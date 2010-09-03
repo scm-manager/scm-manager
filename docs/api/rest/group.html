@@ -1,0 +1,215 @@
+<html>
+  <head>
+    <title>REST API - Group</title>
+    <link rel="stylesheet" type="text/css" href="resources/style.css" />
+  </head>
+  <body>
+
+    <h1>REST API - Group</h1>
+
+    <ul>
+      <li><a href="#getall">Get all</a></li>
+      <li><a href="#get">Get</a></li>
+      <li><a href="#add">Add</a></li>
+      <li><a href="#update">Update</a></li>
+      <li><a href="#delete">Delete</a></li>
+    </ul>
+
+    <a name="getall"></a>
+    <h2>Get all</h2>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>URL</th>
+          <td>/api/rest/groups(.xml|.json)</td>
+        </tr>
+        <tr>
+          <th>Method</th>
+          <td>GET</td>
+        </tr>
+        <tr>
+          <th rowspan="3">Returns</th>
+          <td>200 OK</td>
+        </tr>
+        <tr>
+          <td>401 Unauthorized</td>
+        </tr>
+        <tr>
+          <td>415 Unsupported Media Type</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>JSON Example</h3>
+
+    <pre>
+GET /api/rest/groups.json
+
+[
+  {
+    name: 'group1',
+    members: [
+      'hans', 'klaus', 'uwe'
+    ]
+  },
+  {
+    name: 'group2',
+    members: [
+      'peter', 'klaus', 'hans'
+    ]
+  }
+]
+    </pre>
+
+    <a name="get"></a>
+    <h2>Get</h2>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>URL</th>
+          <td>/api/rest/groups/<i>group name</i>(.xml|.json)</td>
+        </tr>
+        <tr>
+          <th>Method</th>
+          <td>GET</td>
+        </tr>
+        <tr>
+          <th rowspan="4">Returns</th>
+          <td>200 OK</td>
+        </tr>
+        <tr>
+          <td>401 Unauthorized</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+        </tr>
+        <tr>
+          <td>415 Unsupported Media Type</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>JSON Example</h3>
+
+    <pre>
+GET /api/rest/groups/<i>group name</i>.json
+
+{
+  name: 'group1',
+  members: [
+    'hans', 'klaus', 'uwe'
+  ]
+}
+    </pre>
+
+    <a name="add"></a>
+    <h2>Add</h2>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>URL</th>
+          <td>/api/rest/groups(.xml|.json)</td>
+        </tr>
+        <tr>
+          <th>Method</th>
+          <td>POST</td>
+        </tr>
+        <tr>
+          <th rowspan="3">Returns</th>
+          <td>201 Created & Location</td>
+        </tr>
+        <tr>
+          <td>401 Unauthorized</td>
+        </tr>
+        <tr>
+          <td>415 Unsupported Media Type</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>JSON Example</h3>
+
+    <pre>
+POST /api/rest/groups.json
+
+{
+  name: 'group3',
+  members: [
+    'klaus', 'uwe'
+  ]
+}
+    </pre>
+
+    <a name="update"></a>
+    <h2>Update</h2>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>URL</th>
+          <td>/api/rest/groups/<i>group name</i>(.xml|.json)</td>
+        </tr>
+        <tr>
+          <th>Method</th>
+          <td>PUT</td>
+        </tr>
+        <tr>
+          <th rowspan="4">Returns</th>
+          <td>201 Created & Location</td>
+        </tr>
+        <tr>
+          <td>401 Unauthorized</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+        </tr>
+        <tr>
+          <td>415 Unsupported Media Type</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>JSON Example</h3>
+
+    <pre>
+PUT /api/rest/groups.json
+
+{
+  name: 'group3',
+  members: [
+    'hans', 'klaus', 'uwe'
+  ]
+}
+    </pre>
+
+    <a name="delete"></a>
+    <h2>Delete</h2>
+
+    <table>
+      <tbody>
+        <tr>
+          <th>URL</th>
+          <td>/api/rest/groups/<i>group name</i>(.xml|.json)</td>
+        </tr>
+        <tr>
+          <th>Method</th>
+          <td>DELETE</td>
+        </tr>
+        <tr>
+          <th rowspan="3">Returns</th>
+          <td>204 No Content</td>
+        </tr>
+        <tr>
+          <td>401 Unauthorized</td>
+        </tr>
+        <tr>
+          <td>404 Not Found</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </body>
+</html>
