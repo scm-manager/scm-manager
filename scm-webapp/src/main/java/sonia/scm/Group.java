@@ -19,10 +19,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author Sebastian Sdorra
  */
+@XmlRootElement
 public class Group implements Serializable
 {
 

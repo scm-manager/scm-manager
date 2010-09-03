@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : beans.xml
+    Created on : September 3, 2010, 2:32 PM
+    Author     : sdorra
+    Description:
+        Purpose of the document follows.
+-->
+
+<beans xmlns="http://java.sun.com/xml/ns/javaee"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
+
+  <!--
+  <alternatives>
+    <class></class>
+  </alternatives>
+  -->
+
+</beans>
