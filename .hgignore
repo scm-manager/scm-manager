@@ -1,0 +1,20 @@
+# netbeans temp & private files
+/?target/
+release.properties
+nbactions.*\.xml
+# MacOS X Files
+\.DS_Store$
+\._\.DS_Store$
+\._\.
+Desktop DB$
+Desktop DF$
+\.hotfiles\.btree$
+\.orig$
+~$
+\.\~.*$
+\.bak$
+.*\.NavData$
+\.orig\..*$
+\.chg\..*$
+\.rej$
+\.conflict\~$
