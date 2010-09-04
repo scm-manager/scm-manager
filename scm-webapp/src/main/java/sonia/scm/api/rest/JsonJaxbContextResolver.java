@@ -10,7 +10,6 @@ package sonia.scm.api.rest;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Group;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.json.JSONConfiguration;
@@ -28,7 +27,6 @@ import javax.xml.bind.JAXBContext;
  *
  * @author Sebastian Sdorra
  */
-@Provider
 public class JsonJaxbContextResolver implements ContextResolver<JAXBContext>
 {
 
@@ -42,7 +40,7 @@ public class JsonJaxbContextResolver implements ContextResolver<JAXBContext>
   {
     this.context = new JSONJAXBContext(
         JSONConfiguration.mapped().rootUnwrapping(true).arrays(
-          "members").build(), types.toArray(new Class[0]));
+          "member", "groups").build(), types.toArray(new Class[0]));
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -69,5 +67,6 @@ public class JsonJaxbContextResolver implements ContextResolver<JAXBContext>
   private JAXBContext context;
 
   /** Field description */
-  private List<Class> types = Arrays.asList(new Class[] { Group.class });
+  private List<Class> types = Arrays.asList(new Class[] { 
+          Group.class });
 }

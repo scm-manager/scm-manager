@@ -16,16 +16,23 @@ import sonia.scm.util.Util;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement
+@XmlRootElement(name = "groups")
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(propOrder = { "name", "members" })
 public class Group implements Serializable
 {
 
@@ -33,6 +40,12 @@ public class Group implements Serializable
   private static final long serialVersionUID = 1752369869345245872L;
 
   //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  public Group() {}
 
   /**
    * Constructs ...
@@ -57,6 +70,24 @@ public class Group implements Serializable
   {
     this.name = name;
     this.members = members;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param name
+   * @param members
+   */
+  public Group(String name, String... members)
+  {
+    this.name = name;
+    this.members = new ArrayList<String>();
+
+    if (Util.isNotEmpty(members))
+    {
+      this.members.addAll(Arrays.asList(members));
+    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -154,6 +185,7 @@ public class Group implements Serializable
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  @XmlElement(name = "members")
   private List<String> members;
 
   /** Field description */

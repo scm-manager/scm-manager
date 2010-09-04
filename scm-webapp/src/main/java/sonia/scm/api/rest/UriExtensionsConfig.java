@@ -23,6 +23,10 @@ import javax.ws.rs.core.MediaType;
 public class UriExtensionsConfig extends PackagesResourceConfig
 {
 
+  public static final String EXTENSION_XML = "xml";
+
+  public static final String EXTENSION_JSON = "json";
+
   /**
    * Constructs ...
    *
@@ -68,8 +72,8 @@ public class UriExtensionsConfig extends PackagesResourceConfig
     if (mediaTypeMap == null)
     {
       mediaTypeMap = new HashMap<String, MediaType>();
-      mediaTypeMap.put("json", MediaType.APPLICATION_JSON_TYPE);
-      mediaTypeMap.put("xml", MediaType.APPLICATION_XML_TYPE);
+      mediaTypeMap.put(EXTENSION_JSON, MediaType.APPLICATION_JSON_TYPE);
+      mediaTypeMap.put(EXTENSION_XML, MediaType.APPLICATION_XML_TYPE);
     }
 
     return mediaTypeMap;
