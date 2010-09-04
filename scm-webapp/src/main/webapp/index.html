@@ -1,18 +1,71 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
   <head>
-    <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="resources/extjs/resources/css/ext-all.css" />
+    <link rel="stylesheet" type="text/css" href="resources/extjs/resources/css/xtheme-gray.css" />
+    <link rel="stylesheet" type="text/css" href="resources/css/style.css" />
 
+    <script type="text/javascript" src="resources/extjs/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="resources/extjs/ext-all-debug.js"></script>
+
+    <script type="text/javascript" src="resources/js/global.js"></script>
+    <script type="text/javascript" src="resources/js/sonia.group.js"></script>
+    <script type="text/javascript" src="resources/js/sonia.repository.js"></script>
+    <script type="text/javascript" src="resources/js/layout.js"></script>
+
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <title>SCM-WebAPP</title>
   </head>
   <body>
-    <h1>Content</h1>
-    <pre></pre>
+
+    <!-- use class="x-hide-display" to prevent a brief flicker of the content -->
+    <div id="north" class="x-hide-display">
+
+      <div id="header" style="visibility: visible; ">
+        <div id="appTitle" class="left-side">
+          <h1>SCM Manager</h1>
+          <p>SCM Repository Management</p>
+        </div>
+        <div  id="logo" class="right-side">
+          <img src="resources/images/logo.gif" alt="Ostfalia Hochschule für angewandte Wissenschaften">
+        </div>
+      </div>
+
+    </div>
+    <div id="west" class="x-hide-display">
+      <ul>
+        <li><a id="groups">Groups</a></li>
+      </ul>
+    </div>
+    <div id="settings">
+      <ul>
+        <li><a href="#">Test</a></li>
+      </ul>
+    </div>
+    <div id="repository-tab" class="x-hide-display">
+      <h1>SCM Managers</h1>
+    </div>
+    <div id="props-panel" class="x-hide-display" style="width:200px;height:200px;overflow:hidden;">
+    </div>
+    <div id="south" class="x-hide-display">
+
+      <div id="footer" style="visibility: visible; ">
+        <div class="left-side">
+          © <a target="_blank" href="http://www.ostfalia.de">Ostfalia</a>
+          –
+          <a target="_blank" href="http://www.ostfalia.de/rz">Rechenzentrum</a>
+        </div>
+        <div class="right-side">
+          <a href="#imprint">Impressum</a>
+        </div>
+      </div>
+
+    </div>
+
   </body>
 </html>

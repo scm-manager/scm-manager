@@ -1,0 +1,45 @@
+/* 
+    Document   : style
+    Created on : Aug 18, 2010, 3:14:05 PM
+    Author     : Sebastian Sdorra
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+#header {
+  margin: 5px;
+}
+
+#appTitle {
+  color: #004077;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  margin-top: 20px;
+}
+
+#appTitle h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.right-side {
+  float: right;
+}
+
+.left-side {
+  float: left;
+}
+
+#south {
+  font-size: 12px;
+}
+
+#footer a {
+  color: #666;
+  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
+  margin-top: 20px;
+}
