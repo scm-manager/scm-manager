@@ -20,20 +20,20 @@ function removeGroup(){
     console.debug( 'remove group ' + group );
 
     Ext.MessageBox.show({
-      title: "Remove Group",
-      msg: "Remove Group '" + group + "'?",
+      title: 'Remove Group',
+      msg: 'Remove Group "' + group + '"?',
       buttons: Ext.MessageBox.OKCANCEL,
       icon: Ext.MessageBox.QUESTION,
       fn: function(result){
-        if ( result == "ok" ){
+        if ( result == 'ok' ){
           Ext.Ajax.request({
-            url: 'api/rest/groups/' + group + ".json",
+            url: restUrl + 'groups/' + group + '.json',
             method: 'DELETE',
             success: function(){
               groupStore.reload();
             },
             failure: function(){
-              alert("ERROR!!!")
+              alert('ERROR!!!')
             }
           });
         }
@@ -78,7 +78,7 @@ var groupToolbar = new Ext.Toolbar({
       specialkey: function(field, e){
         if (e.getKey() == e.ENTER) {
           var value = this.getValue();
-          console.log( "Filter: " + value );
+          console.log( 'Filter: ' + value );
           // TODO filter by member
           groupStore.filter('name', new RegExp('.*' + value + '.*'));
         }
@@ -99,10 +99,10 @@ var groupSelModel = new Ext.grid.RowSelectionModel({
 });
 
 var groupStore = new Ext.data.JsonStore({
-  url: 'api/rest/groups.json',
+  url: restUrl + 'groups.json',
   root: 'groups',
   fields: [
-    'name', "members"
+    'name', 'members'
   ],
   sortInfo: {
     field: 'name'
@@ -269,15 +269,15 @@ Sonia.group.AddForm = new Ext.extend(Ext.FormPanel, {
 
     var url = null;
     if ( this.update ){
-      url = "api/rest/groups/" + this.name + ".json";
+      url = restUrl + 'groups/' + this.name + '.json';
     } else {
-      url = "api/rest/groups.json";
+      url = restUrl + 'groups.json';
     }
 
     Ext.Ajax.request({
       url: url,
       jsonData: group,
-      method: this.update ? "PUT" : "POST",
+      method: this.update ? 'PUT' : 'POST',
       success: function(){
         // TODO make this in a nice way
         groupStore.reload();
@@ -287,7 +287,7 @@ Sonia.group.AddForm = new Ext.extend(Ext.FormPanel, {
         }
       },
       failure: function(){
-        alert( "failure" );
+        alert( 'failure' );
       }
     });
 

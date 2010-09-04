@@ -10,3 +10,5 @@ var repositoryTypeStore = new Ext.data.ArrayStore({
   fields: [ 'name', 'type' ],
   data: repositoryTypes
 });
+
+var restUrl = "api/rest/";
