@@ -27,6 +27,7 @@ import javax.xml.bind.JAXBContext;
  *
  * @author Sebastian Sdorra
  */
+@Provider
 public class JsonJaxbContextResolver implements ContextResolver<JAXBContext>
 {
 
