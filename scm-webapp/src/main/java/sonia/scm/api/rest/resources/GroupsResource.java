@@ -97,6 +97,8 @@ public class GroupsResource
       throw new WebApplicationException(Status.NOT_FOUND);
     }
 
+    groupStore.remove(name);
+
     return Response.noContent().build();
   }
 
