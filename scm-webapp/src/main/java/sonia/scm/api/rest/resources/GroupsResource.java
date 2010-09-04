@@ -19,6 +19,7 @@ import java.util.LinkedHashMap;
 import javax.inject.Singleton;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -75,6 +76,28 @@ public class GroupsResource
     return Response.created(
         uriInfo.getAbsolutePath().resolve(
           "groups/".concat(group.getName()))).build();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   */
+  @DELETE
+  @Path("{name}")
+  public Response delete(@PathParam("name") String name)
+  {
+    Group group = groupStore.get(name);
+
+    if (group == null)
+    {
+      throw new WebApplicationException(Status.NOT_FOUND);
+    }
+
+    return Response.noContent().build();
   }
 
   /**
