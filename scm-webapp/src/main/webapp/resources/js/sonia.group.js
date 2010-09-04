@@ -291,26 +291,6 @@ Sonia.group.AddForm = new Ext.extend(Ext.FormPanel, {
       }
     });
 
-
-    /*form.submit({
-      params: {
-        members: memberArray
-      },
-      method: this.update ? "PUT" : "POST",
-      waitTitle:'Connecting',
-      waitMsg:'Sending data...',
-      success: function(){
-        // TODO make this in a nice way
-        groupStore.reload();
-
-        if ( containerWindow ){
-          containerWindow.close();
-        }
-      },
-      failure: function(){
-        alert( "failure" );
-      }
-    });*/
   },
 
   close: function(){

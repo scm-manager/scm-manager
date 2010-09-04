@@ -46,7 +46,7 @@
     <pre>
 GET /api/rest/groups.json
 
-[
+{ groups: [
   {
     name: 'group1',
     members: [
@@ -59,7 +59,7 @@ GET /api/rest/groups.json
       'peter', 'klaus', 'hans'
     ]
   }
-]
+]}
     </pre>
 
     <a name="get"></a>
@@ -175,7 +175,7 @@ POST /api/rest/groups.json
     <h3>JSON Example</h3>
 
     <pre>
-PUT /api/rest/groups.json
+PUT /api/rest/groups/group3.json
 
 {
   name: 'group3',
