@@ -21,6 +21,7 @@ import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -74,6 +75,35 @@ public class GroupsResource
     return Response.created(
         uriInfo.getAbsolutePath().resolve(
           "groups/".concat(group.getName()))).build();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param name
+   * @param group
+   *
+   * @return
+   */
+  @PUT
+  @Path("{name}")
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public Response update(@PathParam("name") String name, Group group)
+  {
+    Group updateGroup = groupStore.get(name);
+
+    if (updateGroup == null)
+    {
+      throw new WebApplicationException(Status.NOT_FOUND);
+    }
+
+    updateGroup.setName(name);
+    updateGroup.setMembers(group.getMembers());
+
+    return Response.created(
+        uriInfo.getAbsolutePath().resolve(group.getName())).build();
   }
 
   //~--- get methods ----------------------------------------------------------

@@ -182,6 +182,30 @@ public class Group implements Serializable
     return name;
   }
 
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param members
+   */
+  public void setMembers(List<String> members)
+  {
+    this.members = members;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   */
+  public void setName(String name)
+  {
+    this.name = name;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
