@@ -18,13 +18,18 @@ import java.util.LinkedHashMap;
 
 import javax.inject.Singleton;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -50,6 +55,27 @@ public class GroupsResource
                    new Group("devel", "sdorra", "th", "merlec", "oelkersd"));
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param group
+   *
+   * @return
+   */
+  @POST
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public Response add(Group group)
+  {
+    groupStore.put(group.getName(), group);
+
+    return Response.created(
+        uriInfo.getAbsolutePath().resolve(
+          "groups/".concat(group.getName()))).build();
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -70,8 +96,6 @@ public class GroupsResource
     {
       throw new WebApplicationException(Status.NOT_FOUND);
     }
-
-    System.out.println( group );
 
     return group;
   }
@@ -94,4 +118,8 @@ public class GroupsResource
 
   /** Field description */
   private LinkedHashMap<String, Group> groupStore;
+
+  /** Field description */
+  @Context
+  private UriInfo uriInfo;
 }
