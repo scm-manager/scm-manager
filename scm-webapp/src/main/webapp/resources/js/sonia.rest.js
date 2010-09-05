@@ -29,3 +29,213 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
   }
 
 });
+
+Sonia.rest.EditForm = Ext.extend(Ext.form.FormPanel, {
+
+  title: 'Edit REST',
+
+  initComponent: function(){
+
+    var config = {
+      labelWidth: 80,
+      autoHeight: true,
+      frame: true,
+      title: this.title,
+      defaultType:'textfield',
+      monitorValid: true,
+      defaults: {width: 190},
+      buttons:[
+        {text: 'Ok', formBind: true, scope: this, handler: this.submit},
+        {text: 'Cancel', scope: this, handler: this.cancel}
+      ]
+    };
+
+    this.addEvents('submit', 'cancel');
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.rest.EditForm.superclass.initComponent.apply(this, arguments);
+  },
+
+  load: function(item){
+    var data = {success: true, data: item};
+    this.getForm().loadRecord( data );
+  },
+
+  submit: function(){
+    var form = this.getForm();
+    var item = this.getItem( form );
+    this.fireEvent('submit', item);
+  },
+
+  getItem: function(form){
+    // abstract funtion
+  },
+
+  cancel: function(){
+    this.fireEvent('cancel', false);
+  }
+
+});
+
+Ext.reg('restEditForm', Sonia.rest.EditForm);
+
+Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
+
+  restAddUrl: null,
+  restEditUrlPattern: null,
+  restRemoveUrlPattern: null,
+  idField: null,
+  searchField: null,
+  editForm: null,
+  editWindowWidth: 300,
+
+  initComponent: function(){
+
+    var restSelModel = new Ext.grid.RowSelectionModel({
+      singleSelect: true
+    });
+
+    var restToolbar = new Ext.Toolbar({
+      items: [
+        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddWindow},
+        {xtype: 'tbbutton', text: 'Edit', scope: this, handler: this.showEditWindow},
+        {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.remove},
+        {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload},
+        {xtype: 'tbseparator'},
+        {xtype: 'label', text: 'Search: '},
+        {xtype: 'textfield', listeners: {
+          specialkey: {
+            fn: function(field, e){
+              if (e.getKey() == e.ENTER) {
+                this.search(field.getValue());
+              }
+            },
+            scope: this
+          }
+        }}
+      ]
+    });
+
+    var config = {
+      selModel: restSelModel,
+      tbar: restToolbar,
+      viewConfig: {
+        forceFit: true
+      },
+      loadMask: true,
+      listeners: {
+        celldblclick: this.showEditWindow
+      }
+    };
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.rest.Grid.superclass.initComponent.apply(this, arguments);
+    
+    // load data
+    this.store.load();
+  },
+
+  showAddWindow: function(){
+    var addWindow = new Sonia.rest.DetailWindow({
+      items: [{
+        id: 'addForm',
+        xtype: this.editForm,
+        listeners: {
+          submit: {
+            fn: function(item){
+
+              var store = this.store;
+
+              Ext.Ajax.request({
+                url: this.restAddUrl,
+                jsonData: item,
+                method: 'POST',
+                success: function(){
+                  store.reload();
+                  addWindow.close();
+                },
+                failure: function(){
+                  alert( 'failure' );
+                }
+              });
+
+            },
+            scope: this
+          },
+          cancel: function(){
+            addWindow.close();
+          }
+        }
+      }]
+    });
+
+    addWindow.show();
+  },
+
+  showEditWindow: function(){
+    if ( this.selModel.hasSelection() ){
+      console.debug( 'showEditWindow' );
+    }
+  },
+
+  remove: function(){
+    if ( this.selModel.hasSelection() ){
+      var id = this.selModel.getSelected().data[this.idField];
+
+      if ( debug ){
+        console.debug( 'remove item ' + id );
+      }
+
+      // TODO show confirmation dialog
+
+      var store = this.store;
+
+      var url = String.format( this.restRemoveUrlPattern, id );
+      Ext.Ajax.request({
+        url: url,
+        method: 'DELETE',
+        success: function(){
+          store.reload();
+        },
+        failure: function(){
+          alert( 'failure' );
+        }
+      });
+    }
+  },
+
+  reload: function(){
+    this.store.reload();
+  },
+
+  search: function(value){
+    if ( this.searchField != null ){
+      this.store.filter(this.searchField, new RegExp('.*' + value + '.*'));
+    }
+  }
+
+});
+
+Ext.reg('restGrid', Sonia.rest.Grid);
+
+Sonia.rest.DetailWindow = Ext.extend(Ext.Window, {
+
+  initComponent: function(){
+    var config = {
+      layout:'fit',
+      width: 300,
+      autoScroll: true,
+      closable: false,
+      resizable: false,
+      plain: true,
+      border: false,
+      modal: true
+    };
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.rest.DetailWindow.superclass.initComponent.apply(this, arguments);
+  }
+
+});
+
+Ext.reg('restDetailWindow', Sonia.rest.DetailWindow);

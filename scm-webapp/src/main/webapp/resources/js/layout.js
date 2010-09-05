@@ -15,13 +15,26 @@ Ext.onReady(function(){
   var tabPanel = new Ext.TabPanel({
       region: 'center', // a center region is ALWAYS required for border layout
       deferredRender: false,
-      activeTab: 0,     // first tab initially active
+      activeTab: 1,     // first tab initially active
       items: [{
         id: 'welcome',
         xtype: 'panel',
         title: 'Welcome',
         // closable: true,
         autoScroll: true
+      },{
+        id: 't_sample',
+        xtype: 'restGrid',
+        title: 'Sample',
+        autoScroll: true,
+        store: groupStore,
+        cm: groupColModel,
+        idField: 'name',
+        searchField: 'name',
+        editForm: 'sampleEditForm',
+        restAddUrl: restUrl + 'groups.json',
+        restEditUrlPattern: restUrl + 'groups/{0}.json',
+        restRemoveUrlPattern: restUrl + 'groups/{0}.json'
       }]
     });
 
