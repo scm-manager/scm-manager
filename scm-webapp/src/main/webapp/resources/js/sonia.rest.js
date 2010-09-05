@@ -186,21 +186,30 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
         console.debug( 'remove item ' + id );
       }
 
-      // TODO show confirmation dialog
-
       var store = this.store;
-
       var url = String.format( this.restRemoveUrlPattern, id );
-      Ext.Ajax.request({
-        url: url,
-        method: 'DELETE',
-        success: function(){
-          store.reload();
-        },
-        failure: function(){
-          alert( 'failure' );
+
+      Ext.MessageBox.show({
+        title: 'Remove Item',
+        msg: 'Remove Item "' + id + '"?',
+        buttons: Ext.MessageBox.OKCANCEL,
+        icon: Ext.MessageBox.QUESTION,
+        fn: function(result){
+          if ( result == 'ok' ){
+            Ext.Ajax.request({
+              url: url,
+              method: 'DELETE',
+              success: function(){
+                store.reload();
+              },
+              failure: function(){
+                alert( 'failure' );
+              }
+            });
+          }
         }
       });
+
     }
   },
 
