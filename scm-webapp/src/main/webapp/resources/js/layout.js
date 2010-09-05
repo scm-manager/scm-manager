@@ -82,6 +82,7 @@ Ext.onReady(function(){
       closable: true,
       autoScroll: true
     });
+    tabPanel.setActiveTab('t_group');
   }
 
   Ext.Ajax.request({
