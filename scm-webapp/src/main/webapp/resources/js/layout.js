@@ -88,7 +88,8 @@ Ext.onReady(function(){
     var menu = Ext.get( 'main-menu' );
     var groupsLink = menu.createChild({
       tag: 'li',
-      html: 'Groups'
+      html: 'Groups',
+      style: 'cursor: pointer;'
     });
     groupsLink.on('click', addGroupPanel);
   }
