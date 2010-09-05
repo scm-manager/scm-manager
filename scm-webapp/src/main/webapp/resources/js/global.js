@@ -3,6 +3,8 @@
  * and open the template in the editor.
  */
 
+var debug = true;
+
 var repositoryTypes = [ ['Mercurial', 'hg'], ['Subversion','svn'], ['Git','git'] ];
 
 var repositoryTypeStore = new Ext.data.ArrayStore({

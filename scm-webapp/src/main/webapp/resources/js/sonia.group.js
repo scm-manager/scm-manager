@@ -9,7 +9,6 @@ var addGroupWindow = null;
 
 /** Sonia.GroupGrid **/
 function addGroup(){
-  console.debug( 'add group' );
   addGroupWindow = new Sonia.group.DetailWindow();
   addGroupWindow.show();
 }
@@ -17,7 +16,10 @@ function addGroup(){
 function removeGroup(){
   if (groupSelModel.hasSelection()){
     var group = groupSelModel.getSelected().data.name;
-    console.debug( 'remove group ' + group );
+
+    if ( debug ){
+      console.debug( 'remove group ' + group );
+    }
 
     Ext.MessageBox.show({
       title: 'Remove Group',
@@ -78,7 +80,9 @@ var groupToolbar = new Ext.Toolbar({
       specialkey: function(field, e){
         if (e.getKey() == e.ENTER) {
           var value = this.getValue();
-          console.log( 'Filter: ' + value );
+          if ( debug ){
+            console.log( 'Filter: ' + value );
+          }
           // TODO filter by member
           groupStore.filter('name', new RegExp('.*' + value + '.*'));
         }
@@ -274,6 +278,11 @@ Sonia.group.AddForm = new Ext.extend(Ext.FormPanel, {
       url = restUrl + 'groups/' + this.name + '.json';
     } else {
       url = restUrl + 'groups.json';
+    }
+
+    if ( debug ){
+      var action = this.update ? 'edit' : 'add';
+      console.debug( action + ' group ' + name );
     }
 
     Ext.Ajax.request({
