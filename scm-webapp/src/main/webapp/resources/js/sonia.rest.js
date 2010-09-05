@@ -182,10 +182,6 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
     if ( this.selModel.hasSelection() ){
       var id = this.selModel.getSelected().data[this.idField];
 
-      if ( debug ){
-        console.debug( 'remove item ' + id );
-      }
-
       var store = this.store;
       var url = String.format( this.restRemoveUrlPattern, id );
 
@@ -195,6 +191,11 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
         buttons: Ext.MessageBox.OKCANCEL,
         icon: Ext.MessageBox.QUESTION,
         fn: function(result){
+
+          if ( debug ){
+            console.debug( 'remove item ' + id );
+          }
+
           if ( result == 'ok' ){
             Ext.Ajax.request({
               url: url,
@@ -207,6 +208,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
               }
             });
           }
+          
         }
       });
 
