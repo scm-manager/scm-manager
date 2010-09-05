@@ -98,7 +98,7 @@ var groupSelModel = new Ext.grid.RowSelectionModel({
   singleSelect: true
 });
 
-var groupStore = new Ext.data.JsonStore({
+var groupStore = new Sonia.rest.JsonStore({
   url: restUrl + 'groups.json',
   root: 'groups',
   fields: [
