@@ -109,7 +109,7 @@ var groupStore = new Ext.data.JsonStore({
   }
 });
 
-groupStore.load();
+//groupStore.load();
 
 Sonia.GroupGrid = Ext.extend(Ext.grid.GridPanel, {
   initComponent: function(){
@@ -126,6 +126,8 @@ Sonia.GroupGrid = Ext.extend(Ext.grid.GridPanel, {
         celldblclick: editGroup
       }
     };
+
+    groupStore.load();
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.GroupGrid.superclass.initComponent.apply(this, arguments);

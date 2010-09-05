@@ -12,7 +12,20 @@ Ext.onReady(function(){
   // should ensure that stable state ids are set for stateful components in real apps.
   Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
 
-  var viewport = new Ext.Viewport({
+  var tabPanel = new Ext.TabPanel({
+      region: 'center', // a center region is ALWAYS required for border layout
+      deferredRender: false,
+      activeTab: 0,     // first tab initially active
+      items: [{
+        id: 'welcome',
+        xtype: 'panel',
+        title: 'Welcome',
+        // closable: true,
+        autoScroll: true
+      }]
+    });
+
+  new Ext.Viewport({
     layout: 'border',
     items: [
     // create instance immediately
@@ -47,7 +60,7 @@ Ext.onReady(function(){
         iconCls: 'settings'
       }]
     },
-      new Ext.BoxComponent({
+    new Ext.BoxComponent({
       region: 'south',
       id: 'south-panel',
       contentEl: 'south',
@@ -57,24 +70,33 @@ Ext.onReady(function(){
     // in this instance the TabPanel is not wrapped by another panel
     // since no title is needed, this Panel is added directly
     // as a Container
-    new Ext.TabPanel({
-      region: 'center', // a center region is ALWAYS required for border layout
-      deferredRender: false,
-      activeTab: 0,     // first tab initially active
-      items: [{
-        id: 't_group',
-        //contentEl: 'repository-tab',
-        xtype: 'groupGrid',
-        title: 'Groups',
-        // closable: true,
-        autoScroll: true
-      }/*,{
-        id: 't_repository',
-        xtype: 'repositoryGrid',
-        title: 'Repositories',
-        autoScroll: true
-      }*/]
-    })]
+    tabPanel
+  ]});
+
+  function addGroupPanel(){
+    console.log( 'addGroupPanel' );
+    tabPanel.add({
+      id: 't_group',
+      xtype: 'groupGrid',
+      title: 'Groups',
+      closable: true,
+      autoScroll: true
+    });
+  }
+
+  Ext.Ajax.request({
+    url: restUrl + 'authentication.json',
+    method: 'GET',
+    success: function(){
+      addGroupPanel();
+    },
+    failure: function(){
+      var loginWin = new Sonia.login.Window();
+      loginWin.on('success', function(){
+        addGroupPanel();
+      });
+      loginWin.show();
+    }
   });
 
 });
