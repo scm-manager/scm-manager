@@ -74,7 +74,6 @@ Ext.onReady(function(){
   ]});
 
   function addGroupPanel(){
-    console.log( 'addGroupPanel' );
     tabPanel.add({
       id: 't_group',
       xtype: 'groupGrid',
@@ -85,16 +84,25 @@ Ext.onReady(function(){
     tabPanel.setActiveTab('t_group');
   }
 
+  function createMainMenu(){
+    var menu = Ext.get( 'main-menu' );
+    var groupsLink = menu.createChild({
+      tag: 'li',
+      html: 'Groups'
+    });
+    groupsLink.on('click', addGroupPanel);
+  }
+
   Ext.Ajax.request({
     url: restUrl + 'authentication.json',
     method: 'GET',
     success: function(){
-      addGroupPanel();
+      createMainMenu();
     },
     failure: function(){
       var loginWin = new Sonia.login.Window();
       loginWin.on('success', function(){
-        addGroupPanel();
+        createMainMenu();
       });
       loginWin.show();
     }
