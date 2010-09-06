@@ -36,14 +36,8 @@ Sonia.repository.EditForm = Ext.extend(Sonia.rest.EditForm, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.EditForm.superclass.initComponent.apply(this, arguments);
-  },
-
-  getItem: function(form){
-    var value = form.getFieldValues();
-    console.debug( value );
-    return value;
   }
-
+  
 });
 
 Ext.reg('repositoryEditForm', Sonia.repository.EditForm);

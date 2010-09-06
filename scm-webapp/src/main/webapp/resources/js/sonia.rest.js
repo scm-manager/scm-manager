@@ -73,7 +73,7 @@ Sonia.rest.EditForm = Ext.extend(Ext.form.FormPanel, {
   },
 
   getItem: function(form){
-    // abstract funtion
+    return form.getFieldValues();
   },
 
   cancel: function(){
