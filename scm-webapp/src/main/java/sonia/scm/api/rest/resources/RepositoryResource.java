@@ -19,20 +19,9 @@ import java.util.LinkedHashMap;
 
 import javax.inject.Singleton;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -41,8 +30,13 @@ import javax.ws.rs.core.UriInfo;
 @Singleton
 @Path("repositories")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-public class RepositoryResource
+public class RepositoryResource extends AbstractResource<Repository>
 {
+
+  /** Field description */
+  public static final String PATH_PART = "repositories";
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -72,81 +66,43 @@ public class RepositoryResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   *  Method description
+   * Method description
    *
    *
-   *
-   * @param uriInfo
-   * @param repository
-   *
-   *  @return
+   * @param item
    */
-  @POST
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response add(@Context UriInfo uriInfo, Repository repository)
+  @Override
+  protected void addItem(Repository item)
   {
-    repositoryStore.put(repository.getName(), repository);
-
-    return Response.created(
-        uriInfo.getAbsolutePath().resolve(
-          "repositories/".concat(repository.getName()))).build();
-  }
-
-  /**
-   *   Method description
-   *
-   *
-   *   @param name
-   *
-   *   @return
-   */
-  @DELETE
-  @Path("{name}")
-  public Response delete(@PathParam("name") String name)
-  {
-    Repository repository = repositoryStore.get(name);
-
-    if (repository == null)
-    {
-      throw new WebApplicationException(Status.NOT_FOUND);
-    }
-
-    repositoryStore.remove(name);
-
-    return Response.noContent().build();
+    repositoryStore.put(item.getName(), item);
   }
 
   /**
    * Method description
    *
    *
-   *
-   *
-   * @param uriInfo
-   * @param name
-   * @param repository
-   *
-   * @return
+   * @param item
    */
-  @PUT
-  @Path("{name}")
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response update(@Context UriInfo uriInfo,
-                         @PathParam("name") String name, Repository repository)
+  @Override
+  protected void removeItem(Repository item)
   {
-    Repository updateRepository = repositoryStore.get(name);
+    repositoryStore.remove(item.getName());
+  }
 
-    if (updateRepository == null)
-    {
-      throw new WebApplicationException(Status.NOT_FOUND);
-    }
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   * @param item
+   */
+  @Override
+  protected void updateItem(String name, Repository item)
+  {
+    Repository repository = repositoryStore.get(name);
 
-    updateRepository.setName(name);
-    updateRepository.setDescription(repository.getDescription());
-    updateRepository.setContact(repository.getContact());
-
-    return Response.created(
-        uriInfo.getAbsolutePath().resolve(repository.getName())).build();
+    repository.setContact(item.getContact());
+    repository.setDescription(item.getDescription());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -155,22 +111,43 @@ public class RepositoryResource
    * Method description
    *
    *
+   * @return
+   */
+  @Override
+  protected Repository[] getAllItems()
+  {
+    Collection<Repository> repositoryCollection = repositoryStore.values();
+
+    return repositoryCollection.toArray(
+        new Repository[repositoryCollection.size()]);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param item
+   *
+   * @return
+   */
+  @Override
+  protected String getId(Repository item)
+  {
+    return item.getName();
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param name
    *
    * @return
    */
-  @GET
-  @Path("{name}")
-  public Repository get(@PathParam("name") String name)
+  @Override
+  protected Repository getItem(String name)
   {
-    Repository repository = repositoryStore.get(name);
-
-    if (repository == null)
-    {
-      throw new WebApplicationException(Status.NOT_FOUND);
-    }
-
-    return repository;
+    return repositoryStore.get(name);
   }
 
   /**
@@ -179,13 +156,10 @@ public class RepositoryResource
    *
    * @return
    */
-  @GET
-  public Repository[] getAll()
+  @Override
+  protected String getPathPart()
   {
-    Collection<Repository> repositoryCollection = repositoryStore.values();
-
-    return repositoryCollection.toArray(
-        new Repository[repositoryCollection.size()]);
+    return PATH_PART;
   }
 
   //~--- fields ---------------------------------------------------------------

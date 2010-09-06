@@ -18,20 +18,9 @@ import java.util.LinkedHashMap;
 
 import javax.inject.Singleton;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -40,8 +29,13 @@ import javax.ws.rs.core.UriInfo;
 @Singleton
 @Path("groups")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-public class GroupResource
+public class GroupResource extends AbstractResource<Group>
 {
+
+  /** Field description */
+  public static final String PATH_PART = "groups";
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -63,19 +57,24 @@ public class GroupResource
    * Method description
    *
    *
-   * @param group
-   *
-   * @return
+   * @param item
    */
-  @POST
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response add(Group group)
+  @Override
+  protected void addItem(Group item)
   {
-    groupStore.put(group.getName(), group);
+    groupStore.put(item.getName(), item);
+  }
 
-    return Response.created(
-        uriInfo.getAbsolutePath().resolve(
-          "groups/".concat(group.getName()))).build();
+  /**
+   * Method description
+   *
+   *
+   * @param item
+   */
+  @Override
+  protected void removeItem(Group item)
+  {
+    groupStore.remove(item.getName());
   }
 
   /**
@@ -83,52 +82,14 @@ public class GroupResource
    *
    *
    * @param name
-   *
-   * @return
+   * @param item
    */
-  @DELETE
-  @Path("{name}")
-  public Response delete(@PathParam("name") String name)
+  @Override
+  protected void updateItem(String name, Group item)
   {
     Group group = groupStore.get(name);
 
-    if (group == null)
-    {
-      throw new WebApplicationException(Status.NOT_FOUND);
-    }
-
-    groupStore.remove(name);
-
-    return Response.noContent().build();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param name
-   * @param group
-   *
-   * @return
-   */
-  @PUT
-  @Path("{name}")
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response update(@PathParam("name") String name, Group group)
-  {
-    Group updateGroup = groupStore.get(name);
-
-    if (updateGroup == null)
-    {
-      throw new WebApplicationException(Status.NOT_FOUND);
-    }
-
-    updateGroup.setName(name);
-    updateGroup.setMembers(group.getMembers());
-
-    return Response.created(
-        uriInfo.getAbsolutePath().resolve(group.getName())).build();
+    group.setMembers(item.getMembers());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -137,22 +98,42 @@ public class GroupResource
    * Method description
    *
    *
+   * @return
+   */
+  @Override
+  protected Group[] getAllItems()
+  {
+    Collection<Group> groupCollection = groupStore.values();
+
+    return groupCollection.toArray(new Group[groupCollection.size()]);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param item
+   *
+   * @return
+   */
+  @Override
+  protected String getId(Group item)
+  {
+    return item.getName();
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param name
    *
    * @return
    */
-  @GET
-  @Path("{name}")
-  public Group get(@PathParam("name") String name)
+  @Override
+  protected Group getItem(String name)
   {
-    Group group = groupStore.get(name);
-
-    if (group == null)
-    {
-      throw new WebApplicationException(Status.NOT_FOUND);
-    }
-
-    return group;
+    return groupStore.get(name);
   }
 
   /**
@@ -161,20 +142,14 @@ public class GroupResource
    *
    * @return
    */
-  @GET
-  public Group[] getAll()
+  @Override
+  protected String getPathPart()
   {
-    Collection<Group> groupCollection = groupStore.values();
-
-    return groupCollection.toArray(new Group[groupCollection.size()]);
+    return PATH_PART;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private LinkedHashMap<String, Group> groupStore;
-
-  /** Field description */
-  @Context
-  private UriInfo uriInfo;
 }

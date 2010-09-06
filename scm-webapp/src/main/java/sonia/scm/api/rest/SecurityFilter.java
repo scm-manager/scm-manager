@@ -68,8 +68,6 @@ public class SecurityFilter implements Filter
       String uri =
         request.getRequestURI().substring(request.getContextPath().length());
 
-      System.out.println( uri + "" + uri.startsWith( URL_AUTHENTICATION ) );
-
       if (uri.startsWith(URL_AUTHENTICATION)
           || (request.getSession(true).getAttribute("auth") != null))
       {
