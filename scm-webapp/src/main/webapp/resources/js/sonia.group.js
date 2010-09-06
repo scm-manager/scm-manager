@@ -13,6 +13,7 @@ Sonia.group.EditForm = new Ext.extend(Sonia.rest.EditForm, {
     });
 
     var config = {
+      title: 'Edit Group',
       items:[{
         fieldLabel:'Name',
         name:'name',

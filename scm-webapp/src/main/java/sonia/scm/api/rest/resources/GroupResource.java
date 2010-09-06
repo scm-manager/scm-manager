@@ -40,14 +40,14 @@ import javax.ws.rs.core.UriInfo;
 @Singleton
 @Path("groups")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-public class GroupsResource
+public class GroupResource
 {
 
   /**
    * Constructs ...
    *
    */
-  public GroupsResource()
+  public GroupResource()
   {
     groupStore = new LinkedHashMap<String, Group>();
     groupStore.put("csit",

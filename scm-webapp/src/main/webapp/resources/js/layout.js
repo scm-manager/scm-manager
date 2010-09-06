@@ -84,14 +84,33 @@ Ext.onReady(function(){
     tabPanel.setActiveTab('t_group');
   }
 
+  function addRepositoryPanel(){
+    tabPanel.add({
+      id: 't_repository',
+      xtype: 'repositoryGrid',
+      title: 'Repositories',
+      closable: true,
+      autoScroll: true
+    });
+    tabPanel.setActiveTab('t_repository');
+  }
+
   function createMainMenu(){
     var menu = Ext.get( 'main-menu' );
+    
     var groupsLink = menu.createChild({
       tag: 'li',
       html: 'Groups',
       style: 'cursor: pointer;'
     });
     groupsLink.on('click', addGroupPanel);
+
+    var repositoryLink = menu.createChild({
+      tag: 'li',
+      html: 'Repositories',
+      style: 'cursor: pointer;'
+    });
+    repositoryLink.on('click', addRepositoryPanel);
   }
 
   Ext.Ajax.request({
