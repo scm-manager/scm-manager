@@ -75,6 +75,14 @@ Sonia.sample.EditForm = new Ext.extend(Sonia.rest.EditForm, {
     Sonia.sample.EditForm.superclass.initComponent.apply(this, arguments);
   },
 
+  load: function(item){
+    var members = item.members;
+    for (var i=0; i<members.length; i++){
+      this.store.add( [ new Ext.data.Record( {name: members[i]}) ] );
+    }
+    this.getForm().loadRecord({success: true, data: item});
+  },
+
   getItem: function(form){
 
     var memberArray = [];

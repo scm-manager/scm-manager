@@ -33,6 +33,7 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
 Sonia.rest.EditForm = Ext.extend(Ext.form.FormPanel, {
 
   title: 'Edit REST',
+  data: null,
 
   initComponent: function(){
 
@@ -54,6 +55,10 @@ Sonia.rest.EditForm = Ext.extend(Ext.form.FormPanel, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.rest.EditForm.superclass.initComponent.apply(this, arguments);
+
+    if ( this.data != null ){
+      this.load(this.data);
+    }
   },
 
   load: function(item){
@@ -146,6 +151,10 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
               var store = this.store;
 
+              if ( debug ){
+                console.debug( 'add item ' + item[this.idField] );
+              }
+
               Ext.Ajax.request({
                 url: this.restAddUrl,
                 jsonData: item,
@@ -174,7 +183,50 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
   showEditWindow: function(){
     if ( this.selModel.hasSelection() ){
-      console.debug( 'showEditWindow' );
+
+      var data = this.selModel.getSelected().data;
+
+      var editWindow = new Sonia.rest.DetailWindow({
+        items: [{
+          id: 'editForm',
+          xtype: this.editForm,
+          data: data,
+          listeners: {
+            submit: {
+              fn: function(item){
+
+                var store = this.store;
+                var id = item[this.idField];
+                var url = String.format(this.restEditUrlPattern, id);
+
+                if ( debug ){
+                  console.debug( 'update item ' + id );
+                }
+
+                Ext.Ajax.request({
+                  url: url,
+                  jsonData: item,
+                  method: 'PUT',
+                  success: function(){
+                    store.reload();
+                    editWindow.close();
+                  },
+                  failure: function(){
+                    alert( 'failure' );
+                  }
+                });
+
+              },
+              scope: this
+            },
+            cancel: function(){
+              editWindow.close();
+            }
+          }
+        }]
+      });
+
+      editWindow.show();
     }
   },
 
