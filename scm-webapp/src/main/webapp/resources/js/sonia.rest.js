@@ -104,7 +104,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
       items: [
         {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddWindow},
         {xtype: 'tbbutton', text: 'Edit', scope: this, handler: this.showEditWindow},
-        {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.remove},
+        {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.removeItem},
         {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload},
         {xtype: 'tbseparator'},
         {xtype: 'label', text: 'Search: '},
@@ -230,7 +230,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
     }
   },
 
-  remove: function(){
+  removeItem: function(){
     if ( this.selModel.hasSelection() ){
       var id = this.selModel.getSelected().data[this.idField];
 
