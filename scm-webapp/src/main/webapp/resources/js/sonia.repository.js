@@ -9,14 +9,17 @@ Sonia.repository.EditForm = Ext.extend(Sonia.rest.EditForm, {
 
   initComponent: function(){
 
+    var update = this.data != null;
+
     var config = {
       title: 'Edit Repository',
       items:[
-        {fieldLabel: 'Name', name: 'name', allowBlank: false},
+        {fieldLabel: 'Name', name: 'name', readOnly: update, allowBlank: false},
         {
          fieldLabel: 'Type',
          name: 'type',
          xtype: 'combo',
+         readOnly: update,
          hiddenName : 'type',
          typeAhead: true,
          triggerAction: 'all',
@@ -24,8 +27,8 @@ Sonia.repository.EditForm = Ext.extend(Sonia.rest.EditForm, {
          mode: 'local',
          editable: false,
          store: repositoryTypeStore,
-         valueField: 'type',
-         displayField: 'name',
+         valueField: 'name',
+         displayField: 'displayName',
          allowBlank: false
         },
 

@@ -116,7 +116,10 @@ Ext.onReady(function(){
   Ext.Ajax.request({
     url: restUrl + 'authentication.json',
     method: 'GET',
-    success: function(){
+    success: function(response){
+      state = Ext.decode(response.responseText);
+      console.debug( state );
+      repositoryTypeStore.loadData(state.repositoryTypes);
       createMainMenu();
     },
     failure: function(){

@@ -34,7 +34,7 @@ Sonia.rest.EditForm = Ext.extend(Ext.form.FormPanel, {
 
   title: 'Edit REST',
   data: null,
-
+  
   initComponent: function(){
 
     var config = {

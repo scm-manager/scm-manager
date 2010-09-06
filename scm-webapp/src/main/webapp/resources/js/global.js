@@ -5,12 +5,13 @@
 
 var debug = true;
 
-var repositoryTypes = [ ['Mercurial', 'hg'], ['Subversion','svn'], ['Git','git'] ];
+var state = null;
 
-var repositoryTypeStore = new Ext.data.ArrayStore({
+/*var repositoryTypes = [ ['Mercurial', 'hg'], ['Subversion','svn'], ['Git','git'] ];*/
+
+var repositoryTypeStore = new Ext.data.JsonStore({
   id: 1,
-  fields: [ 'name', 'type' ],
-  data: repositoryTypes
+  fields: [ 'displayName', 'name' ]
 });
 
 var restUrl = "api/rest/";

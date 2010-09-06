@@ -18,7 +18,8 @@ Sonia.group.EditForm = new Ext.extend(Sonia.rest.EditForm, {
         fieldLabel:'Name',
         name:'name',
         anchor: '100%',
-        allowBlank: false
+        allowBlank: false,
+        readOnly: this.data != null
       },{
         fieldLabel: 'Members',
         xtype: 'fieldset',
