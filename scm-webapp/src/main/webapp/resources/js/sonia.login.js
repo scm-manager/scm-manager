@@ -17,42 +17,65 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
       defaultType:'textfield',
       monitorValid:true,
       items:[{
+        id: 'username',
         fieldLabel:'Username',
         name:'username',
-        allowBlank:false
+        allowBlank:false,
+        listeners: {
+          specialkey: {
+            fn: this.specialKeyPressed,
+            scope: this
+          }
+        }
       },{
         fieldLabel:'Password',
         name:'password',
         inputType:'password',
-        allowBlank:false
+        allowBlank:false,
+        listeners: {
+          specialkey: {
+            fn: this.specialKeyPressed,
+            scope: this
+          }
+        }
       }],
       buttons:[{
         text:'Login',
         formBind: true,
         scope: this,
-        handler: function(){
-          var form = this.getForm();
-          form.submit({
-            method:'POST',
-            waitTitle:'Connecting',
-            waitMsg:'Sending data...',
-            
-            success: function(){
-              Ext.Msg.alert('Login Success!');
-            },
-
-            failure: function(form, action){
-              Ext.Msg.alert('Login Failure!');
-              form.reset();
-            }
-          });
-        }
+        handler: this.authenticate
       }]
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.login.Form.superclass.initComponent.apply(this, arguments);
+  },
 
+  authenticate: function(){
+    var form = this.getForm();
+    form.submit({
+      method:'POST',
+      waitTitle:'Connecting',
+      waitMsg:'Sending data...',
+
+      success: function(){
+        Ext.Msg.alert('Login Success!');
+      },
+
+      failure: function(form, action){
+        Ext.Msg.alert('Login Failure!');
+        form.reset();
+      }
+    });
+  },
+
+  specialKeyPressed: function(field, e){
+    if (e.getKey() == e.ENTER) {
+      var form = this.getForm();
+      if ( form.isValid() ){
+        this.authenticate();
+      }
+    }
   }
 
 });
