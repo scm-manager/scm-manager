@@ -13,8 +13,9 @@ Sonia.repository.EditForm = Ext.extend(Sonia.rest.EditForm, {
 
     var config = {
       title: 'Edit Repository',
+      focusField: 'repositoryName',
       items:[
-        {fieldLabel: 'Name', name: 'name', readOnly: update, allowBlank: false},
+        { id: 'repositoryName', fieldLabel: 'Name', name: 'name', readOnly: update, allowBlank: false},
         {
          fieldLabel: 'Type',
          name: 'type',

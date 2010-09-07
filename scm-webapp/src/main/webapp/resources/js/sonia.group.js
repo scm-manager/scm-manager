@@ -16,15 +16,9 @@ Sonia.group.EditForm = new Ext.extend(Sonia.rest.EditForm, {
 
     var config = {
       title: 'Edit Group',
-      listeners: {
-        afterrender: function(){
-          if ( ! update ){
-            Ext.getCmp('nameField').focus(true, 500);
-          }
-        }
-      },
+      focusField: 'groupName',
       items:[{
-        id: 'nameField',
+        id: 'groupName',
         fieldLabel:'Name',
         name:'name',
         anchor: '100%',

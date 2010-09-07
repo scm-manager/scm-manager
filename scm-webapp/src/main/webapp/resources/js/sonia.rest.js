@@ -34,6 +34,7 @@ Sonia.rest.EditForm = Ext.extend(Ext.form.FormPanel, {
 
   title: 'Edit REST',
   data: null,
+  focusField: null,
   
   initComponent: function(){
 
@@ -45,6 +46,16 @@ Sonia.rest.EditForm = Ext.extend(Ext.form.FormPanel, {
       defaultType:'textfield',
       monitorValid: true,
       defaults: {width: 190},
+      listeners: {
+        afterrender: {
+          fn: function(){
+            if ( this.focusField != null && this.data == null ){
+              Ext.getCmp(this.focusField).focus(true, 500);
+            }
+          },
+          scope: this
+        }
+      },
       buttons:[
         {text: 'Ok', formBind: true, scope: this, handler: this.submit},
         {text: 'Cancel', scope: this, handler: this.cancel}
