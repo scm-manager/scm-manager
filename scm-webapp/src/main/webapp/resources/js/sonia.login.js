@@ -10,12 +10,17 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
   initComponent: function(){
 
     var config = {
-      labelWidth:80,
+      labelWidth: 80,
       url: restUrl + "authentication.json",
-      frame:true,
-      title:'Please Login',
-      defaultType:'textfield',
-      monitorValid:true,
+      frame: true,
+      title: 'Please Login',
+      defaultType: 'textfield',
+      monitorValid: true,
+      listeners: {
+        afterrender: function(){
+          Ext.getCmp('username').focus(true, 500);
+        }
+      },
       items:[{
         id: 'username',
         fieldLabel:'Username',
