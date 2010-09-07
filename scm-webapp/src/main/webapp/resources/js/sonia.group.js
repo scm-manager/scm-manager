@@ -12,14 +12,24 @@ Sonia.group.EditForm = new Ext.extend(Sonia.rest.EditForm, {
       fields: [ 'name' ]
     });
 
+    var update = this.data != null;
+
     var config = {
       title: 'Edit Group',
+      listeners: {
+        afterrender: function(){
+          if ( ! update ){
+            Ext.getCmp('nameField').focus(true, 500);
+          }
+        }
+      },
       items:[{
+        id: 'nameField',
         fieldLabel:'Name',
         name:'name',
         anchor: '100%',
         allowBlank: false,
-        readOnly: this.data != null
+        readOnly: update
       },{
         fieldLabel: 'Members',
         xtype: 'fieldset',
