@@ -9,7 +9,12 @@ package sonia.scm.util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Closeable;
+import java.io.IOException;
+
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,6 +22,34 @@ import java.util.Collection;
  */
 public class Util
 {
+
+  /** Field description */
+  private static final Logger logger = Logger.getLogger(Util.class.getName());
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param closeable
+   */
+  public static void close(Closeable closeable)
+  {
+    if (closeable != null)
+    {
+      try
+      {
+        closeable.close();
+      }
+      catch (IOException ex)
+      {
+        logger.log(Level.SEVERE, null, ex);
+      }
+    }
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
