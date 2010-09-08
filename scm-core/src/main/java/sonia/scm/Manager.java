@@ -87,4 +87,12 @@ public interface Manager<T, E extends Exception> extends Initable, Closeable
    * @return
    */
   public Collection<T> getAll();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isConfigured();
 }
