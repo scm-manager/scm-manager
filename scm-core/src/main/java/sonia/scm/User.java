@@ -9,37 +9,49 @@ package sonia.scm;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
+import java.security.Principal;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "state")
+@XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ScmState
+@XmlType(propOrder = { "name", "displayName", "mail" })
+public class User implements Principal, Serializable
 {
 
+  /** Field description */
+  private static final long serialVersionUID = -3089541936726329663L;
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructs ...
    *
    */
-  public ScmState() {}
+  public User() {}
 
   /**
    * Constructs ...
    *
    *
-   * @param user
-   * @param repositoryTypes
+   * @param name
+   * @param displayName
+   * @param mail
    */
-  public ScmState(User user, RepositoryType[] repositoryTypes)
+  public User(String name, String displayName, String mail)
   {
-    this.user = user;
-    this.repositoryTypes = repositoryTypes;
+    this.name = name;
+    this.displayName = displayName;
+    this.mail = mail;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -50,9 +62,9 @@ public class ScmState
    *
    * @return
    */
-  public RepositoryType[] getRepositoryTypes()
+  public String getDisplayName()
   {
-    return repositoryTypes;
+    return displayName;
   }
 
   /**
@@ -61,9 +73,9 @@ public class ScmState
    *
    * @return
    */
-  public User getUser()
+  public String getMail()
   {
-    return user;
+    return mail;
   }
 
   /**
@@ -72,9 +84,10 @@ public class ScmState
    *
    * @return
    */
-  public boolean isSuccess()
+  @Override
+  public String getName()
   {
-    return success;
+    return name;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -83,44 +96,44 @@ public class ScmState
    * Method description
    *
    *
-   * @param repositoryTypes
+   * @param displayName
    */
-  public void setRepositoryTypes(RepositoryType[] repositoryTypes)
+  public void setDisplayName(String displayName)
   {
-    this.repositoryTypes = repositoryTypes;
+    this.displayName = displayName;
   }
 
   /**
    * Method description
    *
    *
-   * @param success
+   * @param mail
    */
-  public void setSuccess(boolean success)
+  public void setMail(String mail)
   {
-    this.success = success;
+    this.mail = mail;
   }
 
   /**
    * Method description
    *
    *
-   * @param user
+   *
+   * @param name
    */
-  public void setUser(User user)
+  public void setName(String name)
   {
-    this.user = user;
+    this.name = name;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlElement(name = "repositoryTypes")
-  private RepositoryType[] repositoryTypes;
+  private String displayName;
 
   /** Field description */
-  private boolean success = true;
+  private String mail;
 
   /** Field description */
-  private User user;
+  private String name;
 }

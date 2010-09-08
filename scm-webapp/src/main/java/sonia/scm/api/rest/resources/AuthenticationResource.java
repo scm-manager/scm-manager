@@ -11,9 +11,12 @@ package sonia.scm.api.rest.resources;
 
 import sonia.scm.RepositoryType;
 import sonia.scm.ScmState;
+import sonia.scm.User;
+import sonia.scm.security.Authenticator;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +41,15 @@ import javax.ws.rs.core.Response;
 public class AuthenticationResource
 {
 
+  /** Field description */
+  private static final RepositoryType[] types = new RepositoryType[] {
+                                                  new RepositoryType("hg",
+                                                    "Mercurial"),
+          new RepositoryType("svn", "Subversion"),
+          new RepositoryType("git", "Git") };
+
+  //~--- get methods ----------------------------------------------------------
+
   /**
    * Method description
    *
@@ -54,11 +66,11 @@ public class AuthenticationResource
                            @FormParam("password") String password)
   {
     ScmState state = null;
+    User user = authenticator.authenticate(request, username, password);
 
-    if ("hans".equals(username) && "hans123".equals(password))
+    if (user != null)
     {
-      request.getSession(true).setAttribute("auth", username);
-      state = getState(username);
+      state = getState(user);
     }
     else
     {
@@ -80,11 +92,11 @@ public class AuthenticationResource
   public ScmState getState(@Context HttpServletRequest request)
   {
     ScmState state = null;
-    String username = (String) request.getSession(true).getAttribute("auth");
+    User user = authenticator.getUser(request);
 
-    if (username != null)
+    if (user != null)
     {
-      state = getState(username);
+      state = getState(user);
     }
     else
     {
@@ -98,23 +110,24 @@ public class AuthenticationResource
    * Method description
    *
    *
-   * @param username
+   *
+   * @param user
    *
    * @return
    */
-  private ScmState getState(String username)
+  private ScmState getState(User user)
   {
     ScmState state = new ScmState();
 
-    state.setUsername(username);
-
-    RepositoryType[] types = new RepositoryType[] {
-                               new RepositoryType("hg", "Mercurial"),
-                               new RepositoryType("svn", "Subversion"),
-                               new RepositoryType("git", "Git") };
-
+    state.setUser(user);
     state.setRepositoryTypes(types);
 
     return state;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @Inject
+  private Authenticator authenticator;
 }
