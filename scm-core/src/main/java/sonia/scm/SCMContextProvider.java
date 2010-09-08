@@ -12,6 +12,10 @@ package sonia.scm;
 import sonia.scm.group.GroupManager;
 import sonia.scm.repository.RepositoryManager;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -25,13 +29,25 @@ public interface SCMContextProvider
    *
    * @return
    */
-  public GroupManager getGroupManager();
+  public File getBaseDirectory();
 
   /**
    * Method description
    *
    *
+   *
+   * @param type
    * @return
    */
-  public RepositoryManager getRepositoryManager();
+  public GroupManager getGroupManager(String type);
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param type
+   * @return
+   */
+  public RepositoryManager getRepositoryManager(String type);
 }

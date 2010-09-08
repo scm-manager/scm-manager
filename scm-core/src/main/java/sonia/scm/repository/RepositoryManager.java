@@ -16,4 +16,14 @@ import sonia.scm.Manager;
  * @author Sebastian Sdorra
  */
 public interface RepositoryManager
-        extends Manager<Repository, RepositoryException> {}
+        extends Manager<Repository, RepositoryException>
+{
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public RepositoryType getType();
+}

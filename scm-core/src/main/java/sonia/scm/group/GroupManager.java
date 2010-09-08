@@ -15,4 +15,14 @@ import sonia.scm.Manager;
  *
  * @author Sebastian Sdorra
  */
-public interface GroupManager extends Manager<Group, GroupException> {}
+public interface GroupManager extends Manager<Group, GroupException>
+{
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getType();
+}
