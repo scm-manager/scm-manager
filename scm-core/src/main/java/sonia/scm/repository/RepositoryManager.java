@@ -9,6 +9,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.ListenerSupport;
 import sonia.scm.Manager;
 
 /**
@@ -16,7 +17,7 @@ import sonia.scm.Manager;
  * @author Sebastian Sdorra
  */
 public interface RepositoryManager
-        extends Manager<Repository, RepositoryException>
+        extends Manager<Repository, RepositoryException>, ListenerSupport<RepositoryListener>
 {
 
   /**

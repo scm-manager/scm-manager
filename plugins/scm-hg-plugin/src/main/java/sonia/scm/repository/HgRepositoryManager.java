@@ -25,7 +25,7 @@ import javax.xml.bind.JAXB;
  *
  * @author Sebastian Sdorra
  */
-public class HgRepositoryManager implements RepositoryManager
+public class HgRepositoryManager extends AbstractRepositoryManager
 {
 
   /** Field description */
