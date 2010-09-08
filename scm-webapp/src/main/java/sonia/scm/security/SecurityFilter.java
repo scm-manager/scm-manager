@@ -83,12 +83,12 @@ public class SecurityFilter implements Filter
 
         if (user != null)
         {
-          ((HttpServletResponse) res).sendError(
-              HttpServletResponse.SC_UNAUTHORIZED);
+          chain.doFilter(new ScmHttpServletRequest(request, user), res);
         }
         else
         {
-          chain.doFilter(new ScmHttpServletRequest(request, user), res);
+          ((HttpServletResponse) res).sendError(
+              HttpServletResponse.SC_UNAUTHORIZED);
         }
       }
       else
