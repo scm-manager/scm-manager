@@ -17,6 +17,7 @@ import sonia.scm.util.Util;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
 
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +55,28 @@ public class BasicContextProvider implements SCMContextProvider
   /**
    * Method description
    *
+   *
+   * @throws IOException
    */
+  @Override
+  public void close() throws IOException
+  {
+    for (GroupManager manager : groupManagerMap.values())
+    {
+      manager.close();
+    }
+
+    for (RepositoryManager manager : repositoryManagerMap.values())
+    {
+      manager.close();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Override
   public void init()
   {
     loadGroupManagers();

@@ -43,6 +43,8 @@ public class SCMContext
           {
             provider = new BasicContextProvider();
           }
+
+          provider.init();
         }
       }
     }

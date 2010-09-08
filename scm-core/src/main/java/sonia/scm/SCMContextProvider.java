@@ -14,14 +14,23 @@ import sonia.scm.repository.RepositoryManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Closeable;
 import java.io.File;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface SCMContextProvider
+public interface SCMContextProvider extends Closeable
 {
+
+  /**
+   * Method description
+   *
+   */
+  public void init();
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
