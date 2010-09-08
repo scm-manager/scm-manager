@@ -5,7 +5,7 @@
 
 
 
-package sonia.scm;
+package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
 

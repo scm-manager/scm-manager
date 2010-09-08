@@ -9,7 +9,7 @@ package sonia.scm.api.rest;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Group;
+import sonia.scm.group.Group;
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.json.JSONConfiguration;

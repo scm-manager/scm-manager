@@ -9,7 +9,7 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.RepositoryType;
+import sonia.scm.repository.RepositoryType;
 import sonia.scm.ScmState;
 import sonia.scm.User;
 import sonia.scm.security.Authenticator;

@@ -9,6 +9,7 @@ package sonia.scm;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import sonia.scm.repository.RepositoryType;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;

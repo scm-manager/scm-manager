@@ -5,7 +5,7 @@
 
 
 
-package sonia.scm;
+package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
