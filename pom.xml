@@ -11,6 +11,7 @@
   <name>scm</name>
 
   <modules>
+    <module>scm-core</module>
     <module>scm-webapp</module>
   </modules>
 
@@ -68,4 +69,3 @@
   </properties>
 
 </project>
-
