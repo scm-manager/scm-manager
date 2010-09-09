@@ -10,7 +10,7 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>sonia.scm.plugin</groupId>
+  <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-hg-plugin</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>scm-hg-plugin</name>
