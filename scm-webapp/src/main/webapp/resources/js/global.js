@@ -4,10 +4,8 @@
  */
 
 var debug = true;
-
 var state = null;
-
-/*var repositoryTypes = [ ['Mercurial', 'hg'], ['Subversion','svn'], ['Git','git'] ];*/
+var authCallbacks = [];
 
 var repositoryTypeStore = new Ext.data.JsonStore({
   id: 1,
@@ -15,3 +13,14 @@ var repositoryTypeStore = new Ext.data.JsonStore({
 });
 
 var restUrl = "api/rest/";
+
+function loadState(s){
+  state = s;
+  console.debug( s );
+  repositoryTypeStore.loadData(state.repositoryTypes);
+  Ext.each(authCallbacks, function(callback){
+    if ( Ext.isFunction(callback) ){
+      callback(state);
+    }
+  });
+}

@@ -9,9 +9,10 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.RepositoryType;
+import sonia.scm.SCMContext;
 import sonia.scm.ScmState;
 import sonia.scm.User;
+import sonia.scm.repository.RepositoryType;
 import sonia.scm.security.Authenticator;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -40,15 +41,6 @@ import javax.ws.rs.core.Response;
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class AuthenticationResource
 {
-
-  /** Field description */
-  private static final RepositoryType[] types = new RepositoryType[] {
-                                                  new RepositoryType("hg",
-                                                    "Mercurial"),
-          new RepositoryType("svn", "Subversion"),
-          new RepositoryType("git", "Git") };
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -120,7 +112,9 @@ public class AuthenticationResource
     ScmState state = new ScmState();
 
     state.setUser(user);
-    state.setRepositoryTypes(types);
+    state.setRepositoryTypes(
+        SCMContext.getContext().getRepositoryTypes().toArray(
+          new RepositoryType[0]));
 
     return state;
   }

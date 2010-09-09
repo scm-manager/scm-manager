@@ -113,20 +113,21 @@ Ext.onReady(function(){
     repositoryLink.on('click', addRepositoryPanel);
   }
 
+  // create menu after login
+  authCallbacks.push( createMainMenu );
+
   Ext.Ajax.request({
     url: restUrl + 'authentication.json',
     method: 'GET',
     success: function(response){
-      state = Ext.decode(response.responseText);
-      console.debug( state );
-      repositoryTypeStore.loadData(state.repositoryTypes);
-      createMainMenu();
+      var s = Ext.decode(response.responseText);
+      loadState(s);
     },
     failure: function(){
       var loginWin = new Sonia.login.Window();
-      loginWin.on('success', function(){
+      /*loginWin.on('success', function(){
         createMainMenu();
-      });
+      });*/
       loginWin.show();
     }
   });

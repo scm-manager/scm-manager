@@ -11,11 +11,13 @@ package sonia.scm;
 
 import sonia.scm.group.GroupManager;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryType;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
 import java.io.File;
+import java.util.Collection;
 
 /**
  *
@@ -59,4 +61,12 @@ public interface SCMContextProvider extends Closeable
    * @return
    */
   public RepositoryManager getRepositoryManager(String type);
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Collection<RepositoryType> getRepositoryTypes();
 }

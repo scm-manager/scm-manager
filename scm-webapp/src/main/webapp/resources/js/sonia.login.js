@@ -63,8 +63,8 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
       waitTitle:'Connecting',
       waitMsg:'Sending data...',
 
-      success: function(){
-        Ext.Msg.alert('Login Success!');
+      success: function(form, action){
+        loadState( action.result );
       },
 
       failure: function(form, action){
