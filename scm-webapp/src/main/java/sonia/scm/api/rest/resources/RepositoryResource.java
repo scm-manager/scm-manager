@@ -9,6 +9,7 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.repository.Permission;
 import sonia.scm.repository.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -47,20 +48,32 @@ public class RepositoryResource extends AbstractResource<Repository>
     repositoryStore = new LinkedHashMap<String, Repository>();
     repositoryStore.put("sonia.lib",
                         new Repository("hg", "sonia.lib", "csit@ostfalia.de",
-                                       "SONIA Library"));
+                                       "SONIA Library",
+                                       new Permission("csit", true, true,
+                                         true)));
     repositoryStore.put("sonia.misc",
                         new Repository("hg", "sonia.misc", "csit@ostfalia.de",
-                                       "SONIA Miscelanious"));
+                                       "SONIA Miscelanious",
+                                       new Permission("csit", true, true,
+                                         true)));
     repositoryStore.put("PWA",
                         new Repository("svn", "PWA",
-                                       "csit@fh-wolfenbuettel.de", "PWA"));
+                                       "csit@fh-wolfenbuettel.de", "PWA",
+                                       new Permission("th", true, true),
+                                       new Permission("sdorra", true, true),
+                                       new Permission("oelkersd", true,
+                                         false)));
     repositoryStore.put("sonia.app",
                         new Repository("hg", "sonia.app", "csit@ostfalia.de",
-                                       "SONIA Applications"));
+                                       "SONIA Applications",
+                                       new Permission("csit", true, true,
+                                         true)));
     repositoryStore.put("sonia.webapps",
                         new Repository("hg", "sonia.webapps",
                                        "csit@ostfalia.de",
-                                       "SONIA WebApplications"));
+                                       "SONIA WebApplications",
+                                       new Permission("csit", true, true,
+                                         true)));
   }
 
   //~--- methods --------------------------------------------------------------

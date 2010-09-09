@@ -10,6 +10,8 @@ package sonia.scm.api.rest;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.group.Group;
+import sonia.scm.repository.Repository;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.json.JSONConfiguration;
@@ -41,7 +43,9 @@ public class JsonJaxbContextResolver implements ContextResolver<JAXBContext>
   {
     this.context = new JSONJAXBContext(
         JSONConfiguration.mapped().rootUnwrapping(true).arrays(
-          "member", "groups").build(), types.toArray(new Class[0]));
+          "member", "groups", "permissions").nonStrings(
+          "readable", "writeable", "groupPermission").build(), types.toArray(
+          new Class[0]));
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -68,6 +72,6 @@ public class JsonJaxbContextResolver implements ContextResolver<JAXBContext>
   private JAXBContext context;
 
   /** Field description */
-  private List<Class> types = Arrays.asList(new Class[] { 
-          Group.class });
+  private List<Class> types = Arrays.asList(new Class[] { Group.class,
+          Repository.class });
 }

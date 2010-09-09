@@ -46,6 +46,17 @@ public class HgConfig
    *
    * @return
    */
+  public String getHgBinary()
+  {
+    return hgBinary;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public File getRepositoryDirectory()
   {
     return repositoryDirectory;
@@ -68,6 +79,17 @@ public class HgConfig
    * Method description
    *
    *
+   * @param hgBinary
+   */
+  public void setHgBinary(String hgBinary)
+  {
+    this.hgBinary = hgBinary;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repositoryDirectory
    */
   public void setRepositoryDirectory(File repositoryDirectory)
@@ -79,6 +101,9 @@ public class HgConfig
 
   /** Field description */
   private File configDirectory;
+
+  /** Field description */
+  private String hgBinary = "hg";
 
   /** Field description */
   private File repositoryDirectory;

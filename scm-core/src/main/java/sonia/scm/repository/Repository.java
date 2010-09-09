@@ -7,9 +7,17 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.Util;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -21,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "repositories")
 @XmlType(propOrder =
 {
-  "type", "name", "contact", "description"
+  "type", "name", "contact", "description", "permissions"
 })
 public class Repository implements Serializable
 {
@@ -58,14 +66,21 @@ public class Repository implements Serializable
    * @param name
    * @param contact
    * @param description
+   * @param permissions
    */
   public Repository(String type, String name, String contact,
-                    String description)
+                    String description, Permission... permissions)
   {
     this.type = type;
     this.name = name;
     this.contact = contact;
     this.description = description;
+    this.permissions = new ArrayList<Permission>();
+
+    if (Util.isNotEmpty(permissions))
+    {
+      this.permissions.addAll(Arrays.asList(permissions));
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -101,6 +116,17 @@ public class Repository implements Serializable
   public String getName()
   {
     return name;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<Permission> getPermissions()
+  {
+    return permissions;
   }
 
   /**
@@ -153,6 +179,17 @@ public class Repository implements Serializable
    * Method description
    *
    *
+   * @param permissions
+   */
+  public void setPermissions(List<Permission> permissions)
+  {
+    this.permissions = permissions;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param type
    */
   public void setType(String type)
@@ -170,6 +207,9 @@ public class Repository implements Serializable
 
   /** Field description */
   private String name;
+
+  /** Field description */
+  private List<Permission> permissions;
 
   /** Field description */
   private String type;
