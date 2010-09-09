@@ -45,10 +45,11 @@ public class GroupResource extends AbstractResource<Group>
   {
     groupStore = new LinkedHashMap<String, Group>();
     groupStore.put("csit",
-                   new Group("csit", "th", "merlec", "hopper", "oelkersd",
-                             "sdorra", "gollnict"));
+                   new Group("static", "csit", "th", "merlec", "hopper",
+                             "oelkersd", "sdorra", "gollnict"));
     groupStore.put("devel",
-                   new Group("devel", "sdorra", "th", "merlec", "oelkersd"));
+                   new Group("static", "devel", "sdorra", "th", "merlec",
+                             "oelkersd"));
   }
 
   //~--- methods --------------------------------------------------------------

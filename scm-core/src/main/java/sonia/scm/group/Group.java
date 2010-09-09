@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "name", "members" })
+@XmlType(propOrder = { "type", "name", "members" })
 public class Group implements Serializable
 {
 
@@ -51,10 +51,13 @@ public class Group implements Serializable
    * Constructs ...
    *
    *
+   *
+   * @param type
    * @param name
    */
-  public Group(String name)
+  public Group(String type, String name)
   {
+    this.type = type;
     this.name = name;
     this.members = new ArrayList<String>();
   }
@@ -63,11 +66,14 @@ public class Group implements Serializable
    * Constructs ...
    *
    *
+   *
+   * @param type
    * @param name
    * @param members
    */
-  public Group(String name, List<String> members)
+  public Group(String type, String name, List<String> members)
   {
+    this.type = type;
     this.name = name;
     this.members = members;
   }
@@ -76,11 +82,14 @@ public class Group implements Serializable
    * Constructs ...
    *
    *
+   *
+   * @param type
    * @param name
    * @param members
    */
-  public Group(String name, String... members)
+  public Group(String type, String name, String... members)
   {
+    this.type = type;
     this.name = name;
     this.members = new ArrayList<String>();
 
@@ -182,6 +191,17 @@ public class Group implements Serializable
     return name;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getType()
+  {
+    return type;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -206,12 +226,25 @@ public class Group implements Serializable
     this.name = name;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   */
+  public void setType(String type)
+  {
+    this.type = type;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlElement(name = "members")
   private List<String> members;
 
   /** Field description */
   private String name;
+
+  /** Field description */
+  private String type;
 }
