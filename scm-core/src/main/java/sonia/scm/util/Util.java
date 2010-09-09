@@ -10,6 +10,7 @@ package sonia.scm.util;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 
 import java.util.Collection;
@@ -46,6 +47,35 @@ public class Util
       {
         logger.log(Level.SEVERE, null, ex);
       }
+    }
+  }
+
+  /**
+   *   Method description
+   *
+   *
+   *   @param file
+   *
+   *   @throws IOException
+   */
+  public static void delete(File file) throws IOException
+  {
+    if (file.isDirectory())
+    {
+      File[] children = file.listFiles();
+
+      if (children != null)
+      {
+        for (File child : children)
+        {
+          delete(child);
+        }
+      }
+    }
+
+    if (!file.delete())
+    {
+      throw new IOException("could not delete file ".concat(file.getPath()));
     }
   }
 
