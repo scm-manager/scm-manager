@@ -58,6 +58,7 @@ public class ContextListener extends GuiceServletContextListener
       protected void configureServlets()
       {
         bind(Authenticator.class).to(DemoAuthenticator.class);
+        bind(SCMContextProvider.class).toInstance(SCMContext.getContext());
 
         Map<String, String> params = new HashMap<String, String>();
 
