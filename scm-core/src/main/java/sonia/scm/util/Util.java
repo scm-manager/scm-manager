@@ -12,6 +12,8 @@ package sonia.scm.util;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import java.util.Collection;
 import java.util.logging.Level;
@@ -47,6 +49,25 @@ public class Util
       {
         logger.log(Level.SEVERE, null, ex);
       }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param in
+   * @param out
+   *
+   * @throws IOException
+   */
+  public static void copy(InputStream in, OutputStream out) throws IOException
+  {
+    byte[] buffer = new byte[0xFFFF];
+
+    for (int len; (len = in.read(buffer)) != -1; )
+    {
+      out.write(buffer, 0, len);
     }
   }
 

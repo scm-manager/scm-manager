@@ -10,19 +10,25 @@
     <version>1.0-SNAPSHOT</version>
   </parent>
 
-  <groupId>sonia.scm.server</groupId>
-  <artifactId>scm-server-util</artifactId>
+  <groupId>sonia.scm</groupId>
+  <artifactId>scm-server-api</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>scm-server-util</name>
+  <name>scm-server-api</name>
 
   <dependencies>
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-core</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
 
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-cli</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
-
+    
   </dependencies>
 
 </project>

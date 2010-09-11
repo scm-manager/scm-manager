@@ -12,7 +12,8 @@
   <modules>
     <module>scm-core</module>
     <module>scm-cli</module>
-    <module>scm-server-util</module>
+    <module>scm-server-api</module>
+    <module>scm-server-jetty</module>
     <module>plugins</module>
     <module>scm-agent</module>
     <module>scm-webapp</module>
@@ -26,12 +27,11 @@
       <url>http://download.java.net/maven/2</url>
     </repository>
 
-  <repository>
-    <id>guice-maven</id>
-    <name>guice maven</name>
-    <url>http://guiceyfruit.googlecode.com/svn/repo/releases</url>
-  </repository>
-
+    <repository>
+      <id>guice-maven</id>
+      <name>guice maven</name>
+      <url>http://guiceyfruit.googlecode.com/svn/repo/releases</url>
+    </repository>
 
   </repositories>
 
