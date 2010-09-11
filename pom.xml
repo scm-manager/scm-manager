@@ -17,6 +17,7 @@
     <module>plugins</module>
     <module>scm-agent</module>
     <module>scm-webapp</module>
+    <module>scm-server</module>
   </modules>
 
   <repositories>

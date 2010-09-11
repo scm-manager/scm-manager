@@ -93,9 +93,9 @@ public class JettyServer implements Server
 
     wac.setContextPath(config.getContextPath());
     wac.setWar(webapp.getAbsolutePath());
-    wac.setExtractWAR(false);
-    server.setHandler(server);
-    server.setStopAtShutdown(true);
+    wac.setExtractWAR(true);
+    server.setHandler(wac);
+    //server.setStopAtShutdown(true);
 
     try
     {

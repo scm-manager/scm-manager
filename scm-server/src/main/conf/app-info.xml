@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : app-info.xml
+    Created on : September 11, 2010, 6:14 PM
+    Author     : sdorra
+    Description:
+        Purpose of the document follows.
+-->
+
+<app-info>
+
+  <name>${pom.name}</name>
+  <version>${pom.version}</version>
+  <appName>scm-webapp.war</appName>
+
+</app-info>

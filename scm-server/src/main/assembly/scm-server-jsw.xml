@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : scm-server-jsw.xml
+    Created on : September 10, 2010, 11:59 AM
+    Author     : sdorra
+    Description:
+        Purpose of the document follows.
+-->
+
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+
+  <id>jsw</id>
+
+  <formats>
+    <format>zip</format>
+    <format>tar.gz</format>
+    <format>tar.bz2</format>
+  </formats>
+
+  <includeBaseDirectory>true</includeBaseDirectory>
+  
+  <fileSets>
+    <fileSet>
+      <directory>target/appassembler/jsw/scm-server/bin</directory>
+      <filtered>false</filtered>
+      <outputDirectory>bin</outputDirectory>
+      <directoryMode>0755</directoryMode>
+    </fileSet>
+    <fileSet>
+      <directory>target/appassembler/jsw/scm-server/conf</directory>
+      <filtered>true</filtered>
+      <outputDirectory>conf</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>target/appassembler/jsw/scm-server/lib</directory>
+      <filtered>false</filtered>
+      <outputDirectory>lib</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>target/appassembler/jsw/scm-server/webapp</directory>
+      <filtered>false</filtered>
+      <outputDirectory>webapp</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>target</directory>
+      <filtered>false</filtered>
+      <excludes>
+        <exclude>**/*</exclude>
+      </excludes>
+      <outputDirectory>logs</outputDirectory>
+    </fileSet>
+  </fileSets>
+
+  <files>
+    <file>
+      <source>src/main/conf/app-info.xml</source>
+      <filtered>true</filtered>
+      <outputDirectory>conf</outputDirectory>
+    </file>
+  </files>
+  
+</assembly>
