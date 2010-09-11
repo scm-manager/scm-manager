@@ -16,8 +16,6 @@ import sonia.scm.group.Group;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 
-import javax.inject.Singleton;
-
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -26,7 +24,6 @@ import javax.ws.rs.core.MediaType;
  *
  * @author Sebastian Sdorra
  */
-@Singleton
 @Path("groups")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class GroupResource extends AbstractResource<Group>

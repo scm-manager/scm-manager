@@ -9,6 +9,8 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
+
 import sonia.scm.SCMContext;
 import sonia.scm.ScmState;
 import sonia.scm.User;
@@ -16,9 +18,6 @@ import sonia.scm.repository.RepositoryType;
 import sonia.scm.security.Authenticator;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -36,7 +35,6 @@ import javax.ws.rs.core.Response;
  *
  * @author Sebastian Sdorra
  */
-@Singleton
 @Path("authentication")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class AuthenticationResource

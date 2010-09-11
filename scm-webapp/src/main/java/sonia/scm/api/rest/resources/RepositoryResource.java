@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import javax.inject.Singleton;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -28,7 +27,6 @@ import javax.ws.rs.core.MediaType;
  *
  * @author Sebastian Sdorra
  */
-@Singleton
 @Path("repositories")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class RepositoryResource extends AbstractResource<Repository>
