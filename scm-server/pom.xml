@@ -76,12 +76,6 @@
                   <generatorConfigurations>
                     <generatorConfiguration>
                       <generator>jsw</generator>
-                      <includes>
-                        <include>linux-x86-32</include>
-                        <include>linux-x86-64</include>
-                        <include>windows-32</include>
-                        <include>windows-64</include>
-                      </includes>
                       <configuration>
                         <property>
                           <name>configuration.directory.in.classpath.first</name>

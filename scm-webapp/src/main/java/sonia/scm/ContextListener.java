@@ -15,6 +15,8 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 
 import sonia.scm.api.rest.UriExtensionsConfig;
+import sonia.scm.filter.GZipFilter;
+import sonia.scm.filter.StaticResourceFilter;
 import sonia.scm.security.Authenticator;
 import sonia.scm.security.DemoAuthenticator;
 
@@ -36,10 +38,29 @@ public class ContextListener extends GuiceServletContextListener
 {
 
   /** Field description */
-  public static final String REST_MAPPING = "/api/rest/*";
+  public static final String PATTERN_PAGE = "*.html";
+
+  /** Field description */
+  public static final String PATTERN_RESTAPI = "/api/rest/*";
+
+  /** Field description */
+  public static final String PATTERN_SCRIPT = "*.js";
+
+  /** Field description */
+  public static final String PATTERN_STYLESHEET = "*.css";
 
   /** Field description */
   public static final String REST_PACKAGE = "sonia.scm.api.rest";
+
+  /** Field description */
+  public static final String[] PATTERN_STATIC_RESOURCES = new String[] {
+                                                            PATTERN_SCRIPT,
+          PATTERN_STYLESHEET, "*.jpg", "*.gif", "*.png" };
+
+  /** Field description */
+  public static final String[] PATTERN_COMPRESSABLE = new String[] {
+                                                        PATTERN_SCRIPT,
+          PATTERN_STYLESHEET, "*.json", "*.xml", "*.txt" };
 
   //~--- get methods ----------------------------------------------------------
 
@@ -60,6 +81,12 @@ public class ContextListener extends GuiceServletContextListener
         bind(Authenticator.class).to(DemoAuthenticator.class);
         bind(SCMContextProvider.class).toInstance(SCMContext.getContext());
 
+        // filters
+        filter(PATTERN_PAGE,
+               PATTERN_STATIC_RESOURCES).through(StaticResourceFilter.class);
+        filter(PATTERN_PAGE, PATTERN_COMPRESSABLE).through(GZipFilter.class);
+
+        // jersey
         Map<String, String> params = new HashMap<String, String>();
 
         /*
@@ -74,7 +101,7 @@ public class ContextListener extends GuiceServletContextListener
         params.put(ServletContainer.RESOURCE_CONFIG_CLASS,
                    UriExtensionsConfig.class.getName());
         params.put(PackagesResourceConfig.PROPERTY_PACKAGES, REST_PACKAGE);
-        serve(REST_MAPPING).with(GuiceContainer.class, params);
+        serve(PATTERN_RESTAPI).with(GuiceContainer.class, params);
       }
     });
   }
