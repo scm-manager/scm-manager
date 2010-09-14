@@ -10,7 +10,10 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import sonia.scm.User;
+import sonia.scm.filter.HttpFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -18,13 +21,8 @@ import java.io.IOException;
 
 import java.security.Principal;
 
-
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +31,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-public class SecurityFilter implements Filter
+@Singleton
+public class SecurityFilter extends HttpFilter
 {
 
   /** Field description */
@@ -44,75 +43,39 @@ public class SecurityFilter implements Filter
   /**
    * Method description
    *
-   */
-  @Override
-  public void destroy()
-  {
-
-    // do nothing
-  }
-
-  /**
-   * Method description
    *
-   *
-   * @param req
-   * @param res
+   * @param request
+   * @param response
    * @param chain
    *
    * @throws IOException
    * @throws ServletException
    */
   @Override
-  public void doFilter(ServletRequest req, ServletResponse res,
-                       FilterChain chain)
+  protected void doFilter(HttpServletRequest request,
+                          HttpServletResponse response, FilterChain chain)
           throws IOException, ServletException
   {
-    if ((req instanceof HttpServletRequest)
-        && (res instanceof HttpServletResponse))
+    String uri =
+      request.getRequestURI().substring(request.getContextPath().length());
+
+    if (!uri.startsWith(URL_AUTHENTICATION))
     {
-      HttpServletRequest request = (HttpServletRequest) req;
-      String uri =
-        request.getRequestURI().substring(request.getContextPath().length());
+      User user = authenticator.getUser(request);
 
-      if (!uri.startsWith(URL_AUTHENTICATION))
+      if (user != null)
       {
-        User user = authenticator.getUser(request);
-
-        if (user != null)
-        {
-          chain.doFilter(new ScmHttpServletRequest(request, user), res);
-        }
-        else
-        {
-          ((HttpServletResponse) res).sendError(
-              HttpServletResponse.SC_UNAUTHORIZED);
-        }
+        chain.doFilter(new ScmHttpServletRequest(request, user), response);
       }
       else
       {
-        chain.doFilter(req, res);
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
       }
     }
     else
     {
-      throw new ServletException("request is not an HttpServletRequest");
+      chain.doFilter(request, response);
     }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param filterConfig
-   *
-   * @throws ServletException
-   */
-  @Override
-  public void init(FilterConfig filterConfig) throws ServletException
-  {
-
-    // do nothing
   }
 
   //~--- inner classes --------------------------------------------------------

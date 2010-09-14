@@ -11,6 +11,8 @@ package sonia.scm.filter;
 
 import com.google.inject.Singleton;
 
+import sonia.scm.util.WebUtil;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
@@ -44,9 +46,7 @@ public class GZipFilter extends HttpFilter
                           HttpServletResponse response, FilterChain chain)
           throws IOException, ServletException
   {
-    String ae = request.getHeader("accept-encoding");
-
-    if ((ae != null) && (ae.indexOf("gzip") != -1))
+    if (WebUtil.isGzipSupported(request))
     {
       GZipResponseWrapper wrappedResponse = new GZipResponseWrapper(response);
 

@@ -40,6 +40,9 @@ public class WebUtil
     "Tue, 09 Apr 1985 10:00:00 GMT";
 
   /** Field description */
+  public static final String HEADER_ACCEPTENCODING = "Accept-Encoding";
+
+  /** Field description */
   public static final String HEADER_CACHECONTROL = "Cache-Control";
 
   /** Field description */
@@ -238,7 +241,7 @@ public class WebUtil
    */
   public static boolean isGzipSupported(HttpServletRequest request)
   {
-    String enc = request.getHeader("Accept-Encoding");
+    String enc = request.getHeader(HEADER_ACCEPTENCODING);
 
     return (enc != null) && enc.contains("gzip");
   }

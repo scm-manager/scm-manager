@@ -19,6 +19,7 @@ import sonia.scm.filter.GZipFilter;
 import sonia.scm.filter.StaticResourceFilter;
 import sonia.scm.security.Authenticator;
 import sonia.scm.security.DemoAuthenticator;
+import sonia.scm.security.SecurityFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -85,6 +86,7 @@ public class ContextListener extends GuiceServletContextListener
         filter(PATTERN_PAGE,
                PATTERN_STATIC_RESOURCES).through(StaticResourceFilter.class);
         filter(PATTERN_PAGE, PATTERN_COMPRESSABLE).through(GZipFilter.class);
+        filter(PATTERN_RESTAPI).through(SecurityFilter.class);
 
         // jersey
         Map<String, String> params = new HashMap<String, String>();
