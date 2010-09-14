@@ -5,7 +5,7 @@
 
 
 
-package sonia.scm.group;
+package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -15,8 +15,10 @@ import sonia.scm.Handler;
  *
  * @author Sebastian Sdorra
  */
-public interface GroupManager extends Handler<Group, GroupException>
+public interface RepositoryHandler
+        extends Handler<Repository, RepositoryException>
 {
+
 
   /**
    * Method description
@@ -24,5 +26,13 @@ public interface GroupManager extends Handler<Group, GroupException>
    *
    * @return
    */
-  public String getType();
+  public boolean isConfigured();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public RepositoryType getType();
 }

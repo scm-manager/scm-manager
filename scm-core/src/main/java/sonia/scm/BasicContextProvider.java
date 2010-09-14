@@ -10,8 +10,8 @@ package sonia.scm;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.group.GroupManager;
+import sonia.scm.repository.BasicRepositoryManager;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryType;
 import sonia.scm.util.ServiceUtil;
 import sonia.scm.util.Util;
 
@@ -20,7 +20,6 @@ import sonia.scm.util.Util;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,10 +67,7 @@ public class BasicContextProvider implements SCMContextProvider
       manager.close();
     }
 
-    for (RepositoryManager manager : repositoryManagerMap.values())
-    {
-      manager.close();
-    }
+    repositoryManager.close();
   }
 
   /**
@@ -82,7 +78,7 @@ public class BasicContextProvider implements SCMContextProvider
   public void init()
   {
     loadGroupManagers();
-    loadRepositoryManagers();
+    loadRepositoryManager();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -117,26 +113,13 @@ public class BasicContextProvider implements SCMContextProvider
    * Method description
    *
    *
-   * @param type
    *
    * @return
    */
   @Override
-  public RepositoryManager getRepositoryManager(String type)
+  public RepositoryManager getRepositoryManager()
   {
-    return repositoryManagerMap.get(type);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public List<RepositoryType> getRepositoryTypes()
-  {
-    return repositoryTypes;
+    return repositoryManager;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -194,20 +177,16 @@ public class BasicContextProvider implements SCMContextProvider
    * Method description
    *
    */
-  private void loadRepositoryManagers()
+  private void loadRepositoryManager()
   {
-    repositoryManagerMap = new HashMap<String, RepositoryManager>();
-    repositoryTypes = new ArrayList<RepositoryType>();
+    repositoryManager = ServiceUtil.getService(RepositoryManager.class);
 
-    List<RepositoryManager> repositoryManagers =
-      ServiceUtil.getServices(RepositoryManager.class);
-
-    for (RepositoryManager manager : repositoryManagers)
+    if (repositoryManager == null)
     {
-      manager.init(this);
-      repositoryManagerMap.put(manager.getType().getName(), manager);
-      repositoryTypes.add(manager.getType());
+      repositoryManager = new BasicRepositoryManager();
     }
+
+    repositoryManager.init(this);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -219,8 +198,5 @@ public class BasicContextProvider implements SCMContextProvider
   private Map<String, GroupManager> groupManagerMap;
 
   /** Field description */
-  private Map<String, RepositoryManager> repositoryManagerMap;
-
-  /** Field description */
-  private List<RepositoryType> repositoryTypes;
+  private RepositoryManager repositoryManager;
 }

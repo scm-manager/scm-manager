@@ -17,6 +17,7 @@ import sonia.scm.repository.RepositoryType;
 
 import java.io.Closeable;
 import java.io.File;
+
 import java.util.Collection;
 
 /**
@@ -57,16 +58,7 @@ public interface SCMContextProvider extends Closeable
    *
    *
    *
-   * @param type
    * @return
    */
-  public RepositoryManager getRepositoryManager(String type);
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<RepositoryType> getRepositoryTypes();
+  public RepositoryManager getRepositoryManager();
 }

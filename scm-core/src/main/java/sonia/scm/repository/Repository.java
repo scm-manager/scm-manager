@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "repositories")
 @XmlType(propOrder =
 {
-  "type", "name", "contact", "description", "permissions"
+  "id", "type", "name", "contact", "description", "permissions"
 })
 public class Repository implements Serializable
 {
@@ -49,11 +49,14 @@ public class Repository implements Serializable
    * Constructs ...
    *
    *
+   *
+   * @param id
    * @param type
    * @param name
    */
-  public Repository(String type, String name)
+  public Repository(String id, String type, String name)
   {
+    this.id = id;
     this.type = type;
     this.name = name;
   }
@@ -62,15 +65,18 @@ public class Repository implements Serializable
    * Constructs ...
    *
    *
+   *
+   * @param id
    * @param type
    * @param name
    * @param contact
    * @param description
    * @param permissions
    */
-  public Repository(String type, String name, String contact,
+  public Repository(String id, String type, String name, String contact,
                     String description, Permission... permissions)
   {
+    this.id = id;
     this.type = type;
     this.name = name;
     this.contact = contact;
@@ -105,6 +111,17 @@ public class Repository implements Serializable
   public String getDescription()
   {
     return description;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getId()
+  {
+    return id;
   }
 
   /**
@@ -168,6 +185,17 @@ public class Repository implements Serializable
    * Method description
    *
    *
+   * @param id
+   */
+  public void setId(String id)
+  {
+    this.id = id;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param name
    */
   public void setName(String name)
@@ -204,6 +232,9 @@ public class Repository implements Serializable
 
   /** Field description */
   private String description;
+
+  /** Field description */
+  private String id;
 
   /** Field description */
   private String name;

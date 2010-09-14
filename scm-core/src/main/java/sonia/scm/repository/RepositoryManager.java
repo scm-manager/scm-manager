@@ -9,15 +9,20 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.Handler;
 import sonia.scm.ListenerSupport;
-import sonia.scm.Manager;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 public interface RepositoryManager
-        extends Manager<Repository, RepositoryException>, ListenerSupport<RepositoryListener>
+        extends Handler<Repository, RepositoryException>,
+                ListenerSupport<RepositoryListener>
 {
 
   /**
@@ -26,5 +31,5 @@ public interface RepositoryManager
    *
    * @return
    */
-  public RepositoryType getType();
+  public Collection<RepositoryType> getTypes();
 }

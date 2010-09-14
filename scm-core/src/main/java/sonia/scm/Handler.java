@@ -21,7 +21,7 @@ import java.util.Collection;
  * @param <T>
  * @param <E>
  */
-public interface Manager<T, E extends Exception> extends Initable, Closeable
+public interface Handler<T, E extends Exception> extends Initable, Closeable
 {
 
   /**
@@ -78,7 +78,7 @@ public interface Manager<T, E extends Exception> extends Initable, Closeable
    *
    * @return
    */
-  public T get(String name);
+  public T get(String id);
 
   /**
    * Method description
@@ -87,12 +87,4 @@ public interface Manager<T, E extends Exception> extends Initable, Closeable
    * @return
    */
   public Collection<T> getAll();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public boolean isConfigured();
 }

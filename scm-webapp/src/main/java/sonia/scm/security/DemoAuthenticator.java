@@ -75,7 +75,7 @@ public class DemoAuthenticator implements Authenticator
    *
    * @return
    */
-  @Override
+  @Override 
   public User getUser(HttpServletRequest request)
   {
     User user = null;

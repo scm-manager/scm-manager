@@ -17,7 +17,7 @@ import sonia.scm.repository.Repository;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-
+import java.util.UUID;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -45,29 +45,31 @@ public class RepositoryResource extends AbstractResource<Repository>
   {
     repositoryStore = new LinkedHashMap<String, Repository>();
     repositoryStore.put("sonia.lib",
-                        new Repository("hg", "sonia.lib", "csit@ostfalia.de",
-                                       "SONIA Library",
+                        new Repository(createId(), "hg", "sonia.lib",
+                                       "csit@ostfalia.de", "SONIA Library",
                                        new Permission("csit", true, true,
                                          true)));
     repositoryStore.put("sonia.misc",
-                        new Repository("hg", "sonia.misc", "csit@ostfalia.de",
+                        new Repository(createId(), "hg", "sonia.misc",
+                                       "csit@ostfalia.de",
                                        "SONIA Miscelanious",
                                        new Permission("csit", true, true,
                                          true)));
     repositoryStore.put("PWA",
-                        new Repository("svn", "PWA",
+                        new Repository(createId(), "svn", "PWA",
                                        "csit@fh-wolfenbuettel.de", "PWA",
                                        new Permission("th", true, true),
                                        new Permission("sdorra", true, true),
                                        new Permission("oelkersd", true,
                                          false)));
     repositoryStore.put("sonia.app",
-                        new Repository("hg", "sonia.app", "csit@ostfalia.de",
+                        new Repository(createId(), "hg", "sonia.app",
+                                       "csit@ostfalia.de",
                                        "SONIA Applications",
                                        new Permission("csit", true, true,
                                          true)));
     repositoryStore.put("sonia.webapps",
-                        new Repository("hg", "sonia.webapps",
+                        new Repository(createId(), "hg", "sonia.webapps",
                                        "csit@ostfalia.de",
                                        "SONIA WebApplications",
                                        new Permission("csit", true, true,
@@ -171,6 +173,19 @@ public class RepositoryResource extends AbstractResource<Repository>
   protected String getPathPart()
   {
     return PATH_PART;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private String createId()
+  {
+    return UUID.randomUUID().toString();
   }
 
   //~--- fields ---------------------------------------------------------------

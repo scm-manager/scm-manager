@@ -14,6 +14,7 @@ import com.google.inject.Inject;
 import sonia.scm.SCMContext;
 import sonia.scm.ScmState;
 import sonia.scm.User;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.security.Authenticator;
 
@@ -111,8 +112,7 @@ public class AuthenticationResource
 
     state.setUser(user);
     state.setRepositoryTypes(
-        SCMContext.getContext().getRepositoryTypes().toArray(
-          new RepositoryType[0]));
+        repositoryManger.getTypes().toArray(new RepositoryType[0]));
 
     return state;
   }
@@ -122,4 +122,8 @@ public class AuthenticationResource
   /** Field description */
   @Inject
   private Authenticator authenticator;
+
+  /** Field description */
+  @Inject
+  private RepositoryManager repositoryManger;
 }

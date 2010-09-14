@@ -36,7 +36,7 @@ import javax.xml.bind.JAXB;
  *
  * @author Sebastian Sdorra
  */
-public class HgRepositoryManager extends AbstractRepositoryManager
+public class HgRepositoryHandler implements RepositoryHandler
 {
 
   /** Field description */
@@ -59,7 +59,7 @@ public class HgRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private static final Logger logger =
-    Logger.getLogger(HgRepositoryManager.class.getName());
+    Logger.getLogger(HgRepositoryHandler.class.getName());
 
   //~--- methods --------------------------------------------------------------
 
@@ -111,7 +111,6 @@ public class HgRepositoryManager extends AbstractRepositoryManager
     File hgDirectory = new File(directory, ".hg");
 
     writeHgrc(repository, hgDirectory);
-    fireEvent(repository, RepositoryEvent.CREATE);
   }
 
   /**
@@ -132,7 +131,6 @@ public class HgRepositoryManager extends AbstractRepositoryManager
     if (new File(directory, ".hg").exists())
     {
       Util.delete(directory);
-      fireEvent(repository, RepositoryEvent.DELETE);
     }
     else
     {
@@ -187,7 +185,6 @@ public class HgRepositoryManager extends AbstractRepositoryManager
     if (hgDirectory.exists())
     {
       writeHgrc(repository, hgDirectory);
-      fireEvent(repository, RepositoryEvent.MODIFY);
     }
   }
 
@@ -235,7 +232,9 @@ public class HgRepositoryManager extends AbstractRepositoryManager
 
       if (hgDirectory.exists() && hgDirectory.isDirectory())
       {
-        repository = new Repository(TYPE_NAME, name);
+        repository = new Repository();
+        repository.setType(TYPE_NAME);
+        repository.setName(name);
         readHgrc(repository, hgDirectory);
       }
     }
@@ -357,6 +356,15 @@ public class HgRepositoryManager extends AbstractRepositoryManager
             repository.setPermissions(permissions);
           }
         }
+
+        INISection scmSection = iniConfig.getSection("scm");
+
+        if (scmSection != null)
+        {
+          String id = scmSection.getParameter("id");
+
+          repository.setId(id);
+        }
       }
       catch (IOException ex)
       {
@@ -402,9 +410,14 @@ public class HgRepositoryManager extends AbstractRepositoryManager
       appendPermission(section, permissions);
     }
 
+    INISection scmSection = new INISection("scm");
+
+    section.setParameter("id", repository.getId());
+
     INIConfiguration iniConfig = new INIConfiguration();
 
     iniConfig.addSection(section);
+    iniConfig.addSection(scmSection);
 
     File hgrc = new File(hgDirectory, "hgrc");
     INIConfigurationWriter writer = new INIConfigurationWriter();

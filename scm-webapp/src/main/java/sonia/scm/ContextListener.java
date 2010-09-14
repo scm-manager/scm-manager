@@ -16,10 +16,12 @@ import com.google.inject.servlet.ServletModule;
 
 import sonia.scm.api.rest.UriExtensionsConfig;
 import sonia.scm.filter.GZipFilter;
+import sonia.scm.filter.SecurityFilter;
 import sonia.scm.filter.StaticResourceFilter;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.security.Authenticator;
 import sonia.scm.security.DemoAuthenticator;
-import sonia.scm.security.SecurityFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -79,8 +81,12 @@ public class ContextListener extends GuiceServletContextListener
       @Override
       protected void configureServlets()
       {
+        SCMContextProvider context = SCMContext.getContext();
+
         bind(Authenticator.class).to(DemoAuthenticator.class);
-        bind(SCMContextProvider.class).toInstance(SCMContext.getContext());
+        bind(SCMContextProvider.class).toInstance(context);
+        bind(RepositoryManager.class).toInstance(
+            context.getRepositoryManager());
 
         // filters
         filter(PATTERN_PAGE,
