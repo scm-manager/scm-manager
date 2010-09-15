@@ -19,6 +19,8 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
                 console.debug( 'empty array, clear whole store' );
               }
               this.removeAll();
+            } else {
+              alert( action + ": " + response.responseText );
             }
           },
           scope: this
