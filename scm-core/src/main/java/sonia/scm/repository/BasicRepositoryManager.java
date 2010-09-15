@@ -169,11 +169,14 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
 
     for (RepositoryHandler handler : handlerMap.values())
     {
-      repository = handler.get(id);
-
-      if (repository != null)
+      if (handler.isConfigured())
       {
-        break;
+        repository = handler.get(id);
+
+        if (repository != null)
+        {
+          break;
+        }
       }
     }
 
@@ -193,11 +196,14 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
 
     for (RepositoryHandler handler : handlerMap.values())
     {
-      Collection<Repository> handlerRepositories = handler.getAll();
-
-      if (handlerRepositories != null)
+      if (handler.isConfigured())
       {
-        repositories.addAll(handlerRepositories);
+        Collection<Repository> handlerRepositories = handler.getAll();
+
+        if (handlerRepositories != null)
+        {
+          repositories.addAll(handlerRepositories);
+        }
       }
     }
 
@@ -224,10 +230,11 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
    *
    * @return
    *
-   * @throws RepositoryHandlerNotFoundException
+   *
+   * @throws RepositoryException
    */
   private RepositoryHandler getHandler(Repository repository)
-          throws RepositoryHandlerNotFoundException
+          throws RepositoryException
   {
     String type = repository.getType();
     RepositoryHandler handler = handlerMap.get(type);
@@ -236,6 +243,10 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
     {
       throw new RepositoryHandlerNotFoundException(
           "could not find handler for ".concat(type));
+    }
+    else if (!handler.isConfigured())
+    {
+      throw new RepositoryException("handler is not configured");
     }
 
     return handler;
