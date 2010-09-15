@@ -36,16 +36,20 @@ public abstract class AbstractResource<T>
    *
    *
    * @param item
+   *
+   * @throws Exception
    */
-  protected abstract void addItem(T item);
+  protected abstract void addItem(T item) throws Exception;
 
   /**
    * Method description
    *
    *
    * @param item
+   *
+   * @throws Exception
    */
-  protected abstract void removeItem(T item);
+  protected abstract void removeItem(T item) throws Exception;
 
   /**
    * Method description
@@ -53,8 +57,10 @@ public abstract class AbstractResource<T>
    *
    * @param name
    * @param item
+   *
+   * @throws Exception
    */
-  protected abstract void updateItem(String name, T item);
+  protected abstract void updateItem(String name, T item) throws Exception;
 
   //~--- get methods ----------------------------------------------------------
 
@@ -110,7 +116,14 @@ public abstract class AbstractResource<T>
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response add(@Context UriInfo uriInfo, T item)
   {
-    addItem(item);
+    try
+    {
+      addItem(item);
+    }
+    catch (Exception ex)
+    {
+      throw new WebApplicationException(ex);
+    }
 
     return Response.created(
         uriInfo.getAbsolutePath().resolve(
@@ -136,7 +149,14 @@ public abstract class AbstractResource<T>
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
 
-    removeItem(item);
+    try
+    {
+      removeItem(item);
+    }
+    catch (Exception ex)
+    {
+      throw new WebApplicationException(ex);
+    }
 
     return Response.noContent().build();
   }
@@ -159,14 +179,14 @@ public abstract class AbstractResource<T>
   public Response update(@Context UriInfo uriInfo,
                          @PathParam("name") String name, T item)
   {
-    T updateItem = getItem(name);
-
-    if (updateItem == null)
+    try
     {
-      throw new WebApplicationException(Response.Status.NOT_FOUND);
+      updateItem(name, item);
     }
-
-    updateItem(name, item);
+    catch (Exception ex)
+    {
+      throw new WebApplicationException(ex);
+    }
 
     return Response.created(
         uriInfo.getAbsolutePath().resolve(getId(item))).build();

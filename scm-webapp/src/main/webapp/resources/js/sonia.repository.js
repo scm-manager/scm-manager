@@ -53,7 +53,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     var repositoryStore = new Sonia.rest.JsonStore({
       url: restUrl + 'repositories.json',
       root: 'repositories',
-      fields: [ 'name', 'type', 'contact', 'description' ],
+      fields: [ 'id', 'name', 'type', 'contact', 'description' ],
       sortInfo: {
         field: 'name'
       }
@@ -71,7 +71,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     var config = {
       store: repositoryStore,
       colModel: repositoryColModel,
-      idField: 'name',
+      idField: 'id',
       searchField: 'name',
       editForm: 'repositoryEditForm',
       restAddUrl: restUrl + 'repositories.json',

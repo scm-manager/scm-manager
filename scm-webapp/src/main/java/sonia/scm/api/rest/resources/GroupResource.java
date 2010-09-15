@@ -9,6 +9,8 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Singleton;
+
 import sonia.scm.group.Group;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -25,6 +27,7 @@ import javax.ws.rs.core.MediaType;
  * @author Sebastian Sdorra
  */
 @Path("groups")
+@Singleton
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class GroupResource extends AbstractResource<Group>
 {

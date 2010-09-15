@@ -9,15 +9,18 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.Permission;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RepositoryManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.UUID;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -28,53 +31,13 @@ import javax.ws.rs.core.MediaType;
  * @author Sebastian Sdorra
  */
 @Path("repositories")
+@Singleton
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class RepositoryResource extends AbstractResource<Repository>
 {
 
   /** Field description */
   public static final String PATH_PART = "repositories";
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public RepositoryResource()
-  {
-    repositoryStore = new LinkedHashMap<String, Repository>();
-    repositoryStore.put("sonia.lib",
-                        new Repository(createId(), "hg", "sonia.lib",
-                                       "csit@ostfalia.de", "SONIA Library",
-                                       new Permission("csit", true, true,
-                                         true)));
-    repositoryStore.put("sonia.misc",
-                        new Repository(createId(), "hg", "sonia.misc",
-                                       "csit@ostfalia.de",
-                                       "SONIA Miscelanious",
-                                       new Permission("csit", true, true,
-                                         true)));
-    repositoryStore.put("PWA",
-                        new Repository(createId(), "svn", "PWA",
-                                       "csit@fh-wolfenbuettel.de", "PWA",
-                                       new Permission("th", true, true),
-                                       new Permission("sdorra", true, true),
-                                       new Permission("oelkersd", true,
-                                         false)));
-    repositoryStore.put("sonia.app",
-                        new Repository(createId(), "hg", "sonia.app",
-                                       "csit@ostfalia.de",
-                                       "SONIA Applications",
-                                       new Permission("csit", true, true,
-                                         true)));
-    repositoryStore.put("sonia.webapps",
-                        new Repository(createId(), "hg", "sonia.webapps",
-                                       "csit@ostfalia.de",
-                                       "SONIA WebApplications",
-                                       new Permission("csit", true, true,
-                                         true)));
-  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -83,11 +46,15 @@ public class RepositoryResource extends AbstractResource<Repository>
    *
    *
    * @param item
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
   protected void addItem(Repository item)
+          throws RepositoryException, IOException
   {
-    repositoryStore.put(item.getName(), item);
+    repositoryManager.create(item);
   }
 
   /**
@@ -95,11 +62,15 @@ public class RepositoryResource extends AbstractResource<Repository>
    *
    *
    * @param item
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
   protected void removeItem(Repository item)
+          throws RepositoryException, IOException
   {
-    repositoryStore.remove(item.getName());
+    repositoryManager.delete(item);
   }
 
   /**
@@ -108,14 +79,15 @@ public class RepositoryResource extends AbstractResource<Repository>
    *
    * @param name
    * @param item
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
   protected void updateItem(String name, Repository item)
+          throws RepositoryException, IOException
   {
-    Repository repository = repositoryStore.get(name);
-
-    repository.setContact(item.getContact());
-    repository.setDescription(item.getDescription());
+    repositoryManager.modify(item);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -129,7 +101,7 @@ public class RepositoryResource extends AbstractResource<Repository>
   @Override
   protected Repository[] getAllItems()
   {
-    Collection<Repository> repositoryCollection = repositoryStore.values();
+    Collection<Repository> repositoryCollection = repositoryManager.getAll();
 
     return repositoryCollection.toArray(
         new Repository[repositoryCollection.size()]);
@@ -146,21 +118,22 @@ public class RepositoryResource extends AbstractResource<Repository>
   @Override
   protected String getId(Repository item)
   {
-    return item.getName();
+    return item.getId();
   }
 
   /**
    * Method description
    *
    *
-   * @param name
+   *
+   * @param id
    *
    * @return
    */
   @Override
-  protected Repository getItem(String name)
+  protected Repository getItem(String id)
   {
-    return repositoryStore.get(name);
+    return repositoryManager.get(id);
   }
 
   /**
@@ -175,21 +148,9 @@ public class RepositoryResource extends AbstractResource<Repository>
     return PATH_PART;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private String createId()
-  {
-    return UUID.randomUUID().toString();
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private HashMap<String, Repository> repositoryStore;
+  @Inject
+  private RepositoryManager repositoryManager;
 }
