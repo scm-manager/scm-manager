@@ -95,11 +95,14 @@ Ext.onReady(function(){
     },{
       title: 'Config',
       items: [{
-        label: 'Repositories',
-        fn: null
+        label: 'General',
+        fn: function(){ console.debug( 'General Config' ); }
+      },{
+        label: 'Repository Types',
+        fn: function(){ console.debug( 'Repository Type Config' ); }
       },{
         label: 'Server',
-        fn: null
+        fn: function(){ console.debug( 'Server Config' ); }
       }]
     }]);
   }
