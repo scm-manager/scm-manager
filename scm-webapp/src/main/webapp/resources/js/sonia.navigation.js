@@ -6,7 +6,7 @@
 
 Ext.ns('Sonia.navigation');
 
-Sonia.navigation.NavPanel = Ext.extend(Ext.Panel, {
+Sonia.navigation.NavSection = Ext.extend(Ext.Panel, {
 
   data: null,
 
@@ -25,7 +25,7 @@ Sonia.navigation.NavPanel = Ext.extend(Ext.Panel, {
     }
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.navigation.NavPanel.superclass.initComponent.apply(this, arguments);
+    Sonia.navigation.NavSection.superclass.initComponent.apply(this, arguments);
 
   },
 
@@ -35,7 +35,12 @@ Sonia.navigation.NavPanel = Ext.extend(Ext.Panel, {
     var prefix = this.id + '-nav-item-';
     if ( id != null && id.indexOf(prefix) == 0 ){
       var i = parseInt( id.substring( prefix.length ) );
-      this.data[i].fn();
+      var fn = this.data[i].fn;
+      if ( Ext.isFunction( fn ) ){
+        fn();
+      } else if ( debug ){
+        console.debug('fn at "' +  this.data[i].label + '" is not a function');
+      }
     }
   },
 
@@ -59,6 +64,54 @@ Sonia.navigation.NavPanel = Ext.extend(Ext.Panel, {
       dh.append(list, links);
       list.on('click', this.onItemClick, this);
     }
+  }
+
+});
+
+Ext.reg('navSection', Sonia.navigation.NavSection);
+
+Sonia.navigation.NavPanel = Ext.extend(Ext.Panel, {
+
+  sections: null,
+
+  initComponent: function(){
+
+    var config = {
+      listeners: {
+        afterrender: {
+          fn: this.renderSections,
+          scope: this
+        }
+      }
+    };
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.navigation.NavSection.superclass.initComponent.apply(this, arguments);
+  },
+
+  renderSections: function(){
+    if ( this.sections != null ){
+      this.addSections( this.sections );
+    }
+  },
+
+  addSections: function(sections){
+    if ( Ext.isArray( sections ) && sections.length > 0 ){
+      for ( var i=0; i<sections.length; i++ ){
+        this.addSection( sections[i] );
+      }
+    } else {
+      this.addSection( sections );
+    }
+    this.doLayout();
+  },
+
+  addSection: function(section){
+    this.add({
+      xtype: 'navSection',
+      title: section.title,
+      data: section.items
+    });
   }
 
 });

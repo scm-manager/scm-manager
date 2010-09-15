@@ -36,8 +36,9 @@ Ext.onReady(function(){
       height: 75
     }), {
       region: 'west',
-      id: 'west-panel', // see Ext.getCmp() below
+      id: 'west', // see Ext.getCmp() below
       title: 'West',
+      xtype: 'navPanel',
       split: true,
       width: 200,
       minSize: 175,
@@ -81,19 +82,26 @@ Ext.onReady(function(){
   }
 
   function createMainMenu(){
-    var panel = Ext.getCmp('west-panel');
-    panel.add({
-      xtype: 'navPanel',
+    var panel = Ext.getCmp('west');
+    panel.addSections([{
       title: 'Main',
-      data: [{
+      items: [{
         label: 'Groups',
         fn: addGroupPanel
       },{
         label: 'Repositories',
         fn: addRepositoryPanel
       }]
-    });
-    panel.doLayout();
+    },{
+      title: 'Config',
+      items: [{
+        label: 'Repositories',
+        fn: null
+      },{
+        label: 'Server',
+        fn: null
+      }]
+    }]);
   }
 
   // create menu after login
