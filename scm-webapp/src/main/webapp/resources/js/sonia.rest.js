@@ -14,13 +14,14 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
         // fix jersey empty array problem
         exception: {
           fn: function(proxy, type, action, options, response, arg){
-            if ( action == 'read' && response.responseText == 'null' ){
+            var status = response.status;
+            if ( status == 200 && action == 'read' && response.responseText == 'null' ){
               if ( debug ){
                 console.debug( 'empty array, clear whole store' );
               }
               this.removeAll();
             } else {
-              alert( action + ": " + response.responseText );
+              alert( action + "(" + status + "): " + response.responseText );
             }
           },
           scope: this
