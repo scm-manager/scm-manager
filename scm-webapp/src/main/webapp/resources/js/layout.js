@@ -43,22 +43,7 @@ Ext.onReady(function(){
       minSize: 175,
       maxSize: 400,
       collapsible: true,
-      margins: '0 0 0 5',
-      layout: {
-        type: 'accordion',
-        animate: true
-      },
-      items: [{
-        contentEl: 'west',
-        title: 'Navigation',
-        border: false,
-        iconCls: 'nav' // see the HEAD section for style used
-      }, {
-        title: 'Settings',
-        contentEl: 'settings',
-        border: false,
-        iconCls: 'settings'
-      }]
+      margins: '0 0 0 5'
     },
     new Ext.BoxComponent({
       region: 'south',
@@ -96,21 +81,19 @@ Ext.onReady(function(){
   }
 
   function createMainMenu(){
-    var menu = Ext.get( 'main-menu' );
-    
-    var groupsLink = menu.createChild({
-      tag: 'li',
-      html: 'Groups',
-      style: 'cursor: pointer;'
+    var panel = Ext.getCmp('west-panel');
+    panel.add({
+      xtype: 'navPanel',
+      title: 'Main',
+      data: [{
+        label: 'Groups',
+        fn: addGroupPanel
+      },{
+        label: 'Repositories',
+        fn: addRepositoryPanel
+      }]
     });
-    groupsLink.on('click', addGroupPanel);
-
-    var repositoryLink = menu.createChild({
-      tag: 'li',
-      html: 'Repositories',
-      style: 'cursor: pointer;'
-    });
-    repositoryLink.on('click', addRepositoryPanel);
+    panel.doLayout();
   }
 
   // create menu after login
