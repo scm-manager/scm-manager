@@ -274,7 +274,10 @@ public class HgRepositoryHandler implements RepositoryHandler
 
         if (repository != null)
         {
-          repositories.add(repository);
+          if (Util.isNotEmpty(repository.getId()))
+          {
+            repositories.add(repository);
+          }
         }
       }
     }
