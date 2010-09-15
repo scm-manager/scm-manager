@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -85,6 +86,8 @@ public class HgRepositoryHandler implements RepositoryHandler
   public void create(Repository repository)
           throws RepositoryException, IOException
   {
+    repository.setId(UUID.randomUUID().toString());
+
     File directory = getDirectory(repository);
 
     if (directory.exists())
@@ -216,17 +219,17 @@ public class HgRepositoryHandler implements RepositoryHandler
    * Method description
    *
    *
-   * @param name
+   * @param id
    *
    * @return
    */
   @Override
-  public Repository get(String name)
+  public Repository get(String id)
   {
     Repository repository = null;
-    File directory = getDirectory(name);
+    File[] directories = config.getRepositoryDirectory().listFiles();
 
-    if (directory.exists() && directory.isDirectory())
+    for (File directory : directories)
     {
       File hgDirectory = new File(directory, ".hg");
 
@@ -234,8 +237,17 @@ public class HgRepositoryHandler implements RepositoryHandler
       {
         repository = new Repository();
         repository.setType(TYPE_NAME);
-        repository.setName(name);
+        repository.setName(directory.getName());
         readHgrc(repository, hgDirectory);
+
+        if (!id.equals(repository.getId()))
+        {
+          repository = null;
+        }
+        else
+        {
+          break;
+        }
       }
     }
 
@@ -258,7 +270,7 @@ public class HgRepositoryHandler implements RepositoryHandler
     {
       for (String repositoryName : repositoryNames)
       {
-        Repository repository = get(repositoryName);
+        Repository repository = buildRepository(repositoryName);
 
         if (repository != null)
         {
@@ -310,6 +322,35 @@ public class HgRepositoryHandler implements RepositoryHandler
 
     section.setParameter("allow_read", builder.getReadPermission());
     section.setParameter("allow_push", builder.getWritePermission());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   */
+  private Repository buildRepository(String name)
+  {
+    Repository repository = null;
+    File directory = getDirectory(name);
+
+    if (directory.exists() && directory.isDirectory())
+    {
+      File hgDirectory = new File(directory, ".hg");
+
+      if (hgDirectory.exists() && hgDirectory.isDirectory())
+      {
+        repository = new Repository();
+        repository.setType(TYPE_NAME);
+        repository.setName(name);
+        readHgrc(repository, hgDirectory);
+      }
+    }
+
+    return repository;
   }
 
   /**
@@ -412,7 +453,7 @@ public class HgRepositoryHandler implements RepositoryHandler
 
     INISection scmSection = new INISection("scm");
 
-    section.setParameter("id", repository.getId());
+    scmSection.setParameter("id", repository.getId());
 
     INIConfiguration iniConfig = new INIConfiguration();
 
@@ -431,13 +472,13 @@ public class HgRepositoryHandler implements RepositoryHandler
    * Method description
    *
    *
-   * @param name
+   * @param id
    *
    * @return
    */
-  private File getDirectory(String name)
+  private File getDirectory(String id)
   {
-    return new File(config.getRepositoryDirectory(), name);
+    return new File(config.getRepositoryDirectory(), id);
   }
 
   /**
@@ -450,7 +491,7 @@ public class HgRepositoryHandler implements RepositoryHandler
    */
   private File getDirectory(Repository repository)
   {
-    return getDirectory(repository.getName());
+    return new File(config.getRepositoryDirectory(), repository.getName());
   }
 
   //~--- fields ---------------------------------------------------------------
