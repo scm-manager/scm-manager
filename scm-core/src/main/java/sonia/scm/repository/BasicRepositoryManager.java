@@ -214,6 +214,20 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
    * Method description
    *
    *
+   * @param type
+   *
+   * @return
+   */
+  @Override
+  public RepositoryHandler getHandler(String type)
+  {
+    return handlerMap.get(type);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   @Override

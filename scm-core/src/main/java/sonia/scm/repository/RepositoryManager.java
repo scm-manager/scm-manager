@@ -29,6 +29,16 @@ public interface RepositoryManager
    * Method description
    *
    *
+   * @param type
+   *
+   * @return
+   */
+  public RepositoryHandler getHandler(String type);
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   public Collection<RepositoryType> getTypes();
