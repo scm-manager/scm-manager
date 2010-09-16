@@ -35,14 +35,7 @@ public abstract class AbstractResourceServlet extends HttpServlet
   /** Field description */
   private static final long serialVersionUID = -7703282364120349053L;
 
-  public AbstractResourceServlet()
-  {
-    System.out.println("CONSTRUCT !!!");
-  }
-
   //~--- methods --------------------------------------------------------------
-
-
 
   /**
    * Method description
@@ -77,8 +70,6 @@ public abstract class AbstractResourceServlet extends HttpServlet
   @Override
   public void init() throws ServletException
   {
-    System.out.println("INIT !!!");
-
     ByteArrayOutputStream output = new ByteArrayOutputStream();
 
     try
@@ -161,8 +152,6 @@ public abstract class AbstractResourceServlet extends HttpServlet
                               HttpServletResponse response)
           throws ServletException, IOException
   {
-    System.out.println( "JA !!!" );
-
     response.setCharacterEncoding(getCharacterEncoding());
     response.setContentType(getContentType());
     response.setContentLength(content.length);
