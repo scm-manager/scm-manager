@@ -12,6 +12,7 @@
   <modules>
     <module>scm-core</module>
     <module>scm-cli</module>
+    <module>scm-web-api</module>
     <module>scm-server-api</module>
     <module>scm-server-jetty</module>
     <module>plugins</module>
