@@ -75,7 +75,7 @@ public class StaticResourceFilter extends HttpFilter
     String uri = request.getRequestURI();
     File resource = getResourceFile(request, uri);
 
-    if (resource.exists())
+    if (!resource.exists())
     {
       WebUtil.addETagHeader(response, resource);
       WebUtil.addStaticCacheControls(response, WebUtil.TIME_YEAR);
@@ -100,7 +100,7 @@ public class StaticResourceFilter extends HttpFilter
     }
     else
     {
-      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      chain.doFilter(request, response);
     }
   }
 

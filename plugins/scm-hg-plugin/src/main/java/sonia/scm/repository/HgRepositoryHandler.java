@@ -153,19 +153,19 @@ public class HgRepositoryHandler implements RepositoryHandler
     File baseDirectory = context.getBaseDirectory();
 
     AssertUtil.assertIsNotNull(baseDirectory);
+    configFile = new File(baseDirectory, CONFIG_FILE);
+    loadConfig();
+  }
 
-    File configFile = new File(baseDirectory, CONFIG_FILE);
-
+  /**
+   * Method description
+   *
+   */
+  public void loadConfig()
+  {
     if (configFile.exists())
     {
       config = JAXB.unmarshal(configFile, HgConfig.class);
-
-      if (config.getConfigDirectory() == null)
-      {
-        File configDirectory = new File(baseDirectory, DEFAULT_CONFIGPATH);
-
-        config.setConfigDirectory(configDirectory);
-      }
     }
   }
 
@@ -211,6 +211,15 @@ public class HgRepositoryHandler implements RepositoryHandler
     {
       readHgrc(repository, hgDirectory);
     }
+  }
+
+  /**
+   * Method description
+   *
+   */
+  public void storeConfig()
+  {
+    JAXB.marshal(config, configFile);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -291,6 +300,17 @@ public class HgRepositoryHandler implements RepositoryHandler
    *
    * @return
    */
+  public HgConfig getConfig()
+  {
+    return config;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
   public RepositoryType getType()
   {
@@ -307,6 +327,19 @@ public class HgRepositoryHandler implements RepositoryHandler
   public boolean isConfigured()
   {
     return config != null;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param config
+   */
+  public void setConfig(HgConfig config)
+  {
+    this.config = config;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -501,4 +534,7 @@ public class HgRepositoryHandler implements RepositoryHandler
 
   /** Field description */
   private HgConfig config;
+
+  /** Field description */
+  private File configFile;
 }

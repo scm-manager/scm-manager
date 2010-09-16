@@ -14,5 +14,15 @@
   <artifactId>scm-hg-plugin</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>scm-hg-plugin</name>
-  
+
+  <dependencies>
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-web-api</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+  </dependencies>
+ 
 </project>
