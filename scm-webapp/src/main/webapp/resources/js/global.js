@@ -5,7 +5,12 @@
 
 var debug = true;
 var state = null;
+
+// functions called after login
 var authCallbacks = [];
+
+// config form panels
+var repositoryConfigPanels = [];
 
 var repositoryTypeStore = new Ext.data.JsonStore({
   id: 1,

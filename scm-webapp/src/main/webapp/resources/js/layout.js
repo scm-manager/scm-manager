@@ -59,26 +59,27 @@ Ext.onReady(function(){
     tabPanel
   ]});
 
-  function addGroupPanel(){
+  function addTabPanel(id, xtype, title){
     tabPanel.add({
-      id: 't_group',
-      xtype: 'groupGrid',
-      title: 'Groups',
+      id: id,
+      xtype: xtype,
+      title: title,
       closable: true,
       autoScroll: true
     });
-    tabPanel.setActiveTab('t_group');
+    tabPanel.setActiveTab(id);
+  }
+
+  function addGroupPanel(){
+    addTabPanel('t_group', 'groupGrid', 'Groups');
   }
 
   function addRepositoryPanel(){
-    tabPanel.add({
-      id: 't_repository',
-      xtype: 'repositoryGrid',
-      title: 'Repositories',
-      closable: true,
-      autoScroll: true
-    });
-    tabPanel.setActiveTab('t_repository');
+    addTabPanel('t_repository', 'repositoryGrid', 'Repositories');
+  }
+
+  function addConfigPanel(){
+    addTabPanel('t_config', 'configPanel', 'Repository Config');
   }
 
   function createMainMenu(){
@@ -99,7 +100,7 @@ Ext.onReady(function(){
         fn: function(){ console.debug( 'General Config' ); }
       },{
         label: 'Repository Types',
-        fn: function(){ console.debug( 'Repository Type Config' ); }
+        fn: addConfigPanel
       },{
         label: 'Server',
         fn: function(){ console.debug( 'Server Config' ); }
