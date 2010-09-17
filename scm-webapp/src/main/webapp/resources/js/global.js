@@ -12,6 +12,10 @@ var authCallbacks = [];
 // config form panels
 var repositoryConfigPanels = [];
 
+function registerConfigPanel(panel){
+  repositoryConfigPanels.push( panel );
+}
+
 var repositoryTypeStore = new Ext.data.JsonStore({
   id: 1,
   fields: [ 'displayName', 'name' ]

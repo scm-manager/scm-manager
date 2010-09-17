@@ -35,9 +35,9 @@ public class HgConfig
    *
    * @return
    */
-  public File getConfigDirectory()
+  public String getBaseUrl()
   {
-    return configDirectory;
+    return baseUrl;
   }
 
   /**
@@ -68,11 +68,11 @@ public class HgConfig
    * Method description
    *
    *
-   * @param configDirectory
+   * @param baseUrl
    */
-  public void setConfigDirectory(File configDirectory)
+  public void setBaseUrl(String baseUrl)
   {
-    this.configDirectory = configDirectory;
+    this.baseUrl = baseUrl;
   }
 
   /**
@@ -100,7 +100,7 @@ public class HgConfig
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private File configDirectory;
+  private String baseUrl;
 
   /** Field description */
   private String hgBinary = "hg";

@@ -62,7 +62,14 @@ public class HgConfigResource
   @GET
   public HgConfig getConfig()
   {
-    return handler.getConfig();
+    HgConfig config = handler.getConfig();
+
+    if (config == null)
+    {
+      config = new HgConfig();
+    }
+
+    return config;
   }
 
   //~--- set methods ----------------------------------------------------------
