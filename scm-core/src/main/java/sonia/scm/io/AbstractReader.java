@@ -7,10 +7,6 @@
 
 package sonia.scm.io;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.util.Util;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.ByteArrayInputStream;
@@ -52,20 +48,7 @@ public abstract class AbstractReader<T>
    */
   public T read(byte[] data) throws IOException
   {
-    T result = null;
-    InputStream input = null;
-
-    try
-    {
-      input = new ByteArrayInputStream(data);
-      result = read(input);
-    }
-    finally
-    {
-      Util.close(input);
-    }
-
-    return result;
+    return read(new ByteArrayInputStream(data));
   }
 
   /**
@@ -95,19 +78,6 @@ public abstract class AbstractReader<T>
    */
   public T read(File file) throws IOException
   {
-    T result = null;
-    InputStream input = null;
-
-    try
-    {
-      input = new FileInputStream(file);
-      result = read(input);
-    }
-    finally
-    {
-      Util.close(input);
-    }
-
-    return result;
+    return read(new FileInputStream(file));
   }
 }

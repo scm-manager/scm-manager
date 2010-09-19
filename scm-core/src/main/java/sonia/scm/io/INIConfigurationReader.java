@@ -7,6 +7,10 @@
 
 package sonia.scm.io;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.Util;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.BufferedReader;
@@ -44,47 +48,55 @@ public class INIConfigurationReader extends AbstractReader<INIConfiguration>
   public INIConfiguration read(InputStream input) throws IOException
   {
     INIConfiguration configuration = new INIConfiguration();
-    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-    INISection section = null;
-    String line = reader.readLine();
 
-    while (line != null)
+    try
     {
-      line = line.trim();
+      BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+      INISection section = null;
+      String line = reader.readLine();
 
-      Matcher sectionMatcher = sectionPattern.matcher(line);
-
-      if (sectionMatcher.matches())
+      while (line != null)
       {
-        String name = sectionMatcher.group(1);
+        line = line.trim();
 
-        if (section != null)
+        Matcher sectionMatcher = sectionPattern.matcher(line);
+
+        if (sectionMatcher.matches())
         {
-          configuration.addSection(section);
+          String name = sectionMatcher.group(1);
+
+          if (section != null)
+          {
+            configuration.addSection(section);
+          }
+
+          section = new INISection(name);
+        }
+        else if ((section != null) &&!line.startsWith(";")
+                 &&!line.startsWith("#"))
+        {
+          int index = line.indexOf("=");
+
+          if (index > 0)
+          {
+            String key = line.substring(0, index).trim();
+            String value = line.substring(index + 1, line.length()).trim();
+
+            section.setParameter(key, value);
+          }
         }
 
-        section = new INISection(name);
+        line = reader.readLine();
       }
-      else if ((section != null) &&!line.startsWith(";")
-               &&!line.startsWith("#"))
+
+      if (section != null)
       {
-        int index = line.indexOf("=");
-
-        if (index > 0)
-        {
-          String key = line.substring(0, index).trim();
-          String value = line.substring(index + 1, line.length()).trim();
-
-          section.setParameter(key, value);
-        }
+        configuration.addSection(section);
       }
-
-      line = reader.readLine();
     }
-
-    if (section != null)
+    finally
     {
-      configuration.addSection(section);
+      Util.close(input);
     }
 
     return configuration;

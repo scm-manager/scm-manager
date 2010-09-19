@@ -49,17 +49,7 @@ public abstract class AbstractWriter<T>
    */
   public void write(T object, File file) throws IOException
   {
-    OutputStream output = null;
-
-    try
-    {
-      output = new FileOutputStream(file);
-      write(object, output);
-    }
-    finally
-    {
-      Util.close(output);
-    }
+    write(object, new FileOutputStream(file));
   }
 
   /**

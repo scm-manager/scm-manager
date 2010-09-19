@@ -7,6 +7,10 @@
 
 package sonia.scm.io;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.Util;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
@@ -33,13 +37,22 @@ public class INIConfigurationWriter extends AbstractWriter<INIConfiguration>
   public void write(INIConfiguration object, OutputStream output)
           throws IOException
   {
-    PrintWriter writer = new PrintWriter(output);
+    PrintWriter writer = null;
 
-    for (INISection section : object.getSections())
+    try
     {
-      writer.println(section.toString());
-    }
+      writer = new PrintWriter(output);
 
-    writer.flush();
+      for (INISection section : object.getSections())
+      {
+        writer.println(section.toString());
+      }
+
+      writer.flush();
+    }
+    finally
+    {
+      Util.close(writer);
+    }
   }
 }
