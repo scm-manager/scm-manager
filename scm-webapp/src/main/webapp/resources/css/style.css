@@ -11,6 +11,19 @@
    Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
 
+a {
+  color: #004077;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #004077;
+}
+
+a:visited {
+  color: #004077;
+}
+
 #header {
   margin: 5px;
 }

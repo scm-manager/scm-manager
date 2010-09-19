@@ -48,12 +48,14 @@ Ext.reg('repositoryEditForm', Sonia.repository.EditForm);
 
 Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 
+  urlTemplate: '<a href="{0}" target="_blank">{0}</a>',
+
   initComponent: function(){
 
     var repositoryStore = new Sonia.rest.JsonStore({
       url: restUrl + 'repositories.json',
       root: 'repositories',
-      fields: [ 'id', 'name', 'type', 'contact', 'description' ],
+      fields: [ 'id', 'name', 'type', 'contact', 'description', 'creationDate', 'url' ],
       sortInfo: {
         field: 'name'
       }
@@ -64,7 +66,9 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         {header: 'Name', sortable: true, width: 100, dataIndex: 'name'},
         {header: 'Type', sortable: true, width: 50, dataIndex: 'type'},
         {header: 'Contact', sortable: true, width: 100, dataIndex: 'contact'},
-        {header: 'Description', sortable: true, dataIndex: 'description'}
+        {header: 'Description', sortable: true, dataIndex: 'description'},
+        {header: 'Creation date', sortable: true, dataIndex: 'creationDate'},
+        {header: 'Url', sortable: true, dataIndex: 'url', scope: this, renderer: this.renderUrl }
       ]
     });
 
@@ -82,6 +86,10 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Grid.superclass.initComponent.apply(this, arguments);
+  },
+
+  renderUrl: function(url){
+    return String.format( this.urlTemplate, url );
   }
 
 });

@@ -9,6 +9,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.util.DateAdapter;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -20,14 +21,18 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "repositories")
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder =
 {
   "id", "type", "name", "contact", "description", "creationDate", "url",
@@ -277,6 +282,7 @@ public class Repository implements Serializable
   private String contact;
 
   /** Field description */
+  @XmlJavaTypeAdapter(DateAdapter.class)
   private Date creationDate;
 
   /** Field description */
