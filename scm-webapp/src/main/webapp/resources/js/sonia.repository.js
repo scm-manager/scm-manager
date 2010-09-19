@@ -72,6 +72,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       store: repositoryStore,
       colModel: repositoryColModel,
       idField: 'id',
+      nameField: 'name',
       searchField: 'name',
       editForm: 'repositoryEditForm',
       restAddUrl: restUrl + 'repositories.json',

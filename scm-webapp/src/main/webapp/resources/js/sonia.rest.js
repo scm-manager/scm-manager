@@ -104,6 +104,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
   restEditUrlPattern: null,
   restRemoveUrlPattern: null,
   idField: null,
+  nameField: null,
   searchField: null,
   editForm: null,
   editWindowWidth: 300,
@@ -247,23 +248,24 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
   removeItem: function(){
     if ( this.selModel.hasSelection() ){
-      var id = this.selModel.getSelected().data[this.idField];
-
+      var selected = this.selModel.getSelected();
+      var id = selected.data[this.idField]
       var store = this.store;
       var url = String.format( this.restRemoveUrlPattern, id );
+      var name = this.nameField != null ? selected.data[this.nameField] : id;
 
       Ext.MessageBox.show({
         title: 'Remove Item',
-        msg: 'Remove Item "' + id + '"?',
+        msg: 'Remove Item "' + name + '"?',
         buttons: Ext.MessageBox.OKCANCEL,
         icon: Ext.MessageBox.QUESTION,
         fn: function(result){
-
-          if ( debug ){
-            console.debug( 'remove item ' + id );
-          }
-
           if ( result == 'ok' ){
+
+            if ( debug ){
+              console.debug( 'remove item' );
+            }
+            
             Ext.Ajax.request({
               url: url,
               method: 'DELETE',
