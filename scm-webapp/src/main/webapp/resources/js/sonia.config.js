@@ -73,6 +73,7 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
         buttons: [{
           text: 'Save',
           scope: this,
+          formBind: true, 
           handler: this.submitForm
         },{
           text: 'Reset',
