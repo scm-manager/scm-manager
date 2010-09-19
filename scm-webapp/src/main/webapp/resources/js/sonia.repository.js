@@ -49,6 +49,7 @@ Ext.reg('repositoryEditForm', Sonia.repository.EditForm);
 Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 
   urlTemplate: '<a href="{0}" target="_blank">{0}</a>',
+  mailtoTemplate: '<a href="mailto: {0}">{0}</a>',
 
   initComponent: function(){
 
@@ -64,11 +65,11 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     var repositoryColModel = new Ext.grid.ColumnModel({
       columns: [
         {header: 'Name', sortable: true, width: 100, dataIndex: 'name'},
-        {header: 'Type', sortable: true, width: 50, dataIndex: 'type'},
-        {header: 'Contact', sortable: true, width: 100, dataIndex: 'contact'},
+        {header: 'Type', sortable: true, width: 50, dataIndex: 'type', renderer: this.renderRepositoryType},
+        {header: 'Contact', sortable: true, width: 80, dataIndex: 'contact', scope: this, renderer: this.renderMailto},
         {header: 'Description', sortable: true, dataIndex: 'description'},
-        {header: 'Creation date', sortable: true, dataIndex: 'creationDate'},
-        {header: 'Url', sortable: true, dataIndex: 'url', scope: this, renderer: this.renderUrl }
+        {header: 'Creation date', sortable: true, width: 60, dataIndex: 'creationDate'},
+        {header: 'Url', sortable: true, dataIndex: 'url', width: 120, scope: this, renderer: this.renderUrl}
       ]
     });
 
@@ -88,8 +89,18 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     Sonia.repository.Grid.superclass.initComponent.apply(this, arguments);
   },
 
+  renderRepositoryType: function(repositoryType){
+    return repositoryTypeStore.queryBy(function(rec){
+      return rec.data.name == repositoryType;
+    }).itemAt(0).data.displayName;
+  },
+
   renderUrl: function(url){
     return String.format( this.urlTemplate, url );
+  },
+
+  renderMailto: function(mail){
+    return String.format( this.mailtoTemplate, mail );
   }
 
 });
