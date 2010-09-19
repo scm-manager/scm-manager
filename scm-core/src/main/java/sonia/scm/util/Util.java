@@ -15,7 +15,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import java.util.Collection;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +30,9 @@ import java.util.logging.Logger;
  */
 public class Util
 {
+
+  /** Field description */
+  public static final String DATE_PATTERN = "yyyy-MM-dd HH-mm-ss";
 
   /** Field description */
   private static final Logger logger = Logger.getLogger(Util.class.getName());
@@ -98,6 +106,79 @@ public class Util
     {
       throw new IOException("could not delete file ".concat(file.getPath()));
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param date
+   * @param tz
+   *
+   * @return
+   */
+  public static String formatDate(Date date, TimeZone tz)
+  {
+    SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
+
+    if (tz != null)
+    {
+      sdf.setTimeZone(tz);
+    }
+
+    return sdf.format(date);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param date
+   *
+   * @return
+   */
+  public static String formatDate(Date date)
+  {
+    return formatDate(date, null);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param dateString
+   * @param tz
+   *
+   * @return
+   *
+   * @throws ParseException
+   */
+  public static Date parseDate(String dateString, TimeZone tz)
+          throws ParseException
+  {
+    SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
+
+    if (tz != null)
+    {
+      sdf.setTimeZone(tz);
+    }
+
+    return sdf.parse(dateString);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param dateString
+   *
+   * @return
+   *
+   * @throws ParseException
+   */
+  public static Date parseDate(String dateString) throws ParseException
+  {
+    return parseDate(dateString, null);
   }
 
   //~--- get methods ----------------------------------------------------------

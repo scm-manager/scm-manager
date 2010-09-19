@@ -24,8 +24,11 @@ import sonia.scm.util.Util;
 import java.io.File;
 import java.io.IOException;
 
+import java.text.ParseException;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -87,6 +90,8 @@ public class HgRepositoryHandler implements RepositoryHandler
           throws RepositoryException, IOException
   {
     repository.setId(UUID.randomUUID().toString());
+    repository.setUrl(buildUrl(repository.getName()));
+    repository.setCreationDate(new Date());
 
     File directory = getDirectory(repository);
 
@@ -113,7 +118,7 @@ public class HgRepositoryHandler implements RepositoryHandler
 
     File hgDirectory = new File(directory, ".hg");
 
-    writeHgrc(repository, hgDirectory);
+    storeRepository(repository, hgDirectory);
   }
 
   /**
@@ -187,7 +192,7 @@ public class HgRepositoryHandler implements RepositoryHandler
 
     if (hgDirectory.exists())
     {
-      writeHgrc(repository, hgDirectory);
+      storeRepository(repository, hgDirectory);
     }
   }
 
@@ -209,7 +214,7 @@ public class HgRepositoryHandler implements RepositoryHandler
 
     if (hgDirectory.exists())
     {
-      readHgrc(repository, hgDirectory);
+      loadRepository(repository, hgDirectory);
     }
   }
 
@@ -247,7 +252,7 @@ public class HgRepositoryHandler implements RepositoryHandler
         repository = new Repository();
         repository.setType(TYPE_NAME);
         repository.setName(directory.getName());
-        readHgrc(repository, hgDirectory);
+        loadRepository(repository, hgDirectory);
 
         if (!id.equals(repository.getId()))
         {
@@ -382,7 +387,8 @@ public class HgRepositoryHandler implements RepositoryHandler
         repository = new Repository();
         repository.setType(TYPE_NAME);
         repository.setName(name);
-        readHgrc(repository, hgDirectory);
+        repository.setUrl(buildUrl(name));
+        loadRepository(repository, hgDirectory);
       }
     }
 
@@ -393,10 +399,35 @@ public class HgRepositoryHandler implements RepositoryHandler
    * Method description
    *
    *
+   * @param name
+   *
+   * @return
+   */
+  private String buildUrl(String name)
+  {
+    String url = config.getBaseUrl();
+
+    if (Util.isNotEmpty(url))
+    {
+      if (!url.endsWith("/"))
+      {
+        url = url.concat("/");
+      }
+
+      url = url.concat(name);
+    }
+
+    return url;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repository
    * @param hgDirectory
    */
-  private void readHgrc(Repository repository, File hgDirectory)
+  private void loadRepository(Repository repository, File hgDirectory)
   {
     File hgrc = new File(hgDirectory, "hgrc");
 
@@ -441,6 +472,20 @@ public class HgRepositoryHandler implements RepositoryHandler
           String id = scmSection.getParameter("id");
 
           repository.setId(id);
+
+          String creationDateString = scmSection.getParameter("creationDate");
+
+          if (Util.isNotEmpty(creationDateString))
+          {
+            try
+            {
+              repository.setCreationDate(Util.parseDate(creationDateString));
+            }
+            catch (ParseException ex)
+            {
+              logger.log(Level.SEVERE, null, ex);
+            }
+          }
         }
       }
       catch (IOException ex)
@@ -459,7 +504,7 @@ public class HgRepositoryHandler implements RepositoryHandler
    *
    * @throws IOException
    */
-  private void writeHgrc(Repository repository, File hgDirectory)
+  private void storeRepository(Repository repository, File hgDirectory)
           throws IOException
   {
     INISection section = new INISection("web");
@@ -490,6 +535,13 @@ public class HgRepositoryHandler implements RepositoryHandler
     INISection scmSection = new INISection("scm");
 
     scmSection.setParameter("id", repository.getId());
+
+    Date creationDate = repository.getCreationDate();
+
+    if (creationDate != null)
+    {
+      scmSection.setParameter("creationDate", Util.formatDate(creationDate));
+    }
 
     INIConfiguration iniConfig = new INIConfiguration();
 

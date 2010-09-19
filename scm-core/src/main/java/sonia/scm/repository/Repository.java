@@ -17,6 +17,7 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -29,7 +30,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "repositories")
 @XmlType(propOrder =
 {
-  "id", "type", "name", "contact", "description", "permissions"
+  "id", "type", "name", "contact", "description", "creationDate", "url",
+  "permissions"
 })
 public class Repository implements Serializable
 {
@@ -108,6 +110,17 @@ public class Repository implements Serializable
    *
    * @return
    */
+  public Date getCreationDate()
+  {
+    return creationDate;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getDescription()
   {
     return description;
@@ -157,6 +170,17 @@ public class Repository implements Serializable
     return type;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getUrl()
+  {
+    return url;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -168,6 +192,17 @@ public class Repository implements Serializable
   public void setContact(String contact)
   {
     this.contact = contact;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param creationDate
+   */
+  public void setCreationDate(Date creationDate)
+  {
+    this.creationDate = creationDate;
   }
 
   /**
@@ -225,10 +260,24 @@ public class Repository implements Serializable
     this.type = type;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   */
+  public void setUrl(String url)
+  {
+    this.url = url;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private String contact;
+
+  /** Field description */
+  private Date creationDate;
 
   /** Field description */
   private String description;
@@ -244,4 +293,7 @@ public class Repository implements Serializable
 
   /** Field description */
   private String type;
+
+  /** Field description */
+  private String url;
 }
