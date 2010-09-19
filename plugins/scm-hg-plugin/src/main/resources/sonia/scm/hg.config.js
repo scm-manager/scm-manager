@@ -23,34 +23,39 @@ registerConfigPanel({
   }],
 
   onSubmit: function(values){
+    this.el.mask('Submit ...');
     Ext.Ajax.request({
       url: restUrl + 'config/repositories/hg.json',
       method: 'POST',
       jsonData: values,
       scope: this,
+      disableCaching: true,
       success: function(response){
-        alert( 'success' );
+        this.el.unmask();
       },
       failure: function(){
-        alert( 'failure' );
+        this.el.unmask();
       }
     });
   },
 
-  onLoad: function(){
-    //this.getEl().mask();
+  onLoad: function(el){
+    var tid = setTimeout( function(){ el.mask('Loading ...'); }, 100);
     Ext.Ajax.request({
       url: restUrl + 'config/repositories/hg.json',
       method: 'GET',
       scope: this,
+      disableCaching: true,
       success: function(response){
         var obj = Ext.decode(response.responseText);
         this.load(obj);
-        //this.getEl().unmask();
+        clearTimeout(tid);
+        el.unmask();
       },
       failure: function(){
-        alert( 'failure' );
-        //this.getEl().unmask();
+        el.unmask();
+        clearTimeout(tid);
+        alert('failure');
       }
     });
   }

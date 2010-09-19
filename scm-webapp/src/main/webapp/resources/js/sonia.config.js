@@ -61,6 +61,14 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
         layoutConfig : {
           labelSeparator : ''
         },
+        listeners: {
+          render: function(){
+            if ( this.onLoad != null && Ext.isFunction( this.onLoad ) ){
+              this.onLoad(this.el);
+            }
+          },
+          scope: this
+        },
         items: this.items,
         buttons: [{
           text: 'Save',
@@ -78,14 +86,13 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.config.ConfigForm.superclass.initComponent.apply(this, arguments);
-    
-    if ( this.onLoad != null && Ext.isFunction( this.onLoad ) ){
-      this.onLoad();
-    }
   },
 
   load: function(values){
-    this.getForm().loadRecord({success: true, data: values});
+    this.getForm().loadRecord({
+      success: true,
+      data: values
+    });
   },
 
   submitForm: function(){
