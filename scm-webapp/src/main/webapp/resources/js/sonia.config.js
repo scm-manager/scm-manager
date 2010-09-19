@@ -33,6 +33,9 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
 
   title: 'Config Form',
   items: null,
+  onSubmit: null,
+  getValues: null,
+  onCancel: null,
 
   initComponent: function(){
 
@@ -61,15 +64,41 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
         },
         items: this.items,
         buttons: [{
-          text: 'Save'
+          text: 'Save',
+          scope: this,
+          handler: this.submitForm
         },{
-          text: 'Cancel'
+          text: 'Cancel',
+          scope: this,
+          handler: this.cancel
         }]
       }]
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.config.ConfigForm.superclass.initComponent.apply(this, arguments);
+    
+    if ( this.onLoad != null && Ext.isFunction( this.onLoad ) ){
+      this.onLoad();
+    }
+  },
+
+  load: function(values){
+    this.getForm().loadRecord({success: true, data: values});
+  },
+
+  submitForm: function(){
+    var form = this.getForm();
+    if ( this.onSubmit != null && Ext.isFunction( this.onSubmit ) ){
+      this.onSubmit( form.getValues() );
+    }
+  },
+
+  cancel: function(){
+    var form = this.getForm();
+    if ( this.onCancel != null && Ext.isFunction( this.onCancel ) ){
+      this.onCancel(form);
+    }
   }
 
 });
