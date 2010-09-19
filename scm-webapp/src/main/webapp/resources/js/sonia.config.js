@@ -35,7 +35,6 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
   items: null,
   onSubmit: null,
   getValues: null,
-  onCancel: null,
 
   initComponent: function(){
 
@@ -68,9 +67,11 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
           scope: this,
           handler: this.submitForm
         },{
-          text: 'Cancel',
+          text: 'Reset',
           scope: this,
-          handler: this.cancel
+          handler: function(){
+            this.getForm().reset();
+          }
         }]
       }]
     };
@@ -91,13 +92,6 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
     var form = this.getForm();
     if ( this.onSubmit != null && Ext.isFunction( this.onSubmit ) ){
       this.onSubmit( form.getValues() );
-    }
-  },
-
-  cancel: function(){
-    var form = this.getForm();
-    if ( this.onCancel != null && Ext.isFunction( this.onCancel ) ){
-      this.onCancel(form);
     }
   }
 
