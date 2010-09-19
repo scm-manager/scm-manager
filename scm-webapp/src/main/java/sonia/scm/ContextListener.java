@@ -13,7 +13,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
-import javax.servlet.ServletContextEvent;
 
 import sonia.scm.util.Util;
 
@@ -22,9 +21,6 @@ import sonia.scm.util.Util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -33,18 +29,18 @@ import java.util.logging.Logger;
 public class ContextListener extends GuiceServletContextListener
 {
 
-  @Override
-  public void contextInitialized(ServletContextEvent servletContextEvent)
-  {
-    Logger logger = Logger.getLogger("");
-    logger.setLevel(Level.ALL);
-    ConsoleHandler handler = new ConsoleHandler();
-    handler.setLevel(Level.ALL);
-    logger.addHandler( handler );
-    super.contextInitialized(servletContextEvent);
-  }
-
-
+  /*
+   * @Override
+   * public void contextInitialized(ServletContextEvent servletContextEvent)
+   * {
+   * Logger logger = Logger.getLogger("");
+   * logger.setLevel(Level.ALL);
+   * ConsoleHandler handler = new ConsoleHandler();
+   * handler.setLevel(Level.ALL);
+   * logger.addHandler( handler );
+   * super.contextInitialized(servletContextEvent);
+   * }
+   */
 
   /**
    * Method description
