@@ -12,9 +12,10 @@ package sonia.scm.plugin;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import sonia.scm.ScmWebPlugin;
-import sonia.scm.ScmWebPluginContext;
 import sonia.scm.util.Util;
+import sonia.scm.web.ScmWebPlugin;
+import sonia.scm.web.ScmWebPluginContext;
+import sonia.scm.web.WebResource;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -60,13 +62,14 @@ public class ScriptResourceServlet extends AbstractResourceServlet
         "function sayPluginHello(){ alert('Plugin Hello !'); }".concat(
           System.getProperty("line.separator")).getBytes());
 
-    List<ScmWebPlugin> plugins = webPluginContext.getPlugins();
+    Collection<WebResource> scriptResources =
+      webPluginContext.getScriptResources();
 
-    if (Util.isNotEmpty(plugins))
+    if (Util.isNotEmpty(scriptResources))
     {
-      for (ScmWebPlugin plugin : plugins)
+      for (WebResource scriptResource : scriptResources)
       {
-        appendResource(stream, plugin);
+        appendResource(stream, scriptResource);
       }
     }
   }
@@ -92,15 +95,15 @@ public class ScriptResourceServlet extends AbstractResourceServlet
    *
    *
    * @param stream
-   * @param plugin
+   * @param script
    *
    * @throws IOException
    * @throws ServletException
    */
-  private void appendResource(OutputStream stream, ScmWebPlugin plugin)
+  private void appendResource(OutputStream stream, WebResource script)
           throws ServletException, IOException
   {
-    InputStream input = plugin.getScript();
+    InputStream input = script.getContent();
 
     if (input != null)
     {

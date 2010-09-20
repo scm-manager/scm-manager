@@ -5,7 +5,7 @@
 
 
 
-package sonia.scm;
+package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -22,19 +22,7 @@ import java.io.InputStream;
 public interface ScmWebPlugin
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Module[] getModules();
+public void contextInitialized( ScmWebPluginContext context );
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public InputStream getScript();
+public void contextDestroyed( ScmWebPluginContext context );
 }

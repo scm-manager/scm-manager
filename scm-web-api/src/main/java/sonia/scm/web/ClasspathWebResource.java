@@ -5,30 +5,28 @@
 
 
 
-package sonia.scm;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.util.ServiceUtil;
+package sonia.scm.web;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.List;
+import java.io.InputStream;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ScmWebPluginContext
+public class ClasspathWebResource implements WebResource
 {
 
   /**
    * Constructs ...
    *
+   *
+   * @param contentPath
    */
-  public ScmWebPluginContext()
+  public ClasspathWebResource(String contentPath)
   {
-    plugins = ServiceUtil.getServices(ScmWebPlugin.class);
+    this.contentPath = contentPath;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -39,13 +37,14 @@ public class ScmWebPluginContext
    *
    * @return
    */
-  public List<ScmWebPlugin> getPlugins()
+  @Override
+  public InputStream getContent()
   {
-    return plugins;
+    return ClasspathWebResource.class.getResourceAsStream(contentPath);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private List<ScmWebPlugin> plugins;
+  private String contentPath;
 }

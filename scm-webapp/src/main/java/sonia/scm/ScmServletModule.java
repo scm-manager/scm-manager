@@ -19,6 +19,7 @@ import sonia.scm.plugin.ScriptResourceServlet;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.security.Authenticator;
 import sonia.scm.security.DemoAuthenticator;
+import sonia.scm.web.ScmWebPluginContext;
 
 //~--- JDK imports ------------------------------------------------------------
 

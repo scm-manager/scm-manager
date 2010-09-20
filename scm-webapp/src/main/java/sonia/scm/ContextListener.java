@@ -14,13 +14,18 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import sonia.scm.util.ServiceUtil;
 import sonia.scm.util.Util;
+import sonia.scm.web.ScmWebPlugin;
+import sonia.scm.web.ScmWebPluginContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+
+import javax.servlet.ServletContextEvent;
 
 /**
  *
@@ -29,18 +34,47 @@ import java.util.List;
 public class ContextListener extends GuiceServletContextListener
 {
 
-  /*
-   * @Override
-   * public void contextInitialized(ServletContextEvent servletContextEvent)
-   * {
-   * Logger logger = Logger.getLogger("");
-   * logger.setLevel(Level.ALL);
-   * ConsoleHandler handler = new ConsoleHandler();
-   * handler.setLevel(Level.ALL);
-   * logger.addHandler( handler );
-   * super.contextInitialized(servletContextEvent);
-   * }
+  /**
+   * Method description
+   *
+   *
+   * @param servletContextEvent
    */
+  @Override
+  public void contextDestroyed(ServletContextEvent servletContextEvent)
+  {
+    List<ScmWebPlugin> plugins = ServiceUtil.getServices(ScmWebPlugin.class);
+
+    for (ScmWebPlugin plugin : plugins)
+    {
+      plugin.contextDestroyed(webPluginContext);
+    }
+
+    super.contextDestroyed(servletContextEvent);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param servletContextEvent
+   */
+  @Override
+  public void contextInitialized(ServletContextEvent servletContextEvent)
+  {
+    webPluginContext = new ScmWebPluginContext();
+
+    List<ScmWebPlugin> plugins = ServiceUtil.getServices(ScmWebPlugin.class);
+
+    for (ScmWebPlugin plugin : plugins)
+    {
+      plugin.contextInitialized(webPluginContext);
+    }
+
+    super.contextInitialized(servletContextEvent);
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -51,25 +85,22 @@ public class ContextListener extends GuiceServletContextListener
   @Override
   protected Injector getInjector()
   {
-    ScmWebPluginContext webPluginContext = new ScmWebPluginContext();
-    List<ScmWebPlugin> plugins = webPluginContext.getPlugins();
     List<Module> modules = new ArrayList<Module>();
 
     modules.add(new ScmServletModule(webPluginContext));
 
-    if (Util.isNotEmpty(plugins))
-    {
-      for (ScmWebPlugin plugin : plugins)
-      {
-        Module[] moduleArray = plugin.getModules();
+    Collection<Module> pluginModules = webPluginContext.getInjectModules();
 
-        if (Util.isNotEmpty(moduleArray))
-        {
-          modules.addAll(Arrays.asList(moduleArray));
-        }
-      }
+    if (Util.isNotEmpty(pluginModules))
+    {
+      modules.addAll(pluginModules);
     }
 
     return Guice.createInjector(modules);
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private ScmWebPluginContext webPluginContext;
 }
