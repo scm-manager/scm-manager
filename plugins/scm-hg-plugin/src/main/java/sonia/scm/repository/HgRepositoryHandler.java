@@ -261,31 +261,6 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  protected String buildUrl(Repository repository)
-  {
-    String url = config.getBaseUrl();
-
-    if (Util.isNotEmpty(url))
-    {
-      if (!url.endsWith("/"))
-      {
-        url = url.concat("/");
-      }
-
-      url = url.concat(repository.getName());
-    }
-
-    return url;
-  }
 
   //~--- get methods ----------------------------------------------------------
 

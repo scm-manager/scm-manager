@@ -10,6 +10,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -27,20 +28,9 @@ import javax.xml.bind.JAXB;
  *
  * @param <C>
  */
-public abstract class AbstractRepositoryHandler<C> implements RepositoryHandler
+public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
+        implements RepositoryHandler
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  protected abstract String buildUrl(Repository repository);
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -145,6 +135,31 @@ public abstract class AbstractRepositoryHandler<C> implements RepositoryHandler
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  protected String buildUrl(Repository repository)
+  {
+    String url = config.getBaseUrl();
+
+    if (Util.isNotEmpty(url))
+    {
+      if (!url.endsWith("/"))
+      {
+        url = url.concat("/");
+      }
+
+      url = url.concat(repository.getName());
+    }
+
+    return url;
+  }
 
   /**
    * Method description

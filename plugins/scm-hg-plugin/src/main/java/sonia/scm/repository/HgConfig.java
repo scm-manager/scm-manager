@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "config")
-public class HgConfig
+public class HgConfig extends BasicRepositoryConfig
 {
 
   /**
@@ -29,16 +29,6 @@ public class HgConfig
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getBaseUrl()
-  {
-    return baseUrl;
-  }
 
   /**
    * Method description
@@ -68,17 +58,6 @@ public class HgConfig
    * Method description
    *
    *
-   * @param baseUrl
-   */
-  public void setBaseUrl(String baseUrl)
-  {
-    this.baseUrl = baseUrl;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param hgBinary
    */
   public void setHgBinary(String hgBinary)
@@ -99,8 +78,6 @@ public class HgConfig
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private String baseUrl;
 
   /** Field description */
   private String hgBinary = "hg";
