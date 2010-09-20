@@ -11,14 +11,12 @@ package sonia.scm;
 
 import sonia.scm.group.GroupManager;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryType;
+import sonia.scm.security.EncryptionHandler;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
 import java.io.File;
-
-import java.util.Collection;
 
 /**
  *
@@ -42,6 +40,14 @@ public interface SCMContextProvider extends Closeable
    * @return
    */
   public File getBaseDirectory();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public EncryptionHandler getEncryptionHandler();
 
   /**
    * Method description

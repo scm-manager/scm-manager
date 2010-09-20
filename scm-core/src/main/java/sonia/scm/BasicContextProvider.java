@@ -12,6 +12,8 @@ package sonia.scm;
 import sonia.scm.group.GroupManager;
 import sonia.scm.repository.BasicRepositoryManager;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.security.EncryptionHandler;
+import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.util.ServiceUtil;
 import sonia.scm.util.Util;
 
@@ -79,6 +81,7 @@ public class BasicContextProvider implements SCMContextProvider
   {
     loadGroupManagers();
     loadRepositoryManager();
+    loadEncryptionHandler();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -93,6 +96,18 @@ public class BasicContextProvider implements SCMContextProvider
   public File getBaseDirectory()
   {
     return baseDirectory;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public EncryptionHandler getEncryptionHandler()
+  {
+    return encryptionHandler;
   }
 
   /**
@@ -159,6 +174,20 @@ public class BasicContextProvider implements SCMContextProvider
    * Method description
    *
    */
+  private void loadEncryptionHandler()
+  {
+    encryptionHandler = ServiceUtil.getService(EncryptionHandler.class);
+
+    if (encryptionHandler == null)
+    {
+      encryptionHandler = new MessageDigestEncryptionHandler();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   */
   private void loadGroupManagers()
   {
     groupManagerMap = new HashMap<String, GroupManager>();
@@ -193,6 +222,9 @@ public class BasicContextProvider implements SCMContextProvider
 
   /** Field description */
   private File baseDirectory;
+
+  /** Field description */
+  private EncryptionHandler encryptionHandler;
 
   /** Field description */
   private Map<String, GroupManager> groupManagerMap;
