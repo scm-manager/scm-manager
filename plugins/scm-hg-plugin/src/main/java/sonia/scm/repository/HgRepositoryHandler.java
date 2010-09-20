@@ -9,14 +9,13 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.SCMContextProvider;
+import sonia.scm.ConfigurationException;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
-import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -30,17 +29,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import javax.xml.bind.JAXB;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgRepositoryHandler implements RepositoryHandler
+public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
 {
 
   /** Field description */
@@ -71,15 +67,6 @@ public class HgRepositoryHandler implements RepositoryHandler
    * Method description
    *
    *
-   * @throws IOException
-   */
-  @Override
-  public void close() throws IOException {}
-
-  /**
-   * Method description
-   *
-   *
    * @param repository
    *
    * @throws IOException
@@ -89,9 +76,7 @@ public class HgRepositoryHandler implements RepositoryHandler
   public void create(Repository repository)
           throws RepositoryException, IOException
   {
-    repository.setId(UUID.randomUUID().toString());
-    repository.setUrl(buildUrl(repository.getName()));
-    repository.setCreationDate(new Date());
+    initNewRepository(repository);
 
     File directory = getDirectory(repository);
 
@@ -150,34 +135,6 @@ public class HgRepositoryHandler implements RepositoryHandler
    * Method description
    *
    *
-   * @param context
-   */
-  @Override
-  public void init(SCMContextProvider context)
-  {
-    File baseDirectory = context.getBaseDirectory();
-
-    AssertUtil.assertIsNotNull(baseDirectory);
-    configFile = new File(baseDirectory, CONFIG_FILE);
-    loadConfig();
-  }
-
-  /**
-   * Method description
-   *
-   */
-  public void loadConfig()
-  {
-    if (configFile.exists())
-    {
-      config = JAXB.unmarshal(configFile, HgConfig.class);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param repository
    *
    * @throws IOException
@@ -218,15 +175,6 @@ public class HgRepositoryHandler implements RepositoryHandler
     }
   }
 
-  /**
-   * Method description
-   *
-   */
-  public void storeConfig()
-  {
-    JAXB.marshal(config, configFile);
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -241,7 +189,7 @@ public class HgRepositoryHandler implements RepositoryHandler
   public Repository get(String id)
   {
     Repository repository = null;
-    File[] directories = config.getRepositoryDirectory().listFiles();
+    File[] directories = getRepositoryDirectory().listFiles();
 
     for (File directory : directories)
     {
@@ -278,7 +226,7 @@ public class HgRepositoryHandler implements RepositoryHandler
   public Collection<Repository> getAll()
   {
     List<Repository> repositories = new ArrayList<Repository>();
-    String[] repositoryNames = config.getRepositoryDirectory().list();
+    String[] repositoryNames = getRepositoryDirectory().list();
 
     if ((repositoryNames != null) && (repositoryNames.length > 0))
     {
@@ -305,23 +253,42 @@ public class HgRepositoryHandler implements RepositoryHandler
    *
    * @return
    */
-  public HgConfig getConfig()
-  {
-    return config;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public RepositoryType getType()
   {
     return TYPE;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  protected String buildUrl(Repository repository)
+  {
+    String url = config.getBaseUrl();
+
+    if (Util.isNotEmpty(url))
+    {
+      if (!url.endsWith("/"))
+      {
+        url = url.concat("/");
+      }
+
+      url = url.concat(repository.getName());
+    }
+
+    return url;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
   /**
    * Method description
    *
@@ -329,22 +296,9 @@ public class HgRepositoryHandler implements RepositoryHandler
    * @return
    */
   @Override
-  public boolean isConfigured()
+  protected Class<HgConfig> getConfigClass()
   {
-    return config != null;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param config
-   */
-  public void setConfig(HgConfig config)
-  {
-    this.config = config;
+    return HgConfig.class;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -387,37 +341,12 @@ public class HgRepositoryHandler implements RepositoryHandler
         repository = new Repository();
         repository.setType(TYPE_NAME);
         repository.setName(name);
-        repository.setUrl(buildUrl(name));
+        repository.setUrl(buildUrl(repository));
         loadRepository(repository, hgDirectory);
       }
     }
 
     return repository;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   */
-  private String buildUrl(String name)
-  {
-    String url = config.getBaseUrl();
-
-    if (Util.isNotEmpty(url))
-    {
-      if (!url.endsWith("/"))
-      {
-        url = url.concat("/");
-      }
-
-      url = url.concat(name);
-    }
-
-    return url;
   }
 
   /**
@@ -582,11 +511,27 @@ public class HgRepositoryHandler implements RepositoryHandler
     return new File(config.getRepositoryDirectory(), repository.getName());
   }
 
-  //~--- fields ---------------------------------------------------------------
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private File getRepositoryDirectory()
+  {
+    File directory = null;
 
-  /** Field description */
-  private HgConfig config;
+    if (isConfigured())
+    {
+      directory = config.getRepositoryDirectory();
 
-  /** Field description */
-  private File configFile;
+      if (!directory.exists() &&!directory.mkdirs())
+      {
+        throw new ConfigurationException(
+            "could not create directory ".concat(directory.getPath()));
+      }
+    }
+
+    return directory;
+  }
 }
