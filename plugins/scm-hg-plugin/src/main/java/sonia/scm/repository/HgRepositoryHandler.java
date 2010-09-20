@@ -54,10 +54,6 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
     "repositories".concat(File.separator).concat(TYPE_NAME);
 
   /** Field description */
-  public static final String CONFIG_FILE =
-    "config".concat(File.separator).concat("hg.xml");
-
-  /** Field description */
   private static final Logger logger =
     Logger.getLogger(HgRepositoryHandler.class.getName());
 
@@ -258,11 +254,6 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
   {
     return TYPE;
   }
-
-  //~--- methods --------------------------------------------------------------
-
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
