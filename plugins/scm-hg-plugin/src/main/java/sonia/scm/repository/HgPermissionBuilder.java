@@ -3,10 +3,17 @@
  * and open the template in the editor.
  */
 
+
+
 package sonia.scm.repository;
 
-import java.util.Collection;
+//~--- non-JDK imports --------------------------------------------------------
+
 import sonia.scm.group.Group;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collection;
 
 /**
  *
@@ -72,19 +79,16 @@ public class HgPermissionBuilder
         name = createGroupString(name);
       }
 
-      if (permission.isReadable())
+      if (!firstRead)
       {
-        if (!firstRead)
-        {
-          read.append(", ");
-        }
-        else
-        {
-          firstRead = false;
-        }
-
-        read.append(name);
+        read.append(", ");
       }
+      else
+      {
+        firstRead = false;
+      }
+
+      read.append(name);
 
       if (permission.isWriteable())
       {
@@ -116,7 +120,8 @@ public class HgPermissionBuilder
 
     result.append("__").append(name).append(", ");
 
-    Group group = /*SCMContext.getContext().getGroupManager().get(name);*/ null;
+    Group group = /* SCMContext.getContext().getGroupManager().get(name); */
+      null;
 
     if (group != null)
     {

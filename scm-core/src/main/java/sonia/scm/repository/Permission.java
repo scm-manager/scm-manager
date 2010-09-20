@@ -7,6 +7,12 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -15,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name="permissions")
+@XmlRootElement(name = "permissions")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Permission
 {
@@ -31,13 +37,11 @@ public class Permission
    *
    *
    * @param name
-   * @param readable
    * @param writeable
    */
-  public Permission(String name, boolean readable, boolean writeable)
+  public Permission(String name, boolean writeable)
   {
     this.name = name;
-    this.readable = readable;
     this.writeable = writeable;
     this.groupPermission = false;
   }
@@ -47,17 +51,32 @@ public class Permission
    *
    *
    * @param name
-   * @param readable
    * @param writeable
    * @param groupPermission
    */
-  public Permission(String name, boolean readable, boolean writeable,
-                    boolean groupPermission)
+  public Permission(String name, boolean writeable, boolean groupPermission)
   {
     this.name = name;
-    this.readable = readable;
     this.writeable = writeable;
     this.groupPermission = groupPermission;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param name
+   * @param writeable
+   * @param groupPermission
+   * @param path
+   */
+  public Permission(String name, boolean writeable, boolean groupPermission,
+                    String path)
+  {
+    this.name = name;
+    this.writeable = writeable;
+    this.groupPermission = groupPermission;
+    this.path = path;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -80,16 +99,16 @@ public class Permission
       buffer.append(" (Group)");
     }
 
-    buffer.append(" - ");
-
-    if (readable)
-    {
-      buffer.append("r");
-    }
+    buffer.append(" - r");
 
     if (writeable)
     {
       buffer.append("w");
+    }
+
+    if (Util.isNotEmpty(path))
+    {
+      buffer.append(" ").append(path);
     }
 
     return buffer.toString();
@@ -114,6 +133,17 @@ public class Permission
    *
    * @return
    */
+  public String getPath()
+  {
+    return path;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public boolean isGroupPermission()
   {
     return groupPermission;
@@ -125,9 +155,9 @@ public class Permission
    *
    * @return
    */
-  public boolean isReadable()
+  public boolean isRootPermission()
   {
-    return readable;
+    return Util.isEmpty(path);
   }
 
   /**
@@ -141,6 +171,19 @@ public class Permission
     return writeable;
   }
 
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param path
+   */
+  public void setPath(String path)
+  {
+    this.path = path;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -150,7 +193,7 @@ public class Permission
   private String name;
 
   /** Field description */
-  private boolean readable;
+  private String path = "";
 
   /** Field description */
   private boolean writeable;

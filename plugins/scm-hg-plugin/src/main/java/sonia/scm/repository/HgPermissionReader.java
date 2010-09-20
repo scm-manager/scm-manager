@@ -3,12 +3,19 @@
  * and open the template in the editor.
  */
 
+
+
 package sonia.scm.repository;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import sonia.scm.util.Util;
 
 /**
  *
@@ -145,12 +152,12 @@ public class HgPermissionReader
         writePermissions.remove(readPerm);
       }
 
-      permissions.add(new Permission(readPerm, true, write, group));
+      permissions.add(new Permission(readPerm, write, group));
     }
 
     for (String writePerm : writePermissions)
     {
-      permissions.add(new Permission(writePerm, false, true, group));
+      permissions.add(new Permission(writePerm, true, group));
     }
   }
 }
