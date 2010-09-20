@@ -210,9 +210,10 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
             submit: {
               fn: function(item){
 
+                item = Ext.apply(data, item);
+
                 var store = this.store;
                 var id = data[this.idField];
-                item[this.idField] = id;
                 var url = String.format(this.restEditUrlPattern, id);
 
                 if ( debug ){
