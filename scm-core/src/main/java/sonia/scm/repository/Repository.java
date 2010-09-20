@@ -96,6 +96,24 @@ public class Repository implements Serializable
     }
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   */
+  public void copyProperties(Repository repository)
+  {
+    repository.setName(name);
+    repository.setContact(contact);
+    repository.setCreationDate(creationDate);
+    repository.setDescription(description);
+    repository.setPermissions(permissions);
+    repository.setUrl(url);
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
