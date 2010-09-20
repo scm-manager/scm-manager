@@ -50,10 +50,6 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
                                               TYPE_DISPLAYNAME);
 
   /** Field description */
-  public static final String DEFAULT_CONFIGPATH =
-    "repositories".concat(File.separator).concat(TYPE_NAME);
-
-  /** Field description */
   private static final Logger logger =
     Logger.getLogger(HgRepositoryHandler.class.getName());
 
