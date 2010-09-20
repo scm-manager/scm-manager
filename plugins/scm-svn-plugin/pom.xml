@@ -15,4 +15,14 @@
   <version>1.0-SNAPSHOT</version>
   <name>scm-svn-plugin</name>
 
+  <dependencies>
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-web-api</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+  </dependencies>
+
 </project>
