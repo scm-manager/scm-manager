@@ -5,17 +5,13 @@
 
 
 Ext.onReady(function(){
-
-  // NOTE: This is an example showing simple state management. During development,
-  // it is generally best to disable state management as dynamically-generated ids
-  // can change across page loads, leading to unpredictable results.  The developer
-  // should ensure that stable state ids are set for stateful components in real apps.
+  
   Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
 
   var tabPanel = new Ext.TabPanel({
-      region: 'center', // a center region is ALWAYS required for border layout
+      region: 'center',
       deferredRender: false,
-      activeTab: 0,     // first tab initially active
+      activeTab: 0,
       items: [{
         id: 'welcome',
         xtype: 'panel',
@@ -28,7 +24,6 @@ Ext.onReady(function(){
   new Ext.Viewport({
     layout: 'border',
     items: [
-    // create instance immediately
     new Ext.BoxComponent({
       region: 'north',
       id: 'north-panel',
@@ -36,8 +31,8 @@ Ext.onReady(function(){
       height: 75
     }), {
       region: 'west',
-      id: 'west', // see Ext.getCmp() below
-      title: 'West',
+      id: 'west',
+      title: 'Navigation',
       xtype: 'navPanel',
       split: true,
       width: 200,
@@ -53,9 +48,6 @@ Ext.onReady(function(){
       height: 16,
       margins: '2 2 2 5'
     }),
-    // in this instance the TabPanel is not wrapped by another panel
-    // since no title is needed, this Panel is added directly
-    // as a Container
     tabPanel
   ]});
 
@@ -120,9 +112,6 @@ Ext.onReady(function(){
     },
     failure: function(){
       var loginWin = new Sonia.login.Window();
-      /*loginWin.on('success', function(){
-        createMainMenu();
-      });*/
       loginWin.show();
     }
   });
