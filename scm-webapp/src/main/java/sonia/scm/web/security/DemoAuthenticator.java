@@ -5,7 +5,7 @@
 
 
 
-package sonia.scm.security;
+package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -75,7 +75,7 @@ public class DemoAuthenticator implements Authenticator
    *
    * @return
    */
-  @Override 
+  @Override
   public User getUser(HttpServletRequest request)
   {
     User user = null;

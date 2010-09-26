@@ -17,8 +17,8 @@ import sonia.scm.filter.SecurityFilter;
 import sonia.scm.filter.StaticResourceFilter;
 import sonia.scm.plugin.ScriptResourceServlet;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.security.Authenticator;
-import sonia.scm.security.DemoAuthenticator;
+import sonia.scm.web.security.Authenticator;
+import sonia.scm.web.security.DemoAuthenticator;
 import sonia.scm.web.ScmWebPluginContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -90,16 +90,16 @@ public class ScmServletModule extends ServletModule
   {
     SCMContextProvider context = SCMContext.getContext();
 
-    bind(Authenticator.class).to(DemoAuthenticator.class);
     bind(SCMContextProvider.class).toInstance(context);
+    bind(Authenticator.class).to(DemoAuthenticator.class);
     bind(RepositoryManager.class).toInstance(context.getRepositoryManager());
     bind(ScmWebPluginContext.class).toInstance(webPluginContext);
 
     // filters
-    filter(PATTERN_PAGE,
+    /*filter(PATTERN_PAGE,
            PATTERN_STATIC_RESOURCES).through(StaticResourceFilter.class);
     filter(PATTERN_PAGE, PATTERN_COMPRESSABLE).through(GZipFilter.class);
-    filter(PATTERN_RESTAPI).through(SecurityFilter.class);
+    filter(PATTERN_RESTAPI).through(SecurityFilter.class);*/
 
     // plugin resources
     serve(PATTERN_PLUGIN_SCRIPT).with(ScriptResourceServlet.class);

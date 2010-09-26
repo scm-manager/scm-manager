@@ -5,7 +5,7 @@
 
 
 
-package sonia.scm.filter;
+package sonia.scm.web.filter;
 
 //~--- JDK imports ------------------------------------------------------------
 

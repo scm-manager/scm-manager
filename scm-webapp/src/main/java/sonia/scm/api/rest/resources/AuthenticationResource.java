@@ -16,7 +16,7 @@ import sonia.scm.ScmState;
 import sonia.scm.User;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryType;
-import sonia.scm.security.Authenticator;
+import sonia.scm.web.security.Authenticator;
 
 //~--- JDK imports ------------------------------------------------------------
 

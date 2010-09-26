@@ -42,7 +42,7 @@
       <artifactId>scm-hg-plugin</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
-
+    
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
@@ -90,12 +90,17 @@
         <artifactId>maven-jetty-plugin</artifactId>
         <version>6.1.25</version>
         <configuration>
+          <stopPort>9966</stopPort>
+          <stopKey>foo</stopKey>
           <systemproperties>
             <systemproperty>
               <name>org.apache.commons.logging.Log</name>
               <value>org.apache.commons.logging.impl.Jdk14Logger</value>
             </systemproperty>
           </systemproperties>
+          <source>1.6</source>
+          <target>1.6</target>
+          <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
         <dependencies>
           <dependency>

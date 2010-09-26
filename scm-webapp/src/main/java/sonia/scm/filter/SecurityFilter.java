@@ -9,6 +9,7 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.web.filter.HttpFilter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -25,7 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.security.Authenticator;
+import sonia.scm.web.security.Authenticator;
 
 /**
  *

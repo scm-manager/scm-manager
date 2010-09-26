@@ -5,7 +5,7 @@
 
 
 
-package sonia.scm.security;
+package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 

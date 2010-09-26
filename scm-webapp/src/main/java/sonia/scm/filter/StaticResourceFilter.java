@@ -9,6 +9,7 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.web.filter.HttpFilter;
 import com.google.inject.Singleton;
 
 import sonia.scm.util.WebUtil;
