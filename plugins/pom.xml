@@ -18,6 +18,7 @@
   <modules>
     <module>scm-hg-plugin</module>
     <module>scm-svn-plugin</module>
+    <module>scm-git-plugin</module>
   </modules>
   
   <dependencies>
