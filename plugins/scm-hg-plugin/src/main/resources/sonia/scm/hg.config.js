@@ -11,6 +11,11 @@ registerConfigPanel({
     name : 'hgBinary',
     allowBlank : false
   },{
+    xtype : 'textfield',
+    fieldLabel : 'Python Binary',
+    name : 'pythonBinary',
+    allowBlank : false
+  },{
     xtype: 'textfield',
     name: 'repositoryDirectory',
     fieldLabel: 'Repository directory',

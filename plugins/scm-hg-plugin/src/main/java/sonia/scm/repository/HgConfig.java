@@ -29,7 +29,6 @@ public class HgConfig extends BasicRepositoryConfig
 
   //~--- get methods ----------------------------------------------------------
 
-
   /**
    * Method description
    *
@@ -39,6 +38,17 @@ public class HgConfig extends BasicRepositoryConfig
   public String getHgBinary()
   {
     return hgBinary;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getPythonBinary()
+  {
+    return pythonBinary;
   }
 
   /**
@@ -69,6 +79,17 @@ public class HgConfig extends BasicRepositoryConfig
    * Method description
    *
    *
+   * @param pythonBinary
+   */
+  public void setPythonBinary(String pythonBinary)
+  {
+    this.pythonBinary = pythonBinary;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repositoryDirectory
    */
   public void setRepositoryDirectory(File repositoryDirectory)
@@ -78,9 +99,11 @@ public class HgConfig extends BasicRepositoryConfig
 
   //~--- fields ---------------------------------------------------------------
 
-
   /** Field description */
   private String hgBinary = "hg";
+
+  /** Field description */
+  private String pythonBinary = "python";
 
   /** Field description */
   private File repositoryDirectory;

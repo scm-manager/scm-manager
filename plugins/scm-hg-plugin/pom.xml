@@ -18,6 +18,13 @@
   <dependencies>
 
     <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>${servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-web-api</artifactId>
       <version>1.0-SNAPSHOT</version>

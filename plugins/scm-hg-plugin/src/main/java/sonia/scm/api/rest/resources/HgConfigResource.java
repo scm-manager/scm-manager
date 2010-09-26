@@ -15,8 +15,13 @@ import com.google.inject.Singleton;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.web.HgWebConfigWriter;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
+import javax.servlet.ServletContext;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -79,16 +84,23 @@ public class HgConfigResource
    *
    *
    * @param uriInfo
+   * @param servletContext
    * @param config
    *
    * @return
+   *
+   * @throws IOException
    */
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response setConfig(@Context UriInfo uriInfo, HgConfig config)
+  public Response setConfig(@Context UriInfo uriInfo,
+                            @Context ServletContext servletContext,
+                            HgConfig config)
+          throws IOException
   {
     handler.setConfig(config);
     handler.storeConfig();
+    new HgWebConfigWriter(config).write(servletContext);
 
     return Response.created(uriInfo.getRequestUri()).build();
   }
