@@ -92,6 +92,7 @@ public abstract class AbstractSimpleRepositoryHandler<T extends SimpleRepository
       throw new RepositoryException(msg.toString());
     }
 
+    postCreate(repository, directory);
     repository.setType(getType().getName());
     storeRepositoryConfig(repository);
   }
@@ -262,6 +263,19 @@ public abstract class AbstractSimpleRepositoryHandler<T extends SimpleRepository
       throw new ConfigurationException("could not create config directory");
     }
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param directory
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  protected void postCreate(Repository repository, File directory)
+          throws IOException, RepositoryException {}
 
   /**
    * Method description

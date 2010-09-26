@@ -14,6 +14,7 @@ import sonia.scm.util.Util;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -63,6 +64,22 @@ public class SimpleCommand implements Command
     return getResult(process);
   }
 
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param workDirectory
+   */
+  @Override
+  public void setWorkDirectory(File workDirectory)
+  {
+    this.workDirectory = workDirectory;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
@@ -75,9 +92,12 @@ public class SimpleCommand implements Command
   {
     ProcessBuilder processBuilder = new ProcessBuilder(command);
 
-    processBuilder.redirectErrorStream(true);
+    if (workDirectory != null)
+    {
+      processBuilder = processBuilder.directory(workDirectory);
+    }
 
-    return processBuilder.start();
+    return processBuilder.redirectErrorStream(true).start();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -140,4 +160,7 @@ public class SimpleCommand implements Command
 
   /** Field description */
   private String[] command;
+
+  /** Field description */
+  private File workDirectory;
 }

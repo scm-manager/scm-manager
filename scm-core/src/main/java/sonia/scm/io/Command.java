@@ -9,6 +9,7 @@ package sonia.scm.io;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -27,4 +28,14 @@ public interface Command
    * @throws IOException
    */
   public CommandResult execute() throws IOException;
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param file
+   */
+  public void setWorkDirectory(File file);
 }
