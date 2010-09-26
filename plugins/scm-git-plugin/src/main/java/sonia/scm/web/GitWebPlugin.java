@@ -14,6 +14,8 @@ package sonia.scm.web;
 public class GitWebPlugin implements ScmWebPlugin
 {
 
+  public static final String SCRIPT = "/sonia/scm/git.config.js";
+
   /**
    * Method description
    *
@@ -34,5 +36,9 @@ public class GitWebPlugin implements ScmWebPlugin
    * @param context
    */
   @Override
-  public void contextInitialized(ScmWebPluginContext context) {}
+  public void contextInitialized(ScmWebPluginContext context)
+  {
+    context.addScriptResource( new ClasspathWebResource(SCRIPT) );
+
+  }
 }
