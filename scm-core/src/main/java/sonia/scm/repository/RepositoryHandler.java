@@ -19,6 +19,13 @@ public interface RepositoryHandler
         extends Handler<Repository, RepositoryException>
 {
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public RepositoryType getType();
 
   /**
    * Method description
@@ -27,12 +34,4 @@ public interface RepositoryHandler
    * @return
    */
   public boolean isConfigured();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public RepositoryType getType();
 }

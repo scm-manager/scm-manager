@@ -14,8 +14,6 @@ package sonia.scm.repository;
 public interface RepositoryListener
 {
 
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Method description
    *
