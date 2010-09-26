@@ -7,10 +7,6 @@
 
 package sonia.scm.io;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.util.Util;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
