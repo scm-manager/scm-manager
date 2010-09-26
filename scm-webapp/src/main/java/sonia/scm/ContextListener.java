@@ -62,7 +62,8 @@ public class ContextListener extends GuiceServletContextListener
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent)
   {
-    webPluginContext = new ScmWebPluginContext();
+    webPluginContext =
+      new ScmWebPluginContext(servletContextEvent.getServletContext());
 
     List<ScmWebPlugin> plugins = ServiceUtil.getServices(ScmWebPlugin.class);
 

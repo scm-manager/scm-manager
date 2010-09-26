@@ -17,12 +17,27 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
+
 /**
  *
  * @author Sebastian Sdorra
  */
 public class ScmWebPluginContext
 {
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param servletContext
+   */
+  public ScmWebPluginContext(ServletContext servletContext)
+  {
+    this.servletContext = servletContext;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -92,6 +107,17 @@ public class ScmWebPluginContext
     return scriptResources;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public ServletContext getServletContext()
+  {
+    return servletContext;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -99,4 +125,7 @@ public class ScmWebPluginContext
 
   /** Field description */
   private Set<Module> injectModules = new HashSet<Module>();
+
+  /** Field description */
+  private ServletContext servletContext;
 }

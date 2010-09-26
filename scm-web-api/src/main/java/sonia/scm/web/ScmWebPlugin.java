@@ -7,14 +7,6 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Module;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.InputStream;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -22,7 +14,19 @@ import java.io.InputStream;
 public interface ScmWebPlugin
 {
 
-public void contextInitialized( ScmWebPluginContext context );
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   */
+  public void contextDestroyed(ScmWebPluginContext context);
 
-public void contextDestroyed( ScmWebPluginContext context );
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   */
+  public void contextInitialized(ScmWebPluginContext context);
 }
