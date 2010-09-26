@@ -50,6 +50,12 @@
     </dependency>
 
     <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-git-plugin</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
       <groupId>com.sun.jersey</groupId>
       <artifactId>jersey-json</artifactId>
       <version>${jersey.version}</version>
