@@ -9,11 +9,13 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.web.filter.HttpFilter;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import sonia.scm.User;
+import sonia.scm.web.filter.HttpFilter;
+import sonia.scm.web.filter.SecurityHttpServletRequestWrapper;
+import sonia.scm.web.security.Authenticator;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -26,7 +28,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.web.security.Authenticator;
 
 /**
  *
@@ -66,7 +67,8 @@ public class SecurityFilter extends HttpFilter
 
       if (user != null)
       {
-        chain.doFilter(new ScmHttpServletRequest(request, user), response);
+        chain.doFilter(new SecurityHttpServletRequestWrapper(request, user),
+                       response);
       }
       else
       {
@@ -78,75 +80,6 @@ public class SecurityFilter extends HttpFilter
       chain.doFilter(request, response);
     }
   }
-
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 10/09/08
-   * @author         Enter your name here...
-   */
-  private static class ScmHttpServletRequest extends HttpServletRequestWrapper
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param request
-     * @param user
-     */
-    public ScmHttpServletRequest(HttpServletRequest request, User user)
-    {
-      super(request);
-      this.user = user;
-    }
-
-    //~--- get methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    @Override
-    public String getRemoteUser()
-    {
-      return user.getName();
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public User getUser()
-    {
-      return user;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    @Override
-    public Principal getUserPrincipal()
-    {
-      return user;
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private User user;
-  }
-
 
   //~--- fields ---------------------------------------------------------------
 
