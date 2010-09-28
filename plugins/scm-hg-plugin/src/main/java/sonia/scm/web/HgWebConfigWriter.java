@@ -35,9 +35,6 @@ public class HgWebConfigWriter
 {
 
   /** Field description */
-  public static final String CGI_PATH = "WEB-INF/cgi/hgweb.cgi";
-
-  /** Field description */
   public static final String CGI_TEMPLATE = "/sonia/scm/hgweb.cgi";
 
   /** Field description */
@@ -72,17 +69,7 @@ public class HgWebConfigWriter
 
     writeWebConfigFile(webConfigFile);
 
-    String path = context.getRealPath(CGI_PATH);
-    File cgiFile = new File(path);
-    File cgiDirectory = cgiFile.getParentFile();
-
-    if (!cgiDirectory.exists() &&!cgiDirectory.mkdirs())
-    {
-      throw new IOException(
-          "could not create directory: ".concat(cgiDirectory.getPath()));
-    }
-
-    System.out.println( cgiFile );
+    File cgiFile = HgUtil.getCGI();
 
     writeCGIFile(cgiFile, webConfigFile);
   }
@@ -111,6 +98,7 @@ public class HgWebConfigWriter
       rp.addVariable("python", config.getPythonBinary());
       rp.addVariable("config", webConfigFile.getAbsolutePath());
       rp.process(input, output);
+      cgiFile.setExecutable(true);
     }
     finally
     {
