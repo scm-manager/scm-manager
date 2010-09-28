@@ -146,6 +146,21 @@ public class Util
    * Method description
    *
    *
+   * @param value
+   *
+   * @return
+   */
+  public static String nonNull(String value)
+  {
+    return (value != null)
+           ? value
+           : "";
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param dateString
    * @param tz
    *
