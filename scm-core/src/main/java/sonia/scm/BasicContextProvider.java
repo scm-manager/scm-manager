@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -64,6 +65,11 @@ public class BasicContextProvider implements SCMContextProvider
   @Override
   public void close() throws IOException
   {
+    for (SCMPlugin plugin : plugins)
+    {
+      plugin.contextDestroyed(this);
+    }
+
     for (GroupManager manager : groupManagerMap.values())
     {
       manager.close();
@@ -82,6 +88,7 @@ public class BasicContextProvider implements SCMContextProvider
     loadGroupManagers();
     loadRepositoryManager();
     loadEncryptionHandler();
+    loadPlugins();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -206,6 +213,20 @@ public class BasicContextProvider implements SCMContextProvider
    * Method description
    *
    */
+  private void loadPlugins()
+  {
+    plugins = ServiceUtil.getServices(SCMPlugin.class);
+
+    for (SCMPlugin plugin : plugins)
+    {
+      plugin.contextInitialized(this);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   */
   private void loadRepositoryManager()
   {
     repositoryManager = ServiceUtil.getService(RepositoryManager.class);
@@ -228,6 +249,9 @@ public class BasicContextProvider implements SCMContextProvider
 
   /** Field description */
   private Map<String, GroupManager> groupManagerMap;
+
+  /** Field description */
+  private List<SCMPlugin> plugins;
 
   /** Field description */
   private RepositoryManager repositoryManager;

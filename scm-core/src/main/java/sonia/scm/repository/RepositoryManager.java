@@ -29,6 +29,16 @@ public interface RepositoryManager
    * Method description
    *
    *
+   * @param handler
+   */
+  public void addHandler(RepositoryHandler handler);
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
    * @param type
    *
    * @return

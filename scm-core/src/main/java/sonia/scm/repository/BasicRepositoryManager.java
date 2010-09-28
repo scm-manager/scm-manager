@@ -9,7 +9,10 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.ConfigurationException;
+import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.util.AssertUtil;
 import sonia.scm.util.ServiceUtil;
 import sonia.scm.util.Util;
 
@@ -43,6 +46,31 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param handler
+   */
+  @Override
+  public void addHandler(RepositoryHandler handler)
+  {
+    AssertUtil.assertIsNotNull(handler);
+
+    RepositoryType type = handler.getType();
+
+    AssertUtil.assertIsNotNull(type);
+
+    if (handlerMap.containsKey(type.getName()))
+    {
+      throw new ConfigurationException(
+          type.getName().concat("allready registered"));
+    }
+
+    handlerMap.put(type.getName(), handler);
+    handler.init(SCMContext.getContext());
+  }
 
   /**
    * Method description
