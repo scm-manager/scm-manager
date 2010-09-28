@@ -42,6 +42,6 @@ public class HgWebPlugin implements ScmWebPlugin
   public void contextInitialized(ScmWebPluginContext context)
   {
     context.addScriptResource(new ClasspathWebResource(SCRIPT));
-    context.addInjectModule(new HgServletModule( context.getServletContext() ));
+    context.addInjectModule(new HgServletModule());
   }
 }

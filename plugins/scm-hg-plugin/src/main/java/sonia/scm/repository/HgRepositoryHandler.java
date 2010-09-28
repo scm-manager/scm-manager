@@ -16,6 +16,7 @@ import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -115,7 +116,7 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
 
     if (new File(directory, ".hg").exists())
     {
-      Util.delete(directory);
+      IOUtil.delete(directory);
     }
     else
     {

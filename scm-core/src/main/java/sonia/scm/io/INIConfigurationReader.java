@@ -9,7 +9,7 @@ package sonia.scm.io;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.Util;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -96,7 +96,7 @@ public class INIConfigurationReader extends AbstractReader<INIConfiguration>
     }
     finally
     {
-      Util.close(input);
+      IOUtil.close(input);
     }
 
     return configuration;

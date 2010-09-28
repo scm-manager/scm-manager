@@ -9,7 +9,7 @@ package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.Util;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -164,6 +164,11 @@ public class CGIRunner
       execCmd = cmdPrefix + " " + execCmd;
     }
 
+    if (logger.isLoggable(Level.FINE))
+    {
+      logger.fine("execute cgi: ".concat(execCmd));
+    }
+
     Process p = (dir == null)
                 ? Runtime.getRuntime().exec(execCmd, env.getEnvArray())
                 : Runtime.getRuntime().exec(execCmd, env.getEnvArray(), dir);
@@ -192,6 +197,11 @@ public class CGIRunner
         catch (IOException e)
         {
           logger.log(Level.FINEST, null, e);
+        }
+        finally
+        {
+          IOUtil.close(inFromReq);
+          IOUtil.close(outToCgi);
         }
       }
     }).start();
@@ -244,7 +254,7 @@ public class CGIRunner
 
       // copy cgi content to response stream...
       os = res.getOutputStream();
-      Util.copy(inFromCgi, os);
+      IOUtil.copy(inFromCgi, os);
       p.waitFor();
 
       if (!ignoreExitState)
@@ -280,7 +290,7 @@ public class CGIRunner
     {
       if (os != null)
       {
-        Util.close(os);
+        IOUtil.close(os);
       }
 
       os = null;

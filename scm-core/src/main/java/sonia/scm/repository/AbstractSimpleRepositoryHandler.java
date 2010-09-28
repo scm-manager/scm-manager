@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXB;
+import sonia.scm.util.IOUtil;
 
 /**
  *
@@ -115,8 +116,8 @@ public abstract class AbstractSimpleRepositoryHandler<T extends SimpleRepository
 
     if (directory.exists() && repositoryFile.exists())
     {
-      Util.delete(directory);
-      Util.delete(repositoryFile);
+      IOUtil.delete(directory);
+      IOUtil.delete(repositoryFile);
     }
     else
     {

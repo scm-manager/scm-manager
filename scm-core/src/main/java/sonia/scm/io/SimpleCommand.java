@@ -9,7 +9,7 @@ package sonia.scm.io;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.Util;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -150,7 +150,7 @@ public class SimpleCommand implements Command
     }
     finally
     {
-      Util.close(input);
+      IOUtil.close(input);
     }
 
     return result;

@@ -9,7 +9,7 @@ package sonia.scm.io;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.Util;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -66,8 +66,8 @@ public class RegexResourceProcessor extends AbstractResourceProcessor
     }
     finally
     {
-      Util.close(reader);
-      Util.close(writer);
+      IOUtil.close(reader);
+      IOUtil.close(writer);
     }
   }
 

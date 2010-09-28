@@ -15,7 +15,7 @@ import sonia.scm.io.INISection;
 import sonia.scm.io.RegexResourceProcessor;
 import sonia.scm.io.ResourceProcessor;
 import sonia.scm.repository.HgConfig;
-import sonia.scm.util.Util;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -102,8 +102,8 @@ public class HgWebConfigWriter
     }
     finally
     {
-      Util.close(input);
-      Util.close(output);
+      IOUtil.close(input);
+      IOUtil.close(output);
     }
   }
 

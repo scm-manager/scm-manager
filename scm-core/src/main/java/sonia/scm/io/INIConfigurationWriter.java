@@ -9,7 +9,7 @@ package sonia.scm.io;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.Util;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -52,7 +52,7 @@ public class INIConfigurationWriter extends AbstractWriter<INIConfiguration>
     }
     finally
     {
-      Util.close(writer);
+      IOUtil.close(writer);
     }
   }
 }

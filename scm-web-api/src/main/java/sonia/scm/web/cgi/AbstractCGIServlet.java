@@ -7,12 +7,6 @@
 
 package sonia.scm.web.cgi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Singleton;
-
-import sonia.scm.util.Util;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -26,34 +20,30 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * CGI Servlet.
- *
- * The cgi bin directory can be set with the "cgibinResourceBase" init parameter
- * or it will default to the resource base of the context.
- *
- * The "commandPrefix" init parameter may be used to set a prefix to all
- * commands passed to exec. This can be used on systems that need assistance to
- * execute a particular file type. For example on windows this can be set to
- * "perl" so that perl scripts are executed.
- *
- * The "Path" init param is passed to the exec environment as PATH. Note: Must
- * be run unpacked somewhere in the filesystem.
- *
- * Any initParameter that starts with ENV_ is used to set an environment
- * variable with the name stripped of the leading ENV_ and using the init
- * parameter value.
- *
- * Based on org.eclipse.jetty.servlets.CGI
  *
  * @author Sebastian Sdorra
- *
  */
-@Singleton
-public class CGIServlet extends HttpServlet
+public abstract class AbstractCGIServlet extends HttpServlet
 {
 
   /** Field description */
-  private static final long serialVersionUID = 5719539505555835833L;
+  private static final long serialVersionUID = -8638099037069714140L;
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param req
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  protected abstract File getCommand(HttpServletRequest req)
+          throws ServletException, IOException;
 
   //~--- methods --------------------------------------------------------------
 
@@ -66,17 +56,19 @@ public class CGIServlet extends HttpServlet
   @Override
   public void init() throws ServletException
   {
+    cgiRunner = new CGIRunner(getServletContext(), createEnvironment(),
+                              getCmdPrefix(), isExitStateIgnored());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected EnvList createEnvironment()
+  {
     EnvList env = new EnvList();
-    String cmdPrefix = getInitParameter("commandPrefix");
-    boolean ignoreExitStatus =
-      "true".equalsIgnoreCase(getInitParameter("ignoreExitState"));
-    String commandPath = getInitParameter("command");
-
-    if (Util.isNotEmpty(commandPath))
-    {
-      command = new File(commandPath);
-    }
-
     Enumeration e = getInitParameterNames();
 
     while (e.hasMoreElements())
@@ -99,8 +91,7 @@ public class CGIServlet extends HttpServlet
       }
     }
 
-    cgiRunner = new CGIRunner(getServletContext(), env, cmdPrefix,
-                              ignoreExitStatus);
+    return env;
   }
 
   /**
@@ -117,14 +108,41 @@ public class CGIServlet extends HttpServlet
   protected void service(HttpServletRequest req, HttpServletResponse resp)
           throws ServletException, IOException
   {
-    cgiRunner.exec(command, req.getPathInfo(), req, resp);
+    cgiRunner.exec(getCommand(req), req.getPathInfo(), req, resp);
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected String getCmdPrefix()
+  {
+    return null;
+  }
+
+  ;
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected boolean isExitStateIgnored()
+  {
+    return false;
+  }
+
+  ;
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private CGIRunner cgiRunner;
-
-  /** Field description */
-  private File command;
 }

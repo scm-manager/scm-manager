@@ -9,7 +9,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.Util;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -82,7 +82,7 @@ public abstract class AbstractResourceServlet extends HttpServlet
     }
     finally
     {
-      Util.close(output);
+      IOUtil.close(output);
     }
 
     this.content = output.toByteArray();
@@ -164,7 +164,7 @@ public abstract class AbstractResourceServlet extends HttpServlet
     }
     finally
     {
-      Util.close(output);
+      IOUtil.close(output);
     }
   }
 

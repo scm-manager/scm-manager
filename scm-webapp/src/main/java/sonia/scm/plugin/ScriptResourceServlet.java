@@ -12,20 +12,18 @@ package sonia.scm.plugin;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.ScmWebPlugin;
 import sonia.scm.web.ScmWebPluginContext;
 import sonia.scm.web.WebResource;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import java.util.Collection;
-import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -109,11 +107,11 @@ public class ScriptResourceServlet extends AbstractResourceServlet
     {
       try
       {
-        Util.copy(input, stream);
+        IOUtil.copy(input, stream);
       }
       finally
       {
-        Util.close(input);
+        IOUtil.close(input);
       }
     }
   }
