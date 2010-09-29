@@ -86,18 +86,11 @@ public class GitRepositoryHandler
                                 "update-server-info");
 
     command.setWorkDirectory(directory);
-
-    CommandResult result = command.execute();
-
-    if (!result.isSuccessfull())
-    {
-      StringBuilder msg = new StringBuilder("command exit with error ");
-
-      msg.append(result.getReturnCode()).append(" and message: '");
-      msg.append(result.getOutput()).append("'");
-
-      throw new RepositoryException(msg.toString());
-    }
+    execute(command);
+    command = new ExtendedCommand(config.getGitBinary(), "config", "--bool",
+                                  "--add", "http.receivepack", "true");
+    command.setWorkDirectory(directory);
+    execute(command);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -112,5 +105,32 @@ public class GitRepositoryHandler
   protected Class<GitConfig> getConfigClass()
   {
     return GitConfig.class;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param command
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  private void execute(ExtendedCommand command)
+          throws IOException, RepositoryException
+  {
+    CommandResult result = command.execute();
+
+    if (!result.isSuccessfull())
+    {
+      StringBuilder msg = new StringBuilder("command exit with error ");
+
+      msg.append(result.getReturnCode()).append(" and message: '");
+      msg.append(result.getOutput()).append("'");
+
+      throw new RepositoryException(msg.toString());
+    }
   }
 }
