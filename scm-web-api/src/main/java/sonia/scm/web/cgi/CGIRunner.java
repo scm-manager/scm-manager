@@ -303,6 +303,100 @@ public class CGIRunner
     }
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getCmdPrefix()
+  {
+    return cmdPrefix;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public ServletContext getContext()
+  {
+    return context;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public EnvList getEnvironment()
+  {
+    return environment;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isIgnoreExitState()
+  {
+    return ignoreExitState;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param cmdPrefix
+   */
+  public void setCmdPrefix(String cmdPrefix)
+  {
+    this.cmdPrefix = cmdPrefix;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   */
+  public void setContext(ServletContext context)
+  {
+    this.context = context;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param environment
+   */
+  public void setEnvironment(EnvList environment)
+  {
+    this.environment = environment;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param ignoreExitState
+   */
+  public void setIgnoreExitState(boolean ignoreExitState)
+  {
+    this.ignoreExitState = ignoreExitState;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
