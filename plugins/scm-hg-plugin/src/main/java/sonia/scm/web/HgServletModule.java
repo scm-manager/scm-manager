@@ -30,9 +30,4 @@ public class HgServletModule extends ServletModule
     filter("/hg/*").through(BasicAuthenticationFilter.class);
     serve("/hg/*").with(HgCGIServlet.class);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String cgiPath;
 }
