@@ -50,10 +50,4 @@
 
   </dependencies>
 
-  <properties>
-    <servlet.version>2.5</servlet.version>
-    <jersey.version>1.5-ea01</jersey.version>
-    <guice.version>2.0</guice.version>
-  </properties>
-
 </project>

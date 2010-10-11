@@ -104,8 +104,8 @@
               <value>org.apache.commons.logging.impl.Jdk14Logger</value>
             </systemproperty>
           </systemproperties>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>${project.build.javaLevel}</source>
+          <target>${project.build.javaLevel}</target>
           <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
         <dependencies>
@@ -121,13 +121,6 @@
 
     <finalName>scm-webapp</finalName>
   </build>
-
-  <properties>
-    <servlet.version>2.5</servlet.version>
-    <jersey.version>1.5-ea01</jersey.version>
-    <guice.version>2.0</guice.version>
-    <ehcache.version>2.2.0</ehcache.version>
-  </properties>
   
 </project>
 
