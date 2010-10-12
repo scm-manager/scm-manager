@@ -27,7 +27,7 @@ public class EnvList
    *    Constructs ...
    *
    */
-  EnvList()
+  public EnvList()
   {
     envMap = new HashMap<String, String>();
   }
@@ -38,12 +38,25 @@ public class EnvList
    *
    * @param l
    */
-  EnvList(EnvList l)
+  public EnvList(EnvList l)
   {
     envMap = new HashMap<String, String>(l.envMap);
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param key
+   *
+   * @return
+   */
+  public boolean containsKey(String key)
+  {
+    return envMap.containsKey(key);
+  }
 
   /**
    * Method description
@@ -55,11 +68,6 @@ public class EnvList
   public String toString()
   {
     return envMap.toString();
-  }
-
-  public boolean containsKey( String key )
-  {
-    return envMap.containsKey(key);
   }
 
   //~--- get methods ----------------------------------------------------------

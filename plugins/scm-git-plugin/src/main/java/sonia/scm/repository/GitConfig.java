@@ -30,6 +30,17 @@ public class GitConfig extends SimpleRepositoryConfig
     return gitBinary;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getGitHttpBackend()
+  {
+    return gitHttpBackend;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -43,8 +54,22 @@ public class GitConfig extends SimpleRepositoryConfig
     this.gitBinary = gitBinary;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param gitHttpBackend
+   */
+  public void setGitHttpBackend(String gitHttpBackend)
+  {
+    this.gitHttpBackend = gitHttpBackend;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private String gitBinary = "git";
+
+  /** Field description */
+  private String gitHttpBackend = "git-http-backend";
 }

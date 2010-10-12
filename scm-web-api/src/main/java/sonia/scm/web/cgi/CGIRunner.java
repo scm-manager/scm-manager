@@ -55,11 +55,10 @@ public class CGIRunner
    * @param cmdPrefix
    * @param ignoreExitState
    */
-  public CGIRunner(ServletContext context, EnvList environment,
+  public CGIRunner(ServletContext context,
                    String cmdPrefix, boolean ignoreExitState)
   {
     this.context = context;
-    this.environment = environment;
     this.cmdPrefix = cmdPrefix;
     this.ignoreExitState = ignoreExitState;
   }
@@ -77,7 +76,7 @@ public class CGIRunner
    *
    * @throws IOException
    */
-  public void exec(File command, String pathInfo, HttpServletRequest req,
+  public void exec(EnvList environment, File command, String pathInfo, HttpServletRequest req,
                    HttpServletResponse res)
           throws IOException
   {
@@ -99,39 +98,37 @@ public class CGIRunner
       pathTranslated = path;
     }
 
-    EnvList env = new EnvList(environment);
-
     // these ones are from "The WWW Common Gateway Interface Version 1.1"
     // look at :
     // http://Web.Golux.Com/coar/cgi/draft-coar-cgi-v11-03-clean.html#6.1.1
-    env.set("AUTH_TYPE", req.getAuthType());
-    env.set("CONTENT_LENGTH", Integer.toString(len));
-    env.set("CONTENT_TYPE", req.getContentType());
-    env.set("GATEWAY_INTERFACE", "CGI/1.1");
+    environment.set("AUTH_TYPE", req.getAuthType());
+    environment.set("CONTENT_LENGTH", Integer.toString(len));
+    environment.set("CONTENT_TYPE", req.getContentType());
+    environment.set("GATEWAY_INTERFACE", "CGI/1.1");
 
     if ((pathInfo != null) && (pathInfo.length() > 0))
     {
-      env.set("PATH_INFO", pathInfo);
+      environment.set("PATH_INFO", pathInfo);
     }
 
-    env.set("PATH_TRANSLATED", pathTranslated);
-    env.set("QUERY_STRING", req.getQueryString());
-    env.set("REMOTE_ADDR", req.getRemoteAddr());
-    env.set("REMOTE_HOST", req.getRemoteHost());
+    environment.set("PATH_TRANSLATED", pathTranslated);
+    environment.set("QUERY_STRING", req.getQueryString());
+    environment.set("REMOTE_ADDR", req.getRemoteAddr());
+    environment.set("REMOTE_HOST", req.getRemoteHost());
 
     // The identity information reported about the connection by a
     // RFC 1413 [11] request to the remote agent, if
     // available. Servers MAY choose not to support this feature, or
     // not to request the data for efficiency reasons.
     // "REMOTE_IDENT" => "NYI"
-    env.set("REMOTE_USER", req.getRemoteUser());
-    env.set("REQUEST_METHOD", req.getMethod());
-    env.set("SCRIPT_NAME", scriptName);
-    env.set("SCRIPT_FILENAME", scriptPath);
-    env.set("SERVER_NAME", req.getServerName());
-    env.set("SERVER_PORT", Integer.toString(req.getServerPort()));
-    env.set("SERVER_PROTOCOL", req.getProtocol());
-    env.set("SERVER_SOFTWARE", context.getServerInfo());
+    environment.set("REMOTE_USER", req.getRemoteUser());
+    environment.set("REQUEST_METHOD", req.getMethod());
+    environment.set("SCRIPT_NAME", scriptName);
+    environment.set("SCRIPT_FILENAME", scriptPath);
+    environment.set("SERVER_NAME", req.getServerName());
+    environment.set("SERVER_PORT", Integer.toString(req.getServerPort()));
+    environment.set("SERVER_PROTOCOL", req.getProtocol());
+    environment.set("SERVER_SOFTWARE", context.getServerInfo());
 
     Enumeration enm = req.getHeaderNames();
 
@@ -140,11 +137,11 @@ public class CGIRunner
       String name = (String) enm.nextElement();
       String value = req.getHeader(name);
 
-      env.set("HTTP_" + name.toUpperCase().replace('-', '_'), value);
+      environment.set("HTTP_" + name.toUpperCase().replace('-', '_'), value);
     }
 
     // these extra ones were from printenv on www.dev.nomura.co.uk
-    env.set("HTTPS", (req.isSecure()
+    environment.set("HTTPS", (req.isSecure()
                       ? "ON"
                       : "OFF"));
 
@@ -172,8 +169,8 @@ public class CGIRunner
     }
 
     Process p = (dir == null)
-                ? Runtime.getRuntime().exec(execCmd, env.getEnvArray())
-                : Runtime.getRuntime().exec(execCmd, env.getEnvArray(), dir);
+                ? Runtime.getRuntime().exec(execCmd, environment.getEnvArray())
+                : Runtime.getRuntime().exec(execCmd, environment.getEnvArray(), dir);
 
     // hook processes input to browser's output (async)
     final InputStream inFromReq = req.getInputStream();
@@ -333,17 +330,6 @@ public class CGIRunner
    *
    * @return
    */
-  public EnvList getEnvironment()
-  {
-    return environment;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public boolean isIgnoreExitState()
   {
     return ignoreExitState;
@@ -371,17 +357,6 @@ public class CGIRunner
   public void setContext(ServletContext context)
   {
     this.context = context;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param environment
-   */
-  public void setEnvironment(EnvList environment)
-  {
-    this.environment = environment;
   }
 
   /**
@@ -480,9 +455,6 @@ public class CGIRunner
 
   /** Field description */
   private ServletContext context;
-
-  /** Field description */
-  private EnvList environment;
 
   /** Field description */
   private boolean ignoreExitState;

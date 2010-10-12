@@ -9,8 +9,11 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.repository.GitConfig;
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.web.cgi.AbstractCGIServlet;
 import sonia.scm.web.cgi.EnvList;
 
@@ -46,16 +49,45 @@ public class GitCGIServlet extends AbstractCGIServlet
    *
    *
    * @return
+   *
+   * @throws ServletException
    */
   @Override
-  protected EnvList createEnvironment()
+  protected EnvList createBaseEnvironment() throws ServletException
   {
-    EnvList list = super.createEnvironment();
+    EnvList list = super.createBaseEnvironment();
 
-    list.set(ENV_PROJECT_ROOT, "/tmp/git");
     list.set(ENV_HTTP_EXPORT_ALL, "");
 
     return list;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param baseEnvironment
+   *
+   * @return
+   *
+   * @throws ServletException
+   */
+  @Override
+  protected EnvList createRequestEnvironment(EnvList baseEnvironment)
+          throws ServletException
+  {
+    GitConfig config = repositoryHandler.getConfig();
+
+    if (config == null)
+    {
+      throw new ServletException("git is not configured");
+    }
+
+    EnvList env = new EnvList(baseEnvironment);
+
+    env.set(ENV_PROJECT_ROOT, config.getRepositoryDirectory().getPath());
+
+    return env;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -75,6 +107,19 @@ public class GitCGIServlet extends AbstractCGIServlet
   protected File getCommand(HttpServletRequest req)
           throws ServletException, IOException
   {
-    return new File("/opt/local/libexec/git-core/git-http-backend/");
+    GitConfig config = repositoryHandler.getConfig();
+
+    if (config == null)
+    {
+      throw new ServletException("git is not configured");
+    }
+
+    return new File(config.getGitHttpBackend());
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @Inject
+  private GitRepositoryHandler repositoryHandler;
 }

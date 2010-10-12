@@ -56,8 +56,9 @@ public abstract class AbstractCGIServlet extends HttpServlet
   @Override
   public void init() throws ServletException
   {
-    cgiRunner = new CGIRunner(getServletContext(), createEnvironment(),
-                              getCmdPrefix(), isExitStateIgnored());
+    cgiRunner = new CGIRunner(getServletContext(), getCmdPrefix(),
+                              isExitStateIgnored());
+    baseEnvironment = createBaseEnvironment();
   }
 
   /**
@@ -65,8 +66,10 @@ public abstract class AbstractCGIServlet extends HttpServlet
    *
    *
    * @return
+   *
+   * @throws ServletException
    */
-  protected EnvList createEnvironment()
+  protected EnvList createBaseEnvironment() throws ServletException
   {
     EnvList env = new EnvList();
     Enumeration e = getInitParameterNames();
@@ -98,6 +101,22 @@ public abstract class AbstractCGIServlet extends HttpServlet
    * Method description
    *
    *
+   * @param baseEnvironment
+   *
+   * @return
+   *
+   * @throws ServletException
+   */
+  protected EnvList createRequestEnvironment(EnvList baseEnvironment)
+          throws ServletException
+  {
+    return new EnvList(baseEnvironment);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param req
    * @param resp
    *
@@ -108,7 +127,8 @@ public abstract class AbstractCGIServlet extends HttpServlet
   protected void service(HttpServletRequest req, HttpServletResponse resp)
           throws ServletException, IOException
   {
-    cgiRunner.exec(getCommand(req), req.getPathInfo(), req, resp);
+    cgiRunner.exec(createRequestEnvironment(baseEnvironment), getCommand(req),
+                   req.getPathInfo(), req, resp);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -124,10 +144,6 @@ public abstract class AbstractCGIServlet extends HttpServlet
     return null;
   }
 
-  ;
-
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Method description
    *
@@ -139,9 +155,10 @@ public abstract class AbstractCGIServlet extends HttpServlet
     return false;
   }
 
-  ;
-
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private EnvList baseEnvironment;
 
   /** Field description */
   private CGIRunner cgiRunner;

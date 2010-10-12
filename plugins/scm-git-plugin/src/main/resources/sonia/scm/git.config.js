@@ -20,6 +20,11 @@ registerConfigPanel({
     name: 'baseUrl',
     fieldLabel: 'Base URL',
     allowBlank : false
+  },{
+    xtype : 'textfield',
+    fieldLabel : 'Git-Http-Backend',
+    name : 'gitHttpBackend',
+    allowBlank : false
   }],
 
   onSubmit: function(values){
