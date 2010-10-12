@@ -12,8 +12,8 @@ package sonia.scm.api.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import sonia.scm.repository.RepositoryManager;
-
+import sonia.scm.repository.GitConfig;
+import sonia.scm.repository.GitRepositoryHandler;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -26,8 +26,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import sonia.scm.repository.GitConfig;
-import sonia.scm.repository.GitRepositoryHandler;
 
 /**
  *
@@ -43,13 +41,13 @@ public class GitConfigResource
    * Constructs ...
    *
    *
-   * @param repositoryManager
+   *
+   * @param repositoryHandler
    */
   @Inject
-  public GitConfigResource(RepositoryManager repositoryManager)
+  public GitConfigResource(GitRepositoryHandler repositoryHandler)
   {
-    repositoryHandler = (GitRepositoryHandler) repositoryManager.getHandler(
-      GitRepositoryHandler.TYPE_NAME);
+    this.repositoryHandler = repositoryHandler;
   }
 
   //~--- get methods ----------------------------------------------------------

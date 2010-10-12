@@ -47,13 +47,13 @@ public class HgConfigResource
    * Constructs ...
    *
    *
-   * @param repositoryManager
+   *
+   * @param handler
    */
   @Inject
-  public HgConfigResource(RepositoryManager repositoryManager)
+  public HgConfigResource(HgRepositoryHandler handler)
   {
-    handler = (HgRepositoryHandler) repositoryManager.getHandler(
-      HgRepositoryHandler.TYPE_NAME);
+    this.handler = handler;
   }
 
   //~--- get methods ----------------------------------------------------------

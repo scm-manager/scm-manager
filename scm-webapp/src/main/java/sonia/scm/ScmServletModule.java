@@ -9,10 +9,14 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.servlet.ServletModule;
 
 import sonia.scm.api.rest.UriExtensionsConfig;
+import sonia.scm.plugin.SCMPluginManager;
 import sonia.scm.plugin.ScriptResourceServlet;
+import sonia.scm.repository.BasicRepositoryManager;
+import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.ScmWebPluginContext;
 import sonia.scm.web.security.Authenticator;
@@ -25,8 +29,12 @@ import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
+import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -88,8 +96,30 @@ public class ScmServletModule extends ServletModule
     SCMContextProvider context = SCMContext.getContext();
 
     bind(SCMContextProvider.class).toInstance(context);
+
+    Multibinder<RepositoryHandler> repositoryHandlerBinder =
+      Multibinder.newSetBinder(binder(), RepositoryHandler.class);
+    SCMPluginManager pluginManager = new SCMPluginManager();
+
+    try
+    {
+      pluginManager.load();
+    }
+    catch (IOException ex)
+    {
+      Logger.getLogger(ScmServletModule.class.getName()).log(Level.SEVERE,
+                       null, ex);
+    }
+
+    for (Class<? extends RepositoryHandler> handler :
+            pluginManager.getRepositoryHandlers())
+    {
+      bind(handler);
+      repositoryHandlerBinder.addBinding().to(handler);
+    }
+
     bind(Authenticator.class).to(DemoAuthenticator.class);
-    bind(RepositoryManager.class).toInstance(context.getRepositoryManager());
+    bind(RepositoryManager.class).to(BasicRepositoryManager.class);
     bind(ScmWebPluginContext.class).toInstance(webPluginContext);
 
     /*

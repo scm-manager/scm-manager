@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!--
+    Document   : plugin.xml
+    Created on : October 12, 2010, 8:29 AM
+    Author     : sdorra
+    Description:
+        Purpose of the document follows.
+-->
+
+<plugin-config>
+
+    <repository-handlers>
+        <handler>sonia.scm.repository.HgRepositoryHandler</handler>
+    </repository-handlers>
+
+</plugin-config>

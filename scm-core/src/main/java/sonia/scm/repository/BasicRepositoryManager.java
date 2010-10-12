@@ -9,12 +9,14 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.ServiceUtil;
-import sonia.scm.util.Util;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -32,17 +34,26 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
+@Singleton
 public class BasicRepositoryManager extends AbstractRepositoryManager
 {
 
   /**
    * Constructs ...
    *
+   *
+   * @param handlerSet
    */
-  public BasicRepositoryManager()
+  @Inject
+  public BasicRepositoryManager(Set<RepositoryHandler> handlerSet)
   {
     handlerMap = new HashMap<String, RepositoryHandler>();
     types = new ArrayList<RepositoryType>();
+
+    for (RepositoryHandler handler : handlerSet)
+    {
+      addHandler(handler);
+    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -70,6 +81,7 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
 
     handlerMap.put(type.getName(), handler);
     handler.init(SCMContext.getContext());
+    types.add(type);
   }
 
   /**
@@ -81,9 +93,9 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   @Override
   public void close() throws IOException
   {
-    for (RepositoryHandler manager : handlerMap.values())
+    for (RepositoryHandler handler : handlerMap.values())
     {
-      manager.close();
+      IOUtil.close(handler);
     }
   }
 
@@ -128,23 +140,7 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
    * @param context
    */
   @Override
-  public void init(SCMContextProvider context)
-  {
-    List<RepositoryHandler> handlerList =
-      ServiceUtil.getServices(RepositoryHandler.class);
-
-    if (Util.isNotEmpty(handlerList))
-    {
-      for (RepositoryHandler handler : handlerList)
-      {
-        RepositoryType type = handler.getType();
-
-        types.add(type);
-        handlerMap.put(type.getName(), handler);
-        handler.init(context);
-      }
-    }
-  }
+  public void init(SCMContextProvider context) {}
 
   /**
    * Method description

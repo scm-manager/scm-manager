@@ -9,6 +9,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Singleton;
+
 import sonia.scm.ConfigurationException;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
@@ -37,6 +39,7 @@ import java.util.logging.Logger;
  *
  * @author Sebastian Sdorra
  */
+@Singleton
 public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
 {
 

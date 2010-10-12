@@ -7,12 +7,6 @@
 
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.group.GroupManager;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.security.EncryptionHandler;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
@@ -40,31 +34,4 @@ public interface SCMContextProvider extends Closeable
    * @return
    */
   public File getBaseDirectory();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public EncryptionHandler getEncryptionHandler();
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param type
-   * @return
-   */
-  public GroupManager getGroupManager(String type);
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @return
-   */
-  public RepositoryManager getRepositoryManager();
 }

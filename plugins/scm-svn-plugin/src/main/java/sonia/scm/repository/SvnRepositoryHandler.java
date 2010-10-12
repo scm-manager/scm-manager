@@ -13,7 +13,7 @@ import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
-import sonia.scm.util.Util;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -28,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXB;
-import sonia.scm.util.IOUtil;
 
 /**
  *

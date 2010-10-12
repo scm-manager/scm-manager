@@ -9,6 +9,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Singleton;
+
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 
@@ -21,6 +23,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
+@Singleton
 public class GitRepositoryHandler
         extends AbstractSimpleRepositoryHandler<GitConfig>
 {
