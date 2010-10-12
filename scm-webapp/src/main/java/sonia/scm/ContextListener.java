@@ -14,6 +14,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.ServiceUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.ScmWebPlugin;
@@ -66,7 +67,8 @@ public class ContextListener extends GuiceServletContextListener
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent)
   {
-    //enableDebugLogging();
+
+    // enableDebugLogging();
     webPluginContext =
       new ScmWebPluginContext(servletContextEvent.getServletContext());
 
@@ -102,7 +104,12 @@ public class ContextListener extends GuiceServletContextListener
       modules.addAll(pluginModules);
     }
 
-    return Guice.createInjector(modules);
+    Injector injector = Guice.createInjector(modules);
+
+    // init RepositoryManager
+    injector.getInstance(RepositoryManager.class).init(SCMContext.getContext());
+
+    return injector;
   }
 
   //~--- methods --------------------------------------------------------------
