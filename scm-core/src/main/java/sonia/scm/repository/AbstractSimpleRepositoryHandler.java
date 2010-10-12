@@ -13,7 +13,7 @@ import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
-import sonia.scm.util.Util;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -28,7 +28,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXB;
-import sonia.scm.util.IOUtil;
 
 /**
  *
@@ -195,12 +194,12 @@ public abstract class AbstractSimpleRepositoryHandler<T extends SimpleRepository
   @Override
   public Repository get(String id)
   {
-    Repository repository = null;
     File repositoryFile = getRepositoryFile(id);
+    Repository repository = null;
 
     if (repositoryFile.exists())
     {
-      repository = JAXB.unmarshal(repositoryFile, Repository.class);
+      repository = getRepositoryFromConfig(repositoryFile);
     }
 
     return repository;
@@ -229,10 +228,12 @@ public abstract class AbstractSimpleRepositoryHandler<T extends SimpleRepository
     {
       try
       {
-        Repository repository = JAXB.unmarshal(repositoryFile,
-                                  Repository.class);
+        Repository repository = getRepositoryFromConfig(repositoryFile);
 
-        repositories.add(repository);
+        if (repository != null)
+        {
+          repositories.add(repository);
+        }
       }
       catch (Exception ex)
       {
@@ -314,6 +315,33 @@ public abstract class AbstractSimpleRepositoryHandler<T extends SimpleRepository
     }
 
     return directory;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryFile
+   *
+   * @return
+   */
+  protected Repository getRepositoryFromConfig(File repositoryFile)
+  {
+    Repository repository = JAXB.unmarshal(repositoryFile, Repository.class);
+    File directory = getDirectory(repository);
+
+    if (!directory.exists())
+    {
+      if (logger.isLoggable(Level.WARNING))
+      {
+        logger.warning(
+            "could not find repository ".concat(repository.getName()));
+      }
+
+      repository = null;
+    }
+
+    return repository;
   }
 
   /**
