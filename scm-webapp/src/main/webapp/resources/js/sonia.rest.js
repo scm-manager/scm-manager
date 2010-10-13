@@ -174,6 +174,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
   showAddForm: function(){
     var form = this.editForm;
+    form.data = null;
     form.listeners = {
       submit: {
         fn: function(item){
@@ -343,25 +344,3 @@ Sonia.rest.RestPanel = Ext.extend(Ext.Panel,{
 });
 
 Ext.reg('restPanel', Sonia.rest.RestPanel);
-
-Sonia.rest.DetailWindow = Ext.extend(Ext.Window, {
-
-  initComponent: function(){
-    var config = {
-      layout:'fit',
-      width: 300,
-      autoScroll: true,
-      closable: false,
-      resizable: false,
-      plain: true,
-      border: false,
-      modal: true
-    };
-
-    Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.rest.DetailWindow.superclass.initComponent.apply(this, arguments);
-  }
-
-});
-
-Ext.reg('restDetailWindow', Sonia.rest.DetailWindow);
