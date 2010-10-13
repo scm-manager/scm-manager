@@ -62,12 +62,14 @@ Ext.onReady(function(){
     tabPanel.setActiveTab(id);
   }
 
-  function addGroupPanel(){
-    addTabPanel('t_group', 'groupGrid', 'Groups');
-  }
-
   function addRepositoryPanel(){
-    addTabPanel('t_repository', 'repositoryGrid', 'Repositories');
+    tabPanel.add({
+      id: 't_repository',
+      title: 'Repositories',
+      xtype: 'restPanel',
+      grid: {xtype: 'repositoryGrid'}
+    });
+    tabPanel.setActiveTab('t_repository');
   }
 
   function addConfigPanel(){
@@ -79,9 +81,6 @@ Ext.onReady(function(){
     panel.addSections([{
       title: 'Main',
       items: [{
-        label: 'Groups',
-        fn: addGroupPanel
-      },{
         label: 'Repositories',
         fn: addRepositoryPanel
       }]

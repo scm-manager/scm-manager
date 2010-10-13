@@ -42,13 +42,13 @@ Sonia.rest.EditForm = Ext.extend(Ext.form.FormPanel, {
   initComponent: function(){
 
     var config = {
-      labelWidth: 80,
+      labelWidth: 100,
       autoHeight: true,
       frame: true,
       title: this.title,
       defaultType:'textfield',
       monitorValid: true,
-      defaults: {width: 190},
+      defaults: {width: 240},
       listeners: {
         afterrender: {
           fn: function(){
@@ -59,6 +59,7 @@ Sonia.rest.EditForm = Ext.extend(Ext.form.FormPanel, {
           scope: this
         }
       },
+      buttonAlign: 'center',
       buttons:[
         {text: 'Ok', formBind: true, scope: this, handler: this.submit},
         {text: 'Cancel', scope: this, handler: this.cancel}
@@ -117,7 +118,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
     var restToolbar = new Ext.Toolbar({
       items: [
-        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddWindow},
+        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddForm},
         {xtype: 'tbbutton', text: 'Edit', scope: this, handler: this.showEditWindow},
         {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.removeItem},
         {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload},
@@ -137,6 +138,8 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
     });
 
     var config = {
+      region: 'center',
+      autoHeight: true,
       selModel: restSelModel,
       tbar: restToolbar,
       viewConfig: {
@@ -155,95 +158,101 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
     this.store.load();
   },
 
-  showAddWindow: function(){
-    var addWindow = new Sonia.rest.DetailWindow({
-      items: [{
-        id: 'addForm',
-        xtype: this.editForm,
-        listeners: {
-          submit: {
-            fn: function(item){
+  showPanel: function(pn){
+    var panel = Ext.getCmp('southpanel');
+    panel.removeAll();
+    panel.add( pn );
+    panel.doLayout();
+  },
 
-              var store = this.store;
-
-              if ( debug ){
-                console.debug( 'add item ' + item[this.idField] );
-              }
-
-              Ext.Ajax.request({
-                url: this.restAddUrl,
-                jsonData: item,
-                method: 'POST',
-                success: function(){
-                  store.reload();
-                  addWindow.close();
-                },
-                failure: function(){
-                  alert( 'failure' );
-                }
-              });
-
-            },
-            scope: this
-          },
-          cancel: function(){
-            addWindow.close();
-          }
-        }
-      }]
+  resetPanel: function(){
+    this.showPanel({
+      xtype: 'panel',
+      html: 'select or add'
     });
+  },
 
-    addWindow.show();
+  showAddForm: function(){
+    var form = this.editForm;
+    form.listeners = {
+      submit: {
+        fn: function(item){
+
+          var store = this.store;
+
+          if ( debug ){
+            console.debug( 'add item ' + item[this.nameField] );
+          }
+          Ext.Ajax.request({
+            url: this.restAddUrl,
+            jsonData: item,
+            method: 'POST',
+            scope: this,
+            success: function(){
+              store.reload();
+              this.resetPanel();
+            },
+            failure: function(){
+              alert( 'failure' );
+            }
+          });
+
+        },
+        scope: this
+      },
+      cancel: {
+        fn: this.resetPanel,
+        scope: this
+      }
+    };
+
+    this.showPanel( form );
   },
 
   showEditWindow: function(){
     if ( this.selModel.hasSelection() ){
-
       var data = this.selModel.getSelected().data;
 
-      var editWindow = new Sonia.rest.DetailWindow({
-        items: [{
-          id: 'editForm',
-          xtype: this.editForm,
-          data: data,
-          listeners: {
-            submit: {
-              fn: function(item){
+      var form = this.editForm;
+      form.data = data;
+      form.listeners = {
+        submit: {
+          fn: function(item){
 
-                item = Ext.apply(data, item);
+            item = Ext.apply(data, item);
 
-                var store = this.store;
-                var id = data[this.idField];
-                var url = String.format(this.restEditUrlPattern, id);
+            var store = this.store;
+            var id = data[this.idField];
+            var url = String.format(this.restEditUrlPattern, id);
 
-                if ( debug ){
-                  console.debug( 'update item ' + id );
-                }
-
-                Ext.Ajax.request({
-                  url: url,
-                  jsonData: item,
-                  method: 'PUT',
-                  success: function(){
-                    store.reload();
-                    editWindow.close();
-                  },
-                  failure: function(){
-                    alert( 'failure' );
-                  }
-                });
-
-              },
-              scope: this
-            },
-            cancel: function(){
-              editWindow.close();
+            if ( debug ){
+              console.debug( 'update item ' + id );
             }
-          }
-        }]
-      });
 
-      editWindow.show();
+            Ext.Ajax.request({
+              url: url,
+              jsonData: item,
+              method: 'PUT',
+              scope: this,
+              success: function(){
+                store.reload();
+                this.resetPanel();
+              },
+              failure: function(){
+                alert( 'failure' );
+              }
+            });
+
+          },
+          scope: this
+        },
+        cancel: {
+          fn: this.resetPanel,
+          scope: this
+        }
+      }
+
+      this.showPanel( form );
     }
   },
 
@@ -264,7 +273,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
           if ( result == 'ok' ){
 
             if ( debug ){
-              console.debug( 'remove item' );
+              console.debug( 'remove item ' + id );
             }
             
             Ext.Ajax.request({
@@ -298,6 +307,42 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 });
 
 Ext.reg('restGrid', Sonia.rest.Grid);
+
+Sonia.rest.RestPanel = Ext.extend(Ext.Panel,{
+
+  grid: null,
+  title: null,
+
+  initComponent: function(){
+    var config = {
+      title: this.title,
+      layout: 'border',
+      border: false,
+      closable: true,
+      autoScroll: true,
+      items:[
+        this.grid,{
+          id: 'southpanel',
+          xtype: 'panel',
+          region: 'south',
+          split: true,
+          frame: true,
+          height: 200,
+          items:[{
+            xtype: 'panel',
+            html: 'Select or add'
+          }]
+        }
+      ]
+    };
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.rest.RestPanel.superclass.initComponent.apply(this, arguments);
+  }
+
+});
+
+Ext.reg('restPanel', Sonia.rest.RestPanel);
 
 Sonia.rest.DetailWindow = Ext.extend(Ext.Window, {
 
