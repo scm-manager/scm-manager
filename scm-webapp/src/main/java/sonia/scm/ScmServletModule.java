@@ -10,9 +10,13 @@ package sonia.scm;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.multibindings.Multibinder;
+import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 
 import sonia.scm.api.rest.UriExtensionsConfig;
+import sonia.scm.cache.CacheManager;
+import sonia.scm.cache.CacheRepositoryManagerDecorator;
+import sonia.scm.cache.EhCacheManager;
 import sonia.scm.plugin.SCMPluginManager;
 import sonia.scm.plugin.ScriptResourceServlet;
 import sonia.scm.repository.BasicRepositoryManager;
@@ -118,8 +122,11 @@ public class ScmServletModule extends ServletModule
       repositoryHandlerBinder.addBinding().to(handler);
     }
 
+    bind(CacheManager.class).to(EhCacheManager.class);
     bind(Authenticator.class).to(DemoAuthenticator.class);
-    bind(RepositoryManager.class).to(BasicRepositoryManager.class);
+    bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
+        BasicRepositoryManager.class);
+    bind(RepositoryManager.class).to(CacheRepositoryManagerDecorator.class);
     bind(ScmWebPluginContext.class).toInstance(webPluginContext);
 
     /*
