@@ -16,11 +16,12 @@ import sonia.scm.ScmState;
 import sonia.scm.User;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryType;
-import sonia.scm.web.security.Authenticator;
+import sonia.scm.web.security.SecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -47,6 +48,7 @@ public class AuthenticationResource
    *
    *
    * @param request
+   * @param response
    * @param username
    * @param password
    *
@@ -54,11 +56,13 @@ public class AuthenticationResource
    */
   @POST
   public ScmState getState(@Context HttpServletRequest request,
+                           @Context HttpServletResponse response,
                            @FormParam("username") String username,
                            @FormParam("password") String password)
   {
     ScmState state = null;
-    User user = authenticator.authenticate(request, username, password);
+    User user = securityContext.authenticate(request, response, username,
+                  password);
 
     if (user != null)
     {
@@ -84,7 +88,7 @@ public class AuthenticationResource
   public ScmState getState(@Context HttpServletRequest request)
   {
     ScmState state = null;
-    User user = authenticator.getUser(request);
+    User user = securityContext.getUser();
 
     if (user != null)
     {
@@ -122,9 +126,9 @@ public class AuthenticationResource
 
   /** Field description */
   @Inject
-  private Authenticator authenticator;
+  private RepositoryManager repositoryManger;
 
   /** Field description */
   @Inject
-  private RepositoryManager repositoryManger;
+  private SecurityContext securityContext;
 }

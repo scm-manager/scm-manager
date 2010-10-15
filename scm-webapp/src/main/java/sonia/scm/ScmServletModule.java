@@ -10,21 +10,24 @@ package sonia.scm;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.multibindings.Multibinder;
-import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 
 import sonia.scm.api.rest.UriExtensionsConfig;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.CacheRepositoryManagerDecorator;
 import sonia.scm.cache.EhCacheManager;
+import sonia.scm.filter.SecurityFilter;
 import sonia.scm.plugin.SCMPluginManager;
 import sonia.scm.plugin.ScriptResourceServlet;
 import sonia.scm.repository.BasicRepositoryManager;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.util.DebugServlet;
 import sonia.scm.web.ScmWebPluginContext;
 import sonia.scm.web.security.Authenticator;
+import sonia.scm.web.security.BasicSecurityContext;
 import sonia.scm.web.security.DemoAuthenticator;
+import sonia.scm.web.security.SecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -46,6 +49,9 @@ import java.util.logging.Logger;
  */
 public class ScmServletModule extends ServletModule
 {
+
+  /** Field description */
+  public static final String PATTERN_DEBUG = "/debug.html";
 
   /** Field description */
   public static final String PATTERN_PAGE = "*.html";
@@ -100,6 +106,8 @@ public class ScmServletModule extends ServletModule
     SCMContextProvider context = SCMContext.getContext();
 
     bind(SCMContextProvider.class).toInstance(context);
+    bind(Authenticator.class).to(DemoAuthenticator.class);
+    bind(SecurityContext.class).to(BasicSecurityContext.class);
 
     Multibinder<RepositoryHandler> repositoryHandlerBinder =
       Multibinder.newSetBinder(binder(), RepositoryHandler.class);
@@ -123,7 +131,6 @@ public class ScmServletModule extends ServletModule
     }
 
     bind(CacheManager.class).to(EhCacheManager.class);
-    bind(Authenticator.class).to(DemoAuthenticator.class);
     bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
         BasicRepositoryManager.class);
     bind(RepositoryManager.class).to(CacheRepositoryManagerDecorator.class);
@@ -135,6 +142,10 @@ public class ScmServletModule extends ServletModule
      * filter(PATTERN_PAGE, PATTERN_COMPRESSABLE).through(GZipFilter.class);
      * filter(PATTERN_RESTAPI).through(SecurityFilter.class);
      */
+    filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(SecurityFilter.class);
+
+    // debug servlet
+    serve(PATTERN_DEBUG).with(DebugServlet.class);
 
     // plugin resources
     serve(PATTERN_PLUGIN_SCRIPT).with(ScriptResourceServlet.class);

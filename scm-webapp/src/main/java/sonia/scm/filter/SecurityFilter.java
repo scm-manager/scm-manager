@@ -10,23 +10,20 @@ package sonia.scm.filter;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import sonia.scm.User;
 import sonia.scm.web.filter.HttpFilter;
 import sonia.scm.web.filter.SecurityHttpServletRequestWrapper;
-import sonia.scm.web.security.Authenticator;
+import sonia.scm.web.security.SecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
-import java.security.Principal;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -58,26 +55,33 @@ public class SecurityFilter extends HttpFilter
                           HttpServletResponse response, FilterChain chain)
           throws IOException, ServletException
   {
-    String uri =
-      request.getRequestURI().substring(request.getContextPath().length());
+    SecurityContext securityContext = securityContextProvider.get();
 
-    if (!uri.startsWith(URL_AUTHENTICATION))
+    if (securityContext != null)
     {
-      User user = authenticator.getUser(request);
+      String uri =
+        request.getRequestURI().substring(request.getContextPath().length());
 
-      if (user != null)
+      if (!uri.startsWith(URL_AUTHENTICATION))
       {
-        chain.doFilter(new SecurityHttpServletRequestWrapper(request, user),
-                       response);
+        if (securityContext.isAuthenticated())
+        {
+          chain.doFilter(new SecurityHttpServletRequestWrapper(request,
+                  securityContext.getUser()), response);
+        }
+        else
+        {
+          response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        }
       }
       else
       {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        chain.doFilter(request, response);
       }
     }
     else
     {
-      chain.doFilter(request, response);
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
   }
 
@@ -85,5 +89,5 @@ public class SecurityFilter extends HttpFilter
 
   /** Field description */
   @Inject
-  private Authenticator authenticator;
+  private Provider<SecurityContext> securityContextProvider;
 }

@@ -9,6 +9,9 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
+import com.google.inject.servlet.SessionScoped;
+
 import sonia.scm.User;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -20,22 +23,9 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-public class DemoAuthenticator implements Authenticator
+@SessionScoped
+public class BasicSecurityContext implements SecurityContext
 {
-
-  /** Field description */
-  private static final String DEMO_DISPLAYNAME = "Hans am Schalter";
-
-  /** Field description */
-  private static final String DEMO_MAIL = "hans@schalter.de";
-
-  /** Field description */
-  private static final String DEMO_PASSWORD = "hans123";
-
-  /** Field description */
-  private static final String DEMO_USERNAME = "hans";
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -53,13 +43,43 @@ public class DemoAuthenticator implements Authenticator
                            HttpServletResponse response, String username,
                            String password)
   {
-    User user = null;
-
-    if (DEMO_USERNAME.equals(username) && DEMO_PASSWORD.equals(password))
-    {
-      user = new User(username, DEMO_DISPLAYNAME, DEMO_MAIL);
-    }
+    user = authenticator.authenticate(request, response, username, password);
 
     return user;
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public User getUser()
+  {
+    return user;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isAuthenticated()
+  {
+    return user != null;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @Inject
+  private Authenticator authenticator;
+
+  /** Field description */
+  private User user;
 }

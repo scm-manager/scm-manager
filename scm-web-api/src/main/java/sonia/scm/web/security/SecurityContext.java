@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-public interface Authenticator
+public interface SecurityContext
 {
 
   /**
@@ -35,6 +35,24 @@ public interface Authenticator
    * @return
    */
   public User authenticate(HttpServletRequest request,
-                           HttpServletResponse response, String username,
-                           String password);
+                              HttpServletResponse response, String username,
+                              String password);
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public User getUser();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isAuthenticated();
 }

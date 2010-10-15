@@ -10,11 +10,12 @@ package sonia.scm.web.filter;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.User;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.Authenticator;
+import sonia.scm.web.security.SecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -56,20 +57,6 @@ public class BasicAuthenticationFilter extends HttpFilter
   /** Field description */
   public static final String HEADER_WWW_AUTHENTICATE = "WWW-Authenticate";
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param authenticator
-   */
-  @Inject
-  public BasicAuthenticationFilter(Authenticator authenticator)
-  {
-    this.authenticator = authenticator;
-  }
-
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -88,32 +75,40 @@ public class BasicAuthenticationFilter extends HttpFilter
                           HttpServletResponse response, FilterChain chain)
           throws IOException, ServletException
   {
-    User user = authenticator.getUser(request);
+    SecurityContext securityContext = securityContextProvider.get();
+    User user = null;
 
-    if (user == null)
+    if (securityContext != null)
     {
-      String authentication = request.getHeader(HEADER_AUTHORIZATION);
-
-      if (Util.isEmpty(authentication))
+      if (!securityContext.isAuthenticated())
       {
-        sendUnauthorized(response);
+        String authentication = request.getHeader(HEADER_AUTHORIZATION);
+
+        if (Util.isEmpty(authentication))
+        {
+          sendUnauthorized(response);
+        }
+        else
+        {
+          if (!authentication.toUpperCase().startsWith(
+                  AUTHORIZATION_BASIC_PREFIX))
+          {
+            throw new ServletException("wrong basic header");
+          }
+
+          String token = authentication.substring(6);
+
+          token = new String(Base64.decode(token.getBytes()));
+
+          String[] credentials = token.split(CREDENTIAL_SEPARATOR);
+
+          user = securityContext.authenticate(request, response,
+                  credentials[0], credentials[1]);
+        }
       }
       else
       {
-        if (!authentication.toUpperCase().startsWith(
-                AUTHORIZATION_BASIC_PREFIX))
-        {
-          throw new ServletException("wrong basic header");
-        }
-
-        String token = authentication.substring(6);
-
-        token = new String(Base64.decode(token.getBytes()));
-
-        String[] credentials = token.split(CREDENTIAL_SEPARATOR);
-
-        user = authenticator.authenticate(request, credentials[0],
-                                          credentials[1]);
+        user = securityContext.getUser();
       }
     }
 
@@ -145,5 +140,6 @@ public class BasicAuthenticationFilter extends HttpFilter
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Authenticator authenticator;
+  @Inject
+  private Provider<SecurityContext> securityContextProvider;
 }
