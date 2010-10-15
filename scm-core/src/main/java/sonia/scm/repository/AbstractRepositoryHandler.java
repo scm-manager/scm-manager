@@ -9,6 +9,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.ConfigChangedListener;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.util.Util;
 
@@ -18,6 +19,8 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.xml.bind.JAXB;
@@ -41,6 +44,18 @@ public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
   protected abstract Class<C> getConfigClass();
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param listener
+   */
+  @Override
+  public void addListener(ConfigChangedListener listener)
+  {
+    listenerSet.add(listener);
+  }
 
   /**
    * Method description
@@ -82,6 +97,18 @@ public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
     {
       config = JAXB.unmarshal(configFile, getConfigClass());
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param listener
+   */
+  @Override
+  public void removeListener(ConfigChangedListener listener)
+  {
+    listenerSet.remove(listener);
   }
 
   /**
@@ -132,6 +159,7 @@ public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
   public void setConfig(C config)
   {
     this.config = config;
+    fireConfigChanged();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -174,6 +202,18 @@ public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
     repository.setCreationDate(new Date());
   }
 
+  /**
+   * Method description
+   *
+   */
+  private void fireConfigChanged()
+  {
+    for (ConfigChangedListener listener : listenerSet)
+    {
+      listener.configChanged(config);
+    }
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -181,4 +221,8 @@ public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
 
   /** Field description */
   protected File configFile;
+
+  /** Field description */
+  private Set<ConfigChangedListener> listenerSet =
+    new HashSet<ConfigChangedListener>();
 }

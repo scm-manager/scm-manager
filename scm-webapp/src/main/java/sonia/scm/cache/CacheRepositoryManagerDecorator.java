@@ -10,12 +10,16 @@ package sonia.scm.cache;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
+import sonia.scm.ConfigChangedListener;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.Undecorated;
 import sonia.scm.repository.AbstractRepositoryManagerDecorator;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryType;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
@@ -24,7 +28,6 @@ import sonia.scm.util.Util;
 import java.io.IOException;
 
 import java.util.Collection;
-import sonia.scm.Undecorated;
 
 /**
  *
@@ -32,6 +35,7 @@ import sonia.scm.Undecorated;
  */
 public class CacheRepositoryManagerDecorator
         extends AbstractRepositoryManagerDecorator
+        implements ConfigChangedListener
 {
 
   /** Field description */
@@ -51,8 +55,7 @@ public class CacheRepositoryManagerDecorator
    */
   @Inject
   public CacheRepositoryManagerDecorator(
-          @Undecorated RepositoryManager manager,
-          CacheManager cacheManager)
+          @Undecorated RepositoryManager manager, CacheManager cacheManager)
   {
     super(manager);
     cache = cacheManager.getExtendedCache(String.class, Repository.class,
@@ -60,6 +63,31 @@ public class CacheRepositoryManagerDecorator
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param handler
+   */
+  @Override
+  public void addHandler(RepositoryHandler handler)
+  {
+    super.addHandler(handler);
+    handler.addListener(this);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param config
+   */
+  @Override
+  public void configChanged(Object config)
+  {
+    cache.clear();
+  }
 
   /**
    * Method description
@@ -93,6 +121,23 @@ public class CacheRepositoryManagerDecorator
   {
     orginal.delete(repository);
     removeFromCache(repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   */
+  @Override
+  public void init(SCMContextProvider context)
+  {
+    super.init(context);
+
+    for (RepositoryType type : getTypes())
+    {
+      getHandler(type.getName()).addListener(this);
+    }
   }
 
   /**

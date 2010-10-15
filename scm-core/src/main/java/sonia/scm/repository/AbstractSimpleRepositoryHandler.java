@@ -36,8 +36,8 @@ import javax.xml.bind.JAXB;
  *
  * @param <T>
  */
-public abstract class AbstractSimpleRepositoryHandler<T extends SimpleRepositoryConfig>
-        extends AbstractRepositoryHandler<T>
+public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepositoryConfig>
+        extends AbstractRepositoryHandler<C>
 {
 
   /** Field description */
@@ -343,19 +343,12 @@ public abstract class AbstractSimpleRepositoryHandler<T extends SimpleRepository
     }
     else
     {
-      String url = config.getBaseUrl();
+      String url = buildUrl(repository);
 
       if (Util.isNotEmpty(url))
       {
-        if (!url.endsWith("/"))
-        {
-          url = url.concat("/");
-        }
-
-        url = url.concat(repository.getName());
+        repository.setUrl(url);
       }
-
-      repository.setUrl(url);
     }
 
     return repository;

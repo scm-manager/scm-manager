@@ -9,14 +9,19 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.ConfigChangedListener;
 import sonia.scm.Handler;
+import sonia.scm.ListenerSupport;
 
 /**
  *
  * @author Sebastian Sdorra
+ *
+ * @param <C>
  */
 public interface RepositoryHandler
-        extends Handler<Repository, RepositoryException>
+        extends Handler<Repository, RepositoryException>,
+                ListenerSupport<ConfigChangedListener>
 {
 
   /**
