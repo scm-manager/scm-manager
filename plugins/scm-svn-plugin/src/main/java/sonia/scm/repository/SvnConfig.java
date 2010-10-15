@@ -16,19 +16,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "config")
-public class SvnConfig extends BasicRepositoryConfig
+public class SvnConfig extends SimpleRepositoryConfig
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getRepositoryDirectory()
-  {
-    return repositoryDirectory;
-  }
 
   /**
    * Method description
@@ -58,17 +47,6 @@ public class SvnConfig extends BasicRepositoryConfig
    * Method description
    *
    *
-   * @param repositoryDirectory
-   */
-  public void setRepositoryDirectory(String repositoryDirectory)
-  {
-    this.repositoryDirectory = repositoryDirectory;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param svnAccessFile
    */
   public void setSvnAccessFile(String svnAccessFile)
@@ -88,9 +66,6 @@ public class SvnConfig extends BasicRepositoryConfig
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String repositoryDirectory;
 
   /** Field description */
   private String svnAccessFile;
