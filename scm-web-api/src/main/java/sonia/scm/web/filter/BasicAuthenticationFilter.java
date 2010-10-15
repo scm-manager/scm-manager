@@ -57,6 +57,21 @@ public class BasicAuthenticationFilter extends HttpFilter
   /** Field description */
   public static final String HEADER_WWW_AUTHENTICATE = "WWW-Authenticate";
 
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param securityContextProvider
+   */
+  @Inject
+  public BasicAuthenticationFilter(
+          Provider<SecurityContext> securityContextProvider)
+  {
+    this.securityContextProvider = securityContextProvider;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -140,6 +155,5 @@ public class BasicAuthenticationFilter extends HttpFilter
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @Inject
   private Provider<SecurityContext> securityContextProvider;
 }

@@ -37,6 +37,20 @@ public class SecurityFilter extends HttpFilter
   /** Field description */
   public static final String URL_AUTHENTICATION = "/api/rest/authentication";
 
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param securityContextProvider
+   */
+  @Inject
+  public SecurityFilter(Provider<SecurityContext> securityContextProvider)
+  {
+    this.securityContextProvider = securityContextProvider;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -88,6 +102,5 @@ public class SecurityFilter extends HttpFilter
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @Inject
   private Provider<SecurityContext> securityContextProvider;
 }
