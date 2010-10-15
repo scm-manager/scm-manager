@@ -11,7 +11,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
 
     var config = {
       labelWidth: 80,
-      url: restUrl + "authentication.json",
+      url: restUrl + "authentication/login.json",
       frame: true,
       title: 'Please Login',
       defaultType: 'textfield',

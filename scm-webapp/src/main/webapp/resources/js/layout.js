@@ -76,6 +76,22 @@ Ext.onReady(function(){
     addTabPanel('t_config', 'configPanel', 'Repository Config');
   }
 
+  function logout(){
+    Ext.Ajax.request({
+      url: restUrl + 'authentication/logout.json',
+      method: 'GET',
+      success: function(response){
+        tabPanel.removeAll();
+        Ext.getCmp('west').removeAll();
+        var loginWin = new Sonia.login.Window();
+        loginWin.show();
+      },
+      failure: function(){
+        alert("logout failed");
+      }
+    });
+  }
+
   function createMainMenu(){
     var panel = Ext.getCmp('west');
     panel.addSections([{
@@ -95,6 +111,12 @@ Ext.onReady(function(){
       },{
         label: 'Server',
         fn: function(){ console.debug( 'Server Config' ); }
+      }]
+    },{
+      title: 'Abmelden',
+      items: [{
+        label: 'Abmelden',
+        fn: logout
       }]
     }]);
   }

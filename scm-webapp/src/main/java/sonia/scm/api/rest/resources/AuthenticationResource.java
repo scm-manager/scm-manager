@@ -49,12 +49,34 @@ public class AuthenticationResource
    *
    * @param request
    * @param response
+   *
+   * @return
+   */
+  @GET
+  @Path("logout")
+  public Response logout(@Context HttpServletRequest request,
+                         @Context HttpServletResponse response)
+  {
+    securityContext.logout(request, response);
+
+    return Response.ok().build();
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
    * @param username
    * @param password
    *
    * @return
    */
   @POST
+  @Path("login")
   public ScmState getState(@Context HttpServletRequest request,
                            @Context HttpServletResponse response,
                            @FormParam("username") String username,

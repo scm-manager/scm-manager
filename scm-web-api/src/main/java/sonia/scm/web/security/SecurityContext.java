@@ -35,8 +35,17 @@ public interface SecurityContext
    * @return
    */
   public User authenticate(HttpServletRequest request,
-                              HttpServletResponse response, String username,
-                              String password);
+                           HttpServletResponse response, String username,
+                           String password);
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   */
+  public void logout(HttpServletRequest request, HttpServletResponse response);
 
   //~--- get methods ----------------------------------------------------------
 

@@ -48,6 +48,19 @@ public class BasicSecurityContext implements SecurityContext
     return user;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   */
+  @Override
+  public void logout(HttpServletRequest request, HttpServletResponse response)
+  {
+    user = null;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
