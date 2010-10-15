@@ -14,6 +14,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -339,6 +340,22 @@ public abstract class AbstractSimpleRepositoryHandler<T extends SimpleRepository
       }
 
       repository = null;
+    }
+    else
+    {
+      String url = config.getBaseUrl();
+
+      if (Util.isNotEmpty(url))
+      {
+        if (!url.endsWith("/"))
+        {
+          url = url.concat("/");
+        }
+
+        url = url.concat(repository.getName());
+      }
+
+      repository.setUrl(url);
     }
 
     return repository;
