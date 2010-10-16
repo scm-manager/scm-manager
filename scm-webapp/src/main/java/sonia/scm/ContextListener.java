@@ -25,10 +25,6 @@ import sonia.scm.web.ScmWebPluginContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletContextEvent;
 
@@ -67,8 +63,6 @@ public class ContextListener extends GuiceServletContextListener
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent)
   {
-
-    enableDebugLogging();
     webPluginContext =
       new ScmWebPluginContext(servletContextEvent.getServletContext());
 
@@ -110,24 +104,6 @@ public class ContextListener extends GuiceServletContextListener
     injector.getInstance(RepositoryManager.class).init(SCMContext.getContext());
 
     return injector;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  private void enableDebugLogging()
-  {
-    Logger logger = LogManager.getLogManager().getLogger("");
-
-    logger.setLevel(Level.FINEST);
-
-    ConsoleHandler handler = new ConsoleHandler();
-
-    handler.setLevel(Level.FINEST);
-    logger.addHandler(handler);
   }
 
   //~--- fields ---------------------------------------------------------------
