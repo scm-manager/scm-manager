@@ -12,6 +12,9 @@ package sonia.scm;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.servlet.ServletModule;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.api.rest.UriExtensionsConfig;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.CacheRepositoryManagerDecorator;
@@ -40,8 +43,6 @@ import java.io.IOException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -81,6 +82,10 @@ public class ScmServletModule extends ServletModule
                                                         PATTERN_SCRIPT,
           PATTERN_STYLESHEET, "*.json", "*.xml", "*.txt" };
 
+  /** Field description */
+  private static Logger logger =
+    LoggerFactory.getLogger(ScmServletModule.class);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -119,8 +124,7 @@ public class ScmServletModule extends ServletModule
     }
     catch (IOException ex)
     {
-      Logger.getLogger(ScmServletModule.class.getName()).log(Level.SEVERE,
-                       null, ex);
+      logger.error(ex.getMessage(), ex);
     }
 
     for (Class<? extends RepositoryHandler> handler :

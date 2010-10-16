@@ -9,6 +9,9 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.util.Util;
 
@@ -22,8 +25,6 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.bind.JAXB;
 
@@ -39,7 +40,7 @@ public class SCMPluginManager
 
   /** Field description */
   private static final Logger logger =
-    Logger.getLogger(SCMPluginManager.class.getName());
+    LoggerFactory.getLogger(SCMPluginManager.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -131,7 +132,7 @@ public class SCMPluginManager
     }
     catch (Exception ex)
     {
-      logger.log(Level.SEVERE, null, ex);
+      logger.error(ex.getMessage(), ex);
     }
   }
 

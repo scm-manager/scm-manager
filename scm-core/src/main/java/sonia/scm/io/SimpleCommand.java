@@ -9,6 +9,9 @@ package sonia.scm.io;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -19,9 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -31,7 +31,7 @@ public class SimpleCommand implements Command
 
   /** Field description */
   private static final Logger logger =
-    Logger.getLogger(SimpleCommand.class.getName());
+    LoggerFactory.getLogger(SimpleCommand.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -144,7 +144,7 @@ public class SimpleCommand implements Command
     }
     catch (InterruptedException ex)
     {
-      logger.log(Level.SEVERE, null, ex);
+      logger.error(ex.getMessage(), ex);
 
       throw new IOException(ex.getMessage());
     }

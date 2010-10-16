@@ -7,12 +7,14 @@
 
 package sonia.scm.cli;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.math.BigInteger;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -23,7 +25,7 @@ public class ConvertUtil
 
   /** Field description */
   private static final Logger logger =
-    Logger.getLogger(ConvertUtil.class.getName());
+    LoggerFactory.getLogger(ConvertUtil.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -77,7 +79,7 @@ public class ConvertUtil
     }
     catch (NumberFormatException ex)
     {
-      logger.log(Level.FINER, null, ex);
+      logger.debug(ex.getMessage(), ex);
     }
 
     return result;

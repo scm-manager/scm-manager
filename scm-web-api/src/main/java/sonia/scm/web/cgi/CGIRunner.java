@@ -9,6 +9,9 @@ package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -21,8 +24,6 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -41,8 +42,7 @@ public class CGIRunner
   public static final int BUFFERSIZE = 2 * 8192;
 
   /** Field description */
-  private static final Logger logger =
-    Logger.getLogger(CGIRunner.class.getName());
+  private static final Logger logger = LoggerFactory.getLogger(CGIRunner.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -51,12 +51,11 @@ public class CGIRunner
    *
    *
    * @param context
-   * @param environment
    * @param cmdPrefix
    * @param ignoreExitState
    */
-  public CGIRunner(ServletContext context,
-                   String cmdPrefix, boolean ignoreExitState)
+  public CGIRunner(ServletContext context, String cmdPrefix,
+                   boolean ignoreExitState)
   {
     this.context = context;
     this.cmdPrefix = cmdPrefix;
@@ -69,6 +68,8 @@ public class CGIRunner
    * Method description
    *
    *
+   *
+   * @param environment
    * @param command
    * @param pathInfo
    * @param req
@@ -76,8 +77,8 @@ public class CGIRunner
    *
    * @throws IOException
    */
-  public void exec(EnvList environment, File command, String pathInfo, HttpServletRequest req,
-                   HttpServletResponse res)
+  public void exec(EnvList environment, File command, String pathInfo,
+                   HttpServletRequest req, HttpServletResponse res)
           throws IOException
   {
     String path = command.getAbsolutePath();
@@ -142,8 +143,8 @@ public class CGIRunner
 
     // these extra ones were from printenv on www.dev.nomura.co.uk
     environment.set("HTTPS", (req.isSecure()
-                      ? "ON"
-                      : "OFF"));
+                              ? "ON"
+                              : "OFF"));
 
     // "DOCUMENT_ROOT" => root + "/docs",
     // "SERVER_URL" => "NYI - http://us0245",
@@ -163,14 +164,15 @@ public class CGIRunner
       execCmd = cmdPrefix + " " + execCmd;
     }
 
-    if (logger.isLoggable(Level.FINE))
+    if (logger.isInfoEnabled())
     {
-      logger.fine("execute cgi: ".concat(execCmd));
+      logger.info("execute cgi: ".concat(execCmd));
     }
 
     Process p = (dir == null)
                 ? Runtime.getRuntime().exec(execCmd, environment.getEnvArray())
-                : Runtime.getRuntime().exec(execCmd, environment.getEnvArray(), dir);
+                : Runtime.getRuntime().exec(execCmd, environment.getEnvArray(),
+                  dir);
 
     // hook processes input to browser's output (async)
     final InputStream inFromReq = req.getInputStream();
@@ -194,9 +196,9 @@ public class CGIRunner
 
           outToCgi.close();
         }
-        catch (IOException e)
+        catch (IOException ex)
         {
-          logger.log(Level.FINEST, null, e);
+          logger.debug(ex.getMessage(), ex);
         }
         finally
         {
@@ -266,7 +268,7 @@ public class CGIRunner
           StringBuilder msg = new StringBuilder("Non-zero exit status (");
 
           msg.append(exitValue).append(") from CGI program: ").append(path);
-          logger.warning(msg.toString());
+          logger.warn(msg.toString());
 
           if (!res.isCommitted())
           {
@@ -280,11 +282,11 @@ public class CGIRunner
 
       // browser has probably closed its input stream - we
       // terminate and clean up...
-      logger.finest("CGI: Client closed connection!");
+      logger.debug("CGI: Client closed connection!");
     }
     catch (InterruptedException ie)
     {
-      logger.finest("CGI: interrupted!");
+      logger.debug("CGI: interrupted!");
     }
     finally
     {

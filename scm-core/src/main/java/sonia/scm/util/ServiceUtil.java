@@ -3,14 +3,21 @@
  * and open the template in the editor.
  */
 
+
+
 package sonia.scm.util;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+//~--- JDK imports ------------------------------------------------------------
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.ServiceLoader;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -21,7 +28,7 @@ public class ServiceUtil
 
   /** Field description */
   private static final Logger logger =
-    Logger.getLogger(ServiceUtil.class.getName());
+    LoggerFactory.getLogger(ServiceUtil.class);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -71,10 +78,7 @@ public class ServiceUtil
     }
     catch (NoSuchElementException ex)
     {
-      if (logger.isLoggable(Level.FINEST))
-      {
-        logger.log(Level.FINEST, null, ex);
-      }
+      logger.debug(ex.getMessage(), ex);
     }
 
     return result;
@@ -107,13 +111,9 @@ public class ServiceUtil
     }
     catch (NoSuchElementException ex)
     {
-      if (logger.isLoggable(Level.FINEST))
-      {
-        logger.log(Level.FINEST, null, ex);
-      }
+      logger.debug(ex.getMessage(), ex);
     }
 
     return result;
   }
 }
-

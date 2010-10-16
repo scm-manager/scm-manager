@@ -9,6 +9,9 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.io.CommandResult;
@@ -25,8 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.bind.JAXB;
 
@@ -34,7 +35,8 @@ import javax.xml.bind.JAXB;
  *
  * @author Sebastian Sdorra
  *
- * @param <T>
+ *
+ * @param <C>
  */
 public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepositoryConfig>
         extends AbstractRepositoryHandler<C>
@@ -42,7 +44,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
   /** Field description */
   private static final Logger logger =
-    Logger.getLogger(AbstractSimpleRepositoryHandler.class.getName());
+    LoggerFactory.getLogger(AbstractSimpleRepositoryHandler.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -238,7 +240,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       }
       catch (Exception ex)
       {
-        logger.log(Level.SEVERE, null, ex);
+        logger.error(ex.getMessage(), ex);
       }
     }
 
@@ -333,10 +335,9 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
     if (!directory.exists())
     {
-      if (logger.isLoggable(Level.WARNING))
+      if (logger.isWarnEnabled())
       {
-        logger.warning(
-            "could not find repository ".concat(repository.getName()));
+        logger.warn("could not find repository ".concat(repository.getName()));
       }
 
       repository = null;

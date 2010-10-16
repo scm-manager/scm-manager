@@ -10,6 +10,10 @@ package sonia.scm.web.filter;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Singleton;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -23,8 +27,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -45,7 +47,7 @@ public class LoggingFilter extends HttpFilter
 
   /** Field description */
   private static final Logger logger =
-    Logger.getLogger(LoggingFilter.class.getName());
+    LoggerFactory.getLogger(LoggingFilter.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -65,7 +67,7 @@ public class LoggingFilter extends HttpFilter
                           HttpServletResponse response, FilterChain chain)
           throws IOException, ServletException
   {
-    if (logger.isLoggable(Level.FINEST))
+    if (logger.isDebugEnabled())
     {
       LoggingHttpServletRequest loggingRequest =
         new LoggingHttpServletRequest(request);
@@ -90,16 +92,16 @@ public class LoggingFilter extends HttpFilter
    */
   private void logRequest(LoggingHttpServletRequest request)
   {
-    logger.finest("**************** request ****************");
-    logger.finest("Info: Request-Uri = ".concat(request.getRequestURI()));
-    logger.finest("Info: Remote-Addr = ".concat(request.getRemoteAddr()));
-    logger.finest(
+    logger.debug("**************** request ****************");
+    logger.debug("Info: Request-Uri = ".concat(request.getRequestURI()));
+    logger.debug("Info: Remote-Addr = ".concat(request.getRemoteAddr()));
+    logger.debug(
         "Info: Content-Size = ".concat(
           Integer.toString(request.getContentLength())));
-    logger.finest(
+    logger.debug(
         "Info: Content-Type = ".concat(Util.nonNull(request.getContentType())));
-    logger.finest("Info: Method = ".concat(request.getMethod()));
-    logger.finest(
+    logger.debug("Info: Method = ".concat(request.getMethod()));
+    logger.debug(
         "Info: AuthType = ".concat(Util.nonNull(request.getAuthType())));
 
     Enumeration headers = request.getHeaderNames();
@@ -108,7 +110,7 @@ public class LoggingFilter extends HttpFilter
     {
       String header = (String) headers.nextElement();
 
-      logger.finest(
+      logger.debug(
           "Header: ".concat(header).concat(" = ").concat(
             request.getHeader(header)));
     }
@@ -119,7 +121,7 @@ public class LoggingFilter extends HttpFilter
     {
       for (Cookie cookie : cookies)
       {
-        logger.finest(
+        logger.debug(
             "Cookie: ".concat(cookie.getName()).concat(" = ").concat(
               cookie.getValue()));
       }
@@ -133,7 +135,7 @@ public class LoggingFilter extends HttpFilter
       {
         String parameter = (String) parameters.nextElement();
 
-        logger.finest(
+        logger.debug(
             "Parameter: ".concat(parameter).concat(" = ").concat(
               request.getParameter(parameter)));
       }
@@ -147,7 +149,7 @@ public class LoggingFilter extends HttpFilter
       {
         String attribute = (String) attributes.nextElement();
 
-        logger.finest(
+        logger.debug(
             "Attribute: ".concat(attribute).concat(" = ").concat(
               request.getAttribute(attribute).toString()));
       }
@@ -155,7 +157,7 @@ public class LoggingFilter extends HttpFilter
 
     HttpSession session = request.getSession(true);
 
-    logger.finest("Session-New: ".concat(Boolean.toString(session.isNew())));
+    logger.debug("Session-New: ".concat(Boolean.toString(session.isNew())));
 
     Enumeration sAttributes = session.getAttributeNames();
 
@@ -165,7 +167,7 @@ public class LoggingFilter extends HttpFilter
       {
         String sAttribute = (String) sAttributes.nextElement();
 
-        logger.finest(
+        logger.debug(
             "Session-Attribute: ".concat(sAttribute).concat(" = ").concat(
               request.getSession().getAttribute(sAttribute).toString()));
       }
@@ -180,29 +182,29 @@ public class LoggingFilter extends HttpFilter
    */
   private void logResponse(LoggingHttpServletResponse response)
   {
-    logger.finest("**************** response ****************");
-    logger.finest(
+    logger.debug("**************** response ****************");
+    logger.debug(
         "status code = ".concat(Integer.toString(response.getStatusCode())));
-    logger.finest(
+    logger.debug(
         "status message = ".concat(Util.nonNull(response.getStatusMessage())));
-    logger.finest(
+    logger.debug(
         "charset = ".concat(Util.nonNull(response.getCharacterEncoding())));
-    logger.finest(
+    logger.debug(
         "content-type = ".concat(Util.nonNull(response.getContentType())));
-    logger.finest(
+    logger.debug(
         "content-length = ".concat(
           Integer.toString(response.getContentLength())));
 
     for (Cookie cookie : response.getCookies())
     {
-      logger.finest(
+      logger.debug(
           "Cookie: ".concat(cookie.getName()).concat(" = ").concat(
             cookie.getValue()));
     }
 
     for (Entry<String, String> header : response.getHeaders().entrySet())
     {
-      logger.finest(
+      logger.debug(
           "Header: ".concat(header.getKey()).concat(" = ").concat(
             header.getValue()));
     }

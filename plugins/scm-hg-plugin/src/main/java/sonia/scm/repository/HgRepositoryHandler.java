@@ -11,6 +11,9 @@ package sonia.scm.repository;
 
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.ConfigurationException;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
@@ -32,8 +35,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -55,7 +56,7 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
 
   /** Field description */
   private static final Logger logger =
-    Logger.getLogger(HgRepositoryHandler.class.getName());
+    LoggerFactory.getLogger(HgRepositoryHandler.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -378,14 +379,14 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
             }
             catch (ParseException ex)
             {
-              logger.log(Level.SEVERE, null, ex);
+              logger.error(ex.getMessage(), ex);
             }
           }
         }
       }
       catch (IOException ex)
       {
-        logger.log(Level.SEVERE, null, ex);
+        logger.error(ex.getMessage(), ex);
       }
     }
   }

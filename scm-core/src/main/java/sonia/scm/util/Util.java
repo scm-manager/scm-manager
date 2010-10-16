@@ -9,22 +9,12 @@ package sonia.scm.util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -35,9 +25,6 @@ public class Util
 
   /** Field description */
   public static final String DATE_PATTERN = "yyyy-MM-dd HH-mm-ss";
-
-  /** Field description */
-  private static final Logger logger = Logger.getLogger(Util.class.getName());
 
   //~--- methods --------------------------------------------------------------
 

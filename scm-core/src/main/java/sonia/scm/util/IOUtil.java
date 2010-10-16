@@ -7,6 +7,11 @@
 
 package sonia.scm.util;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
@@ -17,9 +22,6 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -28,7 +30,8 @@ public class IOUtil
 {
 
   /** Field description */
-  private static final Logger logger = Logger.getLogger(IOUtil.class.getName());
+  private static final Logger logger =
+    LoggerFactory.getLogger(IOUtil.class.getName());
 
   //~--- methods --------------------------------------------------------------
 
@@ -48,7 +51,7 @@ public class IOUtil
       }
       catch (IOException ex)
       {
-        logger.log(Level.SEVERE, null, ex);
+        logger.error(ex.getMessage(), ex);
       }
     }
   }
@@ -172,7 +175,7 @@ public class IOUtil
       }
       catch (IOException ex)
       {
-        logger.log(Level.SEVERE, null, ex);
+        logger.error(ex.getMessage(), ex);
       }
       finally
       {

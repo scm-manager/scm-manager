@@ -12,6 +12,9 @@ package sonia.scm.repository;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
@@ -37,6 +40,12 @@ import java.util.Set;
 @Singleton
 public class BasicRepositoryManager extends AbstractRepositoryManager
 {
+
+  /** Field description */
+  private static final Logger logger =
+    LoggerFactory.getLogger(BasicRepositoryManager.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -79,6 +88,12 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
           type.getName().concat("allready registered"));
     }
 
+    if (logger.isInfoEnabled())
+    {
+      logger.info("added RepositoryHandler {} for type {}", handler.getClass(),
+                  type);
+    }
+
     handlerMap.put(type.getName(), handler);
     handler.init(SCMContext.getContext());
     types.add(type);
@@ -112,6 +127,12 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   public void create(Repository repository)
           throws RepositoryException, IOException
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("create repository {} of type {}", repository.getName(),
+                  repository.getType());
+    }
+
     getHandler(repository).create(repository);
     fireEvent(repository, RepositoryEvent.CREATE);
   }
@@ -129,6 +150,12 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   public void delete(Repository repository)
           throws RepositoryException, IOException
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("delete repository {} of type {}", repository.getName(),
+                  repository.getType());
+    }
+
     getHandler(repository).delete(repository);
     fireEvent(repository, RepositoryEvent.DELETE);
   }
@@ -155,6 +182,12 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   public void modify(Repository repository)
           throws RepositoryException, IOException
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("modify repository {} of type {}", repository.getName(),
+                  repository.getType());
+    }
+
     getHandler(repository).modify(repository);
     fireEvent(repository, RepositoryEvent.MODIFY);
   }
@@ -216,6 +249,11 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   @Override
   public Collection<Repository> getAll()
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch all repositories");
+    }
+
     Set<Repository> repositories = new HashSet<Repository>();
 
     for (RepositoryHandler handler : handlerMap.values())
@@ -229,6 +267,11 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
           repositories.addAll(handlerRepositories);
         }
       }
+    }
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fetched {} repositories", repositories.size());
     }
 
     return repositories;

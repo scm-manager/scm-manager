@@ -9,18 +9,18 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.web.filter.HttpFilter;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.util.WebUtil;
+import sonia.scm.web.filter.HttpFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -39,7 +39,7 @@ public class StaticResourceFilter extends HttpFilter
 
   /** Field description */
   private static final Logger logger =
-    Logger.getLogger(StaticResourceFilter.class.getName());
+    LoggerFactory.getLogger(StaticResourceFilter.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -83,13 +83,13 @@ public class StaticResourceFilter extends HttpFilter
 
       if (!WebUtil.isModified(request, resource))
       {
-        if (logger.isLoggable(Level.FINEST))
+        if (logger.isDebugEnabled())
         {
           StringBuilder msg = new StringBuilder("return ");
 
           msg.append(HttpServletResponse.SC_NOT_MODIFIED);
           msg.append(" for ").append(uri);
-          logger.finest(msg.toString());
+          logger.debug(msg.toString());
         }
 
         response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);

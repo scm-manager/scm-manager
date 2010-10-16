@@ -9,6 +9,9 @@ package sonia.scm.server;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.cli.CliException;
 import sonia.scm.cli.CliParser;
 import sonia.scm.cli.DefaultCliHelpBuilder;
@@ -19,9 +22,6 @@ import sonia.scm.util.ServiceUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.xml.bind.JAXB;
 
@@ -46,7 +46,7 @@ public class ServerApplication
 
   /** Field description */
   private static final Logger logger =
-    Logger.getLogger(ServerApplication.class.getName());
+    LoggerFactory.getLogger(ServerApplication.class.getName());
 
   //~--- methods --------------------------------------------------------------
 
@@ -108,11 +108,11 @@ public class ServerApplication
             }
             catch (ServerException ex)
             {
-              logger.log(Level.SEVERE, null, ex);
+              logger.error(ex.getMessage(), ex);
             }
             catch (IOException ex)
             {
-              logger.log(Level.SEVERE, null, ex);
+              logger.error(ex.getMessage(), ex);
             }
           }
         }
@@ -124,15 +124,18 @@ public class ServerApplication
    * Method description
    *
    *
+   *
+   * @param appInfo
    * @param parser
    * @param config
    */
-  private static void printHelp(ApplicationInformation appInfo, CliParser parser, ServerConfig config)
+  private static void printHelp(ApplicationInformation appInfo,
+                                CliParser parser, ServerConfig config)
   {
     String s = System.getProperty("line.separator");
     StringBuilder prefix = new StringBuilder(appInfo.getName());
-    prefix.append(" ").append( appInfo.getVersion() );
 
+    prefix.append(" ").append(appInfo.getVersion());
     prefix.append(s).append("usage: ");
     prefix.append(s);
 

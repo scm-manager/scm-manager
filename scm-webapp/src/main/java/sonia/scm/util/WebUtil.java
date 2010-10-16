@@ -7,6 +7,11 @@
 
 package sonia.scm.util;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -18,8 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,8 +83,7 @@ public class WebUtil
     "EEE, dd MMM yyyy HH:mm:ss zzz";
 
   /** Field description */
-  private static final Logger logger =
-    Logger.getLogger(WebUtil.class.getName());
+  private static final Logger logger = LoggerFactory.getLogger(WebUtil.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -212,19 +214,11 @@ public class WebUtil
       }
       catch (ParseException ex)
       {
-        if (logger.isLoggable(Level.WARNING))
-        {
-          logger.log(Level.WARNING, null, ex);
-        }
+        logger.warn(ex.getMessage(), ex);
       }
       catch (NumberFormatException ex)
       {
-        logger.warning(dateString);
-
-        if (logger.isLoggable(Level.WARNING))
-        {
-          logger.log(Level.WARNING, dateString, ex);
-        }
+        logger.warn(ex.getMessage(), ex);
       }
     }
 

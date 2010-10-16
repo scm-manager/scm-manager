@@ -68,7 +68,7 @@ public class ContextListener extends GuiceServletContextListener
   public void contextInitialized(ServletContextEvent servletContextEvent)
   {
 
-    // enableDebugLogging();
+    enableDebugLogging();
     webPluginContext =
       new ScmWebPluginContext(servletContextEvent.getServletContext());
 
