@@ -33,6 +33,24 @@ public class RepositoryType
     this.displayName = displayName;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    StringBuilder msg = new StringBuilder(name);
+
+    msg.append(" (").append(displayName).append(")");
+
+    return msg.toString();
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
