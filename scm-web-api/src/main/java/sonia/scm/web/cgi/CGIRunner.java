@@ -164,9 +164,9 @@ public class CGIRunner
       execCmd = cmdPrefix + " " + execCmd;
     }
 
-    if (logger.isInfoEnabled())
+    if (logger.isDebugEnabled())
     {
-      logger.info("execute cgi: ".concat(execCmd));
+      logger.debug("execute cgi: ".concat(execCmd));
     }
 
     Process p = (dir == null)
