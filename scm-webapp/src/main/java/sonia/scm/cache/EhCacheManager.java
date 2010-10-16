@@ -52,7 +52,7 @@ public class EhCacheManager implements CacheManager
   public <K, V> ExtendedCache<K, V> getExtendedCache(Class<K> key,
           Class<V> value, String name)
   {
-    return getCache(key, value, name);
+    return getCache(name);
   }
 
   /**
@@ -71,23 +71,20 @@ public class EhCacheManager implements CacheManager
   public <K, V> SimpleCache<K, V> getSimpleCache(Class<K> key, Class<V> value,
           String name)
   {
-    return getCache(key, value, name);
+    return getCache(name);
   }
 
   /**
    * Method description
    *
    *
-   * @param key
-   * @param value
    * @param name
    * @param <K>
    * @param <V>
    *
    * @return
    */
-  private <K, V> EhCache<K, V> getCache(Class<K> key, Class<V> value,
-          String name)
+  private <K, V> EhCache<K, V> getCache(String name)
   {
     return new EhCache<K, V>(cacheManager.getCache(name));
   }

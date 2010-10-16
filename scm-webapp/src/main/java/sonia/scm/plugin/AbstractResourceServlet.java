@@ -102,7 +102,7 @@ public abstract class AbstractResourceServlet extends HttpServlet
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException
   {
-    processRequest(request, response);
+    processRequest(response);
   }
 
   /**
@@ -120,7 +120,7 @@ public abstract class AbstractResourceServlet extends HttpServlet
                         HttpServletResponse response)
           throws ServletException, IOException
   {
-    processRequest(request, response);
+    processRequest(response);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -142,14 +142,12 @@ public abstract class AbstractResourceServlet extends HttpServlet
    * Method description
    *
    *
-   * @param request
    * @param response
    *
    * @throws IOException
    * @throws ServletException
    */
-  private void processRequest(HttpServletRequest request,
-                              HttpServletResponse response)
+  private void processRequest(HttpServletResponse response)
           throws ServletException, IOException
   {
     response.setCharacterEncoding(getCharacterEncoding());

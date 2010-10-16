@@ -7,6 +7,11 @@
 
 package sonia.scm.filter;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
@@ -23,6 +28,12 @@ import javax.servlet.http.HttpServletResponseWrapper;
  */
 public class GZipResponseWrapper extends HttpServletResponseWrapper
 {
+
+  /** Field description */
+  private static final Logger logger =
+    LoggerFactory.getLogger(GZipResponseWrapper.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -71,7 +82,10 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
         }
       }
     }
-    catch (IOException e) {}
+    catch (IOException ex)
+    {
+      logger.error(ex.getMessage(), ex);
+    }
   }
 
   /**

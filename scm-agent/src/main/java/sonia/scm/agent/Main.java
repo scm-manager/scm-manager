@@ -7,6 +7,11 @@
 
 package sonia.scm.agent;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.grizzly.http.SelectorThread;
@@ -31,6 +36,9 @@ public class Main
 
   /** Field description */
   private static final String DEFAULT_URI = "http://localhost:{0}/";
+
+  /** Field description */
+  private static Logger logger = LoggerFactory.getLogger(Main.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -95,7 +103,10 @@ public class Main
       {
         return Integer.parseInt(port);
       }
-      catch (NumberFormatException e) {}
+      catch (NumberFormatException ex)
+      {
+        logger.debug(ex.getMessage(), ex);
+      }
     }
 
     return defaultPort;
