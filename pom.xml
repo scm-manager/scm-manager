@@ -8,7 +8,32 @@
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>scm</name>
+
   <url>http://bitbucket.org/sdorra/scm-manager</url>
+
+  <developers>
+    <developer>
+      <id>sdorra</id>
+      <name>Sebastian Sdorra</name>
+      <email>s.sdorra@gmail.com</email>
+      <timezone>Europe/Berlin</timezone>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:hg:http://bitbucket.org/sdorra/scm-manager</connection>
+    <developerConnection>scm:hg:https://bitbucket.org/sdorra/scm-manager</developerConnection>
+    <url>http://bitbucket.org/sdorra/scm-manager</url>
+  </scm>
+
+  <issueManagement>
+    <system>bitbucket</system>
+    <url>http://bitbucket.org/sdorra/scm-manager/issues</url>
+  </issueManagement>
+
+  <prerequisites>
+    <maven>2.1</maven>
+  </prerequisites>
 
   <modules>
     <module>scm-core</module>
