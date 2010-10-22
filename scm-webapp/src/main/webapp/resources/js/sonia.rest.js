@@ -319,13 +319,12 @@ Sonia.rest.RestPanel = Ext.extend(Ext.Panel,{
       title: this.title,
       layout: 'border',
       border: false,
-      closable: true,
-      autoScroll: true,
       items:[
         this.grid,{
           id: 'southpanel',
           xtype: 'panel',
           region: 'south',
+          autoScroll: true,
           split: true,
           frame: true,
           height: 200,
