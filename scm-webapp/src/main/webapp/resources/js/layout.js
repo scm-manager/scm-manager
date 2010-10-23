@@ -67,6 +67,7 @@ Ext.onReady(function(){
       id: 't_repository',
       title: 'Repositories',
       xtype: 'restPanel',
+      closable: true,
       grid: {xtype: 'repositoryGrid'}
     });
     tabPanel.setActiveTab('t_repository');
