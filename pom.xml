@@ -122,7 +122,9 @@
           <excludes>
             <exclude>target/**</exclude>
             <exclude>.hg/**</exclude>
+            <exclude>**/extjs/**</exclude>
           </excludes>
+          <strictCheck>true</strictCheck>
         </configuration>
       </plugin>
       

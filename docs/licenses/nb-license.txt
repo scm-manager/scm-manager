@@ -1,7 +1,7 @@
 <#if licenseFirst??>
 ${licenseFirst}*
 </#if>
-${licensePrefix}Copyright (c) 2009, Sebastian Sdorra
+${licensePrefix}Copyright (c) 2010, Sebastian Sdorra
 ${licensePrefix}All rights reserved.
 ${licensePrefix}
 ${licensePrefix}Redistribution and use in source and binary forms, with or without
