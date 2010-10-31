@@ -24,7 +24,10 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "name", "displayName", "mail" })
+@XmlType(propOrder =
+{
+  "name", "displayName", "mail", "password"
+})
 public class User implements Principal, Serializable
 {
 
@@ -90,6 +93,17 @@ public class User implements Principal, Serializable
     return name;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getPassword()
+  {
+    return password;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -126,6 +140,17 @@ public class User implements Principal, Serializable
     this.name = name;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param password
+   */
+  public void setPassword(String password)
+  {
+    this.password = password;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -136,4 +161,7 @@ public class User implements Principal, Serializable
 
   /** Field description */
   private String name;
+
+  /** Field description */
+  private String password;
 }

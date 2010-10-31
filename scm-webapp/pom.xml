@@ -119,7 +119,7 @@
           <systemproperties>
             <systemproperty>
               <name>org.apache.commons.logging.Log</name>
-              <value>org.apache.commons.logging.impl.Jdk14Logger</value>
+              <value>org.apache.commons.logging.impl.Log4JLogger</value>
             </systemproperty>
           </systemproperties>
           <source>${project.build.javaLevel}</source>

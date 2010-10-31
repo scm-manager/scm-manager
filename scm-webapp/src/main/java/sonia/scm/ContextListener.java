@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.ServletContextEvent;
+import sonia.scm.web.security.Authenticator;
 
 /**
  *
@@ -102,6 +103,9 @@ public class ContextListener extends GuiceServletContextListener
 
     // init RepositoryManager
     injector.getInstance(RepositoryManager.class).init(SCMContext.getContext());
+
+    // init Authenticator
+    injector.getInstance(Authenticator.class).init(SCMContext.getContext());
 
     return injector;
   }

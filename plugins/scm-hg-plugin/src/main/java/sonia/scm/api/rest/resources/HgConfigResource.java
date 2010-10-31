@@ -14,7 +14,6 @@ import com.google.inject.Singleton;
 
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.HgWebConfigWriter;
 
 //~--- JDK imports ------------------------------------------------------------

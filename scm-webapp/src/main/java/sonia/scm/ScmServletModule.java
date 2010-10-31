@@ -25,12 +25,14 @@ import sonia.scm.plugin.ScriptResourceServlet;
 import sonia.scm.repository.BasicRepositoryManager;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.security.EncryptionHandler;
+import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.util.DebugServlet;
 import sonia.scm.web.ScmWebPluginContext;
 import sonia.scm.web.security.Authenticator;
 import sonia.scm.web.security.BasicSecurityContext;
-import sonia.scm.web.security.DemoAuthenticator;
 import sonia.scm.web.security.SecurityContext;
+import sonia.scm.web.security.XmlAuthenticator;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -111,7 +113,8 @@ public class ScmServletModule extends ServletModule
     SCMContextProvider context = SCMContext.getContext();
 
     bind(SCMContextProvider.class).toInstance(context);
-    bind(Authenticator.class).to(DemoAuthenticator.class);
+    bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
+    bind(Authenticator.class).to(XmlAuthenticator.class);
     bind(SecurityContext.class).to(BasicSecurityContext.class);
 
     Multibinder<RepositoryHandler> repositoryHandlerBinder =

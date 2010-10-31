@@ -9,9 +9,12 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.Initable;
 import sonia.scm.User;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.Closeable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-public interface Authenticator
+public interface Authenticator extends Initable, Closeable
 {
 
   /**
