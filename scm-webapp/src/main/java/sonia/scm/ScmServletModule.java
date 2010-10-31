@@ -31,6 +31,7 @@ import sonia.scm.util.Util;
 import sonia.scm.web.plugin.SCMPlugin;
 import sonia.scm.web.plugin.SCMPluginManager;
 import sonia.scm.web.plugin.ScmWebPluginContext;
+import sonia.scm.web.plugin.SecurityConfig;
 import sonia.scm.web.security.Authenticator;
 import sonia.scm.web.security.BasicSecurityContext;
 import sonia.scm.web.security.SecurityContext;
@@ -42,8 +43,6 @@ import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
-
-import java.io.IOException;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -122,8 +121,9 @@ public class ScmServletModule extends ServletModule
     SCMContextProvider context = SCMContext.getContext();
 
     bind(SCMContextProvider.class).toInstance(context);
-    bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
-    bind(Authenticator.class).to(XmlAuthenticator.class);
+
+    // bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
+    // bind(Authenticator.class).to(XmlAuthenticator.class);
     bind(SecurityContext.class).to(BasicSecurityContext.class);
     loadPlugins(pluginManager);
     bind(CacheManager.class).to(EhCacheManager.class);
@@ -203,6 +203,9 @@ public class ScmServletModule extends ServletModule
         Multibinder.newSetBinder(binder(), RepositoryHandler.class);
       Set<Class<? extends RepositoryHandler>> handlerSet =
         new LinkedHashSet<Class<? extends RepositoryHandler>>();
+      Class<? extends EncryptionHandler> encryptionHandler =
+        MessageDigestEncryptionHandler.class;
+      Class<? extends Authenticator> authenticator = XmlAuthenticator.class;
 
       for (SCMPlugin plugin : pluginSet)
       {
@@ -213,8 +216,31 @@ public class ScmServletModule extends ServletModule
         {
           handlerSet.addAll(handlers);
         }
+
+        SecurityConfig securityConfig = plugin.getSecurityConfig();
+
+        if (securityConfig != null)
+        {
+          Class<? extends EncryptionHandler> enc =
+            securityConfig.getEncryptionHandler();
+
+          if (enc != null)
+          {
+            encryptionHandler = enc;
+          }
+
+          Class<? extends Authenticator> auth =
+            securityConfig.getAuthenticator();
+
+          if (auth != null)
+          {
+            authenticator = auth;
+          }
+        }
       }
 
+      bind(EncryptionHandler.class).to(encryptionHandler);
+      bind(Authenticator.class).to(authenticator);
       bindRepositoryHandlers(repositoryHandlerBinder, handlerSet);
     }
   }
