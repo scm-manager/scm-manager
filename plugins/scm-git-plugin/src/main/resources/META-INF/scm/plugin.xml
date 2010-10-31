@@ -10,8 +10,10 @@
 
 <plugin-config>
 
-    <repository-handlers>
-        <handler>sonia.scm.repository.GitRepositoryHandler</handler>
-    </repository-handlers>
+  <web-plugin>sonia.scm.web.GitWebPlugin</web-plugin>
+
+  <repository-handlers>
+    <repository-handler>sonia.scm.repository.GitRepositoryHandler</repository-handler>
+  </repository-handlers>
 
 </plugin-config>

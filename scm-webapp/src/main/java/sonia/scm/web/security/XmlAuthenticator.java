@@ -71,9 +71,6 @@ public class XmlAuthenticator implements Authenticator
 
       String encryptedPassword = encryptionHandler.encrypt(password);
 
-      System.out.println(encryptedPassword);
-      System.out.println(user.getPassword());
-
       if (!encryptedPassword.equalsIgnoreCase(user.getPassword()))
       {
         user = null;

@@ -5,7 +5,7 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.web.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -82,10 +82,64 @@ public class SCMPlugin
     return handlers;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public SecurityConfig getSecurityConfig()
+  {
+    return securityConfig;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Class<? extends ScmWebPlugin> getWebPlugin()
+  {
+    return webPlugin;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param securityConfig
+   */
+  public void setSecurityConfig(SecurityConfig securityConfig)
+  {
+    this.securityConfig = securityConfig;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param webPlugin
+   */
+  public void setWebPlugin(Class<? extends ScmWebPlugin> webPlugin)
+  {
+    this.webPlugin = webPlugin;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   @XmlElementWrapper(name = "repository-handlers")
-  @XmlElement(name = "handler")
+  @XmlElement(name = "repository-handler")
   private Set<Class<? extends RepositoryHandler>> handlers;
+
+  /** Field description */
+  @XmlElement(name = "security")
+  private SecurityConfig securityConfig;
+
+  /** Field description */
+  @XmlElement(name = "web-plugin")
+  private Class<? extends ScmWebPlugin> webPlugin;
 }

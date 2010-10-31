@@ -5,7 +5,7 @@
 
 
 
-package sonia.scm.web;
+package sonia.scm.web.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 

@@ -10,8 +10,10 @@
 
 <plugin-config>
 
+  <web-plugin>sonia.scm.web.SvnWebPlugin</web-plugin>
+
     <repository-handlers>
-        <handler>sonia.scm.repository.SvnRepositoryHandler</handler>
+        <repository-handler>sonia.scm.repository.SvnRepositoryHandler</repository-handler>
     </repository-handlers>
 
 </plugin-config>

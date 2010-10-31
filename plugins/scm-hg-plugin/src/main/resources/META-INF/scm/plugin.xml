@@ -10,8 +10,10 @@
 
 <plugin-config>
 
-    <repository-handlers>
-        <handler>sonia.scm.repository.HgRepositoryHandler</handler>
-    </repository-handlers>
+  <web-plugin>sonia.scm.web.HgWebPlugin</web-plugin>
+
+  <repository-handlers>
+    <repository-handler>sonia.scm.repository.HgRepositoryHandler</repository-handler>
+  </repository-handlers>
 
 </plugin-config>

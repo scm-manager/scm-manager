@@ -7,6 +7,10 @@
 
 package sonia.scm.web;
 
+import sonia.scm.web.plugin.ScmWebPlugin;
+import sonia.scm.web.plugin.ScmWebPluginContext;
+import sonia.scm.web.plugin.ClasspathWebResource;
+
 /**
  *
  * @author Sebastian Sdorra

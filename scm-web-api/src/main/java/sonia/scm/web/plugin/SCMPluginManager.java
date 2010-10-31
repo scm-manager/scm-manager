@@ -5,15 +5,12 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.web.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.repository.RepositoryHandler;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -21,9 +18,8 @@ import java.io.IOException;
 
 import java.net.URL;
 
-import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.xml.bind.JAXB;
@@ -41,17 +37,6 @@ public class SCMPluginManager
   /** Field description */
   private static final Logger logger =
     LoggerFactory.getLogger(SCMPluginManager.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public SCMPluginManager()
-  {
-    repositoryHandlers = new HashSet<Class<? extends RepositoryHandler>>();
-  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -104,9 +89,9 @@ public class SCMPluginManager
    *
    * @return
    */
-  public Set<Class<? extends RepositoryHandler>> getRepositoryHandlers()
+  public Set<SCMPlugin> getPlugins()
   {
-    return repositoryHandlers;
+    return plugins;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -122,13 +107,13 @@ public class SCMPluginManager
     try
     {
       SCMPlugin plugin = JAXB.unmarshal(url, SCMPlugin.class);
-      Collection<Class<? extends RepositoryHandler>> handlers =
-        plugin.getHandlers();
 
-      if (Util.isNotEmpty(handlers))
+      if (logger.isInfoEnabled())
       {
-        repositoryHandlers.addAll(handlers);
+        logger.info("load plugin {}", url.toExternalForm());
       }
+
+      plugins.add(plugin);
     }
     catch (Exception ex)
     {
@@ -139,5 +124,5 @@ public class SCMPluginManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Set<Class<? extends RepositoryHandler>> repositoryHandlers;
+  private Set<SCMPlugin> plugins = new LinkedHashSet<SCMPlugin>();
 }

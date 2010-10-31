@@ -14,20 +14,29 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.ServiceUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.ScmWebPlugin;
-import sonia.scm.web.ScmWebPluginContext;
+import sonia.scm.web.plugin.SCMPlugin;
+import sonia.scm.web.plugin.SCMPluginManager;
+import sonia.scm.web.plugin.ScmWebPlugin;
+import sonia.scm.web.plugin.ScmWebPluginContext;
+import sonia.scm.web.security.Authenticator;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletContextEvent;
-import sonia.scm.web.security.Authenticator;
 
 /**
  *
@@ -35,6 +44,12 @@ import sonia.scm.web.security.Authenticator;
  */
 public class ContextListener extends GuiceServletContextListener
 {
+
+  /** the logger for ContextListener */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ContextListener.class);
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -45,9 +60,7 @@ public class ContextListener extends GuiceServletContextListener
   @Override
   public void contextDestroyed(ServletContextEvent servletContextEvent)
   {
-    List<ScmWebPlugin> plugins = ServiceUtil.getServices(ScmWebPlugin.class);
-
-    for (ScmWebPlugin plugin : plugins)
+    for (ScmWebPlugin plugin : webPluginSet)
     {
       plugin.contextDestroyed(webPluginContext);
     }
@@ -64,14 +77,38 @@ public class ContextListener extends GuiceServletContextListener
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent)
   {
-    webPluginContext =
-      new ScmWebPluginContext(servletContextEvent.getServletContext());
+    pluginManager = new SCMPluginManager();
 
-    List<ScmWebPlugin> plugins = ServiceUtil.getServices(ScmWebPlugin.class);
-
-    for (ScmWebPlugin plugin : plugins)
+    try
     {
-      plugin.contextInitialized(webPluginContext);
+      pluginManager.load();
+      webPluginContext =
+        new ScmWebPluginContext(servletContextEvent.getServletContext());
+
+      for (SCMPlugin plugin : pluginManager.getPlugins())
+      {
+        try
+        {
+          webPluginSet.add(plugin.getWebPlugin().newInstance());
+        }
+        catch (InstantiationException ex)
+        {
+          logger.error(ex.getMessage(), ex);
+        }
+        catch (IllegalAccessException ex)
+        {
+          logger.error(ex.getMessage(), ex);
+        }
+      }
+
+      for (ScmWebPlugin plugin : webPluginSet)
+      {
+        plugin.contextInitialized(webPluginContext);
+      }
+    }
+    catch (IOException ex)
+    {
+      throw new RuntimeException(ex);
     }
 
     super.contextInitialized(servletContextEvent);
@@ -113,5 +150,11 @@ public class ContextListener extends GuiceServletContextListener
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private SCMPluginManager pluginManager;
+
+  /** Field description */
   private ScmWebPluginContext webPluginContext;
+
+  /** Field description */
+  private Set<ScmWebPlugin> webPluginSet = new LinkedHashSet<ScmWebPlugin>();
 }

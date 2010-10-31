@@ -14,8 +14,8 @@ import com.google.inject.Singleton;
 
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.ScmWebPluginContext;
-import sonia.scm.web.WebResource;
+import sonia.scm.web.plugin.ScmWebPluginContext;
+import sonia.scm.web.plugin.WebResource;
 
 //~--- JDK imports ------------------------------------------------------------
 

@@ -9,6 +9,9 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.web.plugin.ClasspathWebResource;
+import sonia.scm.web.plugin.ScmWebPlugin;
+import sonia.scm.web.plugin.ScmWebPluginContext;
 import com.google.inject.servlet.ServletModule;
 
 import sonia.scm.web.filter.BasicAuthenticationFilter;

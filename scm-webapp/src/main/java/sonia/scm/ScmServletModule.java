@@ -20,7 +20,6 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.CacheRepositoryManagerDecorator;
 import sonia.scm.cache.EhCacheManager;
 import sonia.scm.filter.SecurityFilter;
-import sonia.scm.plugin.SCMPluginManager;
 import sonia.scm.plugin.ScriptResourceServlet;
 import sonia.scm.repository.BasicRepositoryManager;
 import sonia.scm.repository.RepositoryHandler;
@@ -28,7 +27,10 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.util.DebugServlet;
-import sonia.scm.web.ScmWebPluginContext;
+import sonia.scm.util.Util;
+import sonia.scm.web.plugin.SCMPlugin;
+import sonia.scm.web.plugin.SCMPluginManager;
+import sonia.scm.web.plugin.ScmWebPluginContext;
 import sonia.scm.web.security.Authenticator;
 import sonia.scm.web.security.BasicSecurityContext;
 import sonia.scm.web.security.SecurityContext;
@@ -43,8 +45,11 @@ import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 import java.io.IOException;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -117,8 +122,6 @@ public class ScmServletModule extends ServletModule
     bind(Authenticator.class).to(XmlAuthenticator.class);
     bind(SecurityContext.class).to(BasicSecurityContext.class);
 
-    Multibinder<RepositoryHandler> repositoryHandlerBinder =
-      Multibinder.newSetBinder(binder(), RepositoryHandler.class);
     SCMPluginManager pluginManager = new SCMPluginManager();
 
     try
@@ -130,13 +133,7 @@ public class ScmServletModule extends ServletModule
       logger.error(ex.getMessage(), ex);
     }
 
-    for (Class<? extends RepositoryHandler> handler :
-            pluginManager.getRepositoryHandlers())
-    {
-      bind(handler);
-      repositoryHandlerBinder.addBinding().to(handler);
-    }
-
+    loadPlugins(pluginManager);
     bind(CacheManager.class).to(EhCacheManager.class);
     bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
         BasicRepositoryManager.class);
@@ -173,6 +170,61 @@ public class ScmServletModule extends ServletModule
                UriExtensionsConfig.class.getName());
     params.put(PackagesResourceConfig.PROPERTY_PACKAGES, REST_PACKAGE);
     serve(PATTERN_RESTAPI).with(GuiceContainer.class, params);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryHandlerBinder
+   * @param handlerSet
+   */
+  private void bindRepositoryHandlers(
+          Multibinder<RepositoryHandler> repositoryHandlerBinder,
+          Set<Class<? extends RepositoryHandler>> handlerSet)
+  {
+    for (Class<? extends RepositoryHandler> handlerClass : handlerSet)
+    {
+      if (logger.isInfoEnabled())
+      {
+        logger.info("load RepositoryHandler {}", handlerClass.getName());
+      }
+
+      bind(handlerClass);
+      repositoryHandlerBinder.addBinding().to(handlerClass);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param pluginManager
+   */
+  private void loadPlugins(SCMPluginManager pluginManager)
+  {
+    Set<SCMPlugin> pluginSet = pluginManager.getPlugins();
+
+    if (Util.isNotEmpty(pluginSet))
+    {
+      Multibinder<RepositoryHandler> repositoryHandlerBinder =
+        Multibinder.newSetBinder(binder(), RepositoryHandler.class);
+      Set<Class<? extends RepositoryHandler>> handlerSet =
+        new LinkedHashSet<Class<? extends RepositoryHandler>>();
+
+      for (SCMPlugin plugin : pluginSet)
+      {
+        Collection<Class<? extends RepositoryHandler>> handlers =
+          plugin.getHandlers();
+
+        if (Util.isNotEmpty(handlers))
+        {
+          handlerSet.addAll(handlers);
+        }
+      }
+
+      bindRepositoryHandlers(repositoryHandlerBinder, handlerSet);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
