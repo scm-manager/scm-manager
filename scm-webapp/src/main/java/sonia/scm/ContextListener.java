@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.util.ServiceUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.plugin.SCMPlugin;
 import sonia.scm.web.plugin.SCMPluginManager;
@@ -127,7 +126,7 @@ public class ContextListener extends GuiceServletContextListener
   {
     List<Module> modules = new ArrayList<Module>();
 
-    modules.add(new ScmServletModule(webPluginContext));
+    modules.add(new ScmServletModule(pluginManager, webPluginContext));
 
     Collection<Module> pluginModules = webPluginContext.getInjectModules();
 

@@ -99,10 +99,14 @@ public class ScmServletModule extends ServletModule
    * Constructs ...
    *
    *
+   *
+   * @param pluginManager
    * @param webPluginContext
    */
-  ScmServletModule(ScmWebPluginContext webPluginContext)
+  ScmServletModule(SCMPluginManager pluginManager,
+                   ScmWebPluginContext webPluginContext)
   {
+    this.pluginManager = pluginManager;
     this.webPluginContext = webPluginContext;
   }
 
@@ -121,18 +125,6 @@ public class ScmServletModule extends ServletModule
     bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
     bind(Authenticator.class).to(XmlAuthenticator.class);
     bind(SecurityContext.class).to(BasicSecurityContext.class);
-
-    SCMPluginManager pluginManager = new SCMPluginManager();
-
-    try
-    {
-      pluginManager.load();
-    }
-    catch (IOException ex)
-    {
-      logger.error(ex.getMessage(), ex);
-    }
-
     loadPlugins(pluginManager);
     bind(CacheManager.class).to(EhCacheManager.class);
     bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
@@ -228,6 +220,9 @@ public class ScmServletModule extends ServletModule
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private SCMPluginManager pluginManager;
 
   /** Field description */
   private ScmWebPluginContext webPluginContext;
