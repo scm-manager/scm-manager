@@ -48,17 +48,22 @@ Ext.onReady(function(){
 
   store.loadData(repos);
 
+  var sm = new Ext.grid.RowSelectionModel({
+    singleSelect: true
+  });
+
   var grid = {
     xtype: 'grid',
     split: true,
     region: 'center',
     store: store,
     autoExpandColumn: 'description',
+    sm: sm,
     columns: [
-      {id: 'id', header: 'Id', dataIndex: 'id'},
-      {id: 'name', header: 'Name', dataIndex: 'name'},
-      {id: 'mail', header: 'E-Mail', dataIndex: 'mail'},
-      {id: 'description', header: 'Description', dataIndex: 'description'}
+      {id: 'id', header: 'Id', sortable: true, dataIndex: 'id'},
+      {id: 'name', header: 'Name', sortable: true, dataIndex: 'name'},
+      {id: 'mail', header: 'E-Mail', sortable: true, dataIndex: 'mail'},
+      {id: 'description', header: 'Description', sortable: true, dataIndex: 'description'}
     ],
     viewConfig: {
       forceFit: true,
@@ -68,6 +73,7 @@ Ext.onReady(function(){
   }
 
   var form = {
+    id: 'repo-form',
     xtype: 'form',
     padding: 5,
     autoScroll: true,
@@ -85,6 +91,16 @@ Ext.onReady(function(){
       {text: 'Cancel', scope: this}
     ]
   };
+
+  sm.on({
+    'selectionchange' : function(sm){
+      var selected = sm.getSelected();
+      if ( selected ){
+        console.debug( selected.data );
+        Ext.getCmp('repo-form').getForm().loadRecord( selected );
+      }
+    }
+  });
 
   var panel = {
     id: 'welcome',
