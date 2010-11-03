@@ -1,10 +1,10 @@
-/*
+/**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
@@ -13,7 +13,7 @@
  * 3. Neither the name of SCM-Manager; nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,9 +24,9 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * http://bitbucket.org/sdorra/scm-manager
- *
+ * 
  */
 
 Ext.ns('Sonia.login');
@@ -50,7 +50,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
       items:[{
         id: 'username',
         fieldLabel:'Username',
-        name:'username',
+        name: 'username',
         allowBlank:false,
         listeners: {
           specialkey: {
@@ -60,9 +60,9 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
         }
       },{
         fieldLabel:'Password',
-        name:'password',
-        inputType:'password',
-        allowBlank:false,
+        name: 'password',
+        inputType: 'password',
+        allowBlank: false,
         listeners: {
           specialkey: {
             fn: this.specialKeyPressed,
@@ -71,7 +71,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
         }
       }],
       buttons:[{
-        text:'Login',
+        text: 'Login',
         formBind: true,
         scope: this,
         handler: this.authenticate
@@ -90,11 +90,17 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
       waitMsg:'Sending data...',
 
       success: function(form, action){
+        if ( debug ){
+          console.debug( 'login success' );
+        }
         loadState( action.result );
       },
 
       failure: function(form, action){
-        Ext.Msg.alert('Login Failure!');
+        if ( debug ){
+          console.debug( 'login failed' );
+        }
+        Ext.Msg.alert('Login failed!');
         form.reset();
       }
     });
@@ -116,7 +122,6 @@ Ext.reg('soniaLoginForm', Sonia.login.Form);
 Sonia.login.Window = Ext.extend(Ext.Window,{
 
   initComponent: function(){
-
     var form = new Sonia.login.Form();
     form.on('actioncomplete', function(){
       this.fireEvent('success');
@@ -139,7 +144,6 @@ Sonia.login.Window = Ext.extend(Ext.Window,{
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.login.Window.superclass.initComponent.apply(this, arguments);
-
   }
 
 });
