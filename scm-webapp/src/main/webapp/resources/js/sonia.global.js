@@ -39,12 +39,6 @@ var loginCallbacks = [];
 // function called after logout
 var logoutCallbacks = [];
 
-// TODO: move to sonia.repository.js
-var repositoryTypeStore = new Ext.data.JsonStore({
-  id: 1,
-  fields: [ 'displayName', 'name' ]
-});
-
 var restUrl = "api/rest/";
 
 function loadState(s){
@@ -52,8 +46,6 @@ function loadState(s){
     console.debug( s );
   }
   state = s;
-  // load repository types from callback
-  repositoryTypeStore.loadData(state.repositoryTypes);
   // call login callback functions
   Ext.each(loginCallbacks, function(callback){
     if ( Ext.isFunction(callback) ){

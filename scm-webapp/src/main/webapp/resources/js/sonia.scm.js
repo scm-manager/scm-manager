@@ -90,7 +90,19 @@ Ext.onReady(function(){
     }
   });
 
-// methods called after login
+  // adds a tab to main TabPanel
+  function addTabPanel(id, xtype, title){
+    mainTabPanel.add({
+      id: id,
+      xtype: xtype,
+      title: title,
+      closable: true,
+      autoScroll: true
+    });
+    mainTabPanel.setActiveTab(id);
+  }
+
+  // methods called after login
 
   function createMainMenu(){
     if ( debug ){
