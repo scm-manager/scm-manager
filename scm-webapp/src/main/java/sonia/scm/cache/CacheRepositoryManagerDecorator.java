@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,13 +39,12 @@ import com.google.inject.Inject;
 
 import sonia.scm.ConfigChangedListener;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.Type;
 import sonia.scm.Undecorated;
 import sonia.scm.repository.AbstractRepositoryManagerDecorator;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryType;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
@@ -87,19 +88,6 @@ public class CacheRepositoryManagerDecorator
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param handler
-   */
-  @Override
-  public void addHandler(RepositoryHandler handler)
-  {
-    super.addHandler(handler);
-    handler.addListener(this);
-  }
 
   /**
    * Method description
@@ -158,7 +146,7 @@ public class CacheRepositoryManagerDecorator
   {
     super.init(context);
 
-    for (RepositoryType type : getTypes())
+    for (Type type : getTypes())
     {
       getHandler(type.getName()).addListener(this);
     }

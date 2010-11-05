@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,9 +39,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import sonia.scm.ScmState;
-import sonia.scm.user.User;
+import sonia.scm.Type;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryType;
+import sonia.scm.user.User;
 import sonia.scm.web.security.SecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -162,8 +164,7 @@ public class AuthenticationResource
     ScmState state = new ScmState();
 
     state.setUser(user);
-    state.setRepositoryTypes(
-        repositoryManger.getTypes().toArray(new RepositoryType[0]));
+    state.setRepositoryTypes(repositoryManger.getTypes().toArray(new Type[0]));
 
     return state;
   }

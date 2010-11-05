@@ -1,10 +1,10 @@
 /**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
@@ -13,7 +13,7 @@
  * 3. Neither the name of SCM-Manager; nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,56 +24,67 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * http://bitbucket.org/sdorra/scm-manager
- *
+ * 
  */
 
-package sonia.scm.repository;
+package sonia.scm;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class RepositoryType
+public interface HandlerBase<T extends TypedObject, E extends Exception> extends Initable, Closeable
 {
-
-  /**
-   * Constructs ...
-   *
-   */
-  public RepositoryType() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param name
-   * @param displayName
-   */
-  public RepositoryType(String name, String displayName)
-  {
-    this.name = name;
-    this.displayName = displayName;
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @return
+   * @param object
+   *
+   * @throws E
+   * @throws IOException
    */
-  @Override
-  public String toString()
-  {
-    StringBuilder msg = new StringBuilder(name);
+  public void create(T object) throws E, IOException;
 
-    msg.append(" (").append(displayName).append(")");
+  /**
+   * Method description
+   *
+   *
+   * @param object
+   *
+   * @throws E
+   * @throws IOException
+   */
+  public void delete(T object) throws E, IOException;
 
-    return msg.toString();
-  }
+  /**
+   * Method description
+   *
+   *
+   * @param object
+   *
+   * @throws E
+   * @throws IOException
+   */
+  public void modify(T object) throws E, IOException;
+
+  /**
+   * Method description
+   *
+   *
+   * @param object
+   *
+   * @throws E
+   * @throws IOException
+   */
+  public void refresh(T object) throws E, IOException;
 
   //~--- get methods ----------------------------------------------------------
 
@@ -81,53 +92,19 @@ public class RepositoryType
    * Method description
    *
    *
-   * @return
-   */
-  public String getDisplayName()
-  {
-    return displayName;
-  }
-
-  /**
-   * Method description
    *
+   * @param id
    *
    * @return
    */
-  public String getName()
-  {
-    return name;
-  }
-
-  //~--- set methods ----------------------------------------------------------
+  public T get(String id);
 
   /**
    * Method description
    *
    *
-   * @param displayName
+   * @return
    */
-  public void setDisplayName(String displayName)
-  {
-    this.displayName = displayName;
-  }
+  public Collection<T> getAll();
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   */
-  public void setName(String name)
-  {
-    this.name = name;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String displayName;
-
-  /** Field description */
-  private String name;
 }

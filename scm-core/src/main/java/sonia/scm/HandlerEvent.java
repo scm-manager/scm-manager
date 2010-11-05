@@ -29,10 +29,10 @@
  *
  */
 
-package sonia.scm.repository;
+package sonia.scm;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public enum RepositoryEvent { CREATE, MODIFY, DELETE }
+public enum HandlerEvent { CREATE, MODIFY, DELETE }

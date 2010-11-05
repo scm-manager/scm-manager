@@ -33,6 +33,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.HandlerEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -56,6 +57,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import sonia.scm.Type;
 
 /**
  *
@@ -81,7 +83,7 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   public BasicRepositoryManager(Set<RepositoryHandler> handlerSet)
   {
     handlerMap = new HashMap<String, RepositoryHandler>();
-    types = new ArrayList<RepositoryType>();
+    types = new ArrayList<Type>();
 
     for (RepositoryHandler handler : handlerSet)
     {
@@ -91,18 +93,11 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param handler
-   */
-  @Override
-  public void addHandler(RepositoryHandler handler)
+  private void addHandler(RepositoryHandler handler)
   {
     AssertUtil.assertIsNotNull(handler);
 
-    RepositoryType type = handler.getType();
+    Type type = handler.getType();
 
     AssertUtil.assertIsNotNull(type);
 
@@ -158,7 +153,7 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
     }
 
     getHandler(repository).create(repository);
-    fireEvent(repository, RepositoryEvent.CREATE);
+    fireEvent(repository, HandlerEvent.CREATE);
   }
 
   /**
@@ -181,7 +176,7 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
     }
 
     getHandler(repository).delete(repository);
-    fireEvent(repository, RepositoryEvent.DELETE);
+    fireEvent(repository, HandlerEvent.DELETE);
   }
 
   /**
@@ -213,7 +208,7 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
     }
 
     getHandler(repository).modify(repository);
-    fireEvent(repository, RepositoryEvent.MODIFY);
+    fireEvent(repository, HandlerEvent.MODIFY);
   }
 
   /**
@@ -322,7 +317,7 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
    * @return
    */
   @Override
-  public Collection<RepositoryType> getTypes()
+  public Collection<Type> getTypes()
   {
     return types;
   }
@@ -363,5 +358,5 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   private Map<String, RepositoryHandler> handlerMap;
 
   /** Field description */
-  private List<RepositoryType> types;
+  private List<Type> types;
 }

@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,14 +41,4 @@ import sonia.scm.Handler;
  *
  * @author Sebastian Sdorra
  */
-public interface GroupManager extends Handler<Group, GroupException>
-{
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getType();
-}
+public interface GroupManager extends Handler<Group, GroupException> {}

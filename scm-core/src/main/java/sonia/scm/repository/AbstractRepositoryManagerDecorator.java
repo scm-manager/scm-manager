@@ -40,6 +40,7 @@ import sonia.scm.SCMContextProvider;
 import java.io.IOException;
 
 import java.util.Collection;
+import sonia.scm.Type;
 
 /**
  *
@@ -58,20 +59,6 @@ public abstract class AbstractRepositoryManagerDecorator
   public AbstractRepositoryManagerDecorator(RepositoryManager orginal)
   {
     this.orginal = orginal;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param handler
-   */
-  @Override
-  public void addHandler(RepositoryHandler handler)
-  {
-    orginal.addHandler(handler);
   }
 
   /**
@@ -145,7 +132,7 @@ public abstract class AbstractRepositoryManagerDecorator
    * @return
    */
   @Override
-  public Collection<RepositoryType> getTypes()
+  public Collection<Type> getTypes()
   {
     return orginal.getTypes();
   }

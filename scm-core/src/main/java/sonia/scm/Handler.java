@@ -29,14 +29,9 @@
  *
  */
 
+
+
 package sonia.scm;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Closeable;
-import java.io.IOException;
-
-import java.util.Collection;
 
 /**
  *
@@ -45,65 +40,17 @@ import java.util.Collection;
  * @param <T>
  * @param <E>
  */
-public interface Handler<T, E extends Exception> extends Initable, Closeable
+public interface Handler<T extends TypedObject, E extends Exception>
+        extends HandlerBase<T, E>
 {
 
   /**
    * Method description
    *
    *
-   * @param object
-   *
-   * @throws E
-   * @throws IOException
-   */
-  public void create(T object) throws E, IOException;
-
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   *
-   * @throws E
-   * @throws IOException
-   */
-  public void delete(T object) throws E, IOException;
-
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   *
-   * @throws E
-   * @throws IOException
-   */
-  public void modify(T object) throws E, IOException;
-
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   *
-   * @throws E
-   * @throws IOException
-   */
-  public void refresh(T object) throws E, IOException;
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param id
-   *
    * @return
    */
-  public T get(String id);
+  public Type getType();
 
   /**
    * Method description
@@ -111,5 +58,5 @@ public interface Handler<T, E extends Exception> extends Initable, Closeable
    *
    * @return
    */
-  public Collection<T> getAll();
+  public boolean isConfigured();
 }

@@ -29,10 +29,13 @@
  *
  */
 
+
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.Type;
 import sonia.scm.io.ExtendedCommand;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -54,8 +57,7 @@ public class SvnRepositoryHandler
   public static final String TYPE_NAME = "svn";
 
   /** Field description */
-  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
-                                              TYPE_DISPLAYNAME);
+  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -66,7 +68,7 @@ public class SvnRepositoryHandler
    * @return
    */
   @Override
-  public RepositoryType getType()
+  public Type getType()
   {
     return TYPE;
   }

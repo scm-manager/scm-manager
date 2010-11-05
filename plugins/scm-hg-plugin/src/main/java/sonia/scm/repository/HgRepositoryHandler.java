@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
+import sonia.scm.Type;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.INIConfiguration;
@@ -75,8 +78,7 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
   public static final String TYPE_NAME = "hg";
 
   /** Field description */
-  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
-                                              TYPE_DISPLAYNAME);
+  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
 
   /** Field description */
   private static final Logger logger =
@@ -275,7 +277,7 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
    * @return
    */
   @Override
-  public RepositoryType getType()
+  public Type getType()
   {
     return TYPE;
   }

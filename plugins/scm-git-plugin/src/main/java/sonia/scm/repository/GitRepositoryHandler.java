@@ -29,12 +29,15 @@
  *
  */
 
+
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Singleton;
 
+import sonia.scm.Type;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 
@@ -59,8 +62,7 @@ public class GitRepositoryHandler
   public static final String TYPE_NAME = "git";
 
   /** Field description */
-  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
-                                              TYPE_DISPLAYNAME);
+  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -71,7 +73,7 @@ public class GitRepositoryHandler
    * @return
    */
   @Override
-  public RepositoryType getType()
+  public Type getType()
   {
     return TYPE;
   }

@@ -29,12 +29,13 @@
  *
  */
 
+
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.user.User;
-import sonia.scm.repository.RepositoryType;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -65,7 +66,7 @@ public class ScmState
    * @param user
    * @param repositoryTypes
    */
-  public ScmState(User user, RepositoryType[] repositoryTypes)
+  public ScmState(User user, Type[] repositoryTypes)
   {
     this.user = user;
     this.repositoryTypes = repositoryTypes;
@@ -79,7 +80,7 @@ public class ScmState
    *
    * @return
    */
-  public RepositoryType[] getRepositoryTypes()
+  public Type[] getRepositoryTypes()
   {
     return repositoryTypes;
   }
@@ -114,7 +115,7 @@ public class ScmState
    *
    * @param repositoryTypes
    */
-  public void setRepositoryTypes(RepositoryType[] repositoryTypes)
+  public void setRepositoryTypes(Type[] repositoryTypes)
   {
     this.repositoryTypes = repositoryTypes;
   }
@@ -145,7 +146,7 @@ public class ScmState
 
   /** Field description */
   @XmlElement(name = "repositoryTypes")
-  private RepositoryType[] repositoryTypes;
+  private Type[] repositoryTypes;
 
   /** Field description */
   private boolean success = true;

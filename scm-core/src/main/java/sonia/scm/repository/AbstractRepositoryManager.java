@@ -33,6 +33,7 @@ package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import sonia.scm.HandlerEvent;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -74,7 +75,7 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
    * @param repository
    * @param event
    */
-  protected void fireEvent(Repository repository, RepositoryEvent event)
+  protected void fireEvent(Repository repository, HandlerEvent event)
   {
     for (RepositoryListener listener : listenerSet)
     {

@@ -29,23 +29,30 @@
  *
  */
 
-package sonia.scm.repository;
 
-import sonia.scm.HandlerEvent;
+
+package sonia.scm;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
+ *
+ * @param <T>
+ * @param <E>
  */
-public interface RepositoryListener
+public interface Manager<T extends TypedObject, E extends Exception>
+        extends HandlerBase<T, E>
 {
 
   /**
    * Method description
    *
    *
-   * @param repository
-   * @param event
+   * @return
    */
-  public void onEvent(Repository repository, HandlerEvent event);
+  public Collection<Type> getTypes();
 }

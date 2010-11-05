@@ -31,97 +31,45 @@
 
 
 
-package sonia.scm.group;
+package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.TypedObject;
+import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "groups")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "type", "name", "members" })
-public class Group implements TypedObject, Serializable
+public class Type
 {
 
-  /** Field description */
-  private static final long serialVersionUID = 1752369869345245872L;
-
-  //~--- constructors ---------------------------------------------------------
-
   /**
-   * Constructs ...
+   * Constructor is required for JAXB
    *
    */
-  public Group() {}
+  public Type() {}
 
   /**
    * Constructs ...
    *
    *
-   *
-   * @param type
    * @param name
+   * @param displayName
    */
-  public Group(String type, String name)
+  public Type(String name, String displayName)
   {
-    this.type = type;
+    AssertUtil.assertIsNotEmpty(name);
     this.name = name;
-    this.members = new ArrayList<String>();
-  }
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param type
-   * @param name
-   * @param members
-   */
-  public Group(String type, String name, List<String> members)
-  {
-    this.type = type;
-    this.name = name;
-    this.members = members;
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param type
-   * @param name
-   * @param members
-   */
-  public Group(String type, String name, String... members)
-  {
-    this.type = type;
-    this.name = name;
-    this.members = new ArrayList<String>();
-
-    if (Util.isNotEmpty(members))
+    if (Util.isNotEmpty(displayName))
     {
-      this.members.addAll(Arrays.asList(members));
+      this.displayName = displayName;
+    }
+    else
+    {
+      this.displayName = name;
     }
   }
 
@@ -131,35 +79,61 @@ public class Group implements TypedObject, Serializable
    * Method description
    *
    *
-   * @param member
+   * @param obj
    *
    * @return
    */
-  public boolean add(String member)
+  @Override
+  public boolean equals(Object obj)
   {
-    return members.add(member);
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final Type other = (Type) obj;
+
+    if ((this.name == null)
+        ? (other.name != null)
+        : !this.name.equals(other.name))
+    {
+      return false;
+    }
+
+    if ((this.displayName == null)
+        ? (other.displayName != null)
+        : !this.displayName.equals(other.displayName))
+    {
+      return false;
+    }
+
+    return true;
   }
 
   /**
    * Method description
    *
-   */
-  public void clear()
-  {
-    members.clear();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param member
    *
    * @return
    */
-  public boolean remove(String member)
+  @Override
+  public int hashCode()
   {
-    return members.remove(member);
+    int hash = 5;
+
+    hash = 37 * hash + ((this.name != null)
+                        ? this.name.hashCode()
+                        : 0);
+    hash = 37 * hash + ((this.displayName != null)
+                        ? this.displayName.hashCode()
+                        : 0);
+
+    return hash;
   }
 
   /**
@@ -171,26 +145,11 @@ public class Group implements TypedObject, Serializable
   @Override
   public String toString()
   {
-    StringBuilder msg = new StringBuilder();
+    StringBuilder out = new StringBuilder("Type{name=");
 
-    msg.append(name).append(" [");
+    out.append(name).append(", displayName=").append(displayName).append("}");
 
-    if (Util.isNotEmpty(members))
-    {
-      Iterator<String> it = members.iterator();
-
-      while (it.hasNext())
-      {
-        msg.append(it.next());
-
-        if (it.hasNext())
-        {
-          msg.append(",");
-        }
-      }
-    }
-
-    return msg.append("]").toString();
+    return out.toString();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -201,9 +160,9 @@ public class Group implements TypedObject, Serializable
    *
    * @return
    */
-  public List<String> getMembers()
+  public String getDisplayName()
   {
-    return members;
+    return displayName;
   }
 
   /**
@@ -217,29 +176,17 @@ public class Group implements TypedObject, Serializable
     return name;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getType()
-  {
-    return type;
-  }
-
   //~--- set methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param members
+   * @param displayName
    */
-  public void setMembers(List<String> members)
+  public void setDisplayName(String displayName)
   {
-    this.members = members;
+    this.displayName = displayName;
   }
 
   /**
@@ -253,25 +200,11 @@ public class Group implements TypedObject, Serializable
     this.name = name;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   */
-  public void setType(String type)
-  {
-    this.type = type;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private List<String> members;
+  private String displayName;
 
   /** Field description */
   private String name;
-
-  /** Field description */
-  private String type;
 }
