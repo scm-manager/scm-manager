@@ -170,6 +170,7 @@ Sonia.repository.FormPanel = Ext.extend(Ext.FormPanel,{
       labelWidth: 100,
       defaults: {width: 240},
       autoScroll: true,
+      monitorValid: true,
       defaultType: 'textfield',
       items:[
         {id: 'repositoryName', fieldLabel: 'Name', name: 'name', readOnly: update, allowBlank: false},
@@ -195,7 +196,7 @@ Sonia.repository.FormPanel = Ext.extend(Ext.FormPanel,{
       ],
       buttonAlign: 'center',
       buttons: [
-        {text: 'Ok', scope: this, handler: this.submit},
+        {text: 'Ok', formBind: true, scope: this, handler: this.submit},
         {text: 'Cancel', scope: this, handler: this.reset}
       ]
     };
