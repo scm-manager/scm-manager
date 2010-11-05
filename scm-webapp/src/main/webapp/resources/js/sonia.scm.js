@@ -113,7 +113,9 @@ Ext.onReady(function(){
       title: 'Main',
       items: [{
         label: 'Repositories',
-        fn: function(){console.debug( 'Repositories' );}
+        fn: function(){
+          addTabPanel('repositories', 'repositoryPanel', 'Repositories');
+        }
       }]
     },{
       title: 'Config',
