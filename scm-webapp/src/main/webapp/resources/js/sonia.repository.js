@@ -104,9 +104,6 @@ Sonia.repository.Grid = Ext.extend(Ext.grid.GridPanel, {
     if ( debug ){
       console.debug('reload store');
     }
-
-    console.debug( this );
-
     this.store.load();
   },
 
@@ -222,12 +219,19 @@ Sonia.repository.FormPanel = Ext.extend(Ext.FormPanel,{
       console.debug( 'repository form submitted' );
     }
     var item = this.getForm().getFieldValues();
-    item = Ext.apply( this.item, item );
+    if ( this.item != null ){
+      this.update(item);
+    } else {
+      this.create(item);
+    }
+  },
 
+  update: function(item){
+    item = Ext.apply( this.item, item );
     if ( debug ){
       console.debug( 'update repository: ' + item.name );
     }
-    var url = restUrl + 'repositories/' + item.id + ".json";
+    var url = restUrl + 'repositories/' + item.id + '.json';
     Ext.Ajax.request({
       url: url,
       jsonData: item,
@@ -246,7 +250,26 @@ Sonia.repository.FormPanel = Ext.extend(Ext.FormPanel,{
   },
 
   create: function(item){
-    
+    if ( debug ){
+      console.debug( 'create repository: ' + item.name );
+    }
+    var url = restUrl + 'repositories.json';
+    Ext.Ajax.request({
+      url: url,
+      jsonData: item,
+      method: 'POST',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('create success');
+        }
+        this.getForm().reset();
+        this.execCallback(this.onCreate, item);
+      },
+      failure: function(){
+        alert( 'failure' );
+      }
+    });
   },
 
   reset: function(){
@@ -278,7 +301,11 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
       enableTabScroll: true,
       region:'center',
       autoScroll: true,
+      tbar: [
+        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddForm}
+      ],
       items: [{
+          id: 'repositoryGrid',
           xtype: 'repositoryGrid',
           region: 'center'
         }, {
@@ -302,6 +329,30 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Panel.superclass.initComponent.apply(this, arguments);
+  },
+
+  showAddForm: function(){
+    var editPanel = Ext.getCmp('repositoryEditPanel');
+    editPanel.removeAll();
+    var panel = new Sonia.repository.FormPanel({
+      region: 'south',
+      title: 'Repository Form',
+      padding: 5,
+      onUpdate: {
+        fn: this.reload,
+        scope: this
+      },
+      onCreate: {
+        fn: this.reload,
+        scope: this
+      }
+    });
+    editPanel.add(panel);
+    editPanel.doLayout();
+  },
+
+  reload: function(){
+    Ext.getCmp('repositoryGrid').reload();
   }
 
 });

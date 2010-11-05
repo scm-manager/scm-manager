@@ -111,7 +111,11 @@ Ext.onReady(function(){
     bodyCssClass: 'x-panel-mc',
     enableTabScroll: true,
     region:'center',
-    autoScroll: true,  
+    autoScroll: true,
+    tbar: [{
+      id:'tab',
+      text: 'View in New Tab'
+    }],
     items: [
       grid, {
         id: 'bottom-preview',
