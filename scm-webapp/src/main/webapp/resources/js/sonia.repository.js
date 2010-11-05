@@ -74,17 +74,24 @@ Sonia.repository.Grid = Ext.extend(Ext.grid.GridPanel, {
     });
 
     var repositoryColModel = new Ext.grid.ColumnModel({
+      defaults: {
+        sortable: true,
+        scope: this,
+        width: 125
+      },
       columns: [
-        {header: 'Name', sortable: true, dataIndex: 'name'},
-        {header: 'Type', sortable: true, dataIndex: 'type', renderer: this.renderRepositoryType},
-        {header: 'Contact', sortable: true, dataIndex: 'contact', scope: this, renderer: this.renderMailto},
-        {header: 'Description', sortable: true, dataIndex: 'description'},
-        {header: 'Creation date', sortable: true, dataIndex: 'creationDate'},
-        {header: 'Url', sortable: true, dataIndex: 'url', scope: this, renderer: this.renderUrl}
+        {id: 'name', header: 'Name', dataIndex: 'name'},
+        {id: 'type', header: 'Type', dataIndex: 'type', renderer: this.renderRepositoryType, width: 80},
+        {id: 'contact', header: 'Contact', dataIndex: 'contact', renderer: this.renderMailto},
+        {id: 'description', header: 'Description', dataIndex: 'description'},
+        {id: 'creationDate', header: 'Creation date', dataIndex: 'creationDate'},
+        {id: 'Url', header: 'Url', dataIndex: 'url', renderer: this.renderUrl, width: 250}
       ]
     });
 
     var config = {
+      loadMask: true,
+      autoExpandColumn: 'description',
       store: repositoryStore,
       colModel: repositoryColModel,
       sm: selectionModel
@@ -316,7 +323,6 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
           id: 'repositoryEditPanel',
           layout: 'fit',
           items: [{
-            //xtype: 'repositoryForm',
             region: 'south',
             title: 'Repository Form',
             xtype: 'panel',
