@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<users>
+    <name>scmadmin</name>
+    <displayName>SCM Administrator</displayName>
+    <mail>scm-admin@scm-manager.com</mail>
+    <password>ff8f5c593a01f9fcd3ed48b09a4b013e8d8f3be7</password>
+    <type>xml</type>
+</users>

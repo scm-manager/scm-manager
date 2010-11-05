@@ -33,27 +33,26 @@
 
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.ListenerSupport;
-import sonia.scm.Manager;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface UserManager
-        extends Manager<User, Exception>, ListenerSupport<UserListener>
+public class UserHandlerNotFoundException extends UserException
 {
 
+  /** Field description */
+  private static final long serialVersionUID = -4704703054646330523L;
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param type
-   *
-   * @return
+   * @param message
    */
-  @Override
-  public UserHandler getHandler(String type);
+  public UserHandlerNotFoundException(String message)
+  {
+    super(message);
+  }
 }

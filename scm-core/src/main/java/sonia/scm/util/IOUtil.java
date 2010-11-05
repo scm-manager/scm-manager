@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -156,6 +158,21 @@ public class IOUtil
     if (!file.delete())
     {
       throw new IOException("could not delete file ".concat(file.getPath()));
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   */
+  public static void mkdirs(File directory)
+  {
+    if (!directory.exists() &&!directory.mkdirs())
+    {
+      throw new IllegalStateException(
+          "could not create directory ".concat(directory.getPath()));
     }
   }
 
