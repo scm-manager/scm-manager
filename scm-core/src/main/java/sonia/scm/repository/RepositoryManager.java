@@ -55,5 +55,6 @@ public interface RepositoryManager
    *
    * @return
    */
+  @Override
   public RepositoryHandler getHandler(String type);
 }
