@@ -140,6 +140,7 @@ public class User implements TypedObject, Principal, Serializable
    *
    * @return
    */
+  @Override
   public String getType()
   {
     return type;
