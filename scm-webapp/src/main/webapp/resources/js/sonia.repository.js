@@ -302,7 +302,8 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
       region:'center',
       autoScroll: true,
       tbar: [
-        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddForm}
+        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddForm},
+        {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.remove}
       ],
       items: [{
           id: 'repositoryGrid',
@@ -329,6 +330,61 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Panel.superclass.initComponent.apply(this, arguments);
+  },
+
+  remove: function(){
+    var grid = Ext.getCmp('repositoryGrid');
+    var selected = grid.getSelectionModel().getSelected();
+    if ( selected ){
+      var item = selected.data;
+      var url = restUrl + 'repositories/' + item.id + '.json';
+      
+      Ext.MessageBox.show({
+        title: 'Remove Repository',
+        msg: 'Remove Repository "' + item.name + '"?',
+        buttons: Ext.MessageBox.OKCANCEL,
+        icon: Ext.MessageBox.QUESTION,
+        fn: function(result){
+          if ( result == 'ok' ){
+
+            if ( debug ){
+              console.debug( 'remove repository ' + item.name );
+            }
+
+            Ext.Ajax.request({
+              url: url,
+              method: 'DELETE',
+              scope: this,
+              success: function(){
+                this.reload();
+                this.resetPanel();
+              },
+              failure: function(){
+                alert( 'failure' );
+              }
+            });
+          }
+
+        },
+        scope: this
+      });
+
+    } else if ( debug ){
+      console.debug( 'no repository selected' );
+    }
+  },
+
+  resetPanel: function(){
+    var editPanel = Ext.getCmp('repositoryEditPanel');
+    editPanel.removeAll();
+    editPanel.add({
+      region: 'south',
+      title: 'Repository Form',
+      padding: 5,
+      xtype: 'panel',
+      html: 'Add or select an Repository'
+    });
+    editPanel.doLayout();
   },
 
   showAddForm: function(){
