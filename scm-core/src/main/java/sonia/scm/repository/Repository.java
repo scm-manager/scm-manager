@@ -29,10 +29,13 @@
  *
  */
 
+
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.TypedObject;
 import sonia.scm.util.DateAdapter;
 import sonia.scm.util.Util;
 
@@ -62,7 +65,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
   "id", "type", "name", "contact", "description", "creationDate", "url",
   "permissions"
 })
-public class Repository implements Serializable
+public class Repository implements TypedObject, Serializable
 {
 
   /** Field description */
@@ -212,6 +215,7 @@ public class Repository implements Serializable
    *
    * @return
    */
+  @Override
   public String getType()
   {
     return type;

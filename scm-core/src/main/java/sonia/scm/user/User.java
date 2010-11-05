@@ -29,7 +29,13 @@
  *
  */
 
-package sonia.scm;
+
+
+package sonia.scm.user;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.TypedObject;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -50,9 +56,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder =
 {
-  "name", "displayName", "mail", "password"
+  "name", "displayName", "mail", "password", "type"
 })
-public class User implements Principal, Serializable
+public class User implements TypedObject, Principal, Serializable
 {
 
   /** Field description */
@@ -128,6 +134,17 @@ public class User implements Principal, Serializable
     return password;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getType()
+  {
+    return type;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -175,6 +192,17 @@ public class User implements Principal, Serializable
     this.password = password;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   */
+  public void setType(String type)
+  {
+    this.type = type;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -188,4 +216,7 @@ public class User implements Principal, Serializable
 
   /** Field description */
   private String password;
+
+  /** Field description */
+  private String type;
 }

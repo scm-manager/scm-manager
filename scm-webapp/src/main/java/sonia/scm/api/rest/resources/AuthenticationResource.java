@@ -37,7 +37,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import sonia.scm.ScmState;
-import sonia.scm.User;
+import sonia.scm.user.User;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.web.security.SecurityContext;

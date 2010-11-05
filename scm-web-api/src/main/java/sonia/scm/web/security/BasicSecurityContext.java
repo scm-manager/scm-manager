@@ -36,7 +36,7 @@ package sonia.scm.web.security;
 import com.google.inject.Inject;
 import com.google.inject.servlet.SessionScoped;
 
-import sonia.scm.User;
+import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 

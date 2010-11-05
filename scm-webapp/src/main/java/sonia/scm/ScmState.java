@@ -33,6 +33,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.user.User;
 import sonia.scm.repository.RepositoryType;
 
 //~--- JDK imports ------------------------------------------------------------

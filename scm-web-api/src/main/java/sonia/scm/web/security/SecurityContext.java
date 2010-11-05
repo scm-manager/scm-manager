@@ -33,7 +33,7 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.User;
+import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 

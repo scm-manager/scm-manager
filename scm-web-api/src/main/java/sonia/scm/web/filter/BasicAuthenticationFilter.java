@@ -37,7 +37,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import sonia.scm.User;
+import sonia.scm.user.User;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.SecurityContext;
 
