@@ -304,7 +304,7 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
       autoScroll: true,
       tbar: [
         {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddForm},
-        {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.remove},
+        {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.removeRepository},
         '-',
         {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload},
       ],
@@ -335,7 +335,7 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
     Sonia.repository.Panel.superclass.initComponent.apply(this, arguments);
   },
 
-  remove: function(){
+  removeRepository: function(){
     var grid = Ext.getCmp('repositoryGrid');
     var selected = grid.getSelectionModel().getSelected();
     if ( selected ){
