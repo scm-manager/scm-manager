@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.web.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -52,4 +54,12 @@ public interface WebResource
    * @throws IOException
    */
   public InputStream getContent() throws IOException;
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getId();
 }

@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -47,7 +49,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -89,7 +94,12 @@ public class ScriptResourceServlet extends AbstractResourceServlet
 
     if (Util.isNotEmpty(scriptResources))
     {
-      for (WebResource scriptResource : scriptResources)
+      List<WebResource> resourceList =
+        new ArrayList<WebResource>(scriptResources);
+
+      Collections.sort(resourceList, new WebResourceComparator());
+
+      for (WebResource scriptResource : resourceList)
       {
         appendResource(stream, scriptResource);
       }

@@ -31,58 +31,35 @@
 
 
 
-package sonia.scm.web.plugin;
+package sonia.scm.plugin;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.web.plugin.WebResource;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.InputStream;
+import java.util.Comparator;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ClasspathWebResource implements WebResource
+public class WebResourceComparator implements Comparator<WebResource>
 {
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param contentPath
-   */
-  public ClasspathWebResource(String contentPath)
-  {
-    this.contentPath = contentPath;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
    * Method description
    *
+   *
+   * @param resource
+   * @param resource1
    *
    * @return
    */
   @Override
-  public InputStream getContent()
+  public int compare(WebResource resource, WebResource resource1)
   {
-    return ClasspathWebResource.class.getResourceAsStream(contentPath);
+    return resource.getId().compareTo(resource1.getId());
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getId()
-  {
-    return contentPath;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String contentPath;
 }
