@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -50,6 +52,10 @@ import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.MessageDigestEncryptionHandler;
+import sonia.scm.user.BasicUserManager;
+import sonia.scm.user.UserHandler;
+import sonia.scm.user.UserManager;
+import sonia.scm.user.XmlUserHandler;
 import sonia.scm.util.DebugServlet;
 import sonia.scm.util.Util;
 import sonia.scm.web.plugin.SCMPlugin;
@@ -154,6 +160,7 @@ public class ScmServletModule extends ServletModule
     bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
         BasicRepositoryManager.class);
     bind(RepositoryManager.class).to(CacheRepositoryManagerDecorator.class);
+    bind(UserManager.class).to(BasicUserManager.class);
     bind(ScmWebPluginContext.class).toInstance(webPluginContext);
 
     /*
@@ -212,6 +219,28 @@ public class ScmServletModule extends ServletModule
   }
 
   /**
+   *  Method description
+   *
+   *
+   *  @param userHandlerBinder
+   *  @param handlerSet
+   */
+  private void bindUserHandlers(Multibinder<UserHandler> userHandlerBinder,
+                                Set<Class<? extends UserHandler>> handlerSet)
+  {
+    for (Class<? extends UserHandler> handlerClass : handlerSet)
+    {
+      if (logger.isInfoEnabled())
+      {
+        logger.info("load UserHandler {}", handlerClass.getName());
+      }
+
+      bind(handlerClass);
+      userHandlerBinder.addBinding().to(handlerClass);
+    }
+  }
+
+  /**
    * Method description
    *
    *
@@ -223,22 +252,42 @@ public class ScmServletModule extends ServletModule
 
     if (Util.isNotEmpty(pluginSet))
     {
+
+      // repository handlers
       Multibinder<RepositoryHandler> repositoryHandlerBinder =
         Multibinder.newSetBinder(binder(), RepositoryHandler.class);
-      Set<Class<? extends RepositoryHandler>> handlerSet =
+      Set<Class<? extends RepositoryHandler>> repositoryHandlerSet =
         new LinkedHashSet<Class<? extends RepositoryHandler>>();
+
+      // user handlers
+      Multibinder<UserHandler> userHandlerBinder =
+        Multibinder.newSetBinder(binder(), UserHandler.class);
+      Set<Class<? extends UserHandler>> userHandlerSet =
+        new LinkedHashSet<Class<? extends UserHandler>>();
+
+      userHandlerSet.add(XmlUserHandler.class);
+
+      // security stuff
       Class<? extends EncryptionHandler> encryptionHandler =
         MessageDigestEncryptionHandler.class;
       Class<? extends Authenticator> authenticator = XmlAuthenticator.class;
 
       for (SCMPlugin plugin : pluginSet)
       {
-        Collection<Class<? extends RepositoryHandler>> handlers =
-          plugin.getHandlers();
+        Collection<Class<? extends RepositoryHandler>> pluginRepositoryHandlers =
+          plugin.getRepositoryHandlers();
 
-        if (Util.isNotEmpty(handlers))
+        if (Util.isNotEmpty(pluginRepositoryHandlers))
         {
-          handlerSet.addAll(handlers);
+          repositoryHandlerSet.addAll(pluginRepositoryHandlers);
+        }
+
+        Collection<Class<? extends UserHandler>> pluginUserHandlers =
+          plugin.getUserHandlers();
+
+        if (Util.isNotEmpty(pluginUserHandlers))
+        {
+          userHandlerSet.addAll(pluginUserHandlers);
         }
 
         SecurityConfig securityConfig = plugin.getSecurityConfig();
@@ -265,7 +314,8 @@ public class ScmServletModule extends ServletModule
 
       bind(EncryptionHandler.class).to(encryptionHandler);
       bind(Authenticator.class).to(authenticator);
-      bindRepositoryHandlers(repositoryHandlerBinder, handlerSet);
+      bindRepositoryHandlers(repositoryHandlerBinder, repositoryHandlerSet);
+      bindUserHandlers(userHandlerBinder, userHandlerSet);
     }
   }
 

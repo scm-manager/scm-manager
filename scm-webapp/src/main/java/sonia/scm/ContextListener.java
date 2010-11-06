@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -42,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.user.UserManager;
 import sonia.scm.util.Util;
 import sonia.scm.web.plugin.SCMPlugin;
 import sonia.scm.web.plugin.SCMPluginManager;
@@ -163,6 +166,9 @@ public class ContextListener extends GuiceServletContextListener
 
     // init RepositoryManager
     injector.getInstance(RepositoryManager.class).init(SCMContext.getContext());
+
+    // init UserManager
+    injector.getInstance(UserManager.class).init(SCMContext.getContext());
 
     // init Authenticator
     injector.getInstance(Authenticator.class).init(SCMContext.getContext());

@@ -29,15 +29,17 @@
  *
  */
 
+
+
 package sonia.scm.web.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.user.UserHandler;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -62,35 +64,8 @@ public class SCMPlugin
    */
   public SCMPlugin()
   {
-    handlers = new HashSet<Class<? extends RepositoryHandler>>();
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param handlerClass
-   *
-   * @return
-   */
-  public boolean addHandler(Class<? extends RepositoryHandler> handlerClass)
-  {
-    return handlers.add(handlerClass);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param handlerClass
-   *
-   * @return
-   */
-  public boolean removeHandler(Class<? extends RepositoryHandler> handlerClass)
-  {
-    return handlers.remove(handlerClass);
+    repositoryHandlers = new HashSet<Class<? extends RepositoryHandler>>();
+    userHandlers = new HashSet<Class<? extends UserHandler>>();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -101,9 +76,9 @@ public class SCMPlugin
    *
    * @return
    */
-  public Collection<Class<? extends RepositoryHandler>> getHandlers()
+  public Set<Class<? extends RepositoryHandler>> getRepositoryHandlers()
   {
-    return handlers;
+    return repositoryHandlers;
   }
 
   /**
@@ -123,6 +98,17 @@ public class SCMPlugin
    *
    * @return
    */
+  public Set<Class<? extends UserHandler>> getUserHandlers()
+  {
+    return userHandlers;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public Class<? extends ScmWebPlugin> getWebPlugin()
   {
     return webPlugin;
@@ -134,11 +120,34 @@ public class SCMPlugin
    * Method description
    *
    *
+   * @param repositoryHandlers
+   */
+  public void setRepositoryHandlers(
+          Set<Class<? extends RepositoryHandler>> repositoryHandlers)
+  {
+    this.repositoryHandlers = repositoryHandlers;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param securityConfig
    */
   public void setSecurityConfig(SecurityConfig securityConfig)
   {
     this.securityConfig = securityConfig;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param userHandlers
+   */
+  public void setUserHandlers(Set<Class<? extends UserHandler>> userHandlers)
+  {
+    this.userHandlers = userHandlers;
   }
 
   /**
@@ -157,11 +166,16 @@ public class SCMPlugin
   /** Field description */
   @XmlElementWrapper(name = "repository-handlers")
   @XmlElement(name = "repository-handler")
-  private Set<Class<? extends RepositoryHandler>> handlers;
+  private Set<Class<? extends RepositoryHandler>> repositoryHandlers;
 
   /** Field description */
   @XmlElement(name = "security")
   private SecurityConfig securityConfig;
+
+  /** Field description */
+  @XmlElementWrapper(name = "user-handlers")
+  @XmlElement(name = "user-handler")
+  private Set<Class<? extends UserHandler>> userHandlers;
 
   /** Field description */
   @XmlElement(name = "web-plugin")
