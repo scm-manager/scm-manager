@@ -87,6 +87,99 @@ public class User implements TypedObject, Principal, Serializable
     this.mail = mail;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final User other = (User) obj;
+
+    if ((this.displayName == null)
+        ? (other.displayName != null)
+        : !this.displayName.equals(other.displayName))
+    {
+      return false;
+    }
+
+    if ((this.mail == null)
+        ? (other.mail != null)
+        : !this.mail.equals(other.mail))
+    {
+      return false;
+    }
+
+    if ((this.name == null)
+        ? (other.name != null)
+        : !this.name.equals(other.name))
+    {
+      return false;
+    }
+
+    if ((this.password == null)
+        ? (other.password != null)
+        : !this.password.equals(other.password))
+    {
+      return false;
+    }
+
+    if ((this.type == null)
+        ? (other.type != null)
+        : !this.type.equals(other.type))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    int hash = 7;
+
+    hash = 79 * hash + ((this.displayName != null)
+                        ? this.displayName.hashCode()
+                        : 0);
+    hash = 79 * hash + ((this.mail != null)
+                        ? this.mail.hashCode()
+                        : 0);
+    hash = 79 * hash + ((this.name != null)
+                        ? this.name.hashCode()
+                        : 0);
+    hash = 79 * hash + ((this.password != null)
+                        ? this.password.hashCode()
+                        : 0);
+    hash = 79 * hash + ((this.type != null)
+                        ? this.type.hashCode()
+                        : 0);
+
+    return hash;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
