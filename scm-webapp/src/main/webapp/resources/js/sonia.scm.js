@@ -124,7 +124,9 @@ Ext.onReady(function(){
         fn: function(){console.debug( 'General Config' );}
       },{
         label: 'Repository Types',
-        fn: function(){console.debug( 'RepositoryType Config' );}
+        fn: function(){
+          addTabPanel('repositoryConfig', 'configPanel', 'Repository Config');
+        }
       },{
         label: 'Server',
         fn: function(){console.debug( 'Server Config' );}
