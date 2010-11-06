@@ -70,7 +70,7 @@ public class XmlUserHandler implements UserHandler
   public static final String ADMIN_FILE = "scmadmin.xml";
 
   /** Field description */
-  public static final String ADMIN_PATH = "sonia/scm/admin-account.xml";
+  public static final String ADMIN_PATH = "/sonia/scm/config/admin-account.xml";
 
   /** Field description */
   public static final String FILE_EXTENSION = ".xml";
@@ -126,7 +126,7 @@ public class XmlUserHandler implements UserHandler
       throw new UserAllreadyExistException();
     }
 
-    JAXB.marshal(User.class, file);
+    JAXB.marshal(user, file);
   }
 
   /**
@@ -317,7 +317,7 @@ public class XmlUserHandler implements UserHandler
    */
   private void createAdminAccount()
   {
-    InputStream input = XmlUserHandler.class.getResourceAsStream(TYPE_NAME);
+    InputStream input = XmlUserHandler.class.getResourceAsStream(ADMIN_PATH);
     FileOutputStream output = null;
 
     try
