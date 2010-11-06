@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -40,18 +42,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
-import sonia.scm.user.User;
 import sonia.scm.security.EncryptionHandler;
+import sonia.scm.user.User;
+import sonia.scm.user.XmlUserHandler;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import javax.xml.bind.JAXB;
 
 /**
  *
@@ -86,13 +86,10 @@ public class XmlAuthenticator implements Authenticator
                            HttpServletResponse response, String username,
                            String password)
   {
-    User user = null;
-    File userFile = new File(baseDirectory, username.concat(".xml"));
+    User user = userHandler.get(username);
 
-    if ((userFile != null) && userFile.exists())
+    if (user != null)
     {
-      user = JAXB.unmarshal(userFile, User.class);
-
       String encryptedPassword = encryptionHandler.encrypt(password);
 
       if (!encryptedPassword.equalsIgnoreCase(user.getPassword()))
@@ -106,6 +103,11 @@ public class XmlAuthenticator implements Authenticator
       }
       else
       {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("user {} logged in successfully", username);
+        }
+
         user.setPassword(null);
       }
     }
@@ -139,21 +141,17 @@ public class XmlAuthenticator implements Authenticator
   @Override
   public void init(SCMContextProvider provider)
   {
-    baseDirectory = new File(provider.getBaseDirectory(), NAME_DIRECTORY);
 
-    if (logger.isInfoEnabled())
-    {
-      logger.info("init XmlAuthenticator with directory {}",
-                  baseDirectory.getAbsolutePath());
-    }
+    // do nothing
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private File baseDirectory;
+  @Inject
+  private EncryptionHandler encryptionHandler;
 
   /** Field description */
   @Inject
-  private EncryptionHandler encryptionHandler;
+  private XmlUserHandler userHandler;
 }
