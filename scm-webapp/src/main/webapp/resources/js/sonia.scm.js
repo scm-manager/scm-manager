@@ -132,6 +132,14 @@ Ext.onReady(function(){
         fn: function(){console.debug( 'Server Config' );}
       }]
     },{
+      title: 'Security',
+      items: [{
+        label: 'Users',
+        fn: function(){
+          addTabPanel('userGrid', 'userGrid', 'Users');
+        }
+      }]
+    },{
       title: 'Abmelden',
       items: [{
         label: 'Abmelden',
