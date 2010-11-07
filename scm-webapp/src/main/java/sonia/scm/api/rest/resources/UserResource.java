@@ -38,6 +38,7 @@ package sonia.scm.api.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.AssertUtil;
@@ -74,11 +75,14 @@ public class UserResource extends AbstractResource<User>
    *
    *
    * @param userManager
+   * @param encryptionHandler
    */
   @Inject
-  public UserResource(UserManager userManager)
+  public UserResource(UserManager userManager,
+                      EncryptionHandler encryptionHandler)
   {
     this.userManager = userManager;
+    this.encryptionHandler = encryptionHandler;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -94,6 +98,7 @@ public class UserResource extends AbstractResource<User>
   @Override
   protected void addItem(User user) throws Exception
   {
+    encryptPassword(user);
     userManager.create(user);
   }
 
@@ -129,6 +134,10 @@ public class UserResource extends AbstractResource<User>
 
       AssertUtil.assertIsNotNull(o);
       user.setPassword(o.getPassword());
+    }
+    else
+    {
+      encryptPassword(user);
     }
 
     userManager.modify(user);
@@ -214,7 +223,28 @@ public class UserResource extends AbstractResource<User>
     return PATH_PART;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   */
+  private void encryptPassword(User user)
+  {
+    String password = user.getPassword();
+
+    if (Util.isNotEmpty(password))
+    {
+      user.setPassword(encryptionHandler.encrypt(password));
+    }
+  }
+
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private EncryptionHandler encryptionHandler;
 
   /** Field description */
   private UserManager userManager;
