@@ -31,26 +31,54 @@
 
 
 
-package sonia.scm.user;
+package sonia.scm.xml;
 
-import sonia.scm.user.xml.XmlUserHandler;
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Date;
+
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class XmlUserHandlerTest extends UserHandlerTestBase
+public class XmlTimestampDateAdapter extends XmlAdapter<String, Long>
 {
 
   /**
    * Method description
    *
    *
+   * @param value
+   *
    * @return
+   *
+   * @throws Exception
    */
   @Override
-  public UserHandler createUserHandler()
+  public String marshal(Long value) throws Exception
   {
-    return new XmlUserHandler();
+    return Util.formatDate(new Date(value));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param value
+   *
+   * @return
+   *
+   * @throws Exception
+   */
+  @Override
+  public Long unmarshal(String value) throws Exception
+  {
+    return Util.parseDate(value).getTime();
   }
 }

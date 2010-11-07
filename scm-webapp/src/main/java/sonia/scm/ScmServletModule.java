@@ -55,7 +55,7 @@ import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.user.BasicUserManager;
 import sonia.scm.user.UserHandler;
 import sonia.scm.user.UserManager;
-import sonia.scm.user.XmlUserHandler;
+import sonia.scm.user.xml.XmlUserHandler;
 import sonia.scm.util.DebugServlet;
 import sonia.scm.util.Util;
 import sonia.scm.web.plugin.SCMPlugin;

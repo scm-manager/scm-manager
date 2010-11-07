@@ -58,7 +58,7 @@ import javax.xml.bind.annotation.XmlType;
 {
   "name", "displayName", "mail", "password", "type"
 })
-public class User implements TypedObject, Principal, Serializable
+public class User implements TypedObject, Principal, Cloneable, Serializable
 {
 
   /** Field description */
@@ -88,6 +88,30 @@ public class User implements TypedObject, Principal, Serializable
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   */
+  @Override
+  public User clone()
+  {
+    User user = null;
+
+    try
+    {
+      user = (User) super.clone();
+    }
+    catch (CloneNotSupportedException ex)
+    {
+      throw new RuntimeException(ex);
+    }
+
+    return user;
+  }
 
   /**
    * Method description

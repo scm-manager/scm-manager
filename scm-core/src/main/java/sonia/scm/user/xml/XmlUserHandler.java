@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.user;
+package sonia.scm.user.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -42,19 +42,20 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
+import sonia.scm.user.User;
+import sonia.scm.user.UserAllreadyExistException;
+import sonia.scm.user.UserException;
+import sonia.scm.user.UserHandler;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.LinkedList;
 
 import javax.xml.bind.JAXB;
 
@@ -65,9 +66,6 @@ import javax.xml.bind.JAXB;
 @Singleton
 public class XmlUserHandler implements UserHandler
 {
-
-  /** Field description */
-  public static final String ADMIN_FILE = "scmadmin.xml";
 
   /** Field description */
   public static final String ADMIN_PATH = "/sonia/scm/config/admin-account.xml";
@@ -85,8 +83,8 @@ public class XmlUserHandler implements UserHandler
   public static final Type type = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
 
   /** Field description */
-  public static final String DIRECTORY =
-    "user".concat(File.separator).concat("xml");
+  public static final String DATABASEFILE =
+    "config".concat(File.separator).concat("users.xml");
 
   /** the logger for XmlUserHandler */
   private static final Logger logger =
@@ -119,14 +117,18 @@ public class XmlUserHandler implements UserHandler
   @Override
   public void create(User user) throws UserException, IOException
   {
-    File file = getFile(user.getName());
-
-    if (file.exists())
+    if (userDB.contains(user.getName()))
     {
       throw new UserAllreadyExistException();
     }
 
-    JAXB.marshal(user, file);
+    user.setType(TYPE_NAME);
+
+    synchronized (XmlUserHandler.class)
+    {
+      userDB.add(user.clone());
+      storeDB();
+    }
   }
 
   /**
@@ -141,11 +143,15 @@ public class XmlUserHandler implements UserHandler
   @Override
   public void delete(User user) throws UserException, IOException
   {
-    File file = getFile(user.getName());
+    String name = user.getName();
 
-    if (file.exists())
+    if (userDB.contains(name))
     {
-      IOUtil.delete(file);
+      synchronized (XmlUserHandler.class)
+      {
+        userDB.remove(name);
+        storeDB();
+      }
     }
     else
     {
@@ -164,11 +170,17 @@ public class XmlUserHandler implements UserHandler
   {
     File directory = context.getBaseDirectory();
 
-    userDirectory = new File(directory, DIRECTORY);
+    userDBFile = new File(directory, DATABASEFILE);
 
-    if (!userDirectory.exists())
+    if (userDBFile.exists())
     {
-      IOUtil.mkdirs(userDirectory);
+      loadDB();
+    }
+    else
+    {
+      IOUtil.mkdirs(userDBFile.getParentFile());
+      userDB = new XmlUserDatabase();
+      userDB.setCreationTime(System.currentTimeMillis());
       createAdminAccount();
     }
   }
@@ -185,11 +197,18 @@ public class XmlUserHandler implements UserHandler
   @Override
   public void modify(User user) throws UserException, IOException
   {
-    File file = getFile(user.getName());
+    String name = user.getName();
 
-    if (file.exists())
+    if (userDB.contains(name))
     {
-      JAXB.marshal(user, file);
+      user.setType(TYPE_NAME);
+
+      synchronized (XmlUserHandler.class)
+      {
+        userDB.remove(name);
+        userDB.add(user.clone());
+        storeDB();
+      }
     }
     else
     {
@@ -209,7 +228,7 @@ public class XmlUserHandler implements UserHandler
   @Override
   public void refresh(User user) throws UserException, IOException
   {
-    User fresh = get(user.getName());
+    User fresh = userDB.get(user.getName());
 
     if (fresh == null)
     {
@@ -235,12 +254,11 @@ public class XmlUserHandler implements UserHandler
   @Override
   public User get(String id)
   {
-    User user = null;
-    File file = getFile(id);
+    User user = userDB.get(id);
 
-    if (file.exists())
+    if (user != null)
     {
-      user = JAXB.unmarshal(file, User.class);
+      user = user.clone();
     }
 
     return user;
@@ -255,31 +273,11 @@ public class XmlUserHandler implements UserHandler
   @Override
   public Collection<User> getAll()
   {
-    List<User> users = new ArrayList<User>();
-    File[] userFiles = userDirectory.listFiles(new FilenameFilter()
-    {
-      @Override
-      public boolean accept(File dir, String name)
-      {
-        return name.endsWith(FILE_EXTENSION);
-      }
-    });
+    LinkedList<User> users = new LinkedList<User>();
 
-    for (File userFile : userFiles)
+    for (User user : userDB.values())
     {
-      try
-      {
-        User user = JAXB.unmarshal(userFile, User.class);
-
-        if (user != null)
-        {
-          users.add(user);
-        }
-      }
-      catch (Exception ex)
-      {
-        logger.error(ex.getMessage(), ex);
-      }
+      users.add(user.clone());
     }
 
     return users;
@@ -306,7 +304,7 @@ public class XmlUserHandler implements UserHandler
   @Override
   public boolean isConfigured()
   {
-    return (userDirectory != null) && userDirectory.exists();
+    return (userDBFile != null) && userDBFile.exists();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -318,41 +316,48 @@ public class XmlUserHandler implements UserHandler
   private void createAdminAccount()
   {
     InputStream input = XmlUserHandler.class.getResourceAsStream(ADMIN_PATH);
-    FileOutputStream output = null;
 
     try
     {
-      output = new FileOutputStream(new File(userDirectory, ADMIN_FILE));
-      IOUtil.copy(input, output);
+      User user = JAXB.unmarshal(input, User.class);
+
+      userDB.add(user);
+      storeDB();
     }
-    catch (IOException ex)
+    catch (Exception ex)
     {
       logger.error("could not create AdminAccount", ex);
     }
     finally
     {
       IOUtil.close(input);
-      IOUtil.close(output);
     }
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
-   *
-   * @param id
-   *
-   * @return
    */
-  private File getFile(String id)
+  private void loadDB()
   {
-    return new File(userDirectory, id.concat(FILE_EXTENSION));
+    userDB = JAXB.unmarshal(userDBFile, XmlUserDatabase.class);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  private void storeDB()
+  {
+    userDB.setLastModified(System.currentTimeMillis());
+    JAXB.marshal(userDB, userDBFile);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private File userDirectory;
+  private XmlUserDatabase userDB;
+
+  /** Field description */
+  private File userDBFile;
 }

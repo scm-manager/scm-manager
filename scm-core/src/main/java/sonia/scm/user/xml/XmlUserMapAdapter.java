@@ -31,26 +31,63 @@
 
 
 
-package sonia.scm.user;
+package sonia.scm.user.xml;
 
-import sonia.scm.user.xml.XmlUserHandler;
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.user.User;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class XmlUserHandlerTest extends UserHandlerTestBase
+public class XmlUserMapAdapter
+        extends XmlAdapter<XmlUserList, Map<String, User>>
 {
 
   /**
    * Method description
    *
    *
+   * @param userMap
+   *
    * @return
+   *
+   * @throws Exception
    */
   @Override
-  public UserHandler createUserHandler()
+  public XmlUserList marshal(Map<String, User> userMap) throws Exception
   {
-    return new XmlUserHandler();
+    return new XmlUserList(userMap);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param users
+   *
+   * @return
+   *
+   * @throws Exception
+   */
+  @Override
+  public Map<String, User> unmarshal(XmlUserList users) throws Exception
+  {
+    Map<String, User> userMap = new LinkedHashMap<String, User>();
+
+    for (User user : users)
+    {
+      userMap.put(user.getName(), user);
+    }
+
+    return userMap;
   }
 }

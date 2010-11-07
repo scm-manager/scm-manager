@@ -31,127 +31,155 @@
 
 
 
-package sonia.scm.web.security;
+package sonia.scm.user.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.SCMContextProvider;
-import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
-import sonia.scm.user.xml.XmlUserHandler;
+import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class XmlAuthenticator implements Authenticator
+@XmlRootElement(name = "user-db")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class XmlUserDatabase
 {
-
-  /** Field description */
-  public static final String NAME_DIRECTORY = "users";
-
-  /** the logger for XmlAuthenticator */
-  private static final Logger logger =
-    LoggerFactory.getLogger(XmlAuthenticator.class);
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param request
-   * @param response
+   * @param user
+   */
+  public void add(User user)
+  {
+    userMap.put(user.getName(), user);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param username
-   * @param password
    *
    * @return
    */
-  @Override
-  public User authenticate(HttpServletRequest request,
-                           HttpServletResponse response, String username,
-                           String password)
+  public boolean contains(String username)
   {
-    User user = userHandler.get(username);
-
-    if (user != null)
-    {
-      String encryptedPassword = encryptionHandler.encrypt(password);
-
-      if (!encryptedPassword.equalsIgnoreCase(user.getPassword()))
-      {
-        user = null;
-
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("password for user {} is wrong", username);
-        }
-      }
-      else
-      {
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("user {} logged in successfully", username);
-        }
-
-        user.setPassword(null);
-      }
-    }
-    else if (logger.isDebugEnabled())
-    {
-      logger.debug("could not find user {}", username);
-    }
-
-    return user;
+    return userMap.containsKey(username);
   }
 
   /**
    * Method description
    *
    *
-   * @throws IOException
+   * @param username
+   *
+   * @return
    */
-  @Override
-  public void close() throws IOException
+  public User remove(String username)
   {
-
-    // do nothing
+    return userMap.remove(username);
   }
 
   /**
    * Method description
    *
    *
-   * @param provider
+   * @return
    */
-  @Override
-  public void init(SCMContextProvider provider)
+  public Collection<User> values()
   {
+    return userMap.values();
+  }
 
-    // do nothing
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param username
+   *
+   * @return
+   */
+  public User get(String username)
+  {
+    return userMap.get(username);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public long getCreationTime()
+  {
+    return creationTime;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public long getLastModified()
+  {
+    return lastModified;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param creationTime
+   */
+  public void setCreationTime(long creationTime)
+  {
+    this.creationTime = creationTime;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param lastModified
+   */
+  public void setLastModified(long lastModified)
+  {
+    this.lastModified = lastModified;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @Inject
-  private EncryptionHandler encryptionHandler;
+  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
+  private Long creationTime;
 
   /** Field description */
-  @Inject
-  private XmlUserHandler userHandler;
+  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
+  private Long lastModified;
+
+  /** Field description */
+  @XmlJavaTypeAdapter(XmlUserMapAdapter.class)
+  @XmlElement(name = "users")
+  private Map<String, User> userMap = new LinkedHashMap<String, User>();
 }

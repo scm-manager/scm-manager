@@ -160,7 +160,12 @@ public abstract class UserHandlerTestBase
 
     handler.create(zaphod);
     assertNotNull(handler.get("zaphod"));
-    handler.get("");
+
+    // test for reference
+    zaphod.setDisplayName("Tricia McMillan");
+    zaphod = handler.get("zaphod");
+    assertNotNull(zaphod);
+    assertEquals("Zaphod Beeblebrox", zaphod.getDisplayName());
   }
 
   /**
@@ -208,6 +213,33 @@ public abstract class UserHandlerTestBase
 
     assertTrue(foundZaphod);
     assertTrue(foundTrillian);
+
+    // test for reference
+    trillian = null;
+
+    for (User u : users)
+    {
+      if (u.getName().equals("trillian"))
+      {
+        trillian = u;
+      }
+    }
+
+    assertNotNull(trillian);
+    trillian.setDisplayName("Zaphod Beeblebrox");
+
+    User reference = null;
+
+    for (User u : handler.getAll())
+    {
+      if (u.getName().equals("trillian"))
+      {
+        reference = u;
+      }
+    }
+
+    assertNotNull(reference);
+    assertEquals(reference.getDisplayName(), "Tricia McMillan");
   }
 
   /**

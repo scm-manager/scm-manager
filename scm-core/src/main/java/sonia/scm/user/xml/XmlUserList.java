@@ -31,42 +31,49 @@
 
 
 
-package sonia.scm.web.security;
+package sonia.scm.user.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.SCMContextProvider;
-import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
-import sonia.scm.user.xml.XmlUserHandler;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class XmlAuthenticator implements Authenticator
+@XmlRootElement(name = "users")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class XmlUserList implements Iterable<User>
 {
 
-  /** Field description */
-  public static final String NAME_DIRECTORY = "users";
+  /**
+   * Constructs ...
+   *
+   */
+  public XmlUserList() {}
 
-  /** the logger for XmlAuthenticator */
-  private static final Logger logger =
-    LoggerFactory.getLogger(XmlAuthenticator.class);
+  /**
+   * Constructs ...
+   *
+   *
+   *
+   * @param userMap
+   */
+  public XmlUserList(Map<String, User> userMap)
+  {
+    this.users = new LinkedList<User>(userMap.values());
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -74,84 +81,43 @@ public class XmlAuthenticator implements Authenticator
    * Method description
    *
    *
-   * @param request
-   * @param response
-   * @param username
-   * @param password
-   *
    * @return
    */
   @Override
-  public User authenticate(HttpServletRequest request,
-                           HttpServletResponse response, String username,
-                           String password)
+  public Iterator<User> iterator()
   {
-    User user = userHandler.get(username);
-
-    if (user != null)
-    {
-      String encryptedPassword = encryptionHandler.encrypt(password);
-
-      if (!encryptedPassword.equalsIgnoreCase(user.getPassword()))
-      {
-        user = null;
-
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("password for user {} is wrong", username);
-        }
-      }
-      else
-      {
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("user {} logged in successfully", username);
-        }
-
-        user.setPassword(null);
-      }
-    }
-    else if (logger.isDebugEnabled())
-    {
-      logger.debug("could not find user {}", username);
-    }
-
-    return user;
+    return users.iterator();
   }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @throws IOException
+   * @return
    */
-  @Override
-  public void close() throws IOException
+  public LinkedList<User> getUsers()
   {
-
-    // do nothing
+    return users;
   }
+
+  //~--- set methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param provider
+   * @param users
    */
-  @Override
-  public void init(SCMContextProvider provider)
+  public void setUsers(LinkedList<User> users)
   {
-
-    // do nothing
+    this.users = users;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @Inject
-  private EncryptionHandler encryptionHandler;
-
-  /** Field description */
-  @Inject
-  private XmlUserHandler userHandler;
+  @XmlElement(name = "user")
+  private LinkedList<User> users;
 }
