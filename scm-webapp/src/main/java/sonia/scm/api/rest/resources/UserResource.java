@@ -40,6 +40,7 @@ import com.google.inject.Singleton;
 
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -122,6 +123,14 @@ public class UserResource extends AbstractResource<User>
   @Override
   protected void updateItem(String name, User user) throws Exception
   {
+    if (DUMMY_PASSWORT.equals(user.getPassword()))
+    {
+      User o = userManager.get(name);
+
+      AssertUtil.assertIsNotNull(o);
+      user.setPassword(o.getPassword());
+    }
+
     userManager.modify(user);
   }
 
