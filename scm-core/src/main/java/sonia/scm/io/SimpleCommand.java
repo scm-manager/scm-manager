@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.io;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -43,7 +45,6 @@ import sonia.scm.util.IOUtil;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -139,16 +140,16 @@ public class SimpleCommand implements Command
   protected SimpleCommandResult getResult(Process process) throws IOException
   {
     SimpleCommandResult result = null;
-    InputStream input = null;
+    BufferedReader reader = null;
 
     try
     {
       String s = System.getProperty("line.separator");
       StringBuilder content = new StringBuilder();
 
-      input = process.getInputStream();
+      reader =
+        new BufferedReader(new InputStreamReader(process.getInputStream()));
 
-      BufferedReader reader = new BufferedReader(new InputStreamReader(input));
       String line = reader.readLine();
 
       while (line != null)
@@ -174,7 +175,7 @@ public class SimpleCommand implements Command
     }
     finally
     {
-      IOUtil.close(input);
+      IOUtil.close(reader);
     }
 
     return result;

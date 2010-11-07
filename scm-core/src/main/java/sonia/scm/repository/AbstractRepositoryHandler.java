@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -42,7 +44,6 @@ import sonia.scm.util.Util;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -223,7 +224,7 @@ public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
   {
     repository.setId(UUID.randomUUID().toString());
     repository.setUrl(buildUrl(repository));
-    repository.setCreationDate(new Date());
+    repository.setCreationDate(System.currentTimeMillis());
   }
 
   /**

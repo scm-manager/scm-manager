@@ -36,8 +36,8 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.TypedObject;
-import sonia.scm.util.DateAdapter;
 import sonia.scm.util.Util;
+import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -45,7 +45,6 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -160,7 +159,7 @@ public class Repository implements TypedObject, Serializable
    *
    * @return
    */
-  public Date getCreationDate()
+  public long getCreationDate()
   {
     return creationDate;
   }
@@ -251,7 +250,7 @@ public class Repository implements TypedObject, Serializable
    *
    * @param creationDate
    */
-  public void setCreationDate(Date creationDate)
+  public void setCreationDate(long creationDate)
   {
     this.creationDate = creationDate;
   }
@@ -328,8 +327,8 @@ public class Repository implements TypedObject, Serializable
   private String contact;
 
   /** Field description */
-  @XmlJavaTypeAdapter(DateAdapter.class)
-  private Date creationDate;
+  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
+  private Long creationDate;
 
   /** Field description */
   private String description;

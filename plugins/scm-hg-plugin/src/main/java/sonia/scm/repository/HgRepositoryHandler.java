@@ -401,7 +401,8 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
           {
             try
             {
-              repository.setCreationDate(Util.parseDate(creationDateString));
+              repository.setCreationDate(
+                  Util.parseDate(creationDateString).getTime());
             }
             catch (ParseException ex)
             {
@@ -460,11 +461,12 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
 
     scmSection.setParameter("id", repository.getId());
 
-    Date creationDate = repository.getCreationDate();
+    long creationDate = repository.getCreationDate();
 
-    if (creationDate != null)
+    if (creationDate >= -1)
     {
-      scmSection.setParameter("creationDate", Util.formatDate(creationDate));
+      scmSection.setParameter("creationDate",
+                              Util.formatDate(new Date(creationDate)));
     }
 
     INIConfiguration iniConfig = new INIConfiguration();
