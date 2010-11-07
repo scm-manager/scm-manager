@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -36,6 +38,8 @@ package sonia.scm.repository;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.Serializable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -47,8 +51,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "permissions")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Permission
+public class Permission implements Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -2915175031430884040L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
