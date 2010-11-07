@@ -447,6 +447,8 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
       section.setParameter("contact", contact);
     }
 
+    section.setParameter("push_ssl", "false");
+
     Collection<Permission> permissions = repository.getPermissions();
 
     if (permissions != null)
