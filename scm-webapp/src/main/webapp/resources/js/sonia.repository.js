@@ -46,23 +46,9 @@ Ext.ns('Sonia.repository');
 
 
 // RepositoryGrid
-Sonia.repository.Grid = Ext.extend(Ext.grid.GridPanel, {
-
-  urlTemplate: '<a href="{0}" target="_blank">{0}</a>',
-  mailtoTemplate: '<a href="mailto: {0}">{0}</a>',
-
+Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
+  
   initComponent: function(){
-
-    var selectionModel = new Ext.grid.RowSelectionModel({
-      singleSelect: true
-    });
-
-    selectionModel.on({
-      selectionchange: {
-        scope: this,
-        fn: this.selectionChanged
-      }
-    });
 
     var repositoryStore = new Sonia.rest.JsonStore({
       url: restUrl + 'repositories.json',
@@ -90,71 +76,44 @@ Sonia.repository.Grid = Ext.extend(Ext.grid.GridPanel, {
     });
 
     var config = {
-      loadMask: true,
       autoExpandColumn: 'description',
       store: repositoryStore,
-      colModel: repositoryColModel,
-      sm: selectionModel
+      colModel: repositoryColModel
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Grid.superclass.initComponent.apply(this, arguments);
-
-    // load data
-    if ( debug ){
-      console.debug( 'load repository list' );
-    }
-    repositoryStore.load();
   },
 
-  reload: function(){
+  selectItem: function(item){
     if ( debug ){
-      console.debug('reload store');
+      console.debug( item.name + ' selected' );
     }
-    this.store.load();
-  },
-
-  selectionChanged: function(sm){
-    var selected = sm.getSelected();
-    if ( selected ){
-      if ( debug ){
-        console.debug( selected.data.name + ' selected' );
+    var editPanel = Ext.getCmp('repositoryEditPanel');
+    editPanel.removeAll();
+    var panel = new Sonia.repository.FormPanel({
+      item: selected.data,
+      region: 'south',
+      title: 'Repository Form',
+      padding: 5,
+      onUpdate: {
+        fn: this.reload,
+        scope: this
+      },
+      onCreate: {
+        fn: this.reload,
+        scope: this
       }
-      var editPanel = Ext.getCmp('repositoryEditPanel');
-      editPanel.removeAll();
-      var panel = new Sonia.repository.FormPanel({
-        item: selected.data,
-        region: 'south',
-        title: 'Repository Form',
-        padding: 5,
-        onUpdate: {
-          fn: this.reload,
-          scope: this
-        },
-        onCreate: {
-          fn: this.reload,
-          scope: this
-        }
-      });
-      editPanel.add(panel);
-      editPanel.doLayout();
-    }
+    });
+    editPanel.add(panel);
+    editPanel.doLayout();
   },
 
   renderRepositoryType: function(repositoryType){
     return repositoryTypeStore.queryBy(function(rec){
       return rec.data.name == repositoryType;
     }).itemAt(0).data.displayName;
-  },
-
-  renderUrl: function(url){
-    return String.format( this.urlTemplate, url );
-  },
-
-  renderMailto: function(mail){
-    return String.format( this.mailtoTemplate, mail );
   }
-
   
 });
 

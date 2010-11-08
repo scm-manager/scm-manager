@@ -58,3 +58,65 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
   }
 
 });
+
+Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
+
+  urlTemplate: '<a href="{0}" target="_blank">{0}</a>',
+  mailtoTemplate: '<a href="mailto: {0}">{0}</a>',
+
+  initComponent: function(){
+
+    var selectionModel = new Ext.grid.RowSelectionModel({
+      singleSelect: true
+    });
+
+    selectionModel.on({
+      selectionchange: {
+        scope: this,
+        fn: this.selectionChanged
+      }
+    });
+
+    var config = {
+      loadMask: true,
+      sm: selectionModel
+    };
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.rest.Grid.superclass.initComponent.apply(this, arguments);
+
+    // load store
+    if ( debug ){
+      console.debug( 'load store' );
+    }
+    this.store.load();
+  },
+
+  reload: function(){
+    if ( debug ){
+      console.debug('reload store');
+    }
+    this.store.load();
+  },
+
+  selectionChanged: function(sm){
+    var selected = sm.getSelected();
+    if ( selected ){
+      this.selectItem( selected.data );
+    }
+  },
+
+  selectItem: function(item){
+    
+  },
+
+  renderUrl: function(url){
+    return String.format( this.urlTemplate, url );
+  },
+
+  renderMailto: function(mail){
+    return String.format( this.mailtoTemplate, mail );
+  }
+
+
+});

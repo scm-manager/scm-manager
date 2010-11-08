@@ -33,22 +33,9 @@
 Ext.ns('Sonia.user');
 
 // UserGrid
-Sonia.user.Grid = Ext.extend(Ext.grid.GridPanel, {
-
-  mailtoTemplate: '<a href="mailto: {0}">{0}</a>',
+Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
 
   initComponent: function(){
-
-    var selectionModel = new Ext.grid.RowSelectionModel({
-      singleSelect: true
-    });
-
-    selectionModel.on({
-      selectionchange: {
-        scope: this,
-        fn: this.selectionChanged
-      }
-    });
 
     var userStore = new Sonia.rest.JsonStore({
       url: restUrl + 'users.json',
@@ -74,40 +61,16 @@ Sonia.user.Grid = Ext.extend(Ext.grid.GridPanel, {
     });
 
     var config = {
-      loadMask: true,
       store: userStore,
-      colModel: userColModel,
-      sm: selectionModel
+      colModel: userColModel
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.user.Grid.superclass.initComponent.apply(this, arguments);
-
-    // load data
-    if ( debug ){
-      console.debug( 'load user list' );
-    }
-    userStore.load();
   },
 
-  reload: function(){
-    if ( debug ){
-      console.debug('reload store');
-    }
-    this.store.load();
-  },
-
-  selectionChanged: function(sm){
-    var selected = sm.getSelected();
-    if ( selected ){
-      if ( debug ){
-        console.debug( selected.data.name + ' selected' );
-      }
-    }
-  },
-
-  renderMailto: function(mail){
-    return String.format( this.mailtoTemplate, mail );
+  selectItem: function(item){
+    console.debug( item );
   }
 
 });
