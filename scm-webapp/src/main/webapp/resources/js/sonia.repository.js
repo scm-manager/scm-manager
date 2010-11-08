@@ -92,7 +92,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     var editPanel = Ext.getCmp('repositoryEditPanel');
     editPanel.removeAll();
     var panel = new Sonia.repository.FormPanel({
-      item: selected.data,
+      item: item,
       region: 'south',
       title: 'Repository Form',
       padding: 5,
@@ -121,23 +121,13 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 Ext.reg('repositoryGrid', Sonia.repository.Grid);
 
 // RepositoryFormPanel
-Sonia.repository.FormPanel = Ext.extend(Ext.FormPanel,{
-
-  item: null,
-  onUpdate: null,
-  onCreate: null,
+Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
   initComponent: function(){
 
     update = this.item != null;
 
     var config = {
-      padding: 5,
-      labelWidth: 100,
-      defaults: {width: 240},
-      autoScroll: true,
-      monitorValid: true,
-      defaultType: 'textfield',
       items:[
         {id: 'repositoryName', fieldLabel: 'Name', name: 'name', readOnly: update, allowBlank: false},
         {
@@ -159,38 +149,11 @@ Sonia.repository.FormPanel = Ext.extend(Ext.FormPanel,{
 
         {fieldLabel: 'Contact', name: 'contact'},
         {fieldLabel: 'Description', name: 'description', xtype: 'textarea'}
-      ],
-      buttonAlign: 'center',
-      buttons: [
-        {text: 'Ok', formBind: true, scope: this, handler: this.submit},
-        {text: 'Cancel', scope: this, handler: this.reset}
       ]
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.FormPanel.superclass.initComponent.apply(this, arguments);
-
-    if ( update ){
-      this.loadData( this.item );
-    }
-  },
-
-  loadData: function(item){
-    this.item = item;
-    var data = {success: true, data: item};
-    this.getForm().loadRecord(data);
-  },
-
-  submit: function(){
-    if ( debug ){
-      console.debug( 'repository form submitted' );
-    }
-    var item = this.getForm().getFieldValues();
-    if ( this.item != null ){
-      this.update(item);
-    } else {
-      this.create(item);
-    }
   },
 
   update: function(item){
@@ -237,18 +200,6 @@ Sonia.repository.FormPanel = Ext.extend(Ext.FormPanel,{
         alert( 'failure' );
       }
     });
-  },
-
-  reset: function(){
-    this.getForm().reset();
-  },
-
-  execCallback: function(obj, item){
-    if ( Ext.isFunction( obj ) ){
-      obj(item);
-    } else if ( Ext.isObject( obj )){
-      obj.fn.call( obj.scope, item );
-    }
   }
 
 });

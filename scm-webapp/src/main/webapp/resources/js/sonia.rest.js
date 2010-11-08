@@ -59,6 +59,8 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
 
 });
 
+// Grid
+
 Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
   urlTemplate: '<a href="{0}" target="_blank">{0}</a>',
@@ -107,7 +109,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
   },
 
   selectItem: function(item){
-    
+    console.debug( item );
   },
 
   renderUrl: function(url){
@@ -118,5 +120,80 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
     return String.format( this.mailtoTemplate, mail );
   }
 
+});
+
+// FormPanel
+
+Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
+
+  item: null,
+  onUpdate: null,
+  onCreate: null,
+
+  initComponent: function(){
+    var config = {
+      padding: 5,
+      labelWidth: 100,
+      defaults: {width: 240},
+      autoScroll: true,
+      monitorValid: true,
+      defaultType: 'textfield',
+      buttonAlign: 'center',
+      buttons: [
+        {text: 'Ok', formBind: true, scope: this, handler: this.submit},
+        {text: 'Cancel', scope: this, handler: this.reset}
+      ]
+    }
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.rest.FormPanel.superclass.initComponent.apply(this, arguments);
+
+    if ( this.item != null ){
+      this.loadData(this.item);
+    }
+  },
+
+  loadData: function(item){
+    this.item = item;
+    var data = {success: true, data: item};
+    this.getForm().loadRecord(data);
+  },
+
+  submit: function(){
+    if ( debug ){
+      console.debug( 'form submitted' );
+    }
+    var item = this.getForm().getFieldValues();
+    if ( this.item != null ){
+      this.update(item);
+    } else {
+      this.create(item);
+    }
+  },
+  
+  reset: function(){
+    if ( debug ){
+      console.debug( 'reset form' );
+    }
+    this.getForm().reset();
+  },
+
+  execCallback: function(obj, item){
+    if ( Ext.isFunction( obj ) ){
+      obj(item);
+    } else if ( Ext.isObject( obj )){
+      obj.fn.call( obj.scope, item );
+    }
+  },
+
+  update: function(item){
+    console.debug( 'update item: ' );
+    console.debug( item );
+  },
+
+  create: function(item){
+    console.debug( 'create item: ' );
+    console.debug( item );
+  }
 
 });
