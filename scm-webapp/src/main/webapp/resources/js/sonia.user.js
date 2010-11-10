@@ -77,3 +77,146 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
 
 // register xtype
 Ext.reg('userGrid', Sonia.user.Grid);
+
+// UserFormPanel
+Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
+
+  initComponent: function(){
+
+    var config = {
+      items: [{
+        fieldLabel: 'Name',
+        name: 'name',
+        allowBlank: false
+      },{
+        fieldLabel: 'DisplayName',
+        name: 'displayName',
+        allowBlank: false
+      },{
+        fieldLabel: 'Mail',
+        name: 'mail',
+        allowBlank: false
+      },{
+        fieldLabel: 'Password',
+        name: 'password',
+        inputType: 'password'
+      },{
+        name: 'password',
+        inputType: 'password'
+      }]
+    };
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.user.FormPanel.superclass.initComponent.apply(this, arguments);
+  },
+
+  update: function(item){
+    console.debug('update user');
+    console.debug(item);
+  },
+
+  create: function(user){
+    if ( debug ){
+      console.debug( 'create user: ' + user.name );
+    }
+    // set user type
+    user.type = 'xml';
+    var url = restUrl + 'users.json';
+    Ext.Ajax.request({
+      url: url,
+      jsonData: user,
+      method: 'POST',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('create success');
+        }
+        this.getForm().reset();
+        this.execCallback(this.onCreate, user);
+      },
+      failure: function(){
+        alert( 'failure' );
+      }
+    });
+  }
+
+});
+
+// register xtype
+Ext.reg('userForm', Sonia.user.FormPanel);
+
+// UserPanel
+Sonia.user.Panel = Ext.extend(Ext.Panel, {
+
+  initComponent: function(){
+
+    var config = {
+      layout: 'border',
+      hideMode: 'offsets',
+      bodyCssClass: 'x-panel-mc',
+      enableTabScroll: true,
+      region:'center',
+      autoScroll: true,
+      tbar: [
+        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddPanel},
+        {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.remove},
+        '-',
+        {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload},
+      ],
+      items: [{
+        id: 'userGrid',
+        xtype: 'userGrid',
+        region: 'center'
+      },{
+        id: 'userEditPanel',
+        layout: 'fit',
+        items: [{
+          region: 'south',
+          title: 'User Form',
+          xtype: 'panel',
+          padding: 5,
+          html: 'Add or select an User'
+        }],
+        height: 250,
+        split: true,
+        border: false,
+        region: 'south'
+      }]
+    };
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.user.Panel.superclass.initComponent.apply(this, arguments);
+  },
+
+  showAddPanel: function(){
+    var editPanel = Ext.getCmp('userEditPanel');
+    editPanel.removeAll();
+    var panel = new Sonia.user.FormPanel({
+      region: 'south',
+      title: 'Repository Form',
+      padding: 5,
+      onUpdate: {
+        fn: this.reload,
+        scope: this
+      },
+      onCreate: {
+        fn: this.reload,
+        scope: this
+      }
+    });
+    editPanel.add(panel);
+    editPanel.doLayout();
+  },
+
+  remove: function(){
+    console.debug( 'remove' );
+  },
+
+  reload: function(){
+    console.debug( 'reload' );
+  }
+
+});
+
+// register xtype
+Ext.reg('userPanel', Sonia.user.Panel);

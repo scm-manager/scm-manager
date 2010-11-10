@@ -136,7 +136,7 @@ Ext.onReady(function(){
       items: [{
         label: 'Users',
         fn: function(){
-          addTabPanel('userGrid', 'userGrid', 'Users');
+          addTabPanel('users', 'userPanel', 'Users');
         }
       }]
     },{
