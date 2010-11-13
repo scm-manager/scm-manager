@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -117,16 +119,16 @@ public class LoggingFilter extends HttpFilter
   private void logRequest(LoggingHttpServletRequest request)
   {
     logger.debug("**************** request ****************");
-    logger.debug("Info: Request-Uri = ".concat(request.getRequestURI()));
-    logger.debug("Info: Remote-Addr = ".concat(request.getRemoteAddr()));
-    logger.debug(
-        "Info: Content-Size = ".concat(
-          Integer.toString(request.getContentLength())));
-    logger.debug(
-        "Info: Content-Type = ".concat(Util.nonNull(request.getContentType())));
-    logger.debug("Info: Method = ".concat(request.getMethod()));
-    logger.debug(
-        "Info: AuthType = ".concat(Util.nonNull(request.getAuthType())));
+    logger.debug("Info: Request-Uri = {}", request.getRequestURI());
+    logger.debug("Info: Remote-Addr = {}", request.getRemoteAddr());
+    logger.debug("Info: Remote-User = {}",
+                 Util.nonNull(request.getRemoteUser()));
+    logger.debug("Info: Content-Size = {}",
+                 Integer.toString(request.getContentLength()));
+    logger.debug("Info: Content-Type = {}",
+                 Util.nonNull(request.getContentType()));
+    logger.debug("Info: Method = {}", request.getMethod());
+    logger.debug("Info: AuthType = {}", Util.nonNull(request.getAuthType()));
 
     Enumeration headers = request.getHeaderNames();
 
@@ -134,9 +136,7 @@ public class LoggingFilter extends HttpFilter
     {
       String header = (String) headers.nextElement();
 
-      logger.debug(
-          "Header: ".concat(header).concat(" = ").concat(
-            request.getHeader(header)));
+      logger.debug("Header: {} = {}", header, request.getHeader(header));
     }
 
     Cookie[] cookies = request.getCookies();
@@ -145,9 +145,7 @@ public class LoggingFilter extends HttpFilter
     {
       for (Cookie cookie : cookies)
       {
-        logger.debug(
-            "Cookie: ".concat(cookie.getName()).concat(" = ").concat(
-              cookie.getValue()));
+        logger.debug("Cookie: {} = {}", cookie.getName(), cookie.getValue());
       }
     }
 
@@ -159,9 +157,8 @@ public class LoggingFilter extends HttpFilter
       {
         String parameter = (String) parameters.nextElement();
 
-        logger.debug(
-            "Parameter: ".concat(parameter).concat(" = ").concat(
-              request.getParameter(parameter)));
+        logger.debug("Parameter: {} = {}", parameter,
+                     request.getParameter(parameter));
       }
     }
 
@@ -173,15 +170,14 @@ public class LoggingFilter extends HttpFilter
       {
         String attribute = (String) attributes.nextElement();
 
-        logger.debug(
-            "Attribute: ".concat(attribute).concat(" = ").concat(
-              request.getAttribute(attribute).toString()));
+        logger.debug("Attribute: {} = {}", attribute,
+                     request.getAttribute(attribute).toString());
       }
     }
 
     HttpSession session = request.getSession(true);
 
-    logger.debug("Session-New: ".concat(Boolean.toString(session.isNew())));
+    logger.debug("Session-New: {}", Boolean.toString(session.isNew()));
 
     Enumeration sAttributes = session.getAttributeNames();
 
@@ -191,9 +187,8 @@ public class LoggingFilter extends HttpFilter
       {
         String sAttribute = (String) sAttributes.nextElement();
 
-        logger.debug(
-            "Session-Attribute: ".concat(sAttribute).concat(" = ").concat(
-              request.getSession().getAttribute(sAttribute).toString()));
+        logger.debug("Session-Attribute: {} = {}", sAttribute,
+                     request.getSession().getAttribute(sAttribute).toString());
       }
     }
   }
@@ -207,30 +202,23 @@ public class LoggingFilter extends HttpFilter
   private void logResponse(LoggingHttpServletResponse response)
   {
     logger.debug("**************** response ****************");
-    logger.debug(
-        "status code = ".concat(Integer.toString(response.getStatusCode())));
-    logger.debug(
-        "status message = ".concat(Util.nonNull(response.getStatusMessage())));
-    logger.debug(
-        "charset = ".concat(Util.nonNull(response.getCharacterEncoding())));
-    logger.debug(
-        "content-type = ".concat(Util.nonNull(response.getContentType())));
-    logger.debug(
-        "content-length = ".concat(
-          Integer.toString(response.getContentLength())));
+    logger.debug("status code = {}",
+                 Integer.toString(response.getStatusCode()));
+    logger.debug("status message = {}",
+                 Util.nonNull(response.getStatusMessage()));
+    logger.debug("charset = {}", Util.nonNull(response.getCharacterEncoding()));
+    logger.debug("content-type = {}", Util.nonNull(response.getContentType()));
+    logger.debug("content-length = {}",
+                 Integer.toString(response.getContentLength()));
 
     for (Cookie cookie : response.getCookies())
     {
-      logger.debug(
-          "Cookie: ".concat(cookie.getName()).concat(" = ").concat(
-            cookie.getValue()));
+      logger.debug("Cookie: {} = {}", cookie.getName(), cookie.getValue());
     }
 
     for (Entry<String, String> header : response.getHeaders().entrySet())
     {
-      logger.debug(
-          "Header: ".concat(header.getKey()).concat(" = ").concat(
-            header.getValue()));
+      logger.debug("Header: {} = {}", header.getKey(), header.getValue());
     }
   }
 
