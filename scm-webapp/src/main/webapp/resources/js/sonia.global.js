@@ -29,8 +29,9 @@
  * 
  */
 
+// enable debug mode, if console is available
+var debug = Ext.isDefined(console);
 
-var debug = true;
 var state = null;
 
 // sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT

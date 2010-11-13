@@ -38,6 +38,9 @@ package sonia.scm.api.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.ScmState;
 import sonia.scm.Type;
 import sonia.scm.repository.RepositoryManager;
@@ -68,6 +71,12 @@ import javax.ws.rs.core.Response;
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class AuthenticationResource
 {
+
+  /** the logger for AuthenticationResource */
+  private static final Logger logger =
+    LoggerFactory.getLogger(AuthenticationResource.class);
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -133,21 +142,28 @@ public class AuthenticationResource
    * @return
    */
   @GET
-  public ScmState getState(@Context HttpServletRequest request)
+  public Response getState(@Context HttpServletRequest request)
   {
+    Response response = null;
     ScmState state = null;
     User user = securityContext.getUser();
 
     if (user != null)
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("return state for user {}", user.getName());
+      }
+
       state = getState(user);
+      response = Response.ok(state).build();
     }
     else
     {
-      throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+      response = Response.status(Response.Status.UNAUTHORIZED).build();
     }
 
-    return state;
+    return response;
   }
 
   /**
