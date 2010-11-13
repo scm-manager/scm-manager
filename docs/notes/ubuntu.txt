@@ -1,0 +1,10 @@
+sudo add-apt-repository "deb http://archive.canonical.com/ lucid partner"
+sudo apt-get update
+scm ubuntu packages:
+- sun-java-jdk
+- mercurial
+- git-core
+- git-web
+- svn
+
+sudo update-java-alternatives -s java-6-sun
