@@ -162,6 +162,7 @@ public class ScmServletModule extends ServletModule
     bind(RepositoryManager.class).to(CacheRepositoryManagerDecorator.class);
     bind(UserManager.class).to(BasicUserManager.class);
     bind(ScmWebPluginContext.class).toInstance(webPluginContext);
+    //filter(PATTERN_RESTAPI).through(LoggingFilter.class);
 
     /*
      * filter(PATTERN_PAGE,

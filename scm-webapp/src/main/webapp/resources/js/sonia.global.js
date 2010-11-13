@@ -30,7 +30,7 @@
  */
 
 // enable debug mode, if console is available
-var debug = Ext.isDefined(console);
+var debug = typeof console != 'undefined';
 
 var state = null;
 
