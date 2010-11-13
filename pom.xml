@@ -54,13 +54,7 @@
       <name>Repository hosting the jee6 artifacts</name>
       <url>http://download.java.net/maven/2</url>
     </repository>
-
-    <repository>
-      <id>guice-maven</id>
-      <name>guice maven</name>
-      <url>http://guiceyfruit.googlecode.com/svn/repo/releases</url>
-    </repository>
-
+    
   </repositories>
 
   <dependencies>
@@ -258,7 +252,7 @@
     <slf4j.version>1.6.1</slf4j.version>
     <servlet.version>2.5</servlet.version>
     <guice.version>2.0</guice.version>
-    <jersey.version>1.5-ea03</jersey.version>
+    <jersey.version>1.5-ea04</jersey.version>
     <ehcache.version>2.3.0</ehcache.version>
     <project.build.javaLevel>1.6</project.build.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
