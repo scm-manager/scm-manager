@@ -35,88 +35,75 @@ package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Validateable;
+import org.junit.Test;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class AssertUtil
+public class ValidationUtilTest
 {
 
   /**
    * Method description
    *
-   *
-   * @param value
    */
-  public static void assertIsNotEmpty(String value)
+  @Test
+  public void testIsFilenameValid()
   {
-    if (Util.isEmpty(value))
-    {
-      throw new IllegalStateException("value is empty");
-    }
+
+    // true
+    assertTrue(ValidationUtil.isFilenameValid("test"));
+    assertTrue(ValidationUtil.isFilenameValid("test 123"));
+
+    // false
+    assertFalse(ValidationUtil.isFilenameValid("../../"));
+    assertFalse(ValidationUtil.isFilenameValid("test/../.."));
+    assertFalse(ValidationUtil.isFilenameValid("\\ka"));
+    assertFalse(ValidationUtil.isFilenameValid("ka:on"));
   }
 
   /**
    * Method description
    *
-   *
-   * @param array
    */
-  public static void assertIsNotEmpty(Object[] array)
+  @Test
+  public void testIsMailAddressValid()
   {
-    if (Util.isEmpty(array))
-    {
-      throw new IllegalStateException("array is empty");
-    }
+
+    // true
+    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@ostfalia.de"));
+    assertTrue(ValidationUtil.isMailAddressValid("sdorra@ostfalia.de"));
+    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@hbk-bs.de"));
+    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@gmail.com"));
+
+    // false
+    assertFalse(ValidationUtil.isMailAddressValid("ostfalia.de"));
+    assertFalse(ValidationUtil.isMailAddressValid("@ostfalia.de"));
+    assertFalse(ValidationUtil.isMailAddressValid("s.sdorra@"));
+    assertFalse(ValidationUtil.isMailAddressValid("s.sdorra@ostfalia"));
+    assertFalse(ValidationUtil.isMailAddressValid("s.sdorra@@ostfalia.de"));
+    assertFalse(ValidationUtil.isMailAddressValid("s.sdorra@ ostfalia.de"));
+    assertFalse(ValidationUtil.isMailAddressValid("s.sdorra @ostfalia.de"));
   }
 
   /**
    * Method description
    *
-   *
-   * @param collection
    */
-  public static void assertIsNotEmpty(Collection<?> collection)
+  @Test
+  public void testIsNotContaining()
   {
-    if (Util.isEmpty(collection))
-    {
-      throw new IllegalStateException("collection is empty");
-    }
-  }
 
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   */
-  public static void assertIsNotNull(Object object)
-  {
-    if (object == null)
-    {
-      throw new IllegalStateException("object is required");
-    }
-  }
+    // true
+    assertTrue(ValidationUtil.isNotContaining("test", "abc"));
 
-  /**
-   * Method description
-   *
-   *
-   * @param validateable
-   */
-  public static void assertIsValid(Validateable validateable)
-  {
-    assertIsNotNull(validateable);
-
-    if (!validateable.isValid())
-    {
-      throw new IllegalStateException("object is not valid");
-    }
+    // false
+    assertFalse(ValidationUtil.isNotContaining("test", "e"));
+    assertFalse(ValidationUtil.isNotContaining("test", "e", "s"));
+    assertFalse(ValidationUtil.isNotContaining("test", "es"));
+    assertFalse(ValidationUtil.isNotContaining("test", "t"));
   }
 }

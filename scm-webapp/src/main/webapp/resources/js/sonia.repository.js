@@ -147,7 +147,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
          allowBlank: false
         },
 
-        {fieldLabel: 'Contact', name: 'contact'},
+        {fieldLabel: 'Contact', name: 'contact', vtype: 'email'},
         {fieldLabel: 'Description', name: 'description', xtype: 'textarea'}
       ]
     };

@@ -29,11 +29,12 @@
  *
  */
 
+
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.HandlerEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -41,8 +42,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
+import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.Type;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 
@@ -57,7 +60,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import sonia.scm.Type;
 
 /**
  *
@@ -93,31 +95,6 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
 
   //~--- methods --------------------------------------------------------------
 
-  private void addHandler(RepositoryHandler handler)
-  {
-    AssertUtil.assertIsNotNull(handler);
-
-    Type type = handler.getType();
-
-    AssertUtil.assertIsNotNull(type);
-
-    if (handlerMap.containsKey(type.getName()))
-    {
-      throw new ConfigurationException(
-          type.getName().concat("allready registered"));
-    }
-
-    if (logger.isInfoEnabled())
-    {
-      logger.info("added RepositoryHandler {} for type {}", handler.getClass(),
-                  type);
-    }
-
-    handlerMap.put(type.getName(), handler);
-    handler.init(SCMContext.getContext());
-    types.add(type);
-  }
-
   /**
    * Method description
    *
@@ -152,6 +129,7 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
                   repository.getType());
     }
 
+    AssertUtil.assertIsValid(repository);
     getHandler(repository).create(repository);
     fireEvent(repository, HandlerEvent.CREATE);
   }
@@ -207,6 +185,7 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
                   repository.getType());
     }
 
+    AssertUtil.assertIsValid(repository);
     getHandler(repository).modify(repository);
     fireEvent(repository, HandlerEvent.MODIFY);
   }
@@ -321,6 +300,41 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   {
     return types;
   }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param handler
+   */
+  private void addHandler(RepositoryHandler handler)
+  {
+    AssertUtil.assertIsNotNull(handler);
+
+    Type type = handler.getType();
+
+    AssertUtil.assertIsNotNull(type);
+
+    if (handlerMap.containsKey(type.getName()))
+    {
+      throw new ConfigurationException(
+          type.getName().concat("allready registered"));
+    }
+
+    if (logger.isInfoEnabled())
+    {
+      logger.info("added RepositoryHandler {} for type {}", handler.getClass(),
+                  type);
+    }
+
+    handlerMap.put(type.getName(), handler);
+    handler.init(SCMContext.getContext());
+    types.add(type);
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description

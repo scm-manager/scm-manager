@@ -136,6 +136,7 @@ public class BasicUserManager implements UserManager
       logger.info("create user {} of type {}", user.getName(), user.getType());
     }
 
+    AssertUtil.assertIsValid(user);
     getHandler(user).create(user);
     fireEvent(user, HandlerEvent.CREATE);
   }
@@ -154,7 +155,7 @@ public class BasicUserManager implements UserManager
   {
     if (logger.isInfoEnabled())
     {
-      logger.info("create user {} of type {}", user.getName(), user.getType());
+      logger.info("delete user {} of type {}", user.getName(), user.getType());
     }
 
     getHandler(user).delete(user);
@@ -193,6 +194,7 @@ public class BasicUserManager implements UserManager
       logger.info("modify user {} of type {}", user.getName(), user.getType());
     }
 
+    AssertUtil.assertIsValid(user);
     getHandler(user).modify(user);
     fireEvent(user, HandlerEvent.MODIFY);
   }

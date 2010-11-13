@@ -78,6 +78,19 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
 // register xtype
 Ext.reg('userGrid', Sonia.user.Grid);
 
+
+Ext.apply(Ext.form.VTypes, {
+  password: function(val, field) {
+    if (field.initialPassField) {
+      var pwd = Ext.getCmp(field.initialPassField);
+      return (val == pwd.getValue());
+    }
+    return true;
+  },
+  passwordText: 'The passwords entered do not match!'
+});
+
+
 // UserFormPanel
 Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
@@ -95,14 +108,24 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       },{
         fieldLabel: 'Mail',
         name: 'mail',
-        allowBlank: false
+        allowBlank: false,
+        vtype: 'email'
       },{
         fieldLabel: 'Password',
+        id: 'pwd',
         name: 'password',
-        inputType: 'password'
+        inputType: 'password',
+        minLength: 6,
+        maxLength: 32,
+        minLengthText: 'Password must be at least 6 characters long.'
       },{
         name: 'password',
-        inputType: 'password'
+        inputType: 'password',
+        minLength: 6,
+        maxLength: 32,
+        minLengthText: 'Password must be at least 6 characters long.',
+        vtype: 'password',
+        initialPassField: 'pwd'
       }]
     };
 

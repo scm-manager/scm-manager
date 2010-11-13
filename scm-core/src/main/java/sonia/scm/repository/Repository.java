@@ -36,7 +36,9 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.TypedObject;
+import sonia.scm.Validateable;
 import sonia.scm.util.Util;
+import sonia.scm.util.ValidationUtil;
 import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -64,7 +66,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
   "id", "type", "name", "contact", "description", "creationDate", "url",
   "permissions"
 })
-public class Repository implements TypedObject, Serializable
+public class Repository implements TypedObject, Validateable, Serializable
 {
 
   /** Field description */
@@ -229,6 +231,20 @@ public class Repository implements TypedObject, Serializable
   public String getUrl()
   {
     return url;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isValid()
+  {
+    return Util.isNotEmpty(name) && Util.isNotEmpty(type)
+           && ((Util.isEmpty(contact))
+               || ValidationUtil.isMailAddressValid(contact));
   }
 
   //~--- set methods ----------------------------------------------------------

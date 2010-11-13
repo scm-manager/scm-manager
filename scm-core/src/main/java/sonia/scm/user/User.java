@@ -36,6 +36,9 @@ package sonia.scm.user;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.TypedObject;
+import sonia.scm.Validateable;
+import sonia.scm.util.Util;
+import sonia.scm.util.ValidationUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -58,7 +61,8 @@ import javax.xml.bind.annotation.XmlType;
 {
   "name", "displayName", "mail", "password", "type"
 })
-public class User implements TypedObject, Principal, Cloneable, Serializable
+public class User
+        implements TypedObject, Principal, Cloneable, Validateable, Serializable
 {
 
   /** Field description */
@@ -261,6 +265,20 @@ public class User implements TypedObject, Principal, Cloneable, Serializable
   public String getType()
   {
     return type;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isValid()
+  {
+    return Util.isNotEmpty(name) && Util.isNotEmpty(displayName)
+           && Util.isNotEmpty(type)
+           && ((Util.isEmpty(mail)) || ValidationUtil.isMailAddressValid(mail));
   }
 
   //~--- set methods ----------------------------------------------------------
