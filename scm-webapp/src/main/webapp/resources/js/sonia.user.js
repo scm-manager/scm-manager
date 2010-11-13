@@ -70,7 +70,31 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
   },
 
   selectItem: function(item){
-    console.debug( item );
+    if ( debug ){
+      console.debug( item.name + ' selected' );
+    }
+    var editPanel = Ext.getCmp('userEditPanel');
+    editPanel.removeAll();
+    var panel = new Sonia.user.FormPanel({
+      item: item,
+      region: 'south',
+      title: 'User Form',
+      padding: 5,
+      onUpdate: {
+        fn: this.reload,
+        scope: this
+      },
+      onCreate: {
+        fn: this.reload,
+        scope: this
+      }
+    });
+    panel.getForm().setValues([
+      {id: 'password', value: dummyPassword},
+      {id: 'password-confirm', value: dummyPassword}
+    ]);
+    editPanel.add(panel);
+    editPanel.doLayout();
   }
 
 });
@@ -78,7 +102,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
 // register xtype
 Ext.reg('userGrid', Sonia.user.Grid);
 
-
+// passord validator
 Ext.apply(Ext.form.VTypes, {
   password: function(val, field) {
     if (field.initialPassField) {
@@ -119,7 +143,7 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         maxLength: 32,
         minLengthText: 'Password must be at least 6 characters long.'
       },{
-        name: 'password',
+        name: 'password-confirm',
         inputType: 'password',
         minLength: 6,
         maxLength: 32,
@@ -134,8 +158,28 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   },
 
   update: function(item){
-    console.debug('update user');
-    console.debug(item);
+
+    item = Ext.apply( this.item, item );
+    if ( debug ){
+      console.debug( 'update user: ' + item.name );
+    }
+    var url = restUrl + 'users/' + item.name + '.json';
+    Ext.Ajax.request({
+      url: url,
+      jsonData: item,
+      method: 'PUT',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('update success');
+        }
+        this.execCallback(this.onUpdate, item);
+      },
+      failure: function(){
+        alert( 'failure' );
+      }
+    });
+    
   },
 
   create: function(user){
@@ -182,7 +226,7 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
       autoScroll: true,
       tbar: [
         {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddPanel},
-        {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.remove},
+        {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.removeUser},
         '-',
         {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload},
       ],
@@ -230,13 +274,66 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
     editPanel.add(panel);
     editPanel.doLayout();
   },
+  
+ resetPanel: function(){
+    var editPanel = Ext.getCmp('userEditPanel');
+    editPanel.removeAll();
+    editPanel.add({
+      region: 'south',
+      title: 'User Form',
+      padding: 5,
+      xtype: 'panel',
+      html: 'Add or select an User'
+    });
+    editPanel.doLayout();
+  },
 
-  remove: function(){
-    console.debug( 'remove' );
+  removeUser: function(){
+
+    var grid = Ext.getCmp('userGrid');
+    var selected = grid.getSelectionModel().getSelected();
+    if ( selected ){
+      var item = selected.data;
+      var url = restUrl + 'users/' + item.name + '.json';
+
+      Ext.MessageBox.show({
+        title: 'Remove User',
+        msg: 'Remove User "' + item.name + '"?',
+        buttons: Ext.MessageBox.OKCANCEL,
+        icon: Ext.MessageBox.QUESTION,
+        fn: function(result){
+          if ( result == 'ok' ){
+
+            if ( debug ){
+              console.debug( 'remove user ' + item.name );
+            }
+
+            Ext.Ajax.request({
+              url: url,
+              method: 'DELETE',
+              scope: this,
+              success: function(){
+                this.reload();
+                this.resetPanel();
+              },
+              failure: function(){
+                alert( 'failure' );
+              }
+            });
+          }
+
+        },
+        scope: this
+      });
+
+    } else if ( debug ){
+      console.debug( 'no repository selected' );
+    }
+
   },
 
   reload: function(){
-    console.debug( 'reload' );
+    Ext.getCmp('userGrid').reload();
   }
 
 });

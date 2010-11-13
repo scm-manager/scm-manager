@@ -33,6 +33,9 @@
 var debug = true;
 var state = null;
 
+// sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT
+var dummyPassword = '__dummypassword__';
+
 // functions called after login
 var loginCallbacks = [];
 
@@ -89,4 +92,5 @@ function logout(){
   });
 }
 
+// enable extjs quicktips
 Ext.QuickTips.init();
