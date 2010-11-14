@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -72,5 +74,6 @@ public class SvnWebPlugin implements ScmWebPlugin
   public void contextInitialized(ScmWebPluginContext context)
   {
     context.addScriptResource(new ClasspathWebResource(SCRIPT));
+    context.addInjectModule(new SvnServletModule());
   }
 }

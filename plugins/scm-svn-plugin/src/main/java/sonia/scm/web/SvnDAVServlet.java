@@ -31,68 +31,41 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import sonia.scm.Type;
-import sonia.scm.io.ExtendedCommand;
+import org.tmatesoft.svn.core.internal.server.dav.DAVConfig;
+import org.tmatesoft.svn.core.internal.server.dav.DAVServlet;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
+import sonia.scm.repository.SvnRepositoryHandler;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class SvnRepositoryHandler
-        extends AbstractSimpleRepositoryHandler<SvnConfig>
+public class SvnDAVServlet extends DAVServlet
 {
 
   /** Field description */
-  public static final String TYPE_DISPLAYNAME = "Subversion";
+  private static final long serialVersionUID = -1462257085465785945L;
 
-  /** Field description */
-  public static final String TYPE_NAME = "svn";
-
-  /** Field description */
-  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
-
-  //~--- get methods ----------------------------------------------------------
+  //~--- constructors ---------------------------------------------------------
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @return
+   * @param handler
    */
-  @Override
-  public Type getType()
+  @Inject
+  public SvnDAVServlet(SvnRepositoryHandler handler)
   {
-    return TYPE;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @return
-   */
-  @Override
-  protected ExtendedCommand buildCreateCommand(Repository repository,
-          File directory)
-  {
-    return new ExtendedCommand(config.getSvnAdminBinary(), "create",
-                               directory.getPath());
+    this.handler = handler;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -104,8 +77,13 @@ public class SvnRepositoryHandler
    * @return
    */
   @Override
-  protected Class<SvnConfig> getConfigClass()
+  protected DAVConfig getDAVConfig()
   {
-    return SvnConfig.class;
+    return new SvnDAVConfig(super.getDAVConfig(), handler.getConfig());
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private SvnRepositoryHandler handler;
 }

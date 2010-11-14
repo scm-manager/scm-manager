@@ -31,81 +31,38 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Singleton;
+import com.google.inject.servlet.ServletModule;
 
-import sonia.scm.Type;
-import sonia.scm.io.ExtendedCommand;
+import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class SvnRepositoryHandler
-        extends AbstractSimpleRepositoryHandler<SvnConfig>
+public class SvnServletModule extends ServletModule
 {
 
-  /** Field description */
-  public static final String TYPE_DISPLAYNAME = "Subversion";
-
-  /** Field description */
-  public static final String TYPE_NAME = "svn";
-
-  /** Field description */
-  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
-
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Method description
    *
-   *
-   * @return
    */
   @Override
-  public Type getType()
+  protected void configureServlets()
   {
-    return TYPE;
-  }
+    filter("/svn/*").through(BasicAuthenticationFilter.class);
 
-  //~--- methods --------------------------------------------------------------
+    Map<String, String> parameters = new HashMap<String, String>();
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @return
-   */
-  @Override
-  protected ExtendedCommand buildCreateCommand(Repository repository,
-          File directory)
-  {
-    return new ExtendedCommand(config.getSvnAdminBinary(), "create",
-                               directory.getPath());
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected Class<SvnConfig> getConfigClass()
-  {
-    return SvnConfig.class;
+    parameters.put("SVNParentPath", System.getProperty("java.io.tmpdir"));
+    serve("/svn/*").with(SvnDAVServlet.class, parameters);
   }
 }

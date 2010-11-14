@@ -36,6 +36,7 @@
   </prerequisites>
 
   <modules>
+    <module>third-party</module>
     <module>scm-core</module>
     <module>scm-cli</module>
     <module>scm-web-api</module>

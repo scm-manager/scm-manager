@@ -35,6 +35,9 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.ConfigChangedListener;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.util.Util;
@@ -59,6 +62,12 @@ import javax.xml.bind.JAXB;
 public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
         implements RepositoryHandler
 {
+
+  /** the logger for AbstractRepositoryHandler */
+  private static final Logger logger =
+    LoggerFactory.getLogger(AbstractRepositoryHandler.class);
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -120,6 +129,11 @@ public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
   {
     if (configFile.exists())
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("load config {}", configFile.getPath());
+      }
+
       config = JAXB.unmarshal(configFile, getConfigClass());
     }
   }
@@ -144,6 +158,11 @@ public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
   {
     if (config != null)
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("store config {}", configFile.getPath());
+      }
+
       JAXB.marshal(config, configFile);
     }
   }
