@@ -37,9 +37,9 @@ package sonia.scm.repository;
 
 import com.google.inject.Singleton;
 
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+
 import sonia.scm.Type;
-import sonia.scm.io.CommandResult;
-import sonia.scm.io.ExtendedCommand;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -87,39 +87,15 @@ public class GitRepositoryHandler
    * @param repository
    * @param directory
    *
-   * @return
-   */
-  @Override
-  protected ExtendedCommand buildCreateCommand(Repository repository,
-          File directory)
-  {
-    return new ExtendedCommand(config.getGitBinary(), "init", "--bare",
-                               directory.getPath());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
    * @throws IOException
    * @throws RepositoryException
    */
   @Override
-  protected void postCreate(Repository repository, File directory)
-          throws IOException, RepositoryException
+  protected void create(Repository repository, File directory)
+          throws RepositoryException, IOException
   {
-    ExtendedCommand command = new ExtendedCommand(config.getGitBinary(),
-                                "update-server-info");
-
-    command.setWorkDirectory(directory);
-    execute(command);
-    command = new ExtendedCommand(config.getGitBinary(), "config", "--bool",
-                                  "--add", "http.receivepack", "true");
-    command.setWorkDirectory(directory);
-    execute(command);
+    new FileRepositoryBuilder().setGitDir(
+        directory).readEnvironment().findGitDir().build().create(true);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -136,30 +112,8 @@ public class GitRepositoryHandler
     return GitConfig.class;
   }
 
-  //~--- methods --------------------------------------------------------------
+  //~--- fields ---------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param command
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  private void execute(ExtendedCommand command)
-          throws IOException, RepositoryException
-  {
-    CommandResult result = command.execute();
-
-    if (!result.isSuccessfull())
-    {
-      StringBuilder msg = new StringBuilder("command exit with error ");
-
-      msg.append(result.getReturnCode()).append(" and message: '");
-      msg.append(result.getOutput()).append("'");
-
-      throw new RepositoryException(msg.toString());
-    }
-  }
+  /** Field description */
+  private FileRepositoryBuilder builder = new FileRepositoryBuilder();
 }

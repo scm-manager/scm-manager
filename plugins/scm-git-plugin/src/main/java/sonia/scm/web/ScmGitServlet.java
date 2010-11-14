@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -36,15 +38,13 @@ package sonia.scm.web;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import sonia.scm.repository.GitConfig;
+import org.eclipse.jgit.http.server.GitServlet;
+
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.util.IOUtil;
-import sonia.scm.web.cgi.AbstractCGIServlet;
-import sonia.scm.web.cgi.EnvList;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -58,14 +58,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class GitCGIServlet extends AbstractCGIServlet
+public class ScmGitServlet extends GitServlet
 {
-
-  /** Field description */
-  public static final String ENV_HTTP_EXPORT_ALL = "GIT_HTTP_EXPORT_ALL";
-
-  /** Field description */
-  public static final String ENV_PROJECT_ROOT = "GIT_PROJECT_ROOT";
 
   /** Field description */
   public static final String MIMETYPE_HTML = "text/html";
@@ -78,55 +72,23 @@ public class GitCGIServlet extends AbstractCGIServlet
   public static final String RESOURCE_GITINDEX = "/sonia/scm/git.index.html";
 
   /** Field description */
-  private static final long serialVersionUID = 9147517765161830847L;
+  private static final long serialVersionUID = -7712897339207470674L;
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param handler
+   */
+  @Inject
+  public ScmGitServlet(GitRepositoryHandler handler)
+  {
+    setRepositoryResolver(new GitRepositoryResolver(handler.getConfig()));
+  }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws ServletException
-   */
-  @Override
-  protected EnvList createBaseEnvironment() throws ServletException
-  {
-    EnvList list = super.createBaseEnvironment();
-
-    list.set(ENV_HTTP_EXPORT_ALL, "");
-
-    return list;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseEnvironment
-   *
-   * @return
-   *
-   * @throws ServletException
-   */
-  @Override
-  protected EnvList createRequestEnvironment(EnvList baseEnvironment)
-          throws ServletException
-  {
-    GitConfig config = repositoryHandler.getConfig();
-
-    if (config == null)
-    {
-      throw new ServletException("git is not configured");
-    }
-
-    EnvList env = new EnvList(baseEnvironment);
-
-    env.set(ENV_PROJECT_ROOT, config.getRepositoryDirectory().getPath());
-
-    return env;
-  }
 
   /**
    * Method description
@@ -155,35 +117,6 @@ public class GitCGIServlet extends AbstractCGIServlet
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
-  @Override
-  protected File getCommand(HttpServletRequest request)
-          throws ServletException, IOException
-  {
-    GitConfig config = repositoryHandler.getConfig();
-
-    if (config == null)
-    {
-      throw new ServletException("git is not configured");
-    }
-
-    return new File(config.getGitHttpBackend());
-  }
-
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Method description
    *
@@ -203,7 +136,7 @@ public class GitCGIServlet extends AbstractCGIServlet
 
     try
     {
-      input = GitCGIServlet.class.getResourceAsStream(RESOURCE_GITINDEX);
+      input = ScmGitServlet.class.getResourceAsStream(RESOURCE_GITINDEX);
       output = response.getOutputStream();
       IOUtil.copy(input, output);
     }
@@ -228,10 +161,4 @@ public class GitCGIServlet extends AbstractCGIServlet
   {
     return request.getRequestURI().substring(request.getContextPath().length());
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @Inject
-  private GitRepositoryHandler repositoryHandler;
 }

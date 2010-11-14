@@ -33,11 +33,6 @@ registerConfigPanel({
   xtype : 'configForm',
   title : 'Git Settings',
   items : [{
-    xtype : 'textfield',
-    fieldLabel : 'Git Binary',
-    name : 'gitBinary',
-    allowBlank : false
-  },{
     xtype: 'textfield',
     name: 'repositoryDirectory',
     fieldLabel: 'Repository directory',
@@ -46,11 +41,6 @@ registerConfigPanel({
     xtype: 'textfield',
     name: 'baseUrl',
     fieldLabel: 'Base URL',
-    allowBlank : false
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Git-Http-Backend',
-    name : 'gitHttpBackend',
     allowBlank : false
   }],
 

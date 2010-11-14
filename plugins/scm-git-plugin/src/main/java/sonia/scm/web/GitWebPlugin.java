@@ -81,7 +81,7 @@ public class GitWebPlugin implements ScmWebPlugin
       protected void configureServlets()
       {
         filter("/git/*").through(BasicAuthenticationFilter.class);
-        serve("/git/*").with(GitCGIServlet.class);
+        serve("/git/*").with(ScmGitServlet.class);
       }
     });
   }
