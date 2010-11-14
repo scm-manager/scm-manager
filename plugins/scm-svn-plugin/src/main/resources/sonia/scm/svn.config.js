@@ -33,11 +33,6 @@ registerConfigPanel({
   xtype : 'configForm',
   title : 'Subversion Settings',
   items : [{
-    xtype : 'textfield',
-    fieldLabel : 'Svnadmin Binary',
-    name : 'svnAdminBinary',
-    allowBlank : false
-  },{
     xtype: 'textfield',
     name: 'repositoryDirectory',
     fieldLabel: 'Repository directory',

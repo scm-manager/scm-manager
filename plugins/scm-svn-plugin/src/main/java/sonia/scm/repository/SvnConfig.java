@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -54,17 +56,6 @@ public class SvnConfig extends SimpleRepositoryConfig
     return svnAccessFile;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getSvnAdminBinary()
-  {
-    return svnAdminBinary;
-  }
-
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -78,22 +69,8 @@ public class SvnConfig extends SimpleRepositoryConfig
     this.svnAccessFile = svnAccessFile;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param svnAdminBinary
-   */
-  public void setSvnAdminBinary(String svnAdminBinary)
-  {
-    this.svnAdminBinary = svnAdminBinary;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private String svnAccessFile;
-
-  /** Field description */
-  private String svnAdminBinary;
 }
