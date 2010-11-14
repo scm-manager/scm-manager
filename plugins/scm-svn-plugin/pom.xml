@@ -27,6 +27,12 @@
       <groupId>org.tmatesoft.svnkit</groupId>
       <artifactId>svnkit</artifactId>
       <version>${svnkit.version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>trilead-ssh2</artifactId>
+          <groupId>org.tmatesoft.svnkit</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
