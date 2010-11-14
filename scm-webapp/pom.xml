@@ -14,7 +14,7 @@
   <artifactId>scm-webapp</artifactId>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
-  <name>scm-webapp Java EE 6 Webapp</name>
+  <name>scm-webapp</name>
 
   <dependencies>
 
