@@ -1,0 +1,6 @@
+convert bdb repository to fsfs
+
+svnadmin create --fs-type=fsfs fsfs-repo
+svnadmin dump repo | svnadmin load fsfs-repo
+mv repo backup-repo
+mv fsfs-repo repo 
