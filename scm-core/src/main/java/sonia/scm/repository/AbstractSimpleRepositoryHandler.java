@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -77,18 +79,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    *
    *
    * @param repository
-   * @param directory
-   *
-   * @return
-   */
-  protected abstract ExtendedCommand buildCreateCommand(Repository repository,
-          File directory);
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
    *
    * @throws IOException
    * @throws RepositoryException
@@ -106,19 +96,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       throw new RepositoryAllreadyExistExeption();
     }
 
-    ExtendedCommand cmd = buildCreateCommand(repository, directory);
-    CommandResult result = cmd.execute();
-
-    if (!result.isSuccessfull())
-    {
-      StringBuilder msg = new StringBuilder("command exit with error ");
-
-      msg.append(result.getReturnCode()).append(" and message: '");
-      msg.append(result.getOutput()).append("'");
-
-      throw new RepositoryException(msg.toString());
-    }
-
+    create(repository, directory);
     postCreate(repository, directory);
     repository.setType(getType().getName());
     storeRepositoryConfig(repository);
@@ -272,6 +250,48 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param directory
+   *
+   * @return
+   */
+  protected ExtendedCommand buildCreateCommand(Repository repository,
+          File directory)
+  {
+    throw new UnsupportedOperationException("method is not implemented");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param directory
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  protected void create(Repository repository, File directory)
+          throws RepositoryException, IOException
+  {
+    ExtendedCommand cmd = buildCreateCommand(repository, directory);
+    CommandResult result = cmd.execute();
+
+    if (!result.isSuccessfull())
+    {
+      StringBuilder msg = new StringBuilder("command exit with error ");
+
+      msg.append(result.getReturnCode()).append(" and message: '");
+      msg.append(result.getOutput()).append("'");
+
+      throw new RepositoryException(msg.toString());
+    }
+  }
 
   /**
    * Method description

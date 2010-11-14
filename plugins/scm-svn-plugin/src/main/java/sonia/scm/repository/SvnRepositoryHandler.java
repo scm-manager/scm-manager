@@ -37,12 +37,19 @@ package sonia.scm.repository;
 
 import com.google.inject.Singleton;
 
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
+
 import sonia.scm.Type;
 import sonia.scm.io.ExtendedCommand;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -85,14 +92,21 @@ public class SvnRepositoryHandler
    * @param repository
    * @param directory
    *
-   * @return
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
-  protected ExtendedCommand buildCreateCommand(Repository repository,
-          File directory)
+  protected void create(Repository repository, File directory)
+          throws RepositoryException, IOException
   {
-    return new ExtendedCommand(config.getSvnAdminBinary(), "create",
-                               directory.getPath());
+    try
+    {
+      SVNRepositoryFactory.createLocalRepository(directory, true, false);
+    }
+    catch (SVNException ex)
+    {
+      throw new RepositoryException(ex);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
