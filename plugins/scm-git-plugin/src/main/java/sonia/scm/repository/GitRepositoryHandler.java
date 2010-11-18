@@ -112,8 +112,14 @@ public class GitRepositoryHandler
     return GitConfig.class;
   }
 
+  @Override
+  protected GitConfig createInitialConfig()
+  {
+    return new GitConfig();
+  }
+
+
+
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private FileRepositoryBuilder builder = new FileRepositoryBuilder();
 }

@@ -41,15 +41,11 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
 import sonia.scm.Type;
-import sonia.scm.io.ExtendedCommand;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -107,6 +103,18 @@ public class SvnRepositoryHandler
     {
       throw new RepositoryException(ex);
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected SvnConfig createInitialConfig()
+  {
+    return new SvnConfig();
   }
 
   //~--- get methods ----------------------------------------------------------

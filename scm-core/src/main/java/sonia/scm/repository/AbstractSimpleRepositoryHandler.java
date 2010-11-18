@@ -69,6 +69,9 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 {
 
   /** Field description */
+  public static final String DIRECTORY_REPOSITORY = "repositories";
+
+  /** Field description */
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractSimpleRepositoryHandler.class);
 
@@ -140,6 +143,37 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
   {
     super.init(context);
     createConfigDirectory(context);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Override
+  public void loadConfig()
+  {
+    super.loadConfig();
+
+    if (config == null)
+    {
+      config = createInitialConfig();
+
+      if (config != null)
+      {
+        File repositoryDirectory = config.getRepositoryDirectory();
+
+        if (repositoryDirectory == null)
+        {
+          repositoryDirectory = new File(
+              baseDirectory,
+              DIRECTORY_REPOSITORY.concat(File.separator).concat(
+                getType().getName()));
+          config.setRepositoryDirectory(repositoryDirectory);
+        }
+
+        IOUtil.mkdirs(repositoryDirectory);
+      }
+    }
   }
 
   /**
@@ -301,8 +335,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    */
   protected void createConfigDirectory(SCMContextProvider context)
   {
-    File baseDirectory = context.getBaseDirectory();
-
     configDirectory =
       new File(baseDirectory,
                "config".concat(File.separator).concat(getType().getName()));
@@ -311,6 +343,17 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     {
       throw new ConfigurationException("could not create config directory");
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected C createInitialConfig()
+  {
+    return null;
   }
 
   /**

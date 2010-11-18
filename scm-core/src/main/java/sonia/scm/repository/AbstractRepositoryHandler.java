@@ -115,8 +115,9 @@ public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
   {
     String name = getType().getName();
 
+    baseDirectory = context.getBaseDirectory();
     configFile =
-      new File(context.getBaseDirectory(),
+      new File(baseDirectory,
                "config".concat(File.separator).concat(name).concat(".xml"));
     loadConfig();
   }
@@ -259,6 +260,9 @@ public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected File baseDirectory;
 
   /** Field description */
   protected C config;
