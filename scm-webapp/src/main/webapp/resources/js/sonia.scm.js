@@ -121,11 +121,13 @@ Ext.onReady(function(){
       title: 'Config',
       items: [{
         label: 'General',
-        fn: function(){console.debug( 'General Config' );}
+        fn: function(){
+          addTabPanel("scmConfig", "scmConfig", "Scm Config");
+        }
       },{
         label: 'Repository Types',
         fn: function(){
-          addTabPanel('repositoryConfig', 'configPanel', 'Repository Config');
+          addTabPanel('repositoryConfig', 'repositoryConfig', 'Repository Config');
         }
       },{
         label: 'Server',

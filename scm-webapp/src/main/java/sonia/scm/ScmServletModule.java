@@ -45,6 +45,7 @@ import sonia.scm.api.rest.UriExtensionsConfig;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.CacheRepositoryManagerDecorator;
 import sonia.scm.cache.EhCacheManager;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.SecurityFilter;
 import sonia.scm.plugin.ScriptResourceServlet;
 import sonia.scm.repository.BasicRepositoryManager;
@@ -74,11 +75,15 @@ import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
+import java.io.File;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+
+import javax.xml.bind.JAXB;
 
 /**
  *
@@ -152,6 +157,10 @@ public class ScmServletModule extends ServletModule
 
     bind(SCMContextProvider.class).toInstance(context);
 
+    ScmConfiguration config = getScmConfiguration(context);
+
+    bind(ScmConfiguration.class).toInstance(config);
+
     // bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
     // bind(Authenticator.class).to(XmlAuthenticator.class);
     bind(SecurityContext.class).to(BasicSecurityContext.class);
@@ -162,7 +171,8 @@ public class ScmServletModule extends ServletModule
     bind(RepositoryManager.class).to(CacheRepositoryManagerDecorator.class);
     bind(UserManager.class).to(BasicUserManager.class);
     bind(ScmWebPluginContext.class).toInstance(webPluginContext);
-    //filter(PATTERN_RESTAPI).through(LoggingFilter.class);
+
+    // filter(PATTERN_RESTAPI).through(LoggingFilter.class);
 
     /*
      * filter(PATTERN_PAGE,
@@ -318,6 +328,41 @@ public class ScmServletModule extends ServletModule
       bindRepositoryHandlers(repositoryHandlerBinder, repositoryHandlerSet);
       bindUserHandlers(userHandlerBinder, userHandlerSet);
     }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   *
+   * @return
+   */
+  private ScmConfiguration getScmConfiguration(SCMContextProvider context)
+  {
+    ScmConfiguration config = null;
+    File file = new File(context.getBaseDirectory(), ScmConfiguration.PATH);
+
+    if (file.exists())
+    {
+      try
+      {
+        JAXB.unmarshal(file, ScmConfiguration.class);
+      }
+      catch (Exception ex)
+      {
+        logger.error(ex.getMessage(), ex);
+      }
+    }
+
+    if (config == null)
+    {
+      config = new ScmConfiguration();
+    }
+
+    return config;
   }
 
   //~--- fields ---------------------------------------------------------------
