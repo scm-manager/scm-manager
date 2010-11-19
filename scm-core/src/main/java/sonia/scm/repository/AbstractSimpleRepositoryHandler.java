@@ -172,6 +172,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
         }
 
         IOUtil.mkdirs(repositoryDirectory);
+        storeConfig();
       }
     }
   }

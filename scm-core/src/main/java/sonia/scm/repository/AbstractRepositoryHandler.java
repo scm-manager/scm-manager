@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigChangedListener;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -164,6 +165,9 @@ public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
         logger.debug("store config {}", configFile.getPath());
       }
 
+      File parent = configFile.getParentFile();
+
+      IOUtil.mkdirs(parent);
       JAXB.marshal(config, configFile);
     }
   }
