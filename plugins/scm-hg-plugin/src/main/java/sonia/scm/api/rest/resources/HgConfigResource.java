@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -107,7 +109,6 @@ public class HgConfigResource
    *
    *
    * @param uriInfo
-   * @param servletContext
    * @param config
    *
    * @return
@@ -116,14 +117,12 @@ public class HgConfigResource
    */
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response setConfig(@Context UriInfo uriInfo,
-                            @Context ServletContext servletContext,
-                            HgConfig config)
+  public Response setConfig(@Context UriInfo uriInfo, HgConfig config)
           throws IOException
   {
     handler.setConfig(config);
     handler.storeConfig();
-    new HgWebConfigWriter(config).write(servletContext);
+    new HgWebConfigWriter(config).write();
 
     return Response.created(uriInfo.getRequestUri()).build();
   }

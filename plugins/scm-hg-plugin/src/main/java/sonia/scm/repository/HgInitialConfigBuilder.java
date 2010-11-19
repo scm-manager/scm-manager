@@ -31,38 +31,53 @@
 
 
 
-package sonia.scm.web;
+package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.io.INIConfiguration;
-import sonia.scm.io.INIConfigurationWriter;
-import sonia.scm.io.INISection;
-import sonia.scm.io.RegexResourceProcessor;
-import sonia.scm.io.ResourceProcessor;
-import sonia.scm.repository.HgConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.io.Command;
+import sonia.scm.io.CommandResult;
+import sonia.scm.io.SimpleCommand;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgWebConfigWriter
+public class HgInitialConfigBuilder
 {
 
   /** Field description */
-  public static final String CGI_TEMPLATE = "/sonia/scm/hgweb.cgi";
+  public static final String DIRECTORY_REPOSITORY = "repositories";
 
   /** Field description */
-  public static final String CONFIG_NAME = "hgweb.config";
+  private static final String[] PATH = new String[]
+  {
+
+    // default path
+    "/usr/bin",
+
+    // manually installed
+    "/usr/local/bin",
+
+    // mac ports
+    "/opt/local/bin",
+
+    // opencsw
+    "/opt/csw/bin"
+  };
+
+  /** the logger for HgInitialConfigBuilder */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgInitialConfigBuilder.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -70,11 +85,11 @@ public class HgWebConfigWriter
    * Constructs ...
    *
    *
-   * @param config
+   * @param baseDirectory
    */
-  public HgWebConfigWriter(HgConfig config)
+  public HgInitialConfigBuilder(File baseDirectory)
   {
-    this.config = config;
+    this.baseDirectory = baseDirectory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -83,79 +98,82 @@ public class HgWebConfigWriter
    * Method description
    *
    *
-   *
-   * @throws IOException
+   * @return
    */
-  public void write() throws IOException
+  public HgConfig createInitialConfig()
   {
-    File webConfigFile = new File(config.getRepositoryDirectory(), CONFIG_NAME);
+    File repoDirectory = new File(
+                             baseDirectory,
+                             DIRECTORY_REPOSITORY.concat(File.separator).concat(
+                               HgRepositoryHandler.TYPE_NAME));
 
-    writeWebConfigFile(webConfigFile);
+    IOUtil.mkdirs(repoDirectory);
+    config.setRepositoryDirectory(repoDirectory);
+    config.setHgBinary(search("hg"));
+    config.setPythonBinary(search("python"));
 
-    File cgiFile = HgUtil.getCGI();
-
-    writeCGIFile(cgiFile, webConfigFile);
+    return config;
   }
 
   /**
-   * Method description
+   * TODO check for windows
    *
    *
-   * @param cgiFile
-   * @param webConfigFile
+   * @param cmd
    *
-   * @throws IOException
+   * @return
    */
-  private void writeCGIFile(File cgiFile, File webConfigFile) throws IOException
+  private String search(String cmd)
   {
-    InputStream input = null;
-    OutputStream output = null;
+    String cmdPath = null;
 
     try
     {
-      input = HgWebConfigWriter.class.getResourceAsStream(CGI_TEMPLATE);
-      output = new FileOutputStream(cgiFile);
+      Command command = new SimpleCommand(cmd, "--version");
+      CommandResult result = command.execute();
 
-      ResourceProcessor rp = new RegexResourceProcessor();
-
-      rp.addVariable("python", config.getPythonBinary());
-      rp.addVariable("config", webConfigFile.getAbsolutePath());
-      rp.process(input, output);
-      cgiFile.setExecutable(true);
+      if (result.isSuccessfull())
+      {
+        cmdPath = cmd;
+      }
     }
-    finally
+    catch (IOException ex) {}
+
+    if (cmdPath == null)
     {
-      IOUtil.close(input);
-      IOUtil.close(output);
+      for (String pathPart : PATH)
+      {
+        File file = new File(pathPart, cmd);
+
+        if (file.exists())
+        {
+          cmdPath = file.getAbsolutePath();
+
+          break;
+        }
+      }
     }
-  }
 
-  /**
-   * Method description
-   *
-   *
-   * @param webConfigFile
-   *
-   * @throws IOException
-   */
-  private void writeWebConfigFile(File webConfigFile) throws IOException
-  {
-    INIConfiguration webConfig = new INIConfiguration();
-    INISection pathsSection = new INISection("paths");
-    String path = config.getRepositoryDirectory().getAbsolutePath();
-
-    if (!path.endsWith(File.separator))
+    if (cmdPath != null)
     {
-      path = path.concat(File.separator);
+      if (logger.isInfoEnabled())
+      {
+        logger.info("found {} at {}", cmd, cmdPath);
+      }
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("could not find {}", cmd);
     }
 
-    pathsSection.setParameter("/", path.concat("*"));
-    webConfig.addSection(pathsSection);
-    new INIConfigurationWriter().write(webConfig, webConfigFile);
+    return cmdPath;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private HgConfig config;
+  private File baseDirectory;
+
+  /** Field description */
+  private HgConfig config = new HgConfig();
 }

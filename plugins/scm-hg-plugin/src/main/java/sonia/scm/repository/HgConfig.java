@@ -29,11 +29,11 @@
  *
  */
 
+
+
 package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "config")
-public class HgConfig extends BasicRepositoryConfig
+public class HgConfig extends SimpleRepositoryConfig
 {
 
   /**
@@ -75,17 +75,6 @@ public class HgConfig extends BasicRepositoryConfig
     return pythonBinary;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public File getRepositoryDirectory()
-  {
-    return repositoryDirectory;
-  }
-
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -110,25 +99,11 @@ public class HgConfig extends BasicRepositoryConfig
     this.pythonBinary = pythonBinary;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryDirectory
-   */
-  public void setRepositoryDirectory(File repositoryDirectory)
-  {
-    this.repositoryDirectory = repositoryDirectory;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String hgBinary = "hg";
+  private String hgBinary;
 
   /** Field description */
-  private String pythonBinary = "python";
-
-  /** Field description */
-  private File repositoryDirectory;
+  private String pythonBinary;
 }

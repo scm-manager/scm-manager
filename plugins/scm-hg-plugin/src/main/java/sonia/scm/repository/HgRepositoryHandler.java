@@ -50,6 +50,7 @@ import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
+import sonia.scm.web.HgWebConfigWriter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -62,6 +63,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  *
@@ -151,6 +153,31 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
     else
     {
       throw new RepositoryException("repository does not exists");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Override
+  public void loadConfig()
+  {
+    super.loadConfig();
+
+    if (config == null)
+    {
+      try
+      {
+        config =
+          new HgInitialConfigBuilder(baseDirectory).createInitialConfig();
+        storeConfig();
+        new HgWebConfigWriter(config).write();
+      }
+      catch (IOException ex)
+      {
+        logger.error(ex.getMessage(), ex);
+      }
     }
   }
 
