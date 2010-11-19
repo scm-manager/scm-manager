@@ -37,6 +37,9 @@ package sonia.scm.cache;
 
 import com.google.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.ConfigChangedListener;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
@@ -69,6 +72,10 @@ public class CacheRepositoryManagerDecorator
   /** Field description */
   public static final String CACHE_REPOSITORY = "sonia.cache.repository";
 
+  /** the logger for CacheRepositoryManagerDecorator */
+  private static final Logger logger =
+    LoggerFactory.getLogger(CacheRepositoryManagerDecorator.class);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -98,6 +105,11 @@ public class CacheRepositoryManagerDecorator
   @Override
   public void configChanged(Object config)
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("config has changed, clear repository cache");
+    }
+
     cache.clear();
   }
 
@@ -250,6 +262,11 @@ public class CacheRepositoryManagerDecorator
 
     if (Util.isNotEmpty(id))
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("put repository {} to cache", repository.getName());
+      }
+
       cache.put(id, repository);
       cache.removeCollection(CACHE_KEY_ALL);
     }
@@ -263,6 +280,11 @@ public class CacheRepositoryManagerDecorator
    */
   private void removeFromCache(Repository repository)
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("remove repository {} from cache", repository.getName());
+    }
+
     cache.remove(repository.getId());
     cache.removeCollection(CACHE_KEY_ALL);
   }
