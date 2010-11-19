@@ -349,7 +349,7 @@ public class ScmServletModule extends ServletModule
     {
       try
       {
-        JAXB.unmarshal(file, ScmConfiguration.class);
+        config = JAXB.unmarshal(file, ScmConfiguration.class);
       }
       catch (Exception ex)
       {

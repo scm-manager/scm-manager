@@ -43,7 +43,6 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -103,6 +102,24 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     postCreate(repository, directory);
     repository.setType(getType().getName());
     storeRepositoryConfig(repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param repository
+   * @return
+   */
+  @Override
+  public String createResourcePath(Repository repository)
+  {
+    StringBuilder path = new StringBuilder("/");
+
+    path.append(getType().getName()).append("/").append(repository.getName());
+
+    return path.toString();
   }
 
   /**
@@ -429,15 +446,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       }
 
       repository = null;
-    }
-    else
-    {
-      String url = buildUrl(repository);
-
-      if (Util.isNotEmpty(url))
-      {
-        repository.setUrl(url);
-      }
     }
 
     return repository;

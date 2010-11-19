@@ -47,11 +47,6 @@ registerConfigPanel({
     name: 'repositoryDirectory',
     fieldLabel: 'Repository directory',
     allowBlank : false
-  },{
-    xtype: 'textfield',
-    name: 'baseUrl',
-    fieldLabel: 'Base URL',
-    allowBlank : false
   }],
 
   onSubmit: function(values){

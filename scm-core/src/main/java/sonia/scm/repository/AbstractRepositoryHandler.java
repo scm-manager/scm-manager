@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ConfigChangedListener;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -60,7 +59,7 @@ import javax.xml.bind.JAXB;
  *
  * @param <C>
  */
-public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
+public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig>
         implements RepositoryHandler
 {
 
@@ -218,36 +217,10 @@ public abstract class AbstractRepositoryHandler<C extends BasicRepositoryConfig>
    *
    *
    * @param repository
-   *
-   * @return
-   */
-  protected String buildUrl(Repository repository)
-  {
-    String url = config.getBaseUrl();
-
-    if (Util.isNotEmpty(url))
-    {
-      if (!url.endsWith("/"))
-      {
-        url = url.concat("/");
-      }
-
-      url = url.concat(repository.getName());
-    }
-
-    return url;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
    */
   protected void initNewRepository(Repository repository)
   {
     repository.setId(UUID.randomUUID().toString());
-    repository.setUrl(buildUrl(repository));
     repository.setCreationDate(System.currentTimeMillis());
   }
 

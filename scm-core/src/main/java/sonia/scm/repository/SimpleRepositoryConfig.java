@@ -39,7 +39,7 @@ import java.io.File;
  *
  * @author Sebastian Sdorra
  */
-public class SimpleRepositoryConfig extends BasicRepositoryConfig
+public class SimpleRepositoryConfig
 {
 
   /**

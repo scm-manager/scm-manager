@@ -63,7 +63,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  *
@@ -129,6 +128,20 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
     File hgDirectory = new File(directory, ".hg");
 
     storeRepository(repository, hgDirectory);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  public String createResourcePath(Repository repository)
+  {
+    return "/hg/".concat(repository.getName());
   }
 
   /**
@@ -361,7 +374,6 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
         repository = new Repository();
         repository.setType(TYPE_NAME);
         repository.setName(name);
-        repository.setUrl(buildUrl(repository));
         loadRepository(repository, hgDirectory);
       }
     }
