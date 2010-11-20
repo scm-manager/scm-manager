@@ -35,72 +35,35 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Singleton;
+import org.junit.Test;
 
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import sonia.scm.user.User;
 
-import sonia.scm.Type;
+import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
+import java.util.Arrays;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class GitRepositoryHandler
-        extends AbstractSimpleRepositoryHandler<GitConfig>
+public class PermissionUtilTest
 {
 
-  /** Field description */
-  public static final String TYPE_DISPLAYNAME = "Git";
-
-  /** Field description */
-  public static final String TYPE_NAME = "git";
-
-  /** Field description */
-  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
-
-  //~--- get methods ----------------------------------------------------------
-
   /**
-   * TODO dont use getAll
+   * Constructs ...
    *
-   *
-   * @param name
-   *
-   * @return
    */
-  public Repository getByName(String name)
+  public PermissionUtilTest()
   {
-    Repository repository = null;
+    repository = new Repository();
 
-    for (Repository r : getAll())
-    {
-      if (r.getName().equals(name))
-      {
-        repository = r;
+    Permission[] permissions = new Permission[] { new Permission("dent", false),
+            new Permission("perfect", true) };
 
-        break;
-      }
-    }
-
-    return repository;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Type getType()
-  {
-    return TYPE;
+    repository.setPermissions(Arrays.asList(permissions));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -108,31 +71,23 @@ public class GitRepositoryHandler
   /**
    * Method description
    *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @throws IOException
-   * @throws RepositoryException
    */
-  @Override
-  protected void create(Repository repository, File directory)
-          throws RepositoryException, IOException
+  @Test(expected = IllegalStateException.class)
+  public void assertFailedPermissionTest()
   {
-    new FileRepositoryBuilder().setGitDir(
-        directory).readEnvironment().findGitDir().build().create(true);
+    PermissionUtil.assertPermission(repository, dent, true);
   }
 
   /**
    * Method description
    *
-   *
-   * @return
    */
-  @Override
-  protected GitConfig createInitialConfig()
+  @Test
+  public void assertPermissionTest()
   {
-    return new GitConfig();
+    PermissionUtil.hasPermission(repository, dent, false);
+    PermissionUtil.hasPermission(repository, perfect, false);
+    PermissionUtil.hasPermission(repository, perfect, true);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -140,12 +95,32 @@ public class GitRepositoryHandler
   /**
    * Method description
    *
-   *
-   * @return
    */
-  @Override
-  protected Class<GitConfig> getConfigClass()
+  @Test
+  public void hasPermissionTest()
   {
-    return GitConfig.class;
+    assertTrue(PermissionUtil.hasPermission(repository, dent, false));
+    assertTrue(PermissionUtil.hasPermission(repository, perfect, false));
+    assertTrue(PermissionUtil.hasPermission(repository, perfect, true));
+    assertFalse(PermissionUtil.hasPermission(repository, dent, true));
+    assertFalse(PermissionUtil.hasPermission(repository, slarti, true));
+    assertFalse(PermissionUtil.hasPermission(repository, slarti, false));
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private User dent = new User("dent", "Arthur Dent",
+                               "arthur.dent@hitchhiker.com");
+
+  /** Field description */
+  private User perfect = new User("perfect", "Ford Prefect",
+                                  "ford.perfect@hitchhiker.com");
+
+  /** Field description */
+  private Repository repository;
+
+  /** Field description */
+  private User slarti = new User("slarti", "Slartibartfaß",
+                                 "Slartibartfass@hitchhiker.com");
 }

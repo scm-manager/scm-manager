@@ -31,61 +31,84 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-
-import sonia.scm.Type;
+import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.Repository;
+import sonia.scm.web.filter.PermissionFilter;
+import sonia.scm.web.security.SecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class GitRepositoryHandler
-        extends AbstractSimpleRepositoryHandler<GitConfig>
+public class GitPermissionFilter extends PermissionFilter
 {
 
   /** Field description */
-  public static final String TYPE_DISPLAYNAME = "Git";
+  public static final String PATTERN_WRITEREQUEST = "git-receive-pack";
 
   /** Field description */
-  public static final String TYPE_NAME = "git";
+  public static final Pattern PATTERN_REPOSITORYNAME =
+    Pattern.compile("/[^/]+/([^/]+)(?:/.*)?");
 
-  /** Field description */
-  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   *
+   * @param securityContextProvider
+   * @param handler
+   */
+  @Inject
+  public GitPermissionFilter(Provider<SecurityContext> securityContextProvider,
+                             GitRepositoryHandler handler)
+  {
+    super(securityContextProvider);
+    this.handler = handler;
+  }
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * TODO dont use getAll
+   * Method description
    *
    *
-   * @param name
+   * @param request
    *
    * @return
    */
-  public Repository getByName(String name)
+  @Override
+  protected Repository getRepository(HttpServletRequest request)
   {
     Repository repository = null;
+    String uri = request.getRequestURI();
 
-    for (Repository r : getAll())
+    uri = uri.substring(request.getContextPath().length());
+
+    Matcher m = PATTERN_REPOSITORYNAME.matcher(uri);
+
+    if (m.matches())
     {
-      if (r.getName().equals(name))
-      {
-        repository = r;
+      String repositoryname = m.group(1);
 
-        break;
-      }
+      repository = handler.getByName(repositoryname);
     }
 
     return repository;
@@ -95,57 +118,18 @@ public class GitRepositoryHandler
    * Method description
    *
    *
-   * @return
-   */
-  @Override
-  public Type getType()
-  {
-    return TYPE;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param directory
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Override
-  protected void create(Repository repository, File directory)
-          throws RepositoryException, IOException
-  {
-    new FileRepositoryBuilder().setGitDir(
-        directory).readEnvironment().findGitDir().build().create(true);
-  }
-
-  /**
-   * Method description
-   *
+   * @param request
    *
    * @return
    */
   @Override
-  protected GitConfig createInitialConfig()
+  protected boolean isWriteRequest(HttpServletRequest request)
   {
-    return new GitConfig();
+    return request.getRequestURI().endsWith(PATTERN_WRITEREQUEST);
   }
 
-  //~--- get methods ----------------------------------------------------------
+  //~--- fields ---------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected Class<GitConfig> getConfigClass()
-  {
-    return GitConfig.class;
-  }
+  /** Field description */
+  private GitRepositoryHandler handler;
 }

@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -46,6 +48,9 @@ import sonia.scm.web.plugin.ScmWebPluginContext;
  */
 public class GitWebPlugin implements ScmWebPlugin
 {
+
+  /** Field description */
+  public static final String PATTERN_GIT = "/git/*";
 
   /** Field description */
   public static final String SCRIPT = "/sonia/scm/git.config.js";
@@ -80,8 +85,9 @@ public class GitWebPlugin implements ScmWebPlugin
       @Override
       protected void configureServlets()
       {
-        filter("/git/*").through(BasicAuthenticationFilter.class);
-        serve("/git/*").with(ScmGitServlet.class);
+        filter(PATTERN_GIT).through(BasicAuthenticationFilter.class);
+        filter(PATTERN_GIT).through(GitPermissionFilter.class);
+        serve(PATTERN_GIT).with(ScmGitServlet.class);
       }
     });
   }

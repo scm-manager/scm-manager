@@ -35,104 +35,35 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Singleton;
-
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-
-import sonia.scm.Type;
+import sonia.scm.user.User;
+import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class GitRepositoryHandler
-        extends AbstractSimpleRepositoryHandler<GitConfig>
+public class PermissionUtil
 {
-
-  /** Field description */
-  public static final String TYPE_DISPLAYNAME = "Git";
-
-  /** Field description */
-  public static final String TYPE_NAME = "git";
-
-  /** Field description */
-  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * TODO dont use getAll
-   *
-   *
-   * @param name
-   *
-   * @return
-   */
-  public Repository getByName(String name)
-  {
-    Repository repository = null;
-
-    for (Repository r : getAll())
-    {
-      if (r.getName().equals(name))
-      {
-        repository = r;
-
-        break;
-      }
-    }
-
-    return repository;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Type getType()
-  {
-    return TYPE;
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
    * @param repository
-   * @param directory
-   *
-   * @throws IOException
-   * @throws RepositoryException
+   * @param user
+   * @param write
    */
-  @Override
-  protected void create(Repository repository, File directory)
-          throws RepositoryException, IOException
+  public static void assertPermission(Repository repository, User user,
+          boolean write)
   {
-    new FileRepositoryBuilder().setGitDir(
-        directory).readEnvironment().findGitDir().build().create(true);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected GitConfig createInitialConfig()
-  {
-    return new GitConfig();
+    if (!hasPermission(repository, user, write))
+    {
+      throw new IllegalStateException("action denied");
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -141,11 +72,41 @@ public class GitRepositoryHandler
    * Method description
    *
    *
+   * @param repository
+   * @param user
+   * @param write
+   *
    * @return
    */
-  @Override
-  protected Class<GitConfig> getConfigClass()
+  public static boolean hasPermission(Repository repository, User user,
+          boolean write)
   {
-    return GitConfig.class;
+    String username = user.getName();
+
+    AssertUtil.assertIsNotEmpty(username);
+
+    boolean result = false;
+    List<Permission> permissions = repository.getPermissions();
+
+    if (permissions != null)
+    {
+      for (Permission p : permissions)
+      {
+        if (!p.isGroupPermission())
+        {
+          String name = p.getName();
+
+          if ((name != null) && name.equalsIgnoreCase(username)
+              && (!write || p.isWriteable()))
+          {
+            result = true;
+
+            break;
+          }
+        }
+      }
+    }
+
+    return result;
   }
 }
