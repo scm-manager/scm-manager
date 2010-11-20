@@ -7,13 +7,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-M1</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-webapp</artifactId>
   <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0-M1</version>
   <name>scm-webapp</name>
 
   <dependencies>
@@ -28,31 +28,31 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0-M1</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-web-api</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0-M1</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0-M1</version>
     </dependency>
     
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0-M1</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-git-plugin</artifactId>
-      <version>1.0-SNAPSHOT</version>
+      <version>1.0-M1</version>
     </dependency>
 
     <dependency>
