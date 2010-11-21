@@ -17,6 +17,7 @@
 
   <modules>
     <module>svnkit-dav</module>
+    <module>closure-compiler</module>
   </modules>
 
 </project>

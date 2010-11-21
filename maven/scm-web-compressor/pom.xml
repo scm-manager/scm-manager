@@ -11,11 +11,17 @@
 
   <groupId>sonia.scm.maven</groupId>
   <artifactId>scm-web-compressor</artifactId>
-  <packaging>jar</packaging>
+  <packaging>maven-plugin</packaging>
   <version>1.0-M2-SNAPSHOT</version>
   <name>scm-web-compressor</name>
 
   <dependencies>
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-core</artifactId>
+      <version>1.0-M2-SNAPSHOT</version>
+    </dependency>
 
     <dependency>
       <groupId>org.apache.maven</groupId>
@@ -37,10 +43,9 @@
 
     <dependency>
       <groupId>com.google.closure</groupId>
-      <artifactId>compiler</artifactId>
+      <artifactId>repacked-compiler</artifactId>
       <version>20100917</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/compiler-20100917.jar</systemPath>
+      <classifier>full</classifier>
     </dependency>
 
   </dependencies>

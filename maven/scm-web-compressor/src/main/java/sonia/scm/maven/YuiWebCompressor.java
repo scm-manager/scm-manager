@@ -75,8 +75,8 @@ public class YuiWebCompressor extends AbstractWebCompressor
   @Override
   protected void appendElement(Document document, String path)
   {
-    document.appendElement("link").attr("type", "text/css").attr("rel",
-                           "stylesheet").attr("href", path);
+    document.head().appendElement("link").attr("type", "text/css").attr("rel",
+                                  "stylesheet").attr("href", path);
   }
 
   /**

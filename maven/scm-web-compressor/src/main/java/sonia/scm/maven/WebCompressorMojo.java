@@ -55,7 +55,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
- *
+ * @goal compress
  * @author Sebastian Sdorra
  */
 public class WebCompressorMojo extends AbstractMojo
@@ -68,8 +68,8 @@ public class WebCompressorMojo extends AbstractMojo
   public WebCompressorMojo()
   {
     compressorSet = new LinkedHashSet<WebCompressor>();
-    compressorSet.add(new ClosureWebCompressor());
     compressorSet.add(new YuiWebCompressor());
+    compressorSet.add(new ClosureWebCompressor());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -84,6 +84,8 @@ public class WebCompressorMojo extends AbstractMojo
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException
   {
+    IOUtil.mkdirs(outputDirectory);
+
     OutputStream output = null;
 
     try
@@ -97,6 +99,7 @@ public class WebCompressorMojo extends AbstractMojo
                             encoding, outputPrefix, concat);
       }
 
+      IOUtil.mkdirs(outputFile.getParentFile());
       output = new FileOutputStream(outputFile);
       output.write(document.html().getBytes(encoding));
     }
