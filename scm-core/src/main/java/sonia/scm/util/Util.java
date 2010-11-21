@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -218,5 +220,34 @@ public class Util
   public static boolean isNotEmpty(Object[] array)
   {
     return (array != null) && (array.length > 0);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param byteValue
+   *
+   * @return
+   */
+  public static String toString(byte[] byteValue)
+  {
+    StringBuilder buffer = new StringBuilder();
+
+    for (int i = 0; i < byteValue.length; i++)
+    {
+      int x = byteValue[i] & 0xff;
+
+      if (x < 16)
+      {
+        buffer.append('0');
+      }
+
+      buffer.append(Integer.toString(x, 16));
+    }
+
+    return buffer.toString();
   }
 }

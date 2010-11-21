@@ -31,110 +31,46 @@
 
 
 
-package sonia.scm.util;
+package sonia.scm.maven;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import org.jsoup.nodes.Document;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ChecksumUtil
+public interface WebCompressor
 {
 
-  /** Field description */
-  private static final String DIGEST_TYPE = "SHA-1";
-
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Method description
    *
    *
-   * @param in
-   *
-   * @return
+   * @param head
+   * @param elements
+   * @param inputDirectory
+   * @param outputDirectory
+   * @param outputPrefix
+   * @param concat
    *
    * @throws IOException
+   * @throws MojoExecutionException
+   * @throws MojoFailureException
    */
-  public static String createChecksum(InputStream in) throws IOException
-  {
-    MessageDigest digest = null;
-
-    try
-    {
-      byte[] buffer = new byte[1024];
-
-      digest = getDigest();
-
-      int numRead = 0;
-
-      do
-      {
-        numRead = in.read(buffer);
-
-        if (numRead > 0)
-        {
-          digest.update(buffer, 0, numRead);
-        }
-      }
-      while (numRead != -1);
-    }
-    finally
-    {
-      if (in != null)
-      {
-        in.close();
-      }
-    }
-
-    return Util.toString(digest.digest());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public static String createChecksum(File file) throws IOException
-  {
-    return createChecksum(new FileInputStream(file));
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private static MessageDigest getDigest()
-  {
-    MessageDigest digest = null;
-
-    try
-    {
-      digest = MessageDigest.getInstance(DIGEST_TYPE);
-    }
-    catch (NoSuchAlgorithmException ex)
-    {
-      throw new RuntimeException("no such digest");
-    }
-
-    return digest;
-  }
+  public void compress(Document document, File inputDirectory,
+                       File outputDirectory, String encoding, String outputPrefix,
+                       boolean concat)
+          throws IOException, MojoExecutionException, MojoFailureException;
 }

@@ -228,7 +228,7 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
         {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddPanel},
         {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.removeUser},
         '-',
-        {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload},
+        {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload}
       ],
       items: [{
         id: 'userGrid',

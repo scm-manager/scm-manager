@@ -31,49 +31,37 @@
 
 
 
-package sonia.scm.security;
+package sonia.scm.maven;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.AssertUtil;
-import sonia.scm.util.Util;
+import com.yahoo.platform.yui.compressor.CssCompressor;
+
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class MessageDigestEncryptionHandler implements EncryptionHandler
+public class YuiWebCompressor extends AbstractWebCompressor
 {
 
   /** Field description */
-  public static final String DEFAULT_DIGEST = "SHA-1";
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public MessageDigestEncryptionHandler()
-  {
-    this.digest = DEFAULT_DIGEST;
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param digest
-   */
-  public MessageDigestEncryptionHandler(String digest)
-  {
-    this.digest = digest;
-  }
+  public static final String EXTENSION = "css";
 
   //~--- methods --------------------------------------------------------------
 
@@ -81,29 +69,63 @@ public class MessageDigestEncryptionHandler implements EncryptionHandler
    * Method description
    *
    *
-   * @param value
+   * @param document
+   * @param path
+   */
+  @Override
+  protected void appendElement(Document document, String path)
+  {
+    document.appendElement("link").attr("type", "text/css").attr("rel",
+                           "stylesheet").attr("href", path);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param source
+   * @param target
+   * @param encoding
+   *
+   * @throws IOException
+   * @throws MojoExecutionException
+   * @throws MojoFailureException
+   */
+  @Override
+  protected void compress(File source, File target, String encoding)
+          throws IOException, MojoExecutionException, MojoFailureException
+  {
+    FileReader reader = null;
+    FileWriter writer = null;
+
+    try
+    {
+      reader = new FileReader(source);
+
+      CssCompressor compressor = new CssCompressor(reader);
+
+      writer = new FileWriter(target);
+      compressor.compress(writer, 5000);
+    }
+    finally
+    {
+      IOUtil.close(reader);
+      IOUtil.close(writer);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param document
    *
    * @return
    */
   @Override
-  public String encrypt(String value)
+  protected Elements selectElements(Document document)
   {
-    String result = null;
-
-    try
-    {
-      AssertUtil.assertIsNotEmpty(value);
-
-      MessageDigest messageDigest = MessageDigest.getInstance(digest);
-
-      result = encrypt(messageDigest, value);
-    }
-    catch (NoSuchAlgorithmException ex)
-    {
-      throw new EncryptionException(ex);
-    }
-
-    return result;
+    return document.select("link[type=text/css][href]");
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -114,32 +136,24 @@ public class MessageDigestEncryptionHandler implements EncryptionHandler
    *
    * @return
    */
-  public String getDigest()
+  @Override
+  protected String getExtension()
   {
-    return digest;
+    return EXTENSION;
   }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param messageDigest
-   * @param value
+   * @param inputDirectory
+   * @param element
    *
    * @return
    */
-  private String encrypt(MessageDigest messageDigest, String value)
+  @Override
+  protected File getFile(File inputDirectory, Element element)
   {
-    messageDigest.reset();
-    messageDigest.update(value.getBytes());
-
-    return Util.toString(messageDigest.digest());
+    return new File(inputDirectory, element.attr("href"));
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String digest;
 }

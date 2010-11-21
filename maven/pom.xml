@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>sonia.scm</groupId>
+    <artifactId>scm</artifactId>
+    <version>1.0-M2-SNAPSHOT</version>
+  </parent>
+
+  <groupId>sonia.scm.maven</groupId>
+  <artifactId>scm-maven-plugins</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-M2-SNAPSHOT</version>
+  <name>scm-maven-plugins</name>
+
+  <modules>
+    <module>scm-web-compressor</module>
+  </modules>
+  
+  <dependencies>
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-core</artifactId>
+      <version>1.0-M2-SNAPSHOT</version>
+    </dependency>
+
+  </dependencies>
+
+</project>
