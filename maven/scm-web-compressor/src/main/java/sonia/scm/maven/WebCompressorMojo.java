@@ -94,7 +94,7 @@ public class WebCompressorMojo extends AbstractMojo
       for (WebCompressor compressor : compressorSet)
       {
         compressor.compress(document, inputDirectory, outputDirectory,
-                            encoding, outputPrefix, true);
+                            encoding, outputPrefix, concat);
       }
 
       output = new FileOutputStream(outputFile);
@@ -111,6 +111,17 @@ public class WebCompressorMojo extends AbstractMojo
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Set<WebCompressor> getCompressorSet()
+  {
+    return compressorSet;
+  }
 
   /**
    * Method description
@@ -167,7 +178,40 @@ public class WebCompressorMojo extends AbstractMojo
     return outputPrefix;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isConcat()
+  {
+    return concat;
+  }
+
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param compressorSet
+   */
+  public void setCompressorSet(Set<WebCompressor> compressorSet)
+  {
+    this.compressorSet = compressorSet;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param concat
+   */
+  public void setConcat(boolean concat)
+  {
+    this.concat = concat;
+  }
 
   /**
    * Method description
@@ -236,12 +280,17 @@ public class WebCompressorMojo extends AbstractMojo
 
   /**
    * @parameter
+   */
+  private boolean concat = true;
+
+  /**
+   * @parameter
    * @required
    */
   private File inputFile;
 
   /**
-   * @parameter
+   * @parameter default-value="${project.build.directory}/web-compressor"
    */
   private File outputDirectory;
 
