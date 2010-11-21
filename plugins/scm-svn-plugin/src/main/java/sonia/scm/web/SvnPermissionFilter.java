@@ -35,44 +35,87 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.servlet.ServletModule;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
-import sonia.scm.web.filter.BasicAuthenticationFilter;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.SvnRepositoryHandler;
+import sonia.scm.web.filter.PermissionFilter;
+import sonia.scm.web.security.SecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SvnServletModule extends ServletModule
+@Singleton
+public class SvnPermissionFilter extends PermissionFilter
 {
 
   /** Field description */
-  public static final String PARAMETER_SVN_PARENTPATH = "SVNParentPath";
+  private static Set<String> WRITEMETHOD_SET =
+    new HashSet<String>(Arrays.asList("MKACTIVITY", "PROPPATCH", "PUT",
+      "CHECKOUT", "MKCOL", "MOVE", "COPY", "DELETE", "LOCK", "UNLOCK",
+      "MERGE"));
 
-  /** Field description */
-  public static final String PATTERN_SVN = "/svn/*";
+  //~--- constructors ---------------------------------------------------------
 
-  //~--- methods --------------------------------------------------------------
+  /**
+   * Constructs ...
+   *
+   *
+   *
+   * @param securityContextProvider
+   * @param handler
+   */
+  @Inject
+  public SvnPermissionFilter(Provider<SecurityContext> securityContextProvider,
+                             SvnRepositoryHandler handler)
+  {
+    super(securityContextProvider);
+    this.handler = handler;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @param name
+   *
+   * @return
    */
   @Override
-  protected void configureServlets()
+  protected Repository getRepository(String name)
   {
-    filter(PATTERN_SVN).through(BasicAuthenticationFilter.class);
-    filter(PATTERN_SVN).through(SvnPermissionFilter.class);
-
-    Map<String, String> parameters = new HashMap<String, String>();
-
-    parameters.put(PARAMETER_SVN_PARENTPATH,
-                   System.getProperty("java.io.tmpdir"));
-    serve(PATTERN_SVN).with(SvnDAVServlet.class, parameters);
+    return handler.getByName(name);
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  @Override
+  protected boolean isWriteRequest(HttpServletRequest request)
+  {
+    return WRITEMETHOD_SET.contains(request.getMethod().toUpperCase());
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private SvnRepositoryHandler handler;
 }

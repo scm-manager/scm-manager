@@ -68,6 +68,31 @@ public class SvnRepositoryHandler
   //~--- get methods ----------------------------------------------------------
 
   /**
+   * TODO dont use getAll
+   *
+   *
+   * @param name
+   *
+   * @return
+   */
+  public Repository getByName(String name)
+  {
+    Repository repository = null;
+
+    for (Repository r : getAll())
+    {
+      if (r.getName().equals(name))
+      {
+        repository = r;
+
+        break;
+      }
+    }
+
+    return repository;
+  }
+
+  /**
    * Method description
    *
    *

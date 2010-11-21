@@ -50,6 +50,9 @@ import sonia.scm.web.security.SecurityContext;
 
 import java.io.IOException;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -66,6 +69,10 @@ public abstract class PermissionFilter extends HttpFilter
   private static final Logger logger =
     LoggerFactory.getLogger(PermissionFilter.class);
 
+  /** Field description */
+  public static final Pattern PATTERN_REPOSITORYNAME =
+    Pattern.compile("/[^/]+/([^/]+)(?:/.*)?");
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -80,16 +87,6 @@ public abstract class PermissionFilter extends HttpFilter
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  protected abstract Repository getRepository(HttpServletRequest request);
 
   /**
    * Method description
@@ -172,6 +169,50 @@ public abstract class PermissionFilter extends HttpFilter
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  protected Repository getRepository(HttpServletRequest request)
+  {
+    Repository repository = null;
+    String uri = request.getRequestURI();
+
+    uri = uri.substring(request.getContextPath().length());
+
+    Matcher m = PATTERN_REPOSITORYNAME.matcher(uri);
+
+    if (m.matches())
+    {
+      String repositoryname = m.group(1);
+
+      repository = getRepository(repositoryname);
+    }
+
+    return repository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   */
+  protected Repository getRepository(String name)
+  {
+    return null;
+  }
+
+  ;
 
   //~--- fields ---------------------------------------------------------------
 

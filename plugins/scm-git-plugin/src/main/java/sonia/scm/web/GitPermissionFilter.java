@@ -62,10 +62,6 @@ public class GitPermissionFilter extends PermissionFilter
   /** Field description */
   public static final String PATTERN_WRITEREQUEST = "git-receive-pack";
 
-  /** Field description */
-  public static final Pattern PATTERN_REPOSITORYNAME =
-    Pattern.compile("/[^/]+/([^/]+)(?:/.*)?");
-
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -90,28 +86,14 @@ public class GitPermissionFilter extends PermissionFilter
    * Method description
    *
    *
-   * @param request
+   * @param name
    *
    * @return
    */
   @Override
-  protected Repository getRepository(HttpServletRequest request)
+  protected Repository getRepository(String name)
   {
-    Repository repository = null;
-    String uri = request.getRequestURI();
-
-    uri = uri.substring(request.getContextPath().length());
-
-    Matcher m = PATTERN_REPOSITORYNAME.matcher(uri);
-
-    if (m.matches())
-    {
-      String repositoryname = m.group(1);
-
-      repository = handler.getByName(repositoryname);
-    }
-
-    return repository;
+    return handler.getByName(name);
   }
 
   /**
