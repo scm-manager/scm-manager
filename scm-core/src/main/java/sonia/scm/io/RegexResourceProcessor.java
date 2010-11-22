@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.io;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -106,6 +108,7 @@ public class RegexResourceProcessor extends AbstractResourceProcessor
    */
   private String parseLine(Map<String, String> variableMap, String line)
   {
+    StringBuffer result = null;
     Matcher m = PATTERN.matcher(line);
 
     while (m.find())
@@ -115,12 +118,17 @@ public class RegexResourceProcessor extends AbstractResourceProcessor
 
       if (value != null)
       {
-        line = m.replaceAll(value);
-      }
+        if (result == null)
+        {
+          result = new StringBuffer();
+        }
 
-      m = PATTERN.matcher(line);
+        m.appendReplacement(result, value);
+      }
     }
 
-    return line;
+    return (result != null)
+           ? result.toString()
+           : line;
   }
 }
