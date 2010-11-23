@@ -53,9 +53,7 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -226,7 +224,7 @@ public class RepositoryResource extends AbstractResource<Repository>
 
     if (ctxPath.endsWith("/"))
     {
-      ctxPath.substring(0, ctxPath.length() - 1);
+      ctxPath = ctxPath.substring(0, ctxPath.length() - 1);
     }
 
     RepositoryHandler handler =

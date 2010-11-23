@@ -38,14 +38,12 @@ package sonia.scm.maven;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.jsoup.nodes.Document;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
-import org.jsoup.nodes.Document;
 
 /**
  *
@@ -58,10 +56,11 @@ public interface WebCompressor
    * Method description
    *
    *
-   * @param head
-   * @param elements
+   *
+   * @param document
    * @param inputDirectory
    * @param outputDirectory
+   * @param encoding
    * @param outputPrefix
    * @param concat
    *
@@ -70,7 +69,7 @@ public interface WebCompressor
    * @throws MojoFailureException
    */
   public void compress(Document document, File inputDirectory,
-                       File outputDirectory, String encoding, String outputPrefix,
-                       boolean concat)
+                       File outputDirectory, String encoding,
+                       String outputPrefix, boolean concat)
           throws IOException, MojoExecutionException, MojoFailureException;
 }
