@@ -162,6 +162,8 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       console.debug( 'update repository: ' + item.name );
     }
     var url = restUrl + 'repositories/' + item.id + '.json';
+    var el = this.el;
+    var tid = setTimeout( function(){ el.mask('Loading ...'); }, 100);
     Ext.Ajax.request({
       url: url,
       jsonData: item,
@@ -171,9 +173,13 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         if ( debug ){
           console.debug('update success');
         }
+        clearTimeout(tid);
+        el.unmask();
         this.execCallback(this.onUpdate, item);
       },
       failure: function(){
+        clearTimeout(tid);
+        el.unmask();
         alert( 'failure' );
       }
     });
@@ -184,6 +190,8 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       console.debug( 'create repository: ' + item.name );
     }
     var url = restUrl + 'repositories.json';
+    var el = this.el;
+    var tid = setTimeout( function(){ el.mask('Loading ...'); }, 100);
     Ext.Ajax.request({
       url: url,
       jsonData: item,
@@ -194,9 +202,13 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
           console.debug('create success');
         }
         this.getForm().reset();
+        clearTimeout(tid);
+        el.unmask();
         this.execCallback(this.onCreate, item);
       },
       failure: function(){
+        clearTimeout(tid);
+        el.unmask();
         alert( 'failure' );
       }
     });
