@@ -58,7 +58,6 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("users")
 @Singleton
-@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class UserResource extends AbstractResource<User>
 {
 

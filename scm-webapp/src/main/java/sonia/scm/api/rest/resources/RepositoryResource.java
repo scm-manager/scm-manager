@@ -63,7 +63,6 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("repositories")
 @Singleton
-@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class RepositoryResource extends AbstractResource<Repository>
 {
 

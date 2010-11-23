@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.api.rest.resources;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -40,6 +42,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -195,13 +198,12 @@ public abstract class AbstractResource<T>
    * @param name
    * @param item
    *
-   * @return
    */
   @PUT
   @Path("{name}")
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response update(@Context UriInfo uriInfo,
-                         @PathParam("name") String name, T item)
+  public void update(@Context UriInfo uriInfo, @PathParam("name") String name,
+                     T item)
   {
     try
     {
@@ -211,9 +213,6 @@ public abstract class AbstractResource<T>
     {
       throw new WebApplicationException(ex);
     }
-
-    return Response.created(
-        uriInfo.getAbsolutePath().resolve(getId(item))).build();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -228,6 +227,7 @@ public abstract class AbstractResource<T>
    */
   @GET
   @Path("{name}")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public T get(@PathParam("name") String name)
   {
     T item = getItem(name);
@@ -247,6 +247,7 @@ public abstract class AbstractResource<T>
    * @return
    */
   @GET
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public T[] getAll()
   {
     return getAllItems();
