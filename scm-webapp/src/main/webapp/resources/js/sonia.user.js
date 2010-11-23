@@ -124,7 +124,8 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       items: [{
         fieldLabel: 'Name',
         name: 'name',
-        allowBlank: false
+        allowBlank: false,
+        readOnly: this.item != null
       },{
         fieldLabel: 'DisplayName',
         name: 'displayName',
