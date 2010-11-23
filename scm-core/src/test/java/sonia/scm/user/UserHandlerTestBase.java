@@ -51,7 +51,9 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -60,6 +62,11 @@ import java.util.UUID;
  */
 public abstract class UserHandlerTestBase
 {
+
+  /** Field description */
+  public static final int THREAD_COUNT = 10;
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -285,6 +292,50 @@ public abstract class UserHandlerTestBase
    *
    *
    * @throws IOException
+   * @throws InterruptedException
+   * @throws UserException
+   */
+  @Test
+  public void testMultiThreaded()
+          throws UserException, IOException, InterruptedException
+  {
+    int initialSize = handler.getAll().size();
+    List<MultiThreadTester> testers = new ArrayList<MultiThreadTester>();
+
+    for (int i = 0; i < THREAD_COUNT; i++)
+    {
+      testers.add(new MultiThreadTester(handler));
+    }
+
+    for (MultiThreadTester tester : testers)
+    {
+      new Thread(tester).start();
+    }
+
+    boolean fin = false;
+
+    while (!fin)
+    {
+      Thread.sleep(100l);
+      fin = true;
+
+      for (MultiThreadTester tester : testers)
+      {
+        if (!tester.finished)
+        {
+          fin = false;
+        }
+      }
+    }
+
+    assertTrue((initialSize + THREAD_COUNT) == handler.getAll().size());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
    * @throws UserException
    */
   @Test
@@ -349,6 +400,110 @@ public abstract class UserHandlerTestBase
     return new User("zaphod", "Zaphod Beeblebrox",
                     "zaphod.beeblebrox@hitchhiker.com");
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 2010-11-23
+   * @author         Sebastian Sdorra
+   */
+  private static class MultiThreadTester implements Runnable
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param userHandler
+     */
+    public MultiThreadTester(UserHandler userHandler)
+    {
+      this.userHandler = userHandler;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     */
+    @Override
+    public void run()
+    {
+      try
+      {
+        User user = createUser();
+
+        modifyAndDeleteUser(user);
+        createUser();
+      }
+      catch (Exception ex)
+      {
+        throw new RuntimeException(ex);
+      }
+
+      finished = true;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     *
+     * @throws IOException
+     * @throws UserException
+     */
+    private User createUser() throws UserException, IOException
+    {
+      String id = UUID.randomUUID().toString();
+      User user = new User(id, id.concat(" displayName"),
+                           id.concat("@mail.com"));
+
+      userHandler.create(user);
+
+      return user;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @param user
+     *
+     * @throws IOException
+     * @throws UserException
+     */
+    private void modifyAndDeleteUser(User user)
+            throws UserException, IOException
+    {
+      String name = user.getName();
+      String nd = name.concat(" new displayname");
+
+      user.setDisplayName(nd);
+      userHandler.modify(user);
+
+      User otherUser = userHandler.get(name);
+
+      assertNotNull(otherUser);
+      assertEquals(nd, otherUser.getDisplayName());
+      userHandler.delete(user);
+      otherUser = userHandler.get(name);
+      assertNull(otherUser);
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private boolean finished = false;
+
+    /** Field description */
+    private UserHandler userHandler;
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
