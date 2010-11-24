@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.web.cgi;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -125,13 +127,16 @@ public abstract class AbstractCGIServlet extends HttpServlet
    * Method description
    *
    *
+   *
+   * @param request
    * @param baseEnvironment
    *
    * @return
    *
    * @throws ServletException
    */
-  protected EnvList createRequestEnvironment(EnvList baseEnvironment)
+  protected EnvList createRequestEnvironment(HttpServletRequest request,
+          EnvList baseEnvironment)
           throws ServletException
   {
     return new EnvList(baseEnvironment);
@@ -151,8 +156,8 @@ public abstract class AbstractCGIServlet extends HttpServlet
   protected void service(HttpServletRequest req, HttpServletResponse resp)
           throws ServletException, IOException
   {
-    cgiRunner.exec(createRequestEnvironment(baseEnvironment), getCommand(req),
-                   req.getPathInfo(), req, resp);
+    cgiRunner.exec(createRequestEnvironment(req, baseEnvironment),
+                   getCommand(req), req.getPathInfo(), req, resp);
   }
 
   //~--- get methods ----------------------------------------------------------

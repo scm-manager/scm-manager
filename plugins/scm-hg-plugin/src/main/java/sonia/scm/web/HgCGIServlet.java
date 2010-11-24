@@ -29,18 +29,27 @@
  *
  */
 
+
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.Repository;
 import sonia.scm.web.cgi.AbstractCGIServlet;
+import sonia.scm.web.cgi.EnvList;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -54,7 +63,31 @@ public class HgCGIServlet extends AbstractCGIServlet
 {
 
   /** Field description */
+  public static final String ENV_REPOSITORY_NAME = "REPO_NAME";
+
+  /** Field description */
+  public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
+
+  /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
+
+  /** Field description */
+  public static final Pattern PATTERN_REPOSITORYNAME =
+    Pattern.compile("/[^/]+/([^/]+)(?:/.*)?");
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param handler
+   */
+  @Inject
+  public HgCGIServlet(HgRepositoryHandler handler)
+  {
+    this.handler = handler;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -69,6 +102,39 @@ public class HgCGIServlet extends AbstractCGIServlet
   {
     command = HgUtil.getCGI();
     super.init();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param baseEnvironment
+   *
+   * @return
+   *
+   * @throws ServletException
+   */
+  @Override
+  protected EnvList createRequestEnvironment(HttpServletRequest request,
+          EnvList baseEnvironment)
+          throws ServletException
+  {
+    EnvList list = new EnvList(baseEnvironment);
+    Repository repository = getRepository(request);
+
+    if (repository == null)
+    {
+      throw new ServletException("repository not found");
+    }
+
+    String name = repository.getName();
+    File directory = handler.getDirectory(repository);
+
+    list.set(ENV_REPOSITORY_PATH, directory.getAbsolutePath());
+    list.set(ENV_REPOSITORY_NAME, name);
+
+    return list;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -91,8 +157,51 @@ public class HgCGIServlet extends AbstractCGIServlet
     return command;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  protected Repository getRepository(HttpServletRequest request)
+  {
+    Repository repository = null;
+    String uri = request.getRequestURI();
+
+    uri = uri.substring(request.getContextPath().length());
+
+    Matcher m = PATTERN_REPOSITORYNAME.matcher(uri);
+
+    if (m.matches())
+    {
+      String repositoryname = m.group(1);
+
+      repository = getRepository(repositoryname);
+    }
+
+    return repository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryname
+   *
+   * @return
+   */
+  private Repository getRepository(String repositoryname)
+  {
+    return handler.getByName(repositoryname);
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private File command;
+
+  /** Field description */
+  private HgRepositoryHandler handler;
 }

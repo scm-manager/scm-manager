@@ -46,8 +46,6 @@ import sonia.scm.web.HgWebConfigWriter;
 
 import java.io.IOException;
 
-import javax.servlet.ServletContext;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;

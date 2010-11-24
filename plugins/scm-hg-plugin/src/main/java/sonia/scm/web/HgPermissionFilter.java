@@ -35,31 +35,74 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.servlet.ServletModule;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
-import sonia.scm.web.filter.BasicAuthenticationFilter;
+import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.Repository;
+import sonia.scm.web.filter.PermissionFilter;
+import sonia.scm.web.security.SecurityContext;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgServletModule extends ServletModule
+@Singleton
+public class HgPermissionFilter extends PermissionFilter
 {
 
-  /** Field description */
-  public static final String MAPPING_HG = "/hg/*";
+  /**
+   * Constructs ...
+   *
+   *
+   * @param securityContextProvider
+   * @param handler
+   */
+  @Inject
+  public HgPermissionFilter(Provider<SecurityContext> securityContextProvider,
+                            HgRepositoryHandler handler)
+  {
+    super(securityContextProvider);
+    this.handler = handler;
+  }
 
-  //~--- methods --------------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @param name
+   *
+   * @return
    */
   @Override
-  protected void configureServlets()
+  protected Repository getRepository(String name)
   {
-    filter(MAPPING_HG).through(BasicAuthenticationFilter.class);
-    filter(MAPPING_HG).through(HgPermissionFilter.class);
-    serve(MAPPING_HG).with(HgCGIServlet.class);
+    return handler.getByName(name);
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  @Override
+  protected boolean isWriteRequest(HttpServletRequest request)
+  {
+    return !request.getMethod().equalsIgnoreCase("GET");
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private HgRepositoryHandler handler;
 }

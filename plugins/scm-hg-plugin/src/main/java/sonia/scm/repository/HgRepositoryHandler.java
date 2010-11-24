@@ -314,6 +314,44 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
    * Method description
    *
    *
+   * @param repositoryname
+   *
+   * @return
+   */
+  public Repository getByName(String repositoryname)
+  {
+    Repository repository = null;
+
+    for (Repository r : getAll())
+    {
+      if (r.getName().equals(repositoryname))
+      {
+        repository = r;
+
+        break;
+      }
+    }
+
+    return repository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  public File getDirectory(Repository repository)
+  {
+    return new File(config.getRepositoryDirectory(), repository.getName());
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   @Override
@@ -532,19 +570,6 @@ public class HgRepositoryHandler extends AbstractRepositoryHandler<HgConfig>
   private File getDirectory(String id)
   {
     return new File(config.getRepositoryDirectory(), id);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  private File getDirectory(Repository repository)
-  {
-    return new File(config.getRepositoryDirectory(), repository.getName());
   }
 
   /**
