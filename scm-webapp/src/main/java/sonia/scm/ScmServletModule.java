@@ -43,12 +43,10 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.api.rest.UriExtensionsConfig;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.cache.CacheRepositoryManagerDecorator;
 import sonia.scm.cache.EhCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.SecurityFilter;
 import sonia.scm.plugin.ScriptResourceServlet;
-import sonia.scm.repository.BasicRepositoryManager;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.security.EncryptionHandler;
@@ -84,6 +82,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.xml.bind.JAXB;
+import sonia.scm.repository.xml.XmlRepositoryManager;
 
 /**
  *
@@ -168,7 +167,7 @@ public class ScmServletModule extends ServletModule
     bind(CacheManager.class).to(EhCacheManager.class);
     //bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
     //    BasicRepositoryManager.class);
-    bind(RepositoryManager.class).to(BasicRepositoryManager.class);
+    bind(RepositoryManager.class).to(XmlRepositoryManager.class);
     bind(UserManager.class).to(BasicUserManager.class);
     bind(ScmWebPluginContext.class).toInstance(webPluginContext);
 

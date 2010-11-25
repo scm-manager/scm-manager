@@ -63,10 +63,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder =
 {
-  "id", "type", "name", "contact", "description", "creationDate", "url",
-  "permissions"
+  "id", "type", "name", "contact", "description", "creationDate",
+  "lastModified", "url", "permissions"
 })
-public class Repository implements TypedObject, Validateable, Serializable
+public class Repository
+        implements TypedObject, Validateable, Cloneable, Serializable
 {
 
   /** Field description */
@@ -130,6 +131,29 @@ public class Repository implements TypedObject, Validateable, Serializable
    * Method description
    *
    *
+   * @return
+   */
+  @Override
+  public Repository clone()
+  {
+    Repository repository = null;
+
+    try
+    {
+      repository = (Repository) super.clone();
+    }
+    catch (CloneNotSupportedException ex)
+    {
+      throw new RuntimeException(ex);
+    }
+
+    return repository;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repository
    */
   public void copyProperties(Repository repository)
@@ -140,6 +164,22 @@ public class Repository implements TypedObject, Validateable, Serializable
     repository.setDescription(description);
     repository.setPermissions(permissions);
     repository.setUrl(url);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    StringBuilder buffer = new StringBuilder("Repository{type=");
+
+    buffer.append(type).append(", name=").append(name).append("}");
+
+    return buffer.toString();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -186,6 +226,17 @@ public class Repository implements TypedObject, Validateable, Serializable
   public String getId()
   {
     return id;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Long getLastModified()
+  {
+    return lastModified;
   }
 
   /**
@@ -297,6 +348,17 @@ public class Repository implements TypedObject, Validateable, Serializable
    * Method description
    *
    *
+   * @param lastModified
+   */
+  public void setLastModified(long lastModified)
+  {
+    this.lastModified = lastModified;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param name
    */
   public void setName(String name)
@@ -351,6 +413,10 @@ public class Repository implements TypedObject, Validateable, Serializable
 
   /** Field description */
   private String id;
+
+  /** Field description */
+  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
+  private Long lastModified;
 
   /** Field description */
   private String name;

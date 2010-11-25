@@ -225,7 +225,6 @@ public class XmlUserHandler implements UserHandler
    * @throws IOException
    * @throws UserException
    */
-  @Override
   public void refresh(User user) throws UserException, IOException
   {
     User fresh = userDB.get(user.getName());
@@ -235,10 +234,7 @@ public class XmlUserHandler implements UserHandler
       throw new UserException("user does not exists");
     }
 
-    user.setDisplayName(fresh.getDisplayName());
-    user.setMail(fresh.getMail());
-    user.setPassword(fresh.getPassword());
-    user.setType(TYPE_NAME);
+    fresh.copyProperties(user);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -251,7 +247,6 @@ public class XmlUserHandler implements UserHandler
    *
    * @return
    */
-  @Override
   public User get(String id)
   {
     User user = userDB.get(id);
@@ -270,7 +265,6 @@ public class XmlUserHandler implements UserHandler
    *
    * @return
    */
-  @Override
   public Collection<User> getAll()
   {
     LinkedList<User> users = new LinkedList<User>();

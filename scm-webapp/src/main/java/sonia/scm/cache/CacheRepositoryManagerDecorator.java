@@ -229,6 +229,21 @@ public class CacheRepositoryManagerDecorator
   }
 
   /**
+   * TODO cache result
+   *
+   *
+   * @param type
+   * @param name
+   *
+   * @return
+   */
+  @Override
+  public Repository get(String type, String name)
+  {
+    return orginal.get(type, name);
+  }
+
+  /**
    * Method description
    *
    *

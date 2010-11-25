@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm.repository.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -46,32 +46,45 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
+import sonia.scm.repository.AbstractRepositoryManager;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryAllreadyExistExeption;
+import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.repository.RepositoryHandlerNotFoundException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+
+import javax.xml.bind.JAXB;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class BasicRepositoryManager extends AbstractRepositoryManager
+public class XmlRepositoryManager extends AbstractRepositoryManager
 {
 
   /** Field description */
+  public static final String DATABASEFILE =
+    "config".concat(File.separator).concat("repositories.xml");
+
+  /** Field description */
   private static final Logger logger =
-    LoggerFactory.getLogger(BasicRepositoryManager.class);
+    LoggerFactory.getLogger(XmlRepositoryManager.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -82,10 +95,10 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
    * @param handlerSet
    */
   @Inject
-  public BasicRepositoryManager(Set<RepositoryHandler> handlerSet)
+  public XmlRepositoryManager(Set<RepositoryHandler> handlerSet)
   {
     handlerMap = new HashMap<String, RepositoryHandler>();
-    types = new ArrayList<Type>();
+    types = new HashSet<Type>();
 
     for (RepositoryHandler handler : handlerSet)
     {
@@ -130,7 +143,22 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
     }
 
     AssertUtil.assertIsValid(repository);
+
+    if (repositoryDB.contains(repository))
+    {
+      throw new RepositoryAllreadyExistExeption();
+    }
+
+    repository.setId(UUID.randomUUID().toString());
+    repository.setCreationDate(System.currentTimeMillis());
     getHandler(repository).create(repository);
+
+    synchronized (XmlRepositoryDatabase.class)
+    {
+      repositoryDB.add(repository);
+      storeDB();
+    }
+
     fireEvent(repository, HandlerEvent.CREATE);
   }
 
@@ -153,7 +181,22 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
                   repository.getType());
     }
 
-    getHandler(repository).delete(repository);
+    if (repositoryDB.contains(repository))
+    {
+      getHandler(repository).delete(repository);
+
+      synchronized (XmlRepositoryDatabase.class)
+      {
+        repositoryDB.remove(repository);
+        storeDB();
+      }
+    }
+    else
+    {
+      throw new RepositoryException(
+          "repository ".concat(repository.getName()).concat(" not found"));
+    }
+
     fireEvent(repository, HandlerEvent.DELETE);
   }
 
@@ -164,7 +207,23 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
    * @param context
    */
   @Override
-  public void init(SCMContextProvider context) {}
+  public void init(SCMContextProvider context)
+  {
+    File directory = context.getBaseDirectory();
+
+    repositoryDBFile = new File(directory, DATABASEFILE);
+
+    if (repositoryDBFile.exists())
+    {
+      loadDB();
+    }
+    else
+    {
+      IOUtil.mkdirs(repositoryDBFile.getParentFile());
+      repositoryDB = new XmlRepositoryDatabase();
+      repositoryDB.setCreationTime(System.currentTimeMillis());
+    }
+  }
 
   /**
    * Method description
@@ -186,7 +245,25 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
     }
 
     AssertUtil.assertIsValid(repository);
-    getHandler(repository).modify(repository);
+
+    if (repositoryDB.contains(repository))
+    {
+      getHandler(repository).modify(repository);
+      repository.setLastModified(System.currentTimeMillis());
+
+      synchronized (XmlRepositoryDatabase.class)
+      {
+        repositoryDB.remove(repository);
+        repositoryDB.add(repository.clone());
+        storeDB();
+      }
+    }
+    else
+    {
+      throw new RepositoryException(
+          "repository ".concat(repository.getName()).concat(" not found"));
+    }
+
     fireEvent(repository, HandlerEvent.MODIFY);
   }
 
@@ -203,14 +280,26 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   public void refresh(Repository repository)
           throws RepositoryException, IOException
   {
-    getHandler(repository).refresh(repository);
+    AssertUtil.assertIsNotNull(repository);
+
+    Repository fresh = repositoryDB.get(repository.getType(),
+                         repository.getName());
+
+    if (repository != null)
+    {
+      repository.copyProperties(fresh);
+    }
+    else
+    {
+      throw new RepositoryException(
+          "repository ".concat(repository.getName()).concat(" not found"));
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
-   *
    *
    *
    * @param id
@@ -220,19 +309,38 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   @Override
   public Repository get(String id)
   {
-    Repository repository = null;
+    AssertUtil.assertIsNotEmpty(id);
 
-    for (RepositoryHandler handler : handlerMap.values())
+    Repository repository = repositoryDB.get(id);
+
+    if (repository != null)
     {
-      if (handler.isConfigured())
-      {
-        repository = handler.get(id);
+      repository = repository.clone();
+    }
 
-        if (repository != null)
-        {
-          break;
-        }
-      }
+    return repository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   * @param name
+   *
+   * @return
+   */
+  @Override
+  public Repository get(String type, String name)
+  {
+    AssertUtil.assertIsNotEmpty(type);
+    AssertUtil.assertIsNotEmpty(name);
+
+    Repository repository = repositoryDB.get(type, name);
+
+    if (repository != null)
+    {
+      repository = repository.clone();
     }
 
     return repository;
@@ -247,29 +355,11 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   @Override
   public Collection<Repository> getAll()
   {
-    if (logger.isDebugEnabled())
+    LinkedList<Repository> repositories = new LinkedList<Repository>();
+
+    for (Repository repository : repositoryDB.values())
     {
-      logger.debug("fetch all repositories");
-    }
-
-    Set<Repository> repositories = new HashSet<Repository>();
-
-    for (RepositoryHandler handler : handlerMap.values())
-    {
-      if (handler.isConfigured())
-      {
-        Collection<Repository> handlerRepositories = handler.getAll();
-
-        if (handlerRepositories != null)
-        {
-          repositories.addAll(handlerRepositories);
-        }
-      }
-    }
-
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("fetched {} repositories", repositories.size());
+      repositories.add(repository.clone());
     }
 
     return repositories;
@@ -334,6 +424,26 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
     types.add(type);
   }
 
+  /**
+   * Method description
+   *
+   */
+  private void loadDB()
+  {
+    repositoryDB = JAXB.unmarshal(repositoryDBFile,
+                                  XmlRepositoryDatabase.class);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  private void storeDB()
+  {
+    repositoryDB.setLastModified(System.currentTimeMillis());
+    JAXB.marshal(repositoryDB, repositoryDBFile);
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -372,5 +482,11 @@ public class BasicRepositoryManager extends AbstractRepositoryManager
   private Map<String, RepositoryHandler> handlerMap;
 
   /** Field description */
-  private List<Type> types;
+  private XmlRepositoryDatabase repositoryDB;
+
+  /** Field description */
+  private File repositoryDBFile;
+
+  /** Field description */
+  private Set<Type> types;
 }

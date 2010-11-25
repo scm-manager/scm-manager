@@ -31,22 +31,20 @@
 
 
 
-package sonia.scm.web;
+package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.Singleton;
 
-import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.web.filter.PermissionFilter;
-import sonia.scm.web.filter.RegexPermissionFilter;
 import sonia.scm.web.security.SecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -54,9 +52,14 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class HgPermissionFilter extends RegexPermissionFilter
+public abstract class RegexPermissionFilter extends PermissionFilter
 {
+
+  /** Field description */
+  public static final Pattern PATTERN_REPOSITORYNAME =
+    Pattern.compile("/[^/]+/([^/]+)(?:/.*)?");
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -65,11 +68,12 @@ public class HgPermissionFilter extends RegexPermissionFilter
    * @param securityContextProvider
    * @param repositoryManager
    */
-  @Inject
-  public HgPermissionFilter(Provider<SecurityContext> securityContextProvider,
-                            RepositoryManager repositoryManager)
+  public RegexPermissionFilter(
+          Provider<SecurityContext> securityContextProvider,
+          RepositoryManager repositoryManager)
   {
-    super(securityContextProvider, repositoryManager);
+    super(securityContextProvider);
+    this.repositoryManager = repositoryManager;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -80,11 +84,7 @@ public class HgPermissionFilter extends RegexPermissionFilter
    *
    * @return
    */
-  @Override
-  protected String getType()
-  {
-    return HgRepositoryHandler.TYPE_NAME;
-  }
+  protected abstract String getType();
 
   /**
    * Method description
@@ -95,8 +95,40 @@ public class HgPermissionFilter extends RegexPermissionFilter
    * @return
    */
   @Override
-  protected boolean isWriteRequest(HttpServletRequest request)
+  protected Repository getRepository(HttpServletRequest request)
   {
-    return !request.getMethod().equalsIgnoreCase("GET");
+    Repository repository = null;
+    String uri = request.getRequestURI();
+
+    uri = uri.substring(request.getContextPath().length());
+
+    Matcher m = PATTERN_REPOSITORYNAME.matcher(uri);
+
+    if (m.matches())
+    {
+      String repositoryname = m.group(1);
+
+      repository = getRepository(repositoryname);
+    }
+
+    return repository;
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   */
+  protected Repository getRepository(String name)
+  {
+    return repositoryManager.get(getType(), name);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private RepositoryManager repositoryManager;
 }

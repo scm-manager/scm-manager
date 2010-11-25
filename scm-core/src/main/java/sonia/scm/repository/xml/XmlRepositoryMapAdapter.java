@@ -31,26 +31,67 @@
 
 
 
-package sonia.scm.user;
+package sonia.scm.repository.xml;
 
-import sonia.scm.user.xml.XmlUserHandler;
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.repository.Repository;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class XmlUserHandlerTest extends UserHandlerTestBase
+public class XmlRepositoryMapAdapter
+        extends XmlAdapter<XmlRepositoryList, Map<String, Repository>>
 {
 
   /**
    * Method description
    *
    *
+   * @param repositoryMap
+   *
    * @return
+   *
+   * @throws Exception
    */
   @Override
-  public UserHandler createUserHandler()
+  public XmlRepositoryList marshal(Map<String, Repository> repositoryMap)
+          throws Exception
   {
-    return new XmlUserHandler();
+    return new XmlRepositoryList(repositoryMap);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositories
+   *
+   * @return
+   *
+   * @throws Exception
+   */
+  @Override
+  public Map<String, Repository> unmarshal(XmlRepositoryList repositories)
+          throws Exception
+  {
+    Map<String, Repository> repositoryMap = new LinkedHashMap<String,
+                                              Repository>();
+
+    for (Repository repository : repositories)
+    {
+      repositoryMap.put(XmlRepositoryDatabase.createKey(repository),
+                        repository);
+    }
+
+    return repositoryMap;
   }
 }

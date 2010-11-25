@@ -49,7 +49,6 @@ import java.io.IOException;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.xml.bind.JAXB;
 
@@ -211,18 +210,6 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   */
-  protected void initNewRepository(Repository repository)
-  {
-    repository.setId(UUID.randomUUID().toString());
-    repository.setCreationDate(System.currentTimeMillis());
-  }
 
   /**
    * Method description

@@ -31,45 +31,62 @@
 
 
 
-package sonia.scm.web;
+package sonia.scm.repository.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
-
-import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.web.filter.PermissionFilter;
-import sonia.scm.web.filter.RegexPermissionFilter;
-import sonia.scm.web.security.SecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class HgPermissionFilter extends RegexPermissionFilter
+@XmlRootElement(name = "repositories")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class XmlRepositoryList implements Iterable<Repository>
 {
 
   /**
    * Constructs ...
    *
-   *
-   * @param securityContextProvider
-   * @param repositoryManager
    */
-  @Inject
-  public HgPermissionFilter(Provider<SecurityContext> securityContextProvider,
-                            RepositoryManager repositoryManager)
+  public XmlRepositoryList() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   *
+   * @param repositoryMap
+   */
+  public XmlRepositoryList(Map<String, Repository> repositoryMap)
   {
-    super(securityContextProvider, repositoryManager);
+    this.repositories = new LinkedList<Repository>(repositoryMap.values());
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Iterator<Repository> iterator()
+  {
+    return repositories.iterator();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -80,23 +97,27 @@ public class HgPermissionFilter extends RegexPermissionFilter
    *
    * @return
    */
-  @Override
-  protected String getType()
+  public LinkedList<Repository> getRepositories()
   {
-    return HgRepositoryHandler.TYPE_NAME;
+    return repositories;
   }
+
+  //~--- set methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param request
-   *
-   * @return
+   * @param repositories
    */
-  @Override
-  protected boolean isWriteRequest(HttpServletRequest request)
+  public void setRepositories(LinkedList<Repository> repositories)
   {
-    return !request.getMethod().equalsIgnoreCase("GET");
+    this.repositories = repositories;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @XmlElement(name = "repository")
+  private LinkedList<Repository> repositories;
 }

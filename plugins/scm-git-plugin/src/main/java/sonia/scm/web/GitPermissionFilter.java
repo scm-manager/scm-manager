@@ -40,14 +40,11 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.Repository;
-import sonia.scm.web.filter.PermissionFilter;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.web.filter.RegexPermissionFilter;
 import sonia.scm.web.security.SecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -56,7 +53,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class GitPermissionFilter extends PermissionFilter
+public class GitPermissionFilter extends RegexPermissionFilter
 {
 
   /** Field description */
@@ -70,14 +67,13 @@ public class GitPermissionFilter extends PermissionFilter
    *
    *
    * @param securityContextProvider
-   * @param handler
+   * @param repositoryManager
    */
   @Inject
   public GitPermissionFilter(Provider<SecurityContext> securityContextProvider,
-                             GitRepositoryHandler handler)
+                             RepositoryManager repositoryManager)
   {
-    super(securityContextProvider);
-    this.handler = handler;
+    super(securityContextProvider, repositoryManager);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -86,14 +82,12 @@ public class GitPermissionFilter extends PermissionFilter
    * Method description
    *
    *
-   * @param name
-   *
    * @return
    */
   @Override
-  protected Repository getRepository(String name)
+  protected String getType()
   {
-    return handler.getByName(name);
+    return GitRepositoryHandler.TYPE_NAME;
   }
 
   /**
@@ -109,9 +103,4 @@ public class GitPermissionFilter extends PermissionFilter
   {
     return request.getRequestURI().endsWith(PATTERN_WRITEREQUEST);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private GitRepositoryHandler handler;
 }

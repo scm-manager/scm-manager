@@ -40,6 +40,7 @@ import com.google.inject.Singleton;
 
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.cgi.AbstractCGIServlet;
 import sonia.scm.web.cgi.EnvList;
 
@@ -81,11 +82,15 @@ public class HgCGIServlet extends AbstractCGIServlet
    * Constructs ...
    *
    *
+   *
+   * @param repositoryManager
    * @param handler
    */
   @Inject
-  public HgCGIServlet(HgRepositoryHandler handler)
+  public HgCGIServlet(RepositoryManager repositoryManager,
+                      HgRepositoryHandler handler)
   {
+    this.repositoryManager = repositoryManager;
     this.handler = handler;
   }
 
@@ -194,7 +199,7 @@ public class HgCGIServlet extends AbstractCGIServlet
    */
   private Repository getRepository(String repositoryname)
   {
-    return handler.getByName(repositoryname);
+    return repositoryManager.get(HgRepositoryHandler.TYPE_NAME, repositoryname);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -204,4 +209,7 @@ public class HgCGIServlet extends AbstractCGIServlet
 
   /** Field description */
   private HgRepositoryHandler handler;
+
+  /** Field description */
+  private RepositoryManager repositoryManager;
 }

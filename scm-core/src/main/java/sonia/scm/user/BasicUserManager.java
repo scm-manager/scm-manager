@@ -216,7 +216,7 @@ public class BasicUserManager implements UserManager
       logger.info("refresh user {} of type {}", user.getName(), user.getType());
     }
 
-    getHandler(user).refresh(user);
+    // getHandler(user).refresh(user);
   }
 
   /**
@@ -250,8 +250,8 @@ public class BasicUserManager implements UserManager
     {
       if (handler.isConfigured())
       {
-        user = handler.get(id);
 
+        // user = handler.get(id);
         if (user != null)
         {
           break;
@@ -278,19 +278,20 @@ public class BasicUserManager implements UserManager
 
     Set<User> repositories = new HashSet<User>();
 
-    for (UserHandler handler : handlerMap.values())
-    {
-      if (handler.isConfigured())
-      {
-        Collection<User> handlerRepositories = handler.getAll();
-
-        if (handlerRepositories != null)
-        {
-          repositories.addAll(handlerRepositories);
-        }
-      }
-    }
-
+    /*
+     * for (UserHandler handler : handlerMap.values())
+     * {
+     * if (handler.isConfigured())
+     * {
+     *   Collection<User> handlerRepositories = handler.getAll();
+     *
+     *   if (handlerRepositories != null)
+     *   {
+     *     repositories.addAll(handlerRepositories);
+     *   }
+     * }
+     * }
+     */
     if (logger.isDebugEnabled())
     {
       logger.debug("fetched {} users", repositories.size());

@@ -66,22 +66,6 @@ public class HgRepositoryHandler
   /** Field description */
   public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public String createResourcePath(Repository repository)
-  {
-    return "/hg/".concat(repository.getName());
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**

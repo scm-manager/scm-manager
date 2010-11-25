@@ -52,6 +52,17 @@ public interface RepositoryManager
    *
    *
    * @param type
+   * @param name
+   *
+   * @return
+   */
+  public Repository get(String type, String name);
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
    *
    * @return
    */

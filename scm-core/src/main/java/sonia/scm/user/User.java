@@ -121,6 +121,22 @@ public class User
    * Method description
    *
    *
+   * @param user
+   */
+  public void copyProperties(User user)
+  {
+    user.setAdmin(admin);
+    user.setDisplayName(displayName);
+    user.setMail(mail);
+    user.setName(name);
+    user.setPassword(password);
+    user.setType(type);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param obj
    *
    * @return
