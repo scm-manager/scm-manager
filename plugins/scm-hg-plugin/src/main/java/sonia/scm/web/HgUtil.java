@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -50,7 +52,7 @@ public class HgUtil
   public static final String CGI_DIRECTORY = "cgi-bin";
 
   /** Field description */
-  public static final String CGI_NAME = "hgweb.cgi";
+  public static final String CGI_NAME = "hgweb.py";
 
   //~--- get methods ----------------------------------------------------------
 

@@ -62,7 +62,6 @@ import javax.ws.rs.core.UriInfo;
  */
 @Singleton
 @Path("config/repositories/hg")
-@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class HgConfigResource
 {
 
@@ -88,6 +87,7 @@ public class HgConfigResource
    * @return
    */
   @GET
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public HgConfig getConfig()
   {
     HgConfig config = handler.getConfig();

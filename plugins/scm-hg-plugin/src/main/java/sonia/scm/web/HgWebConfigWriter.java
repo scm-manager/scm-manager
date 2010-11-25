@@ -59,10 +59,8 @@ public class HgWebConfigWriter
 {
 
   /** Field description */
-  public static final String CGI_TEMPLATE = "/sonia/scm/hgweb.cgi";
+  public static final String CGI_TEMPLATE = "/sonia/scm/hgweb.py";
 
-  /** Field description */
-  public static final String CONFIG_NAME = "hgweb.config";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -88,13 +86,9 @@ public class HgWebConfigWriter
    */
   public void write() throws IOException
   {
-    File webConfigFile = new File(config.getRepositoryDirectory(), CONFIG_NAME);
-
-    writeWebConfigFile(webConfigFile);
-
     File cgiFile = HgUtil.getCGI();
 
-    writeCGIFile(cgiFile, webConfigFile);
+    writeCGIFile(cgiFile);
   }
 
   /**
@@ -102,11 +96,10 @@ public class HgWebConfigWriter
    *
    *
    * @param cgiFile
-   * @param webConfigFile
    *
    * @throws IOException
    */
-  private void writeCGIFile(File cgiFile, File webConfigFile) throws IOException
+  private void writeCGIFile(File cgiFile) throws IOException
   {
     InputStream input = null;
     OutputStream output = null;
@@ -119,7 +112,6 @@ public class HgWebConfigWriter
       ResourceProcessor rp = new RegexResourceProcessor();
 
       rp.addVariable("python", config.getPythonBinary());
-      rp.addVariable("config", webConfigFile.getAbsolutePath());
       rp.process(input, output);
       cgiFile.setExecutable(true);
     }
@@ -128,30 +120,6 @@ public class HgWebConfigWriter
       IOUtil.close(input);
       IOUtil.close(output);
     }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param webConfigFile
-   *
-   * @throws IOException
-   */
-  private void writeWebConfigFile(File webConfigFile) throws IOException
-  {
-    INIConfiguration webConfig = new INIConfiguration();
-    INISection pathsSection = new INISection("paths");
-    String path = config.getRepositoryDirectory().getAbsolutePath();
-
-    if (!path.endsWith(File.separator))
-    {
-      path = path.concat(File.separator);
-    }
-
-    pathsSection.setParameter("/", path.concat("*"));
-    webConfig.addSection(pathsSection);
-    new INIConfigurationWriter().write(webConfig, webConfigFile);
   }
 
   //~--- fields ---------------------------------------------------------------

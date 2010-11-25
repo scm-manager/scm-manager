@@ -301,6 +301,56 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     return repositories;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryname
+   *
+   * @return
+   */
+  public Repository getByName(String repositoryname)
+  {
+    Repository repository = null;
+
+    for (Repository r : getAll())
+    {
+      if (r.getName().equals(repositoryname))
+      {
+        repository = r;
+
+        break;
+      }
+    }
+
+    return repository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  public File getDirectory(Repository repository)
+  {
+    File directory = null;
+
+    if (isConfigured())
+    {
+      directory = new File(config.getRepositoryDirectory(),
+                           repository.getName());
+    }
+    else
+    {
+      throw new ConfigurationException("RepositoryHandler is not configured");
+    }
+
+    return directory;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -399,31 +449,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  protected File getDirectory(Repository repository)
-  {
-    File directory = null;
-
-    if (isConfigured())
-    {
-      directory = new File(config.getRepositoryDirectory(),
-                           repository.getName());
-    }
-    else
-    {
-      throw new ConfigurationException("RepositoryHandler is not configured");
-    }
-
-    return directory;
-  }
 
   /**
    * Method description
