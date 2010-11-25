@@ -66,6 +66,24 @@ public class HgRepositoryHandler
   /** Field description */
   public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Override
+  public void loadConfig()
+  {
+    super.loadConfig();
+
+    if (config == null)
+    {
+      config = new HgInitialConfigBuilder(baseDirectory).createInitialConfig();
+      storeConfig();
+    }
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
