@@ -65,6 +65,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
   urlTemplate: '<a href="{0}" target="_blank">{0}</a>',
   mailtoTemplate: '<a href="mailto: {0}">{0}</a>',
+  checkboxTemplate: '<input type="checkbox" disabled="true" {0}/>',
 
   initComponent: function(){
 
@@ -118,6 +119,14 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
   renderMailto: function(mail){
     return String.format( this.mailtoTemplate, mail );
+  },
+
+  renderCheckbox: function(value){
+    var param = "";
+    if ( value ){
+      param = "checked='checked' ";
+    }
+    return String.format( this.checkboxTemplate, param );
   }
 
 });

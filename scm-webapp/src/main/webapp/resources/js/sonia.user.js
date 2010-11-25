@@ -40,7 +40,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
     var userStore = new Sonia.rest.JsonStore({
       url: restUrl + 'users.json',
       root: 'users',
-      fields: [ 'name', 'displayName', 'mail', 'type'],
+      fields: [ 'name', 'displayName', 'mail', 'admin', 'type'],
       sortInfo: {
         field: 'name'
       }
@@ -56,6 +56,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
         {id: 'name', header: 'Name', dataIndex: 'name'},
         {id: 'displayName', header: 'Display Name', dataIndex: 'displayName', width: 250},
         {id: 'mail', header: 'Mail', dataIndex: 'mail', renderer: this.renderMailto, width: 200},
+        {id: 'admin', header: 'Admin', dataIndex: 'admin', renderer: this.renderCheckbox, width: 50},
         {id: 'type', header: 'Type', dataIndex: 'type', width: 80}
       ]
     });
@@ -151,6 +152,10 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         minLengthText: 'Password must be at least 6 characters long.',
         vtype: 'password',
         initialPassField: 'pwd'
+      },{
+        fieldLabel: 'Administrator',
+        name: 'admin',
+        xtype: 'checkbox'
       }]
     };
 

@@ -4,5 +4,6 @@
     <displayName>SCM Administrator</displayName>
     <mail>scm-admin@scm-manager.com</mail>
     <password>ff8f5c593a01f9fcd3ed48b09a4b013e8d8f3be7</password>
+    <admin>true</admin>
     <type>xml</type>
 </users>

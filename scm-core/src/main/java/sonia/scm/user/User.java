@@ -59,7 +59,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder =
 {
-  "name", "displayName", "mail", "password", "type"
+  "name", "displayName", "mail", "password", "admin", "type"
 })
 public class User
         implements TypedObject, Principal, Cloneable, Validateable, Serializable
@@ -273,6 +273,17 @@ public class User
    *
    * @return
    */
+  public boolean isAdmin()
+  {
+    return admin;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
   public boolean isValid()
   {
@@ -282,6 +293,17 @@ public class User
   }
 
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param admin
+   */
+  public void setAdmin(boolean admin)
+  {
+    this.admin = admin;
+  }
 
   /**
    * Method description
@@ -340,6 +362,9 @@ public class User
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean admin;
 
   /** Field description */
   private String displayName;
