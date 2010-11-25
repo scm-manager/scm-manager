@@ -166,9 +166,9 @@ public class ScmServletModule extends ServletModule
     bind(SecurityContext.class).to(BasicSecurityContext.class);
     loadPlugins(pluginManager);
     bind(CacheManager.class).to(EhCacheManager.class);
-    bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
-        BasicRepositoryManager.class);
-    bind(RepositoryManager.class).to(CacheRepositoryManagerDecorator.class);
+    //bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
+    //    BasicRepositoryManager.class);
+    bind(RepositoryManager.class).to(BasicRepositoryManager.class);
     bind(UserManager.class).to(BasicUserManager.class);
     bind(ScmWebPluginContext.class).toInstance(webPluginContext);
 
