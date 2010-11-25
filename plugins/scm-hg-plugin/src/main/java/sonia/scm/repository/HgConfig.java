@@ -33,6 +33,10 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.Util;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -73,6 +77,19 @@ public class HgConfig extends SimpleRepositoryConfig
   public String getPythonBinary()
   {
     return pythonBinary;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isValid()
+  {
+    return super.isValid() && Util.isNotEmpty(hgBinary)
+           && Util.isNotEmpty(pythonBinary);
   }
 
   //~--- set methods ----------------------------------------------------------

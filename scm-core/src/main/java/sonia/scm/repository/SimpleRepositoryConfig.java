@@ -29,7 +29,13 @@
  *
  */
 
+
+
 package sonia.scm.repository;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.Validateable;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -39,7 +45,7 @@ import java.io.File;
  *
  * @author Sebastian Sdorra
  */
-public class SimpleRepositoryConfig
+public class SimpleRepositoryConfig implements Validateable
 {
 
   /**
@@ -51,6 +57,18 @@ public class SimpleRepositoryConfig
   public File getRepositoryDirectory()
   {
     return repositoryDirectory;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isValid()
+  {
+    return repositoryDirectory != null;
   }
 
   //~--- set methods ----------------------------------------------------------

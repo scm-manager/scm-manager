@@ -193,7 +193,7 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   @Override
   public boolean isConfigured()
   {
-    return config != null;
+    return (config != null) && config.isValid();
   }
 
   //~--- set methods ----------------------------------------------------------
