@@ -42,31 +42,31 @@ Ext.onReady(function(){
   new Ext.Viewport({
     layout: 'border',
     items: [
-      new Ext.BoxComponent({
-        region: 'north',
-        id: 'north-panel',
-        contentEl: 'north',
-        height: 75
-      }), {
-        region: 'west',
-        id: 'navigationPanel',
-        title: 'Navigation',
-        xtype: 'navPanel',
-        split: true,
-        width: 200,
-        minSize: 175,
-        maxSize: 400,
-        collapsible: true,
-        margins: '0 0 0 5'
-      },
-      new Ext.BoxComponent({
-        region: 'south',
-        id: 'south-panel',
-        contentEl: 'south',
-        height: 16,
-        margins: '2 2 2 5'
-      }),
-      mainTabPanel
+    new Ext.BoxComponent({
+      region: 'north',
+      id: 'north-panel',
+      contentEl: 'north',
+      height: 75
+    }), {
+      region: 'west',
+      id: 'navigationPanel',
+      title: 'Navigation',
+      xtype: 'navPanel',
+      split: true,
+      width: 200,
+      minSize: 175,
+      maxSize: 400,
+      collapsible: true,
+      margins: '0 0 0 5'
+    },
+    new Ext.BoxComponent({
+      region: 'south',
+      id: 'south-panel',
+      contentEl: 'south',
+      height: 16,
+      margins: '2 2 2 5'
+    }),
+    mainTabPanel
     ]
   });
 
@@ -109,7 +109,7 @@ Ext.onReady(function(){
       console.debug('create main menu');
     }
     var panel = Ext.getCmp('navigationPanel');
-    panel.addSections([{
+    panel.addSection({
       title: 'Main',
       items: [{
         label: 'Repositories',
@@ -117,37 +117,47 @@ Ext.onReady(function(){
           addTabPanel('repositories', 'repositoryPanel', 'Repositories');
         }
       }]
-    },{
-      title: 'Config',
-      items: [{
-        label: 'General',
-        fn: function(){
-          addTabPanel("scmConfig", "scmConfig", "Scm Config");
-        }
+    });
+
+    if ( admin ){
+      panel.addSections([{
+        title: 'Config',
+        items: [{
+          label: 'General',
+          fn: function(){
+            addTabPanel("scmConfig", "scmConfig", "Scm Config");
+          }
+        },{
+          label: 'Repository Types',
+          fn: function(){
+            addTabPanel('repositoryConfig', 'repositoryConfig', 'Repository Config');
+          }
+        },{
+          label: 'Server',
+          fn: function(){
+            console.debug( 'Server Config' );
+          }
+        }]
       },{
-        label: 'Repository Types',
-        fn: function(){
-          addTabPanel('repositoryConfig', 'repositoryConfig', 'Repository Config');
-        }
-      },{
-        label: 'Server',
-        fn: function(){console.debug( 'Server Config' );}
-      }]
-    },{
-      title: 'Security',
-      items: [{
-        label: 'Users',
-        fn: function(){
-          addTabPanel('users', 'userPanel', 'Users');
-        }
-      }]
-    },{
+        title: 'Security',
+        items: [{
+          label: 'Users',
+          fn: function(){
+            addTabPanel('users', 'userPanel', 'Users');
+          }
+        }]
+      }]);
+    }
+    
+    panel.addSection({
       title: 'Abmelden',
       items: [{
         label: 'Abmelden',
         fn: logout
       }]
-    }]);
+    });
+    //fix hidden logout button
+    panel.doLayout();
   }
 
   function createWelcomePanel(){

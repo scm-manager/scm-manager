@@ -33,6 +33,7 @@
 var debug = typeof console != 'undefined';
 
 var state = null;
+var admin = false;
 
 // sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT
 var dummyPassword = '__dummypassword__';
@@ -50,6 +51,7 @@ function loadState(s){
     console.debug( s );
   }
   state = s;
+  admin = s.user.admin;
   // call login callback functions
   Ext.each(loginCallbacks, function(callback){
     if ( Ext.isFunction(callback) ){
