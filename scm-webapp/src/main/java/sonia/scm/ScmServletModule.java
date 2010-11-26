@@ -49,12 +49,11 @@ import sonia.scm.filter.SecurityFilter;
 import sonia.scm.plugin.ScriptResourceServlet;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.xml.XmlRepositoryManager;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.MessageDigestEncryptionHandler;
-
-import sonia.scm.user.UserHandler;
 import sonia.scm.user.UserManager;
-
+import sonia.scm.user.xml.XmlUserManager;
 import sonia.scm.util.DebugServlet;
 import sonia.scm.util.Util;
 import sonia.scm.web.plugin.SCMPlugin;
@@ -82,8 +81,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.xml.bind.JAXB;
-import sonia.scm.repository.xml.XmlRepositoryManager;
-import sonia.scm.user.xml.XmlUserManager;
 
 /**
  *
@@ -166,8 +163,9 @@ public class ScmServletModule extends ServletModule
     bind(SecurityContext.class).to(BasicSecurityContext.class);
     loadPlugins(pluginManager);
     bind(CacheManager.class).to(EhCacheManager.class);
-    //bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
-    //    BasicRepositoryManager.class);
+
+    // bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
+    // BasicRepositoryManager.class);
     bind(RepositoryManager.class).to(XmlRepositoryManager.class);
     bind(UserManager.class).to(XmlUserManager.class);
     bind(ScmWebPluginContext.class).toInstance(webPluginContext);
@@ -230,28 +228,6 @@ public class ScmServletModule extends ServletModule
   }
 
   /**
-   *  Method description
-   *
-   *
-   *  @param userHandlerBinder
-   *  @param handlerSet
-   */
-  private void bindUserHandlers(Multibinder<UserHandler> userHandlerBinder,
-                                Set<Class<? extends UserHandler>> handlerSet)
-  {
-    for (Class<? extends UserHandler> handlerClass : handlerSet)
-    {
-      if (logger.isInfoEnabled())
-      {
-        logger.info("load UserHandler {}", handlerClass.getName());
-      }
-
-      bind(handlerClass);
-      userHandlerBinder.addBinding().to(handlerClass);
-    }
-  }
-
-  /**
    * Method description
    *
    *
@@ -270,7 +246,6 @@ public class ScmServletModule extends ServletModule
       Set<Class<? extends RepositoryHandler>> repositoryHandlerSet =
         new LinkedHashSet<Class<? extends RepositoryHandler>>();
 
-
       // security stuff
       Class<? extends EncryptionHandler> encryptionHandler =
         MessageDigestEncryptionHandler.class;
@@ -285,7 +260,6 @@ public class ScmServletModule extends ServletModule
         {
           repositoryHandlerSet.addAll(pluginRepositoryHandlers);
         }
-
 
         SecurityConfig securityConfig = plugin.getSecurityConfig();
 
