@@ -163,7 +163,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     }
     var url = restUrl + 'repositories/' + item.id + '.json';
     var el = this.el;
-    var tid = setTimeout( function(){ el.mask('Loading ...'); }, 100);
+    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
     Ext.Ajax.request({
       url: url,
       jsonData: item,
@@ -191,7 +191,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     }
     var url = restUrl + 'repositories.json';
     var el = this.el;
-    var tid = setTimeout( function(){ el.mask('Loading ...'); }, 100);
+    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
     Ext.Ajax.request({
       url: url,
       jsonData: item,
@@ -224,6 +224,18 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
 
   initComponent: function(){
 
+    var toolbar = [];
+    if ( admin ){
+      toolbar.push(
+        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddForm}
+      );
+    }
+    toolbar.push(
+      {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.removeRepository},
+      '-',
+      {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload}
+    );
+
     var config = {
       layout: 'border',
       hideMode: 'offsets',
@@ -231,12 +243,7 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
       enableTabScroll: true,
       region:'center',
       autoScroll: true,
-      tbar: [
-        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddForm},
-        {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.removeRepository},
-        '-',
-        {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload}
-      ],
+      tbar: toolbar,
       items: [{
           id: 'repositoryGrid',
           xtype: 'repositoryGrid',
