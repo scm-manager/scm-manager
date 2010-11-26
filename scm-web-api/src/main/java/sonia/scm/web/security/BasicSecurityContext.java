@@ -48,7 +48,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 @SessionScoped
-public class BasicSecurityContext implements SecurityContext
+public class BasicSecurityContext implements WebSecurityContext
 {
 
   /**

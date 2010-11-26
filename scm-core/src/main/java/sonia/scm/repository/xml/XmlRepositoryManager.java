@@ -36,6 +36,7 @@ package sonia.scm.repository.xml;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -47,11 +48,15 @@ import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.repository.AbstractRepositoryManager;
+import sonia.scm.repository.PermissionType;
+import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryAllreadyExistExeption;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHandlerNotFoundException;
+import sonia.scm.security.SecurityContext;
+import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 
@@ -92,11 +97,16 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * Constructs ...
    *
    *
+   *
+   * @param securityContextProvider
    * @param handlerSet
    */
   @Inject
-  public XmlRepositoryManager(Set<RepositoryHandler> handlerSet)
+  public XmlRepositoryManager(
+          Provider<SecurityContext> securityContextProvider,
+          Set<RepositoryHandler> handlerSet)
   {
+    this.securityContextProvider = securityContextProvider;
     handlerMap = new HashMap<String, RepositoryHandler>();
     types = new HashSet<Type>();
 
@@ -142,6 +152,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
                   repository.getType());
     }
 
+    assertIsAdmin();
     AssertUtil.assertIsValid(repository);
 
     if (repositoryDB.contains(repository))
@@ -180,6 +191,8 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
       logger.info("delete repository {} of type {}", repository.getName(),
                   repository.getType());
     }
+
+    assertIsOwner(repository);
 
     if (repositoryDB.contains(repository))
     {
@@ -244,6 +257,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
                   repository.getType());
     }
 
+    assertIsOwner(repository);
     AssertUtil.assertIsValid(repository);
 
     if (repositoryDB.contains(repository))
@@ -281,6 +295,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
           throws RepositoryException, IOException
   {
     AssertUtil.assertIsNotNull(repository);
+    assertIsReader(repository);
 
     Repository fresh = repositoryDB.get(repository.getType(),
                          repository.getName());
@@ -315,6 +330,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
     if (repository != null)
     {
+      assertIsReader(repository);
       repository = repository.clone();
     }
 
@@ -340,7 +356,14 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
     if (repository != null)
     {
-      repository = repository.clone();
+      if (isReader(repository))
+      {
+        repository = repository.clone();
+      }
+      else
+      {
+        repository = null;
+      }
     }
 
     return repository;
@@ -359,7 +382,10 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
     for (Repository repository : repositoryDB.values())
     {
-      repositories.add(repository.clone());
+      if (isReader(repository))
+      {
+        repositories.add(repository.clone());
+      }
     }
 
     return repositories;
@@ -427,6 +453,44 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   /**
    * Method description
    *
+   *
+   * @throws RepositoryException
+   */
+  private void assertIsAdmin() throws RepositoryException
+  {
+    if (!getCurrentUser().isAdmin())
+    {
+      throw new RepositoryException("admin permsission required");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   */
+  private void assertIsOwner(Repository repository)
+  {
+    PermissionUtil.assertPermission(repository, getCurrentUser(),
+                                    PermissionType.OWNER);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   */
+  private void assertIsReader(Repository repository)
+  {
+    PermissionUtil.assertPermission(repository, getCurrentUser(),
+                                    PermissionType.READ);
+  }
+
+  /**
+   * Method description
+   *
    */
   private void loadDB()
   {
@@ -445,6 +509,25 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private User getCurrentUser()
+  {
+    SecurityContext context = securityContextProvider.get();
+
+    AssertUtil.assertIsNotNull(context);
+
+    User user = context.getUser();
+
+    AssertUtil.assertIsNotNull(user);
+
+    return user;
+  }
 
   /**
    * Method description
@@ -476,6 +559,20 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     return handler;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  private boolean isReader(Repository repository)
+  {
+    return PermissionUtil.hasPermission(repository, getCurrentUser(),
+            PermissionType.READ);
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -486,6 +583,9 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private File repositoryDBFile;
+
+  /** Field description */
+  private Provider<SecurityContext> securityContextProvider;
 
   /** Field description */
   private Set<Type> types;

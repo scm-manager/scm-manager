@@ -39,7 +39,7 @@ import com.google.inject.Singleton;
 
 import sonia.scm.web.filter.HttpFilter;
 import sonia.scm.web.filter.SecurityHttpServletRequestWrapper;
-import sonia.scm.web.security.SecurityContext;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -70,7 +70,7 @@ public class SecurityFilter extends HttpFilter
    * @param securityContextProvider
    */
   @Inject
-  public SecurityFilter(Provider<SecurityContext> securityContextProvider)
+  public SecurityFilter(Provider<WebSecurityContext> securityContextProvider)
   {
     this.securityContextProvider = securityContextProvider;
   }
@@ -93,7 +93,7 @@ public class SecurityFilter extends HttpFilter
                           HttpServletResponse response, FilterChain chain)
           throws IOException, ServletException
   {
-    SecurityContext securityContext = securityContextProvider.get();
+    WebSecurityContext securityContext = securityContextProvider.get();
 
     if (securityContext != null)
     {
@@ -126,5 +126,5 @@ public class SecurityFilter extends HttpFilter
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Provider<SecurityContext> securityContextProvider;
+  private Provider<WebSecurityContext> securityContextProvider;
 }

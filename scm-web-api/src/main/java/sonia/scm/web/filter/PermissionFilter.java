@@ -45,7 +45,7 @@ import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.web.security.SecurityContext;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -75,7 +75,7 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @param securityContextProvider
    */
-  public PermissionFilter(Provider<SecurityContext> securityContextProvider)
+  public PermissionFilter(Provider<WebSecurityContext> securityContextProvider)
   {
     this.securityContextProvider = securityContextProvider;
   }
@@ -120,7 +120,7 @@ public abstract class PermissionFilter extends HttpFilter
                           HttpServletResponse response, FilterChain chain)
           throws IOException, ServletException
   {
-    SecurityContext securityContext = securityContextProvider.get();
+    WebSecurityContext securityContext = securityContextProvider.get();
 
     AssertUtil.assertIsNotNull(securityContext);
 
@@ -179,5 +179,5 @@ public abstract class PermissionFilter extends HttpFilter
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  protected Provider<SecurityContext> securityContextProvider;
+  protected Provider<WebSecurityContext> securityContextProvider;
 }

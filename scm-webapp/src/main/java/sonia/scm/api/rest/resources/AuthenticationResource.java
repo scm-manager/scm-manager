@@ -45,7 +45,7 @@ import sonia.scm.ScmState;
 import sonia.scm.Type;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
-import sonia.scm.web.security.SecurityContext;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -193,5 +193,5 @@ public class AuthenticationResource
 
   /** Field description */
   @Inject
-  private SecurityContext securityContext;
+  private WebSecurityContext securityContext;
 }

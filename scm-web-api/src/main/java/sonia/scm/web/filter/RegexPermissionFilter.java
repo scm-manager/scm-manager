@@ -39,7 +39,7 @@ import com.google.inject.Provider;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.web.security.SecurityContext;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -69,7 +69,7 @@ public abstract class RegexPermissionFilter extends PermissionFilter
    * @param repositoryManager
    */
   public RegexPermissionFilter(
-          Provider<SecurityContext> securityContextProvider,
+          Provider<WebSecurityContext> securityContextProvider,
           RepositoryManager repositoryManager)
   {
     super(securityContextProvider);

@@ -62,7 +62,7 @@ import sonia.scm.web.plugin.ScmWebPluginContext;
 import sonia.scm.web.plugin.SecurityConfig;
 import sonia.scm.web.security.Authenticator;
 import sonia.scm.web.security.BasicSecurityContext;
-import sonia.scm.web.security.SecurityContext;
+import sonia.scm.web.security.WebSecurityContext;
 import sonia.scm.web.security.XmlAuthenticator;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -81,6 +81,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.xml.bind.JAXB;
+import sonia.scm.security.SecurityContext;
 
 /**
  *
@@ -161,6 +162,7 @@ public class ScmServletModule extends ServletModule
     // bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
     // bind(Authenticator.class).to(XmlAuthenticator.class);
     bind(SecurityContext.class).to(BasicSecurityContext.class);
+    bind(WebSecurityContext.class).to(BasicSecurityContext.class);
     loadPlugins(pluginManager);
     bind(CacheManager.class).to(EhCacheManager.class);
 

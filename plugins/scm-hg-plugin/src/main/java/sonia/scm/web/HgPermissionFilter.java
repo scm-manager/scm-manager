@@ -44,7 +44,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.filter.PermissionFilter;
 import sonia.scm.web.filter.RegexPermissionFilter;
-import sonia.scm.web.security.SecurityContext;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -66,7 +66,7 @@ public class HgPermissionFilter extends RegexPermissionFilter
    * @param repositoryManager
    */
   @Inject
-  public HgPermissionFilter(Provider<SecurityContext> securityContextProvider,
+  public HgPermissionFilter(Provider<WebSecurityContext> securityContextProvider,
                             RepositoryManager repositoryManager)
   {
     super(securityContextProvider, repositoryManager);

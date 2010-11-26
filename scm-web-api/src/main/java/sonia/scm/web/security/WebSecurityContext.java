@@ -31,50 +31,48 @@
 
 
 
-package sonia.scm.web;
+package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
-
-import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.web.filter.RegexPermissionFilter;
-import sonia.scm.web.security.WebSecurityContext;
+import sonia.scm.security.SecurityContext;
+import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class GitPermissionFilter extends RegexPermissionFilter
+public interface WebSecurityContext extends SecurityContext
 {
 
-  /** Field description */
-  public static final String PATTERN_WRITEREQUEST = "git-receive-pack";
-
-  //~--- constructors ---------------------------------------------------------
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   * @param username
+   * @param password
+   *
+   * @return
+   */
+  public User authenticate(HttpServletRequest request,
+                           HttpServletResponse response, String username,
+                           String password);
 
   /**
-   * Constructs ...
+   * Method description
    *
    *
-   *
-   * @param securityContextProvider
-   * @param repositoryManager
+   * @param request
+   * @param response
    */
-  @Inject
-  public GitPermissionFilter(Provider<WebSecurityContext> securityContextProvider,
-                             RepositoryManager repositoryManager)
-  {
-    super(securityContextProvider, repositoryManager);
-  }
+  public void logout(HttpServletRequest request, HttpServletResponse response);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -84,23 +82,5 @@ public class GitPermissionFilter extends RegexPermissionFilter
    *
    * @return
    */
-  @Override
-  protected String getType()
-  {
-    return GitRepositoryHandler.TYPE_NAME;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  @Override
-  protected boolean isWriteRequest(HttpServletRequest request)
-  {
-    return request.getRequestURI().endsWith(PATTERN_WRITEREQUEST);
-  }
+  public boolean isAuthenticated();
 }
