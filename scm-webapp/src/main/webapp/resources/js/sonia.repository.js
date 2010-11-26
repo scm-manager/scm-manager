@@ -44,6 +44,57 @@ loginCallbacks.push( loadRepositoryTypes );
 // register namespace
 Ext.ns('Sonia.repository');
 
+// functions
+
+Sonia.repository.hasPermission = function(repository, type){
+  var result = false;
+  if ( admin ){
+    result = true;
+  } else {
+    var permissions = repository.permissions;
+    if ( Ext.isDefined(permissions) ){
+      for (var i=0;i<permissions.length; i++ ){
+        console.debug( permissions[i] );
+        if ( permissions[i].name == state.user.name ){
+          result = permissions[i].type == type;
+          break;
+        }
+      }
+    }
+  }
+  return result;
+}
+
+Sonia.repository.isOwner = function(repository){
+  return Sonia.repository.hasPermission(repository, 'OWNER');
+}
+
+Sonia.repository.setEditPanel = function(panel){
+  var editPanel = Ext.getCmp('repositoryEditPanel');
+  editPanel.removeAll();
+  editPanel.add(panel);
+  editPanel.doLayout();
+}
+
+// panels
+
+Sonia.repository.DefaultPanel = {
+  region: 'south',
+  title: 'Repository Form',
+  padding: 5,
+  xtype: 'panel',
+  html: 'Add or select an Repository'
+}
+
+Sonia.repository.NoPermissionPanel = {
+  region: 'south',
+  title: 'Repository Form',
+  padding: 5,
+  xtype: 'panel',
+  html: 'No permission to modify this repository'
+}
+
+// components
 
 // RepositoryGrid
 Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
@@ -53,7 +104,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     var repositoryStore = new Sonia.rest.JsonStore({
       url: restUrl + 'repositories.json',
       root: 'repositories',
-      fields: [ 'id', 'name', 'type', 'contact', 'description', 'creationDate', 'url' ],
+      fields: [ 'id', 'name', 'type', 'contact', 'description', 'creationDate', 'url', 'permissions' ],
       sortInfo: {
         field: 'name'
       }
@@ -89,24 +140,30 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     if ( debug ){
       console.debug( item.name + ' selected' );
     }
-    var editPanel = Ext.getCmp('repositoryEditPanel');
-    editPanel.removeAll();
-    var panel = new Sonia.repository.FormPanel({
-      item: item,
-      region: 'south',
-      title: 'Repository Form',
-      padding: 5,
-      onUpdate: {
-        fn: this.reload,
-        scope: this
-      },
-      onCreate: {
-        fn: this.reload,
-        scope: this
-      }
-    });
-    editPanel.add(panel);
-    editPanel.doLayout();
+
+    var panel = null;
+    
+    if ( Sonia.repository.isOwner(item) ){
+      Ext.getCmp('removeButton').setDisabled(false);
+      panel = new Sonia.repository.FormPanel({
+        item: item,
+        region: 'south',
+        title: 'Repository Form',
+        padding: 5,
+        onUpdate: {
+          fn: this.reload,
+          scope: this
+        },
+        onCreate: {
+          fn: this.reload,
+          scope: this
+        }
+      });
+    } else {
+      Ext.getCmp('removeButton').setDisabled(true);
+      panel = Sonia.repository.NoPermissionPanel;
+    }
+    Sonia.repository.setEditPanel(panel);
   },
 
   renderRepositoryType: function(repositoryType){
@@ -231,7 +288,7 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
       );
     }
     toolbar.push(
-      {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.removeRepository},
+      {xtype: 'tbbutton', id: 'removeButton', disabled: true, text: 'Remove', scope: this, handler: this.removeRepository},
       '-',
       {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload}
     );
@@ -313,21 +370,11 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
   },
 
   resetPanel: function(){
-    var editPanel = Ext.getCmp('repositoryEditPanel');
-    editPanel.removeAll();
-    editPanel.add({
-      region: 'south',
-      title: 'Repository Form',
-      padding: 5,
-      xtype: 'panel',
-      html: 'Add or select an Repository'
-    });
-    editPanel.doLayout();
+    Sonia.repository.setEditPanel(Sonia.repository.DefaultPanel);
   },
 
   showAddForm: function(){
-    var editPanel = Ext.getCmp('repositoryEditPanel');
-    editPanel.removeAll();
+    Ext.getCmp('removeButton').setDisabled(true);
     var panel = new Sonia.repository.FormPanel({
       region: 'south',
       title: 'Repository Form',
@@ -341,8 +388,7 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
         scope: this
       }
     });
-    editPanel.add(panel);
-    editPanel.doLayout();
+    Sonia.repository.setEditPanel(panel);
   },
 
   reload: function(){
