@@ -35,12 +35,24 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.ListenerSupport;
-import sonia.scm.Manager;
+import sonia.scm.user.xml.XmlUserManager;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface UserManager
-        extends Manager<User, UserException>, ListenerSupport<UserListener> {}
+public class XmlUserManagerTest extends UserManagerTestBase
+{
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public UserManager createUserHandler()
+  {
+    return new XmlUserManager();
+  }
+}
