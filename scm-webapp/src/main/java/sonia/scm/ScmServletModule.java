@@ -51,10 +51,10 @@ import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.MessageDigestEncryptionHandler;
-import sonia.scm.user.BasicUserManager;
+
 import sonia.scm.user.UserHandler;
 import sonia.scm.user.UserManager;
-import sonia.scm.user.xml.XmlUserHandler;
+
 import sonia.scm.util.DebugServlet;
 import sonia.scm.util.Util;
 import sonia.scm.web.plugin.SCMPlugin;
@@ -83,6 +83,7 @@ import java.util.Set;
 
 import javax.xml.bind.JAXB;
 import sonia.scm.repository.xml.XmlRepositoryManager;
+import sonia.scm.user.xml.XmlUserManager;
 
 /**
  *
@@ -168,7 +169,7 @@ public class ScmServletModule extends ServletModule
     //bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
     //    BasicRepositoryManager.class);
     bind(RepositoryManager.class).to(XmlRepositoryManager.class);
-    bind(UserManager.class).to(BasicUserManager.class);
+    bind(UserManager.class).to(XmlUserManager.class);
     bind(ScmWebPluginContext.class).toInstance(webPluginContext);
 
     // filter(PATTERN_RESTAPI).through(LoggingFilter.class);
@@ -269,13 +270,6 @@ public class ScmServletModule extends ServletModule
       Set<Class<? extends RepositoryHandler>> repositoryHandlerSet =
         new LinkedHashSet<Class<? extends RepositoryHandler>>();
 
-      // user handlers
-      Multibinder<UserHandler> userHandlerBinder =
-        Multibinder.newSetBinder(binder(), UserHandler.class);
-      Set<Class<? extends UserHandler>> userHandlerSet =
-        new LinkedHashSet<Class<? extends UserHandler>>();
-
-      userHandlerSet.add(XmlUserHandler.class);
 
       // security stuff
       Class<? extends EncryptionHandler> encryptionHandler =
@@ -292,13 +286,6 @@ public class ScmServletModule extends ServletModule
           repositoryHandlerSet.addAll(pluginRepositoryHandlers);
         }
 
-        Collection<Class<? extends UserHandler>> pluginUserHandlers =
-          plugin.getUserHandlers();
-
-        if (Util.isNotEmpty(pluginUserHandlers))
-        {
-          userHandlerSet.addAll(pluginUserHandlers);
-        }
 
         SecurityConfig securityConfig = plugin.getSecurityConfig();
 
@@ -325,7 +312,6 @@ public class ScmServletModule extends ServletModule
       bind(EncryptionHandler.class).to(encryptionHandler);
       bind(Authenticator.class).to(authenticator);
       bindRepositoryHandlers(repositoryHandlerBinder, repositoryHandlerSet);
-      bindUserHandlers(userHandlerBinder, userHandlerSet);
     }
   }
 

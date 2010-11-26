@@ -36,7 +36,6 @@ package sonia.scm.web.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.RepositoryHandler;
-import sonia.scm.user.UserHandler;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -65,7 +64,6 @@ public class SCMPlugin
   public SCMPlugin()
   {
     repositoryHandlers = new HashSet<Class<? extends RepositoryHandler>>();
-    userHandlers = new HashSet<Class<? extends UserHandler>>();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -90,17 +88,6 @@ public class SCMPlugin
   public SecurityConfig getSecurityConfig()
   {
     return securityConfig;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Set<Class<? extends UserHandler>> getUserHandlers()
-  {
-    return userHandlers;
   }
 
   /**
@@ -143,17 +130,6 @@ public class SCMPlugin
    * Method description
    *
    *
-   * @param userHandlers
-   */
-  public void setUserHandlers(Set<Class<? extends UserHandler>> userHandlers)
-  {
-    this.userHandlers = userHandlers;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param webPlugin
    */
   public void setWebPlugin(Class<? extends ScmWebPlugin> webPlugin)
@@ -171,11 +147,6 @@ public class SCMPlugin
   /** Field description */
   @XmlElement(name = "security")
   private SecurityConfig securityConfig;
-
-  /** Field description */
-  @XmlElementWrapper(name = "user-handlers")
-  @XmlElement(name = "user-handler")
-  private Set<Class<? extends UserHandler>> userHandlers;
 
   /** Field description */
   @XmlElement(name = "web-plugin")

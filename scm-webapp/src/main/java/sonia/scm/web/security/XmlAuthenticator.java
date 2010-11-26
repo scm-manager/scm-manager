@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
-import sonia.scm.user.xml.XmlUserHandler;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -52,6 +51,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.user.UserManager;
 
 /**
  *
@@ -86,7 +86,7 @@ public class XmlAuthenticator implements Authenticator
                            HttpServletResponse response, String username,
                            String password)
   {
-    User user = userHandler.get(username);
+    User user = userManager.get(username);
 
     if (user != null)
     {
@@ -153,5 +153,5 @@ public class XmlAuthenticator implements Authenticator
 
   /** Field description */
   @Inject
-  private XmlUserHandler userHandler;
+  private UserManager userManager;
 }

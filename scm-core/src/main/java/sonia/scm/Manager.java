@@ -81,23 +81,4 @@ public interface Manager<T extends TypedObject, E extends Exception>
    * @return
    */
   public Collection<T> getAll();
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param <H>
-   *
-   * @return
-   */
-  public <H extends Handler<T, E>> H getHandler(String type);
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<Type> getTypes();
 }

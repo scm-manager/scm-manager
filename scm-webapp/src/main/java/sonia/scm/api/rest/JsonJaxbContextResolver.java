@@ -72,7 +72,7 @@ public class JsonJaxbContextResolver implements ContextResolver<JAXBContext>
     this.context = new JSONJAXBContext(
         JSONConfiguration.mapped().rootUnwrapping(true).arrays(
           "member", "groups", "permissions", "repositories",
-          "repositoryTypes").nonStrings(
+          "repositoryTypes", "users").nonStrings(
             "readable", "writeable", "groupPermission",
             "admin").build(), types.toArray(new Class[0]));
   }

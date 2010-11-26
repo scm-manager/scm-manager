@@ -43,17 +43,4 @@ import sonia.scm.Manager;
  * @author Sebastian Sdorra
  */
 public interface UserManager
-        extends Manager<User, Exception>, ListenerSupport<UserListener>
-{
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
-  @Override
-  public UserHandler getHandler(String type);
-}
+        extends Manager<User, Exception>, ListenerSupport<UserListener> {}

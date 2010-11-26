@@ -33,26 +33,63 @@
 
 package sonia.scm.user;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.HandlerEvent;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public class UserHandlerNotFoundException extends UserException
+public abstract class AbstractUserManager implements UserManager
 {
 
-  /** Field description */
-  private static final long serialVersionUID = -4704703054646330523L;
-
-  //~--- constructors ---------------------------------------------------------
+  /**
+   * Method description
+   *
+   *
+   * @param listener
+   */
+  @Override
+  public void addListener(UserListener listener)
+  {
+    listenerSet.add(listener);
+  }
 
   /**
-   * Constructs ...
+   * Method description
    *
    *
-   * @param message
+   * @param listener
    */
-  public UserHandlerNotFoundException(String message)
+  @Override
+  public void removeListener(UserListener listener)
   {
-    super(message);
+    listenerSet.remove(listener);
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param event
+   */
+  protected void fireEvent(User user, HandlerEvent event)
+  {
+    for (UserListener listener : listenerSet)
+    {
+      listener.onEvent(user, event);
+    }
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Set<UserListener> listenerSet = new HashSet<UserListener>();
 }

@@ -36,14 +36,14 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.ListenerSupport;
-import sonia.scm.Manager;
+import sonia.scm.TypeManager;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 public interface RepositoryManager
-        extends Manager<Repository, RepositoryException>,
+        extends TypeManager<Repository, RepositoryException>,
                 ListenerSupport<RepositoryListener>
 {
 

@@ -41,12 +41,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
-import sonia.scm.Type;
+import sonia.scm.user.AbstractUserManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserAllreadyExistException;
 import sonia.scm.user.UserException;
-import sonia.scm.user.UserHandler;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -64,31 +64,22 @@ import javax.xml.bind.JAXB;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class XmlUserHandler implements UserHandler
+public class XmlUserManager extends AbstractUserManager
 {
 
   /** Field description */
   public static final String ADMIN_PATH = "/sonia/scm/config/admin-account.xml";
 
   /** Field description */
-  public static final String FILE_EXTENSION = ".xml";
-
-  /** Field description */
-  public static final String TYPE_DISPLAYNAME = "XML";
-
-  /** Field description */
-  public static final String TYPE_NAME = "xml";
-
-  /** Field description */
-  public static final Type type = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
-
-  /** Field description */
   public static final String DATABASEFILE =
     "config".concat(File.separator).concat("users.xml");
 
-  /** the logger for XmlUserHandler */
+  /** Field description */
+  public static final String TYPE = "xml";
+
+  /** the logger for XmlUserManager */
   private static final Logger logger =
-    LoggerFactory.getLogger(XmlUserHandler.class);
+    LoggerFactory.getLogger(XmlUserManager.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -122,9 +113,14 @@ public class XmlUserHandler implements UserHandler
       throw new UserAllreadyExistException();
     }
 
-    user.setType(TYPE_NAME);
+    String type = user.getType();
 
-    synchronized (XmlUserHandler.class)
+    if (Util.isEmpty(type))
+    {
+      user.setType(TYPE);
+    }
+
+    synchronized (XmlUserManager.class)
     {
       userDB.add(user.clone());
       storeDB();
@@ -147,7 +143,7 @@ public class XmlUserHandler implements UserHandler
 
     if (userDB.contains(name))
     {
-      synchronized (XmlUserHandler.class)
+      synchronized (XmlUserManager.class)
       {
         userDB.remove(name);
         storeDB();
@@ -201,9 +197,7 @@ public class XmlUserHandler implements UserHandler
 
     if (userDB.contains(name))
     {
-      user.setType(TYPE_NAME);
-
-      synchronized (XmlUserHandler.class)
+      synchronized (XmlUserManager.class)
       {
         userDB.remove(name);
         userDB.add(user.clone());
@@ -225,6 +219,7 @@ public class XmlUserHandler implements UserHandler
    * @throws IOException
    * @throws UserException
    */
+  @Override
   public void refresh(User user) throws UserException, IOException
   {
     User fresh = userDB.get(user.getName());
@@ -247,6 +242,7 @@ public class XmlUserHandler implements UserHandler
    *
    * @return
    */
+  @Override
   public User get(String id)
   {
     User user = userDB.get(id);
@@ -265,6 +261,7 @@ public class XmlUserHandler implements UserHandler
    *
    * @return
    */
+  @Override
   public Collection<User> getAll()
   {
     LinkedList<User> users = new LinkedList<User>();
@@ -277,30 +274,6 @@ public class XmlUserHandler implements UserHandler
     return users;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Type getType()
-  {
-    return type;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public boolean isConfigured()
-  {
-    return (userDBFile != null) && userDBFile.exists();
-  }
-
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -309,7 +282,7 @@ public class XmlUserHandler implements UserHandler
    */
   private void createAdminAccount()
   {
-    InputStream input = XmlUserHandler.class.getResourceAsStream(ADMIN_PATH);
+    InputStream input = XmlUserManager.class.getResourceAsStream(ADMIN_PATH);
 
     try
     {
