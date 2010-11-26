@@ -55,12 +55,12 @@ public class PermissionUtil
    *
    * @param repository
    * @param user
-   * @param write
+   * @param pt
    */
   public static void assertPermission(Repository repository, User user,
-          boolean write)
+          PermissionType pt)
   {
-    if (!hasPermission(repository, user, write))
+    if (!hasPermission(repository, user, pt))
     {
       throw new IllegalStateException("action denied");
     }
@@ -74,36 +74,61 @@ public class PermissionUtil
    *
    * @param repository
    * @param user
-   * @param write
+   * @param pt
    *
    * @return
    */
   public static boolean hasPermission(Repository repository, User user,
-          boolean write)
+          PermissionType pt)
   {
     String username = user.getName();
 
     AssertUtil.assertIsNotEmpty(username);
 
     boolean result = false;
-    List<Permission> permissions = repository.getPermissions();
 
-    if (permissions != null)
+    if (user.isAdmin())
     {
-      for (Permission p : permissions)
+      result = true;
+    }
+    else
+    {
+      List<Permission> permissions = repository.getPermissions();
+
+      if (permissions != null)
       {
-        if (!p.isGroupPermission())
-        {
-          String name = p.getName();
+        result = hasPermission(permissions, username, pt);
+      }
+    }
 
-          if ((name != null) && name.equalsIgnoreCase(username)
-              && (!write || p.isWriteable()))
-          {
-            result = true;
+    return result;
+  }
 
-            break;
-          }
-        }
+  /**
+   * Method description
+   *
+   *
+   * @param permissions
+   * @param username
+   * @param pt
+   *
+   * @return
+   */
+  private static boolean hasPermission(List<Permission> permissions,
+          String username, PermissionType pt)
+  {
+    boolean result = false;
+
+    for (Permission p : permissions)
+    {
+      String name = p.getName();
+
+      if ((name != null) && name.equalsIgnoreCase(username)
+          && (p.getType().getValue() >= pt.getValue()))
+      {
+        result = true;
+
+        break;
       }
     }
 

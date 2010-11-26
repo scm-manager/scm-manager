@@ -59,9 +59,14 @@ public class PermissionUtilTest
   public PermissionUtilTest()
   {
     repository = new Repository();
+    admams.setAdmin(true);
 
-    Permission[] permissions = new Permission[] { new Permission("dent", false),
-            new Permission("perfect", true) };
+    Permission[] permissions = new Permission[] {
+                                 new Permission("dent", PermissionType.READ),
+                                 new Permission("perfect",
+                                   PermissionType.WRITE),
+                                 new Permission("marvin",
+                                   PermissionType.OWNER) };
 
     repository.setPermissions(Arrays.asList(permissions));
   }
@@ -75,7 +80,7 @@ public class PermissionUtilTest
   @Test(expected = IllegalStateException.class)
   public void assertFailedPermissionTest()
   {
-    PermissionUtil.assertPermission(repository, dent, true);
+    PermissionUtil.assertPermission(repository, dent, PermissionType.WRITE);
   }
 
   /**
@@ -85,9 +90,15 @@ public class PermissionUtilTest
   @Test
   public void assertPermissionTest()
   {
-    PermissionUtil.hasPermission(repository, dent, false);
-    PermissionUtil.hasPermission(repository, perfect, false);
-    PermissionUtil.hasPermission(repository, perfect, true);
+    PermissionUtil.assertPermission(repository, dent, PermissionType.READ);
+    PermissionUtil.assertPermission(repository, perfect, PermissionType.READ);
+    PermissionUtil.assertPermission(repository, perfect, PermissionType.WRITE);
+    PermissionUtil.assertPermission(repository, marvin, PermissionType.READ);
+    PermissionUtil.assertPermission(repository, marvin, PermissionType.WRITE);
+    PermissionUtil.assertPermission(repository, marvin, PermissionType.OWNER);
+    PermissionUtil.assertPermission(repository, admams, PermissionType.READ);
+    PermissionUtil.assertPermission(repository, admams, PermissionType.WRITE);
+    PermissionUtil.assertPermission(repository, admams, PermissionType.OWNER);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -99,12 +110,30 @@ public class PermissionUtilTest
   @Test
   public void hasPermissionTest()
   {
-    assertTrue(PermissionUtil.hasPermission(repository, dent, false));
-    assertTrue(PermissionUtil.hasPermission(repository, perfect, false));
-    assertTrue(PermissionUtil.hasPermission(repository, perfect, true));
-    assertFalse(PermissionUtil.hasPermission(repository, dent, true));
-    assertFalse(PermissionUtil.hasPermission(repository, slarti, true));
-    assertFalse(PermissionUtil.hasPermission(repository, slarti, false));
+    assertTrue(PermissionUtil.hasPermission(repository, dent,
+            PermissionType.READ));
+    assertTrue(PermissionUtil.hasPermission(repository, perfect,
+            PermissionType.READ));
+    assertTrue(PermissionUtil.hasPermission(repository, perfect,
+            PermissionType.WRITE));
+    assertFalse(PermissionUtil.hasPermission(repository, dent,
+            PermissionType.WRITE));
+    assertFalse(PermissionUtil.hasPermission(repository, slarti,
+            PermissionType.WRITE));
+    assertFalse(PermissionUtil.hasPermission(repository, slarti,
+            PermissionType.READ));
+    assertTrue(PermissionUtil.hasPermission(repository, marvin,
+            PermissionType.READ));
+    assertTrue(PermissionUtil.hasPermission(repository, marvin,
+            PermissionType.WRITE));
+    assertTrue(PermissionUtil.hasPermission(repository, marvin,
+            PermissionType.OWNER));
+    assertTrue(PermissionUtil.hasPermission(repository, admams,
+            PermissionType.READ));
+    assertTrue(PermissionUtil.hasPermission(repository, admams,
+            PermissionType.WRITE));
+    assertTrue(PermissionUtil.hasPermission(repository, admams,
+            PermissionType.OWNER));
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -122,5 +151,13 @@ public class PermissionUtilTest
 
   /** Field description */
   private User slarti = new User("slarti", "Slartibartfaß",
-                                 "Slartibartfass@hitchhiker.com");
+                                 "slartibartfass@hitchhiker.com");
+
+  /** Field description */
+  private User marvin = new User("marvin", "Marvin",
+                                 "paranoid.android@hitchhiker.com");
+
+  /** Field description */
+  private User admams = new User("adams", "Douglas Adams",
+                                 "douglas.adams@hitchhiker.com");
 }

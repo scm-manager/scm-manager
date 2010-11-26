@@ -40,6 +40,7 @@ import com.google.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
@@ -134,7 +135,9 @@ public abstract class PermissionFilter extends HttpFilter
         boolean writeRequest = isWriteRequest(request);
 
         if (PermissionUtil.hasPermission(repository, securityContext.getUser(),
-                                         writeRequest))
+                                         writeRequest
+                                         ? PermissionType.WRITE
+                                         : PermissionType.READ))
         {
           chain.doFilter(request, response);
         }

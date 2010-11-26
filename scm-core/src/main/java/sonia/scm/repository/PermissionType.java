@@ -33,60 +33,23 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "permissions")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class Permission implements Serializable
+public enum PermissionType
 {
-
-  /** Field description */
-  private static final long serialVersionUID = -2915175031430884040L;
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public Permission() {}
+  READ(0), WRITE(10), OWNER(100);
 
   /**
    * Constructs ...
    *
    *
-   * @param name
+   * @param value
    */
-  public Permission(String name)
+  private PermissionType(int value)
   {
-    this.name = name;
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param name
-   * @param type
-   */
-  public Permission(String name, PermissionType type)
-  {
-    this.name = name;
-    this.type = type;
+    this.value = value;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -97,51 +60,13 @@ public class Permission implements Serializable
    *
    * @return
    */
-  public String getName()
+  public int getValue()
   {
-    return name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public PermissionType getType()
-  {
-    return type;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   */
-  public void setName(String name)
-  {
-    this.name = name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   */
-  public void setType(PermissionType type)
-  {
-    this.type = type;
+    return value;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String name;
-
-  /** Field description */
-  private PermissionType type = PermissionType.READ;
+  private int value;
 }
