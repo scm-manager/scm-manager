@@ -39,15 +39,17 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.eclipse.jgit.http.server.GitServlet;
+import org.eclipse.jgit.http.server.resolver.RepositoryResolver;
+import org.eclipse.jgit.lib.Repository;
 
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -62,17 +64,15 @@ public class ScmGitServlet extends GitServlet
 {
 
   /** Field description */
-  public static final String MIMETYPE_HTML = "text/html";
-
-  /** Field description */
   public static final String REGEX_GITHTTPBACKEND =
     "(?x)^/git/(.*/(HEAD|info/refs|objects/(info/[^/]+|[0-9a-f]{2}/[0-9a-f]{38}|pack/pack-[0-9a-f]{40}\\.(pack|idx))|git-(upload|receive)-pack))$";
 
   /** Field description */
-  public static final String RESOURCE_GITINDEX = "/sonia/scm/git.index.html";
+  private static final long serialVersionUID = -7712897339207470674L;
 
   /** Field description */
-  private static final long serialVersionUID = -7712897339207470674L;
+  private static final Pattern REGEX_REPOSITORYNAME =
+    Pattern.compile("/git/([^/]+)/?.*");
 
   //~--- constructors ---------------------------------------------------------
 
@@ -85,7 +85,8 @@ public class ScmGitServlet extends GitServlet
   @Inject
   public ScmGitServlet(GitRepositoryHandler handler)
   {
-    setRepositoryResolver(new GitRepositoryResolver(handler.getConfig()));
+    resolver = new GitRepositoryResolver(handler.getConfig());
+    setRepositoryResolver(resolver);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -113,7 +114,7 @@ public class ScmGitServlet extends GitServlet
     }
     else
     {
-      printGitInformation(response);
+      printGitInformation(request, response);
     }
   }
 
@@ -121,29 +122,49 @@ public class ScmGitServlet extends GitServlet
    * Method description
    *
    *
+   *
+   * @param request
    * @param response
    *
    * @throws IOException
    * @throws ServletException
    */
-  private void printGitInformation(HttpServletResponse response)
+  private void printGitInformation(HttpServletRequest request,
+                                   HttpServletResponse response)
           throws ServletException, IOException
   {
-    response.setContentType(MIMETYPE_HTML);
-
-    InputStream input = null;
-    OutputStream output = null;
+    String uri = getRelativePath(request);
+    Matcher m = REGEX_REPOSITORYNAME.matcher(uri);
+    String name = null;
+    Repository repository = null;
 
     try
     {
-      input = ScmGitServlet.class.getResourceAsStream(RESOURCE_GITINDEX);
-      output = response.getOutputStream();
-      IOUtil.copy(input, output);
+      if (m.matches())
+      {
+        name = m.group(1);
+        repository = resolver.open(request, name);
+      }
+
+      if (repository != null)
+      {
+        new GitRepositoryViewer().handleRequest(response, repository, name);
+      }
+      else
+      {
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+      }
+    }
+    catch (Exception ex)
+    {
+      throw new ServletException(ex);
     }
     finally
     {
-      IOUtil.close(input);
-      IOUtil.close(output);
+      if (repository != null)
+      {
+        repository.close();
+      }
     }
   }
 
@@ -161,4 +182,9 @@ public class ScmGitServlet extends GitServlet
   {
     return request.getRequestURI().substring(request.getContextPath().length());
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private RepositoryResolver resolver;
 }

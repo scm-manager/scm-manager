@@ -33,16 +33,15 @@
 
 <html>
   <head>
-    <title>SCM :: Manager - Git Repository</title>
+    <title>SCM :: Manager - Git Repository - ${name}</title>
     <style type="text/css">
       body {
         background-color: #ffffff;
-        font-size: 12px;
-        font-family: Verdana, "Verdana CE",  Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
-        color: #000000;
         margin: 10px;
+        color: #202020;
+        font-family: Verdana,Helvetica,Arial,sans-serif;
+        font-size: 75%;
       }
-
       h1, h2, h3, h4, h5 {
         font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
         font-weight: bold;
@@ -50,37 +49,61 @@
         padding: 0px;
         color: #D20005;
       }
-
       h1 {
-        font-size:  18px;
+        font-size: 18px;
         border-bottom: 1px solid #AFAFAF;
       }
-
       h2 {
-        font-size:  16px;
-      }
-
-      h3 {
         font-size:  14px;
+        border-bottom: 1px solid #AFAFAF;
       }
-
       a:link, a:visited {
         color: #045491;
-        font-weight : bold;
+        font-weight: bold;
         text-decoration: none;
-      }
-      
+      }      
       a:link:hover, a:visited:hover  {
         color: #045491;
-        font-weight : bold;
-        text-decoration : underline;
+        font-weight: bold;
+        text-decoration: underline;
+      }
+      table {
+        border: 0 none;
+        border-collapse: collapse;
+        font-size: 100%;
+        margin: 20px 0;
+        padding: 20px;
+        width: 100%;
+      }
+      td, th {
+        padding: 3px;
+        vertical-align: top;
+        border: 1px solid #CCCCCC;
+        text-align: left;
+      }
+      .small {
+        width: 20%;
       }
     </style>
   </head>
   <body>
 
-    <h1>SCM :: Manager - Git Repository</h1>
-    
+    <h1>SCM :: Manager - Git Repository - ${name}</h1>
+
+    <table>
+      <thead>
+        <tr>
+          <th class="small">Time</th>
+          <th class="small">Author</th>
+          <th>Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${commits}
+      </tbody>
+    </table>
+
+    <h2>Git Informations</h2>
     <ul>
       <li><a href="http://git-scm.com/" target="_blank">Git Homepage</a></li>
       <li><a href="http://www.kernel.org/pub/software/scm/git/docs/gittutorial.html" target="_blank">Git Tutorial</a></li>

@@ -123,7 +123,7 @@ public class RegexResourceProcessor extends AbstractResourceProcessor
           result = new StringBuffer();
         }
 
-        m.appendReplacement(result, value);
+        m.appendReplacement(result, Matcher.quoteReplacement(value));
       }
     }
 
