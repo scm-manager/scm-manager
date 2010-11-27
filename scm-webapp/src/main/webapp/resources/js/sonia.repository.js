@@ -180,37 +180,151 @@ Ext.reg('repositoryGrid', Sonia.repository.Grid);
 // RepositoryFormPanel
 Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
+  permissionStore: null,
+
   initComponent: function(){
 
     update = this.item != null;
 
-    var config = {
-      items:[
-        {id: 'repositoryName', fieldLabel: 'Name', name: 'name', readOnly: update, allowBlank: false},
-        {
-         fieldLabel: 'Type',
-         name: 'type',
-         xtype: 'combo',
-         readOnly: update,
-         hiddenName : 'type',
-         typeAhead: true,
-         triggerAction: 'all',
-         lazyRender: true,
-         mode: 'local',
-         editable: false,
-         store: repositoryTypeStore,
-         valueField: 'name',
-         displayField: 'displayName',
-         allowBlank: false
-        },
+    this.permissionStore = new Ext.data.JsonStore({
+      root: 'permissions',
+      fields: [ 'name', 'type' ],
+      sortInfo: {
+        field: 'name'
+      }
+    });
 
-        {fieldLabel: 'Contact', name: 'contact', vtype: 'email'},
-        {fieldLabel: 'Description', name: 'description', xtype: 'textarea'}
+    var permissionColModel = new Ext.grid.ColumnModel({
+      columns: [{
+          id: 'name',
+          header: 'Name',
+          dataIndex: 'name',
+          editor: new Ext.form.TextField({
+            allowBlank: false
+          })
+        },{
+          id: 'type',
+          header: 'Type',
+          dataIndex: 'type',
+          editor: new Ext.form.ComboBox({
+            valueField: 'type',
+            displayField: 'type',
+            typeAhead: false,
+            editable: false,
+            triggerAction: 'all',
+            mode: 'local',
+            store: new Ext.data.SimpleStore({
+              fields: ['type'],
+              data: [
+                ['READ'],
+                ['WRITE'],
+                ['OWNER']
+              ]
+            })
+          })
+        }
       ]
+    });
+
+    if ( update ){
+      this.permissionStore.loadData( this.item );
+    }
+
+    var selectionModel = new Ext.grid.RowSelectionModel({
+      singleSelect: true
+    });
+
+    var config = {
+      items:[{
+        xtype : 'fieldset',
+        checkboxToggle : false,
+        title : 'Settings',
+        collapsible : true,
+        autoHeight : true,
+        autoWidth: true,
+        autoScroll: true,
+        defaults: {width: 240},
+        defaultType: 'textfield',
+        buttonAlign: 'center',
+        items: [
+          {id: 'repositoryName', fieldLabel: 'Name', name: 'name', readOnly: update, allowBlank: false},
+          {
+           fieldLabel: 'Type',
+           name: 'type',
+           xtype: 'combo',
+           readOnly: update,
+           hiddenName : 'type',
+           typeAhead: true,
+           triggerAction: 'all',
+           lazyRender: true,
+           mode: 'local',
+           editable: false,
+           store: repositoryTypeStore,
+           valueField: 'name',
+           displayField: 'displayName',
+           allowBlank: false
+          },
+          {fieldLabel: 'Contact', name: 'contact', vtype: 'email'},
+          {fieldLabel: 'Description', name: 'description', xtype: 'textarea'}
+        ]
+      },{
+        id: 'permissionGrid',
+        xtype: 'editorgrid',
+        title: 'Permissions',
+        clicksToEdit: 1,
+        frame: true,
+        width: '100%',
+        autoHeight: true,
+        autoScroll: false,
+        colModel: permissionColModel,
+        sm: selectionModel,
+        store: this.permissionStore,
+        viewConfig: {
+          forceFit:true
+        },
+        tbar: [{
+          text: 'Add',
+          scope: this,
+          handler : function(){
+            var Permission = this.permissionStore.recordType;
+            var p = new Permission({
+              name: 'username',
+              type: 'READ'
+            });
+            var grid = Ext.getCmp('permissionGrid');
+            grid.stopEditing();
+            this.permissionStore.insert(0, p);
+            grid.startEditing(0, 0);
+          }
+        },{
+          text: 'Remove',
+          scope: this,
+          handler: function(){
+            var grid = Ext.getCmp('permissionGrid');
+            var selected = grid.getSelectionModel().getSelected();
+            if ( selected ){
+              this.permissionStore.remove(selected);
+            }
+          }
+        }]
+
+      }]
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.FormPanel.superclass.initComponent.apply(this, arguments);
+  },
+
+  updatePermissions: function(item){
+    var permissions = [];
+    this.permissionStore.data.each(function(record){
+      permissions.push( record.data );
+    })
+    item.permissions = permissions;
+  },
+
+  clearModifications: function(){
+    // todo
   },
 
   update: function(item){
@@ -221,6 +335,9 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     var url = restUrl + 'repositories/' + item.id + '.json';
     var el = this.el;
     var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
+
+    this.updatePermissions(item);
+
     Ext.Ajax.request({
       url: url,
       jsonData: item,
@@ -230,6 +347,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         if ( debug ){
           console.debug('update success');
         }
+        this.clearModifications();
         clearTimeout(tid);
         el.unmask();
         this.execCallback(this.onUpdate, item);
@@ -249,6 +367,9 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     var url = restUrl + 'repositories.json';
     var el = this.el;
     var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
+    
+    this.updatePermissions(item);
+
     Ext.Ajax.request({
       url: url,
       jsonData: item,
@@ -258,6 +379,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         if ( debug ){
           console.debug('create success');
         }
+        this.permissionStore.removeAll();
         this.getForm().reset();
         clearTimeout(tid);
         el.unmask();
