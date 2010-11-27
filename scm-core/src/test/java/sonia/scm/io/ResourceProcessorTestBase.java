@@ -53,13 +53,16 @@ public abstract class ResourceProcessorTestBase
 {
 
   /** Field description */
-  public static final String TEXT_1 = "Hello Tricia McMillan";
+  public static final String TEXT_1 = "Hello Tricia McMillan!";
 
   /** Field description */
-  public static final String TEXT_2 = "Hello ${person}";
+  public static final String TEXT_2 = "Hello ${person}!";
 
   /** Field description */
-  public static final String TEXT_3 = "Hello ${person} and ${secondPerson}";
+  public static final String TEXT_3 = "Hello ${person} and ${secondPerson}!";
+
+  /** Field description */
+  public static final String TEXT_4 = "<h1>Hello ${person}</h1>";
 
   /** Field description */
   public static final String VAR_PERSON = "person";
@@ -82,6 +85,25 @@ public abstract class ResourceProcessorTestBase
    * @return
    */
   protected abstract ResourceProcessor createNewResourceProcessor();
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testHtml() throws IOException
+  {
+    ResourceProcessor processor = createNewResourceProcessor();
+
+    processor.addVariable(VAR_PERSON, VAR_PERSON_VALUE);
+
+    StringWriter output = new StringWriter();
+
+    processor.process(new StringReader(TEXT_4), output);
+    assertEquals("<h1>Hello Tricia McMillan</h1>", output.toString());
+  }
 
   /**
    * Method description
@@ -135,7 +157,7 @@ public abstract class ResourceProcessorTestBase
     StringWriter output = new StringWriter();
 
     processor.process(new StringReader(TEXT_3), output);
-    assertEquals("Hello Tricia McMillan and Zaphod Beeblebrox",
+    assertEquals("Hello Tricia McMillan and Zaphod Beeblebrox!",
                  output.toString());
   }
 

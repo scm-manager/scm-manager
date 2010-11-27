@@ -127,8 +127,12 @@ public class RegexResourceProcessor extends AbstractResourceProcessor
       }
     }
 
-    return (result != null)
-           ? result.toString()
-           : line;
+    if (result != null)
+    {
+      m.appendTail(result);
+      line = result.toString();
+    }
+
+    return line;
   }
 }
