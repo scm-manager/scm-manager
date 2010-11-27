@@ -257,11 +257,14 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
                   repository.getType());
     }
 
-    assertIsOwner(repository);
     AssertUtil.assertIsValid(repository);
 
-    if (repositoryDB.contains(repository))
+    Repository notModifiedRepository = repositoryDB.get(repository.getType(),
+                                         repository.getName());
+
+    if (notModifiedRepository != null)
     {
+      assertIsOwner(notModifiedRepository);
       getHandler(repository).modify(repository);
       repository.setLastModified(System.currentTimeMillis());
 
