@@ -393,6 +393,18 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         alert( 'failure' );
       }
     });
+  },
+
+  reset: function(){
+    if ( debug ){
+      console.debug( 'reset form' );
+    }
+    this.getForm().reset();
+    if ( this.item != null ){
+      this.permissionStore.loadData( this.item );
+    } else {
+      this.permissionStore.removeAll();
+    }
   }
 
 });
