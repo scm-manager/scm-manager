@@ -35,17 +35,21 @@ package sonia.scm.user.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.security.SecurityContext;
 import sonia.scm.user.AbstractUserManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserAllreadyExistException;
 import sonia.scm.user.UserException;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -81,6 +85,20 @@ public class XmlUserManager extends AbstractUserManager
   private static final Logger logger =
     LoggerFactory.getLogger(XmlUserManager.class);
 
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param scurityContextProvider
+   */
+  @Inject
+  public XmlUserManager(Provider<SecurityContext> scurityContextProvider)
+  {
+    this.scurityContextProvider = scurityContextProvider;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -108,6 +126,8 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void create(User user) throws UserException, IOException
   {
+    SecurityUtil.assertIsAdmin(scurityContextProvider);
+
     if (userDB.contains(user.getName()))
     {
       throw new UserAllreadyExistException();
@@ -139,6 +159,8 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void delete(User user) throws UserException, IOException
   {
+    SecurityUtil.assertIsAdmin(scurityContextProvider);
+
     String name = user.getName();
 
     if (userDB.contains(name))
@@ -193,6 +215,8 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void modify(User user) throws UserException, IOException
   {
+    SecurityUtil.assertIsAdmin(scurityContextProvider);
+
     String name = user.getName();
 
     if (userDB.contains(name))
@@ -222,6 +246,8 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void refresh(User user) throws UserException, IOException
   {
+    SecurityUtil.assertIsAdmin(scurityContextProvider);
+
     User fresh = userDB.get(user.getName());
 
     if (fresh == null)
@@ -245,6 +271,8 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public User get(String id)
   {
+
+    // SecurityUtil.assertIsAdmin(scurityContextProvider);
     User user = userDB.get(id);
 
     if (user != null)
@@ -264,6 +292,8 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public Collection<User> getAll()
   {
+    SecurityUtil.assertIsAdmin(scurityContextProvider);
+
     LinkedList<User> users = new LinkedList<User>();
 
     for (User user : userDB.values())
@@ -321,6 +351,9 @@ public class XmlUserManager extends AbstractUserManager
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Provider<SecurityContext> scurityContextProvider;
 
   /** Field description */
   private XmlUserDatabase userDB;

@@ -31,45 +31,54 @@
 
 
 
-package sonia.scm.user;
+package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Provider;
 
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.security.SecurityContext;
-import sonia.scm.user.xml.XmlUserManager;
-
-import static org.mockito.Mockito.*;
+import sonia.scm.user.User;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class XmlUserManagerTest extends UserManagerTestBase
+public class SecurityUtil
 {
 
   /**
    * Method description
    *
    *
-   * @return
+   * @param contextProvider
    */
-  @Override
-  public UserManager createUserHandler()
+  public static void assertIsAdmin(Provider<SecurityContext> contextProvider)
   {
-    User admin = new User("scmadmin", "SCM Admin", "scmadmin@scm.org");
+    assertIsAdmin(contextProvider.get());
+  }
 
-    admin.setAdmin(true);
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   */
+  public static void assertIsAdmin(SecurityContext context)
+  {
+    AssertUtil.assertIsNotNull(context);
 
-    SecurityContext context = mock(SecurityContext.class);
+    User user = context.getUser();
 
-    when(context.getUser()).thenReturn(admin);
+    if (user == null)
+    {
+      throw new ScmSecurityException("user is not authenticated");
+    }
 
-    Provider<SecurityContext> scp = mock(Provider.class);
-
-    when(scp.get()).thenReturn(context);
-
-    return new XmlUserManager(scp);
+    if (!user.isAdmin())
+    {
+      throw new ScmSecurityException("admin account is required");
+    }
   }
 }

@@ -31,45 +31,57 @@
 
 
 
-package sonia.scm.user;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Provider;
-
-import sonia.scm.security.SecurityContext;
-import sonia.scm.user.xml.XmlUserManager;
-
-import static org.mockito.Mockito.*;
+package sonia.scm.security;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class XmlUserManagerTest extends UserManagerTestBase
+public class ScmSecurityException extends RuntimeException
 {
 
+  /** Field description */
+  private static final long serialVersionUID = 3166977667869197399L;
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
-   * Method description
+   * Constructs ...
    *
-   *
-   * @return
    */
-  @Override
-  public UserManager createUserHandler()
+  public ScmSecurityException() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   */
+  public ScmSecurityException(String message)
   {
-    User admin = new User("scmadmin", "SCM Admin", "scmadmin@scm.org");
+    super(message);
+  }
 
-    admin.setAdmin(true);
+  /**
+   * Constructs ...
+   *
+   *
+   * @param throwable
+   */
+  public ScmSecurityException(Throwable throwable)
+  {
+    super(throwable);
+  }
 
-    SecurityContext context = mock(SecurityContext.class);
-
-    when(context.getUser()).thenReturn(admin);
-
-    Provider<SecurityContext> scp = mock(Provider.class);
-
-    when(scp.get()).thenReturn(context);
-
-    return new XmlUserManager(scp);
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   * @param throwable
+   */
+  public ScmSecurityException(String message, Throwable throwable)
+  {
+    super(message, throwable);
   }
 }
