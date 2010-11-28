@@ -195,6 +195,9 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     });
 
     var permissionColModel = new Ext.grid.ColumnModel({
+      defaults: {
+        sortable: true
+      },
       columns: [{
           id: 'name',
           header: 'Name',
@@ -288,7 +291,6 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
           handler : function(){
             var Permission = this.permissionStore.recordType;
             var p = new Permission({
-              name: 'username',
               type: 'READ'
             });
             var grid = Ext.getCmp('permissionGrid');
