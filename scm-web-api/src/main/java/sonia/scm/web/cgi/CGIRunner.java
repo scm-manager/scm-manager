@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -118,7 +121,7 @@ public class CGIRunner
       len = 0;
     }
 
-    if ((pathTranslated == null) || (pathTranslated.length() == 0))
+    if (Util.isEmpty(pathTranslated))
     {
       pathTranslated = path;
     }
@@ -130,12 +133,7 @@ public class CGIRunner
     environment.set("CONTENT_LENGTH", Integer.toString(len));
     environment.set("CONTENT_TYPE", req.getContentType());
     environment.set("GATEWAY_INTERFACE", "CGI/1.1");
-
-    if ((pathInfo != null) && (pathInfo.length() > 0))
-    {
-      environment.set("PATH_INFO", pathInfo);
-    }
-
+    environment.set("PATH_INFO", pathInfo);
     environment.set("PATH_TRANSLATED", pathTranslated);
     environment.set("QUERY_STRING", req.getQueryString());
     environment.set("REMOTE_ADDR", req.getRemoteAddr());

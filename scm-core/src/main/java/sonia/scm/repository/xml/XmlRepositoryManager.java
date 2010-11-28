@@ -303,7 +303,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     Repository fresh = repositoryDB.get(repository.getType(),
                          repository.getName());
 
-    if (repository != null)
+    if (fresh != null)
     {
       repository.copyProperties(fresh);
     }

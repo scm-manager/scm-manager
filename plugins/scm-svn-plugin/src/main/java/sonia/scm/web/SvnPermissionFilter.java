@@ -39,10 +39,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.SvnRepositoryHandler;
-import sonia.scm.web.filter.PermissionFilter;
 import sonia.scm.web.filter.RegexPermissionFilter;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -79,8 +77,9 @@ public class SvnPermissionFilter extends RegexPermissionFilter
    * @param repositoryManager
    */
   @Inject
-  public SvnPermissionFilter(Provider<WebSecurityContext> securityContextProvider,
-                             RepositoryManager repositoryManager)
+  public SvnPermissionFilter(
+          Provider<WebSecurityContext> securityContextProvider,
+          RepositoryManager repositoryManager)
   {
     super(securityContextProvider, repositoryManager);
   }

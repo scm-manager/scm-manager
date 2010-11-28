@@ -33,10 +33,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.util.Util;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;

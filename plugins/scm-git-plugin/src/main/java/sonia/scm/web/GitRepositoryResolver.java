@@ -44,9 +44,6 @@ import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.util.FS;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.GitConfig;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -62,12 +59,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class GitRepositoryResolver implements RepositoryResolver
 {
-
-  /** the logger for GitRepositoryResolver */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitRepositoryResolver.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -171,15 +162,18 @@ public class GitRepositoryResolver implements RepositoryResolver
     }
     catch (RuntimeException e)
     {
-      repository.close();
-
       throw new RepositoryNotFoundException(repositoryName, e);
     }
     catch (IOException e)
     {
-      repository.close();
-
       throw new RepositoryNotFoundException(repositoryName, e);
+    }
+    finally
+    {
+      if (repository != null)
+      {
+        repository.close();
+      }
     }
 
     return repository;

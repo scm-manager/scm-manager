@@ -35,9 +35,6 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.io.INIConfiguration;
-import sonia.scm.io.INIConfigurationWriter;
-import sonia.scm.io.INISection;
 import sonia.scm.io.RegexResourceProcessor;
 import sonia.scm.io.ResourceProcessor;
 import sonia.scm.repository.HgConfig;
@@ -60,7 +57,6 @@ public class HgWebConfigWriter
 
   /** Field description */
   public static final String CGI_TEMPLATE = "/sonia/scm/hgweb.py";
-
 
   //~--- constructors ---------------------------------------------------------
 

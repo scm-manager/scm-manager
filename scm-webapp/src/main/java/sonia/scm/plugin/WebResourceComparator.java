@@ -39,14 +39,22 @@ import sonia.scm.web.plugin.WebResource;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import java.util.Comparator;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class WebResourceComparator implements Comparator<WebResource>
+public class WebResourceComparator
+        implements Comparator<WebResource>, Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -5916499507958881372L;
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

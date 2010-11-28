@@ -40,9 +40,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.web.filter.PermissionFilter;
 import sonia.scm.web.filter.RegexPermissionFilter;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -66,8 +64,9 @@ public class HgPermissionFilter extends RegexPermissionFilter
    * @param repositoryManager
    */
   @Inject
-  public HgPermissionFilter(Provider<WebSecurityContext> securityContextProvider,
-                            RepositoryManager repositoryManager)
+  public HgPermissionFilter(
+          Provider<WebSecurityContext> securityContextProvider,
+          RepositoryManager repositoryManager)
   {
     super(securityContextProvider, repositoryManager);
   }

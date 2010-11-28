@@ -220,12 +220,12 @@ public class RepositoryResource extends AbstractResource<Repository>
 
     String ctxPath = request.getContextPath();
 
-    url.append(ctxPath);
-
     if (ctxPath.endsWith("/"))
     {
       ctxPath = ctxPath.substring(0, ctxPath.length() - 1);
     }
+
+    url.append(ctxPath);
 
     RepositoryHandler handler =
       repositoryManager.getHandler(repository.getType());

@@ -41,9 +41,6 @@ import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.io.RegexResourceProcessor;
 import sonia.scm.io.ResourceProcessor;
 import sonia.scm.util.IOUtil;
