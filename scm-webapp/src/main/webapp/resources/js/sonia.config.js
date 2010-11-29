@@ -176,6 +176,9 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
         layoutConfig : {
           labelSeparator : ''
         },
+        defaults: {
+          width: 250
+        },
         listeners: {
           render: function(){
             if ( this.onLoad != null && Ext.isFunction( this.onLoad ) ){
