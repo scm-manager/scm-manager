@@ -6,7 +6,7 @@
   <groupId>sonia.scm</groupId>
   <artifactId>scm</artifactId>
   <packaging>pom</packaging>
-  <version>1.0-M2-SNAPSHOT</version>
+  <version>1.0-M2</version>
   <name>scm</name>
 
   <url>http://bitbucket.org/sdorra/scm-manager</url>

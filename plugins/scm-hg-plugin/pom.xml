@@ -7,12 +7,12 @@
   <parent>
     <groupId>sonia.scm.plugins</groupId>
     <artifactId>scm-plugins</artifactId>
-    <version>1.0-M2-SNAPSHOT</version>
+    <version>1.0-M2</version>
   </parent>
 
   <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-hg-plugin</artifactId>
-  <version>1.0-M2-SNAPSHOT</version>
+  <version>1.0-M2</version>
   <name>scm-hg-plugin</name>
 
   <dependencies>
@@ -27,7 +27,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-web-api</artifactId>
-      <version>1.0-M2-SNAPSHOT</version>
+      <version>1.0-M2</version>
     </dependency>
 
   </dependencies>
