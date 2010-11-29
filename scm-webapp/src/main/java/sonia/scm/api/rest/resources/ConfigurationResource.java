@@ -36,11 +36,14 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.SecurityUtil;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -72,11 +75,15 @@ public class ConfigurationResource
    *
    *
    * @param configuration
+   * @param securityContextProvider
    */
   @Inject
-  public ConfigurationResource(ScmConfiguration configuration)
+  public ConfigurationResource(
+          ScmConfiguration configuration,
+          Provider<WebSecurityContext> securityContextProvider)
   {
     this.configuration = configuration;
+    this.securityContextProvider = securityContextProvider;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -110,6 +117,7 @@ public class ConfigurationResource
   public Response setConfig(@Context UriInfo uriInfo,
                             ScmConfiguration newConfig)
   {
+    SecurityUtil.assertIsAdmin(securityContextProvider);
     configuration.load(newConfig);
 
     synchronized (ScmConfiguration.class)
@@ -132,4 +140,7 @@ public class ConfigurationResource
 
   /** Field description */
   public ScmConfiguration configuration;
+
+  /** Field description */
+  private Provider<WebSecurityContext> securityContextProvider;
 }

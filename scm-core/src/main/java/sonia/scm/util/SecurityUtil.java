@@ -54,7 +54,8 @@ public class SecurityUtil
    *
    * @param contextProvider
    */
-  public static void assertIsAdmin(Provider<SecurityContext> contextProvider)
+  public static void assertIsAdmin(
+          Provider<? extends SecurityContext> contextProvider)
   {
     assertIsAdmin(contextProvider.get());
   }
@@ -92,7 +93,8 @@ public class SecurityUtil
    *
    * @return
    */
-  public static User getCurrentUser(Provider<SecurityContext> contextProvider)
+  public static User getCurrentUser(
+          Provider<? extends SecurityContext> contextProvider)
   {
     AssertUtil.assertIsNotNull(contextProvider);
 
