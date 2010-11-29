@@ -132,11 +132,6 @@ Ext.onReady(function(){
           fn: function(){
             addTabPanel('repositoryConfig', 'repositoryConfig', 'Repository Config');
           }
-        },{
-          label: 'Server',
-          fn: function(){
-            console.debug( 'Server Config' );
-          }
         }]
       },{
         title: 'Security',

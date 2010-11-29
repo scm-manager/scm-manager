@@ -110,7 +110,9 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
   },
 
   selectItem: function(item){
-    console.debug( item );
+    if (debug){
+      console.debug( item );
+    }
   },
 
   renderUrl: function(url){
@@ -196,13 +198,17 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
   },
 
   update: function(item){
-    console.debug( 'update item: ' );
-    console.debug( item );
+    if ( debug ){
+      console.debug( 'update item: ' );
+      console.debug( item );
+    }
   },
 
   create: function(item){
-    console.debug( 'create item: ' );
-    console.debug( item );
+    if (debug){
+      console.debug( 'create item: ' );
+      console.debug( item );
+    }
   }
 
 });

@@ -54,7 +54,6 @@ Sonia.repository.hasPermission = function(repository, type){
     var permissions = repository.permissions;
     if ( Ext.isDefined(permissions) ){
       for (var i=0;i<permissions.length; i++ ){
-        console.debug( permissions[i] );
         if ( permissions[i].name == state.user.name ){
           result = permissions[i].type == type;
           break;
