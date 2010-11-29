@@ -81,4 +81,32 @@ public class SecurityUtil
       throw new ScmSecurityException("admin account is required");
     }
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param contextProvider
+   *
+   * @return
+   */
+  public static User getCurrentUser(Provider<SecurityContext> contextProvider)
+  {
+    AssertUtil.assertIsNotNull(contextProvider);
+
+    SecurityContext context = contextProvider.get();
+
+    AssertUtil.assertIsNotNull(context);
+
+    User user = context.getUser();
+
+    if (user == null)
+    {
+      throw new ScmSecurityException("user is not authenticated");
+    }
+
+    return user;
+  }
 }

@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.user.AbstractUserManager;
 import sonia.scm.user.User;
@@ -126,7 +127,12 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void create(User user) throws UserException, IOException
   {
-    SecurityUtil.assertIsAdmin(scurityContextProvider);
+    User currentUser = SecurityUtil.getCurrentUser(scurityContextProvider);
+
+    if (!user.equals(currentUser) &&!currentUser.isAdmin())
+    {
+      throw new ScmSecurityException("admin account is required");
+    }
 
     if (userDB.contains(user.getName()))
     {
