@@ -32,6 +32,26 @@
 // register namespace
 Ext.ns('Sonia.user');
 
+
+// functions
+
+Sonia.user.setEditPanel = function(panel){
+  var editPanel = Ext.getCmp('userEditPanel');
+  editPanel.removeAll();
+  editPanel.add(panel);
+  editPanel.doLayout();
+}
+
+// Panels
+
+Sonia.user.DefaultPanel = {
+  region: 'south',
+  title: 'User Form',
+  padding: 5,
+  xtype: 'panel',
+  html: 'Add or select an User'
+};
+
 // UserGrid
 Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
 
@@ -74,8 +94,6 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
     if ( debug ){
       console.debug( item.name + ' selected' );
     }
-    var editPanel = Ext.getCmp('userEditPanel');
-    editPanel.removeAll();
     var panel = new Sonia.user.FormPanel({
       item: item,
       region: 'south',
@@ -94,8 +112,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
       {id: 'password', value: dummyPassword},
       {id: 'password-confirm', value: dummyPassword}
     ]);
-    editPanel.add(panel);
-    editPanel.doLayout();
+    Sonia.user.setEditPanel(panel);
   }
 
 });
@@ -211,6 +228,10 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         alert( 'failure' );
       }
     });
+  },
+
+  cancel: function(){
+    Sonia.user.setEditPanel( Sonia.user.DefaultPanel );
   }
 
 });
@@ -281,17 +302,8 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
     editPanel.doLayout();
   },
   
- resetPanel: function(){
-    var editPanel = Ext.getCmp('userEditPanel');
-    editPanel.removeAll();
-    editPanel.add({
-      region: 'south',
-      title: 'User Form',
-      padding: 5,
-      xtype: 'panel',
-      html: 'Add or select an User'
-    });
-    editPanel.doLayout();
+  resetPanel: function(){
+   Sonia.user.setEditPanel( Sonia.user.DefaultPanel );
   },
 
   removeUser: function(){

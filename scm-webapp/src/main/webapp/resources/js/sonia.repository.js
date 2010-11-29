@@ -394,16 +394,11 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     });
   },
 
-  reset: function(){
+  cancel: function(){
     if ( debug ){
-      console.debug( 'reset form' );
+      console.debug( 'cancel form' );
     }
-    this.getForm().reset();
-    if ( this.item != null ){
-      this.permissionStore.loadData( this.item );
-    } else {
-      this.permissionStore.removeAll();
-    }
+    Sonia.repository.setEditPanel( Sonia.repository.DefaultPanel );
   }
 
 });

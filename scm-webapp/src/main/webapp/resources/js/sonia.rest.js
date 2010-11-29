@@ -152,7 +152,7 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
       buttonAlign: 'center',
       buttons: [
         {text: 'Ok', formBind: true, scope: this, handler: this.submit},
-        {text: 'Cancel', scope: this, handler: this.reset}
+        {text: 'Cancel', scope: this, handler: this.cancel}
       ]
     }
 
@@ -182,7 +182,7 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
     }
   },
   
-  reset: function(){
+  cancel: function(){
     if ( debug ){
       console.debug( 'reset form' );
     }
