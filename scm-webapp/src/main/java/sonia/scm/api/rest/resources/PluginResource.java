@@ -31,30 +31,66 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.api.rest.resources;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import sonia.scm.plugin.Plugin;
+import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.PluginManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "plugin-information")
-public class PluginInformation
+@Singleton
+@Path("plugins")
+public class PluginResource
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @return
+   * @param pluginManager
    */
-  public String getAuthor()
+  @Inject
+  public PluginResource(PluginManager pluginManager)
   {
-    return author;
+    Collection<Plugin> pluginCollection = pluginManager.getPlugins();
+    List<PluginInformation> informations = new ArrayList<PluginInformation>();
+
+    if (pluginCollection != null)
+    {
+      for (Plugin plugin : pluginCollection)
+      {
+        PluginInformation pluginInfo = plugin.getInformation();
+
+        if (pluginInfo != null)
+        {
+          informations.add(pluginInfo);
+        }
+      }
+    }
+
+    plugins = informations.toArray(new PluginInformation[0]);
   }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -62,115 +98,15 @@ public class PluginInformation
    *
    * @return
    */
-  public String getDescription()
+  @GET
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public PluginInformation[] getPlugins()
   {
-    return description;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getName()
-  {
-    return name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getUrl()
-  {
-    return url;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getVersion()
-  {
-    return version;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param author
-   */
-  public void setAuthor(String author)
-  {
-    this.author = author;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param description
-   */
-  public void setDescription(String description)
-  {
-    this.description = description;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   */
-  public void setName(String name)
-  {
-    this.name = name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param url
-   */
-  public void setUrl(String url)
-  {
-    this.url = url;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param version
-   */
-  public void setVersion(String version)
-  {
-    this.version = version;
+    return plugins;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String author;
-
-  /** Field description */
-  private String description;
-
-  /** Field description */
-  private String name;
-
-  /** Field description */
-  private String url;
-
-  /** Field description */
-  private String version;
+  private PluginInformation[] plugins;
 }

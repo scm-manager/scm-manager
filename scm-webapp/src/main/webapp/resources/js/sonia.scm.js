@@ -132,6 +132,11 @@ Ext.onReady(function(){
           fn: function(){
             addTabPanel('repositoryConfig', 'repositoryConfig', 'Repository Config');
           }
+        },{
+          label: 'Plugins',
+          fn: function(){
+            addTabPanel('plugins', 'pluginGrid', 'Plugins')
+          }
         }]
       },{
         title: 'Security',
