@@ -40,12 +40,18 @@
         Purpose of the document follows.
 -->
 
-<plugin-config>
+<plugin>
 
-  <web-plugin>sonia.scm.web.GitWebPlugin</web-plugin>
+  <information>
+    <name>${project.name}</name>
+    <description>${project.description}</description>
+    <author>Sebastian Sdorra</author>
+    <version>${project.version}</version>
+    <url>http://bitbucket.org/sdorra/scm-manager</url>
+  </information>
 
-  <repository-handlers>
-    <repository-handler>sonia.scm.repository.GitRepositoryHandler</repository-handler>
-  </repository-handlers>
-
-</plugin-config>
+  <resources>
+    <script>/sonia/scm/git.config.js</script>
+  </resources>
+  
+</plugin>

@@ -40,12 +40,18 @@
         Purpose of the document follows.
 -->
 
-<plugin-config>
+<plugin>
 
-  <web-plugin>sonia.scm.web.HgWebPlugin</web-plugin>
+  <information>
+    <name>scm-hg-plugin</name>
+    <description>Mercurial Plugin</description>
+    <author>Sebastian Sdorra</author>
+    <version>1.0-M3-SNAPSHOT</version>
+    <url>http://bitbucket.org/sdorra/scm-manager</url>
+  </information>
 
-  <repository-handlers>
-    <repository-handler>sonia.scm.repository.HgRepositoryHandler</repository-handler>
-  </repository-handlers>
-
-</plugin-config>
+  <resources>
+    <script>/sonia/scm/hg.config.js</script>
+  </resources>
+  
+</plugin>

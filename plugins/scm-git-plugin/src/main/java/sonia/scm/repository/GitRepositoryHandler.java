@@ -40,6 +40,7 @@ import com.google.inject.Singleton;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import sonia.scm.Type;
+import sonia.scm.plugin.ext.Extension;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -51,6 +52,7 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  */
 @Singleton
+@Extension
 public class GitRepositoryHandler
         extends AbstractSimpleRepositoryHandler<GitConfig>
 {

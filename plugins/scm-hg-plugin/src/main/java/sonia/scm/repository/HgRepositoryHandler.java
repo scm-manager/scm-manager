@@ -42,6 +42,7 @@ import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
+import sonia.scm.plugin.ext.Extension;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -53,6 +54,7 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  */
 @Singleton
+@Extension
 public class HgRepositoryHandler
         extends AbstractSimpleRepositoryHandler<HgConfig>
 {

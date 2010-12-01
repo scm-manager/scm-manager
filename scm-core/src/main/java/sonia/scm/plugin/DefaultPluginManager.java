@@ -35,145 +35,111 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import sonia.scm.plugin.ext.ExtensionObject;
+import sonia.scm.plugin.ext.ExtensionProcessor;
+import sonia.scm.plugin.ext.JARExtensionScanner;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
+
+import java.net.URL;
 
 import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
-import javax.servlet.ServletException;
+import javax.xml.bind.JAXB;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class ScriptResourceServlet extends AbstractResourceServlet
+public class DefaultPluginManager implements PluginManager
 {
 
   /** Field description */
-  public static final String CONTENT_TYPE = "text/javascript";
+  public static final String DEFAULT_PACKAGE = "sonia.scm";
 
   /** Field description */
-  private static final long serialVersionUID = -5769146163848821050L;
+  public static final String PATH_PLUGINCONFIG = "META-INF/scm/plugin.xml";
+
+  /** the logger for DefaultPluginManager */
+  private static final Logger logger =
+    LoggerFactory.getLogger(DefaultPluginManager.class);
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
-   *
-   * @param manager
    */
-  @Inject
-  public ScriptResourceServlet(PluginManager manager)
+  public DefaultPluginManager()
   {
-    this.manager = manager;
-  }
+    ClassLoader classLoader = getClassLoader();
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param stream
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
-  @Override
-  protected void appendResources(OutputStream stream)
-          throws ServletException, IOException
-  {
-    stream.write(
-        "function sayPluginHello(){ alert('Plugin Hello !'); }".concat(
-          System.getProperty("line.separator")).getBytes());
-
-    Collection<String> scriptResources = getScriptResources();
-
-    if (Util.isNotEmpty(scriptResources))
+    try
     {
-      for (String resource : scriptResources)
-      {
-        appendResource(stream, resource);
-      }
+      load(classLoader);
+    }
+    catch (IOException ex)
+    {
+      throw new RuntimeException(ex);
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected String getContentType()
-  {
-    return CONTENT_TYPE;
-  }
-
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param stream
-   * @param script
-   *
-   * @throws IOException
-   * @throws ServletException
+   * @param processor
    */
-  private void appendResource(OutputStream stream, String script)
-          throws ServletException, IOException
+  @Override
+  public void processExtensions(ExtensionProcessor processor)
   {
-    InputStream input = ScriptResourceServlet.class.getResourceAsStream(script);
+    Set<ExtensionObject> extensions = new HashSet<ExtensionObject>();
+    ClassLoader classLoader = getClassLoader();
+    JARExtensionScanner scanner = new JARExtensionScanner();
 
-    if (input != null)
+    for (Plugin plugin : plugins)
     {
+      InputStream input = null;
+
       try
       {
-        IOUtil.copy(input, stream);
+        Set<String> packageSet = plugin.getPackageSet();
+
+        if (packageSet == null)
+        {
+          packageSet = new HashSet<String>();
+        }
+
+        packageSet.add(DEFAULT_PACKAGE);
+        input = new FileInputStream(plugin.getPath());
+        scanner.processExtensions(classLoader, extensions, input, packageSet);
+      }
+      catch (IOException ex)
+      {
+        logger.error(ex.getMessage(), ex);
       }
       finally
       {
         IOUtil.close(input);
       }
     }
-  }
 
-  /**
-   * Method description
-   *
-   *
-   * @param resources
-   * @param plugin
-   */
-  private void processPlugin(Set<String> resources, Plugin plugin)
-  {
-    PluginResources pluginResources = plugin.getResources();
-
-    if (pluginResources != null)
+    for (ExtensionObject exo : extensions)
     {
-      Set<String> scriptResources = pluginResources.getScriptResources();
-
-      if (scriptResources != null)
-      {
-        resources.addAll(scriptResources);
-      }
+      processor.processExtension(exo.getExtension(), exo.getExtensionClass());
     }
   }
 
@@ -185,24 +151,91 @@ public class ScriptResourceServlet extends AbstractResourceServlet
    *
    * @return
    */
-  private Collection<String> getScriptResources()
+  @Override
+  public Collection<Plugin> getPlugins()
   {
-    Set<String> resources = new TreeSet<String>();
-    Collection<Plugin> plugins = manager.getPlugins();
+    return plugins;
+  }
 
-    if (plugins != null)
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param classLoader
+   *
+   * @throws IOException
+   */
+  private void load(ClassLoader classLoader) throws IOException
+  {
+    Enumeration<URL> urlEnum = classLoader.getResources(PATH_PLUGINCONFIG);
+
+    if (urlEnum != null)
     {
-      for (Plugin plugin : plugins)
+      while (urlEnum.hasMoreElements())
       {
-        processPlugin(resources, plugin);
+        URL url = urlEnum.nextElement();
+
+        loadPlugin(url);
       }
     }
+  }
 
-    return resources;
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   */
+  private void loadPlugin(URL url)
+  {
+    try
+    {
+
+      // jar:file:/some/path/file.jar!/META-INF/scm/plugin.xml
+      String path = url.toExternalForm();
+
+      path = path.substring("jar:file:".length(), path.lastIndexOf("!"));
+
+      if (logger.isInfoEnabled())
+      {
+        logger.info("load plugin {}", path);
+      }
+
+      Plugin plugin = JAXB.unmarshal(url, Plugin.class);
+
+      plugin.setPath(path);
+      plugins.add(plugin);
+    }
+    catch (Exception ex)
+    {
+      logger.error(ex.getMessage(), ex);
+    }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private ClassLoader getClassLoader()
+  {
+    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+    if (classLoader == null)
+    {
+      classLoader = DefaultPluginManager.class.getClassLoader();
+    }
+
+    return classLoader;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private PluginManager manager;
+  private Set<Plugin> plugins = new HashSet<Plugin>();
 }

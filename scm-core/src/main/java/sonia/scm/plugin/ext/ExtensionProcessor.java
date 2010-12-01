@@ -31,35 +31,21 @@
 
 
 
-package sonia.scm.web.plugin;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-import java.io.InputStream;
+package sonia.scm.plugin.ext;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface WebResource
+public interface ExtensionProcessor
 {
 
   /**
    * Method description
    *
    *
-   * @return
-   *
-   * @throws IOException
+   * @param extension
+   * @param extensionClass
    */
-  public InputStream getContent() throws IOException;
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getId();
+  public void processExtension(Extension extension, Class<?> extensionClass);
 }

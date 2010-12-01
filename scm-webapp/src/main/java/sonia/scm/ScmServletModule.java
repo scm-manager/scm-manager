@@ -35,7 +35,6 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.multibindings.Multibinder;
 import com.google.inject.servlet.ServletModule;
 
 import org.slf4j.Logger;
@@ -46,20 +45,16 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.EhCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.SecurityFilter;
+import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.ScriptResourceServlet;
-import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.xml.XmlRepositoryManager;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.MessageDigestEncryptionHandler;
+import sonia.scm.security.SecurityContext;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.xml.XmlUserManager;
 import sonia.scm.util.DebugServlet;
-import sonia.scm.util.Util;
-import sonia.scm.web.plugin.SCMPlugin;
-import sonia.scm.web.plugin.SCMPluginManager;
-import sonia.scm.web.plugin.ScmWebPluginContext;
-import sonia.scm.web.plugin.SecurityConfig;
 import sonia.scm.web.security.Authenticator;
 import sonia.scm.web.security.BasicSecurityContext;
 import sonia.scm.web.security.WebSecurityContext;
@@ -74,14 +69,10 @@ import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 import java.io.File;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.bind.JAXB;
-import sonia.scm.security.SecurityContext;
 
 /**
  *
@@ -131,15 +122,14 @@ public class ScmServletModule extends ServletModule
    * Constructs ...
    *
    *
-   *
-   * @param pluginManager
-   * @param webPluginContext
+   * @param manager
+   * @param bindExtProcessor
    */
-  ScmServletModule(SCMPluginManager pluginManager,
-                   ScmWebPluginContext webPluginContext)
+  ScmServletModule(PluginManager manager,
+                   BindingExtensionProcessor bindExtProcessor)
   {
-    this.pluginManager = pluginManager;
-    this.webPluginContext = webPluginContext;
+    this.pluginManager = manager;
+    this.bindExtProcessor = bindExtProcessor;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -158,19 +148,18 @@ public class ScmServletModule extends ServletModule
     ScmConfiguration config = getScmConfiguration(context);
 
     bind(ScmConfiguration.class).toInstance(config);
-
-    // bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
-    // bind(Authenticator.class).to(XmlAuthenticator.class);
+    bind(PluginManager.class).toInstance(pluginManager);
+    bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
+    bind(Authenticator.class).to(XmlAuthenticator.class);
     bind(SecurityContext.class).to(BasicSecurityContext.class);
     bind(WebSecurityContext.class).to(BasicSecurityContext.class);
-    loadPlugins(pluginManager);
+    bindExtProcessor.bindExtensions(binder());
     bind(CacheManager.class).to(EhCacheManager.class);
 
     // bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
     // BasicRepositoryManager.class);
     bind(RepositoryManager.class).to(XmlRepositoryManager.class);
     bind(UserManager.class).to(XmlUserManager.class);
-    bind(ScmWebPluginContext.class).toInstance(webPluginContext);
 
     // filter(PATTERN_RESTAPI).through(LoggingFilter.class);
 
@@ -204,91 +193,6 @@ public class ScmServletModule extends ServletModule
                UriExtensionsConfig.class.getName());
     params.put(PackagesResourceConfig.PROPERTY_PACKAGES, REST_PACKAGE);
     serve(PATTERN_RESTAPI).with(GuiceContainer.class, params);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryHandlerBinder
-   * @param handlerSet
-   */
-  private void bindRepositoryHandlers(
-          Multibinder<RepositoryHandler> repositoryHandlerBinder,
-          Set<Class<? extends RepositoryHandler>> handlerSet)
-  {
-    for (Class<? extends RepositoryHandler> handlerClass : handlerSet)
-    {
-      if (logger.isInfoEnabled())
-      {
-        logger.info("load RepositoryHandler {}", handlerClass.getName());
-      }
-
-      bind(handlerClass);
-      repositoryHandlerBinder.addBinding().to(handlerClass);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param pluginManager
-   */
-  private void loadPlugins(SCMPluginManager pluginManager)
-  {
-    Set<SCMPlugin> pluginSet = pluginManager.getPlugins();
-
-    if (Util.isNotEmpty(pluginSet))
-    {
-
-      // repository handlers
-      Multibinder<RepositoryHandler> repositoryHandlerBinder =
-        Multibinder.newSetBinder(binder(), RepositoryHandler.class);
-      Set<Class<? extends RepositoryHandler>> repositoryHandlerSet =
-        new LinkedHashSet<Class<? extends RepositoryHandler>>();
-
-      // security stuff
-      Class<? extends EncryptionHandler> encryptionHandler =
-        MessageDigestEncryptionHandler.class;
-      Class<? extends Authenticator> authenticator = XmlAuthenticator.class;
-
-      for (SCMPlugin plugin : pluginSet)
-      {
-        Collection<Class<? extends RepositoryHandler>> pluginRepositoryHandlers =
-          plugin.getRepositoryHandlers();
-
-        if (Util.isNotEmpty(pluginRepositoryHandlers))
-        {
-          repositoryHandlerSet.addAll(pluginRepositoryHandlers);
-        }
-
-        SecurityConfig securityConfig = plugin.getSecurityConfig();
-
-        if (securityConfig != null)
-        {
-          Class<? extends EncryptionHandler> enc =
-            securityConfig.getEncryptionHandler();
-
-          if (enc != null)
-          {
-            encryptionHandler = enc;
-          }
-
-          Class<? extends Authenticator> auth =
-            securityConfig.getAuthenticator();
-
-          if (auth != null)
-          {
-            authenticator = auth;
-          }
-        }
-      }
-
-      bind(EncryptionHandler.class).to(encryptionHandler);
-      bind(Authenticator.class).to(authenticator);
-      bindRepositoryHandlers(repositoryHandlerBinder, repositoryHandlerSet);
-    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -329,8 +233,8 @@ public class ScmServletModule extends ServletModule
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SCMPluginManager pluginManager;
+  private BindingExtensionProcessor bindExtProcessor;
 
   /** Field description */
-  private ScmWebPluginContext webPluginContext;
+  private PluginManager pluginManager;
 }

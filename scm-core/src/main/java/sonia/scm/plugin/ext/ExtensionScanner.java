@@ -31,49 +31,36 @@
 
 
 
-package sonia.scm.web;
+package sonia.scm.plugin.ext;
 
-//~--- non-JDK imports --------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
 
-import sonia.scm.web.plugin.ClasspathWebResource;
-import sonia.scm.web.plugin.ScmWebPlugin;
-import sonia.scm.web.plugin.ScmWebPluginContext;
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SvnWebPlugin implements ScmWebPlugin
+public interface ExtensionScanner
 {
 
-  /** Field description */
-  public static final String SCRIPT = "/sonia/scm/svn.config.js";
-
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Method description
    *
    *
-   * @param context
-   */
-  @Override
-  public void contextDestroyed(ScmWebPluginContext context)
-  {
-
-    // do nothing
-  }
-
-  /**
-   * Method description
    *
+   * @param classLoader
+   * @param extensionObjects
+   * @param input
+   * @param packagess
    *
-   * @param context
+   * @throws IOException
    */
-  @Override
-  public void contextInitialized(ScmWebPluginContext context)
-  {
-    context.addScriptResource(new ClasspathWebResource(SCRIPT));
-    context.addInjectModule(new SvnServletModule());
-  }
+  public void processExtensions(ClassLoader classLoader,
+                                Collection<ExtensionObject> extensionObjects,
+                                InputStream input, Collection<String> packagess)
+          throws IOException;
 }

@@ -40,29 +40,16 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import sonia.scm.plugin.DefaultPluginManager;
+import sonia.scm.plugin.PluginManager;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.UserManager;
-import sonia.scm.util.Util;
-import sonia.scm.web.plugin.SCMPlugin;
-import sonia.scm.web.plugin.SCMPluginManager;
-import sonia.scm.web.plugin.ScmWebPlugin;
-import sonia.scm.web.plugin.ScmWebPluginContext;
 import sonia.scm.web.security.Authenticator;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-
-import javax.servlet.ServletContextEvent;
 
 /**
  *
@@ -70,77 +57,6 @@ import javax.servlet.ServletContextEvent;
  */
 public class ContextListener extends GuiceServletContextListener
 {
-
-  /** the logger for ContextListener */
-  private static final Logger logger =
-    LoggerFactory.getLogger(ContextListener.class);
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param servletContextEvent
-   */
-  @Override
-  public void contextDestroyed(ServletContextEvent servletContextEvent)
-  {
-    for (ScmWebPlugin plugin : webPluginSet)
-    {
-      plugin.contextDestroyed(webPluginContext);
-    }
-
-    super.contextDestroyed(servletContextEvent);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param servletContextEvent
-   */
-  @Override
-  public void contextInitialized(ServletContextEvent servletContextEvent)
-  {
-    pluginManager = new SCMPluginManager();
-
-    try
-    {
-      pluginManager.load();
-      webPluginContext =
-        new ScmWebPluginContext(servletContextEvent.getServletContext());
-
-      for (SCMPlugin plugin : pluginManager.getPlugins())
-      {
-        try
-        {
-          webPluginSet.add(plugin.getWebPlugin().newInstance());
-        }
-        catch (InstantiationException ex)
-        {
-          logger.error(ex.getMessage(), ex);
-        }
-        catch (IllegalAccessException ex)
-        {
-          logger.error(ex.getMessage(), ex);
-        }
-      }
-
-      for (ScmWebPlugin plugin : webPluginSet)
-      {
-        plugin.contextInitialized(webPluginContext);
-      }
-    }
-    catch (IOException ex)
-    {
-      throw new RuntimeException(ex);
-    }
-
-    super.contextInitialized(servletContextEvent);
-  }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -151,18 +67,19 @@ public class ContextListener extends GuiceServletContextListener
   @Override
   protected Injector getInjector()
   {
-    List<Module> modules = new ArrayList<Module>();
+    PluginManager manager = new DefaultPluginManager();
+    BindingExtensionProcessor bindExtProcessor =
+      new BindingExtensionProcessor();
 
-    modules.add(new ScmServletModule(pluginManager, webPluginContext));
+    manager.processExtensions(bindExtProcessor);
 
-    Collection<Module> pluginModules = webPluginContext.getInjectModules();
+    ScmServletModule main = new ScmServletModule(manager, bindExtProcessor);
+    List<Module> moduleList =
+      new ArrayList<Module>(bindExtProcessor.getModuleSet());
 
-    if (Util.isNotEmpty(pluginModules))
-    {
-      modules.addAll(pluginModules);
-    }
+    moduleList.add(0, main);
 
-    Injector injector = Guice.createInjector(modules);
+    Injector injector = Guice.createInjector(moduleList);
 
     // init RepositoryManager
     injector.getInstance(RepositoryManager.class).init(SCMContext.getContext());
@@ -175,15 +92,4 @@ public class ContextListener extends GuiceServletContextListener
 
     return injector;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private SCMPluginManager pluginManager;
-
-  /** Field description */
-  private ScmWebPluginContext webPluginContext;
-
-  /** Field description */
-  private Set<ScmWebPlugin> webPluginSet = new LinkedHashSet<ScmWebPlugin>();
 }

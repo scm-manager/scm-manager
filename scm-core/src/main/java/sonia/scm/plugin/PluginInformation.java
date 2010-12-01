@@ -29,95 +29,26 @@
  *
  */
 
-package sonia.scm.web.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Module;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.servlet.ServletContext;
+package sonia.scm.plugin;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ScmWebPluginContext
+public class PluginInformation
 {
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param servletContext
-   */
-  public ScmWebPluginContext(ServletContext servletContext)
-  {
-    this.servletContext = servletContext;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param module
-   */
-  public void addInjectModule(Module module)
-  {
-    injectModules.add(module);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param resource
-   */
-  public void addScriptResource(WebResource resource)
-  {
-    scriptResources.add(resource);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param module
-   */
-  public void removeInjectModule(Module module)
-  {
-    injectModules.remove(module);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param resource
-   */
-  public void removeScriptResource(WebResource resource)
-  {
-    scriptResources.remove(resource);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
    * Method description
    *
    *
    * @return
    */
-  public Collection<Module> getInjectModules()
+  public String getAuthor()
   {
-    return injectModules;
+    return author;
   }
 
   /**
@@ -126,9 +57,9 @@ public class ScmWebPluginContext
    *
    * @return
    */
-  public Collection<WebResource> getScriptResources()
+  public String getDescription()
   {
-    return scriptResources;
+    return description;
   }
 
   /**
@@ -137,19 +68,104 @@ public class ScmWebPluginContext
    *
    * @return
    */
-  public ServletContext getServletContext()
+  public String getName()
   {
-    return servletContext;
+    return name;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getUrl()
+  {
+    return url;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getVersion()
+  {
+    return version;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param author
+   */
+  public void setAuthor(String author)
+  {
+    this.author = author;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param description
+   */
+  public void setDescription(String description)
+  {
+    this.description = description;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   */
+  public void setName(String name)
+  {
+    this.name = name;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   */
+  public void setUrl(String url)
+  {
+    this.url = url;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param version
+   */
+  public void setVersion(String version)
+  {
+    this.version = version;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Set<WebResource> scriptResources = new HashSet<WebResource>();
+  private String author;
 
   /** Field description */
-  private Set<Module> injectModules = new HashSet<Module>();
+  private String description;
 
   /** Field description */
-  private ServletContext servletContext;
+  private String name;
+
+  /** Field description */
+  private String url;
+
+  /** Field description */
+  private String version;
 }

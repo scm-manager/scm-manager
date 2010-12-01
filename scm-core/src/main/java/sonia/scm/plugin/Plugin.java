@@ -31,15 +31,12 @@
 
 
 
-package sonia.scm.web.plugin;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.repository.RepositoryHandler;
+package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.HashSet;
+import java.net.URL;
+
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -47,36 +44,26 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "plugin-config")
+@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SCMPlugin
+public class Plugin
 {
 
   /**
-   * Constructs ...
-   *
-   */
-  public SCMPlugin()
-  {
-    repositoryHandlers = new HashSet<Class<? extends RepositoryHandler>>();
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
    * Method description
    *
    *
    * @return
    */
-  public Set<Class<? extends RepositoryHandler>> getRepositoryHandlers()
+  public PluginInformation getInformation()
   {
-    return repositoryHandlers;
+    return information;
   }
 
   /**
@@ -85,9 +72,9 @@ public class SCMPlugin
    *
    * @return
    */
-  public SecurityConfig getSecurityConfig()
+  public Set<String> getPackageSet()
   {
-    return securityConfig;
+    return packageSet;
   }
 
   /**
@@ -96,9 +83,20 @@ public class SCMPlugin
    *
    * @return
    */
-  public Class<? extends ScmWebPlugin> getWebPlugin()
+  public String getPath()
   {
-    return webPlugin;
+    return path;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public PluginResources getResources()
+  {
+    return resources;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -107,48 +105,60 @@ public class SCMPlugin
    * Method description
    *
    *
-   * @param repositoryHandlers
+   * @param information
    */
-  public void setRepositoryHandlers(
-          Set<Class<? extends RepositoryHandler>> repositoryHandlers)
+  public void setInformation(PluginInformation information)
   {
-    this.repositoryHandlers = repositoryHandlers;
+    this.information = information;
   }
 
   /**
    * Method description
    *
    *
-   * @param securityConfig
+   * @param packageSet
    */
-  public void setSecurityConfig(SecurityConfig securityConfig)
+  public void setPackageSet(Set<String> packageSet)
   {
-    this.securityConfig = securityConfig;
+    this.packageSet = packageSet;
   }
 
   /**
    * Method description
    *
    *
-   * @param webPlugin
+   * @param path
    */
-  public void setWebPlugin(Class<? extends ScmWebPlugin> webPlugin)
+  public void setPath(String path)
   {
-    this.webPlugin = webPlugin;
+    this.path = path;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param resources
+   */
+  public void setResources(PluginResources resources)
+  {
+    this.resources = resources;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlElementWrapper(name = "repository-handlers")
-  @XmlElement(name = "repository-handler")
-  private Set<Class<? extends RepositoryHandler>> repositoryHandlers;
+  private PluginInformation information;
 
   /** Field description */
-  @XmlElement(name = "security")
-  private SecurityConfig securityConfig;
+  @XmlElement(name = "package")
+  @XmlElementWrapper(name = "packages")
+  private Set<String> packageSet;
 
   /** Field description */
-  @XmlElement(name = "web-plugin")
-  private Class<? extends ScmWebPlugin> webPlugin;
+  @XmlTransient
+  private String path;
+
+  /** Field description */
+  private PluginResources resources;
 }

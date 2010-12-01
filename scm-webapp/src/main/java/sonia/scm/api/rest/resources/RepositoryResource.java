@@ -213,25 +213,27 @@ public class RepositoryResource extends AbstractResource<Repository>
    */
   private void appendUrl(Repository repository)
   {
-    StringBuilder url = new StringBuilder(request.getScheme());
-
-    url.append("://").append(configuration.getServername());
-    url.append(":").append(request.getLocalPort());
-
-    String ctxPath = request.getContextPath();
-
-    if (ctxPath.endsWith("/"))
-    {
-      ctxPath = ctxPath.substring(0, ctxPath.length() - 1);
-    }
-
-    url.append(ctxPath);
-
     RepositoryHandler handler =
       repositoryManager.getHandler(repository.getType());
 
-    url.append(handler.createResourcePath(repository));
-    repository.setUrl(url.toString());
+    if (handler != null)
+    {
+      StringBuilder url = new StringBuilder(request.getScheme());
+
+      url.append("://").append(configuration.getServername());
+      url.append(":").append(request.getLocalPort());
+
+      String ctxPath = request.getContextPath();
+
+      if (ctxPath.endsWith("/"))
+      {
+        ctxPath = ctxPath.substring(0, ctxPath.length() - 1);
+      }
+
+      url.append(ctxPath);
+      url.append(handler.createResourcePath(repository));
+      repository.setUrl(url.toString());
+    }
   }
 
   //~--- fields ---------------------------------------------------------------

@@ -29,28 +29,59 @@
  *
  */
 
-package sonia.scm.web.plugin;
+
+
+package sonia.scm.plugin.ext;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface ScmWebPlugin
+public class ExtensionObject
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param context
+   * @param extension
+   * @param extensionClass
    */
-  public void contextDestroyed(ScmWebPluginContext context);
+  public ExtensionObject(Extension extension, Class<?> extensionClass)
+  {
+    this.extension = extension;
+    this.extensionClass = extensionClass;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param context
+   * @return
    */
-  public void contextInitialized(ScmWebPluginContext context);
+  public Extension getExtension()
+  {
+    return extension;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Class<?> getExtensionClass()
+  {
+    return extensionClass;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Extension extension;
+
+  /** Field description */
+  private Class<?> extensionClass;
 }

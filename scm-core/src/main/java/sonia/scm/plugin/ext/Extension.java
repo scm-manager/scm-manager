@@ -31,58 +31,21 @@
 
 
 
-package sonia.scm.web.plugin;
+package sonia.scm.plugin.ext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.InputStream;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ClasspathWebResource implements WebResource
-{
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param contentPath
-   */
-  public ClasspathWebResource(String contentPath)
-  {
-    this.contentPath = contentPath;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public InputStream getContent()
-  {
-    return ClasspathWebResource.class.getResourceAsStream(contentPath);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getId()
-  {
-    return contentPath;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String contentPath;
-}
+@Documented
+@Target({ ElementType.TYPE })
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Extension {}

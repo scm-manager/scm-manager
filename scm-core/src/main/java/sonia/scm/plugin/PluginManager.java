@@ -31,64 +31,40 @@
 
 
 
-package sonia.scm.web;
+package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.servlet.ServletModule;
+import com.google.inject.Binder;
 
-import sonia.scm.web.filter.BasicAuthenticationFilter;
-import sonia.scm.web.plugin.ClasspathWebResource;
-import sonia.scm.web.plugin.ScmWebPlugin;
-import sonia.scm.web.plugin.ScmWebPluginContext;
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collection;
+import sonia.scm.plugin.ext.ExtensionProcessor;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GitWebPlugin implements ScmWebPlugin
+public interface PluginManager
 {
 
-  /** Field description */
-  public static final String PATTERN_GIT = "/git/*";
+  /**
+   * Method description
+   *
+   *
+   * @param binder
+   */
+  public void processExtensions(ExtensionProcessor processor);
 
-  /** Field description */
-  public static final String SCRIPT = "/sonia/scm/git.config.js";
 
-  //~--- methods --------------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param context
+   * @return
    */
-  @Override
-  public void contextDestroyed(ScmWebPluginContext context)
-  {
-
-    // do nothing
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   */
-  @Override
-  public void contextInitialized(ScmWebPluginContext context)
-  {
-    context.addScriptResource(new ClasspathWebResource(SCRIPT));
-    context.addInjectModule(new ServletModule()
-    {
-      @Override
-      protected void configureServlets()
-      {
-        filter(PATTERN_GIT).through(BasicAuthenticationFilter.class);
-        filter(PATTERN_GIT).through(GitPermissionFilter.class);
-        serve(PATTERN_GIT).with(ScmGitServlet.class);
-      }
-    });
-  }
+  public Collection<Plugin> getPlugins();
 }

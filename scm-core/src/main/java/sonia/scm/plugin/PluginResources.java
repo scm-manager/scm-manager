@@ -29,83 +29,25 @@
  *
  */
 
-package sonia.scm.web.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.net.URL;
-
-import java.util.Enumeration;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.xml.bind.JAXB;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SCMPluginManager
+@XmlAccessorType(XmlAccessType.NONE)
+public class PluginResources
 {
-
-  /** Field description */
-  public static final String PATH_PLUGINCONFIG = "META-INF/scm/plugin.xml";
-
-  /** Field description */
-  private static final Logger logger =
-    LoggerFactory.getLogger(SCMPluginManager.class);
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  public void load() throws IOException
-  {
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-    if (classLoader == null)
-    {
-      classLoader = SCMPluginManager.class.getClassLoader();
-    }
-
-    load(classLoader);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param classLoader
-   *
-   * @throws IOException
-   */
-  public void load(ClassLoader classLoader) throws IOException
-  {
-    Enumeration<URL> urlEnum = classLoader.getResources(PATH_PLUGINCONFIG);
-
-    if (urlEnum != null)
-    {
-      while (urlEnum.hasMoreElements())
-      {
-        URL url = urlEnum.nextElement();
-
-        loadPlugin(url);
-      }
-    }
-  }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -113,40 +55,53 @@ public class SCMPluginManager
    *
    * @return
    */
-  public Set<SCMPlugin> getPlugins()
+  public Set<String> getScriptResources()
   {
-    return plugins;
+    return scriptResources;
   }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param url
+   * @return
    */
-  private void loadPlugin(URL url)
+  public Set<String> getStylesheetResources()
   {
-    try
-    {
-      SCMPlugin plugin = JAXB.unmarshal(url, SCMPlugin.class);
+    return stylesheetResources;
+  }
 
-      if (logger.isInfoEnabled())
-      {
-        logger.info("load plugin {}", url.toExternalForm());
-      }
+  //~--- set methods ----------------------------------------------------------
 
-      plugins.add(plugin);
-    }
-    catch (Exception ex)
-    {
-      logger.error(ex.getMessage(), ex);
-    }
+  /**
+   * Method description
+   *
+   *
+   * @param scriptResources
+   */
+  public void setScriptResources(Set<String> scriptResources)
+  {
+    this.scriptResources = scriptResources;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param stylesheetResources
+   */
+  public void setStylesheetResources(Set<String> stylesheetResources)
+  {
+    this.stylesheetResources = stylesheetResources;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Set<SCMPlugin> plugins = new LinkedHashSet<SCMPlugin>();
+  @XmlElement(name = "script")
+  private Set<String> scriptResources;
+
+  /** Field description */
+  @XmlElement(name = "stylesheet")
+  private Set<String> stylesheetResources;
 }

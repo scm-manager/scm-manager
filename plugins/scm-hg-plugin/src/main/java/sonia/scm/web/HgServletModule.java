@@ -36,6 +36,7 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.servlet.ServletModule;
+import sonia.scm.plugin.ext.Extension;
 
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
@@ -43,6 +44,7 @@ import sonia.scm.web.filter.BasicAuthenticationFilter;
  *
  * @author Sebastian Sdorra
  */
+@Extension
 public class HgServletModule extends ServletModule
 {
 

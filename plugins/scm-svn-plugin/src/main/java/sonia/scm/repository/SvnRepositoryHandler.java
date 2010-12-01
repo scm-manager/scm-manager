@@ -41,6 +41,7 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
 import sonia.scm.Type;
+import sonia.scm.plugin.ext.Extension;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -52,6 +53,7 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  */
 @Singleton
+@Extension
 public class SvnRepositoryHandler
         extends AbstractSimpleRepositoryHandler<SvnConfig>
 {

@@ -43,11 +43,13 @@ import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 import java.util.HashMap;
 import java.util.Map;
+import sonia.scm.plugin.ext.Extension;
 
 /**
  *
  * @author Sebastian Sdorra
  */
+@Extension
 public class SvnServletModule extends ServletModule
 {
 

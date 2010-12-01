@@ -31,43 +31,37 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.web.plugin.WebResource;
+import com.google.inject.servlet.ServletModule;
+import sonia.scm.plugin.ext.Extension;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
-
-import java.util.Comparator;
+import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class WebResourceComparator
-        implements Comparator<WebResource>, Serializable
+@Extension
+public class GitServletModule extends ServletModule
 {
 
   /** Field description */
-  private static final long serialVersionUID = -5916499507958881372L;
+  public static final String PATTERN_GIT = "/git/*";
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
-   *
-   * @param resource
-   * @param resource1
-   *
-   * @return
    */
   @Override
-  public int compare(WebResource resource, WebResource resource1)
+  protected void configureServlets()
   {
-    return resource.getId().compareTo(resource1.getId());
+    filter(PATTERN_GIT).through(BasicAuthenticationFilter.class);
+    filter(PATTERN_GIT).through(GitPermissionFilter.class);
+    serve(PATTERN_GIT).with(ScmGitServlet.class);
   }
 }
