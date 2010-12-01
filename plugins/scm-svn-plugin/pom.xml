@@ -14,6 +14,8 @@
   <artifactId>scm-svn-plugin</artifactId>
   <version>1.0-M3-SNAPSHOT</version>
   <name>scm-svn-plugin</name>
+  <url>https://bitbucket.org/sdorra/scm-manager</url>
+  <description>Plugin for the version control system Subversion</description>
 
   <dependencies>
 

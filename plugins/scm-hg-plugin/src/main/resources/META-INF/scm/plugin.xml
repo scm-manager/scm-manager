@@ -43,11 +43,11 @@
 <plugin>
 
   <information>
-    <name>scm-hg-plugin</name>
-    <description>Mercurial Plugin</description>
+    <name>${project.name}</name>
+    <description>${project.description}</description>
     <author>Sebastian Sdorra</author>
-    <version>1.0-M3-SNAPSHOT</version>
-    <url>http://bitbucket.org/sdorra/scm-manager</url>
+    <version>${project.version}</version>
+    <url>${project.url}</url>
   </information>
 
   <resources>

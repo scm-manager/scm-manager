@@ -47,7 +47,7 @@
     <description>${project.description}</description>
     <author>Sebastian Sdorra</author>
     <version>${project.version}</version>
-    <url>http://bitbucket.org/sdorra/scm-manager</url>
+    <url>${project.url}</url>
   </information>
 
   <resources>

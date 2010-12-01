@@ -14,6 +14,8 @@
   <artifactId>scm-hg-plugin</artifactId>
   <version>1.0-M3-SNAPSHOT</version>
   <name>scm-hg-plugin</name>
+  <url>https://bitbucket.org/sdorra/scm-manager</url>
+  <description>Plugin for the version control system Mercurial</description>
 
   <dependencies>
 

@@ -31,4 +31,26 @@
 
   </dependencies>
 
+  <build>
+    <resources>
+
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>META-INF/scm/plugin.xml</include>
+        </includes>
+      </resource>
+
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>META-INF/scm/plugin.xml</exclude>
+        </excludes>
+      </resource>
+
+    </resources>
+  </build>
+
 </project>
