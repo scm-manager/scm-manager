@@ -38,6 +38,7 @@ package sonia.scm.plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContext;
 import sonia.scm.plugin.ext.ExtensionObject;
 import sonia.scm.plugin.ext.ExtensionProcessor;
 import sonia.scm.plugin.ext.JARExtensionScanner;
@@ -64,9 +65,6 @@ import javax.xml.bind.JAXB;
  */
 public class DefaultPluginManager implements PluginManager
 {
-
-  /** Field description */
-  public static final String DEFAULT_PACKAGE = "sonia.scm";
 
   /** Field description */
   public static final String PATH_PLUGINCONFIG = "META-INF/scm/plugin.xml";
@@ -123,7 +121,7 @@ public class DefaultPluginManager implements PluginManager
           packageSet = new HashSet<String>();
         }
 
-        packageSet.add(DEFAULT_PACKAGE);
+        packageSet.add(SCMContext.DEFAULT_PACKAGE);
         input = new FileInputStream(plugin.getPath());
         scanner.processExtensions(classLoader, extensions, input, packageSet);
       }

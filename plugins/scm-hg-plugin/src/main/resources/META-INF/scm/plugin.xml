@@ -53,5 +53,5 @@
   <resources>
     <script>/sonia/scm/hg.config.js</script>
   </resources>
-  
+
 </plugin>

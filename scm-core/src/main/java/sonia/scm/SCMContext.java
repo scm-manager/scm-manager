@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -41,6 +43,9 @@ import sonia.scm.util.ServiceUtil;
  */
 public class SCMContext
 {
+
+  /** Field description */
+  public static final String DEFAULT_PACKAGE = "sonia.scm";
 
   /** Field description */
   private static volatile SCMContextProvider provider;

@@ -45,6 +45,7 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.EhCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.SecurityFilter;
+import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.ScriptResourceServlet;
 import sonia.scm.repository.RepositoryManager;
@@ -69,8 +70,12 @@ import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 import java.io.File;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.bind.JAXB;
 
@@ -191,11 +196,104 @@ public class ScmServletModule extends ServletModule
     params.put(ResourceConfig.FEATURE_REDIRECT, Boolean.TRUE.toString());
     params.put(ServletContainer.RESOURCE_CONFIG_CLASS,
                UriExtensionsConfig.class.getName());
-    params.put(PackagesResourceConfig.PROPERTY_PACKAGES, REST_PACKAGE);
+
+    String restPath = getRestPackages();
+
+    if (logger.isInfoEnabled())
+    {
+      logger.info("configure jersey with package path: {}", restPath);
+    }
+
+    params.put(PackagesResourceConfig.PROPERTY_PACKAGES, restPath);
     serve(PATTERN_RESTAPI).with(GuiceContainer.class, params);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param packageSet
+   * @param plugin
+   */
+  private void appendPluginPackages(Set<String> packageSet, Plugin plugin)
+  {
+    Set<String> pluginPackageSet = plugin.getPackageSet();
+
+    if (pluginPackageSet != null)
+    {
+      for (String pluginPkg : pluginPackageSet)
+      {
+        boolean append = true;
+
+        for (String pkg : packageSet)
+        {
+          if (pluginPkg.startsWith(pkg))
+          {
+            append = false;
+
+            break;
+          }
+        }
+
+        if (append)
+        {
+          if (logger.isDebugEnabled())
+          {
+            String name = "unknown";
+
+            if (plugin.getInformation() != null)
+            {
+              name = plugin.getInformation().getName();
+            }
+
+            logger.debug("plugin {} added rest path {}", name, pluginPkg);
+          }
+
+          packageSet.add(pluginPkg);
+        }
+      }
+    }
+  }
+
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private String getRestPackages()
+  {
+    Set<String> packageSet = new HashSet<String>();
+
+    packageSet.add(SCMContext.DEFAULT_PACKAGE);
+
+    Collection<Plugin> plugins = pluginManager.getPlugins();
+
+    if (plugins != null)
+    {
+      for (Plugin plugin : plugins)
+      {
+        appendPluginPackages(packageSet, plugin);
+      }
+    }
+
+    StringBuilder buffer = new StringBuilder();
+    Iterator<String> pkgIterator = packageSet.iterator();
+
+    while (pkgIterator.hasNext())
+    {
+      buffer.append(pkgIterator.next());
+
+      if (pkgIterator.hasNext())
+      {
+        buffer.append(";");
+      }
+    }
+
+    return buffer.toString();
+  }
 
   /**
    * Method description
