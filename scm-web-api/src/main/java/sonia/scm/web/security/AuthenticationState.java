@@ -29,39 +29,45 @@
  *
  */
 
+
+
 package sonia.scm.web.security;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.Initable;
-import sonia.scm.user.User;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Closeable;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface Authenticator extends Initable, Closeable
+public enum AuthenticationState
 {
+  CREATE_USER(true), MODIFY_USER(true), SUCCESS(true), NEXT(false),
+  FAILED(false);
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param successfully
+   */
+  private AuthenticationState(boolean successfully)
+  {
+    this.successfully = successfully;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param request
-   * @param response
-   * @param username
-   * @param password
-   *
    * @return
    */
-  public User authenticate(HttpServletRequest request,
-                           HttpServletResponse response, String username,
-                           String password);
+  public boolean isSuccessfully()
+  {
+    return successfully;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean successfully = false;
 }

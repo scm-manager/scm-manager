@@ -35,40 +35,21 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.SCMContextProvider;
-import sonia.scm.security.EncryptionHandler;
-import sonia.scm.user.User;
+import sonia.scm.Initable;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
+import java.io.Closeable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.user.UserManager;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class XmlAuthenticator implements Authenticator
+public interface AuthenticationManager extends Initable, Closeable
 {
-
-  /** Field description */
-  public static final String NAME_DIRECTORY = "users";
-
-  /** the logger for XmlAuthenticator */
-  private static final Logger logger =
-    LoggerFactory.getLogger(XmlAuthenticator.class);
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -81,77 +62,6 @@ public class XmlAuthenticator implements Authenticator
    *
    * @return
    */
-  @Override
-  public User authenticate(HttpServletRequest request,
-                           HttpServletResponse response, String username,
-                           String password)
-  {
-    User user = userManager.get(username);
-
-    if (user != null)
-    {
-      String encryptedPassword = encryptionHandler.encrypt(password);
-
-      if (!encryptedPassword.equalsIgnoreCase(user.getPassword()))
-      {
-        user = null;
-
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("password for user {} is wrong", username);
-        }
-      }
-      else
-      {
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("user {} logged in successfully", username);
-        }
-
-        user.setPassword(null);
-      }
-    }
-    else if (logger.isDebugEnabled())
-    {
-      logger.debug("could not find user {}", username);
-    }
-
-    return user;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Override
-  public void close() throws IOException
-  {
-
-    // do nothing
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param provider
-   */
-  @Override
-  public void init(SCMContextProvider provider)
-  {
-
-    // do nothing
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @Inject
-  private EncryptionHandler encryptionHandler;
-
-  /** Field description */
-  @Inject
-  private UserManager userManager;
+  public AuthenticationResult authenticate(HttpServletRequest request,
+          HttpServletResponse response, String username, String password);
 }

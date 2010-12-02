@@ -44,12 +44,15 @@ import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.UserManager;
-import sonia.scm.web.security.Authenticator;
+import sonia.scm.util.IOUtil;
+import sonia.scm.web.security.AuthenticationManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.ServletContextEvent;
 
 /**
  *
@@ -57,6 +60,33 @@ import java.util.List;
  */
 public class ContextListener extends GuiceServletContextListener
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param servletContextEvent
+   */
+  @Override
+  public void contextDestroyed(ServletContextEvent servletContextEvent)
+  {
+    if (injector != null)
+    {
+
+      // close RepositoryManager
+      IOUtil.close(injector.getInstance(RepositoryManager.class));
+
+      // close Authenticator
+      IOUtil.close(injector.getInstance(AuthenticationManager.class));
+
+      // close UserManager
+      IOUtil.close(injector.getInstance(UserManager.class));
+    }
+
+    super.contextDestroyed(servletContextEvent);
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -78,8 +108,7 @@ public class ContextListener extends GuiceServletContextListener
       new ArrayList<Module>(bindExtProcessor.getModuleSet());
 
     moduleList.add(0, main);
-
-    Injector injector = Guice.createInjector(moduleList);
+    injector = Guice.createInjector(moduleList);
 
     // init RepositoryManager
     injector.getInstance(RepositoryManager.class).init(SCMContext.getContext());
@@ -88,8 +117,14 @@ public class ContextListener extends GuiceServletContextListener
     injector.getInstance(UserManager.class).init(SCMContext.getContext());
 
     // init Authenticator
-    injector.getInstance(Authenticator.class).init(SCMContext.getContext());
+    injector.getInstance(AuthenticationManager.class).init(
+        SCMContext.getContext());
 
     return injector;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Injector injector;
 }

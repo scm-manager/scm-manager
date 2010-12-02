@@ -35,31 +35,22 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.servlet.SessionScoped;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.user.User;
-import sonia.scm.user.UserManager;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@SessionScoped
-public class BasicSecurityContext implements WebSecurityContext
+public class AuthenticationResult
 {
 
-  /** the logger for BasicSecurityContext */
-  private static final Logger logger =
-    LoggerFactory.getLogger(BasicSecurityContext.class);
+  /** Field description */
+  public static final AuthenticationResult NEXT =
+    new AuthenticationResult(AuthenticationState.NEXT);
+
+  /** Field description */
+  public static final AuthenticationResult FAILED =
+    new AuthenticationResult(AuthenticationState.FAILED);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -67,15 +58,24 @@ public class BasicSecurityContext implements WebSecurityContext
    * Constructs ...
    *
    *
-   * @param authenticator
-   * @param userManager
+   * @param state
    */
-  @Inject
-  public BasicSecurityContext(AuthenticationManager authenticator,
-                              UserManager userManager)
+  public AuthenticationResult(AuthenticationState state)
   {
-    this.authenticator = authenticator;
-    this.userManager = userManager;
+    this.state = state;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param user
+   * @param state
+   */
+  public AuthenticationResult(User user, AuthenticationState state)
+  {
+    this.user = user;
+    this.state = state;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -84,58 +84,23 @@ public class BasicSecurityContext implements WebSecurityContext
    * Method description
    *
    *
-   * @param request
-   * @param response
-   * @param username
-   * @param password
-   *
    * @return
    */
   @Override
-  public User authenticate(HttpServletRequest request,
-                           HttpServletResponse response, String username,
-                           String password)
+  public String toString()
   {
-    AuthenticationResult result = authenticator.authenticate(request, response,
-                                    username, password);
+    StringBuilder out = new StringBuilder("user: ");
 
-    if (result.getState().isSuccessfully())
+    if (user != null)
     {
-      user = result.getUser();
-
-      try
-      {
-        switch (result.getState())
-        {
-          case CREATE_USER :
-            userManager.create(user);
-
-            break;
-
-          case MODIFY_USER :
-            userManager.modify(user);
-        }
-      }
-      catch (Exception ex)
-      {
-        logger.error(ex.getMessage(), ex);
-      }
+      out.append(user.getName());
+    }
+    else
+    {
+      out.append("null");
     }
 
-    return user;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   */
-  @Override
-  public void logout(HttpServletRequest request, HttpServletResponse response)
-  {
-    user = null;
+    return out.append(", state: ").append(state.toString()).toString();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -146,10 +111,9 @@ public class BasicSecurityContext implements WebSecurityContext
    *
    * @return
    */
-  @Override
-  public User getUser()
+  public AuthenticationState getState()
   {
-    return user;
+    return state;
   }
 
   /**
@@ -158,20 +122,16 @@ public class BasicSecurityContext implements WebSecurityContext
    *
    * @return
    */
-  @Override
-  public boolean isAuthenticated()
+  public User getUser()
   {
-    return user != null;
+    return user;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private AuthenticationManager authenticator;
+  private AuthenticationState state;
 
   /** Field description */
   private User user;
-
-  /** Field description */
-  private UserManager userManager;
 }

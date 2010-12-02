@@ -36,15 +36,19 @@ package sonia.scm.web.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.servlet.SessionScoped;
+import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContextProvider;
+import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,13 +57,19 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-@SessionScoped
-public class BasicSecurityContext implements WebSecurityContext
+@Singleton
+public class XmlAuthenticationManager implements AuthenticationManager
 {
 
-  /** the logger for BasicSecurityContext */
+  /** Field description */
+  public static final String NAME_DIRECTORY = "users";
+
+  /** Field description */
+  public static final String TYPE = "xml";
+
+  /** the logger for XmlAuthenticationManager */
   private static final Logger logger =
-    LoggerFactory.getLogger(BasicSecurityContext.class);
+    LoggerFactory.getLogger(XmlAuthenticationManager.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -67,15 +77,15 @@ public class BasicSecurityContext implements WebSecurityContext
    * Constructs ...
    *
    *
-   * @param authenticator
    * @param userManager
+   * @param encryptionHandler
    */
   @Inject
-  public BasicSecurityContext(AuthenticationManager authenticator,
-                              UserManager userManager)
+  public XmlAuthenticationManager(UserManager userManager,
+                                  EncryptionHandler encryptionHandler)
   {
-    this.authenticator = authenticator;
     this.userManager = userManager;
+    this.encryptionHandler = encryptionHandler;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -92,85 +102,112 @@ public class BasicSecurityContext implements WebSecurityContext
    * @return
    */
   @Override
-  public User authenticate(HttpServletRequest request,
-                           HttpServletResponse response, String username,
-                           String password)
+  public AuthenticationResult authenticate(HttpServletRequest request,
+          HttpServletResponse response, String username, String password)
   {
-    AuthenticationResult result = authenticator.authenticate(request, response,
-                                    username, password);
+    AuthenticationResult result = null;
+    User user = userManager.get(username);
 
-    if (result.getState().isSuccessfully())
+    if (user != null)
     {
-      user = result.getUser();
-
-      try
+      if (TYPE.equals(user.getType()))
       {
-        switch (result.getState())
-        {
-          case CREATE_USER :
-            userManager.create(user);
-
-            break;
-
-          case MODIFY_USER :
-            userManager.modify(user);
-        }
+        result = authenticate(user, username, password);
       }
-      catch (Exception ex)
+      else
       {
-        logger.error(ex.getMessage(), ex);
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("{} is not an xml user", username);
+        }
+
+        result = AuthenticationResult.NEXT;
       }
     }
+    else
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("could not find user {}", username);
+      }
 
-    return user;
+      result = AuthenticationResult.NEXT;
+    }
+
+    return result;
   }
 
   /**
    * Method description
    *
    *
-   * @param request
-   * @param response
+   * @throws IOException
    */
   @Override
-  public void logout(HttpServletRequest request, HttpServletResponse response)
+  public void close() throws IOException
   {
-    user = null;
-  }
 
-  //~--- get methods ----------------------------------------------------------
+    // do nothing
+  }
 
   /**
    * Method description
    *
+   *
+   * @param provider
+   */
+  @Override
+  public void init(SCMContextProvider provider)
+  {
+
+    // do nothing
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param username
+   * @param password
    *
    * @return
    */
-  @Override
-  public User getUser()
+  private AuthenticationResult authenticate(User user, String username,
+          String password)
   {
-    return user;
-  }
+    AuthenticationResult result = null;
+    String encryptedPassword = encryptionHandler.encrypt(password);
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public boolean isAuthenticated()
-  {
-    return user != null;
+    if (!encryptedPassword.equalsIgnoreCase(user.getPassword()))
+    {
+      user = null;
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("password for user {} is wrong", username);
+      }
+
+      result = AuthenticationResult.FAILED;
+    }
+    else
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("user {} logged in successfully", username);
+      }
+
+      user.setPassword(null);
+      result = new AuthenticationResult(user, AuthenticationState.SUCCESS);
+    }
+
+    return result;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private AuthenticationManager authenticator;
-
-  /** Field description */
-  private User user;
+  private EncryptionHandler encryptionHandler;
 
   /** Field description */
   private UserManager userManager;

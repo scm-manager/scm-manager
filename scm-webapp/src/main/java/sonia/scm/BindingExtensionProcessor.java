@@ -46,7 +46,8 @@ import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionProcessor;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.security.EncryptionHandler;
-import sonia.scm.web.security.Authenticator;
+import sonia.scm.web.security.AuthenticationManager;
+import sonia.scm.web.security.XmlAuthenticationManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -90,6 +91,10 @@ public class BindingExtensionProcessor implements ExtensionProcessor
   {
     Multibinder<RepositoryHandler> repositoryHandlers =
       Multibinder.newSetBinder(binder, RepositoryHandler.class);
+    Multibinder<AuthenticationManager> authenticators =
+      Multibinder.newSetBinder(binder, AuthenticationManager.class);
+
+    authenticators.addBinding().to(XmlAuthenticationManager.class);
 
     for (Class extensionClass : extensions)
     {
@@ -103,17 +108,21 @@ public class BindingExtensionProcessor implements ExtensionProcessor
           }
 
           binder.bind(extensionClass);
-
           repositoryHandlers.addBinding().to(extensionClass);
-
         }
         else if (EncryptionHandler.class.isAssignableFrom(extensionClass))
         {
           bind(binder, EncryptionHandler.class, extensionClass);
         }
-        else if (Authenticator.class.isAssignableFrom(extensionClass))
+        else if (AuthenticationManager.class.isAssignableFrom(extensionClass))
         {
-          bind(binder, Authenticator.class, extensionClass);
+          if (logger.isInfoEnabled())
+          {
+            logger.info("bind Authenticator {}", extensionClass.getName());
+          }
+
+          binder.bind(extensionClass);
+          authenticators.addBinding().to(extensionClass);
         }
         else
         {

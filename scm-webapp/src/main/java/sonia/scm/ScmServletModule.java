@@ -56,10 +56,10 @@ import sonia.scm.security.SecurityContext;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.xml.XmlUserManager;
 import sonia.scm.util.DebugServlet;
-import sonia.scm.web.security.Authenticator;
+import sonia.scm.web.security.AuthenticationManager;
 import sonia.scm.web.security.BasicSecurityContext;
+import sonia.scm.web.security.ChainAuthenticatonManager;
 import sonia.scm.web.security.WebSecurityContext;
-import sonia.scm.web.security.XmlAuthenticator;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -155,10 +155,14 @@ public class ScmServletModule extends ServletModule
     bind(ScmConfiguration.class).toInstance(config);
     bind(PluginManager.class).toInstance(pluginManager);
     bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
-    bind(Authenticator.class).to(XmlAuthenticator.class);
+    bindExtProcessor.bindExtensions(binder());
+
+    // bind security stuff
+    bind(AuthenticationManager.class).to(ChainAuthenticatonManager.class);
     bind(SecurityContext.class).to(BasicSecurityContext.class);
     bind(WebSecurityContext.class).to(BasicSecurityContext.class);
-    bindExtProcessor.bindExtensions(binder());
+
+    // bind security cache
     bind(CacheManager.class).to(EhCacheManager.class);
 
     // bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(

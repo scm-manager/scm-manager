@@ -36,15 +36,20 @@ package sonia.scm.web.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.servlet.SessionScoped;
+import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.user.User;
-import sonia.scm.user.UserManager;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.util.AssertUtil;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,13 +58,13 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-@SessionScoped
-public class BasicSecurityContext implements WebSecurityContext
+@Singleton
+public class ChainAuthenticatonManager implements AuthenticationManager
 {
 
-  /** the logger for BasicSecurityContext */
+  /** the logger for ChainAuthenticatonManager */
   private static final Logger logger =
-    LoggerFactory.getLogger(BasicSecurityContext.class);
+    LoggerFactory.getLogger(ChainAuthenticatonManager.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -67,15 +72,13 @@ public class BasicSecurityContext implements WebSecurityContext
    * Constructs ...
    *
    *
-   * @param authenticator
-   * @param userManager
+   * @param authenticatorSet
    */
   @Inject
-  public BasicSecurityContext(AuthenticationManager authenticator,
-                              UserManager userManager)
+  public ChainAuthenticatonManager(Set<AuthenticationManager> authenticatorSet)
   {
-    this.authenticator = authenticator;
-    this.userManager = userManager;
+    AssertUtil.assertIsNotEmpty(authenticatorSet);
+    this.authenticatorSet = authenticatorSet;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -92,28 +95,28 @@ public class BasicSecurityContext implements WebSecurityContext
    * @return
    */
   @Override
-  public User authenticate(HttpServletRequest request,
-                           HttpServletResponse response, String username,
-                           String password)
+  public AuthenticationResult authenticate(HttpServletRequest request,
+          HttpServletResponse response, String username, String password)
   {
-    AuthenticationResult result = authenticator.authenticate(request, response,
-                                    username, password);
+    AuthenticationResult result = null;
 
-    if (result.getState().isSuccessfully())
+    for (AuthenticationManager authenticator : authenticatorSet)
     {
-      user = result.getUser();
-
       try
       {
-        switch (result.getState())
+        result = authenticator.authenticate(request, response, username,
+                password);
+
+        if (logger.isDebugEnabled())
         {
-          case CREATE_USER :
-            userManager.create(user);
+          logger.debug("authenticator {} ends with result, {}",
+                       authenticator.getClass().getName(), result);
+        }
 
-            break;
-
-          case MODIFY_USER :
-            userManager.modify(user);
+        if (((result != null) && result.getState().isSuccessfully())
+            || (result.getState() == AuthenticationState.FAILED))
+        {
+          break;
         }
       }
       catch (Exception ex)
@@ -122,56 +125,41 @@ public class BasicSecurityContext implements WebSecurityContext
       }
     }
 
-    return user;
+    return result;
   }
 
   /**
    * Method description
    *
    *
-   * @param request
-   * @param response
+   * @throws IOException
    */
   @Override
-  public void logout(HttpServletRequest request, HttpServletResponse response)
+  public void close() throws IOException
   {
-    user = null;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public User getUser()
-  {
-    return user;
+    for (AuthenticationManager authenticator : authenticatorSet)
+    {
+      IOUtil.close(authenticator);
+    }
   }
 
   /**
    * Method description
    *
    *
-   * @return
+   * @param context
    */
   @Override
-  public boolean isAuthenticated()
+  public void init(SCMContextProvider context)
   {
-    return user != null;
+    for (AuthenticationManager authenticator : authenticatorSet)
+    {
+      authenticator.init(context);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private AuthenticationManager authenticator;
-
-  /** Field description */
-  private User user;
-
-  /** Field description */
-  private UserManager userManager;
+  private Set<AuthenticationManager> authenticatorSet;
 }
