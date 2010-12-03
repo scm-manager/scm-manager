@@ -17,7 +17,7 @@
 
   <modules>
     <module>svnkit-dav</module>
-    <module>closure-compiler</module>
+    <module>shared-libs</module>
   </modules>
 
 </project>

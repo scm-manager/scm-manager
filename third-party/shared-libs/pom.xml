@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>sonia.scm.third-party</groupId>
+    <artifactId>sonia.scm.third-party</artifactId>
+    <version>1.0-M3-SNAPSHOT</version>
+  </parent>
+
+  <groupId>sonia.scm.third-party</groupId>
+  <artifactId>shared-libs</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0-M3-SNAPSHOT</version>
+  <name>shared-libs</name>
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>2.3.1</version>
+        <executions>
+          <execution>
+            <id>google-closure</id>
+            <goals>
+              <goal>install-file</goal>
+            </goals>
+            <phase>install</phase>
+            <configuration>
+              <file>${project.basedir}/src/main/lib/compiler-20100917.jar</file>
+              <groupId>com.google.closure</groupId>
+              <artifactId>compiler</artifactId>
+              <version>20100917</version>
+              <packaging>jar</packaging>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+  </build>
+
+</project>

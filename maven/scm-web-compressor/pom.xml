@@ -43,9 +43,8 @@
 
     <dependency>
       <groupId>com.google.closure</groupId>
-      <artifactId>repacked-compiler</artifactId>
+      <artifactId>compiler</artifactId>
       <version>20100917</version>
-      <classifier>full</classifier>
     </dependency>
 
   </dependencies>
