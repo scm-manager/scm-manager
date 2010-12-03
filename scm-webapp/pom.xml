@@ -139,6 +139,25 @@
 
     <finalName>scm-webapp</finalName>
   </build>
+
+  <profiles>
+
+    <profile>
+      <id>development</id>
+
+      <dependencies>
+
+        <dependency>
+          <groupId>sonia.scm.plugins</groupId>
+          <artifactId>scm-graph-plugin</artifactId>
+          <version>1.0-M3-SNAPSHOT</version>
+        </dependency>
+
+      </dependencies>
+
+    </profile>
+
+  </profiles>
   
 </project>
 
