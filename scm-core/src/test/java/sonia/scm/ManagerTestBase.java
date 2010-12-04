@@ -1,0 +1,148 @@
+/**
+ * Copyright (c) 2010, Sebastian Sdorra
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of SCM-Manager; nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * http://bitbucket.org/sdorra/scm-manager
+ *
+ */
+
+
+
+package sonia.scm;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.inject.Provider;
+
+import org.junit.After;
+import org.junit.Before;
+
+import sonia.scm.security.SecurityContext;
+import sonia.scm.user.User;
+import sonia.scm.util.IOUtil;
+
+import static org.junit.Assert.*;
+
+import static org.mockito.Mockito.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+import java.io.IOException;
+
+import java.util.UUID;
+
+/**
+ *
+ * @author Sebastian Sdorra
+ *
+ * @param <T>
+ * @param <E>
+ */
+public abstract class ManagerTestBase<T extends TypedObject,
+        E extends Exception>
+{
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected abstract Manager<T, E> createManager();
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @After
+  public void tearDownTest() throws IOException
+  {
+    try
+    {
+      manager.close();
+    }
+    finally
+    {
+      IOUtil.delete(tempDirectory);
+    }
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Before
+  public void setUpTest()
+  {
+    tempDirectory = new File(System.getProperty("java.io.tmpdir"),
+                             UUID.randomUUID().toString());
+    assertTrue(tempDirectory.mkdirs());
+    manager = createManager();
+
+    SCMContextProvider provider = mock(SCMContextProvider.class);
+
+    when(provider.getBaseDirectory()).thenReturn(tempDirectory);
+    manager.init(provider);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected Provider<SecurityContext> getAdminSecurityContextProvider()
+  {
+    User admin = new User("scmadmin", "SCM Admin", "scmadmin@scm.org");
+
+    admin.setAdmin(true);
+
+    SecurityContext context = mock(SecurityContext.class);
+
+    when(context.getUser()).thenReturn(admin);
+
+    Provider<SecurityContext> scp = mock(Provider.class);
+
+    when(scp.get()).thenReturn(context);
+
+    return scp;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected Manager<T, E> manager;
+
+  /** Field description */
+  protected File tempDirectory;
+}

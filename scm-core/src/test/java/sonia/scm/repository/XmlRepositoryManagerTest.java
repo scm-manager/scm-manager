@@ -31,17 +31,23 @@
 
 
 
-package sonia.scm.user;
+package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.user.xml.XmlUserManager;
+import sonia.scm.Manager;
+import sonia.scm.repository.xml.XmlRepositoryManager;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class XmlUserManagerTest extends UserManagerTestBase
+public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
 {
 
   /**
@@ -51,8 +57,13 @@ public class XmlUserManagerTest extends UserManagerTestBase
    * @return
    */
   @Override
-  public UserManager createManager()
+  protected Manager<Repository, RepositoryException> createManager()
   {
-    return new XmlUserManager(getAdminSecurityContextProvider());
+    Set<RepositoryHandler> handlerSet = new HashSet<RepositoryHandler>();
+
+    handlerSet.add(new DummyRepositoryHandler());
+
+    return new XmlRepositoryManager(getAdminSecurityContextProvider(),
+                                    handlerSet);
   }
 }

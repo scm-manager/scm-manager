@@ -31,18 +31,36 @@
 
 
 
-package sonia.scm.user;
+package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.user.xml.XmlUserManager;
+import sonia.scm.Type;
+import sonia.scm.util.IOUtil;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class XmlUserManagerTest extends UserManagerTestBase
+public class DummyRepositoryHandler
+        extends AbstractSimpleRepositoryHandler<SimpleRepositoryConfig>
 {
+
+  /** Field description */
+  public static final String TYPE_DISPLAYNAME = "Dummy";
+
+  /** Field description */
+  public static final String TYPE_NAME = "dummy";
+
+  /** Field description */
+  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -51,8 +69,54 @@ public class XmlUserManagerTest extends UserManagerTestBase
    * @return
    */
   @Override
-  public UserManager createManager()
+  public Type getType()
   {
-    return new XmlUserManager(getAdminSecurityContextProvider());
+    return TYPE;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param directory
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Override
+  protected void create(Repository repository, File directory)
+          throws RepositoryException, IOException
+  {
+
+    // do nothing
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected SimpleRepositoryConfig createInitialConfig()
+  {
+    return new SimpleRepositoryConfig();
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected Class<SimpleRepositoryConfig> getConfigClass()
+  {
+    return SimpleRepositoryConfig.class;
   }
 }

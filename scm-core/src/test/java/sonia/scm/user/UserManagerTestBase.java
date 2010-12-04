@@ -35,20 +35,15 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import sonia.scm.SCMContextProvider;
-import sonia.scm.util.IOUtil;
+import sonia.scm.Manager;
+import sonia.scm.ManagerTestBase;
 
 import static org.junit.Assert.*;
 
-import static org.mockito.Mockito.*;
-
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -61,39 +56,13 @@ import java.util.UUID;
  * @author Sebastian Sdorra
  */
 public abstract class UserManagerTestBase
+        extends ManagerTestBase<User, UserException>
 {
 
   /** Field description */
   public static final int THREAD_COUNT = 10;
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public abstract UserManager createUserHandler();
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @After
-  public void tearDownTest() throws IOException
-  {
-    try
-    {
-      userManager.close();
-    }
-    finally
-    {
-      IOUtil.delete(tempDirectory);
-    }
-  }
 
   /**
    * Method description
@@ -107,9 +76,9 @@ public abstract class UserManagerTestBase
   {
     User zaphod = getTestUser();
 
-    userManager.create(zaphod);
+    manager.create(zaphod);
 
-    User otherUser = userManager.get("zaphod");
+    User otherUser = manager.get("zaphod");
 
     assertNotNull(otherUser);
     assertUserEquals(zaphod, otherUser);
@@ -127,12 +96,12 @@ public abstract class UserManagerTestBase
   {
     User zaphod = getTestUser();
 
-    userManager.create(zaphod);
-    assertNotNull(userManager.get("zaphod"));
+    manager.create(zaphod);
+    assertNotNull(manager.get("zaphod"));
 
     User sameUser = getTestUser();
 
-    userManager.create(sameUser);
+    manager.create(sameUser);
   }
 
   /**
@@ -147,10 +116,10 @@ public abstract class UserManagerTestBase
   {
     User zaphod = getTestUser();
 
-    userManager.create(zaphod);
-    assertNotNull(userManager.get("zaphod"));
-    userManager.delete(zaphod);
-    assertNull(userManager.get("zaphod"));
+    manager.create(zaphod);
+    assertNotNull(manager.get("zaphod"));
+    manager.delete(zaphod);
+    assertNull(manager.get("zaphod"));
   }
 
   /**
@@ -165,12 +134,12 @@ public abstract class UserManagerTestBase
   {
     User zaphod = getTestUser();
 
-    userManager.create(zaphod);
-    assertNotNull(userManager.get("zaphod"));
+    manager.create(zaphod);
+    assertNotNull(manager.get("zaphod"));
 
     // test for reference
     zaphod.setDisplayName("Tricia McMillan");
-    zaphod = userManager.get("zaphod");
+    zaphod = manager.get("zaphod");
     assertNotNull(zaphod);
     assertEquals("Zaphod Beeblebrox", zaphod.getDisplayName());
   }
@@ -187,18 +156,18 @@ public abstract class UserManagerTestBase
   {
     User zaphod = getTestUser();
 
-    userManager.create(zaphod);
-    assertNotNull(userManager.get("zaphod"));
+    manager.create(zaphod);
+    assertNotNull(manager.get("zaphod"));
 
     User trillian = new User("trillian", "Tricia McMillan",
                              "tricia.mcmillan@hitchhiker.com");
 
-    userManager.create(trillian);
-    assertNotNull(userManager.get("trillian"));
+    manager.create(trillian);
+    assertNotNull(manager.get("trillian"));
 
     boolean foundZaphod = false;
     boolean foundTrillian = false;
-    Collection<User> users = userManager.getAll();
+    Collection<User> users = manager.getAll();
 
     assertNotNull(users);
     assertFalse(users.isEmpty());
@@ -237,7 +206,7 @@ public abstract class UserManagerTestBase
 
     User reference = null;
 
-    for (User u : userManager.getAll())
+    for (User u : manager.getAll())
     {
       if (u.getName().equals("trillian"))
       {
@@ -261,12 +230,12 @@ public abstract class UserManagerTestBase
   {
     User zaphod = getTestUser();
 
-    userManager.create(zaphod);
-    assertNotNull(userManager.get("zaphod"));
+    manager.create(zaphod);
+    assertNotNull(manager.get("zaphod"));
     zaphod.setDisplayName("Tricia McMillan");
-    userManager.modify(zaphod);
+    manager.modify(zaphod);
 
-    User otherUser = userManager.get("zaphod");
+    User otherUser = manager.get("zaphod");
 
     assertNotNull(otherUser);
     assertEquals(otherUser.getDisplayName(), "Tricia McMillan");
@@ -284,7 +253,7 @@ public abstract class UserManagerTestBase
   {
     User zaphod = getTestUser();
 
-    userManager.modify(zaphod);
+    manager.modify(zaphod);
   }
 
   /**
@@ -299,12 +268,12 @@ public abstract class UserManagerTestBase
   public void testMultiThreaded()
           throws UserException, IOException, InterruptedException
   {
-    int initialSize = userManager.getAll().size();
+    int initialSize = manager.getAll().size();
     List<MultiThreadTester> testers = new ArrayList<MultiThreadTester>();
 
     for (int i = 0; i < THREAD_COUNT; i++)
     {
-      testers.add(new MultiThreadTester(userManager));
+      testers.add(new MultiThreadTester(manager));
     }
 
     for (MultiThreadTester tester : testers)
@@ -328,7 +297,7 @@ public abstract class UserManagerTestBase
       }
     }
 
-    assertTrue((initialSize + THREAD_COUNT) == userManager.getAll().size());
+    assertTrue((initialSize + THREAD_COUNT) == manager.getAll().size());
   }
 
   /**
@@ -343,34 +312,12 @@ public abstract class UserManagerTestBase
   {
     User zaphod = getTestUser();
 
-    userManager.create(zaphod);
-    assertNotNull(userManager.get("zaphod"));
+    manager.create(zaphod);
+    assertNotNull(manager.get("zaphod"));
     zaphod.setDisplayName("Tricia McMillan");
-    userManager.refresh(zaphod);
+    manager.refresh(zaphod);
     assertEquals(zaphod.getDisplayName(), "Zaphod Beeblebrox");
   }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Before
-  public void setUpTest()
-  {
-    tempDirectory = new File(System.getProperty("java.io.tmpdir"),
-                             UUID.randomUUID().toString());
-    assertTrue(tempDirectory.mkdirs());
-    userManager = createUserHandler();
-
-    SCMContextProvider provider = mock(SCMContextProvider.class);
-
-    when(provider.getBaseDirectory()).thenReturn(tempDirectory);
-    userManager.init(provider);
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -419,9 +366,9 @@ public abstract class UserManagerTestBase
      *
      * @param userManager
      */
-    public MultiThreadTester(UserManager userManager)
+    public MultiThreadTester(Manager<User, UserException> userManager)
     {
-      this.userManager = userManager;
+      this.manager = userManager;
     }
 
     //~--- methods ------------------------------------------------------------
@@ -463,7 +410,7 @@ public abstract class UserManagerTestBase
       User user = new User(id, id.concat(" displayName"),
                            id.concat("@mail.com"));
 
-      userManager.create(user);
+      manager.create(user);
 
       return user;
     }
@@ -484,14 +431,14 @@ public abstract class UserManagerTestBase
       String nd = name.concat(" new displayname");
 
       user.setDisplayName(nd);
-      userManager.modify(user);
+      manager.modify(user);
 
-      User otherUser = userManager.get(name);
+      User otherUser = manager.get(name);
 
       assertNotNull(otherUser);
       assertEquals(nd, otherUser.getDisplayName());
-      userManager.delete(user);
-      otherUser = userManager.get(name);
+      manager.delete(user);
+      otherUser = manager.get(name);
       assertNull(otherUser);
     }
 
@@ -501,15 +448,6 @@ public abstract class UserManagerTestBase
     private boolean finished = false;
 
     /** Field description */
-    private UserManager userManager;
+    private Manager<User, UserException> manager;
   }
-
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private File tempDirectory;
-
-  /** Field description */
-  private UserManager userManager;
 }
