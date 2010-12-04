@@ -235,7 +235,12 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void modify(User user) throws UserException, IOException
   {
-    SecurityUtil.assertIsAdmin(scurityContextProvider);
+    User currentUser = SecurityUtil.getCurrentUser(scurityContextProvider);
+
+    if (!user.equals(currentUser) &&!currentUser.isAdmin())
+    {
+      throw new ScmSecurityException("admin account is required");
+    }
 
     String name = user.getName();
 

@@ -74,6 +74,7 @@ public class AuthenticationResult
    */
   public AuthenticationResult(User user)
   {
+    this.user = user;
     this.state = AuthenticationState.SUCCESS;
   }
 
