@@ -44,6 +44,7 @@
     <module>scm-server-api</module>
     <module>scm-server-jetty</module>
     <module>plugins</module>
+    <module>samples</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
   </modules>
