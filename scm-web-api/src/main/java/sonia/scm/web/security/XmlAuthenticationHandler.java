@@ -58,7 +58,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class XmlAuthenticationManager implements AuthenticationManager
+public class XmlAuthenticationHandler implements AuthenticationHandler
 {
 
   /** Field description */
@@ -67,9 +67,9 @@ public class XmlAuthenticationManager implements AuthenticationManager
   /** Field description */
   public static final String TYPE = "xml";
 
-  /** the logger for XmlAuthenticationManager */
+  /** the logger for XmlAuthenticationHandler */
   private static final Logger logger =
-    LoggerFactory.getLogger(XmlAuthenticationManager.class);
+    LoggerFactory.getLogger(XmlAuthenticationHandler.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -81,7 +81,7 @@ public class XmlAuthenticationManager implements AuthenticationManager
    * @param encryptionHandler
    */
   @Inject
-  public XmlAuthenticationManager(UserManager userManager,
+  public XmlAuthenticationHandler(UserManager userManager,
                                   EncryptionHandler encryptionHandler)
   {
     this.userManager = userManager;
@@ -121,7 +121,7 @@ public class XmlAuthenticationManager implements AuthenticationManager
           logger.debug("{} is not an xml user", username);
         }
 
-        result = AuthenticationResult.NEXT;
+        result = AuthenticationResult.NOT_FOUND;
       }
     }
     else
@@ -131,7 +131,7 @@ public class XmlAuthenticationManager implements AuthenticationManager
         logger.debug("could not find user {}", username);
       }
 
-      result = AuthenticationResult.NEXT;
+      result = AuthenticationResult.NOT_FOUND;
     }
 
     return result;
@@ -162,6 +162,22 @@ public class XmlAuthenticationManager implements AuthenticationManager
 
     // do nothing
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getType()
+  {
+    return TYPE;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

@@ -33,40 +33,36 @@
 
 package sonia.scm.web.security;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.Initable;
+import sonia.scm.TypedObject;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.Closeable;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public enum AuthenticationState
+public interface AuthenticationHandler extends Initable, Closeable, TypedObject
 {
-  SUCCESS(true), NOT_FOUND(false), FAILED(false);
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param successfully
-   */
-  private AuthenticationState(boolean successfully)
-  {
-    this.successfully = successfully;
-  }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
+   * @param request
+   * @param response
+   * @param username
+   * @param password
+   *
    * @return
    */
-  public boolean isSuccessfully()
-  {
-    return successfully;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private boolean successfully = false;
+  public AuthenticationResult authenticate(HttpServletRequest request,
+          HttpServletResponse response, String username, String password);
 }

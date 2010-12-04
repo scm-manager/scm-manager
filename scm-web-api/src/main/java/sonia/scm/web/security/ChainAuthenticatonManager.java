@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 
@@ -72,13 +73,14 @@ public class ChainAuthenticatonManager implements AuthenticationManager
    * Constructs ...
    *
    *
-   * @param authenticatorSet
+   * @param authenticationHandlerSet
    */
   @Inject
-  public ChainAuthenticatonManager(Set<AuthenticationManager> authenticatorSet)
+  public ChainAuthenticatonManager(
+          Set<AuthenticationHandler> authenticationHandlerSet)
   {
-    AssertUtil.assertIsNotEmpty(authenticatorSet);
-    this.authenticatorSet = authenticatorSet;
+    AssertUtil.assertIsNotEmpty(authenticationHandlerSet);
+    this.authenticationHandlerSet = authenticationHandlerSet;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -95,17 +97,18 @@ public class ChainAuthenticatonManager implements AuthenticationManager
    * @return
    */
   @Override
-  public AuthenticationResult authenticate(HttpServletRequest request,
-          HttpServletResponse response, String username, String password)
+  public User authenticate(HttpServletRequest request,
+                           HttpServletResponse response, String username,
+                           String password)
   {
-    AuthenticationResult result = null;
+    User user = null;
 
-    for (AuthenticationManager authenticator : authenticatorSet)
+    for (AuthenticationHandler authenticator : authenticationHandlerSet)
     {
       try
       {
-        result = authenticator.authenticate(request, response, username,
-                password);
+        AuthenticationResult result = authenticator.authenticate(request,
+                                        response, username, password);
 
         if (logger.isDebugEnabled())
         {
@@ -113,9 +116,16 @@ public class ChainAuthenticatonManager implements AuthenticationManager
                        authenticator.getClass().getName(), result);
         }
 
-        if (((result != null) && result.getState().isSuccessfully())
-            || (result.getState() == AuthenticationState.FAILED))
+        if ((result != null) && (result.getState() != null)
+            && (result.getState().isSuccessfully()
+                || (result.getState() == AuthenticationState.FAILED)))
         {
+          if (result.getState().isSuccessfully() && (result.getUser() != null))
+          {
+            user = result.getUser();
+            user.setType(authenticator.getType());
+          }
+
           break;
         }
       }
@@ -125,7 +135,7 @@ public class ChainAuthenticatonManager implements AuthenticationManager
       }
     }
 
-    return result;
+    return user;
   }
 
   /**
@@ -137,7 +147,7 @@ public class ChainAuthenticatonManager implements AuthenticationManager
   @Override
   public void close() throws IOException
   {
-    for (AuthenticationManager authenticator : authenticatorSet)
+    for (AuthenticationHandler authenticator : authenticationHandlerSet)
     {
       IOUtil.close(authenticator);
     }
@@ -152,7 +162,7 @@ public class ChainAuthenticatonManager implements AuthenticationManager
   @Override
   public void init(SCMContextProvider context)
   {
-    for (AuthenticationManager authenticator : authenticatorSet)
+    for (AuthenticationHandler authenticator : authenticationHandlerSet)
     {
       authenticator.init(context);
     }
@@ -161,5 +171,5 @@ public class ChainAuthenticatonManager implements AuthenticationManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Set<AuthenticationManager> authenticatorSet;
+  private Set<AuthenticationHandler> authenticationHandlerSet;
 }

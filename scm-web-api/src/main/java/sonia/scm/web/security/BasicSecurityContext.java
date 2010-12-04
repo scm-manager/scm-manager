@@ -96,28 +96,26 @@ public class BasicSecurityContext implements WebSecurityContext
                            HttpServletResponse response, String username,
                            String password)
   {
-    AuthenticationResult result = authenticator.authenticate(request, response,
-                                    username, password);
+    user = authenticator.authenticate(request, response, username, password);
 
-    if (result.getState().isSuccessfully())
+    if (user != null)
     {
-      user = result.getUser();
-
       try
       {
-        switch (result.getState())
+        user.setLastLogin(System.currentTimeMillis());
+
+        if (userManager.contains(username))
         {
-          case CREATE_USER :
-            userManager.create(user);
-
-            break;
-
-          case MODIFY_USER :
-            userManager.modify(user);
+          userManager.modify(user);
+        }
+        else
+        {
+          userManager.create(user);
         }
       }
       catch (Exception ex)
       {
+        user = null;
         logger.error(ex.getMessage(), ex);
       }
     }

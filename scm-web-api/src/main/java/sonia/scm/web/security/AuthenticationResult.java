@@ -45,8 +45,8 @@ public class AuthenticationResult
 {
 
   /** Field description */
-  public static final AuthenticationResult NEXT =
-    new AuthenticationResult(AuthenticationState.NEXT);
+  public static final AuthenticationResult NOT_FOUND =
+    new AuthenticationResult(AuthenticationState.NOT_FOUND);
 
   /** Field description */
   public static final AuthenticationResult FAILED =
@@ -63,6 +63,18 @@ public class AuthenticationResult
   public AuthenticationResult(AuthenticationState state)
   {
     this.state = state;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   *
+   * @param user
+   */
+  public AuthenticationResult(User user)
+  {
+    this.state = AuthenticationState.SUCCESS;
   }
 
   /**

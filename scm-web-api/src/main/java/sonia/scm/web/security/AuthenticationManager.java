@@ -36,6 +36,7 @@ package sonia.scm.web.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Initable;
+import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -62,6 +63,7 @@ public interface AuthenticationManager extends Initable, Closeable
    *
    * @return
    */
-  public AuthenticationResult authenticate(HttpServletRequest request,
-          HttpServletResponse response, String username, String password);
+  public User authenticate(HttpServletRequest request,
+                           HttpServletResponse response, String username,
+                           String password);
 }
