@@ -166,7 +166,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
     synchronized (XmlRepositoryDatabase.class)
     {
-      repositoryDB.add(repository);
+      repositoryDB.add(repository.clone());
       storeDB();
     }
 
@@ -305,7 +305,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
     if (fresh != null)
     {
-      repository.copyProperties(fresh);
+      fresh.copyProperties(repository);
     }
     else
     {
