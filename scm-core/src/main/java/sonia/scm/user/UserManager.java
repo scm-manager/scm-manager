@@ -43,4 +43,16 @@ import sonia.scm.Manager;
  * @author Sebastian Sdorra
  */
 public interface UserManager
-        extends Manager<User, UserException>, ListenerSupport<UserListener> {}
+        extends Manager<User, UserException>, ListenerSupport<UserListener>
+{
+
+  /**
+   * Method description
+   *
+   *
+   * @param username
+   *
+   * @return
+   */
+  public boolean contains(String username);
+}

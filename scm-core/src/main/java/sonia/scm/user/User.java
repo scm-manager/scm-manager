@@ -59,7 +59,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder =
 {
-  "name", "displayName", "mail", "password", "admin", "type"
+  "name", "displayName", "mail", "password", "admin", "type", "lastLogin"
 })
 public class User
         implements TypedObject, Principal, Cloneable, Validateable, Serializable
@@ -243,6 +243,17 @@ public class User
    *
    * @return
    */
+  public long getLastLogin()
+  {
+    return lastLogin;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getMail()
   {
     return mail;
@@ -336,6 +347,17 @@ public class User
    * Method description
    *
    *
+   * @param lastLogin
+   */
+  public void setLastLogin(long lastLogin)
+  {
+    this.lastLogin = lastLogin;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param mail
    */
   public void setMail(String mail)
@@ -384,6 +406,9 @@ public class User
 
   /** Field description */
   private String displayName;
+
+  /** Field description */
+  private long lastLogin;
 
   /** Field description */
   private String mail;

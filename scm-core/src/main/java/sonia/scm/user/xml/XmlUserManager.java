@@ -119,6 +119,20 @@ public class XmlUserManager extends AbstractUserManager
    * Method description
    *
    *
+   * @param username
+   *
+   * @return
+   */
+  @Override
+  public boolean contains(String username)
+  {
+    return userDB.contains(username);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param user
    *
    * @throws IOException
