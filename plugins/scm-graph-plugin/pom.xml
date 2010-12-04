@@ -14,7 +14,8 @@
   <artifactId>scm-graph-plugin</artifactId>
   <version>1.0-M3-SNAPSHOT</version>
   <name>scm-graph-plugin</name>
-  
+  <url>https://bitbucket.org/sdorra/scm-manager</url>
+
   <dependencies>
 
     <dependency>

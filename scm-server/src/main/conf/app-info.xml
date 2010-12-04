@@ -42,8 +42,8 @@
 
 <app-info>
 
-  <name>${pom.name}</name>
-  <version>${pom.version}</version>
+  <name>${project.name}</name>
+  <version>${project.version}</version>
   <appName>scm-webapp.war</appName>
 
 </app-info>
