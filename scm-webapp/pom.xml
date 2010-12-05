@@ -32,12 +32,6 @@
     </dependency>
 
     <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-web-api</artifactId>
-      <version>1.0-M3-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
       <version>1.0-M3-SNAPSHOT</version>
@@ -101,6 +95,15 @@
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache-core</artifactId>
       <version>${ehcache.version}</version>
+    </dependency>
+
+    <!-- test scope -->
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-test</artifactId>
+      <version>1.0-M3-SNAPSHOT</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

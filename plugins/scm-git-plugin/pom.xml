@@ -18,12 +18,6 @@
   <description>Plugin for the version control system Git</description>
 
   <dependencies>
-    
-    <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-web-api</artifactId>
-      <version>1.0-M3-SNAPSHOT</version>
-    </dependency>
 
     <dependency>
       <groupId>javax.servlet</groupId>

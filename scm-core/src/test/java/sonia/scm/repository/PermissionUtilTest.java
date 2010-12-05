@@ -44,6 +44,10 @@ import static org.junit.Assert.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Arrays;
+import sonia.scm.repository.Permission;
+import sonia.scm.repository.PermissionType;
+import sonia.scm.repository.PermissionUtil;
+import sonia.scm.repository.Repository;
 
 /**
  *

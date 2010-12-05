@@ -38,9 +38,8 @@
   <modules>
     <module>third-party</module>
     <module>scm-core</module>
+    <module>scm-test</module>
     <module>maven</module>
-    <module>scm-cli</module>
-    <module>scm-web-api</module>
     <module>scm-server-api</module>
     <module>scm-server-jetty</module>
     <module>plugins</module>
@@ -70,14 +69,14 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.8.2</version>
+      <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
-      <version>1.8.5</version>
+      <version>${mokito.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -251,6 +250,8 @@
   </profiles>
 
   <properties>
+    <mokito.version>1.8.5</mokito.version>
+    <junit.version>4.8.2</junit.version>
     <slf4j.version>1.6.1</slf4j.version>
     <servlet.version>2.5</servlet.version>
     <guice.version>2.0</guice.version>

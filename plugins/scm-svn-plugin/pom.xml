@@ -20,12 +20,6 @@
   <dependencies>
 
     <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-web-api</artifactId>
-      <version>1.0-M3-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.tmatesoft.svnkit</groupId>
       <artifactId>svnkit</artifactId>
       <version>${svnkit.version}</version>

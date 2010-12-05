@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <artifactId>scm</artifactId>
     <groupId>sonia.scm</groupId>
@@ -11,37 +11,30 @@
   </parent>
 
   <groupId>sonia.scm</groupId>
-  <artifactId>scm-web-api</artifactId>
+  <artifactId>scm-test</artifactId>
   <version>1.0-M3-SNAPSHOT</version>
-  <name>scm-web-api</name>
-
+  <name>scm-test</name>
+  
   <dependencies>
-
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>${servlet.version}</version>
-      <scope>provided</scope>
-    </dependency>
 
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
       <version>1.0-M3-SNAPSHOT</version>
     </dependency>
-
+    
     <dependency>
-      <groupId>com.sun.jersey</groupId>
-      <artifactId>jersey-core</artifactId>
-      <version>${jersey.version}</version>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>com.google.inject.extensions</groupId>
-      <artifactId>guice-servlet</artifactId>
-      <version>${guice.version}</version>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
+      <version>${mokito.version}</version>
     </dependency>
 
   </dependencies>
-
+  
 </project>
