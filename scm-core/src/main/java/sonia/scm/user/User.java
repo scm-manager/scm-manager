@@ -39,6 +39,7 @@ import sonia.scm.TypedObject;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
+import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -49,7 +50,7 @@ import java.security.Principal;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -57,10 +58,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder =
-{
-  "name", "displayName", "mail", "password", "admin", "type", "lastLogin"
-})
 public class User
         implements TypedObject, Principal, Cloneable, Validateable, Serializable
 {
@@ -232,6 +229,17 @@ public class User
    *
    * @return
    */
+  public long getCreationDate()
+  {
+    return creationDate;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getDisplayName()
   {
     return displayName;
@@ -336,6 +344,17 @@ public class User
    * Method description
    *
    *
+   * @param creationDate
+   */
+  public void setCreationDate(long creationDate)
+  {
+    this.creationDate = creationDate;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param displayName
    */
   public void setDisplayName(String displayName)
@@ -405,10 +424,15 @@ public class User
   private boolean admin;
 
   /** Field description */
+  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
+  private Long creationDate;
+
+  /** Field description */
   private String displayName;
 
   /** Field description */
-  private long lastLogin;
+  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
+  private Long lastLogin;
 
   /** Field description */
   private String mail;

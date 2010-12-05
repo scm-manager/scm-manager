@@ -165,6 +165,8 @@ public class XmlUserManager extends AbstractUserManager
       user.setType(TYPE);
     }
 
+    user.setCreationDate(System.currentTimeMillis());
+
     synchronized (XmlUserManager.class)
     {
       userDB.add(user.clone());

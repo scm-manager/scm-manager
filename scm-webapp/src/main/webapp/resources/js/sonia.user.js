@@ -60,7 +60,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
     var userStore = new Sonia.rest.JsonStore({
       url: restUrl + 'users.json',
       root: 'users',
-      fields: [ 'name', 'displayName', 'mail', 'admin', 'type'],
+      fields: [ 'name', 'displayName', 'mail', 'admin', 'creationDate', 'lastLogin', 'type'],
       sortInfo: {
         field: 'name'
       }
@@ -77,6 +77,8 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
         {id: 'displayName', header: 'Display Name', dataIndex: 'displayName', width: 250},
         {id: 'mail', header: 'Mail', dataIndex: 'mail', renderer: this.renderMailto, width: 200},
         {id: 'admin', header: 'Admin', dataIndex: 'admin', renderer: this.renderCheckbox, width: 50},
+        {id: 'creationDate', header: 'Creation date', dataIndex: 'creationDate'},
+        {id: 'lastLogin', header: 'Last login', dataIndex: 'lastLogin'},
         {id: 'type', header: 'Type', dataIndex: 'type', width: 80}
       ]
     });
@@ -108,10 +110,12 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
         scope: this
       }
     });
-    panel.getForm().setValues([
-      {id: 'password', value: dummyPassword},
-      {id: 'password-confirm', value: dummyPassword}
-    ]);
+    if ( item.type == 'xml' ){
+      panel.getForm().setValues([
+        {id: 'password', value: dummyPassword},
+        {id: 'password-confirm', value: dummyPassword}
+      ]);
+    }
     Sonia.user.setEditPanel(panel);
   }
 
@@ -138,22 +142,24 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
   initComponent: function(){
 
-    var config = {
-      items: [{
-        fieldLabel: 'Name',
-        name: 'name',
-        allowBlank: false,
-        readOnly: this.item != null
-      },{
-        fieldLabel: 'DisplayName',
-        name: 'displayName',
-        allowBlank: false
-      },{
-        fieldLabel: 'Mail',
-        name: 'mail',
-        allowBlank: false,
-        vtype: 'email'
-      },{
+    var items = [{
+      fieldLabel: 'Name',
+      name: 'name',
+      allowBlank: false,
+      readOnly: this.item != null
+    },{
+      fieldLabel: 'DisplayName',
+      name: 'displayName',
+      allowBlank: false
+    },{
+      fieldLabel: 'Mail',
+      name: 'mail',
+      allowBlank: false,
+      vtype: 'email'
+    }];
+
+    if ( this.item == null || this.item.type == 'xml' ){
+      items.push({
         fieldLabel: 'Password',
         id: 'pwd',
         name: 'password',
@@ -169,14 +175,16 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         minLengthText: 'Password must be at least 6 characters long.',
         vtype: 'password',
         initialPassField: 'pwd'
-      },{
-        fieldLabel: 'Administrator',
-        name: 'admin',
-        xtype: 'checkbox'
-      }]
-    };
+      });
+    }
 
-    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    items.push({
+      fieldLabel: 'Administrator',
+      name: 'admin',
+      xtype: 'checkbox'
+    });
+
+    Ext.apply(this, Ext.apply(this.initialConfig, {items: items}));
     Sonia.user.FormPanel.superclass.initComponent.apply(this, arguments);
   },
 
