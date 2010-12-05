@@ -120,6 +120,18 @@ Sonia.navigation.NavPanel = Ext.extend(Ext.Panel, {
     }
   },
 
+  insertSection: function(pos, section){
+    if ( debug ){
+      console.debug('insert navsection ' + section.title + ' at ' + pos);
+    }
+    this.insert(pos,{
+      xtype: 'navSection',
+      title: section.title,
+      data: section.items
+    });
+    this.doLayout();
+  },
+
   addSections: function(sections){
     if ( Ext.isArray( sections ) && sections.length > 0 ){
       for ( var i=0; i<sections.length; i++ ){
@@ -132,11 +144,18 @@ Sonia.navigation.NavPanel = Ext.extend(Ext.Panel, {
   },
 
   addSection: function(section){
+    if ( debug ){
+      console.debug('add navsection ' + section.title);
+    }
     this.add({
       xtype: 'navSection',
       title: section.title,
       data: section.items
     });
+  },
+
+  count: function(){
+    return this.items.length;
   }
 
 });

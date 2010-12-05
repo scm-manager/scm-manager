@@ -179,7 +179,7 @@ Ext.onReady(function(){
   // register login callbacks
 
   // create menu
-  loginCallbacks.push( createMainMenu );
+  loginCallbacks.splice(0, 0, createMainMenu );
   // add welcome tab
   loginCallbacks.push( createWelcomePanel );
 

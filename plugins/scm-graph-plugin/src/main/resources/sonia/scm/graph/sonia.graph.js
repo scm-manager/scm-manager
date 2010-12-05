@@ -30,7 +30,9 @@
  */
 loginCallbacks.push(function(){
   if (admin){
-    Ext.getCmp('navigationPanel').addSection({
+    var navPanel = Ext.getCmp('navigationPanel');
+    var count = navPanel.count() - 1;
+    navPanel.insertSection(count, {
       title: 'Development',
       items: [{
         label: 'Injection Graph',
