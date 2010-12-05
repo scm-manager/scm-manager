@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.StoreException;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.user.AbstractUserManager;
@@ -63,6 +64,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 /**
  *
@@ -98,6 +103,18 @@ public class XmlUserManager extends AbstractUserManager
   public XmlUserManager(Provider<SecurityContext> scurityContextProvider)
   {
     this.scurityContextProvider = scurityContextProvider;
+
+    try
+    {
+      JAXBContext context = JAXBContext.newInstance(XmlUserDatabase.class);
+
+      marshaller = context.createMarshaller();
+      unmarshaller = context.createUnmarshaller();
+    }
+    catch (JAXBException ex)
+    {
+      throw new StoreException(ex);
+    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -384,7 +401,14 @@ public class XmlUserManager extends AbstractUserManager
    */
   private void loadDB()
   {
-    userDB = JAXB.unmarshal(userDBFile, XmlUserDatabase.class);
+    try
+    {
+      userDB = (XmlUserDatabase) unmarshaller.unmarshal(userDBFile);
+    }
+    catch (JAXBException ex)
+    {
+      throw new StoreException(ex);
+    }
   }
 
   /**
@@ -393,14 +417,27 @@ public class XmlUserManager extends AbstractUserManager
    */
   private void storeDB()
   {
-    userDB.setLastModified(System.currentTimeMillis());
-    JAXB.marshal(userDB, userDBFile);
+    try
+    {
+      userDB.setLastModified(System.currentTimeMillis());
+      marshaller.marshal(userDB, userDBFile);
+    }
+    catch (JAXBException ex)
+    {
+      throw new StoreException(ex);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private Marshaller marshaller;
+
+  /** Field description */
   private Provider<SecurityContext> scurityContextProvider;
+
+  /** Field description */
+  private Unmarshaller unmarshaller;
 
   /** Field description */
   private XmlUserDatabase userDB;

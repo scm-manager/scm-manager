@@ -46,6 +46,7 @@ import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.StoreException;
 import sonia.scm.Type;
 import sonia.scm.repository.AbstractRepositoryManager;
 import sonia.scm.repository.PermissionType;
@@ -73,7 +74,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 /**
  *
@@ -113,6 +117,19 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     for (RepositoryHandler handler : handlerSet)
     {
       addHandler(handler);
+    }
+
+    try
+    {
+      JAXBContext context =
+        JAXBContext.newInstance(XmlRepositoryDatabase.class);
+
+      marshaller = context.createMarshaller();
+      unmarshaller = context.createUnmarshaller();
+    }
+    catch (JAXBException ex)
+    {
+      throw new StoreException(ex);
     }
   }
 
@@ -497,8 +514,15 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    */
   private void loadDB()
   {
-    repositoryDB = JAXB.unmarshal(repositoryDBFile,
-                                  XmlRepositoryDatabase.class);
+    try
+    {
+      repositoryDB =
+        (XmlRepositoryDatabase) unmarshaller.unmarshal(repositoryDBFile);
+    }
+    catch (JAXBException ex)
+    {
+      throw new StoreException(ex);
+    }
   }
 
   /**
@@ -507,8 +531,15 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    */
   private void storeDB()
   {
-    repositoryDB.setLastModified(System.currentTimeMillis());
-    JAXB.marshal(repositoryDB, repositoryDBFile);
+    try
+    {
+      repositoryDB.setLastModified(System.currentTimeMillis());
+      marshaller.marshal(repositoryDB, repositoryDBFile);
+    }
+    catch (JAXBException ex)
+    {
+      throw new StoreException(ex);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -582,6 +613,9 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   private Map<String, RepositoryHandler> handlerMap;
 
   /** Field description */
+  private Marshaller marshaller;
+
+  /** Field description */
   private XmlRepositoryDatabase repositoryDB;
 
   /** Field description */
@@ -592,4 +626,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private Set<Type> types;
+
+  /** Field description */
+  private Unmarshaller unmarshaller;
 }
