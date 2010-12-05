@@ -31,48 +31,42 @@
 
 
 
-package sonia.scm;
+package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
-import org.junit.After;
-import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import sonia.scm.security.SecurityContext;
-import sonia.scm.user.User;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.util.IOUtil;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
 
-import java.util.UUID;
-
 /**
  *
  * @author Sebastian Sdorra
- *
- * @param <T>
- * @param <E>
  */
-public abstract class ManagerTestBase<T extends TypedObject,
-        E extends Exception>
+@Singleton
+public class JAXBStoreFactory implements StoreFactory
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected abstract Manager<T, E> createManager();
+  /** Field description */
+  public static final String CONFIGDIRECTORY_NAME = "config";
+
+  /** Field description */
+  public static final String FILE_EXTENSION = ".xml";
+
+  /** the logger for JAXBStoreFactory */
+  private static final Logger logger =
+    LoggerFactory.getLogger(JAXBStoreFactory.class);
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -80,35 +74,25 @@ public abstract class ManagerTestBase<T extends TypedObject,
    *
    * @throws IOException
    */
-  @After
-  public void tearDownTest() throws IOException
+  @Override
+  public void close() throws IOException
   {
-    try
-    {
-      manager.close();
-    }
-    finally
-    {
-      IOUtil.delete(tempDirectory);
-    }
-  }
 
-  //~--- set methods ----------------------------------------------------------
+    // do nothing
+  }
 
   /**
    * Method description
    *
+   *
+   * @param context
    */
-  @Before
-  public void setUpTest()
+  @Override
+  public void init(SCMContextProvider context)
   {
-    tempDirectory = new File(System.getProperty("java.io.tmpdir"),
-                             UUID.randomUUID().toString());
-    assertTrue(tempDirectory.mkdirs());
-    provider = mock(SCMContextProvider.class);
-    when(provider.getBaseDirectory()).thenReturn(tempDirectory);
-    manager = createManager();
-    manager.init(provider);
+    configDirectory = new File(context.getBaseDirectory(),
+                               CONFIGDIRECTORY_NAME);
+    IOUtil.mkdirs(configDirectory);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -117,33 +101,28 @@ public abstract class ManagerTestBase<T extends TypedObject,
    * Method description
    *
    *
+   * @param type
+   * @param name
+   * @param <T>
+   *
    * @return
    */
-  protected Provider<SecurityContext> getAdminSecurityContextProvider()
+  @Override
+  public <T> Store<T> getStore(Class<T> type, String name)
   {
-    User admin = new User("scmadmin", "SCM Admin", "scmadmin@scm.org");
+    File configFile = new File(configDirectory, name.concat(FILE_EXTENSION));
 
-    admin.setAdmin(true);
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create store for {} at {}", type.getName(),
+                   configFile.getPath());
+    }
 
-    SecurityContext context = mock(SecurityContext.class);
-
-    when(context.getUser()).thenReturn(admin);
-
-    Provider<SecurityContext> scp = mock(Provider.class);
-
-    when(scp.get()).thenReturn(context);
-
-    return scp;
+    return new JAXBStore<T>(type, configFile);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  protected Manager<T, E> manager;
-
-  /** Field description */
-  protected SCMContextProvider provider;
-
-  /** Field description */
-  protected File tempDirectory;
+  private File configDirectory;
 }

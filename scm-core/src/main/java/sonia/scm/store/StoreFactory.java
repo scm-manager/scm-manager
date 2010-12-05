@@ -31,34 +31,32 @@
 
 
 
-package sonia.scm.user;
+package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.store.JAXBStoreFactory;
-import sonia.scm.store.StoreFactory;
-import sonia.scm.user.xml.XmlUserManager;
+import sonia.scm.Initable;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.Closeable;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class XmlUserManagerTest extends UserManagerTestBase
+public interface StoreFactory extends Initable, Closeable
 {
 
   /**
    * Method description
    *
    *
+   * @param type
+   * @param name
+   * @param <T>
+   *
    * @return
    */
-  @Override
-  public UserManager createManager()
-  {
-    StoreFactory factory = new JAXBStoreFactory();
-
-    factory.init(provider);
-
-    return new XmlUserManager(getAdminSecurityContextProvider(), factory);
-  }
+  public <T> Store<T> getStore(Class<T> type, String name);
 }

@@ -37,6 +37,8 @@ package sonia.scm.repository;
 
 import sonia.scm.Manager;
 import sonia.scm.repository.xml.XmlRepositoryManager;
+import sonia.scm.store.JAXBStoreFactory;
+import sonia.scm.store.StoreFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -63,7 +65,11 @@ public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
 
     handlerSet.add(new DummyRepositoryHandler());
 
-    return new XmlRepositoryManager(getAdminSecurityContextProvider(),
+    StoreFactory factory = new JAXBStoreFactory();
+
+    factory.init(provider);
+
+    return new XmlRepositoryManager(getAdminSecurityContextProvider(), factory,
                                     handlerSet);
   }
 }

@@ -43,6 +43,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.store.StoreFactory;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.IOUtil;
 import sonia.scm.web.security.AuthenticationManager;
@@ -81,6 +82,9 @@ public class ContextListener extends GuiceServletContextListener
 
       // close UserManager
       IOUtil.close(injector.getInstance(UserManager.class));
+
+      // close StoreFactory
+      IOUtil.close(injector.getInstance(StoreFactory.class));
     }
 
     super.contextDestroyed(servletContextEvent);
@@ -110,15 +114,19 @@ public class ContextListener extends GuiceServletContextListener
     moduleList.add(0, main);
     injector = Guice.createInjector(moduleList);
 
+    SCMContextProvider context = SCMContext.getContext();
+
+    // init StoreFactory
+    injector.getInstance(StoreFactory.class).init(context);
+
     // init RepositoryManager
-    injector.getInstance(RepositoryManager.class).init(SCMContext.getContext());
+    injector.getInstance(RepositoryManager.class).init(context);
 
     // init UserManager
-    injector.getInstance(UserManager.class).init(SCMContext.getContext());
+    injector.getInstance(UserManager.class).init(context);
 
     // init Authenticator
-    injector.getInstance(AuthenticationManager.class).init(
-        SCMContext.getContext());
+    injector.getInstance(AuthenticationManager.class).init(context);
 
     return injector;
   }

@@ -53,6 +53,8 @@ import sonia.scm.repository.xml.XmlRepositoryManager;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.security.SecurityContext;
+import sonia.scm.store.JAXBStoreFactory;
+import sonia.scm.store.StoreFactory;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.xml.XmlUserManager;
 import sonia.scm.util.DebugServlet;
@@ -152,6 +154,7 @@ public class ScmServletModule extends ServletModule
 
     ScmConfiguration config = getScmConfiguration(context);
 
+    bind(StoreFactory.class).to(JAXBStoreFactory.class);
     bind(ScmConfiguration.class).toInstance(config);
     bind(PluginManager.class).toInstance(pluginManager);
     bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);

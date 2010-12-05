@@ -43,9 +43,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
-import sonia.scm.StoreException;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.security.SecurityContext;
+import sonia.scm.store.Store;
+import sonia.scm.store.StoreFactory;
 import sonia.scm.user.AbstractUserManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserAllreadyExistException;
@@ -56,7 +57,6 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -64,10 +64,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 
 import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
 /**
  *
@@ -81,8 +77,7 @@ public class XmlUserManager extends AbstractUserManager
   public static final String ADMIN_PATH = "/sonia/scm/config/admin-account.xml";
 
   /** Field description */
-  public static final String DATABASEFILE =
-    "config".concat(File.separator).concat("users.xml");
+  public static final String STORE_NAME = "users";
 
   /** Field description */
   public static final String TYPE = "xml";
@@ -98,23 +93,14 @@ public class XmlUserManager extends AbstractUserManager
    *
    *
    * @param scurityContextProvider
+   * @param storeFactory
    */
   @Inject
-  public XmlUserManager(Provider<SecurityContext> scurityContextProvider)
+  public XmlUserManager(Provider<SecurityContext> scurityContextProvider,
+                        StoreFactory storeFactory)
   {
     this.scurityContextProvider = scurityContextProvider;
-
-    try
-    {
-      JAXBContext context = JAXBContext.newInstance(XmlUserDatabase.class);
-
-      marshaller = context.createMarshaller();
-      unmarshaller = context.createUnmarshaller();
-    }
-    catch (JAXBException ex)
-    {
-      throw new StoreException(ex);
-    }
+    this.store = storeFactory.getStore(XmlUserDatabase.class, STORE_NAME);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -235,17 +221,10 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void init(SCMContextProvider context)
   {
-    File directory = context.getBaseDirectory();
+    userDB = store.get();
 
-    userDBFile = new File(directory, DATABASEFILE);
-
-    if (userDBFile.exists())
+    if (userDB == null)
     {
-      loadDB();
-    }
-    else
-    {
-      IOUtil.mkdirs(userDBFile.getParentFile());
       userDB = new XmlUserDatabase();
       userDB.setCreationTime(System.currentTimeMillis());
       createAdminAccount();
@@ -399,49 +378,20 @@ public class XmlUserManager extends AbstractUserManager
    * Method description
    *
    */
-  private void loadDB()
-  {
-    try
-    {
-      userDB = (XmlUserDatabase) unmarshaller.unmarshal(userDBFile);
-    }
-    catch (JAXBException ex)
-    {
-      throw new StoreException(ex);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   */
   private void storeDB()
   {
-    try
-    {
-      userDB.setLastModified(System.currentTimeMillis());
-      marshaller.marshal(userDB, userDBFile);
-    }
-    catch (JAXBException ex)
-    {
-      throw new StoreException(ex);
-    }
+    userDB.setLastModified(System.currentTimeMillis());
+    store.set(userDB);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Marshaller marshaller;
-
-  /** Field description */
   private Provider<SecurityContext> scurityContextProvider;
 
   /** Field description */
-  private Unmarshaller unmarshaller;
+  private Store<XmlUserDatabase> store;
 
   /** Field description */
   private XmlUserDatabase userDB;
-
-  /** Field description */
-  private File userDBFile;
 }

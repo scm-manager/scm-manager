@@ -54,10 +54,37 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement
+@XmlRootElement(name = "repository-db")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XmlRepositoryDatabase
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   * @param name
+   *
+   * @return
+   */
+  static String createKey(String type, String name)
+  {
+    return type.concat(":").concat(name);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  static String createKey(Repository repository)
+  {
+    return createKey(repository.getType(), repository.getName());
+  }
 
   /**
    * Method description
@@ -218,35 +245,6 @@ public class XmlRepositoryDatabase
   public void setLastModified(long lastModified)
   {
     this.lastModified = lastModified;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param name
-   *
-   * @return
-   */
-  static String createKey(String type, String name)
-  {
-    return type.concat(":").concat(name);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  static String createKey(Repository repository)
-  {
-    return createKey(repository.getType(), repository.getName());
   }
 
   //~--- fields ---------------------------------------------------------------

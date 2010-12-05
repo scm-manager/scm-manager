@@ -31,84 +31,58 @@
 
 
 
-package sonia.scm;
+package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
-
-import org.junit.After;
-import org.junit.Before;
-
-import sonia.scm.security.SecurityContext;
-import sonia.scm.user.User;
-import sonia.scm.util.IOUtil;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.IOException;
 
-import java.util.UUID;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 /**
  *
  * @author Sebastian Sdorra
  *
  * @param <T>
- * @param <E>
  */
-public abstract class ManagerTestBase<T extends TypedObject,
-        E extends Exception>
+public class JAXBStore<T> implements Store<T>
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected abstract Manager<T, E> createManager();
+  /** the logger for JAXBStore */
+  private static final Logger logger = LoggerFactory.getLogger(JAXBStore.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @throws IOException
+   * @param type
+   * @param configFile
    */
-  @After
-  public void tearDownTest() throws IOException
+  public JAXBStore(Class<T> type, File configFile)
   {
     try
     {
-      manager.close();
+      JAXBContext context = JAXBContext.newInstance(type);
+
+      marshaller = context.createMarshaller();
+      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+      unmarshaller = context.createUnmarshaller();
+      this.configFile = configFile;
     }
-    finally
+    catch (JAXBException ex)
     {
-      IOUtil.delete(tempDirectory);
+      throw new StoreException(ex);
     }
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Before
-  public void setUpTest()
-  {
-    tempDirectory = new File(System.getProperty("java.io.tmpdir"),
-                             UUID.randomUUID().toString());
-    assertTrue(tempDirectory.mkdirs());
-    provider = mock(SCMContextProvider.class);
-    when(provider.getBaseDirectory()).thenReturn(tempDirectory);
-    manager = createManager();
-    manager.init(provider);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -119,31 +93,61 @@ public abstract class ManagerTestBase<T extends TypedObject,
    *
    * @return
    */
-  protected Provider<SecurityContext> getAdminSecurityContextProvider()
+  @Override
+  public T get()
   {
-    User admin = new User("scmadmin", "SCM Admin", "scmadmin@scm.org");
+    T result = null;
 
-    admin.setAdmin(true);
+    if (configFile.exists())
+    {
+      try
+      {
+        result = (T) unmarshaller.unmarshal(configFile);
+      }
+      catch (JAXBException ex)
+      {
+        throw new StoreException(ex);
+      }
+    }
 
-    SecurityContext context = mock(SecurityContext.class);
+    return result;
+  }
 
-    when(context.getUser()).thenReturn(admin);
+  //~--- set methods ----------------------------------------------------------
 
-    Provider<SecurityContext> scp = mock(Provider.class);
+  /**
+   * Method description
+   *
+   *
+   * @param object
+   */
+  @Override
+  public void set(T object)
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("store {} to {}", object.getClass().getName(),
+                   configFile.getPath());
+    }
 
-    when(scp.get()).thenReturn(context);
-
-    return scp;
+    try
+    {
+      marshaller.marshal(object, configFile);
+    }
+    catch (JAXBException ex)
+    {
+      throw new StoreException(ex);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  protected Manager<T, E> manager;
+  private File configFile;
 
   /** Field description */
-  protected SCMContextProvider provider;
+  private Marshaller marshaller;
 
   /** Field description */
-  protected File tempDirectory;
+  private Unmarshaller unmarshaller;
 }

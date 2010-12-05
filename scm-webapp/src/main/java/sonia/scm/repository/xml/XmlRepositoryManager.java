@@ -46,7 +46,6 @@ import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.StoreException;
 import sonia.scm.Type;
 import sonia.scm.repository.AbstractRepositoryManager;
 import sonia.scm.repository.PermissionType;
@@ -57,13 +56,14 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHandlerNotFoundException;
 import sonia.scm.security.SecurityContext;
+import sonia.scm.store.Store;
+import sonia.scm.store.StoreFactory;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.Collection;
@@ -74,11 +74,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -88,8 +83,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 {
 
   /** Field description */
-  public static final String DATABASEFILE =
-    "config".concat(File.separator).concat("repositories.xml");
+  public static final String STORE_NAME = "repositories";
 
   /** Field description */
   private static final Logger logger =
@@ -103,33 +97,22 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    *
    *
    * @param securityContextProvider
+   * @param storeFactory
    * @param handlerSet
    */
   @Inject
   public XmlRepositoryManager(
           Provider<SecurityContext> securityContextProvider,
-          Set<RepositoryHandler> handlerSet)
+          StoreFactory storeFactory, Set<RepositoryHandler> handlerSet)
   {
     this.securityContextProvider = securityContextProvider;
+    this.store = storeFactory.getStore(XmlRepositoryDatabase.class, STORE_NAME);
     handlerMap = new HashMap<String, RepositoryHandler>();
     types = new HashSet<Type>();
 
     for (RepositoryHandler handler : handlerSet)
     {
       addHandler(handler);
-    }
-
-    try
-    {
-      JAXBContext context =
-        JAXBContext.newInstance(XmlRepositoryDatabase.class);
-
-      marshaller = context.createMarshaller();
-      unmarshaller = context.createUnmarshaller();
-    }
-    catch (JAXBException ex)
-    {
-      throw new StoreException(ex);
     }
   }
 
@@ -239,17 +222,10 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   @Override
   public void init(SCMContextProvider context)
   {
-    File directory = context.getBaseDirectory();
+    repositoryDB = store.get();
 
-    repositoryDBFile = new File(directory, DATABASEFILE);
-
-    if (repositoryDBFile.exists())
+    if (repositoryDB == null)
     {
-      loadDB();
-    }
-    else
-    {
-      IOUtil.mkdirs(repositoryDBFile.getParentFile());
       repositoryDB = new XmlRepositoryDatabase();
       repositoryDB.setCreationTime(System.currentTimeMillis());
     }
@@ -512,34 +488,9 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * Method description
    *
    */
-  private void loadDB()
-  {
-    try
-    {
-      repositoryDB =
-        (XmlRepositoryDatabase) unmarshaller.unmarshal(repositoryDBFile);
-    }
-    catch (JAXBException ex)
-    {
-      throw new StoreException(ex);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   */
   private void storeDB()
   {
-    try
-    {
-      repositoryDB.setLastModified(System.currentTimeMillis());
-      marshaller.marshal(repositoryDB, repositoryDBFile);
-    }
-    catch (JAXBException ex)
-    {
-      throw new StoreException(ex);
-    }
+    store.set(repositoryDB);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -610,23 +561,17 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private final Store<XmlRepositoryDatabase> store;
+
+  /** Field description */
   private Map<String, RepositoryHandler> handlerMap;
 
   /** Field description */
-  private Marshaller marshaller;
-
-  /** Field description */
   private XmlRepositoryDatabase repositoryDB;
-
-  /** Field description */
-  private File repositoryDBFile;
 
   /** Field description */
   private Provider<SecurityContext> securityContextProvider;
 
   /** Field description */
   private Set<Type> types;
-
-  /** Field description */
-  private Unmarshaller unmarshaller;
 }
