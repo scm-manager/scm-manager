@@ -42,4 +42,8 @@
     <url>${project.url}</url>
   </information>
 
+  <resources>
+    <script>/sonia/scm/sample/auth/sonia.sample-auth.js</script>
+  </resources>
+
 </plugin>

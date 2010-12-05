@@ -35,20 +35,21 @@ package sonia.scm.sample.auth;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.user.User;
-import sonia.scm.user.UserManager;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.security.AuthenticationHandler;
 import sonia.scm.web.security.AuthenticationResult;
-import sonia.scm.web.security.AuthenticationState;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.IOException;
 
 import java.util.Map;
@@ -56,6 +57,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import javax.xml.bind.JAXB;
 
 /**
  *
@@ -68,6 +71,14 @@ public class SampleAuthenticationHandler implements AuthenticationHandler
 
   /** Field description */
   public static final String TYPE = "sample";
+
+  /** Field description */
+  public static final String CONFIG_PATH =
+    "config".concat(File.separator).concat("sample-auth.xml");
+
+  /** the logger for SampleAuthenticationHandler */
+  private static final Logger logger =
+    LoggerFactory.getLogger(SampleAuthenticationHandler.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -114,6 +125,8 @@ public class SampleAuthenticationHandler implements AuthenticationHandler
   @Override
   public void init(SCMContextProvider context)
   {
+    configFile = new File(context.getBaseDirectory(), CONFIG_PATH);
+    loadConfig();
     addUser(new User("dent", "Arthur Dent", "arthur.dent@hitchhiker.com"));
     addUser(new User("perfect", "Ford Prefect", "ford.perfect@hitchhiker.com"));
     addUser(new User("slarti", "Slartibartfaß",
@@ -121,7 +134,59 @@ public class SampleAuthenticationHandler implements AuthenticationHandler
     addUser(new User("marvin", "Marvin", "paranoid.android@hitchhiker.com"));
   }
 
+  /**
+   * Method description
+   *
+   *
+   */
+  public void loadConfig()
+  {
+    if (configFile.exists())
+    {
+      try
+      {
+        config = JAXB.unmarshal(configFile, SampleConfig.class);
+      }
+      catch (Exception ex)
+      {
+        logger.error(ex.getMessage(), ex);
+      }
+    }
+
+    if (config == null)
+    {
+      config = new SampleConfig();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   */
+  public void storeConfig()
+  {
+    try
+    {
+      JAXB.marshal(config, configFile);
+    }
+    catch (Exception ex)
+    {
+      logger.error(ex.getMessage(), ex);
+    }
+  }
+
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public SampleConfig getConfig()
+  {
+    return config;
+  }
 
   /**
    * Method description
@@ -133,6 +198,19 @@ public class SampleAuthenticationHandler implements AuthenticationHandler
   public String getType()
   {
     return TYPE;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param config
+   */
+  public void setConfig(SampleConfig config)
+  {
+    this.config = config;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -165,7 +243,7 @@ public class SampleAuthenticationHandler implements AuthenticationHandler
 
     if (dbUser != null)
     {
-      if (password.equals(username.concat("123")))
+      if (password.equals(username.concat(config.getPasswordSuffix())))
       {
         result = new AuthenticationResult(dbUser);
       }
@@ -183,6 +261,12 @@ public class SampleAuthenticationHandler implements AuthenticationHandler
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private SampleConfig config;
+
+  /** Field description */
+  private File configFile;
 
   /** Field description */
   private Map<String, User> userDB = new ConcurrentHashMap<String, User>();

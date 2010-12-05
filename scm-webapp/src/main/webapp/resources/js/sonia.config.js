@@ -31,11 +31,15 @@
 
 // config form panels
 var repositoryConfigPanels = [];
+var generalConfigPanels =[];
 
 function registerConfigPanel(panel){
   repositoryConfigPanels.push( panel );
 }
 
+function registerGeneralConfigPanel(panel){
+  generalConfigPanels.push(panel);
+}
 
 Ext.ns("Sonia.config");
 
@@ -133,7 +137,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
             }
           });
         }
-      }]
+      }, generalConfigPanels]
     }
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
