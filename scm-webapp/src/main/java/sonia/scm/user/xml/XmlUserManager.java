@@ -141,6 +141,11 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void create(User user) throws UserException, IOException
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("create user {} of type {}", user.getName(), user.getType());
+    }
+
     User currentUser = SecurityUtil.getCurrentUser(scurityContextProvider);
 
     if (!user.equals(currentUser) &&!currentUser.isAdmin())
@@ -179,6 +184,11 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void delete(User user) throws UserException, IOException
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("delete user {} of type {}", user.getName(), user.getType());
+    }
+
     SecurityUtil.assertIsAdmin(scurityContextProvider);
 
     String name = user.getName();
@@ -235,9 +245,14 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void modify(User user) throws UserException, IOException
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("modify user {} of type {}", user.getName(), user.getType());
+    }
+
     User currentUser = SecurityUtil.getCurrentUser(scurityContextProvider);
 
-    if (!user.equals(currentUser) &&!currentUser.isAdmin())
+    if (!user.getName().equals(currentUser.getName()) &&!currentUser.isAdmin())
     {
       throw new ScmSecurityException("admin account is required");
     }
@@ -271,6 +286,11 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void refresh(User user) throws UserException, IOException
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("refresh user {} of type {}", user.getName(), user.getType());
+    }
+
     SecurityUtil.assertIsAdmin(scurityContextProvider);
 
     User fresh = userDB.get(user.getName());
