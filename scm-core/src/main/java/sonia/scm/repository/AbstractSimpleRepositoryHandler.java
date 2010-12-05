@@ -42,6 +42,7 @@ import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
+import sonia.scm.store.StoreFactory;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -66,6 +67,19 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
   /** the logger for AbstractSimpleRepositoryHandler */
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractSimpleRepositoryHandler.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param storeFactory
+   */
+  public AbstractSimpleRepositoryHandler(StoreFactory storeFactory)
+  {
+    super(storeFactory);
+  }
 
   //~--- methods --------------------------------------------------------------
 

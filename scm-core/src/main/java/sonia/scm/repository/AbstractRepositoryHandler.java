@@ -40,7 +40,8 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigChangedListener;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.util.IOUtil;
+import sonia.scm.store.Store;
+import sonia.scm.store.StoreFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -49,8 +50,6 @@ import java.io.IOException;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.xml.bind.JAXB;
 
 /**
  *
@@ -65,6 +64,19 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   /** the logger for AbstractRepositoryHandler */
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractRepositoryHandler.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param storeFactory
+   */
+  protected AbstractRepositoryHandler(StoreFactory storeFactory)
+  {
+    this.store = storeFactory.getStore(getConfigClass(), getType().getName());
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -115,9 +127,6 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
     String name = getType().getName();
 
     baseDirectory = context.getBaseDirectory();
-    configFile =
-      new File(baseDirectory,
-               "config".concat(File.separator).concat(name).concat(".xml"));
     loadConfig();
   }
 
@@ -127,15 +136,12 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
    */
   public void loadConfig()
   {
-    if (configFile.exists())
+    if (logger.isDebugEnabled())
     {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("load config {}", configFile.getPath());
-      }
-
-      config = JAXB.unmarshal(configFile, getConfigClass());
+      logger.debug("load config from store");
     }
+
+    config = store.get();
   }
 
   /**
@@ -160,13 +166,10 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
     {
       if (logger.isDebugEnabled())
       {
-        logger.debug("store config {}", configFile.getPath());
+        logger.debug("store config");
       }
 
-      File parent = configFile.getParentFile();
-
-      IOUtil.mkdirs(parent);
-      JAXB.marshal(config, configFile);
+      store.set(config);
     }
   }
 
@@ -232,7 +235,7 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   protected C config;
 
   /** Field description */
-  protected File configFile;
+  protected Store<C> store;
 
   /** Field description */
   private Set<ConfigChangedListener> listenerSet =

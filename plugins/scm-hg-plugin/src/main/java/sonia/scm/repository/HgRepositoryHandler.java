@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import sonia.scm.Type;
@@ -43,6 +44,7 @@ import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.plugin.ext.Extension;
+import sonia.scm.store.StoreFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -67,6 +69,20 @@ public class HgRepositoryHandler
 
   /** Field description */
   public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param storeFactory
+   */
+  @Inject
+  public HgRepositoryHandler(StoreFactory storeFactory)
+  {
+    super(storeFactory);
+  }
 
   //~--- methods --------------------------------------------------------------
 

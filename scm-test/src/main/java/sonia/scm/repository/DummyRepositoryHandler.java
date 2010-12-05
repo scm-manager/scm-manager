@@ -36,7 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Type;
-import sonia.scm.util.IOUtil;
+import sonia.scm.store.StoreFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -59,6 +59,19 @@ public class DummyRepositoryHandler
 
   /** Field description */
   public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param storeFactory
+   */
+  public DummyRepositoryHandler(StoreFactory storeFactory)
+  {
+    super(storeFactory);
+  }
 
   //~--- get methods ----------------------------------------------------------
 

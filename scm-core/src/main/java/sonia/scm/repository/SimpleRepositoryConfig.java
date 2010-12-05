@@ -41,10 +41,13 @@ import sonia.scm.Validateable;
 
 import java.io.File;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author Sebastian Sdorra
  */
+@XmlRootElement
 public class SimpleRepositoryConfig implements Validateable
 {
 

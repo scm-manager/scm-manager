@@ -35,12 +35,14 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import sonia.scm.Type;
 import sonia.scm.plugin.ext.Extension;
+import sonia.scm.store.StoreFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -65,6 +67,20 @@ public class GitRepositoryHandler
 
   /** Field description */
   public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param storeFactory
+   */
+  @Inject
+  public GitRepositoryHandler(StoreFactory storeFactory)
+  {
+    super(storeFactory);
+  }
 
   //~--- get methods ----------------------------------------------------------
 

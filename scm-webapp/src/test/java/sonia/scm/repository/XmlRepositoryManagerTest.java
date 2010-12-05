@@ -62,12 +62,10 @@ public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
   protected Manager<Repository, RepositoryException> createManager()
   {
     Set<RepositoryHandler> handlerSet = new HashSet<RepositoryHandler>();
-
-    handlerSet.add(new DummyRepositoryHandler());
-
     StoreFactory factory = new JAXBStoreFactory();
 
     factory.init(provider);
+    handlerSet.add(new DummyRepositoryHandler(factory));
 
     return new XmlRepositoryManager(getAdminSecurityContextProvider(), factory,
                                     handlerSet);

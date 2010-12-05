@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.tmatesoft.svn.core.SVNException;
@@ -42,6 +43,7 @@ import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
 import sonia.scm.Type;
 import sonia.scm.plugin.ext.Extension;
+import sonia.scm.store.StoreFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -66,6 +68,20 @@ public class SvnRepositoryHandler
 
   /** Field description */
   public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param storeFactory
+   */
+  @Inject
+  public SvnRepositoryHandler(StoreFactory storeFactory)
+  {
+    super(storeFactory);
+  }
 
   //~--- get methods ----------------------------------------------------------
 
