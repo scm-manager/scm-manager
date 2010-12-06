@@ -37,6 +37,15 @@
       <version>${svnkit.version}</version>
     </dependency>
 
+    <!-- test scope -->
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-test</artifactId>
+      <version>1.0-M3-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <properties>

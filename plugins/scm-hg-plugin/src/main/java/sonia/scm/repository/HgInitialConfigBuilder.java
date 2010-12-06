@@ -123,7 +123,7 @@ public class HgInitialConfigBuilder
    *
    * @return
    */
-  private String search(String cmd)
+  public static String search(String cmd)
   {
     String cmdPath = null;
 
