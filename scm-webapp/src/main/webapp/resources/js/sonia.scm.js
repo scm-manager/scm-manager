@@ -110,6 +110,7 @@ Ext.onReady(function(){
     }
     var panel = Ext.getCmp('navigationPanel');
     panel.addSection({
+      id: 'navMain',
       title: 'Main',
       items: [{
         label: 'Repositories',
@@ -121,6 +122,7 @@ Ext.onReady(function(){
 
     if ( admin ){
       panel.addSections([{
+        id: 'navConfig',
         title: 'Config',
         items: [{
           label: 'General',
@@ -150,6 +152,7 @@ Ext.onReady(function(){
     }
     
     panel.addSection({
+      id: 'navLogout',
       title: 'Abmelden',
       items: [{
         label: 'Abmelden',
