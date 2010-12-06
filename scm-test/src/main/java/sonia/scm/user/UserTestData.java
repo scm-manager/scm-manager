@@ -31,39 +31,13 @@
 
 
 
-package sonia.scm;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Provider;
-
-import org.junit.After;
-import org.junit.Before;
-
-import sonia.scm.security.SecurityContext;
-import sonia.scm.user.User;
-import sonia.scm.util.IOUtil;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
-
-import java.util.UUID;
+package sonia.scm.user;
 
 /**
  *
  * @author Sebastian Sdorra
- *
- * @param <T>
- * @param <E>
  */
-public abstract class ManagerTestBase<T extends TypedObject,
-        E extends Exception> extends AbstractTestBase
+public class UserTestData
 {
 
   /**
@@ -72,35 +46,76 @@ public abstract class ManagerTestBase<T extends TypedObject,
    *
    * @return
    */
-  protected abstract Manager<T, E> createManager();
-
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
-  @Override
-  protected void postSetUp() throws Exception
+  public static User createAdams()
   {
-    manager = createManager();
-    manager.init(contextProvider);
+    return new User("adams", "Douglas Adams", "douglas.adams@hitchhiker.com");
   }
 
   /**
    * Method description
    *
    *
-   * @throws Exception
+   * @return
    */
-  @Override
-  protected void preTearDown() throws Exception
+  public static User createDent()
   {
-    manager.close();
+    return new User("dent", "Arthur Dent", "arthur.dent@hitchhiker.com");
   }
 
-  //~--- fields ---------------------------------------------------------------
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static User createMarvin()
+  {
+    return new User("marvin", "Marvin", "paranoid.android@hitchhiker.com");
+  }
 
-  /** Field description */
-  protected Manager<T, E> manager;
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static User createPerfect()
+  {
+    return new User("perfect", "Ford Prefect", "ford.perfect@hitchhiker.com");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static User createSlarti()
+  {
+    return new User("slarti", "Slartibartfaß", "slartibartfass@hitchhiker.com");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static User createTrillian()
+  {
+    return new User("trillian", "Tricia McMillan",
+                    "tricia.mcmillan@hitchhiker.com");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static User createZaphod()
+  {
+    return new User("zaphod", "Zaphod Beeblebrox",
+                    "zaphod.beeblebrox@hitchhiker.com");
+  }
 }

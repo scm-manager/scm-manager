@@ -31,39 +31,13 @@
 
 
 
-package sonia.scm;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Provider;
-
-import org.junit.After;
-import org.junit.Before;
-
-import sonia.scm.security.SecurityContext;
-import sonia.scm.user.User;
-import sonia.scm.util.IOUtil;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
-
-import java.util.UUID;
+package sonia.scm.repository;
 
 /**
  *
  * @author Sebastian Sdorra
- *
- * @param <T>
- * @param <E>
  */
-public abstract class ManagerTestBase<T extends TypedObject,
-        E extends Exception> extends AbstractTestBase
+public class RepositoryTestData
 {
 
   /**
@@ -72,35 +46,39 @@ public abstract class ManagerTestBase<T extends TypedObject,
    *
    * @return
    */
-  protected abstract Manager<T, E> createManager();
-
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
-  @Override
-  protected void postSetUp() throws Exception
+  public static Repository createHappyVerticalPeopleTransporter()
   {
-    manager = createManager();
-    manager.init(contextProvider);
+    Repository happyVerticalPeopleTransporter = new Repository();
+
+    happyVerticalPeopleTransporter.setType(DummyRepositoryHandler.TYPE_NAME);
+    happyVerticalPeopleTransporter.setContact(
+        "zaphod.beeblebrox@hitchhiker.com");
+    happyVerticalPeopleTransporter.setName("happyVerticalPeopleTransporter");
+    happyVerticalPeopleTransporter.setDescription(
+        "Happy Vertical People Transporter");
+    happyVerticalPeopleTransporter.setUrl(
+        "http://hitchhiker.com/dummy/HeartOfGold");
+
+    return happyVerticalPeopleTransporter;
   }
 
   /**
    * Method description
    *
    *
-   * @throws Exception
+   * @return
    */
-  @Override
-  protected void preTearDown() throws Exception
+  public static Repository createHeartOfGold()
   {
-    manager.close();
+    Repository heartOfGold = new Repository();
+
+    heartOfGold.setType(DummyRepositoryHandler.TYPE_NAME);
+    heartOfGold.setContact("zaphod.beeblebrox@hitchhiker.com");
+    heartOfGold.setName("HeartOfGold");
+    heartOfGold.setDescription(
+        "Heart of Gold is the first prototype ship to successfully utilise the revolutionary Infinite Improbability Drive");
+    heartOfGold.setUrl("http://hitchhiker.com/dummy/HeartOfGold");
+
+    return heartOfGold;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected Manager<T, E> manager;
 }

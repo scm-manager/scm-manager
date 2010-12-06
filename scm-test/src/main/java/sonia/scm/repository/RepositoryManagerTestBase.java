@@ -205,7 +205,7 @@ public abstract class RepositoryManagerTestBase
   @Test(expected = RepositoryException.class)
   public void testModifyNotExisting() throws RepositoryException, IOException
   {
-    manager.modify(getTestRepository());
+    manager.modify(RepositoryTestData.createHeartOfGold());
   }
 
   /**
@@ -278,7 +278,8 @@ public abstract class RepositoryManagerTestBase
   private Repository createSecondTestRepository()
           throws RepositoryException, IOException
   {
-    return createRepository(getSecondTestRepository());
+    return createRepository(
+        RepositoryTestData.createHappyVerticalPeopleTransporter());
   }
 
   /**
@@ -293,50 +294,6 @@ public abstract class RepositoryManagerTestBase
   private Repository createTestRepository()
           throws RepositoryException, IOException
   {
-    return createRepository(getTestRepository());
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private Repository getSecondTestRepository()
-  {
-    Repository happyVerticalPeopleTransporter = new Repository();
-
-    happyVerticalPeopleTransporter.setType(DummyRepositoryHandler.TYPE_NAME);
-    happyVerticalPeopleTransporter.setContact(
-        "zaphod.beeblebrox@hitchhiker.com");
-    happyVerticalPeopleTransporter.setName("happyVerticalPeopleTransporter");
-    happyVerticalPeopleTransporter.setDescription(
-        "Happy Vertical People Transporter");
-    happyVerticalPeopleTransporter.setUrl(
-        "http://hitchhiker.com/dummy/HeartOfGold");
-
-    return happyVerticalPeopleTransporter;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private Repository getTestRepository()
-  {
-    Repository heartOfGold = new Repository();
-
-    heartOfGold.setType(DummyRepositoryHandler.TYPE_NAME);
-    heartOfGold.setContact("zaphod.beeblebrox@hitchhiker.com");
-    heartOfGold.setName("HeartOfGold");
-    heartOfGold.setDescription(
-        "Heart of Gold is the first prototype ship to successfully utilise the revolutionary Infinite Improbability Drive");
-    heartOfGold.setUrl("http://hitchhiker.com/dummy/HeartOfGold");
-
-    return heartOfGold;
+    return createRepository(RepositoryTestData.createHeartOfGold());
   }
 }

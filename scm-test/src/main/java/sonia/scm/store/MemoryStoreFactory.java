@@ -31,76 +31,64 @@
 
 
 
-package sonia.scm;
+package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
-
-import org.junit.After;
-import org.junit.Before;
-
-import sonia.scm.security.SecurityContext;
-import sonia.scm.user.User;
-import sonia.scm.util.IOUtil;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
+import sonia.scm.SCMContextProvider;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
-
-import java.util.UUID;
 
 /**
  *
  * @author Sebastian Sdorra
- *
- * @param <T>
- * @param <E>
  */
-public abstract class ManagerTestBase<T extends TypedObject,
-        E extends Exception> extends AbstractTestBase
+public class MemoryStoreFactory implements StoreFactory
 {
 
   /**
    * Method description
    *
    *
+   * @throws IOException
+   */
+  @Override
+  public void close() throws IOException
+  {
+
+    // do nothing
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   */
+  @Override
+  public void init(SCMContextProvider context)
+  {
+
+    // do nothing
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   * @param name
+   * @param <T>
+   *
    * @return
    */
-  protected abstract Manager<T, E> createManager();
-
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
   @Override
-  protected void postSetUp() throws Exception
+  public <T> Store<T> getStore(Class<T> type, String name)
   {
-    manager = createManager();
-    manager.init(contextProvider);
+    return new MemoryStore<T>();
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
-  @Override
-  protected void preTearDown() throws Exception
-  {
-    manager.close();
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected Manager<T, E> manager;
 }

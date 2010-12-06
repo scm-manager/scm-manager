@@ -31,39 +31,15 @@
 
 
 
-package sonia.scm;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Provider;
-
-import org.junit.After;
-import org.junit.Before;
-
-import sonia.scm.security.SecurityContext;
-import sonia.scm.user.User;
-import sonia.scm.util.IOUtil;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
-
-import java.util.UUID;
+package sonia.scm.store;
 
 /**
  *
  * @author Sebastian Sdorra
  *
  * @param <T>
- * @param <E>
  */
-public abstract class ManagerTestBase<T extends TypedObject,
-        E extends Exception> extends AbstractTestBase
+public class MemoryStore<T> implements Store<T>
 {
 
   /**
@@ -72,35 +48,28 @@ public abstract class ManagerTestBase<T extends TypedObject,
    *
    * @return
    */
-  protected abstract Manager<T, E> createManager();
-
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
   @Override
-  protected void postSetUp() throws Exception
+  public T get()
   {
-    manager = createManager();
-    manager.init(contextProvider);
+    return object;
   }
 
+  //~--- set methods ----------------------------------------------------------
+
   /**
    * Method description
    *
    *
-   * @throws Exception
+   * @param obejct
    */
   @Override
-  protected void preTearDown() throws Exception
+  public void set(T obejct)
   {
-    manager.close();
+    this.object = obejct;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  protected Manager<T, E> manager;
+  private T object;
 }

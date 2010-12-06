@@ -31,39 +31,30 @@
 
 
 
-package sonia.scm;
+package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Provider;
 
-import org.junit.After;
-import org.junit.Before;
-
+import sonia.scm.SCMContextProvider;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.user.User;
-import sonia.scm.util.IOUtil;
-
-import static org.junit.Assert.*;
 
 import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.IOException;
 
-import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Sebastian Sdorra
- *
- * @param <T>
- * @param <E>
  */
-public abstract class ManagerTestBase<T extends TypedObject,
-        E extends Exception> extends AbstractTestBase
+public class MockUtil
 {
 
   /**
@@ -72,35 +63,63 @@ public abstract class ManagerTestBase<T extends TypedObject,
    *
    * @return
    */
-  protected abstract Manager<T, E> createManager();
-
-  /**
-   * Method description
-   *
-   *
-   * @throws Exception
-   */
-  @Override
-  protected void postSetUp() throws Exception
+  public static Provider<SecurityContext> getAdminSecurityContextProvider()
   {
-    manager = createManager();
-    manager.init(contextProvider);
+    User admin = new User("scmadmin", "SCM Admin", "scmadmin@scm.org");
+
+    admin.setAdmin(true);
+
+    SecurityContext context = mock(SecurityContext.class);
+
+    when(context.getUser()).thenReturn(admin);
+
+    Provider<SecurityContext> scp = mock(Provider.class);
+
+    when(scp.get()).thenReturn(context);
+
+    return scp;
   }
 
   /**
    * Method description
    *
    *
-   * @throws Exception
+   * @return
    */
-  @Override
-  protected void preTearDown() throws Exception
+  public static HttpServletRequest getHttpServletRequest()
   {
-    manager.close();
+    HttpServletRequest request = mock(HttpServletRequest.class);
+
+    when(request.getContextPath()).thenReturn("/scm-webapp");
+
+    return request;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static HttpServletResponse getHttpServletResponse()
+  {
+    return mock(HttpServletResponse.class);
+  }
 
-  /** Field description */
-  protected Manager<T, E> manager;
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   *
+   * @return
+   */
+  public static SCMContextProvider getSCMContextProvider(File directory)
+  {
+    SCMContextProvider provider = mock(SCMContextProvider.class);
+
+    when(provider.getBaseDirectory()).thenReturn(directory);
+
+    return provider;
+  }
 }

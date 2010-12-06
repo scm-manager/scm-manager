@@ -35,6 +35,7 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.util.MockUtil;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.user.xml.XmlUserManager;
@@ -57,8 +58,9 @@ public class XmlUserManagerTest extends UserManagerTestBase
   {
     StoreFactory factory = new JAXBStoreFactory();
 
-    factory.init(provider);
+    factory.init(contextProvider);
 
-    return new XmlUserManager(getAdminSecurityContextProvider(), factory);
+    return new XmlUserManager(MockUtil.getAdminSecurityContextProvider(),
+                              factory);
   }
 }

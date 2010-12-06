@@ -74,7 +74,7 @@ public abstract class UserManagerTestBase
   @Test
   public void testCreate() throws UserException, IOException
   {
-    User zaphod = getTestUser();
+    User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
 
@@ -94,12 +94,12 @@ public abstract class UserManagerTestBase
   @Test(expected = UserAllreadyExistException.class)
   public void testCreateExisting() throws UserException, IOException
   {
-    User zaphod = getTestUser();
+    User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
     assertNotNull(manager.get("zaphod"));
 
-    User sameUser = getTestUser();
+    User sameUser = UserTestData.createZaphod();
 
     manager.create(sameUser);
   }
@@ -114,7 +114,7 @@ public abstract class UserManagerTestBase
   @Test
   public void testDelete() throws UserException, IOException
   {
-    User zaphod = getTestUser();
+    User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
     assertNotNull(manager.get("zaphod"));
@@ -132,7 +132,7 @@ public abstract class UserManagerTestBase
   @Test
   public void testGet() throws UserException, IOException
   {
-    User zaphod = getTestUser();
+    User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
     assertNotNull(manager.get("zaphod"));
@@ -154,13 +154,12 @@ public abstract class UserManagerTestBase
   @Test
   public void testGetAll() throws UserException, IOException
   {
-    User zaphod = getTestUser();
+    User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
     assertNotNull(manager.get("zaphod"));
 
-    User trillian = new User("trillian", "Tricia McMillan",
-                             "tricia.mcmillan@hitchhiker.com");
+    User trillian = UserTestData.createTrillian();
 
     manager.create(trillian);
     assertNotNull(manager.get("trillian"));
@@ -228,7 +227,7 @@ public abstract class UserManagerTestBase
   @Test
   public void testModify() throws UserException, IOException
   {
-    User zaphod = getTestUser();
+    User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
     assertNotNull(manager.get("zaphod"));
@@ -251,7 +250,7 @@ public abstract class UserManagerTestBase
   @Test(expected = UserException.class)
   public void testModifyNotExisting() throws UserException, IOException
   {
-    User zaphod = getTestUser();
+    User zaphod = UserTestData.createZaphod();
 
     manager.modify(zaphod);
   }
@@ -310,7 +309,7 @@ public abstract class UserManagerTestBase
   @Test
   public void testRefresh() throws UserException, IOException
   {
-    User zaphod = getTestUser();
+    User zaphod = UserTestData.createZaphod();
 
     manager.create(zaphod);
     assertNotNull(manager.get("zaphod"));
@@ -332,20 +331,6 @@ public abstract class UserManagerTestBase
     assertEquals(user.getDisplayName(), otherUser.getDisplayName());
     assertEquals(user.getMail(), otherUser.getMail());
     assertEquals(user.getPassword(), otherUser.getPassword());
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private User getTestUser()
-  {
-    return new User("zaphod", "Zaphod Beeblebrox",
-                    "zaphod.beeblebrox@hitchhiker.com");
   }
 
   //~--- inner classes --------------------------------------------------------

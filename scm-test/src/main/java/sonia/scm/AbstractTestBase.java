@@ -35,44 +35,47 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
-
 import org.junit.After;
 import org.junit.Before;
 
-import sonia.scm.security.SecurityContext;
-import sonia.scm.user.User;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.IOException;
 
 import java.util.UUID;
 
 /**
  *
  * @author Sebastian Sdorra
- *
- * @param <T>
- * @param <E>
  */
-public abstract class ManagerTestBase<T extends TypedObject,
-        E extends Exception> extends AbstractTestBase
+public class AbstractTestBase
 {
 
   /**
    * Method description
    *
    *
-   * @return
+   * @throws Exception
    */
-  protected abstract Manager<T, E> createManager();
+  @After
+  public void tearDownTest() throws Exception
+  {
+    try
+    {
+      preTearDown();
+    }
+    finally
+    {
+      IOUtil.delete(tempDirectory);
+    }
+  }
+
+  //~--- set methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -80,12 +83,17 @@ public abstract class ManagerTestBase<T extends TypedObject,
    *
    * @throws Exception
    */
-  @Override
-  protected void postSetUp() throws Exception
+  @Before
+  public void setUpTest() throws Exception
   {
-    manager = createManager();
-    manager.init(contextProvider);
+    tempDirectory = new File(System.getProperty("java.io.tmpdir"),
+                             UUID.randomUUID().toString());
+    assertTrue(tempDirectory.mkdirs());
+    contextProvider = MockUtil.getSCMContextProvider(tempDirectory);
+    postSetUp();
   }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -93,14 +101,23 @@ public abstract class ManagerTestBase<T extends TypedObject,
    *
    * @throws Exception
    */
-  @Override
-  protected void preTearDown() throws Exception
-  {
-    manager.close();
-  }
+  protected void postSetUp() throws Exception {}
+
+  /**
+   * Method description
+   *
+   *
+   * @throws Exception
+   */
+  protected void preTearDown() throws Exception {}
+
+  ;
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  protected Manager<T, E> manager;
+  protected SCMContextProvider contextProvider;
+
+  /** Field description */
+  private File tempDirectory;
 }
