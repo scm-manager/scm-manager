@@ -35,6 +35,7 @@ package sonia.scm.sample.auth;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -42,6 +43,8 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.ext.Extension;
+import sonia.scm.store.Store;
+import sonia.scm.store.StoreFactory;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.security.AuthenticationHandler;
@@ -49,7 +52,6 @@ import sonia.scm.web.security.AuthenticationResult;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.Map;
@@ -57,8 +59,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import javax.xml.bind.JAXB;
 
 /**
  *
@@ -70,15 +70,28 @@ public class SampleAuthenticationHandler implements AuthenticationHandler
 {
 
   /** Field description */
-  public static final String TYPE = "sample";
+  public static final String STORE_NAME = "sample-auth";
 
   /** Field description */
-  public static final String CONFIG_PATH =
-    "config".concat(File.separator).concat("sample-auth.xml");
+  public static final String TYPE = "sample";
 
   /** the logger for SampleAuthenticationHandler */
   private static final Logger logger =
     LoggerFactory.getLogger(SampleAuthenticationHandler.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param storeFactory
+   */
+  @Inject
+  public SampleAuthenticationHandler(StoreFactory storeFactory)
+  {
+    store = storeFactory.getStore(SampleConfig.class, STORE_NAME);
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -125,8 +138,13 @@ public class SampleAuthenticationHandler implements AuthenticationHandler
   @Override
   public void init(SCMContextProvider context)
   {
-    configFile = new File(context.getBaseDirectory(), CONFIG_PATH);
-    loadConfig();
+    config = store.get();
+
+    if (config == null)
+    {
+      config = new SampleConfig();
+    }
+
     addUser(new User("dent", "Arthur Dent", "arthur.dent@hitchhiker.com"));
     addUser(new User("perfect", "Ford Prefect", "ford.perfect@hitchhiker.com"));
     addUser(new User("slarti", "Slartibartfaß",
@@ -137,42 +155,10 @@ public class SampleAuthenticationHandler implements AuthenticationHandler
   /**
    * Method description
    *
-   *
-   */
-  public void loadConfig()
-  {
-    if (configFile.exists())
-    {
-      try
-      {
-        config = JAXB.unmarshal(configFile, SampleConfig.class);
-      }
-      catch (Exception ex)
-      {
-        logger.error(ex.getMessage(), ex);
-      }
-    }
-
-    if (config == null)
-    {
-      config = new SampleConfig();
-    }
-  }
-
-  /**
-   * Method description
-   *
    */
   public void storeConfig()
   {
-    try
-    {
-      JAXB.marshal(config, configFile);
-    }
-    catch (Exception ex)
-    {
-      logger.error(ex.getMessage(), ex);
-    }
+    store.set(config);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -266,7 +252,7 @@ public class SampleAuthenticationHandler implements AuthenticationHandler
   private SampleConfig config;
 
   /** Field description */
-  private File configFile;
+  private Store<SampleConfig> store;
 
   /** Field description */
   private Map<String, User> userDB = new ConcurrentHashMap<String, User>();
