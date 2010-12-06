@@ -36,7 +36,12 @@ Sonia.navigation.NavSection = Ext.extend(Ext.Panel, {
   data: null,
 
   initComponent: function(){
-
+    if ( this.data == null ){
+      this.data = this.items;
+    }
+    if ( this.data == null ){
+      this.data = [];
+    }
     var config = {
       frame: true,
       collapsible:true,
@@ -62,7 +67,12 @@ Sonia.navigation.NavSection = Ext.extend(Ext.Panel, {
       var i = parseInt( id.substring( prefix.length ) );
       var fn = this.data[i].fn;
       if ( Ext.isFunction( fn ) ){
-        fn();
+        var scope = this.data[i].scope;
+        if ( Ext.isObject( scope )){
+          fn.call(scope);
+        } else {
+          fn();
+        }
       } else if ( debug ){
         console.debug('fn at "' +  this.data[i].label + '" is not a function');
       }
@@ -83,12 +93,39 @@ Sonia.navigation.NavSection = Ext.extend(Ext.Panel, {
         };
         links.push(link);
       }
-
+      
       var dh = Ext.DomHelper;
-      var list = dh.append(this.body, {tag: 'ul', cls: 'nav-list'}, true);
+      var list = dh.overwrite(this.body, {tag: 'ul', cls: 'nav-list'}, true);
       dh.append(list, links);
       list.on('click', this.onItemClick, this);
     }
+  },
+
+  addLink: function(link){
+    this.data.push(link);
+    this.renderMenu();
+  },
+
+  addLinks: function(links){
+    if ( Ext.isArray(links) && links.length > 0 ){
+      for ( var i=0; i<links.length; i++ ){
+        this.data.push(links[i]);
+      }
+      this.renderMenu();
+    } else {
+      this.addLink(links);
+    }
+  },
+
+  insertLink: function(pos, link){
+    console.debug( this.data );
+    this.data.splice(pos, 0, link);
+    console.debug( this.data );
+    this.renderMenu();
+  },
+
+  count: function(){
+    return this.data.length;
   }
 
 });
@@ -124,11 +161,8 @@ Sonia.navigation.NavPanel = Ext.extend(Ext.Panel, {
     if ( debug ){
       console.debug('insert navsection ' + section.title + ' at ' + pos);
     }
-    this.insert(pos,{
-      xtype: 'navSection',
-      title: section.title,
-      data: section.items
-    });
+    section.xtype = 'navSection';
+    this.insert(pos, section);
     this.doLayout();
   },
 
@@ -147,11 +181,8 @@ Sonia.navigation.NavPanel = Ext.extend(Ext.Panel, {
     if ( debug ){
       console.debug('add navsection ' + section.title);
     }
-    this.add({
-      xtype: 'navSection',
-      title: section.title,
-      data: section.items
-    });
+    section.xtype = 'navSection';
+    this.add(section);
   },
 
   count: function(){
