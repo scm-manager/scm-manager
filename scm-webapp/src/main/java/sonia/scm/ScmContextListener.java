@@ -59,7 +59,7 @@ import javax.servlet.ServletContextEvent;
  *
  * @author Sebastian Sdorra
  */
-public class ContextListener extends GuiceServletContextListener
+public class ScmContextListener extends GuiceServletContextListener
 {
 
   /**

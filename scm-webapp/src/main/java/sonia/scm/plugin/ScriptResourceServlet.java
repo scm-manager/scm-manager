@@ -38,6 +38,7 @@ package sonia.scm.plugin;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.boot.BootstrapUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -140,7 +141,7 @@ public class ScriptResourceServlet extends AbstractResourceServlet
   private void appendResource(OutputStream stream, String script)
           throws ServletException, IOException
   {
-    InputStream input = ScriptResourceServlet.class.getResourceAsStream(script);
+    InputStream input = getResourceAsStream(script);
 
     if (input != null)
     {
@@ -178,6 +179,39 @@ public class ScriptResourceServlet extends AbstractResourceServlet
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param resource
+   *
+   * @return
+   */
+  private InputStream getResourceAsStream(String resource)
+  {
+    InputStream input = null;
+    ClassLoader classLoader = BootstrapUtil.getClassLoader(getServletContext());
+
+    if (classLoader != null)
+    {
+      String classLoaderResource = resource;
+
+      if (classLoaderResource.startsWith("/"))
+      {
+        classLoaderResource = classLoaderResource.substring(1);
+      }
+
+      input = classLoader.getResourceAsStream(classLoaderResource);
+    }
+
+    if (input == null)
+    {
+      input = ScriptResourceServlet.class.getResourceAsStream(resource);
+    }
+
+    return input;
+  }
 
   /**
    * Method description

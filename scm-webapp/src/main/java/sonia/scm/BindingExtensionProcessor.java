@@ -47,7 +47,6 @@ import sonia.scm.plugin.ext.ExtensionProcessor;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.web.security.AuthenticationHandler;
-import sonia.scm.web.security.AuthenticationManager;
 import sonia.scm.web.security.XmlAuthenticationHandler;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -119,7 +118,8 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         {
           if (logger.isInfoEnabled())
           {
-            logger.info("bind AuthenticationHandler {}", extensionClass.getName());
+            logger.info("bind AuthenticationHandler {}",
+                        extensionClass.getName());
           }
 
           binder.bind(extensionClass);
