@@ -28,6 +28,10 @@
           <artifactId>trilead-ssh2</artifactId>
           <groupId>org.tmatesoft.svnkit</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>sqljet</artifactId>
+          <groupId>org.tmatesoft.sqljet</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
 
