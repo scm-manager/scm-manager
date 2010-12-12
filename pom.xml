@@ -52,8 +52,14 @@
 
     <repository>
       <id>java.net2</id>
-      <name>Repository hosting the jee6 artifacts</name>
+      <name>Repository hosting the javaee artifacts</name>
       <url>http://download.java.net/maven/2</url>
+    </repository>
+    
+    <repository>
+      <id>maven.scm-manager.org</id>
+      <name>scm-manager release repository</name>
+      <url>http://maven.scm-manager.org/nexus/content/groups/public/</url>
     </repository>
     
   </repositories>
@@ -248,6 +254,22 @@
     </profile>
 
   </profiles>
+  
+  <distributionManagement>
+
+    <repository>
+      <id>maven.scm-manager.org</id>
+      <name>scm-manager release repository</name>
+      <url>http://maven.scm-manager.org/nexus/content/repositories/releases/</url>
+    </repository>
+
+    <snapshotRepository>
+      <id>maven.scm-manager.org</id>
+      <name>scm-manager snapshot repository</name>
+      <url>http://maven.scm-manager.org/nexus/content/repositories/snapshots/</url>
+    </snapshotRepository>
+
+  </distributionManagement>
 
   <properties>
     <mokito.version>1.8.5</mokito.version>
