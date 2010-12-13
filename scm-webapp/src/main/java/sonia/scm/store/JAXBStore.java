@@ -45,7 +45,6 @@ import java.io.File;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 
 /**
  *
@@ -72,11 +71,7 @@ public class JAXBStore<T> implements Store<T>
   {
     try
     {
-      JAXBContext context = JAXBContext.newInstance(type);
-
-      marshaller = context.createMarshaller();
-      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-      unmarshaller = context.createUnmarshaller();
+      context = JAXBContext.newInstance(type);
       this.configFile = configFile;
     }
     catch (JAXBException ex)
@@ -102,7 +97,7 @@ public class JAXBStore<T> implements Store<T>
     {
       try
       {
-        result = (T) unmarshaller.unmarshal(configFile);
+        result = (T) context.createUnmarshaller().unmarshal(configFile);
       }
       catch (JAXBException ex)
       {
@@ -132,6 +127,9 @@ public class JAXBStore<T> implements Store<T>
 
     try
     {
+      Marshaller marshaller = context.createMarshaller();
+
+      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
       marshaller.marshal(object, configFile);
     }
     catch (JAXBException ex)
@@ -146,8 +144,5 @@ public class JAXBStore<T> implements Store<T>
   private File configFile;
 
   /** Field description */
-  private Marshaller marshaller;
-
-  /** Field description */
-  private Unmarshaller unmarshaller;
+  private JAXBContext context;
 }
