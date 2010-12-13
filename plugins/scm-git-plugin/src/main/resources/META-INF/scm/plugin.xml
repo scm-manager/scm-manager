@@ -43,10 +43,12 @@
 <plugin>
 
   <information>
+    <groupId>${project.groupId}</groupId>
+    <artifactId>${project.artifactId}</artifactId>
+    <version>${project.version}</version>
     <name>${project.name}</name>
     <description>${project.description}</description>
     <author>Sebastian Sdorra</author>
-    <version>${project.version}</version>
     <url>${project.url}</url>
   </information>
 

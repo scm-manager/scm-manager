@@ -31,82 +31,60 @@
 
 
 
-package sonia.scm.api.rest.resources;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-import sonia.scm.plugin.Plugin;
-import sonia.scm.plugin.PluginInformation;
-import sonia.scm.plugin.PluginManager;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+package sonia.scm.plugin;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-@Path("plugins")
-public class PluginResource
+public class PluginLoadException extends RuntimeException
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -8683647962850692519L;
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  public PluginLoadException()
+  {
+    super();
+  }
 
   /**
    * Constructs ...
    *
    *
-   * @param pluginManager
+   * @param message
    */
-  @Inject
-  public PluginResource(PluginManager pluginManager)
+  public PluginLoadException(String message)
   {
-    Collection<Plugin> pluginCollection = pluginManager.getPlugins();
-    List<PluginInformation> informations = new ArrayList<PluginInformation>();
-
-    if (pluginCollection != null)
-    {
-      for (Plugin plugin : pluginCollection)
-      {
-        PluginInformation pluginInfo = plugin.getInformation();
-
-        if (pluginInfo != null)
-        {
-          informations.add(pluginInfo);
-        }
-      }
-    }
-
-    plugins = informations.toArray(new PluginInformation[0]);
+    super(message);
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @return
+   * @param cause
    */
-  @GET
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public PluginInformation[] getPlugins()
+  public PluginLoadException(Throwable cause)
   {
-    return plugins;
+    super(cause);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private PluginInformation[] plugins;
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   * @param cause
+   */
+  public PluginLoadException(String message, Throwable cause)
+  {
+    super(message, cause);
+  }
 }

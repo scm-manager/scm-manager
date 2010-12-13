@@ -39,7 +39,7 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
   initComponent: function(){
 
     var pluginStore = new Sonia.rest.JsonStore({
-      url: restUrl + 'plugins.json',
+      url: restUrl + 'plugins/installed.json',
       root: 'plugin-information',
       fields: [  'name', 'author', 'description', 'url', 'version' ],
       sortInfo: {

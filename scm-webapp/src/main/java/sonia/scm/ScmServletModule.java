@@ -45,7 +45,9 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.EhCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.SecurityFilter;
+import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.Plugin;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.ScriptResourceServlet;
 import sonia.scm.repository.RepositoryManager;
@@ -129,13 +131,13 @@ public class ScmServletModule extends ServletModule
    * Constructs ...
    *
    *
-   * @param manager
+   * @param pluginLoader
    * @param bindExtProcessor
    */
-  ScmServletModule(PluginManager manager,
+  ScmServletModule(PluginLoader pluginLoader,
                    BindingExtensionProcessor bindExtProcessor)
   {
-    this.pluginManager = manager;
+    this.pluginLoader = pluginLoader;
     this.bindExtProcessor = bindExtProcessor;
   }
 
@@ -156,7 +158,8 @@ public class ScmServletModule extends ServletModule
 
     bind(StoreFactory.class).to(JAXBStoreFactory.class);
     bind(ScmConfiguration.class).toInstance(config);
-    bind(PluginManager.class).toInstance(pluginManager);
+    bind(PluginLoader.class).toInstance(pluginLoader);
+    bind(PluginManager.class).to(DefaultPluginManager.class);
     bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
     bindExtProcessor.bindExtensions(binder());
 
@@ -276,7 +279,7 @@ public class ScmServletModule extends ServletModule
 
     packageSet.add(SCMContext.DEFAULT_PACKAGE);
 
-    Collection<Plugin> plugins = pluginManager.getPlugins();
+    Collection<Plugin> plugins = pluginLoader.getInstalledPlugins();
 
     if (plugins != null)
     {
@@ -341,5 +344,5 @@ public class ScmServletModule extends ServletModule
   private BindingExtensionProcessor bindExtProcessor;
 
   /** Field description */
-  private PluginManager pluginManager;
+  private PluginLoader pluginLoader;
 }

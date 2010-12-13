@@ -33,27 +33,72 @@
 
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "plugin-information")
-public class PluginInformation
+public class PluginRepository
 {
 
   /**
+   * Constructs ...
+   *
+   */
+  public PluginRepository() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param id
+   * @param url
+   */
+  public PluginRepository(String id, String url)
+  {
+    this.id = id;
+    this.url = url;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
    * Method description
    *
    *
+   * @param obj
+   *
    * @return
    */
-  public String getArtifactId()
+  @Override
+  public boolean equals(Object obj)
   {
-    return artifactId;
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final PluginRepository other = (PluginRepository) obj;
+
+    if ((this.id == null)
+        ? (other.id != null)
+        : !this.id.equals(other.id))
+    {
+      return false;
+    }
+
+    if ((this.url == null)
+        ? (other.url != null)
+        : !this.url.equals(other.url))
+    {
+      return false;
+    }
+
+    return true;
   }
 
   /**
@@ -62,9 +107,19 @@ public class PluginInformation
    *
    * @return
    */
-  public String getAuthor()
+  @Override
+  public int hashCode()
   {
-    return author;
+    int hash = 7;
+
+    hash = 37 * hash + ((this.id != null)
+                        ? this.id.hashCode()
+                        : 0);
+    hash = 37 * hash + ((this.url != null)
+                        ? this.url.hashCode()
+                        : 0);
+
+    return hash;
   }
 
   /**
@@ -73,10 +128,17 @@ public class PluginInformation
    *
    * @return
    */
-  public String getDescription()
+  @Override
+  public String toString()
   {
-    return description;
+    StringBuilder out = new StringBuilder("PluginRepository{id=");
+
+    out.append(id).append(", url=").append(url).append(")");
+
+    return out.toString();
   }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -84,20 +146,9 @@ public class PluginInformation
    *
    * @return
    */
-  public String getGroupId()
+  public String getId()
   {
-    return groupId;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getName()
-  {
-    return name;
+    return id;
   }
 
   /**
@@ -111,72 +162,17 @@ public class PluginInformation
     return url;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getVersion()
-  {
-    return version;
-  }
-
   //~--- set methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param artifactId
+   * @param id
    */
-  public void setArtifactId(String artifactId)
+  public void setId(String id)
   {
-    this.artifactId = artifactId;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param author
-   */
-  public void setAuthor(String author)
-  {
-    this.author = author;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param description
-   */
-  public void setDescription(String description)
-  {
-    this.description = description;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param groupId
-   */
-  public void setGroupId(String groupId)
-  {
-    this.groupId = groupId;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   */
-  public void setName(String name)
-  {
-    this.name = name;
+    this.id = id;
   }
 
   /**
@@ -190,37 +186,11 @@ public class PluginInformation
     this.url = url;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param version
-   */
-  public void setVersion(String version)
-  {
-    this.version = version;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String artifactId;
-
-  /** Field description */
-  private String author;
-
-  /** Field description */
-  private String description;
-
-  /** Field description */
-  private String groupId;
-
-  /** Field description */
-  private String name;
+  private String id;
 
   /** Field description */
   private String url;
-
-  /** Field description */
-  private String version;
 }

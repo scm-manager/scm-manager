@@ -31,34 +31,45 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.api.rest.resources;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.PluginManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface PluginManager
+@Singleton
+@Path("plugins/available")
+public class AvailablePluginResource
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param id
+   * @param pluginManager
    */
-  public void install(String id);
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  public void uninstall(String id);
+  @Inject
+  public AvailablePluginResource(PluginManager pluginManager)
+  {
+    this.pluginManager = pluginManager;
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -66,25 +77,30 @@ public interface PluginManager
    * Method description
    *
    *
-   * @param id
-   *
    * @return
    */
-  public PluginInformation get(String id);
+  @GET
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public PluginInformation[] getAvailablePlugins()
+  {
+    Collection<PluginInformation> pluginCollection =
+      pluginManager.getAvailable();
+    PluginInformation[] plugins = null;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getAvailable();
+    if (pluginCollection != null)
+    {
+      plugins = pluginCollection.toArray(new PluginInformation[0]);
+    }
+    else
+    {
+      plugins = new PluginInformation[0];
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getInstalled();
+    return plugins;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private PluginManager pluginManager;
 }

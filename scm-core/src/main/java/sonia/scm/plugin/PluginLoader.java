@@ -33,6 +33,10 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.plugin.ext.ExtensionProcessor;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
@@ -41,24 +45,16 @@ import java.util.Collection;
  *
  * @author Sebastian Sdorra
  */
-public interface PluginManager
+public interface PluginLoader
 {
 
   /**
    * Method description
    *
    *
-   * @param id
+   * @param processor
    */
-  public void install(String id);
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  public void uninstall(String id);
+  public void processExtensions(ExtensionProcessor processor);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -66,25 +62,7 @@ public interface PluginManager
    * Method description
    *
    *
-   * @param id
-   *
    * @return
    */
-  public PluginInformation get(String id);
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getAvailable();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getInstalled();
+  public Collection<Plugin> getInstalledPlugins();
 }

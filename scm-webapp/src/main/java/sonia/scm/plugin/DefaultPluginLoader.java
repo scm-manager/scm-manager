@@ -63,15 +63,15 @@ import javax.xml.bind.JAXB;
  *
  * @author Sebastian Sdorra
  */
-public class DefaultPluginManager implements PluginManager
+public class DefaultPluginLoader implements PluginLoader
 {
 
   /** Field description */
   public static final String PATH_PLUGINCONFIG = "META-INF/scm/plugin.xml";
 
-  /** the logger for DefaultPluginManager */
+  /** the logger for DefaultPluginLoader */
   private static final Logger logger =
-    LoggerFactory.getLogger(DefaultPluginManager.class);
+    LoggerFactory.getLogger(DefaultPluginLoader.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -79,7 +79,7 @@ public class DefaultPluginManager implements PluginManager
    * Constructs ...
    *
    */
-  public DefaultPluginManager()
+  public DefaultPluginLoader()
   {
     ClassLoader classLoader = getClassLoader();
 
@@ -108,7 +108,7 @@ public class DefaultPluginManager implements PluginManager
     ClassLoader classLoader = getClassLoader();
     JARExtensionScanner scanner = new JARExtensionScanner();
 
-    for (Plugin plugin : plugins)
+    for (Plugin plugin : installedPlugins)
     {
       InputStream input = null;
 
@@ -150,9 +150,9 @@ public class DefaultPluginManager implements PluginManager
    * @return
    */
   @Override
-  public Collection<Plugin> getPlugins()
+  public Collection<Plugin> getInstalledPlugins()
   {
-    return plugins;
+    return installedPlugins;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -204,7 +204,7 @@ public class DefaultPluginManager implements PluginManager
       Plugin plugin = JAXB.unmarshal(url, Plugin.class);
 
       plugin.setPath(path);
-      plugins.add(plugin);
+      installedPlugins.add(plugin);
     }
     catch (Exception ex)
     {
@@ -235,5 +235,5 @@ public class DefaultPluginManager implements PluginManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Set<Plugin> plugins = new HashSet<Plugin>();
+  private Set<Plugin> installedPlugins = new HashSet<Plugin>();
 }

@@ -74,12 +74,12 @@ public class ScriptResourceServlet extends AbstractResourceServlet
    * Constructs ...
    *
    *
-   * @param manager
+   * @param pluginLoader
    */
   @Inject
-  public ScriptResourceServlet(PluginManager manager)
+  public ScriptResourceServlet(PluginLoader pluginLoader)
   {
-    this.manager = manager;
+    this.pluginLoader = pluginLoader;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -222,7 +222,7 @@ public class ScriptResourceServlet extends AbstractResourceServlet
   private Collection<String> getScriptResources()
   {
     Set<String> resources = new TreeSet<String>();
-    Collection<Plugin> plugins = manager.getPlugins();
+    Collection<Plugin> plugins = pluginLoader.getInstalledPlugins();
 
     if (plugins != null)
     {
@@ -238,5 +238,5 @@ public class ScriptResourceServlet extends AbstractResourceServlet
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private PluginManager manager;
+  private PluginLoader pluginLoader;
 }

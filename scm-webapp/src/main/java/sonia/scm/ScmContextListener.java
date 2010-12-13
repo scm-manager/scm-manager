@@ -40,8 +40,8 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 
-import sonia.scm.plugin.DefaultPluginManager;
-import sonia.scm.plugin.PluginManager;
+import sonia.scm.plugin.DefaultPluginLoader;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.user.UserManager;
@@ -101,13 +101,14 @@ public class ScmContextListener extends GuiceServletContextListener
   @Override
   protected Injector getInjector()
   {
-    PluginManager manager = new DefaultPluginManager();
+    PluginLoader pluginLoader = new DefaultPluginLoader();
     BindingExtensionProcessor bindExtProcessor =
       new BindingExtensionProcessor();
 
-    manager.processExtensions(bindExtProcessor);
+    pluginLoader.processExtensions(bindExtProcessor);
 
-    ScmServletModule main = new ScmServletModule(manager, bindExtProcessor);
+    ScmServletModule main = new ScmServletModule(pluginLoader,
+                              bindExtProcessor);
     List<Module> moduleList =
       new ArrayList<Module>(bindExtProcessor.getModuleSet());
 

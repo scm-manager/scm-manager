@@ -43,6 +43,7 @@ import java.io.File;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -54,6 +55,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ScmConfiguration
 {
+
+  /** Field description */
+  public static final String DEFAULT_PLUGINURL =
+    "http://plugins.scm-manager.org/plugins.xml";
 
   /** Field description */
   public static final String PATH =
@@ -80,12 +85,34 @@ public class ScmConfiguration
    *
    * @return
    */
+  public String getPluginUrl()
+  {
+    return pluginUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getServername()
   {
     return servername;
   }
 
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param pluginUrl
+   */
+  public void setPluginUrl(String pluginUrl)
+  {
+    this.pluginUrl = pluginUrl;
+  }
 
   /**
    * Method description
@@ -99,6 +126,10 @@ public class ScmConfiguration
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @XmlElement(name = "plugin-url")
+  private String pluginUrl = DEFAULT_PLUGINURL;
 
   /** Field description */
   private String servername = "localhost";

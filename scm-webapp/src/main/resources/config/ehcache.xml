@@ -108,4 +108,15 @@
         diskExpiryThreadIntervalSeconds="2400"
   />
 
+  <cache
+        name="sonia.cache.plugins"
+        maxElementsInMemory="20000"
+        eternal="false"
+        overflowToDisk="true"
+        timeToIdleSeconds="1200"
+        timeToLiveSeconds="2400"
+        diskPersistent="true"
+        diskExpiryThreadIntervalSeconds="2400"
+  />
+
 </ehcache>

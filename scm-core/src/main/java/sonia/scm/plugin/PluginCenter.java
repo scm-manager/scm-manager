@@ -35,25 +35,40 @@ package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "plugin-information")
-public class PluginInformation
+@XmlRootElement(name = "plugin-center")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class PluginCenter implements Serializable
 {
 
+  /** Field description */
+  private static final long serialVersionUID = -6414175308610267397L;
+
+  //~--- get methods ----------------------------------------------------------
+
   /**
    * Method description
    *
    *
    * @return
    */
-  public String getArtifactId()
+  public Set<PluginInformation> getPlugins()
   {
-    return artifactId;
+    return plugins;
   }
 
   /**
@@ -62,64 +77,9 @@ public class PluginInformation
    *
    * @return
    */
-  public String getAuthor()
+  public Set<PluginRepository> getRepositories()
   {
-    return author;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getDescription()
-  {
-    return description;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getGroupId()
-  {
-    return groupId;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getName()
-  {
-    return name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getUrl()
-  {
-    return url;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getVersion()
-  {
-    return version;
+    return repositories;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -128,99 +88,33 @@ public class PluginInformation
    * Method description
    *
    *
-   * @param artifactId
+   * @param plugins
    */
-  public void setArtifactId(String artifactId)
+  public void setPlugins(Set<PluginInformation> plugins)
   {
-    this.artifactId = artifactId;
+    this.plugins = plugins;
   }
 
   /**
    * Method description
    *
    *
-   * @param author
+   * @param repositories
    */
-  public void setAuthor(String author)
+  public void setRepositories(Set<PluginRepository> repositories)
   {
-    this.author = author;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param description
-   */
-  public void setDescription(String description)
-  {
-    this.description = description;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param groupId
-   */
-  public void setGroupId(String groupId)
-  {
-    this.groupId = groupId;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   */
-  public void setName(String name)
-  {
-    this.name = name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param url
-   */
-  public void setUrl(String url)
-  {
-    this.url = url;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param version
-   */
-  public void setVersion(String version)
-  {
-    this.version = version;
+    this.repositories = repositories;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String artifactId;
+  @XmlElement(name = "plugin")
+  @XmlElementWrapper(name = "plugins")
+  private Set<PluginInformation> plugins = new HashSet<PluginInformation>();
 
   /** Field description */
-  private String author;
-
-  /** Field description */
-  private String description;
-
-  /** Field description */
-  private String groupId;
-
-  /** Field description */
-  private String name;
-
-  /** Field description */
-  private String url;
-
-  /** Field description */
-  private String version;
+  @XmlElement(name = "repository")
+  @XmlElementWrapper(name = "repositories")
+  private Set<PluginRepository> repositories = new HashSet<PluginRepository>();
 }

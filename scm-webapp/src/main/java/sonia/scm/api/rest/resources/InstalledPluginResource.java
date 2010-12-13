@@ -31,34 +31,55 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.api.rest.resources;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.PluginManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
 
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface PluginManager
+@Singleton
+@Path("plugins/installed")
+public class InstalledPluginResource
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param id
+   * @param pluginManager
    */
-  public void install(String id);
+  @Inject
+  public InstalledPluginResource(PluginManager pluginManager)
+  {
+    Collection<PluginInformation> pluginCollection =
+      pluginManager.getInstalled();
 
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  public void uninstall(String id);
+    if (pluginCollection != null)
+    {
+      plugins = pluginCollection.toArray(new PluginInformation[0]);
+    }
+    else
+    {
+      plugins = new PluginInformation[0];
+    }
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -66,25 +87,17 @@ public interface PluginManager
    * Method description
    *
    *
-   * @param id
-   *
    * @return
    */
-  public PluginInformation get(String id);
+  @GET
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public PluginInformation[] getPlugins()
+  {
+    return plugins;
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getAvailable();
+  //~--- fields ---------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getInstalled();
+  /** Field description */
+  private PluginInformation[] plugins;
 }
