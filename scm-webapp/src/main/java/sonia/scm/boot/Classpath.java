@@ -31,29 +31,58 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.boot;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
+
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "plugin-information")
-public class PluginInformation
+@XmlRootElement(name = "classpath")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Classpath implements Iterable<String>
 {
 
   /**
+   * Constructs ...
+   *
+   */
+  public Classpath() {}
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
    * Method description
    *
    *
-   * @return
+   * @param path
    */
-  public String getArtifactId()
+  public void add(String path)
   {
-    return artifactId;
+    pathSet.add(path);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param file
+   */
+  public void add(File file)
+  {
+    pathSet.add(file.getPath());
   }
 
   /**
@@ -62,10 +91,13 @@ public class PluginInformation
    *
    * @return
    */
-  public String getAuthor()
+  @Override
+  public Iterator<String> iterator()
   {
-    return author;
+    return pathSet.iterator();
   }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -73,68 +105,9 @@ public class PluginInformation
    *
    * @return
    */
-  public String getDescription()
+  public Set<String> getPathSet()
   {
-    return description;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getGroupId()
-  {
-    return groupId;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getId()
-  {
-    StringBuilder id = new StringBuilder(groupId);
-
-    id.append(":").append(artifactId).append(":");
-
-    return id.append(version).toString();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getName()
-  {
-    return name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getUrl()
-  {
-    return url;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getVersion()
-  {
-    return version;
+    return pathSet;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -143,99 +116,16 @@ public class PluginInformation
    * Method description
    *
    *
-   * @param artifactId
+   * @param pathSet
    */
-  public void setArtifactId(String artifactId)
+  public void setPathSet(Set<String> pathSet)
   {
-    this.artifactId = artifactId;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param author
-   */
-  public void setAuthor(String author)
-  {
-    this.author = author;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param description
-   */
-  public void setDescription(String description)
-  {
-    this.description = description;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param groupId
-   */
-  public void setGroupId(String groupId)
-  {
-    this.groupId = groupId;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   */
-  public void setName(String name)
-  {
-    this.name = name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param url
-   */
-  public void setUrl(String url)
-  {
-    this.url = url;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param version
-   */
-  public void setVersion(String version)
-  {
-    this.version = version;
+    this.pathSet = pathSet;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String artifactId;
-
-  /** Field description */
-  private String author;
-
-  /** Field description */
-  private String description;
-
-  /** Field description */
-  private String groupId;
-
-  /** Field description */
-  private String name;
-
-  /** Field description */
-  private String url;
-
-  /** Field description */
-  private String version;
+  @XmlElement(name = "path")
+  private Set<String> pathSet = new LinkedHashSet<String>();
 }

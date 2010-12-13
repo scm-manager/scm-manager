@@ -47,11 +47,18 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
+import javax.xml.bind.JAXB;
 
 /**
  *
@@ -62,6 +69,9 @@ public class BootstrapListener implements ServletContextListener
 
   /** Field description */
   public static final String LISTENER = "sonia.scm.ScmContextListener";
+
+  /** Field description */
+  public static final String PLUGIN_CLASSPATHFILE = "classpath.xml";
 
   /** Field description */
   public static final String PLUGIN_DIRECTORY = "plugins";
@@ -102,32 +112,23 @@ public class BootstrapListener implements ServletContextListener
 
     if (pluginDirectory.exists())
     {
-      try
-      {
-        File[] jarFiles = pluginDirectory.listFiles(new JarFilenameFilter());
+      File classpathFile = new File(pluginDirectory, PLUGIN_CLASSPATHFILE);
 
-        if (Util.isNotEmpty(jarFiles))
+      if (classpathFile.exists())
+      {
+        try
         {
-          int size = jarFiles.length;
-          URL[] urls = new URL[size];
+          Classpath classpath = JAXB.unmarshal(classpathFile, Classpath.class);
 
-          for (int i = 0; i < size; i++)
+          if (classpath != null)
           {
-            urls[i] = jarFiles[i].toURI().toURL();
-
-            if (logger.isDebugEnabled())
-            {
-              logger.debug("added jar {} to classpath",
-                           urls[i].toExternalForm());
-            }
+            classLoader = createClassLoader(pluginDirectory, classpath);
           }
-
-          classLoader = new URLClassLoader(urls, getParentClassLoader());
         }
-      }
-      catch (IOException ex)
-      {
-        logger.error(ex.getMessage(), ex);
+        catch (Exception ex)
+        {
+          logger.error(ex.getMessage(), ex);
+        }
       }
     }
 
@@ -150,6 +151,51 @@ public class BootstrapListener implements ServletContextListener
     scmContextListener.contextInitialized(sce);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param pluginDirectory
+   * @param classpath
+   *
+   * @return
+   */
+  private ClassLoader createClassLoader(File pluginDirectory,
+          Classpath classpath)
+  {
+    List<URL> classpathURLs = new LinkedList<URL>();
+
+    for (String path : classpath)
+    {
+      if (path.startsWith("/"))
+      {
+        path = path.substring(1);
+      }
+
+      File file = new File(pluginDirectory, path);
+
+      if (file.exists())
+      {
+        try
+        {
+          if (logger.isDebugEnabled())
+          {
+            logger.debug("append {} to classpath", file.getPath());
+          }
+
+          classpathURLs.add(file.toURI().toURL());
+        }
+        catch (MalformedURLException ex)
+        {
+          logger.error(ex.getMessage(), ex);
+        }
+      }
+    }
+
+    return new URLClassLoader(classpathURLs.toArray(new URL[0]),
+                              getParentClassLoader());
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -169,35 +215,6 @@ public class BootstrapListener implements ServletContextListener
 
     return classLoader;
   }
-
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 2010-12-09
-   * @author         Sebastian Sdorra
-   */
-  private static class JarFilenameFilter implements FilenameFilter
-  {
-
-    /**
-     * Method description
-     *
-     *
-     * @param file
-     * @param name
-     *
-     * @return
-     */
-    @Override
-    public boolean accept(File file, String name)
-    {
-      return name.endsWith(".jar");
-    }
-  }
-
 
   //~--- fields ---------------------------------------------------------------
 

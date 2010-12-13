@@ -35,8 +35,6 @@ package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.net.URL;
-
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;

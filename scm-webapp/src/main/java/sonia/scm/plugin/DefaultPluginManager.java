@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
+import sonia.scm.SCMContext;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.SimpleCache;
 import sonia.scm.config.ScmConfiguration;
@@ -100,9 +101,7 @@ public class DefaultPluginManager implements PluginManager
 
       if (info != null)
       {
-        String id = getPluginId(info);
-
-        installedPlugins.put(id, plugin.getInformation());
+        installedPlugins.put(info.getId(), plugin.getInformation());
       }
     }
 
@@ -128,7 +127,12 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public void install(String id)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    if (pluginHandler == null)
+    {
+      getPluginCenter();
+    }
+
+    pluginHandler.install(id);
   }
 
   /**
@@ -156,7 +160,19 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public PluginInformation get(String id)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    PluginInformation result = null;
+
+    for (PluginInformation info : getPluginCenter().getPlugins())
+    {
+      if (id.equals(info.getId()))
+      {
+        result = info;
+
+        break;
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -195,42 +211,35 @@ public class DefaultPluginManager implements PluginManager
 
     if (center == null)
     {
-      if (logger.isInfoEnabled())
+      synchronized (DefaultPluginManager.class)
       {
-        logger.info("fetch plugin informations from {}",
-                    configuration.getPluginUrl());
-      }
+        if (logger.isInfoEnabled())
+        {
+          logger.info("fetch plugin informations from {}",
+                      configuration.getPluginUrl());
+        }
 
-      try
-      {
-        center = (PluginCenter) unmarshaller.unmarshal(
-          new URL(configuration.getPluginUrl()));
-        cache.put(PluginCenter.class.getName(), center);
-      }
-      catch (Exception ex)
-      {
-        throw new PluginLoadException(ex);
+        try
+        {
+          center = (PluginCenter) unmarshaller.unmarshal(
+            new URL(configuration.getPluginUrl()));
+          cache.put(PluginCenter.class.getName(), center);
+
+          if (pluginHandler == null)
+          {
+            pluginHandler = new AetherPluginHandler(SCMContext.getContext());
+          }
+
+          pluginHandler.setPluginRepositories(center.getRepositories());
+        }
+        catch (Exception ex)
+        {
+          throw new PluginLoadException(ex);
+        }
       }
     }
 
     return center;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param info
-   *
-   * @return
-   */
-  private String getPluginId(PluginInformation info)
-  {
-    StringBuilder id = new StringBuilder(info.getGroupId());
-
-    id.append(":").append(info.getArtifactId()).append(":");
-
-    return id.append(info.getVersion()).toString();
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -243,6 +252,9 @@ public class DefaultPluginManager implements PluginManager
 
   /** Field description */
   private Map<String, PluginInformation> installedPlugins;
+
+  /** Field description */
+  private AetherPluginHandler pluginHandler;
 
   /** Field description */
   private Unmarshaller unmarshaller;

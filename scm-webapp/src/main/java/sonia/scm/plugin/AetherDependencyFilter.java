@@ -31,47 +31,42 @@
 
 
 
-package sonia.scm.api.rest.resources;
+package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import org.sonatype.aether.artifact.Artifact;
+import org.sonatype.aether.graph.DependencyFilter;
+import org.sonatype.aether.graph.DependencyNode;
 
-import sonia.scm.plugin.PluginInformation;
-import sonia.scm.plugin.PluginManager;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Set;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-@Path("plugins/available")
-public class AvailablePluginResource
+public class AetherDependencyFilter implements DependencyFilter
 {
+
+  /** Field description */
+  public static final String EXCLUDE_LIST = "/config/dependencies.list";
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
-   *
-   * @param pluginManager
    */
-  @Inject
-  public AvailablePluginResource(PluginManager pluginManager)
+  public AetherDependencyFilter()
   {
-    this.pluginManager = pluginManager;
+    loadExcludes();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -80,17 +75,62 @@ public class AvailablePluginResource
    * Method description
    *
    *
-   * @param id
+   * @param node
+   * @param parents
    *
    * @return
    */
-  @POST
-  @Path("{id}")
-  public Response install(@PathParam("id") String id)
+  @Override
+  public boolean accept(DependencyNode node, List<DependencyNode> parents)
   {
-    pluginManager.install(id);
+    Artifact artifact = node.getDependency().getArtifact();
 
-    return Response.ok().build();
+    return !exludeSet.contains(getId(artifact));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  private void loadExcludes()
+  {
+    Scanner scanner = null;
+
+    try
+    {
+      scanner = new Scanner(
+          AetherDependencyFilter.class.getResourceAsStream(EXCLUDE_LIST));
+
+      while (scanner.hasNextLine())
+      {
+        parseLine(scanner.nextLine());
+      }
+    }
+    finally
+    {
+      scanner.close();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param line
+   */
+  private void parseLine(String line)
+  {
+    line = line.trim();
+
+    if (Util.isNotEmpty(line))
+    {
+      String[] parts = line.split(":");
+
+      if (parts.length >= 2)
+      {
+        exludeSet.add(parts[0].concat(":").concat(parts[1]));
+      }
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -99,30 +139,17 @@ public class AvailablePluginResource
    * Method description
    *
    *
+   * @param artifact
+   *
    * @return
    */
-  @GET
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public PluginInformation[] getAvailablePlugins()
+  private String getId(Artifact artifact)
   {
-    Collection<PluginInformation> pluginCollection =
-      pluginManager.getAvailable();
-    PluginInformation[] plugins = null;
-
-    if (pluginCollection != null)
-    {
-      plugins = pluginCollection.toArray(new PluginInformation[0]);
-    }
-    else
-    {
-      plugins = new PluginInformation[0];
-    }
-
-    return plugins;
+    return artifact.getGroupId().concat(":").concat(artifact.getArtifactId());
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private PluginManager pluginManager;
+  private Set<String> exludeSet = new HashSet<String>();
 }
