@@ -36,6 +36,7 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -46,6 +47,8 @@ import sonia.scm.SCMContext;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.SimpleCache;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.SecurityContext;
+import sonia.scm.util.SecurityUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -81,15 +84,19 @@ public class DefaultPluginManager implements PluginManager
    *
    *
    *
+   *
+   * @param securityContextProvicer
    * @param configuration
    * @param pluginLoader
    * @param cacheManager
    */
   @Inject
-  public DefaultPluginManager(ScmConfiguration configuration,
-                              PluginLoader pluginLoader,
-                              CacheManager cacheManager)
+  public DefaultPluginManager(
+          Provider<SecurityContext> securityContextProvicer,
+          ScmConfiguration configuration, PluginLoader pluginLoader,
+          CacheManager cacheManager)
   {
+    this.securityContextProvicer = securityContextProvicer;
     this.configuration = configuration;
     this.cache = cacheManager.getSimpleCache(String.class, PluginCenter.class,
             CACHE_NAME);
@@ -99,7 +106,7 @@ public class DefaultPluginManager implements PluginManager
     {
       PluginInformation info = plugin.getInformation();
 
-      if (info != null)
+      if ((info != null) && info.isValid())
       {
         installedPlugins.put(info.getId(), plugin.getInformation());
       }
@@ -127,6 +134,8 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public void install(String id)
   {
+    SecurityUtil.assertIsAdmin(securityContextProvicer);
+
     if (pluginHandler == null)
     {
       getPluginCenter();
@@ -144,6 +153,8 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public void uninstall(String id)
   {
+    SecurityUtil.assertIsAdmin(securityContextProvicer);
+
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
@@ -160,6 +171,8 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public PluginInformation get(String id)
   {
+    SecurityUtil.assertIsAdmin(securityContextProvicer);
+
     PluginInformation result = null;
 
     for (PluginInformation info : getPluginCenter().getPlugins())
@@ -184,6 +197,8 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public Collection<PluginInformation> getAvailable()
   {
+    SecurityUtil.assertIsAdmin(securityContextProvicer);
+
     return getPluginCenter().getPlugins();
   }
 
@@ -196,6 +211,8 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public Collection<PluginInformation> getInstalled()
   {
+    SecurityUtil.assertIsAdmin(securityContextProvicer);
+
     return installedPlugins.values();
   }
 
@@ -255,6 +272,9 @@ public class DefaultPluginManager implements PluginManager
 
   /** Field description */
   private AetherPluginHandler pluginHandler;
+
+  /** Field description */
+  private Provider<SecurityContext> securityContextProvicer;
 
   /** Field description */
   private Unmarshaller unmarshaller;

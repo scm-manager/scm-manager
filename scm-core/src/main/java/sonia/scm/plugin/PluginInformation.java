@@ -33,6 +33,11 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.Validateable;
+import sonia.scm.util.Util;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -42,7 +47,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "plugin-information")
-public class PluginInformation
+public class PluginInformation implements Validateable
 {
 
   /**
@@ -135,6 +140,19 @@ public class PluginInformation
   public String getVersion()
   {
     return version;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isValid()
+  {
+    return Util.isNotEmpty(groupId) && Util.isNotEmpty(artifactId)
+           && Util.isNotEmpty(name) && Util.isNotEmpty(version);
   }
 
   //~--- set methods ----------------------------------------------------------
