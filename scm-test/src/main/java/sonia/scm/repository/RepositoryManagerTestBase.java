@@ -261,7 +261,6 @@ public abstract class RepositoryManagerTestBase
     assertNotNull(repository.getId());
     assertNotNull(manager.get(repository.getId()));
     assertTrue(repository.getCreationDate() > 0);
-    assertTrue(repository.getCreationDate() < System.currentTimeMillis());
 
     return repository;
   }
