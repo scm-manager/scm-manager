@@ -135,9 +135,14 @@ Ext.onReady(function(){
             addTabPanel('repositoryConfig', 'repositoryConfig', 'Repository Config');
           }
         },{
-          label: 'Plugins',
+          label: 'Installed Plugins',
           fn: function(){
-            addTabPanel('plugins', 'pluginGrid', 'Plugins')
+            addTabPanel('installedPlugins', 'installedPluginsGrid', 'Installed Plugins')
+          }
+        },{
+          label: 'Available Plugins',
+          fn: function(){
+            addTabPanel('availablePlugins', 'availablePluginsGrid', 'Available Plugins')
           }
         }]
       },{

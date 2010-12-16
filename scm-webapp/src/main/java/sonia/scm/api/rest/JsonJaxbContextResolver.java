@@ -37,6 +37,7 @@ package sonia.scm.api.rest;
 
 import sonia.scm.ScmState;
 import sonia.scm.group.Group;
+import sonia.scm.plugin.PluginInformation;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
 
@@ -71,8 +72,8 @@ public class JsonJaxbContextResolver implements ContextResolver<JAXBContext>
   {
     this.context = new JSONJAXBContext(
         JSONConfiguration.mapped().rootUnwrapping(true).arrays(
-          "member", "groups", "permissions", "repositories",
-          "repositoryTypes", "users").nonStrings(
+          "member", "groups", "permissions", "repositories", "repositoryTypes",
+          "users", "plugin-information").nonStrings(
             "readable", "writeable", "groupPermission",
             "admin").build(), types.toArray(new Class[0]));
   }
@@ -102,5 +103,6 @@ public class JsonJaxbContextResolver implements ContextResolver<JAXBContext>
 
   /** Field description */
   private List<Class> types = Arrays.asList(new Class[] { Group.class,
-          Repository.class, ScmState.class, User.class });
+          Repository.class, PluginInformation.class, ScmState.class,
+          User.class });
 }
