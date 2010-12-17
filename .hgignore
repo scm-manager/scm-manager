@@ -18,3 +18,7 @@ Desktop DF$
 \.chg\..*$
 \.rej$
 \.conflict\~$
+# Eclipse Files
+\.project
+\.classpath
+\.settings
