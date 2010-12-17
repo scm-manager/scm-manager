@@ -153,6 +153,22 @@ Sonia.plugin.AvailableGrid = Ext.extend(Sonia.rest.Grid,{
     if ( debug ){
       console.debug( 'install plugin ' + pluginId );
     }
+    Ext.Ajax.request({
+      url: restUrl + 'plugins/available/' + pluginId + '.json',
+      method: 'POST',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('plugin successfully installed');
+        }
+      },
+      failure: function(){
+        if ( debug ){
+          console.debug('plugin installation failed');
+        }
+        alert( 'failure' );
+      }
+    });
   }
 
 });
