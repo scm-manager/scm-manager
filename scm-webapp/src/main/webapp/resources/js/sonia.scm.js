@@ -127,7 +127,7 @@ Ext.onReady(function(){
         items: [{
           label: 'General',
           fn: function(){
-            addTabPanel("scmConfig", "scmConfig", "Scm Config");
+            addTabPanel("scmConfig", "scmConfig", "SCM Config");
           }
         },{
           label: 'Repository Types',
@@ -158,9 +158,9 @@ Ext.onReady(function(){
     
     panel.addSection({
       id: 'navLogout',
-      title: 'Abmelden',
+      title: 'Log out',
       items: [{
-        label: 'Abmelden',
+        label: 'Log out',
         fn: logout
       }]
     });
