@@ -56,7 +56,9 @@ import java.net.URL;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -199,7 +201,18 @@ public class DefaultPluginManager implements PluginManager
   {
     SecurityUtil.assertIsAdmin(securityContextProvicer);
 
-    return getPluginCenter().getPlugins();
+    Set<PluginInformation> availablePlugins = new HashSet<PluginInformation>();
+    Set<PluginInformation> centerPlugins = getPluginCenter().getPlugins();
+
+    for (PluginInformation info : centerPlugins)
+    {
+      if (!installedPlugins.containsKey(info.getId()))
+      {
+        availablePlugins.add(info);
+      }
+    }
+
+    return availablePlugins;
   }
 
   /**
