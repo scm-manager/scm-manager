@@ -100,6 +100,32 @@ Sonia.plugin.InstalledGrid = Ext.extend(Sonia.rest.Grid, {
 // register xtype
 Ext.reg('installedPluginsGrid', Sonia.plugin.InstalledGrid);
 
+// loading window
+
+Sonia.plugin.LoadingWindow = Ext.extend(Ext.Window,{
+
+  initComponent: function(){
+
+    var config = {
+      layout:'fit',
+      width:300,
+      height:150,
+      closable: false,
+      resizable: false,
+      plain: true,
+      border: false,
+      modal: true,
+      items: [{
+        xtype: 'progress'
+      }]
+    };
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.login.Window.superclass.initComponent.apply(this, arguments);
+  }
+
+});
+
 // available plugins grid
 
 Sonia.plugin.AvailableGrid = Ext.extend(Sonia.rest.Grid,{
@@ -153,6 +179,17 @@ Sonia.plugin.AvailableGrid = Ext.extend(Sonia.rest.Grid,{
     if ( debug ){
       console.debug( 'install plugin ' + pluginId );
     }
+
+    var loadingBox = Ext.MessageBox.show({
+        title: 'Please wait',
+        msg: 'Installing Plugin.',
+        width: 300,
+        wait: true,
+        animate: true,
+        progress: true,
+        closable: false
+    });
+
     Ext.Ajax.request({
       url: restUrl + 'plugins/available/' + pluginId + '.json',
       method: 'POST',
@@ -161,12 +198,16 @@ Sonia.plugin.AvailableGrid = Ext.extend(Sonia.rest.Grid,{
         if ( debug ){
           console.debug('plugin successfully installed');
         }
+        loadingBox.hide();
+        Ext.MessageBox.alert('Plugin successfully installed',
+          'Restart the applicationserver to activate the plugin.');
       },
       failure: function(){
         if ( debug ){
           console.debug('plugin installation failed');
         }
         alert( 'failure' );
+        loadingBox.hide();
       }
     });
   }
