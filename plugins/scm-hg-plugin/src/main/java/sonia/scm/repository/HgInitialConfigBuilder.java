@@ -42,6 +42,7 @@ import sonia.scm.io.Command;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.SimpleCommand;
 import sonia.scm.util.IOUtil;
+import sonia.scm.web.HgWebConfigWriter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -111,6 +112,14 @@ public class HgInitialConfigBuilder
     config.setRepositoryDirectory(repoDirectory);
     config.setHgBinary(search("hg"));
     config.setPythonBinary(search("python"));
+    try {
+      new HgWebConfigWriter(config).write();
+    } catch(IOException ioe) {
+      if(logger.isErrorEnabled()) {
+        logger.error("Could not write Hg CGI for inital config.  " + 
+            "HgWeb may not function until a new Hg config is set", ioe);
+      }
+    }
 
     return config;
   }
