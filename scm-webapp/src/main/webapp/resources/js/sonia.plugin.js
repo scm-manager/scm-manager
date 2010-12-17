@@ -87,7 +87,8 @@ Sonia.plugin.InstalledGrid = Ext.extend(Sonia.rest.Grid, {
     var config = {
       autoExpandColumn: 'description',
       store: pluginStore,
-      colModel: pluginColModel
+      colModel: pluginColModel,
+      emptyText: 'No plugin is installed'
     };
 
 
@@ -155,7 +156,8 @@ Sonia.plugin.AvailableGrid = Ext.extend(Sonia.rest.Grid,{
     var config = {
       autoExpandColumn: 'description',
       store: pluginStore,
-      colModel: pluginColModel
+      colModel: pluginColModel,
+      emptyText: 'No plugin available'
     };
 
     this.on('cellclick', this.cellClick);

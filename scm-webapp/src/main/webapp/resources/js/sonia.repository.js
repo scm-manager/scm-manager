@@ -128,7 +128,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     var config = {
       autoExpandColumn: 'description',
       store: repositoryStore,
-      colModel: repositoryColModel
+      colModel: repositoryColModel,
+      emptyText: 'No repository is configured'
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));

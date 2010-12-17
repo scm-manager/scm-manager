@@ -66,6 +66,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
   urlTemplate: '<a href="{0}" target="_blank">{0}</a>',
   mailtoTemplate: '<a href="mailto: {0}">{0}</a>',
   checkboxTemplate: '<input type="checkbox" disabled="true" {0}/>',
+  emptyText: 'No items available',
 
   initComponent: function(){
 
@@ -82,7 +83,11 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
     var config = {
       loadMask: true,
-      sm: selectionModel
+      sm: selectionModel,
+      viewConfig: {
+        deferEmptyText: false,
+        emptyText: this.emptyText
+      }
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
