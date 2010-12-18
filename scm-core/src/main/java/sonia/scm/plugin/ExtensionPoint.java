@@ -31,40 +31,21 @@
 
 
 
-package sonia.scm.web.security;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.Initable;
-import sonia.scm.TypedObject;
-import sonia.scm.plugin.ExtensionPoint;
+package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.Closeable;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@ExtensionPoint
-public interface AuthenticationHandler extends Initable, Closeable, TypedObject
-{
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param username
-   * @param password
-   *
-   * @return
-   */
-  public AuthenticationResult authenticate(HttpServletRequest request,
-          HttpServletResponse response, String username, String password);
-}
+@Documented
+@Target({ ElementType.TYPE })
+@Retention(RetentionPolicy.CLASS)
+public @interface ExtensionPoint {}

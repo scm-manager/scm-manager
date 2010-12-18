@@ -38,12 +38,14 @@ package sonia.scm.repository;
 import sonia.scm.ConfigChangedListener;
 import sonia.scm.Handler;
 import sonia.scm.ListenerSupport;
+import sonia.scm.plugin.ExtensionPoint;
 
 /**
  *
  * @author Sebastian Sdorra
  *
  */
+@ExtensionPoint
 public interface RepositoryHandler
         extends Handler<Repository, RepositoryException>,
                 ListenerSupport<ConfigChangedListener>
@@ -53,7 +55,9 @@ public interface RepositoryHandler
    * Method description
    *
    *
+   *
+   * @param repository
    * @return
    */
-  public String createResourcePath( Repository repository );
+  public String createResourcePath(Repository repository);
 }
