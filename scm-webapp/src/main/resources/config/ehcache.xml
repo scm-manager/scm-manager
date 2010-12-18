@@ -113,8 +113,7 @@
         maxElementsInMemory="10"
         eternal="false"
         overflowToDisk="false"
-        timeToIdleSeconds="1200"
-        timeToLiveSeconds="2400"
+        timeToLiveSeconds="3600"
         diskPersistent="false"
   />
 
