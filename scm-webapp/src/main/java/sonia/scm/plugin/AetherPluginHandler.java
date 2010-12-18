@@ -73,6 +73,7 @@ import java.io.File;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -193,15 +194,60 @@ public class AetherPluginHandler
                 localRepositoryDirectory.getAbsolutePath().length()));
         }
 
-        Marshaller marshaller = jaxbContext.createMarshaller();
-
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        marshaller.marshal(classpath, classpathFile);
+        storeClasspath();
       }
     }
     catch (Exception ex)
     {
       throw new PluginLoadException(ex);
+    }
+  }
+
+  /**
+   * TODO: remove dependencies and remove files
+   *
+   *
+   * @param pluginPath
+   */
+  public void uninstall(String pluginPath)
+  {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("try to uninstall plugin: {}", pluginPath);
+    }
+
+    if (classpath != null)
+    {
+      synchronized (Classpath.class)
+      {
+        Iterator<String> iterator = classpath.iterator();
+
+        while (iterator.hasNext())
+        {
+          String path = iterator.next();
+
+          if (pluginPath.contains(path))
+          {
+            if (logger.isInfoEnabled())
+            {
+              logger.info("remove {} from classpath", path);
+            }
+
+            iterator.remove();
+
+            break;
+          }
+        }
+
+        try
+        {
+          storeClasspath();
+        }
+        catch (JAXBException ex)
+        {
+          throw new PluginLoadException(ex);
+        }
+      }
     }
   }
 
@@ -255,6 +301,20 @@ public class AetherPluginHandler
                        WagonRepositoryConnectorFactory.class);
 
     return locator.getService(RepositorySystem.class);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws JAXBException
+   */
+  private void storeClasspath() throws JAXBException
+  {
+    Marshaller marshaller = jaxbContext.createMarshaller();
+
+    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+    marshaller.marshal(classpath, classpathFile);
   }
 
   //~--- fields ---------------------------------------------------------------

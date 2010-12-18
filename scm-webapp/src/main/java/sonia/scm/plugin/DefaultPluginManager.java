@@ -58,6 +58,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -107,7 +108,7 @@ public class DefaultPluginManager implements PluginManager
     this.configuration = configuration;
     this.cache = cacheManager.getSimpleCache(String.class, PluginCenter.class,
             CACHE_NAME);
-    installedPlugins = new HashMap<String, PluginInformation>();
+    installedPlugins = new HashMap<String, Plugin>();
 
     for (Plugin plugin : pluginLoader.getInstalledPlugins())
     {
@@ -115,7 +116,7 @@ public class DefaultPluginManager implements PluginManager
 
       if ((info != null) && info.isValid())
       {
-        installedPlugins.put(info.getId(), plugin.getInformation());
+        installedPlugins.put(info.getId(), plugin);
       }
     }
 
@@ -172,7 +173,19 @@ public class DefaultPluginManager implements PluginManager
   {
     SecurityUtil.assertIsAdmin(securityContextProvicer);
 
-    throw new UnsupportedOperationException("Not supported yet.");
+    Plugin plugin = installedPlugins.get(id);
+
+    if (plugin == null)
+    {
+      throw new PluginLoadException(id.concat(" is not install"));
+    }
+
+    if (pluginHandler == null)
+    {
+      pluginHandler = new AetherPluginHandler(SCMContext.getContext());
+    }
+
+    pluginHandler.uninstall(plugin.getPath());
   }
 
   /**
@@ -235,7 +248,7 @@ public class DefaultPluginManager implements PluginManager
 
     Set<PluginInformation> infoSet = new HashSet<PluginInformation>();
 
-    filter(infoSet, installedPlugins.values(), filter);
+    filter(infoSet, getInstalled(), filter);
     filter(infoSet, getPluginCenter().getPlugins(), filter);
 
     return infoSet;
@@ -252,9 +265,8 @@ public class DefaultPluginManager implements PluginManager
   {
     SecurityUtil.assertIsAdmin(securityContextProvicer);
 
-    Set<PluginInformation> infoSet = new HashSet<PluginInformation>();
+    Set<PluginInformation> infoSet = getInstalled();
 
-    infoSet.addAll(installedPlugins.values());
     infoSet.addAll(getPluginCenter().getPlugins());
 
     return infoSet;
@@ -292,7 +304,7 @@ public class DefaultPluginManager implements PluginManager
    * @return
    */
   @Override
-  public Collection<PluginInformation> getAvailableUpdates()
+  public Set<PluginInformation> getAvailableUpdates()
   {
     SecurityUtil.assertIsAdmin(securityContextProvicer);
 
@@ -306,11 +318,18 @@ public class DefaultPluginManager implements PluginManager
    * @return
    */
   @Override
-  public Collection<PluginInformation> getInstalled()
+  public Set<PluginInformation> getInstalled()
   {
     SecurityUtil.assertIsAdmin(securityContextProvicer);
 
-    return installedPlugins.values();
+    Set<PluginInformation> infoSet = new LinkedHashSet<PluginInformation>();
+
+    for (Plugin plugin : installedPlugins.values())
+    {
+      infoSet.add(plugin.getInformation());
+    }
+
+    return infoSet;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -345,7 +364,7 @@ public class DefaultPluginManager implements PluginManager
   {
     PluginState state = PluginState.AVAILABLE;
 
-    for (PluginInformation installed : installedPlugins.values())
+    for (PluginInformation installed : getInstalled())
     {
       if (isSamePlugin(available, installed))
       {
@@ -452,7 +471,7 @@ public class DefaultPluginManager implements PluginManager
   private ScmConfiguration configuration;
 
   /** Field description */
-  private Map<String, PluginInformation> installedPlugins;
+  private Map<String, Plugin> installedPlugins;
 
   /** Field description */
   private AetherPluginHandler pluginHandler;

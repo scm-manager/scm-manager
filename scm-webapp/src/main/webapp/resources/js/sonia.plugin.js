@@ -98,8 +98,39 @@ Sonia.plugin.installPlugin = function(pluginId){
 
 Sonia.plugin.uninstallPlugin = function(pluginId){
   if ( debug ){
-    console.debug('not implemented');
+    console.debug( 'uninstall plugin ' + pluginId );
   }
+
+  var loadingBox = Ext.MessageBox.show({
+      title: 'Please wait',
+      msg: 'Uninstalling Plugin.',
+      width: 300,
+      wait: true,
+      animate: true,
+      progress: true,
+      closable: false
+  });
+
+  Ext.Ajax.request({
+    url: restUrl + 'plugins/uninstall/' + pluginId + '.json',
+    method: 'POST',
+    scope: this,
+    success: function(){
+      if ( debug ){
+        console.debug('plugin successfully uninstalled');
+      }
+      loadingBox.hide();
+      Ext.MessageBox.alert('Plugin successfully uninstalled',
+        'Restart the applicationserver to activate the changes.');
+    },
+    failure: function(){
+      if ( debug ){
+        console.debug('plugin uninstallation failed');
+      }
+      alert( 'failure' );
+      loadingBox.hide();
+    }
+  });
 }
 
 Sonia.plugin.updatePlugin = function(pluginId){
@@ -107,33 +138,6 @@ Sonia.plugin.updatePlugin = function(pluginId){
     console.debug('not implemented');
   }
 }
-
-
-// loading window
-
-Sonia.plugin.LoadingWindow = Ext.extend(Ext.Window,{
-
-  initComponent: function(){
-
-    var config = {
-      layout:'fit',
-      width:300,
-      height:150,
-      closable: false,
-      resizable: false,
-      plain: true,
-      border: false,
-      modal: true,
-      items: [{
-        xtype: 'progress'
-      }]
-    };
-
-    Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.login.Window.superclass.initComponent.apply(this, arguments);
-  }
-
-});
 
 // plugin grid
 
