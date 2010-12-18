@@ -14,6 +14,7 @@
   <artifactId>scm-graph-plugin</artifactId>
   <version>1.0-M4-SNAPSHOT</version>
   <name>scm-graph-plugin</name>
+  <description>Creates an Google Guice injection graph</description>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
 
   <dependencies>
