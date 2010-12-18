@@ -124,8 +124,6 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   @Override
   public void init(SCMContextProvider context)
   {
-    String name = getType().getName();
-
     baseDirectory = context.getBaseDirectory();
     loadConfig();
   }

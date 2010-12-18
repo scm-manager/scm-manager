@@ -37,11 +37,11 @@ package sonia.scm.plugin;
  *
  * @author Sebastian Sdorra
  */
-public class PluginLoadException extends PluginException
+public class PluginNotInstalledException extends PluginException
 {
 
   /** Field description */
-  private static final long serialVersionUID = -8683647962850692519L;
+  private static final long serialVersionUID = 3990675453445423469L;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -49,7 +49,7 @@ public class PluginLoadException extends PluginException
    * Constructs ...
    *
    */
-  public PluginLoadException()
+  public PluginNotInstalledException()
   {
     super();
   }
@@ -60,7 +60,7 @@ public class PluginLoadException extends PluginException
    *
    * @param message
    */
-  public PluginLoadException(String message)
+  public PluginNotInstalledException(String message)
   {
     super(message);
   }
@@ -71,7 +71,7 @@ public class PluginLoadException extends PluginException
    *
    * @param cause
    */
-  public PluginLoadException(Throwable cause)
+  public PluginNotInstalledException(Throwable cause)
   {
     super(cause);
   }
@@ -83,7 +83,7 @@ public class PluginLoadException extends PluginException
    * @param message
    * @param cause
    */
-  public PluginLoadException(String message, Throwable cause)
+  public PluginNotInstalledException(String message, Throwable cause)
   {
     super(message, cause);
   }
