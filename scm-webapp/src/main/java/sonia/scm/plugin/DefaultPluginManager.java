@@ -135,6 +135,16 @@ public class DefaultPluginManager implements PluginManager
   /**
    * Method description
    *
+   */
+  @Override
+  public void clearCache()
+  {
+    cache.clear();
+  }
+
+  /**
+   * Method description
+   *
    *
    * @param id
    */
@@ -246,11 +256,6 @@ public class DefaultPluginManager implements PluginManager
 
     infoSet.addAll(installedPlugins.values());
     infoSet.addAll(getPluginCenter().getPlugins());
-
-    for ( PluginInformation pi : infoSet )
-    {
-      System.out.println( pi.getName() + ": " + pi.hashCode() );
-    }
 
     return infoSet;
   }

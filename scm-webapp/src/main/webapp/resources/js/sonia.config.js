@@ -92,12 +92,18 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
     var config = {
       panels: [{
         xtype: 'configForm',
-        title : 'General Settings',
-        items : [{
-          xtype : 'textfield',
-          fieldLabel : 'Servername',
-          name : 'servername',
-          allowBlank : false
+        title: 'General Settings',
+        items: [{
+          xtype: 'textfield',
+          fieldLabel: 'Servername',
+          name: 'servername',
+          allowBlank: false
+        },{
+          xtype: 'textfield',
+          fieldLabel: 'Plugin repository',
+          name: 'plugin-url',
+          vtype: 'url',
+          allowBlank: false
         }],
       
         onSubmit: function(values){

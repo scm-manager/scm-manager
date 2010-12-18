@@ -47,6 +47,12 @@ public interface PluginManager
   /**
    * Method description
    *
+   */
+  public void clearCache();
+
+  /**
+   * Method description
+   *
    *
    * @param id
    */

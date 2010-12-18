@@ -75,6 +75,7 @@ public class ScmConfiguration
   public void load(ScmConfiguration other)
   {
     this.servername = other.servername;
+    this.pluginUrl = other.pluginUrl;
   }
 
   //~--- get methods ----------------------------------------------------------
