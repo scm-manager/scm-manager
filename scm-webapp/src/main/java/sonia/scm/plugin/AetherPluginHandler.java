@@ -199,7 +199,7 @@ public class AetherPluginHandler
     }
     catch (Exception ex)
     {
-      throw new PluginLoadException(ex);
+      throw new PluginException(ex);
     }
   }
 
@@ -245,7 +245,7 @@ public class AetherPluginHandler
         }
         catch (JAXBException ex)
         {
-          throw new PluginLoadException(ex);
+          throw new PluginException(ex);
         }
       }
     }

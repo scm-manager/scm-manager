@@ -135,8 +135,39 @@ Sonia.plugin.uninstallPlugin = function(pluginId){
 
 Sonia.plugin.updatePlugin = function(pluginId){
   if ( debug ){
-    console.debug('not implemented');
+    console.debug( 'update plugin to ' + pluginId );
   }
+
+  var loadingBox = Ext.MessageBox.show({
+      title: 'Please wait',
+      msg: 'Update Plugin.',
+      width: 300,
+      wait: true,
+      animate: true,
+      progress: true,
+      closable: false
+  });
+
+  Ext.Ajax.request({
+    url: restUrl + 'plugins/update/' + pluginId + '.json',
+    method: 'POST',
+    scope: this,
+    success: function(){
+      if ( debug ){
+        console.debug('plugin successfully updated');
+      }
+      loadingBox.hide();
+      Ext.MessageBox.alert('Plugin successfully updated',
+        'Restart the applicationserver to activate the changes.');
+    },
+    failure: function(){
+      if ( debug ){
+        console.debug('plugin updated failed');
+      }
+      alert( 'failure' );
+      loadingBox.hide();
+    }
+  });
 }
 
 // plugin grid

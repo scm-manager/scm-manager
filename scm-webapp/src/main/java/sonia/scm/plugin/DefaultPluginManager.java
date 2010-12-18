@@ -177,7 +177,7 @@ public class DefaultPluginManager implements PluginManager
 
     if (plugin == null)
     {
-      throw new PluginLoadException(id.concat(" is not install"));
+      throw new PluginNotInstalledException(id.concat(" is not install"));
     }
 
     if (pluginHandler == null)
@@ -199,7 +199,38 @@ public class DefaultPluginManager implements PluginManager
   {
     SecurityUtil.assertIsAdmin(securityContextProvicer);
 
-    throw new UnsupportedOperationException("Not supported yet.");
+    String[] idParts = id.split(":");
+    String groupId = idParts[0];
+    String artefactId = idParts[1];
+    PluginInformation installed = null;
+
+    for (PluginInformation info : getInstalled())
+    {
+      if (groupId.equals(info.getGroupId())
+          && artefactId.equals(info.getArtifactId()))
+      {
+        installed = info;
+
+        break;
+      }
+    }
+
+    if (installed == null)
+    {
+      StringBuilder msg = new StringBuilder(groupId);
+
+      msg.append(":").append(groupId).append(" is not install");
+
+      throw new PluginNotInstalledException(msg.toString());
+    }
+
+    if (pluginHandler == null)
+    {
+      getPluginCenter();
+    }
+
+    pluginHandler.uninstall(installed.getId());
+    pluginHandler.install(id);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -370,12 +401,14 @@ public class DefaultPluginManager implements PluginManager
       {
         if (installed.getVersion().equals(available.getVersion()))
         {
-          available.setState(PluginState.INSTALLED);
+          state = PluginState.INSTALLED;
         }
         else
         {
-          available.setState(PluginState.UPDATE_AVAILABLE);
+          state = PluginState.UPDATE_AVAILABLE;
         }
+
+        break;
       }
     }
 
