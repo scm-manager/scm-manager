@@ -38,8 +38,8 @@ package sonia.scm.api.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.PluginInformation;
-import sonia.scm.plugin.PluginManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -58,8 +58,8 @@ import javax.ws.rs.core.Response;
  * @author Sebastian Sdorra
  */
 @Singleton
-@Path("plugins/available")
-public class AvailablePluginResource
+@Path("plugins")
+public class PluginResource
 {
 
   /**
@@ -69,7 +69,7 @@ public class AvailablePluginResource
    * @param pluginManager
    */
   @Inject
-  public AvailablePluginResource(PluginManager pluginManager)
+  public PluginResource(DefaultPluginManager pluginManager)
   {
     this.pluginManager = pluginManager;
   }
@@ -85,10 +85,44 @@ public class AvailablePluginResource
    * @return
    */
   @POST
-  @Path("{id}")
+  @Path("install/{id}")
   public Response install(@PathParam("id") String id)
   {
     pluginManager.install(id);
+
+    return Response.ok().build();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   *
+   * @return
+   */
+  @POST
+  @Path("uninstall/{id}")
+  public Response uninstall(@PathParam("id") String id)
+  {
+    pluginManager.uninstall(id);
+
+    return Response.ok().build();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   *
+   * @return
+   */
+  @POST
+  @Path("update/{id}")
+  public Response update(@PathParam("id") String id)
+  {
+    pluginManager.update(id);
 
     return Response.ok().build();
   }
@@ -103,10 +137,64 @@ public class AvailablePluginResource
    */
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public PluginInformation[] getAvailablePlugins()
+  public PluginInformation[] getAll()
   {
-    Collection<PluginInformation> pluginCollection =
-      pluginManager.getAvailable();
+    return getArray(pluginManager.getAll());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @GET
+  @Path("available")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public PluginInformation[] getAvailable()
+  {
+    return getArray(pluginManager.getAvailable());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @GET
+  @Path("updates")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public PluginInformation[] getAvailableUpdates()
+  {
+    return getArray(pluginManager.getAvailableUpdates());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @GET
+  @Path("installed")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public PluginInformation[] getInstalled()
+  {
+    return getArray(pluginManager.getInstalled());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param pluginCollection
+   *
+   * @return
+   */
+  private PluginInformation[] getArray(
+          Collection<PluginInformation> pluginCollection)
+  {
     PluginInformation[] plugins = null;
 
     if (pluginCollection != null)
@@ -124,5 +212,5 @@ public class AvailablePluginResource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private PluginManager pluginManager;
+  private DefaultPluginManager pluginManager;
 }

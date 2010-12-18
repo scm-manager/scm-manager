@@ -37,7 +37,7 @@ Sonia.plugin.Store = Ext.extend(Sonia.rest.JsonStore, {
   constructor: function(config) {
     var baseConfig = {
       root: 'plugin-information',
-      fields: [  'name', 'author', 'description', 'url', 'version', 'groupId', 'artifactId' ],
+      fields: [  'name', 'author', 'description', 'url', 'version', 'state', 'groupId', 'artifactId' ],
       sortInfo: {
         field: 'name'
       }
@@ -59,47 +59,55 @@ Sonia.plugin.DefaultColumns = [
 ]
 
 
-// installed plugins grid
-
-Sonia.plugin.InstalledGrid = Ext.extend(Sonia.rest.Grid, {
-
-  initComponent: function(){
-
-    var pluginStore = new Sonia.plugin.Store({
-      url: restUrl + 'plugins/installed.json'
-    });
-
-    var columns = [];
-    columns = columns.concat( columns, Sonia.plugin.DefaultColumns );
-    columns.push(
-      {id: 'Url', header: 'Url', dataIndex: 'url', renderer: this.renderUrl, width: 250}
-    );
-
-    var pluginColModel = new Ext.grid.ColumnModel({
-      defaults: {
-        sortable: true,
-        scope: this,
-        width: 125
-      },
-      columns: columns
-    });
-
-    var config = {
-      autoExpandColumn: 'description',
-      store: pluginStore,
-      colModel: pluginColModel,
-      emptyText: 'No plugin is installed'
-    };
-
-
-    Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.plugin.InstalledGrid.superclass.initComponent.apply(this, arguments);
+Sonia.plugin.installPlugin = function(pluginId){
+  if ( debug ){
+    console.debug( 'install plugin ' + pluginId );
   }
 
-});
+  var loadingBox = Ext.MessageBox.show({
+      title: 'Please wait',
+      msg: 'Installing Plugin.',
+      width: 300,
+      wait: true,
+      animate: true,
+      progress: true,
+      closable: false
+  });
 
-// register xtype
-Ext.reg('installedPluginsGrid', Sonia.plugin.InstalledGrid);
+  Ext.Ajax.request({
+    url: restUrl + 'plugins/install/' + pluginId + '.json',
+    method: 'POST',
+    scope: this,
+    success: function(){
+      if ( debug ){
+        console.debug('plugin successfully installed');
+      }
+      loadingBox.hide();
+      Ext.MessageBox.alert('Plugin successfully installed',
+        'Restart the applicationserver to activate the plugin.');
+    },
+    failure: function(){
+      if ( debug ){
+        console.debug('plugin installation failed');
+      }
+      alert( 'failure' );
+      loadingBox.hide();
+    }
+  });
+}
+
+Sonia.plugin.uninstallPlugin = function(pluginId){
+  if ( debug ){
+    console.debug('not implemented');
+  }
+}
+
+Sonia.plugin.updatePlugin = function(pluginId){
+  if ( debug ){
+    console.debug('not implemented');
+  }
+}
+
 
 // loading window
 
@@ -127,22 +135,17 @@ Sonia.plugin.LoadingWindow = Ext.extend(Ext.Window,{
 
 });
 
-// available plugins grid
+// plugin grid
 
-Sonia.plugin.AvailableGrid = Ext.extend(Sonia.rest.Grid,{
+Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
+
+  actionLinkTemplate: '<a style="cursor: pointer;" onclick="{1}">{0}</a>',
 
   initComponent: function(){
 
     var pluginStore = new Sonia.plugin.Store({
-      url: restUrl + 'plugins/available.json'
+      url: restUrl + 'plugins.json'
     });
-    
-    var columns = [];
-    columns = columns.concat( columns, Sonia.plugin.DefaultColumns );
-    columns.push(
-      {id: 'Url', header: 'Url', dataIndex: 'url', renderer: this.renderUrl, width: 250},
-      {id: 'Install', header: 'Install', renderer: this.renderInstallLink, width: 60}
-    );
 
     var pluginColModel = new Ext.grid.ColumnModel({
       defaults: {
@@ -150,70 +153,46 @@ Sonia.plugin.AvailableGrid = Ext.extend(Sonia.rest.Grid,{
         scope: this,
         width: 125
       },
-      columns: columns
+      columns: [
+        {id: 'name', header: 'Name', dataIndex: 'name'},
+        {id: 'author', header: 'Author', dataIndex: 'author'},
+        {id: 'description', header: 'Description', dataIndex: 'description'},
+        {id: 'version', header: 'Version', dataIndex: 'version'},
+        {id: 'state', header: 'State', dataIndex: 'state', width: 80},
+        {id: 'action', header: 'Action', renderer: this.renderActionColumn},
+        {id: 'Url', header: 'Url', dataIndex: 'url', renderer: this.renderUrl, width: 150}
+      ]
     });
 
     var config = {
       autoExpandColumn: 'description',
       store: pluginStore,
       colModel: pluginColModel,
-      emptyText: 'No plugin available'
+      emptyText: 'No plugins avaiable'
     };
 
-    this.on('cellclick', this.cellClick);
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.plugin.AvailableGrid.superclass.initComponent.apply(this, arguments);
+    Sonia.plugin.Grid.superclass.initComponent.apply(this, arguments);
   },
 
-  renderInstallLink: function(){
-    return '<a style="cursor: pointer">Install</a>'
-  },
-
-  cellClick: function(grid, rowIndex, columnIndex, e){
-    if(columnIndex==grid.getColumnModel().getIndexById('Install')){
-      var record = grid.getStore().getAt(rowIndex);
-      this.installPlugin(Sonia.plugin.GetPluginId(record.data));
+  renderActionColumn: function(val, meta, record){
+    var out = "";
+    var data = record.data;
+    var id = Sonia.plugin.GetPluginId(data);
+    if ( data.state == 'AVAILABLE' ){
+      out = String.format(this.actionLinkTemplate, 'Install', 'Sonia.plugin.installPlugin(\'' + id + '\')');
+    } else if ( data.state == 'INSTALLED' ){
+      out = String.format(this.actionLinkTemplate, 'Uninstall', 'Sonia.plugin.uninstallPlugin(\'' + id + '\')');
+    } else if ( data.state == 'UPDATE_AVAILABLE' ){
+      out = String.format(this.actionLinkTemplate, 'Update', 'Sonia.plugin.updatePlugin(\'' + id + '\')');
+      out += ', '
+      out += String.format(this.actionLinkTemplate, 'Uninstall', 'Sonia.plugin.uninstallPlugin(\'' + id + '\')');
     }
-  },
-
-  installPlugin: function(pluginId){
-    if ( debug ){
-      console.debug( 'install plugin ' + pluginId );
-    }
-
-    var loadingBox = Ext.MessageBox.show({
-        title: 'Please wait',
-        msg: 'Installing Plugin.',
-        width: 300,
-        wait: true,
-        animate: true,
-        progress: true,
-        closable: false
-    });
-
-    Ext.Ajax.request({
-      url: restUrl + 'plugins/available/' + pluginId + '.json',
-      method: 'POST',
-      scope: this,
-      success: function(){
-        if ( debug ){
-          console.debug('plugin successfully installed');
-        }
-        loadingBox.hide();
-        Ext.MessageBox.alert('Plugin successfully installed',
-          'Restart the applicationserver to activate the plugin.');
-      },
-      failure: function(){
-        if ( debug ){
-          console.debug('plugin installation failed');
-        }
-        alert( 'failure' );
-        loadingBox.hide();
-      }
-    });
+    return out;
   }
-
+  
 });
 
-Ext.reg('availablePluginsGrid', Sonia.plugin.AvailableGrid);
+// register xtype
+Ext.reg('pluginGrid', Sonia.plugin.Grid);
