@@ -118,9 +118,7 @@ Sonia.navigation.NavSection = Ext.extend(Ext.Panel, {
   },
 
   insertLink: function(pos, link){
-    console.debug( this.data );
     this.data.splice(pos, 0, link);
-    console.debug( this.data );
     this.renderMenu();
   },
 
