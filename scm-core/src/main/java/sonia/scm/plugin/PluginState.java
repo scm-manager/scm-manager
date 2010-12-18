@@ -33,92 +33,11 @@
 
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface PluginManager
+public enum PluginState
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  public void install(String id);
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  public void uninstall(String id);
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  public void update(String id);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  public PluginInformation get(String id);
-
-  /**
-   * Method description
-   *
-   *
-   * @param filter
-   *
-   * @return
-   */
-  public Collection<PluginInformation> get(PluginFilter filter);
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getAll();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getAvailable();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getAvailableUpdates();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getInstalled();
+  CORE, AVAILABLE, INSTALLED, UPDATE_AVAILABLE;
 }

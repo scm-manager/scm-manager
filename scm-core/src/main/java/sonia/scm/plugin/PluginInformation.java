@@ -54,6 +54,86 @@ public class PluginInformation implements Validateable
    * Method description
    *
    *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final PluginInformation other = (PluginInformation) obj;
+
+    if ((this.artifactId == null)
+        ? (other.artifactId != null)
+        : !this.artifactId.equals(other.artifactId))
+    {
+      return false;
+    }
+
+    if ((this.author == null)
+        ? (other.author != null)
+        : !this.author.equals(other.author))
+    {
+      return false;
+    }
+
+    if ((this.groupId == null)
+        ? (other.groupId != null)
+        : !this.groupId.equals(other.groupId))
+    {
+      return false;
+    }
+
+    if ((this.version == null)
+        ? (other.version != null)
+        : !this.version.equals(other.version))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    int hash = 7;
+
+    hash = 53 * hash + ((this.artifactId != null)
+                        ? this.artifactId.hashCode()
+                        : 0);
+    hash = 53 * hash + ((this.groupId != null)
+                        ? this.groupId.hashCode()
+                        : 0);
+    hash = 53 * hash + ((this.version != null)
+                        ? this.version.hashCode()
+                        : 0);
+
+    return hash;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   public String getArtifactId()
@@ -118,6 +198,17 @@ public class PluginInformation implements Validateable
   public String getName()
   {
     return name;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public PluginState getState()
+  {
+    return state;
   }
 
   /**
@@ -216,6 +307,17 @@ public class PluginInformation implements Validateable
    * Method description
    *
    *
+   * @param state
+   */
+  public void setState(PluginState state)
+  {
+    this.state = state;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param url
    */
   public void setUrl(String url)
@@ -250,6 +352,9 @@ public class PluginInformation implements Validateable
 
   /** Field description */
   private String name;
+
+  /** Field description */
+  private PluginState state;
 
   /** Field description */
   private String url;

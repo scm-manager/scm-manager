@@ -33,92 +33,42 @@
 
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface PluginManager
+public class StatePluginFilter implements PluginFilter
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param id
+   * @param state
    */
-  public void install(String id);
+  public StatePluginFilter(PluginState state)
+  {
+    this.state = state;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param id
-   */
-  public void uninstall(String id);
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  public void update(String id);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
+   * @param plugin
    *
    * @return
    */
-  public PluginInformation get(String id);
+  @Override
+  public boolean accept(PluginInformation plugin)
+  {
+    return state == plugin.getState();
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @param filter
-   *
-   * @return
-   */
-  public Collection<PluginInformation> get(PluginFilter filter);
+  //~--- fields ---------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getAll();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getAvailable();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getAvailableUpdates();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginInformation> getInstalled();
+  /** Field description */
+  private PluginState state;
 }

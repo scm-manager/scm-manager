@@ -69,6 +69,10 @@ public class DefaultPluginLoader implements PluginLoader
   /** Field description */
   public static final String PATH_PLUGINCONFIG = "META-INF/scm/plugin.xml";
 
+  /** Field description */
+  public static final String REGE_COREPLUGIN =
+    "^.*(?:/|\\\\)WEB-INF(?:/|\\\\)lib(?:/|\\\\).*\\.jar$";
+
   /** the logger for DefaultPluginLoader */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultPluginLoader.class);
@@ -196,12 +200,24 @@ public class DefaultPluginLoader implements PluginLoader
 
       path = path.substring("jar:file:".length(), path.lastIndexOf("!"));
 
+      boolean corePlugin = path.matches(REGE_COREPLUGIN);
+
       if (logger.isInfoEnabled())
       {
-        logger.info("load plugin {}", path);
+        logger.info("load {}plugin {}", corePlugin
+                                        ? "core "
+                                        : " ", path);
       }
 
       Plugin plugin = JAXB.unmarshal(url, Plugin.class);
+      PluginInformation info = plugin.getInformation();
+
+      if (info != null)
+      {
+        info.setState(corePlugin
+                      ? PluginState.CORE
+                      : PluginState.INSTALLED);
+      }
 
       plugin.setPath(path);
       installedPlugins.add(plugin);

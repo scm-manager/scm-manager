@@ -48,6 +48,7 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.SimpleCache;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.SecurityContext;
+import sonia.scm.util.AssertUtil;
 import sonia.scm.util.SecurityUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -78,6 +79,10 @@ public class DefaultPluginManager implements PluginManager
   /** the logger for DefaultPluginManager */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultPluginManager.class);
+
+  /** Field description */
+  public static final PluginFilter FILTER_UPDATES =
+    new StatePluginFilter(PluginState.UPDATE_AVAILABLE);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -160,6 +165,20 @@ public class DefaultPluginManager implements PluginManager
     throw new UnsupportedOperationException("Not supported yet.");
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   */
+  @Override
+  public void update(String id)
+  {
+    SecurityUtil.assertIsAdmin(securityContextProvicer);
+
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -194,6 +213,52 @@ public class DefaultPluginManager implements PluginManager
    * Method description
    *
    *
+   * @param filter
+   *
+   * @return
+   */
+  @Override
+  public Set<PluginInformation> get(PluginFilter filter)
+  {
+    AssertUtil.assertIsNotNull(filter);
+    SecurityUtil.assertIsAdmin(securityContextProvicer);
+
+    Set<PluginInformation> infoSet = new HashSet<PluginInformation>();
+
+    filter(infoSet, installedPlugins.values(), filter);
+    filter(infoSet, getPluginCenter().getPlugins(), filter);
+
+    return infoSet;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Collection<PluginInformation> getAll()
+  {
+    SecurityUtil.assertIsAdmin(securityContextProvicer);
+
+    Set<PluginInformation> infoSet = new HashSet<PluginInformation>();
+
+    infoSet.addAll(installedPlugins.values());
+    infoSet.addAll(getPluginCenter().getPlugins());
+
+    for ( PluginInformation pi : infoSet )
+    {
+      System.out.println( pi.getName() + ": " + pi.hashCode() );
+    }
+
+    return infoSet;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   @Override
@@ -222,12 +287,97 @@ public class DefaultPluginManager implements PluginManager
    * @return
    */
   @Override
+  public Collection<PluginInformation> getAvailableUpdates()
+  {
+    SecurityUtil.assertIsAdmin(securityContextProvicer);
+
+    return get(FILTER_UPDATES);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public Collection<PluginInformation> getInstalled()
   {
     SecurityUtil.assertIsAdmin(securityContextProvicer);
 
     return installedPlugins.values();
   }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param target
+   * @param source
+   * @param filter
+   */
+  private void filter(Set<PluginInformation> target,
+                      Collection<PluginInformation> source, PluginFilter filter)
+  {
+    for (PluginInformation info : source)
+    {
+      if (filter.accept(info))
+      {
+        target.add(info);
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param available
+   */
+  private void preparePlugin(PluginInformation available)
+  {
+    PluginState state = PluginState.AVAILABLE;
+
+    for (PluginInformation installed : installedPlugins.values())
+    {
+      if (isSamePlugin(available, installed))
+      {
+        if (installed.getVersion().equals(available.getVersion()))
+        {
+          available.setState(PluginState.INSTALLED);
+        }
+        else
+        {
+          available.setState(PluginState.UPDATE_AVAILABLE);
+        }
+      }
+    }
+
+    available.setState(state);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param pc
+   */
+  private void preparePlugins(PluginCenter pc)
+  {
+    Set<PluginInformation> infoSet = pc.getPlugins();
+
+    if (infoSet != null)
+    {
+      for (PluginInformation available : infoSet)
+      {
+        preparePlugin(available);
+      }
+    }
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -253,6 +403,7 @@ public class DefaultPluginManager implements PluginManager
         {
           center = (PluginCenter) unmarshaller.unmarshal(
             new URL(configuration.getPluginUrl()));
+          preparePlugins(center);
           cache.put(PluginCenter.class.getName(), center);
 
           if (pluginHandler == null)
@@ -270,6 +421,21 @@ public class DefaultPluginManager implements PluginManager
     }
 
     return center;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param p1
+   * @param p2
+   *
+   * @return
+   */
+  private boolean isSamePlugin(PluginInformation p1, PluginInformation p2)
+  {
+    return p1.getGroupId().equals(p2.getGroupId())
+           && p1.getArtifactId().equals(p2.getArtifactId());
   }
 
   //~--- fields ---------------------------------------------------------------
