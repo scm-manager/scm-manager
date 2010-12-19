@@ -47,7 +47,12 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
               }
               this.removeAll();
             } else {
-              alert( action + "(" + status + "): " + response.responseText );
+              Ext.MessageBox.show({
+                title: 'Error',
+                msg: 'Could not load items. Server returned status: ' + status,
+                buttons: Ext.MessageBox.OK,
+                icon:Ext.MessageBox.ERROR
+              });
             }
           },
           scope: this

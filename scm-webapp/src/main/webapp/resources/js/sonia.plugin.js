@@ -90,8 +90,13 @@ Sonia.plugin.installPlugin = function(pluginId){
       if ( debug ){
         console.debug('plugin installation failed');
       }
-      alert( 'failure' );
       loadingBox.hide();
+      Ext.MessageBox.show({
+        title: 'Error',
+        msg: 'Plugin installation failed',
+        buttons: Ext.MessageBox.OK,
+        icon:Ext.MessageBox.ERROR
+      });
     }
   });
 }
@@ -127,8 +132,13 @@ Sonia.plugin.uninstallPlugin = function(pluginId){
       if ( debug ){
         console.debug('plugin uninstallation failed');
       }
-      alert( 'failure' );
       loadingBox.hide();
+      Ext.MessageBox.show({
+        title: 'Error',
+        msg: 'Plugin uninstallation failed',
+        buttons: Ext.MessageBox.OK,
+        icon:Ext.MessageBox.ERROR
+      });
     }
   });
 }
@@ -162,10 +172,15 @@ Sonia.plugin.updatePlugin = function(pluginId){
     },
     failure: function(){
       if ( debug ){
-        console.debug('plugin updated failed');
+        console.debug('plugin update failed');
       }
-      alert( 'failure' );
       loadingBox.hide();
+      Ext.MessageBox.show({
+        title: 'Error',
+        msg: 'Plugin update failed',
+        buttons: Ext.MessageBox.OK,
+        icon:Ext.MessageBox.ERROR
+      });
     }
   });
 }

@@ -139,7 +139,12 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
             failure: function(){
               el.unmask();
               clearTimeout(tid);
-              alert('failure');
+              Ext.MessageBox.show({
+                title: 'Error',
+                msg: 'Could not load config.',
+                buttons: Ext.MessageBox.OK,
+                icon:Ext.MessageBox.ERROR
+              });
             }
           });
         }

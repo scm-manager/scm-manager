@@ -207,7 +207,12 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         this.execCallback(this.onUpdate, item);
       },
       failure: function(){
-        alert( 'failure' );
+        Ext.MessageBox.show({
+          title: 'Error',
+          msg: 'User update failed',
+          buttons: Ext.MessageBox.OK,
+          icon:Ext.MessageBox.ERROR
+        });
       }
     });
     
@@ -233,7 +238,12 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         this.execCallback(this.onCreate, user);
       },
       failure: function(){
-        alert( 'failure' );
+        Ext.MessageBox.show({
+          title: 'Error',
+          msg: 'User creation failed',
+          buttons: Ext.MessageBox.OK,
+          icon:Ext.MessageBox.ERROR
+        });
       }
     });
   },
@@ -343,7 +353,12 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
                 this.resetPanel();
               },
               failure: function(){
-                alert( 'failure' );
+                Ext.MessageBox.show({
+                  title: 'Error',
+                  msg: 'User deletion failed',
+                  buttons: Ext.MessageBox.OK,
+                  icon:Ext.MessageBox.ERROR
+                });
               }
             });
           }

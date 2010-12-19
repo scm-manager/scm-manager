@@ -357,7 +357,12 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       failure: function(){
         clearTimeout(tid);
         el.unmask();
-        alert( 'failure' );
+        Ext.MessageBox.show({
+          title: 'Error',
+          msg: 'Repository update failed',
+          buttons: Ext.MessageBox.OK,
+          icon:Ext.MessageBox.ERROR
+        });
       }
     });
   },
@@ -390,7 +395,12 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       failure: function(){
         clearTimeout(tid);
         el.unmask();
-        alert( 'failure' );
+        Ext.MessageBox.show({
+          title: 'Error',
+          msg: 'Repository creation failed',
+          buttons: Ext.MessageBox.OK,
+          icon:Ext.MessageBox.ERROR
+        });
       }
     });
   },
@@ -486,7 +496,12 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
                 this.resetPanel();
               },
               failure: function(){
-                alert( 'failure' );
+                Ext.MessageBox.show({
+                  title: 'Error',
+                  msg: 'Repository deletion failed',
+                  buttons: Ext.MessageBox.OK,
+                  icon:Ext.MessageBox.ERROR
+                });
               }
             });
           }
