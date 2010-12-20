@@ -78,14 +78,14 @@ public class CGIRunner
    *
    *
    * @param context
-   * @param cmdPrefix
+   * @param defaultCmdPrefix
    * @param ignoreExitState
    */
-  public CGIRunner(ServletContext context, String cmdPrefix,
+  public CGIRunner(ServletContext context, String defaultCmdPrefix,
                    boolean ignoreExitState)
   {
     this.context = context;
-    this.cmdPrefix = cmdPrefix;
+    this.defaultCmdPrefix = defaultCmdPrefix;
     this.ignoreExitState = ignoreExitState;
   }
 
@@ -93,7 +93,6 @@ public class CGIRunner
 
   /**
    * Method description
-   *
    *
    *
    * @param environment
@@ -106,6 +105,28 @@ public class CGIRunner
    */
   public void exec(EnvList environment, File command, String pathInfo,
                    HttpServletRequest req, HttpServletResponse res)
+          throws IOException
+  {
+    exec(environment, defaultCmdPrefix, command, pathInfo, req, res);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param environment
+   * @param cmdPrefix
+   * @param command
+   * @param pathInfo
+   * @param req
+   * @param res
+   *
+   * @throws IOException
+   */
+  public void exec(EnvList environment, String cmdPrefix, File command,
+                   String pathInfo, HttpServletRequest req,
+                   HttpServletResponse res)
           throws IOException
   {
     String path = command.getAbsolutePath();
@@ -334,7 +355,7 @@ public class CGIRunner
    */
   public String getCmdPrefix()
   {
-    return cmdPrefix;
+    return defaultCmdPrefix;
   }
 
   /**
@@ -369,7 +390,7 @@ public class CGIRunner
    */
   public void setCmdPrefix(String cmdPrefix)
   {
-    this.cmdPrefix = cmdPrefix;
+    this.defaultCmdPrefix = cmdPrefix;
   }
 
   /**
@@ -475,10 +496,10 @@ public class CGIRunner
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String cmdPrefix;
+  private ServletContext context;
 
   /** Field description */
-  private ServletContext context;
+  private String defaultCmdPrefix;
 
   /** Field description */
   private boolean ignoreExitState;

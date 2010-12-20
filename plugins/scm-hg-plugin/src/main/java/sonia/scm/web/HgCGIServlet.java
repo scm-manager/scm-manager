@@ -38,9 +38,11 @@ package sonia.scm.web;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.util.AssertUtil;
 import sonia.scm.web.cgi.AbstractCGIServlet;
 import sonia.scm.web.cgi.EnvList;
 
@@ -62,6 +64,9 @@ import javax.servlet.http.HttpServletRequest;
 @Singleton
 public class HgCGIServlet extends AbstractCGIServlet
 {
+
+  /** Field description */
+  public static final String ENV_PYTHON_PATH = "SCM_PYTHON_PATH";
 
   /** Field description */
   public static final String ENV_REPOSITORY_NAME = "REPO_NAME";
@@ -139,10 +144,41 @@ public class HgCGIServlet extends AbstractCGIServlet
     list.set(ENV_REPOSITORY_PATH, directory.getAbsolutePath());
     list.set(ENV_REPOSITORY_NAME, name);
 
+    String pythonPath = "";
+    HgConfig config = handler.getConfig();
+
+    if (config != null)
+    {
+      pythonPath = config.getPythonPath();
+
+      if (pythonPath == null)
+      {
+        pythonPath = "";
+      }
+    }
+
+    list.set(ENV_PYTHON_PATH, pythonPath);
+
     return list;
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected String getCmdPrefix()
+  {
+    HgConfig config = handler.getConfig();
+
+    AssertUtil.assertIsNotNull(config);
+
+    return config.getPythonBinary();
+  }
 
   /**
    * Method description

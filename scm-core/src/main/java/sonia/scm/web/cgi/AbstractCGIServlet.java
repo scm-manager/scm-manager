@@ -82,8 +82,7 @@ public abstract class AbstractCGIServlet extends HttpServlet
   @Override
   public void init() throws ServletException
   {
-    cgiRunner = new CGIRunner(getServletContext(), getCmdPrefix(),
-                              isExitStateIgnored());
+    cgiRunner = new CGIRunner(getServletContext(), null, isExitStateIgnored());
     baseEnvironment = createBaseEnvironment();
   }
 
@@ -157,7 +156,8 @@ public abstract class AbstractCGIServlet extends HttpServlet
           throws ServletException, IOException
   {
     cgiRunner.exec(createRequestEnvironment(req, baseEnvironment),
-                   getCommand(req), req.getPathInfo(), req, resp);
+                   getCmdPrefix(), getCommand(req), req.getPathInfo(), req,
+                   resp);
   }
 
   //~--- get methods ----------------------------------------------------------

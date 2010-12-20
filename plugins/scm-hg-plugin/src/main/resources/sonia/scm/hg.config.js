@@ -43,6 +43,10 @@ registerConfigPanel({
     name : 'pythonBinary',
     allowBlank : false
   },{
+    xtype : 'textfield',
+    fieldLabel : 'Python Path',
+    name : 'pythonPath'
+  },{
     xtype: 'textfield',
     name: 'repositoryDirectory',
     fieldLabel: 'Repository directory',

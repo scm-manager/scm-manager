@@ -85,6 +85,17 @@ public class HgConfig extends SimpleRepositoryConfig
    *
    * @return
    */
+  public String getPythonPath()
+  {
+    return pythonPath;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
   public boolean isValid()
   {
@@ -116,6 +127,17 @@ public class HgConfig extends SimpleRepositoryConfig
     this.pythonBinary = pythonBinary;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param pythonPath
+   */
+  public void setPythonPath(String pythonPath)
+  {
+    this.pythonPath = pythonPath;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -123,4 +145,7 @@ public class HgConfig extends SimpleRepositoryConfig
 
   /** Field description */
   private String pythonBinary;
+
+  /** Field description */
+  private String pythonPath = "";
 }
