@@ -278,7 +278,7 @@ public class ActiveDirectoryAuthenticationHandler implements AuthenticationHandl
       if (usr != null) {
         User user = new User(username, usr.fullName(), usr.emailAddress());
         user.setType(TYPE);
-        user.setAdmin(isAdmin(usr));        
+        user.setAdmin(isAdmin(usr, username));
         if(!usr.accountDisabled()) {
           result = new AuthenticationResult(user);
         } else { // Account disabled
@@ -293,7 +293,7 @@ public class ActiveDirectoryAuthenticationHandler implements AuthenticationHandl
     return result;
   }
 
-  private boolean isAdmin(IADsUser usr)
+  private boolean isAdmin(IADsUser usr, String username)
   {
     boolean admin = false;
     
@@ -309,7 +309,7 @@ public class ActiveDirectoryAuthenticationHandler implements AuthenticationHandl
       }
     }
     
-    if(config.getAdminUserSet().contains(usr.name())) {
+    if(config.getAdminUserSet().contains(username)) {
       admin = true;
     }
     return admin;
