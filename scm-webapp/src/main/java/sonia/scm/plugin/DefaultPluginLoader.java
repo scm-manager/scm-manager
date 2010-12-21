@@ -46,11 +46,13 @@ import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 import java.net.URL;
+import java.net.URLDecoder;
 
 import java.util.Collection;
 import java.util.Enumeration;
@@ -65,6 +67,9 @@ import javax.xml.bind.JAXB;
  */
 public class DefaultPluginLoader implements PluginLoader
 {
+
+  /** Field description */
+  public static final String ENCODING = "UTF-8";
 
   /** Field description */
   public static final String PATH_PLUGINCONFIG = "META-INF/scm/plugin.xml";
@@ -165,6 +170,33 @@ public class DefaultPluginLoader implements PluginLoader
    * Method description
    *
    *
+   * @param path
+   *
+   * @return
+   */
+  private String decodePath(String path)
+  {
+    File file = new File(path);
+
+    if (!file.exists())
+    {
+      try
+      {
+        path = URLDecoder.decode(path, ENCODING);
+      }
+      catch (IOException ex)
+      {
+        logger.error(ex.getMessage(), ex);
+      }
+    }
+
+    return path;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param classLoader
    *
    * @throws IOException
@@ -199,6 +231,7 @@ public class DefaultPluginLoader implements PluginLoader
       String path = url.toExternalForm();
 
       path = path.substring("jar:file:".length(), path.lastIndexOf("!"));
+      path = decodePath(path);
 
       boolean corePlugin = path.matches(REGE_COREPLUGIN);
 
