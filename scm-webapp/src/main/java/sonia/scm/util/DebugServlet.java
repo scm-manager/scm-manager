@@ -198,8 +198,8 @@ public class DebugServlet extends HttpServlet
   private void printHeader(PrintWriter writer)
   {
     writer.append("<html>");
-    writer.append("<head><title>SCM Manaer :: Debugging</title></head>");
-    writer.append("<body><h1>SCM Manaer :: Debugging</h1>");
+    writer.append("<head><title>SCM Manager :: Debugging</title></head>");
+    writer.append("<body><h1>SCM Manager :: Debugging</h1>");
   }
 
   /**

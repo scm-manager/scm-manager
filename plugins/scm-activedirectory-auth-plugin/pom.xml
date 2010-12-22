@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>scm-plugins</artifactId>
+    <groupId>sonia.scm.plugins</groupId>
+    <version>1.0-M5-SNAPSHOT</version>
+  </parent>
+
+  <groupId>sonia.scm.plugins</groupId>
+  <artifactId>scm-activedirectory-auth-plugin</artifactId>
+  <version>1.0-M5-SNAPSHOT</version>
+  <name>scm-activedirectory-auth-plugin</name>
+  <url>https://bitbucket.org/sdorra/scm-manager</url>
+  <description>
+    Plugin for using Active Directory as an authentication handler.
+    Currently only supports running on Windows in a 32-bit JVM.
+  </description>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>${servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-core</artifactId>
+      <version>1.0-M5-SNAPSHOT</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.jvnet.com4j.typelibs</groupId>
+      <artifactId>ado20</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jvnet.com4j.typelibs</groupId>
+      <artifactId>active-directory</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jvnet.com4j</groupId>
+      <artifactId>com4j</artifactId>
+      <version>20080107</version>
+    </dependency>
+
+  </dependencies>
+
+</project>
