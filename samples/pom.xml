@@ -16,6 +16,7 @@
   <name>scm-samples</name>
 
   <modules>
+    <module>scm-sample-hello</module>
     <module>scm-sample-auth</module>
   </modules>
 
