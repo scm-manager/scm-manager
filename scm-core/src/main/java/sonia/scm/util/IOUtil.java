@@ -38,6 +38,8 @@ package sonia.scm.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.io.ZipUnArchiver;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
@@ -158,6 +160,30 @@ public class IOUtil
     if (!file.delete())
     {
       throw new IOException("could not delete file ".concat(file.getPath()));
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param archive
+   * @param outputDirectory
+   *
+   * @throws IOException
+   */
+  public static void extract(File archive, File outputDirectory)
+          throws IOException
+  {
+    String name = archive.getName().toLowerCase();
+
+    if (name.endsWith(ZipUnArchiver.EXTENSION))
+    {
+      new ZipUnArchiver().extract(archive, outputDirectory);
+    }
+    else
+    {
+      throw new IOException("no unarchiver found for ".concat(name));
     }
   }
 
