@@ -247,6 +247,12 @@
           <artifactId>scm-sample-auth</artifactId>
           <version>1.0-M5-SNAPSHOT</version>
         </dependency>
+        
+        <dependency>
+          <groupId>sonia.scm.plugins</groupId>
+          <artifactId>scm-activedirectory-auth-plugin</artifactId>
+          <version>1.0-M5-SNAPSHOT</version>
+        </dependency>
 
       </dependencies>
 
