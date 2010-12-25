@@ -38,13 +38,20 @@ package sonia.scm.repository;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.Type;
+import sonia.scm.installer.HgInstaller;
+import sonia.scm.installer.UnixHgInstaller;
+import sonia.scm.installer.WindowsHgInstaller;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.util.SystemUtil;
+import sonia.scm.web.HgWebConfigWriter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -69,6 +76,10 @@ public class HgRepositoryHandler
 
   /** Field description */
   public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+
+  /** the logger for HgRepositoryHandler */
+  private static final org.slf4j.Logger logger =
+    LoggerFactory.getLogger(HgRepositoryHandler.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -95,11 +106,61 @@ public class HgRepositoryHandler
   {
     super.loadConfig();
 
+    HgInstaller installer = null;
+
+    if (SystemUtil.isWindows())
+    {
+      installer = new WindowsHgInstaller(baseDirectory);
+    }
+    else
+    {
+      installer = new UnixHgInstaller(baseDirectory);
+    }
+
     if (config == null)
     {
-      config = new HgInitialConfigBuilder(baseDirectory).createInitialConfig();
-      storeConfig();
+      config = new HgConfig();
+
+      try
+      {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("installing mercurial with {}",
+                       installer.getClass().getName());
+        }
+
+        installer.install(config);
+        new HgWebConfigWriter(config).write();
+      }
+      catch (IOException ioe)
+      {
+        if (logger.isErrorEnabled())
+        {
+          logger.error(
+              "Could not write Hg CGI for inital config.  "
+              + "HgWeb may not function until a new Hg config is set", ioe);
+        }
+      }
     }
+    else
+    {
+      try
+      {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("update mercurial with {}",
+                       installer.getClass().getName());
+        }
+
+        installer.update(config);
+      }
+      catch (IOException ex)
+      {
+        logger.error(ex.getMessage(), ex);
+      }
+    }
+
+    storeConfig();
   }
 
   //~--- get methods ----------------------------------------------------------

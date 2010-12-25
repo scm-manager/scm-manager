@@ -31,17 +31,43 @@
 
 
 
-package sonia.scm.util;
+package sonia.scm.api.rest.resources;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.repository.HgConfig;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.api.json.JSONJAXBContext;
+
+import javax.ws.rs.ext.ContextResolver;
+import javax.ws.rs.ext.Provider;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SystemUtil
+@Provider
+public class HgJsonJaxbContextResolver implements ContextResolver<JAXBContext>
 {
 
-  /** Field description */
-  public static final String PROPERTY_OSNAME = "os.name";
+  /**
+   * Constructs ...
+   *
+   *
+   * @throws JAXBException
+   */
+  public HgJsonJaxbContextResolver() throws JAXBException
+  {
+    this.context = new JSONJAXBContext(
+        JSONConfiguration.mapped().rootUnwrapping(true).nonStrings(
+          "useOptimizedBytecode").build(), new Class[] { HgConfig.class });
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -49,41 +75,18 @@ public class SystemUtil
    * Method description
    *
    *
-   * @return
-   */
-  public static boolean isMac()
-  {
-    String os = System.getProperty(PROPERTY_OSNAME).toLowerCase();
-
-    // Mac
-    return (os.indexOf("mac") >= 0);
-  }
-
-  /**
-   * Method description
-   *
+   * @param type
    *
    * @return
    */
-  public static boolean isUnix()
+  @Override
+  public JAXBContext getContext(Class<?> type)
   {
-    String os = System.getProperty(PROPERTY_OSNAME).toLowerCase();
-
-    // linux or unix
-    return ((os.indexOf("nix") >= 0) || (os.indexOf("nux") >= 0));
+    return context;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static boolean isWindows()
-  {
-    String os = System.getProperty(PROPERTY_OSNAME).toLowerCase();
+  //~--- fields ---------------------------------------------------------------
 
-    // windows
-    return (os.indexOf("win") >= 0);
-  }
+  /** Field description */
+  private JAXBContext context;
 }

@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm.installer;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -41,8 +41,10 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.io.Command;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.SimpleCommand;
+import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.util.IOUtil;
-import sonia.scm.web.HgWebConfigWriter;
+import sonia.scm.util.SystemUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -53,32 +55,15 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class HgInitialConfigBuilder
+public abstract class AbstractHgInstaller implements HgInstaller
 {
 
   /** Field description */
   public static final String DIRECTORY_REPOSITORY = "repositories";
 
-  /** Field description */
-  private static final String[] PATH = new String[]
-  {
-
-    // default path
-    "/usr/bin",
-
-    // manually installed
-    "/usr/local/bin",
-
-    // mac ports
-    "/opt/local/bin",
-
-    // opencsw
-    "/opt/csw/bin"
-  };
-
-  /** the logger for HgInitialConfigBuilder */
+  /** the logger for AbstractHgInstaller */
   private static final Logger logger =
-    LoggerFactory.getLogger(HgInitialConfigBuilder.class);
+    LoggerFactory.getLogger(AbstractHgInstaller.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -88,7 +73,7 @@ public class HgInitialConfigBuilder
    *
    * @param baseDirectory
    */
-  public HgInitialConfigBuilder(File baseDirectory)
+  public AbstractHgInstaller(File baseDirectory)
   {
     this.baseDirectory = baseDirectory;
   }
@@ -99,9 +84,12 @@ public class HgInitialConfigBuilder
    * Method description
    *
    *
-   * @return
+   * @param config
+   *
+   * @throws IOException
    */
-  public HgConfig createInitialConfig()
+  @Override
+  public void install(HgConfig config) throws IOException
   {
     File repoDirectory = new File(
                              baseDirectory,
@@ -110,29 +98,19 @@ public class HgInitialConfigBuilder
 
     IOUtil.mkdirs(repoDirectory);
     config.setRepositoryDirectory(repoDirectory);
-    config.setHgBinary(search("hg"));
-    config.setPythonBinary(search("python"));
-    try {
-      new HgWebConfigWriter(config).write();
-    } catch(IOException ioe) {
-      if(logger.isErrorEnabled()) {
-        logger.error("Could not write Hg CGI for inital config.  " + 
-            "HgWeb may not function until a new Hg config is set", ioe);
-      }
-    }
-
-    return config;
   }
 
   /**
    * TODO check for windows
    *
    *
+   *
+   * @param path
    * @param cmd
    *
    * @return
    */
-  public static String search(String cmd)
+  protected String search(String[] path, String cmd)
   {
     String cmdPath = null;
 
@@ -150,9 +128,18 @@ public class HgInitialConfigBuilder
 
     if (cmdPath == null)
     {
-      for (String pathPart : PATH)
+      for (String pathPart : path)
       {
-        File file = new File(pathPart, cmd);
+        File file = null;
+
+        if (SystemUtil.isWindows())
+        {
+          file = new File(pathPart, cmd.concat(".exe"));
+        }
+        else
+        {
+          file = new File(pathPart, cmd);
+        }
 
         if (file.exists())
         {
@@ -181,8 +168,5 @@ public class HgInitialConfigBuilder
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private File baseDirectory;
-
-  /** Field description */
-  private HgConfig config = new HgConfig();
+  protected File baseDirectory;
 }

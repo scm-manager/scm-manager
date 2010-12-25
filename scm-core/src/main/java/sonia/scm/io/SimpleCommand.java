@@ -115,6 +115,11 @@ public class SimpleCommand implements Command
    */
   protected Process createProcess() throws IOException
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("start external process {}", command);
+    }
+
     ProcessBuilder processBuilder = new ProcessBuilder(command);
 
     if (workDirectory != null)

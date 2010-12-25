@@ -177,7 +177,14 @@ public class HgCGIServlet extends AbstractCGIServlet
 
     AssertUtil.assertIsNotNull(config);
 
-    return config.getPythonBinary();
+    String python = config.getPythonBinary();
+
+    if ((python != null) && config.isUseOptimizedBytecode())
+    {
+      python = python.concat(" -O");
+    }
+
+    return python;
   }
 
   /**

@@ -26,6 +26,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-json</artifactId>
+      <version>${jersey.version}</version>
+    </dependency>
+
     <!-- test scope -->
 
     <dependency>

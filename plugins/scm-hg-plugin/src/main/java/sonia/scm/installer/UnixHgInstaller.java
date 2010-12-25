@@ -31,59 +31,85 @@
 
 
 
-package sonia.scm.util;
+package sonia.scm.installer;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.repository.HgConfig;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SystemUtil
+public class UnixHgInstaller extends AbstractHgInstaller
 {
 
   /** Field description */
-  public static final String PROPERTY_OSNAME = "os.name";
+  private static final String[] PATH = new String[]
+  {
 
-  //~--- get methods ----------------------------------------------------------
+    // default path
+    "/usr/bin",
+
+    // manually installed
+    "/usr/local/bin",
+
+    // mac ports
+    "/opt/local/bin",
+
+    // opencsw
+    "/opt/csw/bin"
+  };
+
+  /** the logger for UnixHgInstaller */
+  private static final Logger logger =
+    LoggerFactory.getLogger(UnixHgInstaller.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param baseDirectory
+   */
+  public UnixHgInstaller(File baseDirectory)
+  {
+    super(baseDirectory);
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @return
+   * @param config
    */
-  public static boolean isMac()
+  @Override
+  public void install(HgConfig config)
   {
-    String os = System.getProperty(PROPERTY_OSNAME).toLowerCase();
-
-    // Mac
-    return (os.indexOf("mac") >= 0);
+    config.setHgBinary(search(PATH, "hg"));
+    config.setPythonBinary(search(PATH, "python"));
   }
 
   /**
    * Method description
    *
    *
-   * @return
+   * @param config
    */
-  public static boolean isUnix()
+  @Override
+  public void update(HgConfig config)
   {
-    String os = System.getProperty(PROPERTY_OSNAME).toLowerCase();
 
-    // linux or unix
-    return ((os.indexOf("nix") >= 0) || (os.indexOf("nux") >= 0));
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static boolean isWindows()
-  {
-    String os = System.getProperty(PROPERTY_OSNAME).toLowerCase();
-
-    // windows
-    return (os.indexOf("win") >= 0);
+    // do nothing
   }
 }

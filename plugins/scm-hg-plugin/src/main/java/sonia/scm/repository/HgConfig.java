@@ -96,6 +96,17 @@ public class HgConfig extends SimpleRepositoryConfig
    *
    * @return
    */
+  public boolean isUseOptimizedBytecode()
+  {
+    return useOptimizedBytecode;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
   public boolean isValid()
   {
@@ -138,6 +149,17 @@ public class HgConfig extends SimpleRepositoryConfig
     this.pythonPath = pythonPath;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param useOptimizedBytecode
+   */
+  public void setUseOptimizedBytecode(boolean useOptimizedBytecode)
+  {
+    this.useOptimizedBytecode = useOptimizedBytecode;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -148,4 +170,7 @@ public class HgConfig extends SimpleRepositoryConfig
 
   /** Field description */
   private String pythonPath = "";
+
+  /** Field description */
+  private boolean useOptimizedBytecode = false;
 }
