@@ -313,17 +313,18 @@ public class WindowsHgInstaller extends AbstractHgInstaller
         while (scanner.hasNextLine())
         {
           String line = scanner.nextLine();
-          int index = line.indexOf("﻿REG_SZ");
+          int index = line.indexOf("REG_SZ");
 
           if (index > 0)
           {
             programmDirectory = line.substring(index
-                                               + "﻿REG_SZ".length()).trim();
+                                               + "REG_SZ".length()).trim();
 
             if (logger.isDebugEnabled())
             {
               logger.debug("use programm directory {}", programmDirectory);
             }
+            break;
           }
         }
       }
