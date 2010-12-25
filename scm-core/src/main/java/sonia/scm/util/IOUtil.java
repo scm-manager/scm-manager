@@ -44,6 +44,8 @@ import sonia.scm.io.ZipUnArchiver;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -160,6 +162,39 @@ public class IOUtil
     if (!file.delete())
     {
       throw new IOException("could not delete file ".concat(file.getPath()));
+    }
+  }
+
+  public static void copy( File source, File target ) throws IOException
+  {
+    if ( source.isDirectory() )
+    {
+      if ( ! target.exists() )
+      {
+        mkdirs(target);
+      }
+
+      String[] children = source.list();
+      for ( String child : children )
+      {
+        copy(new File(source, child), new File(target, child));
+      }
+    }
+    else
+    {
+      FileInputStream input = null;
+      FileOutputStream output = null;
+      try
+      {
+        input = new FileInputStream( source );
+        output = new FileOutputStream( target );
+        copy(input, output);
+      }
+      finally
+      {
+        close(input);
+        close(output);
+      }
     }
   }
 

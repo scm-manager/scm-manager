@@ -64,7 +64,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   {
 
     // TortoiseHg
-    "TortoiseHg\\hg.exe"
+    "TortoiseHg"
   };
 
   /** Field description */
@@ -80,7 +80,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   {
 
     // TortoiseHg
-    "TortoiseHg\\template"
+    "TortoiseHg\\templates"
   };
 
   /** Field description */
@@ -90,6 +90,8 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   /** the logger for WindowsHgInstaller */
   private static final Logger logger =
     LoggerFactory.getLogger(WindowsHgInstaller.class);
+
+  public static String BINARY_MERCURIAL = "hg";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -120,38 +122,29 @@ public class WindowsHgInstaller extends AbstractHgInstaller
     super.install(config);
 
     String progDir = getProgrammDirectory();
-    String path = null;
     File libraryZip = find(progDir, PATH_LIBRARY_ZIP);
+
+    File libDir = null;
 
     if (libraryZip != null)
     {
-      File libDir = new File(baseDirectory, "lib\\hg");
+      libDir = new File(baseDirectory, "lib\\hg");
 
       IOUtil.extract(libraryZip, libDir);
-      path = libDir.getAbsolutePath();
+      config.setPythonPath(libDir.getAbsolutePath());
     }
 
-    File templateDir = find(progDir, PATH_TEMPLATE);
-
-    if (templateDir != null)
+    if ( libDir != null )
     {
-      if (path != null)
+      File templateDir = find(progDir, PATH_TEMPLATE);
+      if (templateDir != null)
       {
-        path = path.concat(";").concat(templateDir.getAbsolutePath());
-      }
-      else
-      {
-        path = templateDir.getAbsolutePath();
+        IOUtil.copy(templateDir, new File(libDir, "templates"));
       }
     }
-
-    if (path != null)
-    {
-      config.setPythonPath(path);
-    }
-
     checkForOptimizedByteCode(config);
     config.setPythonBinary(getPythonBinary());
+    config.setHgBinary( search(PATH_HG, BINARY_MERCURIAL) );
   }
 
   /**
