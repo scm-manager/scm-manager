@@ -51,6 +51,11 @@ registerConfigPanel({
     name: 'repositoryDirectory',
     fieldLabel: 'Repository directory',
     allowBlank : false
+  },{
+    xtype: 'checkbox',
+    name: 'useOptimizedBytecode',
+    fieldLabel: 'Optimized Bytecode (.pyo)',
+    inputValue: 'true'
   }],
 
   onSubmit: function(values){

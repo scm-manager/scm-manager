@@ -60,38 +60,32 @@ public class WindowsHgInstaller extends AbstractHgInstaller
 {
 
   /** Field description */
-  public static String[] PATH_HG = new String[]
+  private static final String FILE_LIBRARY_ZIP = "library.zip";
+
+  /** Field description */
+  private static final String FILE_MERCURIAL = "hg.exe";
+
+  /** Field description */
+  private static final String FILE_TEMPLATES = "templates";
+
+  /** Field description */
+  private static final String[] REGISTRY_HG = new String[]
   {
 
     // TortoiseHg
-    "TortoiseHg"
+    "HKEY_CURRENT_USER\\Software\\TortoiseHg",
+
+    // Mercurial
+    "HKEY_CURRENT_USER\\Software\\Mercurial\\InstallDir"
   };
 
   /** Field description */
-  public static String[] PATH_LIBRARY_ZIP = new String[]
-  {
-
-    // TortoiseHg
-    "TortoiseHg\\library.zip"
-  };
-
-  /** Field description */
-  public static String[] PATH_TEMPLATE = new String[]
-  {
-
-    // TortoiseHg
-    "TortoiseHg\\templates"
-  };
-
-  /** Field description */
-  private static final String DEFAULT_PROGRAMMDIRECTORY =
-    "C:\\Programm Files\\";
+  private static final String REGISTRY_PYTHON =
+    "HKEY_CLASSES_ROOT\\Python.File\\shell\\open\\command";
 
   /** the logger for WindowsHgInstaller */
   private static final Logger logger =
     LoggerFactory.getLogger(WindowsHgInstaller.class);
-
-  public static String BINARY_MERCURIAL = "hg";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -121,30 +115,15 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   {
     super.install(config);
 
-    String progDir = getProgrammDirectory();
-    File libraryZip = find(progDir, PATH_LIBRARY_ZIP);
+    File hgDirectory = getMercurialDirectory();
 
-    File libDir = null;
-
-    if (libraryZip != null)
+    if (hgDirectory != null)
     {
-      libDir = new File(baseDirectory, "lib\\hg");
-
-      IOUtil.extract(libraryZip, libDir);
-      config.setPythonPath(libDir.getAbsolutePath());
+      installHg(config, hgDirectory);
     }
 
-    if ( libDir != null )
-    {
-      File templateDir = find(progDir, PATH_TEMPLATE);
-      if (templateDir != null)
-      {
-        IOUtil.copy(templateDir, new File(libDir, "templates"));
-      }
-    }
     checkForOptimizedByteCode(config);
     config.setPythonBinary(getPythonBinary());
-    config.setHgBinary( search(PATH_HG, BINARY_MERCURIAL) );
   }
 
   /**
@@ -210,28 +189,38 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    * Method description
    *
    *
-   * @param prefix
-   * @param path
+   * @param config
+   * @param hgDirectory
    *
-   * @return
+   * @throws IOException
    */
-  private File find(String prefix, String[] path)
+  private void installHg(HgConfig config, File hgDirectory) throws IOException
   {
-    File result = null;
-
-    for (String pathPart : path)
+    if (logger.isInfoEnabled())
     {
-      File file = new File(prefix, pathPart);
-
-      if (file.exists())
-      {
-        result = file;
-
-        break;
-      }
+      logger.info("installing mercurial {}", hgDirectory.getAbsolutePath());
     }
 
-    return result;
+    File libDir = new File(baseDirectory, "lib\\hg");
+
+    IOUtil.mkdirs(libDir);
+
+    File libraryZip = new File(hgDirectory, FILE_LIBRARY_ZIP);
+
+    if (libraryZip.exists())
+    {
+      IOUtil.extract(libraryZip, libDir);
+      config.setPythonPath(libDir.getAbsolutePath());
+    }
+
+    File templateDirectory = new File(hgDirectory, FILE_TEMPLATES);
+
+    if (templateDirectory.exists())
+    {
+      IOUtil.copy(templateDirectory, new File(libDir, FILE_TEMPLATES));
+    }
+
+    config.setHgBinary(new File(hgDirectory, FILE_MERCURIAL).getAbsolutePath());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -242,11 +231,30 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    *
    * @return
    */
-  private String getProgrammDirectory()
+  private File getMercurialDirectory()
   {
-    return getRegistryValue(
-        "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion",
-        "ProgramFilesDir", DEFAULT_PROGRAMMDIRECTORY);
+    File directory = null;
+
+    for (String registryKey : REGISTRY_HG)
+    {
+      String path = getRegistryValue(registryKey, null, null);
+
+      if (path != null)
+      {
+        directory = new File(path);
+
+        if (!directory.exists())
+        {
+          directory = null;
+        }
+        else
+        {
+          break;
+        }
+      }
+    }
+
+    return directory;
   }
 
   /**
@@ -257,9 +265,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    */
   private String getPythonBinary()
   {
-    String python =
-      getRegistryValue(
-          "﻿HKEY_CLAS﻿SES_ROOT\\Python.File\\shell\\open\\command", null, null);
+    String python = getRegistryValue(REGISTRY_PYTHON, null, null);
 
     if (python == null)
     {
@@ -313,10 +319,18 @@ public class WindowsHgInstaller extends AbstractHgInstaller
             programmDirectory = line.substring(index
                                                + "REG_SZ".length()).trim();
 
+            if (programmDirectory.startsWith("\""))
+            {
+              programmDirectory = programmDirectory.substring(1);
+              programmDirectory = programmDirectory.substring(0,
+                      programmDirectory.indexOf("\""));
+            }
+
             if (logger.isDebugEnabled())
             {
               logger.debug("use programm directory {}", programmDirectory);
             }
+
             break;
           }
         }

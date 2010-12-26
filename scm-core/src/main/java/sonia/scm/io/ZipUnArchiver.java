@@ -179,11 +179,6 @@ public class ZipUnArchiver extends AbstractUnArchiver
   private void extractFile(ZipInputStream input, File outputFile)
           throws IOException
   {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("extract file {}", outputFile.getPath());
-    }
-
     FileOutputStream output = null;
 
     try
