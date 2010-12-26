@@ -288,7 +288,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   private String getRegistryValue(String key, String subKey,
                                   String defaultValue)
   {
-    String programmDirectory = defaultValue;
+    String programDirectory = defaultValue;
     SimpleCommand command = null;
 
     if (subKey != null)
@@ -316,19 +316,19 @@ public class WindowsHgInstaller extends AbstractHgInstaller
 
           if (index > 0)
           {
-            programmDirectory = line.substring(index
+            programDirectory = line.substring(index
                                                + "REG_SZ".length()).trim();
 
-            if (programmDirectory.startsWith("\""))
+            if (programDirectory.startsWith("\""))
             {
-              programmDirectory = programmDirectory.substring(1);
-              programmDirectory = programmDirectory.substring(0,
-                      programmDirectory.indexOf("\""));
+              programDirectory = programDirectory.substring(1);
+              programDirectory = programDirectory.substring(0,
+                      programDirectory.indexOf("\""));
             }
 
             if (logger.isDebugEnabled())
             {
-              logger.debug("use programm directory {}", programmDirectory);
+              logger.debug("use program directory {}", programDirectory);
             }
 
             break;
@@ -341,6 +341,6 @@ public class WindowsHgInstaller extends AbstractHgInstaller
       logger.error(ex.getMessage(), ex);
     }
 
-    return programmDirectory;
+    return programDirectory;
   }
 }
