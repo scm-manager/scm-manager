@@ -29,8 +29,6 @@
  *
  */
 
-
-
 package sonia.scm.util;
 
 /**
@@ -85,5 +83,10 @@ public class SystemUtil
 
     // windows
     return (os.indexOf("win") >= 0);
+  }
+
+  public static boolean is32bit()
+  {
+    return "32".equals(System.getProperty("sun.arch.data.model"));
   }
 }
