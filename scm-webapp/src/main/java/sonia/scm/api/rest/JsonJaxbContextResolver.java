@@ -36,6 +36,7 @@ package sonia.scm.api.rest;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.ScmState;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.Group;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.repository.Repository;
@@ -102,7 +103,9 @@ public class JsonJaxbContextResolver implements ContextResolver<JAXBContext>
   private JAXBContext context;
 
   /** Field description */
-  private List<Class> types = Arrays.asList(new Class[] { Group.class,
-          Repository.class, PluginInformation.class, ScmState.class,
-          User.class });
+  private List<Class> types = Arrays.asList(new Class[]
+  {
+    Group.class, Repository.class, PluginInformation.class, ScmState.class,
+    User.class, ScmConfiguration.class
+  });
 }

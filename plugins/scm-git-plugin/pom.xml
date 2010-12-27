@@ -57,7 +57,7 @@
   </dependencies>
 
   <properties>
-    <jgit.version>0.9.3</jgit.version>
+    <jgit.version>0.10.1</jgit.version>
   </properties>
 
   <repositories>
