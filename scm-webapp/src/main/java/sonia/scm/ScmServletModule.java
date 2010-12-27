@@ -69,6 +69,7 @@ import sonia.scm.web.security.WebSecurityContext;
 
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
+import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
@@ -203,6 +204,8 @@ public class ScmServletModule extends ServletModule
      * params.put("com.sun.jersey.config.feature.Trace", "true");
      * params.put("com.sun.jersey.config.feature.TracePerRequest", "true");
      */
+    params.put(JSONConfiguration.FEATURE_POJO_MAPPING,
+               Boolean.TRUE.toString());
     params.put(ResourceConfig.FEATURE_REDIRECT, Boolean.TRUE.toString());
     params.put(ServletContainer.RESOURCE_CONFIG_CLASS,
                UriExtensionsConfig.class.getName());
