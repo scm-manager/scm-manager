@@ -29,8 +29,6 @@
  *
  */
 
-
-
 package sonia.scm.installer;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -63,10 +61,19 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   private static final String FILE_LIBRARY_ZIP = "library.zip";
 
   /** Field description */
-  private static final String FILE_MERCURIAL = "hg.exe";
+  private static final String FILE_MERCURIAL_EXE = "hg.exe";
+
+  /** Field description */
+  private static final String FILE_MERCURIAL_SCRIPT = "hg.bat";
 
   /** Field description */
   private static final String FILE_TEMPLATES = "templates";
+
+  /** Field description */
+  private static final String FILE_SCRIPTS = "Scripts";
+
+  /** Field description */
+  private static final String FILE_LIB_MERCURIAL = "Lib\\site-packages\\mercurial";
 
   /** Field description */
   private static final String[] REGISTRY_HG = new String[]
@@ -80,12 +87,11 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   };
 
   /** Field description */
-  private static final String REGISTRY_PYTHON =
-    "HKEY_CLASSES_ROOT\\Python.File\\shell\\open\\command";
+  private static final String REGISTRY_PYTHON = "HKEY_CLASSES_ROOT\\Python.File\\shell\\open\\command";
 
   /** the logger for WindowsHgInstaller */
-  private static final Logger logger =
-    LoggerFactory.getLogger(WindowsHgInstaller.class);
+  private static final Logger logger = LoggerFactory
+      .getLogger(WindowsHgInstaller.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -115,15 +121,21 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   {
     super.install(config);
 
-    File hgDirectory = getMercurialDirectory();
+    String pythonBinary = getPythonBinary();
+    config.setPythonBinary(pythonBinary);
 
-    if (hgDirectory != null)
+    File hgScript = getMercurialScript(pythonBinary);
+    File hgDirectory = getMercurialDirectory();
+    if (hgScript != null)
+    {
+      config.setHgBinary(hgScript.getAbsolutePath());
+    }
+    else if (hgDirectory != null)
     {
       installHg(config, hgDirectory);
     }
 
     checkForOptimizedByteCode(config);
-    config.setPythonBinary(getPythonBinary());
   }
 
   /**
@@ -133,7 +145,8 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    * @param config
    */
   @Override
-  public void update(HgConfig config) {}
+  public void update(HgConfig config)
+  {}
 
   /**
    * Method description
@@ -220,7 +233,8 @@ public class WindowsHgInstaller extends AbstractHgInstaller
       IOUtil.copy(templateDirectory, new File(libDir, FILE_TEMPLATES));
     }
 
-    config.setHgBinary(new File(hgDirectory, FILE_MERCURIAL).getAbsolutePath());
+    config.setHgBinary(new File(hgDirectory, FILE_MERCURIAL_EXE)
+        .getAbsolutePath());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -258,6 +272,32 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   }
 
   /**
+   * Returns the location of the script to run Mercurial, if Mercurial is
+   * installed as a Python package from source.  Only packages that include a
+   * templates directory will be recognized.
+   */
+  private File getMercurialScript(String pythonBinary)
+  {
+    File hgScript = null;
+
+    if (pythonBinary != null)
+    {
+      File pythonBinaryFile = new File(pythonBinary);
+      if (pythonBinaryFile.exists())
+      {
+        File pythonDir = pythonBinaryFile.getParentFile();
+        File scriptsDir = new File(pythonDir, FILE_SCRIPTS);
+        File potentialHgScript = new File(scriptsDir, FILE_MERCURIAL_SCRIPT);
+        File mercurialPackageDir = new File(pythonDir, FILE_LIB_MERCURIAL);
+        File templatesDir = new File(mercurialPackageDir, FILE_TEMPLATES);
+        if (potentialHgScript.exists() && templatesDir.exists())
+          hgScript = potentialHgScript;
+      }
+    }
+    return hgScript;
+  }
+
+  /**
    * Method description
    *
    *
@@ -285,8 +325,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    *
    * @return
    */
-  private String getRegistryValue(String key, String subKey,
-                                  String defaultValue)
+  private String getRegistryValue(String key, String subKey, String defaultValue)
   {
     String programDirectory = defaultValue;
     SimpleCommand command = null;
@@ -316,14 +355,13 @@ public class WindowsHgInstaller extends AbstractHgInstaller
 
           if (index > 0)
           {
-            programDirectory = line.substring(index
-                                               + "REG_SZ".length()).trim();
+            programDirectory = line.substring(index + "REG_SZ".length()).trim();
 
             if (programDirectory.startsWith("\""))
             {
               programDirectory = programDirectory.substring(1);
-              programDirectory = programDirectory.substring(0,
-                      programDirectory.indexOf("\""));
+              programDirectory = programDirectory.substring(0, programDirectory
+                  .indexOf("\""));
             }
 
             if (logger.isDebugEnabled())
