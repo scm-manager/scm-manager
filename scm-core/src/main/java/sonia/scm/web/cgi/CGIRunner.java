@@ -38,6 +38,7 @@ package sonia.scm.web.cgi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.logging.LoggingOutputStream;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -223,8 +224,9 @@ public class CGIRunner
     final int inLength = len;
 
     // TODO: print or log error stream
-    IOUtil.copyThread(new InputStreamReader(p.getErrorStream()),
-                      new OutputStreamWriter(System.err));
+    IOUtil.copyThread(p.getErrorStream(),
+                      new LoggingOutputStream(logger,
+                        LoggingOutputStream.LEVEL_ERROR));
     new Thread(new Runnable()
     {
       @Override

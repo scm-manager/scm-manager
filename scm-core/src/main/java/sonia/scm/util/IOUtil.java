@@ -128,12 +128,68 @@ public class IOUtil
    * Method description
    *
    *
+   * @param source
+   * @param target
+   *
+   * @throws IOException
+   */
+  public static void copy(File source, File target) throws IOException
+  {
+    if (source.isDirectory())
+    {
+      if (!target.exists())
+      {
+        mkdirs(target);
+      }
+
+      String[] children = source.list();
+
+      for (String child : children)
+      {
+        copy(new File(source, child), new File(target, child));
+      }
+    }
+    else
+    {
+      FileInputStream input = null;
+      FileOutputStream output = null;
+
+      try
+      {
+        input = new FileInputStream(source);
+        output = new FileOutputStream(target);
+        copy(input, output);
+      }
+      finally
+      {
+        close(input);
+        close(output);
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param reader
    * @param writer
    */
   public static void copyThread(Reader reader, Writer writer)
   {
     new Thread(new IOCopyThread(reader, writer)).start();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param input
+   * @param output
+   */
+  public static void copyThread(InputStream input, OutputStream output)
+  {
+    new Thread(new IOStreamCopyThread(input, output)).start();
   }
 
   /**
@@ -162,39 +218,6 @@ public class IOUtil
     if (!file.delete())
     {
       throw new IOException("could not delete file ".concat(file.getPath()));
-    }
-  }
-
-  public static void copy( File source, File target ) throws IOException
-  {
-    if ( source.isDirectory() )
-    {
-      if ( ! target.exists() )
-      {
-        mkdirs(target);
-      }
-
-      String[] children = source.list();
-      for ( String child : children )
-      {
-        copy(new File(source, child), new File(target, child));
-      }
-    }
-    else
-    {
-      FileInputStream input = null;
-      FileOutputStream output = null;
-      try
-      {
-        input = new FileInputStream( source );
-        output = new FileOutputStream( target );
-        copy(input, output);
-      }
-      finally
-      {
-        close(input);
-        close(output);
-      }
     }
   }
 
@@ -293,5 +316,62 @@ public class IOUtil
 
     /** Field description */
     private Writer writer;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 2010-12-27
+   * @author         Sebastian Sdorra
+   */
+  private static class IOStreamCopyThread implements Runnable
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param input
+     * @param output
+     */
+    public IOStreamCopyThread(InputStream input, OutputStream output)
+    {
+      this.input = input;
+      this.output = output;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     */
+    @Override
+    public void run()
+    {
+      try
+      {
+        copy(input, output);
+      }
+      catch (IOException ex)
+      {
+        logger.error(ex.getMessage(), ex);
+      }
+      finally
+      {
+        close(input);
+        close(output);
+      }
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private InputStream input;
+
+    /** Field description */
+    private OutputStream output;
   }
 }
