@@ -71,12 +71,11 @@ public class JsonJaxbContextResolver implements ContextResolver<JAXBContext>
    */
   public JsonJaxbContextResolver() throws Exception
   {
-    this.context = new JSONJAXBContext(
-        JSONConfiguration.mapped().rootUnwrapping(true).arrays(
-          "member", "groups", "permissions", "repositories", "repositoryTypes",
-          "users", "plugin-information").nonStrings(
-            "readable", "writeable", "groupPermission",
-            "admin").build(), types.toArray(new Class[0]));
+    this.context =
+      new JSONJAXBContext(JSONConfiguration.mapped().arrays("member", "groups",
+        "permissions", "repositories", "repositoryTypes", "users",
+        "plugin-information").nonStrings("readable", "writeable",
+          "groupPermission", "admin").build(), types.toArray(new Class[0]));
   }
 
   //~--- get methods ----------------------------------------------------------

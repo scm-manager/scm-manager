@@ -36,7 +36,6 @@ Sonia.plugin.Store = Ext.extend(Sonia.rest.JsonStore, {
 
   constructor: function(config) {
     var baseConfig = {
-      root: 'plugin-information',
       fields: [  'name', 'author', 'description', 'url', 'version', 'state', 'groupId', 'artifactId' ],
       sortInfo: {
         field: 'name'

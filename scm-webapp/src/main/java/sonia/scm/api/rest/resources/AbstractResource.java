@@ -35,6 +35,7 @@ package sonia.scm.api.rest.resources;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collection;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -97,7 +98,7 @@ public abstract class AbstractResource<T>
    *
    * @return
    */
-  protected abstract T[] getAllItems();
+  protected abstract Collection<T> getAllItems();
 
   /**
    * Method description
@@ -248,7 +249,7 @@ public abstract class AbstractResource<T>
    */
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public T[] getAll()
+  public Collection<T> getAll()
   {
     return getAllItems();
   }

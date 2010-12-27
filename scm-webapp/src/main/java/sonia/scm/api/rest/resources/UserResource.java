@@ -149,24 +149,15 @@ public class UserResource extends AbstractResource<User>
    * @return
    */
   @Override
-  protected User[] getAllItems()
+  protected Collection<User> getAllItems()
   {
-    User[] users = null;
-    Collection<User> userCollection = userManager.getAll();
+    Collection<User> users = userManager.getAll();
 
-    if (Util.isNotEmpty(userCollection))
+    if (Util.isNotEmpty(users))
     {
-      int size = userCollection.size();
-
-      users = new User[size];
-
-      int i = 0;
-
-      for (User u : userCollection)
+      for (User u : users)
       {
         u.setPassword(DUMMY_PASSWORT);
-        users[i] = u;
-        i++;
       }
     }
 

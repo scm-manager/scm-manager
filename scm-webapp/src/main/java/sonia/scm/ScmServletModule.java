@@ -204,8 +204,7 @@ public class ScmServletModule extends ServletModule
      * params.put("com.sun.jersey.config.feature.Trace", "true");
      * params.put("com.sun.jersey.config.feature.TracePerRequest", "true");
      */
-    params.put(JSONConfiguration.FEATURE_POJO_MAPPING,
-               Boolean.TRUE.toString());
+    params.put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE.toString());
     params.put(ResourceConfig.FEATURE_REDIRECT, Boolean.TRUE.toString());
     params.put(ServletContainer.RESOURCE_CONFIG_CLASS,
                UriExtensionsConfig.class.getName());

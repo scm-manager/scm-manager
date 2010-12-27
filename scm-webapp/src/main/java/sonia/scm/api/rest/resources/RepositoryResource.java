@@ -144,11 +144,9 @@ public class RepositoryResource extends AbstractResource<Repository>
    * @return
    */
   @Override
-  protected Repository[] getAllItems()
+  protected Collection<Repository> getAllItems()
   {
-    Collection<Repository> repositoryCollection = repositoryManager.getAll();
-    Repository[] repositories =
-      repositoryCollection.toArray(new Repository[repositoryCollection.size()]);
+    Collection<Repository> repositories = repositoryManager.getAll();
 
     for (Repository repository : repositories)
     {
