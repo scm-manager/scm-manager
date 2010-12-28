@@ -29,12 +29,13 @@
  *
  */
 
+
+
 package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -53,12 +54,6 @@ import javax.servlet.http.HttpServletResponseWrapper;
 public class GZipResponseWrapper extends HttpServletResponseWrapper
 {
 
-  /** Field description */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GZipResponseWrapper.class);
-
-  //~--- constructors ---------------------------------------------------------
-
   /**
    * Constructs ...
    *
@@ -76,39 +71,14 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
   /**
    * Method description
    *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public ServletOutputStream createOutputStream() throws IOException
-  {
-    return (new GZipResponseStream(origResponse));
-  }
-
-  /**
-   * Method description
-   *
    */
   public void finishResponse()
   {
-    try
+    IOUtil.close(writer);
+
+    if ((stream != null) &&!stream.isClosed())
     {
-      if (writer != null)
-      {
-        writer.close();
-      }
-      else
-      {
-        if (stream != null)
-        {
-          stream.close();
-        }
-      }
-    }
-    catch (IOException ex)
-    {
-      logger.error(ex.getMessage(), ex);
+      IOUtil.close(stream);
     }
   }
 
@@ -147,7 +117,7 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
       stream = createOutputStream();
     }
 
-    return (stream);
+    return stream;
   }
 
   /**
@@ -163,7 +133,7 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
   {
     if (writer != null)
     {
-      return (writer);
+      return writer;
     }
 
     if (stream != null)
@@ -175,7 +145,7 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
     stream = createOutputStream();
     writer = new PrintWriter(new OutputStreamWriter(stream, "UTF-8"));
 
-    return (writer);
+    return writer;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -189,13 +159,28 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
   @Override
   public void setContentLength(int length) {}
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private GZipResponseStream createOutputStream() throws IOException
+  {
+    return new GZipResponseStream(origResponse);
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   protected HttpServletResponse origResponse = null;
 
   /** Field description */
-  protected ServletOutputStream stream = null;
+  protected GZipResponseStream stream = null;
 
   /** Field description */
   protected PrintWriter writer = null;

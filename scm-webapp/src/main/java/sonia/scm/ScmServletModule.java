@@ -83,6 +83,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.xml.bind.JAXB;
+import sonia.scm.filter.GZipFilter;
 
 /**
  *
@@ -182,9 +183,8 @@ public class ScmServletModule extends ServletModule
     /*
      * filter(PATTERN_PAGE,
      *      PATTERN_STATIC_RESOURCES).through(StaticResourceFilter.class);
-     * filter(PATTERN_PAGE, PATTERN_COMPRESSABLE).through(GZipFilter.class);
-     * filter(PATTERN_RESTAPI).through(SecurityFilter.class);
      */
+    filter(PATTERN_PAGE, PATTERN_COMPRESSABLE).through(GZipFilter.class);
     filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(SecurityFilter.class);
 
     // debug servlet

@@ -29,7 +29,13 @@
  *
  */
 
+
+
 package sonia.scm.filter;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -86,11 +92,19 @@ public class GZipResponseStream extends ServletOutputStream
 
     byte[] bytes = baos.toByteArray();
 
-    response.addHeader("Content-Length", Integer.toString(bytes.length));
+    response.addIntHeader("Content-Length", bytes.length);
     response.addHeader("Content-Encoding", "gzip");
-    output.write(bytes);
-    output.flush();
-    output.close();
+
+    try
+    {
+      output.write(bytes);
+      output.flush();
+    }
+    finally
+    {
+      IOUtil.close(output);
+    }
+
     closed = true;
   }
 
@@ -102,7 +116,7 @@ public class GZipResponseStream extends ServletOutputStream
    */
   public boolean closed()
   {
-    return (this.closed);
+    return closed;
   }
 
   /**
@@ -184,6 +198,19 @@ public class GZipResponseStream extends ServletOutputStream
     }
 
     gzipstream.write(b, off, len);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isClosed()
+  {
+    return closed;
   }
 
   //~--- fields ---------------------------------------------------------------
