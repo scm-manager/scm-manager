@@ -112,17 +112,6 @@ public class GZipResponseStream extends ServletOutputStream
    * Method description
    *
    *
-   * @return
-   */
-  public boolean closed()
-  {
-    return closed;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @throws IOException
    */
   @Override
