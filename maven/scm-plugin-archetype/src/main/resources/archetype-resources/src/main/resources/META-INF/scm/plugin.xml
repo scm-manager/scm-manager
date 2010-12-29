@@ -1,0 +1,25 @@
+#set($dollar = '$')
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+  <information>
+    <groupId>${dollar}{project.groupId}</groupId>
+    <artifactId>${dollar}{project.artifactId}</artifactId>
+    <version>${dollar}{project.version}</version>
+    <name>${dollar}{project.name}</name>
+    <description>${dollar}{project.description}</description>
+    <!--
+    <author></author>
+    <url>${dollar}{project.url}</url>
+    -->
+  </information>
+
+  <packages>
+    <package>${package}</package>
+  </packages>
+
+  <resources>
+    <script>/scm/sample.hello.js</script>
+  </resources>
+
+</plugin>

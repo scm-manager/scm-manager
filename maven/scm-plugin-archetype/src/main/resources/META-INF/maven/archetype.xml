@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : archetype.xml
+    Created on : December 29, 2010, 5:00 PM
+    Author     : sdorra
+    Description:
+        Purpose of the document follows.
+-->
+
+<archetype>
+
+  <id>scm-plugin</id>
+
+  <sources>
+    <source>src/main/java/HelloResource.java</source>
+  </sources>
+
+  <resources>
+    <resource>src/main/resources/META-INF/scm/plugin.xml</resource>
+    <resource>src/main/resources/scm/sample.hello.js</resource>
+  </resources>
+
+</archetype>
