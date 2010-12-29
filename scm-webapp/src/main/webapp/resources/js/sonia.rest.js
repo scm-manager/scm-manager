@@ -126,7 +126,11 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
   },
 
   renderUrl: function(url){
-    return String.format( this.urlTemplate, url );
+    var result = '';
+    if ( url != null ){
+      result = String.format( this.urlTemplate, url );
+    }
+    return result;
   },
 
   renderMailto: function(mail){
