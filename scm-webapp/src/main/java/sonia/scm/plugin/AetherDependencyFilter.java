@@ -83,9 +83,19 @@ public class AetherDependencyFilter implements DependencyFilter
   @Override
   public boolean accept(DependencyNode node, List<DependencyNode> parents)
   {
-    Artifact artifact = node.getDependency().getArtifact();
+    boolean result = true;
 
-    return !exludeSet.contains(getId(artifact));
+    if ((node != null) && (node.getDependency() != null))
+    {
+      Artifact artifact = node.getDependency().getArtifact();
+
+      if (artifact != null)
+      {
+        result = !exludeSet.contains(getId(artifact));
+      }
+    }
+
+    return result;
   }
 
   /**

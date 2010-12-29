@@ -51,21 +51,23 @@ import org.sonatype.aether.connector.wagon.WagonProvider;
 import org.sonatype.aether.connector.wagon.WagonRepositoryConnectorFactory;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyFilter;
+import org.sonatype.aether.graph.DependencyNode;
 import org.sonatype.aether.impl.ArtifactDescriptorReader;
 import org.sonatype.aether.impl.VersionRangeResolver;
 import org.sonatype.aether.impl.VersionResolver;
 import org.sonatype.aether.impl.internal.DefaultServiceLocator;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.RemoteRepository;
-import org.sonatype.aether.resolution.ArtifactResult;
 import org.sonatype.aether.spi.connector.RepositoryConnectorFactory;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
+import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
 
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.boot.BootstrapListener;
 import sonia.scm.boot.Classpath;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -73,8 +75,9 @@ import java.io.File;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -103,10 +106,14 @@ public class AetherPluginHandler
    * Constructs ...
    *
    *
+   *
+   * @param pluginManager
    * @param context
    */
-  public AetherPluginHandler(SCMContextProvider context)
+  public AetherPluginHandler(PluginManager pluginManager,
+                             SCMContextProvider context)
   {
+    this.pluginManager = pluginManager;
     localRepositoryDirectory = new File(context.getBaseDirectory(),
             BootstrapListener.PLUGIN_DIRECTORY);
 
@@ -157,96 +164,34 @@ public class AetherPluginHandler
 
     Dependency dependency = new Dependency(new DefaultArtifact(gav),
                               PLUGIN_SCOPE);
-    CollectRequest request = new CollectRequest(dependency, remoteRepositories);
-    MavenRepositorySystemSession session = new MavenRepositorySystemSession();
+    List<Dependency> dependencies = getInstalledDependencies(null);
 
-    session.setLocalRepositoryManager(
-        repositorySystem.newLocalRepositoryManager(localRepository));
+    collectDependencies(dependency, dependencies);
 
-    try
-    {
-
-      /*
-       * DependencyNode node = repositorySystem.collectDependencies(session,
-       *                       request).getRoot();
-       */
-      List<ArtifactResult> artifacts =
-        repositorySystem.resolveDependencies(session, request, FILTER);
-
-      synchronized (Classpath.class)
-      {
-        if (classpath == null)
-        {
-          classpath = new Classpath();
-        }
-
-        for (ArtifactResult result : artifacts)
-        {
-          File file = result.getArtifact().getFile();
-
-          if (logger.isDebugEnabled())
-          {
-            logger.debug("added {} to classpath", file.getPath());
-          }
-
-          classpath.add(
-              file.getAbsolutePath().substring(
-                localRepositoryDirectory.getAbsolutePath().length()));
-        }
-
-        storeClasspath();
-      }
-    }
-    catch (Exception ex)
-    {
-      throw new PluginException(ex);
-    }
+    
   }
 
   /**
    * TODO: remove dependencies and remove files
    *
    *
-   * @param pluginPath
+   *
+   * @param id
    */
-  public void uninstall(String pluginPath)
+  public void uninstall(String id)
   {
     if (logger.isInfoEnabled())
     {
-      logger.info("try to uninstall plugin: {}", pluginPath);
+      logger.info("try to uninstall plugin: {}", id);
     }
 
     if (classpath != null)
     {
       synchronized (Classpath.class)
       {
-        Iterator<String> iterator = classpath.iterator();
+        List<Dependency> dependencies = getInstalledDependencies(id);
 
-        while (iterator.hasNext())
-        {
-          String path = iterator.next();
-
-          if (pluginPath.contains(path))
-          {
-            if (logger.isInfoEnabled())
-            {
-              logger.info("remove {} from classpath", path);
-            }
-
-            iterator.remove();
-
-            break;
-          }
-        }
-
-        try
-        {
-          storeClasspath();
-        }
-        catch (JAXBException ex)
-        {
-          throw new PluginException(ex);
-        }
+        collectDependencies(null, dependencies);
       }
     }
   }
@@ -271,6 +216,86 @@ public class AetherPluginHandler
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param dependency
+   * @param dependencies
+   */
+  private void collectDependencies(Dependency dependency,
+                                   List<Dependency> dependencies)
+  {
+    CollectRequest request = new CollectRequest(dependency, dependencies,
+                               remoteRepositories);
+    MavenRepositorySystemSession session = new MavenRepositorySystemSession();
+
+    session.setLocalRepositoryManager(
+        repositorySystem.newLocalRepositoryManager(localRepository));
+
+    try
+    {
+      DependencyNode node = repositorySystem.collectDependencies(session,
+                              request).getRoot();
+
+      repositorySystem.resolveDependencies(session, node, FILTER);
+
+      synchronized (Classpath.class)
+      {
+        if (classpath == null)
+        {
+          classpath = new Classpath();
+        }
+
+        PreorderNodeListGenerator nodeListGenerator =
+          new PreorderNodeListGenerator();
+
+        node.accept(nodeListGenerator);
+
+        Set<String> classpathSet =
+          createClasspathSet(nodeListGenerator.getClassPath());
+
+        classpath.setPathSet(classpathSet);
+        storeClasspath();
+      }
+    }
+    catch (Exception ex)
+    {
+      throw new PluginException(ex);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param classpathString
+   *
+   * @return
+   */
+  private Set<String> createClasspathSet(String classpathString)
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("set new plugin classpath: {}", classpathString);
+    }
+
+    Set<String> classpathSet = new LinkedHashSet<String>();
+
+    if (Util.isNotEmpty(classpathString))
+    {
+      String[] classpathParts = classpathString.split(File.pathSeparator);
+      int prefixLength = localRepositoryDirectory.getAbsolutePath().length();
+
+      for (String classpathPart : classpathParts)
+      {
+        classpathSet.add(classpathPart.substring(prefixLength));
+      }
+    }
+
+    return classpathSet;
+  }
 
   /**
    * Method description
@@ -317,6 +342,42 @@ public class AetherPluginHandler
     marshaller.marshal(classpath, classpathFile);
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param skipId
+   * @return
+   */
+  private List<Dependency> getInstalledDependencies(String skipId)
+  {
+    List<Dependency> dependencies = new ArrayList<Dependency>();
+    Collection<PluginInformation> installed =
+      pluginManager.get(new StatePluginFilter(PluginState.INSTALLED));
+
+    if (installed != null)
+    {
+      for (PluginInformation plugin : installed)
+      {
+        String id = plugin.getId();
+
+        if ((skipId == null) ||!id.equals(skipId))
+        {
+          if (Util.isNotEmpty(id))
+          {
+            dependencies.add(new Dependency(new DefaultArtifact(id),
+                                            PLUGIN_SCOPE));
+          }
+        }
+      }
+    }
+
+    return dependencies;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -333,6 +394,9 @@ public class AetherPluginHandler
 
   /** Field description */
   private File localRepositoryDirectory;
+
+  /** Field description */
+  private PluginManager pluginManager;
 
   /** Field description */
   private List<RemoteRepository> remoteRepositories;

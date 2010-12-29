@@ -46,6 +46,8 @@ Sonia.plugin.Store = Ext.extend(Sonia.rest.JsonStore, {
 
 });
 
+Sonia.plugin.StoreInstance = null;
+
 Sonia.plugin.GetPluginId = function(data){
   return data.groupId + ':' + data.artifactId + ':' + data.version;
 }
@@ -84,6 +86,7 @@ Sonia.plugin.installPlugin = function(pluginId){
       loadingBox.hide();
       Ext.MessageBox.alert('Plugin successfully installed',
         'Restart the applicationserver to activate the plugin.');
+      Sonia.plugin.StoreInstance.reload();
     },
     failure: function(){
       if ( debug ){
@@ -126,6 +129,7 @@ Sonia.plugin.uninstallPlugin = function(pluginId){
       loadingBox.hide();
       Ext.MessageBox.alert('Plugin successfully uninstalled',
         'Restart the applicationserver to activate the changes.');
+      Sonia.plugin.StoreInstance.reload();
     },
     failure: function(){
       if ( debug ){
@@ -168,6 +172,7 @@ Sonia.plugin.updatePlugin = function(pluginId){
       loadingBox.hide();
       Ext.MessageBox.alert('Plugin successfully updated',
         'Restart the applicationserver to activate the changes.');
+      Sonia.plugin.StoreInstance.reload();
     },
     failure: function(){
       if ( debug ){
@@ -192,9 +197,10 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
 
   initComponent: function(){
 
-    var pluginStore = new Sonia.plugin.Store({
+    Sonia.plugin.StoreInstance = new Sonia.plugin.Store({
       url: restUrl + 'plugins.json'
     });
+
 
     var pluginColModel = new Ext.grid.ColumnModel({
       defaults: {
@@ -215,7 +221,7 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
 
     var config = {
       autoExpandColumn: 'description',
-      store: pluginStore,
+      store: Sonia.plugin.StoreInstance,
       colModel: pluginColModel,
       emptyText: 'No plugins avaiable'
     };

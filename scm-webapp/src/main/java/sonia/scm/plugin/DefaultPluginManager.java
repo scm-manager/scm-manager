@@ -50,6 +50,7 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.SecurityUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -154,12 +155,25 @@ public class DefaultPluginManager implements PluginManager
   {
     SecurityUtil.assertIsAdmin(securityContextProvicer);
 
-    if (pluginHandler == null)
-    {
-      getPluginCenter();
-    }
+    PluginCenter center = getPluginCenter();
 
     pluginHandler.install(id);
+
+    for (PluginInformation plugin : center.getPlugins())
+    {
+      String pluginId = plugin.getId();
+
+      if (Util.isNotEmpty(pluginId) && pluginId.equals(id))
+      {
+        plugin.setState(PluginState.INSTALLED);
+
+        // ugly workaround
+        Plugin newPlugin = new Plugin();
+
+        newPlugin.setInformation(plugin);
+        installedPlugins.put(id, newPlugin);
+      }
+    }
   }
 
   /**
@@ -182,10 +196,12 @@ public class DefaultPluginManager implements PluginManager
 
     if (pluginHandler == null)
     {
-      pluginHandler = new AetherPluginHandler(SCMContext.getContext());
+      getPluginCenter();
     }
 
-    pluginHandler.uninstall(plugin.getPath());
+    pluginHandler.uninstall(id);
+    installedPlugins.remove(id);
+    preparePlugins(getPluginCenter());
   }
 
   /**
@@ -465,7 +481,8 @@ public class DefaultPluginManager implements PluginManager
 
           if (pluginHandler == null)
           {
-            pluginHandler = new AetherPluginHandler(SCMContext.getContext());
+            pluginHandler = new AetherPluginHandler(this,
+                    SCMContext.getContext());
           }
 
           pluginHandler.setPluginRepositories(center.getRepositories());
