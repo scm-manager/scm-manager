@@ -44,6 +44,8 @@ import sonia.scm.api.rest.UriExtensionsConfig;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.EhCacheManager;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.filter.GZipFilter;
+import sonia.scm.filter.SSLFilter;
 import sonia.scm.filter.SecurityFilter;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.Plugin;
@@ -83,7 +85,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.xml.bind.JAXB;
-import sonia.scm.filter.GZipFilter;
 
 /**
  *
@@ -91,6 +92,9 @@ import sonia.scm.filter.GZipFilter;
  */
 public class ScmServletModule extends ServletModule
 {
+
+  /** Field description */
+  public static final String PATTERN_ALL = "/*";
 
   /** Field description */
   public static final String PATTERN_DEBUG = "/debug.html";
@@ -184,6 +188,7 @@ public class ScmServletModule extends ServletModule
      * filter(PATTERN_PAGE,
      *      PATTERN_STATIC_RESOURCES).through(StaticResourceFilter.class);
      */
+    filter(PATTERN_ALL).through(SSLFilter.class);
     filter(PATTERN_PAGE, PATTERN_COMPRESSABLE).through(GZipFilter.class);
     filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(SecurityFilter.class);
 

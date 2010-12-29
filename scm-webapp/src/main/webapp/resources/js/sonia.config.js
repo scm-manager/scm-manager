@@ -104,6 +104,16 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'plugin-url',
           vtype: 'url',
           allowBlank: false
+        },{
+          xtype: 'checkbox',
+          fieldLabel: 'Enable SSL',
+          name: 'enableSSL',
+          inputValue: 'true'
+        },{
+          xtype: 'textfield',
+          fieldLabel: 'SSL Port',
+          name: 'sslPort',
+          vtype: 'alphanum'
         }],
       
         onSubmit: function(values){

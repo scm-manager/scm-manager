@@ -76,6 +76,8 @@ public class ScmConfiguration
   {
     this.servername = other.servername;
     this.pluginUrl = other.pluginUrl;
+    this.sslPort = other.sslPort;
+    this.enableSSL = other.enableSSL;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -102,7 +104,40 @@ public class ScmConfiguration
     return servername;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public int getSslPort()
+  {
+    return sslPort;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isEnableSSL()
+  {
+    return enableSSL;
+  }
+
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param enableSSL
+   */
+  public void setEnableSSL(boolean enableSSL)
+  {
+    this.enableSSL = enableSSL;
+  }
 
   /**
    * Method description
@@ -126,6 +161,17 @@ public class ScmConfiguration
     this.servername = servername;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param sslPort
+   */
+  public void setSslPort(int sslPort)
+  {
+    this.sslPort = sslPort;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -134,4 +180,10 @@ public class ScmConfiguration
 
   /** Field description */
   private String servername = "localhost";
+
+  /** Field description */
+  private boolean enableSSL = false;
+
+  /** Field description */
+  private int sslPort = 8181;
 }
