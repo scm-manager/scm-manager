@@ -240,13 +240,8 @@ public class DefaultPluginManager implements PluginManager
       throw new PluginNotInstalledException(msg.toString());
     }
 
-    if (pluginHandler == null)
-    {
-      getPluginCenter();
-    }
-
-    pluginHandler.uninstall(installed.getId());
-    pluginHandler.install(id);
+    uninstall(installed.getId());
+    install(id);
   }
 
   //~--- get methods ----------------------------------------------------------
