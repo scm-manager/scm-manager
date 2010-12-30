@@ -41,6 +41,7 @@ import com.google.inject.servlet.SessionScoped;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 
@@ -57,6 +58,9 @@ import javax.servlet.http.HttpServletResponse;
 public class BasicSecurityContext implements WebSecurityContext
 {
 
+  /** Field description */
+  public static final String USER_ANONYMOUS = "anonymous";
+
   /** the logger for BasicSecurityContext */
   private static final Logger logger =
     LoggerFactory.getLogger(BasicSecurityContext.class);
@@ -67,13 +71,17 @@ public class BasicSecurityContext implements WebSecurityContext
    * Constructs ...
    *
    *
+   *
+   * @param configuration
    * @param authenticator
    * @param userManager
    */
   @Inject
-  public BasicSecurityContext(AuthenticationManager authenticator,
+  public BasicSecurityContext(ScmConfiguration configuration,
+                              AuthenticationManager authenticator,
                               UserManager userManager)
   {
+    this.configuration = configuration;
     this.authenticator = authenticator;
     this.userManager = userManager;
   }
@@ -155,6 +163,11 @@ public class BasicSecurityContext implements WebSecurityContext
   @Override
   public User getUser()
   {
+    if ((user == null) && configuration.isAnonymousAccessEnabled())
+    {
+      user = userManager.get(USER_ANONYMOUS);
+    }
+
     return user;
   }
 
@@ -167,13 +180,16 @@ public class BasicSecurityContext implements WebSecurityContext
   @Override
   public boolean isAuthenticated()
   {
-    return user != null;
+    return getUser() != null;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private AuthenticationManager authenticator;
+
+  /** Field description */
+  private ScmConfiguration configuration;
 
   /** Field description */
   private User user;

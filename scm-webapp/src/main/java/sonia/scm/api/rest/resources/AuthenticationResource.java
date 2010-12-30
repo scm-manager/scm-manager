@@ -94,7 +94,19 @@ public class AuthenticationResource
   {
     securityContext.logout(request, response);
 
-    return Response.ok().build();
+    Response resp = null;
+    User user = securityContext.getUser();
+
+    if (user != null)
+    {
+      resp = Response.ok(getState(user)).build();
+    }
+    else
+    {
+      resp = Response.ok().build();
+    }
+
+    return resp;
   }
 
   //~--- get methods ----------------------------------------------------------

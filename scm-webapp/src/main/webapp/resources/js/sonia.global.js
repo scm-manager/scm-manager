@@ -60,31 +60,51 @@ function loadState(s){
   });
 }
 
+function clearState(){
+  // clear state
+  state = null;
+  // clear repository store
+  repositoryTypeStore.removeAll();
+  // remove all tabs
+  Ext.getCmp('mainTabPanel').removeAll();
+  // remove navigation items
+  Ext.getCmp('navigationPanel').removeAll();
+}
+
+function login(){
+  clearState();
+  var loginWin = new Sonia.login.Window();
+  loginWin.show();
+}
+
 function logout(){
   Ext.Ajax.request({
     url: restUrl + 'authentication/logout.json',
     method: 'GET',
-    success: function(){
+    success: function(response){
       if ( debug ){
         console.debug('logout success');
       }
-      // clear state
-      state = null;
-      // clear repository store
-      repositoryTypeStore.removeAll();
-      // remove all tabs
-      Ext.getCmp('mainTabPanel').removeAll();
-      // remove navigation items
-      Ext.getCmp('navigationPanel').removeAll();
+      clearState();
       // call logout callback functions
       Ext.each(logoutCallbacks, function(callback){
         if ( Ext.isFunction(callback) ){
           callback(state);
         }
       });
-      // show login window
-      var loginWin = new Sonia.login.Window();
-      loginWin.show();
+
+      var s = null;
+      var text = response.responseText;
+      if ( text != null && text.length > 0 ){
+        s = Ext.decode( text );
+      }
+      if ( s != null && s.success ){
+        loadState(s);
+      } else {
+        // show login window
+        var loginWin = new Sonia.login.Window();
+        loginWin.show();
+      }
     },
     failure: function(){
       if ( debug ){

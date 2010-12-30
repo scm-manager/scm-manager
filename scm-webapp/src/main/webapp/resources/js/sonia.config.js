@@ -106,6 +106,11 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           allowBlank: false
         },{
           xtype: 'checkbox',
+          fieldLabel: 'Allow Anonymous Access',
+          name: 'anonymousAccessEnabled',
+          inputValue: 'true'
+        },{
+          xtype: 'checkbox',
           fieldLabel: 'Enable SSL',
           name: 'enableSSL',
           inputValue: 'true'

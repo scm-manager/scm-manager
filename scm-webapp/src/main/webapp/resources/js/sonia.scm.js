@@ -150,15 +150,27 @@ Ext.onReady(function(){
         }]
       }]);
     }
-    
-    panel.addSection({
-      id: 'navLogout',
-      title: 'Log out',
-      items: [{
-        label: 'Log out',
-        fn: logout
-      }]
-    });
+
+    if ( state.user.name == 'anonymous' ){
+      panel.addSection({
+        id: 'navLogin',
+        title: 'Login',
+        items: [{
+          label: 'Login',
+          fn: login
+        }]
+      });
+    } else {
+      panel.addSection({
+        id: 'navLogout',
+        title: 'Log out',
+        items: [{
+          label: 'Log out',
+          fn: logout
+        }]
+      });
+    }
+
     //fix hidden logout button
     panel.doLayout();
   }

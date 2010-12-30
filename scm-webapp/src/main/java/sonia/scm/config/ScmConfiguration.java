@@ -78,6 +78,7 @@ public class ScmConfiguration
     this.pluginUrl = other.pluginUrl;
     this.sslPort = other.sslPort;
     this.enableSSL = other.enableSSL;
+    this.anonymousAccessEnabled = other.anonymousAccessEnabled;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -121,12 +122,34 @@ public class ScmConfiguration
    *
    * @return
    */
+  public boolean isAnonymousAccessEnabled()
+  {
+    return anonymousAccessEnabled;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public boolean isEnableSSL()
   {
     return enableSSL;
   }
 
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param anonymousAccessEnabled
+   */
+  public void setAnonymousAccessEnabled(boolean anonymousAccessEnabled)
+  {
+    this.anonymousAccessEnabled = anonymousAccessEnabled;
+  }
 
   /**
    * Method description
@@ -186,4 +209,7 @@ public class ScmConfiguration
 
   /** Field description */
   private int sslPort = 8181;
+
+  /** Field description */
+  private boolean anonymousAccessEnabled = false;
 }
