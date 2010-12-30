@@ -187,12 +187,17 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     Sonia.user.FormPanel.superclass.initComponent.apply(this, arguments);
   },
 
+  fixRequest: function(user){
+    delete user['password-confirm'];
+  },
+
   update: function(item){
 
     item = Ext.apply( this.item, item );
     if ( debug ){
       console.debug( 'update user: ' + item.name );
     }
+    this.fixRequest(item);
     var url = restUrl + 'users/' + item.name + '.json';
     Ext.Ajax.request({
       url: url,
@@ -221,6 +226,7 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     if ( debug ){
       console.debug( 'create user: ' + user.name );
     }
+    this.fixRequest(user);
     // set user type
     user.type = 'xml';
     var url = restUrl + 'users.json';
