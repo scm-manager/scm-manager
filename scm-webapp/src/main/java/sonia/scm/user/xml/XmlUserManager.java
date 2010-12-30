@@ -63,7 +63,9 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 /**
  *
@@ -75,6 +77,10 @@ public class XmlUserManager extends AbstractUserManager
 
   /** Field description */
   public static final String ADMIN_PATH = "/sonia/scm/config/admin-account.xml";
+
+  /** Field description */
+  public static final String ANONYMOUS_PATH =
+    "/sonia/scm/config/anonymous-account.xml";
 
   /** Field description */
   public static final String STORE_NAME = "users";
@@ -227,7 +233,7 @@ public class XmlUserManager extends AbstractUserManager
     {
       userDB = new XmlUserDatabase();
       userDB.setCreationTime(System.currentTimeMillis());
-      createAdminAccount();
+      createDefaultAccounts();
     }
   }
 
@@ -352,25 +358,48 @@ public class XmlUserManager extends AbstractUserManager
   /**
    * Method description
    *
+   *
+   * @param unmarshaller
+   * @param path
    */
-  private void createAdminAccount()
+  private void createDefaultAccount(Unmarshaller unmarshaller, String path)
   {
-    InputStream input = XmlUserManager.class.getResourceAsStream(ADMIN_PATH);
+    InputStream input = XmlUserManager.class.getResourceAsStream(path);
 
     try
     {
-      User user = JAXB.unmarshal(input, User.class);
+      User user = (User) unmarshaller.unmarshal(input);
 
       userDB.add(user);
       storeDB();
     }
     catch (Exception ex)
     {
-      logger.error("could not create AdminAccount", ex);
+      logger.error("could not create account", ex);
     }
     finally
     {
       IOUtil.close(input);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   */
+  private void createDefaultAccounts()
+  {
+    try
+    {
+      JAXBContext context = JAXBContext.newInstance(User.class);
+      Unmarshaller unmarshaller = context.createUnmarshaller();
+
+      createDefaultAccount(unmarshaller, ADMIN_PATH);
+      createDefaultAccount(unmarshaller, ANONYMOUS_PATH);
+    }
+    catch (JAXBException ex)
+    {
+      logger.error(ex.getMessage(), ex);
     }
   }
 

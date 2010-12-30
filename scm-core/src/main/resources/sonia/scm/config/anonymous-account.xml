@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : anonymous-account.xml
+    Created on : December 30, 2010, 12:44 PM
+    Author     : sdorra
+    Description:
+        Purpose of the document follows.
+-->
+
+<users>
+  <name>anonymous</name>
+  <displayName>SCM Anonymous</displayName>
+  <mail>scm-anonymous@scm-manager.com</mail>
+  <admin>false</admin>
+  <type>xml</type>
+</users>
