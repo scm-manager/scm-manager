@@ -40,6 +40,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.RepositoryManager;
@@ -79,6 +80,9 @@ public class ScmContextListener extends GuiceServletContextListener
 
       // close Authenticator
       IOUtil.close(injector.getInstance(AuthenticationManager.class));
+
+      // close GroupManager
+      IOUtil.close(injector.getInstance(GroupManager.class));
 
       // close UserManager
       IOUtil.close(injector.getInstance(UserManager.class));
@@ -125,6 +129,9 @@ public class ScmContextListener extends GuiceServletContextListener
 
     // init UserManager
     injector.getInstance(UserManager.class).init(context);
+
+    // init GroupManager
+    injector.getInstance(GroupManager.class).init(context);
 
     // init Authenticator
     injector.getInstance(AuthenticationManager.class).init(context);

@@ -31,80 +31,91 @@
 
 
 
-package sonia.scm.group.xml;
+package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import sonia.scm.group.Group;
-import sonia.scm.xml.XmlTimestampDateAdapter;
+import sonia.scm.group.GroupManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.ws.rs.Path;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "group-db")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class XmlGroupDatabase
+@Path("groups")
+@Singleton
+public class GroupResource extends AbstractResource<Group>
 {
+
+  /** Field description */
+  public static final String PATH_PART = "groups";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param groupManager
+   */
+  @Inject
+  public GroupResource(GroupManager groupManager)
+  {
+    this.groupManager = groupManager;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
    * @param group
+   *
+   * @throws Exception
    */
-  public void add(Group group)
+  @Override
+  protected void addItem(Group group) throws Exception
   {
-    groupMap.put(group.getName(), group);
+    groupManager.create(group);
   }
 
   /**
    * Method description
    *
    *
-   * @param groupname
+   * @param group
    *
-   * @return
+   * @throws Exception
    */
-  public boolean contains(String groupname)
+  @Override
+  protected void removeItem(Group group) throws Exception
   {
-    return groupMap.containsKey(groupname);
+    groupManager.delete(group);
   }
 
   /**
    * Method description
    *
    *
-   * @param groupname
+   * @param name
+   * @param group
    *
-   * @return
+   * @throws Exception
    */
-  public Group remove(String groupname)
+  @Override
+  protected void updateItem(String name, Group group) throws Exception
   {
-    return groupMap.remove(groupname);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<Group> values()
-  {
-    return groupMap.values();
+    groupManager.modify(group);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -113,13 +124,40 @@ public class XmlGroupDatabase
    * Method description
    *
    *
-   * @param groupname
+   * @return
+   */
+  @Override
+  protected Collection<Group> getAllItems()
+  {
+    return groupManager.getAll();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param group
    *
    * @return
    */
-  public Group get(String groupname)
+  @Override
+  protected String getId(Group group)
   {
-    return groupMap.get(groupname);
+    return group.getName();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   */
+  @Override
+  protected Group getItem(String name)
+  {
+    return groupManager.get(name);
   }
 
   /**
@@ -128,58 +166,14 @@ public class XmlGroupDatabase
    *
    * @return
    */
-  public long getCreationTime()
+  @Override
+  protected String getPathPart()
   {
-    return creationTime;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public long getLastModified()
-  {
-    return lastModified;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param creationTime
-   */
-  public void setCreationTime(long creationTime)
-  {
-    this.creationTime = creationTime;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param lastModified
-   */
-  public void setLastModified(long lastModified)
-  {
-    this.lastModified = lastModified;
+    return PATH_PART;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
-  private Long creationTime;
-
-  /** Field description */
-  @XmlJavaTypeAdapter(XmlGroupMapAdapter.class)
-  @XmlElement(name = "groups")
-  private Map<String, Group> groupMap = new LinkedHashMap<String, Group>();
-
-  /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
-  private Long lastModified;
+  private GroupManager groupManager;
 }
