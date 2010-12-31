@@ -38,6 +38,7 @@ package sonia.scm.group;
 import sonia.scm.TypedObject;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
+import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -51,6 +52,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -178,6 +180,99 @@ public class Group
    * Method description
    *
    *
+   * @param group
+   */
+  public void copyProperties(Group group)
+  {
+    group.setName(name);
+    group.setMembers(members);
+    group.setType(type);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final Group other = (Group) obj;
+
+    if ((this.creationDate != other.creationDate)
+        && ((this.creationDate == null)
+            ||!this.creationDate.equals(other.creationDate)))
+    {
+      return false;
+    }
+
+    if ((this.members != other.members)
+        && ((this.members == null) ||!this.members.equals(other.members)))
+    {
+      return false;
+    }
+
+    if ((this.name == null)
+        ? (other.name != null)
+        : !this.name.equals(other.name))
+    {
+      return false;
+    }
+
+    if ((this.type == null)
+        ? (other.type != null)
+        : !this.type.equals(other.type))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    int hash = 5;
+
+    hash = 89 * hash + ((this.creationDate != null)
+                        ? this.creationDate.hashCode()
+                        : 0);
+    hash = 89 * hash + ((this.members != null)
+                        ? this.members.hashCode()
+                        : 0);
+    hash = 89 * hash + ((this.name != null)
+                        ? this.name.hashCode()
+                        : 0);
+    hash = 89 * hash + ((this.type != null)
+                        ? this.type.hashCode()
+                        : 0);
+
+    return hash;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   @Override
@@ -238,6 +333,17 @@ public class Group
    *
    * @return
    */
+  public Long getCreationDate()
+  {
+    return creationDate;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public List<String> getMembers()
   {
     if (members == null)
@@ -289,6 +395,17 @@ public class Group
    * Method description
    *
    *
+   * @param creationDate
+   */
+  public void setCreationDate(Long creationDate)
+  {
+    this.creationDate = creationDate;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param members
    */
   public void setMembers(List<String> members)
@@ -319,6 +436,10 @@ public class Group
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
+  private Long creationDate;
 
   /** Field description */
   private List<String> members;

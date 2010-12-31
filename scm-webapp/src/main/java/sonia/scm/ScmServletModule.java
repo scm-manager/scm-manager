@@ -47,6 +47,8 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.GZipFilter;
 import sonia.scm.filter.SSLFilter;
 import sonia.scm.filter.SecurityFilter;
+import sonia.scm.group.GroupManager;
+import sonia.scm.group.xml.XmlGroupManager;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginLoader;
@@ -181,6 +183,7 @@ public class ScmServletModule extends ServletModule
     // BasicRepositoryManager.class);
     bind(RepositoryManager.class).to(XmlRepositoryManager.class);
     bind(UserManager.class).to(XmlUserManager.class);
+    bind(GroupManager.class).to(XmlGroupManager.class);
 
     // filter(PATTERN_RESTAPI).through(LoggingFilter.class);
 
