@@ -6,7 +6,7 @@
   <parent>
     <groupId>sonia.scm.third-party</groupId>
     <artifactId>sonia.scm.third-party</artifactId>
-    <version>1.0-M5</version>
+    <version>1.0-M6-SNAPSHOT</version>
   </parent>
 
   <groupId>org.tmatesoft.svnkit</groupId>
