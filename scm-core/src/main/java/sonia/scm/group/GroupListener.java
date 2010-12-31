@@ -33,13 +33,23 @@
 
 package sonia.scm.group;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.HandlerEvent;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GroupAllreadyExistExeption extends GroupException
+public interface GroupListener
 {
 
-  /** Field description */
-  private static final long serialVersionUID = 4042878550219750430L;
+  /**
+   * Method description
+   *
+   *
+   * @param group
+   * @param event
+   */
+  public void onEvent(Group group, HandlerEvent event);
 }

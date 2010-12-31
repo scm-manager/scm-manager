@@ -35,10 +35,13 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Handler;
+import sonia.scm.ListenerSupport;
+import sonia.scm.Manager;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface GroupManager extends Handler<Group, GroupException> {}
+public interface GroupManager
+        extends Manager<Group, GroupException>,
+                ListenerSupport<GroupListener> {}

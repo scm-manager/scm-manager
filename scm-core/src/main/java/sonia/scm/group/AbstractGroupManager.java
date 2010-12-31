@@ -33,13 +33,63 @@
 
 package sonia.scm.group;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.HandlerEvent;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GroupAllreadyExistExeption extends GroupException
+public abstract class AbstractGroupManager implements GroupManager
 {
 
+  /**
+   *   Method description
+   *
+   *
+   *   @param listener
+   */
+  @Override
+  public void addListener(GroupListener listener)
+  {
+    listenerSet.add(listener);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param listener
+   */
+  @Override
+  public void removeListener(GroupListener listener)
+  {
+    listenerSet.remove(listener);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param group
+   * @param event
+   */
+  protected void fireEvent(Group group, HandlerEvent event)
+  {
+    for (GroupListener listener : listenerSet)
+    {
+      listener.onEvent(group, event);
+    }
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
   /** Field description */
-  private static final long serialVersionUID = 4042878550219750430L;
+  private Set<GroupListener> listenerSet = new HashSet<GroupListener>();
 }

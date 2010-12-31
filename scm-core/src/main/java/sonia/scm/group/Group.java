@@ -36,6 +36,7 @@ package sonia.scm.group;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.TypedObject;
+import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -50,7 +51,6 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 
 /**
  *
@@ -58,8 +58,9 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder = { "type", "name", "members" })
-public class Group implements TypedObject, Serializable
+public class Group
+        implements TypedObject, Serializable, Cloneable, Validateable,
+                   Iterable<String>
 {
 
   /** Field description */
@@ -153,6 +154,42 @@ public class Group implements TypedObject, Serializable
    * Method description
    *
    *
+   * @return
+   *
+   */
+  @Override
+  public Group clone()
+  {
+    Group group = null;
+
+    try
+    {
+      group = (Group) super.clone();
+    }
+    catch (CloneNotSupportedException ex)
+    {
+      throw new RuntimeException(ex);
+    }
+
+    return group;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Iterator<String> iterator()
+  {
+    return getMembers().iterator();
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param member
    *
    * @return
@@ -203,6 +240,11 @@ public class Group implements TypedObject, Serializable
    */
   public List<String> getMembers()
   {
+    if (members == null)
+    {
+      members = new ArrayList<String>();
+    }
+
     return members;
   }
 
@@ -227,6 +269,18 @@ public class Group implements TypedObject, Serializable
   public String getType()
   {
     return type;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isValid()
+  {
+    return Util.isNotEmpty(name) && Util.isNotEmpty(type);
   }
 
   //~--- set methods ----------------------------------------------------------
