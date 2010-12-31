@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -38,6 +40,8 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.user.User;
+import sonia.scm.util.AssertUtil;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -61,25 +65,13 @@ public class BasicAuthenticationFilter extends HttpFilter
 {
 
   /** Field description */
-  public static final String AUTHENTICATION_REALM = "SONIA :: SCM Manager";
-
-  /** Field description */
   public static final String AUTHORIZATION_BASIC_PREFIX = "BASIC";
 
   /** Field description */
   public static final String CREDENTIAL_SEPARATOR = ":";
 
   /** Field description */
-  public static final String HEADERVALUE_CONNECTION_CLOSE = "close";
-
-  /** Field description */
   public static final String HEADER_AUTHORIZATION = "Authorization";
-
-  /** Field description */
-  public static final String HEADER_CONNECTION = "connection";
-
-  /** Field description */
-  public static final String HEADER_WWW_AUTHENTICATE = "WWW-Authenticate";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -115,50 +107,34 @@ public class BasicAuthenticationFilter extends HttpFilter
           throws IOException, ServletException
   {
     WebSecurityContext securityContext = securityContextProvider.get();
+
+    AssertUtil.assertIsNotNull(securityContext);
+
     User user = null;
+    String authentication = request.getHeader(HEADER_AUTHORIZATION);
 
-    if (securityContext != null)
+    if (Util.isNotEmpty(authentication))
     {
-      if (!securityContext.isAuthenticated())
+      if (!authentication.toUpperCase().startsWith(AUTHORIZATION_BASIC_PREFIX))
       {
-        String authentication = request.getHeader(HEADER_AUTHORIZATION);
-
-        if (Util.isEmpty(authentication))
-        {
-          sendUnauthorized(response);
-        }
-        else
-        {
-          if (!authentication.toUpperCase().startsWith(
-                  AUTHORIZATION_BASIC_PREFIX))
-          {
-            throw new ServletException("wrong basic header");
-          }
-
-          String token = authentication.substring(6);
-
-          token = new String(Base64.decode(token.getBytes()));
-
-          String[] credentials = token.split(CREDENTIAL_SEPARATOR);
-
-          user = securityContext.authenticate(request, response,
-                  credentials[0], credentials[1]);
-        }
+        throw new ServletException("wrong basic header");
       }
-      else
-      {
-        user = securityContext.getUser();
-      }
+
+      user = authenticate(request, response, securityContext, authentication);
+    }
+    else if (securityContext.isAuthenticated())
+    {
+      user = securityContext.getUser();
     }
 
-    if (user != null)
+    if (user == null)
     {
-      chain.doFilter(new SecurityHttpServletRequestWrapper(request, user),
-                     response);
+      HttpUtil.sendUnauthorized(response);
     }
     else
     {
-      sendUnauthorized(response);
+      chain.doFilter(new SecurityHttpServletRequestWrapper(request, user),
+                     response);
     }
   }
 
@@ -166,14 +142,26 @@ public class BasicAuthenticationFilter extends HttpFilter
    * Method description
    *
    *
+   * @param request
    * @param response
+   * @param securityContext
+   * @param authentication
+   *
+   * @return
    */
-  private void sendUnauthorized(HttpServletResponse response)
+  private User authenticate(HttpServletRequest request,
+                            HttpServletResponse response,
+                            WebSecurityContext securityContext,
+                            String authentication)
   {
-    response.setHeader(HEADER_WWW_AUTHENTICATE,
-                       "Basic realm=\"" + AUTHENTICATION_REALM + "\"");
-    response.setHeader(HEADER_CONNECTION, HEADERVALUE_CONNECTION_CLOSE);
-    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    String token = authentication.substring(6);
+
+    token = new String(Base64.decode(token.getBytes()));
+
+    String[] credentials = token.split(CREDENTIAL_SEPARATOR);
+
+    return securityContext.authenticate(request, response, credentials[0],
+            credentials[1]);
   }
 
   //~--- fields ---------------------------------------------------------------

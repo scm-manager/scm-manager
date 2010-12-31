@@ -370,6 +370,7 @@ public class XmlUserManager extends AbstractUserManager
     {
       User user = (User) unmarshaller.unmarshal(input);
 
+      user.setCreationDate(System.currentTimeMillis());
       userDB.add(user);
       storeDB();
     }

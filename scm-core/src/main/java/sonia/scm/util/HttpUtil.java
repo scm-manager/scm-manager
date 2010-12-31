@@ -31,56 +31,44 @@
 
 
 
-package sonia.scm;
+package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
 
-import sonia.scm.util.ServiceUtil;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SCMContext
+public class HttpUtil
 {
 
   /** Field description */
-  public static final String DEFAULT_PACKAGE = "sonia.scm";
+  public static final String AUTHENTICATION_REALM = "SONIA :: SCM Manager";
 
   /** Field description */
-  public static final String USER_ANONYMOUS = "anonymous";
+  public static final String HEADERVALUE_CONNECTION_CLOSE = "close";
 
   /** Field description */
-  private static volatile SCMContextProvider provider;
+  public static final String HEADER_CONNECTION = "connection";
 
-  //~--- get methods ----------------------------------------------------------
+  /** Field description */
+  public static final String HEADER_WWW_AUTHENTICATE = "WWW-Authenticate";
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @return
+   * @param response
    */
-  public static SCMContextProvider getContext()
+  public static void sendUnauthorized(HttpServletResponse response)
   {
-    if (provider == null)
-    {
-      synchronized (SCMContext.class)
-      {
-        if (provider == null)
-        {
-          provider = ServiceUtil.getService(SCMContextProvider.class);
-
-          if (provider == null)
-          {
-            provider = new BasicContextProvider();
-          }
-
-          provider.init();
-        }
-      }
-    }
-
-    return provider;
+    response.setHeader(HEADER_WWW_AUTHENTICATE,
+                       "Basic realm=\"" + AUTHENTICATION_REALM + "\"");
+    response.setHeader(HEADER_CONNECTION, HEADERVALUE_CONNECTION_CLOSE);
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
   }
 }

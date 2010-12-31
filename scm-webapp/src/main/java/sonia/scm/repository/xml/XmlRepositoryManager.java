@@ -55,6 +55,7 @@ import sonia.scm.repository.RepositoryAllreadyExistExeption;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHandlerNotFoundException;
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
@@ -358,7 +359,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
       }
       else
       {
-        repository = null;
+        throw new ScmSecurityException("not enaugh permissions");
       }
     }
 

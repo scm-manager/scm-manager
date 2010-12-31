@@ -40,11 +40,14 @@ import com.google.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContext;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -128,41 +131,54 @@ public abstract class PermissionFilter extends HttpFilter
 
     if (user != null)
     {
-      Repository repository = getRepository(request);
-
-      if (repository != null)
+      try
       {
-        boolean writeRequest = isWriteRequest(request);
+        Repository repository = getRepository(request);
 
-        if (PermissionUtil.hasPermission(repository, securityContext.getUser(),
-                                         writeRequest
-                                         ? PermissionType.WRITE
-                                         : PermissionType.READ))
+        if (repository != null)
         {
-          chain.doFilter(request, response);
+          boolean writeRequest = isWriteRequest(request);
+
+          if (PermissionUtil.hasPermission(repository,
+                                           securityContext.getUser(),
+                                           writeRequest
+                                           ? PermissionType.WRITE
+                                           : PermissionType.READ))
+          {
+            chain.doFilter(request, response);
+          }
+          else
+          {
+            if (logger.isInfoEnabled())
+            {
+              logger.info("{} access to repostitory {} for user {} denied",
+                          new Object[] { writeRequest
+                                         ? "write"
+                                         : "read", repository.getName(),
+                                         user.getName() });
+            }
+
+            sendAccessDenied(response, user);
+          }
         }
         else
         {
-          if (logger.isInfoEnabled())
+          if (logger.isDebugEnabled())
           {
-            logger.info("{} access to repostitory {} for user {} denied",
-                        new Object[] { writeRequest
-                                       ? "write"
-                                       : "read", repository.getName(),
-                                       user.getName() });
+            logger.debug("repository not found");
           }
 
-          response.sendError(HttpServletResponse.SC_FORBIDDEN);
+          response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
       }
-      else
+      catch (ScmSecurityException ex)
       {
-        if (logger.isDebugEnabled())
+        if (logger.isWarnEnabled())
         {
-          logger.debug("repository not found");
+          logger.warn("user {} has not enough permissions", user.getName());
         }
 
-        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        sendAccessDenied(response, user);
       }
     }
     else
@@ -172,6 +188,28 @@ public abstract class PermissionFilter extends HttpFilter
         logger.debug("user in not authenticated");
       }
 
+      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   * @param user
+   *
+   * @throws IOException
+   */
+  private void sendAccessDenied(HttpServletResponse response, User user)
+          throws IOException
+  {
+    if (SCMContext.USER_ANONYMOUS.equals(user.getName()))
+    {
+      HttpUtil.sendUnauthorized(response);
+    }
+    else
+    {
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }
   }
