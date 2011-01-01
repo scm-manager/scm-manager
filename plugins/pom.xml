@@ -21,6 +21,7 @@
     <module>scm-git-plugin</module>
     <module>scm-graph-plugin</module>
     <module>scm-activedirectory-auth-plugin</module>
+    <module>scm-pam-plugin</module>
   </modules>
   
   <dependencies>
