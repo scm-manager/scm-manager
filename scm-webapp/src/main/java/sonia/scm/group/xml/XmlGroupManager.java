@@ -196,6 +196,8 @@ public class XmlGroupManager extends AbstractGroupManager
   @Override
   public void init(SCMContextProvider context)
   {
+    groupDB = store.get();
+
     if (groupDB == null)
     {
       groupDB = new XmlGroupDatabase();
