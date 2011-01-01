@@ -147,6 +147,11 @@ Ext.onReady(function(){
           fn: function(){
             addTabPanel('users', 'userPanel', 'Users');
           }
+        },{
+          label: 'Groups',
+          fn: function(){
+            addTabPanel('groups', 'groupGrid', 'Groups');
+          }
         }]
       }]);
     }
