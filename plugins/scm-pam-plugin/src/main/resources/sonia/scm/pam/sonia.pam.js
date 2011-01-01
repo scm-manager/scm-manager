@@ -38,6 +38,16 @@ registerGeneralConfigPanel({
     fieldLabel : 'Service name',
     name : 'service-name',
     allowBlank : false
+  },{
+    xtype : 'textfield',
+    fieldLabel : 'Admin Groups',
+    name : 'admin-groups',
+    allowBlank : true
+  },{
+    xtype : 'textfield',
+    fieldLabel : 'Admin Users',
+    name : 'admin-users',
+    allowBlank : true
   }],
 
   onSubmit: function(values){
