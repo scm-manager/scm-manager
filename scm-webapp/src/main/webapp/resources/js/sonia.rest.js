@@ -134,7 +134,11 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
   },
 
   renderMailto: function(mail){
-    return String.format( this.mailtoTemplate, mail );
+    var result = '';
+    if ( mail != null ){
+      result = String.format( this.mailtoTemplate, mail );
+    }
+    return result;
   },
 
   renderCheckbox: function(value){
