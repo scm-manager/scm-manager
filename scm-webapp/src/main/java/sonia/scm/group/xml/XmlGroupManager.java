@@ -42,6 +42,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.group.AbstractGroupManager;
 import sonia.scm.group.Group;
@@ -149,6 +150,8 @@ public class XmlGroupManager extends AbstractGroupManager
       groupDB.add(group.clone());
       storeDB();
     }
+
+    fireEvent(group, HandlerEvent.CREATE);
   }
 
   /**
@@ -180,6 +183,8 @@ public class XmlGroupManager extends AbstractGroupManager
         groupDB.remove(name);
         storeDB();
       }
+
+      fireEvent(group, HandlerEvent.DELETE);
     }
     else
     {
@@ -235,6 +240,8 @@ public class XmlGroupManager extends AbstractGroupManager
         groupDB.add(group.clone());
         storeDB();
       }
+
+      fireEvent(group, HandlerEvent.MODIFY);
     }
     else
     {

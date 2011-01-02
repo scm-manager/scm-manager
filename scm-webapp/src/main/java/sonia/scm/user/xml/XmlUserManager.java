@@ -42,6 +42,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.security.SecurityContext;
@@ -181,6 +182,8 @@ public class XmlUserManager extends AbstractUserManager
       userDB.add(user.clone());
       storeDB();
     }
+
+    fireEvent(user, HandlerEvent.CREATE);
   }
 
   /**
@@ -211,6 +214,8 @@ public class XmlUserManager extends AbstractUserManager
         userDB.remove(name);
         storeDB();
       }
+
+      fireEvent(user, HandlerEvent.DELETE);
     }
     else
     {
@@ -271,6 +276,8 @@ public class XmlUserManager extends AbstractUserManager
         userDB.add(user.clone());
         storeDB();
       }
+
+      fireEvent(user, HandlerEvent.MODIFY);
     }
     else
     {
