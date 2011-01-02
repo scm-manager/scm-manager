@@ -135,7 +135,7 @@ public class PAMAuthenticationHandler implements AuthenticationHandler
 
           if (unixUser != null)
           {
-            User user = new User(username, username, null);
+            User user = new User(username);
 
             user.setAdmin(isAdmin(unixUser));
             result = new AuthenticationResult(user);

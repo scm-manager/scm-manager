@@ -78,6 +78,18 @@ public class User
    *
    *
    * @param name
+   */
+  public User(String name)
+  {
+    this.name = name;
+    this.displayName = name;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param name
    * @param displayName
    * @param mail
    */

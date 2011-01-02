@@ -153,7 +153,7 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     },{
       fieldLabel: 'Mail',
       name: 'mail',
-      allowBlank: false,
+      allowBlank: true,
       vtype: 'email'
     }];
 
