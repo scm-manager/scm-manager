@@ -150,7 +150,7 @@ Ext.onReady(function(){
         },{
           label: 'Groups',
           fn: function(){
-            addTabPanel('groups', 'groupGrid', 'Groups');
+            addTabPanel('groups', 'groupPanel', 'Groups');
           }
         }]
       }]);
