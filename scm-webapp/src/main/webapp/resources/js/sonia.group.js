@@ -39,6 +39,14 @@ Sonia.group.setEditPanel = function(panel){
   editPanel.doLayout();
 }
 
+Sonia.group.DefaultPanel = {
+  region: 'south',
+  title: 'Group Form',
+  xtype: 'panel',
+  padding: 5,
+  html: 'Add or select a Group'
+}
+
 // GroupGrid
 Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
 
@@ -159,9 +167,6 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
           data.push(a);
         }
       }
-      if ( debug ){
-        console.debug( data );
-      }
       this.memberStore.loadData( data );
     }
 
@@ -222,6 +227,100 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
     Ext.apply(this, Ext.apply(this.initialConfig, {items: items}));
     Sonia.group.FormPanel.superclass.initComponent.apply(this, arguments);
+  },
+
+  updateMembers: function(item){
+    var members = [];
+    this.memberStore.data.each(function(record){
+      members.push( record.data.member );
+    })
+    item.members = members;
+  },
+
+  update: function(group){
+    if ( debug ){
+      console.debug( 'update group ' + group.name );
+    }
+    group = Ext.apply( this.item, group );
+
+    this.updateMembers(group);
+
+    var url = restUrl + 'groups/' + group.id + '.json';
+    var el = this.el;
+    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
+
+    Ext.Ajax.request({
+      url: url,
+      jsonData: group,
+      method: 'PUT',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('update success');
+        }
+        // this.clearModifications();
+        clearTimeout(tid);
+        el.unmask();
+        this.execCallback(this.onUpdate, group);
+      },
+      failure: function(){
+        clearTimeout(tid);
+        el.unmask();
+        Ext.MessageBox.show({
+          title: 'Error',
+          msg: 'Group update failed',
+          buttons: Ext.MessageBox.OK,
+          icon:Ext.MessageBox.ERROR
+        });
+      }
+    });
+  },
+
+  create: function(item){
+    if ( debug ){
+      console.debug( 'create group: ' + item.name );
+    }
+    item.type = 'xml';
+
+    var url = restUrl + 'groups.json';
+    var el = this.el;
+    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
+
+    this.updateMembers(item);
+
+    Ext.Ajax.request({
+      url: url,
+      jsonData: item,
+      method: 'POST',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('create success');
+        }
+        this.memberStore.removeAll();
+        this.getForm().reset();
+        clearTimeout(tid);
+        el.unmask();
+        this.execCallback(this.onCreate, item);
+      },
+      failure: function(){
+        clearTimeout(tid);
+        el.unmask();
+        Ext.MessageBox.show({
+          title: 'Error',
+          msg: 'Group creation failed',
+          buttons: Ext.MessageBox.OK,
+          icon:Ext.MessageBox.ERROR
+        });
+      }
+    });
+  },
+
+  cancel: function(){
+    if ( debug ){
+      console.debug( 'cancel form' );
+    }
+    Sonia.group.setEditPanel( Sonia.group.DefaultPanel );
   }
 
 });
@@ -242,8 +341,10 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
       region:'center',
       autoScroll: true,
       tbar: [
-        {xtype: 'tbbutton', text: 'Add', scope: this},
-        {xtype: 'tbbutton', id: 'removeButton', disabled: true, text: 'Remove', scope: this}
+        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddForm},
+        {xtype: 'tbbutton', id: 'removeButton', disabled: true, text: 'Remove', scope: this, handler: this.removeGroup},
+        '-',
+        {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload}
       ],
       items: [{
           id: 'groupGrid',
@@ -269,6 +370,79 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.group.Panel.superclass.initComponent.apply(this, arguments);
+  },
+
+  removeGroup: function(){
+    var grid = Ext.getCmp('groupGrid');
+    var selected = grid.getSelectionModel().getSelected();
+    if ( selected ){
+      var item = selected.data;
+      var url = restUrl + 'groups/' + item.name + '.json';
+
+      Ext.MessageBox.show({
+        title: 'Remove Group',
+        msg: 'Remove Group "' + item.name + '"?',
+        buttons: Ext.MessageBox.OKCANCEL,
+        icon: Ext.MessageBox.QUESTION,
+        fn: function(result){
+          if ( result == 'ok' ){
+
+            if ( debug ){
+              console.debug( 'remove group ' + item.name );
+            }
+
+            Ext.Ajax.request({
+              url: url,
+              method: 'DELETE',
+              scope: this,
+              success: function(){
+                this.reload();
+                this.resetPanel();
+              },
+              failure: function(){
+                Ext.MessageBox.show({
+                  title: 'Error',
+                  msg: 'Group deletion failed',
+                  buttons: Ext.MessageBox.OK,
+                  icon:Ext.MessageBox.ERROR
+                });
+              }
+            });
+          }
+
+        },
+        scope: this
+      });
+
+    } else if ( debug ){
+      console.debug( 'no repository selected' );
+    }
+  },
+
+  showAddForm: function(){
+    Ext.getCmp('removeButton').setDisabled(true);
+    var panel = new Sonia.group.FormPanel({
+      region: 'south',
+      title: 'Group Form',
+      padding: 5,
+      onUpdate: {
+        fn: this.reload,
+        scope: this
+      },
+      onCreate: {
+        fn: this.reload,
+        scope: this
+      }
+    });
+    Sonia.group.setEditPanel(panel);
+  },
+
+  resetPanel: function(){
+    Sonia.group.setEditPanel(Sonia.group.DefaultPanel);
+  },
+
+  reload: function(){
+    Ext.getCmp('groupGrid').reload();
   }
 
 });
