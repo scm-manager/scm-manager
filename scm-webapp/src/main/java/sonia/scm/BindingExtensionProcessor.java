@@ -42,10 +42,13 @@ import com.google.inject.multibindings.Multibinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.group.GroupListener;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionProcessor;
 import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.repository.RepositoryListener;
 import sonia.scm.security.EncryptionHandler;
+import sonia.scm.user.UserListener;
 import sonia.scm.web.security.AuthenticationHandler;
 import sonia.scm.web.security.XmlAuthenticationHandler;
 
@@ -125,6 +128,40 @@ public class BindingExtensionProcessor implements ExtensionProcessor
           binder.bind(extensionClass);
           authenticators.addBinding().to(extensionClass);
         }
+        else if (GroupListener.class.isAssignableFrom(extensionClass))
+        {
+          if (logger.isInfoEnabled())
+          {
+            logger.info("bind GroupListener {}", extensionClass.getName());
+          }
+
+          GroupListener listener = (GroupListener) extensionClass.newInstance();
+
+          groupListeners.add(listener);
+        }
+        else if (UserListener.class.isAssignableFrom(extensionClass))
+        {
+          if (logger.isInfoEnabled())
+          {
+            logger.info("bind UserListener {}", extensionClass.getName());
+          }
+
+          UserListener listener = (UserListener) extensionClass.newInstance();
+
+          userListeners.add(listener);
+        }
+        else if (RepositoryListener.class.isAssignableFrom(extensionClass))
+        {
+          if (logger.isInfoEnabled())
+          {
+            logger.info("bind RepositoryListener {}", extensionClass.getName());
+          }
+
+          RepositoryListener listener =
+            (RepositoryListener) extensionClass.newInstance();
+
+          repositoryListeners.add(listener);
+        }
         else
         {
           if (logger.isInfoEnabled())
@@ -175,9 +212,42 @@ public class BindingExtensionProcessor implements ExtensionProcessor
    *
    * @return
    */
+  public Set<GroupListener> getGroupListeners()
+  {
+    return groupListeners;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public Set<Module> getModuleSet()
   {
     return moduleSet;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Set<RepositoryListener> getRepositoryListeners()
+  {
+    return repositoryListeners;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Set<UserListener> getUserListeners()
+  {
+    return userListeners;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -219,8 +289,7 @@ public class BindingExtensionProcessor implements ExtensionProcessor
   {
     if (logger.isDebugEnabled())
     {
-      logger.debug("bind Authenticator {}", type.getName(),
-                   bindingType.getName());
+      logger.debug("bind {} of type {}", type.getName(), bindingType.getName());
     }
 
     binder.bind(type).to(bindingType);
@@ -233,4 +302,14 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
   /** Field description */
   private Set<Module> moduleSet;
+
+  /** Field description */
+  private Set<RepositoryListener> repositoryListeners =
+    new HashSet<RepositoryListener>();
+
+  /** Field description */
+  private Set<UserListener> userListeners = new HashSet<UserListener>();
+
+  /** Field description */
+  private Set<GroupListener> groupListeners = new HashSet<GroupListener>();
 }

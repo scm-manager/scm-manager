@@ -29,11 +29,17 @@
  *
  */
 
+
+
 package sonia.scm.repository;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.HandlerEvent;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import sonia.scm.HandlerEvent;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,6 +60,18 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   public void addListener(RepositoryListener listener)
   {
     listenerSet.add(listener);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param listeners
+   */
+  @Override
+  public void addListeners(Collection<RepositoryListener> listeners)
+  {
+    listenerSet.addAll(listeners);
   }
 
   /**

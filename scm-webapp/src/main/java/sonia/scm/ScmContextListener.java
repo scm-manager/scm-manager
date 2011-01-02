@@ -125,13 +125,23 @@ public class ScmContextListener extends GuiceServletContextListener
     injector.getInstance(StoreFactory.class).init(context);
 
     // init RepositoryManager
-    injector.getInstance(RepositoryManager.class).init(context);
+    RepositoryManager repositoryManager =
+      injector.getInstance(RepositoryManager.class);
+
+    repositoryManager.addListeners(bindExtProcessor.getRepositoryListeners());
+    repositoryManager.init(context);
 
     // init UserManager
-    injector.getInstance(UserManager.class).init(context);
+    UserManager userManager = injector.getInstance(UserManager.class);
+
+    userManager.addListeners(bindExtProcessor.getUserListeners());
+    userManager.init(context);
 
     // init GroupManager
-    injector.getInstance(GroupManager.class).init(context);
+    GroupManager groupManager = injector.getInstance(GroupManager.class);
+
+    groupManager.addListeners(bindExtProcessor.getGroupListeners());
+    groupManager.init(context);
 
     // init Authenticator
     injector.getInstance(AuthenticationManager.class).init(context);

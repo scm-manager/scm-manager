@@ -48,6 +48,7 @@ import sonia.scm.store.StoreFactory;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -100,6 +101,18 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   public void addListener(ConfigChangedListener listener)
   {
     listenerSet.add(listener);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param listeners
+   */
+  @Override
+  public void addListeners(Collection<ConfigChangedListener> listeners)
+  {
+    listenerSet.addAll(listeners);
   }
 
   /**

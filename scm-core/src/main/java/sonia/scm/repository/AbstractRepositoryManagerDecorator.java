@@ -29,18 +29,20 @@
  *
  */
 
+
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.Type;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
 import java.util.Collection;
-import sonia.scm.Type;
 
 /**
  *
@@ -61,6 +63,8 @@ public abstract class AbstractRepositoryManagerDecorator
     this.orginal = orginal;
   }
 
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
@@ -71,6 +75,18 @@ public abstract class AbstractRepositoryManagerDecorator
   public void addListener(RepositoryListener listener)
   {
     orginal.addListener(listener);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param listeners
+   */
+  @Override
+  public void addListeners(Collection<RepositoryListener> listeners)
+  {
+    orginal.addListeners(listeners);
   }
 
   /**

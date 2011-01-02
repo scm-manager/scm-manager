@@ -36,11 +36,13 @@ package sonia.scm.user;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.HandlerEvent;
+import sonia.scm.plugin.ExtensionPoint;
 
 /**
  *
  * @author Sebastian Sdorra
  */
+@ExtensionPoint
 public interface UserListener
 {
 

@@ -29,14 +29,20 @@
  *
  */
 
+
+
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
 import sonia.scm.HandlerEvent;
+import sonia.scm.plugin.ExtensionPoint;
 
 /**
  *
  * @author Sebastian Sdorra
  */
+@ExtensionPoint
 public interface RepositoryListener
 {
 

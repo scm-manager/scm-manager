@@ -29,7 +29,13 @@
  *
  */
 
+
+
 package sonia.scm;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collection;
 
 /**
  *
@@ -47,6 +53,14 @@ public interface ListenerSupport<T>
    * @param listener
    */
   public void addListener(T listener);
+
+  /**
+   * Method description
+   *
+   *
+   * @param listeners
+   */
+  public void addListeners(Collection<T> listeners);
 
   /**
    * Method description

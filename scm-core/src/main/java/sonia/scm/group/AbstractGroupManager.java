@@ -39,6 +39,7 @@ import sonia.scm.HandlerEvent;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -59,6 +60,18 @@ public abstract class AbstractGroupManager implements GroupManager
   public void addListener(GroupListener listener)
   {
     listenerSet.add(listener);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param listeners
+   */
+  @Override
+  public void addListeners(Collection<GroupListener> listeners)
+  {
+    listenerSet.addAll(listeners);
   }
 
   /**
