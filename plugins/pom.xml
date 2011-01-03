@@ -22,6 +22,7 @@
     <module>scm-graph-plugin</module>
     <module>scm-activedirectory-auth-plugin</module>
     <module>scm-pam-plugin</module>
+    <module>scm-bzr-plugin</module>
   </modules>
   
   <dependencies>
