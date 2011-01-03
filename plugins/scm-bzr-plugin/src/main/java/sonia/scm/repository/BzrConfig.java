@@ -124,10 +124,10 @@ public class BzrConfig extends SimpleRepositoryConfig
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String bzrBinary;
+  private String bzrBinary = "bzr";
 
   /** Field description */
-  private String pythonBinary;
+  private String pythonBinary = "python";
 
   /** Field description */
   private String pythonPath = "";

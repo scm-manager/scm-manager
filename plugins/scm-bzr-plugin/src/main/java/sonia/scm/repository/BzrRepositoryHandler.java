@@ -38,14 +38,19 @@ package sonia.scm.repository;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.Type;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.web.BzrScriptWriter;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -66,6 +71,10 @@ public class BzrRepositoryHandler
   /** Field description */
   public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
 
+  /** the logger for BzrRepositoryHandler */
+  private static final Logger logger =
+    LoggerFactory.getLogger(BzrRepositoryHandler.class);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -78,6 +87,32 @@ public class BzrRepositoryHandler
   public BzrRepositoryHandler(StoreFactory storeFactory)
   {
     super(storeFactory);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Override
+  public void loadConfig()
+  {
+    super.loadConfig();
+
+    if (config == null)
+    {
+      config = new BzrConfig();
+    }
+
+    try
+    {
+      new BzrScriptWriter(config).write();
+    }
+    catch (IOException ex)
+    {
+      logger.error(ex.getMessage(), ex);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
