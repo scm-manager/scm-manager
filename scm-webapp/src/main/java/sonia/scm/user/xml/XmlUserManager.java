@@ -164,8 +164,6 @@ public class XmlUserManager extends AbstractUserManager
       throw new ScmSecurityException("admin account is required");
     }
 
-    AssertUtil.assertIsValid(user);
-
     if (userDB.contains(user.getName()))
     {
       throw new UserAllreadyExistException();
@@ -178,6 +176,7 @@ public class XmlUserManager extends AbstractUserManager
       user.setType(TYPE);
     }
 
+    AssertUtil.assertIsValid(user);
     user.setCreationDate(System.currentTimeMillis());
 
     synchronized (XmlUserManager.class)
@@ -269,12 +268,12 @@ public class XmlUserManager extends AbstractUserManager
       throw new ScmSecurityException("admin account is required");
     }
 
-    AssertUtil.assertIsValid(user);
-
     String name = user.getName();
 
     if (userDB.contains(name))
     {
+      AssertUtil.assertIsValid(user);
+
       synchronized (XmlUserManager.class)
       {
         userDB.remove(name);
