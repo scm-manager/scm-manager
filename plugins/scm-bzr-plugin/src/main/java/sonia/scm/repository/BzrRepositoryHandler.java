@@ -45,12 +45,10 @@ import sonia.scm.Type;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
-import sonia.scm.web.BzrScriptWriter;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  *
@@ -89,32 +87,6 @@ public class BzrRepositoryHandler
     super(storeFactory);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Override
-  public void loadConfig()
-  {
-    super.loadConfig();
-
-    if (config == null)
-    {
-      config = new BzrConfig();
-    }
-
-    try
-    {
-      new BzrScriptWriter(config).write();
-    }
-    catch (IOException ex)
-    {
-      logger.error(ex.getMessage(), ex);
-    }
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -146,6 +118,18 @@ public class BzrRepositoryHandler
   {
     return new ExtendedCommand(config.getBzrBinary(), "init-repo",
                                "--no-trees", directory.getPath());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected BzrConfig createInitialConfig()
+  {
+    return new BzrConfig();
   }
 
   //~--- get methods ----------------------------------------------------------
