@@ -52,6 +52,7 @@ import sonia.scm.user.AbstractUserManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserAllreadyExistException;
 import sonia.scm.user.UserException;
+import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
@@ -163,6 +164,8 @@ public class XmlUserManager extends AbstractUserManager
       throw new ScmSecurityException("admin account is required");
     }
 
+    AssertUtil.assertIsValid(user);
+
     if (userDB.contains(user.getName()))
     {
       throw new UserAllreadyExistException();
@@ -265,6 +268,8 @@ public class XmlUserManager extends AbstractUserManager
     {
       throw new ScmSecurityException("admin account is required");
     }
+
+    AssertUtil.assertIsValid(user);
 
     String name = user.getName();
 
