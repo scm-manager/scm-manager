@@ -43,6 +43,7 @@ import sonia.scm.repository.HgConfig;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -92,10 +93,13 @@ public class UnixHgInstaller extends AbstractHgInstaller
    *
    *
    * @param config
+   *
+   * @throws IOException
    */
   @Override
-  public void install(HgConfig config)
+  public void install(HgConfig config) throws IOException
   {
+    super.install(config);
     config.setHgBinary(search(PATH, "hg"));
     config.setPythonBinary(search(PATH, "python"));
   }
