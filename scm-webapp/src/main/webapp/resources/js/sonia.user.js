@@ -373,7 +373,7 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
       });
 
     } else if ( debug ){
-      console.debug( 'no repository selected' );
+      console.debug( 'no user selected' );
     }
 
   },
