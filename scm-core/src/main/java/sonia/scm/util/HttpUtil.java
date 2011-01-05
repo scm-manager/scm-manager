@@ -35,6 +35,7 @@ package sonia.scm.util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -70,5 +71,34 @@ public class HttpUtil
                        "Basic realm=\"" + AUTHENTICATION_REALM + "\"");
     response.setHeader(HEADER_CONNECTION, HEADERVALUE_CONNECTION_CLOSE);
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  public static String getStrippedURI(HttpServletRequest request)
+  {
+    return getStrippedURI(request, request.getRequestURI());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param uri
+   *
+   * @return
+   */
+  public static String getStrippedURI(HttpServletRequest request, String uri)
+  {
+    return request.getRequestURI().substring(request.getContextPath().length());
   }
 }

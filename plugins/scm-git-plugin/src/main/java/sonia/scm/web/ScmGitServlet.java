@@ -43,6 +43,7 @@ import org.eclipse.jgit.http.server.resolver.RepositoryResolver;
 import org.eclipse.jgit.lib.Repository;
 
 import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -106,7 +107,7 @@ public class ScmGitServlet extends GitServlet
                          HttpServletResponse response)
           throws ServletException, IOException
   {
-    String uri = getRelativePath(request);
+    String uri = HttpUtil.getStrippedURI(request);
 
     if (uri.matches(REGEX_GITHTTPBACKEND))
     {
@@ -133,7 +134,7 @@ public class ScmGitServlet extends GitServlet
                                    HttpServletResponse response)
           throws ServletException, IOException
   {
-    String uri = getRelativePath(request);
+    String uri = HttpUtil.getStrippedURI(request);
     Matcher m = REGEX_REPOSITORYNAME.matcher(uri);
     String name = null;
     Repository repository = null;
@@ -166,21 +167,6 @@ public class ScmGitServlet extends GitServlet
         repository.close();
       }
     }
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  private String getRelativePath(HttpServletRequest request)
-  {
-    return request.getRequestURI().substring(request.getContextPath().length());
   }
 
   //~--- fields ---------------------------------------------------------------

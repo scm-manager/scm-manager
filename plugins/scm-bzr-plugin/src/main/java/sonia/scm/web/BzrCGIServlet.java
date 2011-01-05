@@ -38,11 +38,15 @@ package sonia.scm.web;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.io.RegexResourceProcessor;
+import sonia.scm.io.ResourceProcessor;
 import sonia.scm.repository.BzrConfig;
 import sonia.scm.repository.BzrRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.HttpUtil;
+import sonia.scm.util.IOUtil;
 import sonia.scm.web.cgi.AbstractCGIServlet;
 import sonia.scm.web.cgi.EnvList;
 
@@ -50,12 +54,15 @@ import sonia.scm.web.cgi.EnvList;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -75,7 +82,20 @@ public class BzrCGIServlet extends AbstractCGIServlet
   public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
 
   /** Field description */
+  public static final String MIMETYPE_HTML = "text/html";
+
+  /** Field description */
+  public static final String RESOURCE_BZRINDEX = "/sonia/scm/bzr.index.html";
+
+  /** Field description */
+  public static final String SMART_SUFFIX = ".bzr/smart";
+
+  /** Field description */
   private static final long serialVersionUID = 7674689744455227632L;
+
+  /** Field description */
+  private static final Pattern REGEX_REPOSITORYNAME =
+    Pattern.compile("/bzr/([^/]+)/?.*");
 
   /** Field description */
   public static final Pattern PATTERN_REPOSITORYNAME =
@@ -161,6 +181,32 @@ public class BzrCGIServlet extends AbstractCGIServlet
     return list;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param req
+   * @param resp
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  @Override
+  protected void service(HttpServletRequest req, HttpServletResponse resp)
+          throws ServletException, IOException
+  {
+    String uri = req.getRequestURI();
+
+    if (!uri.endsWith(SMART_SUFFIX))
+    {
+      printBazaarInformation(req, resp);
+    }
+    else
+    {
+      super.service(req, resp);
+    }
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -198,6 +244,54 @@ public class BzrCGIServlet extends AbstractCGIServlet
   {
     return command;
   }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   *
+   * @throws IOException
+   */
+  private void printBazaarInformation(HttpServletRequest request,
+          HttpServletResponse response)
+          throws IOException
+  {
+    String uri = HttpUtil.getStrippedURI(request);
+    Matcher m = REGEX_REPOSITORYNAME.matcher(uri);
+    String name = "unknown";
+
+    if (m.matches())
+    {
+      name = m.group(1);
+    }
+
+    response.setContentType(MIMETYPE_HTML);
+
+    ResourceProcessor resourceProzessor = new RegexResourceProcessor();
+
+    resourceProzessor.addVariable("name", name);
+
+    InputStream input = null;
+    OutputStream output = null;
+
+    try
+    {
+      input = BzrCGIServlet.class.getResourceAsStream(RESOURCE_BZRINDEX);
+      output = response.getOutputStream();
+      resourceProzessor.process(input, output);
+    }
+    finally
+    {
+      IOUtil.close(input);
+      IOUtil.close(output);
+    }
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
