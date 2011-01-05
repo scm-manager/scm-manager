@@ -49,10 +49,13 @@ import sonia.scm.cache.SimpleCache;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.InputStream;
 
 import java.net.URL;
 
@@ -62,6 +65,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.GZIPInputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -467,24 +471,41 @@ public class DefaultPluginManager implements PluginManager
                       configuration.getPluginUrl());
         }
 
-        try
-        {
-          center = (PluginCenter) unmarshaller.unmarshal(
-            new URL(configuration.getPluginUrl()));
-          preparePlugins(center);
-          cache.put(PluginCenter.class.getName(), center);
+        String pluginUrl = configuration.getPluginUrl();
 
-          if (pluginHandler == null)
+        if (Util.isNotEmpty(pluginUrl))
+        {
+          InputStream input = null;
+
+          try
           {
-            pluginHandler = new AetherPluginHandler(this,
-                    SCMContext.getContext());
-          }
+            input = new URL(pluginUrl).openStream();
 
-          pluginHandler.setPluginRepositories(center.getRepositories());
-        }
-        catch (Exception ex)
-        {
-          throw new PluginLoadException(ex);
+            if (pluginUrl.endsWith(".gz"))
+            {
+              input = new GZIPInputStream(input);
+            }
+
+            center = (PluginCenter) unmarshaller.unmarshal(input);
+            preparePlugins(center);
+            cache.put(PluginCenter.class.getName(), center);
+
+            if (pluginHandler == null)
+            {
+              pluginHandler = new AetherPluginHandler(this,
+                      SCMContext.getContext());
+            }
+
+            pluginHandler.setPluginRepositories(center.getRepositories());
+          }
+          catch (Exception ex)
+          {
+            throw new PluginLoadException(ex);
+          }
+          finally
+          {
+            IOUtil.close(input);
+          }
         }
       }
     }

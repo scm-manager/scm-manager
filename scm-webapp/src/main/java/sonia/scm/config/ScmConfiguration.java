@@ -58,7 +58,7 @@ public class ScmConfiguration
 
   /** Field description */
   public static final String DEFAULT_PLUGINURL =
-    "http://plugins.scm-manager.org/plugins.xml";
+    "http://plugins.scm-manager.org/plugins.xml.gz";
 
   /** Field description */
   public static final String PATH =
