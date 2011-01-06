@@ -10,6 +10,11 @@ if len(pythonPath) > 0:
 
 repositoryPath = os.environ['SCM_REPOSITORY_PATH']
 repositoryName = os.environ['REPO_NAME']
+readonlyString = os.environ['SCM_REPOSITORY_READONLY']
+readonly = True
+
+if readonlyString == 'False':
+  readonly = False
 
 def run_with_cgi(application):
 
@@ -76,7 +81,7 @@ def application(environ, start_response):
       root=repositoryPath,
       prefix="/"+repositoryName,
       path_var='PATH_INFO',
-      readonly=False,
+      readonly=readonly,
       enable_logging=True)
   return app(environ, start_response)
 

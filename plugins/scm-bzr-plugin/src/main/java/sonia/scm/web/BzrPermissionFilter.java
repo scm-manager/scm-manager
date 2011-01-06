@@ -96,6 +96,6 @@ public class BzrPermissionFilter extends RegexPermissionFilter
   @Override
   protected boolean isWriteRequest(HttpServletRequest request)
   {
-    return !request.getMethod().equalsIgnoreCase("GET");
+    return false;
   }
 }

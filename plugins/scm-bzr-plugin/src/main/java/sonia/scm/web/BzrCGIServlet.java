@@ -36,19 +36,24 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.io.RegexResourceProcessor;
 import sonia.scm.io.ResourceProcessor;
 import sonia.scm.repository.BzrConfig;
 import sonia.scm.repository.BzrRepositoryHandler;
+import sonia.scm.repository.PermissionType;
+import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.security.SecurityContext;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.web.cgi.AbstractCGIServlet;
 import sonia.scm.web.cgi.EnvList;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -82,6 +87,10 @@ public class BzrCGIServlet extends AbstractCGIServlet
   public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
 
   /** Field description */
+  public static final String ENV_REPOSITORY_READONLY =
+    "SCM_REPOSITORY_READONLY";
+
+  /** Field description */
   public static final String MIMETYPE_HTML = "text/html";
 
   /** Field description */
@@ -107,13 +116,17 @@ public class BzrCGIServlet extends AbstractCGIServlet
    * Constructs ...
    *
    *
+   *
+   * @param securityContextProvider
    * @param repositoryManager
    * @param handler
    */
   @Inject
-  public BzrCGIServlet(RepositoryManager repositoryManager,
+  public BzrCGIServlet(Provider<WebSecurityContext> securityContextProvider,
+                       RepositoryManager repositoryManager,
                        BzrRepositoryHandler handler)
   {
+    this.securityContextProvider = securityContextProvider;
     this.repositoryManager = repositoryManager;
     this.handler = handler;
   }
@@ -177,6 +190,17 @@ public class BzrCGIServlet extends AbstractCGIServlet
     }
 
     list.set(ENV_PYTHON_PATH, pythonPath);
+
+    boolean writePermission = hasWritePermission(repository);
+
+    if (writePermission)
+    {
+      list.set(ENV_REPOSITORY_READONLY, "False");
+    }
+    else
+    {
+      list.set(ENV_REPOSITORY_READONLY, "True");
+    }
 
     return list;
   }
@@ -334,6 +358,22 @@ public class BzrCGIServlet extends AbstractCGIServlet
                                  repositoryname);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  private boolean hasWritePermission(Repository repository)
+  {
+    WebSecurityContext securityContext = securityContextProvider.get();
+
+    return PermissionUtil.hasPermission(repository, securityContext.getUser(),
+            PermissionType.WRITE);
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -344,4 +384,7 @@ public class BzrCGIServlet extends AbstractCGIServlet
 
   /** Field description */
   private RepositoryManager repositoryManager;
+
+  /** Field description */
+  private Provider<WebSecurityContext> securityContextProvider;
 }
