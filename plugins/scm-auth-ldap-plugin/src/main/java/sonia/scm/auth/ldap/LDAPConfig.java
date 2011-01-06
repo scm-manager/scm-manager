@@ -35,9 +35,12 @@ package sonia.scm.auth.ldap;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -49,4 +52,275 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class LDAPConfig
 {
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getAdminGroups()
+  {
+    return adminGroups;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getAdminNsroleDn()
+  {
+    return adminNsroleDn;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getAdminUsers()
+  {
+    return adminUsers;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getAttributeNameFullname()
+  {
+    return attributeNameFullname;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getAttributeNameId()
+  {
+    return attributeNameId;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getBaseDn()
+  {
+    return baseDn;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getConnectionDn()
+  {
+    return connectionDn;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getConnectionPassword()
+  {
+    return connectionPassword;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getHostUrl()
+  {
+    return hostUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getSearchFilter()
+  {
+    return searchFilter;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getSearchScope()
+  {
+    return searchScope;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getUnitGroup()
+  {
+    return unitGroup;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getUnitPeople()
+  {
+    return unitPeople;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param adminGroups
+   */
+  public void setAdminGroups(String adminGroups)
+  {
+    this.adminGroups = adminGroups;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param adminUsers
+   */
+  public void setAdminUsers(String adminUsers)
+  {
+    this.adminUsers = adminUsers;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  Set<String> getAdminGroupSet()
+  {
+    return split(adminGroups);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  Set<String> getAdminUserSet()
+  {
+    return split(adminUsers);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param rawString
+   *
+   * @return
+   */
+  private Set<String> split(String rawString)
+  {
+    Set<String> tokens = new HashSet<String>();
+
+    for (String token : rawString.split(","))
+    {
+      if (token.trim().length() > 0)
+      {
+        tokens.add(token);
+      }
+    }
+
+    return tokens;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @XmlElement(name = "admin-groups")
+  private String adminGroups = "cn=scm-admin,cn=dev-admin";
+
+  /** Field description */
+  @XmlElement(name = "admin-nsrole-dn")
+  private String adminNsroleDn = "cn=scm-admins-role,dc=scm-manager,dc=org";
+
+  /** Field description */
+  @XmlElement(name = "admin-users")
+  private String adminUsers = "admin,root";
+
+  /** Field description */
+  @XmlElement(name = "attribute-name-fullname")
+  private String attributeNameFullname = "cn";
+
+  /** Field description */
+  @XmlElement(name = "attribute-name-id")
+  private String attributeNameId = "uid";
+
+  /** Field description */
+  @XmlElement(name = "base-dn")
+  private String baseDn = "dc=scm-manager,dc=org";
+
+  /** Field description */
+  @XmlElement(name = "connection-dn")
+  private String connectionDn = "cn=Directory Manager";
+
+  /** Field description */
+  @XmlElement(name = "connection-password")
+  private String connectionPassword = "password";
+
+  /** Field description */
+  @XmlElement(name = "host-url")
+  private String hostUrl = "ldap://localhost:389";
+
+  /** Field description */
+  @XmlElement(name = "search-filter")
+  private String searchFilter = "objectClass=posixAccount";
+
+  /** Field description */
+  @XmlElement(name = "search-scope")
+  private String searchScope = "one";
+
+  /** Field description */
+  @XmlElement(name = "unit-groups")
+  private String unitGroup = "ou=group";
+
+  /** Field description */
+  @XmlElement(name = "unit-people")
+  private String unitPeople = "ou=people";
 }
