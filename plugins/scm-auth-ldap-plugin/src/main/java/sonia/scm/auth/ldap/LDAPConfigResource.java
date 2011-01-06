@@ -54,7 +54,7 @@ import javax.ws.rs.core.UriInfo;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Thorsten Ludewig
  */
 @Singleton
 @Path("config/auth/ldap")

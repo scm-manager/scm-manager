@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Thorsten Ludewig
  */
 @XmlRootElement(name = "ldap-config")
 @XmlAccessorType(XmlAccessType.FIELD)

@@ -56,7 +56,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Thorsten Ludewig
  */
 @Singleton
 @Extension
