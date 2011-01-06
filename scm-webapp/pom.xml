@@ -224,7 +224,7 @@
   </build>
 
   <properties>
-    <aether.version>1.8</aether.version>
+    <aether.version>1.9</aether.version>
     <wagon.version>1.0-beta-7</wagon.version>
     <maven.version>3.0.1</maven.version>
   </properties>
