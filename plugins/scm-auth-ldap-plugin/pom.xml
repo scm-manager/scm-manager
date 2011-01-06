@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>scm-plugins</artifactId>
+    <groupId>sonia.scm.plugins</groupId>
+    <version>1.0-M6-SNAPSHOT</version>
+  </parent>
+
+  <groupId>sonia.scm.plugins</groupId>
+  <artifactId>scm-auth-ldap-plugin</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0-M6-SNAPSHOT</version>
+  <name>${project.artifactId}</name>
+  <description>plugin description</description>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>${servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- test scope -->
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-test</artifactId>
+      <version>1.0-M6-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+
+  </dependencies>
+
+</project>
