@@ -37,17 +37,20 @@ package sonia.scm.repository;
 
 import org.junit.Test;
 
-import sonia.scm.user.User;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Arrays;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.user.User;
+import sonia.scm.web.security.WebSecurityContext;
+
+import static org.junit.Assert.*;
+
+import static org.mockito.Mockito.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Arrays;
 
 /**
  *
@@ -63,7 +66,7 @@ public class PermissionUtilTest
   public PermissionUtilTest()
   {
     repository = new Repository();
-    admams.setAdmin(true);
+    admams.getUser().setAdmin(true);
 
     Permission[] permissions = new Permission[] {
                                  new Permission("dent", PermissionType.READ),
@@ -140,28 +143,50 @@ public class PermissionUtilTest
             PermissionType.OWNER));
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   *
+   * @return
+   */
+  private WebSecurityContext mockCtx(User user)
+  {
+    WebSecurityContext context = mock(WebSecurityContext.class);
+
+    when(context.getUser()).thenReturn(user);
+
+    return context;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private User dent = new User("dent", "Arthur Dent",
-                               "arthur.dent@hitchhiker.com");
+  private WebSecurityContext dent = mockCtx(new User("dent", "Arthur Dent",
+                                      "arthur.dent@hitchhiker.com"));
 
   /** Field description */
-  private User perfect = new User("perfect", "Ford Prefect",
-                                  "ford.perfect@hitchhiker.com");
+  private WebSecurityContext perfect = mockCtx(new User("perfect",
+                                         "Ford Prefect",
+                                         "ford.perfect@hitchhiker.com"));
 
   /** Field description */
   private Repository repository;
 
   /** Field description */
-  private User slarti = new User("slarti", "Slartibartfaß",
-                                 "slartibartfass@hitchhiker.com");
+  private WebSecurityContext slarti = mockCtx(new User("slarti",
+                                        "Slartibartfaß",
+                                        "slartibartfass@hitchhiker.com"));
 
   /** Field description */
-  private User marvin = new User("marvin", "Marvin",
-                                 "paranoid.android@hitchhiker.com");
+  private WebSecurityContext marvin = mockCtx(new User("marvin", "Marvin",
+                                        "paranoid.android@hitchhiker.com"));
 
   /** Field description */
-  private User admams = new User("adams", "Douglas Adams",
-                                 "douglas.adams@hitchhiker.com");
+  private WebSecurityContext admams = mockCtx(new User("adams",
+                                        "Douglas Adams",
+                                        "douglas.adams@hitchhiker.com"));
 }

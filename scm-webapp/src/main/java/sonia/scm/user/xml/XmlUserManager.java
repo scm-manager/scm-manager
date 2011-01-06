@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.security.ScmSecurityException;
-import sonia.scm.security.SecurityContext;
 import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.user.AbstractUserManager;
@@ -56,6 +55,7 @@ import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -104,7 +104,7 @@ public class XmlUserManager extends AbstractUserManager
    * @param storeFactory
    */
   @Inject
-  public XmlUserManager(Provider<SecurityContext> scurityContextProvider,
+  public XmlUserManager(Provider<WebSecurityContext> scurityContextProvider,
                         StoreFactory storeFactory)
   {
     this.scurityContextProvider = scurityContextProvider;
@@ -428,7 +428,7 @@ public class XmlUserManager extends AbstractUserManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Provider<SecurityContext> scurityContextProvider;
+  private Provider<WebSecurityContext> scurityContextProvider;
 
   /** Field description */
   private Store<XmlUserDatabase> store;

@@ -62,6 +62,7 @@ import sonia.scm.store.StoreFactory;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -103,7 +104,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    */
   @Inject
   public XmlRepositoryManager(
-          Provider<SecurityContext> securityContextProvider,
+          Provider<WebSecurityContext> securityContextProvider,
           StoreFactory storeFactory, Set<RepositoryHandler> handlerSet)
   {
     this.securityContextProvider = securityContextProvider;
@@ -469,7 +470,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    */
   private void assertIsOwner(Repository repository)
   {
-    PermissionUtil.assertPermission(repository, getCurrentUser(),
+    PermissionUtil.assertPermission(repository, securityContextProvider,
                                     PermissionType.OWNER);
   }
 
@@ -481,7 +482,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    */
   private void assertIsReader(Repository repository)
   {
-    PermissionUtil.assertPermission(repository, getCurrentUser(),
+    PermissionUtil.assertPermission(repository, securityContextProvider,
                                     PermissionType.READ);
   }
 
@@ -555,7 +556,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    */
   private boolean isReader(Repository repository)
   {
-    return PermissionUtil.hasPermission(repository, getCurrentUser(),
+    return PermissionUtil.hasPermission(repository, securityContextProvider,
             PermissionType.READ);
   }
 
@@ -571,7 +572,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   private XmlRepositoryDatabase repositoryDB;
 
   /** Field description */
-  private Provider<SecurityContext> securityContextProvider;
+  private Provider<WebSecurityContext> securityContextProvider;
 
   /** Field description */
   private Set<Type> types;

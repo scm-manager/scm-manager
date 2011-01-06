@@ -31,22 +31,13 @@
 
 
 
-package sonia.scm.util;
+package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
-
-import sonia.scm.SCMContextProvider;
 import sonia.scm.user.User;
-import sonia.scm.web.security.DummyWebSecurityContext;
-import sonia.scm.web.security.WebSecurityContext;
-
-import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,27 +46,67 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-public class MockUtil
+public class DummyWebSecurityContext implements WebSecurityContext
 {
 
   /**
+   * Constructs ...
+   *
+   *
+   * @param user
+   */
+  public DummyWebSecurityContext(User user)
+  {
+    this.user = user;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   * @param username
+   * @param password
+   *
+   * @return
+   */
+  @Override
+  public User authenticate(HttpServletRequest request,
+                           HttpServletResponse response, String username,
+                           String password)
+  {
+    return user;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   */
+  @Override
+  public void logout(HttpServletRequest request, HttpServletResponse response)
+  {
+
+    // do nothing
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
    * Method description
    *
    *
    * @return
    */
-  public static Provider<WebSecurityContext> getAdminSecurityContextProvider()
+  @Override
+  public User getUser()
   {
-    User admin = new User("scmadmin", "SCM Admin", "scmadmin@scm.org");
-
-    admin.setAdmin(true);
-
-    DummyWebSecurityContext context = new DummyWebSecurityContext(admin);
-    Provider<WebSecurityContext> scp = mock(Provider.class);
-
-    when(scp.get()).thenReturn(context);
-
-    return scp;
+    return user;
   }
 
   /**
@@ -84,40 +115,14 @@ public class MockUtil
    *
    * @return
    */
-  public static HttpServletRequest getHttpServletRequest()
+  @Override
+  public boolean isAuthenticated()
   {
-    HttpServletRequest request = mock(HttpServletRequest.class);
-
-    when(request.getContextPath()).thenReturn("/scm-webapp");
-
-    return request;
+    return true;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static HttpServletResponse getHttpServletResponse()
-  {
-    return mock(HttpServletResponse.class);
-  }
+  //~--- fields ---------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   */
-  public static SCMContextProvider getSCMContextProvider(File directory)
-  {
-    SCMContextProvider provider = mock(SCMContextProvider.class);
-
-    when(provider.getBaseDirectory()).thenReturn(directory);
-
-    return provider;
-  }
+  /** Field description */
+  private User user;
 }

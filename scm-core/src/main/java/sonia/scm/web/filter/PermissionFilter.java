@@ -140,7 +140,7 @@ public abstract class PermissionFilter extends HttpFilter
           boolean writeRequest = isWriteRequest(request);
 
           if (PermissionUtil.hasPermission(repository,
-                                           securityContext.getUser(),
+                                           securityContext,
                                            writeRequest
                                            ? PermissionType.WRITE
                                            : PermissionType.READ))

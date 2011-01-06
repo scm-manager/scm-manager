@@ -35,8 +35,11 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Provider;
+
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -54,16 +57,31 @@ public class PermissionUtil
    *
    *
    * @param repository
-   * @param user
+   * @param securityContext
    * @param pt
    */
-  public static void assertPermission(Repository repository, User user,
-          PermissionType pt)
+  public static void assertPermission(Repository repository,
+          WebSecurityContext securityContext, PermissionType pt)
   {
-    if (!hasPermission(repository, user, pt))
+    if (!hasPermission(repository, securityContext, pt))
     {
       throw new IllegalStateException("action denied");
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param securityContextProvider
+   * @param pt
+   */
+  public static void assertPermission(Repository repository,
+          Provider<WebSecurityContext> securityContextProvider,
+          PermissionType pt)
+  {
+    assertPermission(repository, securityContextProvider.get(), pt);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -73,14 +91,32 @@ public class PermissionUtil
    *
    *
    * @param repository
-   * @param user
+   * @param securityContextProvider
    * @param pt
    *
    * @return
    */
-  public static boolean hasPermission(Repository repository, User user,
+  public static boolean hasPermission(Repository repository,
+          Provider<WebSecurityContext> securityContextProvider,
           PermissionType pt)
   {
+    return hasPermission(repository, securityContextProvider.get(), pt);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param securityContext
+   * @param pt
+   *
+   * @return
+   */
+  public static boolean hasPermission(Repository repository,
+          WebSecurityContext securityContext, PermissionType pt)
+  {
+    User user = securityContext.getUser();
     String username = user.getName();
 
     AssertUtil.assertIsNotEmpty(username);

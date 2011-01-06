@@ -47,7 +47,6 @@ import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.security.SecurityContext;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
@@ -368,9 +367,7 @@ public class BzrCGIServlet extends AbstractCGIServlet
    */
   private boolean hasWritePermission(Repository repository)
   {
-    WebSecurityContext securityContext = securityContextProvider.get();
-
-    return PermissionUtil.hasPermission(repository, securityContext.getUser(),
+    return PermissionUtil.hasPermission(repository, securityContextProvider,
             PermissionType.WRITE);
   }
 
