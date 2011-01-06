@@ -51,8 +51,8 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
@@ -61,11 +61,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @XmlRootElement(name = "repositories")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(propOrder =
-{
-  "id", "type", "name", "contact", "description", "creationDate",
-  "lastModified", "url", "permissions"
-})
 public class Repository
         implements TypedObject, Validateable, Cloneable, Serializable
 {
@@ -290,6 +285,17 @@ public class Repository
    *
    * @return
    */
+  public boolean isPublicReadable()
+  {
+    return publicReadable;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
   public boolean isValid()
   {
@@ -381,6 +387,17 @@ public class Repository
    * Method description
    *
    *
+   * @param publicReadable
+   */
+  public void setPublicReadable(boolean publicReadable)
+  {
+    this.publicReadable = publicReadable;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param type
    */
   public void setType(String type)
@@ -423,6 +440,10 @@ public class Repository
 
   /** Field description */
   private List<Permission> permissions;
+
+  /** Field description */
+  @XmlElement(name = "public")
+  private boolean publicReadable = false;
 
   /** Field description */
   private String type;

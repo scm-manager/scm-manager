@@ -102,7 +102,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 
     var repositoryStore = new Sonia.rest.JsonStore({
       url: restUrl + 'repositories.json',
-      fields: [ 'id', 'name', 'type', 'contact', 'description', 'creationDate', 'url', 'permissions' ],
+      fields: [ 'id', 'name', 'type', 'contact', 'description', 'creationDate', 'url', 'public', 'permissions' ],
       sortInfo: {
         field: 'name'
       }
@@ -270,7 +270,8 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
            allowBlank: false
           },
           {fieldLabel: 'Contact', name: 'contact', vtype: 'email'},
-          {fieldLabel: 'Description', name: 'description', xtype: 'textarea'}
+          {fieldLabel: 'Description', name: 'description', xtype: 'textarea'},
+          {fieldLabel: 'Public', name: 'public', xtype: 'checkbox'}
         ]
       },{
         id: 'permissionGrid',

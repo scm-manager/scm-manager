@@ -87,7 +87,8 @@ public class PermissionUtil
 
     boolean result = false;
 
-    if (user.isAdmin())
+    if (user.isAdmin()
+        || ((pt == PermissionType.READ) && repository.isPublicReadable()))
     {
       result = true;
     }
