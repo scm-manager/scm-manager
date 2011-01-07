@@ -46,6 +46,35 @@ Ext.ns('Sonia.repository');
 
 // functions
 
+Sonia.repository.getPermissionValue = function(type){
+  var value = 0;
+  switch (type){
+    case "READ":
+      value = 0;
+      break;
+    case "WRITE":
+      value = 10;
+      break;
+    case "OWNER":
+      value = 100;
+      break;
+  }
+  return value;
+}
+
+Sonia.repository.isMember = function(group){
+  var result = false;
+  if ( Ext.isDefined(state.groups) ){
+    for ( var i=0; i<state.groups.length; i++ ){
+      if ( state.groups[i] == group ){
+        result = true;
+        break;
+      }
+    }
+  }
+  return result;
+}
+
 Sonia.repository.hasPermission = function(repository, type){
   var result = false;
   if ( admin ){
@@ -53,10 +82,20 @@ Sonia.repository.hasPermission = function(repository, type){
   } else {
     var permissions = repository.permissions;
     if ( Ext.isDefined(permissions) ){
+      var value = Sonia.repository.getPermissionValue( type );
       for (var i=0;i<permissions.length; i++ ){
-        if ( permissions[i].name == state.user.name ){
-          result = permissions[i].type == type;
-          break;
+        var p = permissions[i];
+        var pv = Sonia.repository.getPermissionValue( p.type );
+        if ( pv >= value ){
+          if ( p.groupPermission ){
+            if ( Sonia.repository.isMember( p.name ) ){
+              result = true;
+              break;
+            }
+          } else if ( p.name == state.user.name ) {
+            result = true;
+            break;
+          }
         }
       }
     }
@@ -187,7 +226,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
     this.permissionStore = new Ext.data.JsonStore({
       root: 'permissions',
-      fields: [ 'name', 'type' ],
+      fields: [ 'name', 'type', 'groupPermission' ],
       sortInfo: {
         field: 'name'
       }
@@ -208,6 +247,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
           id: 'type',
           header: 'Type',
           dataIndex: 'type',
+          width: 80,
           editor: new Ext.form.ComboBox({
             valueField: 'type',
             displayField: 'type',
@@ -224,8 +264,13 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
               ]
             })
           })
-        }
-      ]
+        },{
+         id: 'groupPermission',
+         header: 'Group',
+         dataIndex: 'groupPermission',
+         width: 60,
+         editor: new Ext.form.Checkbox()
+        }]
     });
 
     if ( update ){
