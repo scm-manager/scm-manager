@@ -69,6 +69,7 @@ public class Permission implements Serializable
    */
   public Permission(String name)
   {
+    this();
     this.name = name;
   }
 
@@ -81,7 +82,7 @@ public class Permission implements Serializable
    */
   public Permission(String name, PermissionType type)
   {
-    this.name = name;
+    this(name);
     this.type = type;
   }
 
@@ -90,14 +91,13 @@ public class Permission implements Serializable
    *
    *
    * @param name
-   * @param groupPermission
    * @param type
+   * @param groupPermission
    */
-  public Permission(String name, boolean groupPermission, PermissionType type)
+  public Permission(String name, PermissionType type, boolean groupPermission)
   {
-    this.name = name;
+    this(name, type);
     this.groupPermission = groupPermission;
-    this.type = type;
   }
 
   //~--- get methods ----------------------------------------------------------
