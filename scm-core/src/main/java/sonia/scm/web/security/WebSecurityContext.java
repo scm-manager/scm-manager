@@ -40,6 +40,8 @@ import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collection;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -75,6 +77,14 @@ public interface WebSecurityContext extends SecurityContext
   public void logout(HttpServletRequest request, HttpServletResponse response);
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Collection<String> getGroups();
 
   /**
    * Method description

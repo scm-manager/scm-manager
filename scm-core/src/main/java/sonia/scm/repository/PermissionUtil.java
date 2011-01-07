@@ -43,6 +43,7 @@ import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -134,7 +135,8 @@ public class PermissionUtil
 
       if (permissions != null)
       {
-        result = hasPermission(permissions, username, pt);
+        result = hasPermission(permissions, username,
+                               securityContext.getGroups(), pt);
       }
     }
 
@@ -147,12 +149,13 @@ public class PermissionUtil
    *
    * @param permissions
    * @param username
+   * @param groups
    * @param pt
    *
    * @return
    */
   private static boolean hasPermission(List<Permission> permissions,
-          String username, PermissionType pt)
+          String username, Collection<String> groups, PermissionType pt)
   {
     boolean result = false;
 
@@ -160,12 +163,15 @@ public class PermissionUtil
     {
       String name = p.getName();
 
-      if ((name != null) && name.equalsIgnoreCase(username)
-          && (p.getType().getValue() >= pt.getValue()))
+      if ((name != null) && (p.getType().getValue() >= pt.getValue()))
       {
-        result = true;
+        if (name.equals(username)
+            || (p.isGroupPermission() && groups.contains(p.getName())))
+        {
+          result = true;
 
-        break;
+          break;
+        }
       }
     }
 

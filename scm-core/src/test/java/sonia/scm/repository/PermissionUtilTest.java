@@ -50,7 +50,10 @@ import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -108,6 +111,30 @@ public class PermissionUtilTest
     PermissionUtil.assertPermission(repository, admams, PermissionType.OWNER);
   }
 
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testGroupPermissions()
+  {
+    WebSecurityContext context = mockGroupCtx(new User("dent", "Arthur Dent",
+                                   "arthur.dent@hitchhiker.com"));
+    Repository r = new Repository();
+
+    r.setPermissions(
+        new ArrayList<Permission>(
+            Arrays.asList(
+              new Permission("dent"),
+              new Permission("devel", true, PermissionType.READ),
+              new Permission("qa", true, PermissionType.WRITE))));
+    assertTrue(PermissionUtil.hasPermission(r, context, PermissionType.READ));
+    assertTrue(PermissionUtil.hasPermission(r, context, PermissionType.WRITE));
+    assertFalse(PermissionUtil.hasPermission(r, context, PermissionType.OWNER));
+    r.getPermissions().add(new Permission("dent", PermissionType.OWNER));
+    assertTrue(PermissionUtil.hasPermission(r, context, PermissionType.OWNER));
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -158,6 +185,26 @@ public class PermissionUtilTest
     WebSecurityContext context = mock(WebSecurityContext.class);
 
     when(context.getUser()).thenReturn(user);
+
+    return context;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   *
+   * @return
+   */
+  private WebSecurityContext mockGroupCtx(User user)
+  {
+    WebSecurityContext context = mockCtx(user);
+    Set<String> groups = new HashSet<String>();
+
+    groups.add("devel");
+    groups.add("qa");
+    when(context.getGroups()).thenReturn(groups);
 
     return context;
   }

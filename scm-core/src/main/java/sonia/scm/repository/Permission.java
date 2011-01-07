@@ -85,6 +85,21 @@ public class Permission implements Serializable
     this.type = type;
   }
 
+  /**
+   * Constructs ...
+   *
+   *
+   * @param name
+   * @param groupPermission
+   * @param type
+   */
+  public Permission(String name, boolean groupPermission, PermissionType type)
+  {
+    this.name = name;
+    this.groupPermission = groupPermission;
+    this.type = type;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -109,7 +124,29 @@ public class Permission implements Serializable
     return type;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isGroupPermission()
+  {
+    return groupPermission;
+  }
+
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param groupPermission
+   */
+  public void setGroupPermission(boolean groupPermission)
+  {
+    this.groupPermission = groupPermission;
+  }
 
   /**
    * Method description
@@ -134,6 +171,9 @@ public class Permission implements Serializable
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean groupPermission = false;
 
   /** Field description */
   private String name;
