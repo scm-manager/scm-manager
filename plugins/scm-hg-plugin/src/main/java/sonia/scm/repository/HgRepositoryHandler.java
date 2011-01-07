@@ -101,11 +101,8 @@ public class HgRepositoryHandler
    * Method description
    *
    */
-  @Override
-  public void loadConfig()
+  public void doAutoConfiguration()
   {
-    super.loadConfig();
-
     HgInstaller installer = null;
 
     if (SystemUtil.isWindows())
@@ -161,6 +158,17 @@ public class HgRepositoryHandler
     }
 
     storeConfig();
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Override
+  public void loadConfig()
+  {
+    super.loadConfig();
+    doAutoConfiguration();
   }
 
   //~--- get methods ----------------------------------------------------------
