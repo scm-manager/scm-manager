@@ -60,7 +60,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class ChainAuthenticatonManager implements AuthenticationManager
+public class ChainAuthenticatonManager extends AbstractAuthenticationManager
 {
 
   /** the logger for ChainAuthenticatonManager */
@@ -124,6 +124,9 @@ public class ChainAuthenticatonManager implements AuthenticationManager
           {
             user = result.getUser();
             user.setType(authenticator.getType());
+
+            // notify authentication listeners
+            fireAuthenticationEvent(request, response, user);
           }
 
           break;

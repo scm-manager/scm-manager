@@ -144,7 +144,12 @@ public class ScmContextListener extends GuiceServletContextListener
     groupManager.init(context);
 
     // init Authenticator
-    injector.getInstance(AuthenticationManager.class).init(context);
+    AuthenticationManager authenticationManager =
+      injector.getInstance(AuthenticationManager.class);
+
+    authenticationManager.init(context);
+    authenticationManager.addListeners(
+        bindExtProcessor.getAuthenticationListeners());
 
     return injector;
   }

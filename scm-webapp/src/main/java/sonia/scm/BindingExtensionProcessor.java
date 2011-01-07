@@ -50,6 +50,7 @@ import sonia.scm.repository.RepositoryListener;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.UserListener;
 import sonia.scm.web.security.AuthenticationHandler;
+import sonia.scm.web.security.AuthenticationListener;
 import sonia.scm.web.security.XmlAuthenticationHandler;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -162,6 +163,19 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
           repositoryListeners.add(listener);
         }
+        else if (AuthenticationListener.class.isAssignableFrom(extensionClass))
+        {
+          if (logger.isInfoEnabled())
+          {
+            logger.info("bind AuthenticaitonListener {}",
+                        extensionClass.getName());
+          }
+
+          AuthenticationListener listener =
+            (AuthenticationListener) extensionClass.newInstance();
+
+          authenticationListeners.add(listener);
+        }
         else
         {
           if (logger.isInfoEnabled())
@@ -205,6 +219,17 @@ public class BindingExtensionProcessor implements ExtensionProcessor
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Set<AuthenticationListener> getAuthenticationListeners()
+  {
+    return authenticationListeners;
+  }
 
   /**
    * Method description
@@ -306,6 +331,10 @@ public class BindingExtensionProcessor implements ExtensionProcessor
   /** Field description */
   private Set<RepositoryListener> repositoryListeners =
     new HashSet<RepositoryListener>();
+
+  /** Field description */
+  private Set<AuthenticationListener> authenticationListeners =
+    new HashSet<AuthenticationListener>();
 
   /** Field description */
   private Set<UserListener> userListeners = new HashSet<UserListener>();
