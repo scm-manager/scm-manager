@@ -37,7 +37,6 @@ package sonia.scm.web.security;
 
 import sonia.scm.Initable;
 import sonia.scm.ListenerSupport;
-import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -65,7 +64,6 @@ public interface AuthenticationManager
    *
    * @return
    */
-  public User authenticate(HttpServletRequest request,
-                           HttpServletResponse response, String username,
-                           String password);
+  public AuthenticationResult authenticate(HttpServletRequest request,
+          HttpServletResponse response, String username, String password);
 }

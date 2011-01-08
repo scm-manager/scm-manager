@@ -51,6 +51,7 @@ import sonia.scm.user.UserManager;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -113,10 +114,13 @@ public class BasicSecurityContext implements WebSecurityContext
                            HttpServletResponse response, String username,
                            String password)
   {
-    user = authenticator.authenticate(request, response, username, password);
+    AuthenticationResult ar = authenticator.authenticate(request, response,
+                                username, password);
 
-    if (user != null)
+    if (ar != null)
     {
+      user = ar.getUser();
+
       try
       {
         user.setLastLogin(System.currentTimeMillis());
@@ -138,7 +142,19 @@ public class BasicSecurityContext implements WebSecurityContext
           userManager.create(user);
         }
 
+        Collection<String> groupCollection = ar.getGroups();
+
+        if (groupCollection != null)
+        {
+          groups.addAll(groupCollection);
+        }
+
         loadGroups();
+
+        if (logger.isDebugEnabled())
+        {
+          logGroups();
+        }
       }
       catch (Exception ex)
       {
@@ -161,7 +177,7 @@ public class BasicSecurityContext implements WebSecurityContext
   public void logout(HttpServletRequest request, HttpServletResponse response)
   {
     user = null;
-    groups = null;
+    groups = new HashSet<String>();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -220,8 +236,6 @@ public class BasicSecurityContext implements WebSecurityContext
    */
   private void loadGroups()
   {
-    groups = new HashSet<String>();
-
     Collection<Group> groupCollection =
       groupManager.getGroupsForMember(user.getName());
 
@@ -232,6 +246,31 @@ public class BasicSecurityContext implements WebSecurityContext
         groups.add(group.getName());
       }
     }
+  }
+
+  /**
+   * Method description
+   *
+   */
+  private void logGroups()
+  {
+    StringBuilder msg = new StringBuilder("user ");
+
+    msg.append(user.getName()).append(" is member of ");
+
+    Iterator<String> groupIt = groups.iterator();
+
+    while (groupIt.hasNext())
+    {
+      msg.append(groupIt.next());
+
+      if (groupIt.hasNext())
+      {
+        msg.append(", ");
+      }
+    }
+
+    logger.debug(msg.toString());
   }
 
   //~--- fields ---------------------------------------------------------------

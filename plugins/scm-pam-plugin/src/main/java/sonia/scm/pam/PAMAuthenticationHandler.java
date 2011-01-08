@@ -138,7 +138,7 @@ public class PAMAuthenticationHandler implements AuthenticationHandler
             User user = new User(username);
 
             user.setAdmin(isAdmin(unixUser));
-            result = new AuthenticationResult(user);
+            result = new AuthenticationResult(user, unixUser.getGroups());
           }
         }
         catch (PAMException ex)

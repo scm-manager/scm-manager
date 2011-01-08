@@ -69,10 +69,10 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
   @Test
   public void testAuthenticateFailed()
   {
-    User user = manager.authenticate(request, response, trillian.getName(),
+    AuthenticationResult result = manager.authenticate(request, response, trillian.getName(),
                                      "trillian");
 
-    assertNull(user);
+    assertNull(result);
   }
 
   /**
@@ -82,9 +82,9 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
   @Test
   public void testAuthenticateNotFound()
   {
-    User user = manager.authenticate(request, response, "dent", "trillian");
+    AuthenticationResult result = manager.authenticate(request, response, "dent", "trillian");
 
-    assertNull(user);
+    assertNull(result);
   }
 
   /**
@@ -94,17 +94,17 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
   @Test
   public void testAuthenticateSuccess()
   {
-    User user = manager.authenticate(request, response, trillian.getName(),
+    AuthenticationResult result = manager.authenticate(request, response, trillian.getName(),
                                      "trillian123");
 
-    assertNotNull(user);
-    assertUserEquals(trillian, user);
-    assertEquals("trilliansType", user.getType());
-    user = manager.authenticate(request, response, perfect.getName(),
+    assertNotNull(result);
+    assertUserEquals(trillian, result.getUser());
+    assertEquals("trilliansType", result.getUser().getType());
+    result = manager.authenticate(request, response, perfect.getName(),
                                 "perfect123");
     assertNotNull(perfect);
-    assertUserEquals(perfect, user);
-    assertEquals("perfectsType", user.getType());
+    assertUserEquals(perfect, result.getUser());
+    assertEquals("perfectsType", result.getUser().getType());
   }
 
   /**
