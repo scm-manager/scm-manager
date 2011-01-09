@@ -39,6 +39,9 @@ import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -104,6 +107,18 @@ public class DummyWebSecurityContext implements WebSecurityContext
    * @return
    */
   @Override
+  public Set<String> getGroups()
+  {
+    return groups;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public User getUser()
   {
     return user;
@@ -122,6 +137,9 @@ public class DummyWebSecurityContext implements WebSecurityContext
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Set<String> groups = new HashSet<String>();
 
   /** Field description */
   private User user;

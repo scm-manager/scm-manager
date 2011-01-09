@@ -42,10 +42,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.group.Group;
+import sonia.scm.group.GroupManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -74,15 +81,18 @@ public class BasicSecurityContext implements WebSecurityContext
    *
    * @param configuration
    * @param authenticator
+   * @param groupManager
    * @param userManager
    */
   @Inject
   public BasicSecurityContext(ScmConfiguration configuration,
                               AuthenticationManager authenticator,
+                              GroupManager groupManager,
                               UserManager userManager)
   {
     this.configuration = configuration;
     this.authenticator = authenticator;
+    this.groupManager = groupManager;
     this.userManager = userManager;
   }
 
@@ -104,10 +114,13 @@ public class BasicSecurityContext implements WebSecurityContext
                            HttpServletResponse response, String username,
                            String password)
   {
-    user = authenticator.authenticate(request, response, username, password);
+    AuthenticationResult ar = authenticator.authenticate(request, response,
+                                username, password);
 
-    if (user != null)
+    if (ar != null)
     {
+      user = ar.getUser();
+
       try
       {
         user.setLastLogin(System.currentTimeMillis());
@@ -127,6 +140,20 @@ public class BasicSecurityContext implements WebSecurityContext
         else
         {
           userManager.create(user);
+        }
+
+        Collection<String> groupCollection = ar.getGroups();
+
+        if (groupCollection != null)
+        {
+          groups.addAll(groupCollection);
+        }
+
+        loadGroups();
+
+        if (logger.isDebugEnabled())
+        {
+          logGroups();
         }
       }
       catch (Exception ex)
@@ -150,9 +177,27 @@ public class BasicSecurityContext implements WebSecurityContext
   public void logout(HttpServletRequest request, HttpServletResponse response)
   {
     user = null;
+    groups = new HashSet<String>();
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Collection<String> getGroups()
+  {
+    if (groups == null)
+    {
+      groups = new HashSet<String>();
+    }
+
+    return groups;
+  }
 
   /**
    * Method description
@@ -183,6 +228,51 @@ public class BasicSecurityContext implements WebSecurityContext
     return getUser() != null;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  private void loadGroups()
+  {
+    Collection<Group> groupCollection =
+      groupManager.getGroupsForMember(user.getName());
+
+    if (groupCollection != null)
+    {
+      for (Group group : groupCollection)
+      {
+        groups.add(group.getName());
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   */
+  private void logGroups()
+  {
+    StringBuilder msg = new StringBuilder("user ");
+
+    msg.append(user.getName()).append(" is member of ");
+
+    Iterator<String> groupIt = groups.iterator();
+
+    while (groupIt.hasNext())
+    {
+      msg.append(groupIt.next());
+
+      if (groupIt.hasNext())
+      {
+        msg.append(", ");
+      }
+    }
+
+    logger.debug(msg.toString());
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -190,6 +280,12 @@ public class BasicSecurityContext implements WebSecurityContext
 
   /** Field description */
   private ScmConfiguration configuration;
+
+  /** Field description */
+  private GroupManager groupManager;
+
+  /** Field description */
+  private Set<String> groups = new HashSet<String>();
 
   /** Field description */
   private User user;

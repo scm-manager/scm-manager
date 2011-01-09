@@ -120,7 +120,22 @@ Ext.onReady(function(){
       }]
     });
 
+    var securitySection = null;
+
+    if ( state.user.type == 'xml' && state.user.name != 'anonymous' ){
+      securitySection = {
+        title: 'Security',
+        items: [{
+          label: 'Change Password',
+          fn: function(){
+            new Sonia.action.ChangePasswordWindow().show();
+          } 
+        }]
+      }
+    }
+
     if ( admin ){
+
       panel.addSections([{
         id: 'navConfig',
         title: 'Config',
@@ -140,20 +155,31 @@ Ext.onReady(function(){
             addTabPanel('plugins', 'pluginGrid', 'Plugins');
           }
         }]
-      },{
-        title: 'Security',
-        items: [{
-          label: 'Users',
-          fn: function(){
-            addTabPanel('users', 'userPanel', 'Users');
-          }
-        },{
-          label: 'Groups',
-          fn: function(){
-            addTabPanel('groups', 'groupPanel', 'Groups');
-          }
-        }]
       }]);
+
+      if ( securitySection == null ){
+        securitySection = {
+          title: 'Security',
+          items: []
+        }
+      }
+
+      securitySection.items.push({
+        label: 'Users',
+        fn: function(){
+          addTabPanel('users', 'userPanel', 'Users');
+        }
+      });
+      securitySection.items.push({
+        label: 'Groups',
+        fn: function(){
+          addTabPanel('groups', 'groupPanel', 'Groups');
+        }
+      });
+    }
+
+    if ( securitySection != null ){
+      panel.addSection( securitySection );
     }
 
     if ( state.user.name == 'anonymous' ){

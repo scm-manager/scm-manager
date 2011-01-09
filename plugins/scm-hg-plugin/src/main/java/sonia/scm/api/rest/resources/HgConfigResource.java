@@ -78,6 +78,27 @@ public class HgConfigResource
     this.handler = handler;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param uriInfo
+   *
+   * @return
+   */
+  @POST
+  @Path("auto-configuration")
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public HgConfig autoConfiguration(@Context UriInfo uriInfo)
+  {
+    handler.setConfig(null);
+    handler.doAutoConfiguration();
+
+    return handler.getConfig();
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**

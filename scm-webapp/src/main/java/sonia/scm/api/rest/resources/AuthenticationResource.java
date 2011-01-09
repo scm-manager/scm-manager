@@ -99,7 +99,8 @@ public class AuthenticationResource
 
     if (user != null)
     {
-      resp = Response.ok(getState(user)).build();
+      resp = Response.ok(new ScmState(securityContext,
+                                      repositoryManger.getTypes())).build();
     }
     else
     {
@@ -135,7 +136,7 @@ public class AuthenticationResource
 
     if (user != null)
     {
-      state = getState(user);
+      state = new ScmState(securityContext, repositoryManger.getTypes());
     }
     else
     {
@@ -167,7 +168,7 @@ public class AuthenticationResource
         logger.debug("return state for user {}", user.getName());
       }
 
-      state = getState(user);
+      state = new ScmState(securityContext, repositoryManger.getTypes());
       response = Response.ok(state).build();
     }
     else
@@ -176,25 +177,6 @@ public class AuthenticationResource
     }
 
     return response;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param user
-   *
-   * @return
-   */
-  private ScmState getState(User user)
-  {
-    ScmState state = new ScmState();
-
-    state.setUser(user);
-    state.setRepositoryTypes(repositoryManger.getTypes().toArray(new Type[0]));
-
-    return state;
   }
 
   //~--- fields ---------------------------------------------------------------

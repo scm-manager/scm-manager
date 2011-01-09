@@ -381,6 +381,19 @@ public class Group
    * Method description
    *
    *
+   * @param member
+   *
+   * @return
+   */
+  public boolean isMember(String member)
+  {
+    return (members != null) && members.contains(member);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   @Override

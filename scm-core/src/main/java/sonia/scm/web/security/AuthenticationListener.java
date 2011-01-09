@@ -35,12 +35,10 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Initable;
-import sonia.scm.ListenerSupport;
+import sonia.scm.plugin.ExtensionPoint;
+import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.Closeable;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,8 +47,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-public interface AuthenticationManager
-        extends Initable, Closeable, ListenerSupport<AuthenticationListener>
+@ExtensionPoint
+public interface AuthenticationListener
 {
 
   /**
@@ -59,11 +57,8 @@ public interface AuthenticationManager
    *
    * @param request
    * @param response
-   * @param username
-   * @param password
-   *
-   * @return
+   * @param user
    */
-  public AuthenticationResult authenticate(HttpServletRequest request,
-          HttpServletResponse response, String username, String password);
+  public void onAuthentication(HttpServletRequest request,
+                               HttpServletResponse response, User user);
 }

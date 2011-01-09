@@ -35,12 +35,13 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Initable;
-import sonia.scm.ListenerSupport;
+import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.Closeable;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,9 +50,45 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-public interface AuthenticationManager
-        extends Initable, Closeable, ListenerSupport<AuthenticationListener>
+public abstract class AbstractAuthenticationManager
+        implements AuthenticationManager
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param listener
+   */
+  @Override
+  public void addListener(AuthenticationListener listener)
+  {
+    listeners.add(listener);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param listeners
+   */
+  @Override
+  public void addListeners(Collection<AuthenticationListener> listeners)
+  {
+    listeners.addAll(listeners);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param listener
+   */
+  @Override
+  public void removeListener(AuthenticationListener listener)
+  {
+    listeners.remove(listener);
+  }
 
   /**
    * Method description
@@ -59,11 +96,20 @@ public interface AuthenticationManager
    *
    * @param request
    * @param response
-   * @param username
-   * @param password
-   *
-   * @return
+   * @param user
    */
-  public AuthenticationResult authenticate(HttpServletRequest request,
-          HttpServletResponse response, String username, String password);
+  protected void fireAuthenticationEvent(HttpServletRequest request,
+          HttpServletResponse response, User user)
+  {
+    for (AuthenticationListener listener : listeners)
+    {
+      listener.onAuthentication(request, response, user);
+    }
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Set<AuthenticationListener> listeners =
+    new HashSet<AuthenticationListener>();
 }

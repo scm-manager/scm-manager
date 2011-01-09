@@ -36,8 +36,11 @@ package sonia.scm;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.user.User;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collection;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -63,12 +66,15 @@ public class ScmState
    * Constructs ...
    *
    *
-   * @param user
+   *
+   * @param securityContext
    * @param repositoryTypes
    */
-  public ScmState(User user, Type[] repositoryTypes)
+  public ScmState(WebSecurityContext securityContext,
+                  Collection<Type> repositoryTypes)
   {
-    this.user = user;
+    this.user = securityContext.getUser();
+    this.groups = securityContext.getGroups();
     this.repositoryTypes = repositoryTypes;
   }
 
@@ -80,7 +86,18 @@ public class ScmState
    *
    * @return
    */
-  public Type[] getRepositoryTypes()
+  public Collection<String> getGroups()
+  {
+    return groups;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Collection<Type> getRepositoryTypes()
   {
     return repositoryTypes;
   }
@@ -113,9 +130,20 @@ public class ScmState
    * Method description
    *
    *
+   * @param groups
+   */
+  public void setGroups(Collection<String> groups)
+  {
+    this.groups = groups;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repositoryTypes
    */
-  public void setRepositoryTypes(Type[] repositoryTypes)
+  public void setRepositoryTypes(Collection<Type> repositoryTypes)
   {
     this.repositoryTypes = repositoryTypes;
   }
@@ -145,8 +173,11 @@ public class ScmState
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private Collection<String> groups;
+
+  /** Field description */
   @XmlElement(name = "repositoryTypes")
-  private Type[] repositoryTypes;
+  private Collection<Type> repositoryTypes;
 
   /** Field description */
   private boolean success = true;

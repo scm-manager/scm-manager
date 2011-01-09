@@ -60,6 +60,7 @@ import java.io.IOException;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Set;
 
 /**
  *
@@ -318,6 +319,30 @@ public class XmlGroupManager extends AbstractGroupManager
     for (Group group : groupDB.values())
     {
       groups.add(group.clone());
+    }
+
+    return groups;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param member
+   *
+   * @return
+   */
+  @Override
+  public Collection<Group> getGroupsForMember(String member)
+  {
+    LinkedList<Group> groups = new LinkedList<Group>();
+
+    for (Group group : groupDB.values())
+    {
+      if (group.isMember(member))
+      {
+        groups.add(group.clone());
+      }
     }
 
     return groups;

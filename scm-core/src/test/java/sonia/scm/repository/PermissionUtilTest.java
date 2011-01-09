@@ -50,7 +50,10 @@ import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -108,6 +111,53 @@ public class PermissionUtilTest
     PermissionUtil.assertPermission(repository, admams, PermissionType.OWNER);
   }
 
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testGroupPermissions()
+  {
+    WebSecurityContext dent = mockGroupCtx(new User("dent", "Arthur Dent",
+                                   "arthur.dent@hitchhiker.com"),
+                                   "devel", "qa");
+    WebSecurityContext ford = mockGroupCtx(new User("ford", "Ford Prefect",
+                                   "ford.prefect@hitchhiker.com"), "devel");
+    WebSecurityContext zaphod = mockGroupCtx(new User("zaphod",
+                                   "Zaphod Beeblebrox",
+                                   "zaphod.beeblebrox@hitchhiker.com"), "qa");
+    WebSecurityContext trillian = mockGroupCtx(new User("trillian",
+                                   "Trillian Astra",
+                                   "trillian.astra@hitchhiker.com"));
+    Repository r = new Repository();
+
+    r.setPermissions(
+        new ArrayList<Permission>(
+            Arrays.asList(
+              new Permission("dent"),
+              new Permission("devel", PermissionType.WRITE, true),
+              new Permission("qa", PermissionType.READ, true))));
+    // member of both devel and qa
+    assertTrue(PermissionUtil.hasPermission(r, dent, PermissionType.READ));
+    assertTrue(PermissionUtil.hasPermission(r, dent, PermissionType.WRITE));
+    assertFalse(PermissionUtil.hasPermission(r, dent, PermissionType.OWNER));
+    // now, additionally the owner
+    r.getPermissions().add(new Permission("dent", PermissionType.OWNER));
+    assertTrue(PermissionUtil.hasPermission(r, dent, PermissionType.OWNER));
+    // member of just devel
+    assertTrue(PermissionUtil.hasPermission(r, ford, PermissionType.READ));
+    assertTrue(PermissionUtil.hasPermission(r, ford, PermissionType.WRITE));
+    assertFalse(PermissionUtil.hasPermission(r, ford, PermissionType.OWNER));
+    // member of just qa
+    assertTrue(PermissionUtil.hasPermission(r, zaphod, PermissionType.READ));
+    assertFalse(PermissionUtil.hasPermission(r, zaphod, PermissionType.WRITE));
+    assertFalse(PermissionUtil.hasPermission(r, zaphod, PermissionType.OWNER));
+    // member of no groups
+    assertFalse(PermissionUtil.hasPermission(r, trillian, PermissionType.READ));
+    assertFalse(PermissionUtil.hasPermission(r, trillian, PermissionType.WRITE));
+    assertFalse(PermissionUtil.hasPermission(r, trillian, PermissionType.OWNER));
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -158,6 +208,24 @@ public class PermissionUtilTest
     WebSecurityContext context = mock(WebSecurityContext.class);
 
     when(context.getUser()).thenReturn(user);
+
+    return context;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   *
+   * @return
+   */
+  private WebSecurityContext mockGroupCtx(User user, String... groups)
+  {
+    WebSecurityContext context = mockCtx(user);
+    
+    Set<String> groupSet = new HashSet<String>(Arrays.asList(groups));
+    when(context.getGroups()).thenReturn(groupSet);
 
     return context;
   }

@@ -37,6 +37,10 @@ package sonia.scm.web.security;
 
 import sonia.scm.user.User;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collection;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -91,6 +95,37 @@ public class AuthenticationResult
     this.state = state;
   }
 
+  /**
+   * Constructs ...
+   *
+   *
+   *
+   * @param user
+   * @param groups
+   */
+  public AuthenticationResult(User user, Collection<String> groups)
+  {
+    this.user = user;
+    this.groups = groups;
+    this.state = AuthenticationState.SUCCESS;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param user
+   * @param groups
+   * @param state
+   */
+  public AuthenticationResult(User user, Collection<String> groups,
+                              AuthenticationState state)
+  {
+    this.user = user;
+    this.groups = groups;
+    this.state = state;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -124,6 +159,17 @@ public class AuthenticationResult
    *
    * @return
    */
+  public Collection<String> getGroups()
+  {
+    return groups;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public AuthenticationState getState()
   {
     return state;
@@ -141,6 +187,9 @@ public class AuthenticationResult
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Collection<String> groups;
 
   /** Field description */
   private AuthenticationState state;

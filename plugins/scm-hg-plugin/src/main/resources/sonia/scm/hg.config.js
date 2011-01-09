@@ -30,6 +30,7 @@
  */
 
 registerConfigPanel({
+  id: 'hgConfigForm',
   xtype : 'configForm',
   title : 'Mercurial Settings',
   items : [{
@@ -56,6 +57,14 @@ registerConfigPanel({
     name: 'useOptimizedBytecode',
     fieldLabel: 'Optimized Bytecode (.pyo)',
     inputValue: 'true'
+  },{
+    xtype: 'button',
+    text: 'Load Auto-Configuration',
+    fieldLabel: 'Auto-Configuration',
+    handler: function(){
+      var self = Ext.getCmp('hgConfigForm');
+      self.loadConfig( self.el, 'config/repositories/hg/auto-configuration.json', 'POST' );
+    }
   }],
 
   onSubmit: function(values){
@@ -76,10 +85,14 @@ registerConfigPanel({
   },
 
   onLoad: function(el){
+    this.loadConfig(el, 'config/repositories/hg.json', 'GET');
+  },
+
+  loadConfig: function(el, url, method){
     var tid = setTimeout( function(){ el.mask('Loading ...'); }, 100);
     Ext.Ajax.request({
-      url: restUrl + 'config/repositories/hg.json',
-      method: 'GET',
+      url: restUrl + url,
+      method: method,
       scope: this,
       disableCaching: true,
       success: function(response){

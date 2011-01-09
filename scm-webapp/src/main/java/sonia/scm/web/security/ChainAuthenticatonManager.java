@@ -60,7 +60,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class ChainAuthenticatonManager implements AuthenticationManager
+public class ChainAuthenticatonManager extends AbstractAuthenticationManager
 {
 
   /** the logger for ChainAuthenticatonManager */
@@ -97,11 +97,10 @@ public class ChainAuthenticatonManager implements AuthenticationManager
    * @return
    */
   @Override
-  public User authenticate(HttpServletRequest request,
-                           HttpServletResponse response, String username,
-                           String password)
+  public AuthenticationResult authenticate(HttpServletRequest request,
+          HttpServletResponse response, String username, String password)
   {
-    User user = null;
+    AuthenticationResult ar = null;
 
     for (AuthenticationHandler authenticator : authenticationHandlerSet)
     {
@@ -122,8 +121,13 @@ public class ChainAuthenticatonManager implements AuthenticationManager
         {
           if (result.getState().isSuccessfully() && (result.getUser() != null))
           {
-            user = result.getUser();
+            User user = result.getUser();
+
             user.setType(authenticator.getType());
+            ar = result;
+
+            // notify authentication listeners
+            fireAuthenticationEvent(request, response, user);
           }
 
           break;
@@ -135,7 +139,7 @@ public class ChainAuthenticatonManager implements AuthenticationManager
       }
     }
 
-    return user;
+    return ar;
   }
 
   /**

@@ -31,39 +31,65 @@
 
 
 
-package sonia.scm.web.security;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.Initable;
-import sonia.scm.ListenerSupport;
+package sonia.scm.api.rest;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.Closeable;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface AuthenticationManager
-        extends Initable, Closeable, ListenerSupport<AuthenticationListener>
+@XmlRootElement(name = "result")
+public class RestActionResult
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  public RestActionResult() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param success
+   */
+  public RestActionResult(boolean success)
+  {
+    this.success = success;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param request
-   * @param response
-   * @param username
-   * @param password
-   *
    * @return
    */
-  public AuthenticationResult authenticate(HttpServletRequest request,
-          HttpServletResponse response, String username, String password);
+  public boolean isSuccess()
+  {
+    return success;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param success
+   */
+  public void setSuccess(boolean success)
+  {
+    this.success = success;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean success = false;
 }
