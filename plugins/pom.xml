@@ -23,6 +23,7 @@
     <module>scm-activedirectory-auth-plugin</module>
     <module>scm-pam-plugin</module>
     <module>scm-bzr-plugin</module>
+    <module>scm-auth-ldap-plugin</module>
   </modules>
   
   <dependencies>
