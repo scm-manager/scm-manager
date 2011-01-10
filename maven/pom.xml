@@ -16,7 +16,6 @@
   <name>scm-maven-plugins</name>
 
   <modules>
-    <module>scm-web-compressor</module>
     <module>scm-plugin-archetype</module>
   </modules>
   

@@ -56,6 +56,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -178,6 +179,13 @@ public class BasicSecurityContext implements WebSecurityContext
   {
     user = null;
     groups = new HashSet<String>();
+
+    HttpSession session = request.getSession(false);
+
+    if (session != null)
+    {
+      session.invalidate();
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
