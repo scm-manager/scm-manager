@@ -266,7 +266,6 @@
             <configuration>
               <source>src/main/webapp/index.html</source>
               <target>${project.build.directory}/web-compressor/index.html</target>
-              <compressCSS>false</compressCSS>
             </configuration>
           </plugin>
 
