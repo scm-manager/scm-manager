@@ -113,6 +113,17 @@ public class LDAPConfig
    *
    * @return
    */
+  public String getAttributeNameMail()
+  {
+    return attributeNameMail;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getBaseDn()
   {
     return baseDn;
@@ -291,6 +302,10 @@ public class LDAPConfig
   /** Field description */
   @XmlElement(name = "attribute-name-id")
   private String attributeNameId = "uid";
+
+  /** Field description */
+  @XmlElement(name = "attribute-name-mail")
+  private String attributeNameMail = "mail";
 
   /** Field description */
   @XmlElement(name = "base-dn")
