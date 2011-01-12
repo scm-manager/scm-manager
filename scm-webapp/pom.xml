@@ -7,13 +7,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>1.0-M6</version>
+    <version>1.0-M7-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-webapp</artifactId>
   <packaging>war</packaging>
-  <version>1.0-M6</version>
+  <version>1.0-M7-SNAPSHOT</version>
   <name>scm-webapp</name>
 
   <dependencies>
@@ -28,25 +28,25 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>1.0-M6</version>
+      <version>1.0-M7-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
-      <version>1.0-M6</version>
+      <version>1.0-M7-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
-      <version>1.0-M6</version>
+      <version>1.0-M7-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-git-plugin</artifactId>
-      <version>1.0-M6</version>
+      <version>1.0-M7-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -164,7 +164,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>1.0-M6</version>
+      <version>1.0-M7-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
@@ -281,37 +281,37 @@
         <dependency>
           <groupId>sonia.scm.plugins</groupId>
           <artifactId>scm-graph-plugin</artifactId>
-          <version>1.0-M6</version>
+          <version>1.0-M7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
           <groupId>sonia.scm.sample</groupId>
           <artifactId>scm-sample-auth</artifactId>
-          <version>1.0-M6</version>
+          <version>1.0-M7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
           <groupId>sonia.scm.sample</groupId>
           <artifactId>scm-sample-hello</artifactId>
-          <version>1.0-M6</version>
+          <version>1.0-M7-SNAPSHOT</version>
         </dependency>
         
         <dependency>
           <groupId>sonia.scm.plugins</groupId>
           <artifactId>scm-activedirectory-auth-plugin</artifactId>
-          <version>1.0-M6</version>
+          <version>1.0-M7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
           <groupId>sonia.scm.plugins</groupId>
           <artifactId>scm-pam-plugin</artifactId>
-          <version>1.0-M6</version>
+          <version>1.0-M7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
           <groupId>sonia.scm.plugins</groupId>
           <artifactId>scm-bzr-plugin</artifactId>
-          <version>1.0-M6</version>
+          <version>1.0-M7-SNAPSHOT</version>
         </dependency>
 
       </dependencies>

@@ -7,12 +7,12 @@
   <parent>
     <artifactId>scm-plugins</artifactId>
     <groupId>sonia.scm.plugins</groupId>
-    <version>1.0-M6</version>
+    <version>1.0-M7-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-graph-plugin</artifactId>
-  <version>1.0-M6</version>
+  <version>1.0-M7-SNAPSHOT</version>
   <name>scm-graph-plugin</name>
   <description>Creates an Google Guice injection graph</description>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
