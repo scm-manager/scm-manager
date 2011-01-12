@@ -7,12 +7,12 @@
   <parent>
     <artifactId>scm-plugins</artifactId>
     <groupId>sonia.scm.plugins</groupId>
-    <version>1.0-M6-SNAPSHOT</version>
+    <version>1.0-M6</version>
   </parent>
 
   <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-pam-plugin</artifactId>
-  <version>1.0-M6-SNAPSHOT</version>
+  <version>1.0-M6</version>
   <name>scm-pam-plugin</name>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>Using pam as an authentication handler.</description>
