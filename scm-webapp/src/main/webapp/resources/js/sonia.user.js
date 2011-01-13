@@ -59,7 +59,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
 
     var userStore = new Sonia.rest.JsonStore({
       url: restUrl + 'users.json',
-      fields: [ 'name', 'displayName', 'mail', 'admin', 'creationDate', 'lastLogin', 'type'],
+      fields: [ 'name', 'displayName', 'mail', 'admin', 'creationDate', 'lastModified', 'type'],
       sortInfo: {
         field: 'name'
       }
@@ -77,7 +77,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
         {id: 'mail', header: 'Mail', dataIndex: 'mail', renderer: this.renderMailto, width: 200},
         {id: 'admin', header: 'Admin', dataIndex: 'admin', renderer: this.renderCheckbox, width: 50},
         {id: 'creationDate', header: 'Creation date', dataIndex: 'creationDate'},
-        {id: 'lastLogin', header: 'Last login', dataIndex: 'lastLogin'},
+        {id: 'lastLogin', header: 'Last modified', dataIndex: 'lastModified'},
         {id: 'type', header: 'Type', dataIndex: 'type', width: 80}
       ]
     });

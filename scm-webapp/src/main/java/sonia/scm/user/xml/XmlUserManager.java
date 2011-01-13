@@ -273,6 +273,7 @@ public class XmlUserManager extends AbstractUserManager
     if (userDB.contains(name))
     {
       AssertUtil.assertIsValid(user);
+      user.setLastModified(System.currentTimeMillis());
 
       synchronized (XmlUserManager.class)
       {
