@@ -39,6 +39,9 @@ import org.junit.Test;
 
 import sonia.scm.AbstractTestBase;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.cache.CacheManager;
+import sonia.scm.cache.EhCacheManager;
+import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.util.MockUtil;
@@ -69,8 +72,8 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
   @Test
   public void testAuthenticateFailed()
   {
-    AuthenticationResult result = manager.authenticate(request, response, trillian.getName(),
-                                     "trillian");
+    AuthenticationResult result = manager.authenticate(request, response,
+                                    trillian.getName(), "trillian");
 
     assertNull(result);
   }
@@ -82,7 +85,8 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
   @Test
   public void testAuthenticateNotFound()
   {
-    AuthenticationResult result = manager.authenticate(request, response, "dent", "trillian");
+    AuthenticationResult result = manager.authenticate(request, response,
+                                    "dent", "trillian");
 
     assertNull(result);
   }
@@ -94,14 +98,14 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
   @Test
   public void testAuthenticateSuccess()
   {
-    AuthenticationResult result = manager.authenticate(request, response, trillian.getName(),
-                                     "trillian123");
+    AuthenticationResult result = manager.authenticate(request, response,
+                                    trillian.getName(), "trillian123");
 
     assertNotNull(result);
     assertUserEquals(trillian, result.getUser());
     assertEquals("trilliansType", result.getUser().getType());
     result = manager.authenticate(request, response, perfect.getName(),
-                                "perfect123");
+                                  "perfect123");
     assertNotNull(perfect);
     assertUserEquals(perfect, result.getUser());
     assertEquals("perfectsType", result.getUser().getType());
@@ -126,7 +130,8 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
     trillian.setPassword("trillian123");
     handlerSet.add(new SingleUserAuthenticaionHandler("trilliansType",
             trillian));
-    manager = new ChainAuthenticatonManager(handlerSet);
+    manager = new ChainAuthenticatonManager(handlerSet,
+            new MessageDigestEncryptionHandler(), cacheManager);
     manager.init(contextProvider);
     request = MockUtil.getHttpServletRequest();
     response = MockUtil.getHttpServletResponse();
@@ -265,6 +270,9 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
 
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private CacheManager cacheManager = new EhCacheManager();
 
   /** Field description */
   private ChainAuthenticatonManager manager;
