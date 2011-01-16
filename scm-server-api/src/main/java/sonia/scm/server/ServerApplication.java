@@ -100,7 +100,7 @@ public class ServerApplication
     ServerConfig config = new ServerConfig();
     CliParser parser = new CliParser();
 
-    parser.parse(parser, args);
+    parser.parse(config, args);
 
     if (config.getShowHelp())
     {
