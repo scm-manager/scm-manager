@@ -29,27 +29,20 @@
  *
  */
 
+
+
 package sonia.scm.installer;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.io.Command;
-import sonia.scm.io.CommandResult;
-import sonia.scm.io.SimpleCommand;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.SystemUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  *
@@ -60,10 +53,6 @@ public abstract class AbstractHgInstaller implements HgInstaller
 
   /** Field description */
   public static final String DIRECTORY_REPOSITORY = "repositories";
-
-  /** the logger for AbstractHgInstaller */
-  private static final Logger logger = LoggerFactory
-      .getLogger(AbstractHgInstaller.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -91,102 +80,13 @@ public abstract class AbstractHgInstaller implements HgInstaller
   @Override
   public void install(HgConfig config) throws IOException
   {
-    File repoDirectory = new File(baseDirectory, DIRECTORY_REPOSITORY.concat(
-        File.separator).concat(HgRepositoryHandler.TYPE_NAME));
+    File repoDirectory = new File(
+                             baseDirectory,
+                             DIRECTORY_REPOSITORY.concat(File.separator).concat(
+                               HgRepositoryHandler.TYPE_NAME));
 
     IOUtil.mkdirs(repoDirectory);
     config.setRepositoryDirectory(repoDirectory);
-  }
-
-  /**
-   * TODO check for windows
-   *
-   *
-   *
-   * @param path
-   * @param cmd
-   *
-   * @return
-   */
-  protected String search(String[] path, String cmd)
-  {
-    String cmdPath = null;
-
-    try
-    {
-      Command command = new SimpleCommand(cmd, "--version");
-      CommandResult result = command.execute();
-
-      if (result.isSuccessfull())
-      {
-        cmdPath = cmd;
-      }
-    }
-    catch (IOException ex)
-    {}
-
-    if (cmdPath == null)
-    {
-      for (String pathPart : path)
-      {
-        List<String> extensions = getExecutableSearchExtensions();
-        File file = findFileByExtension(pathPart, cmd, extensions);
-        if (file != null)
-        {
-          cmdPath = file.getAbsolutePath();
-          break;
-        }
-      }
-    }
-
-    if (cmdPath != null)
-    {
-      if (logger.isInfoEnabled())
-      {
-        logger.info("found {} at {}", cmd, cmdPath);
-      }
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("could not find {}", cmd);
-    }
-
-    return cmdPath;
-  }
-
-  /**
-   * Returns a list of file extensions to use when searching for executables.
-   * The list is in priority order, with the highest priority first.
-   */
-  protected List<String> getExecutableSearchExtensions()
-  {
-    List<String> extensions;
-    if (SystemUtil.isWindows())
-    {
-      extensions = Arrays.asList(".exe");
-    }
-    else
-    {
-      extensions = Arrays.asList("");
-    }
-    return extensions;
-  }
-
-  private File findFileByExtension(String parentPath, String cmd,
-      List<String> potentialExtensions)
-  {
-    File file = null;
-    for (String potentialExtension : potentialExtensions)
-    {
-      String fileName = cmd.concat(potentialExtension);
-      File potentialFile = new File(parentPath, fileName);
-      if (potentialFile.exists())
-      {
-        file = potentialFile;
-        break;
-      }
-    }
-    return file;
   }
 
   //~--- fields ---------------------------------------------------------------

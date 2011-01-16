@@ -35,10 +35,8 @@ package sonia.scm.installer;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.HgConfig;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -51,29 +49,6 @@ import java.io.IOException;
  */
 public class UnixHgInstaller extends AbstractHgInstaller
 {
-
-  /** Field description */
-  private static final String[] PATH = new String[]
-  {
-
-    // default path
-    "/usr/bin",
-
-    // manually installed
-    "/usr/local/bin",
-
-    // mac ports
-    "/opt/local/bin",
-
-    // opencsw
-    "/opt/csw/bin"
-  };
-
-  /** the logger for UnixHgInstaller */
-  private static final Logger logger =
-    LoggerFactory.getLogger(UnixHgInstaller.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -100,8 +75,8 @@ public class UnixHgInstaller extends AbstractHgInstaller
   public void install(HgConfig config) throws IOException
   {
     super.install(config);
-    config.setHgBinary(search(PATH, "hg"));
-    config.setPythonBinary(search(PATH, "python"));
+    config.setHgBinary(IOUtil.search("hg"));
+    config.setPythonBinary(IOUtil.search("python"));
   }
 
   /**

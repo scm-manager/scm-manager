@@ -320,7 +320,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
 
     if (python == null)
     {
-      python = search(new String[0], "python");
+      python = IOUtil.search(new String[0], "python");
     }
 
     return python;
