@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.server;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.cli.CliException;
 import sonia.scm.cli.CliParser;
 import sonia.scm.cli.DefaultCliHelpBuilder;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.ServiceUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -69,8 +72,49 @@ public class ServerApplication
   public static final int RETURNCODE_MISSING_SERVER_IMPLEMENTATION = 3;
 
   /** Field description */
+  public static final String SERVERCONFIG = "/config.xml";
+
+  /** Field description */
   private static final Logger logger =
     LoggerFactory.getLogger(ServerApplication.class.getName());
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private static ServerConfig getServerConfig()
+  {
+    ServerConfig config = null;
+    InputStream input =
+      ServerApplication.class.getResourceAsStream(SERVERCONFIG);
+
+    if (input != null)
+    {
+      try
+      {
+        config = JAXB.unmarshal(input, ServerConfig.class);
+      }
+      catch (Exception ex)
+      {
+        logger.error(ex.getMessage(), ex);
+      }
+      finally
+      {
+        IOUtil.close(input);
+      }
+    }
+
+    if (config == null)
+    {
+      config = new ServerConfig();
+    }
+
+    return config;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -97,7 +141,7 @@ public class ServerApplication
 
     ApplicationInformation appInfo = JAXB.unmarshal(input,
                                        ApplicationInformation.class);
-    ServerConfig config = new ServerConfig();
+    ServerConfig config = getServerConfig();
     CliParser parser = new CliParser();
 
     parser.parse(config, args);
