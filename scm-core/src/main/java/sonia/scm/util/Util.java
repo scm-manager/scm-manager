@@ -58,6 +58,36 @@ public class Util
    * Method description
    *
    *
+   * @param object
+   * @param otherObject
+   * @param <T>
+   *
+   * @return
+   */
+  public static <T extends Comparable> int compare(T object, T otherObject)
+  {
+    int result = 0;
+
+    if ((object != null) && (otherObject != null))
+    {
+      result = object.compareTo(otherObject);
+    }
+    else if ((object == null) && (otherObject != null))
+    {
+      result = 1;
+    }
+    else if ((object != null) && (otherObject == null))
+    {
+      result = -1;
+    }
+
+    return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param date
    * @param tz
    *
