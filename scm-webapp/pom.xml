@@ -84,15 +84,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>${slf4j.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.16</version>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>0.9.27</version>
     </dependency>
 
     <dependency>
@@ -131,6 +125,12 @@
       <groupId>org.sonatype.aether</groupId>
       <artifactId>aether-connector-wagon</artifactId>
       <version>${aether.version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>xbean-reflect</artifactId>
+          <groupId>org.apache.xbean</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -166,6 +166,12 @@
       <artifactId>scm-test</artifactId>
       <version>1.0-M7-SNAPSHOT</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-simple</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
   </dependencies>
