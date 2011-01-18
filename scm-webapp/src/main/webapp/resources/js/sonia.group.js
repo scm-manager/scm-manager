@@ -237,6 +237,10 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     item.members = members;
   },
 
+  clearModifications: function(){
+    Ext.getCmp('memberGrid').getStore().commitChanges();
+  },
+
   update: function(group){
     if ( debug ){
       console.debug( 'update group ' + group.name );
@@ -258,7 +262,7 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         if ( debug ){
           console.debug('update success');
         }
-        // this.clearModifications();
+        this.clearModifications();
         clearTimeout(tid);
         el.unmask();
         this.execCallback(this.onUpdate, group);
