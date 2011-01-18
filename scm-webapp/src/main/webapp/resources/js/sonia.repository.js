@@ -379,7 +379,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   },
 
   clearModifications: function(){
-    // todo
+    Ext.getCmp('permissionGrid').getStore().commitChanges();
   },
 
   update: function(item){
