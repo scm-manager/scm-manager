@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.auth.ldap;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -51,8 +53,22 @@ import sonia.scm.web.security.AuthenticationResult;
 
 import java.io.IOException;
 
+import java.text.MessageFormat;
+
+import java.util.Properties;
+
+import javax.naming.Context;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.user.User;
 
 /**
  *
@@ -105,6 +121,90 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
     AssertUtil.assertIsNotEmpty(password);
 
     AuthenticationResult result = AuthenticationResult.NOT_FOUND;
+    DirContext context = null;
+
+    try
+    {
+      context = new InitialDirContext(ldapProperties);
+
+      SearchControls searchControls = new SearchControls();
+
+      searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+      searchControls.setCountLimit(1);
+      searchControls.setReturningAttributes(new String[] {
+        config.getAttributeNameId(),
+        config.getAttributeNameFullname(), config.getAttributeNameMail() });
+
+      String filter = MessageFormat.format(config.getSearchFilter(), username);
+      String baseDn = config.getUnitPeople() + "," + config.getBaseDn();
+      NamingEnumeration<SearchResult> searchResult = context.search(baseDn,
+                                                       filter, searchControls);
+
+      if (searchResult.hasMore())
+      {
+        result = AuthenticationResult.FAILED;
+
+        SearchResult sr = searchResult.next();
+        String userDn = sr.getName() + "," + baseDn;
+        Properties userProperties = new Properties(ldapProperties);
+
+        userProperties.put(Context.SECURITY_PRINCIPAL, userDn);
+        userProperties.put(Context.SECURITY_CREDENTIALS, password);
+
+        DirContext userContext = null;
+
+        try
+        {
+          userContext = new InitialDirContext(userProperties);
+
+          User user = new User();
+          Attributes userAttributes = sr.getAttributes();
+          user.setName((String)userAttributes.get(config.getAttributeNameId()).get());
+          user.setDisplayName((String)userAttributes.get(config.getAttributeNameFullname()).get());
+          user.setMail((String)userAttributes.get(config.getAttributeNameMail()).get());
+          user.setType(TYPE);
+          result = new AuthenticationResult(user);
+        }
+        catch (NamingException ex)
+        {
+          logger.trace(ex.getMessage(), ex);
+        }
+        finally
+        {
+          if (userContext != null)
+          {
+            try
+            {
+              userContext.close();
+            }
+            catch (NamingException ex)
+            {
+              logger.error(ex.getMessage(), ex);
+            }
+          }
+        }
+      }
+
+      searchResult.close();
+    }
+    catch (NamingException ex)
+    {
+      logger.error(ex.getMessage(), ex);
+    }
+    finally
+    {
+      if (context != null)
+      {
+        try
+        {
+          context.close();
+        }
+        catch (NamingException ex)
+        {
+          logger.error(ex.getMessage(), ex);
+        }
+      }
+    }
 
     return result;
   }
@@ -138,6 +238,8 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
       config = new LDAPConfig();
       store.set(config);
     }
+
+    buildLdapProperties();
   }
 
   /**
@@ -185,13 +287,44 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
   public void setConfig(LDAPConfig config)
   {
     this.config = config;
+    buildLdapProperties();
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  private void buildLdapProperties()
+  {
+    ldapProperties = new Properties();
+    ldapProperties.put(Context.INITIAL_CONTEXT_FACTORY,
+                       "com.sun.jndi.ldap.LdapCtxFactory");
+    ldapProperties.put(Context.PROVIDER_URL, config.getHostUrl());
+    ldapProperties.put(Context.SECURITY_AUTHENTICATION, "simple");
+
+    /*
+     * if( contextSecurityProtocol.equalsIgnoreCase( "ssl" ) )
+     * {
+     * ldapContextProperties.put( Context.SECURITY_PROTOCOL, "ssl" );
+     * ldapContextProperties.put( "java.naming.ldap.factory.socket",
+     *   "sonia.net.ssl.SSLSocketFactory" );
+     * }
+     */
+    ldapProperties.put(Context.SECURITY_PRINCIPAL, config.getConnectionDn());
+    ldapProperties.put(Context.SECURITY_CREDENTIALS,
+                       config.getConnectionPassword());
+    ldapProperties.put("java.naming.ldap.version", "3");
+  }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private LDAPConfig config;
+
+  /** Field description */
+  private Properties ldapProperties;
 
   /** Field description */
   private Store<LDAPConfig> store;

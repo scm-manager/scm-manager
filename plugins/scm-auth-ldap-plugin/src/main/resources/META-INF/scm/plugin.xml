@@ -6,11 +6,8 @@
     <artifactId>${project.artifactId}</artifactId>
     <version>${project.version}</version>
     <name>${project.name}</name>
-    <description>${project.description}</description>
-    <!--
-    <author></author>
-    <url>${project.url}</url>
-    -->
+    <description>SCM-Manager LDAP Plugin</description>
+    <author>Thorsten Ludewig</author>
   </information>
 
   <packages>

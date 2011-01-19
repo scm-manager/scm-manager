@@ -325,7 +325,7 @@ public class LDAPConfig
 
   /** Field description */
   @XmlElement(name = "search-filter")
-  private String searchFilter = "objectClass=posixAccount";
+  private String searchFilter = "(&(uid={0})(objectClass=posixAccount))";
 
   /** Field description */
   @XmlElement(name = "search-scope")

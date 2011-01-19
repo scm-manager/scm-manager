@@ -33,21 +33,103 @@
 
 registerGeneralConfigPanel({
   xtype : 'configForm',
-  title : 'PAM Authentication',
+  title : 'LDAP Authentication',
   items : [{
     xtype : 'textfield',
-    fieldLabel : 'Service name',
-    name : 'service-name',
-    allowBlank : false
+    fieldLabel : 'Admin NSRole DN',
+    name : 'admin-nsrole-dn',
+    allowBlank : true
   },{
     xtype : 'textfield',
     fieldLabel : 'Admin Groups',
     name : 'admin-groups',
     allowBlank : true
-  },{
+  }
+  ,{
     xtype : 'textfield',
     fieldLabel : 'Admin Users',
     name : 'admin-users',
+    allowBlank : true
+  }
+  ,{
+    xtype : 'textfield',
+    fieldLabel : 'Fullname Attribute Name',
+    name : 'attribute-name-fullname',
+    allowBlank : true
+  }
+  ,{
+    xtype : 'textfield',
+    fieldLabel : 'ID Attribute Name',
+    name : 'attribute-name-id',
+    allowBlank : true
+  }
+  ,{
+    xtype : 'textfield',
+    fieldLabel : 'Mail Attribute Name',
+    name : 'attribute-name-mail',
+    allowBlank : true
+  }
+  ,{
+    xtype : 'textfield',
+    fieldLabel : 'Base DN',
+    name : 'base-dn',
+    allowBlank : true
+  }
+  ,{
+    xtype : 'textfield',
+    fieldLabel : 'Connection DN',
+    name : 'connection-dn',
+    allowBlank : true
+  }
+  ,{
+    xtype : 'textfield',
+    inputType: 'password',
+    fieldLabel : 'Connection Password',
+    name : 'connection-password',
+    allowBlank : true
+  }
+  ,{
+    xtype : 'textfield',
+    fieldLabel : 'Host URL',
+    name : 'host-url',
+    allowBlank : true
+  }
+  ,{
+    xtype : 'textfield',
+    fieldLabel : 'Search Filter',
+    name : 'search-filter',
+    allowBlank : true
+  }
+  ,{
+    xtype : 'combo',
+    fieldLabel : 'Search Scope',
+    name : 'search-scope',
+    allowBlank : true,
+    valueField: 'scope',
+    displayField: 'scope',
+    typeAhead: false,
+    editable: false,
+    triggerAction: 'all',
+    mode: 'local',
+    store: new Ext.data.SimpleStore({
+      fields: ['scope'],
+      data: [
+        ['object'],
+        ['one'],
+        ['sub']
+      ]
+    })
+  }
+  ,{
+    xtype : 'textfield',
+    fieldLabel : 'Groups Unit',
+    name : 'unit-groups',
+    allowBlank : true
+  }
+  ,{
+    xtype : 'textfield',
+    fieldLabel : 'Groups People',
+    name : 'unit-people',
     allowBlank : true
   }],
 
