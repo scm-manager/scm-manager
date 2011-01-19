@@ -45,6 +45,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.security.AuthenticationHandler;
 import sonia.scm.web.security.AuthenticationResult;
@@ -68,7 +69,6 @@ import javax.naming.directory.SearchResult;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.user.User;
 
 /**
  *
@@ -144,42 +144,52 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
       {
         result = AuthenticationResult.FAILED;
 
-        SearchResult sr = searchResult.next();
-        String userDn = sr.getName() + "," + baseDn;
-        Properties userProperties = new Properties(ldapProperties);
-
-        userProperties.put(Context.SECURITY_PRINCIPAL, userDn);
-        userProperties.put(Context.SECURITY_CREDENTIALS, password);
-
-        DirContext userContext = null;
-
-        try
+        // prevent empty passwords to avoid anonymous logins
+        if ((password != null) && (password.trim().length() > 0))
         {
-          userContext = new InitialDirContext(userProperties);
+          SearchResult sr = searchResult.next();
+          String userDn = sr.getName() + "," + baseDn;
+          Properties userProperties = new Properties(ldapProperties);
 
-          User user = new User();
-          Attributes userAttributes = sr.getAttributes();
-          user.setName((String)userAttributes.get(config.getAttributeNameId()).get());
-          user.setDisplayName((String)userAttributes.get(config.getAttributeNameFullname()).get());
-          user.setMail((String)userAttributes.get(config.getAttributeNameMail()).get());
-          user.setType(TYPE);
-          result = new AuthenticationResult(user);
-        }
-        catch (NamingException ex)
-        {
-          logger.trace(ex.getMessage(), ex);
-        }
-        finally
-        {
-          if (userContext != null)
+          userProperties.put(Context.SECURITY_PRINCIPAL, userDn);
+          userProperties.put(Context.SECURITY_CREDENTIALS, password);
+
+          DirContext userContext = null;
+
+          try
           {
-            try
+            userContext = new InitialDirContext(userProperties);
+
+            User user = new User();
+            Attributes userAttributes = sr.getAttributes();
+
+            user.setName(
+                (String) userAttributes.get(config.getAttributeNameId()).get());
+            user.setDisplayName(
+                (String) userAttributes.get(
+                  config.getAttributeNameFullname()).get());
+            user.setMail(
+                (String) userAttributes.get(
+                  config.getAttributeNameMail()).get());
+            user.setType(TYPE);
+            result = new AuthenticationResult(user);
+          }
+          catch (NamingException ex)
+          {
+            logger.trace(ex.getMessage(), ex);
+          }
+          finally
+          {
+            if (userContext != null)
             {
-              userContext.close();
-            }
-            catch (NamingException ex)
-            {
-              logger.error(ex.getMessage(), ex);
+              try
+              {
+                userContext.close();
+              }
+              catch (NamingException ex)
+              {
+                logger.error(ex.getMessage(), ex);
+              }
             }
           }
         }
