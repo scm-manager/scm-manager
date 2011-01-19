@@ -315,6 +315,12 @@
           <version>1.0-M6-SNAPSHOT</version>
         </dependency>
 
+        <dependency>
+          <groupId>sonia.scm.plugins</groupId>
+          <artifactId>scm-auth-ldap-plugin</artifactId>
+          <version>1.0-M7-SNAPSHOT</version>
+        </dependency>
+
       </dependencies>
 
     </profile>
