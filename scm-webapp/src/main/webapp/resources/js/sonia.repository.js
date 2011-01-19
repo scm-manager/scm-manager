@@ -226,7 +226,11 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
     this.permissionStore = new Ext.data.JsonStore({
       root: 'permissions',
-      fields: [ 'name', 'type', 'groupPermission' ],
+      fields: [ 
+        {name: 'name'},
+        {name: 'type'},
+        {name: 'groupPermission', type: 'boolean'}
+      ],
       sortInfo: {
         field: 'name'
       }
@@ -237,6 +241,12 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         sortable: true
       },
       columns: [{
+         id: 'groupPermission',
+         xtype: 'checkcolumn',
+         header: 'Group Permission',
+         dataIndex: 'groupPermission',
+         width: 40
+        },{
           id: 'name',
           header: 'Name',
           dataIndex: 'name',
@@ -264,12 +274,6 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
               ]
             })
           })
-        },{
-         id: 'groupPermission',
-         header: 'Group',
-         dataIndex: 'groupPermission',
-         width: 60,
-         editor: new Ext.form.Checkbox()
         }]
     });
 
@@ -323,6 +327,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         xtype: 'editorgrid',
         title: 'Permissions',
         clicksToEdit: 1,
+        autoExpandColumn: 'name',
         frame: true,
         width: '100%',
         autoHeight: true,
@@ -374,7 +379,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   },
 
   clearModifications: function(){
-    // todo
+    Ext.getCmp('permissionGrid').getStore().commitChanges();
   },
 
   update: function(item){

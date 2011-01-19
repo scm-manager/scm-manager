@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.installer;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -36,10 +38,9 @@ package sonia.scm.installer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.io.SimpleCommand;
-import sonia.scm.io.SimpleCommandResult;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.RegistryUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -47,8 +48,6 @@ import sonia.scm.util.Util;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
-
-import java.util.Scanner;
 
 /**
  *
@@ -61,19 +60,20 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   private static final String FILE_LIBRARY_ZIP = "library.zip";
 
   /** Field description */
+  private static final String FILE_LIB_MERCURIAL =
+    "Lib\\site-packages\\mercurial";
+
+  /** Field description */
   private static final String FILE_MERCURIAL_EXE = "hg.exe";
 
   /** Field description */
   private static final String FILE_MERCURIAL_SCRIPT = "hg.bat";
 
   /** Field description */
-  private static final String FILE_TEMPLATES = "templates";
-
-  /** Field description */
   private static final String FILE_SCRIPTS = "Scripts";
 
   /** Field description */
-  private static final String FILE_LIB_MERCURIAL = "Lib\\site-packages\\mercurial";
+  private static final String FILE_TEMPLATES = "templates";
 
   /** Field description */
   private static final String[] REGISTRY_HG = new String[]
@@ -87,11 +87,12 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   };
 
   /** Field description */
-  private static final String REGISTRY_PYTHON = "HKEY_CLASSES_ROOT\\Python.File\\shell\\open\\command";
+  private static final String REGISTRY_PYTHON =
+    "HKEY_CLASSES_ROOT\\Python.File\\shell\\open\\command";
 
   /** the logger for WindowsHgInstaller */
-  private static final Logger logger = LoggerFactory
-      .getLogger(WindowsHgInstaller.class);
+  private static final Logger logger =
+    LoggerFactory.getLogger(WindowsHgInstaller.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -122,10 +123,12 @@ public class WindowsHgInstaller extends AbstractHgInstaller
     super.install(config);
 
     String pythonBinary = getPythonBinary();
+
     config.setPythonBinary(pythonBinary);
 
     File hgScript = getMercurialScript(pythonBinary);
     File hgDirectory = getMercurialDirectory();
+
     if (hgScript != null)
     {
       config.setHgBinary(hgScript.getAbsolutePath());
@@ -145,8 +148,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    * @param config
    */
   @Override
-  public void update(HgConfig config)
-  {}
+  public void update(HgConfig config) {}
 
   /**
    * Method description
@@ -233,8 +235,8 @@ public class WindowsHgInstaller extends AbstractHgInstaller
       IOUtil.copy(templateDirectory, new File(libDir, FILE_TEMPLATES));
     }
 
-    config.setHgBinary(new File(hgDirectory, FILE_MERCURIAL_EXE)
-        .getAbsolutePath());
+    config.setHgBinary(new File(hgDirectory,
+                                FILE_MERCURIAL_EXE).getAbsolutePath());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -251,7 +253,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
 
     for (String registryKey : REGISTRY_HG)
     {
-      String path = getRegistryValue(registryKey, null, null);
+      String path = RegistryUtil.getRegistryValue(registryKey);
 
       if (path != null)
       {
@@ -275,6 +277,10 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    * Returns the location of the script to run Mercurial, if Mercurial is
    * installed as a Python package from source.  Only packages that include a
    * templates directory will be recognized.
+   *
+   * @param pythonBinary
+   *
+   * @return
    */
   private File getMercurialScript(String pythonBinary)
   {
@@ -283,6 +289,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
     if (pythonBinary != null)
     {
       File pythonBinaryFile = new File(pythonBinary);
+
       if (pythonBinaryFile.exists())
       {
         File pythonDir = pythonBinaryFile.getParentFile();
@@ -290,10 +297,14 @@ public class WindowsHgInstaller extends AbstractHgInstaller
         File potentialHgScript = new File(scriptsDir, FILE_MERCURIAL_SCRIPT);
         File mercurialPackageDir = new File(pythonDir, FILE_LIB_MERCURIAL);
         File templatesDir = new File(mercurialPackageDir, FILE_TEMPLATES);
+
         if (potentialHgScript.exists() && templatesDir.exists())
+        {
           hgScript = potentialHgScript;
+        }
       }
     }
+
     return hgScript;
   }
 
@@ -305,80 +316,13 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    */
   private String getPythonBinary()
   {
-    String python = getRegistryValue(REGISTRY_PYTHON, null, null);
+    String python = RegistryUtil.getRegistryValue(REGISTRY_PYTHON);
 
     if (python == null)
     {
-      python = search(new String[0], "python");
+      python = IOUtil.search(new String[0], "python");
     }
 
     return python;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   * @param subKey
-   * @param defaultValue
-   *
-   * @return
-   */
-  private String getRegistryValue(String key, String subKey, String defaultValue)
-  {
-    String programDirectory = defaultValue;
-    SimpleCommand command = null;
-
-    if (subKey != null)
-    {
-      command = new SimpleCommand("reg", "query", key, "/v", subKey);
-    }
-    else
-    {
-      command = new SimpleCommand("reg", "query", key);
-    }
-
-    try
-    {
-      SimpleCommandResult result = command.execute();
-
-      if (result.isSuccessfull())
-      {
-        String output = result.getOutput();
-        Scanner scanner = new Scanner(output);
-
-        while (scanner.hasNextLine())
-        {
-          String line = scanner.nextLine();
-          int index = line.indexOf("REG_SZ");
-
-          if (index > 0)
-          {
-            programDirectory = line.substring(index + "REG_SZ".length()).trim();
-
-            if (programDirectory.startsWith("\""))
-            {
-              programDirectory = programDirectory.substring(1);
-              programDirectory = programDirectory.substring(0, programDirectory
-                  .indexOf("\""));
-            }
-
-            if (logger.isDebugEnabled())
-            {
-              logger.debug("use program directory {}", programDirectory);
-            }
-
-            break;
-          }
-        }
-      }
-    }
-    catch (IOException ex)
-    {
-      logger.error(ex.getMessage(), ex);
-    }
-
-    return programDirectory;
   }
 }

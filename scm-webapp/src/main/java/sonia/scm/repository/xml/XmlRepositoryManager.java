@@ -380,7 +380,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
     for (Repository repository : repositoryDB.values())
     {
-      if (isReader(repository))
+      if (handlerMap.containsKey(repository.getType()) && isReader(repository))
       {
         repositories.add(repository.clone());
       }

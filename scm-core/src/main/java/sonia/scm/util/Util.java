@@ -58,6 +58,36 @@ public class Util
    * Method description
    *
    *
+   * @param object
+   * @param otherObject
+   * @param <T>
+   *
+   * @return
+   */
+  public static <T extends Comparable> int compare(T object, T otherObject)
+  {
+    int result = 0;
+
+    if ((object != null) && (otherObject != null))
+    {
+      result = object.compareTo(otherObject);
+    }
+    else if ((object == null) && (otherObject != null))
+    {
+      result = 1;
+    }
+    else if ((object != null) && (otherObject == null))
+    {
+      result = -1;
+    }
+
+    return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param date
    * @param tz
    *
@@ -142,6 +172,33 @@ public class Util
     return parseDate(dateString, null);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param byteValue
+   *
+   * @return
+   */
+  public static String toString(byte[] byteValue)
+  {
+    StringBuilder buffer = new StringBuilder();
+
+    for (int i = 0; i < byteValue.length; i++)
+    {
+      int x = byteValue[i] & 0xff;
+
+      if (x < 16)
+      {
+        buffer.append('0');
+      }
+
+      buffer.append(Integer.toString(x, 16));
+    }
+
+    return buffer.toString();
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -187,6 +244,22 @@ public class Util
    * Method description
    *
    *
+   * @param object
+   * @param other
+   *
+   * @return
+   */
+  public static boolean isEquals(Object object, Object other)
+  {
+    return (object == null)
+           ? other == null
+           : object.equals(other);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param value
    *
    * @return
@@ -222,32 +295,17 @@ public class Util
     return (array != null) && (array.length > 0);
   }
 
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Method description
    *
    *
-   * @param byteValue
+   * @param object
+   * @param other
    *
    * @return
    */
-  public static String toString(byte[] byteValue)
+  public static boolean isNotEquals(Object object, Object other)
   {
-    StringBuilder buffer = new StringBuilder();
-
-    for (int i = 0; i < byteValue.length; i++)
-    {
-      int x = byteValue[i] & 0xff;
-
-      if (x < 16)
-      {
-        buffer.append('0');
-      }
-
-      buffer.append(Integer.toString(x, 16));
-    }
-
-    return buffer.toString();
+    return !isEquals(object, other);
   }
 }

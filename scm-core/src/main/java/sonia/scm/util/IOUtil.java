@@ -38,6 +38,9 @@ package sonia.scm.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.io.Command;
+import sonia.scm.io.CommandResult;
+import sonia.scm.io.SimpleCommand;
 import sonia.scm.io.ZipUnArchiver;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -52,12 +55,35 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  *
  * @author Sebastian Sdorra
  */
 public class IOUtil
 {
+
+  /** Field description */
+  public static final String DEFAULT_CHECKPARAMETER = "--version";
+
+  /** Field description */
+  public static final String[] DEFAULT_PATH = new String[]
+  {
+
+    // default path
+    "/usr/bin",
+
+    // manually installed
+    "/usr/local/bin",
+
+    // mac ports
+    "/opt/local/bin",
+
+    // opencsw
+    "/opt/csw/bin"
+  };
 
   /** Field description */
   private static final Logger logger =
@@ -258,6 +284,144 @@ public class IOUtil
       throw new IllegalStateException(
           "could not create directory ".concat(directory.getPath()));
     }
+  }
+
+  /**
+   *
+   *
+   * @param cmd
+   *
+   * @return
+   */
+  public static String search(String cmd)
+  {
+    return search(DEFAULT_PATH, cmd, DEFAULT_CHECKPARAMETER);
+  }
+
+  /**
+   *
+   *
+   * @param path
+   * @param cmd
+   *
+   * @return
+   */
+  public static String search(String[] path, String cmd)
+  {
+    return search(path, cmd, DEFAULT_CHECKPARAMETER);
+  }
+
+  /**
+   * TODO check for windows
+   *
+   *
+   *
+   * @param path
+   * @param cmd
+   * @param checkParameter
+   *
+   * @return
+   */
+  public static String search(String[] path, String cmd, String checkParameter)
+  {
+    String cmdPath = null;
+
+    try
+    {
+      Command command = new SimpleCommand(cmd, checkParameter);
+      CommandResult result = command.execute();
+
+      if (result.isSuccessfull())
+      {
+        cmdPath = cmd;
+      }
+    }
+    catch (IOException ex) {}
+
+    if (cmdPath == null)
+    {
+      for (String pathPart : path)
+      {
+        List<String> extensions = getExecutableSearchExtensions();
+        File file = findFileByExtension(pathPart, cmd, extensions);
+
+        if (file != null)
+        {
+          cmdPath = file.getAbsolutePath();
+
+          break;
+        }
+      }
+    }
+
+    if (cmdPath != null)
+    {
+      if (logger.isInfoEnabled())
+      {
+        logger.info("found {} at {}", cmd, cmdPath);
+      }
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("could not find {}", cmd);
+    }
+
+    return cmdPath;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param parentPath
+   * @param cmd
+   * @param potentialExtensions
+   *
+   * @return
+   */
+  private static File findFileByExtension(String parentPath, String cmd,
+          List<String> potentialExtensions)
+  {
+    File file = null;
+
+    for (String potentialExtension : potentialExtensions)
+    {
+      String fileName = cmd.concat(potentialExtension);
+      File potentialFile = new File(parentPath, fileName);
+
+      if (potentialFile.exists())
+      {
+        file = potentialFile;
+
+        break;
+      }
+    }
+
+    return file;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns a list of file extensions to use when searching for executables.
+   * The list is in priority order, with the highest priority first.
+   *
+   * @return
+   */
+  private static List<String> getExecutableSearchExtensions()
+  {
+    List<String> extensions;
+
+    if (SystemUtil.isWindows())
+    {
+      extensions = Arrays.asList(".exe");
+    }
+    else
+    {
+      extensions = Arrays.asList("");
+    }
+
+    return extensions;
   }
 
   //~--- inner classes --------------------------------------------------------

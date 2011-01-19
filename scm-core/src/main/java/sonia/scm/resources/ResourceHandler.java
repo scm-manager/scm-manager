@@ -31,66 +31,45 @@
 
 
 
-package sonia.scm.installer;
+package sonia.scm.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.util.IOUtil;
+import sonia.scm.plugin.ExtensionPoint;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public abstract class AbstractHgInstaller implements HgInstaller
+@ExtensionPoint
+public interface ResourceHandler
 {
-
-  /** Field description */
-  public static final String DIRECTORY_REPOSITORY = "repositories";
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param baseDirectory
-   */
-  public AbstractHgInstaller(File baseDirectory)
-  {
-    this.baseDirectory = baseDirectory;
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param config
-   *
-   * @throws IOException
+   * @return
    */
-  @Override
-  public void install(HgConfig config) throws IOException
-  {
-    File repoDirectory = new File(
-                             baseDirectory,
-                             DIRECTORY_REPOSITORY.concat(File.separator).concat(
-                               HgRepositoryHandler.TYPE_NAME));
+  public String getName();
 
-    IOUtil.mkdirs(repoDirectory);
-    config.setRepositoryDirectory(repoDirectory);
-  }
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public InputStream getResource();
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected File baseDirectory;
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public ResourceType getType();
 }

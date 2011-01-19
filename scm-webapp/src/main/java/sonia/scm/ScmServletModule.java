@@ -117,6 +117,10 @@ public class ScmServletModule extends ServletModule
   public static final String PATTERN_STYLESHEET = "*.css";
 
   /** Field description */
+  public static final String RESOURCE_REGEX =
+    "^/(?:resources|api|plugins|index)[\\./].*(?:html|\\.css|\\.js|\\.xml|\\.json|\\.txt)";
+
+  /** Field description */
   public static final String REST_PACKAGE = "sonia.scm.api.rest";
 
   /** Field description */
@@ -192,7 +196,7 @@ public class ScmServletModule extends ServletModule
      *      PATTERN_STATIC_RESOURCES).through(StaticResourceFilter.class);
      */
     filter(PATTERN_ALL).through(SSLFilter.class);
-    filter(PATTERN_PAGE, PATTERN_COMPRESSABLE).through(GZipFilter.class);
+    filterRegex(RESOURCE_REGEX).through(GZipFilter.class);
     filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(SecurityFilter.class);
 
     // debug servlet

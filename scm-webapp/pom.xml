@@ -7,13 +7,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>1.0-M6-SNAPSHOT</version>
+    <version>1.0-M7-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-webapp</artifactId>
   <packaging>war</packaging>
-  <version>1.0-M6-SNAPSHOT</version>
+  <version>1.0-M7-SNAPSHOT</version>
   <name>scm-webapp</name>
 
   <dependencies>
@@ -28,25 +28,25 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>1.0-M6-SNAPSHOT</version>
+      <version>1.0-M7-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
-      <version>1.0-M6-SNAPSHOT</version>
+      <version>1.0-M7-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
-      <version>1.0-M6-SNAPSHOT</version>
+      <version>1.0-M7-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-git-plugin</artifactId>
-      <version>1.0-M6-SNAPSHOT</version>
+      <version>1.0-M7-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -84,15 +84,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>${slf4j.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.16</version>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>0.9.27</version>
     </dependency>
 
     <dependency>
@@ -131,6 +125,12 @@
       <groupId>org.sonatype.aether</groupId>
       <artifactId>aether-connector-wagon</artifactId>
       <version>${aether.version}</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>xbean-reflect</artifactId>
+          <groupId>org.apache.xbean</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -164,8 +164,14 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>1.0-M6-SNAPSHOT</version>
+      <version>1.0-M7-SNAPSHOT</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-simple</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
   </dependencies>
@@ -226,7 +232,7 @@
   <properties>
     <aether.version>1.9</aether.version>
     <wagon.version>1.0-beta-7</wagon.version>
-    <maven.version>3.0.1</maven.version>
+    <maven.version>3.0.2</maven.version>
   </properties>
 
   <profiles>
@@ -266,7 +272,6 @@
             <configuration>
               <source>src/main/webapp/index.html</source>
               <target>${project.build.directory}/web-compressor/index.html</target>
-              <compressCSS>false</compressCSS>
             </configuration>
           </plugin>
 
@@ -282,37 +287,37 @@
         <dependency>
           <groupId>sonia.scm.plugins</groupId>
           <artifactId>scm-graph-plugin</artifactId>
-          <version>1.0-M6-SNAPSHOT</version>
+          <version>1.0-M7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
           <groupId>sonia.scm.sample</groupId>
           <artifactId>scm-sample-auth</artifactId>
-          <version>1.0-M6-SNAPSHOT</version>
+          <version>1.0-M7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
           <groupId>sonia.scm.sample</groupId>
           <artifactId>scm-sample-hello</artifactId>
-          <version>1.0-M6-SNAPSHOT</version>
+          <version>1.0-M7-SNAPSHOT</version>
         </dependency>
         
         <dependency>
           <groupId>sonia.scm.plugins</groupId>
           <artifactId>scm-activedirectory-auth-plugin</artifactId>
-          <version>1.0-M6-SNAPSHOT</version>
+          <version>1.0-M7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
           <groupId>sonia.scm.plugins</groupId>
           <artifactId>scm-pam-plugin</artifactId>
-          <version>1.0-M6-SNAPSHOT</version>
+          <version>1.0-M7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
           <groupId>sonia.scm.plugins</groupId>
           <artifactId>scm-bzr-plugin</artifactId>
-          <version>1.0-M6-SNAPSHOT</version>
+          <version>1.0-M7-SNAPSHOT</version>
         </dependency>
 
         <dependency>

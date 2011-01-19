@@ -92,13 +92,16 @@ Ext.onReady(function(){
 
   // adds a tab to main TabPanel
   function addTabPanel(id, xtype, title){
-    mainTabPanel.add({
-      id: id,
-      xtype: xtype,
-      title: title,
-      closable: true,
-      autoScroll: true
-    });
+    var tab = mainTabPanel.findById( id );
+    if ( tab == null ){
+      mainTabPanel.add({
+        id: id,
+        xtype: xtype,
+        title: title,
+        closable: true,
+        autoScroll: true
+      });
+    }
     mainTabPanel.setActiveTab(id);
   }
 

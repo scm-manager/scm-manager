@@ -31,66 +31,35 @@
 
 
 
-package sonia.scm.installer;
+package sonia.scm.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
+import java.util.Comparator;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public abstract class AbstractHgInstaller implements HgInstaller
+public class ResourceHandlerComparator implements Comparator<ResourceHandler>
 {
-
-  /** Field description */
-  public static final String DIRECTORY_REPOSITORY = "repositories";
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param baseDirectory
-   */
-  public AbstractHgInstaller(File baseDirectory)
-  {
-    this.baseDirectory = baseDirectory;
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param config
+   * @param handler
+   * @param otherHandler
    *
-   * @throws IOException
+   * @return
    */
   @Override
-  public void install(HgConfig config) throws IOException
+  public int compare(ResourceHandler handler, ResourceHandler otherHandler)
   {
-    File repoDirectory = new File(
-                             baseDirectory,
-                             DIRECTORY_REPOSITORY.concat(File.separator).concat(
-                               HgRepositoryHandler.TYPE_NAME));
-
-    IOUtil.mkdirs(repoDirectory);
-    config.setRepositoryDirectory(repoDirectory);
+    return Util.compare(handler.getName(), otherHandler.getName());
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected File baseDirectory;
 }

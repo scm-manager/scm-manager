@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : logback.xml
+    Created on : January 18, 2011, 5:46 PM
+    Author     : sdorra
+    Description:
+        Purpose of the document follows.
+-->
+
+<configuration>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <!-- encoders are  by default assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder -->
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="sonia.scm" level="DEBUG" />
+  <logger name="sonia.scm.util.ServiceUtil" level="WARN" />
+
+  <root level="WARN">
+    <appender-ref ref="STDOUT" />
+  </root>
+  
+</configuration>

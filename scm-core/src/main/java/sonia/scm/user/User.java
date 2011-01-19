@@ -131,15 +131,64 @@ public class User
    *
    *
    * @param user
+   *
+   * @return
    */
-  public void copyProperties(User user)
+  public boolean copyProperties(User user)
   {
-    user.setAdmin(admin);
-    user.setDisplayName(displayName);
-    user.setMail(mail);
-    user.setName(name);
-    user.setPassword(password);
-    user.setType(type);
+    return copyProperties(user, true);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param copyPassword
+   *
+   * @return
+   */
+  public boolean copyProperties(User user, boolean copyPassword)
+  {
+    boolean result = false;
+
+    if (user.isAdmin() != admin)
+    {
+      result = true;
+      user.setAdmin(admin);
+    }
+
+    if (Util.isNotEquals(user.getDisplayName(), displayName))
+    {
+      result = true;
+      user.setDisplayName(displayName);
+    }
+
+    if (Util.isNotEquals(user.getMail(), mail))
+    {
+      result = true;
+      user.setMail(mail);
+    }
+
+    if (Util.isNotEquals(user.getName(), name))
+    {
+      result = true;
+      user.setName(name);
+    }
+
+    if (copyPassword && Util.isNotEquals(user.getPassword(), password))
+    {
+      result = true;
+      user.setPassword(password);
+    }
+
+    if (Util.isNotEquals(user.getType(), type))
+    {
+      result = true;
+      user.setType(type);
+    }
+
+    return result;
   }
 
   /**
@@ -263,9 +312,9 @@ public class User
    *
    * @return
    */
-  public long getLastLogin()
+  public Long getLastModified()
   {
-    return lastLogin;
+    return lastModified;
   }
 
   /**
@@ -378,11 +427,11 @@ public class User
    * Method description
    *
    *
-   * @param lastLogin
+   * @param lastModified
    */
-  public void setLastLogin(long lastLogin)
+  public void setLastModified(long lastModified)
   {
-    this.lastLogin = lastLogin;
+    this.lastModified = lastModified;
   }
 
   /**
@@ -444,7 +493,7 @@ public class User
 
   /** Field description */
   @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
-  private Long lastLogin;
+  private Long lastModified;
 
   /** Field description */
   private String mail;

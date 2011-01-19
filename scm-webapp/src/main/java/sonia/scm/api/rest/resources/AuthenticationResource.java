@@ -41,6 +41,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContext;
 import sonia.scm.ScmState;
 import sonia.scm.Type;
 import sonia.scm.repository.RepositoryManager;
@@ -84,6 +85,40 @@ public class AuthenticationResource
    *
    * @param request
    * @param response
+   * @param username
+   * @param password
+   *
+   * @return
+   */
+  @POST
+  @Path("login")
+  public ScmState authenticate(@Context HttpServletRequest request,
+                               @Context HttpServletResponse response,
+                               @FormParam("username") String username,
+                               @FormParam("password") String password)
+  {
+    ScmState state = null;
+    User user = securityContext.authenticate(request, response, username,
+                  password);
+
+    if ((user != null) &&!SCMContext.USER_ANONYMOUS.equals(user.getName()))
+    {
+      state = new ScmState(securityContext, repositoryManger.getTypes());
+    }
+    else
+    {
+      throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+    }
+
+    return state;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
    *
    * @return
    */
@@ -111,40 +146,6 @@ public class AuthenticationResource
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param username
-   * @param password
-   *
-   * @return
-   */
-  @POST
-  @Path("login")
-  public ScmState getState(@Context HttpServletRequest request,
-                           @Context HttpServletResponse response,
-                           @FormParam("username") String username,
-                           @FormParam("password") String password)
-  {
-    ScmState state = null;
-    User user = securityContext.authenticate(request, response, username,
-                  password);
-
-    if (user != null)
-    {
-      state = new ScmState(securityContext, repositoryManger.getTypes());
-    }
-    else
-    {
-      throw new WebApplicationException(Response.Status.UNAUTHORIZED);
-    }
-
-    return state;
-  }
 
   /**
    * Method description

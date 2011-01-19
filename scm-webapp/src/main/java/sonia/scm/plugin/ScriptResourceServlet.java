@@ -39,6 +39,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import sonia.scm.boot.BootstrapUtil;
+import sonia.scm.resources.ResourceHandler;
+import sonia.scm.resources.ResourceHandlerComparator;
+import sonia.scm.resources.ResourceType;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -48,7 +51,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -75,11 +81,14 @@ public class ScriptResourceServlet extends AbstractResourceServlet
    *
    *
    * @param pluginLoader
+   * @param resourceHandlers
    */
   @Inject
-  public ScriptResourceServlet(PluginLoader pluginLoader)
+  public ScriptResourceServlet(PluginLoader pluginLoader,
+                               Set<ResourceHandler> resourceHandlers)
   {
     this.pluginLoader = pluginLoader;
+    this.resourceHandlers = resourceHandlers;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -108,6 +117,22 @@ public class ScriptResourceServlet extends AbstractResourceServlet
       for (String resource : scriptResources)
       {
         appendResource(stream, resource);
+      }
+    }
+
+    if (Util.isNotEmpty(resourceHandlers))
+    {
+      List<ResourceHandler> handlerList =
+        new ArrayList<ResourceHandler>(resourceHandlers);
+
+      Collections.sort(handlerList, new ResourceHandlerComparator());
+
+      for (ResourceHandler resourceHandler : resourceHandlers)
+      {
+        if (resourceHandler.getType() == ResourceType.SCRIPT)
+        {
+          appendResource(resourceHandler.getResource(), stream);
+        }
       }
     }
   }
@@ -143,6 +168,21 @@ public class ScriptResourceServlet extends AbstractResourceServlet
   {
     InputStream input = getResourceAsStream(script);
 
+    appendResource(input, stream);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param input
+   * @param stream
+   *
+   * @throws IOException
+   */
+  private void appendResource(InputStream input, OutputStream stream)
+          throws IOException
+  {
     if (input != null)
     {
       try
@@ -239,4 +279,7 @@ public class ScriptResourceServlet extends AbstractResourceServlet
 
   /** Field description */
   private PluginLoader pluginLoader;
+
+  /** Field description */
+  private Set<ResourceHandler> resourceHandlers;
 }

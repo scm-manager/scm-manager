@@ -42,6 +42,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.cache.CacheManager;
+import sonia.scm.cache.SimpleCache;
+import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
@@ -63,6 +66,9 @@ import javax.servlet.http.HttpServletResponse;
 public class ChainAuthenticatonManager extends AbstractAuthenticationManager
 {
 
+  /** Field description */
+  public static final String CACHE_NAME = "sonia.cache.auth";
+
   /** the logger for ChainAuthenticatonManager */
   private static final Logger logger =
     LoggerFactory.getLogger(ChainAuthenticatonManager.class);
@@ -74,13 +80,20 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    *
    *
    * @param authenticationHandlerSet
+   * @param encryptionHandler
+   * @param cacheManager
    */
   @Inject
   public ChainAuthenticatonManager(
-          Set<AuthenticationHandler> authenticationHandlerSet)
+          Set<AuthenticationHandler> authenticationHandlerSet,
+          EncryptionHandler encryptionHandler, CacheManager cacheManager)
   {
     AssertUtil.assertIsNotEmpty(authenticationHandlerSet);
+    AssertUtil.assertIsNotNull(cacheManager);
     this.authenticationHandlerSet = authenticationHandlerSet;
+    this.encryptionHandler = encryptionHandler;
+    this.cache = cacheManager.getSimpleCache(String.class,
+            AuthenticationCacheValue.class, CACHE_NAME);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -98,6 +111,74 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    */
   @Override
   public AuthenticationResult authenticate(HttpServletRequest request,
+          HttpServletResponse response, String username, String password)
+  {
+    AssertUtil.assertIsNotEmpty(username);
+    AssertUtil.assertIsNotEmpty(password);
+
+    String encryptedPassword = encryptionHandler.encrypt(password);
+    AuthenticationResult ar = getCached(username, encryptedPassword);
+
+    if (ar == null)
+    {
+      ar = doAuthentication(request, response, username, password);
+
+      if ((ar != null) && ar.isCacheable())
+      {
+        cache.put(username,
+                  new AuthenticationCacheValue(ar, encryptedPassword));
+      }
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("authenticate {} via cache", username);
+    }
+
+    return ar;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Override
+  public void close() throws IOException
+  {
+    for (AuthenticationHandler authenticator : authenticationHandlerSet)
+    {
+      IOUtil.close(authenticator);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   */
+  @Override
+  public void init(SCMContextProvider context)
+  {
+    for (AuthenticationHandler authenticator : authenticationHandlerSet)
+    {
+      authenticator.init(context);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   * @param username
+   * @param password
+   *
+   * @return
+   */
+  private AuthenticationResult doAuthentication(HttpServletRequest request,
           HttpServletResponse response, String username, String password)
   {
     AuthenticationResult ar = null;
@@ -142,38 +223,80 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
     return ar;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Override
-  public void close() throws IOException
-  {
-    for (AuthenticationHandler authenticator : authenticationHandlerSet)
-    {
-      IOUtil.close(authenticator);
-    }
-  }
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param context
+   * @param username
+   * @param encryptedPassword
+   *
+   * @return
    */
-  @Override
-  public void init(SCMContextProvider context)
+  private AuthenticationResult getCached(String username,
+          String encryptedPassword)
   {
-    for (AuthenticationHandler authenticator : authenticationHandlerSet)
+    AuthenticationResult result = null;
+    AuthenticationCacheValue value = cache.get(username);
+
+    if (value != null)
     {
-      authenticator.init(context);
+      String cachedPassword = value.password;
+
+      if (cachedPassword.equals(encryptedPassword))
+      {
+        result = value.authenticationResult;
+      }
     }
+
+    return result;
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 2011-01-15
+   * @author         Sebastian Sdorra
+   */
+  private static class AuthenticationCacheValue
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param authenticationResult
+     * @param password
+     */
+    public AuthenticationCacheValue(AuthenticationResult authenticationResult,
+                                    String password)
+    {
+      this.authenticationResult = authenticationResult;
+      this.password = password;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private AuthenticationResult authenticationResult;
+
+    /** Field description */
+    private String password;
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private Set<AuthenticationHandler> authenticationHandlerSet;
+
+  /** Field description */
+  private SimpleCache<String, AuthenticationCacheValue> cache;
+
+  /** Field description */
+  private EncryptionHandler encryptionHandler;
 }

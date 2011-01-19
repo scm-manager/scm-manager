@@ -186,7 +186,34 @@ public class AuthenticationResult
     return user;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isCacheable()
+  {
+    return cacheable;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param cacheable
+   */
+  public void setCacheable(boolean cacheable)
+  {
+    this.cacheable = cacheable;
+  }
+
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean cacheable = true;
 
   /** Field description */
   private Collection<String> groups;

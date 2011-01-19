@@ -124,21 +124,13 @@ public class BasicSecurityContext implements WebSecurityContext
 
       try
       {
-        user.setLastLogin(System.currentTimeMillis());
-
         User dbUser = userManager.get(username);
 
-        if (dbUser != null)
+        if ((dbUser != null) && dbUser.copyProperties(user, false))
         {
-
-          // update properties
-          dbUser.setDisplayName(user.getDisplayName());
-          dbUser.setLastLogin(user.getLastLogin());
-          dbUser.setMail(user.getMail());
-          dbUser.setType(user.getType());
           userManager.modify(dbUser);
         }
-        else
+        else if (dbUser == null)
         {
           userManager.create(user);
         }
