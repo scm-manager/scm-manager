@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.server;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -63,14 +65,12 @@ public interface Server
    * Method description
    *
    *
-   * @param config
    * @param webapp
    *
    * @throws IOException
    * @throws ServerException
    */
-  public void start(ServerConfig config, File webapp)
-          throws ServerException, IOException;
+  public void start(File webapp) throws ServerException, IOException;
 
   /**
    * Method description

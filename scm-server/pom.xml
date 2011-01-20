@@ -20,12 +20,6 @@
 
     <dependency>
       <groupId>sonia.scm</groupId>
-      <artifactId>scm-core</artifactId>
-      <version>1.0-M7-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>sonia.scm</groupId>
       <artifactId>scm-server-api</artifactId>
       <version>1.0-M7-SNAPSHOT</version>
     </dependency>

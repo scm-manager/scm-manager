@@ -67,12 +67,6 @@
   <dependencies>
 
     <dependency>
-      <artifactId>slf4j-api</artifactId>
-      <groupId>org.slf4j</groupId>
-      <version>${slf4j.version}</version>
-    </dependency>    
-
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>${junit.version}</version>

@@ -15,14 +15,4 @@
   <version>1.0-M7-SNAPSHOT</version>
   <name>scm-server-api</name>
 
-  <dependencies>
-
-    <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-core</artifactId>
-      <version>1.0-M7-SNAPSHOT</version>
-    </dependency>
-
-  </dependencies>
-
 </project>

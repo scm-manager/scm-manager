@@ -25,6 +25,12 @@
     </dependency>
 
     <dependency>
+      <artifactId>slf4j-api</artifactId>
+      <groupId>org.slf4j</groupId>
+      <version>${slf4j.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
       <version>${guice.version}</version>

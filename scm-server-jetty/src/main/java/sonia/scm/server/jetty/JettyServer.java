@@ -29,17 +29,17 @@
  *
  */
 
+
+
 package sonia.scm.server.jetty;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.xml.XmlConfiguration;
 
 import sonia.scm.server.Server;
 import sonia.scm.server.ServerAllreadyRunningException;
-import sonia.scm.server.ServerConfig;
 import sonia.scm.server.ServerException;
 import sonia.scm.server.ServerListener;
 
@@ -47,6 +47,8 @@ import sonia.scm.server.ServerListener;
 
 import java.io.File;
 import java.io.IOException;
+
+import java.net.URL;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -57,6 +59,11 @@ import java.util.Set;
  */
 public class JettyServer implements Server
 {
+
+  /** Field description */
+  public static final String CONFIGURATION = "/server-config.xml";
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -86,44 +93,46 @@ public class JettyServer implements Server
    * Method description
    *
    *
-   * @param config
    * @param webapp
    *
    * @throws IOException
    * @throws ServerException
    */
   @Override
-  public void start(ServerConfig config, File webapp)
-          throws ServerException, IOException
+  public void start(File webapp) throws ServerException, IOException
   {
     if (isRunning())
     {
       throw new ServerAllreadyRunningException();
     }
 
-    server = new org.eclipse.jetty.server.Server();
+    URL configURL = JettyServer.class.getResource(CONFIGURATION);
 
-    Connector connector = new SelectChannelConnector();
-
-    for (ServerListener listener : listeners)
+    if (configURL == null)
     {
-      connector.addLifeCycleListener(new JettyServerListenerAdapter(listener));
+      throw new ServerException("could not find server-config.xml");
     }
-
-    connector.setPort(config.getPort());
-    server.addConnector(connector);
-
-    WebAppContext wac = new WebAppContext();
-
-    wac.setContextPath(config.getContextPath());
-    wac.setWar(webapp.getAbsolutePath());
-    wac.setExtractWAR(true);
-    server.setHandler(wac);
-
-    // server.setStopAtShutdown(true);
 
     try
     {
+      server = new org.eclipse.jetty.server.Server();
+
+      XmlConfiguration config = new XmlConfiguration(configURL);
+
+      config.configure(server);
+
+      for (ServerListener listener : listeners)
+      {
+        server.addLifeCycleListener(new JettyServerListenerAdapter(listener));
+      }
+
+      WebAppContext wac = new WebAppContext();
+
+      wac.setWar(webapp.getAbsolutePath());
+      wac.setExtractWAR(true);
+      server.setHandler(wac);
+
+      // server.setStopAtShutdown(true);
       server.start();
       server.join();
     }
