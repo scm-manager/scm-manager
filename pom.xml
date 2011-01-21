@@ -7,9 +7,21 @@
   <artifactId>scm</artifactId>
   <packaging>pom</packaging>
   <version>1.0-M7-SNAPSHOT</version>
+  <description>
+    The easiest way to share your Git, Mercurial
+    and Subversion repositories over http.
+  </description>
   <name>scm</name>
 
   <url>http://bitbucket.org/sdorra/scm-manager</url>
+
+
+  <licenses>
+    <license>
+      <name>BSD</name>
+      <url>http://www.opensource.org/licenses/bsd-license.php</url>
+    </license>
+  </licenses>
 
   <developers>
     <developer>
