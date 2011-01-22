@@ -37,6 +37,7 @@ package sonia.scm.util;
 
 import com.google.inject.Provider;
 
+import sonia.scm.SCMContext;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.user.User;
@@ -110,5 +111,32 @@ public class SecurityUtil
     }
 
     return user;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param contextProvider
+   *
+   * @return
+   */
+  public static boolean isAnonymous(
+          Provider<? extends SecurityContext> contextProvider)
+  {
+    return isAnonymous(contextProvider.get());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   *
+   * @return
+   */
+  public static boolean isAnonymous(SecurityContext context)
+  {
+    return SCMContext.USER_ANONYMOUS.equals(context.getUser().getName());
   }
 }

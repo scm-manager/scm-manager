@@ -36,15 +36,15 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import sonia.scm.Type;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.util.SecurityUtil;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -61,6 +61,9 @@ public class BzrRepositoryHandler
 {
 
   /** Field description */
+  public static final String PUBLIC_RESOURCEPATH_BASE = "/public/bzr/";
+
+  /** Field description */
   public static final String TYPE_DISPLAYNAME = "Bazaar";
 
   /** Field description */
@@ -69,10 +72,6 @@ public class BzrRepositoryHandler
   /** Field description */
   public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
 
-  /** the logger for BzrRepositoryHandler */
-  private static final Logger logger =
-    LoggerFactory.getLogger(BzrRepositoryHandler.class);
-
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -80,11 +79,42 @@ public class BzrRepositoryHandler
    *
    *
    * @param storeFactory
+   * @param securityContextProvider
    */
   @Inject
-  public BzrRepositoryHandler(StoreFactory storeFactory)
+  public BzrRepositoryHandler(
+          StoreFactory storeFactory,
+          Provider<WebSecurityContext> securityContextProvider)
   {
     super(storeFactory);
+    this.securityContextProvider = securityContextProvider;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  public String createResourcePath(Repository repository)
+  {
+    String resourcePath = null;
+
+    if (SecurityUtil.isAnonymous(securityContextProvider))
+    {
+      resourcePath = PUBLIC_RESOURCEPATH_BASE.concat(repository.getName());
+    }
+    else
+    {
+      resourcePath = super.createResourcePath(repository);
+    }
+
+    return resourcePath;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -145,4 +175,9 @@ public class BzrRepositoryHandler
   {
     return BzrConfig.class;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Provider<WebSecurityContext> securityContextProvider;
 }
