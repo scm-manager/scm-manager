@@ -33,19 +33,25 @@
 
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
+//~--- non-JDK imports --------------------------------------------------------
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.util.AssertUtil;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class PluginVersion
+public class PluginVersion implements Comparable<PluginVersion>
 {
+
+  /** the logger for PluginVersion */
+  private static final Logger logger =
+    LoggerFactory.getLogger(PluginVersion.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -82,117 +88,93 @@ public class PluginVersion
     parsedVersion = createParsedVersion();
   }
 
-  //~--- enums ----------------------------------------------------------------
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Enum description
    *
+   *
+   * @param versionString
+   *
+   * @return
    */
-  public static enum PluginVersionType
+
+  /**
+   * Method description
+   *
+   *
+   * @param versionString
+   *
+   * @return
+   */
+  public static PluginVersion createVersion(String versionString)
   {
-    EARLY_ACESS("ea", 0, "early", "earlyaccess"),
-    MILESTONE("M", 1, "milestone"),
-    ALPHA("alpha", 2), BETA("beta", 3),
-    RELEASE_CANDIDAT("rc", 4, "releasecandidate"), RELEASE(10);
+    PluginVersion version = null;
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param value
-     */
-    private PluginVersionType(int value)
+    try
     {
-      this(null, value);
+      version = new PluginVersion(versionString);
     }
-
-    /**
-     * Constructs ...
-     *
-     *
-     *
-     * @param id
-     * @param value
-     * @param aliases
-     */
-    private PluginVersionType(String id, int value, String... aliases)
+    catch (NumberFormatException ex)
     {
-      this.id = id;
-      this.value = value;
-      this.aliases = aliases;
-    }
-
-    //~--- get methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public String[] getAliases()
-    {
-      return aliases;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public String getId()
-    {
-      return id;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public Collection<String> getNames()
-    {
-      List<String> names = new ArrayList<String>();
-
-      if (id != null)
+      if (logger.isWarnEnabled())
       {
-        names.add(id);
+        logger.warn("could not parse version ".concat(versionString), ex);
       }
-
-      if (aliases != null)
-      {
-        names.addAll(Arrays.asList(aliases));
-      }
-
-      return names;
     }
 
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public int getValue()
-    {
-      return value;
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    public String[] aliases;
-
-    /** Field description */
-    private String id;
-
-    /** Field description */
-    private int value;
+    return version;
   }
 
-  //~--- methods --------------------------------------------------------------
+  /**
+   * Method description
+   *
+   *
+   * @param o
+   *
+   * @return
+   */
+  @Override
+  public int compareTo(PluginVersion o)
+  {
+    AssertUtil.assertIsNotNull(o);
+
+    int result = o.major - major;
+
+    if (result == 0)
+    {
+      result = o.minor - minor;
+
+      if (result == 0)
+      {
+        result = o.maintenance - maintenance;
+
+        if (result == 0)
+        {
+          result = o.type.getValue() - type.getValue();
+
+          if (result == 0)
+          {
+            result = o.typeVersion - typeVersion;
+
+            if (result == 0)
+            {
+              if (o.snapshot &&!snapshot)
+              {
+                result = 0;
+              }
+              else if (!o.snapshot && snapshot)
+              {
+                result = 1;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return result;
+  }
 
   /**
    * Method description
@@ -289,6 +271,62 @@ public class PluginVersion
    * Method description
    *
    *
+   * @param o
+   *
+   * @return
+   */
+  public boolean isNewer(PluginVersion o)
+  {
+    return compareTo(o) < 0;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param versionString
+   *
+   * @return
+   */
+  public boolean isNewer(String versionString)
+  {
+    PluginVersion o = PluginVersion.createVersion(versionString);
+
+    return (o != null) && isNewer(o);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param o
+   *
+   * @return
+   */
+  public boolean isOlder(PluginVersion o)
+  {
+    return compareTo(o) > 0;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param versionString
+   *
+   * @return
+   */
+  public boolean isOlder(String versionString)
+  {
+    PluginVersion o = PluginVersion.createVersion(versionString);
+
+    return (o != null) && isOlder(o);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   public boolean isSnapshot()
@@ -347,6 +385,8 @@ public class PluginVersion
       {
         for (String name : versionType.getNames())
         {
+          name = name.toLowerCase();
+
           int index = qualifier.indexOf(name);
 
           if (index > 0)
