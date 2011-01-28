@@ -37,7 +37,25 @@ package sonia.scm.plugin;
  *
  * @author Sebastian Sdorra
  */
-public enum PluginState
+public class OverviewPluginFilter implements PluginFilter
 {
-  CORE, AVAILABLE, INSTALLED, NEWER_VERSION_INSTALLED, UPDATE_AVAILABLE;
+
+  /** Field description */
+  public static OverviewPluginFilter INSTANCE = new OverviewPluginFilter();
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param plugin
+   *
+   * @return
+   */
+  @Override
+  public boolean accept(PluginInformation plugin)
+  {
+    return plugin.getState() != PluginState.NEWER_VERSION_INSTALLED;
+  }
 }

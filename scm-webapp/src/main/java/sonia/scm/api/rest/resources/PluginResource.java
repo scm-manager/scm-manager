@@ -39,7 +39,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import sonia.scm.plugin.DefaultPluginManager;
+import sonia.scm.plugin.OverviewPluginFilter;
 import sonia.scm.plugin.PluginInformation;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -137,9 +139,9 @@ public class PluginResource
    */
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public PluginInformation[] getAll()
+  public Collection<PluginInformation> getAll()
   {
-    return getArray(pluginManager.getAll());
+    return pluginManager.getAll();
   }
 
   /**
@@ -151,9 +153,9 @@ public class PluginResource
   @GET
   @Path("available")
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public PluginInformation[] getAvailable()
+  public Collection<PluginInformation> getAvailable()
   {
-    return getArray(pluginManager.getAvailable());
+    return pluginManager.getAvailable();
   }
 
   /**
@@ -165,9 +167,9 @@ public class PluginResource
   @GET
   @Path("updates")
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public PluginInformation[] getAvailableUpdates()
+  public Collection<PluginInformation> getAvailableUpdates()
   {
-    return getArray(pluginManager.getAvailableUpdates());
+    return pluginManager.getAvailableUpdates();
   }
 
   /**
@@ -179,34 +181,23 @@ public class PluginResource
   @GET
   @Path("installed")
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public PluginInformation[] getInstalled()
+  public Collection<PluginInformation> getInstalled()
   {
-    return getArray(pluginManager.getInstalled());
+    return pluginManager.getInstalled();
   }
 
   /**
    * Method description
    *
    *
-   * @param pluginCollection
-   *
    * @return
    */
-  private PluginInformation[] getArray(
-          Collection<PluginInformation> pluginCollection)
+  @GET
+  @Path("overview")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public Collection<PluginInformation> getOverview()
   {
-    PluginInformation[] plugins = null;
-
-    if (pluginCollection != null)
-    {
-      plugins = pluginCollection.toArray(new PluginInformation[0]);
-    }
-    else
-    {
-      plugins = new PluginInformation[0];
-    }
-
-    return plugins;
+    return pluginManager.get(OverviewPluginFilter.INSTANCE);
   }
 
   //~--- fields ---------------------------------------------------------------

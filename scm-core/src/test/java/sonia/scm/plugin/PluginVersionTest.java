@@ -154,4 +154,16 @@ public class PluginVersionTest
     assertTrue(PluginVersion.createVersion("1.1").isNewer("1.1-alpha1"));
     assertTrue(PluginVersion.createVersion("1.1").isNewer("1.1-RC5"));
   }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testIsOlder()
+  {
+    assertFalse(PluginVersion.createVersion("1.0.1").isOlder("1.0"));
+    assertTrue(PluginVersion.createVersion("1.1-alpha1").isOlder("1.1"));
+    assertTrue(PluginVersion.createVersion("1.1-RC5").isOlder("1.1"));
+  }
 }

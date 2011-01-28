@@ -198,7 +198,7 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
   initComponent: function(){
 
     Sonia.plugin.StoreInstance = new Sonia.plugin.Store({
-      url: restUrl + 'plugins.json'
+      url: restUrl + 'plugins/overview.json'
     });
 
 
