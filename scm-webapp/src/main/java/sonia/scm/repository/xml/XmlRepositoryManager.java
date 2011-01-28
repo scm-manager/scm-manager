@@ -48,6 +48,7 @@ import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.repository.AbstractRepositoryManager;
+import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
@@ -68,6 +69,7 @@ import sonia.scm.web.security.WebSecurityContext;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -330,6 +332,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     {
       assertIsReader(repository);
       repository = repository.clone();
+      prepareRepository(repository);
     }
 
     return repository;
@@ -357,6 +360,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
       if (isReader(repository))
       {
         repository = repository.clone();
+        prepareRepository(repository);
       }
       else
       {
@@ -382,7 +386,10 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     {
       if (handlerMap.containsKey(repository.getType()) && isReader(repository))
       {
-        repositories.add(repository.clone());
+        Repository r = repository.clone();
+
+        prepareRepository(r);
+        repositories.add(r);
       }
     }
 
@@ -489,6 +496,27 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   /**
    * Method description
    *
+   *
+   * @param repository
+   */
+  private void prepareRepository(Repository repository)
+  {
+    if (isOwner(repository))
+    {
+      if (repository.getPermissions() == null)
+      {
+        repository.setPermissions(new ArrayList<Permission>());
+      }
+    }
+    else
+    {
+      repository.setPermissions(null);
+    }
+  }
+
+  /**
+   * Method description
+   *
    */
   private void storeDB()
   {
@@ -544,6 +572,20 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     return handler;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  private boolean isOwner(Repository repository)
+  {
+    return PermissionUtil.hasPermission(repository, securityContextProvider,
+            PermissionType.OWNER);
   }
 
   /**
