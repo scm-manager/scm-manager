@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.group.GroupListener;
+import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionProcessor;
 import sonia.scm.repository.RepositoryHandler;
@@ -188,6 +189,15 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
           resourceHandler.addBinding().to(extensionClass);
         }
+        else if (FileSystem.class.isAssignableFrom(extensionClass))
+        {
+          if (logger.isInfoEnabled())
+          {
+            logger.info("bind FileSystem {}", extensionClass.getName());
+          }
+
+          fileSystemClass = extensionClass;
+        }
         else
         {
           if (logger.isInfoEnabled())
@@ -241,6 +251,17 @@ public class BindingExtensionProcessor implements ExtensionProcessor
   public Set<AuthenticationListener> getAuthenticationListeners()
   {
     return authenticationListeners;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Class<? extends FileSystem> getFileSystemClass()
+  {
+    return fileSystemClass;
   }
 
   /**
@@ -336,6 +357,9 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
   /** Field description */
   private Set<Class<?>> extensions;
+
+  /** Field description */
+  private Class<? extends FileSystem> fileSystemClass;
 
   /** Field description */
   private Set<Module> moduleSet;
