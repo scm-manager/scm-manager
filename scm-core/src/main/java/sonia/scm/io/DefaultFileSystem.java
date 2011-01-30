@@ -35,6 +35,9 @@ package sonia.scm.io;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -49,6 +52,12 @@ import java.io.IOException;
 public class DefaultFileSystem implements FileSystem
 {
 
+  /** the logger for DefaultFileSystem */
+  private static final Logger logger =
+    LoggerFactory.getLogger(DefaultFileSystem.class);
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
@@ -60,6 +69,11 @@ public class DefaultFileSystem implements FileSystem
   @Override
   public void create(File directory) throws IOException
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("create directory {}", directory.getPath());
+    }
+
     IOUtil.mkdirs(directory);
   }
 
@@ -74,6 +88,11 @@ public class DefaultFileSystem implements FileSystem
   @Override
   public void destroy(File directory) throws IOException
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("destroy directory {}", directory.getPath());
+    }
+
     IOUtil.delete(directory);
   }
 }

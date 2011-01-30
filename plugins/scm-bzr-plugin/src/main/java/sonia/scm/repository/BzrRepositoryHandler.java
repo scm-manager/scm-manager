@@ -41,6 +41,7 @@ import com.google.inject.Singleton;
 
 import sonia.scm.Type;
 import sonia.scm.io.ExtendedCommand;
+import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.SecurityUtil;
@@ -79,14 +80,15 @@ public class BzrRepositoryHandler
    *
    *
    * @param storeFactory
+   * @param fileSystem
    * @param securityContextProvider
    */
   @Inject
   public BzrRepositoryHandler(
-          StoreFactory storeFactory,
+          StoreFactory storeFactory, FileSystem fileSystem,
           Provider<WebSecurityContext> securityContextProvider)
   {
-    super(storeFactory);
+    super(storeFactory, fileSystem);
     this.securityContextProvider = securityContextProvider;
   }
 

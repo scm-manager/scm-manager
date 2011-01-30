@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEvent;
-import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.repository.AbstractRepositoryManager;
@@ -98,12 +97,15 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    *
    *
    *
+   *
+   * @param contextProvider
    * @param securityContextProvider
    * @param storeFactory
    * @param handlerSet
    */
   @Inject
   public XmlRepositoryManager(
+          SCMContextProvider contextProvider,
           Provider<WebSecurityContext> securityContextProvider,
           StoreFactory storeFactory, Set<RepositoryHandler> handlerSet)
   {
@@ -114,7 +116,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
     for (RepositoryHandler handler : handlerSet)
     {
-      addHandler(handler);
+      addHandler(contextProvider, handler);
     }
   }
 
@@ -423,9 +425,12 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * Method description
    *
    *
+   *
+   * @param contextProvider
    * @param handler
    */
-  private void addHandler(RepositoryHandler handler)
+  private void addHandler(SCMContextProvider contextProvider,
+                          RepositoryHandler handler)
   {
     AssertUtil.assertIsNotNull(handler);
 
@@ -446,7 +451,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     handlerMap.put(type.getName(), handler);
-    handler.init(SCMContext.getContext());
+    handler.init(contextProvider);
     types.add(type);
   }
 

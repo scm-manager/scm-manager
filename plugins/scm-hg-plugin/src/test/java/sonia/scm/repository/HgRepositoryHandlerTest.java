@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.Util;
 
@@ -86,7 +87,8 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
   protected RepositoryHandler createRepositoryHandler(StoreFactory factory,
           File directory)
   {
-    HgRepositoryHandler handler = new HgRepositoryHandler(factory);
+    HgRepositoryHandler handler = new HgRepositoryHandler(factory,
+                                    new DefaultFileSystem());
 
     handler.init(contextProvider);
     handler.getConfig().setRepositoryDirectory(directory);

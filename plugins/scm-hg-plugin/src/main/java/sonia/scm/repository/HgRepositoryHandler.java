@@ -57,6 +57,7 @@ import sonia.scm.web.HgWebConfigWriter;
 
 import java.io.File;
 import java.io.IOException;
+import sonia.scm.io.FileSystem;
 
 /**
  *
@@ -90,9 +91,9 @@ public class HgRepositoryHandler
    * @param storeFactory
    */
   @Inject
-  public HgRepositoryHandler(StoreFactory storeFactory)
+  public HgRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem)
   {
-    super(storeFactory);
+    super(storeFactory, fileSystem);
   }
 
   //~--- methods --------------------------------------------------------------

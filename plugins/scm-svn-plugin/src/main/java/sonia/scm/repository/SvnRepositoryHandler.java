@@ -42,6 +42,7 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
 import sonia.scm.Type;
+import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
 
@@ -76,11 +77,12 @@ public class SvnRepositoryHandler
    *
    *
    * @param storeFactory
+   * @param fileSystem
    */
   @Inject
-  public SvnRepositoryHandler(StoreFactory storeFactory)
+  public SvnRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem)
   {
-    super(storeFactory);
+    super(storeFactory, fileSystem);
   }
 
   //~--- get methods ----------------------------------------------------------

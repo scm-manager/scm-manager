@@ -41,6 +41,7 @@ import com.google.inject.Singleton;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import sonia.scm.Type;
+import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
 
@@ -75,11 +76,12 @@ public class GitRepositoryHandler
    *
    *
    * @param storeFactory
+   * @param fileSystem
    */
   @Inject
-  public GitRepositoryHandler(StoreFactory storeFactory)
+  public GitRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem)
   {
-    super(storeFactory);
+    super(storeFactory, fileSystem);
   }
 
   //~--- get methods ----------------------------------------------------------
