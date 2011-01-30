@@ -41,7 +41,6 @@ import com.google.inject.Singleton;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.OverviewPluginFilter;
 import sonia.scm.plugin.PluginInformation;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 

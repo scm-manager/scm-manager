@@ -208,7 +208,11 @@ public class BindingExtensionProcessor implements ExtensionProcessor
           binder.bind(extensionClass);
         }
       }
-      catch (Exception ex)
+      catch (IllegalAccessException ex)
+      {
+        logger.error(ex.getMessage(), ex);
+      }
+      catch (InstantiationException ex)
       {
         logger.error(ex.getMessage(), ex);
       }

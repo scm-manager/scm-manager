@@ -66,10 +66,10 @@ public class IOUtil
 {
 
   /** Field description */
-  public static final String DEFAULT_CHECKPARAMETER = "--version";
+  private static final String DEFAULT_CHECKPARAMETER = "--version";
 
   /** Field description */
-  public static final String[] DEFAULT_PATH = new String[]
+  private static final String[] DEFAULT_PATH = new String[]
   {
 
     // default path
@@ -336,7 +336,13 @@ public class IOUtil
         cmdPath = cmd;
       }
     }
-    catch (IOException ex) {}
+    catch (IOException ex)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("could not execute command", ex);
+      }
+    }
 
     if (cmdPath == null)
     {

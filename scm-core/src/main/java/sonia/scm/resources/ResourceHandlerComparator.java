@@ -39,14 +39,22 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import java.util.Comparator;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ResourceHandlerComparator implements Comparator<ResourceHandler>
+public class ResourceHandlerComparator
+        implements Comparator<ResourceHandler>, Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -1760229246326556762L;
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

@@ -39,7 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
-import sonia.scm.SCMContextProvider;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.FileSystem;
@@ -153,18 +152,6 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     {
       logger.warn("repository {} not found", repository);
     }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   */
-  @Override
-  public void init(SCMContextProvider context)
-  {
-    super.init(context);
   }
 
   /**

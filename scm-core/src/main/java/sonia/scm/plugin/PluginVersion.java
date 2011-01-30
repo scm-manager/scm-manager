@@ -180,6 +180,97 @@ public class PluginVersion implements Comparable<PluginVersion>
    * Method description
    *
    *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final PluginVersion other = (PluginVersion) obj;
+
+    if (this.maintenance != other.maintenance)
+    {
+      return false;
+    }
+
+    if (this.major != other.major)
+    {
+      return false;
+    }
+
+    if (this.minor != other.minor)
+    {
+      return false;
+    }
+
+    if ((this.parsedVersion == null)
+        ? (other.parsedVersion != null)
+        : !this.parsedVersion.equals(other.parsedVersion))
+    {
+      return false;
+    }
+
+    if (this.snapshot != other.snapshot)
+    {
+      return false;
+    }
+
+    if (this.type != other.type)
+    {
+      return false;
+    }
+
+    if (this.typeVersion != other.typeVersion)
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    int hash = 5;
+
+    hash = 61 * hash + this.maintenance;
+    hash = 61 * hash + this.major;
+    hash = 61 * hash + this.minor;
+    hash = 61 * hash + ((this.parsedVersion != null)
+                        ? this.parsedVersion.hashCode()
+                        : 0);
+    hash = 61 * hash + (this.snapshot
+                        ? 1
+                        : 0);
+    hash = 61 * hash + ((this.type != null)
+                        ? this.type.hashCode()
+                        : 0);
+    hash = 61 * hash + this.typeVersion;
+
+    return hash;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   @Override
