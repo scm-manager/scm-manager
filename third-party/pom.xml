@@ -6,13 +6,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>1.0-M7-SNAPSHOT</version>
+    <version>1.0-M7</version>
   </parent>
 
   <groupId>sonia.scm.third-party</groupId>
   <artifactId>sonia.scm.third-party</artifactId>
   <packaging>pom</packaging>
-  <version>1.0-M7-SNAPSHOT</version>
+  <version>1.0-M7</version>
   <name>third-party</name>
 
   <modules>
