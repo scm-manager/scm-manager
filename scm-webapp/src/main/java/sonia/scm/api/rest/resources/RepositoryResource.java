@@ -59,7 +59,6 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
 
 /**
  *
@@ -82,15 +81,18 @@ public class RepositoryResource extends AbstractResource<Repository>
    * @param configuration
    * @param repositoryManager
    * @param securityContextProvider
+   * @param requestProvider
    */
   @Inject
   public RepositoryResource(
           ScmConfiguration configuration, RepositoryManager repositoryManager,
-          Provider<WebSecurityContext> securityContextProvider)
+          Provider<WebSecurityContext> securityContextProvider,
+          Provider<HttpServletRequest> requestProvider)
   {
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.securityContextProvider = securityContextProvider;
+    this.requestProvider = requestProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -227,6 +229,7 @@ public class RepositoryResource extends AbstractResource<Repository>
 
     if (handler != null)
     {
+      HttpServletRequest request = requestProvider.get();
       StringBuilder url = new StringBuilder(request.getScheme());
 
       url.append("://").append(configuration.getServername());
@@ -290,9 +293,8 @@ public class RepositoryResource extends AbstractResource<Repository>
   /** Field description */
   private RepositoryManager repositoryManager;
 
-  /** TODO path request direct to method */
-  @Context
-  private HttpServletRequest request;
+  /** Field description */
+  private Provider<HttpServletRequest> requestProvider;
 
   /** Field description */
   private Provider<WebSecurityContext> securityContextProvider;
