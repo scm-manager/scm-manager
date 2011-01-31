@@ -118,7 +118,7 @@ Ext.onReady(function(){
       items: [{
         label: 'Repositories',
         fn: function(){
-          addTabPanel('repositories', 'repositoryPanel', 'Repositories');
+          mainTabPanel.setActiveTab('repositories');
         }
       }]
     });
@@ -209,20 +209,18 @@ Ext.onReady(function(){
     panel.doLayout();
   }
 
-  function createWelcomePanel(){
+  function createRepositoryPanel(){
     if ( debug ){
-      console.debug('create welcome tab');
+      console.debug('create repository panel');
     }
     mainTabPanel.add({
-      id: 'welcomeTab',
-      xtype: 'panel',
-      title: 'Welcome',
-      hideMode: 'offsets',
-      bodyCssClass: 'x-panel-mc',
-      enableTabScroll: true,
+      id: 'repositories',
+      xtype: 'repositoryPanel',
+      title: 'Repositories',
+      closeable: false,
       autoScroll: true
     });
-    mainTabPanel.setActiveTab('welcomeTab');
+    mainTabPanel.setActiveTab('repositories');
   }
 
   // register login callbacks
@@ -230,6 +228,6 @@ Ext.onReady(function(){
   // create menu
   loginCallbacks.splice(0, 0, createMainMenu );
   // add welcome tab
-  loginCallbacks.push( createWelcomePanel );
+  loginCallbacks.push( createRepositoryPanel );
 
 });
