@@ -49,6 +49,7 @@ import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.security.AuthenticationHandler;
 import sonia.scm.web.security.AuthenticationResult;
+import sonia.scm.web.security.AuthenticationState;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -56,11 +57,14 @@ import java.io.IOException;
 
 import java.text.MessageFormat;
 
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
@@ -133,7 +137,8 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
       searchControls.setCountLimit(1);
       searchControls.setReturningAttributes(new String[] {
         config.getAttributeNameId(),
-        config.getAttributeNameFullname(), config.getAttributeNameMail() });
+        config.getAttributeNameFullname(), config.getAttributeNameMail(),
+        config.getAttributeNameGroup() });
 
       String filter = MessageFormat.format(config.getSearchFilter(), username);
       String baseDn = config.getUnitPeople() + "," + config.getBaseDn();
@@ -172,7 +177,10 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
                 (String) userAttributes.get(
                   config.getAttributeNameMail()).get());
             user.setType(TYPE);
-            result = new AuthenticationResult(user);
+            
+            Set<String> userGroups = getGroups(userAttributes);
+            user.setAdmin(isAdmin(userGroups, user));
+            result = new AuthenticationResult(user, userGroups);
           }
           catch (NamingException ex)
           {
@@ -217,6 +225,35 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
     }
 
     return result;
+  }
+
+  private Set<String> getGroups(Attributes userAttributes) throws NamingException {
+    Set<String> groups = new HashSet<String>();
+    
+    Attribute groupsAttribute = userAttributes.get(config.getAttributeNameGroup());
+    if (groupsAttribute != null) {
+      NamingEnumeration<?> userGroups = (NamingEnumeration<?>) groupsAttribute.getAll();
+      while (userGroups.hasMore())
+        groups.add((String) userGroups.next());
+
+      userGroups.close();
+    } else {
+      logger.info("user has no groups assigned");
+    }
+    return groups;
+  }
+
+  private boolean isAdmin(Set<String> userGroups, User user) throws NamingException {
+    Set<String> adminGroups = config.getAdminGroupSet();
+    for (String group : userGroups)
+      if (adminGroups.contains(group))
+        return true;
+    
+    Set<String> adminUsers = config.getAdminUserSet();
+    if (adminUsers.contains(user.getName()))
+      return true;
+
+    return false;
   }
 
   /**
