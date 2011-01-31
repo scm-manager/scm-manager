@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.StoreFactory;
 
 import static org.junit.Assert.*;
@@ -88,7 +89,8 @@ public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
   protected RepositoryHandler createRepositoryHandler(StoreFactory factory,
           File directory)
   {
-    GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory);
+    GitRepositoryHandler repositoryHandler = new GitRepositoryHandler(factory,
+                                               new DefaultFileSystem());
 
     repositoryHandler.init(contextProvider);
 

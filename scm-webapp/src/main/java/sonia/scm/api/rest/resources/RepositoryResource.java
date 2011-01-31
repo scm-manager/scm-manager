@@ -36,24 +36,29 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.Permission;
+import sonia.scm.repository.PermissionType;
+import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 
 import javax.ws.rs.Path;
-import javax.ws.rs.core.Context;
 
 /**
  *
@@ -75,13 +80,19 @@ public class RepositoryResource extends AbstractResource<Repository>
    *
    * @param configuration
    * @param repositoryManager
+   * @param securityContextProvider
+   * @param requestProvider
    */
   @Inject
-  public RepositoryResource(ScmConfiguration configuration,
-                            RepositoryManager repositoryManager)
+  public RepositoryResource(
+          ScmConfiguration configuration, RepositoryManager repositoryManager,
+          Provider<WebSecurityContext> securityContextProvider,
+          Provider<HttpServletRequest> requestProvider)
   {
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
+    this.securityContextProvider = securityContextProvider;
+    this.requestProvider = requestProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -151,6 +162,7 @@ public class RepositoryResource extends AbstractResource<Repository>
     for (Repository repository : repositories)
     {
       appendUrl(repository);
+      prepareRepository(repository);
     }
 
     return repositories;
@@ -185,6 +197,7 @@ public class RepositoryResource extends AbstractResource<Repository>
     Repository repository = repositoryManager.get(id);
 
     appendUrl(repository);
+    prepareRepository(repository);
 
     return repository;
   }
@@ -216,6 +229,7 @@ public class RepositoryResource extends AbstractResource<Repository>
 
     if (handler != null)
     {
+      HttpServletRequest request = requestProvider.get();
       StringBuilder url = new StringBuilder(request.getScheme());
 
       url.append("://").append(configuration.getServername());
@@ -234,6 +248,43 @@ public class RepositoryResource extends AbstractResource<Repository>
     }
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   */
+  private void prepareRepository(Repository repository)
+  {
+    if (isOwner(repository))
+    {
+      if (repository.getPermissions() == null)
+      {
+        repository.setPermissions(new ArrayList<Permission>());
+      }
+    }
+    else
+    {
+      repository.setPermissions(null);
+    }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  private boolean isOwner(Repository repository)
+  {
+    return PermissionUtil.hasPermission(repository, securityContextProvider,
+            PermissionType.OWNER);
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -242,7 +293,9 @@ public class RepositoryResource extends AbstractResource<Repository>
   /** Field description */
   private RepositoryManager repositoryManager;
 
-  /** TODO path request direct to method */
-  @Context
-  private HttpServletRequest request;
+  /** Field description */
+  private Provider<HttpServletRequest> requestProvider;
+
+  /** Field description */
+  private Provider<WebSecurityContext> securityContextProvider;
 }

@@ -167,8 +167,6 @@ public class AetherPluginHandler
     List<Dependency> dependencies = getInstalledDependencies(null);
 
     collectDependencies(dependency, dependencies);
-
-    
   }
 
   /**
@@ -364,13 +362,10 @@ public class AetherPluginHandler
       {
         String id = plugin.getId();
 
-        if ((skipId == null) ||!id.equals(skipId))
+        if (Util.isNotEmpty(id) && ((skipId == null) ||!id.equals(skipId)))
         {
-          if (Util.isNotEmpty(id))
-          {
-            dependencies.add(new Dependency(new DefaultArtifact(id),
-                                            PLUGIN_SCOPE));
-          }
+          dependencies.add(new Dependency(new DefaultArtifact(id),
+                                          PLUGIN_SCOPE));
         }
       }
     }

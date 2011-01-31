@@ -44,11 +44,9 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEvent;
-import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.repository.AbstractRepositoryManager;
-import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
@@ -69,7 +67,6 @@ import sonia.scm.web.security.WebSecurityContext;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -100,12 +97,15 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    *
    *
    *
+   *
+   * @param contextProvider
    * @param securityContextProvider
    * @param storeFactory
    * @param handlerSet
    */
   @Inject
   public XmlRepositoryManager(
+          SCMContextProvider contextProvider,
           Provider<WebSecurityContext> securityContextProvider,
           StoreFactory storeFactory, Set<RepositoryHandler> handlerSet)
   {
@@ -116,7 +116,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
     for (RepositoryHandler handler : handlerSet)
     {
-      addHandler(handler);
+      addHandler(contextProvider, handler);
     }
   }
 
@@ -332,7 +332,6 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     {
       assertIsReader(repository);
       repository = repository.clone();
-      prepareRepository(repository);
     }
 
     return repository;
@@ -360,7 +359,6 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
       if (isReader(repository))
       {
         repository = repository.clone();
-        prepareRepository(repository);
       }
       else
       {
@@ -388,7 +386,6 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
       {
         Repository r = repository.clone();
 
-        prepareRepository(r);
         repositories.add(r);
       }
     }
@@ -428,9 +425,12 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * Method description
    *
    *
+   *
+   * @param contextProvider
    * @param handler
    */
-  private void addHandler(RepositoryHandler handler)
+  private void addHandler(SCMContextProvider contextProvider,
+                          RepositoryHandler handler)
   {
     AssertUtil.assertIsNotNull(handler);
 
@@ -451,7 +451,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     handlerMap.put(type.getName(), handler);
-    handler.init(SCMContext.getContext());
+    handler.init(contextProvider);
     types.add(type);
   }
 
@@ -491,27 +491,6 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   {
     PermissionUtil.assertPermission(repository, securityContextProvider,
                                     PermissionType.READ);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   */
-  private void prepareRepository(Repository repository)
-  {
-    if (isOwner(repository))
-    {
-      if (repository.getPermissions() == null)
-      {
-        repository.setPermissions(new ArrayList<Permission>());
-      }
-    }
-    else
-    {
-      repository.setPermissions(null);
-    }
   }
 
   /**
@@ -572,20 +551,6 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     return handler;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  private boolean isOwner(Repository repository)
-  {
-    return PermissionUtil.hasPermission(repository, securityContextProvider,
-            PermissionType.OWNER);
   }
 
   /**

@@ -6,7 +6,7 @@
   <groupId>sonia.scm</groupId>
   <artifactId>scm</artifactId>
   <packaging>pom</packaging>
-  <version>1.0-M7-SNAPSHOT</version>
+  <version>1.0-RC1-SNAPSHOT</version>
   <description>
     The easiest way to share your Git, Mercurial
     and Subversion repositories over http.

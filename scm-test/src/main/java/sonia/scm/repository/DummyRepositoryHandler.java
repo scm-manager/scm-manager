@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Type;
+import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.StoreFactory;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -70,7 +71,7 @@ public class DummyRepositoryHandler
    */
   public DummyRepositoryHandler(StoreFactory storeFactory)
   {
-    super(storeFactory);
+    super(storeFactory, new DefaultFileSystem());
   }
 
   //~--- get methods ----------------------------------------------------------

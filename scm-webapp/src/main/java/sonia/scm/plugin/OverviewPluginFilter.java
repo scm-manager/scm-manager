@@ -41,7 +41,8 @@ public class OverviewPluginFilter implements PluginFilter
 {
 
   /** Field description */
-  public static OverviewPluginFilter INSTANCE = new OverviewPluginFilter();
+  public static final OverviewPluginFilter INSTANCE =
+    new OverviewPluginFilter();
 
   //~--- methods --------------------------------------------------------------
 

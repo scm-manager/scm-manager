@@ -49,6 +49,8 @@ import sonia.scm.filter.SSLFilter;
 import sonia.scm.filter.SecurityFilter;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.xml.XmlGroupManager;
+import sonia.scm.io.DefaultFileSystem;
+import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginLoader;
@@ -174,6 +176,16 @@ public class ScmServletModule extends ServletModule
     bind(PluginManager.class).to(DefaultPluginManager.class);
     bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
     bindExtProcessor.bindExtensions(binder());
+
+    Class<? extends FileSystem> fileSystem =
+      bindExtProcessor.getFileSystemClass();
+
+    if (fileSystem == null)
+    {
+      fileSystem = DefaultFileSystem.class;
+    }
+
+    bind(FileSystem.class).to(fileSystem);
 
     // bind security stuff
     bind(AuthenticationManager.class).to(ChainAuthenticatonManager.class);

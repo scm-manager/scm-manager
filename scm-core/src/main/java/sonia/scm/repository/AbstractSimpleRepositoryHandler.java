@@ -39,9 +39,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
-import sonia.scm.SCMContextProvider;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.ExtendedCommand;
+import sonia.scm.io.FileSystem;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.IOUtil;
 
@@ -75,10 +75,13 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    *
    *
    * @param storeFactory
+   * @param fileSystem
    */
-  public AbstractSimpleRepositoryHandler(StoreFactory storeFactory)
+  public AbstractSimpleRepositoryHandler(StoreFactory storeFactory,
+          FileSystem fileSystem)
   {
     super(storeFactory);
+    this.fileSystem = fileSystem;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -103,6 +106,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       throw new RepositoryAllreadyExistExeption();
     }
 
+    fileSystem.create(directory);
     create(repository, directory);
     postCreate(repository, directory);
   }
@@ -142,24 +146,12 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
     if (directory.exists())
     {
-      IOUtil.delete(directory);
+      fileSystem.destroy(directory);
     }
     else if (logger.isWarnEnabled())
     {
       logger.warn("repository {} not found", repository);
     }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   */
-  @Override
-  public void init(SCMContextProvider context)
-  {
-    super.init(context);
   }
 
   /**
@@ -305,4 +297,9 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    */
   protected void postCreate(Repository repository, File directory)
           throws IOException, RepositoryException {}
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private FileSystem fileSystem;
 }
