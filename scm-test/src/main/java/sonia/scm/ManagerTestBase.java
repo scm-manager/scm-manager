@@ -33,28 +33,6 @@
 
 package sonia.scm;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Provider;
-
-import org.junit.After;
-import org.junit.Before;
-
-import sonia.scm.security.SecurityContext;
-import sonia.scm.user.User;
-import sonia.scm.util.IOUtil;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
-
-import java.util.UUID;
-
 /**
  *
  * @author Sebastian Sdorra
