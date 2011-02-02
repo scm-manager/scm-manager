@@ -49,7 +49,6 @@ import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.security.AuthenticationHandler;
 import sonia.scm.web.security.AuthenticationResult;
-import sonia.scm.web.security.AuthenticationState;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -57,9 +56,7 @@ import java.io.IOException;
 
 import java.text.MessageFormat;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -180,7 +177,7 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
                   config.getAttributeNameMail()).get());
             user.setType(TYPE);
 
-            //
+            // read group of unique names
             HashSet<String> groups = new HashSet<String>();
 
             searchControls = new SearchControls();
@@ -213,8 +210,14 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
 
             //
             result = new AuthenticationResult(user, groups);
+
+            // read dynamic group attribute
             getGroups(userAttributes, groups);
+
+            // set admin
             user.setAdmin(isAdmin(user.getName(), groups));
+
+            // TODO: nsrole dn - admin role
             result = new AuthenticationResult(user, groups);
           }
           catch (NamingException ex)
