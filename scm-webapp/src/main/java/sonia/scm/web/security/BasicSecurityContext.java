@@ -46,6 +46,7 @@ import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -126,7 +127,7 @@ public class BasicSecurityContext implements WebSecurityContext
       {
         User dbUser = userManager.get(username);
 
-        if ((dbUser != null) && dbUser.copyProperties(user, false))
+        if ((dbUser != null) && user.copyProperties(dbUser, false))
         {
           userManager.modify(dbUser);
         }
@@ -256,18 +257,27 @@ public class BasicSecurityContext implements WebSecurityContext
   {
     StringBuilder msg = new StringBuilder("user ");
 
-    msg.append(user.getName()).append(" is member of ");
+    msg.append(user.getName());
 
-    Iterator<String> groupIt = groups.iterator();
-
-    while (groupIt.hasNext())
+    if (Util.isNotEmpty(groups))
     {
-      msg.append(groupIt.next());
+      msg.append(" is member of ");
 
-      if (groupIt.hasNext())
+      Iterator<String> groupIt = groups.iterator();
+
+      while (groupIt.hasNext())
       {
-        msg.append(", ");
+        msg.append(groupIt.next());
+
+        if (groupIt.hasNext())
+        {
+          msg.append(", ");
+        }
       }
+    }
+    else
+    {
+      msg.append(" is not a memeber of a group");
     }
 
     logger.debug(msg.toString());
