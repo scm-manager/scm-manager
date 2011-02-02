@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.StoreFactory;
 
 import static org.junit.Assert.*;
@@ -83,7 +84,8 @@ public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
   protected RepositoryHandler createRepositoryHandler(StoreFactory factory,
           File directory)
   {
-    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory);
+    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory,
+                                     new DefaultFileSystem());
 
     handler.init(contextProvider);
 

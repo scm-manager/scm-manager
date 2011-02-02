@@ -31,45 +31,44 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm.io;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Manager;
-import sonia.scm.repository.xml.XmlRepositoryManager;
-import sonia.scm.store.JAXBStoreFactory;
-import sonia.scm.store.StoreFactory;
-import sonia.scm.util.MockUtil;
+import sonia.scm.plugin.ExtensionPoint;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
+@ExtensionPoint
+public interface FileSystem
 {
 
   /**
    * Method description
    *
    *
-   * @return
+   *
+   * @param directory
+   *
+   * @throws IOException
    */
-  @Override
-  protected Manager<Repository, RepositoryException> createManager()
-  {
-    Set<RepositoryHandler> handlerSet = new HashSet<RepositoryHandler>();
-    StoreFactory factory = new JAXBStoreFactory();
+  public void create(File directory) throws IOException;
 
-    factory.init(contextProvider);
-    handlerSet.add(new DummyRepositoryHandler(factory));
-
-    return new XmlRepositoryManager(contextProvider,
-                                    MockUtil.getAdminSecurityContextProvider(),
-                                    factory, handlerSet);
-  }
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param directory
+   *
+   * @throws IOException
+   */
+  public void destroy(File directory) throws IOException;
 }

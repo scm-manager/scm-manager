@@ -71,6 +71,12 @@ registerGeneralConfigPanel({
   }
   ,{
     xtype : 'textfield',
+    fieldLabel : 'Group Attribute Name',
+    name : 'attribute-name-group',
+    allowBlank : true
+  }
+  ,{
+    xtype : 'textfield',
     fieldLabel : 'Base DN',
     name : 'base-dn',
     allowBlank : true

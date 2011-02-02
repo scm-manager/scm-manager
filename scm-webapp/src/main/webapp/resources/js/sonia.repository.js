@@ -46,65 +46,8 @@ Ext.ns('Sonia.repository');
 
 // functions
 
-Sonia.repository.getPermissionValue = function(type){
-  var value = 0;
-  switch (type){
-    case "READ":
-      value = 0;
-      break;
-    case "WRITE":
-      value = 10;
-      break;
-    case "OWNER":
-      value = 100;
-      break;
-  }
-  return value;
-}
-
-Sonia.repository.isMember = function(group){
-  var result = false;
-  if ( Ext.isDefined(state.groups) ){
-    for ( var i=0; i<state.groups.length; i++ ){
-      if ( state.groups[i] == group ){
-        result = true;
-        break;
-      }
-    }
-  }
-  return result;
-}
-
-Sonia.repository.hasPermission = function(repository, type){
-  var result = false;
-  if ( admin ){
-    result = true;
-  } else {
-    var permissions = repository.permissions;
-    if ( Ext.isDefined(permissions) ){
-      var value = Sonia.repository.getPermissionValue( type );
-      for (var i=0;i<permissions.length; i++ ){
-        var p = permissions[i];
-        var pv = Sonia.repository.getPermissionValue( p.type );
-        if ( pv >= value ){
-          if ( p.groupPermission ){
-            if ( Sonia.repository.isMember( p.name ) ){
-              result = true;
-              break;
-            }
-          } else if ( p.name == state.user.name ) {
-            result = true;
-            break;
-          }
-        }
-      }
-    }
-  }
-  return result;
-}
-
 Sonia.repository.isOwner = function(repository){
-  return Sonia.repository.hasPermission(repository, 'OWNER');
+  return repository.permissions != null;
 }
 
 Sonia.repository.setEditPanel = function(panel){

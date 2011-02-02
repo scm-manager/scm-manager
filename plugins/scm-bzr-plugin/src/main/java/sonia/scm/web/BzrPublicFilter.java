@@ -31,43 +31,42 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-
-import sonia.scm.Type;
-import sonia.scm.io.FileSystem;
-import sonia.scm.plugin.ext.Extension;
-import sonia.scm.store.StoreFactory;
+import sonia.scm.repository.BzrRepositoryHandler;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.util.HttpUtil;
+import sonia.scm.web.filter.HttpFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-@Extension
-public class GitRepositoryHandler
-        extends AbstractSimpleRepositoryHandler<GitConfig>
+public class BzrPublicFilter extends HttpFilter
 {
 
   /** Field description */
-  public static final String TYPE_DISPLAYNAME = "Git";
-
-  /** Field description */
-  public static final String TYPE_NAME = "git";
-
-  /** Field description */
-  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+  private static final Pattern REGEX_REPOSITORYNAME =
+    Pattern.compile("/public/bzr/([^/]+)");
 
   //~--- constructors ---------------------------------------------------------
 
@@ -75,27 +74,12 @@ public class GitRepositoryHandler
    * Constructs ...
    *
    *
-   * @param storeFactory
-   * @param fileSystem
+   * @param repositoryManager
    */
   @Inject
-  public GitRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem)
+  public BzrPublicFilter(RepositoryManager repositoryManager)
   {
-    super(storeFactory, fileSystem);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Type getType()
-  {
-    return TYPE;
+    this.repositoryManager = repositoryManager;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -104,43 +88,44 @@ public class GitRepositoryHandler
    * Method description
    *
    *
-   * @param repository
-   * @param directory
+   * @param request
+   * @param response
+   * @param chain
    *
    * @throws IOException
-   * @throws RepositoryException
+   * @throws ServletException
    */
   @Override
-  protected void create(Repository repository, File directory)
-          throws RepositoryException, IOException
+  protected void doFilter(HttpServletRequest request,
+                          HttpServletResponse response, FilterChain chain)
+          throws IOException, ServletException
   {
-    new FileRepositoryBuilder().setGitDir(
-        directory).readEnvironment().findGitDir().build().create(true);
+    String requestURI = HttpUtil.getStrippedURI(request);
+    Matcher m = REGEX_REPOSITORYNAME.matcher(requestURI);
+
+    if (m.find())
+    {
+      String name = m.group(1);
+      Repository repository =
+        repositoryManager.get(BzrRepositoryHandler.TYPE_NAME, name);
+
+      if ((repository != null) && repository.isPublicReadable())
+      {
+        chain.doFilter(request, response);
+      }
+      else
+      {
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      }
+    }
+    else
+    {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected GitConfig createInitialConfig()
-  {
-    return new GitConfig();
-  }
+  //~--- fields ---------------------------------------------------------------
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected Class<GitConfig> getConfigClass()
-  {
-    return GitConfig.class;
-  }
+  /** Field description */
+  private RepositoryManager repositoryManager;
 }

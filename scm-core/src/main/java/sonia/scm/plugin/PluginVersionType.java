@@ -29,24 +29,53 @@
  *
  */
 
-package sonia.scm.server;
 
-//~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.cli.Argument;
+package sonia.scm.plugin;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ServerConfig
+public enum PluginVersionType
 {
+  EARLY_ACESS("ea", 0, "early", "earlyaccess"), MILESTONE("M", 1, "milestone"),
+  ALPHA("alpha", 2), BETA("beta", 3),
+  RELEASE_CANDIDAT("RC", 4, "releasecandidate"), RELEASE(10);
 
   /**
    * Constructs ...
    *
+   *
+   * @param value
    */
-  public ServerConfig() {}
+  private PluginVersionType(int value)
+  {
+    this(null, value);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   *
+   * @param id
+   * @param value
+   * @param aliases
+   */
+  private PluginVersionType(String id, int value, String... aliases)
+  {
+    this.id = id;
+    this.value = value;
+    this.aliases = aliases;
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -56,9 +85,9 @@ public class ServerConfig
    *
    * @return
    */
-  public String getContextPath()
+  public String[] getAliases()
   {
-    return contextPath;
+    return aliases;
   }
 
   /**
@@ -67,9 +96,9 @@ public class ServerConfig
    *
    * @return
    */
-  public Integer getPort()
+  public String getId()
   {
-    return port;
+    return id;
   }
 
   /**
@@ -78,9 +107,21 @@ public class ServerConfig
    *
    * @return
    */
-  public String getResourcePath()
+  public Collection<String> getNames()
   {
-    return resourcePath;
+    List<String> names = new ArrayList<String>();
+
+    if (id != null)
+    {
+      names.add(id);
+    }
+
+    if (aliases != null)
+    {
+      names.addAll(Arrays.asList(aliases));
+    }
+
+    return names;
   }
 
   /**
@@ -89,88 +130,19 @@ public class ServerConfig
    *
    * @return
    */
-  public Boolean getShowHelp()
+  public int getValue()
   {
-    return showHelp;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param contextPath
-   */
-  public void setContextPath(String contextPath)
-  {
-    this.contextPath = contextPath;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param port
-   */
-  public void setPort(Integer port)
-  {
-    this.port = port;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param resourcePath
-   */
-  public void setResourcePath(String resourcePath)
-  {
-    this.resourcePath = resourcePath;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param showHelp
-   */
-  public void setShowHelp(Boolean showHelp)
-  {
-    this.showHelp = showHelp;
+    return value;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @Argument(
-    value = "c",
-    longName = "context-path",
-    description = "The Context-Path of the Jab-WebApp"
-  )
-  private String contextPath = "/";
+  public String[] aliases;
 
   /** Field description */
-  @Argument(
-    value = "p",
-    longName = "port",
-    description = "The port for the listener"
-  )
-  private Integer port = Integer.valueOf(8080);
+  private String id;
 
   /** Field description */
-  @Argument(
-    value = "r",
-    longName = "resource-path",
-    description = "Path to the server resource directory"
-  )
-  private String resourcePath;
-
-  /** Field description */
-  @Argument(
-    value = "h",
-    longName = "help",
-    description = "Shows this help"
-  )
-  private Boolean showHelp = Boolean.FALSE;
+  private int value;
 }

@@ -33,22 +33,14 @@
 
 package sonia.scm.server;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.cli.CliException;
-import sonia.scm.cli.CliParser;
-import sonia.scm.cli.DefaultCliHelpBuilder;
-import sonia.scm.util.IOUtil;
-import sonia.scm.util.ServiceUtil;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
+import java.util.NoSuchElementException;
+import java.util.ServiceLoader;
 
 import javax.xml.bind.JAXB;
 
@@ -74,48 +66,6 @@ public class ServerApplication
   /** Field description */
   public static final String SERVERCONFIG = "/config.xml";
 
-  /** Field description */
-  private static final Logger logger =
-    LoggerFactory.getLogger(ServerApplication.class.getName());
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private static ServerConfig getServerConfig()
-  {
-    ServerConfig config = null;
-    InputStream input =
-      ServerApplication.class.getResourceAsStream(SERVERCONFIG);
-
-    if (input != null)
-    {
-      try
-      {
-        config = JAXB.unmarshal(input, ServerConfig.class);
-      }
-      catch (Exception ex)
-      {
-        logger.error(ex.getMessage(), ex);
-      }
-      finally
-      {
-        IOUtil.close(input);
-      }
-    }
-
-    if (config == null)
-    {
-      config = new ServerConfig();
-    }
-
-    return config;
-  }
-
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -124,12 +74,10 @@ public class ServerApplication
    *
    * @param args
    *
-   * @throws CliException
    * @throws IOException
    * @throws ServerException
    */
-  public static void main(String[] args)
-          throws CliException, ServerException, IOException
+  public static void main(String[] args) throws ServerException, IOException
   {
     InputStream input = ServerApplication.class.getResourceAsStream(APPINFO);
 
@@ -141,76 +89,68 @@ public class ServerApplication
 
     ApplicationInformation appInfo = JAXB.unmarshal(input,
                                        ApplicationInformation.class);
-    ServerConfig config = getServerConfig();
-    CliParser parser = new CliParser();
+    final Server server = getServer();
 
-    parser.parse(config, args);
-
-    if (config.getShowHelp())
+    if (server == null)
     {
-      printHelp(appInfo, parser, config);
+      System.err.println("could not find an server implementation");
+      System.exit(RETURNCODE_MISSING_SERVER_IMPLEMENTATION);
     }
-    else
+
+    File webapp = new File("webapp", appInfo.getAppName());
+
+    server.start(webapp);
+    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
     {
-      final Server server = ServiceUtil.getService(Server.class);
-
-      if (server == null)
+      @Override
+      public void run()
       {
-        System.err.println("could not find an server implementation");
-        System.exit(RETURNCODE_MISSING_SERVER_IMPLEMENTATION);
-      }
-
-      File webapp = new File("webapp", appInfo.getAppName());
-
-      server.start(config, webapp);
-      Runtime.getRuntime().addShutdownHook(new Thread(new Runnable()
-      {
-        @Override
-        public void run()
+        if (server.isRunning())
         {
-          if (server.isRunning())
+          try
           {
-            try
-            {
-              server.stop();
-            }
-            catch (ServerException ex)
-            {
-              logger.error(ex.getMessage(), ex);
-            }
-            catch (IOException ex)
-            {
-              logger.error(ex.getMessage(), ex);
-            }
+            server.stop();
+          }
+          catch (ServerException ex)
+          {
+            ex.printStackTrace(System.err);
+          }
+          catch (IOException ex)
+          {
+            ex.printStackTrace(System.err);
           }
         }
-      }));
-    }
+      }
+    }));
   }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   *
-   * @param appInfo
-   * @param parser
-   * @param config
+   * @return
    */
-  private static void printHelp(ApplicationInformation appInfo,
-                                CliParser parser, ServerConfig config)
+  private static Server getServer()
   {
-    String s = System.getProperty("line.separator");
-    StringBuilder prefix = new StringBuilder(appInfo.getName());
+    Server server = null;
 
-    prefix.append(" ").append(appInfo.getVersion());
-    prefix.append(s).append("usage: ");
-    prefix.append(s);
+    try
+    {
+      ServiceLoader<Server> loader = ServiceLoader.load(Server.class);
 
-    DefaultCliHelpBuilder helpBuilder =
-      new DefaultCliHelpBuilder(prefix.toString(), null);
+      if (loader != null)
+      {
+        server = loader.iterator().next();
+      }
+    }
+    catch (NoSuchElementException ex)
+    {
 
-    System.err.println(parser.createHelp(helpBuilder, config));
-    System.exit(RETURNCODE_CLI_ERROR);
+      // no server available
+    }
+
+    return server;
   }
 }

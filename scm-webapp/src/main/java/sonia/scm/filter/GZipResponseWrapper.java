@@ -91,7 +91,10 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
   @Override
   public void flushBuffer() throws IOException
   {
-    stream.flush();
+    if (stream != null)
+    {
+      stream.flush();
+    }
   }
 
   //~--- get methods ----------------------------------------------------------

@@ -31,45 +31,32 @@
 
 
 
-package sonia.scm.repository;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.Manager;
-import sonia.scm.repository.xml.XmlRepositoryManager;
-import sonia.scm.store.JAXBStoreFactory;
-import sonia.scm.store.StoreFactory;
-import sonia.scm.util.MockUtil;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.HashSet;
-import java.util.Set;
+package sonia.scm.plugin;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
+public class OverviewPluginFilter implements PluginFilter
 {
+
+  /** Field description */
+  public static final OverviewPluginFilter INSTANCE =
+    new OverviewPluginFilter();
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
+   * @param plugin
+   *
    * @return
    */
   @Override
-  protected Manager<Repository, RepositoryException> createManager()
+  public boolean accept(PluginInformation plugin)
   {
-    Set<RepositoryHandler> handlerSet = new HashSet<RepositoryHandler>();
-    StoreFactory factory = new JAXBStoreFactory();
-
-    factory.init(contextProvider);
-    handlerSet.add(new DummyRepositoryHandler(factory));
-
-    return new XmlRepositoryManager(contextProvider,
-                                    MockUtil.getAdminSecurityContextProvider(),
-                                    factory, handlerSet);
+    return plugin.getState() != PluginState.NEWER_VERSION_INSTALLED;
   }
 }

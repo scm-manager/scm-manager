@@ -31,45 +31,68 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm.io;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Manager;
-import sonia.scm.repository.xml.XmlRepositoryManager;
-import sonia.scm.store.JAXBStoreFactory;
-import sonia.scm.store.StoreFactory;
-import sonia.scm.util.MockUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.HashSet;
-import java.util.Set;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
+public class DefaultFileSystem implements FileSystem
 {
+
+  /** the logger for DefaultFileSystem */
+  private static final Logger logger =
+    LoggerFactory.getLogger(DefaultFileSystem.class);
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @return
+   * @param directory
+   *
+   * @throws IOException
    */
   @Override
-  protected Manager<Repository, RepositoryException> createManager()
+  public void create(File directory) throws IOException
   {
-    Set<RepositoryHandler> handlerSet = new HashSet<RepositoryHandler>();
-    StoreFactory factory = new JAXBStoreFactory();
+    if (logger.isInfoEnabled())
+    {
+      logger.info("create directory {}", directory.getPath());
+    }
 
-    factory.init(contextProvider);
-    handlerSet.add(new DummyRepositoryHandler(factory));
+    IOUtil.mkdirs(directory);
+  }
 
-    return new XmlRepositoryManager(contextProvider,
-                                    MockUtil.getAdminSecurityContextProvider(),
-                                    factory, handlerSet);
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   *
+   * @throws IOException
+   */
+  @Override
+  public void destroy(File directory) throws IOException
+  {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("destroy directory {}", directory.getPath());
+    }
+
+    IOUtil.delete(directory);
   }
 }

@@ -51,6 +51,9 @@ public class BzrServletModule extends ServletModule
   /** Field description */
   public static final String MAPPING_BZR = "/bzr/*";
 
+  /** Field description */
+  public static final String MAPPING_PUBLICBZR = "/public/bzr/*";
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -60,8 +63,10 @@ public class BzrServletModule extends ServletModule
   @Override
   protected void configureServlets()
   {
-    filter(MAPPING_BZR).through(BasicAuthenticationFilter.class);
+    filter(MAPPING_BZR,
+           MAPPING_PUBLICBZR).through(BasicAuthenticationFilter.class);
     filter(MAPPING_BZR).through(BzrPermissionFilter.class);
-    serve(MAPPING_BZR).with(BzrCGIServlet.class);
+    filter(MAPPING_PUBLICBZR).through(BzrPublicFilter.class);
+    serve(MAPPING_BZR, MAPPING_PUBLICBZR).with(BzrCGIServlet.class);
   }
 }

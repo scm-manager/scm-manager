@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
 import sonia.scm.ScmState;
-import sonia.scm.Type;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
 import sonia.scm.web.security.WebSecurityContext;

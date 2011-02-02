@@ -42,35 +42,4 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "config")
-public class SvnConfig extends SimpleRepositoryConfig
-{
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getSvnAccessFile()
-  {
-    return svnAccessFile;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param svnAccessFile
-   */
-  public void setSvnAccessFile(String svnAccessFile)
-  {
-    this.svnAccessFile = svnAccessFile;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String svnAccessFile;
-}
+public class SvnConfig extends SimpleRepositoryConfig {}

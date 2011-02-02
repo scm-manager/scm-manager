@@ -49,6 +49,7 @@ import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.security.AuthenticationHandler;
 import sonia.scm.web.security.AuthenticationResult;
+import sonia.scm.web.security.AuthenticationState;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -57,8 +58,10 @@ import java.io.IOException;
 import java.text.MessageFormat;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -136,7 +139,8 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
       searchControls.setCountLimit(1);
       searchControls.setReturningAttributes(new String[] {
         config.getAttributeNameId(),
-        config.getAttributeNameFullname(), config.getAttributeNameMail() });
+        config.getAttributeNameFullname(), config.getAttributeNameMail(),
+        config.getAttributeNameGroup() });
 
       String filter = MessageFormat.format(config.getSearchFilter(), username);
       String baseDn = config.getUnitPeople() + "," + config.getBaseDn();
@@ -177,7 +181,7 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
             user.setType(TYPE);
 
             //
-            ArrayList<String> groups = new ArrayList<String>();
+            HashSet<String> groups = new HashSet<String>();
 
             searchControls = new SearchControls();
             searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -190,7 +194,6 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
                              + userDn + "))", searchControls);
 
             //
-
             while (searchResult2.hasMore())
             {
               SearchResult sr2 = searchResult2.next();
@@ -209,9 +212,9 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
             }
 
             //
+            result = new AuthenticationResult(user, groups);
+            getGroups(userAttributes, groups);
             user.setAdmin(isAdmin(user.getName(), groups));
-
-            //
             result = new AuthenticationResult(user, groups);
           }
           catch (NamingException ex)
@@ -374,12 +377,45 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
    * Method description
    *
    *
+   * @param userAttributes
+   * @param groups
+   *
+   * @throws NamingException
+   */
+  private void getGroups(Attributes userAttributes, HashSet<String> groups)
+          throws NamingException
+  {
+    Attribute groupsAttribute =
+      userAttributes.get(config.getAttributeNameGroup());
+
+    if (groupsAttribute != null)
+    {
+      NamingEnumeration<?> userGroups =
+        (NamingEnumeration<?>) groupsAttribute.getAll();
+
+      while (userGroups.hasMore())
+      {
+        groups.add((String) userGroups.next());
+      }
+
+      userGroups.close();
+    }
+    else
+    {
+      logger.info("user has no groups assigned");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param userName
    * @param groups
    *
    * @return
    */
-  private boolean isAdmin(String userName, List<String> groups)
+  private boolean isAdmin(String userName, Set<String> groups)
   {
     boolean admin = false;
 

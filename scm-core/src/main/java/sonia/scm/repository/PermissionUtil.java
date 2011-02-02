@@ -163,15 +163,13 @@ public class PermissionUtil
     {
       String name = p.getName();
 
-      if ((name != null) && (p.getType().getValue() >= pt.getValue()))
+      if (((name != null) && (p.getType().getValue() >= pt.getValue()))
+          && (name.equals(username)
+              || (p.isGroupPermission() && groups.contains(p.getName()))))
       {
-        if (name.equals(username)
-            || (p.isGroupPermission() && groups.contains(p.getName())))
-        {
-          result = true;
+        result = true;
 
-          break;
-        }
+        break;
       }
     }
 

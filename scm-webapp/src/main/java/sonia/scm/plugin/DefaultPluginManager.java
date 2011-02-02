@@ -418,9 +418,13 @@ public class DefaultPluginManager implements PluginManager
         {
           state = PluginState.INSTALLED;
         }
-        else
+        else if (isNewer(available, installed))
         {
           state = PluginState.UPDATE_AVAILABLE;
+        }
+        else
+        {
+          state = PluginState.NEWER_VERSION_INSTALLED;
         }
 
         break;
@@ -511,6 +515,29 @@ public class DefaultPluginManager implements PluginManager
     }
 
     return center;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param available
+   * @param installed
+   *
+   * @return
+   */
+  private boolean isNewer(PluginInformation available,
+                          PluginInformation installed)
+  {
+    boolean result = false;
+    PluginVersion version = PluginVersion.createVersion(installed.getVersion());
+
+    if (version != null)
+    {
+      result = version.isNewer(available.getVersion());
+    }
+
+    return result;
   }
 
   /**

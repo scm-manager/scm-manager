@@ -118,6 +118,10 @@ public class LDAPConfig
     return attributeNameMail;
   }
 
+  public String getAttributeNameGroup() {
+    return attributeNameGroup;
+  }
+
   /**
    * Method description
    *
@@ -306,6 +310,9 @@ public class LDAPConfig
   /** Field description */
   @XmlElement(name = "attribute-name-mail")
   private String attributeNameMail = "mail";
+  
+  @XmlElement(name = "attribute-name-group")
+  private String attributeNameGroup = "group";
 
   /** Field description */
   @XmlElement(name = "base-dn")
