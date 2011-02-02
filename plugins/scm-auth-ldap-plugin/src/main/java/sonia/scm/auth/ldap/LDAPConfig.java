@@ -274,7 +274,7 @@ public class LDAPConfig
     {
       if (token.trim().length() > 0)
       {
-        tokens.add(token);
+        tokens.add(token.trim());
       }
     }
 
@@ -285,7 +285,7 @@ public class LDAPConfig
 
   /** Field description */
   @XmlElement(name = "admin-groups")
-  private String adminGroups = "cn=scm-admin,cn=dev-admin";
+  private String adminGroups = "scm-admin,dev-admin";
 
   /** Field description */
   @XmlElement(name = "admin-nsrole-dn")

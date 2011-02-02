@@ -56,11 +56,14 @@ import java.io.IOException;
 
 import java.text.MessageFormat;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
@@ -172,7 +175,44 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
                 (String) userAttributes.get(
                   config.getAttributeNameMail()).get());
             user.setType(TYPE);
-            result = new AuthenticationResult(user);
+
+            //
+            ArrayList<String> groups = new ArrayList<String>();
+
+            searchControls = new SearchControls();
+            searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            searchControls.setReturningAttributes(new String[] { "cn" });
+            baseDn = config.getUnitGroup() + "," + config.getBaseDn();
+
+            NamingEnumeration<SearchResult> searchResult2 =
+              context.search(baseDn,
+                             "(&(objectClass=groupOfUniqueNames)(uniqueMember="
+                             + userDn + "))", searchControls);
+
+            //
+
+            while (searchResult2.hasMore())
+            {
+              SearchResult sr2 = searchResult2.next();
+              Attributes groupAttributes = sr2.getAttributes();
+              Attribute cnAttribute = groupAttributes.get("cn");
+
+              if (cnAttribute != null)
+              {
+                String cn = (String) cnAttribute.get();
+
+                if ((cn != null) && (cn.trim().length() > 0))
+                {
+                  groups.add(cn);
+                }
+              }
+            }
+
+            //
+            user.setAdmin(isAdmin(user.getName(), groups));
+
+            //
+            result = new AuthenticationResult(user, groups);
           }
           catch (NamingException ex)
           {
@@ -326,6 +366,41 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
     ldapProperties.put(Context.SECURITY_CREDENTIALS,
                        config.getConnectionPassword());
     ldapProperties.put("java.naming.ldap.version", "3");
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param userName
+   * @param groups
+   *
+   * @return
+   */
+  private boolean isAdmin(String userName, List<String> groups)
+  {
+    boolean admin = false;
+
+    if (config.getAdminUserSet().contains(userName))
+    {
+      admin = true;
+    }
+    else
+    {
+      for (String group : groups)
+      {
+        if (config.getAdminGroupSet().contains(group))
+        {
+          admin = true;
+
+          break;
+        }
+      }
+    }
+
+    return admin;
   }
 
   //~--- fields ---------------------------------------------------------------

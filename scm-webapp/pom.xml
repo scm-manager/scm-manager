@@ -233,6 +233,7 @@
     <aether.version>1.9</aether.version>
     <wagon.version>1.0-beta-7</wagon.version>
     <maven.version>3.0.2</maven.version>
+    <netbeans.hint.deploy.server>Tomcat60</netbeans.hint.deploy.server>
   </properties>
 
   <profiles>
