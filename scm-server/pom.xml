@@ -37,9 +37,9 @@
     <plugins>
 
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
+        <groupId>sonia.maven</groupId>
         <artifactId>appassembler-maven-plugin</artifactId>
-        <version>1.1</version>
+        <version>1.0</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -61,6 +61,7 @@
                   <platforms>
                     <platform>jsw</platform>
                   </platforms>
+                  <version>3.5.7</version>
 
                   <jvmSettings>
                     <initialMemorySize>256m</initialMemorySize>
@@ -74,9 +75,11 @@
                         <include>linux-x86-32</include>
                         <include>linux-x86-64</include>
                         <include>macosx-x86-universal-32</include>
+                        <include>macosx-x86-universal-64</include>
                         <include>solaris-sparc-32</include>
                         <include>solaris-sparc-64</include>
                         <include>solaris-x86-32</include>
+                        <include>solaris-x86-64</include>
                         <include>windows-x86-32</include>
                       </includes>
                       <configuration>
