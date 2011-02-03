@@ -103,7 +103,7 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
       console.debug( group.name + ' selected' );
     }
 
-    Ext.getCmp('removeButton').setDisabled(false);
+    Ext.getCmp('groupRmButton').setDisabled(false);
     var panel = new Sonia.group.FormPanel({
       item: group,
       region: 'south',
@@ -346,7 +346,7 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
       autoScroll: true,
       tbar: [
         {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddForm},
-        {xtype: 'tbbutton', id: 'removeButton', disabled: true, text: 'Remove', scope: this, handler: this.removeGroup},
+        {xtype: 'tbbutton', id: 'groupRmButton', disabled: true, text: 'Remove', scope: this, handler: this.removeGroup},
         '-',
         {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload}
       ],
@@ -424,7 +424,7 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
   },
 
   showAddForm: function(){
-    Ext.getCmp('removeButton').setDisabled(true);
+    Ext.getCmp('groupRmButton').setDisabled(true);
     var panel = new Sonia.group.FormPanel({
       region: 'south',
       title: 'Group Form',

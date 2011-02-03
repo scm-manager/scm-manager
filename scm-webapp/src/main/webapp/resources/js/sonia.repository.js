@@ -14,7 +14,7 @@
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
  * 
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER S AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
  * DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
@@ -125,7 +125,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     var panel = null;
     
     if ( Sonia.repository.isOwner(item) ){
-      Ext.getCmp('removeButton').setDisabled(false);
+      Ext.getCmp('repoRmButton').setDisabled(false);
       panel = new Sonia.repository.FormPanel({
         item: item,
         region: 'south',
@@ -141,7 +141,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         }
       });
     } else {
-      Ext.getCmp('removeButton').setDisabled(true);
+      Ext.getCmp('repoRmButton').setDisabled(true);
       panel = Sonia.repository.NoPermissionPanel;
     }
     Sonia.repository.setEditPanel(panel);
@@ -425,7 +425,7 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
       );
     }
     toolbar.push(
-      {xtype: 'tbbutton', id: 'removeButton', disabled: true, text: 'Remove', scope: this, handler: this.removeRepository},
+      {xtype: 'tbbutton', id: 'repoRmButton', disabled: true, text: 'Remove', scope: this, handler: this.removeRepository},
       '-',
       {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload}
     );
@@ -516,7 +516,7 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
   },
 
   showAddForm: function(){
-    Ext.getCmp('removeButton').setDisabled(true);
+    Ext.getCmp('repoRmButton').setDisabled(true);
     var panel = new Sonia.repository.FormPanel({
       region: 'south',
       title: 'Repository Form',
