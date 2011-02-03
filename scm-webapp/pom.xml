@@ -199,6 +199,24 @@
       </plugin>
 
       <plugin>
+        <groupId>sonia.maven</groupId>
+        <artifactId>change-env</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <configuration>
+          <environment>${environment.profile}</environment>
+          <pattern>.*(\.{env})\.xml</pattern>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>change-env</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
         <version>6.1.26</version>
@@ -230,6 +248,7 @@
   </build>
 
   <properties>
+    <environment.profile>default</environment.profile>
     <aether.version>1.9</aether.version>
     <wagon.version>1.0-beta-7</wagon.version>
     <maven.version>3.0.2</maven.version>
@@ -277,6 +296,10 @@
 
         </plugins>
       </build>
+
+      <properties>
+        <environment.profile>release</environment.profile>
+      </properties>
     </profile>
 
     <profile>

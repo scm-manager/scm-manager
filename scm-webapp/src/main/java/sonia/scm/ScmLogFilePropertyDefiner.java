@@ -31,106 +31,61 @@
 
 
 
-package sonia.scm.util;
+package sonia.scm;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import ch.qos.logback.core.PropertyDefinerBase;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.ServiceLoader;
+import java.io.File;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ServiceUtil
+public class ScmLogFilePropertyDefiner extends PropertyDefinerBase
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param def
-   * @param <T>
-   *
-   * @return
-   */
-  public static <T> T getService(Class<T> type, T def)
-  {
-    T result = getService(type);
+  /** Field description */
+  public static final String LOG_DIRECTORY = "logs";
 
-    if (result == null)
-    {
-      result = def;
-    }
-
-    return result;
-  }
+  //~--- constructors ---------------------------------------------------------
 
   /**
-   * Method description
+   * Constructs ...
    *
-   *
-   * @param type
-   * @param <T>
-   *
-   * @return
    */
-  public static <T> T getService(Class<T> type)
+  public ScmLogFilePropertyDefiner()
   {
-    T result = null;
+    File logDirectory = new File(SCMContext.getContext().getBaseDirectory(),
+                                 LOG_DIRECTORY);
 
-    try
+    if (!logDirectory.exists())
     {
-      ServiceLoader<T> loader = ServiceLoader.load(type);
-
-      if (loader != null)
-      {
-        result = loader.iterator().next();
-      }
-    }
-    catch (NoSuchElementException ex)
-    {
-
-      // do nothing
+      logDirectory.mkdirs();
     }
 
-    return result;
+    this.logDirectoryPath = logDirectory.getAbsolutePath();
   }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param type
-   * @param <T>
-   *
    * @return
    */
-  public static <T> List<T> getServices(Class<T> type)
+  @Override
+  public String getPropertyValue()
   {
-    List<T> result = new ArrayList<T>();
-
-    try
-    {
-      ServiceLoader<T> loader = ServiceLoader.load(type);
-
-      if (loader != null)
-      {
-        for (T service : loader)
-        {
-          result.add(service);
-        }
-      }
-    }
-    catch (NoSuchElementException ex)
-    {
-
-      // do nothing
-    }
-
-    return result;
+    return logDirectoryPath;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String logDirectoryPath;
 }
