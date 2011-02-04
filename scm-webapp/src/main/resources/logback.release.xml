@@ -10,6 +10,8 @@
 
 <configuration>
 
+  <jmxConfigurator />
+
   <define name="LOGDIR" class="sonia.scm.ScmLogFilePropertyDefiner" />
 
   <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">

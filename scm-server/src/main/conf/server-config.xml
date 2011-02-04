@@ -55,4 +55,24 @@
   </Call>
   -->
 
+  <!-- JMX support -->
+  <!--
+  <Call id="MBeanServer" class="java.lang.management.ManagementFactory"
+    name="getPlatformMBeanServer" />
+
+  <New id="MBeanContainer" class="org.eclipse.jetty.jmx.MBeanContainer">
+    <Arg>
+      <Ref id="MBeanServer" />
+    </Arg>
+  </New>
+
+  <Get id="Container" name="container">
+    <Call name="addEventListener">
+      <Arg>
+        <Ref id="MBeanContainer" />
+      </Arg>
+    </Call>
+  </Get>
+  -->
+
 </Configure>
