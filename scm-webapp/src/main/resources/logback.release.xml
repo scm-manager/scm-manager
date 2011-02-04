@@ -33,11 +33,20 @@
     </encoder>
   </appender>
 
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+    </encoder>
+    
+  </appender>
+
   <logger name="sonia.scm" level="INFO" />
   <logger name="sonia.scm.util.ServiceUtil" level="WARN" />
 
   <root level="WARN">
     <appender-ref ref="FILE" />
+    <appender-ref ref="STDOUT" />
   </root>
 
 </configuration>
