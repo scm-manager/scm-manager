@@ -39,7 +39,7 @@
       <plugin>
         <groupId>sonia.maven</groupId>
         <artifactId>appassembler-maven-plugin</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
         <executions>
           <execution>
             <phase>package</phase>
@@ -90,10 +90,14 @@
                         <property>
                           <name>set.default.REPO_DIR</name>
                           <value>lib</value>
-                          <property>
-                            <name>wrapper.logfile</name>
-                            <value>logs/wrapper.log</value>
-                          </property>
+                        </property>
+                        <property>
+                          <name>app.base.libexec</name>
+                          <value>libexec</value>
+                        </property>
+                        <property>
+                          <name>wrapper.logfile</name>
+                          <value>logs/wrapper.log</value>
                         </property>
                       </configuration>
                     </generatorConfiguration>

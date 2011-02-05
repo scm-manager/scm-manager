@@ -72,6 +72,11 @@
       <outputDirectory>lib</outputDirectory>
     </fileSet>
     <fileSet>
+      <directory>target/appassembler/jsw/scm-server/libexec</directory>
+      <filtered>false</filtered>
+      <outputDirectory>libexec</outputDirectory>
+    </fileSet>
+    <fileSet>
       <directory>target/appassembler/jsw/scm-server/webapp</directory>
       <filtered>false</filtered>
       <outputDirectory>webapp</outputDirectory>
