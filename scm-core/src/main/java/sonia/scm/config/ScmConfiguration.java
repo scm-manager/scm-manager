@@ -100,6 +100,17 @@ public class ScmConfiguration
    *
    * @return
    */
+  public int getPort()
+  {
+    return port;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getServername()
   {
     return servername;
@@ -177,6 +188,17 @@ public class ScmConfiguration
    * Method description
    *
    *
+   * @param port
+   */
+  public void setPort(int port)
+  {
+    this.port = port;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param servername
    */
   public void setServername(String servername)
@@ -200,6 +222,9 @@ public class ScmConfiguration
   /** Field description */
   @XmlElement(name = "plugin-url")
   private String pluginUrl = DEFAULT_PLUGINURL;
+
+  /** Field description */
+  private int port = -1;
 
   /** Field description */
   private String servername = "localhost";

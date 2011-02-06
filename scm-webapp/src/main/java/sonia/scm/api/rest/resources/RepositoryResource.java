@@ -233,7 +233,7 @@ public class RepositoryResource extends AbstractResource<Repository>
       StringBuilder url = new StringBuilder(request.getScheme());
 
       url.append("://").append(configuration.getServername());
-      url.append(":").append(request.getLocalPort());
+      url.append(":").append(getPort(request));
 
       String ctxPath = request.getContextPath();
 
@@ -270,6 +270,35 @@ public class RepositoryResource extends AbstractResource<Repository>
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  private int getPort(HttpServletRequest request)
+  {
+    int port = 0;
+
+    if (configuration.isEnableSSL())
+    {
+      port = configuration.getSslPort();
+    }
+    else
+    {
+      port = configuration.getPort();
+    }
+
+    if (port <= 0)
+    {
+      port = request.getLocalPort();
+    }
+
+    return port;
+  }
 
   /**
    * Method description

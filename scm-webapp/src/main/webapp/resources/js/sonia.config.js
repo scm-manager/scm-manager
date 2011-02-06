@@ -100,6 +100,11 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           allowBlank: false
         },{
           xtype: 'textfield',
+          fieldLabel: 'Serverport',
+          name: 'port',
+          allowBlank: false
+        },{
+          xtype: 'textfield',
           fieldLabel: 'Plugin repository',
           name: 'plugin-url',
           vtype: 'url',
