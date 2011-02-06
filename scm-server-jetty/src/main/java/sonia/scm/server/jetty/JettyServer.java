@@ -35,7 +35,6 @@ package sonia.scm.server.jetty;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.xml.XmlConfiguration;
 
 import sonia.scm.server.Server;
@@ -125,12 +124,6 @@ public class JettyServer implements Server
       {
         server.addLifeCycleListener(new JettyServerListenerAdapter(listener));
       }
-
-      WebAppContext wac = new WebAppContext();
-
-      wac.setWar(webapp.getAbsolutePath());
-      wac.setExtractWAR(true);
-      server.setHandler(wac);
 
       // server.setStopAtShutdown(true);
       server.start();

@@ -27,6 +27,39 @@
     </Arg>
   </Call>
 
+  <New id="scm-webapp" class="org.eclipse.jetty.webapp.WebAppContext">
+    <Set name="contextPath">/scm</Set>
+    <Set name="war">webapp/scm-webapp.war</Set>
+  </New>
+
+  <New id="docroot" class="org.eclipse.jetty.webapp.WebAppContext">
+    <Set name="contextPath">/</Set>
+    <Set name="baseResource">
+      <New class="org.eclipse.jetty.util.resource.ResourceCollection">
+        <Arg>
+          <Array type="java.lang.String">
+            <Item>webapp/docroot</Item>
+          </Array>
+        </Arg>
+      </New>
+    </Set>
+  </New>
+  
+  <Set name="handler">
+    <New class="org.eclipse.jetty.server.handler.HandlerCollection">
+      <Set name="handlers">
+        <Array type="org.eclipse.jetty.server.Handler">
+          <Item>
+            <Ref id="scm-webapp" />
+          </Item>
+          <Item>
+            <Ref id="docroot" />
+          </Item>
+        </Array>
+      </Set>
+    </New>
+  </Set>
+
   <!-- mod_proxy_ajp or mod_jk -->
   <!--
   <Call name="addConnector">
