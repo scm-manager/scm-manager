@@ -99,7 +99,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'servername',
           allowBlank: false
         },{
-          xtype: 'textfield',
+          xtype: 'numberfield',
           fieldLabel: 'Serverport',
           name: 'port',
           allowBlank: false
@@ -120,10 +120,10 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'enableSSL',
           inputValue: 'true'
         },{
-          xtype: 'textfield',
+          xtype: 'numberfield',
           fieldLabel: 'SSL Port',
           name: 'sslPort',
-          vtype: 'alphanum'
+          allowBlank: false
         }],
       
         onSubmit: function(values){

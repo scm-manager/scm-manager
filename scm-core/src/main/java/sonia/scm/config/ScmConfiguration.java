@@ -78,6 +78,7 @@ public class ScmConfiguration
     this.pluginUrl = other.pluginUrl;
     this.sslPort = other.sslPort;
     this.enableSSL = other.enableSSL;
+    this.port = other.port;
     this.anonymousAccessEnabled = other.anonymousAccessEnabled;
   }
 
