@@ -103,10 +103,10 @@ public class CGIRunner
    * @throws IOException
    */
   public void exec(EnvList environment, File command, String pathInfo,
-                   HttpServletRequest req, HttpServletResponse res)
+                   HttpServletRequest req, HttpServletResponse res, int serverPort)
           throws IOException
   {
-    exec(environment, defaultCmdPrefix, command, pathInfo, req, res);
+    exec(environment, defaultCmdPrefix, command, pathInfo, req, res, serverPort);
   }
 
   /**
@@ -125,7 +125,7 @@ public class CGIRunner
    */
   public void exec(EnvList environment, String cmdPrefix, File command,
                    String pathInfo, HttpServletRequest req,
-                   HttpServletResponse res)
+                   HttpServletResponse res, int serverPort)
           throws IOException
   {
     String path = command.getAbsolutePath();
@@ -169,7 +169,7 @@ public class CGIRunner
     environment.set("SCRIPT_NAME", scriptName);
     environment.set("SCRIPT_FILENAME", scriptPath);
     environment.set("SERVER_NAME", req.getServerName());
-    environment.set("SERVER_PORT", Integer.toString(req.getServerPort()));
+    environment.set("SERVER_PORT", Integer.toString(serverPort));
     environment.set("SERVER_PROTOCOL", req.getProtocol());
     environment.set("SERVER_SOFTWARE", context.getServerInfo());
 

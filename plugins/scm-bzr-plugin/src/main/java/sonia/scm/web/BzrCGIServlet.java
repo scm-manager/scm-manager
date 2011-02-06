@@ -39,6 +39,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.io.RegexResourceProcessor;
 import sonia.scm.io.ResourceProcessor;
 import sonia.scm.repository.BzrConfig;
@@ -116,15 +117,19 @@ public class BzrCGIServlet extends AbstractCGIServlet
    *
    *
    *
+   *
+   * @param configuration
    * @param securityContextProvider
    * @param repositoryManager
    * @param handler
    */
   @Inject
-  public BzrCGIServlet(Provider<WebSecurityContext> securityContextProvider,
+  public BzrCGIServlet(ScmConfiguration configuration,
+                       Provider<WebSecurityContext> securityContextProvider,
                        RepositoryManager repositoryManager,
                        BzrRepositoryHandler handler)
   {
+    super(configuration);
     this.securityContextProvider = securityContextProvider;
     this.repositoryManager = repositoryManager;
     this.handler = handler;

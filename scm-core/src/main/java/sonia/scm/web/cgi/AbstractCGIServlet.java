@@ -33,6 +33,11 @@
 
 package sonia.scm.web.cgi;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.util.HttpUtil;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -54,6 +59,19 @@ public abstract class AbstractCGIServlet extends HttpServlet
 
   /** Field description */
   private static final long serialVersionUID = -8638099037069714140L;
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param configuration
+   */
+  public AbstractCGIServlet(ScmConfiguration configuration)
+  {
+    this.configuration = configuration;
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -157,7 +175,7 @@ public abstract class AbstractCGIServlet extends HttpServlet
   {
     cgiRunner.exec(createRequestEnvironment(req, baseEnvironment),
                    getCmdPrefix(), getCommand(req), req.getPathInfo(), req,
-                   resp);
+                   resp, HttpUtil.getServerPort(configuration, req));
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -191,4 +209,7 @@ public abstract class AbstractCGIServlet extends HttpServlet
 
   /** Field description */
   private CGIRunner cgiRunner;
+
+  /** Field description */
+  private ScmConfiguration configuration;
 }

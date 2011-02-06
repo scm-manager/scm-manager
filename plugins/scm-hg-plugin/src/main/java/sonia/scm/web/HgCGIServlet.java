@@ -38,6 +38,7 @@ package sonia.scm.web;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -88,13 +89,17 @@ public class HgCGIServlet extends AbstractCGIServlet
    *
    *
    *
+   *
+   * @param configuration
    * @param repositoryManager
    * @param handler
    */
   @Inject
-  public HgCGIServlet(RepositoryManager repositoryManager,
+  public HgCGIServlet(ScmConfiguration configuration,
+                      RepositoryManager repositoryManager,
                       HgRepositoryHandler handler)
   {
+    super(configuration);
     this.repositoryManager = repositoryManager;
     this.handler = handler;
   }

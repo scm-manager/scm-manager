@@ -33,6 +33,10 @@
 
 package sonia.scm.util;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.config.ScmConfiguration;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,6 +78,37 @@ public class HttpUtil
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param configuration
+   * @param request
+   *
+   * @return
+   */
+  public static int getServerPort(ScmConfiguration configuration,
+                                  HttpServletRequest request)
+  {
+    int port = 0;
+
+    if (configuration.isEnableSSL())
+    {
+      port = configuration.getSslPort();
+    }
+    else
+    {
+      port = configuration.getPort();
+    }
+
+    if (port <= 0)
+    {
+      port = request.getLocalPort();
+    }
+
+    return port;
+  }
 
   /**
    * Method description
