@@ -37,14 +37,19 @@ package sonia.scm.config;
 
 import com.google.inject.Singleton;
 
+import sonia.scm.xml.XmlSetStringAdapter;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -80,9 +85,33 @@ public class ScmConfiguration
     this.enableSSL = other.enableSSL;
     this.port = other.port;
     this.anonymousAccessEnabled = other.anonymousAccessEnabled;
+    this.adminUsers = other.adminUsers;
+    this.adminGroups = other.adminGroups;
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Set<String> getAdminGroups()
+  {
+    return adminGroups;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Set<String> getAdminUsers()
+  {
+    return adminUsers;
+  }
 
   /**
    * Method description
@@ -156,6 +185,28 @@ public class ScmConfiguration
    * Method description
    *
    *
+   * @param adminGroups
+   */
+  public void setAdminGroups(Set<String> adminGroups)
+  {
+    this.adminGroups = adminGroups;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param adminUsers
+   */
+  public void setAdminUsers(Set<String> adminUsers)
+  {
+    this.adminUsers = adminUsers;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param anonymousAccessEnabled
    */
   public void setAnonymousAccessEnabled(boolean anonymousAccessEnabled)
@@ -219,6 +270,16 @@ public class ScmConfiguration
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @XmlElement(name = "admin-groups")
+  @XmlJavaTypeAdapter(XmlSetStringAdapter.class)
+  private Set<String> adminGroups;
+
+  /** Field description */
+  @XmlElement(name = "admin-users")
+  @XmlJavaTypeAdapter(XmlSetStringAdapter.class)
+  private Set<String> adminUsers;
 
   /** Field description */
   @XmlElement(name = "plugin-url")

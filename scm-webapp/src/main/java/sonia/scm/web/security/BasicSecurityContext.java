@@ -145,6 +145,11 @@ public class BasicSecurityContext implements WebSecurityContext
 
         loadGroups();
 
+        if (!user.isAdmin())
+        {
+          user.setAdmin(isAdmin());
+        }
+
         if (logger.isDebugEnabled())
         {
           logGroups();
@@ -281,6 +286,26 @@ public class BasicSecurityContext implements WebSecurityContext
     }
 
     logger.debug(msg.toString());
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private boolean isAdmin()
+  {
+    boolean result = configuration.getAdminUsers().contains(user.getName());
+
+    if (!result)
+    {
+      result = Util.containsOne(configuration.getAdminGroups(), groups);
+    }
+
+    return result;
   }
 
   //~--- fields ---------------------------------------------------------------

@@ -88,6 +88,34 @@ public class Util
    * Method description
    *
    *
+   * @param collection
+   * @param other
+   * @param <T>
+   *
+   * @return
+   */
+  public static <T> boolean containsOne(Collection<T> collection,
+          Collection<T> other)
+  {
+    boolean result = false;
+
+    for (T item : collection)
+    {
+      if (other.contains(item))
+      {
+        result = true;
+
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param date
    * @param tz
    *

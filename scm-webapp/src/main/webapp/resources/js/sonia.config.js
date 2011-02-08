@@ -124,6 +124,16 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           fieldLabel: 'SSL Port',
           name: 'sslPort',
           allowBlank: false
+        },{
+          xtype : 'textfield',
+          fieldLabel : 'Admin Groups',
+          name : 'admin-groups',
+          allowBlank : true
+        },{
+          xtype : 'textfield',
+          fieldLabel : 'Admin Users',
+          name : 'admin-users',
+          allowBlank : true
         }],
       
         onSubmit: function(values){
