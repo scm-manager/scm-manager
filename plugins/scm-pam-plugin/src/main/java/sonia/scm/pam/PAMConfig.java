@@ -58,56 +58,12 @@ public class PAMConfig
    *
    * @return
    */
-  public String getAdminGroups()
-  {
-    return adminGroups;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getAdminUsers()
-  {
-    return adminUsers;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public String getServiceName()
   {
     return serviceName;
   }
 
   //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param adminGroups
-   */
-  public void setAdminGroups(String adminGroups)
-  {
-    this.adminGroups = adminGroups;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param adminUsers
-   */
-  public void setAdminUsers(String adminUsers)
-  {
-    this.adminUsers = adminUsers;
-  }
 
   /**
    * Method description
@@ -120,64 +76,7 @@ public class PAMConfig
     this.serviceName = serviceName;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  Set<String> getAdminGroupSet()
-  {
-    return split(adminGroups);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  Set<String> getAdminUserSet()
-  {
-    return split(adminUsers);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param rawString
-   *
-   * @return
-   */
-  private Set<String> split(String rawString)
-  {
-    Set<String> tokens = new HashSet<String>();
-
-    for (String token : rawString.split(","))
-    {
-      if (token.trim().length() > 0)
-      {
-        tokens.add(token);
-      }
-    }
-
-    return tokens;
-  }
-
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "admin-groups")
-  private String adminGroups = "";
-
-  /** Field description */
-  @XmlElement(name = "admin-users")
-  private String adminUsers = "";
 
   /** Field description */
   @XmlElement(name = "service-name")

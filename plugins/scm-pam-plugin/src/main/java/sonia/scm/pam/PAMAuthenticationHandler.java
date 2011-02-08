@@ -137,7 +137,6 @@ public class PAMAuthenticationHandler implements AuthenticationHandler
           {
             User user = new User(username);
 
-            user.setAdmin(isAdmin(unixUser));
             result = new AuthenticationResult(user, unixUser.getGroups());
           }
         }
@@ -227,40 +226,6 @@ public class PAMAuthenticationHandler implements AuthenticationHandler
   public void setConfig(PAMConfig config)
   {
     this.config = config;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param unixUser
-   *
-   * @return
-   */
-  private boolean isAdmin(UnixUser unixUser)
-  {
-    boolean admin = false;
-
-    if (config.getAdminUserSet().contains(unixUser.getUserName()))
-    {
-      admin = true;
-    }
-    else
-    {
-      for (String group : unixUser.getGroups())
-      {
-        if (config.getAdminGroupSet().contains(group))
-        {
-          admin = true;
-
-          break;
-        }
-      }
-    }
-
-    return admin;
   }
 
   //~--- fields ---------------------------------------------------------------
