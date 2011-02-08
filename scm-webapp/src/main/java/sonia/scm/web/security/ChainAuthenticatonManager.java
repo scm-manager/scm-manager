@@ -269,13 +269,15 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
      * Constructs ...
      *
      *
-     * @param authenticationResult
+     *
+     * @param ar
      * @param password
      */
-    public AuthenticationCacheValue(AuthenticationResult authenticationResult,
-                                    String password)
+    public AuthenticationCacheValue(AuthenticationResult ar, String password)
     {
-      this.authenticationResult = authenticationResult;
+      this.authenticationResult =
+        new AuthenticationResult(ar.getUser().clone(), ar.getGroups(),
+                                 ar.getState());
       this.password = password;
     }
 
