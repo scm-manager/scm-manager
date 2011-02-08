@@ -269,3 +269,57 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
 });
 
 Ext.reg("configForm", Sonia.config.ConfigForm);
+
+
+Sonia.config.SimpleConfigForm = Ext.extend(Sonia.config.ConfigForm,{
+
+  configUrl: null,
+  loadMethod: 'GET',
+  submitMethod: 'POST',
+
+  initComponent: function(){
+    Ext.apply(this, Ext.apply(this.initialConfig));
+    Sonia.config.SimpleConfigForm.superclass.initComponent.apply(this, arguments);
+  },
+
+  onSubmit: function(values){
+    this.el.mask('Submit ...');
+    Ext.Ajax.request({
+      url: this.configUrl,
+      method: this.submitMethod,
+      jsonData: values,
+      scope: this,
+      disableCaching: true,
+      success: function(response){
+        this.el.unmask();
+      },
+      failure: function(){
+        this.el.unmask();
+      }
+    });
+  },
+
+  onLoad: function(el){
+    var tid = setTimeout( function(){ el.mask('Loading ...'); }, 100);
+    Ext.Ajax.request({
+      url: this.configUrl,
+      method: this.loadMethod,
+      scope: this,
+      disableCaching: true,
+      success: function(response){
+        var obj = Ext.decode(response.responseText);
+        this.load(obj);
+        clearTimeout(tid);
+        el.unmask();
+      },
+      failure: function(){
+        el.unmask();
+        clearTimeout(tid);
+        alert('failure');
+      }
+    });
+  }
+
+});
+
+Ext.reg("simpleConfigForm", Sonia.config.SimpleConfigForm);
