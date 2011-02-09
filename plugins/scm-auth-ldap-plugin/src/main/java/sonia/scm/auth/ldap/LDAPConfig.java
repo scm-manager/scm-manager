@@ -58,39 +58,6 @@ public class LDAPConfig
    *
    * @return
    */
-  public String getAdminGroups()
-  {
-    return adminGroups;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getAdminNsroleDn()
-  {
-    return adminNsroleDn;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getAdminUsers()
-  {
-    return adminUsers;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public String getAttributeNameFullname()
   {
     return attributeNameFullname;
@@ -210,56 +177,6 @@ public class LDAPConfig
     return unitPeople;
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param adminGroups
-   */
-  public void setAdminGroups(String adminGroups)
-  {
-    this.adminGroups = adminGroups;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param adminUsers
-   */
-  public void setAdminUsers(String adminUsers)
-  {
-    this.adminUsers = adminUsers;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  Set<String> getAdminGroupSet()
-  {
-    return split(adminGroups);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  Set<String> getAdminUserSet()
-  {
-    return split(adminUsers);
-  }
-
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -286,18 +203,6 @@ public class LDAPConfig
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "admin-groups")
-  private String adminGroups = "scm-admin,dev-admin";
-
-  /** Field description */
-  @XmlElement(name = "admin-nsrole-dn")
-  private String adminNsroleDn = "cn=scm-admins-role,dc=scm-manager,dc=org";
-
-  /** Field description */
-  @XmlElement(name = "admin-users")
-  private String adminUsers = "admin,root";
 
   /** Field description */
   @XmlElement(name = "attribute-name-fullname")

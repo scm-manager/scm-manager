@@ -214,10 +214,6 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
             // read dynamic group attribute
             getGroups(userAttributes, groups);
 
-            // set admin
-            user.setAdmin(isAdmin(user.getName(), groups));
-
-            // TODO: nsrole dn - admin role
             result = new AuthenticationResult(user, groups);
           }
           catch (NamingException ex)
@@ -407,39 +403,6 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
     {
       logger.info("user has no groups assigned");
     }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param userName
-   * @param groups
-   *
-   * @return
-   */
-  private boolean isAdmin(String userName, Set<String> groups)
-  {
-    boolean admin = false;
-
-    if (config.getAdminUserSet().contains(userName))
-    {
-      admin = true;
-    }
-    else
-    {
-      for (String group : groups)
-      {
-        if (config.getAdminGroupSet().contains(group))
-        {
-          admin = true;
-
-          break;
-        }
-      }
-    }
-
-    return admin;
   }
 
   //~--- fields ---------------------------------------------------------------

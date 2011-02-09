@@ -36,23 +36,6 @@ registerGeneralConfigPanel({
   title : 'LDAP Authentication',
   items : [{
     xtype : 'textfield',
-    fieldLabel : 'Admin NSRole DN',
-    name : 'admin-nsrole-dn',
-    allowBlank : true
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Admin Groups',
-    name : 'admin-groups',
-    allowBlank : true
-  }
-  ,{
-    xtype : 'textfield',
-    fieldLabel : 'Admin Users',
-    name : 'admin-users',
-    allowBlank : true
-  }
-  ,{
-    xtype : 'textfield',
     fieldLabel : 'Fullname Attribute Name',
     name : 'attribute-name-fullname',
     allowBlank : true
