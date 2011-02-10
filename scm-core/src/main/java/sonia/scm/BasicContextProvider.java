@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,6 +41,9 @@ import sonia.scm.util.Util;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
+import java.util.Properties;
 
 /**
  *
@@ -46,6 +51,9 @@ import java.io.IOException;
  */
 public class BasicContextProvider implements SCMContextProvider
 {
+
+  /** Field description */
+  public static final String DEFAULT_VERSION = "unknown";
 
   /** Field description */
   public static final String DIRECTORY_DEFAULT = ".scm";
@@ -56,6 +64,13 @@ public class BasicContextProvider implements SCMContextProvider
   /** Field description */
   public static final String DIRECTORY_PROPERTY = "scm.home";
 
+  /** Field description */
+  public static final String MAVEN_PROPERTIES =
+    "/META-INF/maven/sonia.scm/scm-core/pom.properties";
+
+  /** Field description */
+  public static final String MAVEN_PROPERTY_VERSION = "version";
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -65,6 +80,7 @@ public class BasicContextProvider implements SCMContextProvider
   public BasicContextProvider()
   {
     baseDirectory = findBaseDirectory();
+    version = loadVersion();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -97,6 +113,18 @@ public class BasicContextProvider implements SCMContextProvider
   public File getBaseDirectory()
   {
     return baseDirectory;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getVersion()
+  {
+    return version;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -132,8 +160,38 @@ public class BasicContextProvider implements SCMContextProvider
     return directory;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private String loadVersion()
+  {
+    Properties properties = new Properties();
+    InputStream input =
+      BasicContextProvider.class.getResourceAsStream(MAVEN_PROPERTIES);
+
+    if (input != null)
+    {
+      try
+      {
+        properties.load(input);
+      }
+      catch (IOException ex)
+      {
+        throw new ConfigurationException(ex);
+      }
+    }
+
+    return properties.getProperty(MAVEN_PROPERTY_VERSION, DEFAULT_VERSION);
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private File baseDirectory;
+
+  /** Field description */
+  private String version;
 }

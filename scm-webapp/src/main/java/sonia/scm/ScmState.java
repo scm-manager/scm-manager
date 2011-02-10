@@ -67,12 +67,16 @@ public class ScmState
    *
    *
    *
+   *
+   * @param provider
    * @param securityContext
    * @param repositoryTypes
    */
-  public ScmState(WebSecurityContext securityContext,
+  public ScmState(SCMContextProvider provider,
+                  WebSecurityContext securityContext,
                   Collection<Type> repositoryTypes)
   {
+    this.version = provider.getVersion();
     this.user = securityContext.getUser();
     this.groups = securityContext.getGroups();
     this.repositoryTypes = repositoryTypes;
@@ -111,6 +115,17 @@ public class ScmState
   public User getUser()
   {
     return user;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getVersion()
+  {
+    return version;
   }
 
   /**
@@ -170,6 +185,17 @@ public class ScmState
     this.user = user;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param version
+   */
+  public void setVersion(String version)
+  {
+    this.version = version;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -184,4 +210,7 @@ public class ScmState
 
   /** Field description */
   private User user;
+
+  /** Field description */
+  private String version;
 }

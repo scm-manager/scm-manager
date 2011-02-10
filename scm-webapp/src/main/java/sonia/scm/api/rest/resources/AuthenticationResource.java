@@ -36,12 +36,14 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.ScmState;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
@@ -66,8 +68,8 @@ import javax.ws.rs.core.Response;
  *
  * @author Sebastian Sdorra
  */
-@Path("authentication")
 @Singleton
+@Path("authentication")
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class AuthenticationResource
 {
@@ -75,6 +77,27 @@ public class AuthenticationResource
   /** the logger for AuthenticationResource */
   private static final Logger logger =
     LoggerFactory.getLogger(AuthenticationResource.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param contextProvider
+   * @param repositoryManger
+   * @param securityContextProvider
+   */
+  @Inject
+  public AuthenticationResource(
+          SCMContextProvider contextProvider,
+          RepositoryManager repositoryManger,
+          Provider<WebSecurityContext> securityContextProvider)
+  {
+    this.contextProvider = contextProvider;
+    this.repositoryManger = repositoryManger;
+    this.securityContextProvider = securityContextProvider;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -97,12 +120,14 @@ public class AuthenticationResource
                                @FormParam("password") String password)
   {
     ScmState state = null;
+    WebSecurityContext securityContext = securityContextProvider.get();
     User user = securityContext.authenticate(request, response, username,
                   password);
 
     if ((user != null) &&!SCMContext.USER_ANONYMOUS.equals(user.getName()))
     {
-      state = new ScmState(securityContext, repositoryManger.getTypes());
+      state = new ScmState(contextProvider, securityContext,
+                           repositoryManger.getTypes());
     }
     else
     {
@@ -126,6 +151,8 @@ public class AuthenticationResource
   public Response logout(@Context HttpServletRequest request,
                          @Context HttpServletResponse response)
   {
+    WebSecurityContext securityContext = securityContextProvider.get();
+
     securityContext.logout(request, response);
 
     Response resp = null;
@@ -133,8 +160,10 @@ public class AuthenticationResource
 
     if (user != null)
     {
-      resp = Response.ok(new ScmState(securityContext,
-                                      repositoryManger.getTypes())).build();
+      ScmState state = new ScmState(contextProvider, securityContext,
+                                    repositoryManger.getTypes());
+
+      resp = Response.ok(state).build();
     }
     else
     {
@@ -159,6 +188,7 @@ public class AuthenticationResource
   {
     Response response = null;
     ScmState state = null;
+    WebSecurityContext securityContext = securityContextProvider.get();
     User user = securityContext.getUser();
 
     if (user != null)
@@ -168,7 +198,8 @@ public class AuthenticationResource
         logger.debug("return state for user {}", user.getName());
       }
 
-      state = new ScmState(securityContext, repositoryManger.getTypes());
+      state = new ScmState(contextProvider, securityContext,
+                           repositoryManger.getTypes());
       response = Response.ok(state).build();
     }
     else
@@ -182,10 +213,11 @@ public class AuthenticationResource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @Inject
+  private SCMContextProvider contextProvider;
+
+  /** Field description */
   private RepositoryManager repositoryManger;
 
   /** Field description */
-  @Inject
-  private WebSecurityContext securityContext;
+  private Provider<WebSecurityContext> securityContextProvider;
 }

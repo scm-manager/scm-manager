@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -58,4 +60,12 @@ public interface SCMContextProvider extends Closeable
    * @return
    */
   public File getBaseDirectory();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getVersion();
 }
