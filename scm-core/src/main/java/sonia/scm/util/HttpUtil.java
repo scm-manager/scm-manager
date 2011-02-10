@@ -97,12 +97,11 @@ public class HttpUtil
     {
       port = configuration.getSslPort();
     }
-    else
+    else if (configuration.isEnablePortForward())
     {
-      port = configuration.getPort();
+      port = configuration.getForwardPort();
     }
-
-    if (port <= 0)
+    else
     {
       port = request.getLocalPort();
     }

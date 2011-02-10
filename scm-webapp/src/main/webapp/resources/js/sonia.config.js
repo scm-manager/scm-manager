@@ -99,9 +99,21 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'servername',
           allowBlank: false
         },{
+          xtype: 'checkbox',
+          fieldLabel: 'Enable forwarding (mod_proxy)',
+          name: 'enablePortForward',
+          inputValue: 'true',
+          listeners: {
+            check: function(){
+              Ext.getCmp('serverport').setDisabled( ! this.checked );
+            }
+          }
+        },{
+          id: 'serverport',
           xtype: 'numberfield',
-          fieldLabel: 'Serverport',
-          name: 'port',
+          fieldLabel: 'Forward Port',
+          name: 'forwardPort',
+          disabled: true,
           allowBlank: false
         },{
           xtype: 'textfield',
@@ -118,11 +130,18 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           xtype: 'checkbox',
           fieldLabel: 'Enable SSL',
           name: 'enableSSL',
-          inputValue: 'true'
+          inputValue: 'true',
+          listeners: {
+            check: function(){
+              Ext.getCmp('sslPort').setDisabled( ! this.checked );
+            }
+          }
         },{
+          id: 'sslPort',
           xtype: 'numberfield',
           fieldLabel: 'SSL Port',
           name: 'sslPort',
+          disabled: true,
           allowBlank: false
         },{
           xtype : 'textfield',
@@ -137,6 +156,12 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
         }],
       
         onSubmit: function(values){
+          if ( ! values.enableSSL ){
+            values.sslPort = Ext.getCmp('sslPort').getValue();
+          }
+          if ( ! values.enablePortForward ){
+            values.forwardPort = Ext.getCmp('serverport').getValue();
+          }
           this.el.mask('Submit ...');
           Ext.Ajax.request({
             url: restUrl + 'config.json',
@@ -163,6 +188,12 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
             success: function(response){
               var obj = Ext.decode(response.responseText);
               this.load(obj);
+              if ( obj.enablePortForward ){
+                Ext.getCmp('serverport').setDisabled(false);
+              }
+              if ( obj.enableSSL ){
+                Ext.getCmp('sslPort').setDisabled(false);
+              }
               clearTimeout(tid);
               el.unmask();
             },

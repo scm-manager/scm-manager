@@ -83,7 +83,8 @@ public class ScmConfiguration
     this.pluginUrl = other.pluginUrl;
     this.sslPort = other.sslPort;
     this.enableSSL = other.enableSSL;
-    this.port = other.port;
+    this.enablePortForward = other.enablePortForward;
+    this.forwardPort = other.forwardPort;
     this.anonymousAccessEnabled = other.anonymousAccessEnabled;
     this.adminUsers = other.adminUsers;
     this.adminGroups = other.adminGroups;
@@ -119,9 +120,9 @@ public class ScmConfiguration
    *
    * @return
    */
-  public String getPluginUrl()
+  public int getForwardPort()
   {
-    return pluginUrl;
+    return forwardPort;
   }
 
   /**
@@ -130,9 +131,9 @@ public class ScmConfiguration
    *
    * @return
    */
-  public int getPort()
+  public String getPluginUrl()
   {
-    return port;
+    return pluginUrl;
   }
 
   /**
@@ -166,6 +167,17 @@ public class ScmConfiguration
   public boolean isAnonymousAccessEnabled()
   {
     return anonymousAccessEnabled;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isEnablePortForward()
+  {
+    return enablePortForward;
   }
 
   /**
@@ -218,6 +230,17 @@ public class ScmConfiguration
    * Method description
    *
    *
+   * @param enablePortForward
+   */
+  public void setEnablePortForward(boolean enablePortForward)
+  {
+    this.enablePortForward = enablePortForward;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param enableSSL
    */
   public void setEnableSSL(boolean enableSSL)
@@ -229,22 +252,22 @@ public class ScmConfiguration
    * Method description
    *
    *
-   * @param pluginUrl
+   * @param forwardPort
    */
-  public void setPluginUrl(String pluginUrl)
+  public void setForwardPort(int forwardPort)
   {
-    this.pluginUrl = pluginUrl;
+    this.forwardPort = forwardPort;
   }
 
   /**
    * Method description
    *
    *
-   * @param port
+   * @param pluginUrl
    */
-  public void setPort(int port)
+  public void setPluginUrl(String pluginUrl)
   {
-    this.port = port;
+    this.pluginUrl = pluginUrl;
   }
 
   /**
@@ -282,17 +305,20 @@ public class ScmConfiguration
   private Set<String> adminUsers;
 
   /** Field description */
-  @XmlElement(name = "plugin-url")
-  private String pluginUrl = DEFAULT_PLUGINURL;
+  private int forwardPort = 80;
 
   /** Field description */
-  private int port = -1;
+  @XmlElement(name = "plugin-url")
+  private String pluginUrl = DEFAULT_PLUGINURL;
 
   /** Field description */
   private String servername = "localhost";
 
   /** Field description */
   private boolean enableSSL = false;
+
+  /** Field description */
+  private boolean enablePortForward = false;
 
   /** Field description */
   private int sslPort = 8181;
