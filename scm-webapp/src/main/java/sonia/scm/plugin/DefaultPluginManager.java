@@ -384,6 +384,28 @@ public class DefaultPluginManager implements PluginManager
    * Method description
    *
    *
+   *
+   * @param url
+   * @return
+   */
+  private String buildPluginUrl(String url)
+  {
+    if (url.contains("?"))
+    {
+      url = url.concat("&scm.version=");
+    }
+    else
+    {
+      url = url.concat("?scm.version=");
+    }
+
+    return url.concat(SCMContext.getContext().getVersion());
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param target
    * @param source
    * @param filter
@@ -469,13 +491,15 @@ public class DefaultPluginManager implements PluginManager
     {
       synchronized (DefaultPluginManager.class)
       {
+        String pluginUrl = configuration.getPluginUrl();
+        boolean gzip = pluginUrl.endsWith(".gz");
+
+        pluginUrl = buildPluginUrl(pluginUrl);
+
         if (logger.isInfoEnabled())
         {
-          logger.info("fetch plugin informations from {}",
-                      configuration.getPluginUrl());
+          logger.info("fetch plugin informations from {}", pluginUrl);
         }
-
-        String pluginUrl = configuration.getPluginUrl();
 
         if (Util.isNotEmpty(pluginUrl))
         {
@@ -485,7 +509,7 @@ public class DefaultPluginManager implements PluginManager
           {
             input = new URL(pluginUrl).openStream();
 
-            if (pluginUrl.endsWith(".gz"))
+            if (gzip)
             {
               input = new GZIPInputStream(input);
             }
