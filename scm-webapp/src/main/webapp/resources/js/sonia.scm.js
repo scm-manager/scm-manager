@@ -70,25 +70,7 @@ Ext.onReady(function(){
     ]
   });
 
-  // check login
-  Ext.Ajax.request({
-    url: restUrl + 'authentication.json',
-    method: 'GET',
-    success: function(response){
-      if ( debug ){
-        console.debug('login success');
-      }
-      var s = Ext.decode(response.responseText);
-      loadState(s);
-    },
-    failure: function(){
-      if ( debug ){
-        console.debug('login failed');
-      }
-      var loginWin = new Sonia.login.Window();
-      loginWin.show();
-    }
-  });
+  checkLogin();
 
   // adds a tab to main TabPanel
   function addTabPanel(id, xtype, title){

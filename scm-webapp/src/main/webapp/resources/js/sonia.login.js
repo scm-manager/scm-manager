@@ -71,15 +71,26 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
         }
       }],
       buttons:[{
-        text: 'Login',
-        formBind: true,
-        scope: this,
-        handler: this.authenticate
+          text: 'Cancel',
+          scope: this,
+          handler: this.cancel
+        },{
+          text: 'Login',
+          formBind: true,
+          scope: this,
+          handler: this.authenticate
       }]
     };
 
+    this.addEvents('cancel');
+
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.login.Form.superclass.initComponent.apply(this, arguments);
+  },
+
+  cancel: function(){
+    this.fireEvent('cancel');
+    checkLogin();
   },
 
   authenticate: function(){
@@ -125,6 +136,9 @@ Sonia.login.Window = Ext.extend(Ext.Window,{
     var form = new Sonia.login.Form();
     form.on('actioncomplete', function(){
       this.fireEvent('success');
+      this.close();
+    }, this);
+    form.on('cancel', function(){
       this.close();
     }, this);
 

@@ -71,6 +71,27 @@ function clearState(){
   Ext.getCmp('navigationPanel').removeAll();
 }
 
+function checkLogin(){
+  Ext.Ajax.request({
+    url: restUrl + 'authentication.json',
+    method: 'GET',
+    success: function(response){
+      if ( debug ){
+        console.debug('login success');
+      }
+      var s = Ext.decode(response.responseText);
+      loadState(s);
+    },
+    failure: function(){
+      if ( debug ){
+        console.debug('login failed');
+      }
+      var loginWin = new Sonia.login.Window();
+      loginWin.show();
+    }
+  });
+}
+
 function login(){
   clearState();
   var loginWin = new Sonia.login.Window();
