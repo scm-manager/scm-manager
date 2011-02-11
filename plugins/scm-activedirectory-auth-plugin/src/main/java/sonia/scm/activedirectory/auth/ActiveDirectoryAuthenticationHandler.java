@@ -33,7 +33,6 @@ package sonia.scm.activedirectory.auth;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com4j.COM4J;
 import com4j.Com4jObject;
@@ -54,8 +53,6 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.ext.Extension;
-import sonia.scm.store.Store;
-import sonia.scm.store.StoreFactory;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.SystemUtil;
@@ -88,28 +85,11 @@ public class ActiveDirectoryAuthenticationHandler implements
 {
 
   /** Field description */
-  public static final String STORE_NAME = "activedirectory-auth";
-
-  /** Field description */
   public static final String TYPE = "activedirectory";
 
   /** the logger for ActiveDirectoryAuthenticationHandler */
   private static final Logger logger = LoggerFactory
       .getLogger(ActiveDirectoryAuthenticationHandler.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param storeFactory
-   */
-  @Inject
-  public ActiveDirectoryAuthenticationHandler(StoreFactory storeFactory)
-  {
-    store = storeFactory.getStore(ActiveDirectoryConfig.class, STORE_NAME);
-  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -166,13 +146,6 @@ public class ActiveDirectoryAuthenticationHandler implements
   public void init(SCMContextProvider context)
   {
 
-    config = store.get();
-
-    if (config == null)
-    {
-      config = new ActiveDirectoryConfig();
-    }
-
     if (!canDoNativeAuth())
     {
       if (logger.isErrorEnabled())
@@ -200,27 +173,7 @@ public class ActiveDirectoryAuthenticationHandler implements
     }
   }
 
-  /**
-   * Method description
-   *
-   */
-  public void storeConfig()
-  {
-    store.set(config);
-  }
-
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public ActiveDirectoryConfig getConfig()
-  {
-    return config;
-  }
 
   /**
    * Method description
@@ -232,19 +185,6 @@ public class ActiveDirectoryAuthenticationHandler implements
   public String getType()
   {
     return TYPE;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param config
-   */
-  public void setConfig(ActiveDirectoryConfig config)
-  {
-    this.config = config;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -336,12 +276,6 @@ public class ActiveDirectoryAuthenticationHandler implements
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ActiveDirectoryConfig config;
-
-  /** Field description */
-  private Store<ActiveDirectoryConfig> store;
 
   /** Field description */
   private String defaultNamingContext;

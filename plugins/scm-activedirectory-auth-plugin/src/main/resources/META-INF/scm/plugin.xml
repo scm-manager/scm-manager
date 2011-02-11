@@ -44,8 +44,4 @@
     <url>${project.url}</url>
   </information>
 
-  <resources>
-    <script>/sonia/scm/activedirectory/auth/sonia.activedirectory-auth.js</script>
-  </resources>
-
 </plugin>
