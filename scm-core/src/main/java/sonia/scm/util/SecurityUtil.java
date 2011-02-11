@@ -84,6 +84,35 @@ public class SecurityUtil
     }
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param contextProvider
+   */
+  public static void assertIsNotAnonymous(
+          Provider<? extends SecurityContext> contextProvider)
+  {
+    if (isAnonymous(contextProvider))
+    {
+      throw new ScmSecurityException("anonymous is not allowed here");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   */
+  public static void assertIsNotAnonymous(SecurityContext context)
+  {
+    if (isAnonymous(context))
+    {
+      throw new ScmSecurityException("anonymous is not allowed here");
+    }
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
