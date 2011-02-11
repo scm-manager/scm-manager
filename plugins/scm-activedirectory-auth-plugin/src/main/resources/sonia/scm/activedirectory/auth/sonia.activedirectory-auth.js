@@ -33,17 +33,7 @@
 registerGeneralConfigPanel({
   xtype : 'configForm',
   title : 'Active Directory Authentication',
-  items : [{
-    xtype : 'textfield',
-    fieldLabel : 'Admin Groups',
-    name : 'admin-groups',
-    allowBlank : true
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Admin Users',
-    name : 'admin-users',
-    allowBlank : true
-  }],
+  items : [],
 
   onSubmit: function(values){
     this.el.mask('Submit ...');
