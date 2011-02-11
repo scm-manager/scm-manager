@@ -66,7 +66,9 @@ import sonia.scm.web.security.AuthenticationResult;
 
 import java.io.IOException;
 
+import java.util.Collection;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -189,10 +191,10 @@ public class ActiveDirectoryAuthenticationHandler implements
       logger.info("Active Directory domain is " + defaultNamingContext);
       con = ClassFactory.createConnection();
       con.provider("ADsDSOObject");
-      con
-          .open("Active Directory Provider", ""/*default*/, ""/*default*/, -1/*default*/);
+      con.open("Active Directory Provider", ""/*default*/, ""/*default*/, -1/*default*/);
       logger.debug("Connected to Active Directory");
-    } catch (ExecutionException ex)
+    }
+    catch (ExecutionException ex)
     {
       logger.error("Failure initializing ADSI connection", ex);
     }
@@ -278,51 +280,40 @@ public class ActiveDirectoryAuthenticationHandler implements
           .queryInterface(IADsUser.class);
       if (usr != null)
       {
-        User user = new User(username, usr.fullName(), usr.emailAddress());
-        user.setType(TYPE);
-        user.setAdmin(isAdmin(usr, username));
         if (!usr.accountDisabled())
         {
-          result = new AuthenticationResult(user);
-        } else
+          User user = new User(username, usr.fullName(), usr.emailAddress());
+          user.setType(TYPE);
+          result = new AuthenticationResult(user, getGroups(usr));
+        }
+        else
         { // Account disabled
           result = AuthenticationResult.FAILED;
         }
-      } else
+      }
+      else
       {// the user name was in fact a group
         result = AuthenticationResult.NOT_FOUND;
       }
-    } catch (ComException e)
+    }
+    catch (ComException e)
     {
       result = AuthenticationResult.FAILED;
     }
     return result;
   }
 
-  private boolean isAdmin(IADsUser usr, String username)
+  private Collection<String> getGroups(IADsUser usr)
   {
-    boolean admin = false;
-
-    Set<String> adminGroups = config.getAdminGroupSet();
-    if (!adminGroups.isEmpty())
+    Set<String> groups = new TreeSet<String>();
+    for (Com4jObject g : usr.groups())
     {
-      for (Com4jObject g : usr.groups())
-      {
-        IADsGroup grp = g.queryInterface(IADsGroup.class);
-        // cut "CN=" and make that the role name
-        String groupName = grp.name().substring(3);
-        if (adminGroups.contains(groupName))
-        {
-          admin = true;
-        }
-      }
+      IADsGroup grp = g.queryInterface(IADsGroup.class);
+      // cut "CN=" and make that the role name
+      String groupName = grp.name().substring(3);
+      groups.add(groupName);
     }
-
-    if (config.getAdminUserSet().contains(username))
-    {
-      admin = true;
-    }
-    return admin;
+    return groups;
   }
 
   protected String getDnOfUserOrGroup(String userOrGroupname)
@@ -336,7 +327,8 @@ public class ActiveDirectoryAuthenticationHandler implements
     if (!rs.eof())
     {
       dn = rs.fields().item("distinguishedName").value().toString();
-    } else
+    }
+    else
     {
       dn = null; // No such user or group
     }

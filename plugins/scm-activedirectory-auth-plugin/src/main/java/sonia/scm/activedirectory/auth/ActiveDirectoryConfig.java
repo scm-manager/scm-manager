@@ -29,18 +29,12 @@
  *
  */
 
-
-
 package sonia.scm.activedirectory.auth;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -50,80 +44,4 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "activedirectory-config")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ActiveDirectoryConfig
-{
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getAdminGroups()
-  {
-    return adminGroups;
-  }
-  
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getAdminUsers()
-  {
-    return adminUsers;
-  }
-  
-  Set<String> getAdminGroupSet() {
-    return split(adminGroups);
-  }
-  
-  Set<String> getAdminUserSet() {
-    return split(adminUsers);
-  }
-  
-  private Set<String> split(String rawString) {
-    Set<String> tokens = new HashSet<String>();
-    for(String token : rawString.split(",")) {
-      if(token.trim().length() > 0) {
-        tokens.add(token);
-      }
-    }
-    return tokens;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param passwordSuffix
-   */
-  public void setAdminGroups(String adminGroups)
-  {
-    this.adminGroups = adminGroups;
-  }
-  
-  /**
-   * Method description
-   *
-   *
-   * @param passwordSuffix
-   */
-  public void setAdminUsers(String adminUsers)
-  {
-    this.adminUsers = adminUsers;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "admin-groups")
-  private String adminGroups = "";
-  
-  /** Field description */
-  @XmlElement(name = "admin-users")
-  private String adminUsers = "";
-  
-}
+{}

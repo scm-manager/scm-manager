@@ -29,8 +29,6 @@
  *
  */
 
-
-
 package sonia.scm.activedirectory.auth;
 
 //~--- non-JDK imports --------------------------------------------------------
