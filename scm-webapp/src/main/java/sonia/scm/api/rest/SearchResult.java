@@ -31,30 +31,87 @@
 
 
 
-package sonia.scm.user;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.ListenerSupport;
-import sonia.scm.Manager;
-import sonia.scm.search.Searchable;
+package sonia.scm.api.rest;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface UserManager
-        extends Manager<User, UserException>, Searchable<User>,
-                ListenerSupport<UserListener>
+public class SearchResult
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  public SearchResult() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param value
+   * @param label
+   */
+  public SearchResult(String value, String label)
+  {
+    this.value = value;
+    this.label = label;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param username
+   * @return
+   */
+  public String getLabel()
+  {
+    return label;
+  }
+
+  /**
+   * Method description
+   *
    *
    * @return
    */
-  public boolean contains(String username);
+  public String getValue()
+  {
+    return value;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param label
+   */
+  public void setLabel(String label)
+  {
+    this.label = label;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param value
+   */
+  public void setValue(String value)
+  {
+    this.value = value;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String label;
+
+  /** Field description */
+  private String value;
 }

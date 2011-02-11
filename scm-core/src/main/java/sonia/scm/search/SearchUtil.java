@@ -68,7 +68,7 @@ public class SearchUtil
       {
         for (String o : other)
         {
-          if (!o.matches(query))
+          if ((o == null) ||!o.matches(query))
           {
             result = false;
 
@@ -103,7 +103,7 @@ public class SearchUtil
       {
         for (String o : other)
         {
-          if (o.matches(query))
+          if ((o != null) && o.matches(query))
           {
             result = true;
 

@@ -31,30 +31,79 @@
 
 
 
-package sonia.scm.user;
+package sonia.scm.api.rest;
 
-//~--- non-JDK imports --------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
 
-import sonia.scm.ListenerSupport;
-import sonia.scm.Manager;
-import sonia.scm.search.Searchable;
+import java.util.Collection;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface UserManager
-        extends Manager<User, UserException>, Searchable<User>,
-                ListenerSupport<UserListener>
+@XmlRootElement(name = "search-results")
+public class SearchResults extends RestActionResult
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  public SearchResults() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param success
+   */
+  public SearchResults(boolean success)
+  {
+    super(success);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param results
+   */
+  public SearchResults(Collection<SearchResult> results)
+  {
+    super(true);
+    this.results = results;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param username
-   *
    * @return
    */
-  public boolean contains(String username);
+  public Collection<SearchResult> getResults()
+  {
+    return results;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param results
+   */
+  public void setResults(Collection<SearchResult> results)
+  {
+    this.results = results;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Collection<SearchResult> results;
 }
