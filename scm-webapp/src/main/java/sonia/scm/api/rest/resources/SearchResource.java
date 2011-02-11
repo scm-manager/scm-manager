@@ -55,6 +55,7 @@ import sonia.scm.web.security.WebSecurityContext;
 import java.util.Collection;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;

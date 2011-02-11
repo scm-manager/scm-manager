@@ -140,6 +140,16 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       }
     });
 
+    var memberSearchStore = new Ext.data.JsonStore({
+      root: 'results',
+      idProperty: 'value',
+      fields: ['value','label'],
+      proxy: new Ext.data.HttpProxy({
+        url: restUrl + 'search/users.json',
+        method: 'GET'
+      })
+    });
+
     var memberColModel = new Ext.grid.ColumnModel({
       defaults: {
         sortable: true
@@ -148,8 +158,16 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         id: 'member',
         header: 'Member',
         dataIndex: 'member',
-        editor: new Ext.form.TextField({
-          allowBlank: false
+        editor: new Ext.form.ComboBox({
+          store: memberSearchStore,
+          displayField: 'label',
+          valueField: 'value',
+          typeAhead: true,
+          mode: 'remote',
+          queryParam: 'query',  //contents of the field sent to server.
+          hideTrigger: true,    //hide trigger so it doesn't look like a combobox.
+          selectOnFocus:true,
+          width: 250
         })
       }]
     });
