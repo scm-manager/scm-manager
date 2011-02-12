@@ -158,7 +158,11 @@ public class SearchResource implements UserListener
           @Override
           public SearchResult apply(User user)
           {
-            return new SearchResult(user.getName(), user.getDisplayName());
+            StringBuilder label = new StringBuilder(user.getName());
+
+            label.append(" (").append(user.getDisplayName()).append(")");
+
+            return new SearchResult(user.getName(), label.toString());
           }
         });
 
