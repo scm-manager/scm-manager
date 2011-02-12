@@ -36,36 +36,29 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.HandlerEvent;
-import sonia.scm.api.rest.SearchResult;
-import sonia.scm.api.rest.SearchResults;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.search.SearchRequest;
+import sonia.scm.group.Group;
+import sonia.scm.group.GroupListener;
+import sonia.scm.group.GroupManager;
+import sonia.scm.search.SearchHandler;
+import sonia.scm.search.SearchResult;
+import sonia.scm.search.SearchResults;
 import sonia.scm.user.User;
 import sonia.scm.user.UserListener;
 import sonia.scm.user.UserManager;
-import sonia.scm.util.SecurityUtil;
-import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response.Status;
 
 /**
  *
@@ -73,15 +66,14 @@ import javax.ws.rs.core.Response.Status;
  */
 @Singleton
 @Path("search")
-public class SearchResource implements UserListener
+public class SearchResource implements UserListener, GroupListener
 {
 
   /** Field description */
-  public static final String CACHE_USER = "sonia.cache.search.users";
+  public static final String CACHE_GROUP = "sonia.cache.search.groups";
 
-  /** the logger for SearchResource */
-  private static final Logger logger =
-    LoggerFactory.getLogger(SearchResource.class);
+  /** Field description */
+  public static final String CACHE_USER = "sonia.cache.search.users";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -91,17 +83,32 @@ public class SearchResource implements UserListener
    *
    * @param securityContextProvider
    * @param userManager
+   * @param groupManager
    * @param cacheManager
    */
   @Inject
   public SearchResource(Provider<WebSecurityContext> securityContextProvider,
-                        UserManager userManager, CacheManager cacheManager)
+                        UserManager userManager, GroupManager groupManager,
+                        CacheManager cacheManager)
   {
-    this.securityContextProvider = securityContextProvider;
-    this.userManager = userManager;
-    this.userManager.addListener(this);
-    this.userSearchCache = cacheManager.getCache(String.class,
-            SearchResults.class, CACHE_USER);
+
+    // create user searchhandler
+    userManager.addListener(this);
+
+    Cache<String, SearchResults> userCache =
+      cacheManager.getCache(String.class, SearchResults.class, CACHE_USER);
+
+    this.userSearchHandler = new SearchHandler<User>(securityContextProvider,
+            userCache, userManager);
+
+    // create group searchhandler
+    groupManager.addListener(this);
+
+    Cache<String, SearchResults> groupCache =
+      cacheManager.getCache(String.class, SearchResults.class, CACHE_GROUP);
+
+    this.groupSearchHandler = new SearchHandler<Group>(securityContextProvider,
+            groupCache, groupManager);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -116,7 +123,51 @@ public class SearchResource implements UserListener
   @Override
   public void onEvent(User user, HandlerEvent event)
   {
-    userSearchCache.clear();
+    userSearchHandler.clearCache();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param group
+   * @param event
+   */
+  @Override
+  public void onEvent(Group group, HandlerEvent event)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param queryString
+   *
+   * @return
+   */
+  @GET
+  @Path("groups")
+  public SearchResults searchGroups(@QueryParam("query") String queryString)
+  {
+    return groupSearchHandler.search(queryString,
+                                     new Function<Group, SearchResult>()
+    {
+      @Override
+      public SearchResult apply(Group group)
+      {
+        String label = group.getName();
+        String description = group.getDescription();
+
+        if (description != null)
+        {
+          label = label.concat(" (").concat(description).concat(")");
+        }
+
+        return new SearchResult(group.getName(), label);
+      }
+    });
   }
 
   /**
@@ -131,62 +182,26 @@ public class SearchResource implements UserListener
   @Path("users")
   public SearchResults searchUsers(@QueryParam("query") String queryString)
   {
-    SecurityUtil.assertIsNotAnonymous(securityContextProvider);
-
-    if (Util.isEmpty(queryString))
+    return userSearchHandler.search(queryString,
+                                    new Function<User, SearchResult>()
     {
-      throw new WebApplicationException(Status.BAD_REQUEST);
-    }
-
-    SearchResults result = userSearchCache.get(queryString);
-
-    if (result == null)
-    {
-      SearchRequest request = new SearchRequest(queryString, true);
-
-      request.setMaxResults(5);
-
-      Collection<User> users = userManager.search(request);
-
-      result = new SearchResults();
-
-      if (Util.isNotEmpty(users))
+      @Override
+      public SearchResult apply(User user)
       {
-        Collection<SearchResult> resultCollection =
-          Collections2.transform(users, new Function<User, SearchResult>()
-        {
-          @Override
-          public SearchResult apply(User user)
-          {
-            StringBuilder label = new StringBuilder(user.getName());
+        StringBuilder label = new StringBuilder(user.getName());
 
-            label.append(" (").append(user.getDisplayName()).append(")");
+        label.append(" (").append(user.getDisplayName()).append(")");
 
-            return new SearchResult(user.getName(), label.toString());
-          }
-        });
-
-        result.setSuccess(true);
-        result.setResults(resultCollection);
-        userSearchCache.put(queryString, result);
+        return new SearchResult(user.getName(), label.toString());
       }
-    }
-    else if (logger.isDebugEnabled())
-    {
-      logger.debug("return searchresults for {} from cache", queryString);
-    }
-
-    return result;
+    });
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
+  private SearchHandler<Group> groupSearchHandler;
 
   /** Field description */
-  private UserManager userManager;
-
-  /** Field description */
-  private Cache<String, SearchResults> userSearchCache;
+  private SearchHandler<User> userSearchHandler;
 }

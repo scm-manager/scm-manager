@@ -31,32 +31,50 @@
 
 
 
-package sonia.scm.api.rest;
+package sonia.scm.search;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collection;
+
+import javax.xml.bind.annotation.XmlRootElement;
+import sonia.scm.api.rest.RestActionResult;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SearchResult
+@XmlRootElement(name = "search-results")
+public class SearchResults extends RestActionResult
 {
 
   /**
    * Constructs ...
    *
    */
-  public SearchResult() {}
+  public SearchResults() {}
 
   /**
    * Constructs ...
    *
    *
-   * @param value
-   * @param label
+   * @param success
    */
-  public SearchResult(String value, String label)
+  public SearchResults(boolean success)
   {
-    this.value = value;
-    this.label = label;
+    super(success);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param results
+   */
+  public SearchResults(Collection<SearchResult> results)
+  {
+    super(true);
+    this.results = results;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -67,20 +85,9 @@ public class SearchResult
    *
    * @return
    */
-  public String getLabel()
+  public Collection<SearchResult> getResults()
   {
-    return label;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getValue()
-  {
-    return value;
+    return results;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -89,29 +96,15 @@ public class SearchResult
    * Method description
    *
    *
-   * @param label
+   * @param results
    */
-  public void setLabel(String label)
+  public void setResults(Collection<SearchResult> results)
   {
-    this.label = label;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   */
-  public void setValue(String value)
-  {
-    this.value = value;
+    this.results = results;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String label;
-
-  /** Field description */
-  private String value;
+  private Collection<SearchResult> results;
 }

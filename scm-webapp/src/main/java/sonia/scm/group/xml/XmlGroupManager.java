@@ -44,10 +44,13 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.TransformFilter;
 import sonia.scm.group.AbstractGroupManager;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupAllreadyExistExeption;
 import sonia.scm.group.GroupException;
+import sonia.scm.search.SearchRequest;
+import sonia.scm.search.SearchUtil;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
@@ -279,6 +282,41 @@ public class XmlGroupManager extends AbstractGroupManager
     }
 
     fresh.copyProperties(group);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param searchRequest
+   *
+   * @return
+   */
+  @Override
+  public Collection<Group> search(final SearchRequest searchRequest)
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("search group with query {}", searchRequest.getQuery());
+    }
+
+    return SearchUtil.search(searchRequest, groupDB.values(),
+                             new TransformFilter<Group>()
+    {
+      @Override
+      public Group accept(Group group)
+      {
+        Group result = null;
+
+        if (SearchUtil.matchesOne(searchRequest, group.getName(),
+                                  group.getDescription()))
+        {
+          result = group.clone();
+        }
+
+        return result;
+      }
+    });
   }
 
   //~--- get methods ----------------------------------------------------------
