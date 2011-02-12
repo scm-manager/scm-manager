@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.security.ScmSecurityException;
@@ -64,11 +65,8 @@ import sonia.scm.web.security.WebSecurityContext;
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -340,34 +338,23 @@ public class XmlUserManager extends AbstractUserManager
       logger.debug("search user with query {}", searchRequest.getQuery());
     }
 
-    List<User> users = new ArrayList<User>();
-    int index = 0;
-    int counter = 0;
-    Iterator<User> it = userDB.values().iterator();
-
-    while (it.hasNext())
+    return SearchUtil.search(searchRequest, userDB.values(),
+                             new TransformFilter<User>()
     {
-      User user = it.next();
-
-      if (SearchUtil.matchesOne(searchRequest, user.getName(),
-                                user.getDisplayName(), user.getMail()))
+      @Override
+      public User accept(User user)
       {
-        index++;
+        User result = null;
 
-        if (searchRequest.getStartWith() <= index)
+        if (SearchUtil.matchesOne(searchRequest, user.getName(),
+                                  user.getDisplayName(), user.getMail()))
         {
-          users.add(user.clone());
-          counter++;
-
-          if (searchRequest.getMaxResults() <= counter)
-          {
-            break;
-          }
+          result = user.clone();
         }
-      }
-    }
 
-    return users;
+        return result;
+      }
+    });
   }
 
   //~--- get methods ----------------------------------------------------------

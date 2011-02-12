@@ -35,7 +35,16 @@ package sonia.scm.search;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.Filter;
+import sonia.scm.TransformFilter;
 import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
@@ -118,6 +127,49 @@ public class SearchUtil
     }
 
     return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param searchRequest
+   * @param collection
+   * @param filter
+   * @param <T>
+   *
+   * @return
+   */
+  public static <T> Collection<T> search(SearchRequest searchRequest,
+          Collection<T> collection, TransformFilter<T> filter)
+  {
+    List<T> items = new ArrayList<T>();
+    int index = 0;
+    int counter = 0;
+    Iterator<T> it = collection.iterator();
+
+    while (it.hasNext())
+    {
+      T item = filter.accept(it.next());
+
+      if (item != null)
+      {
+        index++;
+
+        if (searchRequest.getStartWith() <= index)
+        {
+          items.add(item);
+          counter++;
+
+          if (searchRequest.getMaxResults() <= counter)
+          {
+            break;
+          }
+        }
+      }
+    }
+
+    return items;
   }
 
   /**
