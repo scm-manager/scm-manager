@@ -40,6 +40,10 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -65,6 +69,20 @@ public class EhCacheManager implements CacheManager
   {
     cacheManager =
       new net.sf.ehcache.CacheManager(EhCacheManager.class.getResource(CONFIG));
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Override
+  public void close() throws IOException
+  {
+    cacheManager.shutdown();
   }
 
   //~--- get methods ----------------------------------------------------------

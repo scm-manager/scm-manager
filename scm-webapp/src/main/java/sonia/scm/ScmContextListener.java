@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContextEvent;
+import sonia.scm.cache.CacheManager;
 
 /**
  *
@@ -89,6 +90,9 @@ public class ScmContextListener extends GuiceServletContextListener
 
       // close StoreFactory
       IOUtil.close(injector.getInstance(StoreFactory.class));
+
+      // close CacheManager
+      IOUtil.close( injector.getInstance( CacheManager.class ) );
     }
 
     super.contextDestroyed(servletContextEvent);

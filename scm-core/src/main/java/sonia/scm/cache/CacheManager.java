@@ -33,11 +33,15 @@
 
 package sonia.scm.cache;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.Closeable;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface CacheManager
+public interface CacheManager extends Closeable
 {
 
   /**
@@ -52,6 +56,5 @@ public interface CacheManager
    *
    * @return
    */
-  public <K, V> Cache<K, V> getCache(Class<K> key, Class<V> value,
-          String name);
+  public <K, V> Cache<K, V> getCache(Class<K> key, Class<V> value, String name);
 }
