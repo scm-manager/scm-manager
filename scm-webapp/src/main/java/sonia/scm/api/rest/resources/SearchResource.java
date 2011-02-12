@@ -41,10 +41,17 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.HandlerEvent;
 import sonia.scm.api.rest.SearchResult;
 import sonia.scm.api.rest.SearchResults;
+import sonia.scm.cache.Cache;
+import sonia.scm.cache.CacheManager;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.user.User;
+import sonia.scm.user.UserListener;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
@@ -55,7 +62,6 @@ import sonia.scm.web.security.WebSecurityContext;
 import java.util.Collection;
 
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -67,8 +73,17 @@ import javax.ws.rs.core.Response.Status;
  */
 @Singleton
 @Path("search")
-public class SearchResource
+public class SearchResource implements UserListener
 {
+
+  /** Field description */
+  public static final String CACHE_USER = "sonia.cache.search.users";
+
+  /** the logger for SearchResource */
+  private static final Logger logger =
+    LoggerFactory.getLogger(SearchResource.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -76,16 +91,33 @@ public class SearchResource
    *
    * @param securityContextProvider
    * @param userManager
+   * @param cacheManager
    */
   @Inject
   public SearchResource(Provider<WebSecurityContext> securityContextProvider,
-                        UserManager userManager)
+                        UserManager userManager, CacheManager cacheManager)
   {
     this.securityContextProvider = securityContextProvider;
     this.userManager = userManager;
+    this.userManager.addListener(this);
+    this.userSearchCache = cacheManager.getCache(String.class,
+            SearchResults.class, CACHE_USER);
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param event
+   */
+  @Override
+  public void onEvent(User user, HandlerEvent event)
+  {
+    userSearchCache.clear();
+  }
 
   /**
    * Method description
@@ -106,28 +138,38 @@ public class SearchResource
       throw new WebApplicationException(Status.BAD_REQUEST);
     }
 
-    SearchRequest request = new SearchRequest(queryString, true);
+    SearchResults result = userSearchCache.get(queryString);
 
-    request.setMaxResults(5);
-
-    Collection<User> users = userManager.search(request);
-    SearchResults result = new SearchResults();
-
-    if (Util.isNotEmpty(users))
+    if (result == null)
     {
-      Collection<SearchResult> resultCollection = Collections2.transform(users,
-                                                    new Function<User,
-                                                      SearchResult>()
-      {
-        @Override
-        public SearchResult apply(User user)
-        {
-          return new SearchResult(user.getName(), user.getDisplayName());
-        }
-      });
+      SearchRequest request = new SearchRequest(queryString, true);
 
-      result.setSuccess(true);
-      result.setResults(resultCollection);
+      request.setMaxResults(5);
+
+      Collection<User> users = userManager.search(request);
+
+      result = new SearchResults();
+
+      if (Util.isNotEmpty(users))
+      {
+        Collection<SearchResult> resultCollection =
+          Collections2.transform(users, new Function<User, SearchResult>()
+        {
+          @Override
+          public SearchResult apply(User user)
+          {
+            return new SearchResult(user.getName(), user.getDisplayName());
+          }
+        });
+
+        result.setSuccess(true);
+        result.setResults(resultCollection);
+        userSearchCache.put(queryString, result);
+      }
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("return searchresults for {} from cache", queryString);
     }
 
     return result;
@@ -140,4 +182,7 @@ public class SearchResource
 
   /** Field description */
   private UserManager userManager;
+
+  /** Field description */
+  private Cache<String, SearchResults> userSearchCache;
 }

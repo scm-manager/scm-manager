@@ -335,6 +335,11 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public Collection<User> search(final SearchRequest searchRequest)
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("search user with query {}", searchRequest.getQuery());
+    }
+
     List<User> users = new ArrayList<User>();
     int index = 0;
     int counter = 0;

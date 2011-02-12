@@ -90,10 +90,10 @@
   <defaultCache
         maxElementsInMemory="20000"
         eternal="false"
-        overflowToDisk="true"
+        overflowToDisk="false"
         timeToIdleSeconds="1200"
         timeToLiveSeconds="2400"
-        diskPersistent="true"
+        diskPersistent="false"
         diskExpiryThreadIntervalSeconds="2400"
   />
 
@@ -108,22 +108,20 @@
   />
 
   <cache
-        name="sonia.cache.repository"
-        maxElementsInMemory="20000"
-        eternal="false"
-        overflowToDisk="true"
-        timeToIdleSeconds="1200"
-        timeToLiveSeconds="2400"
-        diskPersistent="false"
-        diskExpiryThreadIntervalSeconds="2400"
-  />
-
-  <cache
         name="sonia.cache.plugins"
         maxElementsInMemory="10"
         eternal="false"
         overflowToDisk="false"
         timeToLiveSeconds="3600"
+        diskPersistent="false"
+  />
+
+  <cache
+        name="sonia.cache.search.users"
+        maxElementsInMemory="10000"
+        eternal="false"
+        overflowToDisk="false"
+        timeToLiveSeconds="5400"
         diskPersistent="false"
   />
 
