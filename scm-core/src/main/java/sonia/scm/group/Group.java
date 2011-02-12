@@ -187,6 +187,7 @@ public class Group
     group.setName(name);
     group.setMembers(members);
     group.setType(type);
+    group.setDescription(description);
   }
 
   /**
@@ -215,6 +216,20 @@ public class Group
     if ((this.creationDate != other.creationDate)
         && ((this.creationDate == null)
             ||!this.creationDate.equals(other.creationDate)))
+    {
+      return false;
+    }
+
+    if ((this.description == null)
+        ? (other.description != null)
+        : !this.description.equals(other.description))
+    {
+      return false;
+    }
+
+    if ((this.lastModified != other.lastModified)
+        && ((this.lastModified == null)
+            ||!this.lastModified.equals(other.lastModified)))
     {
       return false;
     }
@@ -251,18 +266,24 @@ public class Group
   @Override
   public int hashCode()
   {
-    int hash = 5;
+    int hash = 7;
 
-    hash = 89 * hash + ((this.creationDate != null)
+    hash = 29 * hash + ((this.creationDate != null)
                         ? this.creationDate.hashCode()
                         : 0);
-    hash = 89 * hash + ((this.members != null)
+    hash = 29 * hash + ((this.description != null)
+                        ? this.description.hashCode()
+                        : 0);
+    hash = 29 * hash + ((this.lastModified != null)
+                        ? this.lastModified.hashCode()
+                        : 0);
+    hash = 29 * hash + ((this.members != null)
                         ? this.members.hashCode()
                         : 0);
-    hash = 89 * hash + ((this.name != null)
+    hash = 29 * hash + ((this.name != null)
                         ? this.name.hashCode()
                         : 0);
-    hash = 89 * hash + ((this.type != null)
+    hash = 29 * hash + ((this.type != null)
                         ? this.type.hashCode()
                         : 0);
 
@@ -336,6 +357,28 @@ public class Group
   public Long getCreationDate()
   {
     return creationDate;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getDescription()
+  {
+    return description;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Long getLastModified()
+  {
+    return lastModified;
   }
 
   /**
@@ -419,6 +462,28 @@ public class Group
    * Method description
    *
    *
+   * @param description
+   */
+  public void setDescription(String description)
+  {
+    this.description = description;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param lastModified
+   */
+  public void setLastModified(Long lastModified)
+  {
+    this.lastModified = lastModified;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param members
    */
   public void setMembers(List<String> members)
@@ -453,6 +518,13 @@ public class Group
   /** Field description */
   @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long creationDate;
+
+  /** Field description */
+  private String description;
+
+  /** Field description */
+  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
+  private Long lastModified;
 
   /** Field description */
   private List<String> members;

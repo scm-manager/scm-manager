@@ -53,7 +53,7 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
   initComponent: function(){
     var groupStore = new Sonia.rest.JsonStore({
       url: restUrl + 'groups.json',
-      fields: [ 'name', 'members', 'creationDate', 'type'],
+      fields: [ 'name', 'members', 'description', 'creationDate', 'type'],
       sortInfo: {
         field: 'name'
       }
@@ -67,6 +67,7 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
       },
       columns: [
         {id: 'name', header: 'Name', dataIndex: 'name'},
+        {id: 'description', header: 'Description', dataIndex: 'description', width: 300 },
         {id: 'members', header: 'Members', dataIndex: 'members', renderer: this.renderMembers},
         {id: 'creationDate', header: 'Creation date', dataIndex: 'creationDate'},
         {id: 'type', header: 'Type', dataIndex: 'type', width: 80}
@@ -204,6 +205,10 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         name: 'name',
         allowBlank: false,
         readOnly: this.item != null
+      },{
+        fieldLabel: 'Description',
+        name: 'description',
+        xtype: 'textarea'
       }]
     },{
       id: 'memberGrid',

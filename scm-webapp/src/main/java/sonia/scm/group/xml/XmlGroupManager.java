@@ -234,6 +234,8 @@ public class XmlGroupManager extends AbstractGroupManager
 
     if (groupDB.contains(name))
     {
+      group.setLastModified(System.currentTimeMillis());
+
       synchronized (XmlGroupManager.class)
       {
         groupDB.remove(name);
