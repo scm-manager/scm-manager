@@ -35,6 +35,8 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.apache.commons.lang.StringEscapeUtils;
+
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -100,10 +102,17 @@ public class GitRepositoryViewer
     if (!repository.getAllRefs().isEmpty())
     {
       Git git = new Git(repository);
+      int c = 0;
 
       for (RevCommit commit : git.log().call())
       {
         appendCommit(sb, commit);
+        c++;
+
+        if (c > logSize)
+        {
+          break;
+        }
       }
     }
 
@@ -127,6 +136,34 @@ public class GitRepositoryViewer
       IOUtil.close(writer);
     }
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public int getLogSize()
+  {
+    return logSize;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param logSize
+   */
+  public void setLogSize(int logSize)
+  {
+    this.logSize = logSize;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -152,11 +189,17 @@ public class GitRepositoryViewer
 
       if (Util.isNotEmpty(name))
       {
-        sb.append(name);
+        sb.append(StringEscapeUtils.escapeHtml(name));
       }
     }
 
-    sb.append("</td><td>").append(commit.getFullMessage());
+    sb.append("</td><td>");
+    sb.append(StringEscapeUtils.escapeHtml(commit.getFullMessage()));
     sb.append("</td></tr>");
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private int logSize = 25;
 }
