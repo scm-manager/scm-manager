@@ -84,12 +84,20 @@ public class EhCacheManager implements CacheManager
   @Override
   public <K, V> Cache<K, V> getCache(Class<K> key, Class<V> value, String name)
   {
-    if (logger.isInfoEnabled())
+    net.sf.ehcache.Cache c = cacheManager.getCache(name);
+
+    if (c == null)
     {
-      logger.info("create new cache {}", name);
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("could not find cache {}, create new from defaults", name);
+      }
+
+      cacheManager.addCacheIfAbsent(name);
+      c = cacheManager.getCache(name);
     }
 
-    return new EhCache<K, V>(cacheManager.getCache(name), name);
+    return new EhCache<K, V>(c, name);
   }
 
   //~--- fields ---------------------------------------------------------------
