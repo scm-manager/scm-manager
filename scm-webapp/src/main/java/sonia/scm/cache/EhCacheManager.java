@@ -37,6 +37,9 @@ package sonia.scm.cache;
 
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -47,6 +50,10 @@ public class EhCacheManager implements CacheManager
 
   /** Field description */
   public static final String CONFIG = "/config/ehcache.xml";
+
+  /** the logger for EhCacheManager */
+  private static final Logger logger =
+    LoggerFactory.getLogger(EhCacheManager.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -77,7 +84,12 @@ public class EhCacheManager implements CacheManager
   @Override
   public <K, V> Cache<K, V> getCache(Class<K> key, Class<V> value, String name)
   {
-    return new EhCache<K, V>(cacheManager.getCache(name));
+    if (logger.isInfoEnabled())
+    {
+      logger.info("create new cache {}", name);
+    }
+
+    return new EhCache<K, V>(cacheManager.getCache(name), name);
   }
 
   //~--- fields ---------------------------------------------------------------

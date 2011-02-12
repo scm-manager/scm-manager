@@ -37,6 +37,9 @@ package sonia.scm.cache;
 
 import net.sf.ehcache.Element;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -47,15 +50,22 @@ import net.sf.ehcache.Element;
 public class EhCache<K, V> implements Cache<K, V>
 {
 
+  /** the logger for EhCache */
+  private static final Logger logger = LoggerFactory.getLogger(EhCache.class);
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructs ...
    *
    *
    * @param cache
+   * @param name
    */
-  public EhCache(net.sf.ehcache.Cache cache)
+  public EhCache(net.sf.ehcache.Cache cache, String name)
   {
     this.cache = cache;
+    this.name = name;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -67,6 +77,11 @@ public class EhCache<K, V> implements Cache<K, V>
   @Override
   public void clear()
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("clear cache {}", name);
+    }
+
     cache.removeAll();
   }
 
@@ -139,4 +154,7 @@ public class EhCache<K, V> implements Cache<K, V>
 
   /** Field description */
   private net.sf.ehcache.Cache cache;
+
+  /** Field description */
+  private String name;
 }
