@@ -58,7 +58,9 @@ import sonia.scm.web.security.WebSecurityContext;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -149,6 +151,7 @@ public class SearchResource implements UserListener, GroupListener
    */
   @GET
   @Path("groups")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public SearchResults searchGroups(@QueryParam("query") String queryString)
   {
     return groupSearchHandler.search(queryString,
@@ -180,6 +183,7 @@ public class SearchResource implements UserListener, GroupListener
    */
   @GET
   @Path("users")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public SearchResults searchUsers(@QueryParam("query") String queryString)
   {
     return userSearchHandler.search(queryString,
