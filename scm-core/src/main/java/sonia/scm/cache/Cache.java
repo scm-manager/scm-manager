@@ -29,11 +29,9 @@
  *
  */
 
+
+
 package sonia.scm.cache;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
 
 /**
  *
@@ -42,8 +40,22 @@ import java.util.Collection;
  * @param <K>
  * @param <V>
  */
-public interface ExtendedCache<K, V> extends SimpleCache<K, V>
+public interface Cache<K, V>
 {
+
+  /**
+   * Method description
+   *
+   */
+  public void clear();
+
+  /**
+   * Method description
+   *
+   *
+   * @param key
+   */
+  public boolean contains(K key);
 
   /**
    * Method description
@@ -52,7 +64,7 @@ public interface ExtendedCache<K, V> extends SimpleCache<K, V>
    * @param key
    * @param value
    */
-  public void putCollection(K key, Collection<V> value);
+  public void put(K key, V value);
 
   /**
    * Method description
@@ -62,7 +74,7 @@ public interface ExtendedCache<K, V> extends SimpleCache<K, V>
    *
    * @return
    */
-  public boolean removeCollection(K key);
+  public boolean remove(K key);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -74,5 +86,5 @@ public interface ExtendedCache<K, V> extends SimpleCache<K, V>
    *
    * @return
    */
-  public Collection<V> getCollection(K key);
+  public V get(K key);
 }

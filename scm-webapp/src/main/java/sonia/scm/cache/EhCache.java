@@ -29,16 +29,13 @@
  *
  */
 
+
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
 
 /**
  *
@@ -47,7 +44,7 @@ import java.util.Collection;
  * @param <K>
  * @param <V>
  */
-public class EhCache<K, V> implements ExtendedCache<K, V>
+public class EhCache<K, V> implements Cache<K, V>
 {
 
   /**
@@ -56,7 +53,7 @@ public class EhCache<K, V> implements ExtendedCache<K, V>
    *
    * @param cache
    */
-  public EhCache(Cache cache)
+  public EhCache(net.sf.ehcache.Cache cache)
   {
     this.cache = cache;
   }
@@ -78,12 +75,13 @@ public class EhCache<K, V> implements ExtendedCache<K, V>
    *
    *
    * @param key
-   * @param value
+   *
+   * @return
    */
   @Override
-  public void put(K key, V value)
+  public boolean contains(K key)
   {
-    cache.put(new Element(key, value));
+    return cache.get(key) != null;
   }
 
   /**
@@ -94,7 +92,7 @@ public class EhCache<K, V> implements ExtendedCache<K, V>
    * @param value
    */
   @Override
-  public void putCollection(K key, Collection<V> value)
+  public void put(K key, V value)
   {
     cache.put(new Element(key, value));
   }
@@ -109,20 +107,6 @@ public class EhCache<K, V> implements ExtendedCache<K, V>
    */
   @Override
   public boolean remove(K key)
-  {
-    return cache.remove(key);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
-  @Override
-  public boolean removeCollection(K key)
   {
     return cache.remove(key);
   }
@@ -151,30 +135,8 @@ public class EhCache<K, V> implements ExtendedCache<K, V>
     return value;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
-  @Override
-  public Collection<V> getCollection(K key)
-  {
-    Collection<V> value = null;
-    Element el = cache.get(key);
-
-    if (el != null)
-    {
-      value = (Collection<V>) el.getObjectValue();
-    }
-
-    return value;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Cache cache;
+  private net.sf.ehcache.Cache cache;
 }

@@ -42,8 +42,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.cache.SimpleCache;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
@@ -92,8 +92,9 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
     AssertUtil.assertIsNotNull(cacheManager);
     this.authenticationHandlerSet = authenticationHandlerSet;
     this.encryptionHandler = encryptionHandler;
-    this.cache = cacheManager.getSimpleCache(String.class,
-            AuthenticationCacheValue.class, CACHE_NAME);
+    this.cache = cacheManager.getCache(String.class,
+                                       AuthenticationCacheValue.class,
+                                       CACHE_NAME);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -297,7 +298,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
   private Set<AuthenticationHandler> authenticationHandlerSet;
 
   /** Field description */
-  private SimpleCache<String, AuthenticationCacheValue> cache;
+  private Cache<String, AuthenticationCacheValue> cache;
 
   /** Field description */
   private EncryptionHandler encryptionHandler;

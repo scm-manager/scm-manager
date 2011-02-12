@@ -44,8 +44,8 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
+import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.cache.SimpleCache;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.util.AssertUtil;
@@ -111,8 +111,8 @@ public class DefaultPluginManager implements PluginManager
   {
     this.securityContextProvicer = securityContextProvicer;
     this.configuration = configuration;
-    this.cache = cacheManager.getSimpleCache(String.class, PluginCenter.class,
-            CACHE_NAME);
+    this.cache = cacheManager.getCache(String.class, PluginCenter.class,
+                                       CACHE_NAME);
     installedPlugins = new HashMap<String, Plugin>();
 
     for (Plugin plugin : pluginLoader.getInstalledPlugins())
@@ -582,7 +582,7 @@ public class DefaultPluginManager implements PluginManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SimpleCache<String, PluginCenter> cache;
+  private Cache<String, PluginCenter> cache;
 
   /** Field description */
   private ScmConfiguration configuration;
