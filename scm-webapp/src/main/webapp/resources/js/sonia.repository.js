@@ -179,6 +179,16 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       }
     });
 
+    var searchStore = new Ext.data.JsonStore({
+      root: 'results',
+      idProperty: 'value',
+      fields: ['value','label'],
+      proxy: new Ext.data.HttpProxy({
+        url: restUrl + 'search/users.json',
+        method: 'GET'
+      })
+    });
+
     var permissionColModel = new Ext.grid.ColumnModel({
       defaults: {
         sortable: true
@@ -193,8 +203,16 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
           id: 'name',
           header: 'Name',
           dataIndex: 'name',
-          editor: new Ext.form.TextField({
-            allowBlank: false
+          editor: new Ext.form.ComboBox({
+            store: searchStore,
+            displayField: 'label',
+            valueField: 'value',
+            typeAhead: true,
+            mode: 'remote',
+            queryParam: 'query',
+            hideTrigger: true,
+            selectOnFocus:true,
+            width: 250
           })
         },{
           id: 'type',

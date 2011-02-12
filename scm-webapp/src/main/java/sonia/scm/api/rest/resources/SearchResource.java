@@ -136,7 +136,7 @@ public class SearchResource implements UserListener, GroupListener
   @Override
   public void onEvent(Group group, HandlerEvent event)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    groupSearchHandler.clearCache();
   }
 
   /**
