@@ -141,16 +141,6 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       }
     });
 
-    var memberSearchStore = new Ext.data.JsonStore({
-      root: 'results',
-      idProperty: 'value',
-      fields: ['value','label'],
-      proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'search/users.json',
-        method: 'GET'
-      })
-    });
-
     var memberColModel = new Ext.grid.ColumnModel({
       defaults: {
         sortable: true
@@ -160,7 +150,7 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         header: 'Member',
         dataIndex: 'member',
         editor: new Ext.form.ComboBox({
-          store: memberSearchStore,
+          store: userSearchStore,
           displayField: 'label',
           valueField: 'value',
           typeAhead: true,

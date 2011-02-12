@@ -136,5 +136,25 @@ function logout(){
   });
 }
 
+var userSearchStore = new Ext.data.JsonStore({
+  root: 'results',
+  idProperty: 'value',
+  fields: ['value','label'],
+  proxy: new Ext.data.HttpProxy({
+    url: restUrl + 'search/users.json',
+    method: 'GET'
+  })
+});
+
+var groupSearchStore = new Ext.data.JsonStore({
+  root: 'results',
+  idProperty: 'value',
+  fields: ['value','label'],
+  proxy: new Ext.data.HttpProxy({
+    url: restUrl + 'search/groups.json',
+    method: 'GET'
+  })
+});
+
 // enable extjs quicktips
 Ext.QuickTips.init();

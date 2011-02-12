@@ -167,7 +167,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
     update = this.item != null;
 
-    this.permissionStore = new Ext.data.JsonStore({
+    var permissionStore = new Ext.data.JsonStore({
       root: 'permissions',
       fields: [ 
         {name: 'name'},
@@ -178,16 +178,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         field: 'name'
       }
     });
-
-    var searchStore = new Ext.data.JsonStore({
-      root: 'results',
-      idProperty: 'value',
-      fields: ['value','label'],
-      proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'search/users.json',
-        method: 'GET'
-      })
-    });
+    this.permissionStore = permissionStore;
 
     var permissionColModel = new Ext.grid.ColumnModel({
       defaults: {
@@ -203,17 +194,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
           id: 'name',
           header: 'Name',
           dataIndex: 'name',
-          editor: new Ext.form.ComboBox({
-            store: searchStore,
-            displayField: 'label',
-            valueField: 'value',
-            typeAhead: true,
-            mode: 'remote',
-            queryParam: 'query',
-            hideTrigger: true,
-            selectOnFocus:true,
-            width: 250
-          })
+          editable: true
         },{
           id: 'type',
           header: 'Type',
@@ -235,7 +216,37 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
               ]
             })
           })
-        }]
+        }],
+      
+        getCellEditor: function(colIndex, rowIndex) {
+          if (colIndex == 1) {
+            var store = null;
+            var rec = permissionStore.getAt(rowIndex);
+            if ( rec.data.groupPermission ){
+              if (debug){
+                console.debug( "using groupSearchStore" );
+              }
+              store = groupSearchStore;
+            } else {
+              if (debug){
+                console.debug( "using userSearchStore" );
+              }
+              store = userSearchStore;
+            }
+            return new Ext.grid.GridEditor(new Ext.form.ComboBox({
+              store: store,
+              displayField: 'label',
+              valueField: 'value',
+              typeAhead: true,
+              mode: 'remote',
+              queryParam: 'query',
+              hideTrigger: true,
+              selectOnFocus:true,
+              width: 250
+            }));
+          }
+          return Ext.grid.ColumnModel.prototype.getCellEditor.call(this, colIndex, rowIndex);
+        }
     });
 
     if ( update ){
@@ -330,7 +341,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.FormPanel.superclass.initComponent.apply(this, arguments);
   },
-
+  
   updatePermissions: function(item){
     var permissions = [];
     this.permissionStore.data.each(function(record){
