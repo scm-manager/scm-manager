@@ -387,6 +387,18 @@ public class XmlGroupManager extends AbstractGroupManager
     return groups;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Long getLastModified()
+  {
+    return groupDB.getLastModified();
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**

@@ -35,6 +35,7 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.LastModifiedAware;
 import sonia.scm.TypedObject;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
@@ -61,8 +62,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Group
-        implements TypedObject, Serializable, Cloneable, Validateable,
-                   Iterable<String>
+        implements TypedObject, LastModifiedAware, Cloneable, Validateable,
+                   Iterable<String>, Serializable
 {
 
   /** Field description */

@@ -414,6 +414,18 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * @return
    */
   @Override
+  public Long getLastModified()
+  {
+    return repositoryDB.getLastModified();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public Collection<Type> getTypes()
   {
     return types;

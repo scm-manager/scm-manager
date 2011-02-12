@@ -403,6 +403,18 @@ public class XmlUserManager extends AbstractUserManager
     return users;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Long getLastModified()
+  {
+    return userDB.getLastModified();
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**

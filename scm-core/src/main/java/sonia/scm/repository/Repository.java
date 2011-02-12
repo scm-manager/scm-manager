@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.LastModifiedAware;
 import sonia.scm.TypedObject;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
@@ -62,7 +63,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement(name = "repositories")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Repository
-        implements TypedObject, Validateable, Cloneable, Serializable
+        implements TypedObject, LastModifiedAware, Validateable, Cloneable,
+                   Serializable
 {
 
   /** Field description */
@@ -229,6 +231,7 @@ public class Repository
    *
    * @return
    */
+  @Override
   public Long getLastModified()
   {
     return lastModified;

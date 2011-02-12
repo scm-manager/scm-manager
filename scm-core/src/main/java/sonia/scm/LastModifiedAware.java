@@ -33,52 +33,18 @@
 
 package sonia.scm;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Collection;
-
 /**
  *
  * @author Sebastian Sdorra
- *
- * @param <T>
- * @param <E>
  */
-public interface Manager<T extends TypedObject, E extends Exception>
-        extends HandlerBase<T, E>, LastModifiedAware
+public interface LastModifiedAware
 {
 
   /**
    * Method description
    *
    *
-   * @param object
-   *
-   * @throws E
-   * @throws IOException
-   */
-  public void refresh(T object) throws E, IOException;
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param id
-   *
    * @return
    */
-  public T get(String id);
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<T> getAll();
+  public Long getLastModified();
 }
