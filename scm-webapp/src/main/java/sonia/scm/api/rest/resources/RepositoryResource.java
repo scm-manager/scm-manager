@@ -94,6 +94,7 @@ public class RepositoryResource
     this.repositoryManager = repositoryManager;
     this.securityContextProvider = securityContextProvider;
     this.requestProvider = requestProvider;
+    setDisableCache(true);
   }
 
   //~--- methods --------------------------------------------------------------

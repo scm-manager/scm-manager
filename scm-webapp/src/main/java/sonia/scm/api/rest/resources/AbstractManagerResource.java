@@ -237,7 +237,18 @@ public abstract class AbstractManagerResource<T extends ModelObject,
 
     prepareForReturn(item);
 
-    return createResponse(request, item);
+    Response response = null;
+
+    if (disableCache)
+    {
+      response = Response.ok(item).build();
+    }
+    else
+    {
+      response = createCacheResponse(request, item);
+    }
+
+    return response;
   }
 
   /**
@@ -259,7 +270,18 @@ public abstract class AbstractManagerResource<T extends ModelObject,
       prepareForReturn(manager.getAll());
     }
 
-    return createResponse(request, items);
+    Response response = null;
+
+    if (disableCache)
+    {
+      response = Response.ok(items).build();
+    }
+    else
+    {
+      response = createCacheResponse(request, items);
+    }
+
+    return response;
   }
 
   /**
@@ -273,6 +295,17 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     return cacheMaxAge;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isDisableCache()
+  {
+    return disableCache;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -284,6 +317,17 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   public void setCacheMaxAge(int cacheMaxAge)
   {
     this.cacheMaxAge = cacheMaxAge;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param disableCache
+   */
+  public void setDisableCache(boolean disableCache)
+  {
+    this.disableCache = disableCache;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -361,7 +405,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @return
    */
-  private Response createResponse(Request request, T item)
+  private Response createCacheResponse(Request request, T item)
   {
     Response.ResponseBuilder builder = null;
     Date lastModified = getLastModified(item);
@@ -395,7 +439,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @return
    */
-  private Response createResponse(Request request, Collection<T> items)
+  private Response createCacheResponse(Request request, Collection<T> items)
   {
     Response.ResponseBuilder builder = null;
     Date lastModified = getLastModified(manager);
@@ -442,6 +486,9 @@ public abstract class AbstractManagerResource<T extends ModelObject,
 
   /** Field description */
   protected int cacheMaxAge = 1;
+
+  /** Field description */
+  protected boolean disableCache = false;
 
   /** Field description */
   protected Manager<T, E> manager;
