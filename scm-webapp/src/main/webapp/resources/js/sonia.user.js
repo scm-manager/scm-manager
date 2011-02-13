@@ -58,7 +58,10 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
   initComponent: function(){
 
     var userStore = new Sonia.rest.JsonStore({
-      url: restUrl + 'users.json',
+      proxy: new Ext.data.HttpProxy({
+        url: restUrl + 'users.json',
+        disableCaching: false
+      }),
       fields: [ 'name', 'displayName', 'mail', 'admin', 'creationDate', 'lastModified', 'type'],
       sortInfo: {
         field: 'name'

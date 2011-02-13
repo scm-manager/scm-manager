@@ -52,7 +52,10 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
 
   initComponent: function(){
     var groupStore = new Sonia.rest.JsonStore({
-      url: restUrl + 'groups.json',
+      proxy: new Ext.data.HttpProxy({
+        url: restUrl + 'groups.json',
+        disableCaching: false
+      }),
       fields: [ 'name', 'members', 'description', 'creationDate', 'type'],
       sortInfo: {
         field: 'name'

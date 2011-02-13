@@ -38,12 +38,15 @@ package sonia.scm.api.rest.resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.LastModifiedAware;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
+import java.util.Date;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -54,8 +57,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -211,6 +217,8 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *  Method description
    *
    *
+   *
+   * @param request
    *  @param id
    *
    *  @return
@@ -218,7 +226,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   @GET
   @Path("{id}")
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public T get(@PathParam("id") String id)
+  public Response get(@Context Request request, @PathParam("id") String id)
   {
     T item = manager.get(id);
 
@@ -227,20 +235,31 @@ public abstract class AbstractManagerResource<T extends ModelObject,
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
 
-    return prepareForReturn(item);
+    prepareForReturn(item);
+
+    return createResponse(request, item);
   }
 
   /**
    * Method description
    *
    *
+   *
+   * @param request
    * @return
    */
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Collection<T> getAll()
+  public Response getAll(@Context Request request)
   {
-    return prepareForReturn(manager.getAll());
+    Collection<T> items = manager.getAll();
+
+    if (Util.isNotEmpty(items))
+    {
+      prepareForReturn(manager.getAll());
+    }
+
+    return createResponse(request, items);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -293,6 +312,85 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   protected Collection<T> prepareForReturn(Collection<T> items)
   {
     return items;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param rb
+   */
+  private void addCacheControl(Response.ResponseBuilder rb)
+  {
+    CacheControl cc = new CacheControl();
+
+    rb.cacheControl(cc);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param item
+   *
+   * @return
+   */
+  private Response createResponse(Request request, T item)
+  {
+    EntityTag e = new EntityTag(Integer.toString(item.hashCode()));
+    Date lastModified = getLastModified(item);
+    Response.ResponseBuilder builder =
+      request.evaluatePreconditions(lastModified, e);
+
+    if (builder == null)
+    {
+      builder = Response.ok(item).tag(e).lastModified(lastModified);
+    }
+
+    addCacheControl(builder);
+
+    return builder.build();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param items
+   *
+   * @return
+   */
+  private Response createResponse(Request request, Collection<T> items)
+  {
+    Date lastModified = getLastModified(manager);
+    Response.ResponseBuilder builder =
+      request.evaluatePreconditions(lastModified);
+
+    if (builder == null)
+    {
+      builder = Response.ok(items).lastModified(lastModified);
+    }
+
+    addCacheControl(builder);
+
+    return builder.build();
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param item
+   *
+   * @return
+   */
+  private Date getLastModified(LastModifiedAware item)
+  {
+    return new Date(item.getLastModified());
   }
 
   //~--- fields ---------------------------------------------------------------
