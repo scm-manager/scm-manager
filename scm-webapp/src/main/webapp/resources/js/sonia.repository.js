@@ -47,7 +47,7 @@ Ext.ns('Sonia.repository');
 // functions
 
 Sonia.repository.isOwner = function(repository){
-  return repository.permissions != null;
+  return admin || repository.permissions != null;
 }
 
 Sonia.repository.setEditPanel = function(panel){
