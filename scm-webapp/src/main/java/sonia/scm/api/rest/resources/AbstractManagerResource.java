@@ -363,10 +363,18 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    */
   private Response createResponse(Request request, T item)
   {
-    EntityTag e = new EntityTag(Integer.toString(item.hashCode()));
+    Response.ResponseBuilder builder = null;
     Date lastModified = getLastModified(item);
-    Response.ResponseBuilder builder =
-      request.evaluatePreconditions(lastModified, e);
+    EntityTag e = new EntityTag(Integer.toString(item.hashCode()));
+
+    if (lastModified != null)
+    {
+      builder = request.evaluatePreconditions(lastModified, e);
+    }
+    else
+    {
+      builder = request.evaluatePreconditions(e);
+    }
 
     if (builder == null)
     {
@@ -389,9 +397,13 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    */
   private Response createResponse(Request request, Collection<T> items)
   {
+    Response.ResponseBuilder builder = null;
     Date lastModified = getLastModified(manager);
-    Response.ResponseBuilder builder =
-      request.evaluatePreconditions(lastModified);
+
+    if (lastModified != null)
+    {
+      builder = request.evaluatePreconditions(lastModified);
+    }
 
     if (builder == null)
     {
@@ -415,7 +427,15 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    */
   private Date getLastModified(LastModifiedAware item)
   {
-    return new Date(item.getLastModified());
+    Date lastModified = null;
+    Long l = item.getLastModified();
+
+    if (l != null)
+    {
+      lastModified = new Date(l);
+    }
+
+    return lastModified;
   }
 
   //~--- fields ---------------------------------------------------------------
