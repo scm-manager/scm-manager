@@ -40,6 +40,7 @@ import com.google.inject.Singleton;
 
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
+import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
@@ -56,7 +57,7 @@ import javax.ws.rs.Path;
  */
 @Path("users")
 @Singleton
-public class UserResource extends AbstractResource<User>
+public class UserResource extends AbstractManagerResource<User, UserException>
 {
 
   /** Field description */
@@ -78,7 +79,7 @@ public class UserResource extends AbstractResource<User>
   public UserResource(UserManager userManager,
                       EncryptionHandler encryptionHandler)
   {
-    this.userManager = userManager;
+    super(userManager);
     this.encryptionHandler = encryptionHandler;
   }
 
@@ -89,14 +90,11 @@ public class UserResource extends AbstractResource<User>
    *
    *
    * @param user
-   *
-   * @throws Exception
    */
   @Override
-  protected void addItem(User user) throws Exception
+  protected void preCreate(User user)
   {
     encryptPassword(user);
-    userManager.create(user);
   }
 
   /**
@@ -104,30 +102,13 @@ public class UserResource extends AbstractResource<User>
    *
    *
    * @param user
-   *
-   * @throws Exception
    */
   @Override
-  protected void removeItem(User user) throws Exception
-  {
-    userManager.delete(user);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param user
-   *
-   * @throws Exception
-   */
-  @Override
-  protected void updateItem(String name, User user) throws Exception
+  protected void preUpate(User user)
   {
     if (DUMMY_PASSWORT.equals(user.getPassword()))
     {
-      User o = userManager.get(name);
+      User o = manager.get(user.getName());
 
       AssertUtil.assertIsNotNull(o);
       user.setPassword(o.getPassword());
@@ -136,23 +117,19 @@ public class UserResource extends AbstractResource<User>
     {
       encryptPassword(user);
     }
-
-    userManager.modify(user);
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
+   * @param users
+   *
    * @return
    */
   @Override
-  protected Collection<User> getAllItems()
+  protected Collection<User> prepareForReturn(Collection<User> users)
   {
-    Collection<User> users = userManager.getAll();
-
     if (Util.isNotEmpty(users))
     {
       for (User u : users)
@@ -173,30 +150,27 @@ public class UserResource extends AbstractResource<User>
    * @return
    */
   @Override
-  protected String getId(User user)
+  protected User prepareForReturn(User user)
   {
-    return user.getName();
+    user.setPassword(DUMMY_PASSWORT);
+
+    return user;
   }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param name
+   * @param user
    *
    * @return
    */
   @Override
-  protected User getItem(String name)
+  protected String getId(User user)
   {
-    User user = userManager.get(name);
-
-    if (user != null)
-    {
-      user.setPassword(DUMMY_PASSWORT);
-    }
-
-    return user;
+    return user.getName();
   }
 
   /**
@@ -233,7 +207,4 @@ public class UserResource extends AbstractResource<User>
 
   /** Field description */
   private EncryptionHandler encryptionHandler;
-
-  /** Field description */
-  private UserManager userManager;
 }

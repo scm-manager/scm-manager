@@ -47,11 +47,10 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,15 +58,15 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.ws.rs.Path;
-import sonia.scm.util.HttpUtil;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Path("repositories")
 @Singleton
-public class RepositoryResource extends AbstractResource<Repository>
+@Path("repositories")
+public class RepositoryResource
+        extends AbstractManagerResource<Repository, RepositoryException>
 {
 
   /** Field description */
@@ -90,6 +89,7 @@ public class RepositoryResource extends AbstractResource<Repository>
           Provider<WebSecurityContext> securityContextProvider,
           Provider<HttpServletRequest> requestProvider)
   {
+    super(repositoryManager);
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.securityContextProvider = securityContextProvider;
@@ -102,64 +102,14 @@ public class RepositoryResource extends AbstractResource<Repository>
    * Method description
    *
    *
-   * @param item
    *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Override
-  protected void addItem(Repository item)
-          throws RepositoryException, IOException
-  {
-    repositoryManager.create(item);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Override
-  protected void removeItem(Repository item)
-          throws RepositoryException, IOException
-  {
-    repositoryManager.delete(item);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param item
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Override
-  protected void updateItem(String name, Repository item)
-          throws RepositoryException, IOException
-  {
-    repositoryManager.modify(item);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
+   * @param repositories
    * @return
    */
   @Override
-  protected Collection<Repository> getAllItems()
+  protected Collection<Repository> prepareForReturn(
+          Collection<Repository> repositories)
   {
-    Collection<Repository> repositories = repositoryManager.getAll();
-
     for (Repository repository : repositories)
     {
       appendUrl(repository);
@@ -173,6 +123,25 @@ public class RepositoryResource extends AbstractResource<Repository>
    * Method description
    *
    *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  protected Repository prepareForReturn(Repository repository)
+  {
+    appendUrl(repository);
+    prepareRepository(repository);
+
+    return repository;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
    * @param item
    *
    * @return
@@ -181,26 +150,6 @@ public class RepositoryResource extends AbstractResource<Repository>
   protected String getId(Repository item)
   {
     return item.getId();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  @Override
-  protected Repository getItem(String id)
-  {
-    Repository repository = repositoryManager.get(id);
-
-    appendUrl(repository);
-    prepareRepository(repository);
-
-    return repository;
   }
 
   /**
@@ -271,8 +220,6 @@ public class RepositoryResource extends AbstractResource<Repository>
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  
 
   /**
    * Method description

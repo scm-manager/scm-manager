@@ -39,11 +39,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import sonia.scm.group.Group;
+import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
 
 import javax.ws.rs.Path;
 
@@ -53,7 +52,8 @@ import javax.ws.rs.Path;
  */
 @Path("groups")
 @Singleton
-public class GroupResource extends AbstractResource<Group>
+public class GroupResource
+        extends AbstractManagerResource<Group, GroupException>
 {
 
   /** Field description */
@@ -70,67 +70,10 @@ public class GroupResource extends AbstractResource<Group>
   @Inject
   public GroupResource(GroupManager groupManager)
   {
-    this.groupManager = groupManager;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param group
-   *
-   * @throws Exception
-   */
-  @Override
-  protected void addItem(Group group) throws Exception
-  {
-    groupManager.create(group);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param group
-   *
-   * @throws Exception
-   */
-  @Override
-  protected void removeItem(Group group) throws Exception
-  {
-    groupManager.delete(group);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param group
-   *
-   * @throws Exception
-   */
-  @Override
-  protected void updateItem(String name, Group group) throws Exception
-  {
-    groupManager.modify(group);
+    super(groupManager);
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected Collection<Group> getAllItems()
-  {
-    return groupManager.getAll();
-  }
 
   /**
    * Method description
@@ -150,20 +93,6 @@ public class GroupResource extends AbstractResource<Group>
    * Method description
    *
    *
-   * @param name
-   *
-   * @return
-   */
-  @Override
-  protected Group getItem(String name)
-  {
-    return groupManager.get(name);
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @return
    */
   @Override
@@ -171,9 +100,4 @@ public class GroupResource extends AbstractResource<Group>
   {
     return PATH_PART;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private GroupManager groupManager;
 }

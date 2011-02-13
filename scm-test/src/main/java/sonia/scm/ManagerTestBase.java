@@ -40,7 +40,7 @@ package sonia.scm;
  * @param <T>
  * @param <E>
  */
-public abstract class ManagerTestBase<T extends TypedObject,
+public abstract class ManagerTestBase<T extends ModelObject,
         E extends Exception> extends AbstractTestBase
 {
 

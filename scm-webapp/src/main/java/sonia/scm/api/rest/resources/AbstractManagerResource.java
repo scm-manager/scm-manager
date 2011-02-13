@@ -33,9 +33,18 @@
 
 package sonia.scm.api.rest.resources;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.Manager;
+import sonia.scm.ModelObject;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -55,50 +64,30 @@ import javax.ws.rs.core.UriInfo;
  * @author Sebastian Sdorra
  *
  * @param <T>
+ * @param <E>
  */
-public abstract class AbstractResource<T>
+public abstract class AbstractManagerResource<T extends ModelObject,
+        E extends Exception>
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   *
-   * @throws Exception
-   */
-  protected abstract void addItem(T item) throws Exception;
+  /** the logger for AbstractManagerResource */
+  private static final Logger logger =
+    LoggerFactory.getLogger(AbstractManagerResource.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param item
-   *
-   * @throws Exception
+   * @param manager
    */
-  protected abstract void removeItem(T item) throws Exception;
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   * @param item
-   *
-   * @throws Exception
-   */
-  protected abstract void updateItem(String name, T item) throws Exception;
+  public AbstractManagerResource(Manager<T, E> manager)
+  {
+    this.manager = manager;
+  }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected abstract Collection<T> getAllItems();
 
   /**
    * Method description
@@ -109,16 +98,6 @@ public abstract class AbstractResource<T>
    * @return
    */
   protected abstract String getId(T item);
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   */
-  protected abstract T getItem(String name);
 
   /**
    * Method description
@@ -142,14 +121,18 @@ public abstract class AbstractResource<T>
    */
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response add(@Context UriInfo uriInfo, T item)
+  public Response create(@Context UriInfo uriInfo, T item)
   {
+    preCreate(item);
+
     try
     {
-      addItem(item);
+      manager.create(item);
     }
     catch (Exception ex)
     {
+      logger.error("error during create", ex);
+
       throw new WebApplicationException(ex);
     }
 
@@ -167,22 +150,26 @@ public abstract class AbstractResource<T>
    *   @return
    */
   @DELETE
-  @Path("{name}")
-  public Response delete(@PathParam("name") String name)
+  @Path("{id}")
+  public Response delete(@PathParam("id") String name)
   {
-    T item = getItem(name);
+    T item = manager.get(name);
 
     if (item == null)
     {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
 
+    preDelete(item);
+
     try
     {
-      removeItem(item);
+      manager.delete(item);
     }
     catch (Exception ex)
     {
+      logger.error("error during create", ex);
+
       throw new WebApplicationException(ex);
     }
 
@@ -190,25 +177,27 @@ public abstract class AbstractResource<T>
   }
 
   /**
-   * Method description
+   *  Method description
    *
    *
    *
    *
-   * @param uriInfo
-   * @param name
-   * @param item
+   *  @param uriInfo
+   *  @param name
+   *  @param item
    *
    */
   @PUT
-  @Path("{name}")
+  @Path("{id}")
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public void update(@Context UriInfo uriInfo, @PathParam("name") String name,
+  public void update(@Context UriInfo uriInfo, @PathParam("id") String name,
                      T item)
   {
+    preUpate(item);
+
     try
     {
-      updateItem(name, item);
+      manager.modify(item);
     }
     catch (Exception ex)
     {
@@ -219,26 +208,26 @@ public abstract class AbstractResource<T>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   *  Method description
    *
    *
-   * @param name
+   *  @param id
    *
-   * @return
+   *  @return
    */
   @GET
-  @Path("{name}")
+  @Path("{id}")
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public T get(@PathParam("name") String name)
+  public T get(@PathParam("id") String id)
   {
-    T item = getItem(name);
+    T item = manager.get(id);
 
     if (item == null)
     {
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
 
-    return item;
+    return prepareForReturn(item);
   }
 
   /**
@@ -251,6 +240,63 @@ public abstract class AbstractResource<T>
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Collection<T> getAll()
   {
-    return getAllItems();
+    return prepareForReturn(manager.getAll());
   }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param item
+   */
+  protected void preCreate(T item) {}
+
+  /**
+   * Method description
+   *
+   *
+   * @param item
+   */
+  protected void preDelete(T item) {}
+
+  /**
+   * Method description
+   *
+   *
+   * @param item
+   */
+  protected void preUpate(T item) {}
+
+  /**
+   * Method description
+   *
+   *
+   * @param item
+   *
+   * @return
+   */
+  protected T prepareForReturn(T item)
+  {
+    return item;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param items
+   *
+   * @return
+   */
+  protected Collection<T> prepareForReturn(Collection<T> items)
+  {
+    return items;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected Manager<T, E> manager;
 }
