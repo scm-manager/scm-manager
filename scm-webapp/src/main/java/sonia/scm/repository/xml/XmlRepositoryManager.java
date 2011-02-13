@@ -511,6 +511,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    */
   private void storeDB()
   {
+    repositoryDB.setLastModified(System.currentTimeMillis());
     store.set(repositoryDB);
   }
 
