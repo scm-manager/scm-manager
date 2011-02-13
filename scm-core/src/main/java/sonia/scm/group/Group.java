@@ -35,15 +35,11 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.LastModifiedAware;
-import sonia.scm.TypedObject;
-import sonia.scm.Validateable;
+import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,9 +57,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Group
-        implements TypedObject, LastModifiedAware, Cloneable, Validateable,
-                   Iterable<String>, Serializable
+public class Group implements ModelObject, Iterable<String>
 {
 
   /** Field description */

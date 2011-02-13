@@ -35,16 +35,12 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.LastModifiedAware;
-import sonia.scm.TypedObject;
-import sonia.scm.Validateable;
+import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,9 +58,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @XmlRootElement(name = "repositories")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Repository
-        implements TypedObject, LastModifiedAware, Validateable, Cloneable,
-                   Serializable
+public class Repository implements ModelObject
 {
 
   /** Field description */

@@ -35,16 +35,12 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.LastModifiedAware;
-import sonia.scm.TypedObject;
-import sonia.scm.Validateable;
+import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
 
 import java.security.Principal;
 
@@ -59,9 +55,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class User
-        implements TypedObject, Principal, Cloneable, LastModifiedAware,
-                   Validateable, Serializable
+public class User implements Principal, ModelObject
 {
 
   /** Field description */

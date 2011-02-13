@@ -35,50 +35,12 @@ package sonia.scm;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.util.Collection;
+import java.io.Serializable;
 
 /**
  *
  * @author Sebastian Sdorra
- *
- * @param <T>
- * @param <E>
  */
-public interface Manager<T extends ModelObject, E extends Exception>
-        extends HandlerBase<T, E>, LastModifiedAware
-{
-
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   *
-   * @throws E
-   * @throws IOException
-   */
-  public void refresh(T object) throws E, IOException;
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  public T get(String id);
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<T> getAll();
-}
+public interface ModelObject
+        extends TypedObject, LastModifiedAware, Cloneable, Validateable,
+                Serializable {}

@@ -44,7 +44,7 @@ import java.util.Collection;
  * @param <T>
  * @param <E>
  */
-public interface TypeManager<T extends TypedObject, E extends Exception>
+public interface TypeManager<T extends ModelObject, E extends Exception>
         extends Manager<T, E>
 {
 
