@@ -83,6 +83,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   initComponent: function(){
 
     var repositoryStore = new Sonia.rest.JsonStore({
+      id: 'repositoryStore',
       proxy: new Ext.data.HttpProxy({
         url: restUrl + 'repositories.json',
         disableCaching: false

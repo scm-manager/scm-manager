@@ -262,6 +262,30 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     return createResponse(request, items);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public int getCacheMaxAge()
+  {
+    return cacheMaxAge;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param cacheMaxAge
+   */
+  public void setCacheMaxAge(int cacheMaxAge)
+  {
+    this.cacheMaxAge = cacheMaxAge;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -324,6 +348,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   {
     CacheControl cc = new CacheControl();
 
+    cc.setMaxAge(cacheMaxAge);
     rb.cacheControl(cc);
   }
 
@@ -394,6 +419,9 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected int cacheMaxAge = 1;
 
   /** Field description */
   protected Manager<T, E> manager;
