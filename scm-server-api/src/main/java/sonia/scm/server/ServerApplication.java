@@ -55,6 +55,12 @@ public class ServerApplication
   public static final String APPINFO = "/app-info.xml";
 
   /** Field description */
+  public static final String PROPERTY_BASEDIR = "basedir";
+
+  /** Field description */
+  public static final String PROPERTY_SCMBASEDIR = "scm.basedir";
+
+  /** Field description */
   public static final int RETURNCODE_CLI_ERROR = 2;
 
   /** Field description */
@@ -95,6 +101,18 @@ public class ServerApplication
     {
       System.err.println("could not find an server implementation");
       System.exit(RETURNCODE_MISSING_SERVER_IMPLEMENTATION);
+    }
+
+    String basedir = System.getProperty(PROPERTY_BASEDIR);
+
+    if (basedir != null)
+    {
+      if (!basedir.endsWith(File.separator))
+      {
+        basedir = basedir.concat(File.separator);
+      }
+
+      System.setProperty(PROPERTY_SCMBASEDIR, basedir);
     }
 
     File webapp = new File("webapp", appInfo.getAppName());

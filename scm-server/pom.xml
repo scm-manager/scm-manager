@@ -42,11 +42,14 @@
         <version>1.1</version>
         <executions>
           <execution>
+            <id>scm-jsw</id>
+            <!--
             <phase>package</phase>
             <goals>
               <goal>create-repository</goal>
               <goal>generate-daemons</goal>
             </goals>
+            -->
             <configuration>
               <target>${project.build.directory}/appassembler</target>
               <assembleDirectory>${project.build.directory}/appassembler/jsw/scm-server</assembleDirectory>
@@ -106,7 +109,32 @@
                 </daemon>
               </daemons>
 
-
+            </configuration>
+          </execution>
+          <execution>
+            <id>scm-app</id>
+            <phase>package</phase>
+            <goals>
+              <goal>assemble</goal>
+            </goals>
+            <configuration>
+              <assembleDirectory>${project.build.directory}/appassembler/app/scm-server</assembleDirectory>
+              <repositoryName>lib</repositoryName>
+              <repositoryLayout>flat</repositoryLayout>
+              <showConsoleWindow>true</showConsoleWindow>
+              <!--
+              <extraJvmArguments>-Xms256m -Xmx256m</extraJvmArguments>
+              -->
+              <configurationDirectory>conf</configurationDirectory>
+              <copyConfigurationDirectory>true</copyConfigurationDirectory>
+              <configurationSourceDirectory>src/main/conf</configurationSourceDirectory>
+              <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+              <programs>
+                <program>
+                  <mainClass>sonia.scm.server.ServerApplication</mainClass>
+                  <name>scm-server</name>
+                </program>
+              </programs>
             </configuration>
           </execution>
         </executions>
@@ -124,12 +152,22 @@
             </goals>
             <configuration>
               <artifactItems>
+                <!--
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>
                   <artifactId>scm-webapp</artifactId>
                   <version>${project.version}</version>
                   <type>war</type>
                   <outputDirectory>${project.build.directory}/appassembler/jsw/scm-server/webapp</outputDirectory>
+                  <destFileName>scm-webapp.war</destFileName>
+                </artifactItem>
+                -->
+                <artifactItem>
+                  <groupId>${project.groupId}</groupId>
+                  <artifactId>scm-webapp</artifactId>
+                  <version>${project.version}</version>
+                  <type>war</type>
+                  <outputDirectory>${project.build.directory}/appassembler/app/scm-server/webapp</outputDirectory>
                   <destFileName>scm-webapp.war</destFileName>
                 </artifactItem>
               </artifactItems>
@@ -144,12 +182,14 @@
         <version>2.2</version>
         <configuration>
           <descriptors>
+            <!--
             <descriptor>src/main/assembly/scm-server-jsw.xml</descriptor>
+            -->
+            <descriptor>src/main/assembly/scm-server-app.xml</descriptor>
           </descriptors>
         </configuration>
         <executions>
           <execution>
-            <id>jsw</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
