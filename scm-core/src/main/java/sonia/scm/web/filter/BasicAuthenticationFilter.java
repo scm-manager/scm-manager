@@ -39,6 +39,9 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
@@ -72,6 +75,10 @@ public class BasicAuthenticationFilter extends HttpFilter
 
   /** Field description */
   public static final String HEADER_AUTHORIZATION = "Authorization";
+
+  /** the logger for BasicAuthenticationFilter */
+  private static final Logger logger =
+    LoggerFactory.getLogger(BasicAuthenticationFilter.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -159,9 +166,29 @@ public class BasicAuthenticationFilter extends HttpFilter
     token = new String(Base64.decode(token.getBytes()));
 
     String[] credentials = token.split(CREDENTIAL_SEPARATOR);
+    User user = null;
 
-    return securityContext.authenticate(request, response, credentials[0],
-            credentials[1]);
+    if (credentials.length == 2)
+    {
+      String username = credentials[0];
+      String password = credentials[1];
+
+      if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
+      {
+        user = securityContext.authenticate(request, response, username,
+                password);
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("username or password is null/empty");
+      }
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("failed to read basic auth credentials");
+    }
+
+    return user;
   }
 
   //~--- fields ---------------------------------------------------------------
