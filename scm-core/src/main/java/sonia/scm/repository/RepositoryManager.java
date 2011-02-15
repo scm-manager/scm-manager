@@ -36,7 +36,12 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.ListenerSupport;
+import sonia.scm.Type;
 import sonia.scm.TypeManager;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collection;
 
 /**
  *
@@ -57,6 +62,14 @@ public interface RepositoryManager
    * @return
    */
   public Repository get(String type, String name);
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Collection<Type> getConfiguredTypes();
 
   /**
    * Method description

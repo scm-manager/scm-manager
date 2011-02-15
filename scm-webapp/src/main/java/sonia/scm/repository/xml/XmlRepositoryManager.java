@@ -67,10 +67,12 @@ import sonia.scm.web.security.WebSecurityContext;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -231,7 +233,6 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     if (repositoryDB == null)
     {
       repositoryDB = new XmlRepositoryDatabase();
-      repositoryDB.setCreationTime(System.currentTimeMillis());
     }
   }
 
@@ -391,6 +392,28 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     return repositories;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Collection<Type> getConfiguredTypes()
+  {
+    List<Type> validTypes = new ArrayList<Type>();
+
+    for (RepositoryHandler handler : handlerMap.values())
+    {
+      if (handler.isConfigured())
+      {
+        validTypes.add(handler.getType());
+      }
+    }
+
+    return validTypes;
   }
 
   /**
