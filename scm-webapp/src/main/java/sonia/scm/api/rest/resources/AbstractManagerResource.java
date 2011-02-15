@@ -245,7 +245,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     }
     else
     {
-      response = createCacheResponse(request, item);
+      response = createCacheResponse(request, item, item);
     }
 
     return response;
@@ -267,7 +267,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
 
     if (Util.isNotEmpty(items))
     {
-      prepareForReturn(manager.getAll());
+      items = prepareForReturn(items);
     }
 
     Response response = null;
@@ -278,7 +278,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     }
     else
     {
-      response = createCacheResponse(request, items);
+      response = createCacheResponse(request, manager, items);
     }
 
     return response;
@@ -401,14 +401,17 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    *
    * @param request
+   * @param timeItem
    * @param item
+   * @param <I>
    *
    * @return
    */
-  private Response createCacheResponse(Request request, T item)
+  private <I> Response createCacheResponse(Request request,
+          LastModifiedAware timeItem, I item)
   {
     Response.ResponseBuilder builder = null;
-    Date lastModified = getLastModified(item);
+    Date lastModified = getLastModified(timeItem);
     EntityTag e = new EntityTag(Integer.toString(item.hashCode()));
 
     if (lastModified != null)
@@ -423,35 +426,6 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     if (builder == null)
     {
       builder = Response.ok(item).tag(e).lastModified(lastModified);
-    }
-
-    addCacheControl(builder);
-
-    return builder.build();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param items
-   *
-   * @return
-   */
-  private Response createCacheResponse(Request request, Collection<T> items)
-  {
-    Response.ResponseBuilder builder = null;
-    Date lastModified = getLastModified(manager);
-
-    if (lastModified != null)
-    {
-      builder = request.evaluatePreconditions(lastModified);
-    }
-
-    if (builder == null)
-    {
-      builder = Response.ok(items).lastModified(lastModified);
     }
 
     addCacheControl(builder);
@@ -485,7 +459,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  protected int cacheMaxAge = 1;
+  protected int cacheMaxAge = 0;
 
   /** Field description */
   protected boolean disableCache = false;

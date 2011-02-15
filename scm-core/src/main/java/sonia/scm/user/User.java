@@ -210,9 +210,28 @@ public class User implements Principal, ModelObject
 
     final User other = (User) obj;
 
+    if (this.admin != other.admin)
+    {
+      return false;
+    }
+
+    if ((this.creationDate != other.creationDate)
+        && ((this.creationDate == null)
+            ||!this.creationDate.equals(other.creationDate)))
+    {
+      return false;
+    }
+
     if ((this.displayName == null)
         ? (other.displayName != null)
         : !this.displayName.equals(other.displayName))
+    {
+      return false;
+    }
+
+    if ((this.lastModified != other.lastModified)
+        && ((this.lastModified == null)
+            ||!this.lastModified.equals(other.lastModified)))
     {
       return false;
     }
@@ -257,21 +276,30 @@ public class User implements Principal, ModelObject
   @Override
   public int hashCode()
   {
-    int hash = 7;
+    int hash = 3;
 
-    hash = 79 * hash + ((this.displayName != null)
+    hash = 37 * hash + (this.admin
+                        ? 1
+                        : 0);
+    hash = 37 * hash + ((this.creationDate != null)
+                        ? this.creationDate.hashCode()
+                        : 0);
+    hash = 37 * hash + ((this.displayName != null)
                         ? this.displayName.hashCode()
                         : 0);
-    hash = 79 * hash + ((this.mail != null)
+    hash = 37 * hash + ((this.lastModified != null)
+                        ? this.lastModified.hashCode()
+                        : 0);
+    hash = 37 * hash + ((this.mail != null)
                         ? this.mail.hashCode()
                         : 0);
-    hash = 79 * hash + ((this.name != null)
+    hash = 37 * hash + ((this.name != null)
                         ? this.name.hashCode()
                         : 0);
-    hash = 79 * hash + ((this.password != null)
+    hash = 37 * hash + ((this.password != null)
                         ? this.password.hashCode()
                         : 0);
-    hash = 79 * hash + ((this.type != null)
+    hash = 37 * hash + ((this.type != null)
                         ? this.type.hashCode()
                         : 0);
 

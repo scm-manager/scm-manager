@@ -263,22 +263,22 @@ public class Group implements ModelObject, Iterable<String>
   {
     int hash = 7;
 
-    hash = 29 * hash + ((this.creationDate != null)
+    hash = 73 * hash + ((this.creationDate != null)
                         ? this.creationDate.hashCode()
                         : 0);
-    hash = 29 * hash + ((this.description != null)
+    hash = 73 * hash + ((this.description != null)
                         ? this.description.hashCode()
                         : 0);
-    hash = 29 * hash + ((this.lastModified != null)
+    hash = 73 * hash + ((this.lastModified != null)
                         ? this.lastModified.hashCode()
                         : 0);
-    hash = 29 * hash + ((this.members != null)
+    hash = 73 * hash + ((this.members != null)
                         ? this.members.hashCode()
                         : 0);
-    hash = 29 * hash + ((this.name != null)
+    hash = 73 * hash + ((this.name != null)
                         ? this.name.hashCode()
                         : 0);
-    hash = 29 * hash + ((this.type != null)
+    hash = 73 * hash + ((this.type != null)
                         ? this.type.hashCode()
                         : 0);
 
@@ -371,6 +371,7 @@ public class Group implements ModelObject, Iterable<String>
    *
    * @return
    */
+  @Override
   public Long getLastModified()
   {
     return lastModified;

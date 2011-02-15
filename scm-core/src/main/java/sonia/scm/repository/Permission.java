@@ -100,6 +100,75 @@ public class Permission implements Serializable
     this.groupPermission = groupPermission;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final Permission other = (Permission) obj;
+
+    if (this.groupPermission != other.groupPermission)
+    {
+      return false;
+    }
+
+    if ((this.name == null)
+        ? (other.name != null)
+        : !this.name.equals(other.name))
+    {
+      return false;
+    }
+
+    if (this.type != other.type)
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    int hash = 7;
+
+    hash = 97 * hash + (this.groupPermission
+                        ? 1
+                        : 0);
+    hash = 97 * hash + ((this.name != null)
+                        ? this.name.hashCode()
+                        : 0);
+    hash = 97 * hash + ((this.type != null)
+                        ? this.type.hashCode()
+                        : 0);
+
+    return hash;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
