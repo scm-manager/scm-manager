@@ -209,7 +209,6 @@ public class XmlGroupManager extends AbstractGroupManager
     if (groupDB == null)
     {
       groupDB = new XmlGroupDatabase();
-      groupDB.setCreationTime(System.currentTimeMillis());
     }
   }
 

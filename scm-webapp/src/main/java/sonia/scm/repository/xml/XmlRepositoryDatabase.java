@@ -60,6 +60,20 @@ public class XmlRepositoryDatabase
 {
 
   /**
+   * Constructs ...
+   *
+   */
+  public XmlRepositoryDatabase()
+  {
+    long c = System.currentTimeMillis();
+
+    creationTime = c;
+    lastModified = c;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
    * Method description
    *
    *

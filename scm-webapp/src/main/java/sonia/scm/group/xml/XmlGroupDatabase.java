@@ -60,6 +60,20 @@ public class XmlGroupDatabase
 {
 
   /**
+   * Constructs ...
+   *
+   */
+  public XmlGroupDatabase()
+  {
+    long c = System.currentTimeMillis();
+
+    creationTime = c;
+    lastModified = c;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
    * Method description
    *
    *

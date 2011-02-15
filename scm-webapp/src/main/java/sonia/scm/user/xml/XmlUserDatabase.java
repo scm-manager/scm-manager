@@ -60,6 +60,20 @@ public class XmlUserDatabase
 {
 
   /**
+   * Constructs ...
+   *
+   */
+  public XmlUserDatabase()
+  {
+    long c = System.currentTimeMillis();
+
+    creationTime = c;
+    lastModified = c;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
    * Method description
    *
    *

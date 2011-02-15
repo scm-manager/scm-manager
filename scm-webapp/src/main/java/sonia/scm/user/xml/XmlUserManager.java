@@ -242,7 +242,6 @@ public class XmlUserManager extends AbstractUserManager
     if (userDB == null)
     {
       userDB = new XmlUserDatabase();
-      userDB.setCreationTime(System.currentTimeMillis());
       createDefaultAccounts();
     }
   }

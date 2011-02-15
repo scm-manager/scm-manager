@@ -127,7 +127,7 @@ public class AuthenticationResource
     if ((user != null) &&!SCMContext.USER_ANONYMOUS.equals(user.getName()))
     {
       state = new ScmState(contextProvider, securityContext,
-                           repositoryManger.getTypes());
+                           repositoryManger.getConfiguredTypes());
     }
     else
     {
@@ -161,7 +161,7 @@ public class AuthenticationResource
     if (user != null)
     {
       ScmState state = new ScmState(contextProvider, securityContext,
-                                    repositoryManger.getTypes());
+                                    repositoryManger.getConfiguredTypes());
 
       resp = Response.ok(state).build();
     }
@@ -199,7 +199,7 @@ public class AuthenticationResource
       }
 
       state = new ScmState(contextProvider, securityContext,
-                           repositoryManger.getTypes());
+                           repositoryManger.getConfiguredTypes());
       response = Response.ok(state).build();
     }
     else
