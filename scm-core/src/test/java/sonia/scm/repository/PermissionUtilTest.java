@@ -37,10 +37,7 @@ package sonia.scm.repository;
 
 import org.junit.Test;
 
-import sonia.scm.repository.Permission;
-import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.PermissionUtil;
-import sonia.scm.repository.Repository;
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.user.User;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -87,7 +84,7 @@ public class PermissionUtilTest
    * Method description
    *
    */
-  @Test(expected = IllegalStateException.class)
+  @Test(expected = ScmSecurityException.class)
   public void assertFailedPermissionTest()
   {
     PermissionUtil.assertPermission(repository, dent, PermissionType.WRITE);
@@ -119,16 +116,15 @@ public class PermissionUtilTest
   public void testGroupPermissions()
   {
     WebSecurityContext dent = mockGroupCtx(new User("dent", "Arthur Dent",
-                                   "arthur.dent@hitchhiker.com"),
-                                   "devel", "qa");
+                                "arthur.dent@hitchhiker.com"), "devel", "qa");
     WebSecurityContext ford = mockGroupCtx(new User("ford", "Ford Prefect",
-                                   "ford.prefect@hitchhiker.com"), "devel");
+                                "ford.prefect@hitchhiker.com"), "devel");
     WebSecurityContext zaphod = mockGroupCtx(new User("zaphod",
-                                   "Zaphod Beeblebrox",
-                                   "zaphod.beeblebrox@hitchhiker.com"), "qa");
+                                  "Zaphod Beeblebrox",
+                                  "zaphod.beeblebrox@hitchhiker.com"), "qa");
     WebSecurityContext trillian = mockGroupCtx(new User("trillian",
-                                   "Trillian Astra",
-                                   "trillian.astra@hitchhiker.com"));
+                                    "Trillian Astra",
+                                    "trillian.astra@hitchhiker.com"));
     Repository r = new Repository();
 
     r.setPermissions(
@@ -137,25 +133,32 @@ public class PermissionUtilTest
               new Permission("dent"),
               new Permission("devel", PermissionType.WRITE, true),
               new Permission("qa", PermissionType.READ, true))));
+
     // member of both devel and qa
     assertTrue(PermissionUtil.hasPermission(r, dent, PermissionType.READ));
     assertTrue(PermissionUtil.hasPermission(r, dent, PermissionType.WRITE));
     assertFalse(PermissionUtil.hasPermission(r, dent, PermissionType.OWNER));
+
     // now, additionally the owner
     r.getPermissions().add(new Permission("dent", PermissionType.OWNER));
     assertTrue(PermissionUtil.hasPermission(r, dent, PermissionType.OWNER));
+
     // member of just devel
     assertTrue(PermissionUtil.hasPermission(r, ford, PermissionType.READ));
     assertTrue(PermissionUtil.hasPermission(r, ford, PermissionType.WRITE));
     assertFalse(PermissionUtil.hasPermission(r, ford, PermissionType.OWNER));
+
     // member of just qa
     assertTrue(PermissionUtil.hasPermission(r, zaphod, PermissionType.READ));
     assertFalse(PermissionUtil.hasPermission(r, zaphod, PermissionType.WRITE));
     assertFalse(PermissionUtil.hasPermission(r, zaphod, PermissionType.OWNER));
+
     // member of no groups
     assertFalse(PermissionUtil.hasPermission(r, trillian, PermissionType.READ));
-    assertFalse(PermissionUtil.hasPermission(r, trillian, PermissionType.WRITE));
-    assertFalse(PermissionUtil.hasPermission(r, trillian, PermissionType.OWNER));
+    assertFalse(PermissionUtil.hasPermission(r, trillian,
+            PermissionType.WRITE));
+    assertFalse(PermissionUtil.hasPermission(r, trillian,
+            PermissionType.OWNER));
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -217,14 +220,15 @@ public class PermissionUtilTest
    *
    *
    * @param user
+   * @param groups
    *
    * @return
    */
   private WebSecurityContext mockGroupCtx(User user, String... groups)
   {
     WebSecurityContext context = mockCtx(user);
-    
     Set<String> groupSet = new HashSet<String>(Arrays.asList(groups));
+
     when(context.getGroups()).thenReturn(groupSet);
 
     return context;
