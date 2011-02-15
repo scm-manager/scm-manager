@@ -35,7 +35,11 @@ package sonia.scm.ic;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+
+import sonia.scm.user.User;
 
 import static org.junit.Assert.*;
 
@@ -43,24 +47,26 @@ import static org.junit.Assert.*;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.GenericType;
+import com.sun.jersey.api.client.WebResource;
+
+import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class AuthenticationITCase extends AbstractITCaseBase
+public class UserITCase extends AbstractITCaseBase
 {
 
   /**
    * Method description
    *
-   *
    */
-  @Test
-  public void testLogin()
+  @Before
+  public void login()
   {
-    Client client = createClient();
-
+    client = createClient();
     adminLogin(client);
   }
 
@@ -68,26 +74,81 @@ public class AuthenticationITCase extends AbstractITCaseBase
    * Method description
    *
    */
-  @Test
-  public void testLoginFailed()
+  @After
+  public void logout()
   {
-    Client client = createClient();
-    ClientResponse response = login(client, "dent", "trillian");
-
-    assertNotNull(response);
-    assertTrue(response.getStatus() == 401);
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testLogout()
-  {
-    Client client = createClient();
-
-    adminLogin(client);
     logout(client);
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void get()
+  {
+    WebResource wr = createResource(client, "users/scmadmin.json");
+    ClientResponse respone = wr.get(ClientResponse.class);
+
+    assertNotNull(respone);
+    assertTrue(respone.getStatus() == 200);
+
+    User user = respone.getEntity(User.class);
+
+    testAdmin(user);
+  }
+
+  /**
+   * Method description
+   * @Test
+   */
+  public void getAll()
+  {
+    WebResource wr = createResource(client, "users.json");
+    ClientResponse respone = wr.get(ClientResponse.class);
+
+    assertNotNull(respone);
+    assertTrue(respone.getStatus() == 200);
+
+    Collection<User> users =
+      respone.getEntity(new GenericType<Collection<User>>() {}
+    );
+
+    assertNotNull(users);
+    assertFalse(users.isEmpty());
+
+    User admin = null;
+
+    for (User user : users)
+    {
+      if (user.getName().equals("scmadmin"))
+      {
+        admin = user;
+      }
+    }
+
+    testAdmin(admin);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   */
+  private void testAdmin(User user)
+  {
+    assertNotNull(user);
+    assertEquals(user.getName(), "scmadmin");
+    assertTrue(user.isAdmin());
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Client client;
 }

@@ -187,6 +187,13 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.sun.jersey.contribs</groupId>
+      <artifactId>jersey-apache-client</artifactId>
+      <version>${jersey.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
