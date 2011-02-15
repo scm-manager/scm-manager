@@ -45,6 +45,7 @@ import sonia.scm.web.security.WebSecurityContext;
 
 import java.util.Collection;
 import java.util.List;
+import sonia.scm.security.ScmSecurityException;
 
 /**
  *
@@ -66,7 +67,7 @@ public class PermissionUtil
   {
     if (!hasPermission(repository, securityContext, pt))
     {
-      throw new IllegalStateException("action denied");
+      throw new ScmSecurityException("action denied");
     }
   }
 
