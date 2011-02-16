@@ -89,7 +89,7 @@ public class UserITCase extends AbstractITCaseBase
   @Test
   public void get()
   {
-    WebResource wr = createResource(client, "users/scmadmin.json");
+    WebResource wr = createResource(client, "users/scmadmin");
     ClientResponse respone = wr.get(ClientResponse.class);
 
     assertNotNull(respone);
@@ -102,11 +102,12 @@ public class UserITCase extends AbstractITCaseBase
 
   /**
    * Method description
-   * @Test
+   * 
    */
+  @Test
   public void getAll()
   {
-    WebResource wr = createResource(client, "users.json");
+    WebResource wr = createResource(client, "users");
     ClientResponse respone = wr.get(ClientResponse.class);
 
     assertNotNull(respone);

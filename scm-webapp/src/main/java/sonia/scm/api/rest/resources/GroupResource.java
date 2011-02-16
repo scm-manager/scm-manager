@@ -44,7 +44,10 @@ import sonia.scm.group.GroupManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collection;
+
 import javax.ws.rs.Path;
+import javax.ws.rs.core.GenericEntity;
 
 /**
  *
@@ -71,6 +74,24 @@ public class GroupResource
   public GroupResource(GroupManager groupManager)
   {
     super(groupManager);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param items
+   *
+   * @return
+   */
+  @Override
+  protected GenericEntity<Collection<Group>> createGenericEntity(
+          Collection<Group> items)
+  {
+    return new GenericEntity<Collection<Group>>(items) {}
+    ;
   }
 
   //~--- get methods ----------------------------------------------------------

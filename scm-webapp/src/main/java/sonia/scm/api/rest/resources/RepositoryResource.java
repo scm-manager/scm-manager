@@ -58,6 +58,7 @@ import java.util.Collection;
 import javax.servlet.http.HttpServletRequest;
 
 import javax.ws.rs.Path;
+import javax.ws.rs.core.GenericEntity;
 
 /**
  *
@@ -98,6 +99,22 @@ public class RepositoryResource
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param items
+   *
+   * @return
+   */
+  @Override
+  protected GenericEntity<Collection<Repository>> createGenericEntity(
+          Collection<Repository> items)
+  {
+    return new GenericEntity<Collection<Repository>>(items) {}
+    ;
+  }
 
   /**
    * Method description

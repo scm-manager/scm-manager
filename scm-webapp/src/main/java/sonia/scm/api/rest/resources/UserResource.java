@@ -50,6 +50,7 @@ import sonia.scm.util.Util;
 import java.util.Collection;
 
 import javax.ws.rs.Path;
+import javax.ws.rs.core.GenericEntity;
 
 /**
  *
@@ -84,6 +85,22 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param items
+   *
+   * @return
+   */
+  @Override
+  protected GenericEntity<Collection<User>> createGenericEntity(
+          Collection<User> items)
+  {
+    return new GenericEntity<Collection<User>>(items) {}
+    ;
+  }
 
   /**
    * Method description

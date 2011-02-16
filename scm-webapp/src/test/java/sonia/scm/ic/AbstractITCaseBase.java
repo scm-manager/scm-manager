@@ -46,7 +46,6 @@ import static org.junit.Assert.*;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.client.apache.ApacheHttpClient;
 import com.sun.jersey.client.apache.config.ApacheHttpClientConfig;
 import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
@@ -65,7 +64,10 @@ public class AbstractITCaseBase
 
   /** Field description */
   public static final String BASE_URL =
-    "http://localhost:8081/scm-webapp/api/rest/";
+    "http://localhost:8080/scm-webapp/api/rest/";
+
+  /** Field description */
+  public static final String EXTENSION = ".xml";
 
   //~--- methods --------------------------------------------------------------
 
@@ -103,7 +105,7 @@ public class AbstractITCaseBase
    */
   protected Client createClient()
   {
-    ClientConfig config = new DefaultApacheHttpClientConfig();
+    DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
 
     config.getProperties().put(ApacheHttpClientConfig.PROPERTY_HANDLE_COOKIES,
                                true);
@@ -122,7 +124,7 @@ public class AbstractITCaseBase
    */
   protected WebResource createResource(Client client, String url)
   {
-    return client.resource(BASE_URL.concat(url));
+    return client.resource(BASE_URL.concat(url).concat(EXTENSION));
   }
 
   /**
@@ -138,7 +140,7 @@ public class AbstractITCaseBase
   protected ClientResponse login(Client client, String username,
                                  String password)
   {
-    WebResource wr = createResource(client, "authentication/login.json");
+    WebResource wr = createResource(client, "authentication/login");
     MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
 
     formData.add("username", username);
@@ -156,7 +158,7 @@ public class AbstractITCaseBase
    */
   protected void logout(Client client)
   {
-    WebResource wr = createResource(client, "authentication/logout.json");
+    WebResource wr = createResource(client, "authentication/logout");
     ClientResponse response = wr.get(ClientResponse.class);
 
     assertNotNull(response);

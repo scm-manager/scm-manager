@@ -60,6 +60,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.EntityTag;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
@@ -92,6 +93,19 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   {
     this.manager = manager;
   }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param items
+   *
+   * @return
+   */
+  protected abstract GenericEntity<Collection<T>> createGenericEntity(
+          Collection<T> items);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -271,14 +285,15 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     }
 
     Response response = null;
+    Object entity = createGenericEntity(items);
 
     if (disableCache)
     {
-      response = Response.ok(items).build();
+      response = Response.ok(entity).build();
     }
     else
     {
-      response = createCacheResponse(request, manager, items);
+      response = createCacheResponse(request, manager, entity);
     }
 
     return response;
