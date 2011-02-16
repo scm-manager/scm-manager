@@ -206,12 +206,14 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *  @param name
    *  @param item
    *
+   *
+   * @return
    */
   @PUT
   @Path("{id}")
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public void update(@Context UriInfo uriInfo, @PathParam("id") String name,
-                     T item)
+  public Response update(@Context UriInfo uriInfo,
+                         @PathParam("id") String name, T item)
   {
     preUpate(item);
 
@@ -223,6 +225,8 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     {
       throw new WebApplicationException(ex);
     }
+
+    return Response.noContent().build();
   }
 
   //~--- get methods ----------------------------------------------------------
