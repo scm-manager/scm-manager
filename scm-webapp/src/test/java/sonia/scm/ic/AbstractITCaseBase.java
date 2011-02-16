@@ -65,7 +65,7 @@ public class AbstractITCaseBase
 
   /** Field description */
   public static final String BASE_URL =
-    "http://localhost:8080/scm-webapp/api/rest/";
+    "http://localhost:8081/scm-webapp/api/rest/";
 
   //~--- methods --------------------------------------------------------------
 

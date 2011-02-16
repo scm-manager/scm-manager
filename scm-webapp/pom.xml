@@ -386,6 +386,12 @@
                   <value>target/scm-it</value>
                 </systemProperty>
               </systemProperties>
+              <connectors>
+                <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                  <port>8081</port>
+                  <maxIdleTime>60000</maxIdleTime>
+                </connector>
+             </connectors>
               <source>${project.build.javaLevel}</source>
               <target>${project.build.javaLevel}</target>
               <encoding>${project.build.sourceEncoding}</encoding>
