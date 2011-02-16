@@ -37,8 +37,7 @@ package sonia.scm.it;
 
 import org.junit.Test;
 
-import sonia.scm.user.User;
-import sonia.scm.user.UserTestData;
+import sonia.scm.group.Group;
 
 import static org.junit.Assert.*;
 
@@ -48,15 +47,15 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
+import java.util.ArrayList;
 import java.util.Collection;
-
-import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class UserITCase extends AbstractAdminITCaseBase
+public class GroupITCase extends AbstractAdminITCaseBase
 {
 
   /**
@@ -66,10 +65,18 @@ public class UserITCase extends AbstractAdminITCaseBase
   @Test
   public void create()
   {
-    User slarti = UserTestData.createSlarti();
+    Group group = new Group();
 
-    slarti.setPassword("slarti123");
-    createUser(slarti);
+    group.setName("group-a");
+    group.setDescription("group a");
+
+    List<String> members = new ArrayList<String>();
+
+    members.add("slarti");
+    members.add("marvin");
+    members.add("dent");
+    group.setMembers(members);
+    createGroup(group);
   }
 
   /**
@@ -79,10 +86,18 @@ public class UserITCase extends AbstractAdminITCaseBase
   @Test
   public void delete()
   {
-    User dent = UserTestData.createDent();
+    Group group = new Group();
 
-    createUser(dent);
-    deleteUser(dent);
+    group.setName("group-b");
+    group.setDescription("group b");
+
+    List<String> members = new ArrayList<String>();
+
+    members.add("slarti");
+    members.add("dent");
+    group.setMembers(members);
+    createGroup(group);
+    deleteGroup(group.getName());
   }
 
   /**
@@ -92,39 +107,29 @@ public class UserITCase extends AbstractAdminITCaseBase
   @Test
   public void modify()
   {
-    User marvin = UserTestData.createMarvin();
+    Group group = new Group();
 
-    createUser(marvin);
-    marvin = getUser(marvin.getName());
-    marvin.setDisplayName("Paranoid Android");
+    group.setName("group-d");
+    group.setDescription("group d");
+    createGroup(group);
+    group = getGroup(group.getName());
+    group.setDescription("GROUP D");
 
-    WebResource wr = createResource(client, "users/".concat(marvin.getName()));
-    ClientResponse response =
-      wr.type(MediaType.APPLICATION_XML).put(ClientResponse.class, marvin);
+    WebResource wr = createResource(client, "groups/group-d");
+    ClientResponse response = wr.put(ClientResponse.class, group);
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 204);
 
-    User other = getUser(marvin.getName());
+    Group other = getGroup("group-d");
 
-    assertEquals(marvin.getDisplayName(), other.getDisplayName());
+    assertEquals(group.getName(), other.getName());
+    assertEquals(group.getDescription(), other.getDescription());
     assertNotNull(other.getLastModified());
-    deleteUser(marvin);
+    deleteGroup(other.getName());
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void get()
-  {
-    User scmadmin = getUser("scmadmin");
-
-    testAdmin(scmadmin);
-  }
 
   /**
    * Method description
@@ -133,30 +138,33 @@ public class UserITCase extends AbstractAdminITCaseBase
   @Test
   public void getAll()
   {
-    WebResource wr = createResource(client, "users");
-    ClientResponse respone = wr.get(ClientResponse.class);
+    Group group = new Group();
 
-    assertNotNull(respone);
-    assertTrue(respone.getStatus() == 200);
+    group.setName("group-c");
+    createGroup(group);
 
-    Collection<User> users =
-      respone.getEntity(new GenericType<Collection<User>>() {}
+    WebResource wr = createResource(client, "groups");
+    ClientResponse response = wr.get(ClientResponse.class);
+    Collection<Group> groups =
+      response.getEntity(new GenericType<Collection<Group>>() {}
     );
 
-    assertNotNull(users);
-    assertFalse(users.isEmpty());
+    assertNotNull(groups);
+    assertFalse(groups.isEmpty());
 
-    User admin = null;
+    Group groupC = null;
 
-    for (User user : users)
+    for (Group g : groups)
     {
-      if (user.getName().equals("scmadmin"))
+      if (g.getName().equals("group-c"))
       {
-        admin = user;
+        groupC = g;
       }
     }
 
-    testAdmin(admin);
+    assertNotNull(groupC);
+    assertNotNull(groupC.getCreationDate());
+    assertNotNull(groupC.getType());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -165,23 +173,24 @@ public class UserITCase extends AbstractAdminITCaseBase
    * Method description
    *
    *
-   * @param user
+   * @param group
    */
-  private void createUser(User user)
+  private void createGroup(Group group)
   {
-    WebResource wr = createResource(client, "users");
-    ClientResponse response =
-      wr.type(MediaType.APPLICATION_XML).post(ClientResponse.class, user);
+    WebResource wr = createResource(client, "groups");
+    ClientResponse response = wr.post(ClientResponse.class, group);
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 201);
 
-    User other = getUser(user.getName());
+    Group other = getGroup(group.getName());
 
-    assertEquals(user.getName(), other.getName());
-    assertEquals(user.getDisplayName(), other.getDisplayName());
-    assertEquals(user.getMail(), other.getMail());
+    assertNotNull(other);
     assertNotNull(other.getType());
+    assertEquals(group.getName(), other.getName());
+    assertEquals(group.getDescription(), other.getDescription());
+    assertArrayEquals(group.getMembers().toArray(new String[0]),
+                      other.getMembers().toArray(new String[0]));
     assertNotNull(other.getCreationDate());
   }
 
@@ -189,28 +198,15 @@ public class UserITCase extends AbstractAdminITCaseBase
    * Method description
    *
    *
-   * @param user
+   * @param name
    */
-  private void deleteUser(User user)
+  private void deleteGroup(String name)
   {
-    WebResource wr = createResource(client, "users/".concat(user.getName()));
-    ClientResponse respone = wr.delete(ClientResponse.class);
+    WebResource wr = createResource(client, "groups/".concat(name));
+    ClientResponse response = wr.delete(ClientResponse.class);
 
-    assertNotNull(respone);
-    assertTrue(respone.getStatus() == 204);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   */
-  private void testAdmin(User user)
-  {
-    assertNotNull(user);
-    assertEquals(user.getName(), "scmadmin");
-    assertTrue(user.isAdmin());
+    assertNotNull(response);
+    assertTrue(response.getStatus() == 204);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -219,22 +215,22 @@ public class UserITCase extends AbstractAdminITCaseBase
    * Method description
    *
    *
-   * @param username
+   * @param groupname
    *
    * @return
    */
-  private User getUser(String username)
+  private Group getGroup(String groupname)
   {
-    WebResource wr = createResource(client, "users/".concat(username));
-    ClientResponse respone = wr.get(ClientResponse.class);
+    WebResource wr = createResource(client, "groups/".concat(groupname));
+    ClientResponse response = wr.get(ClientResponse.class);
 
-    assertNotNull(respone);
-    assertTrue(respone.getStatus() == 200);
+    assertNotNull(response);
 
-    User user = respone.getEntity(User.class);
+    Group group = response.getEntity(Group.class);
 
-    assertNotNull(user);
+    assertNotNull(group);
+    assertEquals(group.getName(), groupname);
 
-    return user;
+    return group;
   }
 }
