@@ -243,7 +243,7 @@
 
   <properties>
     <environment.profile>default</environment.profile>
-    <aether.version>1.9</aether.version>
+    <aether.version>1.10.1</aether.version>
     <wagon.version>1.0-beta-7</wagon.version>
     <maven.version>3.0.2</maven.version>
   </properties>
