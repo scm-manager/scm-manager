@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.ic;
+package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 

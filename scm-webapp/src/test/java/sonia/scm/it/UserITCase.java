@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.ic;
+package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -40,6 +40,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sonia.scm.user.User;
+import sonia.scm.user.UserTestData;
 
 import static org.junit.Assert.*;
 
@@ -52,12 +53,40 @@ import com.sun.jersey.api.client.WebResource;
 
 import java.util.Collection;
 
+import javax.ws.rs.core.MediaType;
+
 /**
  *
  * @author Sebastian Sdorra
  */
 public class UserITCase extends AbstractITCaseBase
 {
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void create()
+  {
+    User slarti = UserTestData.createSlarti();
+
+    slarti.setPassword("slarti123");
+    createUser(slarti);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void delete()
+  {
+    User dent = UserTestData.createDent();
+
+    createUser(dent);
+    deleteUser(dent);
+  }
 
   /**
    * Method description
@@ -80,6 +109,32 @@ public class UserITCase extends AbstractITCaseBase
     logout(client);
   }
 
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void modify()
+  {
+    User marvin = UserTestData.createMarvin();
+
+    createUser(marvin);
+    marvin = getUser(marvin.getName());
+    marvin.setDisplayName("Paranoid Android");
+
+    WebResource wr = createResource(client, "users/".concat(marvin.getName()));
+    ClientResponse response =
+      wr.type(MediaType.APPLICATION_XML).put(ClientResponse.class, marvin);
+
+    assertNotNull(response);
+
+    // assertTrue( response.getStatus() == 204 );
+    User other = getUser(marvin.getName());
+
+    assertEquals(marvin.getDisplayName(), other.getDisplayName());
+    deleteUser(marvin);
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -89,20 +144,14 @@ public class UserITCase extends AbstractITCaseBase
   @Test
   public void get()
   {
-    WebResource wr = createResource(client, "users/scmadmin");
-    ClientResponse respone = wr.get(ClientResponse.class);
+    User scmadmin = getUser("scmadmin");
 
-    assertNotNull(respone);
-    assertTrue(respone.getStatus() == 200);
-
-    User user = respone.getEntity(User.class);
-
-    testAdmin(user);
+    testAdmin(scmadmin);
   }
 
   /**
    * Method description
-   * 
+   *
    */
   @Test
   public void getAll()
@@ -141,11 +190,75 @@ public class UserITCase extends AbstractITCaseBase
    *
    * @param user
    */
+  private void createUser(User user)
+  {
+    WebResource wr = createResource(client, "users");
+    ClientResponse response =
+      wr.type(MediaType.APPLICATION_XML).post(ClientResponse.class, user);
+
+    assertNotNull(response);
+    assertTrue(response.getStatus() == 201);
+
+    User other = getUser(user.getName());
+
+    assertEquals(user.getName(), other.getName());
+    assertEquals(user.getDisplayName(), other.getDisplayName());
+    assertEquals(user.getMail(), other.getMail());
+    assertNotNull(other.getType());
+    assertNotNull(other.getCreationDate());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   */
+  private void deleteUser(User user)
+  {
+    WebResource wr = createResource(client, "users/".concat(user.getName()));
+    ClientResponse respone = wr.delete(ClientResponse.class);
+
+    assertNotNull(respone);
+    assertTrue(respone.getStatus() == 204);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   */
   private void testAdmin(User user)
   {
     assertNotNull(user);
     assertEquals(user.getName(), "scmadmin");
     assertTrue(user.isAdmin());
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param username
+   *
+   * @return
+   */
+  private User getUser(String username)
+  {
+    WebResource wr = createResource(client, "users/".concat(username));
+    ClientResponse respone = wr.get(ClientResponse.class);
+
+    assertNotNull(respone);
+    assertTrue(respone.getStatus() == 200);
+
+    User user = respone.getEntity(User.class);
+
+    assertNotNull(user);
+
+    return user;
   }
 
   //~--- fields ---------------------------------------------------------------
