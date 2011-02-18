@@ -46,11 +46,56 @@ public class RepositoryTestData
    *
    * @return
    */
+  public static Repository create42Puzzle()
+  {
+    return create42Puzzle(DummyRepositoryHandler.TYPE_NAME);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   *
+   * @return
+   */
+  public static Repository create42Puzzle(String type)
+  {
+    Repository repository = new Repository();
+
+    repository.setType(type);
+    repository.setContact("douglas.adams@hitchhiker.com");
+    repository.setName("42Puzzle");
+    repository.setDescription("The 42 Puzzle");
+
+    return repository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public static Repository createHappyVerticalPeopleTransporter()
+  {
+    return createHappyVerticalPeopleTransporter(
+        DummyRepositoryHandler.TYPE_NAME);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param type
+   * @return
+   */
+  public static Repository createHappyVerticalPeopleTransporter(String type)
   {
     Repository happyVerticalPeopleTransporter = new Repository();
 
-    happyVerticalPeopleTransporter.setType(DummyRepositoryHandler.TYPE_NAME);
+    happyVerticalPeopleTransporter.setType(type);
     happyVerticalPeopleTransporter.setContact(
         "zaphod.beeblebrox@hitchhiker.com");
     happyVerticalPeopleTransporter.setName("happyVerticalPeopleTransporter");
@@ -70,9 +115,22 @@ public class RepositoryTestData
    */
   public static Repository createHeartOfGold()
   {
+    return createHeartOfGold(DummyRepositoryHandler.TYPE_NAME);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param type
+   * @return
+   */
+  public static Repository createHeartOfGold(String type)
+  {
     Repository heartOfGold = new Repository();
 
-    heartOfGold.setType(DummyRepositoryHandler.TYPE_NAME);
+    heartOfGold.setType(type);
     heartOfGold.setContact("zaphod.beeblebrox@hitchhiker.com");
     heartOfGold.setName("HeartOfGold");
     heartOfGold.setDescription(

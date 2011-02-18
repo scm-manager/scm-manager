@@ -69,6 +69,9 @@ public class AbstractITCaseBase
   /** Field description */
   public static final String EXTENSION = ".xml";
 
+  /** Field description */
+  public static final String REPOSITORYTEST_TYPE = "git";
+
   //~--- methods --------------------------------------------------------------
 
   /**
