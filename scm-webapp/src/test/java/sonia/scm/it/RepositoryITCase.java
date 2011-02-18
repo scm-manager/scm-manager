@@ -236,6 +236,10 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 204);
+    wr = createResource(client, "repositories/".concat(id));
+    response = wr.get(ClientResponse.class);
+    assertNotNull(response);
+    assertTrue(response.getStatus() == 404);
   }
 
   //~--- get methods ----------------------------------------------------------

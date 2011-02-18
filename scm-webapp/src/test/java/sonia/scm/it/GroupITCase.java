@@ -207,6 +207,13 @@ public class GroupITCase extends AbstractAdminITCaseBase
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 204);
+
+
+    wr = createResource(client, "groups/".concat(name));
+    response = wr.get(ClientResponse.class);
+
+    assertNotNull(response);
+    assertTrue(response.getStatus() == 404);
   }
 
   //~--- get methods ----------------------------------------------------------

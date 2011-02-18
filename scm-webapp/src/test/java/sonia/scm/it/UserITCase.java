@@ -194,10 +194,14 @@ public class UserITCase extends AbstractAdminITCaseBase
   private void deleteUser(User user)
   {
     WebResource wr = createResource(client, "users/".concat(user.getName()));
-    ClientResponse respone = wr.delete(ClientResponse.class);
+    ClientResponse response = wr.delete(ClientResponse.class);
 
-    assertNotNull(respone);
-    assertTrue(respone.getStatus() == 204);
+    assertNotNull(response);
+    assertTrue(response.getStatus() == 204);
+    wr = createResource(client, "users/".concat(user.getName()));
+    response = wr.get(ClientResponse.class);
+    assertNotNull(response);
+    assertTrue(response.getStatus() == 404);
   }
 
   /**
