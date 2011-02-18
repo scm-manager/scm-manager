@@ -298,11 +298,22 @@ public class BasicSecurityContext implements WebSecurityContext
    */
   private boolean isAdmin()
   {
-    boolean result = configuration.getAdminUsers().contains(user.getName());
+    boolean result = false;
+    Set<String> adminUsers = configuration.getAdminUsers();
+
+    if (adminUsers != null)
+    {
+      result = adminUsers.contains(user.getName());
+    }
 
     if (!result)
     {
-      result = Util.containsOne(configuration.getAdminGroups(), groups);
+      Set<String> adminGroups = configuration.getAdminGroups();
+
+      if (adminGroups != null)
+      {
+        result = Util.containsOne(adminGroups, groups);
+      }
     }
 
     return result;
