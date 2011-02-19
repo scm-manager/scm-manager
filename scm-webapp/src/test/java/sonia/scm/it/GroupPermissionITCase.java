@@ -35,18 +35,28 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import sonia.scm.user.User;
-import sonia.scm.user.UserTestData;
+import sonia.scm.group.Group;
+
+import static org.junit.Assert.*;
+
+import static sonia.scm.it.IntegrationTestUtil.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @RunWith(Parameterized.class)
-public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
+public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
 {
 
   /**
@@ -55,9 +65,33 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
    *
    * @param credentials
    */
-  public UserPermissionITCase(Credentials credentials)
+  public GroupPermissionITCase(Credentials credentials)
   {
     super(credentials);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @BeforeClass
+  public static void createTestGroup()
+  {
+    Group testGroup = new Group("xml", "test-group");
+    Client client = createClient();
+
+    authenticateAdmin(client);
+
+    WebResource wr = createResource(client, "groups");
+    ClientResponse response = wr.post(ClientResponse.class, testGroup);
+
+    assertNotNull(response);
+    assertTrue(response.getStatus() == 201);
+    response.close();
+    logoutClient(client);
+    client.destroy();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -71,7 +105,7 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
   @Override
   protected String getBasePath()
   {
-    return "users";
+    return "groups";
   }
 
   /**
@@ -81,9 +115,9 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
    * @return
    */
   @Override
-  protected User getCreateItem()
+  protected Group getCreateItem()
   {
-    return UserTestData.createZaphod();
+    return new Group("xml", "create-test-group");
   }
 
   /**
@@ -95,7 +129,7 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
   @Override
   protected String getDeletePath()
   {
-    return "users/scmadmin";
+    return "groups/test-group";
   }
 
   /**
@@ -107,7 +141,7 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
   @Override
   protected String getGetPath()
   {
-    return "users/scmadmin";
+    return "groups/test-group";
   }
 
   /**
@@ -117,16 +151,9 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
    * @return
    */
   @Override
-  protected User getModifyItem()
+  protected Group getModifyItem()
   {
-    User user = new User("scmadmin", "SCM Administrator",
-                         "scm-admin@scm-manager.org");
-
-    user.setPassword("hallo123");
-    user.setAdmin(true);
-    user.setType("xml");
-
-    return user;
+    return new Group("xml", "test-group", "dent", "zaphod", "trillian");
   }
 
   /**
@@ -138,6 +165,6 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
   @Override
   protected String getModifyPath()
   {
-    return "users/scmadmin";
+    return "groups/test-group";
   }
 }

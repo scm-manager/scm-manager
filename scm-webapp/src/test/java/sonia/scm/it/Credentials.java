@@ -35,29 +35,32 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
-import sonia.scm.user.User;
-import sonia.scm.user.UserTestData;
+import sonia.scm.util.Util;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@RunWith(Parameterized.class)
-public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
+public class Credentials
 {
 
   /**
    * Constructs ...
    *
-   *
-   * @param credentials
    */
-  public UserPermissionITCase(Credentials credentials)
+  public Credentials() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param username
+   * @param password
+   */
+  public Credentials(String username, String password)
   {
-    super(credentials);
+    this.password = password;
+    this.username = username;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -68,10 +71,9 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
    *
    * @return
    */
-  @Override
-  protected String getBasePath()
+  public String getPassword()
   {
-    return "users";
+    return password;
   }
 
   /**
@@ -80,10 +82,9 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
    *
    * @return
    */
-  @Override
-  protected User getCreateItem()
+  public String getUsername()
   {
-    return UserTestData.createZaphod();
+    return username;
   }
 
   /**
@@ -92,52 +93,16 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
    *
    * @return
    */
-  @Override
-  protected String getDeletePath()
+  public boolean isAnonymous()
   {
-    return "users/scmadmin";
+    return Util.isEmpty(username) && Util.isEmpty(password);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected String getGetPath()
-  {
-    return "users/scmadmin";
-  }
+  //~--- fields ---------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected User getModifyItem()
-  {
-    User user = new User("scmadmin", "SCM Administrator",
-                         "scm-admin@scm-manager.org");
+  /** Field description */
+  private String password;
 
-    user.setPassword("hallo123");
-    user.setAdmin(true);
-    user.setType("xml");
-
-    return user;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected String getModifyPath()
-  {
-    return "users/scmadmin";
-  }
+  /** Field description */
+  private String username;
 }
