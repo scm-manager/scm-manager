@@ -36,6 +36,7 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.security.EncryptionHandler;
@@ -43,7 +44,9 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -51,6 +54,8 @@ import java.util.Collection;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -75,13 +80,35 @@ public class UserResource extends AbstractManagerResource<User, UserException>
    *
    * @param userManager
    * @param encryptionHandler
+   * @param securityContextProvider
    */
   @Inject
   public UserResource(UserManager userManager,
-                      EncryptionHandler encryptionHandler)
+                      EncryptionHandler encryptionHandler,
+                      Provider<WebSecurityContext> securityContextProvider)
   {
     super(userManager);
     this.encryptionHandler = encryptionHandler;
+    this.securityContextProvider = securityContextProvider;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param id
+   *
+   * @return
+   */
+  @Override
+  public Response get(Request request, String id)
+  {
+    SecurityUtil.assertIsAdmin(securityContextProvider);
+
+    return super.get(request, id);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -224,4 +251,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
 
   /** Field description */
   private EncryptionHandler encryptionHandler;
+
+  /** Field description */
+  private Provider<WebSecurityContext> securityContextProvider;
 }

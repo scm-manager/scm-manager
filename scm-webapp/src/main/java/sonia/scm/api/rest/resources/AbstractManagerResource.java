@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.LastModifiedAware;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -56,7 +57,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.EntityTag;
@@ -145,20 +145,27 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   {
     preCreate(item);
 
+    Response response = null;
+
     try
     {
       manager.create(item);
+      response = Response.created(
+        uriInfo.getAbsolutePath().resolve(
+          getPathPart().concat("/").concat(getId(item)))).build();
+    }
+    catch (ScmSecurityException ex)
+    {
+      logger.warn("create is not allowd", ex);
+      response = Response.status(Response.Status.FORBIDDEN).build();
     }
     catch (Exception ex)
     {
       logger.error("error during create", ex);
-
-      throw new WebApplicationException(ex);
+      response = Response.serverError().build();
     }
 
-    return Response.created(
-        uriInfo.getAbsolutePath().resolve(
-          getPathPart().concat("/").concat(getId(item)))).build();
+    return response;
   }
 
   /**
@@ -173,27 +180,32 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   @Path("{id}")
   public Response delete(@PathParam("id") String name)
   {
+    Response response = null;
     T item = manager.get(name);
 
-    if (item == null)
+    if (item != null)
     {
-      throw new WebApplicationException(Response.Status.NOT_FOUND);
+      preDelete(item);
+
+      try
+      {
+        manager.delete(item);
+        response = Response.noContent().build();
+      }
+      catch (ScmSecurityException ex)
+      {
+        logger.warn("delete not allowd", ex);
+        response = Response.status(Response.Status.FORBIDDEN).build();
+      }
+      catch (Exception ex)
+      {
+        logger.error("error during create", ex);
+        logger.error("error during create", ex);
+        response = Response.serverError().build();
+      }
     }
 
-    preDelete(item);
-
-    try
-    {
-      manager.delete(item);
-    }
-    catch (Exception ex)
-    {
-      logger.error("error during create", ex);
-
-      throw new WebApplicationException(ex);
-    }
-
-    return Response.noContent().build();
+    return response;
   }
 
   /**
@@ -215,18 +227,28 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   public Response update(@Context UriInfo uriInfo,
                          @PathParam("id") String name, T item)
   {
+    Response response = null;
+
     preUpate(item);
 
     try
     {
       manager.modify(item);
+      response = Response.noContent().build();
+    }
+    catch (ScmSecurityException ex)
+    {
+      logger.warn("delete not allowd", ex);
+      response = Response.status(Response.Status.FORBIDDEN).build();
     }
     catch (Exception ex)
     {
-      throw new WebApplicationException(ex);
+      logger.error("error during create", ex);
+      logger.error("error during create", ex);
+      response = Response.serverError().build();
     }
 
-    return Response.noContent().build();
+    return response;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -246,24 +268,25 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response get(@Context Request request, @PathParam("id") String id)
   {
+    Response response = null;
     T item = manager.get(id);
 
-    if (item == null)
+    if (item != null)
     {
-      throw new WebApplicationException(Response.Status.NOT_FOUND);
-    }
+      prepareForReturn(item);
 
-    prepareForReturn(item);
-
-    Response response = null;
-
-    if (disableCache)
-    {
-      response = Response.ok(item).build();
+      if (disableCache)
+      {
+        response = Response.ok(item).build();
+      }
+      else
+      {
+        response = createCacheResponse(request, item, item);
+      }
     }
     else
     {
-      response = createCacheResponse(request, item, item);
+      response = Response.status(Response.Status.NOT_FOUND).build();
     }
 
     return response;
