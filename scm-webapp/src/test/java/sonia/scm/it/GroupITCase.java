@@ -120,6 +120,7 @@ public class GroupITCase extends AbstractAdminITCaseBase
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 204);
+    response.close();
 
     Group other = getGroup("group-d");
 
@@ -149,6 +150,7 @@ public class GroupITCase extends AbstractAdminITCaseBase
       response.getEntity(new GenericType<Collection<Group>>() {}
     );
 
+    response.close();
     assertNotNull(groups);
     assertFalse(groups.isEmpty());
 
@@ -182,6 +184,7 @@ public class GroupITCase extends AbstractAdminITCaseBase
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 201);
+    response.close();
 
     Group other = getGroup(group.getName());
 
@@ -207,13 +210,12 @@ public class GroupITCase extends AbstractAdminITCaseBase
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 204);
-
-
+    response.close();
     wr = createResource(client, "groups/".concat(name));
     response = wr.get(ClientResponse.class);
-
     assertNotNull(response);
     assertTrue(response.getStatus() == 404);
+    response.close();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -235,6 +237,7 @@ public class GroupITCase extends AbstractAdminITCaseBase
 
     Group group = response.getEntity(Group.class);
 
+    response.close();
     assertNotNull(group);
     assertEquals(group.getName(), groupname);
 

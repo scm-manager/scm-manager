@@ -164,6 +164,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 204);
+    response.close();
 
     Repository other = getRepositoryById(repository.getId());
 
@@ -195,6 +196,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
       response.getEntity(new GenericType<Collection<Repository>>() {}
     );
 
+    response.close();
     assertNotNull(repositories);
     assertFalse(repositories.isEmpty());
 
@@ -248,6 +250,9 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
     assertTrue(response.getStatus() == 201);
 
     String url = response.getHeaders().get("Location").get(0);
+
+    response.close();
+
     Repository other = getRepository(url);
 
     assertNotNull(other);
@@ -272,10 +277,12 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 204);
+    response.close();
     wr = createResource(client, "repositories/".concat(id));
     response = wr.get(ClientResponse.class);
     assertNotNull(response);
     assertTrue(response.getStatus() == 404);
+    response.close();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -299,6 +306,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
 
     Repository repository = response.getEntity(Repository.class);
 
+    response.close();
     assertNotNull(repository);
 
     return repository;
@@ -324,6 +332,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
 
     Repository repository = response.getEntity(Repository.class);
 
+    response.close();
     assertNotNull(repository);
 
     return repository;

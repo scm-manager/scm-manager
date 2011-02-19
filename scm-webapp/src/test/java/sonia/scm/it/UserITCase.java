@@ -104,6 +104,7 @@ public class UserITCase extends AbstractAdminITCaseBase
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 204);
+    response.close();
 
     User other = getUser(marvin.getName());
 
@@ -134,15 +135,16 @@ public class UserITCase extends AbstractAdminITCaseBase
   public void getAll()
   {
     WebResource wr = createResource(client, "users");
-    ClientResponse respone = wr.get(ClientResponse.class);
+    ClientResponse response = wr.get(ClientResponse.class);
 
-    assertNotNull(respone);
-    assertTrue(respone.getStatus() == 200);
+    assertNotNull(response);
+    assertTrue(response.getStatus() == 200);
 
     Collection<User> users =
-      respone.getEntity(new GenericType<Collection<User>>() {}
+      response.getEntity(new GenericType<Collection<User>>() {}
     );
 
+    response.close();
     assertNotNull(users);
     assertFalse(users.isEmpty());
 
@@ -175,6 +177,7 @@ public class UserITCase extends AbstractAdminITCaseBase
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 201);
+    response.close();
 
     User other = getUser(user.getName());
 
@@ -198,10 +201,12 @@ public class UserITCase extends AbstractAdminITCaseBase
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 204);
+    response.close();
     wr = createResource(client, "users/".concat(user.getName()));
     response = wr.get(ClientResponse.class);
     assertNotNull(response);
     assertTrue(response.getStatus() == 404);
+    response.close();
   }
 
   /**
@@ -230,13 +235,14 @@ public class UserITCase extends AbstractAdminITCaseBase
   private User getUser(String username)
   {
     WebResource wr = createResource(client, "users/".concat(username));
-    ClientResponse respone = wr.get(ClientResponse.class);
+    ClientResponse response = wr.get(ClientResponse.class);
 
-    assertNotNull(respone);
-    assertTrue(respone.getStatus() == 200);
+    assertNotNull(response);
+    assertTrue(response.getStatus() == 200);
 
-    User user = respone.getEntity(User.class);
+    User user = response.getEntity(User.class);
 
+    response.close();
     assertNotNull(user);
 
     return user;

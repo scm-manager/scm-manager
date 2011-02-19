@@ -76,6 +76,7 @@ public class AuthenticationITCase extends AbstractITCaseBase
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 401);
+    response.close();
   }
 
   /**
