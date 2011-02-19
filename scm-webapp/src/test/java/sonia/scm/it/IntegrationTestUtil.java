@@ -59,7 +59,7 @@ import javax.ws.rs.core.MultivaluedMap;
  *
  * @author Sebastian Sdorra
  */
-public class AbstractITCaseBase
+public class IntegrationTestUtil
 {
 
   /** Field description */
@@ -76,10 +76,33 @@ public class AbstractITCaseBase
    *
    *
    * @param client
+   * @param username
+   * @param password
+   *
+   * @return
    */
-  protected void adminLogin(Client client)
+  public static ClientResponse authenticate(Client client, String username,
+          String password)
   {
-    ClientResponse cr = login(client, "scmadmin", "scmadmin");
+    WebResource wr = createResource(client, "authentication/login");
+    MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
+
+    formData.add("username", username);
+    formData.add("password", password);
+
+    return wr.type("application/x-www-form-urlencoded").post(
+        ClientResponse.class, formData);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param client
+   */
+  public static void authenticateAdmin(Client client)
+  {
+    ClientResponse cr = authenticate(client, "scmadmin", "scmadmin");
     ScmState state = cr.getEntity(ScmState.class);
 
     cr.close();
@@ -104,7 +127,7 @@ public class AbstractITCaseBase
    *
    * @return
    */
-  protected Client createClient()
+  public static Client createClient()
   {
     DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
 
@@ -123,7 +146,7 @@ public class AbstractITCaseBase
    *
    * @return
    */
-  protected WebResource createResource(Client client, String url)
+  public static WebResource createResource(Client client, String url)
   {
     return client.resource(BASE_URL.concat(url).concat(EXTENSION));
   }
@@ -133,31 +156,8 @@ public class AbstractITCaseBase
    *
    *
    * @param client
-   * @param username
-   * @param password
-   *
-   * @return
    */
-  protected ClientResponse login(Client client, String username,
-                                 String password)
-  {
-    WebResource wr = createResource(client, "authentication/login");
-    MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
-
-    formData.add("username", username);
-    formData.add("password", password);
-
-    return wr.type("application/x-www-form-urlencoded").post(
-        ClientResponse.class, formData);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param client
-   */
-  protected void logout(Client client)
+  public static void logoutClient(Client client)
   {
     WebResource wr = createResource(client, "authentication/logout");
     ClientResponse response = wr.get(ClientResponse.class);

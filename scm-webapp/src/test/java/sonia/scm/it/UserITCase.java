@@ -37,13 +37,18 @@ package sonia.scm.it;
 
 import org.junit.Test;
 
+import sonia.scm.ScmState;
+import sonia.scm.Type;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
 import static org.junit.Assert.*;
 
+import static sonia.scm.it.IntegrationTestUtil.*;
+
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
@@ -162,6 +167,33 @@ public class UserITCase extends AbstractAdminITCaseBase
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param client
+   */
+  protected void adminLogin(Client client)
+  {
+    ClientResponse cr = authenticate(client, "scmadmin", "scmadmin");
+    ScmState state = cr.getEntity(ScmState.class);
+
+    cr.close();
+    assertNotNull(state);
+    assertTrue(state.isSuccess());
+
+    User user = state.getUser();
+
+    assertNotNull(user);
+    assertEquals(user.getName(), "scmadmin");
+    assertTrue(user.isAdmin());
+
+    Collection<Type> types = state.getRepositoryTypes();
+
+    assertNotNull(types);
+    assertFalse(types.isEmpty());
+  }
 
   /**
    * Method description

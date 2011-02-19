@@ -39,6 +39,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import static sonia.scm.it.IntegrationTestUtil.*;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.client.Client;
@@ -48,7 +50,7 @@ import com.sun.jersey.api.client.ClientResponse;
  *
  * @author Sebastian Sdorra
  */
-public class AuthenticationITCase extends AbstractITCaseBase
+public class AuthenticationITCase
 {
 
   /**
@@ -61,7 +63,7 @@ public class AuthenticationITCase extends AbstractITCaseBase
   {
     Client client = createClient();
 
-    adminLogin(client);
+    authenticateAdmin(client);
   }
 
   /**
@@ -72,7 +74,7 @@ public class AuthenticationITCase extends AbstractITCaseBase
   public void testLoginFailed()
   {
     Client client = createClient();
-    ClientResponse response = login(client, "dent", "trillian");
+    ClientResponse response = authenticate(client, "dent", "trillian");
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 401);
@@ -88,7 +90,7 @@ public class AuthenticationITCase extends AbstractITCaseBase
   {
     Client client = createClient();
 
-    adminLogin(client);
-    logout(client);
+    authenticateAdmin(client);
+    logoutClient(client);
   }
 }

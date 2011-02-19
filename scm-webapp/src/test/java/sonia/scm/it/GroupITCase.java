@@ -41,6 +41,8 @@ import sonia.scm.group.Group;
 
 import static org.junit.Assert.*;
 
+import static sonia.scm.it.IntegrationTestUtil.*;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.client.ClientResponse;

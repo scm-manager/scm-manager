@@ -48,6 +48,8 @@ import sonia.scm.util.IOUtil;
 
 import static org.junit.Assert.*;
 
+import static sonia.scm.it.IntegrationTestUtil.*;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.client.ClientResponse;

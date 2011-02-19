@@ -38,6 +38,8 @@ package sonia.scm.it;
 import org.junit.After;
 import org.junit.Before;
 
+import static sonia.scm.it.IntegrationTestUtil.*;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.client.Client;
@@ -46,7 +48,7 @@ import com.sun.jersey.api.client.Client;
  *
  * @author Sebastian Sdorra
  */
-public class AbstractAdminITCaseBase extends AbstractITCaseBase
+public class AbstractAdminITCaseBase
 {
 
   /**
@@ -57,7 +59,7 @@ public class AbstractAdminITCaseBase extends AbstractITCaseBase
   public void login()
   {
     client = createClient();
-    adminLogin(client);
+    authenticateAdmin(client);
   }
 
   /**
@@ -67,7 +69,7 @@ public class AbstractAdminITCaseBase extends AbstractITCaseBase
   @After
   public void logout()
   {
-    logout(client);
+    logoutClient(client);
   }
 
   //~--- fields ---------------------------------------------------------------
