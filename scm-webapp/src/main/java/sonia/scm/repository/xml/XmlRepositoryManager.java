@@ -55,12 +55,11 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHandlerNotFoundException;
 import sonia.scm.security.ScmSecurityException;
-import sonia.scm.security.SecurityContext;
 import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
-import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.SecurityUtil;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -158,7 +157,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
                   repository.getType());
     }
 
-    assertIsAdmin();
+    SecurityUtil.assertIsAdmin(securityContextProvider);
     AssertUtil.assertIsValid(repository);
 
     if (repositoryDB.contains(repository))
@@ -494,20 +493,6 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * Method description
    *
    *
-   * @throws RepositoryException
-   */
-  private void assertIsAdmin() throws RepositoryException
-  {
-    if (!getCurrentUser().isAdmin())
-    {
-      throw new RepositoryException("admin permsission required");
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param repository
    */
   private void assertIsOwner(Repository repository)
@@ -539,25 +524,6 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private User getCurrentUser()
-  {
-    SecurityContext context = securityContextProvider.get();
-
-    AssertUtil.assertIsNotNull(context);
-
-    User user = context.getUser();
-
-    AssertUtil.assertIsNotNull(user);
-
-    return user;
-  }
 
   /**
    * Method description
