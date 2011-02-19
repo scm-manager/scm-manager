@@ -36,11 +36,15 @@ package sonia.scm.it;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.util.IOUtil;
 
 import static org.junit.Assert.*;
 
@@ -50,6 +54,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -57,8 +62,44 @@ import java.util.Collection;
  *
  * @author Sebastian Sdorra
  */
+@RunWith(Parameterized.class)
 public class RepositoryITCase extends AbstractAdminITCaseBase
 {
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param repositoryType
+   */
+  public RepositoryITCase(String repositoryType)
+  {
+    this.repositoryType = repositoryType;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Parameters
+  public static Collection<String[]> createParameters()
+  {
+    Collection<String[]> params = new ArrayList<String[]>();
+
+    params.add(new String[] { "git" });
+    params.add(new String[] { "svn" });
+
+    if (IOUtil.search("hg") != null)
+    {
+      params.add(new String[] { "hg" });
+    }
+
+    return params;
+  }
 
   /**
    * Method description
@@ -68,7 +109,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   public void create()
   {
     Repository repository =
-      RepositoryTestData.createHeartOfGold(REPOSITORYTEST_TYPE);
+      RepositoryTestData.createHeartOfGold(repositoryType);
 
     createRepository(repository);
   }
@@ -81,8 +122,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   public void delete()
   {
     Repository repository =
-      RepositoryTestData.createHappyVerticalPeopleTransporter(
-          REPOSITORYTEST_TYPE);
+      RepositoryTestData.createHappyVerticalPeopleTransporter(repositoryType);
 
     repository = createRepository(repository);
     deleteRepository(repository.getId());
@@ -96,8 +136,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   // @Test
   public void doubleCreate()
   {
-    Repository repository =
-      RepositoryTestData.create42Puzzle(REPOSITORYTEST_TYPE);
+    Repository repository = RepositoryTestData.create42Puzzle(repositoryType);
 
     repository = createRepository(repository);
 
@@ -112,8 +151,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   public void modify()
   {
     Repository repository =
-      RepositoryTestData.createHappyVerticalPeopleTransporter(
-          REPOSITORYTEST_TYPE);
+      RepositoryTestData.createHappyVerticalPeopleTransporter(repositoryType);
 
     repository = createRepository(repository);
     repository.setPermissions(Arrays.asList(new Permission("dent",
@@ -143,8 +181,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   public void getAll()
   {
     Repository repository =
-      RepositoryTestData.createHappyVerticalPeopleTransporter(
-          REPOSITORYTEST_TYPE);
+      RepositoryTestData.createHappyVerticalPeopleTransporter(repositoryType);
 
     repository = createRepository(repository);
 
@@ -208,7 +245,6 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
     ClientResponse response = wr.post(ClientResponse.class, repository);
 
     assertNotNull(response);
-    System.out.println(response.getStatus());
     assertTrue(response.getStatus() == 201);
 
     String url = response.getHeaders().get("Location").get(0);
@@ -292,4 +328,9 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
 
     return repository;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String repositoryType;
 }

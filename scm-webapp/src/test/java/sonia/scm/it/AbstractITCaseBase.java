@@ -69,9 +69,6 @@ public class AbstractITCaseBase
   /** Field description */
   public static final String EXTENSION = ".xml";
 
-  /** Field description */
-  public static final String REPOSITORYTEST_TYPE = "git";
-
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -85,6 +82,7 @@ public class AbstractITCaseBase
     ClientResponse cr = login(client, "scmadmin", "scmadmin");
     ScmState state = cr.getEntity(ScmState.class);
 
+    cr.close();
     assertNotNull(state);
     assertTrue(state.isSuccess());
 
@@ -166,5 +164,7 @@ public class AbstractITCaseBase
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 200);
+    response.close();
+    client.destroy();
   }
 }
