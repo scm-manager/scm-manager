@@ -106,9 +106,18 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   @Override
   public Response get(Request request, String id)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvider);
+    Response response = null;
 
-    return super.get(request, id);
+    if (SecurityUtil.isAdmin(securityContextProvider))
+    {
+      response = super.get(request, id);
+    }
+    else
+    {
+      response = Response.status(Response.Status.FORBIDDEN).build();
+    }
+
+    return response;
   }
 
   //~--- methods --------------------------------------------------------------

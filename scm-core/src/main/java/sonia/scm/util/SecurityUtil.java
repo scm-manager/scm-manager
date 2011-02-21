@@ -150,6 +150,36 @@ public class SecurityUtil
    *
    * @return
    */
+  public static boolean isAdmin(
+          Provider<? extends SecurityContext> contextProvider)
+  {
+    return isAdmin(contextProvider.get());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param contextProvider
+   *
+   * @return
+   */
+  public static boolean isAdmin(SecurityContext contextProvider)
+  {
+    AssertUtil.assertIsNotNull(contextProvider);
+
+    return (contextProvider.getUser() != null)
+           && contextProvider.getUser().isAdmin();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param contextProvider
+   *
+   * @return
+   */
   public static boolean isAnonymous(
           Provider<? extends SecurityContext> contextProvider)
   {

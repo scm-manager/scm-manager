@@ -36,11 +36,14 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
+import sonia.scm.util.SecurityUtil;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -48,6 +51,8 @@ import java.util.Collection;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -68,12 +73,44 @@ public class GroupResource
    * Constructs ...
    *
    *
+   *
+   * @param securityContextProvider
    * @param groupManager
    */
   @Inject
-  public GroupResource(GroupManager groupManager)
+  public GroupResource(Provider<WebSecurityContext> securityContextProvider,
+                       GroupManager groupManager)
   {
     super(groupManager);
+    this.securityContextProvider = securityContextProvider;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param id
+   *
+   * @return
+   */
+  @Override
+  public Response get(Request request, String id)
+  {
+    Response response = null;
+
+    if (SecurityUtil.isAdmin(securityContextProvider))
+    {
+      response = super.get(request, id);
+    }
+    else
+    {
+      response = Response.status(Response.Status.FORBIDDEN).build();
+    }
+
+    return response;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -121,4 +158,9 @@ public class GroupResource
   {
     return PATH_PART;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Provider<WebSecurityContext> securityContextProvider;
 }
