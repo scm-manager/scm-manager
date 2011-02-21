@@ -35,6 +35,7 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -118,6 +119,20 @@ public class RepositorySimplePermissionITCase
     assertNotNull(REPOSITORY_UUID);
     response.close();
     logoutClient(client);
+    client.destroy();
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @AfterClass
+  public static void removeTestRepoistory()
+  {
+    Client client = createClient();
+
+    authenticateAdmin(client);
+    createResource(client, "repositories/" + REPOSITORY_UUID).delete();
     client.destroy();
   }
 

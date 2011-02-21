@@ -35,6 +35,7 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -59,14 +60,6 @@ import com.sun.jersey.api.client.WebResource;
 public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
 {
 
-  /***
-   *
-   *
-   * Group get failed ????
-   *
-   *
-   */
-
   /**
    * Constructs ...
    *
@@ -79,6 +72,20 @@ public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @AfterClass
+  public static void cleanup()
+  {
+    Client client = createClient();
+
+    authenticateAdmin(client);
+    createResource(client, "groups/test-group").delete();
+    client.destroy();
+  }
 
   /**
    * Method description

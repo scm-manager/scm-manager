@@ -35,6 +35,7 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -52,6 +53,7 @@ import static sonia.scm.it.IntegrationTestUtil.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
@@ -80,6 +82,33 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @AfterClass
+  public static void cleanup()
+  {
+    Client client = createClient();
+
+    authenticateAdmin(client);
+
+    Collection<Repository> repositories =
+      createResource(client, "repositories").get(
+          new GenericType<Collection<Repository>>() {}
+    );
+
+    if (repositories != null)
+    {
+      for (Repository r : repositories)
+      {
+        createResource(client, "repositories/" + r.getId()).delete();
+      }
+    }
+
+    client.destroy();
+  }
 
   /**
    * Method description

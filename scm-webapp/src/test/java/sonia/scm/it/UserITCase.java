@@ -35,6 +35,7 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import sonia.scm.ScmState;
@@ -63,6 +64,20 @@ import javax.ws.rs.core.MediaType;
  */
 public class UserITCase extends AbstractAdminITCaseBase
 {
+
+  /**
+   * Method description
+   *
+   */
+  @AfterClass
+  public static void cleanup()
+  {
+    Client client = createClient();
+
+    authenticateAdmin(client);
+    createResource(client, "users/slarti").delete();
+    client.destroy();
+  }
 
   /**
    * Method description

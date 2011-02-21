@@ -35,6 +35,7 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import sonia.scm.group.Group;
@@ -45,6 +46,7 @@ import static sonia.scm.it.IntegrationTestUtil.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
@@ -59,6 +61,21 @@ import java.util.List;
  */
 public class GroupITCase extends AbstractAdminITCaseBase
 {
+
+  /**
+   * Method description
+   *
+   */
+  @AfterClass
+  public static void cleanup()
+  {
+    Client client = createClient();
+
+    authenticateAdmin(client);
+    createResource(client, "groups/group-a").delete();
+    createResource(client, "groups/group-c").delete();
+    client.destroy();
+  }
 
   /**
    * Method description

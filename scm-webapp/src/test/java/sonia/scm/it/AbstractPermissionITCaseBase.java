@@ -36,7 +36,9 @@ package sonia.scm.it;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
@@ -65,11 +67,6 @@ import java.util.Collection;
 public abstract class AbstractPermissionITCaseBase<T>
 {
 
-  /** Field description */
-  public static User TESTUSER = null;
-
-  //~--- constructors ---------------------------------------------------------
-
   /**
    * Constructs ...
    *
@@ -96,46 +93,53 @@ public abstract class AbstractPermissionITCaseBase<T>
     Collection<Credentials[]> params = new ArrayList<Credentials[]>();
 
     params.add(new Credentials[] { new Credentials() });
-
-    User dent = getTestUser();
-
     params.add(new Credentials[] {
-      new Credentials(dent.getName(), dent.getPassword()) });
+      new Credentials("trillian", "a.trillian124") });
 
     return params;
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @return
    */
-  private static User getTestUser()
+  @BeforeClass
+  public static void createTestUser()
   {
-    if (TESTUSER == null)
-    {
-      TESTUSER = UserTestData.createTrillian();
-      TESTUSER.setPassword("a.trillian124");
+    User trillian = UserTestData.createTrillian();
 
-      Client client = createClient();
+    trillian.setPassword("a.trillian124");
 
-      authenticateAdmin(client);
+    Client client = createClient();
 
-      WebResource wr = createResource(client, "users");
-      ClientResponse response = wr.post(ClientResponse.class, TESTUSER);
+    authenticateAdmin(client);
 
-      assertNotNull(response);
-      assertTrue(response.getStatus() == 201);
-      response.close();
-      logoutClient(client);
-      client.destroy();
-    }
+    WebResource wr = createResource(client, "users");
+    ClientResponse response = wr.post(ClientResponse.class, trillian);
 
-    return TESTUSER;
+    assertNotNull(response);
+    assertTrue(response.getStatus() == 201);
+    response.close();
+    logoutClient(client);
+    client.destroy();
   }
+
+  /**
+   * Method description
+   *
+   */
+  @AfterClass
+  public static void removeTestUser()
+  {
+    Client client = createClient();
+
+    authenticateAdmin(client);
+    createResource(client, "users/trillian").delete();
+    client.destroy();
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
