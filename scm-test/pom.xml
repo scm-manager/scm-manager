@@ -47,6 +47,18 @@
       <version>${slf4j.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.eclipse.jgit</groupId>
+      <artifactId>org.eclipse.jgit</artifactId>
+      <version>0.10.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.jcraft</groupId>
+      <artifactId>jsch</artifactId>
+      <version>0.1.42</version>
+    </dependency>
+
   </dependencies>
   
 </project>
