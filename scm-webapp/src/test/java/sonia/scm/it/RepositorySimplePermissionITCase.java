@@ -39,7 +39,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import sonia.scm.group.Group;
+import sonia.scm.repository.Repository;
 
 import static org.junit.Assert.*;
 
@@ -49,23 +49,24 @@ import static sonia.scm.it.IntegrationTestUtil.*;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
+
+import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @RunWith(Parameterized.class)
-public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
+public class RepositorySimplePermissionITCase
+        extends AbstractPermissionITCaseBase<Repository>
 {
 
-  /***
-   *
-   *
-   * Group get failed ????
-   *
-   *
-   */
+  /** Field description */
+  private static String REPOSITORY_UUID;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -73,7 +74,7 @@ public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
    *
    * @param credentials
    */
-  public GroupPermissionITCase(Credentials credentials)
+  public RepositorySimplePermissionITCase(Credentials credentials)
   {
     super(credentials);
   }
@@ -85,21 +86,80 @@ public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
    *
    */
   @BeforeClass
-  public static void createTestGroup()
+  public static void createTestRepository()
   {
-    Group testGroup = new Group("xml", "test-group");
+    Repository repository = new Repository();
+
+    repository.setName("test-repo");
+    repository.setType("git");
+    repository.setPublicReadable(false);
+
     Client client = createClient();
 
     authenticateAdmin(client);
 
-    WebResource wr = createResource(client, "groups");
-    ClientResponse response = wr.post(ClientResponse.class, testGroup);
+    WebResource wr = createResource(client, "repositories");
+    ClientResponse response = wr.post(ClientResponse.class, repository);
 
     assertNotNull(response);
     assertTrue(response.getStatus() == 201);
+
+    String repositoryUrl = response.getHeaders().getFirst("Location");
+
+    assertNotNull(repositoryUrl);
+    response.close();
+    wr = client.resource(repositoryUrl);
+    response = wr.get(ClientResponse.class);
+    assertNotNull(response);
+    assertTrue(response.getStatus() == 200);
+    repository = response.getEntity(Repository.class);
+    assertNotNull(repository);
+    REPOSITORY_UUID = repository.getId();
+    assertNotNull(REPOSITORY_UUID);
     response.close();
     logoutClient(client);
     client.destroy();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   */
+  @Override
+  protected void checkGetAllResponse(ClientResponse response)
+  {
+    if (!credentials.isAnonymous())
+    {
+      assertNotNull(response);
+      assertTrue(response.getStatus() == 200);
+
+      Collection<Repository> repositories =
+        response.getEntity(new GenericType<Collection<Repository>>() {}
+      );
+
+      assertNotNull(repositories);
+      assertTrue(repositories.isEmpty());
+      response.close();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   */
+  @Override
+  protected void checkGetResponse(ClientResponse response)
+  {
+    if (!credentials.isAnonymous())
+    {
+      assertNotNull(response);
+      assertTrue(response.getStatus() == 403);
+      response.close();
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -113,7 +173,7 @@ public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
   @Override
   protected String getBasePath()
   {
-    return "groups";
+    return "repositories";
   }
 
   /**
@@ -123,9 +183,14 @@ public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
    * @return
    */
   @Override
-  protected Group getCreateItem()
+  protected Repository getCreateItem()
   {
-    return new Group("xml", "create-test-group");
+    Repository repository = new Repository();
+
+    repository.setName("create-test-repo");
+    repository.setType("svn");
+
+    return repository;
   }
 
   /**
@@ -137,7 +202,7 @@ public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
   @Override
   protected String getDeletePath()
   {
-    return "groups/test-group";
+    return "repositories/".concat(REPOSITORY_UUID);
   }
 
   /**
@@ -149,7 +214,7 @@ public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
   @Override
   protected String getGetPath()
   {
-    return "groups/test-group";
+    return "repositories/".concat(REPOSITORY_UUID);
   }
 
   /**
@@ -159,9 +224,15 @@ public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
    * @return
    */
   @Override
-  protected Group getModifyItem()
+  protected Repository getModifyItem()
   {
-    return new Group("xml", "test-group", "dent", "zaphod", "trillian");
+    Repository repository = new Repository();
+
+    repository.setName("test-repo");
+    repository.setType("git");
+    repository.setDescription("Test Repository");
+
+    return repository;
   }
 
   /**
@@ -173,6 +244,6 @@ public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
   @Override
   protected String getModifyPath()
   {
-    return "groups/test-group";
+    return "repositories/".concat(REPOSITORY_UUID);
   }
 }

@@ -254,9 +254,9 @@ public abstract class AbstractPermissionITCaseBase<T>
   @Test
   public void get()
   {
-    WebResource wr = createResource(client, getBasePath());
+    WebResource wr = createResource(client, getGetPath());
 
-    checkResponse(wr.get(ClientResponse.class));
+    checkGetResponse(wr.get(ClientResponse.class));
   }
 
   /**
@@ -268,10 +268,32 @@ public abstract class AbstractPermissionITCaseBase<T>
   {
     WebResource wr = createResource(client, getBasePath());
 
-    checkResponse(wr.get(ClientResponse.class));
+    checkGetAllResponse(wr.get(ClientResponse.class));
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   */
+  protected void checkGetAllResponse(ClientResponse response)
+  {
+    checkResponse(response);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   */
+  protected void checkGetResponse(ClientResponse response)
+  {
+    checkResponse(response);
+  }
 
   /**
    * Method description
@@ -326,5 +348,5 @@ public abstract class AbstractPermissionITCaseBase<T>
   protected Client client;
 
   /** Field description */
-  private Credentials credentials;
+  protected Credentials credentials;
 }
