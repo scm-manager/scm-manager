@@ -127,6 +127,21 @@ public class IntegrationTestUtil
    *
    * @return
    */
+  public static Client createAdminClient()
+  {
+    Client client = createClient();
+
+    authenticateAdmin(client);
+
+    return client;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public static Client createClient()
   {
     DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
