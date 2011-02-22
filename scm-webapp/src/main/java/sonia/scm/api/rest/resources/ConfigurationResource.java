@@ -99,9 +99,20 @@ public class ConfigurationResource
    */
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public ScmConfiguration getConfiguration()
+  public Response getConfiguration()
   {
-    return configuration;
+    Response response = null;
+
+    if (SecurityUtil.isAdmin(securityContextProvider))
+    {
+      response = Response.ok(configuration).build();
+    }
+    else
+    {
+      response = Response.status(Response.Status.FORBIDDEN).build();
+    }
+
+    return response;
   }
 
   //~--- set methods ----------------------------------------------------------

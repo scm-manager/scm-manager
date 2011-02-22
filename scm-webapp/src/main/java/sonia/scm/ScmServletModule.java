@@ -44,6 +44,7 @@ import sonia.scm.api.rest.UriExtensionsConfig;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.EhCacheManager;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.filter.AdminSecurityFilter;
 import sonia.scm.filter.GZipFilter;
 import sonia.scm.filter.SSLFilter;
 import sonia.scm.filter.SecurityFilter;
@@ -98,7 +99,15 @@ public class ScmServletModule extends ServletModule
 {
 
   /** Field description */
+  public static final String[] PATTERN_ADMIN = new String[] {
+                                                 "/api/rest/groups*",
+          "/api/rest/users*", "/api/rest/plguins*" };
+
+  /** Field description */
   public static final String PATTERN_ALL = "/*";
+
+  /** Field description */
+  public static final String PATTERN_CONFIG = "/api/rest/config*";
 
   /** Field description */
   public static final String PATTERN_DEBUG = "/debug.html";
@@ -210,6 +219,7 @@ public class ScmServletModule extends ServletModule
     filter(PATTERN_ALL).through(SSLFilter.class);
     filterRegex(RESOURCE_REGEX).through(GZipFilter.class);
     filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(SecurityFilter.class);
+    filter(PATTERN_CONFIG, PATTERN_ADMIN).through(AdminSecurityFilter.class);
 
     // debug servlet
     serve(PATTERN_DEBUG).with(DebugServlet.class);
