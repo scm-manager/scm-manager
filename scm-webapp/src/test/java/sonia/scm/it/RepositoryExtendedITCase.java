@@ -138,9 +138,13 @@ public class RepositoryExtendedITCase
   public static Collection<Object[]> createParameters()
   {
     Collection<Object[]> params = new ArrayList<Object[]>();
-    Repository repository = createRepository("git", "trillian");
+    Repository gitRepository = createRepository("git", "trillian");
 
-    params.add(new Object[] { repository, "trillian", "secret" });
+    params.add(new Object[] { gitRepository, "trillian", "secret" });
+
+    Repository svnRepository = createRepository("svn", "trillian");
+
+    params.add(new Object[] { svnRepository, "trillian", "secret" });
 
     return params;
   }

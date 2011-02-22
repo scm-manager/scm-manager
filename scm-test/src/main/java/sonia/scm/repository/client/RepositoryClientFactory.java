@@ -91,6 +91,11 @@ public class RepositoryClientFactory
         client = new GitRepositoryClient(localRepository, remoteRepository,
                                          username, password);
       }
+      else if ("svn".equals(type))
+      {
+        client = new SvnRepositoryClient(localRepository, remoteRepository,
+                                         username, password);
+      }
     }
     catch (Exception ex)
     {

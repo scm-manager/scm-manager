@@ -56,6 +56,14 @@ public interface RepositoryClient
    * Method description
    *
    *
+   * @throws RepositoryClientException
+   */
+  public void checkout() throws RepositoryClientException;
+
+  /**
+   * Method description
+   *
+   *
    * @param message
    *
    * @throws RepositoryClientException
@@ -66,27 +74,7 @@ public interface RepositoryClient
    * Method description
    *
    *
-   * @param file
-   * @param others
-   *
-   * @throws RepositoryClientException
-   */
-  public void delete(String file, String... others)
-          throws RepositoryClientException;
-
-  /**
-   * Method description
-   *
-   *
    * @throws RepositoryClientException
    */
   public void init() throws RepositoryClientException;
-
-  /**
-   * Method description
-   *
-   *
-   * @throws RepositoryClientException
-   */
-  public void checkout() throws RepositoryClientException;
 }

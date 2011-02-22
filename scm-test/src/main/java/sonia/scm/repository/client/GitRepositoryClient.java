@@ -39,7 +39,6 @@ import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.GitCommand;
-import org.eclipse.jgit.api.RmCommand;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheCheckout;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
@@ -217,34 +216,6 @@ public class GitRepositoryClient implements RepositoryClient
     {
       throw new RepositoryClientException(ex);
     }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   * @param others
-   *
-   * @throws RepositoryClientException
-   */
-  @Override
-  public void delete(String file, String... others)
-          throws RepositoryClientException
-  {
-    RmCommand cmd = new Git(repository).rm();
-
-    cmd = cmd.addFilepattern(file);
-
-    if (others != null)
-    {
-      for (String f : others)
-      {
-        cmd = cmd.addFilepattern(f);
-      }
-    }
-
-    callCommand(cmd);
   }
 
   /**
@@ -452,7 +423,4 @@ public class GitRepositoryClient implements RepositoryClient
 
   /** Field description */
   private URIish uri;
-
-  /** Field description */
-  private String username;
 }
