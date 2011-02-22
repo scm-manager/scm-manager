@@ -96,6 +96,11 @@ public class RepositoryClientFactory
         client = new SvnRepositoryClient(localRepository, remoteRepository,
                                          username, password);
       }
+      else if ("hg".equals(type))
+      {
+        client = new HgRepositoryClient(localRepository, remoteRepository,
+                                        username, password);
+      }
     }
     catch (Exception ex)
     {

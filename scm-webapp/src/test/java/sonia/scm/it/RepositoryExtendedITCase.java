@@ -146,6 +146,13 @@ public class RepositoryExtendedITCase
 
     params.add(new Object[] { svnRepository, "trillian", "secret" });
 
+    if (IOUtil.search("hg") != null)
+    {
+      Repository hgRepository = createRepository("hg", "trillian");
+
+      params.add(new Object[] { hgRepository, "trillian", "secret" });
+    }
+
     return params;
   }
 
