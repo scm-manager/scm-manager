@@ -111,11 +111,11 @@ public class SecurityFilter extends HttpFilter
         }
         else if (securityContext.isAuthenticated())
         {
-          response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+          response.sendError(HttpServletResponse.SC_FORBIDDEN);
         }
         else
         {
-          response.sendError(HttpServletResponse.SC_FORBIDDEN);
+          response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         }
       }
       else
