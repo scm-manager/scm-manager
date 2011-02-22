@@ -88,5 +88,5 @@ public interface RepositoryClient
    *
    * @throws RepositoryClientException
    */
-  public void update() throws RepositoryClientException;
+  public void checkout() throws RepositoryClientException;
 }
