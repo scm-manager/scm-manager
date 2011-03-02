@@ -14,23 +14,45 @@
   <artifactId>scm-server</artifactId>
   <version>1.1-SNAPSHOT</version>
   <name>scm-server</name>
-  <packaging>pom</packaging>
+  <packaging>jar</packaging>
 
   <dependencies>
 
     <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-server-api</artifactId>
-      <version>1.1-SNAPSHOT</version>
+      <groupId>commons-daemon</groupId>
+      <artifactId>commons-daemon</artifactId>
+      <version>1.0.5</version>
     </dependency>
 
     <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-server-jetty</artifactId>
-      <version>1.1-SNAPSHOT</version>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-server</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-webapp</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-jmx</artifactId>
+      <version>${jetty.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-ajp</artifactId>
+      <version>${jetty.version}</version>
     </dependency>
 
   </dependencies>
+
+  <properties>
+    <jetty.version>7.3.0.v20110203</jetty.version>
+  </properties>
 
   <build>
 
@@ -39,102 +61,48 @@
       <plugin>
         <groupId>sonia.maven</groupId>
         <artifactId>appassembler-maven-plugin</artifactId>
-        <version>1.1</version>
+        <version>1.2-SNAPSHOT</version>
         <executions>
           <execution>
-            <id>scm-jsw</id>
-            <!--
+            <id>scm-app</id>
             <phase>package</phase>
             <goals>
               <goal>create-repository</goal>
               <goal>generate-daemons</goal>
             </goals>
-            -->
             <configuration>
               <target>${project.build.directory}/appassembler</target>
-              <assembleDirectory>${project.build.directory}/appassembler/jsw/scm-server</assembleDirectory>
+              <assembleDirectory>${project.build.directory}/appassembler/commons-daemon/scm-server</assembleDirectory>
               <repoPath>lib</repoPath>
               <repositoryLayout>flat</repositoryLayout>
               <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
-
               <daemons>
                 <daemon>
-                  <id>scm-server</id>
-                  <mainClass>sonia.scm.server.ServerApplication</mainClass>
-                  <platforms>
-                    <platform>jsw</platform>
-                  </platforms>
-                  <version>3.5.7</version>
 
-                  <jvmSettings>
-                    <initialMemorySize>256m</initialMemorySize>
-                    <maxMemorySize>256m</maxMemorySize>
-                  </jvmSettings>
+                  <id>scm-server</id>
+                  <mainClass>sonia.scm.server.ScmServerDaemon</mainClass>
+                  <platforms>
+                    <platform>commons-daemon</platform>
+                  </platforms>
+
 
                   <generatorConfigurations>
                     <generatorConfiguration>
-                      <generator>jsw</generator>
-                      <includes>
-                        <include>linux-x86-32</include>
-                        <include>linux-x86-64</include>
-                        <include>macosx-x86-universal-32</include>
-                        <include>macosx-x86-universal-64</include>
-                        <include>solaris-sparc-32</include>
-                        <include>solaris-sparc-64</include>
-                        <include>solaris-x86-32</include>
-                        <include>solaris-x86-64</include>
-                        <include>windows-x86-32</include>
-                      </includes>
+
+                      <generator>commons-daemon</generator>
                       <configuration>
                         <property>
-                          <name>configuration.directory.in.classpath.first</name>
+                          <name>configuration.directory</name>
                           <value>conf</value>
                         </property>
-                        <property>
-                          <name>set.default.REPO_DIR</name>
-                          <value>lib</value>
-                        </property>
-                        <property>
-                          <name>app.base.libexec</name>
-                          <value>libexec</value>
-                        </property>
-                        <property>
-                          <name>wrapper.logfile</name>
-                          <value>logs/wrapper.log</value>
-                        </property>
                       </configuration>
+
                     </generatorConfiguration>
                   </generatorConfigurations>
 
                 </daemon>
               </daemons>
 
-            </configuration>
-          </execution>
-          <execution>
-            <id>scm-app</id>
-            <phase>package</phase>
-            <goals>
-              <goal>assemble</goal>
-            </goals>
-            <configuration>
-              <assembleDirectory>${project.build.directory}/appassembler/app/scm-server</assembleDirectory>
-              <repositoryName>lib</repositoryName>
-              <repositoryLayout>flat</repositoryLayout>
-              <showConsoleWindow>true</showConsoleWindow>
-              <!--
-              <extraJvmArguments>-Xms256m -Xmx256m</extraJvmArguments>
-              -->
-              <configurationDirectory>conf</configurationDirectory>
-              <copyConfigurationDirectory>true</copyConfigurationDirectory>
-              <configurationSourceDirectory>src/main/conf</configurationSourceDirectory>
-              <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
-              <programs>
-                <program>
-                  <mainClass>sonia.scm.server.ServerApplication</mainClass>
-                  <name>scm-server</name>
-                </program>
-              </programs>
             </configuration>
           </execution>
         </executions>
@@ -152,22 +120,12 @@
             </goals>
             <configuration>
               <artifactItems>
-                <!--
                 <artifactItem>
                   <groupId>${project.groupId}</groupId>
                   <artifactId>scm-webapp</artifactId>
                   <version>${project.version}</version>
                   <type>war</type>
-                  <outputDirectory>${project.build.directory}/appassembler/jsw/scm-server/webapp</outputDirectory>
-                  <destFileName>scm-webapp.war</destFileName>
-                </artifactItem>
-                -->
-                <artifactItem>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>scm-webapp</artifactId>
-                  <version>${project.version}</version>
-                  <type>war</type>
-                  <outputDirectory>${project.build.directory}/appassembler/app/scm-server/webapp</outputDirectory>
+                  <outputDirectory>${project.build.directory}/appassembler/commons-daemon/scm-server/var/webapp</outputDirectory>
                   <destFileName>scm-webapp.war</destFileName>
                 </artifactItem>
               </artifactItems>
@@ -182,9 +140,6 @@
         <version>2.2</version>
         <configuration>
           <descriptors>
-            <!--
-            <descriptor>src/main/assembly/scm-server-jsw.xml</descriptor>
-            -->
             <descriptor>src/main/assembly/scm-server-app.xml</descriptor>
           </descriptors>
         </configuration>

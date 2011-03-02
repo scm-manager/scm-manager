@@ -29,96 +29,118 @@
  *
  */
 
+
+
 package sonia.scm.server;
 
-//~--- JDK imports ------------------------------------------------------------
+//~--- non-JDK imports --------------------------------------------------------
 
-import javax.xml.bind.annotation.XmlRootElement;
+import org.apache.commons.daemon.Daemon;
+import org.apache.commons.daemon.DaemonContext;
+import org.apache.commons.daemon.DaemonInitException;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "app-info")
-public class ApplicationInformation
+public class ScmServerDaemon implements Daemon
 {
 
+  /** Field description */
+  private static volatile ScmServer webserver = new ScmServer();
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
    *
-   * @return
+   * @param args
    */
-  public String getAppName()
+  public static void main(String[] args)
   {
-    return appName;
+    webserver.run();
   }
 
   /**
    * Method description
    *
    *
-   * @return
+   * @param args
+   *
+   * @throws Exception
    */
-  public String getName()
+  public static void start(String[] args) throws Exception
   {
-    return name;
+    webserver.start();
   }
 
   /**
    * Method description
    *
    *
-   * @return
-   */
-  public String getVersion()
-  {
-    return version;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
+   * @param args
    *
-   *
-   * @param appName
+   * @throws Exception
    */
-  public void setAppName(String appName)
+  public static void stop(String[] args) throws Exception
   {
-    this.appName = appName;
+    webserver.stopServer();
+    webserver.join(2000l);
   }
 
   /**
    * Method description
    *
-   *
-   * @param name
    */
-  public void setName(String name)
+  @Override
+  public void destroy()
   {
-    this.name = name;
+
+    // do nothing
   }
 
   /**
    * Method description
    *
    *
-   * @param version
+   * @param context
+   *
+   * @throws DaemonInitException
+   * @throws Exception
    */
-  public void setVersion(String version)
+  @Override
+  public void init(DaemonContext context) throws DaemonInitException, Exception
   {
-    this.version = version;
+    daemonArgs = context.getArguments();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws Exception
+   */
+  @Override
+  public void start() throws Exception
+  {
+    start(daemonArgs);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws Exception
+   */
+  @Override
+  public void stop() throws Exception
+  {
+    stop(daemonArgs);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String appName;
-
-  /** Field description */
-  private String name;
-
-  /** Field description */
-  private String version;
+  private String[] daemonArgs;
 }

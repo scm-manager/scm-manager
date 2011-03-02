@@ -48,35 +48,30 @@
   <fileSets>
 
     <fileSet>
-      <directory>target/appassembler/app/scm-server/bin</directory>
+      <directory>target/appassembler/commons-daemon/scm-server/bin</directory>
       <filtered>false</filtered>
       <outputDirectory>bin</outputDirectory>
       <directoryMode>0755</directoryMode>
     </fileSet>
 
     <fileSet>
-      <directory>target/appassembler/app/scm-server/conf</directory>
-      <filtered>true</filtered>
+      <directory>target/appassembler/commons-daemon/scm-server</directory>
+      <filtered>false</filtered>
+      <outputDirectory></outputDirectory>
+    </fileSet>
+
+    <fileSet>
+      <directory>src/main/conf</directory>
+      <filtered>false</filtered>
       <outputDirectory>conf</outputDirectory>
-    </fileSet>
-
-    <fileSet>
-      <directory>target/appassembler/app/scm-server/lib</directory>
-      <filtered>false</filtered>
-      <outputDirectory>lib</outputDirectory>
-    </fileSet>
-
-    <fileSet>
-      <directory>target/appassembler/app/scm-server/webapp</directory>
-      <filtered>false</filtered>
-      <outputDirectory>webapp</outputDirectory>
     </fileSet>
 
     <fileSet>
       <directory>src/main/docroot</directory>
       <filtered>false</filtered>
-      <outputDirectory>webapp/docroot</outputDirectory>
+      <outputDirectory>var/webapp/docroot</outputDirectory>
     </fileSet>
+
     
   </fileSets>
   

@@ -31,152 +31,94 @@
 
 
 
-package sonia.scm.server.jetty;
+package sonia.scm.server;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.xml.XmlConfiguration;
-
-import sonia.scm.server.Server;
-import sonia.scm.server.ServerAllreadyRunningException;
-import sonia.scm.server.ServerException;
-import sonia.scm.server.ServerListener;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
-
 import java.net.URL;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JettyServer implements Server
+public class ScmServer extends Thread
 {
 
   /** Field description */
   public static final String CONFIGURATION = "/server-config.xml";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  public ScmServer()
+  {
+    URL configURL = ScmServer.class.getResource(CONFIGURATION);
+
+    if (configURL == null)
+    {
+      throw new ScmServerException("could not find server-config.xml");
+    }
+
+    server = new org.eclipse.jetty.server.Server();
+
+    try
+    {
+      XmlConfiguration config = new XmlConfiguration(configURL);
+
+      config.configure(server);
+    }
+    catch (Exception ex)
+    {
+      throw new ScmServerException("error during server configuration", ex);
+    }
+  }
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
-   *
-   * @param listener
    */
   @Override
-  public void addListener(ServerListener listener)
+  public void run()
   {
-    listeners.add(listener);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param listener
-   */
-  @Override
-  public void removeListener(ServerListener listener)
-  {
-    listeners.remove(listener);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param webapp
-   *
-   * @throws IOException
-   * @throws ServerException
-   */
-  @Override
-  public void start(File webapp) throws ServerException, IOException
-  {
-    if (isRunning())
-    {
-      throw new ServerAllreadyRunningException();
-    }
-
-    URL configURL = JettyServer.class.getResource(CONFIGURATION);
-
-    if (configURL == null)
-    {
-      throw new ServerException("could not find server-config.xml");
-    }
-
     try
     {
-      server = new org.eclipse.jetty.server.Server();
-
-      XmlConfiguration config = new XmlConfiguration(configURL);
-
-      config.configure(server);
-
-      for (ServerListener listener : listeners)
-      {
-        server.addLifeCycleListener(new JettyServerListenerAdapter(listener));
-      }
-
-      // server.setStopAtShutdown(true);
       server.start();
       server.join();
     }
     catch (Exception ex)
     {
-      throw new ServerException(ex);
+      throw new RuntimeException(ex);
     }
   }
 
   /**
    * Method description
    *
-   *
-   * @throws IOException
-   * @throws ServerException
    */
-  @Override
-  public void stop() throws ServerException, IOException
+  public void stopServer()
   {
-    if (isRunning())
+    try
     {
-      try
-      {
-        server.stop();
-      }
-      catch (Exception ex)
-      {
-        throw new ServerException(ex);
-      }
+      server.setStopAtShutdown(true);
     }
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public boolean isRunning()
-  {
-    return server != null;
+    catch (Exception ex)
+    {
+      ex.printStackTrace(System.err);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Set<ServerListener> listeners = new HashSet<ServerListener>();
-
-  /** Field description */
-  private org.eclipse.jetty.server.Server server;
+  private Server server = new Server();
 }
