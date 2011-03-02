@@ -29,7 +29,7 @@
 
   <New id="scm-webapp" class="org.eclipse.jetty.webapp.WebAppContext">
     <Set name="contextPath">/scm</Set>
-    <Set name="war"><SystemProperty name="basedir" default=""/>var/webapp/scm-webapp.war</Set>
+    <Set name="war"><SystemProperty name="basedir" default="."/>/var/webapp/scm-webapp.war</Set>
   </New>
 
   <New id="docroot" class="org.eclipse.jetty.webapp.WebAppContext">
@@ -38,7 +38,7 @@
       <New class="org.eclipse.jetty.util.resource.ResourceCollection">
         <Arg>
           <Array type="java.lang.String">
-            <Item><SystemProperty name="basedir" default=""/>var/webapp/docroot</Item>
+            <Item><SystemProperty name="basedir" default="."/>/var/webapp/docroot</Item>
           </Array>
         </Arg>
       </New>
