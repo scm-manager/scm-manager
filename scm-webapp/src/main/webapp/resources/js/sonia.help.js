@@ -1,10 +1,10 @@
-/**
+/* *
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
@@ -13,7 +13,7 @@
  * 3. Neither the name of SCM-Manager; nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,81 +24,57 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * http://bitbucket.org/sdorra/scm-manager
- *
+ * 
  */
 
-/* 
-    Document   : style
-    Created on : Aug 18, 2010, 3:14:05 PM
-    Author     : Sebastian Sdorra
-    Description:
-        Purpose of the stylesheet follows.
-*/
+Ext.form.Field.prototype.afterRenderExt = Ext.form.Field.prototype.afterRender;
 
-/* 
-   TODO customize this sample style
-   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
-*/
+Ext.override(Ext.form.Field, {
 
-a {
-  color: #004077;
-  text-decoration: none;
-}
+  afterRender : function() {
+    if ( this.helpText != null ){
+      this.renderHelp( this.helpText );
+    }
+    this.afterRenderExt.apply(this, arguments);
+  },
 
-a:hover {
-  color: #004077;
-}
+  renderHelp : function(text){
+    var div = this.el.up('div');
+    var cls = this.getHelpButtonClass();
 
-a:visited {
-  color: #004077;
-}
+    var helpButton = div.createChild({
+      tag: 'img',
+      width : 16,
+      height : 16,
+      src: 'resources/images/help.gif',
+      cls: cls
+    });
+    
+    Ext.QuickTips.register({
+      target : helpButton,
+      title : '',
+      text : text,
+      enabled : true
+    });
+  },
 
-#header {
-  margin: 5px;
-}
+  getHelpButtonClass: function(){
+    var cls = null;
 
-#appTitle {
-  color: #004077;
-  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-  margin-top: 20px;
-}
+    switch ( this.getXType() ){
+      case 'combo':
+        cls = 'scm-form-combo-help-button';
+        break;
+      case 'textarea':
+        cls = 'scm-form-textarea-help-button';
+        break;
+      default:
+        cls = 'scm-form-help-button';
+    }
 
-#appTitle h1 {
-  font-size: 24px;
-  font-weight: bold;
-}
+    return cls;
+  }
 
-.right-side {
-  float: right;
-}
-
-.left-side {
-  float: left;
-}
-
-#south {
-  font-size: 12px;
-}
-
-#footer a {
-  color: #666;
-  font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-  margin-top: 20px;
-}
-
-.scm-form-help-button {
-  vertical-align: middle;
-  margin-left: 2px;
-}
-
-.scm-form-combo-help-button {
-  vertical-align: middle;
-  margin-left: 19px;
-}
-
-.scm-form-textarea-help-button {
-  vertical-align: top;
-  margin-left: 2px;
-}
+});
