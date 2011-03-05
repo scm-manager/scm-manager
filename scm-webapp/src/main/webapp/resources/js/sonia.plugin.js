@@ -52,14 +52,6 @@ Sonia.plugin.GetPluginId = function(data){
   return data.groupId + ':' + data.artifactId + ':' + data.version;
 }
 
-Sonia.plugin.DefaultColumns = [
-  {id: 'name', header: 'Name', dataIndex: 'name'},
-  {id: 'author', header: 'Author', dataIndex: 'author'},
-  {id: 'description', header: 'Description', dataIndex: 'description'},
-  {id: 'version', header: 'Version', dataIndex: 'version'}
-]
-
-
 Sonia.plugin.installPlugin = function(pluginId){
   if ( debug ){
     console.debug( 'install plugin ' + pluginId );
@@ -193,6 +185,15 @@ Sonia.plugin.updatePlugin = function(pluginId){
 
 Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
 
+  colNameText: 'Name',
+  colAuthorText: 'Author',
+  colDescriptionText: 'Description',
+  colVersionText: 'Version',
+  colStateText: 'State',
+  colActionText: 'Action',
+  colUrlText: 'Url',
+  emptyText: 'No plugins avaiable',
+
   actionLinkTemplate: '<a style="cursor: pointer;" onclick="{1}">{0}</a>',
 
   initComponent: function(){
@@ -209,13 +210,13 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
         width: 125
       },
       columns: [
-        {id: 'name', header: 'Name', dataIndex: 'name'},
-        {id: 'author', header: 'Author', dataIndex: 'author'},
-        {id: 'description', header: 'Description', dataIndex: 'description'},
-        {id: 'version', header: 'Version', dataIndex: 'version'},
-        {id: 'state', header: 'State', dataIndex: 'state', width: 80},
-        {id: 'action', header: 'Action', renderer: this.renderActionColumn},
-        {id: 'Url', header: 'Url', dataIndex: 'url', renderer: this.renderUrl, width: 150}
+        {id: 'name', header: this.colNameText, dataIndex: 'name'},
+        {id: 'author', header: this.colAuthorText, dataIndex: 'author'},
+        {id: 'description', header: this.colDescriptionText, dataIndex: 'description'},
+        {id: 'version', header: this.colVersionText, dataIndex: 'version'},
+        {id: 'state', header: this.colStateText, dataIndex: 'state', width: 80},
+        {id: 'action', header: this.colActionText, renderer: this.renderActionColumn},
+        {id: 'Url', header: this.colUrlText, dataIndex: 'url', renderer: this.renderUrl, width: 150}
       ]
     });
 
@@ -223,7 +224,7 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
       autoExpandColumn: 'description',
       store: Sonia.plugin.StoreInstance,
       colModel: pluginColModel,
-      emptyText: 'No plugins avaiable'
+      emptyText: this.emptyText
     };
 
 
