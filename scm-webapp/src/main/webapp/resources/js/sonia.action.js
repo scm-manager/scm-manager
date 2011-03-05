@@ -33,6 +33,16 @@ Ext.ns('Sonia.action');
 
 Sonia.action.ChangePasswordWindow = Ext.extend(Ext.Window,{
 
+  titleText: 'Change Password',
+  oldPasswordText: 'Old Password',
+  newPasswordText: 'New Password',
+  confirmPasswordText: 'Confirm Password',
+  okText: 'Ok',
+  cancelText: 'Cancel',
+  connectingText: 'Connecting',
+  failedText: 'change password failed!',
+  waitMsgText: 'Sending data...',
+
   initComponent: function(){
 
     var config = {
@@ -47,14 +57,14 @@ Sonia.action.ChangePasswordWindow = Ext.extend(Ext.Window,{
       items: [{
         id: 'changePasswordForm',
         url: restUrl + 'action/change-password.json',
-        title: 'Change Password',
+        title: this.titleText,
         frame: true,
         xtype: 'form',
         monitorValid: true,
         defaultType: 'textfield',
         items: [{
           name: 'old-password',
-          fieldLabel: 'Old Password',
+          fieldLabel: this.oldPasswordText,
           inputType: 'password',
           allowBlank: false,
           minLength: 6,
@@ -62,14 +72,14 @@ Sonia.action.ChangePasswordWindow = Ext.extend(Ext.Window,{
         },{
           id: 'new-password',
           name: 'new-password',
-          fieldLabel: 'New Password',
+          fieldLabel: this.newPasswordText,
           inputType: 'password',
           allowBlank: false,
           minLength: 6,
           maxLength: 32
         },{
           name: 'confirm-password',
-          fieldLabel: 'Confirm Password',
+          fieldLabel: this.confirmPasswordText,
           inputType: 'password',
           allowBlank: false,
           minLength: 6,
@@ -78,12 +88,12 @@ Sonia.action.ChangePasswordWindow = Ext.extend(Ext.Window,{
           initialPassField: 'new-password'
         }],
         buttons: [{
-          text: 'Ok',
+          text: this.okText,
           formBind: true,
           scope: this,
           handler: this.changePassword
         },{
-          text: 'Cancel',
+          text: this.cancelText,
           scope: this,
           handler: this.cancel
         }]
@@ -95,25 +105,25 @@ Sonia.action.ChangePasswordWindow = Ext.extend(Ext.Window,{
   },
 
   changePassword: function(){
-    var win = this;
     var form = Ext.getCmp('changePasswordForm').getForm();
     form.submit({
+      scope: this,
       method:'POST',
-      waitTitle:'Connecting',
-      waitMsg:'Sending data...',
+      waitTitle: this.connectingText,
+      waitMsg: this.waitMsgText,
 
-      success: function(form, action){
+      success: function(){
         if ( debug ){
           console.debug( 'change password success' );
         }
-        win.close();
+        this.close();
       },
 
-      failure: function(form, action){
+      failure: function(){
         if ( debug ){
           console.debug( 'change password failed' );
         }
-        Ext.Msg.alert('change password failed!');
+        Ext.Msg.alert( this.failedText );
       }
     });
   },
