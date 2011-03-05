@@ -55,6 +55,15 @@ Sonia.user.DefaultPanel = {
 // UserGrid
 Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
 
+  titleText: 'User Form',
+  colNameText: 'Name',
+  colDisplayNameText: 'Display Name',
+  colMailText: 'Mail',
+  colAdminText: 'Admin',
+  colCreationDateText: 'Creation Date',
+  colLastModifiedText: 'Last modified',
+  colTypeText: 'Type',
+
   initComponent: function(){
 
     var userStore = new Sonia.rest.JsonStore({
@@ -75,13 +84,13 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
         width: 125
       },
       columns: [
-        {id: 'name', header: 'Name', dataIndex: 'name'},
-        {id: 'displayName', header: 'Display Name', dataIndex: 'displayName', width: 250},
-        {id: 'mail', header: 'Mail', dataIndex: 'mail', renderer: this.renderMailto, width: 200},
-        {id: 'admin', header: 'Admin', dataIndex: 'admin', renderer: this.renderCheckbox, width: 50},
-        {id: 'creationDate', header: 'Creation date', dataIndex: 'creationDate'},
-        {id: 'lastLogin', header: 'Last modified', dataIndex: 'lastModified'},
-        {id: 'type', header: 'Type', dataIndex: 'type', width: 80}
+        {id: 'name', header: this.colNameText, dataIndex: 'name'},
+        {id: 'displayName', header: this.colDisplayNameText, dataIndex: 'displayName', width: 250},
+        {id: 'mail', header: this.colMailText, dataIndex: 'mail', renderer: this.renderMailto, width: 200},
+        {id: 'admin', header: this.colAdminText, dataIndex: 'admin', renderer: this.renderCheckbox, width: 50},
+        {id: 'creationDate', header: this.colCreationDateText, dataIndex: 'creationDate'},
+        {id: 'lastModified', header: this.colLastModifiedText, dataIndex: 'lastModified'},
+        {id: 'type', header: this.colTypeText, dataIndex: 'type', width: 80}
       ]
     });
 
@@ -101,7 +110,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
     var panel = new Sonia.user.FormPanel({
       item: item,
       region: 'south',
-      title: 'User Form',
+      title: this.titleText,
       padding: 5,
       onUpdate: {
         fn: this.reload,
@@ -142,19 +151,29 @@ Ext.apply(Ext.form.VTypes, {
 // UserFormPanel
 Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
+  nameText: 'Name',
+  displayNameText: 'Display name',
+  mailText: 'Mail',
+  passwordText: 'Password',
+  adminText: 'Administrator',
+  errorTitleText: 'Error',
+  updateErrorMsgText: 'User update failed',
+  createErrorMsgText: 'User creation failed',
+  passwordMinLengthText: 'Password must be at least 6 characters long.',
+
   initComponent: function(){
 
     var items = [{
-      fieldLabel: 'Name',
+      fieldLabel: this.nameText,
       name: 'name',
       allowBlank: false,
       readOnly: this.item != null
     },{
-      fieldLabel: 'DisplayName',
+      fieldLabel: this.displayNameText,
       name: 'displayName',
       allowBlank: false
     },{
-      fieldLabel: 'Mail',
+      fieldLabel: this.mailText,
       name: 'mail',
       allowBlank: true,
       vtype: 'email'
@@ -162,26 +181,26 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
     if ( this.item == null || this.item.type == 'xml' ){
       items.push({
-        fieldLabel: 'Password',
+        fieldLabel: this.passwordText,
         id: 'pwd',
         name: 'password',
         inputType: 'password',
         minLength: 6,
         maxLength: 32,
-        minLengthText: 'Password must be at least 6 characters long.'
+        minLengthText: this.passwordMinLengthText
       },{
         name: 'password-confirm',
         inputType: 'password',
         minLength: 6,
         maxLength: 32,
-        minLengthText: 'Password must be at least 6 characters long.',
+        minLengthText: this.passwordMinLengthText,
         vtype: 'password',
         initialPassField: 'pwd'
       });
     }
 
     items.push({
-      fieldLabel: 'Administrator',
+      fieldLabel: this.adminText,
       name: 'admin',
       xtype: 'checkbox'
     });
@@ -215,8 +234,8 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       },
       failure: function(){
         Ext.MessageBox.show({
-          title: 'Error',
-          msg: 'User update failed',
+          title: this.errorTitleText,
+          msg: this.updateErrorMsgText,
           buttons: Ext.MessageBox.OK,
           icon:Ext.MessageBox.ERROR
         });
@@ -247,8 +266,8 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       },
       failure: function(){
         Ext.MessageBox.show({
-          title: 'Error',
-          msg: 'User creation failed',
+          title: this.errorTitleText,
+          msg: this.createErrorMsgText,
           buttons: Ext.MessageBox.OK,
           icon:Ext.MessageBox.ERROR
         });
@@ -268,6 +287,16 @@ Ext.reg('userForm', Sonia.user.FormPanel);
 // UserPanel
 Sonia.user.Panel = Ext.extend(Ext.Panel, {
 
+  addText: 'Add',
+  removeText: 'Remove',
+  reloadText: 'Reload',
+  titleText: 'User Form',
+  emptyText: 'Add or select an User',
+  removeTitleText: 'Remove User',
+  removeMsgText: 'Remove User "{0}"?',
+  errorTitleText: 'Error',
+  errorMsgText: 'User deletion failed',
+
   initComponent: function(){
 
     var config = {
@@ -278,10 +307,10 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
       region:'center',
       autoScroll: true,
       tbar: [
-        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddPanel},
-        {xtype: 'tbbutton', text: 'Remove', scope: this, handler: this.removeUser},
+        {xtype: 'tbbutton', text: this.addText, scope: this, handler: this.showAddPanel},
+        {xtype: 'tbbutton', text: this.removeText, scope: this, handler: this.removeUser},
         '-',
-        {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload}
+        {xtype: 'tbbutton', text: this.reloadText, scope: this, handler: this.reload}
       ],
       items: [{
         id: 'userGrid',
@@ -295,7 +324,7 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
           title: 'User Form',
           xtype: 'panel',
           padding: 5,
-          html: 'Add or select an User'
+          html: this.emptyText
         }],
         height: 250,
         split: true,
@@ -313,7 +342,7 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
     editPanel.removeAll();
     var panel = new Sonia.user.FormPanel({
       region: 'south',
-      title: 'Repository Form',
+      title: this.titleText,
       padding: 5,
       onUpdate: {
         fn: this.reload,
@@ -341,8 +370,8 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
       var url = restUrl + 'users/' + item.name + '.json';
 
       Ext.MessageBox.show({
-        title: 'Remove User',
-        msg: 'Remove User "' + item.name + '"?',
+        title: this.removeTitleText,
+        msg: String.format(this.removeMsgText, item.name),
         buttons: Ext.MessageBox.OKCANCEL,
         icon: Ext.MessageBox.QUESTION,
         fn: function(result){
@@ -362,8 +391,8 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
               },
               failure: function(){
                 Ext.MessageBox.show({
-                  title: 'Error',
-                  msg: 'User deletion failed',
+                  title: this.errorTitleText,
+                  msg: this.errorMsgText,
                   buttons: Ext.MessageBox.OK,
                   icon:Ext.MessageBox.ERROR
                 });
