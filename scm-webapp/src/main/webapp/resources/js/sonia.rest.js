@@ -155,6 +155,9 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
 Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
 
+  addText: 'Add',
+  removeText: 'Remove',
+
   item: null,
   onUpdate: null,
   onCreate: null,

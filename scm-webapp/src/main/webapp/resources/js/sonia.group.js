@@ -50,6 +50,14 @@ Sonia.group.DefaultPanel = {
 // GroupGrid
 Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
 
+  colNameText: 'Name',
+  colDescriptionText: 'Description',
+  colMembersText: 'Members',
+  colCreationDateText: 'Creation date',
+  colTypeText: 'Type',
+  emptyGroupStoreText: 'No group is configured',
+  groupFormTitleText: 'Group Form',
+
   initComponent: function(){
     var groupStore = new Sonia.rest.JsonStore({
       proxy: new Ext.data.HttpProxy({
@@ -69,11 +77,11 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
         width: 125
       },
       columns: [
-        {id: 'name', header: 'Name', dataIndex: 'name'},
-        {id: 'description', header: 'Description', dataIndex: 'description', width: 300 },
-        {id: 'members', header: 'Members', dataIndex: 'members', renderer: this.renderMembers},
-        {id: 'creationDate', header: 'Creation date', dataIndex: 'creationDate'},
-        {id: 'type', header: 'Type', dataIndex: 'type', width: 80}
+        {id: 'name', header: this.colNameText, dataIndex: 'name'},
+        {id: 'description', header: this.colDescriptionText, dataIndex: 'description', width: 300 },
+        {id: 'members', header: this.colMembersText, dataIndex: 'members', renderer: this.renderMembers},
+        {id: 'creationDate', header: this.colCreationDateText, dataIndex: 'creationDate'},
+        {id: 'type', header: this.colTypeText, dataIndex: 'type', width: 80}
       ]
     });
 
@@ -81,7 +89,7 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
       autoExpandColumn: 'members',
       store: groupStore,
       colModel: groupColModel,
-      emptyText: 'No group is configured'
+      emptyText: this.emptyGroupStoreText
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
@@ -111,7 +119,7 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
     var panel = new Sonia.group.FormPanel({
       item: group,
       region: 'south',
-      title: 'Group Form',
+      title:this.groupFormTitleText,
       padding: 5,
       onUpdate: {
         fn: this.reload,
@@ -133,6 +141,15 @@ Ext.reg('groupGrid', Sonia.group.Grid);
 // GroupFormPanel
 Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
+  colMemberText: 'Member',
+  titleText: 'Settings',
+  nameText: 'Name',
+  descriptionText: 'Description',
+  membersText: 'Members',
+  errorTitleText: 'Error',
+  updateErrorMsgText: 'Group update failed',
+  createErrorMsgText: 'Group creation failed',
+  
   memberStore: null,
 
   initComponent: function(){
@@ -150,7 +167,7 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       },
       columns: [{
         id: 'member',
-        header: 'Member',
+        header: this.colMemberText,
         dataIndex: 'member',
         editor: new Ext.form.ComboBox({
           store: userSearchStore,
@@ -185,7 +202,7 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     var items = [{
       xtype : 'fieldset',
       checkboxToggle : false,
-      title : 'Settings',
+      title : this.titleText,
       collapsible : true,
       autoHeight : true,
       autoWidth: true,
@@ -194,19 +211,19 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       defaultType: 'textfield',
       buttonAlign: 'center',
       items: [{
-        fieldLabel: 'Name',
+        fieldLabel: this.nameText,
         name: 'name',
         allowBlank: false,
         readOnly: this.item != null
       },{
-        fieldLabel: 'Description',
+        fieldLabel: this.descriptionText,
         name: 'description',
         xtype: 'textarea'
       }]
     },{
       id: 'memberGrid',
       xtype: 'editorgrid',
-      title: 'Members',
+      title: this.membersText,
       clicksToEdit: 1,
       frame: true,
       width: '100%',
@@ -219,7 +236,7 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         forceFit:true
       },
       tbar: [{
-        text: 'Add',
+        text: this.addText,
         scope: this,
         handler : function(){
           var Member = this.memberStore.recordType;
@@ -229,7 +246,7 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
           grid.startEditing(0, 0);
         }
       },{
-        text: 'Remove',
+        text: this.removeText,
         scope: this,
         handler: function(){
           var grid = Ext.getCmp('memberGrid');
@@ -287,8 +304,8 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         clearTimeout(tid);
         el.unmask();
         Ext.MessageBox.show({
-          title: 'Error',
-          msg: 'Group update failed',
+          title: this.errorTitleText,
+          msg: this.updateErrorMsgText,
           buttons: Ext.MessageBox.OK,
           icon:Ext.MessageBox.ERROR
         });
@@ -327,8 +344,8 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         clearTimeout(tid);
         el.unmask();
         Ext.MessageBox.show({
-          title: 'Error',
-          msg: 'Group creation failed',
+          title: this.errorTitleText,
+          msg: this.createErrorMsgText,
           buttons: Ext.MessageBox.OK,
           icon:Ext.MessageBox.ERROR
         });
@@ -352,6 +369,16 @@ Ext.reg('groupFormPanel', Sonia.group.FormPanel);
 // RepositoryPanel
 Sonia.group.Panel = Ext.extend(Ext.Panel, {
 
+  addText: 'Add',
+  removeText: 'Remove',
+  reloadText: 'Reload',
+  titleText: 'Group Form',
+  emptyText: 'Add or select a Group',
+  removeTitleText: 'Remove Group',
+  removeMsgText: 'Remove Group "{0}"?',
+  errorTitleText: 'Error',
+  errorMsgText: 'Group deletion failed',
+
   initComponent: function(){
     var config = {
       layout: 'border',
@@ -361,10 +388,10 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
       region:'center',
       autoScroll: true,
       tbar: [
-        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddForm},
-        {xtype: 'tbbutton', id: 'groupRmButton', disabled: true, text: 'Remove', scope: this, handler: this.removeGroup},
+        {xtype: 'tbbutton', text: this.addText, scope: this, handler: this.showAddForm},
+        {xtype: 'tbbutton', id: 'groupRmButton', disabled: true, text: this.removeText, scope: this, handler: this.removeGroup},
         '-',
-        {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload}
+        {xtype: 'tbbutton', text: this.reloadText, scope: this, handler: this.reload}
       ],
       items: [{
           id: 'groupGrid',
@@ -375,10 +402,10 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
           layout: 'fit',
           items: [{
             region: 'south',
-            title: 'Group Form',
+            title: this.titleText,
             xtype: 'panel',
             padding: 5,
-            html: 'Add or select a Group'
+            html: this.emptyText
           }],
           height: 250,
           split: true,
@@ -400,8 +427,8 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
       var url = restUrl + 'groups/' + item.name + '.json';
 
       Ext.MessageBox.show({
-        title: 'Remove Group',
-        msg: 'Remove Group "' + item.name + '"?',
+        title: this.removeTitleText,
+        msg: String.format( this.removeMsgText, item.name ),
         buttons: Ext.MessageBox.OKCANCEL,
         icon: Ext.MessageBox.QUESTION,
         fn: function(result){
@@ -421,8 +448,8 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
               },
               failure: function(){
                 Ext.MessageBox.show({
-                  title: 'Error',
-                  msg: 'Group deletion failed',
+                  title: this.errorTitleText,
+                  msg: this.errorMsgText,
                   buttons: Ext.MessageBox.OK,
                   icon:Ext.MessageBox.ERROR
                 });
@@ -443,7 +470,7 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
     Ext.getCmp('groupRmButton').setDisabled(true);
     var panel = new Sonia.group.FormPanel({
       region: 'south',
-      title: 'Group Form',
+      title: this.titleText,
       padding: 5,
       onUpdate: {
         fn: this.reload,
