@@ -33,13 +33,22 @@ Ext.ns('Sonia.login');
 
 Sonia.login.Form = Ext.extend(Ext.FormPanel,{
 
+  usernameText: 'Username',
+  passwordText: 'Password',
+  loginText: 'Login',
+  cancelText: 'Cancel',
+  titleText: 'Please Login',
+  waitTitleText: 'Connecting',
+  WaitMsgText: 'Sending data...',
+  failedMsgText: 'Login failed!',
+
   initComponent: function(){
 
     var config = {
       labelWidth: 80,
       url: restUrl + "authentication/login.json",
       frame: true,
-      title: 'Please Login',
+      title: this.titleText,
       defaultType: 'textfield',
       monitorValid: true,
       listeners: {
@@ -49,7 +58,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
       },
       items:[{
         id: 'username',
-        fieldLabel:'Username',
+        fieldLabel: this.usernameText,
         name: 'username',
         allowBlank:false,
         listeners: {
@@ -59,7 +68,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
           }
         }
       },{
-        fieldLabel:'Password',
+        fieldLabel: this.passwordText,
         name: 'password',
         inputType: 'password',
         allowBlank: false,
@@ -71,11 +80,11 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
         }
       }],
       buttons:[{
-          text: 'Cancel',
+          text: this.cancelText,
           scope: this,
           handler: this.cancel
         },{
-          text: 'Login',
+          text: this.loginText,
           formBind: true,
           scope: this,
           handler: this.authenticate
@@ -96,9 +105,10 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
   authenticate: function(){
     var form = this.getForm();
     form.submit({
-      method:'POST',
-      waitTitle:'Connecting',
-      waitMsg:'Sending data...',
+      scope: this,
+      method: 'POST',
+      waitTitle: this.waitTitleText,
+      waitMsg: this.WaitMsgText,
 
       success: function(form, action){
         if ( debug ){
@@ -107,11 +117,11 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
         loadState( action.result );
       },
 
-      failure: function(form, action){
+      failure: function(form){
         if ( debug ){
           console.debug( 'login failed' );
         }
-        Ext.Msg.alert('Login failed!');
+        Ext.Msg.alert(this.failedMsgText);
         form.reset();
       }
     });
