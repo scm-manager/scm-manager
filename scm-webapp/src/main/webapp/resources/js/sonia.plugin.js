@@ -32,22 +32,6 @@
 // register namespace
 Ext.ns("Sonia.plugin");
 
-Sonia.plugin.Store = Ext.extend(Sonia.rest.JsonStore, {
-
-  constructor: function(config) {
-    var baseConfig = {
-      fields: [  'name', 'author', 'description', 'url', 'version', 'state', 'groupId', 'artifactId' ],
-      sortInfo: {
-        field: 'name'
-      }
-    };
-    Sonia.plugin.Store.superclass.constructor.call(this, Ext.apply(config, baseConfig));
-  }
-
-});
-
-Sonia.plugin.StoreInstance = null;
-
 Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
 
   waitTitleText: 'Please wait',
@@ -87,6 +71,11 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
     });
   },
 
+  fireEvents: function(name, pluginId){
+    this.fireEvent(name, pluginId);
+    this.fireEvent("changed", pluginId);
+  },
+
   install: function(pluginId){
     if ( debug ){
       console.debug( 'install plugin ' + pluginId );
@@ -105,8 +94,7 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
         loadingBox.hide();
         Ext.MessageBox.alert(this.installSuccessText,
           this.restartText);
-        Sonia.plugin.StoreInstance.reload();
-        this.fireEvent('installed', pluginId);
+        this.fireEvents('installed', pluginId);
       },
       failure: function(){
         if ( debug ){
@@ -141,8 +129,7 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
         loadingBox.hide();
         Ext.MessageBox.alert(this.uninstallSuccessText,
           this.restartText);
-        Sonia.plugin.StoreInstance.reload();
-        this.fireEvent('uninstalled', pluginId);
+        this.fireEvents('uninstalled', pluginId);
       },
       failure: function(){
         if ( debug ){
@@ -177,8 +164,7 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
         loadingBox.hide();
         Ext.MessageBox.alert(this.updateSuccessText,
           this.restartText);
-        Sonia.plugin.StoreInstance.reload();
-        this.fireEvent('updated', pluginId);
+        this.fireEvents('updated', pluginId);
       },
       failure: function(){
         if ( debug ){
@@ -200,6 +186,22 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
 // the plugin center
 Sonia.plugin.CenterInstance = new Sonia.plugin.Center();
 
+// plguin store
+
+Sonia.plugin.Store = Ext.extend(Sonia.rest.JsonStore, {
+
+  constructor: function(config) {
+    var baseConfig = {
+      fields: [  'name', 'author', 'description', 'url', 'version', 'state', 'groupId', 'artifactId' ],
+      sortInfo: {
+        field: 'name'
+      }
+    };
+    Sonia.plugin.Store.superclass.constructor.call(this, Ext.apply(config, baseConfig));
+  }
+
+});
+
 // plugin grid
 
 Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
@@ -216,11 +218,6 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
   actionLinkTemplate: '<a style="cursor: pointer;" onclick="{1}">{0}</a>',
 
   initComponent: function(){
-
-    Sonia.plugin.StoreInstance = new Sonia.plugin.Store({
-      url: restUrl + 'plugins/overview.json'
-    });
-
 
     var pluginColModel = new Ext.grid.ColumnModel({
       defaults: {
@@ -241,11 +238,16 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
 
     var config = {
       autoExpandColumn: 'description',
-      store: Sonia.plugin.StoreInstance,
+      store: new Sonia.plugin.Store({
+        url: restUrl + 'plugins/overview.json'
+      }),
       colModel: pluginColModel,
       emptyText: this.emptyText
     };
 
+    Sonia.plugin.CenterInstance.addListener('changed', function(){
+      this.getStore().reload();
+    }, this);
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.plugin.Grid.superclass.initComponent.apply(this, arguments);
