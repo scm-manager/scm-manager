@@ -46,6 +46,18 @@ var logoutCallbacks = [];
 
 var restUrl = "api/rest/";
 
+function execCallbacks(callbacks, param){
+  Ext.each(callbacks, function(callback){
+    if ( Ext.isFunction(callback) ){
+      callback(state);
+    } else if (Ext.isObject(callback)) {
+      callback.fn.call( callback.scope, param );
+    } else if (debug){
+      console.debug( "callback is not a function or object. " + callback );
+    }
+  });
+}
+
 function loadState(s){
   if ( debug ){
     console.debug( s );
@@ -53,11 +65,7 @@ function loadState(s){
   state = s;
   admin = s.user.admin;
   // call login callback functions
-  Ext.each(loginCallbacks, function(callback){
-    if ( Ext.isFunction(callback) ){
-      callback(state);
-    }
-  });
+  execCallbacks(loginCallbacks, state);
 }
 
 function clearState(){
@@ -108,11 +116,7 @@ function logout(){
       }
       clearState();
       // call logout callback functions
-      Ext.each(logoutCallbacks, function(callback){
-        if ( Ext.isFunction(callback) ){
-          callback(state);
-        }
-      });
+      execCallbacks(logoutCallbacks, state);
 
       var s = null;
       var text = response.responseText;

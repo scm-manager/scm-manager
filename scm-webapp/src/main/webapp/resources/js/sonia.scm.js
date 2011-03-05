@@ -29,6 +29,154 @@
  * 
  */
 
+Ext.ns("Sonia.scm");
+
+Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
+
+  tabRepositoriesText: 'Repositories',
+  navChangePasswordText: 'Change Password',
+  sectionMainText: 'Main',
+  sectionSecurityText: 'Security',
+  navRepositoriesText: 'Repositories',
+  sectionConfigText: 'Config',
+  navGeneralConfigText: 'General',
+  tabGeneralConfigText: 'SCM Config',
+
+  navRepositoryTypesText: 'Repository Types',
+  tabRepositoryTypesText: 'Repository Config',
+  navPluginsText: 'Plugins',
+  tabPluginsText: 'Plugins',
+  navUsersText: 'Users',
+  tabUsersText: 'Users',
+  navGroupsText: 'Groups',
+  tabGroupsText: 'Groups',
+
+  sectionLoginText: 'Login',
+  navLoginText: 'Login',
+
+  sectionLogoutText: 'Log out',
+  navLogoutText: 'Log out',
+
+
+  createRepositoryPanel: function(){
+    if ( debug ){
+      console.debug('create repository panel');
+    }
+    var mainTabPanel = Ext.getCmp('mainTabPanel');
+    mainTabPanel.add({
+      id: 'repositories',
+      xtype: 'repositoryPanel',
+      title: this.tabRepositoriesText,
+      closeable: false,
+      autoScroll: true
+    });
+    mainTabPanel.setActiveTab('repositories');
+  },
+
+  createMainMenu: function(){
+    if ( debug ){
+      console.debug('create main menu');
+    }
+    var panel = Ext.getCmp('navigationPanel');
+    panel.addSection({
+      id: 'navMain',
+      title: this.sectionMainText,
+      items: [{
+        label: this.navRepositoriesText,
+        fn: function(){
+          mainTabPanel.setActiveTab('repositories');
+        }
+      }]
+    });
+
+    var securitySection = null;
+
+    if ( state.user.type == 'xml' && state.user.name != 'anonymous' ){
+      securitySection = {
+        title: this.sectionSecurityText,
+        items: [{
+          label: this.navChangePasswordText,
+          fn: function(){
+            new Sonia.action.ChangePasswordWindow().show();
+          }
+        }]
+      }
+    }
+
+    if ( admin ){
+
+      panel.addSections([{
+        id: 'navConfig',
+        title: this.sectionConfigText,
+        items: [{
+          label: this.navGeneralConfigText,
+          fn: function(){
+            addTabPanel("scmConfig", "scmConfig", this.navGeneralConfigText);
+          }
+        },{
+          label: this.navRepositoryTypesText,
+          fn: function(){
+            addTabPanel('repositoryConfig', 'repositoryConfig', this.tabRepositoryTypesText);
+          }
+        },{
+          label: this.navPluginsText,
+          fn: function(){
+            addTabPanel('plugins', 'pluginGrid', this.navPluginsText);
+          }
+        }]
+      }]);
+
+      if ( securitySection == null ){
+        securitySection = {
+          title: this.sectionSecurityText,
+          items: []
+        }
+      }
+
+      securitySection.items.push({
+        label: this.navUsersText,
+        fn: function(){
+          addTabPanel('users', 'userPanel', this.navUsersText);
+        }
+      });
+      securitySection.items.push({
+        label: this.navGroupsText,
+        fn: function(){
+          addTabPanel('groups', 'groupPanel', this.tabGroupsText);
+        }
+      });
+    }
+
+    if ( securitySection != null ){
+      panel.addSection( securitySection );
+    }
+
+    if ( state.user.name == 'anonymous' ){
+      panel.addSection({
+        id: 'navLogin',
+        title: this.sectionLoginText,
+        items: [{
+          label: this.sectionLoginText,
+          fn: login
+        }]
+      });
+    } else {
+      panel.addSection({
+        id: 'navLogout',
+        title: this.sectionLogoutText,
+        items: [{
+          label: this.navLogoutText,
+          fn: logout
+        }]
+      });
+    }
+
+    //fix hidden logout button
+    panel.doLayout();
+  }
+
+});
+
 Ext.onReady(function(){
 
   Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
@@ -87,129 +235,13 @@ Ext.onReady(function(){
     mainTabPanel.setActiveTab(id);
   }
 
-  // methods called after login
-
-  function createMainMenu(){
-    if ( debug ){
-      console.debug('create main menu');
-    }
-    var panel = Ext.getCmp('navigationPanel');
-    panel.addSection({
-      id: 'navMain',
-      title: 'Main',
-      items: [{
-        label: 'Repositories',
-        fn: function(){
-          mainTabPanel.setActiveTab('repositories');
-        }
-      }]
-    });
-
-    var securitySection = null;
-
-    if ( state.user.type == 'xml' && state.user.name != 'anonymous' ){
-      securitySection = {
-        title: 'Security',
-        items: [{
-          label: 'Change Password',
-          fn: function(){
-            new Sonia.action.ChangePasswordWindow().show();
-          } 
-        }]
-      }
-    }
-
-    if ( admin ){
-
-      panel.addSections([{
-        id: 'navConfig',
-        title: 'Config',
-        items: [{
-          label: 'General',
-          fn: function(){
-            addTabPanel("scmConfig", "scmConfig", "SCM Config");
-          }
-        },{
-          label: 'Repository Types',
-          fn: function(){
-            addTabPanel('repositoryConfig', 'repositoryConfig', 'Repository Config');
-          }
-        },{
-          label: 'Plugins',
-          fn: function(){
-            addTabPanel('plugins', 'pluginGrid', 'Plugins');
-          }
-        }]
-      }]);
-
-      if ( securitySection == null ){
-        securitySection = {
-          title: 'Security',
-          items: []
-        }
-      }
-
-      securitySection.items.push({
-        label: 'Users',
-        fn: function(){
-          addTabPanel('users', 'userPanel', 'Users');
-        }
-      });
-      securitySection.items.push({
-        label: 'Groups',
-        fn: function(){
-          addTabPanel('groups', 'groupPanel', 'Groups');
-        }
-      });
-    }
-
-    if ( securitySection != null ){
-      panel.addSection( securitySection );
-    }
-
-    if ( state.user.name == 'anonymous' ){
-      panel.addSection({
-        id: 'navLogin',
-        title: 'Login',
-        items: [{
-          label: 'Login',
-          fn: login
-        }]
-      });
-    } else {
-      panel.addSection({
-        id: 'navLogout',
-        title: 'Log out',
-        items: [{
-          label: 'Log out',
-          fn: logout
-        }]
-      });
-    }
-
-    //fix hidden logout button
-    panel.doLayout();
-  }
-
-  function createRepositoryPanel(){
-    if ( debug ){
-      console.debug('create repository panel');
-    }
-    mainTabPanel.add({
-      id: 'repositories',
-      xtype: 'repositoryPanel',
-      title: 'Repositories',
-      closeable: false,
-      autoScroll: true
-    });
-    mainTabPanel.setActiveTab('repositories');
-  }
-
   // register login callbacks
 
+  var main = new Sonia.scm.Main();
+
   // create menu
-  loginCallbacks.splice(0, 0, createMainMenu );
-  // add welcome tab
-  loginCallbacks.push( createRepositoryPanel );
+  loginCallbacks.splice(0, 0, {fn: main.createMainMenu, scope: main});
+  // add repository tab
+  loginCallbacks.push({fn: main.createRepositoryPanel, scope: main});
 
 });
