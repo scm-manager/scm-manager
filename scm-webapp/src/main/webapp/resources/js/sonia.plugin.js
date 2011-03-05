@@ -48,138 +48,157 @@ Sonia.plugin.Store = Ext.extend(Sonia.rest.JsonStore, {
 
 Sonia.plugin.StoreInstance = null;
 
-Sonia.plugin.GetPluginId = function(data){
-  return data.groupId + ':' + data.artifactId + ':' + data.version;
-}
+Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
 
-Sonia.plugin.installPlugin = function(pluginId){
-  if ( debug ){
-    console.debug( 'install plugin ' + pluginId );
-  }
+  waitTitleText: 'Please wait',
+  errorTitleText: 'Error',
+  restartText: 'Restart the applicationserver to activate the plugin.',
+  
+  installWaitMsgText: 'Installing Plugin.',
+  installSuccessText: 'Plugin successfully installed',
+  installFailedText: 'Plugin installation failed',
 
-  var loadingBox = Ext.MessageBox.show({
-      title: 'Please wait',
-      msg: 'Installing Plugin.',
+  uninstallWaitMsgText: 'Uninstalling Plugin.',
+  uninstallSuccessText: 'Plugin successfully uninstalled',
+  uninstallFailedText: 'Plugin uninstallation failed',
+
+  updateWaitMsgText: 'Updating Plugin.',
+  updateSuccessText: 'Plugin successfully updated',
+  updateFailedText: 'Plugin update failed',
+
+  constructor : function(config) {
+    this.addEvents('install', 'uninstalled', 'updated');
+    Sonia.plugin.Center.superclass.constructor.call(this, config);
+  },
+
+  getPluginId: function(data){
+    return data.groupId + ':' + data.artifactId + ':' + data.version;
+  },
+
+  createLoadingBox: function(msg){
+    return Ext.MessageBox.show({
+      title: this.waitTitleText,
+      msg: msg,
       width: 300,
       wait: true,
       animate: true,
       progress: true,
       closable: false
-  });
+    });
+  },
 
-  Ext.Ajax.request({
-    url: restUrl + 'plugins/install/' + pluginId + '.json',
-    method: 'POST',
-    scope: this,
-    success: function(){
-      if ( debug ){
-        console.debug('plugin successfully installed');
-      }
-      loadingBox.hide();
-      Ext.MessageBox.alert('Plugin successfully installed',
-        'Restart the applicationserver to activate the plugin.');
-      Sonia.plugin.StoreInstance.reload();
-    },
-    failure: function(){
-      if ( debug ){
-        console.debug('plugin installation failed');
-      }
-      loadingBox.hide();
-      Ext.MessageBox.show({
-        title: 'Error',
-        msg: 'Plugin installation failed',
-        buttons: Ext.MessageBox.OK,
-        icon:Ext.MessageBox.ERROR
-      });
+  install: function(pluginId){
+    if ( debug ){
+      console.debug( 'install plugin ' + pluginId );
     }
-  });
-}
 
-Sonia.plugin.uninstallPlugin = function(pluginId){
-  if ( debug ){
-    console.debug( 'uninstall plugin ' + pluginId );
+    var loadingBox = this.createLoadingBox( this.installWaitMsgText );
+
+    Ext.Ajax.request({
+      url: restUrl + 'plugins/install/' + pluginId + '.json',
+      method: 'POST',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('plugin successfully installed');
+        }
+        loadingBox.hide();
+        Ext.MessageBox.alert(this.installSuccessText,
+          this.restartText);
+        Sonia.plugin.StoreInstance.reload();
+        this.fireEvent('installed', pluginId);
+      },
+      failure: function(){
+        if ( debug ){
+          console.debug('plugin installation failed');
+        }
+        loadingBox.hide();
+        Ext.MessageBox.show({
+          title: this.errorTitleText,
+          msg: this.installFailedText,
+          buttons: Ext.MessageBox.OK,
+          icon:Ext.MessageBox.ERROR
+        });
+      }
+    });
+  },
+
+  uninstall: function(pluginId){
+    if ( debug ){
+      console.debug( 'uninstall plugin ' + pluginId );
+    }
+
+    var loadingBox = this.createLoadingBox( this.uninstallWaitMsgText );
+
+    Ext.Ajax.request({
+      url: restUrl + 'plugins/uninstall/' + pluginId + '.json',
+      method: 'POST',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('plugin successfully uninstalled');
+        }
+        loadingBox.hide();
+        Ext.MessageBox.alert(this.uninstallSuccessText,
+          this.restartText);
+        Sonia.plugin.StoreInstance.reload();
+        this.fireEvent('uninstalled', pluginId);
+      },
+      failure: function(){
+        if ( debug ){
+          console.debug('plugin uninstallation failed');
+        }
+        loadingBox.hide();
+        Ext.MessageBox.show({
+          title: this.errorTitleText,
+          msg: this.uninstallFailedText,
+          buttons: Ext.MessageBox.OK,
+          icon:Ext.MessageBox.ERROR
+        });
+      }
+    });
+  },
+
+  update: function(pluginId){
+    if ( debug ){
+      console.debug( 'update plugin to ' + pluginId );
+    }
+
+    var loadingBox = createLoadingBox( this.updateWaitMsgText );
+
+    Ext.Ajax.request({
+      url: restUrl + 'plugins/update/' + pluginId + '.json',
+      method: 'POST',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('plugin successfully updated');
+        }
+        loadingBox.hide();
+        Ext.MessageBox.alert(this.updateSuccessText,
+          this.restartText);
+        Sonia.plugin.StoreInstance.reload();
+        this.fireEvent('updated', pluginId);
+      },
+      failure: function(){
+        if ( debug ){
+          console.debug('plugin update failed');
+        }
+        loadingBox.hide();
+        Ext.MessageBox.show({
+          title: this.errorTitleText,
+          msg: this.updateFailedText,
+          buttons: Ext.MessageBox.OK,
+          icon:Ext.MessageBox.ERROR
+        });
+      }
+    });
   }
 
-  var loadingBox = Ext.MessageBox.show({
-      title: 'Please wait',
-      msg: 'Uninstalling Plugin.',
-      width: 300,
-      wait: true,
-      animate: true,
-      progress: true,
-      closable: false
-  });
+});
 
-  Ext.Ajax.request({
-    url: restUrl + 'plugins/uninstall/' + pluginId + '.json',
-    method: 'POST',
-    scope: this,
-    success: function(){
-      if ( debug ){
-        console.debug('plugin successfully uninstalled');
-      }
-      loadingBox.hide();
-      Ext.MessageBox.alert('Plugin successfully uninstalled',
-        'Restart the applicationserver to activate the changes.');
-      Sonia.plugin.StoreInstance.reload();
-    },
-    failure: function(){
-      if ( debug ){
-        console.debug('plugin uninstallation failed');
-      }
-      loadingBox.hide();
-      Ext.MessageBox.show({
-        title: 'Error',
-        msg: 'Plugin uninstallation failed',
-        buttons: Ext.MessageBox.OK,
-        icon:Ext.MessageBox.ERROR
-      });
-    }
-  });
-}
-
-Sonia.plugin.updatePlugin = function(pluginId){
-  if ( debug ){
-    console.debug( 'update plugin to ' + pluginId );
-  }
-
-  var loadingBox = Ext.MessageBox.show({
-      title: 'Please wait',
-      msg: 'Update Plugin.',
-      width: 300,
-      wait: true,
-      animate: true,
-      progress: true,
-      closable: false
-  });
-
-  Ext.Ajax.request({
-    url: restUrl + 'plugins/update/' + pluginId + '.json',
-    method: 'POST',
-    scope: this,
-    success: function(){
-      if ( debug ){
-        console.debug('plugin successfully updated');
-      }
-      loadingBox.hide();
-      Ext.MessageBox.alert('Plugin successfully updated',
-        'Restart the applicationserver to activate the changes.');
-      Sonia.plugin.StoreInstance.reload();
-    },
-    failure: function(){
-      if ( debug ){
-        console.debug('plugin update failed');
-      }
-      loadingBox.hide();
-      Ext.MessageBox.show({
-        title: 'Error',
-        msg: 'Plugin update failed',
-        buttons: Ext.MessageBox.OK,
-        icon:Ext.MessageBox.ERROR
-      });
-    }
-  });
-}
+// the plugin center
+Sonia.plugin.CenterInstance = new Sonia.plugin.Center();
 
 // plugin grid
 
@@ -235,15 +254,15 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
   renderActionColumn: function(val, meta, record){
     var out = "";
     var data = record.data;
-    var id = Sonia.plugin.GetPluginId(data);
+    var id = Sonia.plugin.CenterInstance.getPluginId(data);
     if ( data.state == 'AVAILABLE' ){
-      out = String.format(this.actionLinkTemplate, 'Install', 'Sonia.plugin.installPlugin(\'' + id + '\')');
+      out = String.format(this.actionLinkTemplate, 'Install', 'Sonia.plugin.CenterInstance.install(\'' + id + '\')');
     } else if ( data.state == 'INSTALLED' ){
-      out = String.format(this.actionLinkTemplate, 'Uninstall', 'Sonia.plugin.uninstallPlugin(\'' + id + '\')');
+      out = String.format(this.actionLinkTemplate, 'Uninstall', 'Sonia.plugin.CenterInstance.uninstall(\'' + id + '\')');
     } else if ( data.state == 'UPDATE_AVAILABLE' ){
-      out = String.format(this.actionLinkTemplate, 'Update', 'Sonia.plugin.updatePlugin(\'' + id + '\')');
+      out = String.format(this.actionLinkTemplate, 'Update', 'Sonia.plugin.CenterInstance.update(\'' + id + '\')');
       out += ', '
-      out += String.format(this.actionLinkTemplate, 'Uninstall', 'Sonia.plugin.uninstallPlugin(\'' + id + '\')');
+      out += String.format(this.actionLinkTemplate, 'Uninstall', 'Sonia.plugin.CenterInstance.uninstall(\'' + id + '\')');
     }
     return out;
   }
