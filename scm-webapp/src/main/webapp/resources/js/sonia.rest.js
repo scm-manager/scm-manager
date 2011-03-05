@@ -33,6 +33,9 @@ Ext.ns("Sonia.rest");
 
 Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
 
+  errorTitleText: 'Error',
+  errorMsgText: 'Could not load items. Server returned status: {0}',
+
   constructor: function(config) {
     var baseConfig = {
       autoLoad: false,
@@ -48,8 +51,8 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
               this.removeAll();
             } else {
               Ext.MessageBox.show({
-                title: 'Error',
-                msg: 'Could not load items. Server returned status: ' + status,
+                title: this.errorTitleText,
+                msg: String.format( this.errorMsgText, status ),
                 buttons: Ext.MessageBox.OK,
                 icon:Ext.MessageBox.ERROR
               });
@@ -155,6 +158,8 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
 Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
 
+  okText: 'Ok',
+  cancelText: 'Cancel',
   addText: 'Add',
   removeText: 'Remove',
 
@@ -172,8 +177,8 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
       defaultType: 'textfield',
       buttonAlign: 'center',
       buttons: [
-        {text: 'Ok', formBind: true, scope: this, handler: this.submit},
-        {text: 'Cancel', scope: this, handler: this.cancel}
+        {text: this.okText, formBind: true, scope: this, handler: this.submit},
+        {text: this.cancelText, scope: this, handler: this.cancel}
       ]
     }
 
