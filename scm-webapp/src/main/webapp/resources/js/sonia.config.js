@@ -87,20 +87,35 @@ Ext.reg("repositoryConfig", Sonia.config.RepositoryConfig);
 
 Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
 
+  titleText: 'General Settings',
+  servnameText: 'Servername',
+  enableForwardingText: 'Enable forwarding (mod_proxy)',
+  forwardPortText: 'Forward Port',
+  pluginRepositoryText: 'Plugin repository',
+  allowAnonymousAccessText: 'Allow Anonymous Access',
+  enableSSLText: 'Enable SSL',
+  sslPortText: 'SSL Port',
+  adminGroupsText: 'Admin Groups',
+  adminUsersText: 'Admin Users',
+  submitText: 'Submit ...',
+  loadingText: 'Loading ...',
+  errorTitleText: 'Error',
+  errorMsgText: 'Could not load config.',
+
   initComponent: function(){
 
     var config = {
       panels: [{
         xtype: 'configForm',
-        title: 'General Settings',
+        title: this.titleText,
         items: [{
           xtype: 'textfield',
-          fieldLabel: 'Servername',
+          fieldLabel: this.servnameText,
           name: 'servername',
           allowBlank: false
         },{
           xtype: 'checkbox',
-          fieldLabel: 'Enable forwarding (mod_proxy)',
+          fieldLabel: this.enableForwardingText,
           name: 'enablePortForward',
           inputValue: 'true',
           listeners: {
@@ -111,24 +126,24 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
         },{
           id: 'serverport',
           xtype: 'numberfield',
-          fieldLabel: 'Forward Port',
+          fieldLabel: this.forwardPortText,
           name: 'forwardPort',
           disabled: true,
           allowBlank: false
         },{
           xtype: 'textfield',
-          fieldLabel: 'Plugin repository',
+          fieldLabel: this.pluginRepositoryText,
           name: 'plugin-url',
           vtype: 'url',
           allowBlank: false
         },{
           xtype: 'checkbox',
-          fieldLabel: 'Allow Anonymous Access',
+          fieldLabel: this.allowAnonymousAccessText,
           name: 'anonymousAccessEnabled',
           inputValue: 'true'
         },{
           xtype: 'checkbox',
-          fieldLabel: 'Enable SSL',
+          fieldLabel: this.enableSSLText,
           name: 'enableSSL',
           inputValue: 'true',
           listeners: {
@@ -139,18 +154,18 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
         },{
           id: 'sslPort',
           xtype: 'numberfield',
-          fieldLabel: 'SSL Port',
+          fieldLabel: this.sslPortText,
           name: 'sslPort',
           disabled: true,
           allowBlank: false
         },{
           xtype : 'textfield',
-          fieldLabel : 'Admin Groups',
+          fieldLabel : this.adminGroupsText,
           name : 'admin-groups',
           allowBlank : true
         },{
           xtype : 'textfield',
-          fieldLabel : 'Admin Users',
+          fieldLabel : this.adminUsersText,
           name : 'admin-users',
           allowBlank : true
         }],
@@ -162,14 +177,14 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           if ( ! values.enablePortForward ){
             values.forwardPort = Ext.getCmp('serverport').getValue();
           }
-          this.el.mask('Submit ...');
+          this.el.mask(this.submitText);
           Ext.Ajax.request({
             url: restUrl + 'config.json',
             method: 'POST',
             jsonData: values,
             scope: this,
             disableCaching: true,
-            success: function(response){
+            success: function(){
               this.el.unmask();
             },
             failure: function(){
@@ -179,7 +194,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
         },
 
         onLoad: function(el){
-          var tid = setTimeout( function(){ el.mask('Loading ...'); }, 100);
+          var tid = setTimeout( function(){ el.mask(this.loadingText); }, 100);
           Ext.Ajax.request({
             url: restUrl + 'config.json',
             method: 'GET',
@@ -201,8 +216,9 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
               el.unmask();
               clearTimeout(tid);
               Ext.MessageBox.show({
-                title: 'Error',
-                msg: 'Could not load config.',
+                title: this.errorTitleText,
+                msg: this.errorMsgText,
+                scope: this,
                 buttons: Ext.MessageBox.OK,
                 icon:Ext.MessageBox.ERROR
               });
@@ -223,6 +239,8 @@ Ext.reg("scmConfig", Sonia.config.ScmConfigPanel);
 Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
 
   title: 'Config Form',
+  saveButtonText: 'Save',
+  resetButtontext: 'Reset',
   items: null,
   onSubmit: null,
   getValues: null,
@@ -265,12 +283,12 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
         },
         items: this.items,
         buttons: [{
-          text: 'Save',
+          text: this.saveButtonText,
           scope: this,
           formBind: true,
           handler: this.submitForm
         },{
-          text: 'Reset',
+          text: this.resetButtontext,
           scope: this,
           handler: function(){
             this.getForm().reset();
@@ -304,6 +322,8 @@ Ext.reg("configForm", Sonia.config.ConfigForm);
 
 Sonia.config.SimpleConfigForm = Ext.extend(Sonia.config.ConfigForm,{
 
+  submitText: 'Submit ...',
+  loadingText: 'Loading ...',
   configUrl: null,
   loadMethod: 'GET',
   submitMethod: 'POST',
@@ -314,7 +334,7 @@ Sonia.config.SimpleConfigForm = Ext.extend(Sonia.config.ConfigForm,{
   },
 
   onSubmit: function(values){
-    this.el.mask('Submit ...');
+    this.el.mask(this.submitText);
     Ext.Ajax.request({
       url: this.configUrl,
       method: this.submitMethod,
@@ -331,7 +351,7 @@ Sonia.config.SimpleConfigForm = Ext.extend(Sonia.config.ConfigForm,{
   },
 
   onLoad: function(el){
-    var tid = setTimeout( function(){ el.mask('Loading ...'); }, 100);
+    var tid = setTimeout( function(){ el.mask(this.loadingText); }, 100);
     Ext.Ajax.request({
       url: this.configUrl,
       method: this.loadMethod,
