@@ -79,7 +79,16 @@ Sonia.repository.NoPermissionPanel = {
 
 // RepositoryGrid
 Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
-  
+
+  colNameText: 'Name',
+  colTypeText: 'Type',
+  colContactText: 'Contact',
+  colDescriptionText: 'Description',
+  colCreationDateText: 'Creation date',
+  colUrlText: 'Url',
+  emptyText: 'No repository is configured',
+  formTitleText: 'Repository Form',
+
   initComponent: function(){
 
     var repositoryStore = new Sonia.rest.JsonStore({
@@ -101,12 +110,12 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         width: 125
       },
       columns: [
-        {id: 'name', header: 'Name', dataIndex: 'name'},
-        {id: 'type', header: 'Type', dataIndex: 'type', renderer: this.renderRepositoryType, width: 80},
-        {id: 'contact', header: 'Contact', dataIndex: 'contact', renderer: this.renderMailto},
-        {id: 'description', header: 'Description', dataIndex: 'description'},
-        {id: 'creationDate', header: 'Creation date', dataIndex: 'creationDate'},
-        {id: 'Url', header: 'Url', dataIndex: 'url', renderer: this.renderUrl, width: 250}
+        {id: 'name', header: this.colNameText, dataIndex: 'name'},
+        {id: 'type', header: this.colTypeText, dataIndex: 'type', renderer: this.renderRepositoryType, width: 80},
+        {id: 'contact', header: this.colContactText, dataIndex: 'contact', renderer: this.renderMailto},
+        {id: 'description', header: this.colDescriptionText, dataIndex: 'description'},
+        {id: 'creationDate', header: this.colCreationDateText, dataIndex: 'creationDate'},
+        {id: 'Url', header: this.colUrlText, dataIndex: 'url', renderer: this.renderUrl, width: 250}
       ]
     });
 
@@ -114,7 +123,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       autoExpandColumn: 'description',
       store: repositoryStore,
       colModel: repositoryColModel,
-      emptyText: 'No repository is configured'
+      emptyText: this.emptyText
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
@@ -133,7 +142,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       panel = new Sonia.repository.FormPanel({
         item: item,
         region: 'south',
-        title: 'Repository Form',
+        title: this.formTitleText,
         padding: 5,
         onUpdate: {
           fn: this.reload,
@@ -165,6 +174,20 @@ Ext.reg('repositoryGrid', Sonia.repository.Grid);
 // RepositoryFormPanel
 Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
+  colGroupPermissionText: 'Group Permission',
+  colNameText: 'Name',
+  colTypeText: 'Type',
+  formTitleText: 'Settings',
+  nameText: 'Name',
+  typeText: 'Type',
+  contactText: 'Contact',
+  descriptionText: 'Description',
+  publicText: 'Public',
+  permissionText: 'Permission',
+  errorTitleText: 'Error',
+  updateErrorMsgText: 'Repository update failed',
+  createErrorMsgText: 'Repository creation failed',
+
   permissionStore: null,
 
   initComponent: function(){
@@ -191,17 +214,17 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       columns: [{
          id: 'groupPermission',
          xtype: 'checkcolumn',
-         header: 'Group Permission',
+         header: this.colGroupPermissionText,
          dataIndex: 'groupPermission',
          width: 40
         },{
           id: 'name',
-          header: 'Name',
+          header: this.colNameText,
           dataIndex: 'name',
           editable: true
         },{
           id: 'type',
-          header: 'Type',
+          header: this.colTypeText,
           dataIndex: 'type',
           width: 80,
           editor: new Ext.form.ComboBox({
@@ -268,7 +291,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       items:[{
         xtype : 'fieldset',
         checkboxToggle : false,
-        title : 'Settings',
+        title : this.formTitleText,
         collapsible : true,
         autoHeight : true,
         autoWidth: true,
@@ -277,9 +300,9 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         defaultType: 'textfield',
         buttonAlign: 'center',
         items: [
-          {id: 'repositoryName', fieldLabel: 'Name', name: 'name', readOnly: update, allowBlank: false},
+          {id: 'repositoryName', fieldLabel: this.nameText, name: 'name', readOnly: update, allowBlank: false},
           {
-           fieldLabel: 'Type',
+           fieldLabel: this.typeText,
            name: 'type',
            xtype: 'combo',
            readOnly: update,
@@ -294,14 +317,14 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
            displayField: 'displayName',
            allowBlank: false
           },
-          {fieldLabel: 'Contact', name: 'contact', vtype: 'email'},
-          {fieldLabel: 'Description', name: 'description', xtype: 'textarea'},
-          {fieldLabel: 'Public', name: 'public', xtype: 'checkbox'}
+          {fieldLabel: this.contactText, name: 'contact', vtype: 'email'},
+          {fieldLabel: this.descriptionText, name: 'description', xtype: 'textarea'},
+          {fieldLabel: this.publicText, name: 'public', xtype: 'checkbox'}
         ]
       },{
         id: 'permissionGrid',
         xtype: 'editorgrid',
-        title: 'Permissions',
+        title: this.permissionsText,
         clicksToEdit: 1,
         autoExpandColumn: 'name',
         frame: true,
@@ -315,7 +338,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
           forceFit:true
         },
         tbar: [{
-          text: 'Add',
+          text: this.addText,
           scope: this,
           handler : function(){
             var Permission = this.permissionStore.recordType;
@@ -328,7 +351,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
             grid.startEditing(0, 0);
           }
         },{
-          text: 'Remove',
+          text: this.removeText,
           scope: this,
           handler: function(){
             var grid = Ext.getCmp('permissionGrid');
@@ -387,8 +410,8 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         clearTimeout(tid);
         el.unmask();
         Ext.MessageBox.show({
-          title: 'Error',
-          msg: 'Repository update failed',
+          title: this.errorTitleText,
+          msg: this.updateErrorMsgText,
           buttons: Ext.MessageBox.OK,
           icon:Ext.MessageBox.ERROR
         });
@@ -425,8 +448,8 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         clearTimeout(tid);
         el.unmask();
         Ext.MessageBox.show({
-          title: 'Error',
-          msg: 'Repository creation failed',
+          title: this.errorTitleText,
+          msg: this.createErrorMsgText,
           buttons: Ext.MessageBox.OK,
           icon:Ext.MessageBox.ERROR
         });
@@ -449,18 +472,28 @@ Ext.reg('repositoryForm', Sonia.repository.FormPanel);
 // RepositoryPanel
 Sonia.repository.Panel = Ext.extend(Ext.Panel, {
 
+  titleText: 'Repository Form',
+  addText: 'Add',
+  removeText: 'Remove',
+  reloadText: 'Reload',
+  emptyText: 'Add or select an Repository',
+  removeTitleText: 'Remove Repository',
+  removeMsgText: 'Remove Repository "{0}"?',
+  errorTitleText: 'Error',
+  errorMsgText: 'Repository deletion failed',
+
   initComponent: function(){
 
     var toolbar = [];
     if ( admin ){
       toolbar.push(
-        {xtype: 'tbbutton', text: 'Add', scope: this, handler: this.showAddForm}
+        {xtype: 'tbbutton', text: this.addText, scope: this, handler: this.showAddForm}
       );
     }
     toolbar.push(
-      {xtype: 'tbbutton', id: 'repoRmButton', disabled: true, text: 'Remove', scope: this, handler: this.removeRepository},
+      {xtype: 'tbbutton', id: 'repoRmButton', disabled: true, text: this.removeText, scope: this, handler: this.removeRepository},
       '-',
-      {xtype: 'tbbutton', text: 'Reload', scope: this, handler: this.reload}
+      {xtype: 'tbbutton', text: this.reloadText, scope: this, handler: this.reload}
     );
 
     var config = {
@@ -480,10 +513,10 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
           layout: 'fit',
           items: [{
             region: 'south',
-            title: 'Repository Form',
+            title: this.titleText,
             xtype: 'panel',
             padding: 5,
-            html: 'Add or select an Repository'
+            html: this.emptyText
           }],
           height: 250,
           split: true,
@@ -505,8 +538,8 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
       var url = restUrl + 'repositories/' + item.id + '.json';
       
       Ext.MessageBox.show({
-        title: 'Remove Repository',
-        msg: 'Remove Repository "' + item.name + '"?',
+        title: this.removeTitleText,
+        msg: String.format(this.removeMsgText, item.name),
         buttons: Ext.MessageBox.OKCANCEL,
         icon: Ext.MessageBox.QUESTION,
         fn: function(result){
@@ -526,8 +559,8 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
               },
               failure: function(){
                 Ext.MessageBox.show({
-                  title: 'Error',
-                  msg: 'Repository deletion failed',
+                  title: this.errorTitleText,
+                  msg: this.errorMsgText,
                   buttons: Ext.MessageBox.OK,
                   icon:Ext.MessageBox.ERROR
                 });
@@ -552,7 +585,7 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
     Ext.getCmp('repoRmButton').setDisabled(true);
     var panel = new Sonia.repository.FormPanel({
       region: 'south',
-      title: 'Repository Form',
+      title: this.titleText,
       padding: 5,
       onUpdate: {
         fn: this.reload,
