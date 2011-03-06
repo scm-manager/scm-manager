@@ -316,11 +316,11 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       if ( Ext.isFunction(callback) ){
         this.addListener(event, callback);
       } else if (Ext.isObject(callback)) {
-        this.main.addListener(event, callback.fn, callback.scope);
+        this.addListener(event, callback.fn, callback.scope);
       } else if (debug){
         console.debug( "callback is not a function or object. " + callback );
       }
-    });
+    }, this);
   }
 
 });
