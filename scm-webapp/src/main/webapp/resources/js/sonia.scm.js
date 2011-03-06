@@ -57,20 +57,25 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   sectionLogoutText: 'Log out',
   navLogoutText: 'Log out',
 
+  mainTabPanel: null,
+
+  constructor : function(config) {
+    this.mainTabPanel = Ext.getCmp('mainTabPanel');
+    Sonia.scm.Main.superclass.constructor.call(this, config);
+  },
 
   createRepositoryPanel: function(){
     if ( debug ){
       console.debug('create repository panel');
     }
-    var mainTabPanel = Ext.getCmp('mainTabPanel');
-    mainTabPanel.add({
+    this.mainTabPanel.add({
       id: 'repositories',
       xtype: 'repositoryPanel',
       title: this.tabRepositoriesText,
       closeable: false,
       autoScroll: true
     });
-    mainTabPanel.setActiveTab('repositories');
+    this.mainTabPanel.setActiveTab('repositories');
   },
 
   createMainMenu: function(){
@@ -84,7 +89,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       items: [{
         label: this.navRepositoriesText,
         fn: function(){
-          Ext.getCmp('mainTabPanel').setActiveTab('repositories');
+          this.mainTabPanel.setActiveTab('repositories');
         },
         scope: this
       }]
@@ -184,10 +189,9 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   },
 
   addTabPanel: function(id, xtype, title){
-    var mainTabPanel = Ext.getCmp('mainTabPanel');
-    var tab = mainTabPanel.findById( id );
+    var tab = this.mainTabPanel.findById( id );
     if ( tab == null ){
-      mainTabPanel.add({
+      this.mainTabPanel.add({
         id: id,
         xtype: xtype,
         title: title,
@@ -195,7 +199,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         autoScroll: true
       });
     }
-    mainTabPanel.setActiveTab(id);
+    this.mainTabPanel.setActiveTab(id);
   },
 
 
@@ -227,7 +231,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     // clear repository store
     repositoryTypeStore.removeAll();
     // remove all tabs
-    Ext.getCmp('mainTabPanel').removeAll();
+    this.mainTabPanel.removeAll();
     // remove navigation items
     Ext.getCmp('navigationPanel').removeAll();
   },
@@ -341,19 +345,13 @@ Ext.onReady(function(){
   main = new Sonia.scm.Main();
   main.checkLogin();
 
-  // adds a tab to main TabPanel
+  /**
+   * Adds a tab to main TabPanel
+   *
+   * @deprecated use main.addTabPanel
+   */
   function addTabPanel(id, xtype, title){
-    var tab = mainTabPanel.findById( id );
-    if ( tab == null ){
-      mainTabPanel.add({
-        id: id,
-        xtype: xtype,
-        title: title,
-        closable: true,
-        autoScroll: true
-      });
-    }
-    mainTabPanel.setActiveTab(id);
+    main.addTabPanel(id, xtype, title);
   }
 
   // register login callbacks
