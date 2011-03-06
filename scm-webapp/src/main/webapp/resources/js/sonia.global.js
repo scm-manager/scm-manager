@@ -46,100 +46,6 @@ var logoutCallbacks = [];
 
 var restUrl = "api/rest/";
 
-function execCallbacks(callbacks, param){
-  Ext.each(callbacks, function(callback){
-    if ( Ext.isFunction(callback) ){
-      callback(state);
-    } else if (Ext.isObject(callback)) {
-      callback.fn.call( callback.scope, param );
-    } else if (debug){
-      console.debug( "callback is not a function or object. " + callback );
-    }
-  });
-}
-
-function loadState(s){
-  if ( debug ){
-    console.debug( s );
-  }
-  state = s;
-  admin = s.user.admin;
-  // call login callback functions
-  execCallbacks(loginCallbacks, state);
-}
-
-function clearState(){
-  // clear state
-  state = null;
-  // clear repository store
-  repositoryTypeStore.removeAll();
-  // remove all tabs
-  Ext.getCmp('mainTabPanel').removeAll();
-  // remove navigation items
-  Ext.getCmp('navigationPanel').removeAll();
-}
-
-function checkLogin(){
-  Ext.Ajax.request({
-    url: restUrl + 'authentication.json',
-    method: 'GET',
-    success: function(response){
-      if ( debug ){
-        console.debug('login success');
-      }
-      var s = Ext.decode(response.responseText);
-      loadState(s);
-    },
-    failure: function(){
-      if ( debug ){
-        console.debug('login failed');
-      }
-      var loginWin = new Sonia.login.Window();
-      loginWin.show();
-    }
-  });
-}
-
-function login(){
-  clearState();
-  var loginWin = new Sonia.login.Window();
-  loginWin.show();
-}
-
-function logout(){
-  Ext.Ajax.request({
-    url: restUrl + 'authentication/logout.json',
-    method: 'GET',
-    success: function(response){
-      if ( debug ){
-        console.debug('logout success');
-      }
-      clearState();
-      // call logout callback functions
-      execCallbacks(logoutCallbacks, state);
-
-      var s = null;
-      var text = response.responseText;
-      if ( text != null && text.length > 0 ){
-        s = Ext.decode( text );
-      }
-      if ( s != null && s.success ){
-        loadState(s);
-      } else {
-        // show login window
-        var loginWin = new Sonia.login.Window();
-        loginWin.show();
-      }
-    },
-    failure: function(){
-      if ( debug ){
-        console.debug('logout failed');
-      }
-      Ext.Msg.alert('Logout Failed!');
-    }
-  });
-}
-
 var userSearchStore = new Ext.data.JsonStore({
   root: 'results',
   idProperty: 'value',
@@ -159,6 +65,9 @@ var groupSearchStore = new Ext.data.JsonStore({
     method: 'GET'
   })
 });
+
+// the main object (sonia.scm)
+var main = null;
 
 // enable extjs quicktips
 Ext.QuickTips.init();

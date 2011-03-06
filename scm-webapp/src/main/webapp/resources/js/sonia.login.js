@@ -114,7 +114,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
         if ( debug ){
           console.debug( 'login success' );
         }
-        loadState( action.result );
+        main.loadState( action.result );
       },
 
       failure: function(form){

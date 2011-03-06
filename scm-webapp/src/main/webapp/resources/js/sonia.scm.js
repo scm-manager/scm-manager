@@ -84,8 +84,9 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       items: [{
         label: this.navRepositoriesText,
         fn: function(){
-          mainTabPanel.setActiveTab('repositories');
-        }
+          Ext.getCmp('mainTabPanel').setActiveTab('repositories');
+        },
+        scope: this
       }]
     });
 
@@ -111,18 +112,21 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         items: [{
           label: this.navGeneralConfigText,
           fn: function(){
-            addTabPanel("scmConfig", "scmConfig", this.navGeneralConfigText);
-          }
+            this.addTabPanel("scmConfig", "scmConfig", this.navGeneralConfigText);
+          },
+          scope: this
         },{
           label: this.navRepositoryTypesText,
           fn: function(){
-            addTabPanel('repositoryConfig', 'repositoryConfig', this.tabRepositoryTypesText);
-          }
+            this.addTabPanel('repositoryConfig', 'repositoryConfig', this.tabRepositoryTypesText);
+          },
+          scope: this
         },{
           label: this.navPluginsText,
           fn: function(){
-            addTabPanel('plugins', 'pluginGrid', this.navPluginsText);
-          }
+            this.addTabPanel('plugins', 'pluginGrid', this.navPluginsText);
+          },
+          scope: this
         }]
       }]);
 
@@ -136,14 +140,16 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       securitySection.items.push({
         label: this.navUsersText,
         fn: function(){
-          addTabPanel('users', 'userPanel', this.navUsersText);
-        }
+          this.addTabPanel('users', 'userPanel', this.navUsersText);
+        },
+        scope: this
       });
       securitySection.items.push({
         label: this.navGroupsText,
         fn: function(){
-          addTabPanel('groups', 'groupPanel', this.tabGroupsText);
-        }
+          this.addTabPanel('groups', 'groupPanel', this.tabGroupsText);
+        },
+        scope: this
       });
     }
 
@@ -157,7 +163,8 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         title: this.sectionLoginText,
         items: [{
           label: this.sectionLoginText,
-          fn: login
+          fn: this.login,
+          scope: this
         }]
       });
     } else {
@@ -166,13 +173,126 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         title: this.sectionLogoutText,
         items: [{
           label: this.navLogoutText,
-          fn: logout
+          fn: this.logout,
+          scope: this
         }]
       });
     }
 
     //fix hidden logout button
     panel.doLayout();
+  },
+
+  addTabPanel: function(id, xtype, title){
+    var mainTabPanel = Ext.getCmp('mainTabPanel');
+    var tab = mainTabPanel.findById( id );
+    if ( tab == null ){
+      mainTabPanel.add({
+        id: id,
+        xtype: xtype,
+        title: title,
+        closable: true,
+        autoScroll: true
+      });
+    }
+    mainTabPanel.setActiveTab(id);
+  },
+
+
+  execCallbacks: function(callbacks, param){
+    Ext.each(callbacks, function(callback){
+      if ( Ext.isFunction(callback) ){
+        callback(state);
+      } else if (Ext.isObject(callback)) {
+        callback.fn.call( callback.scope, param );
+      } else if (debug){
+        console.debug( "callback is not a function or object. " + callback );
+      }
+    });
+  },
+
+  loadState: function(s){
+    if ( debug ){
+      console.debug( s );
+    }
+    state = s;
+    admin = s.user.admin;
+    // call login callback functions
+    this.execCallbacks(loginCallbacks, state);
+  },
+
+  clearState: function(){
+    // clear state
+    state = null;
+    // clear repository store
+    repositoryTypeStore.removeAll();
+    // remove all tabs
+    Ext.getCmp('mainTabPanel').removeAll();
+    // remove navigation items
+    Ext.getCmp('navigationPanel').removeAll();
+  },
+
+  checkLogin: function(){
+    Ext.Ajax.request({
+      url: restUrl + 'authentication.json',
+      method: 'GET',
+      scope: this,
+      success: function(response){
+        if ( debug ){
+          console.debug('login success');
+        }
+        var s = Ext.decode(response.responseText);
+        this.loadState(s);
+      },
+      failure: function(){
+        if ( debug ){
+          console.debug('login failed');
+        }
+        var loginWin = new Sonia.login.Window();
+        loginWin.show();
+      }
+    });
+  },
+
+  login: function(){
+    this.clearState();
+    var loginWin = new Sonia.login.Window();
+    loginWin.show();
+  },
+
+  logout: function(){
+    Ext.Ajax.request({
+      url: restUrl + 'authentication/logout.json',
+      method: 'GET',
+      scope: this,
+      success: function(response){
+        if ( debug ){
+          console.debug('logout success');
+        }
+        this.clearState();
+        // call logout callback functions
+        this.execCallbacks(logoutCallbacks, state);
+
+        var s = null;
+        var text = response.responseText;
+        if ( text != null && text.length > 0 ){
+          s = Ext.decode( text );
+        }
+        if ( s != null && s.success ){
+          this.loadState(s);
+        } else {
+          // show login window
+          var loginWin = new Sonia.login.Window();
+          loginWin.show();
+        }
+      },
+      failure: function(){
+        if ( debug ){
+          console.debug('logout failed');
+        }
+        Ext.Msg.alert('Logout Failed!');
+      }
+    });
   }
 
 });
@@ -218,7 +338,8 @@ Ext.onReady(function(){
     ]
   });
 
-  checkLogin();
+  main = new Sonia.scm.Main();
+  main.checkLogin();
 
   // adds a tab to main TabPanel
   function addTabPanel(id, xtype, title){
@@ -236,8 +357,6 @@ Ext.onReady(function(){
   }
 
   // register login callbacks
-
-  var main = new Sonia.scm.Main();
 
   // create menu
   loginCallbacks.splice(0, 0, {fn: main.createMainMenu, scope: main});
