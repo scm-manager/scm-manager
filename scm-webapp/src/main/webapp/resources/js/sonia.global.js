@@ -38,10 +38,18 @@ var admin = false;
 // sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT
 var dummyPassword = '__dummypassword__';
 
-// functions called after login
+/**
+ * functions called after login
+ *
+ * @deprecated use main.addListener('login', fn, scope)
+ */
 var loginCallbacks = [];
 
-// function called after logout
+/**
+ * functions called after logout
+ *
+ * @deprecated use main.addListener('logout', fn, scope)
+ */
 var logoutCallbacks = [];
 
 var restUrl = "api/rest/";

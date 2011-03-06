@@ -62,9 +62,15 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   mainTabPanel: null,
 
   constructor : function(config) {
-    this.addEvents("login", "logout");
+    this.addEvents('login', 'logout');
     this.mainTabPanel = Ext.getCmp('mainTabPanel');
+    this.addListener('login', this.postLogin, this);
     Sonia.scm.Main.superclass.constructor.call(this, config);
+  },
+
+  postLogin: function(){
+    this.createMainMenu();
+    this.createRepositoryPanel();
   },
 
   createRepositoryPanel: function(){
@@ -303,6 +309,18 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         Ext.Msg.alert(this.logoutFailedText);
       }
     });
+  },
+
+  addListeners: function(event, callbacks){
+    Ext.each(callbacks, function(callback){
+      if ( Ext.isFunction(callback) ){
+        this.addListener(event, callback);
+      } else if (Ext.isObject(callback)) {
+        this.main.addListener(event, callback.fn, callback.scope);
+      } else if (debug){
+        console.debug( "callback is not a function or object. " + callback );
+      }
+    });
   }
 
 });
@@ -360,11 +378,7 @@ Ext.onReady(function(){
     main.addTabPanel(id, xtype, title);
   }
 
-  // register login callbacks
-
-  // create menu
-  loginCallbacks.splice(0, 0, {fn: main.createMainMenu, scope: main});
-  // add repository tab
-  loginCallbacks.push({fn: main.createRepositoryPanel, scope: main});
+  main.addListeners('login', loginCallbacks);
+  main.addListeners('logout', logoutCallbacks);
 
 });
