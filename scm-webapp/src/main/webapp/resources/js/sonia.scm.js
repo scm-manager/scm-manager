@@ -57,9 +57,12 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   sectionLogoutText: 'Log out',
   navLogoutText: 'Log out',
 
+  logoutFailedText: 'Logout Failed!',
+
   mainTabPanel: null,
 
   constructor : function(config) {
+    this.addEvents("login", "logout");
     this.mainTabPanel = Ext.getCmp('mainTabPanel');
     Sonia.scm.Main.superclass.constructor.call(this, config);
   },
@@ -221,7 +224,9 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     }
     state = s;
     admin = s.user.admin;
+
     // call login callback functions
+    this.fireEvent("login", state);
     this.execCallbacks(loginCallbacks, state);
   },
 
@@ -276,6 +281,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         this.clearState();
         // call logout callback functions
         this.execCallbacks(logoutCallbacks, state);
+        this.fireEvent( "logout", state );
 
         var s = null;
         var text = response.responseText;
@@ -294,7 +300,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         if ( debug ){
           console.debug('logout failed');
         }
-        Ext.Msg.alert('Logout Failed!');
+        Ext.Msg.alert(this.logoutFailedText);
       }
     });
   }
