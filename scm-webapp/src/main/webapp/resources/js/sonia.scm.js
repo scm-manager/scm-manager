@@ -211,19 +211,6 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     this.mainTabPanel.setActiveTab(id);
   },
 
-
-  execCallbacks: function(callbacks, param){
-    Ext.each(callbacks, function(callback){
-      if ( Ext.isFunction(callback) ){
-        callback(state);
-      } else if (Ext.isObject(callback)) {
-        callback.fn.call( callback.scope, param );
-      } else if (debug){
-        console.debug( "callback is not a function or object. " + callback );
-      }
-    });
-  },
-
   loadState: function(s){
     if ( debug ){
       console.debug( s );
@@ -233,7 +220,6 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
     // call login callback functions
     this.fireEvent("login", state);
-    this.execCallbacks(loginCallbacks, state);
   },
 
   clearState: function(){
@@ -286,7 +272,6 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         }
         this.clearState();
         // call logout callback functions
-        this.execCallbacks(logoutCallbacks, state);
         this.fireEvent( "logout", state );
 
         var s = null;
