@@ -33,97 +33,89 @@ Ext.ns('Sonia.navigation');
 
 Sonia.navigation.NavSection = Ext.extend(Ext.Panel, {
 
-  data: null,
+  links: null,
+  tpl: new Ext.XTemplate(
+        '<ul class="scm-nav-list">',
+        '<tpl for="links">',
+            '<li class="scm-nav-item">',
+                '<a id="{id}" class="scm-nav-item">{label}</a>',
+            '</li>',
+        '</tpl>',
+        '</ul>'
+      ),
+
 
   initComponent: function(){
-    if ( this.data == null ){
-      this.data = this.items;
+    if ( this.links == null ){
+      this.links = this.items;
     }
-    if ( this.data == null ){
-      this.data = [];
+    if ( this.links == null ){
+      this.links = [];
     }
+
+    Ext.each(this.links, function(link){
+      Ext.id( link );
+    });
+
     var config = {
       frame: true,
       collapsible:true,
-      style: 'margin: 5px',
-      listeners: {
-        afterrender: {
-          fn: this.renderMenu,
-          scope: this
-        }
-      }
+      style: 'margin: 5px'
     }
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.navigation.NavSection.superclass.initComponent.apply(this, arguments);
-
   },
 
-  onItemClick: function(e, t){
-    var target = Ext.get(t);
-    var id = target.id;
-    var prefix = this.id + '-nav-item-';
-    if ( id != null && id.indexOf(prefix) == 0 ){
-      var i = parseInt( id.substring( prefix.length ) );
-      var fn = this.data[i].fn;
-      if ( Ext.isFunction( fn ) ){
-        var scope = this.data[i].scope;
+  doAction: function(e, t){
+    console.debug( t );
+    e.stopEvent();
+    Ext.each(this.links, function(navItem){
+      if ( navItem.id == t.id && Ext.isFunction(navItem.fn) ){
+        var scope = navItem.scope;
         if ( Ext.isObject( scope )){
-          fn.call(scope);
+          navItem.fn.call(scope);
         } else {
-          fn();
+          navItem.fn();
         }
-      } else if ( debug ){
-        console.debug('fn at "' +  this.data[i].label + '" is not a function');
       }
-    }
+    });
+  },
+  
+  afterRender: function(){
+    Sonia.navigation.NavSection.superclass.afterRender.apply(this, arguments);
+
+    // create list items
+    this.tpl.overwrite(this.body, {
+        links: this.links
+    });
+
+    this.body.on('mousedown', this.doAction, this, {delegate:'a'});
+    this.body.on('click', Ext.emptyFn, null, {delegate:'a', preventDefault:true});
   },
 
-  renderMenu: function(){
-    if ( Ext.isArray( this.data ) && this.data.length > 0 ){
-      var links = [];
-      for ( var i=0; i<this.data.length; i++ ){
-        var item = this.data[i];
-        var link = {
-          tag: 'li',
-          cls: 'nav-item',
-          id: this.id + '-nav-item-' + i,
-          html: item.label,
-          style: 'cursor: pointer;'
-        };
-        links.push(link);
-      }
-      
-      var dh = Ext.DomHelper;
-      var list = dh.overwrite(this.body, {tag: 'ul', cls: 'nav-list'}, true);
-      dh.append(list, links);
-      list.on('click', this.onItemClick, this);
-    }
-  },
 
   addLink: function(link){
-    this.data.push(link);
-    this.renderMenu();
+    Ext.id(link);
+    this.links.push(link);
   },
 
   addLinks: function(links){
     if ( Ext.isArray(links) && links.length > 0 ){
       for ( var i=0; i<links.length; i++ ){
-        this.data.push(links[i]);
+        this.addLink(links[i]);
       }
-      this.renderMenu();
     } else {
       this.addLink(links);
     }
   },
 
   insertLink: function(pos, link){
-    this.data.splice(pos, 0, link);
-    this.renderMenu();
+    this.links.splice(pos, 0, link);
   },
 
   count: function(){
-    return this.data.length;
+    return this.links.length;
   }
 
 });

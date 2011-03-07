@@ -95,7 +95,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     panel.addSection({
       id: 'navMain',
       title: this.sectionMainText,
-      items: [{
+      links: [{
         label: this.navRepositoriesText,
         fn: function(){
           this.mainTabPanel.setActiveTab('repositories');
@@ -109,7 +109,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     if ( state.user.type == 'xml' && state.user.name != 'anonymous' ){
       securitySection = {
         title: this.sectionSecurityText,
-        items: [{
+        links: [{
           label: this.navChangePasswordText,
           fn: function(){
             new Sonia.action.ChangePasswordWindow().show();
@@ -123,7 +123,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       panel.addSections([{
         id: 'navConfig',
         title: this.sectionConfigText,
-        items: [{
+        links: [{
           label: this.navGeneralConfigText,
           fn: function(){
             this.addTabPanel("scmConfig", "scmConfig", this.navGeneralConfigText);
@@ -147,18 +147,18 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       if ( securitySection == null ){
         securitySection = {
           title: this.sectionSecurityText,
-          items: []
+          links: []
         }
       }
 
-      securitySection.items.push({
+      securitySection.links.push({
         label: this.navUsersText,
         fn: function(){
           this.addTabPanel('users', 'userPanel', this.navUsersText);
         },
         scope: this
       });
-      securitySection.items.push({
+      securitySection.links.push({
         label: this.navGroupsText,
         fn: function(){
           this.addTabPanel('groups', 'groupPanel', this.tabGroupsText);
@@ -175,7 +175,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       panel.addSection({
         id: 'navLogin',
         title: this.sectionLoginText,
-        items: [{
+        links: [{
           label: this.sectionLoginText,
           fn: this.login,
           scope: this
@@ -185,7 +185,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       panel.addSection({
         id: 'navLogout',
         title: this.sectionLogoutText,
-        items: [{
+        links: [{
           label: this.navLogoutText,
           fn: this.logout,
           scope: this
