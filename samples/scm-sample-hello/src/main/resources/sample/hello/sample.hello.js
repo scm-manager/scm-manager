@@ -59,7 +59,7 @@ loginCallbacks.push(function(){
   var count = navPanel.count() - 1;
   navPanel.insertSection(count, {
     title: 'Hello World',
-    items: [{
+    links: [{
       label: 'Say Hello',
       fn: sayHello
     }]

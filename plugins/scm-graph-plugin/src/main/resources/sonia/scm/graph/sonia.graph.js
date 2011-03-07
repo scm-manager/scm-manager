@@ -34,7 +34,7 @@ loginCallbacks.push(function(){
     var count = navPanel.count() - 1;
     navPanel.insertSection(count, {
       title: 'Development',
-      items: [{
+      links: [{
         label: 'Injection Graph',
         fn: function(){
           window.open('graph.dot');

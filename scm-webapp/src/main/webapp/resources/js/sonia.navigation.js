@@ -68,7 +68,6 @@ Sonia.navigation.NavSection = Ext.extend(Ext.Panel, {
   },
 
   doAction: function(e, t){
-    console.debug( t );
     e.stopEvent();
     Ext.each(this.links, function(navItem){
       if ( navItem.id == t.id && Ext.isFunction(navItem.fn) ){
