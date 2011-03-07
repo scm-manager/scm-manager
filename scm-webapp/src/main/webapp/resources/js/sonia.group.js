@@ -149,6 +149,11 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   errorTitleText: 'Error',
   updateErrorMsgText: 'Group update failed',
   createErrorMsgText: 'Group creation failed',
+
+  // help
+  nameHelpText: 'The unique name for the group.',
+  descriptionHelpText: 'A short description for the group.',
+  membersHelpText: 'The usernames of the group members.',
   
   memberStore: null,
 
@@ -214,11 +219,13 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         fieldLabel: this.nameText,
         name: 'name',
         allowBlank: false,
-        readOnly: this.item != null
+        readOnly: this.item != null,
+        helpText: this.nameHelpText
       },{
         fieldLabel: this.descriptionText,
         name: 'description',
-        xtype: 'textarea'
+        xtype: 'textarea',
+        helpText: this.descriptionHelpText
       }]
     },{
       id: 'memberGrid',
@@ -255,11 +262,30 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
             this.memberStore.remove(selected);
           }
         }
+      },'->',{
+        id: 'memberGridHelp',
+        xtype: 'box',
+        autoEl: {
+          tag: 'img',
+          src: 'resources/images/help.gif'
+        }
       }]
     }];
 
     Ext.apply(this, Ext.apply(this.initialConfig, {items: items}));
     Sonia.group.FormPanel.superclass.initComponent.apply(this, arguments);
+  },
+
+  afterRender: function(){
+    // call super
+    Sonia.group.FormPanel.superclass.afterRender.apply(this, arguments);
+    
+    Ext.QuickTips.register({
+      target: Ext.getCmp('memberGridHelp'),
+      title: '',
+      text: this.membersHelpText,
+      enabled: true
+    });
   },
 
   updateMembers: function(item){
