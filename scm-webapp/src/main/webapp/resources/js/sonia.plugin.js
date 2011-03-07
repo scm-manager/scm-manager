@@ -215,7 +215,7 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
   colUrlText: 'Url',
   emptyText: 'No plugins avaiable',
 
-  actionLinkTemplate: '<a style="cursor: pointer;" onclick="{1}">{0}</a>',
+  actionLinkTemplate: '<a style="cursor: pointer;" onclick="Sonia.plugin.CenterInstance.{1}(\'{2}\')">{0}</a>',
 
   initComponent: function(){
 
@@ -258,13 +258,13 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
     var data = record.data;
     var id = Sonia.plugin.CenterInstance.getPluginId(data);
     if ( data.state == 'AVAILABLE' ){
-      out = String.format(this.actionLinkTemplate, 'Install', 'Sonia.plugin.CenterInstance.install(\'' + id + '\')');
+      out = String.format(this.actionLinkTemplate, 'Install', 'install', id);
     } else if ( data.state == 'INSTALLED' ){
-      out = String.format(this.actionLinkTemplate, 'Uninstall', 'Sonia.plugin.CenterInstance.uninstall(\'' + id + '\')');
+      out = String.format(this.actionLinkTemplate, 'Uninstall', 'uninstall', id);
     } else if ( data.state == 'UPDATE_AVAILABLE' ){
-      out = String.format(this.actionLinkTemplate, 'Update', 'Sonia.plugin.CenterInstance.update(\'' + id + '\')');
+      out = String.format(this.actionLinkTemplate, 'Update', 'update', id);
       out += ', '
-      out += String.format(this.actionLinkTemplate, 'Uninstall', 'Sonia.plugin.CenterInstance.uninstall(\'' + id + '\')');
+      out += String.format(this.actionLinkTemplate, 'Uninstall', 'uninstall', id);
     }
     return out;
   }
