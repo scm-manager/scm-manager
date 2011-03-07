@@ -159,7 +159,15 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   errorTitleText: 'Error',
   updateErrorMsgText: 'User update failed',
   createErrorMsgText: 'User creation failed',
-  passwordMinLengthText: 'Password must be at least 6 characters long.',
+  passwordMinLengthText: 'Password must be at least 6 characters long',
+
+  // help
+  usernameHelpText: 'The unique name for the user.',
+  displayNameHelpText: 'The display name for the user.',
+  mailHelpText: 'The email address for the user.',
+  passwordHelpText: 'The plain text password for the user.',
+  passwordConfirmHelpText: 'Repeat the password for validation.',
+  adminHelpText: 'An administrator is able to create, modify and delete repositories, groups and users.',
 
   initComponent: function(){
 
@@ -167,16 +175,19 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       fieldLabel: this.nameText,
       name: 'name',
       allowBlank: false,
-      readOnly: this.item != null
+      readOnly: this.item != null,
+      helpText: this.usernameHelpText
     },{
       fieldLabel: this.displayNameText,
       name: 'displayName',
-      allowBlank: false
+      allowBlank: false,
+      helpText: this.displayNameHelpText
     },{
       fieldLabel: this.mailText,
       name: 'mail',
       allowBlank: true,
-      vtype: 'email'
+      vtype: 'email',
+      helpText: this.mailHelpText
     }];
 
     if ( this.item == null || this.item.type == 'xml' ){
@@ -187,7 +198,8 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         inputType: 'password',
         minLength: 6,
         maxLength: 32,
-        minLengthText: this.passwordMinLengthText
+        minLengthText: this.passwordMinLengthText,
+        helpText: this.passwordHelpText
       },{
         name: 'password-confirm',
         inputType: 'password',
@@ -195,14 +207,16 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         maxLength: 32,
         minLengthText: this.passwordMinLengthText,
         vtype: 'password',
-        initialPassField: 'pwd'
+        initialPassField: 'pwd',
+        helpText: this.passwordConfirmHelpText
       });
     }
 
     items.push({
       fieldLabel: this.adminText,
       name: 'admin',
-      xtype: 'checkbox'
+      xtype: 'checkbox',
+      helpText: this.adminHelpText
     });
 
     Ext.apply(this, Ext.apply(this.initialConfig, {items: items}));
