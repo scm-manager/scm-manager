@@ -188,6 +188,14 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   updateErrorMsgText: 'Repository update failed',
   createErrorMsgText: 'Repository creation failed',
 
+  // help
+  nameHelpText: 'The name for the repository. This name would be part of the reository url.',
+  typeHelpText: 'The type of the repository.',
+  contactHelpText: 'An e-mail address to contact an for the repository responsible person.',
+  descriptionHelpText: 'A short description for the repository.',
+  publicHelpText: 'A public repository is readable by every person.',
+  permissionHelpText: '... coming soon ...',
+
   permissionStore: null,
 
   initComponent: function(){
@@ -299,9 +307,14 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         defaults: {width: 240},
         defaultType: 'textfield',
         buttonAlign: 'center',
-        items: [
-          {id: 'repositoryName', fieldLabel: this.nameText, name: 'name', readOnly: update, allowBlank: false},
-          {
+        items: [{
+            id: 'repositoryName',
+            fieldLabel: this.nameText,
+            name: 'name',
+            readOnly: update,
+            allowBlank: false,
+            helpText: this.nameHelpText
+          },{
            fieldLabel: this.typeText,
            name: 'type',
            xtype: 'combo',
@@ -315,11 +328,24 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
            store: repositoryTypeStore,
            valueField: 'name',
            displayField: 'displayName',
-           allowBlank: false
-          },
-          {fieldLabel: this.contactText, name: 'contact', vtype: 'email'},
-          {fieldLabel: this.descriptionText, name: 'description', xtype: 'textarea'},
-          {fieldLabel: this.publicText, name: 'public', xtype: 'checkbox'}
+           allowBlank: false,
+           helpText: this.typeHelpText
+          },{
+            fieldLabel: this.contactText,
+            name: 'contact',
+            vtype: 'email',
+            helpText: this.contactHelpText
+          },{
+            fieldLabel: this.descriptionText,
+            name: 'description',
+            xtype: 'textarea',
+            helpText: this.descriptionHelpText
+          },{
+            fieldLabel: this.publicText,
+            name: 'public',
+            xtype: 'checkbox',
+            helpText: this.publicHelpText
+          }
         ]
       },{
         id: 'permissionGrid',
@@ -360,6 +386,13 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
               this.permissionStore.remove(selected);
             }
           }
+        }, '->',{
+          id: 'permissionGridHelp',
+          xtype: 'box',
+          autoEl: {
+            tag: 'img',
+            src: 'resources/images/help.gif'
+          }
         }]
 
       }]
@@ -368,7 +401,19 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.FormPanel.superclass.initComponent.apply(this, arguments);
   },
-  
+
+  afterRender: function(){
+    // call super
+    Sonia.repository.FormPanel.superclass.afterRender.apply(this, arguments);
+
+    Ext.QuickTips.register({
+      target: Ext.getCmp('permissionGridHelp'),
+      title: '',
+      text: this.permissionHelpText,
+      enabled: true
+    });
+  },
+
   updatePermissions: function(item){
     var permissions = [];
     this.permissionStore.data.each(function(record){
