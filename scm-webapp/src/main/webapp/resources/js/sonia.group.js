@@ -151,8 +151,8 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   createErrorMsgText: 'Group creation failed',
 
   // help
-  nameHelpText: 'The unique name for the group.',
-  descriptionHelpText: 'A short description for the group.',
+  nameHelpText: 'The unique name for this group.',
+  descriptionHelpText: 'A short description of the group.',
   membersHelpText: 'The usernames of the group members.',
   
   memberStore: null,

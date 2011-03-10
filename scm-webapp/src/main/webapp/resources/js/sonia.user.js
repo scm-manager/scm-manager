@@ -162,10 +162,10 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   passwordMinLengthText: 'Password must be at least 6 characters long',
 
   // help
-  usernameHelpText: 'The unique name for the user.',
-  displayNameHelpText: 'The display name for the user.',
-  mailHelpText: 'The email address for the user.',
-  passwordHelpText: 'The plain text password for the user.',
+  usernameHelpText: 'The unique name of the user.',
+  displayNameHelpText: 'The display name of the user.',
+  mailHelpText: 'The email address of the user.',
+  passwordHelpText: 'The plain text password of the user.',
   passwordConfirmHelpText: 'Repeat the password for validation.',
   adminHelpText: 'An administrator is able to create, modify and delete repositories, groups and users.',
 
