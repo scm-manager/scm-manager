@@ -56,6 +56,7 @@
     <module>samples</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
+    <module>scm-plugin-backend</module>
   </modules>
 
   <repositories>
