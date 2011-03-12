@@ -62,7 +62,7 @@ public class DefaultPluginScanner implements PluginScanner
 {
 
   /** Field description */
-  public static final String PLUGIN_DESCRIPTOR = "/META-INF/scm/plugin.xml";
+  public static final String PLUGIN_DESCRIPTOR = "META-INF/scm/plugin.xml";
 
   /** Field description */
   public static final String PLUGIN_EXTENSION = ".jar";
@@ -145,6 +145,11 @@ public class DefaultPluginScanner implements PluginScanner
 
       while (entry != null)
       {
+        if (logger.isTraceEnabled())
+        {
+          logger.trace("scann entry {}", entry.getName());
+        }
+
         if (PLUGIN_DESCRIPTOR.equals(entry.getName()))
         {
           Plugin plugin =
@@ -160,12 +165,15 @@ public class DefaultPluginScanner implements PluginScanner
             backend.addPlugin(plugin.getInformation());
           }
 
-          break;
-        } else {
-          entry.getCompressedSize();
-        }
+          inputStream.closeEntry();
 
-        inputStream.closeEntry();
+          break;
+        }
+        else
+        {
+          inputStream.closeEntry();
+          entry = inputStream.getNextJarEntry();
+        }
       }
     }
     catch (Exception ex)
