@@ -33,24 +33,29 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.SCMContext;
+import sonia.scm.util.SystemUtil;
+import sonia.scm.util.Util;
+
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Set;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement
+@XmlRootElement(name = "conditions")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Plugin
+public class PluginCondition
 {
 
   /**
@@ -59,9 +64,9 @@ public class Plugin
    *
    * @return
    */
-  public PluginCondition getCondition()
+  public String getArch()
   {
-    return condition;
+    return arch;
   }
 
   /**
@@ -70,9 +75,9 @@ public class Plugin
    *
    * @return
    */
-  public PluginInformation getInformation()
+  public String getMinVersion()
   {
-    return information;
+    return minVersion;
   }
 
   /**
@@ -81,9 +86,9 @@ public class Plugin
    *
    * @return
    */
-  public Set<String> getPackageSet()
+  public List<String> getOs()
   {
-    return packageSet;
+    return os;
   }
 
   /**
@@ -92,20 +97,53 @@ public class Plugin
    *
    * @return
    */
-  public String getPath()
+  public boolean isSupported()
   {
-    return path;
+    return isSupported(SCMContext.getContext().getVersion(),
+                       SystemUtil.getOS(), SystemUtil.getArch());
   }
 
   /**
    * Method description
    *
    *
+   * @param version
+   * @param os
+   * @param arch
+   *
    * @return
    */
-  public PluginResources getResources()
+  public boolean isSupported(String version, String os, String arch)
   {
-    return resources;
+    boolean supported = true;
+
+    if (Util.isNotEmpty(minVersion) && Util.isNotEmpty(version))
+    {
+      supported = new PluginVersion(version).isNewer(minVersion);
+    }
+
+    if (supported && Util.isNotEmpty(this.os) && Util.isNotEmpty(os))
+    {
+      supported = false;
+      os = os.toLowerCase();
+
+      for (String osType : this.os)
+      {
+        supported = isOs(osType, os);
+
+        if (supported)
+        {
+          break;
+        }
+      }
+    }
+
+    if (supported && Util.isNotEmpty(this.arch) && Util.isNotEmpty(arch))
+    {
+      supported = arch.equals(this.arch);
+    }
+
+    return supported;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -114,76 +152,67 @@ public class Plugin
    * Method description
    *
    *
-   *
-   * @param condition
+   * @param arch
    */
-  public void setCondition(PluginCondition condition)
+  public void setArch(String arch)
   {
-    this.condition = condition;
+    this.arch = arch;
   }
 
   /**
    * Method description
    *
    *
-   * @param information
+   * @param minVersion
    */
-  public void setInformation(PluginInformation information)
+  public void setMinVersion(String minVersion)
   {
-    this.information = information;
+    this.minVersion = minVersion;
   }
 
   /**
    * Method description
    *
    *
-   * @param packageSet
+   * @param os
    */
-  public void setPackageSet(Set<String> packageSet)
+  public void setOs(List<String> os)
   {
-    this.packageSet = packageSet;
+    this.os = os;
   }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param path
+   * @param osType
+   * @param os
+   *
+   * @return
    */
-  public void setPath(String path)
+  private boolean isOs(String osType, String os)
   {
-    this.path = path;
-  }
+    osType = osType.toLowerCase();
 
-  /**
-   * Method description
-   *
-   *
-   * @param resources
-   */
-  public void setResources(PluginResources resources)
-  {
-    this.resources = resources;
+    return (osType.startsWith("mac") && (os.indexOf("mac") >= 0))
+           || (osType.startsWith("win") && (os.indexOf("win") >= 0))
+           || ((osType.startsWith("unix") && (os.indexOf("nix") >= 0))
+               || (os.indexOf("nux") >= 0));
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlElement(name="conditions")
-  private PluginCondition condition;
+  private String arch;
 
   /** Field description */
-  private PluginInformation information;
+  @XmlElement(name = "min-version")
+  private String minVersion;
 
   /** Field description */
-  @XmlElement(name = "package")
-  @XmlElementWrapper(name = "packages")
-  private Set<String> packageSet;
-
-  /** Field description */
-  @XmlTransient
-  private String path;
-
-  /** Field description */
-  private PluginResources resources;
+  @XmlElement(name = "name")
+  @XmlElementWrapper(name = "os")
+  private List<String> os;
 }

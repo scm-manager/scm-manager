@@ -244,6 +244,12 @@ public class DefaultPluginLoader implements PluginLoader
 
       Plugin plugin = JAXB.unmarshal(url, Plugin.class);
       PluginInformation info = plugin.getInformation();
+      PluginCondition condition = plugin.getCondition();
+
+      if (condition != null)
+      {
+        info.setCondition(condition);
+      }
 
       if (info != null)
       {

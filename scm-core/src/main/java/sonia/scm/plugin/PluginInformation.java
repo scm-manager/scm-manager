@@ -73,6 +73,12 @@ public class PluginInformation implements Validateable
 
     final PluginInformation other = (PluginInformation) obj;
 
+    if ((this.condition != other.condition)
+        && ((this.condition == null) ||!this.condition.equals(other.condition)))
+    {
+      return false;
+    }
+
     if ((this.artifactId == null)
         ? (other.artifactId != null)
         : !this.artifactId.equals(other.artifactId))
@@ -87,9 +93,35 @@ public class PluginInformation implements Validateable
       return false;
     }
 
+    if ((this.description == null)
+        ? (other.description != null)
+        : !this.description.equals(other.description))
+    {
+      return false;
+    }
+
     if ((this.groupId == null)
         ? (other.groupId != null)
         : !this.groupId.equals(other.groupId))
+    {
+      return false;
+    }
+
+    if ((this.name == null)
+        ? (other.name != null)
+        : !this.name.equals(other.name))
+    {
+      return false;
+    }
+
+    if (this.state != other.state)
+    {
+      return false;
+    }
+
+    if ((this.url == null)
+        ? (other.url != null)
+        : !this.url.equals(other.url))
     {
       return false;
     }
@@ -113,15 +145,33 @@ public class PluginInformation implements Validateable
   @Override
   public int hashCode()
   {
-    int hash = 7;
+    int hash = 5;
 
-    hash = 53 * hash + ((this.artifactId != null)
+    hash = 83 * hash + ((this.condition != null)
+                        ? this.condition.hashCode()
+                        : 0);
+    hash = 83 * hash + ((this.artifactId != null)
                         ? this.artifactId.hashCode()
                         : 0);
-    hash = 53 * hash + ((this.groupId != null)
+    hash = 83 * hash + ((this.author != null)
+                        ? this.author.hashCode()
+                        : 0);
+    hash = 83 * hash + ((this.description != null)
+                        ? this.description.hashCode()
+                        : 0);
+    hash = 83 * hash + ((this.groupId != null)
                         ? this.groupId.hashCode()
                         : 0);
-    hash = 53 * hash + ((this.version != null)
+    hash = 83 * hash + ((this.name != null)
+                        ? this.name.hashCode()
+                        : 0);
+    hash = 83 * hash + ((this.state != null)
+                        ? this.state.hashCode()
+                        : 0);
+    hash = 83 * hash + ((this.url != null)
+                        ? this.url.hashCode()
+                        : 0);
+    hash = 83 * hash + ((this.version != null)
                         ? this.version.hashCode()
                         : 0);
 
@@ -150,6 +200,17 @@ public class PluginInformation implements Validateable
   public String getAuthor()
   {
     return author;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public PluginCondition getCondition()
+  {
+    return condition;
   }
 
   /**
@@ -274,6 +335,17 @@ public class PluginInformation implements Validateable
    * Method description
    *
    *
+   * @param condition
+   */
+  public void setCondition(PluginCondition condition)
+  {
+    this.condition = condition;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param description
    */
   public void setDescription(String description)
@@ -343,6 +415,9 @@ public class PluginInformation implements Validateable
 
   /** Field description */
   private String author;
+
+  /** Field description */
+  private PluginCondition condition;
 
   /** Field description */
   private String description;
