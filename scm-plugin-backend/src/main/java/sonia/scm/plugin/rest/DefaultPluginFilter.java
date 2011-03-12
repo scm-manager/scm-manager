@@ -35,6 +35,7 @@ package sonia.scm.plugin.rest;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.plugin.PluginCondition;
 import sonia.scm.plugin.PluginFilter;
 import sonia.scm.plugin.PluginInformation;
 
@@ -81,8 +82,10 @@ public class DefaultPluginFilter implements PluginFilter
   @Override
   public boolean accept(PluginInformation plugin)
   {
-    return snapshot
-           ||!plugin.getVersion().toUpperCase().contains(VERSION_SNAPSHOT);
+    PluginCondition condition = plugin.getCondition();
+    return ((condition != null) && condition.isSupported(version, os, arch))
+           || (condition == null) &&
+           (snapshot || !plugin.getVersion().toUpperCase().contains(VERSION_SNAPSHOT));
   }
 
   //~--- fields ---------------------------------------------------------------

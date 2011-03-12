@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginBackend;
+import sonia.scm.plugin.PluginCondition;
 import sonia.scm.plugin.PluginException;
 import sonia.scm.util.IOUtil;
 
@@ -158,6 +159,13 @@ public class DefaultPluginScanner implements PluginScanner
           if ((plugin != null) && (plugin.getInformation() != null)
               && plugin.getInformation().isValid())
           {
+            PluginCondition condition = plugin.getCondition();
+
+            if (condition != null)
+            {
+              plugin.getInformation().setCondition(condition);
+            }
+
             if (logger.isInfoEnabled())
             {
               logger.info("add plugin {} to backend", file.getPath());

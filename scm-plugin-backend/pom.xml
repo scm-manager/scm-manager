@@ -53,7 +53,7 @@
         <artifactId>maven-jetty-plugin</artifactId>
         <version>6.1.26</version>
         <configuration>
-          <stopPort>8005</stopPort>
+          <stopPort>8004</stopPort>
           <stopKey>STOP</stopKey>
           <source>${project.build.javaLevel}</source>
           <target>${project.build.javaLevel}</target>
