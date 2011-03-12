@@ -101,13 +101,18 @@ public class DefaultPluginScanner implements PluginScanner
   @Override
   public void scannDirectory(PluginBackend backend, File directory)
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("scann directory {}", directory.getPath());
+    }
+
     File[] files = directory.listFiles();
 
     for (File file : files)
     {
       if (file.isDirectory())
       {
-        scannDirectory(backend, directory);
+        scannDirectory(backend, file);
       }
       else if (file.getName().endsWith(PLUGIN_EXTENSION))
       {
@@ -125,6 +130,11 @@ public class DefaultPluginScanner implements PluginScanner
    */
   private void scannFile(PluginBackend backend, File file)
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("scann file {}", file.getPath());
+    }
+
     JarInputStream inputStream = null;
 
     try
@@ -142,15 +152,17 @@ public class DefaultPluginScanner implements PluginScanner
 
           if (plugin != null)
           {
-            if ( logger.isInfoEnabled() )
+            if (logger.isInfoEnabled())
             {
-              logger.info( "add plugin {} to backend", file.getPath() );
+              logger.info("add plugin {} to backend", file.getPath());
             }
 
             backend.addPlugin(plugin.getInformation());
           }
 
           break;
+        } else {
+          entry.getCompressedSize();
         }
 
         inputStream.closeEntry();

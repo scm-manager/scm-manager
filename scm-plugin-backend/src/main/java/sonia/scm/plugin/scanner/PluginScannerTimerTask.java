@@ -73,6 +73,7 @@ public class PluginScannerTimerTask extends TimerTask
                                 PluginScannerFactory scannerFactory)
   {
     this.backend = backend;
+    this.configuration = configuration;
     this.scannerFactory = scannerFactory;
   }
 
@@ -92,6 +93,10 @@ public class PluginScannerTimerTask extends TimerTask
 
     for (File directory : configuration.getDirectories())
     {
+      if ( logger.isDebugEnabled() )
+      {
+        logger.info("scann directory {}", directory.getPath());
+      }
       PluginScanner scanner = scannerFactory.createScanner();
 
       if (configuration.isMultithreaded())

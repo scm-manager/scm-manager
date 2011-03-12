@@ -69,7 +69,9 @@ public class TimerPluginScannerScheduler implements PluginScannerScheduler
                                      BackendConfiguration configuration,
                                      PluginScannerFactory scannerFactory)
   {
+    this.backend = backend;
     this.configuration = configuration;
+    this.scannerFactory = scannerFactory;
     timer = new Timer(TIMER_NAME);
   }
 
@@ -92,8 +94,11 @@ public class TimerPluginScannerScheduler implements PluginScannerScheduler
   @Override
   public void start()
   {
-    PluginScannerTimerTask task = new PluginScannerTimerTask(backend, configuration, scannerFactory);
-    timer.schedule(task, configuration.getScannInterval());
+    PluginScannerTimerTask task = new PluginScannerTimerTask(backend,
+                                    configuration, scannerFactory);
+
+    // wait 5 seconds and start with first run
+    timer.schedule(task, 5000l, configuration.getScannInterval());
   }
 
   //~--- fields ---------------------------------------------------------------

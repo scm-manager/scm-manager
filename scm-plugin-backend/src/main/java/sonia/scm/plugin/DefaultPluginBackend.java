@@ -96,6 +96,10 @@ public class DefaultPluginBackend implements PluginBackend
           (PluginBackendStore) storeContext.createUnmarshaller().unmarshal(
             storeFile);
       }
+      else
+      {
+        pluginStore = new PluginBackendStore();
+      }
     }
     catch (JAXBException ex)
     {

@@ -95,7 +95,7 @@ public class ScmBackendModule extends ServletModule
             configurationFile.getPath()));
     }
 
-    BackendConfiguration configuration = JAXB.unmarshal(baseDirectory,
+    BackendConfiguration configuration = JAXB.unmarshal(configurationFile,
                                            BackendConfiguration.class);
 
     bind(File.class).annotatedWith(Names.named(DIRECTORY_PROPERTY)).toInstance(
