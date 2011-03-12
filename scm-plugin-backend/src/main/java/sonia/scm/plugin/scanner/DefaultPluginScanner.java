@@ -165,8 +165,6 @@ public class DefaultPluginScanner implements PluginScanner
             backend.addPlugin(plugin.getInformation());
           }
 
-          inputStream.closeEntry();
-
           break;
         }
         else
