@@ -155,7 +155,8 @@ public class DefaultPluginScanner implements PluginScanner
           Plugin plugin =
             (Plugin) pluginContext.createUnmarshaller().unmarshal(inputStream);
 
-          if (plugin != null)
+          if ((plugin != null) && (plugin.getInformation() != null)
+              && plugin.getInformation().isValid())
           {
             if (logger.isInfoEnabled())
             {
@@ -163,6 +164,10 @@ public class DefaultPluginScanner implements PluginScanner
             }
 
             backend.addPlugin(plugin.getInformation());
+          }
+          else if (logger.isWarnEnabled())
+          {
+            logger.warn("plugin {} is not valid", file.getPath());
           }
 
           break;
