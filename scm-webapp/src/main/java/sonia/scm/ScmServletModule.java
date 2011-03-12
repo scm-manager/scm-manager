@@ -359,6 +359,11 @@ public class ScmServletModule extends ServletModule
       try
       {
         config = JAXB.unmarshal(file, ScmConfiguration.class);
+
+        if (ScmConfiguration.OLD_PLUGINURL.equals(config.getPluginUrl()))
+        {
+          config.setPluginUrl(ScmConfiguration.DEFAULT_PLUGINURL);
+        }
       }
       catch (Exception ex)
       {

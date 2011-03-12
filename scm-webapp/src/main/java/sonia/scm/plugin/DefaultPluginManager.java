@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
@@ -51,13 +52,17 @@ import sonia.scm.security.SecurityContext;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SecurityUtil;
+import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -65,7 +70,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.zip.GZIPInputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -81,6 +85,9 @@ public class DefaultPluginManager implements PluginManager
 
   /** Field description */
   public static final String CACHE_NAME = "sonia.cache.plugins";
+
+  /** Field description */
+  public static final String ENCODING = "UTF-8";
 
   /** the logger for DefaultPluginManager */
   private static final Logger logger =
@@ -98,6 +105,8 @@ public class DefaultPluginManager implements PluginManager
    *
    *
    *
+   *
+   * @param context
    * @param securityContextProvicer
    * @param configuration
    * @param pluginLoader
@@ -105,10 +114,12 @@ public class DefaultPluginManager implements PluginManager
    */
   @Inject
   public DefaultPluginManager(
+          SCMContextProvider context,
           Provider<SecurityContext> securityContextProvicer,
           ScmConfiguration configuration, PluginLoader pluginLoader,
           CacheManager cacheManager)
   {
+    this.context = context;
     this.securityContextProvicer = securityContextProvicer;
     this.configuration = configuration;
     this.cache = cacheManager.getCache(String.class, PluginCenter.class,
@@ -390,16 +401,20 @@ public class DefaultPluginManager implements PluginManager
    */
   private String buildPluginUrl(String url)
   {
-    if (url.contains("?"))
+    String os = SystemUtil.getOS();
+    String arch = SystemUtil.getArch();
+
+    try
     {
-      url = url.concat("&scm.version=");
+      os = URLEncoder.encode(os, ENCODING);
     }
-    else
+    catch (UnsupportedEncodingException ex)
     {
-      url = url.concat("?scm.version=");
+      logger.error(ex.getMessage(), ex);
     }
 
-    return url.concat(SCMContext.getContext().getVersion());
+    return url.replace("{version}", context.getVersion()).replace("{os}",
+                       os).replace("{arch}", arch);
   }
 
   /**
@@ -492,7 +507,6 @@ public class DefaultPluginManager implements PluginManager
       synchronized (DefaultPluginManager.class)
       {
         String pluginUrl = configuration.getPluginUrl();
-        boolean gzip = pluginUrl.endsWith(".gz");
 
         pluginUrl = buildPluginUrl(pluginUrl);
 
@@ -507,13 +521,18 @@ public class DefaultPluginManager implements PluginManager
 
           try
           {
-            input = new URL(pluginUrl).openStream();
+            URLConnection connection = new URL(pluginUrl).openConnection();
 
-            if (gzip)
-            {
-              input = new GZIPInputStream(input);
-            }
+            input = connection.getInputStream();
 
+            /*
+             *  TODO: add gzip support
+             *
+             * if (gzip)
+             * {
+             * input = new GZIPInputStream(input);
+             * }
+             */
             center = (PluginCenter) unmarshaller.unmarshal(input);
             preparePlugins(center);
             cache.put(PluginCenter.class.getName(), center);
@@ -586,6 +605,9 @@ public class DefaultPluginManager implements PluginManager
 
   /** Field description */
   private ScmConfiguration configuration;
+
+  /** Field description */
+  private SCMContextProvider context;
 
   /** Field description */
   private Map<String, Plugin> installedPlugins;

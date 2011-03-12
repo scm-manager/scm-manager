@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.util;
 
 /**
@@ -39,9 +41,47 @@ public class SystemUtil
 {
 
   /** Field description */
+  public static final String PROPERTY_ARCH = "sun.arch.data.model";
+
+  /** Field description */
   public static final String PROPERTY_OSNAME = "os.name";
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static boolean is32bit()
+  {
+    return "32".equals(System.getProperty(PROPERTY_ARCH));
+  }
+
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static String getArch()
+  {
+    return System.getProperty(PROPERTY_ARCH, "32");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static String getOS()
+  {
+    return System.getProperty(PROPERTY_OSNAME);
+  }
 
   /**
    * Method description
@@ -83,10 +123,5 @@ public class SystemUtil
 
     // windows
     return (os.indexOf("win") >= 0);
-  }
-
-  public static boolean is32bit()
-  {
-    return "32".equals(System.getProperty("sun.arch.data.model"));
   }
 }

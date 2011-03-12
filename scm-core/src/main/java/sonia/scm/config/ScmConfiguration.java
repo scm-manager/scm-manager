@@ -63,6 +63,10 @@ public class ScmConfiguration
 
   /** Field description */
   public static final String DEFAULT_PLUGINURL =
+    "http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false";
+
+  /** Field description */
+  public static final String OLD_PLUGINURL =
     "http://plugins.scm-manager.org/plugins.xml.gz";
 
   /** Field description */
