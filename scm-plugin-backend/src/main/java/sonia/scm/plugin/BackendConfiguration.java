@@ -41,7 +41,7 @@ import sonia.scm.xml.XmlIntervalAdapter;
 
 import java.io.File;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -65,7 +65,7 @@ public class BackendConfiguration
    *
    * @return
    */
-  public List<File> getDirectories()
+  public Set<File> getDirectories()
   {
     return directories;
   }
@@ -76,7 +76,7 @@ public class BackendConfiguration
    *
    * @return
    */
-  public List<PluginRepository> getRepositories()
+  public Set<PluginRepository> getRepositories()
   {
     return repositories;
   }
@@ -111,7 +111,7 @@ public class BackendConfiguration
    *
    * @param directories
    */
-  public void setDirectories(List<File> directories)
+  public void setDirectories(Set<File> directories)
   {
     this.directories = directories;
   }
@@ -133,7 +133,7 @@ public class BackendConfiguration
    *
    * @param repositories
    */
-  public void setRepositories(List<PluginRepository> repositories)
+  public void setRepositories(Set<PluginRepository> repositories)
   {
     this.repositories = repositories;
   }
@@ -154,7 +154,7 @@ public class BackendConfiguration
   /** Field description */
   @XmlElement(name = "directory")
   @XmlElementWrapper(name = "directories")
-  private List<File> directories;
+  private Set<File> directories;
 
   /** Field description */
   private boolean multithreaded = true;
@@ -162,7 +162,7 @@ public class BackendConfiguration
   /** Field description */
   @XmlElement(name = "repository")
   @XmlElementWrapper(name = "repositories")
-  private List<PluginRepository> repositories;
+  private Set<PluginRepository> repositories;
 
   /** Field description */
   @XmlElement(name = "scann-interval")

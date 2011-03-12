@@ -47,7 +47,13 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.core.PackagesResourceConfig;
+import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+
 import java.io.File;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.bind.JAXB;
 
@@ -69,6 +75,9 @@ public class ScmBackendModule extends ServletModule
 
   /** Field description */
   public static final String FILE_CONFIG = "config.xml";
+
+  /** Field description */
+  public static final String PATTERN_API = "/api/*";
 
   //~--- methods --------------------------------------------------------------
 
@@ -104,6 +113,12 @@ public class ScmBackendModule extends ServletModule
     bind(PluginBackend.class).to(DefaultPluginBackend.class);
     bind(PluginScannerFactory.class).to(DefaultPluginScannerFactory.class);
     bind(PluginScannerScheduler.class).to(TimerPluginScannerScheduler.class);
+
+    Map<String, String> params = new HashMap<String, String>();
+
+    params.put(PackagesResourceConfig.PROPERTY_PACKAGES,
+               "sonia.scm.plugin.rest");
+    serve(PATTERN_API).with(GuiceContainer.class, params);
   }
 
   /**

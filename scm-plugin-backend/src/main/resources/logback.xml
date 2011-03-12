@@ -19,6 +19,7 @@
   </appender>
 
   <logger name="sonia.scm" level="DEBUG" />
+  <logger name="sonia.scm.plugin.scanner.DefaultPluginScanner" level="INFO" />
 
   <root level="WARN">
     <appender-ref ref="STDOUT" />
