@@ -31,89 +31,97 @@
 
 
 
-package sonia.scm.plugin.scanner;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.plugin.BackendConfiguration;
-import sonia.scm.plugin.PluginBackend;
+package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import java.util.TimerTask;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class PluginScannerTimerTask extends TimerTask
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "plugin-backend")
+public class PluginBackendStore implements Iterable<PluginInformation>
 {
-
-  /** the logger for PluginScannerTimerTask */
-  private static final Logger logger =
-    LoggerFactory.getLogger(PluginScannerTimerTask.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param backend
-   * @param configuration
-   * @param scannerFactory
-   */
-  public PluginScannerTimerTask(PluginBackend backend,
-                                BackendConfiguration configuration,
-                                PluginScannerFactory scannerFactory)
-  {
-    this.backend = backend;
-    this.scannerFactory = scannerFactory;
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @param e
+   *
+   * @return
+   */
+  public boolean add(PluginInformation e)
+  {
+    return plugins.add(e);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param plugin
+   *
+   * @return
+   */
+  public boolean contains(PluginInformation plugin)
+  {
+    return plugins.contains(plugin);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
    */
   @Override
-  public void run()
+  public Iterator<PluginInformation> iterator()
   {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("start scann");
-    }
+    return plugins.iterator();
+  }
 
-    for (File directory : configuration.getDirectories())
-    {
-      PluginScanner scanner = scannerFactory.createScanner();
+  //~--- get methods ----------------------------------------------------------
 
-      if (configuration.isMultithreaded())
-      {
-        new Thread(new PluginScannerRunnable(backend, scanner,
-                directory)).start();
-      }
-      else
-      {
-        scanner.scannDirectory(backend, directory);
-      }
-    }
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<PluginInformation> getPlugins()
+  {
+    return plugins;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param plugins
+   */
+  public void setPlugins(List<PluginInformation> plugins)
+  {
+    this.plugins = plugins;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private PluginBackend backend;
-
-  /** Field description */
-  private BackendConfiguration configuration;
-
-  /** Field description */
-  private PluginScannerFactory scannerFactory;
+  @XmlElement(name = "plugin")
+  @XmlElementWrapper(name = "plugins")
+  private List<PluginInformation> plugins = new ArrayList<PluginInformation>();
 }

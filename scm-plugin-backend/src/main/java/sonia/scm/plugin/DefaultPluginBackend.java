@@ -38,6 +38,11 @@ package sonia.scm.plugin;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.ConfigurationException;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -45,12 +50,27 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+
 /**
  *
  * @author Sebastian Sdorra
  */
 public class DefaultPluginBackend implements PluginBackend
 {
+
+  /** Field description */
+  public static final String FILE_STORE = "store.xml";
+
+  /** Field description */
+  private static final Object LOCK_OBJECT = new Object();
+
+  /** the logger for DefaultPluginBackend */
+  private static final Logger logger =
+    LoggerFactory.getLogger(DefaultPluginBackend.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -64,6 +84,23 @@ public class DefaultPluginBackend implements PluginBackend
           @Named(ScmBackendModule.DIRECTORY_PROPERTY) File baseDirectory)
   {
     this.baseDirectory = baseDirectory;
+    this.storeFile = new File(baseDirectory, FILE_STORE);
+
+    try
+    {
+      storeContext = JAXBContext.newInstance(PluginBackendStore.class);
+
+      if (storeFile.exists())
+      {
+        pluginStore =
+          (PluginBackendStore) storeContext.createUnmarshaller().unmarshal(
+            storeFile);
+      }
+    }
+    catch (JAXBException ex)
+    {
+      throw new ConfigurationException(ex);
+    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -77,7 +114,14 @@ public class DefaultPluginBackend implements PluginBackend
   @Override
   public void addPlugin(PluginInformation plugin)
   {
-    plugins.add(plugin);
+    if (!pluginStore.contains(plugin))
+    {
+      synchronized (LOCK_OBJECT)
+      {
+        pluginStore.add(plugin);
+        store();
+      }
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -103,7 +147,7 @@ public class DefaultPluginBackend implements PluginBackend
   @Override
   public List<PluginInformation> getPlugins()
   {
-    return plugins;
+    return pluginStore.getPlugins();
   }
 
   /**
@@ -120,7 +164,7 @@ public class DefaultPluginBackend implements PluginBackend
     List<PluginInformation> filteredPlugins =
       new ArrayList<PluginInformation>();
 
-    for (PluginInformation plugin : plugins)
+    for (PluginInformation plugin : pluginStore)
     {
       if (filter.accept(plugin))
       {
@@ -131,17 +175,22 @@ public class DefaultPluginBackend implements PluginBackend
     return filteredPlugins;
   }
 
-  //~--- set methods ----------------------------------------------------------
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
-   *
-   * @param plugins
    */
-  public void setPlugins(List<PluginInformation> plugins)
+  private void store()
   {
-    this.plugins = plugins;
+    try
+    {
+      storeContext.createMarshaller().marshal(pluginStore, storeFile);
+    }
+    catch (JAXBException ex)
+    {
+      logger.error("could not store pluginStore", ex);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -150,5 +199,11 @@ public class DefaultPluginBackend implements PluginBackend
   private File baseDirectory;
 
   /** Field description */
-  private List<PluginInformation> plugins = new ArrayList<PluginInformation>();
+  private PluginBackendStore pluginStore;
+
+  /** Field description */
+  private JAXBContext storeContext;
+
+  /** Field description */
+  private File storeFile;
 }
