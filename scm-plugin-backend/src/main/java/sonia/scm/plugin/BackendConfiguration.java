@@ -33,6 +33,10 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.xml.XmlIntervalAdapter;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -44,6 +48,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -161,5 +166,6 @@ public class BackendConfiguration
 
   /** Field description */
   @XmlElement(name = "scann-interval")
-  private long scannInterval;
+  @XmlJavaTypeAdapter(XmlIntervalAdapter.class)
+  private Long scannInterval;
 }

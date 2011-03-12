@@ -37,8 +37,12 @@ package sonia.scm.plugin.scanner;
 
 import com.google.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.plugin.BackendConfiguration;
 import sonia.scm.plugin.PluginBackend;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -53,6 +57,10 @@ public class TimerPluginScannerScheduler implements PluginScannerScheduler
 
   /** Field description */
   public static final String TIMER_NAME = "ScmPluginScanner";
+
+  /** the logger for TimerPluginScannerScheduler */
+  private static final Logger logger =
+    LoggerFactory.getLogger(TimerPluginScannerScheduler.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -94,6 +102,12 @@ public class TimerPluginScannerScheduler implements PluginScannerScheduler
   @Override
   public void start()
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("start scanner task with an interval of {}",
+                  Util.convertTime(configuration.getScannInterval()));
+    }
+
     PluginScannerTimerTask task = new PluginScannerTimerTask(backend,
                                     configuration, scannerFactory);
 

@@ -116,6 +116,66 @@ public class Util
    * Method description
    *
    *
+   * @param time
+   *
+   * @return
+   */
+  public static String convertTime(long time)
+  {
+    String suffix = "ms";
+
+    if (time > 1000)
+    {
+      time /= 1000;
+      suffix = "s";
+
+      if (time > 60)
+      {
+        time /= 60;
+        suffix = "m";
+
+        if (time > 60)
+        {
+          time /= 60;
+          suffix = "h";
+        }
+      }
+    }
+
+    return time + suffix;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param timeString
+   *
+   * @return
+   */
+  public static long convertTime(String timeString)
+  {
+    char suffix = timeString.charAt(timeString.length() - 1);
+    long time = Long.parseLong(timeString.substring(0,
+                  timeString.length() - 1));
+
+    switch (suffix)
+    {
+      case 'h' :
+        time *= 60;
+      case 'm' :
+        time *= 60;
+      case 's' :
+        time *= 1000;
+    }
+
+    return time;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param date
    * @param tz
    *
