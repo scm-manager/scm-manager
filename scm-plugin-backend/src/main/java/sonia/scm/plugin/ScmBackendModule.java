@@ -35,12 +35,21 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 
+import sonia.scm.ConfigurationException;
 import sonia.scm.plugin.scanner.DefaultPluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerScheduler;
 import sonia.scm.plugin.scanner.TimerPluginScannerScheduler;
+import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+
+import javax.xml.bind.JAXB;
 
 /**
  *
@@ -49,6 +58,20 @@ import sonia.scm.plugin.scanner.TimerPluginScannerScheduler;
 public class ScmBackendModule extends ServletModule
 {
 
+  /** Field description */
+  public static final String DIRECTORY_DEFAULT = ".scm-backend";
+
+  /** Field description */
+  public static final String DIRECTORY_ENVIRONMENT = "SCMBACKEND_HOME";
+
+  /** Field description */
+  public static final String DIRECTORY_PROPERTY = "scm-backend.home";
+
+  /** Field description */
+  public static final String FILE_CONFIG = "config.xml";
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
@@ -56,8 +79,76 @@ public class ScmBackendModule extends ServletModule
   @Override
   protected void configureServlets()
   {
+    File baseDirectory = findBaseDirectory();
+
+    if (baseDirectory == null)
+    {
+      throw new ConfigurationException("could not find base directory");
+    }
+
+    File configurationFile = getConfigurationFile(baseDirectory);
+
+    if (!configurationFile.exists())
+    {
+      throw new ConfigurationException(
+          "could not find configuration at ".concat(
+            configurationFile.getPath()));
+    }
+
+    BackendConfiguration configuration = JAXB.unmarshal(baseDirectory,
+                                           BackendConfiguration.class);
+
+    bind(File.class).annotatedWith(Names.named(DIRECTORY_PROPERTY)).toInstance(
+        baseDirectory);
+    bind(BackendConfiguration.class).toInstance(configuration);
     bind(PluginBackend.class).to(DefaultPluginBackend.class);
     bind(PluginScannerFactory.class).to(DefaultPluginScannerFactory.class);
     bind(PluginScannerScheduler.class).to(TimerPluginScannerScheduler.class);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private File findBaseDirectory()
+  {
+    String path = System.getProperty(DIRECTORY_PROPERTY);
+
+    if (Util.isEmpty(path))
+    {
+      path = System.getenv(DIRECTORY_ENVIRONMENT);
+
+      if (Util.isEmpty(path))
+      {
+        path = System.getProperty("user.home").concat(File.separator).concat(
+          DIRECTORY_DEFAULT);
+      }
+    }
+
+    File directory = new File(path);
+
+    if (!directory.exists() &&!directory.mkdirs())
+    {
+      throw new IllegalStateException("could not create directory");
+    }
+
+    return directory;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param baseDirectory
+   *
+   * @return
+   */
+  private File getConfigurationFile(File baseDirectory)
+  {
+    return new File(baseDirectory, FILE_CONFIG);
   }
 }

@@ -35,6 +35,8 @@ package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
+
 import java.util.List;
 
 /**
@@ -53,6 +55,14 @@ public interface PluginBackend
   public void addPlugin(PluginInformation plugin);
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public File getBaseDirectory();
 
   /**
    * Method description

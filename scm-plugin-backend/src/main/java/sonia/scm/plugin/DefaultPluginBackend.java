@@ -33,7 +33,14 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,8 +55,16 @@ public class DefaultPluginBackend implements PluginBackend
   /**
    * Constructs ...
    *
+   *
+   *
+   * @param baseDirectory
    */
-  public DefaultPluginBackend() {}
+  @Inject
+  public DefaultPluginBackend(
+          @Named(ScmBackendModule.DIRECTORY_PROPERTY) File baseDirectory)
+  {
+    this.baseDirectory = baseDirectory;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -66,6 +81,18 @@ public class DefaultPluginBackend implements PluginBackend
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public File getBaseDirectory()
+  {
+    return baseDirectory;
+  }
 
   /**
    * Method description
@@ -118,6 +145,9 @@ public class DefaultPluginBackend implements PluginBackend
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private File baseDirectory;
 
   /** Field description */
   private List<PluginInformation> plugins = new ArrayList<PluginInformation>();
