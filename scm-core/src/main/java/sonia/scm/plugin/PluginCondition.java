@@ -59,6 +59,29 @@ public class PluginCondition
 {
 
   /**
+   * Constructs ...
+   *
+   */
+  public PluginCondition() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param minVersion
+   * @param os
+   * @param arch
+   */
+  public PluginCondition(String minVersion, List<String> os, String arch)
+  {
+    this.minVersion = minVersion;
+    this.os = os;
+    this.arch = arch;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
    * Method description
    *
    *
