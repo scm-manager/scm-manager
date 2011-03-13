@@ -70,8 +70,14 @@ public class PluginConditionTest
   @Test
   public void testIsOsSupported()
   {
-    assertTrue(new PluginCondition(null, Arrays.asList("unix"),
+    assertTrue(new PluginCondition(null, Arrays.asList("linux"),
                                    null).isSupported(null, "linux", null));
+    assertTrue(new PluginCondition(null, Arrays.asList("unix"),
+                                   null).isSupported(null, "Mac OS X", null));
+    assertTrue(new PluginCondition(null, Arrays.asList("unix"),
+                                   null).isSupported(null, "Solaris", null));
+    assertTrue(new PluginCondition(null, Arrays.asList("posix"),
+                                   null).isSupported(null, "Linux", null));
     assertTrue(new PluginCondition(null, Arrays.asList("win"),
                                    null).isSupported(null, "Windows 2000",
                                      null));

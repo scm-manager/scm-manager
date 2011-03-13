@@ -68,35 +68,7 @@ public class Platform
     arch = arch.toLowerCase();
     x64 = "64".equals(arch) || "x86_64".equals(arch) || "ppc64".equals(arch)
           || "sparcv9".equals(arch) || "amd64".equals(arch);
-
-    if (osName.startsWith("Linux"))
-    {
-      type = PlatformType.LINUX;
-    }
-    else if (osName.startsWith("Mac") || osName.startsWith("Darwin"))
-    {
-      type = PlatformType.MAC;
-    }
-    else if (osName.startsWith("Windows"))
-    {
-      type = PlatformType.WINDOWS;
-    }
-    else if (osName.startsWith("Solaris") || osName.startsWith("SunOS"))
-    {
-      type = PlatformType.SOLARIS;
-    }
-    else if (osName.startsWith("FreeBSD"))
-    {
-      type = PlatformType.FREEBSD;
-    }
-    else if (osName.startsWith("OpenBSD"))
-    {
-      type = PlatformType.OPENBSD;
-    }
-    else
-    {
-      type = PlatformType.UNSPECIFIED;
-    }
+    type = PlatformType.createPlatformType(osName);
   }
 
   //~--- methods --------------------------------------------------------------

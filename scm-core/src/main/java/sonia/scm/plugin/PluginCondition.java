@@ -35,6 +35,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.PlatformType;
 import sonia.scm.SCMContext;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
@@ -149,11 +150,12 @@ public class PluginCondition
     if (supported && Util.isNotEmpty(this.os) && Util.isNotEmpty(os))
     {
       supported = false;
-      os = os.toLowerCase();
+
+      PlatformType platformType = PlatformType.createPlatformType(os);
 
       for (String osType : this.os)
       {
-        supported = isOs(osType, os);
+        supported = isOs(osType, platformType);
 
         if (supported)
         {
@@ -212,18 +214,23 @@ public class PluginCondition
    *
    *
    * @param osType
-   * @param os
+   * @param type
    *
    * @return
    */
-  private boolean isOs(String osType, String os)
+  private boolean isOs(String osType, PlatformType type)
   {
     osType = osType.toLowerCase();
-
-    return (osType.startsWith("mac") && (os.indexOf("mac") >= 0))
-           || (osType.startsWith("win") && (os.indexOf("win") >= 0))
-           || ((osType.startsWith("unix") && (os.indexOf("nix") >= 0))
-               || (os.indexOf("nux") >= 0));
+    
+    return
+      ( osType.indexOf("win") >= 0 && PlatformType.WINDOWS == type ) ||
+      ( osType.indexOf("unix") >= 0 && type.isUnix() ) ||
+      ( osType.indexOf("posix") >= 0 && type.isPosix() ) ||
+      ( osType.indexOf("mac") >= 0 && PlatformType.MAC == type) ||
+      ( osType.indexOf("linux") >= 0 && PlatformType.LINUX == type ) ||
+      ( osType.indexOf("solaris") >= 0 && PlatformType.SOLARIS == type ) ||
+      ( osType.indexOf("openbsd") >= 0 && PlatformType.OPENBSD == type ) ||
+      ( osType.indexOf("freebsd") >= 0 && PlatformType.FREEBSD == type );
   }
 
   //~--- fields ---------------------------------------------------------------

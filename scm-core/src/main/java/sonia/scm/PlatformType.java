@@ -56,6 +56,50 @@ public enum PlatformType
     this.posix = posix;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param osName
+   *
+   * @return
+   */
+  public static PlatformType createPlatformType(String osName)
+  {
+    osName = osName.toLowerCase();
+
+    PlatformType type = PlatformType.UNSPECIFIED;
+
+    if (osName.startsWith("linux"))
+    {
+      type = PlatformType.LINUX;
+    }
+    else if (osName.startsWith("mac") || osName.startsWith("darwin"))
+    {
+      type = PlatformType.MAC;
+    }
+    else if (osName.startsWith("windows"))
+    {
+      type = PlatformType.WINDOWS;
+    }
+    else if (osName.startsWith("solaris") || osName.startsWith("sunos"))
+    {
+      type = PlatformType.SOLARIS;
+    }
+    else if (osName.startsWith("freebsd"))
+    {
+      type = PlatformType.FREEBSD;
+    }
+    else if (osName.startsWith("openbsd"))
+    {
+      type = PlatformType.OPENBSD;
+    }
+
+    return type;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
