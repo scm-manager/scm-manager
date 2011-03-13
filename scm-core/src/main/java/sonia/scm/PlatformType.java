@@ -31,45 +31,29 @@
 
 
 
-package sonia.scm.util;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.Platform;
+package sonia.scm;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SystemUtil
+public enum PlatformType
 {
-
-  /** Field description */
-  public static final String PROPERTY_ARCH = "sun.arch.data.model";
-
-  /** Field description */
-  public static final String PROPERTY_OSARCH = "os.arch";
-
-  /** Field description */
-  public static final String PROPERTY_OSNAME = "os.name";
-
-  /** Field description */
-  private static Platform platform =
-    new Platform(System.getProperty(PROPERTY_OSNAME),
-                 System.getProperty(PROPERTY_ARCH),
-                 System.getProperty(PROPERTY_OSARCH));
-
-  //~--- methods --------------------------------------------------------------
+  UNSPECIFIED(false, false), MAC(true, true), LINUX(false, true),
+  WINDOWS(false, false), SOLARIS(true, true), FREEBSD(true, true),
+  OPENBSD(true, true);
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @return
+   * @param unix
+   * @param posix
    */
-  public static boolean is32bit()
+  private PlatformType(boolean unix, boolean posix)
   {
-    return platform.is32Bit();
+    this.unix = unix;
+    this.posix = posix;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -80,9 +64,9 @@ public class SystemUtil
    *
    * @return
    */
-  public static String getArch()
+  public boolean isPosix()
   {
-    return platform.getArch();
+    return posix;
   }
 
   /**
@@ -91,52 +75,16 @@ public class SystemUtil
    *
    * @return
    */
-  public static String getOS()
+  public boolean isUnix()
   {
-    return platform.getName();
+    return unix;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static Platform getPlatform()
-  {
-    return platform;
-  }
+  //~--- fields ---------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static boolean isMac()
-  {
-    return platform.isMac();
-  }
+  /** Field description */
+  private boolean posix;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static boolean isUnix()
-  {
-    return platform.isUnix();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static boolean isWindows()
-  {
-    return platform.isWindows();
-  }
+  /** Field description */
+  private boolean unix;
 }
