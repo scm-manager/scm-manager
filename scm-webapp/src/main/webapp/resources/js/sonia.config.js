@@ -85,6 +85,18 @@ Sonia.config.RepositoryConfig = Ext.extend(Sonia.config.ConfigPanel,{
 
 Ext.reg("repositoryConfig", Sonia.config.RepositoryConfig);
 
+// pluginurl validator
+Ext.apply(Ext.form.VTypes, {
+
+  pluginurl: function(val) {
+    return this.pluginurlRegex.test(val);
+  },
+
+  pluginurlRegex: /(((^https?)|(^ftp)):\/\/([\-\w]+\.)+\w{2,3}(\/[%\-\w]+(\.\w{2,})?)*(([\w\-\.\?\\\/+@&#;`~=%!\{\}]*)(\.\w{2,})?)*\/?)/i,
+  pluginurlText: 'This field should be a URL in the format \n\
+    "http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false"'
+});
+
 Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
 
   titleText: 'General Settings',
@@ -134,7 +146,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           xtype: 'textfield',
           fieldLabel: this.pluginRepositoryText,
           name: 'plugin-url',
-          vtype: 'url',
+          vtype: 'pluginurl',
           allowBlank: false
         },{
           xtype: 'checkbox',
