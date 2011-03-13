@@ -102,5 +102,7 @@ public class PluginConditionTest
     assertTrue(new PluginCondition("1.0", null,
                                    null).isSupported("1.1-SNAPSHOT", null,
                                      null));
+    assertTrue(new PluginCondition("1.1", null, null).isSupported("1.1", null,
+                                   null));
   }
 }

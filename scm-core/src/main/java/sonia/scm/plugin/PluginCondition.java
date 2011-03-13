@@ -142,7 +142,8 @@ public class PluginCondition
 
     if (Util.isNotEmpty(minVersion) && Util.isNotEmpty(version))
     {
-      supported = new PluginVersion(version).isNewer(minVersion);
+      supported = (minVersion.equalsIgnoreCase(version)
+                   || new PluginVersion(version).isNewer(minVersion));
     }
 
     if (supported && Util.isNotEmpty(this.os) && Util.isNotEmpty(os))
