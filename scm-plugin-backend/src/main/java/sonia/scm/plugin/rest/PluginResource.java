@@ -105,8 +105,8 @@ public class PluginResource
   @GET
   @Produces(MediaType.APPLICATION_XML)
   public Response getPlugins(
-         @PathParam("version") String version,
-         @DefaultValue("false") @QueryParam("snapshot") boolean snapshot)
+          @PathParam("version") String version,
+          @DefaultValue("false") @QueryParam("snapshot") boolean snapshot)
   {
     if (logger.isDebugEnabled())
     {
@@ -160,6 +160,8 @@ public class PluginResource
         newest = plugin;
       }
     }
+
+    pluginSet.add(newest);
 
     return pluginSet;
   }
