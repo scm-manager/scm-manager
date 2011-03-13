@@ -106,6 +106,8 @@ public class PluginResource
   @Produces(MediaType.APPLICATION_XML)
   public Response getPlugins(
           @PathParam("version") String version,
+          @QueryParam("os") String os,
+          @QueryParam("arch") String arch,
           @DefaultValue("false") @QueryParam("snapshot") boolean snapshot)
   {
     if (logger.isDebugEnabled())
@@ -115,7 +117,7 @@ public class PluginResource
     }
 
     List<PluginInformation> plugins =
-      backend.getPlugins(new DefaultPluginFilter(version, null, null,
+      backend.getPlugins(new DefaultPluginFilter(version, os, arch,
         snapshot));
     PluginCenter pc = new PluginCenter();
 
