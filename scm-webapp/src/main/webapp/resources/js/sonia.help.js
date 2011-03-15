@@ -65,7 +65,11 @@ Ext.override(Ext.form.Field, {
 
     switch ( this.getXType() ){
       case 'combo':
-        cls = 'scm-form-combo-help-button';
+        if ( this.readOnly ){
+          cls = 'scm-form-help-button';
+        } else {
+          cls = 'scm-form-combo-help-button';
+        }
         break;
       case 'textarea':
         cls = 'scm-form-textarea-help-button';
