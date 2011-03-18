@@ -37,26 +37,31 @@ registerConfigPanel({
     xtype : 'textfield',
     fieldLabel : 'HG Binary',
     name : 'hgBinary',
-    allowBlank : false
+    allowBlank : false,
+    helpText: 'The location of the Mercurial binary.'
   },{
     xtype : 'textfield',
     fieldLabel : 'Python Binary',
     name : 'pythonBinary',
-    allowBlank : false
+    allowBlank : false,
+    helpText: 'The location of the Python binary.'
   },{
     xtype : 'textfield',
     fieldLabel : 'Python Path',
-    name : 'pythonPath'
+    name : 'pythonPath',
+    helpText: 'The Python path.'
   },{
     xtype: 'textfield',
     name: 'repositoryDirectory',
     fieldLabel: 'Repository directory',
+    helpText: 'The location of the Mercurial repositories.',
     allowBlank : false
   },{
     xtype: 'checkbox',
     name: 'useOptimizedBytecode',
     fieldLabel: 'Optimized Bytecode (.pyo)',
-    inputValue: 'true'
+    inputValue: 'true',
+    helpText: 'Use the Python "-O" switch.'
   },{
     xtype: 'button',
     text: 'Load Auto-Configuration',

@@ -114,6 +114,19 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   errorTitleText: 'Error',
   errorMsgText: 'Could not load config.',
 
+  // help
+  servernameHelpText: 'The name of this server. This name would be part of the repository url.',
+  pluginRepositoryHelpText: 'The url of the plugin repository. Explanation of the {placeholders}:\n\
+  <br />version = SCM-Manager Version<br />os = Operation System<br />arch = Architecture',
+  enableForwardingHelpText: 'Enbale mod_proxy port forwarding.',
+  forwardPortHelpText: 'The forwarding port.',
+  allowAnonymousAccessHelpText: 'Anonymous users can see public repositories.',
+  enableSSLHelpText: 'Enable SSL.',
+  sslPortHelpText: 'The ssl port.',
+  adminGroupsHelpText: 'Comma seperated list of groups with admin rights.',
+  adminUsersHelpText: 'Comma seperated list of users with admin rights.',
+
+
   initComponent: function(){
 
     var config = {
@@ -124,12 +137,14 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           xtype: 'textfield',
           fieldLabel: this.servnameText,
           name: 'servername',
+          helpText: this.servernameHelpText,
           allowBlank: false
         },{
           xtype: 'checkbox',
           fieldLabel: this.enableForwardingText,
           name: 'enablePortForward',
           inputValue: 'true',
+          helpText: this.enableForwardingHelpText,
           listeners: {
             check: function(){
               Ext.getCmp('serverport').setDisabled( ! this.checked );
@@ -141,23 +156,27 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           fieldLabel: this.forwardPortText,
           name: 'forwardPort',
           disabled: true,
-          allowBlank: false
+          allowBlank: false,
+          helpText: this.forwardPortHelpText
         },{
           xtype: 'textfield',
           fieldLabel: this.pluginRepositoryText,
           name: 'plugin-url',
           vtype: 'pluginurl',
-          allowBlank: false
+          allowBlank: false,
+          helpText: this.pluginRepositoryHelpText
         },{
           xtype: 'checkbox',
           fieldLabel: this.allowAnonymousAccessText,
           name: 'anonymousAccessEnabled',
-          inputValue: 'true'
+          inputValue: 'true',
+          helpText: this.allowAnonymousAccessHelpText
         },{
           xtype: 'checkbox',
           fieldLabel: this.enableSSLText,
           name: 'enableSSL',
           inputValue: 'true',
+          helpText: this.enableSSLHelpText,
           listeners: {
             check: function(){
               Ext.getCmp('sslPort').setDisabled( ! this.checked );
@@ -169,17 +188,20 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           fieldLabel: this.sslPortText,
           name: 'sslPort',
           disabled: true,
-          allowBlank: false
+          allowBlank: false,
+          helpText: this.sslPortHelpText
         },{
           xtype : 'textfield',
           fieldLabel : this.adminGroupsText,
           name : 'admin-groups',
-          allowBlank : true
+          allowBlank : true,
+          helpText: this.adminGroupsHelpText
         },{
           xtype : 'textfield',
           fieldLabel : this.adminUsersText,
           name : 'admin-users',
-          allowBlank : true
+          allowBlank : true,
+          helpText: this.adminUsersHelpText
         }],
       
         onSubmit: function(values){

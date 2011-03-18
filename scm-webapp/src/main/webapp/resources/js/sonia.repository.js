@@ -189,12 +189,14 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   createErrorMsgText: 'Repository creation failed',
 
   // help
-  nameHelpText: 'The name of the repository. This name would be part of the reository url.',
-  typeHelpText: 'The type of the repository.',
-  contactHelpText: 'An e-mailaddress of the person who is in charge for this repository.',
+  nameHelpText: 'The name of the repository. This name would be part of the repository url.',
+  typeHelpText: 'The type of the repository (e.g. Mercurial, Git or Subversion).',
+  contactHelpText: 'An email address of the person who is in charge for this repository.',
   descriptionHelpText: 'A short description of the repository.',
   publicHelpText: 'A public repository which is readable by every person.',
-  permissionHelpText: '... coming soon ...',
+  permissionHelpText: 'If the "Group Permission" box is checked, then the name represents the groupname otherwise the username.<br />\n\
+  Type explenation:<br />READ = read permission<br />WRITE = read and write permission<br />\n\
+  OWNER = read, write permissions and also the ability to manage the properties and permissions',
 
   permissionStore: null,
 

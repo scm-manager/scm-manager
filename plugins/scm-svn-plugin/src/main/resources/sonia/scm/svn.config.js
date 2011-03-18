@@ -37,6 +37,7 @@ registerConfigPanel({
     xtype: 'textfield',
     name: 'repositoryDirectory',
     fieldLabel: 'Repository directory',
+    helpText: 'The location of the Suberversion repositories.',
     allowBlank : false
   }]
 });
