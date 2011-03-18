@@ -67,6 +67,7 @@ import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -483,9 +484,20 @@ public class DefaultPluginManager implements PluginManager
 
     if (infoSet != null)
     {
-      for (PluginInformation available : infoSet)
+      Iterator<PluginInformation> pit = infoSet.iterator();
+
+      while (pit.hasNext())
       {
-        preparePlugin(available);
+        PluginInformation available = pit.next();
+
+        if (isCorePluging(available))
+        {
+          pit.remove();
+        }
+        else
+        {
+          preparePlugin(available);
+        }
       }
     }
   }
@@ -558,6 +570,34 @@ public class DefaultPluginManager implements PluginManager
     }
 
     return center;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param available
+   *
+   * @return
+   */
+  private boolean isCorePluging(PluginInformation available)
+  {
+    boolean core = false;
+
+    for (Plugin installedPlugin : installedPlugins.values())
+    {
+      PluginInformation installed = installedPlugin.getInformation();
+
+      if (isSamePlugin(available, installed)
+          && (installed.getState() == PluginState.CORE))
+      {
+        core = true;
+
+        break;
+      }
+    }
+
+    return core;
   }
 
   /**
