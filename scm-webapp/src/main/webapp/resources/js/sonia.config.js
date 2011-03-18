@@ -116,8 +116,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
 
   // help
   servernameHelpText: 'The name of this server. This name would be part of the repository url.',
-  pluginRepositoryHelpText: 'The url of the plugin repository. Explanation of the {placeholders}:\n\
-  <br />version = SCM-Manager Version<br />os = Operation System<br />arch = Architecture',
+  pluginRepositoryHelpText: 'The url of the plugin repository.<br />Explanation of the {placeholders}:\n\
+  <br /><b>version</b> = SCM-Manager Version<br /><b>os</b> = Operation System<br /><b>arch</b> = Architecture',
   enableForwardingHelpText: 'Enbale mod_proxy port forwarding.',
   forwardPortHelpText: 'The forwarding port.',
   allowAnonymousAccessHelpText: 'Anonymous users can see public repositories.',

@@ -195,8 +195,8 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   descriptionHelpText: 'A short description of the repository.',
   publicHelpText: 'A public repository which is readable by every person.',
   permissionHelpText: 'If the "Group Permission" box is checked, then the name represents the groupname otherwise the username.<br />\n\
-  Type explenation:<br />READ = read permission<br />WRITE = read and write permission<br />\n\
-  OWNER = read, write permissions and also the ability to manage the properties and permissions',
+  Type explenation:<br /><b>READ</b> = read permission<br /><b>WRITE</b> = read and write permission<br />\n\
+  <b>OWNER</b> = read, write permissions and also the ability to manage the properties and permissions',
 
   permissionStore: null,
 
