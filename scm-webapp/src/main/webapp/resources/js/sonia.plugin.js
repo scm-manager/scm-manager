@@ -210,7 +210,6 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
   colAuthorText: 'Author',
   colDescriptionText: 'Description',
   colVersionText: 'Version',
-  colStateText: 'State',
   colActionText: 'Action',
   colUrlText: 'Url',
   emptyText: 'No plugins avaiable',
@@ -230,7 +229,6 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
         {id: 'author', header: this.colAuthorText, dataIndex: 'author'},
         {id: 'description', header: this.colDescriptionText, dataIndex: 'description'},
         {id: 'version', header: this.colVersionText, dataIndex: 'version'},
-        {id: 'state', header: this.colStateText, dataIndex: 'state', width: 80},
         {id: 'action', header: this.colActionText, renderer: this.renderActionColumn},
         {id: 'Url', header: this.colUrlText, dataIndex: 'url', renderer: this.renderUrl, width: 150}
       ]
