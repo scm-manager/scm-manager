@@ -30,29 +30,63 @@
  */
 
 
+Ext.ns("Sonia.bzr");
+
+Sonia.bzr.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
+
+  // labels
+  titleText: 'Bazaar Settings',
+  bzrBinaryText: 'Bzr Binary',
+  pythonBinary: 'Python Binary',
+  pythonPath: 'Python Path',
+  repositoryDirectoryText: 'Repository directory',
+
+  // helpTexts
+  bzrBinaryHelpText: 'The location of the Bzr binary.',
+  pythonBinaryHelpText: 'The location of the Python binary.',
+  pythonPathHelpText: 'The Python path.',
+  repositoryDirectoryHelpText: 'The location of the Bazaar repositories.',
+
+  initComponent: function(){
+
+    var config = {
+      title : this.titleText,
+      configUrl: restUrl + 'config/repositories/bzr.json',
+      items : [{
+        xtype : 'textfield',
+        fieldLabel : this.bzrBinaryText,
+        name : 'bzrBinary',
+        allowBlank : false,
+        helpText: this.bzrBinaryHelpText
+      },{
+        xtype : 'textfield',
+        fieldLabel : this.pythonBinary,
+        name : 'pythonBinary',
+        allowBlank : false,
+        helpText: this.pythonBinaryHelpText
+      },{
+        xtype : 'textfield',
+        fieldLabel : this.pythonPath,
+        name : 'pythonPath',
+        helpText: this.pythonPathHelpText
+      },{
+        xtype: 'textfield',
+        name: 'repositoryDirectory',
+        fieldLabel: this.repositoryDirectoryText,
+        allowBlank : false,
+        helpText: this.repositoryDirectoryHelpText
+      }]
+    }
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.bzr.ConfigPanel.superclass.initComponent.apply(this, arguments);
+  }
+
+});
+
+Ext.reg("bzrConfigPanel", Sonia.bzr.ConfigPanel);
+
 
 registerConfigPanel({
-  xtype : 'simpleConfigForm',
-  title : 'Bazaar Settings',
-  configUrl: restUrl + 'config/repositories/bzr.json',
-  items : [{
-    xtype : 'textfield',
-    fieldLabel : 'Bzr Binary',
-    name : 'bzrBinary',
-    allowBlank : false
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Python Binary',
-    name : 'pythonBinary',
-    allowBlank : false
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Python Path',
-    name : 'pythonPath'
-  },{
-    xtype: 'textfield',
-    name: 'repositoryDirectory',
-    fieldLabel: 'Repository directory',
-    allowBlank : false
-  }]
+  xtype : 'bzrConfigPanel'
 });
