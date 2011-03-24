@@ -29,15 +29,39 @@
  *
  */
 
+Ext.ns("Sonia.git");
+
+Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
+
+  // labels
+  titleText: 'Git Settings',
+  repositoryDirectoryText: 'Repository directory',
+
+  // helpTexts
+  repositoryDirectoryHelpText: 'The location of the Git repositories.',
+
+  initComponent: function(){
+
+    var config = {
+      title : this.titleText,
+      configUrl: restUrl + 'config/repositories/git.json',
+      items : [{
+        xtype: 'textfield',
+        name: 'repositoryDirectory',
+        fieldLabel: this.repositoryDirectoryText,
+        helpText: this.repositoryDirectoryHelpText,
+        allowBlank : false
+      }]
+    }
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.git.ConfigPanel.superclass.initComponent.apply(this, arguments);
+  }
+
+});
+
+Ext.reg("gitConfigPanel", Sonia.git.ConfigPanel);
+
 registerConfigPanel({
-  xtype : 'simpleConfigForm',
-  title : 'Git Settings',
-  configUrl: restUrl + 'config/repositories/git.json',
-  items : [{
-    xtype: 'textfield',
-    name: 'repositoryDirectory',
-    fieldLabel: 'Repository directory',
-    helpText: 'The location of the Git repositories.',
-    allowBlank : false
-  }]
+  xtype : 'gitConfigPanel'
 });
