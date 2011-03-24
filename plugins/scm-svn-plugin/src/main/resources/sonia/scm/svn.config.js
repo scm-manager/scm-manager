@@ -60,7 +60,7 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
 
 });
 
-Ext.reg("svnConfigPanel", Sonia.git.ConfigPanel);
+Ext.reg("svnConfigPanel", Sonia.svn.ConfigPanel);
 
 registerConfigPanel({
   xtype : 'svnConfigPanel'
