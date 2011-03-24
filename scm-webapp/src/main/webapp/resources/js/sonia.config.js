@@ -275,6 +275,10 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
   title: 'Config Form',
   saveButtonText: 'Save',
   resetButtontext: 'Reset',
+  
+  submitText: 'Submit ...',
+  loadingText: 'Loading ...',
+
   items: null,
   onSubmit: null,
   getValues: null,
@@ -356,8 +360,6 @@ Ext.reg("configForm", Sonia.config.ConfigForm);
 
 Sonia.config.SimpleConfigForm = Ext.extend(Sonia.config.ConfigForm,{
 
-  submitText: 'Submit ...',
-  loadingText: 'Loading ...',
   configUrl: null,
   loadMethod: 'GET',
   submitMethod: 'POST',

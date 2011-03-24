@@ -29,15 +29,39 @@
  *
  */
 
+Ext.ns("Sonia.svn");
+
+Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
+
+  // labels
+  titleText: 'Subversion Settings',
+  repositoryDirectoryText: 'Repository directory',
+
+  // helpTexts
+  repositoryDirectoryHelpText: 'The location of the Suberversion repositories.',
+
+  initComponent: function(){
+
+    var config = {
+      title : this.titleText,
+      configUrl: restUrl + 'config/repositories/svn.json',
+      items : [{
+        xtype: 'textfield',
+        name: 'repositoryDirectory',
+        fieldLabel: this.repositoryDirectoryText,
+        helpText: this.repositoryDirectoryHelpText,
+        allowBlank : false
+      }]
+    }
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.svn.ConfigPanel.superclass.initComponent.apply(this, arguments);
+  }
+
+});
+
+Ext.reg("svnConfigPanel", Sonia.git.ConfigPanel);
+
 registerConfigPanel({
-  xtype : 'simpleConfigForm',
-  title : 'Subversion Settings',
-  configUrl: restUrl + 'config/repositories/svn.json',
-  items : [{
-    xtype: 'textfield',
-    name: 'repositoryDirectory',
-    fieldLabel: 'Repository directory',
-    helpText: 'The location of the Suberversion repositories.',
-    allowBlank : false
-  }]
+  xtype : 'svnConfigPanel'
 });
