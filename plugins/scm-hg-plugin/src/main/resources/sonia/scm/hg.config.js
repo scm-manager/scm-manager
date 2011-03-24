@@ -29,62 +29,94 @@
  *
  */
 
-registerConfigPanel({
-  id: 'hgConfigForm',
-  xtype : 'configForm',
-  title : 'Mercurial Settings',
-  items : [{
-    xtype : 'textfield',
-    fieldLabel : 'HG Binary',
-    name : 'hgBinary',
-    allowBlank : false,
-    helpText: 'The location of the Mercurial binary.'
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Python Binary',
-    name : 'pythonBinary',
-    allowBlank : false,
-    helpText: 'The location of the Python binary.'
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Python Path',
-    name : 'pythonPath',
-    helpText: 'The Python path.'
-  },{
-    xtype: 'textfield',
-    name: 'repositoryDirectory',
-    fieldLabel: 'Repository directory',
-    helpText: 'The location of the Mercurial repositories.',
-    allowBlank : false
-  },{
-    xtype: 'checkbox',
-    name: 'useOptimizedBytecode',
-    fieldLabel: 'Optimized Bytecode (.pyo)',
-    inputValue: 'true',
-    helpText: 'Use the Python "-O" switch.'
-  },{
-    xtype: 'button',
-    text: 'Load Auto-Configuration',
-    fieldLabel: 'Auto-Configuration',
-    handler: function(){
-      var self = Ext.getCmp('hgConfigForm');
-      self.loadConfig( self.el, 'config/repositories/hg/auto-configuration.json', 'POST' );
+
+Ext.ns("Sonia.hg");
+
+Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
+
+  // labels
+  titleText: 'Mercurial Settings',
+  hgBinaryText: 'HG Binary',
+  pythonBinaryText: 'Python Binary',
+  pythonPathText: 'Python Path',
+  repositoryDirectoryText: 'Repository directory',
+  useOptimizedBytecodeText: 'Optimized Bytecode (.pyo)',
+  autoConfigText: 'Load Auto-Configuration',
+
+  // helpText
+  hgBinaryHelpText: 'The location of the Mercurial binary.',
+  pythonBinaryHelpText: 'The location of the Python binary.',
+  pythonPathHelpText: 'The Python path.',
+  repositoryDirectoryHelpText: 'The location of the Mercurial repositories.',
+  useOptimizedBytecodeHelpText: 'Use the Python "-O" switch.',
+
+  initComponent: function(){
+
+    var config = {
+      title : this.titleText,
+      items : [{
+        xtype : 'textfield',
+        fieldLabel : this.hgBinaryText,
+        name : 'hgBinary',
+        allowBlank : false,
+        helpText: this.hgBinaryHelpText
+      },{
+        xtype : 'textfield',
+        fieldLabel : this.pythonBinaryText,
+        name : 'pythonBinary',
+        allowBlank : false,
+        helpText: this.pythonBinaryHelpText
+      },{
+        xtype : 'textfield',
+        fieldLabel : this.pythonPathText,
+        name : 'pythonPath',
+        helpText: this.pythonPathHelpText
+      },{
+        xtype: 'textfield',
+        name: 'repositoryDirectory',
+        fieldLabel: this.repositoryDirectoryText,
+        helpText: this.repositoryDirectoryHelpText,
+        allowBlank : false
+      },{
+        xtype: 'checkbox',
+        name: 'useOptimizedBytecode',
+        fieldLabel: this.useOptimizedBytecodeText,
+        inputValue: 'true',
+        helpText: this.useOptimizedBytecodeHelpText
+      },{
+        xtype: 'button',
+        text: this.autoConfigText,
+        fieldLabel: 'Auto-Configuration',
+        handler: function(){
+          var self = Ext.getCmp('hgConfigForm');
+          self.loadConfig( self.el, 'config/repositories/hg/auto-configuration.json', 'POST' );
+        }
+      }]
     }
-  }],
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.hg.ConfigPanel.superclass.initComponent.apply(this, arguments);
+  },
 
   onSubmit: function(values){
-    this.el.mask('Submit ...');
+
+    console.debug( this.submitText );
+
+    console.debug( this );
+
+    this.el.mask(this.submitText);
     Ext.Ajax.request({
       url: restUrl + 'config/repositories/hg.json',
       method: 'POST',
       jsonData: values,
       scope: this,
       disableCaching: true,
-      success: function(response){
+      success: function(){
         this.el.unmask();
       },
       failure: function(){
         this.el.unmask();
+        alert('failure');
       }
     });
   },
@@ -94,7 +126,7 @@ registerConfigPanel({
   },
 
   loadConfig: function(el, url, method){
-    var tid = setTimeout( function(){ el.mask('Loading ...'); }, 100);
+    var tid = setTimeout( function(){ el.mask(this.loadingText); }, 100);
     Ext.Ajax.request({
       url: restUrl + url,
       method: method,
@@ -114,4 +146,11 @@ registerConfigPanel({
     });
   }
 
+});
+
+Ext.reg("hgConfigPanel", Sonia.hg.ConfigPanel);
+
+registerConfigPanel({
+  id: 'hgConfigForm',
+  xtype : 'hgConfigPanel'
 });
