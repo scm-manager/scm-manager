@@ -57,7 +57,11 @@ Sonia.repository.setEditPanel = function(panel){
   editPanel.doLayout();
 }
 
-// panels
+/**
+ * panels
+ *
+ * TODO: missing i18n
+ */
 
 Sonia.repository.DefaultPanel = {
   region: 'south',

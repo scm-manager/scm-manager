@@ -42,7 +42,10 @@ Sonia.user.setEditPanel = function(panel){
   editPanel.doLayout();
 }
 
-// Panels
+/**
+ * Panels
+ * missing i18n
+ */
 
 Sonia.user.DefaultPanel = {
   region: 'south',

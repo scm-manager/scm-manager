@@ -39,6 +39,10 @@ Sonia.group.setEditPanel = function(panel){
   editPanel.doLayout();
 }
 
+/**
+ * panels
+ * TODO: add missing i18n
+ */
 Sonia.group.DefaultPanel = {
   region: 'south',
   title: 'Group Form',
