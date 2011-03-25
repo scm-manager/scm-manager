@@ -178,9 +178,9 @@ Ext.reg('repositoryGrid', Sonia.repository.Grid);
 // RepositoryFormPanel
 Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
-  colGroupPermissionText: 'Group Permission',
+  colGroupPermissionText: 'Is Group',
   colNameText: 'Name',
-  colTypeText: 'Type',
+  colTypeText: 'Permissions',
   formTitleText: 'Settings',
   nameText: 'Name',
   typeText: 'Type',
@@ -193,14 +193,14 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   createErrorMsgText: 'Repository creation failed',
 
   // help
-  nameHelpText: 'The name of the repository. This name would be part of the repository url.',
+  nameHelpText: 'The name of the repository. This name will be part of the repository url.',
   typeHelpText: 'The type of the repository (e.g. Mercurial, Git or Subversion).',
-  contactHelpText: 'An email address of the person who is in charge for this repository.',
+  contactHelpText: 'Email address of the person who is responsible for this repository.',
   descriptionHelpText: 'A short description of the repository.',
-  publicHelpText: 'A public repository which is readable by every person.',
-  permissionHelpText: 'If the "Group Permission" box is checked, then the name represents the groupname otherwise the username.<br />\n\
-  Type explenation:<br /><b>READ</b> = read permission<br /><b>WRITE</b> = read and write permission<br />\n\
-  <b>OWNER</b> = read, write permissions and also the ability to manage the properties and permissions',
+  publicHelpText: 'Public repository, readable by everyone.',
+  permissionHelpText: 'Manage permissions for a specific user or group.<br />\n\
+  Permissions explenation:<br /><b>READ</b> = read<br /><b>WRITE</b> = read and write<br />\n\
+  <b>OWNER</b> = read, write and also the ability to manage the properties and permissions',
 
   permissionStore: null,
 
@@ -226,12 +226,6 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         sortable: true
       },
       columns: [{
-         id: 'groupPermission',
-         xtype: 'checkcolumn',
-         header: this.colGroupPermissionText,
-         dataIndex: 'groupPermission',
-         width: 40
-        },{
           id: 'name',
           header: this.colNameText,
           dataIndex: 'name',
@@ -257,6 +251,13 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
               ]
             })
           })
+        },
+        {
+         id: 'groupPermission',
+         xtype: 'checkcolumn',
+         header: this.colGroupPermissionText,
+         dataIndex: 'groupPermission',
+         width: 40
         }],
       
         getCellEditor: function(colIndex, rowIndex) {

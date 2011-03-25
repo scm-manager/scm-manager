@@ -115,16 +115,16 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   errorMsgText: 'Could not load config.',
 
   // help
-  servernameHelpText: 'The name of this server. This name would be part of the repository url.',
+  servernameHelpText: 'The name of this server. This name will be part of the repository url.',
   pluginRepositoryHelpText: 'The url of the plugin repository.<br />Explanation of the {placeholders}:\n\
   <br /><b>version</b> = SCM-Manager Version<br /><b>os</b> = Operation System<br /><b>arch</b> = Architecture',
   enableForwardingHelpText: 'Enbale mod_proxy port forwarding.',
   forwardPortHelpText: 'The forwarding port.',
-  allowAnonymousAccessHelpText: 'Anonymous users can see public repositories.',
-  enableSSLHelpText: 'Enable SSL.',
+  allowAnonymousAccessHelpText: 'Anonymous users have read access on public repositories.',
+  enableSSLHelpText: 'Enable secure connections via HTTPS.',
   sslPortHelpText: 'The ssl port.',
-  adminGroupsHelpText: 'Comma seperated list of groups with admin rights.',
-  adminUsersHelpText: 'Comma seperated list of users with admin rights.',
+  adminGroupsHelpText: 'Comma seperated list of groups with admin permissions.',
+  adminUsersHelpText: 'Comma seperated list of users with admin permissions.',
 
 
   initComponent: function(){
