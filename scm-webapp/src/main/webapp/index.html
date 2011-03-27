@@ -64,7 +64,10 @@
     <script type="text/javascript" src="resources/js/sonia.plugin.js"></script>
     <script type="text/javascript" src="resources/js/sonia.scm.js"></script>
     <script type="text/javascript" src="plugins/sonia.plugin.js"></script>
-    
+    <#if shortLocale != 'en'>
+    <script type="text/javascript" src="resources/js/i18n/${shortLocale}.js"></script>
+    </#if>
+
     <title>SCM-WebAPP</title>
   </head>
   <body>
@@ -99,7 +102,7 @@
           © <a target="_blank" href="http://bitbucket.org/sdorra/scm-manager">SCM Manager</a>
         </div>
         <div class="right-side">
-          <a href="#imprint">Impressum</a>
+          ${version}
         </div>
       </div>
 

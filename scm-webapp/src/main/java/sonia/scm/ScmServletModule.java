@@ -64,6 +64,9 @@ import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.template.FreemarkerTemplateHandler;
+import sonia.scm.template.TemplateHandler;
+import sonia.scm.template.TemplateServlet;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.xml.XmlUserManager;
 import sonia.scm.util.DebugServlet;
@@ -111,6 +114,9 @@ public class ScmServletModule extends ServletModule
 
   /** Field description */
   public static final String PATTERN_DEBUG = "/debug.html";
+
+  /** Field description */
+  public static final String PATTERN_INDEX = "/index.html";
 
   /** Field description */
   public static final String PATTERN_PAGE = "*.html";
@@ -226,6 +232,10 @@ public class ScmServletModule extends ServletModule
 
     // plugin resources
     serve(PATTERN_PLUGIN_SCRIPT).with(ScriptResourceServlet.class);
+
+    // template
+    bind(TemplateHandler.class).to(FreemarkerTemplateHandler.class);
+    serve(PATTERN_INDEX, "/").with(TemplateServlet.class);
 
     // jersey
     Map<String, String> params = new HashMap<String, String>();
