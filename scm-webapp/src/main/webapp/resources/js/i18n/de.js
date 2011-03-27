@@ -35,11 +35,11 @@ if (Ext.form.VTypes){
   Ext.override(Ext.form.VTypes, {
 
     // sonia.config.js
-    pluginurlText: 'This field should be a URL in the format \n\
+    pluginurlText: 'Dieses Feld sollte eine URL enthalten. Format: \n\
       "http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false"',
 
     // sonia.user.js
-    passwordText: 'The passwords entered do not match!'
+    passwordText: 'Die Passwörter stimmen nicht überein!'
   });
 
 }
@@ -49,14 +49,14 @@ if (Ext.form.VTypes){
 if (Sonia.login.Form){
 
   Ext.override(Sonia.login.Form, {
-    usernameText: 'Username',
-    passwordText: 'Password',
-    loginText: 'Login',
-    cancelText: 'Cancel',
-    titleText: 'Please Login',
-    waitTitleText: 'Connecting',
-    WaitMsgText: 'Sending data...',
-    failedMsgText: 'Login failed!'
+    usernameText: 'Benutzername',
+    passwordText: 'Passwort',
+    loginText: 'Anmelden',
+    cancelText: 'Abbrechen',
+    titleText: 'Anmeldung',
+    waitTitleText: 'Verbinden',
+    WaitMsgText: 'Übertrage Daten...',
+    failedMsgText: 'Anmeldung fehlgeschlagen!'
   });
 
 }
@@ -66,8 +66,8 @@ if (Sonia.login.Form){
 if ( Sonia.rest.JsonStore ){
 
   Ext.override(Sonia.rest.JsonStore, {
-    errorTitleText: 'Error',
-    errorMsgText: 'Could not load items. Server returned status: {0}'
+    errorTitleText: 'Fehler',
+    errorMsgText: 'Es konnten keine Daten geladen werden. Server-Status: {0}'
   });
 
 }
@@ -75,7 +75,7 @@ if ( Sonia.rest.JsonStore ){
 if ( Sonia.rest.Grid ){
 
   Ext.override(Sonia.rest.Grid, {
-    emptyText: 'No items available'
+    emptyText: 'Es konnten keine Daten gefunden werden.'
   });
 
 }
@@ -84,9 +84,9 @@ if ( Sonia.rest.FormPanel ){
 
   Ext.override(Sonia.rest.FormPanel, {
     okText: 'Ok',
-    cancelText: 'Cancel',
-    addText: 'Add',
-    removeText: 'Remove'
+    cancelText: 'Abbrechen',
+    addText: 'Hinzufügen',
+    removeText: 'Entfernen'
   });
 
 }
@@ -97,13 +97,13 @@ if ( Sonia.repository.Grid ){
 
   Ext.override(Sonia.repository.Grid, {
     colNameText: 'Name',
-    colTypeText: 'Type',
-    colContactText: 'Contact',
-    colDescriptionText: 'Description',
-    colCreationDateText: 'Creation date',
+    colTypeText: 'Typ',
+    colContactText: 'Kontakt',
+    colDescriptionText: 'Beschreibung',
+    colCreationDateText: 'Erstellungsdatum',
     colUrlText: 'Url',
-    emptyText: 'No repository is configured',
-    formTitleText: 'Repository Form'
+    emptyText: 'Es wurde kein Repository konfiguriert',
+    formTitleText: 'Repository'
   });
 
 }
@@ -111,21 +111,21 @@ if ( Sonia.repository.Grid ){
 if (Sonia.repository.FormPanel){
 
   Ext.override(Sonia.repository.FormPanel, {
-    colGroupPermissionText: 'Group Permission',
+    colGroupPermissionText: 'Grouppen Berechtigung',
     colNameText: 'Name',
-    colTypeText: 'Type',
-    formTitleText: 'Settings',
+    colTypeText: 'Typ',
+    formTitleText: 'Einstellungen',
     nameText: 'Name',
-    typeText: 'Type',
-    contactText: 'Contact',
-    descriptionText: 'Description',
-    publicText: 'Public',
-    permissionText: 'Permission',
-    errorTitleText: 'Error',
-    updateErrorMsgText: 'Repository update failed',
-    createErrorMsgText: 'Repository creation failed',
+    typeText: 'Typ',
+    contactText: 'Kontakt',
+    descriptionText: 'Beschreibung',
+    publicText: 'Öffentlich',
+    permissionText: 'Berechtigung',
+    errorTitleText: 'Fehler',
+    updateErrorMsgText: 'Repository update fehlgeschlagen',
+    createErrorMsgText: 'Repository erstellen fehlgeschlagen',
 
-    // help
+    // help TODO
     nameHelpText: 'The name of the repository. This name would be part of the repository url.',
     typeHelpText: 'The type of the repository (e.g. Mercurial, Git or Subversion).',
     contactHelpText: 'An email address of the person who is in charge for this repository.',
@@ -141,15 +141,15 @@ if (Sonia.repository.FormPanel){
 if (Sonia.repository.Panel){
 
   Ext.override(Sonia.repository.Panel, {
-    titleText: 'Repository Form',
-    addText: 'Add',
-    removeText: 'Remove',
-    reloadText: 'Reload',
-    emptyText: 'Add or select an Repository',
-    removeTitleText: 'Remove Repository',
-    removeMsgText: 'Remove Repository "{0}"?',
-    errorTitleText: 'Error',
-    errorMsgText: 'Repository deletion failed'
+    titleText: 'Repository',
+    addText: 'Hinzufügen',
+    removeText: 'Entfernen',
+    reloadText: 'Aktualisieren',
+    emptyText: 'Es wurde kein Repository selektiert',
+    removeTitleText: 'Repository entfernen',
+    removeMsgText: 'Repository entfernen "{0}"?',
+    errorTitleText: 'Fehler',
+    errorMsgText: 'Repository entfernen fehlgeschlagen'
   });
 
 }
@@ -159,22 +159,22 @@ if (Sonia.repository.Panel){
 if (Sonia.config.ScmConfigPanel){
 
   Ext.override(Sonia.config.ScmConfigPanel,{
-    titleText: 'General Settings',
+    titleText: 'Allgemeine Einstellung',
     servnameText: 'Servername',
-    enableForwardingText: 'Enable forwarding (mod_proxy)',
+    enableForwardingText: 'Forwarding (mod_proxy) aktivieren',
     forwardPortText: 'Forward Port',
-    pluginRepositoryText: 'Plugin repository',
-    allowAnonymousAccessText: 'Allow Anonymous Access',
-    enableSSLText: 'Enable SSL',
+    pluginRepositoryText: 'Plugin-Repository',
+    allowAnonymousAccessText: 'Anonymen Zugriff erlauben',
+    enableSSLText: 'SSL Aktivieren',
     sslPortText: 'SSL Port',
-    adminGroupsText: 'Admin Groups',
-    adminUsersText: 'Admin Users',
-    submitText: 'Submit ...',
-    loadingText: 'Loading ...',
-    errorTitleText: 'Error',
-    errorMsgText: 'Could not load config.',
+    adminGroupsText: 'Admin Gruppen',
+    adminUsersText: 'Admin Benutzer',
+    submitText: 'Senden ...',
+    loadingText: 'Laden ...',
+    errorTitleText: 'Fehler',
+    errorMsgText: 'Die Konfiguration konnte nicht geladen werden.',
 
-    // help
+    // help TODO
     servernameHelpText: 'The name of this server. This name would be part of the repository url.',
     pluginRepositoryHelpText: 'The url of the plugin repository.<br />Explanation of the {placeholders}:\n\
       <br /><b>version</b> = SCM-Manager Version<br /><b>os</b> = Operation System<br /><b>arch</b> = Architecture',
@@ -192,12 +192,12 @@ if (Sonia.config.ScmConfigPanel){
 if (Sonia.config.ConfigForm){
 
   Ext.override(Sonia.config.ConfigForm, {
-    title: 'Config Form',
-    saveButtonText: 'Save',
+    title: 'Konfiguration',
+    saveButtonText: 'Speichern',
     resetButtontext: 'Reset',
 
-    submitText: 'Submit ...',
-    loadingText: 'Loading ...'
+    submitText: 'Senden ...',
+    loadingText: 'Laden ...'
   });
 
 }
@@ -207,14 +207,15 @@ if (Sonia.config.ConfigForm){
 if (Sonia.user.Grid){
 
   Ext.override(Sonia.user.Grid, {
-    titleText: 'User Form',
+    titleText: 'Benutzer',
     colNameText: 'Name',
-    colDisplayNameText: 'Display Name',
-    colMailText: 'Mail',
+    colDisplayNameText: 'Anzeigename',
+    colMailText: 'E-Mail',
     colAdminText: 'Admin',
-    colCreationDateText: 'Creation Date',
+    colCreationDateText: 'Erstellungsdatum',
+    // TODO
     colLastModifiedText: 'Last modified',
-    colTypeText: 'Type'
+    colTypeText: 'Typ'
   });
 
 }
@@ -223,16 +224,16 @@ if (Sonia.user.FormPanel){
 
   Ext.override(Sonia.user.FormPanel, {
     nameText: 'Name',
-    displayNameText: 'Display name',
-    mailText: 'Mail',
-    passwordText: 'Password',
+    displayNameText: 'Anzeigename',
+    mailText: 'E-Mail',
+    passwordText: 'Passwort',
     adminText: 'Administrator',
-    errorTitleText: 'Error',
-    updateErrorMsgText: 'User update failed',
-    createErrorMsgText: 'User creation failed',
-    passwordMinLengthText: 'Password must be at least 6 characters long',
+    errorTitleText: 'Fehler',
+    updateErrorMsgText: 'Benutzer update fehlgeschlagen',
+    createErrorMsgText: 'Benutzer erstellen fehlgeschlagen',
+    passwordMinLengthText: 'Das Passwort muss mindestens 6 Zeichen lang sein',
 
-    // help
+    // help TODO
     usernameHelpText: 'The unique name of the user.',
     displayNameHelpText: 'The display name of the user.',
     mailHelpText: 'The email address of the user.',
@@ -246,15 +247,15 @@ if (Sonia.user.FormPanel){
 if (Sonia.user.Panel){
 
   Ext.override(Sonia.user.Panel, {
-    addText: 'Add',
-    removeText: 'Remove',
-    reloadText: 'Reload',
-    titleText: 'User Form',
-    emptyText: 'Add or select an User',
-    removeTitleText: 'Remove User',
-    removeMsgText: 'Remove User "{0}"?',
-    errorTitleText: 'Error',
-    errorMsgText: 'User deletion failed'
+    addText: 'Hinzufügen',
+    removeText: 'Entfernen',
+    reloadText: 'Aktualisieren',
+    titleText: 'Benutzer',
+    emptyText: 'Es wurde kein Benutzer selektiert',
+    removeTitleText: 'Benutzer entfernen',
+    removeMsgText: 'Benutzer "{0}" entfernen?',
+    errorTitleText: 'Fehler',
+    errorMsgText: 'Benutzer entfernen fehlgeschlagen'
   });
 
 }
@@ -266,12 +267,12 @@ if (Sonia.group.Grid){
 
   Ext.override(Sonia.group.Grid,{
     colNameText: 'Name',
-    colDescriptionText: 'Description',
-    colMembersText: 'Members',
-    colCreationDateText: 'Creation date',
-    colTypeText: 'Type',
-    emptyGroupStoreText: 'No group is configured',
-    groupFormTitleText: 'Group Form'
+    colDescriptionText: 'Beschreibung',
+    colMembersText: 'Mitglieder',
+    colCreationDateText: 'Erstellungsdatum',
+    colTypeText: 'Typ',
+    emptyGroupStoreText: 'Es wurde keine Gruppe konfiguriert',
+    groupFormTitleText: 'Grouppe'
   });
 
 }
@@ -279,16 +280,16 @@ if (Sonia.group.Grid){
 if (Sonia.group.FormPanel){
 
   Ext.override(Sonia.group.FormPanel, {
-    colMemberText: 'Member',
-    titleText: 'Settings',
+    colMemberText: 'Mitglied',
+    titleText: 'Einstellungen',
     nameText: 'Name',
-    descriptionText: 'Description',
-    membersText: 'Members',
-    errorTitleText: 'Error',
-    updateErrorMsgText: 'Group update failed',
-    createErrorMsgText: 'Group creation failed',
+    descriptionText: 'Beschreibung',
+    membersText: 'Mitglieder',
+    errorTitleText: 'Fehler',
+    updateErrorMsgText: 'Gruppen update fehlgeschlagen',
+    createErrorMsgText: 'Gruppen erstellen fehlgeschlagen',
 
-    // help
+    // help TODO
     nameHelpText: 'The unique name of the group.',
     descriptionHelpText: 'A short description of the group.',
     membersHelpText: 'The usernames of the group members.'
@@ -299,15 +300,15 @@ if (Sonia.group.FormPanel){
 if (Sonia.group.Panel){
 
   Ext.override(Sonia.group.Panel, {
-    addText: 'Add',
-    removeText: 'Remove',
-    reloadText: 'Reload',
-    titleText: 'Group Form',
-    emptyText: 'Add or select a Group',
-    removeTitleText: 'Remove Group',
-    removeMsgText: 'Remove Group "{0}"?',
-    errorTitleText: 'Error',
-    errorMsgText: 'Group deletion failed'
+    addText: 'Hinzufügen',
+    removeText: 'Entfernen',
+    reloadText: 'Aktualisieren',
+    titleText: 'Gruppe',
+    emptyText: 'Es wurde keine Gruppe selektiert',
+    removeTitleText: 'Gruppe entfernen',
+    removeMsgText: 'Gruppe "{0}" entfernen?',
+    errorTitleText: 'Fehler',
+    errorMsgText: 'Gruppe entfernen fehlgeschlagen'
   });
 
 }
@@ -317,15 +318,15 @@ if (Sonia.group.Panel){
 if (Sonia.action.ChangePasswordWindow){
 
   Ext.override(Sonia.action.ChangePasswordWindow, {
-    titleText: 'Change Password',
-    oldPasswordText: 'Old Password',
-    newPasswordText: 'New Password',
-    confirmPasswordText: 'Confirm Password',
+    titleText: 'Passwort ändern',
+    oldPasswordText: 'Altes Passwort',
+    newPasswordText: 'Neues Password',
+    confirmPasswordText: 'Passwort bestätigen',
     okText: 'Ok',
-    cancelText: 'Cancel',
-    connectingText: 'Connecting',
-    failedText: 'change password failed!',
-    waitMsgText: 'Sending data...'
+    cancelText: 'Abbrechen',
+    connectingText: 'Verbinden',
+    failedText: 'Passwort ändern fehlgeschlagen!',
+    waitMsgText: 'Daten übertragen...'
   });
 
 }
@@ -335,21 +336,21 @@ if (Sonia.action.ChangePasswordWindow){
 if (Sonia.plugin.Center){
 
   Ext.override(Sonia.plugin.Center, {
-    waitTitleText: 'Please wait',
-    errorTitleText: 'Error',
-    restartText: 'Restart the applicationserver to activate the plugin.',
+    waitTitleText: 'Bitte warten',
+    errorTitleText: 'Fehler',
+    restartText: 'Der ApplicationServer muss neugestartet werden um das Plugin zu aktivieren.',
 
-    installWaitMsgText: 'Installing Plugin.',
-    installSuccessText: 'Plugin successfully installed',
-    installFailedText: 'Plugin installation failed',
+    installWaitMsgText: 'Plugin wird installiert.',
+    installSuccessText: 'Plugin wurde erfolgreich installiert',
+    installFailedText: 'Plugin installieren fehlgeschlagen',
 
-    uninstallWaitMsgText: 'Uninstalling Plugin.',
-    uninstallSuccessText: 'Plugin successfully uninstalled',
-    uninstallFailedText: 'Plugin uninstallation failed',
+    uninstallWaitMsgText: 'Plugin wird deinstalliert.',
+    uninstallSuccessText: 'Plugin wurde erfolgreich deinstalliert',
+    uninstallFailedText: 'Plugin deinstallieren fehlgeschlagen',
 
-    updateWaitMsgText: 'Updating Plugin.',
-    updateSuccessText: 'Plugin successfully updated',
-    updateFailedText: 'Plugin update failed'
+    updateWaitMsgText: 'Plugin wird aktualisiert.',
+    updateSuccessText: 'Plugin wurde erfolgreich aktualisiert',
+    updateFailedText: 'Plugin aktualisieren fehlgeschlagen'
   });
 
 }
@@ -358,12 +359,12 @@ if (Sonia.plugin.Grid){
 
   Ext.override(Sonia.plugin.Grid, {
     colNameText: 'Name',
-    colAuthorText: 'Author',
-    colDescriptionText: 'Description',
+    colAuthorText: 'Autor',
+    colDescriptionText: 'Beschreibung',
     colVersionText: 'Version',
-    colActionText: 'Action',
+    colActionText: 'Aktion',
     colUrlText: 'Url',
-    emptyText: 'No plugins avaiable'
+    emptyText: 'Es konnte kein Plugin gefunden werden'
   });
 
 }
@@ -374,30 +375,30 @@ if (Sonia.scm.Main){
 
   Ext.override(Sonia.scm.Main, {
     tabRepositoriesText: 'Repositories',
-    navChangePasswordText: 'Change Password',
-    sectionMainText: 'Main',
-    sectionSecurityText: 'Security',
+    navChangePasswordText: 'Passwort ändern',
+    sectionMainText: 'Repositories',
+    sectionSecurityText: 'Sicherheit',
     navRepositoriesText: 'Repositories',
-    sectionConfigText: 'Config',
-    navGeneralConfigText: 'General',
-    tabGeneralConfigText: 'SCM Config',
+    sectionConfigText: 'Konfiguration',
+    navGeneralConfigText: 'Allgemein',
+    tabGeneralConfigText: 'SCM Konfiguration',
 
-    navRepositoryTypesText: 'Repository Types',
-    tabRepositoryTypesText: 'Repository Config',
+    navRepositoryTypesText: 'Repository Konfiguration',
+    tabRepositoryTypesText: 'Repository Konfiguration',
     navPluginsText: 'Plugins',
     tabPluginsText: 'Plugins',
-    navUsersText: 'Users',
-    tabUsersText: 'Users',
-    navGroupsText: 'Groups',
-    tabGroupsText: 'Groups',
+    navUsersText: 'Benutzer',
+    tabUsersText: 'Benutzer',
+    navGroupsText: 'Gruppen',
+    tabGroupsText: 'Gruppen',
 
-    sectionLoginText: 'Login',
-    navLoginText: 'Login',
+    sectionLoginText: 'Anmelden',
+    navLoginText: 'Anmelden',
 
-    sectionLogoutText: 'Log out',
-    navLogoutText: 'Log out',
+    sectionLogoutText: 'Abmelden',
+    navLogoutText: 'Abmelden',
 
-    logoutFailedText: 'Logout Failed!'
+    logoutFailedText: 'Abmelden Fehlgeschlagen!'
   });
 
 }
