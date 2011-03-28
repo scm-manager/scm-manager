@@ -125,12 +125,13 @@ if (Sonia.repository.FormPanel){
     updateErrorMsgText: 'Repository update fehlgeschlagen',
     createErrorMsgText: 'Repository erstellen fehlgeschlagen',
 
-    // help TODO
-    nameHelpText: 'The name of the repository. This name would be part of the repository url.',
-    typeHelpText: 'The type of the repository (e.g. Mercurial, Git or Subversion).',
-    contactHelpText: 'An email address of the person who is in charge for this repository.',
-    descriptionHelpText: 'A short description of the repository.',
-    publicHelpText: 'A public repository which is readable by every person.',
+    // help
+    nameHelpText: 'Name des Repositories. Dieser Name wird Teil der Repository-URL.',
+    typeHelpText: 'Typ des Repositories (z.B.: Mercurial, Git oder Subversion).',
+    contactHelpText: 'Die E-Mail Adresse einer für das Repository verantwortlichen Person.',
+    descriptionHelpText: 'Eine kurze Beschreibung des Repositories.',
+    publicHelpText: 'Ein öffentliches Repository kann von jeder Person gelesen werden.',
+    // TODO
     permissionHelpText: 'If the "Group Permission" box is checked, then the name represents the groupname otherwise the username.<br />\n\
       Type explenation:<br /><b>READ</b> = read permission<br /><b>WRITE</b> = read and write permission<br />\n\
       <b>OWNER</b> = read, write permissions and also the ability to manage the properties and permissions'
@@ -175,16 +176,16 @@ if (Sonia.config.ScmConfigPanel){
     errorMsgText: 'Die Konfiguration konnte nicht geladen werden.',
 
     // help TODO
-    servernameHelpText: 'The name of this server. This name would be part of the repository url.',
-    pluginRepositoryHelpText: 'The url of the plugin repository.<br />Explanation of the {placeholders}:\n\
-      <br /><b>version</b> = SCM-Manager Version<br /><b>os</b> = Operation System<br /><b>arch</b> = Architecture',
-    enableForwardingHelpText: 'Enbale mod_proxy port forwarding.',
-    forwardPortHelpText: 'The forwarding port.',
-    allowAnonymousAccessHelpText: 'Anonymous users can see public repositories.',
-    enableSSLHelpText: 'Enable SSL.',
-    sslPortHelpText: 'The ssl port.',
-    adminGroupsHelpText: 'Comma seperated list of groups with admin rights.',
-    adminUsersHelpText: 'Comma seperated list of users with admin rights.'
+    servernameHelpText: 'Der Name dieses Servers. Dieser Name wird Teil der Repository-URL.',
+    pluginRepositoryHelpText: 'Die URL des Plugin-Repositories.<br />Beschreibung der {Platzhalter}:\n\
+      <br /><b>version</b> = SCM-Manager Version<br /><b>os</b> = Betriebssystem<br /><b>arch</b> = Architektur',
+    enableForwardingHelpText: 'Apache mod_proxy Port-Forwarding aktivieren.',
+    forwardPortHelpText: 'Der Port für das mod_proxy Port-Forwarding.',
+    allowAnonymousAccessHelpText: 'Anonyme Benutzer können öffentlich Repositories lesen.',
+    enableSSLHelpText: 'Aktiviere sichere Verbindungen über HTTPS.',
+    sslPortHelpText: 'Der SSL-Port.',
+    adminGroupsHelpText: 'Komma getrennte Liste von Gruppen mit Administrationsrechten.',
+    adminUsersHelpText: 'Komma getrennte Liste von Benutzern mit Administrationsrechten.'
   });
 
 }
@@ -233,13 +234,13 @@ if (Sonia.user.FormPanel){
     createErrorMsgText: 'Benutzer erstellen fehlgeschlagen',
     passwordMinLengthText: 'Das Passwort muss mindestens 6 Zeichen lang sein',
 
-    // help TODO
-    usernameHelpText: 'The unique name of the user.',
-    displayNameHelpText: 'The display name of the user.',
-    mailHelpText: 'The email address of the user.',
-    passwordHelpText: 'The plain text password of the user.',
-    passwordConfirmHelpText: 'Repeat the password for validation.',
-    adminHelpText: 'An administrator is able to create, modify and delete repositories, groups and users.'
+    // help
+    usernameHelpText: 'Eindeutiger Name des Benutzers.',
+    displayNameHelpText: 'Anzeigename des Benutzers.',
+    mailHelpText: 'E-Mail Adresse des Benutzers.',
+    passwordHelpText: 'Passwort des Benutzers.',
+    passwordConfirmHelpText: 'Passwortwiederholung zur Kontrolle.',
+    adminHelpText: 'Ein Administrator kann Repositories, Gruppen und Benutzer erstellen, bearbeiten und löschen.'
   });
 
 }
@@ -289,10 +290,10 @@ if (Sonia.group.FormPanel){
     updateErrorMsgText: 'Gruppen update fehlgeschlagen',
     createErrorMsgText: 'Gruppen erstellen fehlgeschlagen',
 
-    // help TODO
-    nameHelpText: 'The unique name of the group.',
-    descriptionHelpText: 'A short description of the group.',
-    membersHelpText: 'The usernames of the group members.'
+    // help
+    nameHelpText: 'Eindeutiger Name der Gruppe.',
+    descriptionHelpText: 'Eine kurze Beschreibung der Gruppe.',
+    membersHelpText: 'Die Benutzernamen der Gruppenmitglieder.'
   });
 
 }
