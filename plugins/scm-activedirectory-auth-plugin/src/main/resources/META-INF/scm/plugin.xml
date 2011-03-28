@@ -44,4 +44,10 @@
     <url>${project.url}</url>
   </information>
 
+  <conditions>
+    <os>
+      <name>windows</name>
+    </os>
+  </conditions>
+  
 </plugin>

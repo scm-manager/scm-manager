@@ -51,6 +51,10 @@
     <author>Sebastian Sdorra</author>
     <url>${project.url}</url>
   </information>
+
+  <conditions>
+    <min-version>1.1</min-version>
+  </conditions>
   
   <resources>
     <script>/sonia/scm/svn.config.js</script>

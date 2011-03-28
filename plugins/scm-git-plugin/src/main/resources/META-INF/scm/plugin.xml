@@ -52,6 +52,10 @@
     <url>${project.url}</url>
   </information>
 
+  <conditions>
+    <min-version>1.1</min-version>
+  </conditions>
+
   <resources>
     <script>/sonia/scm/git.config.js</script>
   </resources>

@@ -44,6 +44,12 @@
     <url>${project.url}</url>
   </information>
 
+  <conditions>
+    <os>
+      <name>posix</name>
+    </os>
+  </conditions>
+
   <resources>
     <script>/sonia/scm/pam/sonia.pam.js</script>
   </resources>
