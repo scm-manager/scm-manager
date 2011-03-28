@@ -87,6 +87,7 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
       url: restUrl + 'plugins/install/' + pluginId + '.json',
       method: 'POST',
       scope: this,
+      timeout: 300000, // 5min
       success: function(){
         if ( debug ){
           console.debug('plugin successfully installed');
@@ -157,6 +158,7 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
       url: restUrl + 'plugins/update/' + pluginId + '.json',
       method: 'POST',
       scope: this,
+      timeout: 300000, // 5min
       success: function(){
         if ( debug ){
           console.debug('plugin successfully updated');
