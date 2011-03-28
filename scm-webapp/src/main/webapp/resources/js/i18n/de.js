@@ -198,7 +198,8 @@ if (Sonia.config.ConfigForm){
     resetButtontext: 'Reset',
 
     submitText: 'Senden ...',
-    loadingText: 'Laden ...'
+    loadingText: 'Laden ...',
+    failedText: 'Es ist ein unbekannter Fehler aufgetreten.'
   });
 
 }

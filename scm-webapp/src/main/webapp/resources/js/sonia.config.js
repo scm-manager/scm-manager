@@ -278,6 +278,7 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
   
   submitText: 'Submit ...',
   loadingText: 'Loading ...',
+  failedText: 'Unknown Error occurred.',
 
   items: null,
   onSubmit: null,
@@ -402,7 +403,7 @@ Sonia.config.SimpleConfigForm = Ext.extend(Sonia.config.ConfigForm,{
       failure: function(){
         el.unmask();
         clearTimeout(tid);
-        alert('failure');
+        Ext.Msg.alert( this.failedText );
       }
     });
   }
