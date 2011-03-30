@@ -132,9 +132,9 @@ if (Sonia.repository.FormPanel){
     descriptionHelpText: 'Eine kurze Beschreibung des Repositories.',
     publicHelpText: 'Ein öffentliches Repository kann von jeder Person gelesen werden.',
     // TODO
-    permissionHelpText: 'If the "Group Permission" box is checked, then the name represents the groupname otherwise the username.<br />\n\
-      Type explenation:<br /><b>READ</b> = read permission<br /><b>WRITE</b> = read and write permission<br />\n\
-      <b>OWNER</b> = read, write permissions and also the ability to manage the properties and permissions'
+    permissionHelpText: 'Rechteverwaltung für bestimmte Nutzer oder Gruppen<br />\n\
+        Rechte:<br /><b>READ</b> = nur lesen<br /><b>WRITE</b> = lesen und schreiben<br />\n\
+        <b>OWNER</b> = lesen, schreiben und Rechteverwaltung.'
   });
 
 }
@@ -195,7 +195,7 @@ if (Sonia.config.ConfigForm){
   Ext.override(Sonia.config.ConfigForm, {
     title: 'Konfiguration',
     saveButtonText: 'Speichern',
-    resetButtontext: 'Reset',
+    resetButtontext: 'Zurücksetzen',
 
     submitText: 'Senden ...',
     loadingText: 'Laden ...',
@@ -215,8 +215,7 @@ if (Sonia.user.Grid){
     colMailText: 'E-Mail',
     colAdminText: 'Admin',
     colCreationDateText: 'Erstellungsdatum',
-    // TODO
-    colLastModifiedText: 'Last modified',
+    colLastModifiedText: 'Letzte Änderung',
     colTypeText: 'Typ'
   });
 
@@ -231,8 +230,8 @@ if (Sonia.user.FormPanel){
     passwordText: 'Passwort',
     adminText: 'Administrator',
     errorTitleText: 'Fehler',
-    updateErrorMsgText: 'Benutzer update fehlgeschlagen',
-    createErrorMsgText: 'Benutzer erstellen fehlgeschlagen',
+    updateErrorMsgText: 'Benutzer Aktualisierung fehlgeschlagen',
+    createErrorMsgText: 'Benutzer Erstellung fehlgeschlagen',
     passwordMinLengthText: 'Das Passwort muss mindestens 6 Zeichen lang sein',
 
     // help
@@ -257,7 +256,7 @@ if (Sonia.user.Panel){
     removeTitleText: 'Benutzer entfernen',
     removeMsgText: 'Benutzer "{0}" entfernen?',
     errorTitleText: 'Fehler',
-    errorMsgText: 'Benutzer entfernen fehlgeschlagen'
+    errorMsgText: 'Entfernen des Benutzers fehlgeschlagen'
   });
 
 }
@@ -273,8 +272,8 @@ if (Sonia.group.Grid){
     colMembersText: 'Mitglieder',
     colCreationDateText: 'Erstellungsdatum',
     colTypeText: 'Typ',
-    emptyGroupStoreText: 'Es wurde keine Gruppe konfiguriert',
-    groupFormTitleText: 'Grouppe'
+    emptyGroupStoreText: 'Es wurde keine Gruppe konfiguriert.',
+    groupFormTitleText: 'Gruppe'
   });
 
 }
@@ -288,8 +287,8 @@ if (Sonia.group.FormPanel){
     descriptionText: 'Beschreibung',
     membersText: 'Mitglieder',
     errorTitleText: 'Fehler',
-    updateErrorMsgText: 'Gruppen update fehlgeschlagen',
-    createErrorMsgText: 'Gruppen erstellen fehlgeschlagen',
+    updateErrorMsgText: 'Gruppen Aktualisierung fehlgeschlagen',
+    createErrorMsgText: 'Gruppen Erstellung fehlgeschlagen',
 
     // help
     nameHelpText: 'Eindeutiger Name der Gruppe.',
@@ -310,7 +309,7 @@ if (Sonia.group.Panel){
     removeTitleText: 'Gruppe entfernen',
     removeMsgText: 'Gruppe "{0}" entfernen?',
     errorTitleText: 'Fehler',
-    errorMsgText: 'Gruppe entfernen fehlgeschlagen'
+    errorMsgText: 'Entfernen der Gruppe fehlgeschlagen.'
   });
 
 }
@@ -327,7 +326,7 @@ if (Sonia.action.ChangePasswordWindow){
     okText: 'Ok',
     cancelText: 'Abbrechen',
     connectingText: 'Verbinden',
-    failedText: 'Passwort ändern fehlgeschlagen!',
+    failedText: 'Passwort Änderung fehlgeschlagen!',
     waitMsgText: 'Daten übertragen...'
   });
 
@@ -366,7 +365,7 @@ if (Sonia.plugin.Grid){
     colVersionText: 'Version',
     colActionText: 'Aktion',
     colUrlText: 'Url',
-    emptyText: 'Es konnte kein Plugin gefunden werden'
+    emptyText: 'Es konnte kein Plugin gefunden werden.'
   });
 
 }
@@ -400,7 +399,7 @@ if (Sonia.scm.Main){
     sectionLogoutText: 'Abmelden',
     navLogoutText: 'Abmelden',
 
-    logoutFailedText: 'Abmelden Fehlgeschlagen!'
+    logoutFailedText: 'Abmeldung Fehlgeschlagen!'
   });
 
 }
