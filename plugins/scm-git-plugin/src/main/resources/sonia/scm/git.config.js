@@ -62,6 +62,25 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
 
 Ext.reg("gitConfigPanel", Sonia.git.ConfigPanel);
 
+// i18n
+
+if ( i18n != null && i18n.country == 'de' ){
+
+  Ext.override(Sonia.git.ConfigPanel, {
+
+    // labels
+    titleText: 'Git Einstellungen',
+    repositoryDirectoryText: 'Repository-Verzeichnis',
+
+    // helpTexts
+    repositoryDirectoryHelpText: 'Das Verzeichnis der Git-Repositories.'
+    
+  });
+
+}
+
+// register panel
+
 registerConfigPanel({
   xtype : 'gitConfigPanel'
 });

@@ -38,15 +38,16 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   titleText: 'Mercurial Settings',
   hgBinaryText: 'HG Binary',
   pythonBinaryText: 'Python Binary',
-  pythonPathText: 'Python Path',
+  pythonPathText: 'Python Module Search Path',
   repositoryDirectoryText: 'Repository directory',
   useOptimizedBytecodeText: 'Optimized Bytecode (.pyo)',
   autoConfigText: 'Load Auto-Configuration',
+  autoConfigLabelText: 'Auto-Configuration',
 
   // helpText
   hgBinaryHelpText: 'The location of the Mercurial binary.',
   pythonBinaryHelpText: 'The location of the Python binary.',
-  pythonPathHelpText: 'The Python path.',
+  pythonPathHelpText: 'The Python Module Search Path (PYTHONPATH).',
   repositoryDirectoryHelpText: 'The location of the Mercurial repositories.',
   useOptimizedBytecodeHelpText: 'Use the Python "-O" switch.',
 
@@ -86,7 +87,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
       },{
         xtype: 'button',
         text: this.autoConfigText,
-        fieldLabel: 'Auto-Configuration',
+        fieldLabel: this.autoConfigLabelText,
         handler: function(){
           var self = Ext.getCmp('hgConfigForm');
           self.loadConfig( self.el, 'config/repositories/hg/auto-configuration.json', 'POST' );
@@ -149,6 +150,35 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
 });
 
 Ext.reg("hgConfigPanel", Sonia.hg.ConfigPanel);
+
+// i18n
+
+if ( i18n != null && i18n.country == 'de' ){
+
+  Ext.override(Sonia.hg.ConfigPanel, {
+
+    // labels
+    titleText: 'Mercurial Einstellungen',
+    hgBinaryText: 'HG Pfad',
+    pythonBinaryText: 'Python Pfad',
+    pythonPathText: 'Python Modul Suchpfad',
+    repositoryDirectoryText: 'Repository-Verzeichnis',
+    useOptimizedBytecodeText: 'Optimierter Bytecode (.pyo)',
+    autoConfigText: 'Einstellungen automatisch laden',
+    autoConfigLabelText: 'Automatische Einstellung',
+
+    // helpText
+    hgBinaryHelpText: 'Pfad zum "hg" Befehl.',
+    pythonBinaryHelpText: 'Pfad zum "python" Befehl.',
+    pythonPathHelpText: 'Der Python Modul Suchpfad (PYTHONPATH).',
+    repositoryDirectoryHelpText: 'Das Verzeichnis der Mercurial-Repositories.',
+    useOptimizedBytecodeHelpText: 'Optimierten Bytecode verwenden (python -O).'
+
+  });
+
+}
+
+// register panel
 
 registerConfigPanel({
   id: 'hgConfigForm',

@@ -62,6 +62,25 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
 
 Ext.reg("svnConfigPanel", Sonia.svn.ConfigPanel);
 
+// i18n
+
+if ( i18n != null && i18n.country == 'de' ){
+
+  Ext.override(Sonia.hg.ConfigPanel, {
+
+    // labels
+    titleText: 'Subversion Einstellungen',
+    repositoryDirectoryText: 'Repository-Verzeichnis',
+
+    // helpTexts
+    repositoryDirectoryHelpText: 'Das Verzeichnis der Subversion-Repositories.'
+
+  });
+
+}
+
+// register panel
+
 registerConfigPanel({
   xtype : 'svnConfigPanel'
 });

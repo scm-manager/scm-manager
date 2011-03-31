@@ -86,6 +86,30 @@ Sonia.bzr.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
 
 Ext.reg("bzrConfigPanel", Sonia.bzr.ConfigPanel);
 
+// i18n
+
+if ( i18n != null && i18n.country == 'de' ){
+
+  Ext.override(Sonia.hg.ConfigPanel, {
+
+    // labels
+    titleText: 'Bazaar Settings',
+    bzrBinaryText: 'Bzr Pfad',
+    pythonBinary: 'Python Pfad',
+    pythonPath: 'Python Modul Suchpfad',
+    repositoryDirectoryText: 'Repository-Verzeichnis',
+
+    // helpTexts
+    bzrBinaryHelpText: 'Pfad zum "bzr" Befehl.',
+    pythonBinaryHelpText: 'Pfad zum "python" Befehl.',
+    pythonPathHelpText: 'Der Python Modul Suchpfad (PYTHONPATH).',
+    repositoryDirectoryHelpText: 'The location of the Bazaar repositories.'
+
+  });
+
+}
+
+// register panel
 
 registerConfigPanel({
   xtype : 'bzrConfigPanel'
