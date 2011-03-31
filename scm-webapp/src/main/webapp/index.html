@@ -43,6 +43,13 @@
     <link rel="icon" type="image/png" href="resources/images/favicon.png" />
     -->
 
+    <script type="text/javascript">
+      var i18n = {
+        locale: '${locale}',
+        country: '${country}'
+      };
+    </script>
+
     <link rel="stylesheet" type="text/css" href="resources/extjs/resources/css/ext-all.css" />
     <link rel="stylesheet" type="text/css" href="resources/extjs/resources/css/xtheme-gray.css" />
     <link rel="stylesheet" type="text/css" href="resources/css/style.css" />
@@ -64,9 +71,9 @@
     <script type="text/javascript" src="resources/js/sonia.plugin.js"></script>
     <script type="text/javascript" src="resources/js/sonia.scm.js"></script>
     <script type="text/javascript" src="plugins/sonia.plugin.js"></script>
-    <#if shortLocale != 'en'>
-    <script type="text/javascript" src="resources/extjs/i18n/ext-lang-${shortLocale}.js"></script>
-    <script type="text/javascript" src="resources/js/i18n/${shortLocale}.js"></script>
+    <#if country != 'en'>
+    <script type="text/javascript" src="resources/extjs/i18n/ext-lang-${country}.js"></script>
+    <script type="text/javascript" src="resources/js/i18n/${country}.js"></script>
     </#if>
 
     <title>SCM-WebAPP</title>

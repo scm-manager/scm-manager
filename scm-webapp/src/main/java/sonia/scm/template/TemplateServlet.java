@@ -117,15 +117,15 @@ public class TemplateServlet extends HttpServlet
 
     params.put("locale", locale);
 
-    String shortLocale = locale;
-    int i = shortLocale.indexOf("_");
+    String country = locale;
+    int i = country.indexOf("_");
 
     if (i > 0)
     {
-      shortLocale = shortLocale.substring(0, i);
+      country = country.substring(0, i);
     }
 
-    params.put("shortLocale", shortLocale);
+    params.put("country", country);
 
     String templateName = getTemplateName(contextPath, request.getRequestURI());
     Writer writer = null;
