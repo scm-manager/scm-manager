@@ -42,10 +42,10 @@ Sonia.bzr.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
   repositoryDirectoryText: 'Repository directory',
 
   // helpTexts
-  bzrBinaryHelpText: 'The location of the Bzr binary.',
-  pythonBinaryHelpText: 'The location of the Python binary.',
-  pythonPathHelpText: 'The Python path.',
-  repositoryDirectoryHelpText: 'The location of the Bazaar repositories.',
+  bzrBinaryHelpText: 'Location of Bzr binary.',
+  pythonBinaryHelpText: 'Location of Python binary.',
+  pythonPathHelpText: 'Python path.',
+  repositoryDirectoryHelpText: 'Location of Bazaar repositories.',
 
   initComponent: function(){
 
@@ -93,7 +93,7 @@ if ( i18n != null && i18n.country == 'de' ){
   Ext.override(Sonia.hg.ConfigPanel, {
 
     // labels
-    titleText: 'Bazaar Settings',
+    titleText: 'Bazaar Einstellungen',
     bzrBinaryText: 'Bzr Pfad',
     pythonBinary: 'Python Pfad',
     pythonPath: 'Python Modul Suchpfad',
@@ -102,8 +102,8 @@ if ( i18n != null && i18n.country == 'de' ){
     // helpTexts
     bzrBinaryHelpText: 'Pfad zum "bzr" Befehl.',
     pythonBinaryHelpText: 'Pfad zum "python" Befehl.',
-    pythonPathHelpText: 'Der Python Modul Suchpfad (PYTHONPATH).',
-    repositoryDirectoryHelpText: 'The location of the Bazaar repositories.'
+    pythonPathHelpText: 'Python Modul Suchpfad (PYTHONPATH).',
+    repositoryDirectoryHelpText: 'Pfad der Bazaar-Repositories.'
 
   });
 

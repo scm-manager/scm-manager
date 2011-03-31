@@ -38,7 +38,7 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
   repositoryDirectoryText: 'Repository directory',
 
   // helpTexts
-  repositoryDirectoryHelpText: 'The location of the Suberversion repositories.',
+  repositoryDirectoryHelpText: 'Location of the Suberversion repositories.',
 
   initComponent: function(){
 
@@ -73,7 +73,7 @@ if ( i18n != null && i18n.country == 'de' ){
     repositoryDirectoryText: 'Repository-Verzeichnis',
 
     // helpTexts
-    repositoryDirectoryHelpText: 'Das Verzeichnis der Subversion-Repositories.'
+    repositoryDirectoryHelpText: 'Verzeichnis der Subversion-Repositories.'
 
   });
 

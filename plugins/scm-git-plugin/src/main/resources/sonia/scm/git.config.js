@@ -38,7 +38,7 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
   repositoryDirectoryText: 'Repository directory',
 
   // helpTexts
-  repositoryDirectoryHelpText: 'The location of the Git repositories.',
+  repositoryDirectoryHelpText: 'Location of the Git repositories.',
 
   initComponent: function(){
 
@@ -73,7 +73,7 @@ if ( i18n != null && i18n.country == 'de' ){
     repositoryDirectoryText: 'Repository-Verzeichnis',
 
     // helpTexts
-    repositoryDirectoryHelpText: 'Das Verzeichnis der Git-Repositories.'
+    repositoryDirectoryHelpText: 'Verzeichnis der Git-Repositories.'
     
   });
 

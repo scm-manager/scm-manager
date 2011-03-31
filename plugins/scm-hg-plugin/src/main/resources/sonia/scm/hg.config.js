@@ -45,10 +45,10 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   autoConfigLabelText: 'Auto-Configuration',
 
   // helpText
-  hgBinaryHelpText: 'The location of the Mercurial binary.',
-  pythonBinaryHelpText: 'The location of the Python binary.',
-  pythonPathHelpText: 'The Python Module Search Path (PYTHONPATH).',
-  repositoryDirectoryHelpText: 'The location of the Mercurial repositories.',
+  hgBinaryHelpText: 'Location of Mercurial binary.',
+  pythonBinaryHelpText: 'Location of Python binary.',
+  pythonPathHelpText: 'Python Module Search Path (PYTHONPATH).',
+  repositoryDirectoryHelpText: 'Location of the Mercurial repositories.',
   useOptimizedBytecodeHelpText: 'Use the Python "-O" switch.',
 
   initComponent: function(){
@@ -100,11 +100,6 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   },
 
   onSubmit: function(values){
-
-    console.debug( this.submitText );
-
-    console.debug( this );
-
     this.el.mask(this.submitText);
     Ext.Ajax.request({
       url: restUrl + 'config/repositories/hg.json',
@@ -170,8 +165,8 @@ if ( i18n != null && i18n.country == 'de' ){
     // helpText
     hgBinaryHelpText: 'Pfad zum "hg" Befehl.',
     pythonBinaryHelpText: 'Pfad zum "python" Befehl.',
-    pythonPathHelpText: 'Der Python Modul Suchpfad (PYTHONPATH).',
-    repositoryDirectoryHelpText: 'Das Verzeichnis der Mercurial-Repositories.',
+    pythonPathHelpText: 'Python Modul Suchpfad (PYTHONPATH).',
+    repositoryDirectoryHelpText: 'Verzeichnis der Mercurial-Repositories.',
     useOptimizedBytecodeHelpText: 'Optimierten Bytecode verwenden (python -O).'
 
   });
