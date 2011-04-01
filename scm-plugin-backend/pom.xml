@@ -6,13 +6,13 @@
   <parent>
     <artifactId>scm</artifactId>
     <groupId>sonia.scm</groupId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-plugin-backend</artifactId>
   <packaging>war</packaging>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <name>${project.artifactId}</name>
 
   <dependencies>
@@ -27,7 +27,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>1.1-SNAPSHOT</version>
+      <version>1.1</version>
     </dependency>
 
     <dependency>
