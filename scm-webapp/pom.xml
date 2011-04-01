@@ -305,12 +305,12 @@
           <plugin>
             <groupId>sonia.maven</groupId>
             <artifactId>web-compressor</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
             <executions>
               <execution>
                 <phase>prepare-package</phase>
                 <goals>
-                  <goal>compress-template</goal>
+                  <goal>partial-compress-template</goal>
                 </goals>
               </execution>
             </executions>
