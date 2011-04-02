@@ -50,7 +50,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -69,11 +76,15 @@ public class HgChangesetViewer implements ChangesetViewer
 
   /** Field description */
   public static final String TEMPLATE =
-    "<changeset><id>{rev}:{short}</id><author>{author|escape}</author><description>{desc|escape}</description><date>{date|isodatesec}</date></changeset>";
+    "<changeset><id>{rev}:{short}</id><author>{author|escape}</author><description>{desc|escape}</description><date>{date|isodatesec}</date></changeset>\n";
 
   /** the logger for HgChangesetViewer */
   private static final Logger logger =
     LoggerFactory.getLogger(HgChangesetViewer.class);
+
+  /** Field description */
+  public static final Pattern REGEX_DATE =
+    Pattern.compile("<date>([^<]+)</date>");
 
   //~--- constructors ---------------------------------------------------------
 
@@ -94,8 +105,6 @@ public class HgChangesetViewer implements ChangesetViewer
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * TODO unmarshall date
-   *
    *
    * @param startId
    * @param max
@@ -118,12 +127,8 @@ public class HgChangesetViewer implements ChangesetViewer
 
       if (result.isSuccessfull())
       {
-        StringBuilder changesetLog = new StringBuilder("<changesets>");
-
-        changesetLog.append(result.getOutput());
-        changesetLog.append("</changesets>");
-
-        StringReader reader = new StringReader(changesetLog.toString());
+        StringReader reader =
+          new StringReader(getFixedOutput(result.getOutput()));
         Unmarshaller unmarshaller = handler.createChangesetUnmarshaller();
         Changesets cs = (Changesets) unmarshaller.unmarshal(reader);
 
@@ -142,6 +147,10 @@ public class HgChangesetViewer implements ChangesetViewer
         logger.error("could not load changesets, hg return code: {}\n{}",
                      result.getReturnCode(), result.getOutput());
       }
+    }
+    catch (ParseException ex)
+    {
+      logger.error("could not parse changeset dates", ex);
     }
     catch (IOException ex)
     {
@@ -171,6 +180,44 @@ public class HgChangesetViewer implements ChangesetViewer
   public List<Changeset> getLastChangesets(int max)
   {
     return getChangesets(ID_TIP, max);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param output
+   *
+   * @return
+   *
+   * @throws ParseException
+   */
+  private String getFixedOutput(String output) throws ParseException
+  {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
+    StringBuilder changesetLog = new StringBuilder("<changesets>");
+    StringTokenizer st = new StringTokenizer(output, "\n");
+
+    while (st.hasMoreElements())
+    {
+      String line = st.nextToken();
+      Matcher m = REGEX_DATE.matcher(line);
+
+      if (m.find())
+      {
+        String dateString = m.group(1);
+        Date date = sdf.parse(dateString);
+
+        line = m.replaceAll(
+          "<date>".concat(Util.formatDate(date)).concat("</date>"));
+      }
+
+      changesetLog.append(line);
+    }
+
+    changesetLog.append("</changesets>");
+
+    return changesetLog.toString();
   }
 
   /**
