@@ -33,21 +33,15 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
 
-import sonia.scm.ConfigChangedListener;
-import sonia.scm.Handler;
-import sonia.scm.ListenerSupport;
-import sonia.scm.plugin.ExtensionPoint;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@ExtensionPoint
-public interface RepositoryHandler
-        extends Handler<Repository, RepositoryException>,
-                ListenerSupport<ConfigChangedListener>
+public interface ChangesetViewer
 {
 
   /**
@@ -55,20 +49,20 @@ public interface RepositoryHandler
    *
    *
    *
-   * @param repository
+   * @param startId
+   * @param max
+   *
    * @return
    */
-  public String createResourcePath(Repository repository);
-
-  //~--- get methods ----------------------------------------------------------
+  public List<Changeset> getChangesets(String startId, int max);
 
   /**
    * Method description
    *
    *
+   * @param max
    *
-   * @param repository
-   * @return null if ChangesetViewer is not supported
+   * @return
    */
-  public ChangesetViewer getChangesetViewer(Repository repository);
+  public List<Changeset> getLastChangesets(int max);
 }

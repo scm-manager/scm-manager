@@ -190,6 +190,20 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
    * Method description
    *
    *
+   *
+   * @param repository
+   * @return
+   */
+  @Override
+  public ChangesetViewer getChangesetViewer(Repository repository)
+  {
+    return null;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   public C getConfig()
