@@ -40,16 +40,19 @@ import com.google.inject.Singleton;
 
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.ConfigurationException;
 import sonia.scm.Type;
 import sonia.scm.installer.HgInstaller;
 import sonia.scm.installer.UnixHgInstaller;
 import sonia.scm.installer.WindowsHgInstaller;
 import sonia.scm.io.ExtendedCommand;
+import sonia.scm.io.FileSystem;
 import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.util.AssertUtil;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.web.HgWebConfigWriter;
 
@@ -57,7 +60,10 @@ import sonia.scm.web.HgWebConfigWriter;
 
 import java.io.File;
 import java.io.IOException;
-import sonia.scm.io.FileSystem;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 /**
  *
@@ -89,11 +95,22 @@ public class HgRepositoryHandler
    *
    *
    * @param storeFactory
+   * @param fileSystem
    */
   @Inject
   public HgRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem)
   {
     super(storeFactory, fileSystem);
+
+    try
+    {
+      changesetContext = JAXBContext.newInstance(Changeset.class);
+    }
+    catch (JAXBException ex)
+    {
+      throw new ConfigurationException(
+          "could not create JAXBContext for Changeset-Class", ex);
+    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -178,6 +195,37 @@ public class HgRepositoryHandler
    * Method description
    *
    *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  public ChangesetViewer getChangesetViewer(Repository repository)
+  {
+    HgChangesetViewer changesetViewer;
+
+    AssertUtil.assertIsNotNull(repository);
+
+    String type = repository.getType();
+
+    AssertUtil.assertIsNotEmpty(type);
+
+    if (TYPE_NAME.equals(type))
+    {
+      changesetViewer = new HgChangesetViewer(this, repository);
+    }
+    else
+    {
+      throw new IllegalArgumentException("mercurial repository is required");
+    }
+
+    return changesetViewer;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   @Override
@@ -187,6 +235,29 @@ public class HgRepositoryHandler
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  Unmarshaller createChangesetUnmarshaller()
+  {
+    Unmarshaller unmarshaller = null;
+
+    try
+    {
+      unmarshaller = changesetContext.createUnmarshaller();
+    }
+    catch (JAXBException ex)
+    {
+      throw new ConfigurationException(
+          "could not create Unmarshaller for Changeset-Class", ex);
+    }
+
+    return unmarshaller;
+  }
 
   /**
    * Method description
@@ -247,4 +318,9 @@ public class HgRepositoryHandler
   {
     return HgConfig.class;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private JAXBContext changesetContext;
 }
