@@ -37,21 +37,25 @@ package sonia.scm.repository;
 
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
+import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;
 
 import java.util.Date;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import sonia.scm.xml.XmlTimestampDateAdapter;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name="changeset")
+@XmlRootElement(name = "changeset")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Changeset implements Validateable, Cloneable, Serializable
 {
 
