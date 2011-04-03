@@ -61,8 +61,6 @@ import java.util.regex.Pattern;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -76,7 +74,7 @@ public class HgChangesetViewer implements ChangesetViewer
 
   /** Field description */
   public static final String TEMPLATE =
-    "<changeset><id>{rev}:{short}</id><author>{author|escape}</author><description>{desc|escape}</description><date>{date|isodatesec}</date></changeset>\n";
+    "<changeset><id>{rev}:{node|short}</id><author>{author|escape}</author><description>{desc|escape}</description><date>{date|isodatesec}</date></changeset>\n";
 
   /** the logger for HgChangesetViewer */
   private static final Logger logger =
@@ -132,9 +130,9 @@ public class HgChangesetViewer implements ChangesetViewer
         Unmarshaller unmarshaller = handler.createChangesetUnmarshaller();
         Changesets cs = (Changesets) unmarshaller.unmarshal(reader);
 
-        if ((cs != null) && Util.isNotEmpty(cs.changesets))
+        if ((cs != null) && Util.isNotEmpty(cs.getChangesets()))
         {
-          changesets = cs.changesets;
+          changesets = cs.getChangesets();
         }
         else if (logger.isWarnEnabled())
         {
@@ -232,23 +230,6 @@ public class HgChangesetViewer implements ChangesetViewer
   {
     return handler.getDirectory(repository).getAbsolutePath();
   }
-
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   * @author         Sebastian Sdorra
-   */
-  @XmlRootElement(name = "changesets")
-  private static class Changesets
-  {
-
-    /** Field description */
-    @XmlElement(name = "changeset")
-    private List<Changeset> changesets;
-  }
-
 
   //~--- fields ---------------------------------------------------------------
 

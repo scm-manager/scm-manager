@@ -40,6 +40,8 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.ChangesetViewer;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
@@ -48,17 +50,26 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -96,6 +107,73 @@ public class RepositoryResource
     this.securityContextProvider = securityContextProvider;
     this.requestProvider = requestProvider;
     setDisableCache(false);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   * @param startId
+   * @param max
+   *
+   * @return
+   */
+  @GET
+  @Path("{id}/changesets")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public Response getChangesets(@PathParam("id") String id,
+                                @QueryParam("changeset") String startId,
+                                @DefaultValue("25") @QueryParam("max") int max)
+  {
+    Response response = null;
+    Repository repository = repositoryManager.get(id);
+
+    if (repository != null)
+    {
+      RepositoryHandler handler =
+        repositoryManager.getHandler(repository.getType());
+
+      if (handler != null)
+      {
+        ChangesetViewer changesetViewer =
+          handler.getChangesetViewer(repository);
+
+        if (changesetViewer != null)
+        {
+          List<Changeset> changesets = null;
+
+          if (Util.isNotEmpty(startId))
+          {
+            changesets = changesetViewer.getChangesets(startId, max);
+          }
+          else
+          {
+            changesets = changesetViewer.getLastChangesets(max);
+          }
+
+          response =
+            Response.ok(new GenericEntity<List<Changeset>>(changesets) {}
+          ).build();
+        }
+        else
+        {
+          response = Response.status(Response.Status.NOT_FOUND).build();
+        }
+      }
+      else
+      {
+        response = Response.status(Response.Status.NOT_FOUND).build();
+      }
+    }
+    else
+    {
+      response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    return response;
   }
 
   //~--- methods --------------------------------------------------------------

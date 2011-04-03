@@ -104,12 +104,12 @@ public class HgRepositoryHandler
 
     try
     {
-      changesetContext = JAXBContext.newInstance(Changeset.class);
+      changesetContext = JAXBContext.newInstance(Changesets.class);
     }
     catch (JAXBException ex)
     {
       throw new ConfigurationException(
-          "could not create JAXBContext for Changeset-Class", ex);
+          "could not create JAXBContext for Changesets-Class", ex);
     }
   }
 
