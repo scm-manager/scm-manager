@@ -198,17 +198,22 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   },
 
   addTabPanel: function(id, xtype, title){
-    var tab = this.mainTabPanel.findById( id );
+    var panel = {
+      id: id,
+      xtype: xtype,
+      title: title,
+      closable: true,
+      autoScroll: true
+    };
+    this.addTab(panel);
+  },
+
+  addTab: function(panel){
+    var tab = this.mainTabPanel.findById(panel.id);
     if ( tab == null ){
-      this.mainTabPanel.add({
-        id: id,
-        xtype: xtype,
-        title: title,
-        closable: true,
-        autoScroll: true
-      });
+      this.mainTabPanel.add(panel);
     }
-    this.mainTabPanel.setActiveTab(id);
+    this.mainTabPanel.setActiveTab(panel.id);
   },
 
   loadState: function(s){

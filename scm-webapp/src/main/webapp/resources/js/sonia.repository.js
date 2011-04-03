@@ -351,6 +351,24 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
             name: 'public',
             xtype: 'checkbox',
             helpText: this.publicHelpText
+          },
+          // TODO remove
+          {
+            fieldLabel: 'ChangesetViewer',
+            text: 'ChangesetViewer',
+            xtype: 'button',
+            scope: this,
+            handler: function(){
+              var changesetViewer = {
+                id: 'changesetViewer',
+                title: this.item.name,
+                repository: this.item,
+                xtype: 'repositoryChangesetViewerPanel',
+                closable: true,
+                autoScroll: true
+              }
+              main.addTab(changesetViewer);
+            }
           }
         ]
       },{
@@ -658,3 +676,83 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
 
 // register xtype
 Ext.reg('repositoryPanel', Sonia.repository.Panel);
+
+
+// changeset viewer
+
+Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
+
+  repository: null,
+  /**
+   * 0 - id
+   * 1 - date
+   * 2 - author
+   * 3 - description
+   */
+  changesetTemplate: '<div><b>{0}</b>: {3}</div><div>{2}</div><div>{1}</div>',
+
+  initComponent: function(){
+
+    var changesetStore = new Ext.data.JsonStore({
+      id: 'changesetStore',
+      url: restUrl + 'repositories/' + this.repository.id  + '/changesets.json',
+      fields: ['id', 'date', 'author', 'description'],
+      idProperty: 'id',
+      autoLoad: true,
+      autoDestroy: true
+    });
+
+    var changesetColModel = new Ext.grid.ColumnModel({
+      defaults: {
+        sortable: false
+      },
+      columns: [
+        {id: 'changeset', dataIndex: 'id', header: 'Changeset', renderer: this.renderChangeset, scope: this},
+        {id: 'date', dataIndex: 'date', header: 'Date', hidden: true},
+        {id: 'author', dataIndex: 'author', header: 'Author', hidden: true},
+        {id: 'description', dataIndex: 'description', header: 'Description', hidden: true}
+      ]
+    });
+
+    var config = {
+      autoExpandColumn: 'changeset',
+      autoHeight: true,
+      store: changesetStore,
+      colModel: changesetColModel
+    }
+    
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.repository.ChangesetViewerGrid.superclass.initComponent.apply(this, arguments);
+  },
+
+  renderChangeset: function(value, p, record){
+    var data = record.data;
+    return String.format(this.changesetTemplate, data.id, data.date, data.author, data.description);
+  }
+
+});
+
+// register xtype
+Ext.reg('repositoryChangesetViewerGrid', Sonia.repository.ChangesetViewerGrid);
+
+Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
+
+  repository: null,
+
+  initComponent: function(){
+
+    var config = {
+      items: [{
+        xtype: 'repositoryChangesetViewerGrid',
+        repository: this.repository
+      }]
+    };
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.repository.ChangesetViewerPanel.superclass.initComponent.apply(this, arguments);
+  }
+
+});
+
+// register xtype
+Ext.reg('repositoryChangesetViewerPanel', Sonia.repository.ChangesetViewerPanel);
