@@ -120,6 +120,8 @@ public class RepositoryResource
    * @param max
    *
    * @return
+   *
+   * @throws RepositoryException
    */
   @GET
   @Path("{id}/changesets")
@@ -127,41 +129,31 @@ public class RepositoryResource
   public Response getChangesets(@PathParam("id") String id,
                                 @QueryParam("changeset") String startId,
                                 @DefaultValue("25") @QueryParam("max") int max)
+                                throws RepositoryException
   {
     Response response = null;
     Repository repository = repositoryManager.get(id);
 
     if (repository != null)
     {
-      RepositoryHandler handler =
-        repositoryManager.getHandler(repository.getType());
+      ChangesetViewer changesetViewer =
+        repositoryManager.getChangesetViewer(repository);
 
-      if (handler != null)
+      if (changesetViewer != null)
       {
-        ChangesetViewer changesetViewer =
-          handler.getChangesetViewer(repository);
+        List<Changeset> changesets = null;
 
-        if (changesetViewer != null)
+        if (Util.isNotEmpty(startId))
         {
-          List<Changeset> changesets = null;
-
-          if (Util.isNotEmpty(startId))
-          {
-            changesets = changesetViewer.getChangesets(startId, max);
-          }
-          else
-          {
-            changesets = changesetViewer.getLastChangesets(max);
-          }
-
-          response =
-            Response.ok(new GenericEntity<List<Changeset>>(changesets) {}
-          ).build();
+          changesets = changesetViewer.getChangesets(startId, max);
         }
         else
         {
-          response = Response.status(Response.Status.NOT_FOUND).build();
+          changesets = changesetViewer.getLastChangesets(max);
         }
+
+        response = Response.ok(new GenericEntity<List<Changeset>>(changesets) {}
+        ).build();
       }
       else
       {

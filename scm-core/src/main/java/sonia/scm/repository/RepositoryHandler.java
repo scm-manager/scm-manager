@@ -69,6 +69,9 @@ public interface RepositoryHandler
    *
    * @param repository
    * @return null if ChangesetViewer is not supported
+   *
+   * @throws RepositoryException
    */
-  public ChangesetViewer getChangesetViewer(Repository repository);
+  public ChangesetViewer getChangesetViewer(Repository repository)
+          throws RepositoryException;
 }

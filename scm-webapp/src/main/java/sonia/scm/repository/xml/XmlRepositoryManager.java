@@ -47,6 +47,7 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.repository.AbstractRepositoryManager;
+import sonia.scm.repository.ChangesetViewer;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
@@ -391,6 +392,26 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     return repositories;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   *
+   * @throws RepositoryException
+   */
+  @Override
+  public ChangesetViewer getChangesetViewer(Repository repository)
+          throws RepositoryException
+  {
+    AssertUtil.assertIsNotNull(repository);
+    isReader(repository);
+
+    return getHandler(repository).getChangesetViewer(repository);
   }
 
   /**

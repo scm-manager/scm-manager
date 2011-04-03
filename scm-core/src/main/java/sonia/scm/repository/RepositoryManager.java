@@ -67,6 +67,19 @@ public interface RepositoryManager
    * Method description
    *
    *
+   *
+   * @param repository
+   * @return null if ChangesetViewer is not supported
+   *
+   * @throws RepositoryException
+   */
+  public ChangesetViewer getChangesetViewer(Repository repository)
+          throws RepositoryException;
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   public Collection<Type> getConfiguredTypes();
