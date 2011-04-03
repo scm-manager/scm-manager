@@ -123,7 +123,7 @@ public class HgChangesetViewer implements ChangesetViewer
       String repositoryPath = getRepositoryPath(repository);
       int total = getTotalChangesets(repositoryPath);
       int startRev = total - start;
-      int endRev = startRev - max;
+      int endRev = total - start - (max - 1);
 
       if (endRev < 0)
       {
