@@ -44,6 +44,7 @@ import sonia.scm.Type;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -85,6 +86,37 @@ public class GitRepositoryHandler
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  public ChangesetViewer getChangesetViewer(Repository repository)
+  {
+    GitChangesetViewer changesetViewer = null;
+
+    AssertUtil.assertIsNotNull(repository);
+
+    String type = repository.getType();
+
+    AssertUtil.assertIsNotEmpty(type);
+
+    if (TYPE_NAME.equals(type))
+    {
+      changesetViewer = new GitChangesetViewer(this, repository);
+    }
+    else
+    {
+      throw new IllegalArgumentException("mercurial repository is required");
+    }
+
+    return changesetViewer;
+  }
 
   /**
    * Method description

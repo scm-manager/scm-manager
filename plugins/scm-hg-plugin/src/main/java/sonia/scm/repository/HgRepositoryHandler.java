@@ -202,7 +202,7 @@ public class HgRepositoryHandler
   @Override
   public ChangesetViewer getChangesetViewer(Repository repository)
   {
-    HgChangesetViewer changesetViewer;
+    HgChangesetViewer changesetViewer = null;
 
     AssertUtil.assertIsNotNull(repository);
 
