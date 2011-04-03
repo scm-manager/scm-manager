@@ -40,7 +40,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.Changeset;
+import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.ChangesetViewer;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
@@ -50,14 +50,12 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -116,8 +114,8 @@ public class RepositoryResource
    *
    *
    * @param id
-   * @param startId
-   * @param max
+   * @param start
+   * @param limit
    *
    * @return
    *
@@ -126,9 +124,9 @@ public class RepositoryResource
   @GET
   @Path("{id}/changesets")
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response getChangesets(@PathParam("id") String id,
-                                @QueryParam("changeset") String startId,
-                                @DefaultValue("25") @QueryParam("max") int max)
+  public Response getChangesets(@PathParam("id") String id, 
+                                @DefaultValue("0") @QueryParam("start") int start,
+                                @DefaultValue("25") @QueryParam("limit") int limit)
                                 throws RepositoryException
   {
     Response response = null;
@@ -141,19 +139,10 @@ public class RepositoryResource
 
       if (changesetViewer != null)
       {
-        List<Changeset> changesets = null;
+        ChangesetPagingResult changesets = changesetViewer.getChangesets(start,
+                                             limit);
 
-        if (Util.isNotEmpty(startId))
-        {
-          changesets = changesetViewer.getChangesets(startId, max);
-        }
-        else
-        {
-          changesets = changesetViewer.getLastChangesets(max);
-        }
-
-        response = Response.ok(new GenericEntity<List<Changeset>>(changesets) {}
-        ).build();
+        response = Response.ok(changesets).build();
       }
       else
       {

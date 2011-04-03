@@ -54,7 +54,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.Date;
-import java.util.List;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,8 +72,11 @@ public class HgChangesetViewer implements ChangesetViewer
   public static final String ID_TIP = "tip";
 
   /** Field description */
-  public static final String TEMPLATE =
+  public static final String TEMPLATE_CHANGESETS =
     "<changeset><id>{rev}:{node|short}</id><author>{author|escape}</author><description>{desc|escape}</description><date>{date|isodatesec}</date></changeset>\n";
+
+  /** Field description */
+  public static final String TEMPLATE_TOTAL = "{rev}";
 
   /** the logger for HgChangesetViewer */
   private static final Logger logger =
@@ -104,23 +106,34 @@ public class HgChangesetViewer implements ChangesetViewer
 
   /**
    *
-   * @param startId
+   *
+   * @param start
    * @param max
    *
    * @return
    */
   @Override
-  public List<Changeset> getChangesets(String startId, int max)
+  public ChangesetPagingResult getChangesets(int start, int max)
   {
-    List<Changeset> changesets = null;
+    ChangesetPagingResult changesets = null;
     InputStream in = null;
 
     try
     {
       String repositoryPath = getRepositoryPath(repository);
+      int total = getTotalChangesets(repositoryPath);
+      int startRev = total - start;
+      int endRev = startRev - max;
+
+      if (endRev < 0)
+      {
+        endRev = 0;
+      }
+
       Command command = new SimpleCommand(handler.getConfig().getHgBinary(),
-                          "-R", repositoryPath, "log", "-r", "tip:0", "-l",
-                          String.valueOf(max), "--template", TEMPLATE);
+                          "-R", repositoryPath, "log", "-r",
+                          startRev + ":" + endRev, "--template",
+                          TEMPLATE_CHANGESETS);
       CommandResult result = command.execute();
 
       if (result.isSuccessfull())
@@ -132,12 +145,12 @@ public class HgChangesetViewer implements ChangesetViewer
 
         if ((cs != null) && Util.isNotEmpty(cs.getChangesets()))
         {
-          changesets = cs.getChangesets();
+          changesets = new ChangesetPagingResult(total, cs.getChangesets());
         }
         else if (logger.isWarnEnabled())
         {
-          logger.warn("could not find any changeset from {} to +{}", startId,
-                      max);
+          logger.warn("could not find any changeset from {} to {}", start,
+                      start + max);
         }
       }
       else
@@ -164,20 +177,6 @@ public class HgChangesetViewer implements ChangesetViewer
     }
 
     return changesets;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param max
-   *
-   * @return
-   */
-  @Override
-  public List<Changeset> getLastChangesets(int max)
-  {
-    return getChangesets(ID_TIP, max);
   }
 
   /**
@@ -229,6 +228,32 @@ public class HgChangesetViewer implements ChangesetViewer
   private String getRepositoryPath(Repository repository)
   {
     return handler.getDirectory(repository).getAbsolutePath();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryPath
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private int getTotalChangesets(String repositoryPath) throws IOException
+  {
+    int total = 0;
+    Command command = new SimpleCommand(handler.getConfig().getHgBinary(),
+                        "-R", repositoryPath, "tip", "--template",
+                        TEMPLATE_TOTAL);
+    CommandResult result = command.execute();
+
+    if (result.isSuccessfull())
+    {
+      total = Integer.parseInt(result.getOutput().trim());
+    }
+
+    return total;
   }
 
   //~--- fields ---------------------------------------------------------------

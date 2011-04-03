@@ -695,9 +695,14 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
     var changesetStore = new Ext.data.JsonStore({
       id: 'changesetStore',
-      url: restUrl + 'repositories/' + this.repository.id  + '/changesets.json',
+      proxy: new Ext.data.HttpProxy({
+        url: restUrl + 'repositories/' + this.repository.id  + '/changesets.json',
+        method: 'GET'
+      }),
       fields: ['id', 'date', 'author', 'description'],
+      root: 'changesets',
       idProperty: 'id',
+      totalProperty: 'total',
       autoLoad: true,
       autoDestroy: true
     });
@@ -718,7 +723,13 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
       autoExpandColumn: 'changeset',
       autoHeight: true,
       store: changesetStore,
-      colModel: changesetColModel
+      colModel: changesetColModel,
+      bbar: new Ext.PagingToolbar({
+        store: changesetStore,
+        displayInfo: true,
+        pageSize: 25,
+        prependButtons: true
+      })
     }
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));

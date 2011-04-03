@@ -117,7 +117,14 @@ public class SimpleCommand implements Command
   {
     if (logger.isDebugEnabled())
     {
-      logger.debug("start external process {}", command);
+      StringBuilder cmd = new StringBuilder();
+
+      for (String c : command)
+      {
+        cmd.append(c).append(" ");
+      }
+
+      logger.debug("start external process '{}'", cmd.toString());
     }
 
     ProcessBuilder processBuilder = new ProcessBuilder(command);

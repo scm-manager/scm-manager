@@ -33,23 +33,99 @@
 
 package sonia.scm.repository;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface ChangesetViewer
+@XmlRootElement(name = "changeset-paging")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class ChangesetPagingResult
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  public ChangesetPagingResult() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param total
+   * @param changesets
+   */
+  public ChangesetPagingResult(int total, List<Changeset> changesets)
+  {
+    this.total = total;
+    this.changesets = changesets;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
+   * @return
+   */
+  public List<Changeset> getChangesets()
+  {
+    return changesets;
+  }
+
+  /**
+   * Method description
    *
-   *
-   * @param start
-   * @param max
    *
    * @return
    */
-  public ChangesetPagingResult getChangesets(int start, int max);
+  public int getTotal()
+  {
+    return total;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param changesets
+   */
+  public void setChangesets(List<Changeset> changesets)
+  {
+    this.changesets = changesets;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param total
+   */
+  public void setTotal(int total)
+  {
+    this.total = total;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @XmlElement(name = "changeset")
+  @XmlElementWrapper(name = "changesets")
+  private List<Changeset> changesets;
+
+  /** Field description */
+  private int total;
 }
