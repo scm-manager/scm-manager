@@ -31,6 +31,14 @@
 
  Ext.apply(Ext.util.Format, {
 
+  formatTimestamp: function(value){
+    var result = '';
+    if ( value != null && (value > 0 ||value.length > 0)){
+      result = Ext.util.Format.date(new Date(value), "Y-m-d H:i:s");
+    }
+    return result;
+  },
+
   timeAgo : function(value){
 
     var time_formats = [
@@ -54,7 +62,12 @@
     var date = value;
 
     if (!Ext.isDate(date)){
-      date = new Date(Date.parse(date));
+      date = parseInt(date);
+      if ( date == 'NaN' ){
+        date = Ext.parseDate(value)
+      } else {
+        date = new Date(date);
+      }
     }
 
     var seconds = (new Date - date) / 1000;

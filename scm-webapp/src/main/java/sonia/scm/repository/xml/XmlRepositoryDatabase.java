@@ -36,7 +36,6 @@ package sonia.scm.repository.xml;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.Repository;
-import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -264,11 +263,9 @@ public class XmlRepositoryDatabase
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long creationTime;
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long lastModified;
 
   /** Field description */

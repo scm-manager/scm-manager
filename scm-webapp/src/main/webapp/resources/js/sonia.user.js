@@ -91,8 +91,8 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
         {id: 'displayName', header: this.colDisplayNameText, dataIndex: 'displayName', width: 250},
         {id: 'mail', header: this.colMailText, dataIndex: 'mail', renderer: this.renderMailto, width: 200},
         {id: 'admin', header: this.colAdminText, dataIndex: 'admin', renderer: this.renderCheckbox, width: 50},
-        {id: 'creationDate', header: this.colCreationDateText, dataIndex: 'creationDate'},
-        {id: 'lastModified', header: this.colLastModifiedText, dataIndex: 'lastModified'},
+        {id: 'creationDate', header: this.colCreationDateText, dataIndex: 'creationDate', renderer: Ext.util.Format.formatTimestamp},
+        {id: 'lastModified', header: this.colLastModifiedText, dataIndex: 'lastModified', renderer: Ext.util.Format.formatTimestamp},
         {id: 'type', header: this.colTypeText, dataIndex: 'type', width: 80}
       ]
     });

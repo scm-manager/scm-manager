@@ -36,7 +36,6 @@ package sonia.scm.group.xml;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.group.Group;
-import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -185,7 +184,6 @@ public class XmlGroupDatabase
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long creationTime;
 
   /** Field description */
@@ -194,6 +192,5 @@ public class XmlGroupDatabase
   private Map<String, Group> groupMap = new LinkedHashMap<String, Group>();
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long lastModified;
 }

@@ -40,6 +40,7 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.PluginLoader;
@@ -55,7 +56,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContextEvent;
-import sonia.scm.cache.CacheManager;
 
 /**
  *
@@ -92,10 +92,25 @@ public class ScmContextListener extends GuiceServletContextListener
       IOUtil.close(injector.getInstance(StoreFactory.class));
 
       // close CacheManager
-      IOUtil.close( injector.getInstance( CacheManager.class ) );
+      IOUtil.close(injector.getInstance(CacheManager.class));
     }
 
     super.contextDestroyed(servletContextEvent);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param servletContextEvent
+   */
+  @Override
+  public void contextInitialized(ServletContextEvent servletContextEvent)
+  {
+    ScmUpgradeHandler upgradeHandler = new ScmUpgradeHandler();
+
+    upgradeHandler.doUpgrade();
+    super.contextInitialized(servletContextEvent);
   }
 
   //~--- get methods ----------------------------------------------------------

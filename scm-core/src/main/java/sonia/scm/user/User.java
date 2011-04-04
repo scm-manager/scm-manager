@@ -38,7 +38,6 @@ package sonia.scm.user;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
-import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -47,7 +46,6 @@ import java.security.Principal;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -314,7 +312,7 @@ public class User implements Principal, ModelObject
    *
    * @return
    */
-  public long getCreationDate()
+  public Long getCreationDate()
   {
     return creationDate;
   }
@@ -432,7 +430,7 @@ public class User implements Principal, ModelObject
    *
    * @param creationDate
    */
-  public void setCreationDate(long creationDate)
+  public void setCreationDate(Long creationDate)
   {
     this.creationDate = creationDate;
   }
@@ -454,7 +452,7 @@ public class User implements Principal, ModelObject
    *
    * @param lastModified
    */
-  public void setLastModified(long lastModified)
+  public void setLastModified(Long lastModified)
   {
     this.lastModified = lastModified;
   }
@@ -510,14 +508,12 @@ public class User implements Principal, ModelObject
   private boolean admin;
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long creationDate;
 
   /** Field description */
   private String displayName;
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long lastModified;
 
   /** Field description */

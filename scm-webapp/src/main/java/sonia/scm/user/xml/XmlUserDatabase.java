@@ -36,7 +36,6 @@ package sonia.scm.user.xml;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.user.User;
-import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -185,11 +184,9 @@ public class XmlUserDatabase
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long creationTime;
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long lastModified;
 
   /** Field description */

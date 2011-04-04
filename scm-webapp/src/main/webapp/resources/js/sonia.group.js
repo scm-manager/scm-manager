@@ -84,7 +84,7 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
         {id: 'name', header: this.colNameText, dataIndex: 'name'},
         {id: 'description', header: this.colDescriptionText, dataIndex: 'description', width: 300 },
         {id: 'members', header: this.colMembersText, dataIndex: 'members', renderer: this.renderMembers},
-        {id: 'creationDate', header: this.colCreationDateText, dataIndex: 'creationDate'},
+        {id: 'creationDate', header: this.colCreationDateText, dataIndex: 'creationDate', renderer: Ext.util.Format.formatTimestamp},
         {id: 'type', header: this.colTypeText, dataIndex: 'type', width: 80}
       ]
     });

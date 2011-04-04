@@ -37,7 +37,6 @@ package sonia.scm.group;
 
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
-import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -49,7 +48,6 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -512,14 +510,12 @@ public class Group implements ModelObject, Iterable<String>
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long creationDate;
 
   /** Field description */
   private String description;
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long lastModified;
 
   /** Field description */

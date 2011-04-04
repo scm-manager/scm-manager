@@ -38,7 +38,6 @@ package sonia.scm.repository;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
-import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -50,7 +49,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -331,7 +329,7 @@ public class Repository implements ModelObject
    *
    * @return
    */
-  public long getCreationDate()
+  public Long getCreationDate()
   {
     return creationDate;
   }
@@ -459,7 +457,7 @@ public class Repository implements ModelObject
    *
    * @param creationDate
    */
-  public void setCreationDate(long creationDate)
+  public void setCreationDate(Long creationDate)
   {
     this.creationDate = creationDate;
   }
@@ -492,7 +490,7 @@ public class Repository implements ModelObject
    *
    * @param lastModified
    */
-  public void setLastModified(long lastModified)
+  public void setLastModified(Long lastModified)
   {
     this.lastModified = lastModified;
   }
@@ -558,7 +556,6 @@ public class Repository implements ModelObject
   private String contact;
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long creationDate;
 
   /** Field description */
@@ -568,7 +565,6 @@ public class Repository implements ModelObject
   private String id;
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long lastModified;
 
   /** Field description */

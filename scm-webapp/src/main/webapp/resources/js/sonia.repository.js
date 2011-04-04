@@ -118,7 +118,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         {id: 'type', header: this.colTypeText, dataIndex: 'type', renderer: this.renderRepositoryType, width: 80},
         {id: 'contact', header: this.colContactText, dataIndex: 'contact', renderer: this.renderMailto},
         {id: 'description', header: this.colDescriptionText, dataIndex: 'description'},
-        {id: 'creationDate', header: this.colCreationDateText, dataIndex: 'creationDate'},
+        {id: 'creationDate', header: this.colCreationDateText, dataIndex: 'creationDate', renderer: Ext.util.Format.formatTimestamp},
         {id: 'Url', header: this.colUrlText, dataIndex: 'url', renderer: this.renderUrl, width: 250}
       ]
     });

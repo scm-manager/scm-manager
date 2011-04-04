@@ -37,7 +37,6 @@ package sonia.scm.repository;
 
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
-import sonia.scm.xml.XmlTimestampDateAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -48,7 +47,6 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -316,7 +314,6 @@ public class Changeset implements Validateable, Cloneable, Serializable
   private String author;
 
   /** The date when the changeset was committed */
-  @XmlJavaTypeAdapter(XmlTimestampDateAdapter.class)
   private Long date;
 
   /** The text of the changeset description */
