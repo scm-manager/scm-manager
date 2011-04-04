@@ -689,7 +689,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
    * 2 - author
    * 3 - description
    */
-  changesetTemplate: '<div><b>{0}</b>: {3}</div><div>{2}</div><div>{1}</div>',
+  changesetTemplate: '<div><b>{id}</b>: {description:htmlEncode}</div><div>{author:htmlEncode}</div><div>{date}</div>',
 
   initComponent: function(){
 
@@ -712,10 +712,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
         sortable: false
       },
       columns: [
-        {id: 'changeset', dataIndex: 'id', renderer: this.renderChangeset, scope: this},
-        {id: 'date', dataIndex: 'date', header: 'Date', hidden: true},
-        {id: 'author', dataIndex: 'author', header: 'Author', hidden: true},
-        {id: 'description', dataIndex: 'description', header: 'Description', hidden: true}
+        {id: 'changeset', dataIndex: 'id', xtype: 'templatecolumn', tpl: this.changesetTemplate}
       ]
     });
 
