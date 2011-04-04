@@ -35,41 +35,33 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNLogEntry;
+import org.tmatesoft.svn.core.SVNURL;
+import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
-
-import sonia.scm.Type;
-import sonia.scm.io.FileSystem;
-import sonia.scm.plugin.ext.Extension;
-import sonia.scm.store.StoreFactory;
-import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.IOException;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-@Extension
-public class SvnRepositoryHandler
-        extends AbstractSimpleRepositoryHandler<SvnConfig>
+public class SvnChangesetViewer implements ChangesetViewer
 {
 
-  /** Field description */
-  public static final String TYPE_DISPLAYNAME = "Subversion";
-
-  /** Field description */
-  public static final String TYPE_NAME = "svn";
-
-  /** Field description */
-  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+  /** the logger for SvnChangesetViewer */
+  private static final Logger logger =
+    LoggerFactory.getLogger(SvnChangesetViewer.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -77,13 +69,13 @@ public class SvnRepositoryHandler
    * Constructs ...
    *
    *
-   * @param storeFactory
-   * @param fileSystem
+   * @param handler
+   * @param repostory
    */
-  @Inject
-  public SvnRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem)
+  public SvnChangesetViewer(SvnRepositoryHandler handler, Repository repostory)
   {
-    super(storeFactory, fileSystem);
+    this.handler = handler;
+    this.repostory = repostory;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -92,43 +84,52 @@ public class SvnRepositoryHandler
    * Method description
    *
    *
-   * @param repository
+   * @param start
+   * @param max
    *
    * @return
    */
   @Override
-  public ChangesetViewer getChangesetViewer(Repository repository)
+  public ChangesetPagingResult getChangesets(int start, int max)
   {
-    SvnChangesetViewer changesetViewer = null;
+    ChangesetPagingResult changesets = null;
+    File directory = handler.getDirectory(repostory);
+    SVNRepository repository = null;
 
-    AssertUtil.assertIsNotNull(repository);
-
-    String type = repository.getType();
-
-    AssertUtil.assertIsNotEmpty(type);
-
-    if (TYPE_NAME.equals(type))
+    try
     {
-      changesetViewer = new SvnChangesetViewer(this, repository);
+      repository = SVNRepositoryFactory.create(SVNURL.fromFile(directory));
+
+      long total = repository.getLatestRevision();
+      long startRev = total - start;
+      long endRev = total - start - (max - 1);
+
+      if (endRev < 0)
+      {
+        endRev = 0;
+      }
+
+      List<Changeset> changesetList = new ArrayList<Changeset>();
+      Collection<SVNLogEntry> entries = repository.log(new String[] { "" },
+                                          null, startRev, endRev, true, true);
+
+      for (SVNLogEntry entry : entries)
+      {
+        changesetList.add(createChangeset(entry));
+      }
+
+      changesets = new ChangesetPagingResult((int) total, changesetList);
     }
-    else
+    catch (SVNException ex)
     {
-      throw new IllegalArgumentException("mercurial repository is required");
+      logger.error("could not open repository", ex);
+    }
+    finally
+    {
+      repository.closeSession();
     }
 
-    return changesetViewer;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Type getType()
-  {
-    return TYPE;
+    return changesets;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -137,49 +138,22 @@ public class SvnRepositoryHandler
    * Method description
    *
    *
-   * @param repository
-   * @param directory
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Override
-  protected void create(Repository repository, File directory)
-          throws RepositoryException, IOException
-  {
-    try
-    {
-      SVNRepositoryFactory.createLocalRepository(directory, true, false);
-    }
-    catch (SVNException ex)
-    {
-      throw new RepositoryException(ex);
-    }
-  }
-
-  /**
-   * Method description
-   *
+   * @param entry
    *
    * @return
    */
-  @Override
-  protected SvnConfig createInitialConfig()
+  private Changeset createChangeset(SVNLogEntry entry)
   {
-    return new SvnConfig();
+    return new Changeset(String.valueOf(entry.getRevision()),
+                         entry.getDate().getTime(), entry.getAuthor(),
+                         entry.getMessage());
   }
 
-  //~--- get methods ----------------------------------------------------------
+  //~--- fields ---------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected Class<SvnConfig> getConfigClass()
-  {
-    return SvnConfig.class;
-  }
+  /** Field description */
+  private SvnRepositoryHandler handler;
+
+  /** Field description */
+  private Repository repostory;
 }
