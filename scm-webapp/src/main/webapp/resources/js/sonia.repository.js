@@ -360,8 +360,8 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
             scope: this,
             handler: function(){
               var changesetViewer = {
-                id: 'changesetViewer',
-                title: this.item.name,
+                id: this.item.id + '-changesetViewer',
+                title: 'ChangesetViewer ' + this.item.name,
                 repository: this.item,
                 xtype: 'repositoryChangesetViewerPanel',
                 closable: true,
