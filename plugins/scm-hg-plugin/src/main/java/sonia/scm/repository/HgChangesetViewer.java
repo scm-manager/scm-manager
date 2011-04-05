@@ -206,7 +206,7 @@ public class HgChangesetViewer implements ChangesetViewer
         Date date = sdf.parse(dateString);
 
         line = m.replaceAll(
-          "<date>".concat(Util.formatDate(date)).concat("</date>"));
+          "<date>".concat(Long.toString(date.getTime())).concat("</date>"));
       }
 
       changesetLog.append(line);
