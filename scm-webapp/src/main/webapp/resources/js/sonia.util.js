@@ -33,8 +33,12 @@
 
   formatTimestamp: function(value){
     var result = '';
-    if ( value != null && (value > 0 ||value.length > 0)){
-      result = Ext.util.Format.date(new Date(value), "Y-m-d H:i:s");
+    if ( value != null && (value > 0 || value.length > 0)){
+      var df = state.clientConfig.dateFormat;
+      if ( df == null || df.length == 0 || ! Ext.isDefined(value) ){
+        df = "Y-m-d H:i:s";
+      }
+      result = Ext.util.Format.date(new Date(value), df);
     }
     return result;
   },

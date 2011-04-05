@@ -62,6 +62,9 @@ public class ScmConfiguration
 {
 
   /** Field description */
+  public static final String DEFAULT_DATEFORMAT = "Y-m-d H:i:s";
+
+  /** Field description */
   public static final String DEFAULT_PLUGINURL =
     "http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false";
 
@@ -84,6 +87,7 @@ public class ScmConfiguration
   public void load(ScmConfiguration other)
   {
     this.servername = other.servername;
+    this.dateFormat = other.dateFormat;
     this.pluginUrl = other.pluginUrl;
     this.sslPort = other.sslPort;
     this.enableSSL = other.enableSSL;
@@ -116,6 +120,17 @@ public class ScmConfiguration
   public Set<String> getAdminUsers()
   {
     return adminUsers;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getDateFormat()
+  {
+    return dateFormat;
   }
 
   /**
@@ -234,6 +249,17 @@ public class ScmConfiguration
    * Method description
    *
    *
+   * @param dateFormat
+   */
+  public void setDateFormat(String dateFormat)
+  {
+    this.dateFormat = dateFormat;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param enablePortForward
    */
   public void setEnablePortForward(boolean enablePortForward)
@@ -326,6 +352,11 @@ public class ScmConfiguration
 
   /** Field description */
   private int sslPort = 8181;
+
+  /**
+   * JavaScript date format, see http://jacwright.com/projects/javascript/date_format
+   */
+  private String dateFormat = DEFAULT_DATEFORMAT;
 
   /** Field description */
   private boolean anonymousAccessEnabled = false;

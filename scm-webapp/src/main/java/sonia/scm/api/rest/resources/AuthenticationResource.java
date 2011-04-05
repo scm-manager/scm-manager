@@ -44,7 +44,9 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.ScmClientConfig;
 import sonia.scm.ScmState;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
 import sonia.scm.web.security.WebSecurityContext;
@@ -85,16 +87,18 @@ public class AuthenticationResource
    *
    *
    * @param contextProvider
+   * @param configuration
    * @param repositoryManger
    * @param securityContextProvider
    */
   @Inject
   public AuthenticationResource(
-          SCMContextProvider contextProvider,
+          SCMContextProvider contextProvider, ScmConfiguration configuration,
           RepositoryManager repositoryManger,
           Provider<WebSecurityContext> securityContextProvider)
   {
     this.contextProvider = contextProvider;
+    this.configuration = configuration;
     this.repositoryManger = repositoryManger;
     this.securityContextProvider = securityContextProvider;
   }
@@ -126,8 +130,7 @@ public class AuthenticationResource
 
     if ((user != null) &&!SCMContext.USER_ANONYMOUS.equals(user.getName()))
     {
-      state = new ScmState(contextProvider, securityContext,
-                           repositoryManger.getConfiguredTypes());
+      state = createState(securityContext);
     }
     else
     {
@@ -160,8 +163,7 @@ public class AuthenticationResource
 
     if (user != null)
     {
-      ScmState state = new ScmState(contextProvider, securityContext,
-                                    repositoryManger.getConfiguredTypes());
+      ScmState state = createState(securityContext);
 
       resp = Response.ok(state).build();
     }
@@ -198,8 +200,7 @@ public class AuthenticationResource
         logger.debug("return state for user {}", user.getName());
       }
 
-      state = new ScmState(contextProvider, securityContext,
-                           repositoryManger.getConfiguredTypes());
+      state = createState(securityContext);
       response = Response.ok(state).build();
     }
     else
@@ -210,7 +211,27 @@ public class AuthenticationResource
     return response;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param securityContext
+   *
+   * @return
+   */
+  private ScmState createState(WebSecurityContext securityContext)
+  {
+    return new ScmState(contextProvider, securityContext,
+                        repositoryManger.getConfiguredTypes(),
+                        new ScmClientConfig(configuration.getDateFormat()));
+  }
+
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private ScmConfiguration configuration;
 
   /** Field description */
   private SCMContextProvider contextProvider;

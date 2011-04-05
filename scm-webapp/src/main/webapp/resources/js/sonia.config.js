@@ -101,6 +101,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
 
   titleText: 'General Settings',
   servnameText: 'Servername',
+  // TODO i18n
+  dateFormatText: 'Date format',
   enableForwardingText: 'Enable forwarding (mod_proxy)',
   forwardPortText: 'Forward Port',
   pluginRepositoryText: 'Plugin repository',
@@ -116,6 +118,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
 
   // help
   servernameHelpText: 'The name of this server. This name will be part of the repository url.',
+  // TODO i18n
+  dateFormatHelpText: 'JavaScript date format.',
   pluginRepositoryHelpText: 'The url of the plugin repository.<br />Explanation of the {placeholders}:\n\
   <br /><b>version</b> = SCM-Manager Version<br /><b>os</b> = Operation System<br /><b>arch</b> = Architecture',
   enableForwardingHelpText: 'Enbale mod_proxy port forwarding.',
@@ -138,6 +142,12 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           fieldLabel: this.servnameText,
           name: 'servername',
           helpText: this.servernameHelpText,
+          allowBlank: false
+        },{
+          xtype: 'textfield',
+          fieldLabel: this.dateFormatText,
+          name: 'dateFormat',
+          helpText: this.dateFormatHelpText,
           allowBlank: false
         },{
           xtype: 'checkbox',

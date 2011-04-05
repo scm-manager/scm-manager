@@ -71,18 +71,32 @@ public class ScmState
    * @param provider
    * @param securityContext
    * @param repositoryTypes
+   * @param clientConfig
    */
   public ScmState(SCMContextProvider provider,
                   WebSecurityContext securityContext,
-                  Collection<Type> repositoryTypes)
+                  Collection<Type> repositoryTypes,
+                  ScmClientConfig clientConfig)
   {
     this.version = provider.getVersion();
     this.user = securityContext.getUser();
     this.groups = securityContext.getGroups();
     this.repositoryTypes = repositoryTypes;
+    this.clientConfig = clientConfig;
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public ScmClientConfig getClientConfig()
+  {
+    return clientConfig;
+  }
 
   /**
    * Method description
@@ -145,6 +159,17 @@ public class ScmState
    * Method description
    *
    *
+   * @param clientConfig
+   */
+  public void setClientConfig(ScmClientConfig clientConfig)
+  {
+    this.clientConfig = clientConfig;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param groups
    */
   public void setGroups(Collection<String> groups)
@@ -197,6 +222,9 @@ public class ScmState
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private ScmClientConfig clientConfig;
 
   /** Field description */
   private Collection<String> groups;
