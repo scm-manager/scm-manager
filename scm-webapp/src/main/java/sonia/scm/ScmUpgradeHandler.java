@@ -91,16 +91,26 @@ public class ScmUpgradeHandler
     File configDirectory = new File(baseDirectory, "config");
     File versionFile = new File(configDirectory, "version.txt");
 
-    // pre version 1.2
-    if (!versionFile.exists())
+    if (configDirectory.exists())
     {
-      if (logger.isInfoEnabled())
+
+      // pre version 1.2
+      if (!versionFile.exists())
       {
-        logger.info("upgrade to version {}",
-                    SCMContext.getContext().getVersion());
+        if (logger.isInfoEnabled())
+        {
+          logger.info("upgrade to version {}",
+                      SCMContext.getContext().getVersion());
+        }
+
+        fixDate(configDirectory);
       }
 
-      fixDate(configDirectory);
+      // fresh installation
+    }
+    else
+    {
+      IOUtil.mkdirs(configDirectory);
     }
 
     writeVersionFile(versionFile);
