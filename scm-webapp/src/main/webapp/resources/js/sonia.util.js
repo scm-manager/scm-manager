@@ -32,14 +32,21 @@
  Ext.apply(Ext.util.Format, {
 
   formatTimestamp: function(value){
+    var date = null;
     var result = '';
     if ( value != null && (value > 0 || value.length > 0)){
       var df = state.clientConfig.dateFormat;
       if ( df == null || df.length == 0 || ! Ext.isDefined(value) ){
         df = "Y-m-d H:i:s";
       }
-      result = Ext.util.Format.date(new Date(value), df);
+      date = new Date(value);
+      result = Ext.util.Format.date(date, df);
     }
+
+    if (date != null && result.indexOf("{0}") >= 0){
+      result = String.format( result, Ext.util.Format.timeAgo(date) );
+    }
+
     return result;
   },
 
