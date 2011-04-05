@@ -282,7 +282,7 @@ public class BasicSecurityContext implements WebSecurityContext
     }
     else
     {
-      msg.append(" is not a memeber of a group");
+      msg.append(" is not a member of a group");
     }
 
     logger.debug(msg.toString());
