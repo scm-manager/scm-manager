@@ -683,7 +683,7 @@ Ext.reg('repositoryPanel', Sonia.repository.Panel);
 Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
   repository: null,
-  changesetTemplate: '<div><b>{id}</b>: {description:htmlEncode}</div><div>{author:htmlEncode}</div><div>{date:timeAgo}</div>',
+  changesetTemplate: '<div><b>{id}</b>: {description:htmlEncode}</div><div>{author:htmlEncode}</div><div>{date:formatTimestamp}</div>',
 
   initComponent: function(){
 
