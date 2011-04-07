@@ -217,6 +217,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   <b>OWNER</b> = read, write and also the ability to manage the properties and permissions',
 
   initComponent: function(){
+    this.addEvents('preCreate', 'created', 'preUpdate', 'updated', 'updateFailed', 'creationFailed');
     Sonia.repository.FormPanel.superclass.initComponent.apply(this, arguments);
   },
 
@@ -229,7 +230,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     var el = this.el;
     var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
 
-    // this.updatePermissions(item);
+    this.fireEvent('preUpdate', item);
 
     Ext.Ajax.request({
       url: url,
@@ -240,12 +241,13 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         if ( debug ){
           console.debug('update success');
         }
-        // this.clearModifications();
+        this.fireEvent('updated', item);
         clearTimeout(tid);
         el.unmask();
         this.execCallback(this.onUpdate, item);
       },
       failure: function(){
+        this.fireEvent('updateFailed', item);
         clearTimeout(tid);
         el.unmask();
         Ext.MessageBox.show({
@@ -265,8 +267,8 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     var url = restUrl + 'repositories.json';
     var el = this.el;
     var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
-    
-    // this.updatePermissions(item);
+
+    this.fireEvent('preCreate', item);
 
     Ext.Ajax.request({
       url: url,
@@ -277,13 +279,14 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         if ( debug ){
           console.debug('create success');
         }
-        // this.permissionStore.removeAll();
+        this.fireEvent('created', item);
         this.getForm().reset();
         clearTimeout(tid);
         el.unmask();
         this.execCallback(this.onCreate, item);
       },
       failure: function(){
+        this.fireEvent('creationFailed', item);
         clearTimeout(tid);
         el.unmask();
         Ext.MessageBox.show({
@@ -486,6 +489,13 @@ Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
     var config = {
       // TODO i18n
       title: 'Permissions',
+      listeners: {
+        updated: this.clearModifications,
+        preUpdate: {
+          fn: this.updatePermissions,
+          scope: this
+        }
+      },
       items:[{
         id: 'permissionGrid',
         xtype: 'editorgrid',
@@ -533,7 +543,6 @@ Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
             src: 'resources/images/help.gif'
           }
         }]
-
       }]
     };
 
@@ -563,12 +572,6 @@ Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
 
   clearModifications: function(){
     Ext.getCmp('permissionGrid').getStore().commitChanges();
-  },
-
-  update: function(item){
-    this.updatePermissions(item);
-    // call super
-    Sonia.repository.PermissionFormPanel.superclass.update.apply(this, arguments);
   }
 
 });
