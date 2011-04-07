@@ -110,3 +110,38 @@
   }
   
 });
+
+Ext.ns('Sonia.util');
+
+// link
+
+Sonia.util.Link = Ext.extend(Ext.BoxComponent, {
+
+  constructor: function(config) {
+    config = config || {};
+    config.xtype = 'box';
+    config.autoEl = { tag: 'a', html: config.text, href: '#' };
+    Sonia.util.Link.superclass.constructor.apply(this, arguments);
+    this.addEvents({
+      'click': true,
+      'mouseover': true,
+      'blur': true
+    });
+    this.text = config.text;
+  },
+    
+  onRender: function() {
+    theLnk = this;
+    this.constructor.superclass.onRender.apply(this, arguments);
+    if (!theLnk.disabled) {
+      this.el.on('blur', function(e) { theLnk.fireEvent('blur'); });
+      this.el.on('click', function(e) { theLnk.fireEvent('click'); });
+      this.el.on('mouseover', function(e) { theLnk.fireEvent('mouseover'); });
+    }
+  }
+
+});
+
+// register xtype
+
+Ext.reg('link', Sonia.util.Link);
