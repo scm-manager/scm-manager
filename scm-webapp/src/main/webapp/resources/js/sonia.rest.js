@@ -169,6 +169,7 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
 
   initComponent: function(){
     var config = {
+      bodyCssClass: 'x-panel-mc',
       padding: 5,
       labelWidth: 100,
       defaults: {width: 240},
@@ -176,6 +177,9 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
       monitorValid: true,
       defaultType: 'textfield',
       buttonAlign: 'center',
+      footerCfg: {
+        cls: 'x-panel-mc'
+      },
       buttons: [
         {text: this.okText, formBind: true, scope: this, handler: this.submit},
         {text: this.cancelText, scope: this, handler: this.cancel}

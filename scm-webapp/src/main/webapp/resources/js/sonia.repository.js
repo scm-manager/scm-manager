@@ -50,10 +50,13 @@ Sonia.repository.isOwner = function(repository){
   return admin || repository.permissions != null;
 }
 
-Sonia.repository.setEditPanel = function(panel){
+Sonia.repository.setEditPanel = function(panels){
   var editPanel = Ext.getCmp('repositoryEditPanel');
   editPanel.removeAll();
-  editPanel.add(panel);
+  Ext.each(panels, function(panel){
+    editPanel.add(panel);
+  });
+  editPanel.setActiveTab(0);
   editPanel.doLayout();
 }
 
@@ -68,6 +71,7 @@ Sonia.repository.DefaultPanel = {
   title: 'Repository Form',
   padding: 5,
   xtype: 'panel',
+  bodyCssClass: 'x-panel-mc',
   html: 'Add or select an Repository'
 }
 
@@ -76,6 +80,7 @@ Sonia.repository.NoPermissionPanel = {
   title: 'Repository Form',
   padding: 5,
   xtype: 'panel',
+  bodyCssClass: 'x-panel-mc',
   html: 'No permission to modify this repository'
 }
 
@@ -139,15 +144,13 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       console.debug( item.name + ' selected' );
     }
 
-    var panel = null;
+    var panels = null;
     
     if ( Sonia.repository.isOwner(item) ){
       Ext.getCmp('repoRmButton').setDisabled(false);
-      panel = new Sonia.repository.FormPanel({
+      panels = [{
         item: item,
-        region: 'south',
-        title: this.formTitleText,
-        padding: 5,
+        xtype: 'repositoryPropertiesForm',
         onUpdate: {
           fn: this.reload,
           scope: this
@@ -156,12 +159,23 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
           fn: this.reload,
           scope: this
         }
-      });
+      },{
+        item: item,
+        xtype: 'repositoryPermissionsForm',
+        onUpdate: {
+          fn: this.reload,
+          scope: this
+        },
+        onCreate: {
+          fn: this.reload,
+          scope: this
+        }
+      }];
     } else {
       Ext.getCmp('repoRmButton').setDisabled(true);
-      panel = Sonia.repository.NoPermissionPanel;
+      panels = Sonia.repository.NoPermissionPanel;
     }
-    Sonia.repository.setEditPanel(panel);
+    Sonia.repository.setEditPanel(panels);
   },
 
   renderRepositoryType: function(repositoryType){
@@ -202,15 +216,183 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   Permissions explenation:<br /><b>READ</b> = read<br /><b>WRITE</b> = read and write<br />\n\
   <b>OWNER</b> = read, write and also the ability to manage the properties and permissions',
 
+  initComponent: function(){
+    Sonia.repository.FormPanel.superclass.initComponent.apply(this, arguments);
+  },
+
+  update: function(item){
+    item = Ext.apply( this.item, item );
+    if ( debug ){
+      console.debug( 'update repository: ' + item.name );
+    }
+    var url = restUrl + 'repositories/' + item.id + '.json';
+    var el = this.el;
+    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
+
+    // this.updatePermissions(item);
+
+    Ext.Ajax.request({
+      url: url,
+      jsonData: item,
+      method: 'PUT',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('update success');
+        }
+        // this.clearModifications();
+        clearTimeout(tid);
+        el.unmask();
+        this.execCallback(this.onUpdate, item);
+      },
+      failure: function(){
+        clearTimeout(tid);
+        el.unmask();
+        Ext.MessageBox.show({
+          title: this.errorTitleText,
+          msg: this.updateErrorMsgText,
+          buttons: Ext.MessageBox.OK,
+          icon:Ext.MessageBox.ERROR
+        });
+      }
+    });
+  },
+
+  create: function(item){
+    if ( debug ){
+      console.debug( 'create repository: ' + item.name );
+    }
+    var url = restUrl + 'repositories.json';
+    var el = this.el;
+    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
+    
+    // this.updatePermissions(item);
+
+    Ext.Ajax.request({
+      url: url,
+      jsonData: item,
+      method: 'POST',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('create success');
+        }
+        // this.permissionStore.removeAll();
+        this.getForm().reset();
+        clearTimeout(tid);
+        el.unmask();
+        this.execCallback(this.onCreate, item);
+      },
+      failure: function(){
+        clearTimeout(tid);
+        el.unmask();
+        Ext.MessageBox.show({
+          title: this.errorTitleText,
+          msg: this.createErrorMsgText,
+          buttons: Ext.MessageBox.OK,
+          icon:Ext.MessageBox.ERROR
+        });
+      }
+    });
+  },
+
+  cancel: function(){
+    if ( debug ){
+      console.debug( 'cancel form' );
+    }
+    Sonia.repository.setEditPanel( Sonia.repository.DefaultPanel );
+  }
+
+});
+
+// register xtype
+Ext.reg('repositoryForm', Sonia.repository.FormPanel);
+
+
+Sonia.repository.PropertiesFormPanel = Ext.extend(Sonia.repository.FormPanel, {
+
+  initComponent: function(){
+    var update = this.item != null;
+
+    var config = {
+      title: this.formTitleText,
+      items: [{
+        id: 'repositoryName',
+        fieldLabel: this.nameText,
+        name: 'name',
+        readOnly: update,
+        allowBlank: false,
+        helpText: this.nameHelpText
+      },{
+       fieldLabel: this.typeText,
+       name: 'type',
+       xtype: 'combo',
+       readOnly: update,
+       hiddenName : 'type',
+       typeAhead: true,
+       triggerAction: 'all',
+       lazyRender: true,
+       mode: 'local',
+       editable: false,
+       store: repositoryTypeStore,
+       valueField: 'name',
+       displayField: 'displayName',
+       allowBlank: false,
+       helpText: this.typeHelpText
+      },{
+        fieldLabel: this.contactText,
+        name: 'contact',
+        vtype: 'email',
+        helpText: this.contactHelpText
+      },{
+        fieldLabel: this.descriptionText,
+        name: 'description',
+        xtype: 'textarea',
+        helpText: this.descriptionHelpText
+      },{
+        fieldLabel: this.publicText,
+        name: 'public',
+        xtype: 'checkbox',
+        helpText: this.publicHelpText
+      },
+      // TODO remove
+      {
+        fieldLabel: 'ChangesetViewer',
+        text: 'ChangesetViewer',
+        xtype: 'button',
+        scope: this,
+        handler: function(){
+          var changesetViewer = {
+            id: this.item.id + '-changesetViewer',
+            title: 'ChangesetViewer ' + this.item.name,
+            repository: this.item,
+            xtype: 'repositoryChangesetViewerPanel',
+            closable: true,
+            autoScroll: true
+          }
+          main.addTab(changesetViewer);
+        }
+      }]
+    };
+
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.repository.PropertiesFormPanel.superclass.initComponent.apply(this, arguments);
+  }
+
+});
+
+// register xtype
+Ext.reg('repositoryPropertiesForm', Sonia.repository.PropertiesFormPanel);
+
+
+Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
+
   permissionStore: null,
 
   initComponent: function(){
-
-    update = this.item != null;
-
     var permissionStore = new Ext.data.JsonStore({
       root: 'permissions',
-      fields: [ 
+      fields: [
         {name: 'name'},
         {name: 'type'},
         {name: 'groupPermission', type: 'boolean'}
@@ -258,7 +440,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
          dataIndex: 'groupPermission',
          width: 40
         }],
-      
+
         getCellEditor: function(colIndex, rowIndex) {
           if (colIndex == 0) {
             var store = null;
@@ -290,7 +472,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         }
     });
 
-    if ( update ){
+    if ( this.item != null ){
       if ( this.item.permissions == null ){
         this.item.permissions = [];
       }
@@ -302,76 +484,9 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     });
 
     var config = {
+      // TODO i18n
+      title: 'Permissions',
       items:[{
-        xtype : 'fieldset',
-        checkboxToggle : false,
-        title : this.formTitleText,
-        collapsible : true,
-        autoHeight : true,
-        autoWidth: true,
-        autoScroll: true,
-        defaults: {width: 240},
-        defaultType: 'textfield',
-        buttonAlign: 'center',
-        items: [{
-            id: 'repositoryName',
-            fieldLabel: this.nameText,
-            name: 'name',
-            readOnly: update,
-            allowBlank: false,
-            helpText: this.nameHelpText
-          },{
-           fieldLabel: this.typeText,
-           name: 'type',
-           xtype: 'combo',
-           readOnly: update,
-           hiddenName : 'type',
-           typeAhead: true,
-           triggerAction: 'all',
-           lazyRender: true,
-           mode: 'local',
-           editable: false,
-           store: repositoryTypeStore,
-           valueField: 'name',
-           displayField: 'displayName',
-           allowBlank: false,
-           helpText: this.typeHelpText
-          },{
-            fieldLabel: this.contactText,
-            name: 'contact',
-            vtype: 'email',
-            helpText: this.contactHelpText
-          },{
-            fieldLabel: this.descriptionText,
-            name: 'description',
-            xtype: 'textarea',
-            helpText: this.descriptionHelpText
-          },{
-            fieldLabel: this.publicText,
-            name: 'public',
-            xtype: 'checkbox',
-            helpText: this.publicHelpText
-          },
-          // TODO remove
-          {
-            fieldLabel: 'ChangesetViewer',
-            text: 'ChangesetViewer',
-            xtype: 'button',
-            scope: this,
-            handler: function(){
-              var changesetViewer = {
-                id: this.item.id + '-changesetViewer',
-                title: 'ChangesetViewer ' + this.item.name,
-                repository: this.item,
-                xtype: 'repositoryChangesetViewerPanel',
-                closable: true,
-                autoScroll: true
-              }
-              main.addTab(changesetViewer);
-            }
-          }
-        ]
-      },{
         id: 'permissionGrid',
         xtype: 'editorgrid',
         title: this.permissionsText,
@@ -423,12 +538,12 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.repository.FormPanel.superclass.initComponent.apply(this, arguments);
+    Sonia.repository.PermissionFormPanel.superclass.initComponent.apply(this, arguments);
   },
-
+  
   afterRender: function(){
     // call super
-    Sonia.repository.FormPanel.superclass.afterRender.apply(this, arguments);
+    Sonia.repository.PermissionFormPanel.superclass.afterRender.apply(this, arguments);
 
     Ext.QuickTips.register({
       target: Ext.getCmp('permissionGridHelp'),
@@ -451,92 +566,14 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   },
 
   update: function(item){
-    item = Ext.apply( this.item, item );
-    if ( debug ){
-      console.debug( 'update repository: ' + item.name );
-    }
-    var url = restUrl + 'repositories/' + item.id + '.json';
-    var el = this.el;
-    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
-
     this.updatePermissions(item);
-
-    Ext.Ajax.request({
-      url: url,
-      jsonData: item,
-      method: 'PUT',
-      scope: this,
-      success: function(){
-        if ( debug ){
-          console.debug('update success');
-        }
-        this.clearModifications();
-        clearTimeout(tid);
-        el.unmask();
-        this.execCallback(this.onUpdate, item);
-      },
-      failure: function(){
-        clearTimeout(tid);
-        el.unmask();
-        Ext.MessageBox.show({
-          title: this.errorTitleText,
-          msg: this.updateErrorMsgText,
-          buttons: Ext.MessageBox.OK,
-          icon:Ext.MessageBox.ERROR
-        });
-      }
-    });
-  },
-
-  create: function(item){
-    if ( debug ){
-      console.debug( 'create repository: ' + item.name );
-    }
-    var url = restUrl + 'repositories.json';
-    var el = this.el;
-    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
-    
-    this.updatePermissions(item);
-
-    Ext.Ajax.request({
-      url: url,
-      jsonData: item,
-      method: 'POST',
-      scope: this,
-      success: function(){
-        if ( debug ){
-          console.debug('create success');
-        }
-        this.permissionStore.removeAll();
-        this.getForm().reset();
-        clearTimeout(tid);
-        el.unmask();
-        this.execCallback(this.onCreate, item);
-      },
-      failure: function(){
-        clearTimeout(tid);
-        el.unmask();
-        Ext.MessageBox.show({
-          title: this.errorTitleText,
-          msg: this.createErrorMsgText,
-          buttons: Ext.MessageBox.OK,
-          icon:Ext.MessageBox.ERROR
-        });
-      }
-    });
-  },
-
-  cancel: function(){
-    if ( debug ){
-      console.debug( 'cancel form' );
-    }
-    Sonia.repository.setEditPanel( Sonia.repository.DefaultPanel );
+    // call super
+    Sonia.repository.PermissionFormPanel.superclass.update.apply(this, arguments);
   }
 
 });
 
-// register xtype
-Ext.reg('repositoryForm', Sonia.repository.FormPanel);
+Ext.reg('repositoryPermissionsForm', Sonia.repository.PermissionFormPanel);
 
 // RepositoryPanel
 Sonia.repository.Panel = Ext.extend(Ext.Panel, {
@@ -568,7 +605,6 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
     var config = {
       layout: 'border',
       hideMode: 'offsets',
-      bodyCssClass: 'x-panel-mc',
       enableTabScroll: true,
       region:'center',
       autoScroll: true,
@@ -579,18 +615,18 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
           region: 'center'
         }, {
           id: 'repositoryEditPanel',
-          layout: 'fit',
-          items: [{
-            region: 'south',
-            title: this.titleText,
-            xtype: 'panel',
-            padding: 5,
-            html: this.emptyText
-          }],
+          xtype: 'tabpanel',
+          activeTab: 0,
           height: 250,
           split: true,
-          border: false,
-          region: 'south'
+          border: true,
+          region: 'south',
+          items: [{
+            bodyCssClass: 'x-panel-mc',
+            title: this.titleText,
+            padding: 5,
+            html: this.emptyText
+          }]
         }
       ]
     }
@@ -652,10 +688,8 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
 
   showAddForm: function(){
     Ext.getCmp('repoRmButton').setDisabled(true);
-    var panel = new Sonia.repository.FormPanel({
-      region: 'south',
-      title: this.titleText,
-      padding: 5,
+    Sonia.repository.setEditPanel([{
+      xtype: 'repositoryPropertiesForm',
       onUpdate: {
         fn: this.reload,
         scope: this
@@ -664,8 +698,7 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
         fn: this.reload,
         scope: this
       }
-    });
-    Sonia.repository.setEditPanel(panel);
+    }]);
   },
 
   reload: function(){
