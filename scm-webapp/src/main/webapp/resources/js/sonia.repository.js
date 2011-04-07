@@ -162,13 +162,15 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       },{
         item: item,
         xtype: 'repositoryPermissionsForm',
-        onUpdate: {
-          fn: this.reload,
-          scope: this
-        },
-        onCreate: {
-          fn: this.reload,
-          scope: this
+        listeners: {
+          updated: {
+            fn: this.reload,
+            scope: this
+          },
+          created: {
+            fn: this.reload,
+            scope: this
+          }
         }
       }];
     } else {
@@ -693,13 +695,15 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
     Ext.getCmp('repoRmButton').setDisabled(true);
     Sonia.repository.setEditPanel([{
       xtype: 'repositoryPropertiesForm',
-      onUpdate: {
-        fn: this.reload,
-        scope: this
-      },
-      onCreate: {
-        fn: this.reload,
-        scope: this
+      listeners: {
+        updated: {
+          fn: this.reload,
+          scope: this
+        },
+        created: {
+          fn: this.reload,
+          scope: this
+        }
       }
     }]);
   },
