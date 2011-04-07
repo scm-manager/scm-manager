@@ -196,60 +196,91 @@ Ext.reg('repositoryGrid', Sonia.repository.Grid);
 
 Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
 
-  tpl: 'Name: {name}<br />\n\
-        Type: {type}<br />\n\
-        URL : <a target="_blank" href="{url}">{url}</a><br />\n\
-        <br /><a id="changesetviewer" style="cursor: pointer">ChangesetViewer</a>',
+  linkTemplate: '<a target="_blank" href="{0}">{0}</a>',
+  actionLinkTemplate: '<a style="cursor: pointer;">{0}</a>',
 
   initComponent: function(){
-    if (typeof this.tpl === 'string') {
-      this.tpl = new Ext.XTemplate(this.tpl);
-    }
     var config = {
       title: this.item.name,
       padding: 5,
       bodyCssClass: 'x-panel-mc',
-      listeners: {
-        click: {
-          fn: this.onLinkClick,
-          scope: this,
-          delegate: 'a'
+      layout: 'table',
+      layoutConfig: {
+        columns: 2,
+        tableAttrs: {
+          style: 'width: 80%;'
         }
-      }
+      },
+      defaults: {
+        style: 'font-size: 12px'
+      },
+      // TODO i18n
+      items: [{
+        xtype: 'label',
+        text: 'Name: '
+      },{
+        xtype: 'box',
+        html: this.item.name
+      },{
+        xtype: 'label',
+        text: 'Type: '
+      },{
+        xtype: 'box',
+        html: this.getRepositoryTypeText(this.item.type)
+      },{
+        xtype: 'label',
+        text: 'Url: '
+      },{
+        xtype: 'box',
+        html: String.format(this.linkTemplate, this.item.url)
+      },{
+        xtype: 'box',
+        height: 10,
+        colspan: 2
+      },{
+        xtype: 'link',
+        colspan: 2,
+        text: 'ChangesetViewer',
+        listeners: {
+          click: {
+            fn: this.openChangesetViewer,
+            scope: this
+          }
+        }
+      }]
     }
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.InfoPanel.superclass.initComponent.apply(this, arguments);
   },
 
-  onLinkClick: function(e, t){
-    if ( t.id == 'changesetviewer' ){
-      var changesetViewer = {
-        id: this.item.id + '-changesetViewer',
-        title: 'ChangesetViewer ' + this.item.name,
-        repository: this.item,
-        xtype: 'repositoryChangesetViewerPanel',
-        closable: true,
-        autoScroll: true
+  getRepositoryTypeText: function(t){
+    var text = null;
+    for ( var i=0; i<state.repositoryTypes.length; i++ ){
+      var type = state.repositoryTypes[i];
+      if ( type.name == t ){
+        text = type.displayName + " (" + t + ")";
+        break;
       }
-      main.addTab(changesetViewer);
     }
+    return text;
   },
 
-  onRender: function(ct, position) {
-    Sonia.repository.InfoPanel.superclass.onRender.call(this, ct, position);
-    if (this.item) {
-      this.body.on({
-        click: this.onLinkClick,
-        scope: this,
-        delegate: 'a'
-      });
-      this.tpl.overwrite(this.body, this.item);
+  openChangesetViewer: function(){
+    var changesetViewer = {
+      id: this.item.id + '-changesetViewer',
+      title: 'ChangesetViewer ' + this.item.name,
+      repository: this.item,
+      xtype: 'repositoryChangesetViewerPanel',
+      closable: true,
+      autoScroll: true
     }
+    main.addTab(changesetViewer);
   }
-
+  
 });
 
+// register xtype
 Ext.reg('repositoryInfoPanel', Sonia.repository.InfoPanel);
 
 // RepositoryFormPanel
