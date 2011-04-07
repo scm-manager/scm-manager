@@ -144,11 +144,14 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       console.debug( item.name + ' selected' );
     }
 
-    var panels = null;
+    var panels = [{
+      item: item,
+      xtype: 'repositoryInfoPanel'
+    }];
     
     if ( Sonia.repository.isOwner(item) ){
       Ext.getCmp('repoRmButton').setDisabled(false);
-      panels = [{
+      panels.push({
         item: item,
         xtype: 'repositoryPropertiesForm',
         onUpdate: {
@@ -172,11 +175,11 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
             scope: this
           }
         }
-      }];
+      });
     } else {
       Ext.getCmp('repoRmButton').setDisabled(true);
-      panels = Sonia.repository.NoPermissionPanel;
     }
+
     Sonia.repository.setEditPanel(panels);
   },
 
@@ -190,6 +193,64 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 
 // register xtype
 Ext.reg('repositoryGrid', Sonia.repository.Grid);
+
+Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
+
+  tpl: 'Name: {name}<br />\n\
+        Type: {type}<br />\n\
+        URL : <a target="_blank" href="{url}">{url}</a><br />\n\
+        <br /><a id="changesetviewer" style="cursor: pointer">ChangesetViewer</a>',
+
+  initComponent: function(){
+    if (typeof this.tpl === 'string') {
+      this.tpl = new Ext.XTemplate(this.tpl);
+    }
+    var config = {
+      title: this.item.name,
+      padding: 5,
+      bodyCssClass: 'x-panel-mc',
+      listeners: {
+        click: {
+          fn: this.onLinkClick,
+          scope: this,
+          delegate: 'a'
+        }
+      }
+    }
+    
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.repository.InfoPanel.superclass.initComponent.apply(this, arguments);
+  },
+
+  onLinkClick: function(e, t){
+    if ( t.id == 'changesetviewer' ){
+      var changesetViewer = {
+        id: this.item.id + '-changesetViewer',
+        title: 'ChangesetViewer ' + this.item.name,
+        repository: this.item,
+        xtype: 'repositoryChangesetViewerPanel',
+        closable: true,
+        autoScroll: true
+      }
+      main.addTab(changesetViewer);
+    }
+  },
+
+  onRender: function(ct, position) {
+    Sonia.repository.InfoPanel.superclass.onRender.call(this, ct, position);
+    if (this.item) {
+      this.body.on({
+        click: this.onLinkClick,
+        scope: this,
+        delegate: 'a'
+      });
+      this.tpl.overwrite(this.body, this.item);
+    }
+  }
+
+});
+
+Ext.reg('repositoryInfoPanel', Sonia.repository.InfoPanel);
 
 // RepositoryFormPanel
 Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
@@ -359,24 +420,6 @@ Sonia.repository.PropertiesFormPanel = Ext.extend(Sonia.repository.FormPanel, {
         name: 'public',
         xtype: 'checkbox',
         helpText: this.publicHelpText
-      },
-      // TODO remove
-      {
-        fieldLabel: 'ChangesetViewer',
-        text: 'ChangesetViewer',
-        xtype: 'button',
-        scope: this,
-        handler: function(){
-          var changesetViewer = {
-            id: this.item.id + '-changesetViewer',
-            title: 'ChangesetViewer ' + this.item.name,
-            repository: this.item,
-            xtype: 'repositoryChangesetViewerPanel',
-            closable: true,
-            autoScroll: true
-          }
-          main.addTab(changesetViewer);
-        }
       }]
     };
 
