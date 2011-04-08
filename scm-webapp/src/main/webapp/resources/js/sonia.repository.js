@@ -811,29 +811,36 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
       root: 'changesets',
       idProperty: 'id',
       totalProperty: 'total',
-      autoLoad: true,
+      autoLoad: false,
       autoDestroy: true
     });
+
+    changesetStore.load({params:{start:0, limit:20}});
 
     var changesetColModel = new Ext.grid.ColumnModel({
       defaults: {
         sortable: false
       },
-      columns: [
-        {id: 'changeset', dataIndex: 'id', xtype: 'templatecolumn', tpl: this.changesetTemplate}
-      ]
+      columns: [{
+        id: 'changeset',
+        dataIndex: 'id',
+        xtype: 'templatecolumn',
+        tpl: this.changesetTemplate
+      }]
     });
 
     var config = {
       header: false,
+      autoScroll: true,
       autoExpandColumn: 'changeset',
-      autoHeight: true,
+      height: '100%',
+      hideHeaders: true,
       store: changesetStore,
       colModel: changesetColModel,
       bbar: new Ext.PagingToolbar({
         store: changesetStore,
         displayInfo: true,
-        pageSize: 25,
+        pageSize: 20,
         prependButtons: true
       })
     }
