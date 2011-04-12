@@ -46,21 +46,15 @@ import sonia.scm.util.Util;
 
 import java.io.IOException;
 
-import java.util.Date;
 import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -95,14 +89,15 @@ public class LoggingFilter extends HttpFilter
   {
     if (logger.isDebugEnabled())
     {
-      LoggingHttpServletRequest loggingRequest =
-        new LoggingHttpServletRequest(request);
-      LoggingHttpServletResponse loggingResponse =
-        new LoggingHttpServletResponse(response);
+      boolean logBody = logger.isTraceEnabled();
+      BufferedHttpServletRequest bufferedRequest =
+        new BufferedHttpServletRequest(request, logBody);
+      BufferedHttpServletResponse bufferedResponse =
+        new BufferedHttpServletResponse(response, logBody);
 
-      logRequest(loggingRequest);
-      chain.doFilter(request, response);
-      logResponse(loggingResponse);
+      logRequest(bufferedRequest);
+      chain.doFilter(bufferedRequest, bufferedResponse);
+      logResponse(response, bufferedResponse);
     }
     else
     {
@@ -116,7 +111,7 @@ public class LoggingFilter extends HttpFilter
    *
    * @param request
    */
-  private void logRequest(LoggingHttpServletRequest request)
+  private void logRequest(BufferedHttpServletRequest request)
   {
     logger.debug("**************** request ****************");
     logger.debug("Info: Request-Uri = {}", request.getRequestURI());
@@ -191,15 +186,26 @@ public class LoggingFilter extends HttpFilter
                      request.getSession().getAttribute(sAttribute).toString());
       }
     }
+
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("Content: ".concat(new String(request.getContentBuffer())));
+    }
   }
 
   /**
    * Method description
    *
    *
+   *
+   * @param orgResponse
    * @param response
+   *
+   * @throws IOException
    */
-  private void logResponse(LoggingHttpServletResponse response)
+  private void logResponse(HttpServletResponse orgResponse,
+                           BufferedHttpServletResponse response)
+          throws IOException
   {
     logger.debug("**************** response ****************");
     logger.debug("status code = {}",
@@ -220,302 +226,23 @@ public class LoggingFilter extends HttpFilter
     {
       logger.debug("Header: {} = {}", header.getKey(), header.getValue());
     }
-  }
 
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 10/09/29
-   * @author         Enter your name here...
-   */
-  private static class LoggingHttpServletRequest
-          extends HttpServletRequestWrapper
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param request
-     */
-    public LoggingHttpServletRequest(HttpServletRequest request)
+    if (logger.isTraceEnabled())
     {
-      super(request);
+      byte[] content = response.getContentBuffer();
+      ServletOutputStream out = null;
+
+      try
+      {
+        out = orgResponse.getOutputStream();
+        out.write(content);
+      }
+      finally
+      {
+        out.close();
+      }
+
+      logger.trace("Content: ".concat(new String(content)));
     }
-  }
-
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 10/09/29
-   * @author         Enter your name here...
-   */
-  private static class LoggingHttpServletResponse
-          extends HttpServletResponseWrapper
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param response
-     */
-    public LoggingHttpServletResponse(HttpServletResponse response)
-    {
-      super(response);
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param cookie
-     */
-    @Override
-    public void addCookie(Cookie cookie)
-    {
-      cookies.add(cookie);
-      super.addCookie(cookie);
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @param name
-     * @param date
-     */
-    @Override
-    public void addDateHeader(String name, long date)
-    {
-      headers.put(name, new Date(date).toString());
-      super.addDateHeader(name, date);
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @param name
-     * @param value
-     */
-    @Override
-    public void addHeader(String name, String value)
-    {
-      headers.put(name, value);
-      super.addHeader(name, value);
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @param name
-     * @param value
-     */
-    @Override
-    public void addIntHeader(String name, int value)
-    {
-      headers.put(name, Integer.toString(value));
-      super.addIntHeader(name, value);
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @param sc
-     *
-     * @throws IOException
-     */
-    @Override
-    public void sendError(int sc) throws IOException
-    {
-      this.statusCode = sc;
-      super.sendError(sc);
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @param sc
-     * @param msg
-     *
-     * @throws IOException
-     */
-    @Override
-    public void sendError(int sc, String msg) throws IOException
-    {
-      this.statusCode = sc;
-      this.statusMessage = msg;
-      super.sendError(sc, msg);
-    }
-
-    //~--- get methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public int getContentLength()
-    {
-      return contentLength;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public Set<Cookie> getCookies()
-    {
-      return cookies;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public Map<String, String> getHeaders()
-    {
-      return headers;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public int getStatusCode()
-    {
-      return statusCode;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public String getStatusMessage()
-    {
-      return statusMessage;
-    }
-
-    //~--- set methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param len
-     */
-    @Override
-    public void setContentLength(int len)
-    {
-      this.contentLength = len;
-      super.setContentLength(len);
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @param name
-     * @param date
-     */
-    @Override
-    public void setDateHeader(String name, long date)
-    {
-      headers.put(name, new Date(date).toString());
-      super.setDateHeader(name, date);
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @param name
-     * @param value
-     */
-    @Override
-    public void setHeader(String name, String value)
-    {
-      headers.put(name, value);
-      super.setHeader(name, value);
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @param name
-     * @param value
-     */
-    @Override
-    public void setIntHeader(String name, int value)
-    {
-      headers.put(name, Integer.toString(value));
-      super.setIntHeader(name, value);
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @param sc
-     */
-    @Override
-    public void setStatus(int sc)
-    {
-      this.statusCode = sc;
-      super.setStatus(sc);
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @param sc
-     * @param sm
-     */
-    @Override
-    public void setStatus(int sc, String sm)
-    {
-      this.statusCode = sc;
-      this.statusMessage = sm;
-      super.setStatus(sc, sm);
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private int contentLength = -1;
-
-    /** Field description */
-    private Set<Cookie> cookies = new HashSet<Cookie>();
-
-    /** Field description */
-    private int statusCode = HttpServletResponse.SC_OK;
-
-    /** Field description */
-    private Map<String, String> headers = new LinkedHashMap<String, String>();
-
-    /** Field description */
-    private String statusMessage;
   }
 }
