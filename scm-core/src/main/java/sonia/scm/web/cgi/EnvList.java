@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -38,6 +40,7 @@ import sonia.scm.util.Util;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -91,7 +94,24 @@ public class EnvList
   @Override
   public String toString()
   {
-    return envMap.toString();
+    String s = System.getProperty("line.separator");
+    StringBuilder out = new StringBuilder("Enironment:");
+
+    out.append(s);
+
+    Iterator<String> it = envMap.values().iterator();
+
+    while (it.hasNext())
+    {
+      out.append("  ").append(it.next());
+
+      if (it.hasNext())
+      {
+        out.append(s);
+      }
+    }
+
+    return out.toString();
   }
 
   //~--- get methods ----------------------------------------------------------

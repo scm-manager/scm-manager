@@ -99,14 +99,17 @@ public class CGIRunner
    * @param pathInfo
    * @param req
    * @param res
+   * @param serverPort
    *
    * @throws IOException
    */
   public void exec(EnvList environment, File command, String pathInfo,
-                   HttpServletRequest req, HttpServletResponse res, int serverPort)
+                   HttpServletRequest req, HttpServletResponse res,
+                   int serverPort)
           throws IOException
   {
-    exec(environment, defaultCmdPrefix, command, pathInfo, req, res, serverPort);
+    exec(environment, defaultCmdPrefix, command, pathInfo, req, res,
+         serverPort);
   }
 
   /**
@@ -120,6 +123,7 @@ public class CGIRunner
    * @param pathInfo
    * @param req
    * @param res
+   * @param serverPort
    *
    * @throws IOException
    */
@@ -209,6 +213,11 @@ public class CGIRunner
     if (logger.isDebugEnabled())
     {
       logger.debug("execute cgi: ".concat(execCmd));
+
+      if (logger.isTraceEnabled())
+      {
+        logger.trace(environment.toString());
+      }
     }
 
     Process p = (dir == null)
@@ -235,7 +244,7 @@ public class CGIRunner
           if (inLength > 0)
           {
             copy(inFromReq, outToCgi, inLength);
-          }
+        }
 
           outToCgi.close();
         }
@@ -263,10 +272,20 @@ public class CGIRunner
       String line = null;
       InputStream inFromCgi = p.getInputStream();
 
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("CGI-Response Header:");
+      }
+
       // br=new BufferedReader(new InputStreamReader(inFromCgi));
       // while ((line=br.readLine())!=null)
       while ((line = getTextLineFromStream(inFromCgi)).length() > 0)
       {
+        if (logger.isTraceEnabled())
+        {
+          logger.trace("  ".concat(line));
+        }
+
         if (!line.startsWith("HTTP"))
         {
           int k = line.indexOf(':');
