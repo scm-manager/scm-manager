@@ -83,9 +83,25 @@ public class CGIRunner
   public CGIRunner(ServletContext context, String defaultCmdPrefix,
                    boolean ignoreExitState)
   {
+    this(context, defaultCmdPrefix, ignoreExitState, false);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param context
+   * @param defaultCmdPrefix
+   * @param ignoreExitState
+   * @param asyncRequestInput
+   */
+  public CGIRunner(ServletContext context, String defaultCmdPrefix,
+                   boolean ignoreExitState, boolean asyncRequestInput)
+  {
     this.context = context;
     this.defaultCmdPrefix = defaultCmdPrefix;
     this.ignoreExitState = ignoreExitState;
+    this.asyncRequestInput = asyncRequestInput;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -225,40 +241,7 @@ public class CGIRunner
                 : Runtime.getRuntime().exec(execCmd, environment.getEnvArray(),
                   dir);
 
-    // hook processes input to browser's output (async)
-    final InputStream inFromReq = req.getInputStream();
-    final OutputStream outToCgi = p.getOutputStream();
-    final int inLength = len;
-
-    // TODO: print or log error stream
-    IOUtil.copyThread(p.getErrorStream(),
-                      new LoggingOutputStream(logger,
-                        LoggingOutputStream.LEVEL_ERROR));
-    new Thread(new Runnable()
-    {
-      @Override
-      public void run()
-      {
-        try
-        {
-          if (inLength > 0)
-          {
-            copy(inFromReq, outToCgi, inLength);
-        }
-
-          outToCgi.close();
-        }
-        catch (IOException ex)
-        {
-          logger.debug(ex.getMessage(), ex);
-        }
-        finally
-        {
-          IOUtil.close(inFromReq);
-          IOUtil.close(outToCgi);
-        }
-      }
-    }).start();
+    passRequestInputToProcess(req, p, len);
 
     // hook processes output to browser's input (sync)
     // if browser closes stream, we should detect it and kill process...
@@ -487,6 +470,71 @@ public class CGIRunner
     }
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param p
+   * @param length
+   *
+   * @throws IOException
+   */
+  private void passRequestInputToProcess(HttpServletRequest request, Process p,
+          int length)
+          throws IOException
+  {
+    final InputStream inFromReq = request.getInputStream();
+    final OutputStream outToCgi = p.getOutputStream();
+    final int inLength = length;
+
+    IOUtil.copyThread(p.getErrorStream(),
+                      new LoggingOutputStream(logger,
+                        LoggingOutputStream.LEVEL_ERROR));
+
+    if (asyncRequestInput)
+    {
+      new Thread(new Runnable()
+      {
+        @Override
+        public void run()
+        {
+          try
+          {
+            if (inLength > 0)
+            {
+              copy(inFromReq, outToCgi, inLength);
+            }
+          }
+          catch (IOException ex)
+          {
+            logger.debug(ex.getMessage(), ex);
+          }
+          finally
+          {
+            IOUtil.close(inFromReq);
+            IOUtil.close(outToCgi);
+          }
+        }
+      }).start();
+    }
+    else
+    {
+      try
+      {
+        if (inLength > 0)
+        {
+          copy(inFromReq, outToCgi, inLength);
+        }
+      }
+      finally
+      {
+        IOUtil.close(inFromReq);
+        IOUtil.close(outToCgi);
+      }
+    }
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -513,6 +561,9 @@ public class CGIRunner
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean asyncRequestInput = false;
 
   /** Field description */
   private ServletContext context;
