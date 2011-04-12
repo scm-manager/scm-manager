@@ -73,16 +73,20 @@
 
   <!-- SSL-Connector -->
   <!--
+     Documentation for the SSL-Connector: 
+     http://wiki.eclipse.org/Jetty/Reference/SSL_Connectors
+  -->
+  <!--
   <Call name="addConnector">
       <Arg>
-        <New class="org.mortbay.jetty.security.SslSocketConnector">
+        <New class="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
         <Set name="Port">8181</Set>
         <Set name="maxIdleTime">30000</Set>
-        <Set name="keystore"><SystemProperty name="jetty.home" default="." />/etc/keystore</Set>
-        <Set name="password">OBF:1vny1zlo1x8e1vnw1vn61x8g1zlu1vn4</Set>
-        <Set name="keyPassword">OBF:1u2u1wml1z7s1z7a1wnl1u2g</Set>
-        <Set name="truststore"><SystemProperty name="jetty.home" default="." />/etc/keystore</Set>
-        <Set name="trustPassword">OBF:1vny1zlo1x8e1vnw1vn61x8g1zlu1vn4</Set>
+        <Set name="keystore"><SystemProperty name="basedir" default="." />/conf/keystore.jks</Set>
+        <Set name="password">OBF:xxx</Set>
+        <Set name="keyPassword">OBF:xxx</Set>
+        <Set name="truststore"><SystemProperty name="basedir" default="." />/conf/keystore.jks</Set>
+        <Set name="trustPassword">OBF:xxx</Set>
       </New>
     </Arg>
   </Call>
