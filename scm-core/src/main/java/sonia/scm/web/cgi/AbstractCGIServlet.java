@@ -53,7 +53,9 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated use {@link CGIExecutorFactory}
  */
+@Deprecated
 public abstract class AbstractCGIServlet extends HttpServlet
 {
 

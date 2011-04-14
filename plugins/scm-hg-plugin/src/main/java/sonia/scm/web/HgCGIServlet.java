@@ -44,8 +44,8 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.web.cgi.AbstractCGIServlet;
-import sonia.scm.web.cgi.EnvList;
+import sonia.scm.web.cgi.CGIExecutor;
+import sonia.scm.web.cgi.CGIExecutorFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -56,14 +56,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgCGIServlet extends AbstractCGIServlet
+public class HgCGIServlet extends HttpServlet
 {
 
   /** Field description */
@@ -90,16 +92,20 @@ public class HgCGIServlet extends AbstractCGIServlet
    *
    *
    *
+   *
+   * @param cgiExecutorFactory
    * @param configuration
    * @param repositoryManager
    * @param handler
    */
   @Inject
-  public HgCGIServlet(ScmConfiguration configuration,
+  public HgCGIServlet(CGIExecutorFactory cgiExecutorFactory,
+                      ScmConfiguration configuration,
                       RepositoryManager repositoryManager,
                       HgRepositoryHandler handler)
   {
-    super(configuration);
+    this.cgiExecutorFactory = cgiExecutorFactory;
+    this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.handler = handler;
   }
@@ -124,18 +130,16 @@ public class HgCGIServlet extends AbstractCGIServlet
    *
    *
    * @param request
-   * @param baseEnvironment
+   * @param response
    *
-   * @return
-   *
+   * @throws IOException
    * @throws ServletException
    */
   @Override
-  protected EnvList createRequestEnvironment(HttpServletRequest request,
-          EnvList baseEnvironment)
-          throws ServletException
+  protected void service(HttpServletRequest request,
+                         HttpServletResponse response)
+          throws ServletException, IOException
   {
-    EnvList list = new EnvList(baseEnvironment);
     Repository repository = getRepository(request);
 
     if (repository == null)
@@ -145,10 +149,6 @@ public class HgCGIServlet extends AbstractCGIServlet
 
     String name = repository.getName();
     File directory = handler.getDirectory(repository);
-
-    list.set(ENV_REPOSITORY_PATH, directory.getAbsolutePath());
-    list.set(ENV_REPOSITORY_NAME, name);
-
     String pythonPath = "";
     HgConfig config = handler.getConfig();
 
@@ -162,9 +162,22 @@ public class HgCGIServlet extends AbstractCGIServlet
       }
     }
 
-    list.set(ENV_PYTHON_PATH, pythonPath);
+    CGIExecutor executor = cgiExecutorFactory.createExecutor(configuration,
+                             getServletContext(), request, response);
 
-    return list;
+    executor.getEnvironment().set(ENV_REPOSITORY_NAME, name);
+    executor.getEnvironment().set(ENV_REPOSITORY_PATH,
+                                  directory.getAbsolutePath());
+    executor.getEnvironment().set(ENV_PYTHON_PATH, pythonPath);
+
+    String interpreter = getInterpreter();
+
+    if (interpreter != null)
+    {
+      executor.setInterpreter(interpreter);
+    }
+
+    executor.execute(command.getAbsolutePath());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -175,8 +188,7 @@ public class HgCGIServlet extends AbstractCGIServlet
    *
    * @return
    */
-  @Override
-  protected String getCmdPrefix()
+  private String getInterpreter()
   {
     HgConfig config = handler.getConfig();
 
@@ -196,29 +208,11 @@ public class HgCGIServlet extends AbstractCGIServlet
    * Method description
    *
    *
-   * @param req
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
-  @Override
-  protected File getCommand(HttpServletRequest req)
-          throws ServletException, IOException
-  {
-    return command;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param request
    *
    * @return
    */
-  protected Repository getRepository(HttpServletRequest request)
+  private Repository getRepository(HttpServletRequest request)
   {
     Repository repository = null;
     String uri = request.getRequestURI();
@@ -253,7 +247,13 @@ public class HgCGIServlet extends AbstractCGIServlet
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private CGIExecutorFactory cgiExecutorFactory;
+
+  /** Field description */
   private File command;
+
+  /** Field description */
+  private ScmConfiguration configuration;
 
   /** Field description */
   private HgRepositoryHandler handler;

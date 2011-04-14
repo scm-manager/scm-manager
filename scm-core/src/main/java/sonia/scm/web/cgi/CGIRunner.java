@@ -59,8 +59,9 @@ import javax.servlet.http.HttpServletResponse;
  * Based on org.eclipse.jetty.servlets.CGI
  *
  * @author Sebastian Sdorra
- *
+ * @deprecated use {@link CGIExecutorFactory}
  */
+@Deprecated
 public class CGIRunner
 {
 
@@ -335,11 +336,7 @@ public class CGIRunner
     }
     finally
     {
-      if (os != null)
-      {
-        IOUtil.close(os);
-      }
-
+      IOUtil.close(os);
       os = null;
       p.destroy();
 

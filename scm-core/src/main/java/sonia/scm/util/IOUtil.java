@@ -118,17 +118,33 @@ public class IOUtil
    *
    * @param reader
    * @param writer
+   * @param bufferSize
    *
    * @throws IOException
    */
-  public static void copy(Reader reader, Writer writer) throws IOException
+  public static void copy(Reader reader, Writer writer, int bufferSize)
+          throws IOException
   {
-    char[] buffer = new char[0xFFFF];
+    char[] buffer = new char[bufferSize];
 
     for (int len; (len = reader.read(buffer)) != -1; )
     {
       writer.write(buffer, 0, len);
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param reader
+   * @param writer
+   *
+   * @throws IOException
+   */
+  public static void copy(Reader reader, Writer writer) throws IOException
+  {
+    copy(reader, writer, 0xFFFF);
   }
 
   /**
@@ -142,12 +158,30 @@ public class IOUtil
    */
   public static void copy(InputStream in, OutputStream out) throws IOException
   {
-    byte[] buffer = new byte[0xFFFF];
+    copy(in, out, 0xFFFF);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param in
+   * @param out
+   * @param bufferSize
+   *
+   * @throws IOException
+   */
+  public static void copy(InputStream in, OutputStream out, int bufferSize)
+          throws IOException
+  {
+    byte[] buffer = new byte[bufferSize];
 
     for (int len; (len = in.read(buffer)) != -1; )
     {
       out.write(buffer, 0, len);
     }
+
+    out.flush();
   }
 
   /**

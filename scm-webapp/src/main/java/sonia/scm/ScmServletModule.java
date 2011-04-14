@@ -70,6 +70,8 @@ import sonia.scm.template.TemplateServlet;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.xml.XmlUserManager;
 import sonia.scm.util.DebugServlet;
+import sonia.scm.web.cgi.CGIExecutorFactory;
+import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
 import sonia.scm.web.security.AuthenticationManager;
 import sonia.scm.web.security.BasicSecurityContext;
 import sonia.scm.web.security.ChainAuthenticatonManager;
@@ -215,8 +217,9 @@ public class ScmServletModule extends ServletModule
     bind(RepositoryManager.class).to(XmlRepositoryManager.class);
     bind(UserManager.class).to(XmlUserManager.class);
     bind(GroupManager.class).to(XmlGroupManager.class);
+    bind(CGIExecutorFactory.class).to(DefaultCGIExecutorFactory.class);
 
-    // filter(PATTERN_RESTAPI).through(LoggingFilter.class);
+    // filter("/hg/*").through(LoggingFilter.class);
 
     /*
      * filter(PATTERN_PAGE,
