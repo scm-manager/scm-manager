@@ -39,6 +39,8 @@ import sonia.scm.config.ScmConfiguration;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -68,13 +70,17 @@ public class HttpUtil
    *
    *
    * @param response
+   *
+   * @throws IOException
    */
   public static void sendUnauthorized(HttpServletResponse response)
+          throws IOException
   {
-    response.setHeader(HEADER_WWW_AUTHENTICATE,
-                       "Basic realm=\"" + AUTHENTICATION_REALM + "\"");
+    response.setHeader(
+        HEADER_WWW_AUTHENTICATE,
+        "Basic realm=\"".concat(AUTHENTICATION_REALM).concat("\""));
     response.setHeader(HEADER_CONNECTION, HEADERVALUE_CONNECTION_CLOSE);
-    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
   }
 
   //~--- get methods ----------------------------------------------------------
