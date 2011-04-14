@@ -358,7 +358,12 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
       if (logger.isWarnEnabled())
       {
-        logger.warn(error.toString());
+        String msg = error.toString().trim();
+
+        if (Util.isNotEmpty(msg))
+        {
+          logger.warn(msg);
+        }
       }
     }
     finally
