@@ -291,11 +291,30 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
           String key = line.substring(0, k).trim();
           String value = line.substring(k + 1).trim();
 
-          if (RESPONSE_HEADER_LOCATION.equals(key))
+          if (RESPONSE_HEADER_LOCATION.equalsIgnoreCase(key))
           {
             response.sendRedirect(response.encodeRedirectURL(value));
           }
-          else if (RESPONSE_HEADER_STATUS.equals(key))
+          else if (REPSONSE_HEADER_CONTENT_TYPE.equalsIgnoreCase(key))
+          {
+            response.setContentType(value);
+          }
+          else if (REPSONSE_HEADER_CONTENT_LENGTH.equalsIgnoreCase(key))
+          {
+            try
+            {
+              response.setContentLength(Integer.parseInt(value));
+            }
+            catch (NumberFormatException ex)
+            {
+              if (logger.isDebugEnabled())
+              {
+                logger.debug(
+                    "could not convert content-length header to integer", ex);
+              }
+            }
+          }
+          else if (RESPONSE_HEADER_STATUS.equalsIgnoreCase(key))
           {
             String[] token = value.split(" ");
             int status = Integer.parseInt(token[0]);
