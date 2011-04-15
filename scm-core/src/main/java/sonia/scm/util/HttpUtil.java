@@ -55,12 +55,6 @@ public class HttpUtil
   public static final String AUTHENTICATION_REALM = "SONIA :: SCM Manager";
 
   /** Field description */
-  public static final String HEADERVALUE_CONNECTION_CLOSE = "close";
-
-  /** Field description */
-  public static final String HEADER_CONNECTION = "connection";
-
-  /** Field description */
   public static final String HEADER_WWW_AUTHENTICATE = "WWW-Authenticate";
 
   /** Field description */
@@ -83,7 +77,6 @@ public class HttpUtil
     response.setHeader(
         HEADER_WWW_AUTHENTICATE,
         "Basic realm=\"".concat(AUTHENTICATION_REALM).concat("\""));
-    response.setHeader(HEADER_CONNECTION, HEADERVALUE_CONNECTION_CLOSE);
     response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
                        STATUS_UNAUTHORIZED_MESSAGE);
   }
