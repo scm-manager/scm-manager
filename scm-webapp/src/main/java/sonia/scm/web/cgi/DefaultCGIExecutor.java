@@ -161,10 +161,22 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
       }
     }
 
-    Process p = Runtime.getRuntime().exec(execCmd, environment.getEnvArray(),
+    Process p = null;
+
+    try
+    {
+      p = Runtime.getRuntime().exec(execCmd, environment.getEnvArray(),
                   workDirectory);
 
-    execute(p);
+      execute(p);
+    }
+    finally
+    {
+      if (p != null)
+      {
+        p.destroy();
+      }
+    }
   }
 
   /**
