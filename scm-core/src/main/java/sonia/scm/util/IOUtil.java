@@ -66,6 +66,9 @@ public class IOUtil
 {
 
   /** Field description */
+  public static final int DEFAULT_BUFFERSIZE = 8192;
+
+  /** Field description */
   private static final String DEFAULT_CHECKPARAMETER = "--version";
 
   /** Field description */
@@ -144,7 +147,7 @@ public class IOUtil
    */
   public static void copy(Reader reader, Writer writer) throws IOException
   {
-    copy(reader, writer, 0xFFFF);
+    copy(reader, writer, DEFAULT_BUFFERSIZE);
   }
 
   /**
@@ -158,7 +161,7 @@ public class IOUtil
    */
   public static void copy(InputStream in, OutputStream out) throws IOException
   {
-    copy(in, out, 0xFFFF);
+    copy(in, out, DEFAULT_BUFFERSIZE);
   }
 
   /**
@@ -237,7 +240,7 @@ public class IOUtil
    */
   public static void copyThread(Reader reader, Writer writer)
   {
-    new Thread(new IOCopyThread(reader, writer)).start();
+    copyThread(reader, writer, DEFAULT_BUFFERSIZE);
   }
 
   /**
@@ -249,7 +252,34 @@ public class IOUtil
    */
   public static void copyThread(InputStream input, OutputStream output)
   {
-    new Thread(new IOStreamCopyThread(input, output)).start();
+    copyThread(input, output, DEFAULT_BUFFERSIZE);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param reader
+   * @param writer
+   * @param bufferSize
+   */
+  public static void copyThread(Reader reader, Writer writer, int bufferSize)
+  {
+    new Thread(new IOCopyThread(reader, writer, bufferSize)).start();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param input
+   * @param output
+   * @param bufferSize
+   */
+  public static void copyThread(InputStream input, OutputStream output,
+                                int bufferSize)
+  {
+    new Thread(new IOStreamCopyThread(input, output, bufferSize)).start();
   }
 
   /**
@@ -482,11 +512,13 @@ public class IOUtil
      *
      * @param reader
      * @param writer
+     * @param bufferSize
      */
-    public IOCopyThread(Reader reader, Writer writer)
+    public IOCopyThread(Reader reader, Writer writer, int bufferSize)
     {
       this.reader = reader;
       this.writer = writer;
+      this.bufferSize = bufferSize;
     }
 
     //~--- methods ------------------------------------------------------------
@@ -500,7 +532,7 @@ public class IOUtil
     {
       try
       {
-        copy(reader, writer);
+        copy(reader, writer, bufferSize);
       }
       catch (IOException ex)
       {
@@ -514,6 +546,9 @@ public class IOUtil
     }
 
     //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private int bufferSize;
 
     /** Field description */
     private Reader reader;
@@ -539,11 +574,14 @@ public class IOUtil
      *
      * @param input
      * @param output
+     * @param bufferSize
      */
-    public IOStreamCopyThread(InputStream input, OutputStream output)
+    public IOStreamCopyThread(InputStream input, OutputStream output,
+                              int bufferSize)
     {
       this.input = input;
       this.output = output;
+      this.bufferSize = bufferSize;
     }
 
     //~--- methods ------------------------------------------------------------
@@ -557,7 +595,7 @@ public class IOUtil
     {
       try
       {
-        copy(input, output);
+        copy(input, output, bufferSize);
       }
       catch (IOException ex)
       {
@@ -571,6 +609,9 @@ public class IOUtil
     }
 
     //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private int bufferSize;
 
     /** Field description */
     private InputStream input;
