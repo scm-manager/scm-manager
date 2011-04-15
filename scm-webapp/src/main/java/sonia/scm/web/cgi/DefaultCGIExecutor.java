@@ -311,21 +311,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
           {
             response.setContentType(value);
           }
-          else if (REPSONSE_HEADER_CONTENT_LENGTH.equalsIgnoreCase(key))
-          {
-            try
-            {
-              response.setContentLength(Integer.parseInt(value));
-            }
-            catch (NumberFormatException ex)
-            {
-              if (logger.isDebugEnabled())
-              {
-                logger.debug(
-                    "could not convert content-length header to integer", ex);
-              }
-            }
-          }
           else if (RESPONSE_HEADER_STATUS.equalsIgnoreCase(key))
           {
             String[] token = value.split(" ");
