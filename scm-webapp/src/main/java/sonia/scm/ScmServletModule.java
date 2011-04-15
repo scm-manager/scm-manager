@@ -219,8 +219,6 @@ public class ScmServletModule extends ServletModule
     bind(GroupManager.class).to(XmlGroupManager.class);
     bind(CGIExecutorFactory.class).to(DefaultCGIExecutorFactory.class);
 
-    // filter("/hg/*").through(LoggingFilter.class);
-
     /*
      * filter(PATTERN_PAGE,
      *      PATTERN_STATIC_RESOURCES).through(StaticResourceFilter.class);
