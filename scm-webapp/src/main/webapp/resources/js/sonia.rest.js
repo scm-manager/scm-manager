@@ -90,6 +90,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
     });
 
     var config = {
+      minHeight: 150,
       loadMask: true,
       sm: selectionModel,
       viewConfig: {
