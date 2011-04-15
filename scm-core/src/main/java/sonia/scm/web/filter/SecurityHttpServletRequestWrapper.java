@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -64,6 +66,20 @@ public class SecurityHttpServletRequestWrapper extends HttpServletRequestWrapper
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getAuthType()
+  {
+    return (user != null)
+           ? BASIC_AUTH
+           : null;
+  }
 
   /**
    * Method description
