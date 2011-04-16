@@ -75,6 +75,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
   mailtoTemplate: '<a href="mailto: {0}">{0}</a>',
   checkboxTemplate: '<input type="checkbox" disabled="true" {0}/>',
   emptyText: 'No items available',
+  minHeight: 150,
 
   initComponent: function(){
 
@@ -90,7 +91,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
     });
 
     var config = {
-      minHeight: 150,
+      minHeight: this.minHeight,
       loadMask: true,
       sm: selectionModel,
       viewConfig: {
@@ -98,6 +99,10 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
         emptyText: this.emptyText
       }
     };
+
+    this.addEvents('fallBelowMinHeight');
+
+    Ext.EventManager.onWindowResize(this.resize, this);
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.rest.Grid.superclass.initComponent.apply(this, arguments);
@@ -107,6 +112,24 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
       console.debug( 'load store' );
     }
     this.store.load();
+  },
+
+  resize: function(){
+    var h = this.getHeight();
+    if (debug){
+      console.debug('' + h + ' < ' + this.minHeight + " = " + (h < this.minHeight));
+    }
+    if ( h < this.minHeight ){
+      if ( debug ){
+        console.debug( 'fire event fallBelowMinHeight' );
+      }
+      this.fireEvent('fallBelowMinHeight', h, this.minHeight);
+    }
+  },
+
+  onDestroy: function(){
+    Ext.EventManager.removeResizeListener(this.resize, this);
+    Sonia.rest.Grid.superclass.onDestroy.apply(this, arguments);
   },
 
   reload: function(){

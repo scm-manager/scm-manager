@@ -132,11 +132,28 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       autoExpandColumn: 'description',
       store: repositoryStore,
       colModel: repositoryColModel,
-      emptyText: this.emptyText
+      emptyText: this.emptyText,
+      listeners: {
+        fallBelowMinHeight: {
+          fn: this.onFallBelowMinHeight,
+          scope: this
+        }
+      }
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Grid.superclass.initComponent.apply(this, arguments);
+  },
+
+  onFallBelowMinHeight: function(height, minHeight){
+    var p = Ext.getCmp('repositoryEditPanel');
+    this.setHeight(minHeight);
+    var epHeight = p.getHeight();
+    p.setHeight(epHeight - (minHeight - height));
+    // rerender
+    this.doLayout();
+    p.doLayout();
+    this.ownerCt.doLayout();
   },
 
   selectItem: function(item){

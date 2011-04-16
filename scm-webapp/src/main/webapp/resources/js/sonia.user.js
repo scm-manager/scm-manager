@@ -99,11 +99,28 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
 
     var config = {
       store: userStore,
-      colModel: userColModel
+      colModel: userColModel,
+      listeners: {
+        fallBelowMinHeight: {
+          fn: this.onFallBelowMinHeight,
+          scope: this
+        }
+      }
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.user.Grid.superclass.initComponent.apply(this, arguments);
+  },
+
+  onFallBelowMinHeight: function(height, minHeight){
+    var p = Ext.getCmp('userEditPanel');
+    this.setHeight(minHeight);
+    var epHeight = p.getHeight();
+    p.setHeight(epHeight - (minHeight - height));
+    // rerender
+    this.doLayout();
+    p.doLayout();
+    this.ownerCt.doLayout();
   },
 
   selectItem: function(item){

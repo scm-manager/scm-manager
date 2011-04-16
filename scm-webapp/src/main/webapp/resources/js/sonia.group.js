@@ -93,12 +93,31 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
       autoExpandColumn: 'members',
       store: groupStore,
       colModel: groupColModel,
-      emptyText: this.emptyGroupStoreText
+      emptyText: this.emptyGroupStoreText,
+      listeners: {
+        fallBelowMinHeight: {
+          fn: this.onFallBelowMinHeight,
+          scope: this
+        }
+      }
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.group.Grid.superclass.initComponent.apply(this, arguments);
   },
+
+
+  onFallBelowMinHeight: function(height, minHeight){
+    var p = Ext.getCmp('groupEditPanel');
+    this.setHeight(minHeight);
+    var epHeight = p.getHeight();
+    p.setHeight(epHeight - (minHeight - height));
+    // rerender
+    this.doLayout();
+    p.doLayout();
+    this.ownerCt.doLayout();
+  },
+
 
   renderMembers: function(members){
     var out = '';
