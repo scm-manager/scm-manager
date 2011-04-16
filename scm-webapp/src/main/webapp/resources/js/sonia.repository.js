@@ -801,22 +801,6 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
   initComponent: function(){
 
-    var changesetStore = new Ext.data.JsonStore({
-      id: 'changesetStore',
-      proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'repositories/' + this.repository.id  + '/changesets.json',
-        method: 'GET'
-      }),
-      fields: ['id', 'date', 'author', 'description'],
-      root: 'changesets',
-      idProperty: 'id',
-      totalProperty: 'total',
-      autoLoad: false,
-      autoDestroy: true
-    });
-
-    changesetStore.load({params:{start:0, limit:20}});
-
     var changesetColModel = new Ext.grid.ColumnModel({
       defaults: {
         sortable: false
@@ -835,14 +819,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
       autoExpandColumn: 'changeset',
       height: '100%',
       hideHeaders: true,
-      store: changesetStore,
-      colModel: changesetColModel,
-      bbar: new Ext.PagingToolbar({
-        store: changesetStore,
-        displayInfo: true,
-        pageSize: 20,
-        prependButtons: true
-      })
+      colModel: changesetColModel
     }
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
@@ -870,11 +847,34 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
 
   initComponent: function(){
 
+    var changesetStore = new Ext.data.JsonStore({
+      id: 'changesetStore',
+      proxy: new Ext.data.HttpProxy({
+        url: restUrl + 'repositories/' + this.repository.id  + '/changesets.json',
+        method: 'GET'
+      }),
+      fields: ['id', 'date', 'author', 'description'],
+      root: 'changesets',
+      idProperty: 'id',
+      totalProperty: 'total',
+      autoLoad: false,
+      autoDestroy: true
+    });
+
+    changesetStore.load({params:{start:0, limit:20}});
+
     var config = {
       items: [{
         xtype: 'repositoryChangesetViewerGrid',
-        repository: this.repository
-      }]
+        repository: this.repository,
+        store: changesetStore
+      }, new Ext.PagingToolbar({
+          store: changesetStore,
+          displayInfo: true,
+          pageSize: 20,
+          prependButtons: true
+        })
+      ]
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
