@@ -43,9 +43,11 @@ import sonia.scm.util.Util;
 import java.io.Serializable;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -130,6 +132,12 @@ public class Changeset implements Validateable, Cloneable, Serializable
       return false;
     }
 
+    if ((this.branches != other.branches)
+        && ((this.branches == null) ||!this.branches.equals(other.branches)))
+    {
+      return false;
+    }
+
     if ((this.date != other.date)
         && ((this.date == null) ||!this.date.equals(other.date)))
     {
@@ -150,6 +158,19 @@ public class Changeset implements Validateable, Cloneable, Serializable
       return false;
     }
 
+    if ((this.modifications != other.modifications)
+        && ((this.modifications == null)
+            ||!this.modifications.equals(other.modifications)))
+    {
+      return false;
+    }
+
+    if ((this.tags != other.tags)
+        && ((this.tags == null) ||!this.tags.equals(other.tags)))
+    {
+      return false;
+    }
+
     return true;
   }
 
@@ -164,17 +185,26 @@ public class Changeset implements Validateable, Cloneable, Serializable
   {
     int hash = 7;
 
-    hash = 71 * hash + ((this.author != null)
+    hash = 47 * hash + ((this.author != null)
                         ? this.author.hashCode()
                         : 0);
-    hash = 71 * hash + ((this.date != null)
+    hash = 47 * hash + ((this.branches != null)
+                        ? this.branches.hashCode()
+                        : 0);
+    hash = 47 * hash + ((this.date != null)
                         ? this.date.hashCode()
                         : 0);
-    hash = 71 * hash + ((this.description != null)
+    hash = 47 * hash + ((this.description != null)
                         ? this.description.hashCode()
                         : 0);
-    hash = 71 * hash + ((this.id != null)
+    hash = 47 * hash + ((this.id != null)
                         ? this.id.hashCode()
+                        : 0);
+    hash = 47 * hash + ((this.modifications != null)
+                        ? this.modifications.hashCode()
+                        : 0);
+    hash = 47 * hash + ((this.tags != null)
+                        ? this.tags.hashCode()
                         : 0);
 
     return hash;
@@ -200,6 +230,13 @@ public class Changeset implements Validateable, Cloneable, Serializable
     }
 
     out.append("desc:").append(description).append("\n");
+    out.append("branches: ").append(Util.toString(branches)).append("\n");
+    out.append("tags: ").append(Util.toString(tags)).append("\n");
+
+    if (modifications != null)
+    {
+      out.append("modifications: \n").append(modifications);
+    }
 
     return out.toString();
   }
@@ -215,6 +252,17 @@ public class Changeset implements Validateable, Cloneable, Serializable
   public String getAuthor()
   {
     return author;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<String> getBranches()
+  {
+    return branches;
   }
 
   /**
@@ -256,6 +304,28 @@ public class Changeset implements Validateable, Cloneable, Serializable
    *
    * @return
    */
+  public Modifications getModifications()
+  {
+    return modifications;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<String> getTags()
+  {
+    return tags;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
   public boolean isValid()
   {
@@ -273,6 +343,17 @@ public class Changeset implements Validateable, Cloneable, Serializable
   public void setAuthor(String author)
   {
     this.author = author;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param branches
+   */
+  public void setBranches(List<String> branches)
+  {
+    this.branches = branches;
   }
 
   /**
@@ -308,10 +389,35 @@ public class Changeset implements Validateable, Cloneable, Serializable
     this.id = id;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param modifications
+   */
+  public void setModifications(Modifications modifications)
+  {
+    this.modifications = modifications;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param tags
+   */
+  public void setTags(List<String> tags)
+  {
+    this.tags = tags;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** The author of the changeset */
   private String author;
+
+  /** The tags associated with the changeset */
+  private List<String> branches;
 
   /** The date when the changeset was committed */
   private Long date;
@@ -321,4 +427,11 @@ public class Changeset implements Validateable, Cloneable, Serializable
 
   /** The changeset identification string */
   private String id;
+
+  /** List of files changed by this changeset */
+  @XmlElement(name = "modifications")
+  private Modifications modifications;
+
+  /** The name of the branches on which the changeset was committed. */
+  private List<String> tags;
 }

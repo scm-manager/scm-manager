@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.TimeZone;
 
 /**
@@ -51,6 +52,9 @@ public class Util
 
   /** Field description */
   public static final String DATE_PATTERN = "yyyy-MM-dd HH-mm-ss";
+
+  /** Field description */
+  public static final String EMPTY_STRING = "";
 
   //~--- methods --------------------------------------------------------------
 
@@ -258,6 +262,36 @@ public class Util
   public static Date parseDate(String dateString) throws ParseException
   {
     return parseDate(dateString, null);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param collection
+   *
+   * @return
+   */
+  public static String toString(Collection<? extends Object> collection)
+  {
+    StringBuilder sb = new StringBuilder();
+
+    if (collection != null)
+    {
+      Iterator<? extends Object> it = collection.iterator();
+
+      while (it.hasNext())
+      {
+        sb.append(it.next());
+
+        if (it.hasNext())
+        {
+          sb.append(", ");
+        }
+      }
+    }
+
+    return sb.toString();
   }
 
   /**
