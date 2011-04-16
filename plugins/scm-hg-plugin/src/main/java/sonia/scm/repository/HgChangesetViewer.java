@@ -38,11 +38,13 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import sonia.scm.io.Command;
 import sonia.scm.io.CommandResult;
 import sonia.scm.io.SimpleCommand;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -50,16 +52,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.List;
 
-import java.util.Date;
-import java.util.StringTokenizer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  *
@@ -72,8 +67,20 @@ public class HgChangesetViewer implements ChangesetViewer
   public static final String ID_TIP = "tip";
 
   /** Field description */
+  //J-
   public static final String TEMPLATE_CHANGESETS =
-    "<changeset><id>{rev}:{node|short}</id><author>{author|escape}</author><description>{desc|escape}</description><date>{date|isodatesec}</date></changeset>\n";
+        "<changeset>"
+      +   "<id>{rev}:{node|short}</id>"
+      +   "<author>{author|escape}</author>"
+      +   "<description>{desc|escape}</description>"
+      +   "<date>{date|isodatesec}</date>"
+      +   "<tags>{tags}</tags>"
+      +   "<branches>{branches}</branches>"
+      +   "<files-added>{file_adds}</files-added>"
+      +   "<files-mods>{file_mods}</files-mods>"
+      +   "<files-dels>{file_dels}</files-dels>"
+      + "</changeset>\n";
+  //J+
 
   /** Field description */
   public static final String TEMPLATE_TOTAL = "{rev}";
@@ -81,10 +88,6 @@ public class HgChangesetViewer implements ChangesetViewer
   /** the logger for HgChangesetViewer */
   private static final Logger logger =
     LoggerFactory.getLogger(HgChangesetViewer.class);
-
-  /** Field description */
-  public static final Pattern REGEX_DATE =
-    Pattern.compile("<date>([^<]+)</date>");
 
   //~--- constructors ---------------------------------------------------------
 
@@ -138,36 +141,26 @@ public class HgChangesetViewer implements ChangesetViewer
 
       if (result.isSuccessfull())
       {
-        StringReader reader =
-          new StringReader(getFixedOutput(result.getOutput()));
-        Unmarshaller unmarshaller = handler.createChangesetUnmarshaller();
-        Changesets cs = (Changesets) unmarshaller.unmarshal(reader);
+        StringBuilder sb = new StringBuilder("<changesets>");
 
-        if ((cs != null) && Util.isNotEmpty(cs.getChangesets()))
-        {
-          changesets = new ChangesetPagingResult(total, cs.getChangesets());
-        }
-        else if (logger.isWarnEnabled())
-        {
-          logger.warn("could not find any changeset from {} to {}", start,
-                      start + max);
-        }
-      }
-      else
-      {
-        logger.error("could not load changesets, hg return code: {}\n{}",
-                     result.getReturnCode(), result.getOutput());
+        sb.append(result.getOutput()).append("</changesets>");
+
+        List<Changeset> changesetList = new HgChangesetParser().parse(
+                                          new InputSource(
+                                            new StringReader(sb.toString())));
+
+        changesets = new ChangesetPagingResult(total, changesetList);
       }
     }
-    catch (ParseException ex)
+    catch (ParserConfigurationException ex)
     {
-      logger.error("could not parse changeset dates", ex);
+      logger.error("could not parse changesets", ex);
     }
     catch (IOException ex)
     {
       logger.error("could not load changesets", ex);
     }
-    catch (JAXBException ex)
+    catch (SAXException ex)
     {
       logger.error("could not unmarshall changesets", ex);
     }
@@ -177,44 +170,6 @@ public class HgChangesetViewer implements ChangesetViewer
     }
 
     return changesets;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param output
-   *
-   * @return
-   *
-   * @throws ParseException
-   */
-  private String getFixedOutput(String output) throws ParseException
-  {
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
-    StringBuilder changesetLog = new StringBuilder("<changesets>");
-    StringTokenizer st = new StringTokenizer(output, "\n");
-
-    while (st.hasMoreElements())
-    {
-      String line = st.nextToken();
-      Matcher m = REGEX_DATE.matcher(line);
-
-      if (m.find())
-      {
-        String dateString = m.group(1);
-        Date date = sdf.parse(dateString);
-
-        line = m.replaceAll(
-          "<date>".concat(Long.toString(date.getTime())).concat("</date>"));
-      }
-
-      changesetLog.append(line);
-    }
-
-    changesetLog.append("</changesets>");
-
-    return changesetLog.toString();
   }
 
   /**

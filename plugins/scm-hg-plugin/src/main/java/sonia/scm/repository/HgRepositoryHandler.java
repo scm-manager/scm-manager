@@ -40,7 +40,6 @@ import com.google.inject.Singleton;
 
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.ConfigurationException;
 import sonia.scm.Type;
 import sonia.scm.installer.HgInstaller;
 import sonia.scm.installer.UnixHgInstaller;
@@ -62,8 +61,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 
 /**
  *
@@ -101,16 +98,6 @@ public class HgRepositoryHandler
   public HgRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem)
   {
     super(storeFactory, fileSystem);
-
-    try
-    {
-      changesetContext = JAXBContext.newInstance(Changesets.class);
-    }
-    catch (JAXBException ex)
-    {
-      throw new ConfigurationException(
-          "could not create JAXBContext for Changesets-Class", ex);
-    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -235,29 +222,6 @@ public class HgRepositoryHandler
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  Unmarshaller createChangesetUnmarshaller()
-  {
-    Unmarshaller unmarshaller = null;
-
-    try
-    {
-      unmarshaller = changesetContext.createUnmarshaller();
-    }
-    catch (JAXBException ex)
-    {
-      throw new ConfigurationException(
-          "could not create Unmarshaller for Changeset-Class", ex);
-    }
-
-    return unmarshaller;
-  }
 
   /**
    * Method description
