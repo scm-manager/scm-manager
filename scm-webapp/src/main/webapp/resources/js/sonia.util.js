@@ -50,24 +50,49 @@
     return result;
   },
 
+  // TODO i18n
+  timeAgoJustNow: 'just now',
+  timeAgoOneMinuteAgo: '1 minute ago',
+  timeAgoOneMinuteFromNow: '1 minute from now',
+  timeAgoMinutes: 'minutes',
+  timeAgoOneHourAgo: '1 hour ago',
+  timeAgoOneHourFromNow: '1 hour from now',
+  timeAgoHours: 'hours',
+  timeAgoYesterday: 'yesterday',
+  timeAgoTomorrow: 'tomorrow',
+  timeAgoDays: 'days',
+  timeAgoLastWeek: 'last week',
+  timeAgoNextWeek: 'next week',
+  timeAgoWeeks: 'weeks',
+  timeAgoLastMonth: 'last month',
+  timeAgoNextMonth: 'next month',
+  timeAgoMonths: 'months',
+  timeAgoLastYear: 'last year',
+  timeAgoNextYear: 'next year',
+  timeAgoYears: 'years',
+  timeAgoLastCentury: 'last century',
+  timeAgoNextCentury: 'next century',
+  timeAgoCenturies: 'centuries',
+
+
   timeAgo : function(value){
 
     var time_formats = [
-      [60, 'just now', 1], // 60
-      [120, '1 minute ago', '1 minute from now'], // 60*2
-      [3600, 'minutes', 60], // 60*60, 60
-      [7200, '1 hour ago', '1 hour from now'], // 60*60*2
-      [86400, 'hours', 3600], // 60*60*24, 60*60
-      [172800, 'yesterday', 'tomorrow'], // 60*60*24*2
-      [604800, 'days', 86400], // 60*60*24*7, 60*60*24
-      [1209600, 'last week', 'next week'], // 60*60*24*7*4*2
-      [2419200, 'weeks', 604800], // 60*60*24*7*4, 60*60*24*7
-      [4838400, 'last month', 'next month'], // 60*60*24*7*4*2
-      [29030400, 'months', 2419200], // 60*60*24*7*4*12, 60*60*24*7*4
-      [58060800, 'last year', 'next year'], // 60*60*24*7*4*12*2
-      [2903040000, 'years', 29030400], // 60*60*24*7*4*12*100, 60*60*24*7*4*12
-      [5806080000, 'last century', 'next century'], // 60*60*24*7*4*12*100*2
-      [58060800000, 'centuries', 2903040000] // 60*60*24*7*4*12*100*20, 60*60*24*7*4*12*100
+      [60, this.timeAgoJustNow, 1], // 60
+      [120, this.timeAgoOneMinuteAgo, this.timeAgoOneMinuteFromNow ], // 60*2
+      [3600, this.timeAgoMinutes, 60], // 60*60, 60
+      [7200, this.timeAgoOneHourAgo, this.timeAgoOneHourFromNow ], // 60*60*2
+      [86400, this.timeAgoHours, 3600], // 60*60*24, 60*60
+      [172800, this.timeAgoYesterday, this.timeAgoTomorrow ], // 60*60*24*2
+      [604800, this.timeAgoDays, 86400], // 60*60*24*7, 60*60*24
+      [1209600, this.timeAgoLastWeek, this.timeAgoNextWeek], // 60*60*24*7*4*2
+      [2419200, this.timeAgoWeeks, 604800], // 60*60*24*7*4, 60*60*24*7
+      [4838400, this.timeAgoLastMonth, this.timeAgoNextMonth], // 60*60*24*7*4*2
+      [29030400, this.timeAgoMonths, 2419200], // 60*60*24*7*4*12, 60*60*24*7*4
+      [58060800, this.timeAgoLastYear, this.timeAgoNextYear], // 60*60*24*7*4*12*2
+      [2903040000, this.timeAgoYears, 29030400], // 60*60*24*7*4*12*100, 60*60*24*7*4*12
+      [5806080000, this.timeAgoLastCentury, this.timeAgoNextCentury], // 60*60*24*7*4*12*100*2
+      [58060800000, this.timeAgoCenturies, 2903040000] // 60*60*24*7*4*12*100*20, 60*60*24*7*4*12*100
     ];
 
     var date = value;
