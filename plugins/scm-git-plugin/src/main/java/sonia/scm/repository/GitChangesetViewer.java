@@ -37,10 +37,13 @@ package sonia.scm.repository;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.treewalk.EmptyTreeIterator;
+import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.FS;
 
 import org.slf4j.Logger;
@@ -107,17 +110,19 @@ public class GitChangesetViewer implements ChangesetViewer
         Git git = new Git(gr);
         List<Changeset> changesetList = new ArrayList<Changeset>();
         int counter = 0;
+        TreeWalk treeWalk = new TreeWalk(gr);
 
         for (RevCommit commit : git.log().call())
         {
           if ((counter >= start) && (counter < start + max))
           {
-            changesetList.add(createChangeset(commit));
+            changesetList.add(createChangeset(treeWalk, commit));
           }
 
           counter++;
         }
 
+        treeWalk.release();
         changesets = new ChangesetPagingResult(counter, changesetList);
       }
     }
@@ -143,14 +148,62 @@ public class GitChangesetViewer implements ChangesetViewer
   //~--- methods --------------------------------------------------------------
 
   /**
+   * TODO: copy and rename
+   *
+   *
+   * @param modifications
+   * @param entry
+   */
+  private void appendModification(Modifications modifications, DiffEntry entry)
+  {
+    switch (entry.getChangeType())
+    {
+      case ADD :
+        if (modifications.getAdded() == null)
+        {
+          modifications.setAdded(new ArrayList<String>());
+        }
+
+        modifications.getAdded().add(entry.getNewPath());
+
+        break;
+
+      case MODIFY :
+        if (modifications.getModified() == null)
+        {
+          modifications.setModified(new ArrayList<String>());
+        }
+
+        modifications.getModified().add(entry.getNewPath());
+
+        break;
+
+      case DELETE :
+        if (modifications.getRemoved() == null)
+        {
+          modifications.setRemoved(new ArrayList<String>());
+        }
+
+        modifications.getRemoved().add(entry.getNewPath());
+
+        break;
+    }
+  }
+
+  /**
    * Method description
    *
    *
+   *
+   * @param treeWalk
    * @param commit
    *
    * @return
+   *
+   * @throws IOException
    */
-  private Changeset createChangeset(RevCommit commit)
+  private Changeset createChangeset(TreeWalk treeWalk, RevCommit commit)
+          throws IOException
   {
     String id = commit.getName();
     long date = commit.getCommitTime();
@@ -165,9 +218,64 @@ public class GitChangesetViewer implements ChangesetViewer
       author = person.getName();
     }
 
-    String message = commit.getFullMessage();
+    String message = commit.getShortMessage();
+    Changeset changeset = new Changeset(id, date, author, message);
+    Modifications modifications = createModifications(treeWalk, commit);
 
-    return new Changeset(id, date, author, message);
+    if (modifications != null)
+    {
+      changeset.setModifications(modifications);
+    }
+
+    return changeset;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param treeWalk
+   * @param commit
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private Modifications createModifications(TreeWalk treeWalk, RevCommit commit)
+          throws IOException
+  {
+    Modifications modifications = null;
+
+    treeWalk.reset();
+    treeWalk.setRecursive(true);
+
+    if (commit.getParentCount() > 0)
+    {
+      treeWalk.addTree(commit.getParent(0).getTree());
+    }
+    else
+    {
+      treeWalk.addTree(new EmptyTreeIterator());
+    }
+
+    treeWalk.addTree(commit.getTree());
+
+    List<DiffEntry> entries = DiffEntry.scan(treeWalk);
+
+    for (DiffEntry e : entries)
+    {
+      if (!e.getOldId().equals(e.getNewId()))
+      {
+        if (modifications == null)
+        {
+          modifications = new Modifications();
+        }
+
+        appendModification(modifications, e);
+      }
+    }
+
+    return modifications;
   }
 
   //~--- fields ---------------------------------------------------------------
