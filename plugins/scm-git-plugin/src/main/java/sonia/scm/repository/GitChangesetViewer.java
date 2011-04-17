@@ -184,7 +184,7 @@ public class GitChangesetViewer implements ChangesetViewer
           modifications.setRemoved(new ArrayList<String>());
         }
 
-        modifications.getRemoved().add(entry.getNewPath());
+        modifications.getRemoved().add(entry.getOldPath());
 
         break;
     }
