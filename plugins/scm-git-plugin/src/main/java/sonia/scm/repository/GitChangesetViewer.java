@@ -38,7 +38,9 @@ package sonia.scm.repository;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -55,7 +57,9 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -111,12 +115,13 @@ public class GitChangesetViewer implements ChangesetViewer
         List<Changeset> changesetList = new ArrayList<Changeset>();
         int counter = 0;
         TreeWalk treeWalk = new TreeWalk(gr);
+        Map<ObjectId, String> tags = createTagMap(gr);
 
         for (RevCommit commit : git.log().call())
         {
           if ((counter >= start) && (counter < start + max))
           {
-            changesetList.add(createChangeset(treeWalk, commit));
+            changesetList.add(createChangeset(treeWalk, tags, commit));
           }
 
           counter++;
@@ -196,13 +201,16 @@ public class GitChangesetViewer implements ChangesetViewer
    *
    *
    * @param treeWalk
+   * @param tags
    * @param commit
    *
    * @return
    *
    * @throws IOException
    */
-  private Changeset createChangeset(TreeWalk treeWalk, RevCommit commit)
+  private Changeset createChangeset(TreeWalk treeWalk,
+                                    Map<ObjectId, String> tags,
+                                    RevCommit commit)
           throws IOException
   {
     String id = commit.getName();
@@ -225,6 +233,21 @@ public class GitChangesetViewer implements ChangesetViewer
     if (modifications != null)
     {
       changeset.setModifications(modifications);
+    }
+
+    String tag = tags.get(commit.getId());
+
+    if (tag != null)
+    {
+      List<String> tagList = changeset.getTags();
+
+      if (tagList == null)
+      {
+        tagList = new ArrayList<String>();
+        changeset.setTags(tagList);
+      }
+
+      changeset.getTags().add(tag);
     }
 
     return changeset;
@@ -276,6 +299,31 @@ public class GitChangesetViewer implements ChangesetViewer
     }
 
     return modifications;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  private Map<ObjectId,
+              String> createTagMap(org.eclipse.jgit.lib.Repository repository)
+  {
+    Map<ObjectId, String> tagMap = new HashMap<ObjectId, String>();
+    Map<String, Ref> tags = repository.getTags();
+
+    if (tags != null)
+    {
+      for (Map.Entry<String, Ref> e : tags.entrySet())
+      {
+        tagMap.put(e.getValue().getObjectId(), e.getKey());
+      }
+    }
+
+    return tagMap;
   }
 
   //~--- fields ---------------------------------------------------------------
