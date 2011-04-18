@@ -42,6 +42,7 @@ import sonia.scm.util.Util;
 
 import java.io.Serializable;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -262,6 +263,11 @@ public class Changeset implements Validateable, Cloneable, Serializable
    */
   public List<String> getBranches()
   {
+    if (branches == null)
+    {
+      branches = new ArrayList<String>();
+    }
+
     return branches;
   }
 
@@ -306,6 +312,11 @@ public class Changeset implements Validateable, Cloneable, Serializable
    */
   public Modifications getModifications()
   {
+    if (modifications == null)
+    {
+      modifications = new Modifications();
+    }
+
     return modifications;
   }
 
@@ -317,6 +328,11 @@ public class Changeset implements Validateable, Cloneable, Serializable
    */
   public List<String> getTags()
   {
+    if (tags == null)
+    {
+      tags = new ArrayList<String>();
+    }
+
     return tags;
   }
 

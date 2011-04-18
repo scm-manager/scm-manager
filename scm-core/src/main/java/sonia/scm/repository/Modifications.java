@@ -39,10 +39,11 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -199,6 +200,11 @@ public class Modifications
    */
   public List<String> getAdded()
   {
+    if (added == null)
+    {
+      added = new ArrayList<String>();
+    }
+
     return added;
   }
 
@@ -210,6 +216,11 @@ public class Modifications
    */
   public List<String> getModified()
   {
+    if (modified == null)
+    {
+      modified = new ArrayList<String>();
+    }
+
     return modified;
   }
 
@@ -221,6 +232,11 @@ public class Modifications
    */
   public List<String> getRemoved()
   {
+    if (removed == null)
+    {
+      removed = new ArrayList<String>();
+    }
+
     return removed;
   }
 
