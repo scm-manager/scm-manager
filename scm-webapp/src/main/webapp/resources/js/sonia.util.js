@@ -168,5 +168,18 @@ Sonia.util.Link = Ext.extend(Ext.BoxComponent, {
 });
 
 // register xtype
-
 Ext.reg('link', Sonia.util.Link);
+
+Sonia.util.getStringFromArray = function(array){
+  var value = '';
+  if ( Ext.isArray(array) ){
+    for ( var i=0; i<array.length; i++ ){
+      value += array[i];
+      if ( (i+1)<array.length ){
+        value += ', ';
+      }
+    }
+  }
+
+  return value;
+}

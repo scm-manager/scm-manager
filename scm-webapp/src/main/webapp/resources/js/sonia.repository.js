@@ -814,7 +814,14 @@ Ext.reg('repositoryPanel', Sonia.repository.Panel);
 Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
   repository: null,
-  changesetTemplate: '<div><b>{id}</b>: {description:htmlEncode}</div><div>{author:htmlEncode}</div><div>{date:formatTimestamp}</div>',
+  changesetMetadataTemplate: '<div class="changeset-description">{description:htmlEncode}</div>\
+                              <div class="changeset-author">{author:htmlEncode}</div>\
+                              <div class="changeset-date">{date:formatTimestamp}</div>',
+  modificationsTemplate: 'A: {0}, M: {1}, D: {2}',
+  idsTemplate: 'Commit: {0}',
+  tagsAndBranchesTemplate: '<div class="changeset-tags">{0}</div>\
+                            <div class="changeset-branches">{1}</div>',
+  
 
   initComponent: function(){
 
@@ -823,17 +830,33 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
         sortable: false
       },
       columns: [{
-        id: 'changeset',
-        dataIndex: 'id',
+        id: 'metadata',
         xtype: 'templatecolumn',
-        tpl: this.changesetTemplate
+        dataIndex: 'author',
+        tpl: this.changesetMetadataTemplate
+      },{
+        id: 'tagsAndBranches',
+        renderer: this.renderTagsAndBranches,
+        scope: this
+      },{
+        id: 'modifications',
+        dataIndex: 'modifications',
+        renderer: this.renderModifications,
+        scope: this,
+        width: 100
+      },{
+        id: 'ids',
+        dataIndex: 'id',
+        renderer: this.renderIds,
+        scope: this,
+        width: 180
       }]
     });
 
     var config = {
       header: false,
       autoScroll: true,
-      autoExpandColumn: 'changeset',
+      autoExpandColumn: 'metadata',
       height: '100%',
       hideHeaders: true,
       colModel: changesetColModel
@@ -843,14 +866,40 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
     Sonia.repository.ChangesetViewerGrid.superclass.initComponent.apply(this, arguments);
   },
 
-  renderChangeset: function(value, p, record){
-    var data = record.data;
-    return String.format(
-      this.changesetTemplate,
-      value, data.date,
-      Ext.util.Format.htmlEncode(data.author),
-      Ext.util.Format.htmlEncode(data.description)
-    );
+  renderTagsAndBranches: function(value, p, record){
+    var tags = this.getLabeledValue("Tags", record.data.tags);
+    var branches = this.getLabeledValue("Branches", record.data.branches);
+    return String.format(this.tagsAndBranchesTemplate, tags, branches);
+  },
+
+  getLabeledValue: function(label, array){
+    var result = '';
+    if ( array != null && array.length > 0 ){
+      result = label + ': ' + Sonia.util.getStringFromArray(array);
+    }
+    return result;
+  },
+
+  renderIds: function(value){
+    return String.format(this.idsTemplate, value);
+  },
+
+  renderModifications: function(value){
+    var added = 0;
+    var modified = 0;
+    var removed = 0;
+    if ( Ext.isDefined(value) ){
+      if ( Ext.isDefined(value.added) ){
+        added = value.added.length;
+      }
+      if ( Ext.isDefined(value.modified) ){
+        modified = value.modified.length;
+      }
+      if ( Ext.isDefined(value.removed) ){
+        removed = value.removed.length;
+      }
+    }
+    return String.format(this.modificationsTemplate, added, modified, removed);
   }
 
 });
@@ -870,7 +919,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
         url: restUrl + 'repositories/' + this.repository.id  + '/changesets.json',
         method: 'GET'
       }),
-      fields: ['id', 'date', 'author', 'description'],
+      fields: ['id', 'date', 'author', 'description', 'modifications', 'tags', 'branches'],
       root: 'changesets',
       idProperty: 'id',
       totalProperty: 'total',
