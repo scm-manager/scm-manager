@@ -38,6 +38,7 @@ package sonia.scm.repository;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
+import sonia.scm.xml.XmlMapStringAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -45,12 +46,15 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -327,6 +331,22 @@ public class Changeset implements Validateable, Cloneable, Serializable
    *
    * @return
    */
+  public Map<String, String> getProperties()
+  {
+    if (properties == null)
+    {
+      properties = new HashMap<String, String>();
+    }
+
+    return properties;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public List<String> getTags()
   {
     if (tags == null)
@@ -422,6 +442,17 @@ public class Changeset implements Validateable, Cloneable, Serializable
    * Method description
    *
    *
+   * @param properties
+   */
+  public void setProperties(Map<String, String> properties)
+  {
+    this.properties = properties;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param tags
    */
   public void setTags(List<String> tags)
@@ -449,6 +480,10 @@ public class Changeset implements Validateable, Cloneable, Serializable
   /** List of files changed by this changeset */
   @XmlElement(name = "modifications")
   private Modifications modifications;
+
+  /** changeset properties */
+  @XmlJavaTypeAdapter(XmlMapStringAdapter.class)
+  private Map<String, String> properties;
 
   /** The name of the branches on which the changeset was committed. */
   private List<String> tags;
