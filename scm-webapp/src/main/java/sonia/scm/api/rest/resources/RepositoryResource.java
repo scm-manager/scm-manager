@@ -40,7 +40,9 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.repository.ChangesetViewer;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
@@ -50,12 +52,14 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -92,18 +96,21 @@ public class RepositoryResource
    * @param repositoryManager
    * @param securityContextProvider
    * @param requestProvider
+   * @param changesetPreProcessorSet
    */
   @Inject
   public RepositoryResource(
           ScmConfiguration configuration, RepositoryManager repositoryManager,
           Provider<WebSecurityContext> securityContextProvider,
-          Provider<HttpServletRequest> requestProvider)
+          Provider<HttpServletRequest> requestProvider,
+          Set<ChangesetPreProcessor> changesetPreProcessorSet)
   {
     super(repositoryManager);
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.securityContextProvider = securityContextProvider;
     this.requestProvider = requestProvider;
+    this.changesetPreProcessorSet = changesetPreProcessorSet;
     setDisableCache(false);
   }
 
@@ -124,10 +131,9 @@ public class RepositoryResource
   @GET
   @Path("{id}/changesets")
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response getChangesets(@PathParam("id") String id, 
-                                @DefaultValue("0") @QueryParam("start") int start,
-                                @DefaultValue("20") @QueryParam("limit") int limit)
-                                throws RepositoryException
+  public Response getChangesets(@PathParam("id") String id, @DefaultValue("0")
+  @QueryParam("start") int start, @DefaultValue("20")
+  @QueryParam("limit") int limit) throws RepositoryException
   {
     Response response = null;
     Repository repository = repositoryManager.get(id);
@@ -142,6 +148,7 @@ public class RepositoryResource
         ChangesetPagingResult changesets = changesetViewer.getChangesets(start,
                                              limit);
 
+        callPreProcessors(changesets);
         response = Response.ok(changesets).build();
       }
       else
@@ -279,6 +286,27 @@ public class RepositoryResource
    * Method description
    *
    *
+   * @param changesets
+   */
+  private void callPreProcessors(ChangesetPagingResult changesets)
+  {
+    if (Util.isNotEmpty(changesetPreProcessorSet)
+        && Util.isNotEmpty(changesets.getChangesets()))
+    {
+      for (Changeset c : changesets.getChangesets())
+      {
+        for (ChangesetPreProcessor cpp : changesetPreProcessorSet)
+        {
+          cpp.process(c);
+        }
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repository
    */
   private void prepareRepository(Repository repository)
@@ -313,6 +341,9 @@ public class RepositoryResource
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Set<ChangesetPreProcessor> changesetPreProcessorSet;
 
   /** Field description */
   private ScmConfiguration configuration;
