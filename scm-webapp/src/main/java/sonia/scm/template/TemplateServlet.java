@@ -64,6 +64,12 @@ public class TemplateServlet extends HttpServlet
 {
 
   /** Field description */
+  public static final String CONTENT_TYPE = "text/html";
+
+  /** Field description */
+  public static final String ENCODING = "UTF-8";
+
+  /** Field description */
   private static final long serialVersionUID = 3578555653924091546L;
 
   //~--- constructors ---------------------------------------------------------
@@ -132,6 +138,8 @@ public class TemplateServlet extends HttpServlet
 
     try
     {
+      response.setCharacterEncoding(ENCODING);
+      response.setContentType(CONTENT_TYPE);
       writer = response.getWriter();
       templateHandler.render(templateName, writer, params);
     }
