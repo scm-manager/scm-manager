@@ -68,6 +68,9 @@ import java.util.Map;
 public class GitChangesetViewer implements ChangesetViewer
 {
 
+  /** Field description */
+  public static final int ID_LENGTH = 20;
+
   /** the logger for GitChangesetViewer */
   private static final Logger logger =
     LoggerFactory.getLogger(GitChangesetViewer.class);
@@ -169,13 +172,11 @@ public class GitChangesetViewer implements ChangesetViewer
         break;
 
       case MODIFY :
-
         modifications.getModified().add(entry.getNewPath());
 
         break;
 
       case DELETE :
-
         modifications.getRemoved().add(entry.getOldPath());
 
         break;
@@ -200,7 +201,7 @@ public class GitChangesetViewer implements ChangesetViewer
                                     RevCommit commit)
           throws IOException
   {
-    String id = commit.getName();
+    String id = commit.getId().abbreviate(ID_LENGTH).name();
     long date = commit.getCommitTime();
 
     date = date * 1000;
