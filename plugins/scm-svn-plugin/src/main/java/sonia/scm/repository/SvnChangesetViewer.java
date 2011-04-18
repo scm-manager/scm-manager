@@ -179,7 +179,8 @@ public class SvnChangesetViewer implements ChangesetViewer
   private Changeset createChangeset(SVNLogEntry entry)
   {
     Changeset changeset = new Changeset(String.valueOf(entry.getRevision()),
-                            entry.getDate().getTime(), entry.getAuthor(),
+                            entry.getDate().getTime(),
+                            Person.toPerson(entry.getAuthor()),
                             entry.getMessage());
     Map<String, SVNLogEntryPath> changeMap = entry.getChangedPaths();
 

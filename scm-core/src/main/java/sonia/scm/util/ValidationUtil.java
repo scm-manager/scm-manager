@@ -33,6 +33,10 @@
 
 package sonia.scm.util;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.Validateable;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -106,5 +110,18 @@ public class ValidationUtil
     }
 
     return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param validateable
+   *
+   * @return
+   */
+  public static boolean isValid(Validateable validateable)
+  {
+    return (validateable != null) && validateable.isValid();
   }
 }

@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
+import sonia.scm.util.ValidationUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -79,7 +80,7 @@ public class Changeset implements Validateable, Cloneable, Serializable
    * @param date
    * @param author
    */
-  public Changeset(String id, Long date, String author)
+  public Changeset(String id, Long date, Person author)
   {
     this(id, date, author, null);
   }
@@ -93,7 +94,7 @@ public class Changeset implements Validateable, Cloneable, Serializable
    * @param author
    * @param description
    */
-  public Changeset(String id, Long date, String author, String description)
+  public Changeset(String id, Long date, Person author, String description)
   {
     this.id = id;
     this.date = date;
@@ -250,7 +251,7 @@ public class Changeset implements Validateable, Cloneable, Serializable
    *
    * @return
    */
-  public String getAuthor()
+  public Person getAuthor()
   {
     return author;
   }
@@ -345,7 +346,8 @@ public class Changeset implements Validateable, Cloneable, Serializable
   @Override
   public boolean isValid()
   {
-    return Util.isNotEmpty(id) && Util.isNotEmpty(author) && (date != null);
+    return Util.isNotEmpty(id) && ValidationUtil.isValid(author)
+           && (date != null);
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -356,7 +358,7 @@ public class Changeset implements Validateable, Cloneable, Serializable
    *
    * @param author
    */
-  public void setAuthor(String author)
+  public void setAuthor(Person author)
   {
     this.author = author;
   }
@@ -430,7 +432,7 @@ public class Changeset implements Validateable, Cloneable, Serializable
   //~--- fields ---------------------------------------------------------------
 
   /** The author of the changeset */
-  private String author;
+  private Person author;
 
   /** The tags associated with the changeset */
   private List<String> branches;

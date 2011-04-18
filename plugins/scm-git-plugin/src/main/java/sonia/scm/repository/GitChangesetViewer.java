@@ -206,14 +206,9 @@ public class GitChangesetViewer implements ChangesetViewer
 
     date = date * 1000;
 
-    String author = null;
-    PersonIdent person = commit.getCommitterIdent();
-
-    if (person != null)
-    {
-      author = person.getName();
-    }
-
+    PersonIdent authorIndent = commit.getCommitterIdent();
+    Person author = new Person(authorIndent.getName(),
+                               authorIndent.getEmailAddress());
     String message = commit.getShortMessage();
     Changeset changeset = new Changeset(id, date, author, message);
     Modifications modifications = createModifications(treeWalk, commit);

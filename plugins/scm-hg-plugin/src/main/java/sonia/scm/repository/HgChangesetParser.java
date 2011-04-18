@@ -147,7 +147,7 @@ public class HgChangesetParser
       }
       else if ("author".equals(name))
       {
-        changeset.setAuthor(value);
+        changeset.setAuthor(Person.toPerson(value));
       }
       else if ("description".equals(name))
       {

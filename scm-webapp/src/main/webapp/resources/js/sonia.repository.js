@@ -814,9 +814,10 @@ Ext.reg('repositoryPanel', Sonia.repository.Panel);
 Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
   repository: null,
-  changesetMetadataTemplate: '<div class="changeset-description">{description:htmlEncode}</div>\
-                              <div class="changeset-author">{author:htmlEncode}</div>\
-                              <div class="changeset-date">{date:formatTimestamp}</div>',
+  mailTemplate: '&lt;<a href="mailto: {0}">{0}</a>&gt;',
+  changesetMetadataTemplate: '<div class="changeset-description">{0}</div>\
+                              <div class="changeset-author">{1}</div>\
+                              <div class="changeset-date">{2}</div>',
   modificationsTemplate: 'A: {0}, M: {1}, D: {2}',
   idsTemplate: 'Commit: {0}',
   tagsAndBranchesTemplate: '<div class="changeset-tags">{0}</div>\
@@ -831,9 +832,9 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
       },
       columns: [{
         id: 'metadata',
-        xtype: 'templatecolumn',
         dataIndex: 'author',
-        tpl: this.changesetMetadataTemplate
+        renderer: this.renderChangesetMetadata,
+        scope: this
       },{
         id: 'tagsAndBranches',
         renderer: this.renderTagsAndBranches,
@@ -865,6 +866,30 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ChangesetViewerGrid.superclass.initComponent.apply(this, arguments);
+  },
+
+  renderChangesetMetadata: function(author, p, record){
+    var authorValue = '';
+    if ( author != null ){
+      authorValue = Ext.util.Format.htmlEncode(author.name);
+      if ( author.mail != null ){
+        authorValue += ' ' + String.format(this.mailTemplate, author.mail);
+      }
+    }
+    var description = record.data.description;
+    if ( description != null ){
+      description = Ext.util.Format.htmlEncode(description);
+    }
+    var date = record.data.date;
+    if ( date != null ){
+      date = Ext.util.Format.formatTimestamp(date);
+    }
+    return String.format(
+      this.changesetMetadataTemplate,
+      description,
+      authorValue,
+      date
+    );
   },
 
   renderTagsAndBranches: function(value, p, record){
