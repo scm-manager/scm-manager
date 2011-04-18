@@ -910,6 +910,7 @@ Ext.reg('repositoryChangesetViewerGrid', Sonia.repository.ChangesetViewerGrid);
 Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
 
   repository: null,
+  pageSize: 20,
 
   initComponent: function(){
 
@@ -927,20 +928,25 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
       autoDestroy: true
     });
 
-    changesetStore.load({params:{start:0, limit:20}});
+    changesetStore.load({
+      params: {
+        start:0,
+        limit: this.pageSize
+      }
+    });
 
     var config = {
       items: [{
         xtype: 'repositoryChangesetViewerGrid',
         repository: this.repository,
         store: changesetStore
-      }, new Ext.PagingToolbar({
-          store: changesetStore,
-          displayInfo: true,
-          pageSize: 20,
-          prependButtons: true
-        })
-      ]
+      }, {
+        xtype: 'paging',
+        store: changesetStore,
+        displayInfo: true,
+        pageSize: this.pageSize,
+        prependButtons: true
+      }]
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
