@@ -40,9 +40,12 @@ import org.slf4j.LoggerFactory;
 
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLogEntry;
+import org.tmatesoft.svn.core.SVNLogEntryPath;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
+
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -51,6 +54,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -135,6 +139,35 @@ public class SvnChangesetViewer implements ChangesetViewer
   //~--- methods --------------------------------------------------------------
 
   /**
+   * TODO: type replaced
+   *
+   *
+   * @param modifications
+   * @param entry
+   */
+  private void appendModification(Modifications modifications,
+                                  SVNLogEntryPath entry)
+  {
+    switch (entry.getType())
+    {
+      case SVNLogEntryPath.TYPE_ADDED :
+        modifications.getAdded().add(entry.getPath());
+
+        break;
+
+      case SVNLogEntryPath.TYPE_DELETED :
+        modifications.getRemoved().add(entry.getPath());
+
+        break;
+
+      case SVNLogEntryPath.TYPE_MODIFIED :
+        modifications.getModified().add(entry.getPath());
+
+        break;
+    }
+  }
+
+  /**
    * Method description
    *
    *
@@ -142,11 +175,25 @@ public class SvnChangesetViewer implements ChangesetViewer
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   private Changeset createChangeset(SVNLogEntry entry)
   {
-    return new Changeset(String.valueOf(entry.getRevision()),
-                         entry.getDate().getTime(), entry.getAuthor(),
-                         entry.getMessage());
+    Changeset changeset = new Changeset(String.valueOf(entry.getRevision()),
+                            entry.getDate().getTime(), entry.getAuthor(),
+                            entry.getMessage());
+    Map<String, SVNLogEntryPath> changeMap = entry.getChangedPaths();
+
+    if (Util.isNotEmpty(changeMap))
+    {
+      Modifications modifications = changeset.getModifications();
+
+      for (SVNLogEntryPath e : changeMap.values())
+      {
+        appendModification(modifications, e);
+      }
+    }
+
+    return changeset;
   }
 
   //~--- fields ---------------------------------------------------------------

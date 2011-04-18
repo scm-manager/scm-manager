@@ -41,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.TimeZone;
 
 /**
@@ -353,6 +354,20 @@ public class Util
    * Method description
    *
    *
+   *
+   * @param map
+   *
+   * @return
+   */
+  public static boolean isEmpty(Map<?, ?> map)
+  {
+    return (map == null) || map.isEmpty();
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param array
    *
    * @return
@@ -402,6 +417,20 @@ public class Util
   public static boolean isNotEmpty(Collection<?> collection)
   {
     return (collection != null) &&!collection.isEmpty();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param map
+   *
+   * @return
+   */
+  public static boolean isNotEmpty(Map<?, ?> map)
+  {
+    return (map != null) &&!map.isEmpty();
   }
 
   /**
