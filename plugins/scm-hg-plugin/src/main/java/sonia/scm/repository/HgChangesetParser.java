@@ -176,15 +176,15 @@ public class HgChangesetParser
       }
       else if ("files-added".equals(name))
       {
-        getModifications(changeset).setAdded(getList(value));
+        changeset.getModifications().setAdded(getList(value));
       }
       else if ("files-mods".equals(name))
       {
-        getModifications(changeset).setModified(getList(value));
+        changeset.getModifications().setModified(getList(value));
       }
       else if ("files-dels".equals(name))
       {
-        getModifications(changeset).setRemoved(getList(value));
+        changeset.getModifications().setRemoved(getList(value));
       }
     }
   }
@@ -228,27 +228,6 @@ public class HgChangesetParser
   private List<String> getList(String value)
   {
     return Arrays.asList(value.split(" "));
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param changeset
-   *
-   * @return
-   */
-  private Modifications getModifications(Changeset changeset)
-  {
-    Modifications mods = changeset.getModifications();
-
-    if (mods == null)
-    {
-      mods = new Modifications();
-      changeset.setModifications(mods);
-    }
-
-    return mods;
   }
 
   //~--- fields ---------------------------------------------------------------

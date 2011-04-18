@@ -164,30 +164,17 @@ public class GitChangesetViewer implements ChangesetViewer
     switch (entry.getChangeType())
     {
       case ADD :
-        if (modifications.getAdded() == null)
-        {
-          modifications.setAdded(new ArrayList<String>());
-        }
-
         modifications.getAdded().add(entry.getNewPath());
 
         break;
 
       case MODIFY :
-        if (modifications.getModified() == null)
-        {
-          modifications.setModified(new ArrayList<String>());
-        }
 
         modifications.getModified().add(entry.getNewPath());
 
         break;
 
       case DELETE :
-        if (modifications.getRemoved() == null)
-        {
-          modifications.setRemoved(new ArrayList<String>());
-        }
 
         modifications.getRemoved().add(entry.getOldPath());
 
@@ -239,14 +226,6 @@ public class GitChangesetViewer implements ChangesetViewer
 
     if (tag != null)
     {
-      List<String> tagList = changeset.getTags();
-
-      if (tagList == null)
-      {
-        tagList = new ArrayList<String>();
-        changeset.setTags(tagList);
-      }
-
       changeset.getTags().add(tag);
     }
 
