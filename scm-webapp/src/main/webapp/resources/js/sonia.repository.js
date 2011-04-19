@@ -822,7 +822,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
   idsTemplate: 'Commit: {0}',
   tagsAndBranchesTemplate: '<div class="changeset-tags">{0}</div>\
                             <div class="changeset-branches">{1}</div>',
-  
+
 
   initComponent: function(){
 
