@@ -966,13 +966,14 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
         xtype: 'repositoryChangesetViewerGrid',
         repository: this.repository,
         store: changesetStore
-      }, {
+      }],
+      bbar: {
         xtype: 'paging',
         store: changesetStore,
         displayInfo: true,
         pageSize: this.pageSize,
         prependButtons: true
-      }]
+      }
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
