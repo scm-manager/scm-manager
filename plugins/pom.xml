@@ -24,6 +24,7 @@
     <module>scm-pam-plugin</module>
     <module>scm-bzr-plugin</module>
     <module>scm-auth-ldap-plugin</module>
+    <module>scm-gravatar-plugin</module>
   </modules>
   
   <dependencies>
