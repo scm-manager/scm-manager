@@ -353,7 +353,7 @@ public class ScmServletModule extends ServletModule
   }
 
   /**
-   * Method description
+   * Load ScmConfiguration with JAXB
    *
    *
    * @param context
@@ -367,6 +367,11 @@ public class ScmServletModule extends ServletModule
 
     if (file.exists())
     {
+      if (logger.isInfoEnabled())
+      {
+        logger.info("load ScmConfiguration: {}", file);
+      }
+
       try
       {
         config = JAXB.unmarshal(file, ScmConfiguration.class);
@@ -380,6 +385,10 @@ public class ScmServletModule extends ServletModule
       {
         logger.error(ex.getMessage(), ex);
       }
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("could not find ScmConfiguration at {}", file);
     }
 
     if (config == null)

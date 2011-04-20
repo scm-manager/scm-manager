@@ -39,6 +39,9 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.PluginManager;
@@ -70,6 +73,12 @@ import javax.xml.bind.JAXB;
 @Path("config")
 public class ConfigurationResource
 {
+
+  /** the logger for ConfigurationResource */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ConfigurationResource.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -148,6 +157,11 @@ public class ConfigurationResource
       if (!file.exists())
       {
         IOUtil.mkdirs(file.getParentFile());
+      }
+
+      if (logger.isInfoEnabled())
+      {
+        logger.info("write ScmConfiguration to {}", file);
       }
 
       JAXB.marshal(configuration, file);
