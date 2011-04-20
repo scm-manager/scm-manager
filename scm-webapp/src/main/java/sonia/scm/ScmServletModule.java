@@ -70,6 +70,7 @@ import sonia.scm.template.TemplateServlet;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.xml.XmlUserManager;
 import sonia.scm.util.DebugServlet;
+import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
 import sonia.scm.web.security.AuthenticationManager;
@@ -85,7 +86,6 @@ import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
-import java.io.File;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -94,7 +94,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.bind.JAXB;
 
 /**
  *
@@ -362,41 +361,11 @@ public class ScmServletModule extends ServletModule
    */
   private ScmConfiguration getScmConfiguration(SCMContextProvider context)
   {
-    ScmConfiguration config = null;
-    File file = new File(context.getBaseDirectory(), ScmConfiguration.PATH);
+    ScmConfiguration configuration = new ScmConfiguration();
 
-    if (file.exists())
-    {
-      if (logger.isInfoEnabled())
-      {
-        logger.info("load ScmConfiguration: {}", file);
-      }
+    ScmConfigurationUtil.getInstance().load(configuration);
 
-      try
-      {
-        config = JAXB.unmarshal(file, ScmConfiguration.class);
-
-        if (ScmConfiguration.OLD_PLUGINURL.equals(config.getPluginUrl()))
-        {
-          config.setPluginUrl(ScmConfiguration.DEFAULT_PLUGINURL);
-        }
-      }
-      catch (Exception ex)
-      {
-        logger.error(ex.getMessage(), ex);
-      }
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("could not find ScmConfiguration at {}", file);
-    }
-
-    if (config == null)
-    {
-      config = new ScmConfiguration();
-    }
-
-    return config;
+    return configuration;
   }
 
   //~--- fields ---------------------------------------------------------------

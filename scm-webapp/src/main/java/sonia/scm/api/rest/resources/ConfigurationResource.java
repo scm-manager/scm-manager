@@ -39,19 +39,13 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.util.IOUtil;
+import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -63,8 +57,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import javax.xml.bind.JAXB;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -73,12 +65,6 @@ import javax.xml.bind.JAXB;
 @Path("config")
 public class ConfigurationResource
 {
-
-  /** the logger for ConfigurationResource */
-  private static final Logger logger =
-    LoggerFactory.getLogger(ConfigurationResource.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -151,20 +137,7 @@ public class ConfigurationResource
 
     synchronized (ScmConfiguration.class)
     {
-      File file = new File(SCMContext.getContext().getBaseDirectory(),
-                           ScmConfiguration.PATH);
-
-      if (!file.exists())
-      {
-        IOUtil.mkdirs(file.getParentFile());
-      }
-
-      if (logger.isInfoEnabled())
-      {
-        logger.info("write ScmConfiguration to {}", file);
-      }
-
-      JAXB.marshal(configuration, file);
+      ScmConfigurationUtil.getInstance().store(configuration);
     }
 
     return Response.created(uriInfo.getRequestUri()).build();
