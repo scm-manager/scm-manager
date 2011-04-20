@@ -67,7 +67,10 @@ public class GravatarChangesetPreProcessor implements ChangesetPreProcessor
 
     if (author != null)
     {
-      String hash = MD5Util.md5Hex(author.getMail());
+      String authorValue = Util.isNotEmpty(author.getMail())
+                           ? author.getMail()
+                           : author.getName();
+      String hash = MD5Util.md5Hex(authorValue);
 
       if (Util.isNotEmpty(hash))
       {
