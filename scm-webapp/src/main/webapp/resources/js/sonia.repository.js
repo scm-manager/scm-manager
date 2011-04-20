@@ -815,10 +815,14 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
   repository: null,
   mailTemplate: '&lt;<a href="mailto: {0}">{0}</a>&gt;',
-  changesetMetadataTemplate: '<div class="changeset-description">{0}</div>\
-                              <div class="changeset-author">{1}</div>\
-                              <div class="changeset-date">{2}</div>',
-  modificationsTemplate: 'A: {0}, M: {1}, D: {2}',
+  changesetMetadataTemplate: '<div class="cs-desc">{0}</div>\
+                              <div class="cs-author">{1}</div>\
+                              <div class="cs-date">{2}</div>',
+  modificationsTemplate: '<div class="cs-mod">\
+                            <img src="resources/images/add.gif" alt="Added"><span class="cs-mod-txt">{0}</span>\
+                            <img src="resources/images/modify.gif" alt="Modified"><span class="cs-mod-txt">{1}</span>\
+                            <img src="resources/images/delete.gif" alt="Deleted"><span class="cs-mod-txt">{2}</span>\
+                          </div>',
   idsTemplate: 'Commit: {0}',
   tagsAndBranchesTemplate: '<div class="changeset-tags">{0}</div>\
                             <div class="changeset-branches">{1}</div>',

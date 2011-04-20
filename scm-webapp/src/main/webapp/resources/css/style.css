@@ -106,3 +106,15 @@ a:visited {
 .scm-nav-item {
   cursor: pointer;
 }
+
+.cs-mod {
+  height: 16px;
+}
+
+.cs-mod img {
+  vertical-align: middle;
+}
+
+.cs-mod-txt {
+  margin: 0 3px;
+}
