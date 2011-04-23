@@ -58,6 +58,7 @@
 
   <resources>
     <script>/sonia/scm/hg.config.js</script>
+    <script>/sonia/scm/hg.config-wizard.js</script>
   </resources>
 
 </plugin>

@@ -92,6 +92,26 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
           var self = Ext.getCmp('hgConfigForm');
           self.loadConfig( self.el, 'config/repositories/hg/auto-configuration.json', 'POST' );
         }
+      },{
+        xtype: 'button',
+        text: 'Start Config Wizard',
+        fieldLabel: "ConfigWizard",
+        handler: function(){
+          var config = this.getForm().getValues();
+          var wizard = new Sonia.hg.ConfigWizard({
+            hgConfig: config
+          });
+          wizard.on('finish', function(config){
+            if (debug){
+              console.debug( 'load config from wizard and submit to server' );
+              console.debug( config );
+            }
+            this.getForm().load(config);
+            this.onSubmit(config);
+          }, this);
+          wizard.show();
+        },
+        scope: this
       }]
     }
 
