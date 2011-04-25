@@ -55,6 +55,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -390,22 +391,9 @@ public class IOUtil
   {
     String cmdPath = null;
 
-    try
+    if (isCommandAvailable(cmd, checkParameter))
     {
-      Command command = new SimpleCommand(cmd, checkParameter);
-      CommandResult result = command.execute();
-
-      if (result.isSuccessfull())
-      {
-        cmdPath = cmd;
-      }
-    }
-    catch (IOException ex)
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("could not execute command", ex);
-      }
+      cmdPath = cmd;
     }
 
     if (cmdPath == null)
@@ -437,6 +425,67 @@ public class IOUtil
     }
 
     return cmdPath;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param cmd
+   *
+   * @return
+   */
+  public static List<String> searchAll(String cmd)
+  {
+    return searchAll(DEFAULT_PATH, cmd, DEFAULT_CHECKPARAMETER);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param path
+   * @param cmd
+   *
+   * @return
+   */
+  public static List<String> searchAll(String[] path, String cmd)
+  {
+    return searchAll(path, cmd, DEFAULT_CHECKPARAMETER);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param path
+   * @param cmd
+   * @param checkParameter
+   *
+   * @return
+   */
+  public static List<String> searchAll(String[] path, String cmd,
+          String checkParameter)
+  {
+    List<String> cmds = new ArrayList<String>();
+
+    if (isCommandAvailable(cmd, checkParameter))
+    {
+      cmds.add(cmd);
+    }
+
+    for (String pathPart : path)
+    {
+      List<String> extensions = getExecutableSearchExtensions();
+      File file = findFileByExtension(pathPart, cmd, extensions);
+
+      if (file != null)
+      {
+        cmds.add(file.getAbsolutePath());
+      }
+    }
+
+    return cmds;
   }
 
   /**
@@ -492,6 +541,37 @@ public class IOUtil
     }
 
     return extensions;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param cmd
+   * @param checkParameter
+   *
+   * @return
+   */
+  private static boolean isCommandAvailable(String cmd, String checkParameter)
+  {
+    boolean success = false;
+
+    try
+    {
+      Command command = new SimpleCommand(cmd, checkParameter);
+      CommandResult result = command.execute();
+
+      success = result.isSuccessfull();
+    }
+    catch (IOException ex)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("could not execute command", ex);
+      }
+    }
+
+    return success;
   }
 
   //~--- inner classes --------------------------------------------------------
