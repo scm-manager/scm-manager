@@ -94,33 +94,22 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   private static final Logger logger =
     LoggerFactory.getLogger(WindowsHgInstaller.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param baseDirectory
-   */
-  public WindowsHgInstaller(File baseDirectory)
-  {
-    super(baseDirectory);
-  }
-
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
+   *
+   * @param baseDirectory
    * @param config
    *
    * @throws IOException
    */
   @Override
-  public void install(HgConfig config) throws IOException
+  public void install(File baseDirectory, HgConfig config) throws IOException
   {
-    super.install(config);
+    super.install(baseDirectory, config);
 
     String pythonBinary = getPythonBinary();
 
@@ -135,7 +124,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
     }
     else if (hgDirectory != null)
     {
-      installHg(config, hgDirectory);
+      installHg(baseDirectory, config, hgDirectory);
     }
 
     checkForOptimizedByteCode(config);
@@ -145,10 +134,12 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    * Method description
    *
    *
+   *
+   * @param baseDirectory
    * @param config
    */
   @Override
-  public void update(HgConfig config) {}
+  public void update(File baseDirectory, HgConfig config) {}
 
   /**
    * Method description
@@ -204,12 +195,15 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    * Method description
    *
    *
+   *
+   * @param baseDirectory
    * @param config
    * @param hgDirectory
    *
    * @throws IOException
    */
-  private void installHg(HgConfig config, File hgDirectory) throws IOException
+  private void installHg(File baseDirectory, HgConfig config, File hgDirectory)
+          throws IOException
   {
     if (logger.isInfoEnabled())
     {

@@ -51,30 +51,19 @@ public class UnixHgInstaller extends AbstractHgInstaller
 {
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param baseDirectory
-   */
-  public UnixHgInstaller(File baseDirectory)
-  {
-    super(baseDirectory);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
    * Method description
    *
    *
+   *
+   * @param baseDirectory
    * @param config
    *
    * @throws IOException
    */
   @Override
-  public void install(HgConfig config) throws IOException
+  public void install(File baseDirectory, HgConfig config) throws IOException
   {
-    super.install(config);
+    super.install(baseDirectory, config);
     config.setHgBinary(IOUtil.search("hg"));
     config.setPythonBinary(IOUtil.search("python"));
   }
@@ -83,10 +72,12 @@ public class UnixHgInstaller extends AbstractHgInstaller
    * Method description
    *
    *
+   *
+   * @param baseDirectory
    * @param config
    */
   @Override
-  public void update(HgConfig config)
+  public void update(File baseDirectory, HgConfig config)
   {
 
     // do nothing

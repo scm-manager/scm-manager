@@ -35,41 +35,34 @@ package sonia.scm.installer;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.HgConfig;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
+import sonia.scm.util.SystemUtil;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface HgInstaller
+public class HgInstallerFactory
 {
 
   /**
    * Method description
    *
    *
-   *
-   * @param baseDirectory
-   * @param config
-   *
-   * @throws IOException
+   * @return
    */
-  public void install(File baseDirectory, HgConfig config) throws IOException;
+  public static HgInstaller createInstaller()
+  {
+    HgInstaller installer = null;
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param baseDirectory
-   * @param config
-   *
-   * @throws IOException
-   */
-  public void update(File baseDirectory, HgConfig config) throws IOException;
+    if (SystemUtil.isWindows())
+    {
+      installer = new WindowsHgInstaller();
+    }
+    else
+    {
+      installer = new UnixHgInstaller();
+    }
+
+    return installer;
+  }
 }

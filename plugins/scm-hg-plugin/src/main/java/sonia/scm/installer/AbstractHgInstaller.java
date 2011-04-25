@@ -54,31 +54,20 @@ public abstract class AbstractHgInstaller implements HgInstaller
   /** Field description */
   public static final String DIRECTORY_REPOSITORY = "repositories";
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param baseDirectory
-   */
-  public AbstractHgInstaller(File baseDirectory)
-  {
-    this.baseDirectory = baseDirectory;
-  }
-
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
+   *
+   * @param baseDirectory
    * @param config
    *
    * @throws IOException
    */
   @Override
-  public void install(HgConfig config) throws IOException
+  public void install(File baseDirectory, HgConfig config) throws IOException
   {
     File repoDirectory = new File(
                              baseDirectory,
@@ -88,9 +77,4 @@ public abstract class AbstractHgInstaller implements HgInstaller
     IOUtil.mkdirs(repoDirectory);
     config.setRepositoryDirectory(repoDirectory);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected File baseDirectory;
 }

@@ -38,12 +38,12 @@ package sonia.scm.repository;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.Type;
 import sonia.scm.installer.HgInstaller;
-import sonia.scm.installer.UnixHgInstaller;
-import sonia.scm.installer.WindowsHgInstaller;
+import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.FileSystem;
 import sonia.scm.io.INIConfiguration;
@@ -52,7 +52,6 @@ import sonia.scm.io.INISection;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.SystemUtil;
 import sonia.scm.web.HgWebConfigWriter;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -82,7 +81,7 @@ public class HgRepositoryHandler
   public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
 
   /** the logger for HgRepositoryHandler */
-  private static final org.slf4j.Logger logger =
+  private static final Logger logger =
     LoggerFactory.getLogger(HgRepositoryHandler.class);
 
   //~--- constructors ---------------------------------------------------------
@@ -108,16 +107,7 @@ public class HgRepositoryHandler
    */
   public void doAutoConfiguration()
   {
-    HgInstaller installer = null;
-
-    if (SystemUtil.isWindows())
-    {
-      installer = new WindowsHgInstaller(baseDirectory);
-    }
-    else
-    {
-      installer = new UnixHgInstaller(baseDirectory);
-    }
+    HgInstaller installer = HgInstallerFactory.createInstaller();
 
     if (config == null)
     {
@@ -131,7 +121,7 @@ public class HgRepositoryHandler
                        installer.getClass().getName());
         }
 
-        installer.install(config);
+        installer.install(baseDirectory, config);
         new HgWebConfigWriter(config).write();
       }
       catch (IOException ioe)
@@ -154,7 +144,7 @@ public class HgRepositoryHandler
                        installer.getClass().getName());
         }
 
-        installer.update(config);
+        installer.update(baseDirectory, config);
       }
       catch (IOException ex)
       {
