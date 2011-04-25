@@ -42,6 +42,8 @@ import sonia.scm.repository.HgConfig;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.List;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -72,4 +74,22 @@ public interface HgInstaller
    * @throws IOException
    */
   public void update(File baseDirectory, HgConfig config) throws IOException;
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<String> getHgInstallations();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<String> getPythonInstallations();
 }

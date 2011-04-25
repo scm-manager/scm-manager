@@ -38,6 +38,7 @@ package sonia.scm.api.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgWebConfigWriter;
@@ -46,12 +47,15 @@ import sonia.scm.web.HgWebConfigWriter;
 
 import java.io.IOException;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -119,6 +123,42 @@ public class HgConfigResource
     }
 
     return config;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @GET
+  @Path("installations/hg")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public GenericEntity<List<String>> getHgInstallations()
+  {
+    List<String> installations =
+      HgInstallerFactory.createInstaller().getHgInstallations();
+
+    return new GenericEntity<List<String>>(installations) {}
+    ;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @GET
+  @Path("installations/python")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public GenericEntity<List<String>> getPythonInstallations()
+  {
+    List<String> installations =
+      HgInstallerFactory.createInstaller().getPythonInstallations();
+
+    return new GenericEntity<List<String>>(installations) {}
+    ;
   }
 
   //~--- set methods ----------------------------------------------------------

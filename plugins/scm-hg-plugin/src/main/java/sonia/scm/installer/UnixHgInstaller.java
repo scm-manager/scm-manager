@@ -43,12 +43,22 @@ import sonia.scm.util.IOUtil;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.List;
+
 /**
  *
  * @author Sebastian Sdorra
  */
 public class UnixHgInstaller extends AbstractHgInstaller
 {
+
+  /** Field description */
+  public static final String COMMAND_HG = "hg";
+
+  /** Field description */
+  public static final String COMMAND_PYTHON = "python";
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -64,8 +74,8 @@ public class UnixHgInstaller extends AbstractHgInstaller
   public void install(File baseDirectory, HgConfig config) throws IOException
   {
     super.install(baseDirectory, config);
-    config.setHgBinary(IOUtil.search("hg"));
-    config.setPythonBinary(IOUtil.search("python"));
+    config.setHgBinary(IOUtil.search(COMMAND_HG));
+    config.setPythonBinary(IOUtil.search(COMMAND_PYTHON));
   }
 
   /**
@@ -81,5 +91,31 @@ public class UnixHgInstaller extends AbstractHgInstaller
   {
 
     // do nothing
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public List<String> getHgInstallations()
+  {
+    return IOUtil.searchAll(COMMAND_HG);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public List<String> getPythonInstallations()
+  {
+    return IOUtil.searchAll(COMMAND_PYTHON);
   }
 }

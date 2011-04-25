@@ -49,6 +49,9 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -87,8 +90,12 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   };
 
   /** Field description */
-  private static final String REGISTRY_PYTHON =
-    "HKEY_CLASSES_ROOT\\Python.File\\shell\\open\\command";
+  private static final String[] REGISTRY_PYTHON = new String[]
+  {
+
+    // .py files
+    "HKEY_CLASSES_ROOT\\Python.File\\shell\\open\\command"
+  };
 
   /** the logger for WindowsHgInstaller */
   private static final Logger logger =
@@ -140,6 +147,34 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    */
   @Override
   public void update(File baseDirectory, HgConfig config) {}
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public List<String> getHgInstallations()
+  {
+    return getInstallations(REGISTRY_HG);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public List<String> getPythonInstallations()
+  {
+    return getInstallations(REGISTRY_PYTHON);
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -239,6 +274,36 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    * Method description
    *
    *
+   * @param registryKeys
+   *
+   * @return
+   */
+  private List<String> getInstallations(String[] registryKeys)
+  {
+    List<String> installations = new ArrayList<String>();
+
+    for (String registryKey : registryKeys)
+    {
+      String path = RegistryUtil.getRegistryValue(registryKey);
+
+      if (path != null)
+      {
+        File file = new File(path);
+
+        if (!file.exists())
+        {
+          installations.add(path);
+        }
+      }
+    }
+
+    return installations;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   private File getMercurialDirectory()
@@ -310,7 +375,7 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    */
   private String getPythonBinary()
   {
-    String python = RegistryUtil.getRegistryValue(REGISTRY_PYTHON);
+    String python = RegistryUtil.getRegistryValue(REGISTRY_PYTHON[0]);
 
     if (python == null)
     {
