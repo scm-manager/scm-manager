@@ -72,6 +72,40 @@ Sonia.hg.ConfigWizard = Ext.extend(Ext.Window,{
   
 });
 
+Sonia.hg.InstallationJsonReader = function(){
+  this.RecordType = Ext.data.Record.create([{
+    name: "path",
+    mapping: "path",
+    type: "string"
+  }]);
+};
+
+Ext.extend(Sonia.hg.InstallationJsonReader, Ext.data.JsonReader, {
+  
+  readRecords: function(o){
+    this.jsonData = o;
+    
+    if (debug){
+      console.debug('read installation data from json');
+      console.debug(o);
+    }
+    
+    var records = [];
+    var paths = o.path;
+    for ( var i=0; i<paths.length; i++ ){
+      records.push(new this.RecordType({
+        'path': paths[i]
+      }));
+    }
+    return {
+      success: true,
+      records: records,
+      totalRecords: records.length
+    };
+  }
+  
+});
+
 Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
   
   hgConfig: null,
@@ -81,17 +115,27 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
   initComponent: function(){
     
     var navHandler = function(direction) {
-       var layout = this.getLayout();
-       var i = layout.activeItem.id.split('step-')[1];
-       i = parseInt(i) - 1;
-       var next = parseInt(i) + direction;
-       layout.setActiveItem(next);
-       Ext.getCmp('move-prev').setDisabled(next == 0);
-       Ext.getCmp('move-next').setDisabled(next == 2);
-       Ext.getCmp('finish').setDisabled(next != 2);
+      var layout = this.getLayout();
+      var i = layout.activeItem.id.split('step-')[1];
+      i = parseInt(i) - 1;
+      var next = parseInt(i) + direction;
+      layout.setActiveItem(next);
+      Ext.getCmp('move-prev').setDisabled(next == 0);
+      Ext.getCmp('move-next').setDisabled(next == 2);
+      Ext.getCmp('finish').setDisabled(next != 2);
     }; 
     
     this.addEvents('finish');
+    
+    var hgInstallationStore = new Ext.data.Store({
+      proxy: new  Ext.data.HttpProxy({
+        url: restUrl + 'config/repositories/hg/installations/hg.json'
+      }),
+      fields: [ 'path' ],
+      reader: new Sonia.hg.InstallationJsonReader()
+    });
+    
+    hgInstallationStore.load();
     
     var config = {
       title: this.title,
@@ -127,7 +171,21 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
       }],
       items: [{
         id: 'step-1',
-        html: '<h2>Step 1</h2>'
+        layout: 'form',
+        items: [{
+          fieldLabel: 'Mercurial Installation',
+          name: 'mercurial',
+          xtype: 'combo',
+          readOnly: false,
+          triggerAction: 'all',
+          lazyRender: true,
+          mode: 'local',
+          editable: true,
+          store: hgInstallationStore,
+          valueField: 'path',
+          displayField: 'path',
+          allowBlank: false
+        }]
       },{
         id: 'step-2',
         html: '<h2>Step 2</h2>'
