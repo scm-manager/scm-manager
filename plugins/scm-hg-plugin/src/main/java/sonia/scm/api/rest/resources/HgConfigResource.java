@@ -55,10 +55,14 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -134,13 +138,12 @@ public class HgConfigResource
   @GET
   @Path("installations/hg")
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public GenericEntity<List<String>> getHgInstallations()
+  public InstallationsResponse getHgInstallations()
   {
     List<String> installations =
       HgInstallerFactory.createInstaller().getHgInstallations();
 
-    return new GenericEntity<List<String>>(installations) {}
-    ;
+    return new InstallationsResponse(installations);
   }
 
   /**
@@ -152,13 +155,12 @@ public class HgConfigResource
   @GET
   @Path("installations/python")
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public GenericEntity<List<String>> getPythonInstallations()
+  public InstallationsResponse getPythonInstallations()
   {
     List<String> installations =
       HgInstallerFactory.createInstaller().getPythonInstallations();
 
-    return new GenericEntity<List<String>>(installations) {}
-    ;
+    return new InstallationsResponse(installations);
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -185,6 +187,71 @@ public class HgConfigResource
 
     return Response.created(uriInfo.getRequestUri()).build();
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 11/04/25
+   * @author         Enter your name here...
+   */
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @XmlRootElement(name = "installations")
+  public static class InstallationsResponse
+  {
+
+    /**
+     * Constructs ...
+     *
+     */
+    public InstallationsResponse() {}
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param paths
+     */
+    public InstallationsResponse(List<String> paths)
+    {
+      this.paths = paths;
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public List<String> getPaths()
+    {
+      return paths;
+    }
+
+    //~--- set methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param paths
+     */
+    public void setPaths(List<String> paths)
+    {
+      this.paths = paths;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    @XmlElement(name = "path")
+    private List<String> paths;
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
