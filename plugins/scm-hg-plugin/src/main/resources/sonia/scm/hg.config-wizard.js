@@ -34,12 +34,14 @@ Ext.ns("Sonia.hg");
 Sonia.hg.ConfigWizard = Ext.extend(Ext.Window,{
   
   hgConfig: null,
+  title: 'Mercurial Configuration Wizard',
   
   initComponent: function(){
     
     this.addEvents('finish');
     
     var config = {
+      title: this.title,
       layout: 'fit',
       width: 540,
       height: 320,
@@ -48,6 +50,7 @@ Sonia.hg.ConfigWizard = Ext.extend(Ext.Window,{
       plain: true,
       border: false,
       modal: true,
+      bodyCssClass: 'x-panel-mc',
       items: [{
         id: 'hgConfigWizardPanel',
         xtype: 'hgConfigWizardPanel',
@@ -110,8 +113,6 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
   
   hgConfig: null,
   
-  title: 'Mercurial Configuration Wizard',
-  
   initComponent: function(){
     
     var navHandler = function(direction) {
@@ -132,18 +133,28 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
         url: restUrl + 'config/repositories/hg/installations/hg.json'
       }),
       fields: [ 'path' ],
-      reader: new Sonia.hg.InstallationJsonReader()
+      reader: new Sonia.hg.InstallationJsonReader(),
+      autoLoad: true,
+      autoDestroy: true
     });
     
-    hgInstallationStore.load();
+    var pythonInstallationStore = new Ext.data.Store({
+      proxy: new  Ext.data.HttpProxy({
+        url: restUrl + 'config/repositories/hg/installations/python.json'
+      }),
+      fields: [ 'path' ],
+      reader: new Sonia.hg.InstallationJsonReader(),
+      autoLoad: true,
+      autoDestroy: true
+    });
     
     var config = {
-      title: this.title,
       layout: 'card',
       activeItem: 0,
-      bodyStyle: 'padding:15px',
+      bodyStyle: 'padding: 5px',
       defaults: {
-        border:false
+        bodyCssClass: 'x-panel-mc',
+        border: false
       },
       bbar: ['->',{
         id: 'move-prev',
@@ -185,6 +196,19 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
           valueField: 'path',
           displayField: 'path',
           allowBlank: false
+        },{
+          fieldLabel: 'Python Installation',
+          name: 'python',
+          xtype: 'combo',
+          readOnly: false,
+          triggerAction: 'all',
+          lazyRender: true,
+          mode: 'local',
+          editable: true,
+          store: pythonInstallationStore,
+          valueField: 'path',
+          displayField: 'path',
+          allowBlank: false          
         }]
       },{
         id: 'step-2',
