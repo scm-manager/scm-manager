@@ -36,9 +36,17 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
   // labels
   titleText: 'Subversion Settings',
   repositoryDirectoryText: 'Repository directory',
+  // TODO i18n
+  pre14CompatibleText: 'Pre 1.4 Compatible',
+  pre15CompatibleText: 'Pre 1.5 Compatible',
+  pre16CompatibleText: 'Pre 1.6 Compatible',
 
   // helpTexts
   repositoryDirectoryHelpText: 'Location of the Suberversion repositories.',
+  // TODO
+  pre14CompatibleHelpText: '',
+  pre15CompatibleHelpText: '',
+  pre16CompatibleHelpText: '',
 
   initComponent: function(){
 
@@ -51,6 +59,24 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
         fieldLabel: this.repositoryDirectoryText,
         helpText: this.repositoryDirectoryHelpText,
         allowBlank : false
+      },{
+        xtype: 'checkbox',
+        name: 'pre14Compatible',
+        fieldLabel: this.pre14CompatibleText,
+        helpText: this.pre14CompatibleHelpText,
+        inputValue: 'true'
+      },{
+        xtype: 'checkbox',
+        name: 'pre15Compatible',
+        fieldLabel: this.pre15CompatibleText,
+        helpText: this.pre15CompatibleHelpText,
+        inputValue: 'true'
+      },{
+        xtype: 'checkbox',
+        name: 'pre16Compatible',
+        fieldLabel: this.pre16CompatibleText,
+        helpText: this.pre16CompatibleHelpText,
+        inputValue: 'true'
       }]
     }
 

@@ -38,6 +38,9 @@ package sonia.scm.repository;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
@@ -70,6 +73,10 @@ public class SvnRepositoryHandler
 
   /** Field description */
   public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+
+  /** the logger for SvnRepositoryHandler */
+  private static final Logger logger =
+    LoggerFactory.getLogger(SvnRepositoryHandler.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -147,9 +154,22 @@ public class SvnRepositoryHandler
   protected void create(Repository repository, File directory)
           throws RepositoryException, IOException
   {
+    if (logger.isDebugEnabled())
+    {
+      StringBuilder log = new StringBuilder("create svn repository \"");
+
+      log.append(directory.getName()).append("\": pre14Compatible=");
+      log.append(config.isPre14Compatible()).append(", pre15Compatible=");
+      log.append(config.isPre15Compatible()).append(", pre16Compatible=");
+      log.append(config.isPre16Compatible());
+      logger.debug(log.toString());
+    }
+
     try
     {
-      SVNRepositoryFactory.createLocalRepository(directory, true, false);
+      SVNRepositoryFactory.createLocalRepository(directory, null, true, false,
+              config.isPre14Compatible(), config.isPre15Compatible(),
+              config.isPre16Compatible());
     }
     catch (SVNException ex)
     {

@@ -42,4 +42,85 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "config")
-public class SvnConfig extends SimpleRepositoryConfig {}
+public class SvnConfig extends SimpleRepositoryConfig
+{
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isPre14Compatible()
+  {
+    return pre14Compatible;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isPre15Compatible()
+  {
+    return pre15Compatible;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isPre16Compatible()
+  {
+    return pre16Compatible;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param pre14Compatible
+   */
+  public void setPre14Compatible(boolean pre14Compatible)
+  {
+    this.pre14Compatible = pre14Compatible;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param pre15Compatible
+   */
+  public void setPre15Compatible(boolean pre15Compatible)
+  {
+    this.pre15Compatible = pre15Compatible;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param pre16Compatible
+   */
+  public void setPre16Compatible(boolean pre16Compatible)
+  {
+    this.pre16Compatible = pre16Compatible;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean pre14Compatible = false;
+
+  /** Field description */
+  private boolean pre15Compatible = false;
+
+  /** Field description */
+  private boolean pre16Compatible = false;
+}
