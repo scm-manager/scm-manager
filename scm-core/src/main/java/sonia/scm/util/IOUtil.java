@@ -293,6 +293,20 @@ public class IOUtil
    */
   public static void delete(File file) throws IOException
   {
+    delete(file, false);
+  }
+
+  /**
+   *   Method description
+   *
+   *
+   *   @param file
+   * @param silent
+   *
+   *   @throws IOException
+   */
+  public static void delete(File file, boolean silent) throws IOException
+  {
     if (file.isDirectory())
     {
       File[] children = file.listFiles();
@@ -308,7 +322,16 @@ public class IOUtil
 
     if (!file.delete())
     {
-      throw new IOException("could not delete file ".concat(file.getPath()));
+      String message = "could not delete file ".concat(file.getPath());
+
+      if (silent)
+      {
+        logger.error(message);
+      }
+      else
+      {
+        throw new IOException(message);
+      }
     }
   }
 
@@ -326,13 +349,29 @@ public class IOUtil
   {
     String name = archive.getName().toLowerCase();
 
-    if (name.endsWith(ZipUnArchiver.EXTENSION))
+    extract(archive, outputDirectory, name);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param archive
+   * @param outputDirectory
+   * @param type
+   *
+   * @throws IOException
+   */
+  public static void extract(File archive, File outputDirectory, String type)
+          throws IOException
+  {
+    if (type.endsWith(ZipUnArchiver.EXTENSION))
     {
       new ZipUnArchiver().extract(archive, outputDirectory);
     }
     else
     {
-      throw new IOException("no unarchiver found for ".concat(name));
+      throw new IOException("no unarchiver found for ".concat(type));
     }
   }
 
