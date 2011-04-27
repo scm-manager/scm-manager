@@ -51,10 +51,13 @@ import sonia.scm.util.Util;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import java.text.MessageFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import java.util.Date;
 
@@ -103,7 +106,7 @@ public class ScmUpgradeHandler
                       SCMContext.getContext().getVersion());
         }
 
-        fixDate(configDirectory);
+        fixDate(baseDirectory, configDirectory);
       }
 
       // fresh installation
@@ -150,18 +153,60 @@ public class ScmUpgradeHandler
    * Method description
    *
    *
+   * @param baseDirectory
+   * @param note
+   *
+   * @return
+   */
+  private File createBackupDirectory(File baseDirectory, String note)
+  {
+    String date = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+    File backupDirectory =
+      new File(baseDirectory, "backups".concat(File.separator).concat(date));
+
+    IOUtil.mkdirs(backupDirectory);
+
+    FileWriter writer = null;
+
+    note = MessageFormat.format(note, SCMContext.getContext().getVersion());
+
+    try
+    {
+      writer = new FileWriter(new File(backupDirectory, "note.txt"));
+      writer.write(note);
+    }
+    catch (IOException ex)
+    {
+      logger.error("could not write note.txt for backup", ex);
+    }
+    finally
+    {
+      IOUtil.close(writer);
+    }
+
+    return backupDirectory;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param baseDirectory
    * @param configDirectory
    */
-  private void fixDate(File configDirectory)
+  private void fixDate(File baseDirectory, File configDirectory)
   {
     try
     {
       DocumentBuilder builder =
         DocumentBuilderFactory.newInstance().newDocumentBuilder();
+      File backupDirectory = createBackupDirectory(baseDirectory,
+                               "upgrade to version {0}");
 
-      fixDate(builder, configDirectory, "users.xml");
-      fixDate(builder, configDirectory, "groups.xml");
-      fixDate(builder, configDirectory, "repositories.xml");
+      fixDate(builder, configDirectory, backupDirectory, "users.xml");
+      fixDate(builder, configDirectory, backupDirectory, "groups.xml");
+      fixDate(builder, configDirectory, backupDirectory, "repositories.xml");
     }
     catch (Exception ex)
     {
@@ -175,6 +220,7 @@ public class ScmUpgradeHandler
    *
    * @param builder
    * @param configDirectory
+   * @param backupDirectory
    * @param filename
    *
    * @throws IOException
@@ -183,11 +229,14 @@ public class ScmUpgradeHandler
    * @throws TransformerException
    */
   private void fixDate(DocumentBuilder builder, File configDirectory,
-                       String filename)
+                       File backupDirectory, String filename)
           throws SAXException, IOException, TransformerConfigurationException,
                  TransformerException
   {
     File configFile = new File(configDirectory, filename);
+    File backupFile = new File(backupDirectory, filename);
+
+    IOUtil.copy(configFile, backupFile);
 
     if (configFile.exists())
     {
