@@ -38,8 +38,10 @@ package sonia.scm.api.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.SCMContext;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.installer.HgInstallerFactory;
+import sonia.scm.installer.HgPackage;
 import sonia.scm.installer.HgPackageReader;
 import sonia.scm.installer.HgPackages;
 import sonia.scm.repository.HgConfig;
@@ -56,6 +58,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -133,6 +136,35 @@ public class HgConfigResource
     handler.doAutoConfiguration(config);
 
     return handler.getConfig();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param id
+   * @return
+   */
+  @POST
+  @Path("packages/{pkgId}")
+  public Response installPackage(@PathParam("pkgId") String id)
+  {
+    Response response = null;
+    HgPackage pkg = pkgReader.getPackage(id);
+
+    if (pkg != null)
+    {
+      HgInstallerFactory.createInstaller().installPackage(handler,
+              SCMContext.getContext().getBaseDirectory(), pkg);
+      response = Response.noContent().build();
+    }
+    else
+    {
+      response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    return response;
   }
 
   //~--- get methods ----------------------------------------------------------

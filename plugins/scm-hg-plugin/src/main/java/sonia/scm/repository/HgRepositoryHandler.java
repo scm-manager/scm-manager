@@ -59,8 +59,6 @@ import sonia.scm.web.HgWebConfigWriter;
 import java.io.File;
 import java.io.IOException;
 
-import javax.xml.bind.JAXBContext;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -256,9 +254,4 @@ public class HgRepositoryHandler
   {
     return HgConfig.class;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private JAXBContext changesetContext;
 }

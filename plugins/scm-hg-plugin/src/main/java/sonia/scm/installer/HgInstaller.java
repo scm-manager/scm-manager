@@ -43,6 +43,7 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.List;
+import sonia.scm.repository.HgRepositoryHandler;
 
 /**
  *
@@ -62,6 +63,18 @@ public interface HgInstaller
    * @throws IOException
    */
   public void install(File baseDirectory, HgConfig config) throws IOException;
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param handler
+   * @param baseDirectory
+   * @param pkg
+   */
+  public void installPackage(HgRepositoryHandler handler, File baseDirectory,
+                             HgPackage pkg);
 
   /**
    * Method description

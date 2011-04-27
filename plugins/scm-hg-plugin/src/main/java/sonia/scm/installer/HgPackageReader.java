@@ -95,6 +95,31 @@ public class HgPackageReader
    * Method description
    *
    *
+   * @param id
+   *
+   * @return
+   */
+  public HgPackage getPackage(String id)
+  {
+    HgPackage pkg = null;
+
+    for (HgPackage p : getPackages())
+    {
+      if (id.equals(p.getId()))
+      {
+        pkg = p;
+
+        break;
+      }
+    }
+
+    return pkg;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   public HgPackages getPackages()

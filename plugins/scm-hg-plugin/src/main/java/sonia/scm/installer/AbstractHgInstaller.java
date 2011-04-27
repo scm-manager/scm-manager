@@ -77,4 +77,20 @@ public abstract class AbstractHgInstaller implements HgInstaller
     IOUtil.mkdirs(repoDirectory);
     config.setRepositoryDirectory(repoDirectory);
   }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param handler
+   * @param baseDirectory
+   * @param pkg
+   */
+  @Override
+  public void installPackage(HgRepositoryHandler handler, File baseDirectory,
+                             HgPackage pkg)
+  {
+    new HgPackageInstaller(handler, baseDirectory, pkg).run();
+  }
 }
