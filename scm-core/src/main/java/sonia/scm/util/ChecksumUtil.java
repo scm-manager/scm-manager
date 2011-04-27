@@ -103,6 +103,25 @@ public class ChecksumUtil
    * Method description
    *
    *
+   * @param input
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public static String createChecksum(String input) throws IOException
+  {
+    MessageDigest digest = getDigest();
+
+    digest.update(input.getBytes());
+
+    return Util.toString(digest.digest());
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param file
    *
    * @return
