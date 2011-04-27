@@ -195,12 +195,34 @@ public class HgPackageInstaller implements Runnable
     HgConfig template = pkg.getHgConfigTemplate();
     HgConfig config = handler.getConfig();
 
-    config.setHgBinary(MessageFormat.format(template.getHgBinary(), path));
-    config.setPythonBinary(MessageFormat.format(template.getPythonBinary(),
-            path));
-    config.setPythonPath(MessageFormat.format(template.getPythonPath(), path));
+    config.setHgBinary(getTemplateValue(template.getHgBinary(), path));
+    config.setPythonBinary(getTemplateValue(template.getPythonBinary(), path));
+    config.setPythonPath(getTemplateValue(template.getPythonPath(), path));
     config.setUseOptimizedBytecode(template.isUseOptimizedBytecode());
     handler.storeConfig();
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param template
+   * @param path
+   *
+   * @return
+   */
+  private String getTemplateValue(String template, String path)
+  {
+    String result = null;
+
+    if (template != null)
+    {
+      result = MessageFormat.format(template, path);
+    }
+
+    return result;
   }
 
   //~--- fields ---------------------------------------------------------------
