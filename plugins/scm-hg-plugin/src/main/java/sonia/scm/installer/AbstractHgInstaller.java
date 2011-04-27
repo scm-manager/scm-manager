@@ -86,11 +86,13 @@ public abstract class AbstractHgInstaller implements HgInstaller
    * @param handler
    * @param baseDirectory
    * @param pkg
+   *
+   * @return
    */
   @Override
-  public void installPackage(HgRepositoryHandler handler, File baseDirectory,
-                             HgPackage pkg)
+  public boolean installPackage(HgRepositoryHandler handler,
+                                File baseDirectory, HgPackage pkg)
   {
-    new HgPackageInstaller(handler, baseDirectory, pkg).run();
+    return new HgPackageInstaller(handler, baseDirectory, pkg).install();
   }
 }

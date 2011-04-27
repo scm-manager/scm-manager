@@ -90,17 +90,42 @@ public class HgPackageInstaller implements Runnable
   /**
    * Method description
    *
+   *
+   * @return
    */
-  @Override
-  public void run()
+  public boolean install()
   {
+    boolean success = false;
     File downloadedFile = downloadFile();
 
     if ((downloadedFile != null) && downloadedFile.exists())
     {
       File directory = extractPackage(downloadedFile);
 
-      updateConfig(directory);
+      if ((directory != null) && directory.exists())
+      {
+        updateConfig(directory);
+        success = true;
+      }
+    }
+
+    return success;
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Override
+  public void run()
+  {
+    if (!install())
+    {
+      logger.error("installation of pkg {} failed", pkg.getId());
+    }
+    else if (logger.isInfoEnabled())
+    {
+      logger.info("successfully installed pkg {}", pkg.getId());
     }
   }
 

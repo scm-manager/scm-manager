@@ -155,9 +155,16 @@ public class HgConfigResource
 
     if (pkg != null)
     {
-      HgInstallerFactory.createInstaller().installPackage(handler,
-              SCMContext.getContext().getBaseDirectory(), pkg);
-      response = Response.noContent().build();
+      if (HgInstallerFactory.createInstaller().installPackage(handler,
+              SCMContext.getContext().getBaseDirectory(), pkg))
+      {
+        response = Response.noContent().build();
+      }
+      else
+      {
+        response =
+          Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+      }
     }
     else
     {

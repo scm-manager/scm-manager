@@ -73,7 +73,7 @@ public interface HgInstaller
    * @param baseDirectory
    * @param pkg
    */
-  public void installPackage(HgRepositoryHandler handler, File baseDirectory,
+  public boolean installPackage(HgRepositoryHandler handler, File baseDirectory,
                              HgPackage pkg);
 
   /**
