@@ -114,18 +114,6 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
   hgConfig: null,
   
   initComponent: function(){
-    
-    var navHandler = function(direction) {
-      var layout = this.getLayout();
-      var i = layout.activeItem.id.split('step-')[1];
-      i = parseInt(i) - 1;
-      var next = parseInt(i) + direction;
-      layout.setActiveItem(next);
-      Ext.getCmp('move-prev').setDisabled(next == 0);
-      Ext.getCmp('move-next').setDisabled(next == 2);
-      Ext.getCmp('finish').setDisabled(next != 2);
-    }; 
-    
     this.addEvents('finish');
     
     var hgInstallationStore = new Ext.data.Store({
@@ -154,18 +142,20 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
       bodyStyle: 'padding: 5px',
       defaults: {
         bodyCssClass: 'x-panel-mc',
-        border: false
+        border: false,
+        labelWidth: 120,
+        width: 230
       },
       bbar: ['->',{
         id: 'move-prev',
         text: 'Back',
-        handler: navHandler.createDelegate(this, [-1]),
+        handler: this.navHandler.createDelegate(this, [-1]),
         disabled: true,
         scope: this
       },{
         id: 'move-next',
         text: 'Next',
-        handler: navHandler.createDelegate(this, [1]),
+        handler: this.navHandler.createDelegate(this, [1]),
         scope: this
       },{
         id: 'finish',
@@ -176,7 +166,22 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
       }],
       items: [{
         id: 'step-1',
+        items: [{
+          xtype: 'radiogroup',
+          name: 'configureOrDownload',
+          columns: 1,
+          items: [
+            {boxLabel: 'Configure local installation', name: 'cod', inputValue: 'local', checked: true},
+            {boxLabel: 'Download and install', name: 'cod', inputValue: 'remote', disabled: true},
+          ]
+        }]
+      },{
+        id: 'step-2',
         layout: 'form',
+        width: '100%',
+        defaults: {
+          width: 230
+        },
         items: [{
           id: 'mercurial',
           fieldLabel: 'Mercurial Installation',
@@ -209,9 +214,6 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
           value: this.hgConfig.pythonBinary
         }]
       },{
-        id: 'step-2',
-        html: '<h2>Step 2</h2>'
-      },{
         id: 'step-3',
         html: '<h2>Step 3</h2>'
       }]
@@ -219,6 +221,17 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.hg.ConfigWizardPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  navHandler: function(direction){
+    var layout = this.getLayout();
+    var i = layout.activeItem.id.split('step-')[1];
+    i = parseInt(i) - 1;
+    var next = parseInt(i) + direction;
+    layout.setActiveItem(next);
+    Ext.getCmp('move-prev').setDisabled(next == 0);
+    Ext.getCmp('move-next').setDisabled(next == 2);
+    Ext.getCmp('finish').setDisabled(next != 2);
   },
   
   applyChanges: function(){

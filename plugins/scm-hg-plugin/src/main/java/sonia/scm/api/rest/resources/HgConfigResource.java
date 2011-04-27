@@ -38,7 +38,10 @@ package sonia.scm.api.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.cache.CacheManager;
 import sonia.scm.installer.HgInstallerFactory;
+import sonia.scm.installer.HgPackageReader;
+import sonia.scm.installer.HgPackages;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgWebConfigWriter;
@@ -79,11 +82,14 @@ public class HgConfigResource
    *
    *
    * @param handler
+   * @param cacheManager
    */
   @Inject
-  public HgConfigResource(HgRepositoryHandler handler)
+  public HgConfigResource(HgRepositoryHandler handler,
+                          CacheManager cacheManager)
   {
     this.handler = handler;
+    this.pkgReader = new HgPackageReader(cacheManager);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -166,6 +172,20 @@ public class HgConfigResource
       HgInstallerFactory.createInstaller().getHgInstallations();
 
     return new InstallationsResponse(installations);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @GET
+  @Path("packages")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public HgPackages getPackages()
+  {
+    return pkgReader.getPackages();
   }
 
   /**
@@ -279,4 +299,7 @@ public class HgConfigResource
 
   /** Field description */
   private HgRepositoryHandler handler;
+
+  /** Field description */
+  private HgPackageReader pkgReader;
 }
