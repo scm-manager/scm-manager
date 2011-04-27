@@ -118,18 +118,26 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   {
     super.install(baseDirectory, config);
 
-    String pythonBinary = getPythonBinary();
-
-    config.setPythonBinary(pythonBinary);
-
-    File hgScript = getMercurialScript(pythonBinary);
-    File hgDirectory = getMercurialDirectory();
-
-    if (hgScript != null)
+    if (Util.isEmpty(config.getPythonBinary()))
     {
-      config.setHgBinary(hgScript.getAbsolutePath());
+      String pythonBinary = getPythonBinary();
+
+      config.setPythonBinary(pythonBinary);
     }
-    else if (hgDirectory != null)
+
+    if (Util.isEmpty(config.getHgBinary()))
+    {
+      File hgScript = getMercurialScript(config.getPythonBinary());
+
+      if (hgScript != null)
+      {
+        config.setHgBinary(hgScript.getAbsolutePath());
+      }
+    }
+
+    File hgDirectory = getMercurialDirectory(config.getHgBinary());
+
+    if (hgDirectory != null)
     {
       installHg(baseDirectory, config, hgDirectory);
     }
@@ -304,9 +312,34 @@ public class WindowsHgInstaller extends AbstractHgInstaller
    * Method description
    *
    *
+   *
+   * @param hgBinary
    * @return
    */
-  private File getMercurialDirectory()
+  private File getMercurialDirectory(String hgBinary)
+  {
+    File directory = null;
+    File hg = new File(hgBinary);
+
+    if (hg.exists() && hg.isFile())
+    {
+      directory = hg.getParentFile();
+    }
+    else
+    {
+      directory = getMercurialDirectoryFromRegistry();
+    }
+
+    return directory;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private File getMercurialDirectoryFromRegistry()
   {
     File directory = null;
 

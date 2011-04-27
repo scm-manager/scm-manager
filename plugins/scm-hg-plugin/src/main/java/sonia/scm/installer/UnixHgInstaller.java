@@ -37,6 +37,7 @@ package sonia.scm.installer;
 
 import sonia.scm.repository.HgConfig;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -74,8 +75,16 @@ public class UnixHgInstaller extends AbstractHgInstaller
   public void install(File baseDirectory, HgConfig config) throws IOException
   {
     super.install(baseDirectory, config);
-    config.setHgBinary(IOUtil.search(COMMAND_HG));
-    config.setPythonBinary(IOUtil.search(COMMAND_PYTHON));
+
+    if (Util.isEmpty(config.getHgBinary()))
+    {
+      config.setHgBinary(IOUtil.search(COMMAND_HG));
+    }
+
+    if (Util.isEmpty(config.getPythonBinary()))
+    {
+      config.setPythonBinary(IOUtil.search(COMMAND_PYTHON));
+    }
   }
 
   /**
