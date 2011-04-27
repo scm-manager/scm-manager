@@ -170,13 +170,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
       },{
         id: 'finish',
         text: 'Finish',
-        handler: function(){
-          if ( debug ){
-            console.debug('finish');
-            console.debug( this.hgConfig );
-          }
-          this.fireEvent('finish', this.hgConfig);
-        },
+        handler: this.applyChanges,
         scope: this,
         disabled: true
       }],
@@ -184,6 +178,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
         id: 'step-1',
         layout: 'form',
         items: [{
+          id: 'mercurial',
           fieldLabel: 'Mercurial Installation',
           name: 'mercurial',
           xtype: 'combo',
@@ -195,8 +190,10 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
           store: hgInstallationStore,
           valueField: 'path',
           displayField: 'path',
-          allowBlank: false
+          allowBlank: false,
+          value: this.hgConfig.hgBinary
         },{
+          id: 'python',
           fieldLabel: 'Python Installation',
           name: 'python',
           xtype: 'combo',
@@ -208,7 +205,8 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
           store: pythonInstallationStore,
           valueField: 'path',
           displayField: 'path',
-          allowBlank: false          
+          allowBlank: false,
+          value: this.hgConfig.pythonBinary
         }]
       },{
         id: 'step-2',
@@ -221,6 +219,24 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.hg.ConfigWizardPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  applyChanges: function(){
+    var mercurial = Ext.getCmp('mercurial').getValue();
+    var python = Ext.getCmp('python').getValue();
+    if (debug){
+      console.debug( 'configure mercurial=' + mercurial + " and python=" + python );
+    }
+    delete this.hgConfig.pythonPath;
+    delete this.hgConfig.useOptimizedBytecode;
+    this.hgConfig.hgBinary = mercurial;
+    this.hgConfig.pythonBinary = python;
+    
+    if ( debug ){
+      console.debug( this.hgConfig );
+    }
+    
+    this.fireEvent('finish', this.hgConfig);
   }
   
 });

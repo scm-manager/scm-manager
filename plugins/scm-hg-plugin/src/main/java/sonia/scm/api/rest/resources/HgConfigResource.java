@@ -98,11 +98,33 @@ public class HgConfigResource
    */
   @POST
   @Path("auto-configuration")
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public HgConfig autoConfiguration(@Context UriInfo uriInfo)
   {
-    handler.setConfig(null);
-    handler.doAutoConfiguration();
+    return autoConfiguration(uriInfo, null);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param uriInfo
+   * @param config
+   *
+   * @return
+   */
+  @POST
+  @Path("auto-configuration")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public HgConfig autoConfiguration(@Context UriInfo uriInfo, HgConfig config)
+  {
+    if (config == null)
+    {
+      config = new HgConfig();
+    }
+
+    handler.doAutoConfiguration(config);
 
     return handler.getConfig();
   }

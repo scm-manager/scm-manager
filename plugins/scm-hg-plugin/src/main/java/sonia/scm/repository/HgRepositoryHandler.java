@@ -104,55 +104,35 @@ public class HgRepositoryHandler
   /**
    * Method description
    *
+   *
+   * @param autoConfig
    */
-  public void doAutoConfiguration()
+  public void doAutoConfiguration(HgConfig autoConfig)
   {
     HgInstaller installer = HgInstallerFactory.createInstaller();
 
-    if (config == null)
+    try
     {
-      config = new HgConfig();
-
-      try
+      if (logger.isDebugEnabled())
       {
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("installing mercurial with {}",
-                       installer.getClass().getName());
-        }
-
-        installer.install(baseDirectory, config);
-        new HgWebConfigWriter(config).write();
+        logger.debug("installing mercurial with {}",
+                     installer.getClass().getName());
       }
-      catch (IOException ioe)
+
+      installer.install(baseDirectory, autoConfig);
+      config = autoConfig;
+      storeConfig();
+      new HgWebConfigWriter(config).write();
+    }
+    catch (IOException ioe)
+    {
+      if (logger.isErrorEnabled())
       {
-        if (logger.isErrorEnabled())
-        {
-          logger.error(
-              "Could not write Hg CGI for inital config.  "
-              + "HgWeb may not function until a new Hg config is set", ioe);
-        }
+        logger.error(
+            "Could not write Hg CGI for inital config.  "
+            + "HgWeb may not function until a new Hg config is set", ioe);
       }
     }
-    else
-    {
-      try
-      {
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("update mercurial with {}",
-                       installer.getClass().getName());
-        }
-
-        installer.update(baseDirectory, config);
-      }
-      catch (IOException ex)
-      {
-        logger.error(ex.getMessage(), ex);
-      }
-    }
-
-    storeConfig();
   }
 
   /**
@@ -163,7 +143,11 @@ public class HgRepositoryHandler
   public void loadConfig()
   {
     super.loadConfig();
-    doAutoConfiguration();
+
+    if (config == null)
+    {
+      doAutoConfiguration(new HgConfig());
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
