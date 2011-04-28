@@ -267,7 +267,12 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
           valueField: 'id',
           displayField: 'id',
           allowBlank: false,
-          tpl: this.packageTemplate
+          tpl: this.packageTemplate,
+          listeners: {
+            select: function(){
+              Ext.getCmp('finish').setDisabled(false);
+            }
+          }
         }]
       }]
     }
@@ -293,17 +298,18 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
     
     var next = -1;
     
-    if ( id == 'cod' && direction == 1 )
-    {
+    if ( id == 'cod' && direction == 1 ){
       var v = Ext.getCmp('configureOrDownload').getValue().getRawValue();
+      var df = false;
       if ( v == 'localInstall' ){
         next = 1;
       } else if ( v == 'remoteInstall' ){
         next = 2;
+        df = true;
       }
       Ext.getCmp('move-prev').setDisabled(false);
       Ext.getCmp('move-next').setDisabled(true);
-      Ext.getCmp('finish').setDisabled(false);
+      Ext.getCmp('finish').setDisabled(df);
     } 
     else if (direction == -1 && (id == 'localInstall' || id == 'remoteInstall')) {
       next = 0;
