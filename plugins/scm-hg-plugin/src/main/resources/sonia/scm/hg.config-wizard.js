@@ -336,6 +336,17 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
       console.debug( 'install mercurial package ' + pkg );
     }
     
+    // TODO i18n
+    var lbox = Ext.MessageBox.show({
+      title: 'Loading',
+      msg: 'install mercurial package ' + pkg,
+      width: 300,
+      wait: true,
+      animate: true,
+      progress: true,
+      closable: false
+    });
+    
     Ext.Ajax.request({
       url: restUrl + 'config/repositories/hg/packages/' + pkg + '.json',
       method: 'POST',
@@ -345,12 +356,14 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
         if ( debug ){
           console.debug('package successfully installed');
         }
+        lbox.hide();
         this.fireEvent('finish');
       },
       failure: function(){
         if ( debug ){
           console.debug('package installation failed');
         }
+        lbox.hide();
         // TODO i18n
         Ext.MessageBox.show({
           title: 'Error',
