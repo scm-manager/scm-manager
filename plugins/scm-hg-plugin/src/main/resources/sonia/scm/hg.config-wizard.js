@@ -43,8 +43,8 @@ Sonia.hg.ConfigWizard = Ext.extend(Ext.Window,{
     var config = {
       title: this.title,
       layout: 'fit',
-      width: 540,
-      height: 320,
+      width: 420,
+      height: 140,
       closable: true,
       resizable: true,
       plain: true,
