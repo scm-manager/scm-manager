@@ -112,7 +112,10 @@ Ext.extend(Sonia.hg.InstallationJsonReader, Ext.data.JsonReader, {
 Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
   
   hgConfig: null,
-  
+  packageTemplate: '<tpl for="."><div class="x-combo-list-item">\
+                      {id} (hg: {hg-version}, py: {python-version}, size: {size:fileSize})\
+                    </div></tpl>',
+ 
   initComponent: function(){
     this.addEvents('finish');
     
@@ -162,7 +165,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
         bodyCssClass: 'x-panel-mc',
         border: false,
         labelWidth: 120,
-        width: 230
+        width: 250
       },
       bbar: ['->',{
         id: 'move-prev',
@@ -206,7 +209,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
         id: 'localInstall',
         layout: 'form',
         defaults: {
-          width: 230
+          width: 250
         },
         items: [{
           id: 'mercurial',
@@ -243,7 +246,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
         id: 'remoteInstall',
         layout: 'form',
         defaults: {
-          width: 230
+          width: 250
         },
         items: [{
           id: 'package',
@@ -257,8 +260,9 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
           editable: false,
           store: packageStore,
           valueField: 'id',
-          displayField: 'hg-version',
-          allowBlank: false
+          displayField: 'id',
+          allowBlank: false,
+          tpl: this.packageTemplate
         }]
       }]
     }
@@ -308,6 +312,56 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
   },
   
   applyChanges: function(){
+    var v = Ext.getCmp('configureOrDownload').getValue().getRawValue();
+    if ( v == 'localInstall' ){
+      this.applyLocalConfiguration();
+    } else if ( v == 'remoteInstall' ){
+      this.applyRemoteConfiguration();
+    }
+  },
+  
+  applyRemoteConfiguration: function(){
+    if ( debug ){
+      console.debug( "apply remote configuration" );
+    }
+    
+    var pkg = Ext.getCmp('package').getValue();
+    if ( debug ){
+      console.debug( 'install mercurial package ' + pkg );
+    }
+    
+    Ext.Ajax.request({
+      url: restUrl + 'config/repositories/hg/packages/' + pkg + '.json',
+      method: 'POST',
+      scope: this,
+      timeout: 900000, // 15min
+      success: function(){
+        if ( debug ){
+          console.debug('package successfully installed');
+        }
+        this.fireEvent('finish');
+      },
+      failure: function(){
+        if ( debug ){
+          console.debug('package installation failed');
+        }
+        // TODO i18n
+        Ext.MessageBox.show({
+          title: 'Error',
+          msg: 'Package installation failed',
+          buttons: Ext.MessageBox.OK,
+          icon:Ext.MessageBox.ERROR
+        });
+      }
+    });
+    
+    
+  },
+  
+  applyLocalConfiguration: function(){
+    if ( debug ){
+      console.debug( "apply remote configuration" );
+    }
     var mercurial = Ext.getCmp('mercurial').getValue();
     var python = Ext.getCmp('python').getValue();
     if (debug){
