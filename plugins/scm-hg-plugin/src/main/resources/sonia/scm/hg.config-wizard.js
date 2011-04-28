@@ -116,7 +116,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
                       {id} (hg: {hg-version}, py: {python-version}, size: {size:fileSize})\
                     </div></tpl>',
   
-  // text TODO i18n
+  // text
   backText: 'Back',
   nextText: 'Next',
   finishText: 'Finish',
@@ -423,3 +423,28 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
 
 // register xtype
 Ext.reg('hgConfigWizardPanel', Sonia.hg.ConfigWizardPanel);
+
+
+// i18n
+
+if ( i18n != null && i18n.country == 'de' ){
+
+  Ext.override(Sonia.hg.ConfigPanel, {
+
+    backText: 'Zurück',
+    nextText: 'Weiter',
+    finishText: 'Fertigstellen',
+    configureLocalText: 'Eine lokale Installation Konfigurieren',
+    configureRemoteText: 'Herunterladen und installieren',
+    loadingText: 'Lade ...',
+    hgInstallationText: 'Mercurial Installation',
+    pythonInstallationText: 'Python Installation',
+    hgPackageText: 'Mercurial Package',
+    errorTitleText: 'Fehler',
+    packageInstallationFailedText: 'Package Installation fehlgeschlagen',
+    installPackageText: 'Installiere Mercurial-Package {0}'
+ 
+
+  });
+
+}

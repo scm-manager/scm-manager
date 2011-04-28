@@ -180,6 +180,8 @@ if ( i18n != null && i18n.country == 'de' ){
     useOptimizedBytecodeText: 'Optimierter Bytecode (.pyo)',
     autoConfigText: 'Einstellungen automatisch laden',
     autoConfigLabelText: 'Automatische Einstellung',
+    configWizardText: 'Konfigurations-Assistenten starten',
+    configWizardLabelText: 'Konfigurations-Assistent',
 
     // helpText
     hgBinaryHelpText: 'Pfad zum "hg" Befehl.',
