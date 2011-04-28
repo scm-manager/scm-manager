@@ -116,6 +116,24 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
   initComponent: function(){
     this.addEvents('finish');
     
+    var packageStore = new Ext.data.JsonStore({
+      id: 'pkgStore',
+      proxy: new Ext.data.HttpProxy({
+        url: restUrl + 'config/repositories/hg/packages.json',
+        disableCaching: false
+      }),
+      fields: [ 'id', 'hg-version', 'python-version', 'size' ],
+      root: 'package',
+      listeners: {
+        load: {
+          fn: this.checkIfPackageAvailable,
+          scope: this
+        }
+      }
+    });
+    
+    packageStore.load();
+
     var hgInstallationStore = new Ext.data.Store({
       proxy: new  Ext.data.HttpProxy({
         url: restUrl + 'config/repositories/hg/installations/hg.json'
@@ -165,20 +183,28 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
         disabled: true
       }],
       items: [{
-        id: 'step-1',
+        id: 'cod',
         items: [{
+          id: 'configureOrDownload',
           xtype: 'radiogroup',
           name: 'configureOrDownload',
           columns: 1,
-          items: [
-            {boxLabel: 'Configure local installation', name: 'cod', inputValue: 'local', checked: true},
-            {boxLabel: 'Download and install', name: 'cod', inputValue: 'remote', disabled: true},
-          ]
+          items: [{
+            boxLabel: 'Configure local installation', 
+            name: 'cod', 
+            inputValue: 'localInstall',
+            checked: true
+          },{
+            id: 'remoteInstallRadio',
+            boxLabel: 'Download and install', 
+            name: 'cod', 
+            inputValue: 'remoteInstall', 
+            disabled: true
+          }]
         }]
       },{
-        id: 'step-2',
+        id: 'localInstall',
         layout: 'form',
-        width: '100%',
         defaults: {
           width: 230
         },
@@ -214,8 +240,26 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
           value: this.hgConfig.pythonBinary
         }]
       },{
-        id: 'step-3',
-        html: '<h2>Step 3</h2>'
+        id: 'remoteInstall',
+        layout: 'form',
+        defaults: {
+          width: 230
+        },
+        items: [{
+          id: 'package',
+          fieldLabel: 'Mercurial Package',
+          name: 'package',
+          xtype: 'combo',
+          readOnly: false,
+          triggerAction: 'all',
+          lazyRender: true,
+          mode: 'local',
+          editable: false,
+          store: packageStore,
+          valueField: 'id',
+          displayField: 'hg-version',
+          allowBlank: false
+        }]
       }]
     }
     
@@ -223,15 +267,44 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
     Sonia.hg.ConfigWizardPanel.superclass.initComponent.apply(this, arguments);
   },
   
+  checkIfPackageAvailable: function(store){
+    var c = store.getTotalCount();
+    if ( debug ){
+      console.debug( "found " + c + " package(s)" );
+    }
+    if ( c > 0 ){
+      Ext.getCmp('remoteInstallRadio').setDisabled(false);
+    }
+  },
+  
   navHandler: function(direction){
     var layout = this.getLayout();
-    var i = layout.activeItem.id.split('step-')[1];
-    i = parseInt(i) - 1;
-    var next = parseInt(i) + direction;
-    layout.setActiveItem(next);
-    Ext.getCmp('move-prev').setDisabled(next == 0);
-    Ext.getCmp('move-next').setDisabled(next == 2);
-    Ext.getCmp('finish').setDisabled(next != 2);
+    var id = layout.activeItem.id;
+    
+    var next = -1;
+    
+    if ( id == 'cod' && direction == 1 )
+    {
+      var v = Ext.getCmp('configureOrDownload').getValue().getRawValue();
+      if ( v == 'localInstall' ){
+        next = 1;
+      } else if ( v == 'remoteInstall' ){
+        next = 2;
+      }
+      Ext.getCmp('move-prev').setDisabled(false);
+      Ext.getCmp('move-next').setDisabled(true);
+      Ext.getCmp('finish').setDisabled(false);
+    } 
+    else if (direction == -1 && (id == 'localInstall' || id == 'remoteInstall')) {
+      next = 0;
+      Ext.getCmp('move-prev').setDisabled(true);
+      Ext.getCmp('move-next').setDisabled(false);
+      Ext.getCmp('finish').setDisabled(true);   
+    }
+    
+    if ( next >= 0 ){
+      layout.setActiveItem(next);
+    }
   },
   
   applyChanges: function(){
