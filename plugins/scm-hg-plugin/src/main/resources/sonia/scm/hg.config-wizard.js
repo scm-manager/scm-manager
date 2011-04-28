@@ -120,7 +120,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
     this.addEvents('finish');
     
     var packageStore = new Ext.data.JsonStore({
-      id: 'pkgStore',
+      storeId: 'pkgStore',
       proxy: new Ext.data.HttpProxy({
         url: restUrl + 'config/repositories/hg/packages.json',
         disableCaching: false
@@ -135,8 +135,6 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
       }
     });
     
-    packageStore.load();
-
     var hgInstallationStore = new Ext.data.Store({
       proxy: new  Ext.data.HttpProxy({
         url: restUrl + 'config/repositories/hg/installations/hg.json'
@@ -204,7 +202,14 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
             inputValue: 'remoteInstall', 
             disabled: true
           }]
-        }]
+        }],
+        listeners: {
+          render: function(panel){
+            panel.body.mask('Loading ...');
+            var store = Ext.StoreMgr.lookup('pkgStore');
+            store.load.defer(100, store);
+          }
+        }
       },{
         id: 'localInstall',
         layout: 'form',
@@ -272,6 +277,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
   },
   
   checkIfPackageAvailable: function(store){
+    Ext.getCmp('cod').body.unmask();
     var c = store.getTotalCount();
     if ( debug ){
       console.debug( "found " + c + " package(s)" );
