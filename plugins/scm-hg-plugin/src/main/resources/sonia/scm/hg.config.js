@@ -41,8 +41,8 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   pythonPathText: 'Python Module Search Path',
   repositoryDirectoryText: 'Repository directory',
   useOptimizedBytecodeText: 'Optimized Bytecode (.pyo)',
-  autoConfigText: 'Load Auto-Configuration',
-  autoConfigLabelText: 'Auto-Configuration',
+  configWizardText: 'Start Configuration Wizard',
+  configWizardLabelText: 'Start Configuration Wizard',
 
   // helpText
   hgBinaryHelpText: 'Location of Mercurial binary.',
@@ -86,8 +86,8 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         helpText: this.useOptimizedBytecodeHelpText
       },{
         xtype: 'button',
-        text: 'Start Config Wizard',
-        fieldLabel: "ConfigWizard",
+        text: this.configWizardText,
+        fieldLabel: this.configWizardLabelText,
         handler: function(){
           var config = this.getForm().getValues();
           var wizard = new Sonia.hg.ConfigWizard({

@@ -115,6 +115,20 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
   packageTemplate: '<tpl for="."><div class="x-combo-list-item">\
                       {id} (hg: {hg-version}, py: {python-version}, size: {size:fileSize})\
                     </div></tpl>',
+  
+  // text TODO i18n
+  backText: 'Back',
+  nextText: 'Next',
+  finishText: 'Finish',
+  configureLocalText: 'Configure local installation',
+  configureRemoteText: 'Download and install',
+  loadingText: 'Loading ...',
+  hgInstallationText: 'Mercurial Installation',
+  pythonInstallationText: 'Python Installation',
+  hgPackageText: 'Mercurial Package',
+  errorTitleText: 'Error',
+  packageInstallationFailedText: 'Package installation failed',
+  installPackageText: 'install mercurial package {0}',
  
   initComponent: function(){
     this.addEvents('finish');
@@ -167,18 +181,18 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
       },
       bbar: ['->',{
         id: 'move-prev',
-        text: 'Back',
+        text: this.backText,
         handler: this.navHandler.createDelegate(this, [-1]),
         disabled: true,
         scope: this
       },{
         id: 'move-next',
-        text: 'Next',
+        text: this.nextText,
         handler: this.navHandler.createDelegate(this, [1]),
         scope: this
       },{
         id: 'finish',
-        text: 'Finish',
+        text: this.finishText,
         handler: this.applyChanges,
         scope: this,
         disabled: true
@@ -191,23 +205,26 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
           name: 'configureOrDownload',
           columns: 1,
           items: [{
-            boxLabel: 'Configure local installation', 
+            boxLabel: this.configureLocalText, 
             name: 'cod', 
             inputValue: 'localInstall',
             checked: true
           },{
             id: 'remoteInstallRadio',
-            boxLabel: 'Download and install', 
+            boxLabel: this.configureRemoteText, 
             name: 'cod', 
             inputValue: 'remoteInstall', 
             disabled: true
           }]
         }],
         listeners: {
-          render: function(panel){
-            panel.body.mask('Loading ...');
-            var store = Ext.StoreMgr.lookup('pkgStore');
-            store.load.defer(100, store);
+          render: {
+            fn: function(panel){
+              panel.body.mask(this.loadingText);
+              var store = Ext.StoreMgr.lookup('pkgStore');
+              store.load.defer(100, store);
+            },
+            scope: this
           }
         }
       },{
@@ -218,7 +235,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
         },
         items: [{
           id: 'mercurial',
-          fieldLabel: 'Mercurial Installation',
+          fieldLabel: this.hgInstallationText,
           name: 'mercurial',
           xtype: 'combo',
           readOnly: false,
@@ -233,7 +250,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
           value: this.hgConfig.hgBinary
         },{
           id: 'python',
-          fieldLabel: 'Python Installation',
+          fieldLabel: this.pythonInstallationText,
           name: 'python',
           xtype: 'combo',
           readOnly: false,
@@ -255,7 +272,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
         },
         items: [{
           id: 'package',
-          fieldLabel: 'Mercurial Package',
+          fieldLabel: this.hgPackageText,
           name: 'package',
           xtype: 'combo',
           readOnly: false,
@@ -342,10 +359,9 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
       console.debug( 'install mercurial package ' + pkg );
     }
     
-    // TODO i18n
     var lbox = Ext.MessageBox.show({
-      title: 'Loading',
-      msg: 'install mercurial package ' + pkg,
+      title: this.loadingText,
+      msg: String.format(this.installPackageText, pkg),
       width: 300,
       wait: true,
       animate: true,
@@ -370,10 +386,9 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
           console.debug('package installation failed');
         }
         lbox.hide();
-        // TODO i18n
         Ext.MessageBox.show({
-          title: 'Error',
-          msg: 'Package installation failed',
+          title: this.errorTitleText,
+          msg: this.packageInstallationFailedText,
           buttons: Ext.MessageBox.OK,
           icon:Ext.MessageBox.ERROR
         });
