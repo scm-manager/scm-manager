@@ -60,6 +60,8 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   logoutFailedText: 'Logout Failed!',
 
   mainTabPanel: null,
+  
+  infoPanels: [],
 
   constructor : function(config) {
     this.addEvents('login', 'logout', 'init');
@@ -69,7 +71,24 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   },
   
   init: function(){
-    this.fireEvent('load', this);
+    this.fireEvent('init', this);
+  },
+  
+  registerInfoPanel: function(type, panel){
+    this.infoPanels[type] = panel;
+  },
+  
+  getInfoPanel: function(type){
+    var rp = null;
+    var panel = this.infoPanels[type];
+    if ( panel == null ){
+      rp = {
+        xtype: 'repositoryInfoPanel'
+      };
+    } else {
+      rp = Sonia.util.clone( panel );
+    }
+    return rp;
   },
 
   postLogin: function(){

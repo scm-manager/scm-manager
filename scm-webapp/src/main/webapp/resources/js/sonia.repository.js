@@ -161,10 +161,10 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       console.debug( item.name + ' selected' );
     }
 
-    var panels = [{
-      item: item,
-      xtype: 'repositoryInfoPanel'
-    }];
+    var infoPanel = main.getInfoPanel(item.type);
+    infoPanel.item = item;
+    
+    var panels = [infoPanel];
     
     if ( Sonia.repository.isOwner(item) ){
       Ext.getCmp('repoRmButton').setDisabled(false);
@@ -211,6 +211,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 // register xtype
 Ext.reg('repositoryGrid', Sonia.repository.Grid);
 
+// default repository information panel
+
 Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
 
   linkTemplate: '<a target="_blank" href="{0}">{0}</a>',
@@ -250,25 +252,19 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
       },{
         xtype: 'box',
         html: String.format(this.linkTemplate, this.item.url)
-      },{
-        xtype: 'box',
-        height: 10,
-        colspan: 2
-      },{
-        xtype: 'link',
-        colspan: 2,
-        text: 'ChangesetViewer',
-        listeners: {
-          click: {
-            fn: this.openChangesetViewer,
-            scope: this
-          }
-        }
       }]
     }
     
+    console.debug(config);
+    this.modifyDefaultConfig(config);
+    console.debug(config);
+    
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.InfoPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  modifyDefaultConfig: function(config){
+    
   },
 
   getRepositoryTypeText: function(t){
@@ -282,15 +278,43 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
     }
     return text;
   },
+  
+  createSpacer: function(){
+    return {
+      xtype: 'box',
+      height: 10,
+      colspan: 2
+    };
+  },
+  
+  createChangesetViewerLink: function(){
+    return {
+      xtype: 'link',
+      colspan: 2,
+      text: 'ChangesetViewer',
+      listeners: {
+        click: {
+          fn: this.openChangesetViewer,
+          scope: this
+        }
+      }
+    };
+  },
 
-  openChangesetViewer: function(){
-    var changesetViewer = {
+  createChangesetViewer: function(){
+    return {
       id: this.item.id + '-changesetViewer',
       title: 'ChangesetViewer ' + this.item.name,
       repository: this.item,
       xtype: 'repositoryChangesetViewerPanel',
       closable: true,
       autoScroll: true
+    };
+  },
+
+  openChangesetViewer: function(changesetViewer){
+    if ( changesetViewer == null ){
+      changesetViewer = this.createChangesetViewer();
     }
     main.addTab(changesetViewer);
   }

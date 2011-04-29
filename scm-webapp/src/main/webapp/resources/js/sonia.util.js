@@ -138,6 +138,18 @@
 
 Ext.ns('Sonia.util');
 
+// clone method
+
+Sonia.util.clone = function(obj) {
+  var newObj = (this instanceof Array) ? [] : {};
+  for (i in obj) {
+    if (i == 'clone') continue;
+    if (obj[i] && typeof obj[i] == "object") {
+      newObj[i] = Sonia.util.clone(obj[i]);
+    } else newObj[i] = obj[i]
+  } return newObj;
+};
+
 // link
 
 Sonia.util.Link = Ext.extend(Ext.BoxComponent, {
