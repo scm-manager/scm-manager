@@ -105,6 +105,15 @@ if ( i18n != null && i18n.country == 'de' ){
 
 }
 
+// register information panel
+
+initCallbacks.push(function(main){
+  main.registerInfoPanel('svn', {
+    checkoutTemplate: 'svn checkout <a href="{0}" target="_blank">{0}</a>',
+    xtype: 'repositoryExtendedInfoPanel'
+  });
+});
+
 // register panel
 
 registerConfigPanel({
