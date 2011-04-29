@@ -79,6 +79,17 @@ if ( i18n != null && i18n.country == 'de' ){
 
 }
 
+// register information panel
+
+initCallbacks.push(function(main){
+  main.registerInfoPanel('git', {
+    checkoutTemplate: 'git clone <a href="{0}" target="_blank">{0}</a>',
+    xtype: 'repositoryExtendedInfoPanel'
+  });
+});
+
+
+
 // register panel
 
 registerConfigPanel({
