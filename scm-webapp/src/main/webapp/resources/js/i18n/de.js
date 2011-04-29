@@ -218,6 +218,15 @@ if (Sonia.config.ConfigForm){
 
 // sonia.user.js
 
+if (Sonia.user.DefaultPanel){
+  
+  Ext.apply(Sonia.user.DefaultPanel, {
+    title: 'Benutzer',
+    html: 'Es wurde kein Benutzer selektiert.'
+  });
+  
+}
+
 if (Sonia.user.Grid){
 
   Ext.override(Sonia.user.Grid, {

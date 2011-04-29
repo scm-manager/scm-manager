@@ -44,9 +44,7 @@ Sonia.user.setEditPanel = function(panel){
 
 /**
  * Panels
- * missing i18n
  */
-
 Sonia.user.DefaultPanel = {
   region: 'south',
   title: 'User Form',
