@@ -216,9 +216,15 @@ Ext.reg('repositoryGrid', Sonia.repository.Grid);
 Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
 
   linkTemplate: '<a target="_blank" href="{0}">{0}</a>',
+  mailTemplate: '<a href="mailto: {0}">{0}</a>',
   actionLinkTemplate: '<a style="cursor: pointer;">{0}</a>',
 
   initComponent: function(){
+    
+    var contact = '';
+    if ( this.item.contact != null ){
+      contact = String.format(this.mailTemplate, this.item.contact);
+    }
     
     // TODO i18n
     var items = [{
@@ -233,6 +239,12 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
     },{
       xtype: 'box',
       html: this.getRepositoryTypeText(this.item.type)
+    },{
+      xtype: 'label',
+      text: 'Contact: '
+    },{
+      xtype: 'box',
+      html: contact
     },{
       xtype: 'label',
       text: 'Url: '
