@@ -163,6 +163,37 @@ if (Sonia.repository.Panel){
 
 }
 
+if (Sonia.repository.PermissionFormPanel){
+  
+  Ext.override(Sonia.repository.PermissionFormPanel, {
+    titleText: 'Berechtigungen'
+  });
+  
+}
+
+if (Sonia.repository.InfoPanel){
+
+  Ext.override(Sonia.repository.InfoPanel, {
+    nameText: 'Name: ',
+    typeText: 'Typ: ',
+    contactText: 'Kontakt: ',
+    urlText: 'Url: ',
+    // german ??
+    changesetViewerText: 'ChangesetViewer',
+    changesetViewerTitleText: 'ChangesetViewer {0}'
+  });
+
+}
+
+if (Sonia.repository.ExtendedInfoPanel){
+  
+  Ext.override(Sonia.repository.ExtendedInfoPanel, {
+    // german ??
+    checkoutText: 'Checkout: '
+  });
+  
+}
+
 // sonia.config.js
 
 if (Sonia.config.ScmConfigPanel){

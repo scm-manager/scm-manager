@@ -62,8 +62,6 @@ Sonia.repository.setEditPanel = function(panels){
 
 /**
  * panels
- *
- * TODO: missing i18n
  */
 
 Sonia.repository.DefaultPanel = {
@@ -210,7 +208,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   mailTemplate: '<a href="mailto: {0}">{0}</a>',
   actionLinkTemplate: '<a style="cursor: pointer;">{0}</a>',
   
-  // text TODO i18n
+  // text
   nameText: 'Name: ',
   typeText: 'Type: ',
   contactText: 'Contact: ',
@@ -225,28 +223,27 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
       contact = String.format(this.mailTemplate, this.item.contact);
     }
     
-    // TODO i18n
     var items = [{
       xtype: 'label',
-      text: 'Name: '
+      text: this.nameText
     },{
       xtype: 'box',
       html: this.item.name
     },{
       xtype: 'label',
-      text: 'Type: '
+      text: this.typeText
     },{
       xtype: 'box',
       html: this.getRepositoryTypeText(this.item.type)
     },{
       xtype: 'label',
-      text: 'Contact: '
+      text: this.contactText
     },{
       xtype: 'box',
       html: contact
     },{
       xtype: 'label',
-      text: 'Url: '
+      text: this.urlText
     },{
       xtype: 'box',
       html: String.format(this.linkTemplate, this.item.url)
@@ -355,8 +352,8 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
   
   checkoutTemplate: null,
   
-  // text TODO i18n
-  ckeckoutText: 'Checkout: ',
+  // text
+  checkoutText: 'Checkout: ',
   
   modifyDefaultConfig: function(config){
     var items = config.items;
@@ -569,6 +566,8 @@ Ext.reg('repositoryPropertiesForm', Sonia.repository.PropertiesFormPanel);
 Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
 
   permissionStore: null,
+  
+  titleText: 'Permissions',
 
   initComponent: function(){
     var permissionStore = new Ext.data.JsonStore({
@@ -665,8 +664,7 @@ Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
     });
 
     var config = {
-      // TODO i18n
-      title: 'Permissions',
+      title: this.titleText,
       listeners: {
         updated: this.clearModifications,
         preUpdate: {
