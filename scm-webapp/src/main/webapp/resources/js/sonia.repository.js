@@ -75,15 +75,6 @@ Sonia.repository.DefaultPanel = {
   html: 'Add or select an Repository'
 }
 
-Sonia.repository.NoPermissionPanel = {
-  region: 'south',
-  title: 'Repository Form',
-  padding: 5,
-  xtype: 'panel',
-  bodyCssClass: 'x-panel-mc',
-  html: 'No permission to modify this repository'
-}
-
 // components
 
 // RepositoryGrid
