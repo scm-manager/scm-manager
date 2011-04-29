@@ -276,6 +276,15 @@ if (Sonia.user.Panel){
 
 // sonia.group.js
 
+if (Sonia.group.DefaultPanel){
+  
+  Ext.apply(Sonia.group.DefaultPanel,{
+    title: 'Gruppe',
+    html: 'Es wurde keine Gruppe selektiert'
+  });
+  
+}
+
 if (Sonia.group.Grid){
 
   Ext.override(Sonia.group.Grid,{

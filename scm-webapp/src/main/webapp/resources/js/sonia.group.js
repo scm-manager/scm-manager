@@ -41,7 +41,6 @@ Sonia.group.setEditPanel = function(panel){
 
 /**
  * panels
- * TODO: add missing i18n
  */
 Sonia.group.DefaultPanel = {
   region: 'south',
