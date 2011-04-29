@@ -93,6 +93,15 @@ if ( Sonia.rest.FormPanel ){
 
 // sonia.repository.js
 
+if (Sonia.repository.DefaultPanel){
+  
+  Ext.apply(Sonia.repository.DefaultPanel, {
+    title: 'Repository',
+    html: 'Es wurde kein Repository selektiert'
+  });
+  
+}
+
 if ( Sonia.repository.Grid ){
 
   Ext.override(Sonia.repository.Grid, {
