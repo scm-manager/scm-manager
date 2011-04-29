@@ -33,17 +33,31 @@
 
 package sonia.scm.repository;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "config")
-public class SvnConfig extends SimpleRepositoryConfig
+public enum Compatibility
 {
+  NONE(false, false, false), PRE14(true, true, true), PRE15(false, true, true),
+  PRE16(false, false, true);
+
+  /**
+   * Field description
+   *
+   * @param pre14Compatible
+   * @param pre15Compatible
+   * @param pre16Compatible
+   */
+  private Compatibility(boolean pre14Compatible, boolean pre15Compatible,
+                        boolean pre16Compatible)
+  {
+    this.pre14Compatible = pre14Compatible;
+    this.pre15Compatible = pre15Compatible;
+    this.pre16Compatible = pre16Compatible;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -51,31 +65,41 @@ public class SvnConfig extends SimpleRepositoryConfig
    *
    * @return
    */
-  public Compatibility getCompatibility()
+  public boolean isPre14Compatible()
   {
-    if (compatibility == null)
-    {
-      compatibility = Compatibility.NONE;
-    }
-
-    return compatibility;
+    return pre14Compatible;
   }
-
-  //~--- set methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param compatibility
+   * @return
    */
-  public void setCompatibility(Compatibility compatibility)
+  public boolean isPre15Compatible()
   {
-    this.compatibility = compatibility;
+    return pre15Compatible;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isPre16Compatible()
+  {
+    return pre16Compatible;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Compatibility compatibility = Compatibility.NONE;
+  private boolean pre14Compatible;
+
+  /** Field description */
+  private boolean pre15Compatible;
+
+  /** Field description */
+  private boolean pre16Compatible;
 }

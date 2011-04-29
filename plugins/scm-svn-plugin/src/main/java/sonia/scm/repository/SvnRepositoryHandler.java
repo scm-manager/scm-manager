@@ -154,22 +154,24 @@ public class SvnRepositoryHandler
   protected void create(Repository repository, File directory)
           throws RepositoryException, IOException
   {
+    Compatibility comp = config.getCompatibility();
+
     if (logger.isDebugEnabled())
     {
       StringBuilder log = new StringBuilder("create svn repository \"");
 
       log.append(directory.getName()).append("\": pre14Compatible=");
-      log.append(config.isPre14Compatible()).append(", pre15Compatible=");
-      log.append(config.isPre15Compatible()).append(", pre16Compatible=");
-      log.append(config.isPre16Compatible());
+      log.append(comp.isPre14Compatible()).append(", pre15Compatible=");
+      log.append(comp.isPre15Compatible()).append(", pre16Compatible=");
+      log.append(comp.isPre16Compatible());
       logger.debug(log.toString());
     }
 
     try
     {
       SVNRepositoryFactory.createLocalRepository(directory, null, true, false,
-              config.isPre14Compatible(), config.isPre15Compatible(),
-              config.isPre16Compatible());
+              comp.isPre14Compatible(), comp.isPre15Compatible(),
+              comp.isPre16Compatible());
     }
     catch (SVNException ex)
     {
