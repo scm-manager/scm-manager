@@ -170,6 +170,7 @@ if (Sonia.config.ScmConfigPanel){
   Ext.override(Sonia.config.ScmConfigPanel,{
     titleText: 'Allgemeine Einstellung',
     servnameText: 'Servername',
+    dateFormatText: 'Datumsformat',
     enableForwardingText: 'Forwarding (mod_proxy) aktivieren',
     forwardPortText: 'Forward Port',
     pluginRepositoryText: 'Plugin-Repository',
@@ -182,9 +183,12 @@ if (Sonia.config.ScmConfigPanel){
     loadingText: 'Laden ...',
     errorTitleText: 'Fehler',
     errorMsgText: 'Die Konfiguration konnte nicht geladen werden.',
+    errorSubmitMsgText: 'Die Konfiguration konnte nicht gespeichert werden.',
 
     // help
     servernameHelpText: 'Der Name dieses Servers. Dieser Name wird Teil der Repository-URL.',
+    // TODO
+    dateFormatHelpText: 'JavaScript Datumsformat.',
     pluginRepositoryHelpText: 'Die URL des Plugin-Repositories.<br />Beschreibung der {Platzhalter}:\n\
       <br /><b>version</b> = SCM-Manager Version<br /><b>os</b> = Betriebssystem<br /><b>arch</b> = Architektur',
     enableForwardingHelpText: 'Apache mod_proxy Port-Forwarding aktivieren.',

@@ -101,7 +101,6 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
 
   titleText: 'General Settings',
   servnameText: 'Servername',
-  // TODO i18n
   dateFormatText: 'Date format',
   enableForwardingText: 'Enable forwarding (mod_proxy)',
   forwardPortText: 'Forward Port',
@@ -115,12 +114,11 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   loadingText: 'Loading ...',
   errorTitleText: 'Error',
   errorMsgText: 'Could not load config.',
-  // TODO i18n
   errorSubmitMsgText: 'Could not submit config.',
 
   // help
   servernameHelpText: 'The name of this server. This name will be part of the repository url.',
-  // TODO i18n
+  // TODO
   dateFormatHelpText: 'JavaScript date format.',
   pluginRepositoryHelpText: 'The url of the plugin repository.<br />Explanation of the {placeholders}:\n\
   <br /><b>version</b> = SCM-Manager Version<br /><b>os</b> = Operation System<br /><b>arch</b> = Architecture',
