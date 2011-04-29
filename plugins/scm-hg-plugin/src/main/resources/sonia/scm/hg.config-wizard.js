@@ -429,7 +429,7 @@ Ext.reg('hgConfigWizardPanel', Sonia.hg.ConfigWizardPanel);
 
 if ( i18n != null && i18n.country == 'de' ){
 
-  Ext.override(Sonia.hg.ConfigPanel, {
+  Ext.override(Sonia.hg.ConfigWizardPanel, {
 
     backText: 'Zurück',
     nextText: 'Weiter',
@@ -443,7 +443,6 @@ if ( i18n != null && i18n.country == 'de' ){
     errorTitleText: 'Fehler',
     packageInstallationFailedText: 'Package Installation fehlgeschlagen',
     installPackageText: 'Installiere Mercurial-Package {0}'
- 
 
   });
 
