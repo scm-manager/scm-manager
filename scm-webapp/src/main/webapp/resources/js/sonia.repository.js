@@ -218,6 +218,14 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   linkTemplate: '<a target="_blank" href="{0}">{0}</a>',
   mailTemplate: '<a href="mailto: {0}">{0}</a>',
   actionLinkTemplate: '<a style="cursor: pointer;">{0}</a>',
+  
+  // text TODO i18n
+  nameText: 'Name: ',
+  typeText: 'Type: ',
+  contactText: 'Contact: ',
+  urlText: 'Url: ',
+  changesetViewerText: 'ChangesetViewer',
+  changesetViewerTitleText: 'ChangesetViewer {0}',
 
   initComponent: function(){
     
@@ -316,7 +324,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
     return {
       xtype: 'link',
       colspan: 2,
-      text: 'ChangesetViewer',
+      text: this.changesetViewerText,
       listeners: {
         click: {
           fn: this.openChangesetViewer,
@@ -329,7 +337,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   createChangesetViewer: function(){
     return {
       id: this.item.id + '-changesetViewer',
-      title: 'ChangesetViewer ' + this.item.name,
+      title: String.format(this.changesetViewerTitleText, this.item.name),
       repository: this.item,
       xtype: 'repositoryChangesetViewerPanel',
       closable: true,
@@ -356,6 +364,9 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
   
   checkoutTemplate: null,
   
+  // text TODO i18n
+  ckeckoutText: 'Checkout: ',
+  
   modifyDefaultConfig: function(config){
     var items = config.items;
     if ( items == null ){
@@ -363,7 +374,7 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
     }
     items.push({
       xtype: 'label',
-      text: 'Checkout: '
+      text: this.checkoutText
     },{
       xtype: 'box',
       html: String.format(

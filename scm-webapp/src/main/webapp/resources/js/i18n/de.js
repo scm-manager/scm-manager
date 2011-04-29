@@ -131,7 +131,6 @@ if (Sonia.repository.FormPanel){
     contactHelpText: 'Die E-Mail Adresse einer für das Repository verantwortlichen Person.',
     descriptionHelpText: 'Eine kurze Beschreibung des Repositories.',
     publicHelpText: 'Ein öffentliches Repository kann von jeder Person gelesen werden.',
-    // TODO
     permissionHelpText: 'Rechteverwaltung für bestimmte Nutzer oder Gruppen<br />\n\
         Rechte:<br /><b>READ</b> = nur lesen<br /><b>WRITE</b> = lesen und schreiben<br />\n\
         <b>OWNER</b> = lesen, schreiben und Rechteverwaltung.'
@@ -175,7 +174,7 @@ if (Sonia.config.ScmConfigPanel){
     errorTitleText: 'Fehler',
     errorMsgText: 'Die Konfiguration konnte nicht geladen werden.',
 
-    // help TODO
+    // help
     servernameHelpText: 'Der Name dieses Servers. Dieser Name wird Teil der Repository-URL.',
     pluginRepositoryHelpText: 'Die URL des Plugin-Repositories.<br />Beschreibung der {Platzhalter}:\n\
       <br /><b>version</b> = SCM-Manager Version<br /><b>os</b> = Betriebssystem<br /><b>arch</b> = Architektur',
