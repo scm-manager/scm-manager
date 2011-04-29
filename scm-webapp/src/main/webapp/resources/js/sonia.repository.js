@@ -219,6 +219,28 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   actionLinkTemplate: '<a style="cursor: pointer;">{0}</a>',
 
   initComponent: function(){
+    
+    // TODO i18n
+    var items = [{
+      xtype: 'label',
+      text: 'Name: '
+    },{
+      xtype: 'box',
+      html: this.item.name
+    },{
+      xtype: 'label',
+      text: 'Type: '
+    },{
+      xtype: 'box',
+      html: this.getRepositoryTypeText(this.item.type)
+    },{
+      xtype: 'label',
+      text: 'Url: '
+    },{
+      xtype: 'box',
+      html: String.format(this.linkTemplate, this.item.url)
+    }];
+    
     var config = {
       title: this.item.name,
       padding: 5,
@@ -233,31 +255,10 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
       defaults: {
         style: 'font-size: 12px'
       },
-      // TODO i18n
-      items: [{
-        xtype: 'label',
-        text: 'Name: '
-      },{
-        xtype: 'box',
-        html: this.item.name
-      },{
-        xtype: 'label',
-        text: 'Type: '
-      },{
-        xtype: 'box',
-        html: this.getRepositoryTypeText(this.item.type)
-      },{
-        xtype: 'label',
-        text: 'Url: '
-      },{
-        xtype: 'box',
-        html: String.format(this.linkTemplate, this.item.url)
-      }]
+      items: items
     }
-    
-    console.debug(config);
+
     this.modifyDefaultConfig(config);
-    console.debug(config);
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.InfoPanel.superclass.initComponent.apply(this, arguments);
@@ -265,6 +266,18 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   
   modifyDefaultConfig: function(config){
     
+  },
+  
+  getRepositoryUrlWithUsername: function(){
+    var uri = this.item.url;
+    if ( state.user.name != 'anonymous' ){
+      var index = uri.indexOf("://");
+      if ( index > 0 ){
+        index += 3;
+        uri = uri.substring(0, index) + state.user.name + "@" + uri.substring(index);
+      }
+    }
+    return uri;
   },
 
   getRepositoryTypeText: function(t){
