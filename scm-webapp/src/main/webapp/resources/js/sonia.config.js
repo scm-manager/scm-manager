@@ -115,6 +115,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   loadingText: 'Loading ...',
   errorTitleText: 'Error',
   errorMsgText: 'Could not load config.',
+  // TODO i18n
+  errorSubmitMsgText: 'Could not submit config.',
 
   // help
   servernameHelpText: 'The name of this server. This name will be part of the repository url.',
@@ -233,6 +235,13 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
             },
             failure: function(){
               this.el.unmask();
+              Ext.MessageBox.show({
+                title: this.errorTitleText,
+                msg: this.errorMsgText,
+                scope: this,
+                buttons: Ext.MessageBox.OK,
+                icon:Ext.MessageBox.ERROR
+              });
             }
           });
         },
@@ -393,6 +402,7 @@ Sonia.config.SimpleConfigForm = Ext.extend(Sonia.config.ConfigForm,{
       },
       failure: function(){
         this.el.unmask();
+        Ext.Msg.alert( this.failedText );
       }
     });
   },
