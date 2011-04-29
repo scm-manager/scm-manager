@@ -349,6 +349,40 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
 // register xtype
 Ext.reg('repositoryInfoPanel', Sonia.repository.InfoPanel);
 
+
+// extended information panel
+
+Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
+  
+  checkoutTemplate: null,
+  
+  modifyDefaultConfig: function(config){
+    var items = config.items;
+    if ( items == null ){
+      items = [];
+    }
+    items.push({
+      xtype: 'label',
+      text: 'Checkout: '
+    },{
+      xtype: 'box',
+      html: String.format(
+              this.checkoutTemplate, 
+              this.getRepositoryUrlWithUsername()
+            )
+    },
+      this.createSpacer(), 
+      this.createChangesetViewerLink()
+    );
+  }
+  
+});
+
+// register xtype
+Ext.reg("repositoryExtendedInfoPanel", Sonia.repository.ExtendedInfoPanel);
+
+
+
 // RepositoryFormPanel
 Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 

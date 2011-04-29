@@ -165,36 +165,6 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
 
 Ext.reg("hgConfigPanel", Sonia.hg.ConfigPanel);
 
-// hg information panel
-
-Sonia.hg.InformationPanel = Ext.extend(Sonia.repository.InfoPanel,{
-  
-  checkoutTemplate: 'hg clone <a href="{0}" target="_blank">{0}</a>',
-  
-  modifyDefaultConfig: function(config){
-    var items = config.items;
-    if ( items == null ){
-      items = [];
-    }
-    items.push({
-      xtype: 'label',
-      text: 'Checkout: '
-    },{
-      xtype: 'box',
-      html: String.format(
-              this.checkoutTemplate, 
-              this.getRepositoryUrlWithUsername()
-            )
-    },
-      this.createSpacer(), 
-      this.createChangesetViewerLink()
-    );
-  }
-  
-});
-
-Ext.reg("hgRepositoryInfoPanel", Sonia.hg.InformationPanel);
-
 // i18n
 
 if ( i18n != null && i18n.country == 'de' ){
@@ -228,7 +198,8 @@ if ( i18n != null && i18n.country == 'de' ){
 
 initCallbacks.push(function(main){
   main.registerInfoPanel('hg', {
-    xtype: 'hgRepositoryInfoPanel'
+    checkoutTemplate: 'hg clone <a href="{0}" target="_blank">{0}</a>',
+    xtype: 'repositoryExtendedInfoPanel'
   });
 });
 
