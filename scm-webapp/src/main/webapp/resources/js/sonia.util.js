@@ -50,7 +50,6 @@
     return result;
   },
 
-  // TODO i18n
   timeAgoJustNow: 'just now',
   timeAgoOneMinuteAgo: '1 minute ago',
   timeAgoOneMinuteFromNow: '1 minute from now',
@@ -73,7 +72,6 @@
   timeAgoLastCentury: 'last century',
   timeAgoNextCentury: 'next century',
   timeAgoCenturies: 'centuries',
-
 
   timeAgo : function(value){
 

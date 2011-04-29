@@ -44,6 +44,37 @@ if (Ext.form.VTypes){
 
 }
 
+// sonia.util.js
+
+if ( Ext.util.Format ){
+  
+  Ext.apply(Ext.util.Format, {
+    timeAgoJustNow: 'Jetzt',
+    timeAgoOneMinuteAgo: 'Vor 1 Minute',
+    timeAgoOneMinuteFromNow: 'In 1 minute',
+    timeAgoMinutes: 'Minuten',
+    timeAgoOneHourAgo: 'Vor 1 Stunde',
+    timeAgoOneHourFromNow: 'In 1 Stunde',
+    timeAgoHours: 'Stunden',
+    timeAgoYesterday: 'Gestern',
+    timeAgoTomorrow: 'Morgen',
+    timeAgoDays: 'Tage',
+    timeAgoLastWeek: 'Letzte Woche',
+    timeAgoNextWeek: 'Nächste Woche',
+    timeAgoWeeks: 'Wochen',
+    timeAgoLastMonth: 'Letzten Monat',
+    timeAgoNextMonth: 'Nächsten Monat',
+    timeAgoMonths: 'Monate',
+    timeAgoLastYear: 'Letztes Jahr',
+    timeAgoNextYear: 'Nächstes Jahr',
+    timeAgoYears: 'Jahre',
+    timeAgoLastCentury: 'Letztes Jahrhundert',
+    timeAgoNextCentury: 'Nächstes Jahrhundert',
+    timeAgoCenturies: 'Jahrhunderte'
+  });
+  
+}
+
 // sonia.login.js
 
 if (Sonia.login.Form){
