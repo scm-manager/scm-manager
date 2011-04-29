@@ -62,10 +62,14 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   mainTabPanel: null,
 
   constructor : function(config) {
-    this.addEvents('login', 'logout');
+    this.addEvents('login', 'logout', 'init');
     this.mainTabPanel = Ext.getCmp('mainTabPanel');
     this.addListener('login', this.postLogin, this);
     Sonia.scm.Main.superclass.constructor.call(this, config);
+  },
+  
+  init: function(){
+    this.fireEvent('load', this);
   },
 
   postLogin: function(){
@@ -357,7 +361,6 @@ Ext.onReady(function(){
   });
 
   main = new Sonia.scm.Main();
-  main.checkLogin();
 
   /**
    * Adds a tab to main TabPanel
@@ -368,7 +371,10 @@ Ext.onReady(function(){
     main.addTabPanel(id, xtype, title);
   }
 
+  main.addListeners('init', initCallbacks);
   main.addListeners('login', loginCallbacks);
   main.addListeners('logout', logoutCallbacks);
 
+  main.init();
+  main.checkLogin();
 });

@@ -52,6 +52,14 @@ var loginCallbacks = [];
  */
 var logoutCallbacks = [];
 
+/**
+ * functions called after initialisation
+ */
+var initCallbacks = [];
+
+/**
+ * The base url for the rest api
+ */
 var restUrl = "api/rest/";
 
 var userSearchStore = new Ext.data.JsonStore({
