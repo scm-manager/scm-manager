@@ -35,6 +35,7 @@ package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -260,11 +261,11 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
     try
     {
-      processIS = process.getInputStream();
       processES = process.getErrorStream();
+      processErrorStreamAsync(processES);
       processServletInput(process);
+      processIS = process.getInputStream();
       processProcessInputStream(processIS);
-      processErrorStream(processES);
       waitForFinish(process);
     }
     finally
@@ -272,6 +273,20 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
       IOUtil.close(processIS);
       IOUtil.close(processES);
     }
+  }
+  
+  private void processErrorStreamAsync( final InputStream errorStream )
+  {
+    new Thread(new Runnable() {
+      @Override
+      public void run() {
+        try {
+            processErrorStream(errorStream);
+        } catch (IOException ex) {
+          logger.error( "could not read errorstream", ex );
+        }
+      }
+    }).start();
   }
 
   /**
