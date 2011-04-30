@@ -299,11 +299,11 @@ public class WindowsHgInstaller extends AbstractHgInstaller
 
       if (path != null)
       {
-        File file = new File(path);
+        File file = new File(path, FILE_MERCURIAL_EXE);
 
-        if (!file.exists())
+        if (file.exists())
         {
-          installations.add(path);
+          installations.add(file.getAbsolutePath());
         }
       }
     }
