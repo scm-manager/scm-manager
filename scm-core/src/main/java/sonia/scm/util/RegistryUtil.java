@@ -109,7 +109,7 @@ public class RegistryUtil
     }
     else
     {
-      command = new SimpleCommand("reg", "query", key);
+      command = new SimpleCommand("reg", "query", key, "/ve");
     }
 
     try
