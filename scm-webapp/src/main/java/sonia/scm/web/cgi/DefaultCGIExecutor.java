@@ -143,12 +143,12 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
     if ((execCmd.charAt(0) != '"') && (execCmd.indexOf(" ") >= 0))
     {
-      execCmd = "\"" + execCmd + "\"";
+      execCmd = "\"".concat(execCmd).concat("\"");
     }
 
     if (interpreter != null)
     {
-      execCmd = interpreter + " " + execCmd;
+      execCmd = interpreter.concat(" ").concat(execCmd);
     }
 
     if (logger.isDebugEnabled())
