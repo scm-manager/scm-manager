@@ -73,6 +73,11 @@
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
     
+    <repository>
+      <id>jgit-repository</id>
+      <url>http://download.eclipse.org/jgit/maven</url>
+    </repository>
+    
   </repositories>
 
   <pluginRepositories>

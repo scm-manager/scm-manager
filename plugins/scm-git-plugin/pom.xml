@@ -66,11 +66,4 @@
     <jgit.version>0.10.1</jgit.version>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>jgit-repository</id>
-      <url>http://download.eclipse.org/jgit/maven</url>
-    </repository>
-  </repositories>
-
 </project>
