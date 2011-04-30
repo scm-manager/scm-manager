@@ -319,13 +319,18 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   private File getMercurialDirectory(String hgBinary)
   {
     File directory = null;
-    File hg = new File(hgBinary);
-
-    if (hg.exists() && hg.isFile())
+    
+    if ( Util.isNotEmpty(hgBinary) )
     {
-      directory = hg.getParentFile();
+      File hg = new File(hgBinary);
+
+      if (hg.exists() && hg.isFile())
+      {
+        directory = hg.getParentFile();
+      }
     }
-    else
+    
+    if ( directory == null )
     {
       directory = getMercurialDirectoryFromRegistry();
     }
