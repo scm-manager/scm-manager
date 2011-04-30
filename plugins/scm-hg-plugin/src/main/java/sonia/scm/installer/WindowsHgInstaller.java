@@ -272,8 +272,11 @@ public class WindowsHgInstaller extends AbstractHgInstaller
       IOUtil.copy(templateDirectory, new File(libDir, FILE_TEMPLATES));
     }
 
-    config.setHgBinary(new File(hgDirectory,
-                                FILE_MERCURIAL_EXE).getAbsolutePath());
+    File hg = new File( hgDirectory, FILE_MERCURIAL_EXE );
+    if ( hg.exists() )
+    {
+      config.setHgBinary(hg.getAbsolutePath());
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
