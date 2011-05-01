@@ -195,15 +195,26 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     String scriptPath = context.getRealPath(scriptName);
     int len = request.getContentLength();
 
-    if (len < 0)
-    {
-      len = 0;
-    }
-
     EnvList env = new EnvList();
-
     env.set(ENV_AUTH_TYPE, request.getAuthType());
-    env.set(ENV_CONTENT_LENGTH, Integer.toString(len));
+    
+    /** 
+     * Note CGI spec says CONTENT_LENGTH must be NULL ("") or undefined
+     * if there is no content, so we cannot put 0 or -1 in as per the
+     * Servlet API spec.
+     * 
+     * see org.apache.catalina.servlets.CGIServlet
+     **/
+    
+    if ( len <= 0 )
+    {
+      env.set(ENV_CONTENT_LENGTH, "");
+    }
+    else 
+    {
+      env.set(ENV_CONTENT_LENGTH, Integer.toString(len));
+    }
+    
     env.set(ENV_CONTENT_TYPE, request.getContentType());
     env.set(ENV_GATEWAY_INTERFACE, CGI_VERSION);
     env.set(ENV_PATH_INFO, pathInfo);
@@ -301,6 +312,8 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
   private void parseHeaders(InputStream is) throws IOException
   {
     String line = null;
+    
+    response.setContentLength(-1);
 
     while ((line = getTextLineFromStream(is)).length() > 0)
     {
@@ -321,10 +334,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
           if (RESPONSE_HEADER_LOCATION.equalsIgnoreCase(key))
           {
             response.sendRedirect(response.encodeRedirectURL(value));
-          }
-          else if (REPSONSE_HEADER_CONTENT_TYPE.equalsIgnoreCase(key))
-          {
-            response.setContentType(value);
           }
           else if (RESPONSE_HEADER_STATUS.equalsIgnoreCase(key))
           {
