@@ -215,7 +215,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
       env.set(ENV_CONTENT_LENGTH, Integer.toString(len));
     }
     
-    env.set(ENV_CONTENT_TYPE, request.getContentType());
+    env.set(ENV_CONTENT_TYPE, Util.nonNull(request.getContentType()));
     env.set(ENV_GATEWAY_INTERFACE, CGI_VERSION);
     env.set(ENV_PATH_INFO, pathInfo);
     env.set(ENV_QUERY_STRING, request.getQueryString());
@@ -231,9 +231,9 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     env.set(ENV_REQUEST_METHOD, request.getMethod());
     env.set(ENV_SCRIPT_NAME, scriptName);
     env.set(ENV_SCRIPT_FILENAME, scriptPath);
-    env.set(ENV_SERVER_NAME, request.getServerName());
+    env.set(ENV_SERVER_NAME, Util.nonNull(request.getServerName()));
     env.set(ENV_SERVER_PORT, Integer.toString(serverPort));
-    env.set(ENV_SERVER_PROTOCOL, request.getProtocol());
+    env.set(ENV_SERVER_PROTOCOL, Util.nonNull(request.getProtocol()));
     env.set(
         ENV_SERVER_SOFTWARE,
         SERVER_SOFTWARE_PREFIX.concat(SCMContext.getContext().getVersion()));
