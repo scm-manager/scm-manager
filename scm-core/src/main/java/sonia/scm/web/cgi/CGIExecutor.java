@@ -111,7 +111,7 @@ public interface CGIExecutor
   public static final String ENV_SERVER_SOFTWARE = "SERVER_SOFTWARE";
 
   /** Field description */
-  public static final String REPSONSE_HEADER_CONTENT_LENGTH = "Content-Length";
+  public static final String RESPONSE_HEADER_CONTENT_LENGTH = "Content-Length";
 
   /** Field description */
   public static final String REPSONSE_HEADER_CONTENT_TYPE = "Content-Type";
