@@ -193,6 +193,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     String scriptName = request.getRequestURI().substring(0,
                           request.getRequestURI().length() - pathInfo.length());
     String scriptPath = context.getRealPath(scriptName);
+    String pathTranslated = request.getPathTranslated();
     int len = request.getContentLength();
 
     EnvList env = new EnvList();
@@ -218,6 +219,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     env.set(ENV_CONTENT_TYPE, Util.nonNull(request.getContentType()));
     env.set(ENV_GATEWAY_INTERFACE, CGI_VERSION);
     env.set(ENV_PATH_INFO, pathInfo);
+    env.set(ENV_PATH_TRANSLATED, pathTranslated);
     env.set(ENV_QUERY_STRING, request.getQueryString());
     env.set(ENV_REMOTE_ADDR, request.getRemoteAddr());
     env.set(ENV_REMOTE_HOST, request.getRemoteHost());
