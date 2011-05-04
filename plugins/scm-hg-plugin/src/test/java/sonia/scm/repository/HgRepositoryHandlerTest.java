@@ -37,7 +37,6 @@ package sonia.scm.repository;
 
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.StoreFactory;
-import sonia.scm.util.Util;
 
 import static org.junit.Assert.*;
 import static org.junit.Assume.*;
@@ -94,7 +93,7 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
     handler.getConfig().setRepositoryDirectory(directory);
 
     // skip tests if hg not in path
-    if (Util.isEmpty(handler.getConfig().getHgBinary()))
+    if (! handler.isConfigured())
     {
       System.out.println("WARNING could not find hg, skipping test");
       assumeTrue(false);

@@ -35,7 +35,6 @@ package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.util.logging.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
