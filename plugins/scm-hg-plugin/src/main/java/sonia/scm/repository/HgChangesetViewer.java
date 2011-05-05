@@ -69,7 +69,7 @@ public class HgChangesetViewer implements ChangesetViewer
   /** Field description */
   //J-
   public static final String TEMPLATE_CHANGESETS =
-        "<changeset>"
+        "\"<changeset>"
       +   "<id>{rev}:{node|short}</id>"
       +   "<author>{author|escape}</author>"
       +   "<description>{desc|escape}</description>"
@@ -79,7 +79,7 @@ public class HgChangesetViewer implements ChangesetViewer
       +   "<files-added>{file_adds}</files-added>"
       +   "<files-mods>{file_mods}</files-mods>"
       +   "<files-dels>{file_dels}</files-dels>"
-      + "</changeset>";
+      + "</changeset>\"";
   //J+
 
   /** Field description */
