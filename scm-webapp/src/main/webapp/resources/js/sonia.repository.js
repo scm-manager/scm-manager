@@ -945,7 +945,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
       header: false,
       autoScroll: true,
       autoExpandColumn: 'metadata',
-      height: '100%',
+      autoHeight: true,
       hideHeaders: true,
       colModel: changesetColModel,
       loadMask: true
