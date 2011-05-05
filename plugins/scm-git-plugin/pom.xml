@@ -63,7 +63,7 @@
   </dependencies>
 
   <properties>
-    <jgit.version>0.10.1</jgit.version>
+    <jgit.version>0.12.1</jgit.version>
   </properties>
 
 </project>

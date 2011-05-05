@@ -39,8 +39,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.eclipse.jgit.http.server.GitServlet;
-import org.eclipse.jgit.http.server.resolver.RepositoryResolver;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.resolver.RepositoryResolver;
 
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.util.HttpUtil;
@@ -172,5 +172,5 @@ public class ScmGitServlet extends GitServlet
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryResolver resolver;
+  private RepositoryResolver<HttpServletRequest> resolver;
 }
