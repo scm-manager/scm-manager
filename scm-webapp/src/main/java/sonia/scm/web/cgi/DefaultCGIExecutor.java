@@ -42,6 +42,7 @@ import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -54,6 +55,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import java.util.Enumeration;
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletInputStream;
@@ -73,6 +75,9 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
   /** Field description */
   public static final int DEFAULT_BUFFER_SIZE = 16264;
+
+  /** Field description */
+  public static final String SYSTEM_ROOT_WINDOWS = "C:\\WINDOWS";
 
   /** Field description */
   private static final String SERVER_SOFTWARE_PREFIX = "scm-manager/";
@@ -166,8 +171,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     try
     {
       p = Runtime.getRuntime().exec(execCmd, environment.getEnvArray(),
-                  workDirectory);
-
+                                    workDirectory);
       execute(p);
     }
     finally
@@ -175,6 +179,25 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
       if (p != null)
       {
         p.destroy();
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param env
+   */
+  private void apendOsEnvironment(EnvList env)
+  {
+    Map<String, String> osEnv = System.getenv();
+
+    if (Util.isNotEmpty(osEnv))
+    {
+      for (Map.Entry<String, String> e : osEnv.entrySet())
+      {
+        env.set(e.getKey(), e.getValue());
       }
     }
   }
@@ -194,27 +217,31 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     String scriptPath = context.getRealPath(scriptName);
     String pathTranslated = request.getPathTranslated();
     int len = request.getContentLength();
-
     EnvList env = new EnvList();
+
+    if (passShellEnvironment)
+    {
+      apendOsEnvironment(env);
+    }
+
     env.set(ENV_AUTH_TYPE, request.getAuthType());
-    
-    /** 
+
+    /**
      * Note CGI spec says CONTENT_LENGTH must be NULL ("") or undefined
      * if there is no content, so we cannot put 0 or -1 in as per the
      * Servlet API spec.
-     * 
+     *
      * see org.apache.catalina.servlets.CGIServlet
-     **/
-    
-    if ( len <= 0 )
+     */
+    if (len <= 0)
     {
       env.set(ENV_CONTENT_LENGTH, "");
     }
-    else 
+    else
     {
       env.set(ENV_CONTENT_LENGTH, Integer.toString(len));
     }
-    
+
     env.set(ENV_CONTENT_TYPE, Util.nonNull(request.getContentType()));
     env.set(ENV_GATEWAY_INTERFACE, CGI_VERSION);
     env.set(ENV_PATH_INFO, pathInfo);
@@ -255,6 +282,11 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
                         ? ENV_HTTPS_VALUE_ON
                         : ENV_HTTPS_VALUE_OFF));
 
+    if (SystemUtil.isWindows())
+    {
+      env.set(ENV_SYSTEM_ROOT, SYSTEM_ROOT_WINDOWS);
+    }
+
     return env;
   }
 
@@ -286,20 +318,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
       IOUtil.close(processES);
     }
   }
-  
-  private void processErrorStreamAsync( final InputStream errorStream )
-  {
-    new Thread(new Runnable() {
-      @Override
-      public void run() {
-        try {
-            processErrorStream(errorStream);
-        } catch (IOException ex) {
-          logger.error( "could not read errorstream", ex );
-        }
-      }
-    }).start();
-  }
 
   /**
    * Method description
@@ -313,7 +331,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
   private void parseHeaders(InputStream is) throws IOException
   {
     String line = null;
-    
+
     response.setContentLength(-1);
 
     while ((line = getTextLineFromStream(is)).length() > 0)
@@ -417,6 +435,31 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    * Method description
    *
    *
+   * @param errorStream
+   */
+  private void processErrorStreamAsync(final InputStream errorStream)
+  {
+    new Thread(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        try
+        {
+          processErrorStream(errorStream);
+        }
+        catch (IOException ex)
+        {
+          logger.error("could not read errorstream", ex);
+        }
+      }
+    }).start();
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param is
    *
    * @throws IOException
@@ -481,7 +524,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     {
       int exitCode = process.waitFor();
 
-      if (exitCode != 0)
+      if ((exitCode != 0) &&!ignoreExitCode)
       {
         logger.warn("process ends with exit code {}", exitCode);
       }

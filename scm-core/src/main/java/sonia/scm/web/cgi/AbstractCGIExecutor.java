@@ -199,13 +199,13 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
   protected EnvList environment;
 
   /** Field description */
-  protected boolean ignoreExitCode;
+  protected boolean ignoreExitCode = false;
 
   /** Field description */
   protected String interpreter;
 
   /** Field description */
-  protected boolean passShellEnvironment;
+  protected boolean passShellEnvironment = false;
 
   /** Field description */
   protected File workDirectory;
