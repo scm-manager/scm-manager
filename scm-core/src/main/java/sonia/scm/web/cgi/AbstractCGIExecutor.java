@@ -92,6 +92,30 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
     return workDirectory;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isIgnoreExitCode()
+  {
+    return ignoreExitCode;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isPassShellEnvironment()
+  {
+    return passShellEnvironment;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -122,12 +146,36 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
    * Method description
    *
    *
+   * @param ignoreExitCode
+   */
+  @Override
+  public void setIgnoreExitCode(boolean ignoreExitCode)
+  {
+    this.ignoreExitCode = ignoreExitCode;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param interpreter
    */
   @Override
   public void setInterpreter(String interpreter)
   {
     this.interpreter = interpreter;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param passShellEnvironment
+   */
+  @Override
+  public void setPassShellEnvironment(boolean passShellEnvironment)
+  {
+    this.passShellEnvironment = passShellEnvironment;
   }
 
   /**
@@ -151,7 +199,13 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
   protected EnvList environment;
 
   /** Field description */
+  protected boolean ignoreExitCode;
+
+  /** Field description */
   protected String interpreter;
+
+  /** Field description */
+  protected boolean passShellEnvironment;
 
   /** Field description */
   protected File workDirectory;

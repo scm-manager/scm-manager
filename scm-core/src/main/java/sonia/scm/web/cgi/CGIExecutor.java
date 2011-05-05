@@ -111,10 +111,13 @@ public interface CGIExecutor
   public static final String ENV_SERVER_SOFTWARE = "SERVER_SOFTWARE";
 
   /** Field description */
-  public static final String RESPONSE_HEADER_CONTENT_LENGTH = "Content-Length";
+  public static final String ENV_SYSTEM_ROOT = "SystemRoot";
 
   /** Field description */
   public static final String REPSONSE_HEADER_CONTENT_TYPE = "Content-Type";
+
+  /** Field description */
+  public static final String RESPONSE_HEADER_CONTENT_LENGTH = "Content-Length";
 
   /** Field description */
   public static final String RESPONSE_HEADER_HTTP_PREFIX = "HTTP";
@@ -172,6 +175,22 @@ public interface CGIExecutor
    */
   public File getWorkDirectory();
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isIgnoreExitCode();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isPassShellEnvironment();
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -194,9 +213,25 @@ public interface CGIExecutor
    * Method description
    *
    *
+   * @param ignoreExitCode
+   */
+  public void setIgnoreExitCode(boolean ignoreExitCode);
+
+  /**
+   * Method description
+   *
+   *
    * @param interpreter
    */
   public void setInterpreter(String interpreter);
+
+  /**
+   * Method description
+   *
+   *
+   * @param passShellEnvironment
+   */
+  public void setPassShellEnvironment(boolean passShellEnvironment);
 
   /**
    * Method description
