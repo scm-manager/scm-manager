@@ -79,7 +79,7 @@ public class HgChangesetViewer implements ChangesetViewer
       +   "<files-added>{file_adds}</files-added>"
       +   "<files-mods>{file_mods}</files-mods>"
       +   "<files-dels>{file_dels}</files-dels>"
-      + "</changeset>\n";
+      + "</changeset>";
   //J+
 
   /** Field description */
@@ -150,6 +150,14 @@ public class HgChangesetViewer implements ChangesetViewer
                                             new StringReader(sb.toString())));
 
         changesets = new ChangesetPagingResult(total, changesetList);
+      } 
+      else if ( logger.isErrorEnabled() )
+      {
+        logger.error( 
+          "command for fetching changesets failed with exit code {} and output {}", 
+          result.getReturnCode(), 
+          result.getOutput() 
+        );
       }
     }
     catch (ParserConfigurationException ex)
@@ -197,7 +205,7 @@ public class HgChangesetViewer implements ChangesetViewer
    */
   private int getTotalChangesets(String repositoryPath) throws IOException
   {
-    int total = 0;
+    int total = -1;
     Command command = new SimpleCommand(handler.getConfig().getHgBinary(),
                         "-R", repositoryPath, "tip", "--template",
                         TEMPLATE_TOTAL);
@@ -206,6 +214,14 @@ public class HgChangesetViewer implements ChangesetViewer
     if (result.isSuccessfull())
     {
       total = Integer.parseInt(result.getOutput().trim());
+    }
+    else if ( logger.isErrorEnabled() )
+    {
+      logger.error(
+        "could not read tip revision, command returned with exit code {} and content {}",
+        result.getReturnCode(),
+        result.getOutput()
+      );
     }
 
     return total;
