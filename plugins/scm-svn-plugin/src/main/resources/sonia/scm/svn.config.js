@@ -96,7 +96,7 @@ Ext.reg("svnConfigPanel", Sonia.svn.ConfigPanel);
 
 if ( i18n != null && i18n.country == 'de' ){
 
-  Ext.override(Sonia.hg.ConfigPanel, {
+  Ext.override(Sonia.svn.ConfigPanel, {
 
     // labels
     titleText: 'Subversion Einstellungen',
