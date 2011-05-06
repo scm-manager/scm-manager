@@ -33,7 +33,7 @@
 
 -->
 <sun-web-app error-url="">
-  <context-root>scm</context-root>
+  <context-root>/scm</context-root>
   <class-loader delegate="true"/>
   <jsp-config>
     <property name="keepgenerated" value="true">
