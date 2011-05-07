@@ -36,7 +36,6 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
   // labels
   titleText: 'Subversion Settings',
   repositoryDirectoryText: 'Repository directory',
-  // TODO i18n
   noneCompatibility: 'No compatibility modus',
   pre14CompatibleText: 'Pre 1.4 Compatible',
   pre15CompatibleText: 'Pre 1.5 Compatible',
@@ -44,10 +43,6 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
 
   // helpTexts
   repositoryDirectoryHelpText: 'Location of the Suberversion repositories.',
-  // TODO
-  pre14CompatibleHelpText: '',
-  pre15CompatibleHelpText: '',
-  pre16CompatibleHelpText: '',
 
   initComponent: function(){
 
@@ -101,6 +96,10 @@ if ( i18n != null && i18n.country == 'de' ){
     // labels
     titleText: 'Subversion Einstellungen',
     repositoryDirectoryText: 'Repository-Verzeichnis',
+    noneCompatibility: 'Kein Kompatiblitätsmodus',
+    pre14CompatibleText: 'Mit Versionen vor 1.4 kompatibel',
+    pre15CompatibleText: 'Mit Versionen vor 1.5 kompatibel',
+    pre16CompatibleText: 'Mit Versionen vor 1.6 kompatibel',
 
     // helpTexts
     repositoryDirectoryHelpText: 'Verzeichnis der Subversion-Repositories.'
