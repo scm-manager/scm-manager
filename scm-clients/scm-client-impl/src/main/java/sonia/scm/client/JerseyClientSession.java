@@ -35,6 +35,7 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.ScmState;
 import sonia.scm.group.Group;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
@@ -84,6 +85,18 @@ public class JerseyClientSession implements ScmClientSession
    */
   @Override
   public ClientHandler<Repository> getRepositoryHandler()
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public ScmState getState()
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }
