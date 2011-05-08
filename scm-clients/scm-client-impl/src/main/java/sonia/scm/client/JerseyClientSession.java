@@ -42,6 +42,8 @@ import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.client.Client;
+
 import java.io.IOException;
 
 /**
@@ -50,6 +52,24 @@ import java.io.IOException;
  */
 public class JerseyClientSession implements ScmClientSession
 {
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param client
+   * @param urlProvider
+   * @param state
+   */
+  public JerseyClientSession(Client client, ScmUrlProvider urlProvider,
+                             ScmState state)
+  {
+    this.client = client;
+    this.urlProvider = urlProvider;
+    this.state = state;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -112,4 +132,15 @@ public class JerseyClientSession implements ScmClientSession
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Client client;
+
+  /** Field description */
+  private ScmState state;
+
+  /** Field description */
+  private ScmUrlProvider urlProvider;
 }

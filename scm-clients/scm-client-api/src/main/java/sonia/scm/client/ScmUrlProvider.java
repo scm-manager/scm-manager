@@ -41,6 +41,9 @@ public class ScmUrlProvider
 {
 
   /** Field description */
+  public static final String API_PATH = "/api/rest/";
+
+  /** Field description */
   public static final String URLPART_AUTHENTICATION = "authentication/login";
 
   //~--- constructors ---------------------------------------------------------
@@ -53,7 +56,14 @@ public class ScmUrlProvider
    */
   public ScmUrlProvider(String baseUrl)
   {
-    this.baseUrl = baseUrl;
+    if (!baseUrl.endsWith(API_PATH))
+    {
+      this.baseUrl = baseUrl.concat(API_PATH);
+    }
+    else
+    {
+      this.baseUrl = baseUrl;
+    }
   }
 
   //~--- get methods ----------------------------------------------------------

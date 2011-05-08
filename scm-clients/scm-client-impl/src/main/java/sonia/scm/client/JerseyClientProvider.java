@@ -33,6 +33,24 @@
 
 package sonia.scm.client;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.sonatype.spice.jersey.client.ahc.config.DefaultAhcConfig;
+
+import sonia.scm.ScmState;
+import sonia.scm.util.AssertUtil;
+import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.core.util.MultivaluedMapImpl;
+import com.sun.servicetag.UnauthorizedAccessException;
+
+import javax.ws.rs.core.MultivaluedMap;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -57,6 +75,40 @@ public class JerseyClientProvider implements ScmClientProvider
           String password)
           throws ScmClientException
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    AssertUtil.assertIsNotEmpty(url);
+
+    ScmUrlProvider urlProvider = new ScmUrlProvider(url);
+    DefaultAhcConfig config = new DefaultAhcConfig();
+    Client client = Client.create(config);
+    WebResource resource = client.resource(urlProvider.getAuthenticationUrl());
+    ClientResponse response = null;
+
+    if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
+    {
+      MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
+
+      formData.add("username", username);
+      formData.add("password", password);
+      response = resource.type("application/x-www-form-urlencoded").post(
+        ClientResponse.class, formData);
+    }
+    else
+    {
+      response = resource.get(ClientResponse.class);
+    }
+
+    if (response.getStatus() == 401)
+    {
+      throw new UnauthorizedAccessException();
+    }
+
+    ScmState state = response.getEntity(ScmState.class);
+
+    if (!state.isSuccess())
+    {
+      throw new ScmClientException("create ScmClientSession failed");
+    }
+
+    return new JerseyClientSession(client, urlProvider, state);
   }
 }
