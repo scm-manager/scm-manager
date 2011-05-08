@@ -7,12 +7,12 @@
   <parent>
     <artifactId>scm-plugins</artifactId>
     <groupId>sonia.scm.plugins</groupId>
-    <version>1.2</version>
+    <version>1.3-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-activedirectory-auth-plugin</artifactId>
-  <version>1.2</version>
+  <version>1.3-SNAPSHOT</version>
   <name>scm-activedirectory-auth-plugin</name>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>
@@ -32,7 +32,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>1.2</version>
+      <version>1.3-SNAPSHOT</version>
     </dependency>
     
     <dependency>

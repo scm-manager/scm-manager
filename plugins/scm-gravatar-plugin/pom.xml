@@ -12,7 +12,7 @@
 
   <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-gravatar-plugin</artifactId>
-  <version>1.0</version>
+  <version>1.1-SNAPSHOT</version>
   <name>scm-gravatar-plugin</name>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>Gravatar icons for the changesetviewer.</description>
