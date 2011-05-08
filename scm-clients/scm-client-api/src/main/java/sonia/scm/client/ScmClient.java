@@ -33,12 +33,21 @@
 
 package sonia.scm.client;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.ServiceUtil;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface ScmClient
+public class ScmClient
 {
+
+  /** Field description */
+  private static volatile ScmClientProvider provider = null;
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Creates an ScmClientSession for the given user
@@ -52,9 +61,12 @@ public interface ScmClient
    *
    * @throws ScmClientException
    */
-  public ScmClientSession createSession(String url, String username,
+  public static ScmClientSession createSession(String url, String username,
           String password)
-          throws ScmClientException;
+          throws ScmClientException
+  {
+    return getProvider().createSession(url, username, password);
+  }
 
   /**
    * Creates an anonymous ScmClientSession
@@ -66,5 +78,33 @@ public interface ScmClient
    *
    * @throws ScmClientException
    */
-  public ScmClientSession createSession(String url) throws ScmClientException;
+  public static ScmClientSession createSession(String url)
+          throws ScmClientException
+  {
+    return getProvider().createSession(url, null, null);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private static ScmClientProvider getProvider()
+  {
+    if (provider == null)
+    {
+      synchronized (ScmClientProvider.class)
+      {
+        if (provider == null)
+        {
+          provider = ServiceUtil.getService(ScmClientProvider.class);
+        }
+      }
+    }
+
+    return provider;
+  }
 }

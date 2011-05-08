@@ -37,46 +37,22 @@ package sonia.scm.client;
  *
  * @author Sebastian Sdorra
  */
-public class ScmClientException extends Exception
+public interface ScmClientProvider
 {
 
   /**
-   * Constructs ...
+   * Method description
    *
+   *
+   * @param url
+   * @param username
+   * @param password
+   *
+   * @return
+   *
+   * @throws ScmClientException
    */
-  public ScmClientException() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   */
-  public ScmClientException(String message)
-  {
-    super(message);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cause
-   */
-  public ScmClientException(Throwable cause)
-  {
-    super(cause);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param message
-   * @param cause
-   */
-  public ScmClientException(String message, Throwable cause)
-  {
-    super(message, cause);
-  }
+  public ScmClientSession createSession(String url, String username,
+          String password)
+          throws ScmClientException;
 }
