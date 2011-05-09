@@ -48,6 +48,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.net.HttpClient;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
@@ -112,19 +113,21 @@ public class DefaultPluginManager implements PluginManager
    * @param configuration
    * @param pluginLoader
    * @param cacheManager
+   * @param client
    */
   @Inject
   public DefaultPluginManager(
           SCMContextProvider context,
           Provider<SecurityContext> securityContextProvicer,
           ScmConfiguration configuration, PluginLoader pluginLoader,
-          CacheManager cacheManager)
+          CacheManager cacheManager, HttpClient client)
   {
     this.context = context;
     this.securityContextProvicer = securityContextProvicer;
     this.configuration = configuration;
     this.cache = cacheManager.getCache(String.class, PluginCenter.class,
                                        CACHE_NAME);
+    this.client = client;
     installedPlugins = new HashMap<String, Plugin>();
 
     for (Plugin plugin : pluginLoader.getInstalledPlugins())
@@ -533,10 +536,7 @@ public class DefaultPluginManager implements PluginManager
 
           try
           {
-            
-            URLConnection connection = new URL(pluginUrl).openConnection();
-
-            input = connection.getInputStream();
+            input = client.get(pluginUrl).getContent();
 
             /*
              *  TODO: add gzip support
@@ -643,6 +643,9 @@ public class DefaultPluginManager implements PluginManager
 
   /** Field description */
   private Cache<String, PluginCenter> cache;
+
+  /** Field description */
+  private HttpClient client;
 
   /** Field description */
   private ScmConfiguration configuration;

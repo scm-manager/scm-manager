@@ -52,6 +52,8 @@ import sonia.scm.group.GroupManager;
 import sonia.scm.group.xml.XmlGroupManager;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
+import sonia.scm.net.HttpClient;
+import sonia.scm.net.URLHttpClient;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginLoader;
@@ -86,14 +88,12 @@ import com.sun.jersey.api.json.JSONConfiguration;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 
 /**
  *
@@ -217,6 +217,9 @@ public class ScmServletModule extends ServletModule
     bind(UserManager.class).to(XmlUserManager.class);
     bind(GroupManager.class).to(XmlGroupManager.class);
     bind(CGIExecutorFactory.class).to(DefaultCGIExecutorFactory.class);
+
+    // bind httpclient
+    bind(HttpClient.class).to(URLHttpClient.class);
 
     /*
      * filter(PATTERN_PAGE,
