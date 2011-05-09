@@ -533,6 +533,7 @@ public class DefaultPluginManager implements PluginManager
 
           try
           {
+            
             URLConnection connection = new URL(pluginUrl).openConnection();
 
             input = connection.getInputStream();

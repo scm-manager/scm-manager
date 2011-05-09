@@ -96,6 +96,9 @@ public class ScmConfiguration
     this.anonymousAccessEnabled = other.anonymousAccessEnabled;
     this.adminUsers = other.adminUsers;
     this.adminGroups = other.adminGroups;
+    this.enableProxy = other.enableProxy;
+    this.proxyPort = other.proxyPort;
+    this.proxyServer = other.proxyServer;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -161,6 +164,28 @@ public class ScmConfiguration
    *
    * @return
    */
+  public int getProxyPort()
+  {
+    return proxyPort;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getProxyServer()
+  {
+    return proxyServer;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getServername()
   {
     return servername;
@@ -197,6 +222,17 @@ public class ScmConfiguration
   public boolean isEnablePortForward()
   {
     return enablePortForward;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isEnableProxy()
+  {
+    return enableProxy;
   }
 
   /**
@@ -271,6 +307,17 @@ public class ScmConfiguration
    * Method description
    *
    *
+   * @param enableProxy
+   */
+  public void setEnableProxy(boolean enableProxy)
+  {
+    this.enableProxy = enableProxy;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param enableSSL
    */
   public void setEnableSSL(boolean enableSSL)
@@ -298,6 +345,28 @@ public class ScmConfiguration
   public void setPluginUrl(String pluginUrl)
   {
     this.pluginUrl = pluginUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param proxyPort
+   */
+  public void setProxyPort(int proxyPort)
+  {
+    this.proxyPort = proxyPort;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param proxyServer
+   */
+  public void setProxyServer(String proxyServer)
+  {
+    this.proxyServer = proxyServer;
   }
 
   /**
@@ -335,11 +404,20 @@ public class ScmConfiguration
   private Set<String> adminUsers;
 
   /** Field description */
+  private boolean enableProxy;
+
+  /** Field description */
   private int forwardPort = 80;
 
   /** Field description */
   @XmlElement(name = "plugin-url")
   private String pluginUrl = DEFAULT_PLUGINURL;
+
+  /** Field description */
+  private int proxyPort;
+
+  /** Field description */
+  private String proxyServer;
 
   /** Field description */
   private String servername = "localhost";
