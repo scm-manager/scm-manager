@@ -115,6 +115,12 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   errorTitleText: 'Error',
   errorMsgText: 'Could not load config.',
   errorSubmitMsgText: 'Could not submit config.',
+  
+  // TODO i18n
+  enableProxyText: 'Enable Proxy',
+  proxyServerText: 'Proxy Server',
+  proxyPortText: 'Proxy Port',
+  
 
   // help
   servernameHelpText: 'The name of this server. This name will be part of the repository url.',
@@ -129,6 +135,11 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   sslPortHelpText: 'The ssl port.',
   adminGroupsHelpText: 'Comma seperated list of groups with admin permissions.',
   adminUsersHelpText: 'Comma seperated list of users with admin permissions.',
+  
+  // TODO i18n
+  enableProxyHelpText: 'Enable Proxy',
+  proxyServerHelpText: 'The proxy server',
+  proxyPortHelpText: 'The proxy port',
 
 
   initComponent: function(){
@@ -201,6 +212,34 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           allowBlank: false,
           helpText: this.sslPortHelpText
         },{
+          xtype: 'checkbox',
+          fieldLabel: this.enableProxyText,
+          name: 'enableProxy',
+          inputValue: 'true',
+          helpText: this.enableProxyHelpText,
+          listeners: {
+            check: function(){
+              Ext.getCmp('proxyServer').setDisabled( ! this.checked );
+              Ext.getCmp('proxyPort').setDisabled( ! this.checked );
+            }
+          }
+        },{
+          id: 'proxyServer',
+          xtype: 'textfield',
+          fieldLabel: this.proxyServerText,
+          name: 'proxyServer',
+          disabled: true,
+          helpText: this.proxyServerHelpText,
+          allowBlank: false
+        },{
+          id: 'proxyPort',
+          xtype: 'numberfield',
+          fieldLabel: this.proxyPortText,
+          name: 'proxyPort',
+          disabled: true,
+          allowBlank: false,
+          helpText: this.proxyPortHelpText
+        },{
           xtype : 'textfield',
           fieldLabel : this.adminGroupsText,
           name : 'admin-groups',
@@ -259,6 +298,10 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
               }
               if ( obj.enableSSL ){
                 Ext.getCmp('sslPort').setDisabled(false);
+              }
+              if ( obj.enableProxy ){
+                Ext.getCmp('proxyServer').setDisabled(false);
+                Ext.getCmp('proxyPort').setDisabled(false);
               }
               clearTimeout(tid);
               el.unmask();
