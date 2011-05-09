@@ -44,6 +44,7 @@ import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.installer.HgPackage;
 import sonia.scm.installer.HgPackageReader;
 import sonia.scm.installer.HgPackages;
+import sonia.scm.net.HttpClient;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgWebConfigWriter;
@@ -84,13 +85,16 @@ public class HgConfigResource
    *
    *
    *
+   *
+   * @param client
    * @param handler
    * @param cacheManager
    */
   @Inject
-  public HgConfigResource(HgRepositoryHandler handler,
+  public HgConfigResource(HttpClient client, HgRepositoryHandler handler,
                           CacheManager cacheManager)
   {
+    this.client = client;
     this.handler = handler;
     this.pkgReader = new HgPackageReader(cacheManager);
   }
@@ -155,7 +159,7 @@ public class HgConfigResource
 
     if (pkg != null)
     {
-      if (HgInstallerFactory.createInstaller().installPackage(handler,
+      if (HgInstallerFactory.createInstaller().installPackage(client, handler,
               SCMContext.getContext().getBaseDirectory(), pkg))
       {
         response = Response.noContent().build();
@@ -335,6 +339,9 @@ public class HgConfigResource
 
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private HttpClient client;
 
   /** Field description */
   private HgRepositoryHandler handler;

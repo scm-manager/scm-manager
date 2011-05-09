@@ -35,7 +35,9 @@ package sonia.scm.installer;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.net.HttpClient;
 import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgRepositoryHandler;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -43,7 +45,6 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.List;
-import sonia.scm.repository.HgRepositoryHandler;
 
 /**
  *
@@ -69,12 +70,16 @@ public interface HgInstaller
    *
    *
    *
+   *
+   * @param client
    * @param handler
    * @param baseDirectory
    * @param pkg
+   *
+   * @return
    */
-  public boolean installPackage(HgRepositoryHandler handler, File baseDirectory,
-                             HgPackage pkg);
+  public boolean installPackage(HttpClient client, HgRepositoryHandler handler,
+                                File baseDirectory, HgPackage pkg);
 
   /**
    * Method description
