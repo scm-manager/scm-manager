@@ -57,7 +57,10 @@ import org.sonatype.aether.impl.VersionRangeResolver;
 import org.sonatype.aether.impl.VersionResolver;
 import org.sonatype.aether.impl.internal.DefaultServiceLocator;
 import org.sonatype.aether.repository.LocalRepository;
+import org.sonatype.aether.repository.Proxy;
+import org.sonatype.aether.repository.ProxySelector;
 import org.sonatype.aether.repository.RemoteRepository;
+import org.sonatype.aether.resolution.DependencyRequest;
 import org.sonatype.aether.spi.connector.RepositoryConnectorFactory;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
@@ -66,6 +69,7 @@ import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.boot.BootstrapListener;
 import sonia.scm.boot.Classpath;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -109,11 +113,14 @@ public class AetherPluginHandler
    *
    * @param pluginManager
    * @param context
+   * @param configuration
    */
   public AetherPluginHandler(PluginManager pluginManager,
-                             SCMContextProvider context)
+                             SCMContextProvider context,
+                             ScmConfiguration configuration)
   {
     this.pluginManager = pluginManager;
+    this.configuration = configuration;
     localRepositoryDirectory = new File(context.getBaseDirectory(),
             BootstrapListener.PLUGIN_DIRECTORY);
 
@@ -208,8 +215,23 @@ public class AetherPluginHandler
 
     for (PluginRepository repository : repositories)
     {
-      remoteRepositories.add(new RemoteRepository(repository.getId(),
-              "default", repository.getUrl()));
+      RemoteRepository rr = new RemoteRepository(repository.getId(), "default",
+                              repository.getUrl());
+
+      if (configuration.isEnableProxy())
+      {
+        Proxy proxy = createProxy();
+
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("enable proxy {} for {}", repository.getUrl(),
+                       proxy.getHost());
+        }
+
+        rr.setProxy(proxy);
+      }
+
+      remoteRepositories.add(rr);
     }
   }
 
@@ -236,8 +258,9 @@ public class AetherPluginHandler
     {
       DependencyNode node = repositorySystem.collectDependencies(session,
                               request).getRoot();
+      DependencyRequest dr = new DependencyRequest(node, FILTER);
 
-      repositorySystem.resolveDependencies(session, node, FILTER);
+      repositorySystem.resolveDependencies(session, dr);
 
       synchronized (Classpath.class)
       {
@@ -293,6 +316,18 @@ public class AetherPluginHandler
     }
 
     return classpathSet;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private Proxy createProxy()
+  {
+    return new Proxy(Proxy.TYPE_HTTP, configuration.getProxyServer(),
+                     configuration.getProxyPort(), null);
   }
 
   /**
@@ -380,6 +415,9 @@ public class AetherPluginHandler
 
   /** Field description */
   private File classpathFile;
+
+  /** Field description */
+  private ScmConfiguration configuration;
 
   /** Field description */
   private JAXBContext jaxbContext;

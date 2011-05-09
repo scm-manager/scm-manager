@@ -61,8 +61,6 @@ import sonia.scm.util.Util;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 
 import java.util.Collection;
@@ -553,7 +551,7 @@ public class DefaultPluginManager implements PluginManager
             if (pluginHandler == null)
             {
               pluginHandler = new AetherPluginHandler(this,
-                      SCMContext.getContext());
+                      SCMContext.getContext(), configuration);
             }
 
             pluginHandler.setPluginRepositories(center.getRepositories());
