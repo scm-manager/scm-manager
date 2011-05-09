@@ -37,6 +37,9 @@ package sonia.scm.net;
 
 import com.google.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.Util;
 
@@ -63,6 +66,10 @@ public class URLHttpClient implements HttpClient
 
   /** Field description */
   public static final String ENCODING = "UTF-8";
+
+  /** the logger for URLHttpClient */
+  private static final Logger logger =
+    LoggerFactory.getLogger(URLHttpClient.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -237,6 +244,14 @@ public class URLHttpClient implements HttpClient
 
     if (configuration.isEnableProxy())
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("fetch '{}' using proxy {}:{}",
+                     new Object[] { url.toExternalForm(),
+                                    configuration.getProxyServer(),
+                                    configuration.getProxyPort() });
+      }
+
       SocketAddress address =
         new InetSocketAddress(configuration.getProxyServer(),
                               configuration.getProxyPort());
@@ -245,6 +260,11 @@ public class URLHttpClient implements HttpClient
     }
     else
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("fetch '{}'");
+      }
+
       connection = url.openConnection();
     }
 
