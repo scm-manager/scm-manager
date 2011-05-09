@@ -262,7 +262,7 @@ public class URLHttpClient implements HttpClient
     {
       if (logger.isDebugEnabled())
       {
-        logger.debug("fetch '{}'");
+        logger.debug("fetch '{}'", url.toExternalForm());
       }
 
       connection = url.openConnection();
