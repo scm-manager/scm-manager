@@ -404,7 +404,7 @@ public class ScmConfiguration
   private Set<String> adminUsers;
 
   /** Field description */
-  private boolean enableProxy;
+  private boolean enableProxy = false;
 
   /** Field description */
   private int forwardPort = 80;
@@ -414,10 +414,10 @@ public class ScmConfiguration
   private String pluginUrl = DEFAULT_PLUGINURL;
 
   /** Field description */
-  private int proxyPort;
+  private int proxyPort = 8080;
 
   /** Field description */
-  private String proxyServer;
+  private String proxyServer = "proxy.mydomain.com";
 
   /** Field description */
   private String servername = "localhost";
