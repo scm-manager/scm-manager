@@ -150,6 +150,7 @@ public class Repository implements ModelObject
     repository.setName(name);
     repository.setContact(contact);
     repository.setCreationDate(creationDate);
+    repository.setLastModified(lastModified);
     repository.setDescription(description);
     repository.setPermissions(permissions);
     repository.setUrl(url);

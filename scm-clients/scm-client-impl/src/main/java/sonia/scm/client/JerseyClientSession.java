@@ -80,10 +80,21 @@ public class JerseyClientSession implements ScmClientSession
   @Override
   public void close() throws IOException
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    client.destroy();
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Client getClient()
+  {
+    return client;
+  }
 
   /**
    * Method description
@@ -106,7 +117,7 @@ public class JerseyClientSession implements ScmClientSession
   @Override
   public ClientHandler<Repository> getRepositoryHandler()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return new JerseyRepositoryClientHandler(this);
   }
 
   /**
@@ -118,7 +129,18 @@ public class JerseyClientSession implements ScmClientSession
   @Override
   public ScmState getState()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return state;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public ScmUrlProvider getUrlProvider()
+  {
+    return urlProvider;
   }
 
   /**

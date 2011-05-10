@@ -46,6 +46,12 @@ public class ScmUrlProvider
   /** Field description */
   public static final String URLPART_AUTHENTICATION = "authentication/login";
 
+  /** Field description */
+  public static final String URLPART_REPOSITORIES = "repositories";
+
+  /** Field description */
+  public static final String URLPART_REPOSITORY = "repositories/";
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -99,6 +105,30 @@ public class ScmUrlProvider
   public String getExtension()
   {
     return extension;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getRepositoriesUrl()
+  {
+    return getResourceUrl(URLPART_REPOSITORIES);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   *
+   * @return
+   */
+  public String getRepositoryUrl(String id)
+  {
+    return getResourceUrl(URLPART_REPOSITORY.concat(id));
   }
 
   /**
