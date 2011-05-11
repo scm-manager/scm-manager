@@ -38,6 +38,7 @@ package sonia.scm.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.sonatype.spice.jersey.client.ahc.AhcHttpClient;
 import org.sonatype.spice.jersey.client.ahc.config.DefaultAhcConfig;
 
 import sonia.scm.ScmState;
@@ -46,7 +47,6 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
@@ -63,6 +63,25 @@ public class JerseyClientProvider implements ScmClientProvider
   /** the logger for JerseyClientProvider */
   private static final Logger logger =
     LoggerFactory.getLogger(JerseyClientProvider.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  public JerseyClientProvider() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param enableLogging
+   */
+  public JerseyClientProvider(boolean enableLogging)
+  {
+    this.enableLogging = enableLogging;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -99,12 +118,15 @@ public class JerseyClientProvider implements ScmClientProvider
 
     ScmUrlProvider urlProvider = new ScmUrlProvider(url);
     DefaultAhcConfig config = new DefaultAhcConfig();
-    Client client = Client.create(config);
-    WebResource resource = client.resource(urlProvider.getAuthenticationUrl());
+    AhcHttpClient client = AhcHttpClient.create(config);
     ClientResponse response = null;
 
     if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
     {
+      WebResource resource = ClientUtil.createResource(client,
+                               urlProvider.getAuthenticationLoginUrl(),
+                               enableLogging);
+
       if (logger.isDebugEnabled())
       {
         logger.debug("try login for {}", username);
@@ -119,6 +141,10 @@ public class JerseyClientProvider implements ScmClientProvider
     }
     else
     {
+      WebResource resource = ClientUtil.createResource(client,
+                               urlProvider.getAuthenticationUrl(),
+                               enableLogging);
+
       if (logger.isDebugEnabled())
       {
         logger.debug("try anonymous login");
@@ -164,4 +190,9 @@ public class JerseyClientProvider implements ScmClientProvider
 
     return new JerseyClientSession(client, urlProvider, state);
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean enableLogging = false;
 }

@@ -35,7 +35,10 @@ package sonia.scm.client;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.filter.LoggingFilter;
 
 /**
  *
@@ -56,5 +59,42 @@ public class ClientUtil
     {
       response.close();
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param client
+   * @param url
+   *
+   * @return
+   */
+  public static WebResource createResource(Client client, String url)
+  {
+    return createResource(client, url, false);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param client
+   * @param url
+   * @param enableLogging
+   *
+   * @return
+   */
+  public static WebResource createResource(Client client, String url,
+          boolean enableLogging)
+  {
+    WebResource resource = client.resource(url);
+
+    if (enableLogging)
+    {
+      resource.addFilter(new LoggingFilter());
+    }
+
+    return resource;
   }
 }

@@ -32,15 +32,23 @@
     <dependency>
       <groupId>org.sonatype.spice</groupId>
       <artifactId>jersey-ahc-client</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.1-patch1</version>
     </dependency>
     
     <!-- test scope -->
     
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jul-to-slf4j</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>0.9.28</version>
+      <scope>test</scope>
     </dependency>
   
   </dependencies>

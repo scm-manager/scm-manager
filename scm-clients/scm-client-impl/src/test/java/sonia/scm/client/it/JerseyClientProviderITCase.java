@@ -35,9 +35,9 @@ package sonia.scm.client.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.Ignore;
 import org.junit.Test;
 
+import sonia.scm.client.ClientUtil;
 import sonia.scm.client.JerseyClientProvider;
 import sonia.scm.client.JerseyClientSession;
 import sonia.scm.client.ScmClientException;
@@ -77,7 +77,6 @@ public class JerseyClientProviderITCase
    * @throws ScmClientException
    */
   @Test
-  @Ignore
   public void createSessionAnonymousTest() throws ScmClientException
   {
     JerseyClientSession adminSession = createSession("scmadmin", "scmadmin");
@@ -85,7 +84,8 @@ public class JerseyClientProviderITCase
     // enable anonymous access
     ScmUrlProvider up = adminSession.getUrlProvider();
     Client client = adminSession.getClient();
-    WebResource resource = client.resource(up.getResourceUrl("config"));
+    WebResource resource = ClientUtil.createResource(client,
+                             up.getResourceUrl("config"), true);
     ScmConfiguration config = resource.get(ScmConfiguration.class);
 
     config.setAnonymousAccessEnabled(true);
@@ -154,7 +154,7 @@ public class JerseyClientProviderITCase
   private JerseyClientSession createSession(String username, String password)
           throws ScmClientException
   {
-    JerseyClientProvider provider = new JerseyClientProvider();
+    JerseyClientProvider provider = new JerseyClientProvider(true);
 
     return provider.createSession("http://localhost:8081/scm", username,
                                   password);

@@ -49,7 +49,11 @@ public class ScmUrlProvider
   public static final String API_PATH = "/api/rest/";
 
   /** Field description */
-  public static final String URLPART_AUTHENTICATION = "authentication/login";
+  public static final String URLPART_AUTHENTICATION = "authentication";
+
+  /** Field description */
+  public static final String URLPART_AUTHENTICATION_LOGIN =
+    "authentication/login";
 
   /** Field description */
   public static final String URLPART_REPOSITORIES = "repositories";
@@ -87,6 +91,17 @@ public class ScmUrlProvider
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getAuthenticationLoginUrl()
+  {
+    return getResourceUrl(URLPART_AUTHENTICATION_LOGIN);
+  }
 
   /**
    * Method description
