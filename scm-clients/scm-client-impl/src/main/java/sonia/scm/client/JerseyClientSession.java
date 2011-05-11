@@ -35,6 +35,9 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.ScmState;
 import sonia.scm.group.Group;
 import sonia.scm.repository.Repository;
@@ -52,6 +55,12 @@ import java.io.IOException;
  */
 public class JerseyClientSession implements ScmClientSession
 {
+
+  /** the logger for JerseyClientSession */
+  private static final Logger logger =
+    LoggerFactory.getLogger(JerseyClientSession.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -80,6 +89,11 @@ public class JerseyClientSession implements ScmClientSession
   @Override
   public void close() throws IOException
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("close client session");
+    }
+
     client.destroy();
   }
 

@@ -35,6 +35,9 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.sonatype.spice.jersey.client.ahc.config.DefaultAhcConfig;
 
 import sonia.scm.ScmState;
@@ -58,6 +61,12 @@ import javax.ws.rs.core.MultivaluedMap;
 public class JerseyClientProvider implements ScmClientProvider
 {
 
+  /** the logger for JerseyClientProvider */
+  private static final Logger logger =
+    LoggerFactory.getLogger(JerseyClientProvider.class);
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
@@ -71,11 +80,23 @@ public class JerseyClientProvider implements ScmClientProvider
    * @throws ScmClientException
    */
   @Override
-  public ScmClientSession createSession(String url, String username,
+  public JerseyClientSession createSession(String url, String username,
           String password)
           throws ScmClientException
   {
     AssertUtil.assertIsNotEmpty(url);
+
+    if (logger.isInfoEnabled())
+    {
+      String user = "anonymous";
+
+      if (Util.isNotEmpty(username))
+      {
+        user = username;
+      }
+
+      logger.info("create new session for {} with username {}", url, user);
+    }
 
     ScmUrlProvider urlProvider = new ScmUrlProvider(url);
     DefaultAhcConfig config = new DefaultAhcConfig();
@@ -85,6 +106,11 @@ public class JerseyClientProvider implements ScmClientProvider
 
     if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("try login for {}", username);
+      }
+
       MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
 
       formData.add("username", username);
@@ -94,11 +120,21 @@ public class JerseyClientProvider implements ScmClientProvider
     }
     else
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("try anonymous login");
+      }
+
       response = resource.get(ClientResponse.class);
     }
 
     if (response.getStatus() == 401)
     {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("server returned 401 unauthorized");
+      }
+
       throw new UnauthorizedAccessException();
     }
 
@@ -106,6 +142,11 @@ public class JerseyClientProvider implements ScmClientProvider
 
     if (!state.isSuccess())
     {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("server returned state failed");
+      }
+
       throw new ScmClientException("create ScmClientSession failed");
     }
 

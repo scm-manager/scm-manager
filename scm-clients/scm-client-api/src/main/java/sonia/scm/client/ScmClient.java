@@ -35,6 +35,9 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.util.ServiceUtil;
 
 /**
@@ -46,6 +49,9 @@ public class ScmClient
 
   /** Field description */
   private static volatile ScmClientProvider provider = null;
+
+  /** the logger for ScmClient */
+  private static final Logger logger = LoggerFactory.getLogger(ScmClient.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -91,8 +97,10 @@ public class ScmClient
    *
    *
    * @return
+   *
+   * @throws ScmClientException
    */
-  private static ScmClientProvider getProvider()
+  private static ScmClientProvider getProvider() throws ScmClientException
   {
     if (provider == null)
     {
@@ -103,6 +111,16 @@ public class ScmClient
           provider = ServiceUtil.getService(ScmClientProvider.class);
         }
       }
+    }
+
+    if (provider == null)
+    {
+      throw new ScmClientException("could not find a ScmClientProvider");
+    }
+    else if (logger.isInfoEnabled())
+    {
+      logger.info("create ScmClient with provider {}",
+                  provider.getClass().getName());
     }
 
     return provider;

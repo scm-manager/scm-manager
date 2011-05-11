@@ -33,6 +33,11 @@
 
 package sonia.scm.client;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -52,6 +57,10 @@ public class ScmUrlProvider
   /** Field description */
   public static final String URLPART_REPOSITORY = "repositories/";
 
+  /** the logger for classVar */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ScmUrlProvider.class);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -69,6 +78,11 @@ public class ScmUrlProvider
     else
     {
       this.baseUrl = baseUrl;
+    }
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create new url provider with baseurl {}", this.baseUrl);
     }
   }
 
@@ -141,7 +155,14 @@ public class ScmUrlProvider
    */
   public String getResourceUrl(String urlPart)
   {
-    return baseUrl.concat(urlPart).concat(extension);
+    String resourceUrl = baseUrl.concat(urlPart).concat(extension);
+
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("return resourceurl {}", resourceUrl);
+    }
+
+    return resourceUrl;
   }
 
   //~--- set methods ----------------------------------------------------------
