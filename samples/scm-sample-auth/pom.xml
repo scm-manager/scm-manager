@@ -8,7 +8,6 @@
     <artifactId>scm-samples</artifactId>
     <groupId>sonia.scm.samples</groupId>
     <version>1.3-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>sonia.scm.sample</groupId>

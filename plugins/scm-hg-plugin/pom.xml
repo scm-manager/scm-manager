@@ -8,7 +8,6 @@
     <groupId>sonia.scm.plugins</groupId>
     <artifactId>scm-plugins</artifactId>
     <version>1.3-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>sonia.scm.plugins</groupId>
