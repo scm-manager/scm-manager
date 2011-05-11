@@ -35,6 +35,14 @@
       <artifactId>jersey-ahc-client</artifactId>
       <version>1.0.1</version>
     </dependency>
+    
+    <!-- test scope -->
+    
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>0.9.28</version>
+    </dependency>
   
   </dependencies>
 
@@ -112,6 +120,7 @@
                   <maxIdleTime>60000</maxIdleTime>
                 </connector>
               </connectors>
+              <contextPath>/scm</contextPath>
               <webApp>${project.build.directory}/webapp/scm-webapp.war</webApp>
               <source>${project.build.javaLevel}</source>
               <target>${project.build.javaLevel}</target>
