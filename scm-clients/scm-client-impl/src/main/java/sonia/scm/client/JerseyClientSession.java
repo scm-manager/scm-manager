@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.ScmState;
 import sonia.scm.group.Group;
-import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -129,7 +128,7 @@ public class JerseyClientSession implements ScmClientSession
    * @return
    */
   @Override
-  public ClientHandler<Repository> getRepositoryHandler()
+  public RepositoryClientHandler getRepositoryHandler()
   {
     return new JerseyRepositoryClientHandler(this);
   }

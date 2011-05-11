@@ -35,6 +35,7 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.Type;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.AssertUtil;
 
@@ -45,13 +46,14 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JerseyRepositoryClientHandler implements ClientHandler<Repository>
+public class JerseyRepositoryClientHandler implements RepositoryClientHandler
 {
 
   /**
@@ -62,6 +64,7 @@ public class JerseyRepositoryClientHandler implements ClientHandler<Repository>
    */
   public JerseyRepositoryClientHandler(JerseyClientSession session)
   {
+    this.session = session;
     this.client = session.getClient();
     this.urlProvider = session.getUrlProvider();
   }
@@ -245,6 +248,18 @@ public class JerseyRepositoryClientHandler implements ClientHandler<Repository>
    * Method description
    *
    *
+   * @return
+   */
+  @Override
+  public Collection<Type> getRepositoryTypes()
+  {
+    return session.getState().getRepositoryTypes();
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param url
    *
    * @return
@@ -281,6 +296,9 @@ public class JerseyRepositoryClientHandler implements ClientHandler<Repository>
 
   /** Field description */
   private Client client;
+
+  /** Field description */
+  private JerseyClientSession session;
 
   /** Field description */
   private ScmUrlProvider urlProvider;

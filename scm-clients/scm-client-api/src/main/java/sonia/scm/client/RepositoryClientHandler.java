@@ -35,19 +35,18 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.ScmState;
-import sonia.scm.group.Group;
-import sonia.scm.user.User;
+import sonia.scm.Type;
+import sonia.scm.repository.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.Closeable;
+import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface ScmClientSession extends Closeable
+public interface RepositoryClientHandler extends ClientHandler<Repository>
 {
 
   /**
@@ -56,29 +55,5 @@ public interface ScmClientSession extends Closeable
    *
    * @return
    */
-  public ClientHandler<Group> getGroupHandler();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public RepositoryClientHandler getRepositoryHandler();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public ScmState getState();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public ClientHandler<User> getUserHandler();
+  public Collection<Type> getRepositoryTypes();
 }
