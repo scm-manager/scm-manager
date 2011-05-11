@@ -113,6 +113,10 @@
                   <name>scm.home</name>
                   <value>target/scm-it</value>
                 </systemProperty>
+                <systemProperty>
+                  <name>file.encoding</name>
+                  <value>UTF-8</value>
+                </systemProperty>
               </systemProperties>
               <connectors>
                 <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
