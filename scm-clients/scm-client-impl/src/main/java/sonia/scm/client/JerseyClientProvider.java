@@ -86,15 +86,15 @@ public class JerseyClientProvider implements ScmClientProvider
   {
     AssertUtil.assertIsNotEmpty(url);
 
+    String user = "anonymous";
+
+    if (Util.isNotEmpty(username))
+    {
+      user = username;
+    }
+
     if (logger.isInfoEnabled())
     {
-      String user = "anonymous";
-
-      if (Util.isNotEmpty(username))
-      {
-        user = username;
-      }
-
       logger.info("create new session for {} with username {}", url, user);
     }
 
@@ -128,14 +128,23 @@ public class JerseyClientProvider implements ScmClientProvider
       response = resource.get(ClientResponse.class);
     }
 
-    if (response.getStatus() == 401)
+    if (response.getStatus() != 200)
     {
+      String msg =
+        "server returned ".concat(String.valueOf(response.getStatus()));
+
       if (logger.isWarnEnabled())
       {
-        logger.warn("server returned 401 unauthorized");
+        logger.warn(msg);
       }
 
-      throw new UnauthorizedAccessException();
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("server returned content: {}",
+                     response.getEntity(String.class));
+      }
+
+      throw new ScmClientException(msg);
     }
 
     ScmState state = response.getEntity(ScmState.class);
@@ -148,6 +157,10 @@ public class JerseyClientProvider implements ScmClientProvider
       }
 
       throw new ScmClientException("create ScmClientSession failed");
+    }
+    else if (logger.isInfoEnabled())
+    {
+      logger.info("create session successfully for user {}", user);
     }
 
     return new JerseyClientSession(client, urlProvider, state);
