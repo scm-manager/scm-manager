@@ -37,18 +37,15 @@ package sonia.scm.client.it;
 
 import org.junit.Test;
 
-import sonia.scm.client.ClientUtil;
 import sonia.scm.client.JerseyClientSession;
+import sonia.scm.client.RepositoryClientHandler;
 import sonia.scm.client.ScmClientException;
-import sonia.scm.client.ScmUrlProvider;
-import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryTestData;
 
 import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
 
 import java.io.IOException;
 
@@ -56,74 +53,33 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class JerseyClientProviderITCase extends AbstractITCaseBase
+public class JerseyClientRepositoryClientHandlerITCase
+        extends AbstractITCaseBase
 {
 
   /**
    * Method description
    *
    *
-   *
-   * @throws IOException
-   * @throws ScmClientException
-   */
-  @Test(expected = ScmClientException.class)
-  public void createSessionAnonymousFailedTest()
-          throws ScmClientException, IOException
-  {
-    createAnonymousSession().close();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
    * @throws IOException
    * @throws ScmClientException
    */
   @Test
-  public void createSessionAnonymousTest()
-          throws ScmClientException, IOException
-  {
-    JerseyClientSession adminSession = createSession("scmadmin", "scmadmin");
-
-    // enable anonymous access
-    ScmUrlProvider up = adminSession.getUrlProvider();
-    Client client = adminSession.getClient();
-    WebResource resource = ClientUtil.createResource(client,
-                             up.getResourceUrl("config"), REQUEST_LOGGING);
-    ScmConfiguration config = resource.get(ScmConfiguration.class);
-
-    config.setAnonymousAccessEnabled(true);
-    resource.post(config);
-
-    // test anonymous access
-    createAnonymousSession().close();
-
-    // disable anonymous access
-    config.setAnonymousAccessEnabled(false);
-    resource.post(config);
-    adminSession.close();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @throws IOException
-   * @throws ScmClientException
-   */
-  @Test
-  public void createSessionTest() throws ScmClientException, IOException
+  public void testCreate() throws ScmClientException, IOException
   {
     JerseyClientSession session = createAdminSession();
+    Repository hog = RepositoryTestData.createHeartOfGold(REPOSITORY_TYPE);
+    RepositoryClientHandler handler = session.getRepositoryHandler();
 
-    assertNotNull(session);
-    assertNotNull(session.getState());
-    assertNotNull(session.getState().getUser());
-    assertEquals(session.getState().getUser().getName(), "scmadmin");
+    handler.create(hog);
+    assertNotNull(hog.getId());
+    assertNotNull(hog.getCreationDate());
+
+    String id = hog.getId();
+    Repository r = handler.get(id);
+
+    assertNotNull(r);
+    assertEquals(hog, r);
     session.close();
   }
 
@@ -131,29 +87,44 @@ public class JerseyClientProviderITCase extends AbstractITCaseBase
    * Method description
    *
    *
-   *
    * @throws IOException
    * @throws ScmClientException
    */
   @Test(expected = ScmClientException.class)
-  public void createSessionWithUnkownUserTest()
-          throws ScmClientException, IOException
+  public void testCreateAnonymous() throws ScmClientException, IOException
   {
-    createSession("dent", "dent123").close();
+    JerseyClientSession session = createAnonymousSession();
+    Repository p42 = RepositoryTestData.create42Puzzle(REPOSITORY_TYPE);
+
+    session.getRepositoryHandler().create(p42);
+    session.close();
   }
 
   /**
    * Method description
    *
    *
-   *
    * @throws IOException
    * @throws ScmClientException
    */
-  @Test(expected = ScmClientException.class)
-  public void createSessionWithWrongPasswordTest()
-          throws ScmClientException, IOException
+  @Test
+  public void testDelete() throws ScmClientException, IOException
   {
-    createSession("scmadmin", "ka123").close();
+    JerseyClientSession session = createAdminSession();
+    Repository hvpt =
+      RepositoryTestData.createHappyVerticalPeopleTransporter(REPOSITORY_TYPE);
+    RepositoryClientHandler handler = session.getRepositoryHandler();
+
+    handler.create(hvpt);
+    assertNotNull(hvpt.getId());
+    assertNotNull(hvpt.getCreationDate());
+
+    String id = hvpt.getId();
+
+    handler.delete(hvpt);
+
+    Repository r = handler.get(id);
+
+    assertNull(r);
   }
 }

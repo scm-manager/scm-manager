@@ -50,6 +50,13 @@
       <version>0.9.28</version>
       <scope>test</scope>
     </dependency>
+    
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-test</artifactId>
+      <version>1.3-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
   
   </dependencies>
 

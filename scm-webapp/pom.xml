@@ -273,6 +273,7 @@
               <maxIdleTime>60000</maxIdleTime>
             </connector>
           </connectors>
+          <contextPath>/scm</contextPath>
           <source>${project.build.javaLevel}</source>
           <target>${project.build.javaLevel}</target>
           <encoding>${project.build.sourceEncoding}</encoding>
