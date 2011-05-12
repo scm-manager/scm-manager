@@ -166,7 +166,7 @@ public class JerseyRepositoryClientHandler implements RepositoryClientHandler
 
     try
     {
-      response = resource.post(ClientResponse.class, repository);
+      response = resource.put(ClientResponse.class, repository);
       ClientUtil.checkResponse(response, 204);
     }
     finally

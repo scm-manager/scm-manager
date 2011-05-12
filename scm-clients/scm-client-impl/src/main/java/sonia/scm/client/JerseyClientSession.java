@@ -46,8 +46,6 @@ import sonia.scm.user.User;
 
 import com.sun.jersey.api.client.Client;
 
-import java.io.IOException;
-
 /**
  *
  * @author Sebastian Sdorra

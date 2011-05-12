@@ -177,4 +177,69 @@ public class JerseyClientRepositoryClientHandlerITCase
     session.close();
     setAnonymousAccess(false);
   }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testEnabledModifyAnonymous()
+  {
+    setAnonymousAccess(true);
+
+    JerseyClientSession session = createAdminSession();
+    Repository rateotu =
+      RepositoryTestData.createRestaurantAtTheEndOfTheUniverse(REPOSITORY_TYPE);
+
+    session.getRepositoryHandler().create(rateotu);
+    session.close();
+    session = createAnonymousSession();
+    rateotu.setDescription("Modify Test");
+
+    boolean notfound = false;
+
+    try
+    {
+      session.getRepositoryHandler().modify(rateotu);
+    }
+    catch (ScmForbiddenException ex)
+    {
+      notfound = true;
+    }
+
+    setAnonymousAccess(false);
+    session.close();
+    session = createAdminSession();
+    session.getRepositoryHandler().delete(rateotu);
+    session.close();
+    assertTrue(notfound);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testModify()
+  {
+    long start = System.currentTimeMillis();
+    JerseyClientSession session = createAdminSession();
+    Repository rateotu =
+      RepositoryTestData.createRestaurantAtTheEndOfTheUniverse(REPOSITORY_TYPE);
+    RepositoryClientHandler handler = session.getRepositoryHandler();
+
+    handler.create(rateotu);
+    assertNotNull(rateotu.getId());
+    assertNotNull(rateotu.getCreationDate());
+    rateotu.setDescription("Modify Test");
+    handler.modify(rateotu);
+    rateotu = handler.get(rateotu.getId());
+    assertNotNull(rateotu);
+    assertEquals(rateotu.getDescription(), "Modify Test");
+    assertNotNull(rateotu.getLastModified());
+    assertTrue(rateotu.getLastModified() > start);
+    assertTrue(rateotu.getLastModified() < System.currentTimeMillis());
+    handler.delete(rateotu);
+    session.close();
+  }
 }
