@@ -40,7 +40,8 @@ import org.junit.Test;
 
 import sonia.scm.client.JerseyClientSession;
 import sonia.scm.client.RepositoryClientHandler;
-import sonia.scm.client.ScmClientException;
+import sonia.scm.client.ScmForbiddenException;
+import sonia.scm.client.ScmUnauthorizedException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.util.Util;
@@ -50,8 +51,6 @@ import static org.junit.Assert.*;
 import static sonia.scm.client.it.TestUtil.*;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 import java.util.List;
 
@@ -66,12 +65,9 @@ public class JerseyClientRepositoryClientHandlerITCase
    * Method description
    *
    *
-   * @throws IOException
-   * @throws ScmClientException
    */
   @AfterClass
   public static void removeTestRepositories()
-          throws ScmClientException, IOException
   {
     JerseyClientSession session = createAdminSession();
     RepositoryClientHandler handler = session.getRepositoryHandler();
@@ -86,17 +82,16 @@ public class JerseyClientRepositoryClientHandlerITCase
     }
 
     session.close();
+    setAnonymousAccess(false);
   }
 
   /**
    * Method description
    *
    *
-   * @throws IOException
-   * @throws ScmClientException
    */
   @Test
-  public void testCreate() throws ScmClientException, IOException
+  public void testCreate()
   {
     JerseyClientSession session = createAdminSession();
     Repository hog = RepositoryTestData.createHeartOfGold(REPOSITORY_TYPE);
@@ -118,28 +113,9 @@ public class JerseyClientRepositoryClientHandlerITCase
    * Method description
    *
    *
-   * @throws IOException
-   * @throws ScmClientException
-   */
-  @Test(expected = ScmClientException.class)
-  public void testCreateAnonymous() throws ScmClientException, IOException
-  {
-    JerseyClientSession session = createAnonymousSession();
-    Repository p42 = RepositoryTestData.create42Puzzle(REPOSITORY_TYPE);
-
-    session.getRepositoryHandler().create(p42);
-    session.close();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws ScmClientException
    */
   @Test
-  public void testDelete() throws ScmClientException, IOException
+  public void testDelete()
   {
     JerseyClientSession session = createAdminSession();
     Repository hvpt =
@@ -157,5 +133,48 @@ public class JerseyClientRepositoryClientHandlerITCase
     Repository r = handler.get(id);
 
     assertNull(r);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   */
+  @Test(expected = ScmUnauthorizedException.class)
+  public void testDisabledCreateAnonymous()
+  {
+    JerseyClientSession session = createAnonymousSession();
+    Repository p42 = RepositoryTestData.create42Puzzle(REPOSITORY_TYPE);
+
+    session.getRepositoryHandler().create(p42);
+    session.close();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   */
+  @Test
+  public void testEnabledCreateAnonymous()
+  {
+    setAnonymousAccess(true);
+
+    JerseyClientSession session = createAnonymousSession();
+    Repository p42 = RepositoryTestData.create42Puzzle(REPOSITORY_TYPE);
+    boolean forbidden = false;
+
+    try
+    {
+      session.getRepositoryHandler().create(p42);
+    }
+    catch (ScmForbiddenException ex)
+    {
+      forbidden = true;
+    }
+
+    assertTrue(forbidden);
+    session.close();
+    setAnonymousAccess(false);
   }
 }

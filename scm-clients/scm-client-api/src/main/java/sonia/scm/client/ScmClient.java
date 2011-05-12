@@ -98,9 +98,8 @@ public class ScmClient
    *
    * @return
    *
-   * @throws ScmClientException
    */
-  private static ScmClientProvider getProvider() throws ScmClientException
+  private static ScmClientProvider getProvider()
   {
     if (provider == null)
     {

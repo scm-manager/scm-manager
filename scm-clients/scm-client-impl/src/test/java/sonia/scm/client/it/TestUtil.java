@@ -38,7 +38,6 @@ package sonia.scm.client.it;
 import sonia.scm.client.ClientUtil;
 import sonia.scm.client.JerseyClientProvider;
 import sonia.scm.client.JerseyClientSession;
-import sonia.scm.client.ScmClientException;
 import sonia.scm.client.ScmUrlProvider;
 import sonia.scm.config.ScmConfiguration;
 
@@ -46,8 +45,6 @@ import sonia.scm.config.ScmConfiguration;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
-
-import java.io.IOException;
 
 /**
  *
@@ -79,10 +76,8 @@ public class TestUtil
    *
    * @return
    *
-   * @throws ScmClientException
    */
   public static JerseyClientSession createAdminSession()
-          throws ScmClientException
   {
     return createSession(ADMIN_USERNAME, ADMIN_PASSWORD);
   }
@@ -93,10 +88,8 @@ public class TestUtil
    *
    * @return
    *
-   * @throws ScmClientException
    */
   public static JerseyClientSession createAnonymousSession()
-          throws ScmClientException
   {
     return createSession(null, null);
   }
@@ -110,11 +103,9 @@ public class TestUtil
    *
    * @return
    *
-   * @throws ScmClientException
    */
   public static JerseyClientSession createSession(String username,
           String password)
-          throws ScmClientException
   {
     JerseyClientProvider provider = new JerseyClientProvider(REQUEST_LOGGING);
 
@@ -129,11 +120,8 @@ public class TestUtil
    *
    * @param access
    *
-   * @throws IOException
-   * @throws ScmClientException
    */
   public static void setAnonymousAccess(boolean access)
-          throws ScmClientException, IOException
   {
     JerseyClientSession adminSession = createAdminSession();
     ScmUrlProvider up = adminSession.getUrlProvider();

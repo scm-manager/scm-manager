@@ -95,12 +95,10 @@ public class JerseyClientProvider implements ScmClientProvider
    *
    * @return
    *
-   * @throws ScmClientException
    */
   @Override
   public JerseyClientSession createSession(String url, String username,
           String password)
-          throws ScmClientException
   {
     AssertUtil.assertIsNotEmpty(url);
 
@@ -153,24 +151,7 @@ public class JerseyClientProvider implements ScmClientProvider
       response = resource.get(ClientResponse.class);
     }
 
-    if (response.getStatus() != 200)
-    {
-      String msg =
-        "server returned ".concat(String.valueOf(response.getStatus()));
-
-      if (logger.isWarnEnabled())
-      {
-        logger.warn(msg);
-      }
-
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("server returned content: {}",
-                     response.getEntity(String.class));
-      }
-
-      throw new ScmClientException(msg);
-    }
+    ClientUtil.checkResponse(response);
 
     ScmState state = response.getEntity(ScmState.class);
 

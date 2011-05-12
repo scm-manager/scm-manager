@@ -37,14 +37,36 @@ package sonia.scm.client;
  *
  * @author Sebastian Sdorra
  */
-public class ScmClientException extends Exception
+public class ScmClientException extends RuntimeException
 {
+
+  /** Field description */
+  public static final int SC_FORBIDDEN = 403;
+
+  /** Field description */
+  public static final int SC_NOTFOUND = 404;
+
+  /** Field description */
+  public static final int SC_UNAUTHORIZED = 401;
+
+  /** Field description */
+  public static final int SC_UNKNOWN = -1;
+
+  /** Field description */
+  private static final long serialVersionUID = -2302107106896701393L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
+   *
+   * @param statusCode
    */
-  public ScmClientException() {}
+  public ScmClientException(int statusCode)
+  {
+    this.statusCode = statusCode;
+  }
 
   /**
    * Constructs ...
@@ -72,6 +94,20 @@ public class ScmClientException extends Exception
    * Constructs ...
    *
    *
+   *
+   * @param statusCode
+   * @param message
+   */
+  public ScmClientException(int statusCode, String message)
+  {
+    super(message);
+    this.statusCode = statusCode;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
    * @param message
    * @param cause
    */
@@ -79,4 +115,60 @@ public class ScmClientException extends Exception
   {
     super(message, cause);
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getContent()
+  {
+    return content;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public int getStatusCode()
+  {
+    return statusCode;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param content
+   */
+  public void setContent(String content)
+  {
+    this.content = content;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param statusCode
+   */
+  public void setStatusCode(int statusCode)
+  {
+    this.statusCode = statusCode;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String content;
+
+  /** Field description */
+  private int statusCode = SC_UNKNOWN;
 }

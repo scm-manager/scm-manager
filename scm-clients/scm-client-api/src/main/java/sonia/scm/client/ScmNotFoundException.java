@@ -37,4 +37,31 @@ package sonia.scm.client;
  *
  * @author Sebastian Sdorra
  */
-public class UnauthorizedException extends ScmClientException {}
+public class ScmNotFoundException extends ScmClientException
+{
+
+  /** Field description */
+  private static final long serialVersionUID = -7015126639998723954L;
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  public ScmNotFoundException()
+  {
+    super(SC_NOTFOUND);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   */
+  public ScmNotFoundException(String message)
+  {
+    super(SC_NOTFOUND, message);
+  }
+}

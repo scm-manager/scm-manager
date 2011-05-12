@@ -37,20 +37,31 @@ package sonia.scm.client;
  *
  * @author Sebastian Sdorra
  */
-public interface ScmClientProvider
+public class ScmForbiddenException extends ScmClientException
 {
 
+  /** Field description */
+  private static final long serialVersionUID = 3937346624508458660L;
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
-   * Method description
-   *
-   *
-   * @param url
-   * @param username
-   * @param password
-   *
-   * @return
+   * Constructs ...
    *
    */
-  public ScmClientSession createSession(String url, String username,
-          String password);
+  public ScmForbiddenException()
+  {
+    super(SC_FORBIDDEN);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   */
+  public ScmForbiddenException(String message)
+  {
+    super(SC_FORBIDDEN, message);
+  }
 }

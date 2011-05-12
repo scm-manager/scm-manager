@@ -53,6 +53,15 @@ public interface ScmClientSession extends Closeable
   /**
    * Method description
    *
+   */
+  @Override
+  public void close();
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
    *
    * @return
    */

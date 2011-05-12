@@ -88,26 +88,19 @@ public class JerseyRepositoryClientHandler implements RepositoryClientHandler
     try
     {
       response = resource.post(ClientResponse.class, repository);
+      ClientUtil.checkResponse(response, 201);
 
-      if (response.getStatus() == 201)
-      {
-        String url = response.getHeaders().get("Location").get(0);
+      String url = response.getHeaders().get("Location").get(0);
 
-        AssertUtil.assertIsNotEmpty(url);
+      AssertUtil.assertIsNotEmpty(url);
 
-        Repository newRepository = getRepository(url);
+      Repository newRepository = getRepository(url);
 
-        AssertUtil.assertIsNotNull(newRepository);
-        newRepository.copyProperties(repository);
+      AssertUtil.assertIsNotNull(newRepository);
+      newRepository.copyProperties(repository);
 
-        // copyProperties does not copy the repository id
-        repository.setId(newRepository.getId());
-      }
-      else
-      {
-
-        // todo errorhandling
-      }
+      // copyProperties does not copy the repository id
+      repository.setId(newRepository.getId());
     }
     finally
     {
@@ -132,12 +125,7 @@ public class JerseyRepositoryClientHandler implements RepositoryClientHandler
     try
     {
       response = resource.delete(ClientResponse.class);
-
-      if (response.getStatus() != 204)
-      {
-
-        // todo errorhandling
-      }
+      ClientUtil.checkResponse(response, 204);
     }
     finally
     {
@@ -179,12 +167,7 @@ public class JerseyRepositoryClientHandler implements RepositoryClientHandler
     try
     {
       response = resource.post(ClientResponse.class, repository);
-
-      if (response.getStatus() != 204)
-      {
-
-        // todo errorhandling
-      }
+      ClientUtil.checkResponse(response, 204);
     }
     finally
     {
@@ -224,17 +207,9 @@ public class JerseyRepositoryClientHandler implements RepositoryClientHandler
     try
     {
       response = resource.get(ClientResponse.class);
-
-      if (response.getStatus() == 200)
-      {
-        repositories = response.getEntity(new GenericType<List<Repository>>() {}
-        );
-      }
-      else
-      {
-
-        // todo errorhandling
-      }
+      ClientUtil.checkResponse(response, 200);
+      repositories = response.getEntity(new GenericType<List<Repository>>() {}
+      );
     }
     finally
     {
@@ -274,14 +249,12 @@ public class JerseyRepositoryClientHandler implements RepositoryClientHandler
     {
       response = resource.get(ClientResponse.class);
 
-      if (response.getStatus() == 200)
-      {
-        repository = response.getEntity(Repository.class);
-      }
-      else
-      {
+      int sc = response.getStatus();
 
-        // todo errorhandling
+      if (sc != ScmClientException.SC_NOTFOUND)
+      {
+        ClientUtil.checkResponse(response, 200);
+        repository = response.getEntity(Repository.class);
       }
     }
     finally

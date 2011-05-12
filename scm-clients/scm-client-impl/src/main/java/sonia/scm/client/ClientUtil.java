@@ -33,6 +33,11 @@
 
 package sonia.scm.client;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.client.Client;
@@ -46,6 +51,67 @@ import com.sun.jersey.api.client.filter.LoggingFilter;
  */
 public class ClientUtil
 {
+
+  /** the logger for ClientUtil */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ClientUtil.class);
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param exception
+   * @param response
+   */
+  public static void appendContent(ScmClientException exception,
+                                   ClientResponse response)
+  {
+    try
+    {
+      exception.setContent(response.getEntity(String.class));
+    }
+    catch (Exception ex)
+    {
+      logger.warn("could not read content", ex);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   * @param expectedStatusCode
+   */
+  public static void checkResponse(ClientResponse response,
+                                   int expectedStatusCode)
+  {
+    int sc = response.getStatus();
+
+    if (sc != expectedStatusCode)
+    {
+      sendException(response, sc);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   *
+   */
+  public static void checkResponse(ClientResponse response)
+  {
+    int sc = response.getStatus();
+
+    if (sc >= 300)
+    {
+      sendException(response, sc);
+    }
+  }
 
   /**
    * Method description
@@ -96,5 +162,58 @@ public class ClientUtil
     }
 
     return resource;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   * @param sc
+   */
+  public static void sendException(ClientResponse response, int sc)
+  {
+    ScmClientException exception = null;
+
+    switch (sc)
+    {
+      case ScmClientException.SC_UNAUTHORIZED :
+        exception = new ScmUnauthorizedException();
+
+        break;
+
+      case ScmClientException.SC_FORBIDDEN :
+        exception = new ScmForbiddenException();
+
+        break;
+
+      case ScmClientException.SC_NOTFOUND :
+        exception = new ScmNotFoundException();
+
+        break;
+
+      default :
+        exception = new ScmClientException(sc);
+        appendContent(exception, response);
+    }
+
+    throw exception;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   *
+   * @return
+   */
+  public static boolean isSuccessfull(ClientResponse response)
+  {
+    int status = response.getStatus();
+
+    return (status > 200) && (status < 300);
   }
 }

@@ -83,10 +83,9 @@ public class JerseyClientSession implements ScmClientSession
    * Method description
    *
    *
-   * @throws IOException
    */
   @Override
-  public void close() throws IOException
+  public void close()
   {
     if (logger.isInfoEnabled())
     {

@@ -39,6 +39,7 @@ import org.junit.Test;
 
 import sonia.scm.client.JerseyClientSession;
 import sonia.scm.client.ScmClientException;
+import sonia.scm.client.ScmUnauthorizedException;
 
 import static org.junit.Assert.*;
 
@@ -60,12 +61,9 @@ public class JerseyClientProviderITCase
    *
    *
    *
-   * @throws IOException
-   * @throws ScmClientException
    */
-  @Test(expected = ScmClientException.class)
+  @Test(expected = ScmUnauthorizedException.class)
   public void createSessionAnonymousFailedTest()
-          throws ScmClientException, IOException
   {
     createAnonymousSession().close();
   }
@@ -75,12 +73,9 @@ public class JerseyClientProviderITCase
    *
    *
    *
-   * @throws IOException
-   * @throws ScmClientException
    */
   @Test
   public void createSessionAnonymousTest()
-          throws ScmClientException, IOException
   {
 
     // enable anonymous access
@@ -98,11 +93,9 @@ public class JerseyClientProviderITCase
    *
    *
    *
-   * @throws IOException
-   * @throws ScmClientException
    */
   @Test
-  public void createSessionTest() throws ScmClientException, IOException
+  public void createSessionTest()
   {
     JerseyClientSession session = createAdminSession();
 
@@ -121,7 +114,7 @@ public class JerseyClientProviderITCase
    * @throws IOException
    * @throws ScmClientException
    */
-  @Test(expected = ScmClientException.class)
+  @Test(expected = ScmUnauthorizedException.class)
   public void createSessionWithUnkownUserTest()
           throws ScmClientException, IOException
   {
@@ -136,7 +129,7 @@ public class JerseyClientProviderITCase
    * @throws IOException
    * @throws ScmClientException
    */
-  @Test(expected = ScmClientException.class)
+  @Test(expected = ScmUnauthorizedException.class)
   public void createSessionWithWrongPasswordTest()
           throws ScmClientException, IOException
   {
