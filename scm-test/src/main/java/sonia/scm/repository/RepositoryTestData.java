@@ -139,4 +139,36 @@ public class RepositoryTestData
 
     return heartOfGold;
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static Repository createRestaurantAtTheEndOfTheUniverse()
+  {
+    return createRestaurantAtTheEndOfTheUniverse(
+        DummyRepositoryHandler.TYPE_NAME);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   *
+   * @return
+   */
+  public static Repository createRestaurantAtTheEndOfTheUniverse(String type)
+  {
+    Repository repository = new Repository();
+
+    repository.setType(type);
+    repository.setContact("douglas.adams@hitchhiker.com");
+    repository.setName("RestaurantAtTheEndOfTheUniverse");
+    repository.setDescription("The Restaurant at the End of the Universe");
+
+    return repository;
+  }
 }
