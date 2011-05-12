@@ -43,7 +43,7 @@ import sonia.scm.client.ScmClientException;
  *
  * @author Sebastian Sdorra
  */
-public class AbstractITCaseBase
+public class TestUtil
 {
 
   /** Field description */
@@ -62,7 +62,7 @@ public class AbstractITCaseBase
   public static final boolean REQUEST_LOGGING = false;
 
   //~--- methods --------------------------------------------------------------
-
+  
   /**
    * Method description
    *
@@ -71,7 +71,8 @@ public class AbstractITCaseBase
    *
    * @throws ScmClientException
    */
-  protected JerseyClientSession createAdminSession() throws ScmClientException
+  public static JerseyClientSession createAdminSession()
+          throws ScmClientException
   {
     return createSession(ADMIN_USERNAME, ADMIN_PASSWORD);
   }
@@ -84,7 +85,7 @@ public class AbstractITCaseBase
    *
    * @throws ScmClientException
    */
-  protected JerseyClientSession createAnonymousSession()
+  public static JerseyClientSession createAnonymousSession()
           throws ScmClientException
   {
     return createSession(null, null);
@@ -101,7 +102,8 @@ public class AbstractITCaseBase
    *
    * @throws ScmClientException
    */
-  protected JerseyClientSession createSession(String username, String password)
+  public static JerseyClientSession createSession(String username,
+          String password)
           throws ScmClientException
   {
     JerseyClientProvider provider = new JerseyClientProvider(REQUEST_LOGGING);

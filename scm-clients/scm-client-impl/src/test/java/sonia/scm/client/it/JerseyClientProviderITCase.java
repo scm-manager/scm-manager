@@ -45,6 +45,8 @@ import sonia.scm.config.ScmConfiguration;
 
 import static org.junit.Assert.*;
 
+import static sonia.scm.client.it.TestUtil.*;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.client.Client;
@@ -56,7 +58,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class JerseyClientProviderITCase extends AbstractITCaseBase
+public class JerseyClientProviderITCase
 {
 
   /**

@@ -35,6 +35,7 @@ package sonia.scm.client.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.AfterClass;
 import org.junit.Test;
 
 import sonia.scm.client.JerseyClientSession;
@@ -42,20 +43,50 @@ import sonia.scm.client.RepositoryClientHandler;
 import sonia.scm.client.ScmClientException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.util.Util;
 
 import static org.junit.Assert.*;
+
+import static sonia.scm.client.it.TestUtil.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 public class JerseyClientRepositoryClientHandlerITCase
-        extends AbstractITCaseBase
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws ScmClientException
+   */
+  @AfterClass
+  public static void removeTestRepositories()
+          throws ScmClientException, IOException
+  {
+    JerseyClientSession session = createAdminSession();
+    RepositoryClientHandler handler = session.getRepositoryHandler();
+    List<Repository> repositories = handler.getAll();
+
+    if (Util.isNotEmpty(repositories))
+    {
+      for (Repository r : repositories)
+      {
+        handler.delete(r);
+      }
+    }
+
+    session.close();
+  }
 
   /**
    * Method description
