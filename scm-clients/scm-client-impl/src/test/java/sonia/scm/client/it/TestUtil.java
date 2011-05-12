@@ -35,9 +35,19 @@ package sonia.scm.client.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.client.ClientUtil;
 import sonia.scm.client.JerseyClientProvider;
 import sonia.scm.client.JerseyClientSession;
 import sonia.scm.client.ScmClientException;
+import sonia.scm.client.ScmUrlProvider;
+import sonia.scm.config.ScmConfiguration;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
+
+import java.io.IOException;
 
 /**
  *
@@ -62,7 +72,7 @@ public class TestUtil
   public static final boolean REQUEST_LOGGING = false;
 
   //~--- methods --------------------------------------------------------------
-  
+
   /**
    * Method description
    *
@@ -109,5 +119,31 @@ public class TestUtil
     JerseyClientProvider provider = new JerseyClientProvider(REQUEST_LOGGING);
 
     return provider.createSession(URL_BASE, username, password);
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param access
+   *
+   * @throws IOException
+   * @throws ScmClientException
+   */
+  public static void setAnonymousAccess(boolean access)
+          throws ScmClientException, IOException
+  {
+    JerseyClientSession adminSession = createAdminSession();
+    ScmUrlProvider up = adminSession.getUrlProvider();
+    Client client = adminSession.getClient();
+    WebResource resource = ClientUtil.createResource(client,
+                             up.getResourceUrl("config"), REQUEST_LOGGING);
+    ScmConfiguration config = resource.get(ScmConfiguration.class);
+
+    config.setAnonymousAccessEnabled(access);
+    resource.post(config);
+    adminSession.close();
   }
 }
