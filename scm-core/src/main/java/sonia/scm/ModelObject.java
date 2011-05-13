@@ -43,4 +43,14 @@ import java.io.Serializable;
  */
 public interface ModelObject
         extends TypedObject, LastModifiedAware, Cloneable, Validateable,
-                Serializable {}
+                Serializable
+{
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getId();
+}

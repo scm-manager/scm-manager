@@ -370,6 +370,18 @@ public class Group implements ModelObject, Iterable<String>
    * @return
    */
   @Override
+  public String getId()
+  {
+    return name;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public Long getLastModified()
   {
     return lastModified;
