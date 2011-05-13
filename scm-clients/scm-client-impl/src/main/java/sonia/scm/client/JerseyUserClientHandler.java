@@ -39,6 +39,7 @@ import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 
 import java.util.List;
@@ -75,6 +76,20 @@ public class JerseyUserClientHandler extends AbstractClientHandler<User>
   {
     return new GenericType<List<User>>() {}
     ;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   * @param item
+   * @param newItem
+   */
+  @Override
+  protected void postCreate(ClientResponse response, User item, User newItem)
+  {
+    newItem.copyProperties(item);
   }
 
   //~--- get methods ----------------------------------------------------------

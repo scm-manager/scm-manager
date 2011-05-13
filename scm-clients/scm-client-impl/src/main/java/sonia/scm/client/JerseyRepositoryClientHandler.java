@@ -92,7 +92,8 @@ public class JerseyRepositoryClientHandler
   @Override
   protected GenericType<List<Repository>> createGenericListType()
   {
-    return new GenericType<List<Repository>>() {};
+    return new GenericType<List<Repository>>() {}
+    ;
   }
 
   /**
@@ -101,17 +102,12 @@ public class JerseyRepositoryClientHandler
    *
    * @param response
    * @param repository
+   * @param newRepository
    */
   @Override
-  protected void postCreate(ClientResponse response, Repository repository)
+  protected void postCreate(ClientResponse response, Repository repository,
+                            Repository newRepository)
   {
-    String url = response.getHeaders().get("Location").get(0);
-
-    AssertUtil.assertIsNotEmpty(url);
-
-    Repository newRepository = getItemByUrl(url);
-
-    AssertUtil.assertIsNotNull(newRepository);
     newRepository.copyProperties(repository);
 
     // copyProperties does not copy the repository id

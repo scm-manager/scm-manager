@@ -123,7 +123,15 @@ public abstract class AbstractClientHandler<T extends ModelObject>
     {
       response = resource.post(ClientResponse.class, item);
       ClientUtil.checkResponse(response, 201);
-      postCreate(response, item);
+
+      String url = response.getHeaders().get("Location").get(0);
+
+      AssertUtil.assertIsNotEmpty(url);
+
+      T newItem = getItemByUrl(url);
+
+      AssertUtil.assertIsNotNull(newItem);
+      postCreate(response, item, newItem);
     }
     finally
     {
@@ -250,8 +258,9 @@ public abstract class AbstractClientHandler<T extends ModelObject>
    *
    * @param response
    * @param item
+   * @param newItem
    */
-  protected void postCreate(ClientResponse response, T item) {}
+  protected void postCreate(ClientResponse response, T item, T newItem) {}
 
   /**
    * Method description
@@ -311,4 +320,6 @@ public abstract class AbstractClientHandler<T extends ModelObject>
 
   /** Field description */
   private Class<T> itemClass;
+
+  ;
 }

@@ -31,81 +31,36 @@
 
 
 
-package sonia.scm.client;
+package sonia.scm.client.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.group.Group;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-
-import java.util.List;
+import sonia.scm.client.ClientHandler;
+import sonia.scm.client.JerseyClientSession;
+import sonia.scm.client.it.AbstractClientHandlerTestBase.ModifyTest;
+import sonia.scm.user.User;
+import sonia.scm.user.UserTestData;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
-        implements GroupClientHandler
+public class JerseyUserClientHandlerITCase
+        extends AbstractClientHandlerTestBase<User>
 {
 
   /**
-   * Constructs ...
+   * Method description
    *
    *
    * @param session
-   */
-  public JerseyGroupClientHandler(JerseyClientSession session)
-  {
-    super(session, Group.class);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
    *
    * @return
    */
   @Override
-  protected GenericType<List<Group>> createGenericListType()
+  protected ClientHandler<User> createHandler(JerseyClientSession session)
   {
-    return new GenericType<List<Group>>() {}
-    ;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   * @param item
-   * @param newItem
-   */
-  @Override
-  protected void postCreate(ClientResponse response, Group item, Group newItem)
-  {
-    newItem.copyProperties(item);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param itemId
-   *
-   * @return
-   */
-  @Override
-  protected String getItemUrl(String itemId)
-  {
-    return urlProvider.getGroupUrl(itemId);
+    return session.getUserHandler();
   }
 
   /**
@@ -115,8 +70,59 @@ public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
    * @return
    */
   @Override
-  protected String getItemsUrl()
+  protected ModifyTest<User> createModifyTest()
   {
-    return urlProvider.getGroupsUrl();
+    return new ModifyTest<User>()
+    {
+      @Override
+      public void modify(User item)
+      {
+        item.setDisplayName("Modified DisplayName");
+      }
+      @Override
+      public boolean isCorrectModified(User item)
+      {
+        return "Modified DisplayName".equals(item.getDisplayName());
+      }
+    };
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param number
+   *
+   * @return
+   */
+  @Override
+  protected User createTestData(int number)
+  {
+    User user = null;
+
+    switch (number)
+    {
+      case 1 :
+        user = UserTestData.createAdams();
+
+        break;
+
+      case 2 :
+        user = UserTestData.createDent();
+
+        break;
+
+      case 3 :
+        user = UserTestData.createMarvin();
+
+        break;
+
+      case 4 :
+        user = UserTestData.createPerfect();
+
+        break;
+    }
+
+    return user;
   }
 }

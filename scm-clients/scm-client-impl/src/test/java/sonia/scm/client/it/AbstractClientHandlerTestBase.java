@@ -60,19 +60,6 @@ public abstract class AbstractClientHandlerTestBase<T extends ModelObject>
    * Method description
    *
    *
-   * @param item
-   */
-  protected void assertIsValid(T item) 
-  {
-    assertNotNull(item);
-    assertNotNull(item.getId());
-    assertTrue( item.getId().length() > 0 );
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param session
    *
    * @return
@@ -117,7 +104,7 @@ public abstract class AbstractClientHandlerTestBase<T extends ModelObject>
     T o = handler.get(id);
 
     assertNotNull(o);
-    assertEquals(item, o);
+    assertEquals(item.getId(), o.getId());
     session.close();
   }
 
@@ -242,6 +229,7 @@ public abstract class AbstractClientHandlerTestBase<T extends ModelObject>
 
     handler.create(item);
     assertIsValid(item);
+    item = handler.get(item.getId());
 
     ModifyTest<T> mt = createModifyTest();
 
@@ -257,6 +245,19 @@ public abstract class AbstractClientHandlerTestBase<T extends ModelObject>
     session.close();
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param item
+   */
+  protected void assertIsValid(T item)
+  {
+    assertNotNull(item);
+    assertNotNull(item.getId());
+    assertTrue(item.getId().length() > 0);
+  }
+
   //~--- inner interfaces -----------------------------------------------------
 
   /**
@@ -266,7 +267,7 @@ public abstract class AbstractClientHandlerTestBase<T extends ModelObject>
    * @param <T>
    *
    * @version        Enter version here..., 11/05/13
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   protected interface ModifyTest<T>
   {
