@@ -76,10 +76,32 @@ public class UnixHgInstaller extends AbstractHgInstaller
   {
     super.install(baseDirectory, config);
 
+    // search mercurial (hg)
+    
     if (Util.isEmpty(config.getHgBinary()))
     {
-      config.setHgBinary(IOUtil.search(COMMAND_HG));
+      String hg = IOUtil.search(COMMAND_HG);
+
+      if (Util.isNotEmpty(hg))
+      {
+        config.setHgBinary(hg);
+
+        // search python in the same folder
+        File hgFile = new File(hg);
+
+        if (hgFile.exists())
+        {
+          File pythonFile = new File(hgFile.getParentFile(), COMMAND_PYTHON);
+
+          if (pythonFile.exists())
+          {
+            config.setPythonBinary(pythonFile.getAbsolutePath());
+          }
+        }
+      }
     }
+    
+    // search python
 
     if (Util.isEmpty(config.getPythonBinary()))
     {
