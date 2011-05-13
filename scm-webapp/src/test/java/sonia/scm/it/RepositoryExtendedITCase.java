@@ -42,6 +42,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import sonia.scm.ScmState;
+import sonia.scm.Type;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
@@ -52,6 +54,8 @@ import sonia.scm.repository.client.RepositoryClientFactory;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.util.IOUtil;
+
+import static org.junit.Assert.*;
 
 import static sonia.scm.it.IntegrationTestUtil.*;
 
@@ -137,20 +141,34 @@ public class RepositoryExtendedITCase
   @Parameters
   public static Collection<Object[]> createParameters()
   {
+    Client client = createClient();
+    ScmState state = authenticateAdmin(client);
+
+    assertNotNull(state);
+    assertTrue(state.isSuccess());
+
     Collection<Object[]> params = new ArrayList<Object[]>();
-    Repository gitRepository = createRepository("git", "trillian");
 
-    params.add(new Object[] { gitRepository, "trillian", "secret" });
-
-    Repository svnRepository = createRepository("svn", "trillian");
-
-    params.add(new Object[] { svnRepository, "trillian", "secret" });
-
-    if (IOUtil.search("hg") != null)
+    for (Type t : state.getRepositoryTypes())
     {
-      Repository hgRepository = createRepository("hg", "trillian");
+      if (t.getName().equals("git"))
+      {
+        Repository gitRepository = createRepository("git", "trillian");
 
-      params.add(new Object[] { hgRepository, "trillian", "secret" });
+        params.add(new Object[] { gitRepository, "trillian", "secret" });
+      }
+      else if (t.getName().equals("svn"))
+      {
+        Repository svnRepository = createRepository("svn", "trillian");
+
+        params.add(new Object[] { svnRepository, "trillian", "secret" });
+      }
+      else if (t.getName().equals("hg"))
+      {
+        Repository hgRepository = createRepository("hg", "trillian");
+
+        params.add(new Object[] { hgRepository, "trillian", "secret" });
+      }
     }
 
     return params;

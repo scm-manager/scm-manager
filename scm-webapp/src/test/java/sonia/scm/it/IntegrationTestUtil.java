@@ -100,7 +100,7 @@ public class IntegrationTestUtil
    *
    * @param client
    */
-  public static void authenticateAdmin(Client client)
+  public static ScmState authenticateAdmin(Client client)
   {
     ClientResponse cr = authenticate(client, "scmadmin", "scmadmin");
     ScmState state = cr.getEntity(ScmState.class);
@@ -119,6 +119,8 @@ public class IntegrationTestUtil
 
     assertNotNull(types);
     assertFalse(types.isEmpty());
+    
+    return state;
   }
 
   /**
