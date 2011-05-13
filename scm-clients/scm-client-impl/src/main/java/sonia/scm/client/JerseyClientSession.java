@@ -39,8 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ScmState;
-import sonia.scm.group.Group;
-import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -113,9 +111,9 @@ public class JerseyClientSession implements ScmClientSession
    * @return
    */
   @Override
-  public ClientHandler<Group> getGroupHandler()
+  public GroupClientHandler getGroupHandler()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return new JerseyGroupClientHandler(this);
   }
 
   /**
@@ -160,9 +158,9 @@ public class JerseyClientSession implements ScmClientSession
    * @return
    */
   @Override
-  public ClientHandler<User> getUserHandler()
+  public UserClientHandler getUserHandler()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return new JerseyUserClientHandler(this);
   }
 
   //~--- fields ---------------------------------------------------------------

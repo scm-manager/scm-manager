@@ -35,26 +35,79 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.ScmState;
-import sonia.scm.user.User;
+import sonia.scm.group.Group;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.Closeable;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface ScmClientSession extends Closeable
+public class JerseyGroupClientHandler implements GroupClientHandler
 {
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param session
+   */
+  public JerseyGroupClientHandler(JerseyClientSession session)
+  {
+    this.session = session;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @param item
    */
   @Override
-  public void close();
+  public void create(Group item)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   */
+  @Override
+  public void delete(String id)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param item
+   */
+  @Override
+  public void delete(Group item)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param item
+   */
+  @Override
+  public void modify(Group item)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -62,9 +115,15 @@ public interface ScmClientSession extends Closeable
    * Method description
    *
    *
+   * @param id
+   *
    * @return
    */
-  public GroupClientHandler getGroupHandler();
+  @Override
+  public Group get(String id)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
 
   /**
    * Method description
@@ -72,21 +131,14 @@ public interface ScmClientSession extends Closeable
    *
    * @return
    */
-  public RepositoryClientHandler getRepositoryHandler();
+  @Override
+  public List<Group> getAll()
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public ScmState getState();
+  //~--- fields ---------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public UserClientHandler getUserHandler();
+  /** Field description */
+  private JerseyClientSession session;
 }
