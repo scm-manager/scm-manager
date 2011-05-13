@@ -431,7 +431,7 @@
             <artifactId>maven-jetty-plugin</artifactId>
             <version>6.1.26</version>
             <configuration>
-              <stopPort>8005</stopPort>
+              <stopPort>8085</stopPort>
               <stopKey>STOP</stopKey>
               <systemProperties>
                 <systemProperty>
