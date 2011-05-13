@@ -56,10 +56,22 @@ public class ScmUrlProvider
     "authentication/login";
 
   /** Field description */
+  public static final String URLPART_GROUP = "groups/";
+
+  /** Field description */
+  public static final String URLPART_GROUPS = "groups";
+
+  /** Field description */
   public static final String URLPART_REPOSITORIES = "repositories";
 
   /** Field description */
   public static final String URLPART_REPOSITORY = "repositories/";
+
+  /** Field description */
+  public static final String URLPART_USER = "users/";
+
+  /** Field description */
+  public static final String URLPART_USERS = "users";
 
   /** the logger for classVar */
   private static final Logger logger =
@@ -140,6 +152,30 @@ public class ScmUrlProvider
    * Method description
    *
    *
+   * @param name
+   *
+   * @return
+   */
+  public String getGroupUrl(String name)
+  {
+    return getResourceUrl(URLPART_GROUP.concat(name));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getGroupsUrl()
+  {
+    return getResourceUrl(URLPART_GROUPS);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   public String getRepositoriesUrl()
@@ -178,6 +214,30 @@ public class ScmUrlProvider
     }
 
     return resourceUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   */
+  public String getUserUrl(String name)
+  {
+    return getResourceUrl(URLPART_USER.concat(name));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getUsersUrl()
+  {
+    return getResourceUrl(URLPART_USERS);
   }
 
   //~--- set methods ----------------------------------------------------------

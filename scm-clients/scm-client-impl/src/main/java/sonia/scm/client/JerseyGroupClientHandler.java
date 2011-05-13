@@ -39,13 +39,16 @@ import sonia.scm.group.Group;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.client.GenericType;
+
 import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JerseyGroupClientHandler implements GroupClientHandler
+public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
+        implements GroupClientHandler
 {
 
   /**
@@ -56,7 +59,7 @@ public class JerseyGroupClientHandler implements GroupClientHandler
    */
   public JerseyGroupClientHandler(JerseyClientSession session)
   {
-    this.session = session;
+    super(session, Group.class);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -65,48 +68,13 @@ public class JerseyGroupClientHandler implements GroupClientHandler
    * Method description
    *
    *
-   * @param item
+   * @return
    */
   @Override
-  public void create(Group item)
+  protected GenericType<List<Group>> createGenericListType()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  @Override
-  public void delete(String id)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   */
-  @Override
-  public void delete(Group item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   */
-  @Override
-  public void modify(Group item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return new GenericType<List<Group>>() {}
+    ;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -115,14 +83,14 @@ public class JerseyGroupClientHandler implements GroupClientHandler
    * Method description
    *
    *
-   * @param id
+   * @param itemId
    *
    * @return
    */
   @Override
-  public Group get(String id)
+  protected String getItemUrl(String itemId)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return urlProvider.getGroupUrl(itemId);
   }
 
   /**
@@ -132,13 +100,8 @@ public class JerseyGroupClientHandler implements GroupClientHandler
    * @return
    */
   @Override
-  public List<Group> getAll()
+  protected String getItemsUrl()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return urlProvider.getGroupsUrl();
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private JerseyClientSession session;
 }

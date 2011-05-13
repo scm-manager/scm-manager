@@ -39,13 +39,16 @@ import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.client.GenericType;
+
 import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JerseyUserClientHandler implements UserClientHandler
+public class JerseyUserClientHandler extends AbstractClientHandler<User>
+        implements UserClientHandler
 {
 
   /**
@@ -56,7 +59,7 @@ public class JerseyUserClientHandler implements UserClientHandler
    */
   public JerseyUserClientHandler(JerseyClientSession session)
   {
-    this.session = session;
+    super(session, User.class);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -65,48 +68,13 @@ public class JerseyUserClientHandler implements UserClientHandler
    * Method description
    *
    *
-   * @param item
+   * @return
    */
   @Override
-  public void create(User item)
+  protected GenericType<List<User>> createGenericListType()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  @Override
-  public void delete(String id)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   */
-  @Override
-  public void delete(User item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   */
-  @Override
-  public void modify(User item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return new GenericType<List<User>>() {}
+    ;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -115,14 +83,14 @@ public class JerseyUserClientHandler implements UserClientHandler
    * Method description
    *
    *
-   * @param id
+   * @param itemId
    *
    * @return
    */
   @Override
-  public User get(String id)
+  protected String getItemUrl(String itemId)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return urlProvider.getUserUrl(itemId);
   }
 
   /**
@@ -132,13 +100,8 @@ public class JerseyUserClientHandler implements UserClientHandler
    * @return
    */
   @Override
-  public List<User> getAll()
+  protected String getItemsUrl()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return urlProvider.getUsersUrl();
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private JerseyClientSession session;
 }
