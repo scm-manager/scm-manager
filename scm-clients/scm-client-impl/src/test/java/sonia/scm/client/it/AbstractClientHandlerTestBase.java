@@ -35,55 +35,68 @@ package sonia.scm.client.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.AfterClass;
 import org.junit.Test;
 
+import sonia.scm.ModelObject;
+import sonia.scm.client.ClientHandler;
 import sonia.scm.client.JerseyClientSession;
-import sonia.scm.client.RepositoryClientHandler;
 import sonia.scm.client.ScmForbiddenException;
 import sonia.scm.client.ScmUnauthorizedException;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.util.Util;
 
 import static org.junit.Assert.*;
 
 import static sonia.scm.client.it.TestUtil.*;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
-
 /**
  *
  * @author Sebastian Sdorra
+ *
+ * @param <T>
  */
-public class JerseyClientRepositoryClientHandlerITCase
+public abstract class AbstractClientHandlerTestBase<T extends ModelObject>
 {
 
   /**
    * Method description
    *
    *
+   * @param item
    */
-  @AfterClass
-  public static void removeTestRepositories()
+  protected void assertIsValid(T item) 
   {
-    JerseyClientSession session = createAdminSession();
-    RepositoryClientHandler handler = session.getRepositoryHandler();
-    List<Repository> repositories = handler.getAll();
-
-    if (Util.isNotEmpty(repositories))
-    {
-      for (Repository r : repositories)
-      {
-        handler.delete(r);
-      }
-    }
-
-    session.close();
-    setAnonymousAccess(false);
+    assertNotNull(item);
+    assertNotNull(item.getId());
+    assertTrue( item.getId().length() > 0 );
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param session
+   *
+   * @return
+   */
+  protected abstract ClientHandler<T> createHandler(
+          JerseyClientSession session);
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected abstract ModifyTest<T> createModifyTest();
+
+  /**
+   * Method description
+   *
+   *
+   * @param number
+   *
+   * @return
+   */
+  protected abstract T createTestData(int number);
 
   /**
    * Method description
@@ -94,18 +107,17 @@ public class JerseyClientRepositoryClientHandlerITCase
   public void testCreate()
   {
     JerseyClientSession session = createAdminSession();
-    Repository hog = RepositoryTestData.createHeartOfGold(REPOSITORY_TYPE);
-    RepositoryClientHandler handler = session.getRepositoryHandler();
+    T item = createTestData(1);
+    ClientHandler<T> handler = createHandler(session);
 
-    handler.create(hog);
-    assertNotNull(hog.getId());
-    assertNotNull(hog.getCreationDate());
+    handler.create(item);
+    assertIsValid(item);
 
-    String id = hog.getId();
-    Repository r = handler.get(id);
+    String id = item.getId();
+    T o = handler.get(id);
 
-    assertNotNull(r);
-    assertEquals(hog, r);
+    assertNotNull(o);
+    assertEquals(item, o);
     session.close();
   }
 
@@ -118,21 +130,19 @@ public class JerseyClientRepositoryClientHandlerITCase
   public void testDelete()
   {
     JerseyClientSession session = createAdminSession();
-    Repository hvpt =
-      RepositoryTestData.createHappyVerticalPeopleTransporter(REPOSITORY_TYPE);
-    RepositoryClientHandler handler = session.getRepositoryHandler();
+    T item = createTestData(2);
+    ClientHandler<T> handler = createHandler(session);
 
-    handler.create(hvpt);
-    assertNotNull(hvpt.getId());
-    assertNotNull(hvpt.getCreationDate());
+    handler.create(item);
+    assertIsValid(item);
 
-    String id = hvpt.getId();
+    String id = item.getId();
 
-    handler.delete(hvpt);
+    handler.delete(item);
 
-    Repository r = handler.get(id);
+    T o = handler.get(id);
 
-    assertNull(r);
+    assertNull(o);
   }
 
   /**
@@ -144,9 +154,9 @@ public class JerseyClientRepositoryClientHandlerITCase
   public void testDisabledCreateAnonymous()
   {
     JerseyClientSession session = createAnonymousSession();
-    Repository p42 = RepositoryTestData.create42Puzzle(REPOSITORY_TYPE);
+    T item = createTestData(3);
 
-    session.getRepositoryHandler().create(p42);
+    createHandler(session).create(item);
     session.close();
   }
 
@@ -161,12 +171,12 @@ public class JerseyClientRepositoryClientHandlerITCase
     setAnonymousAccess(true);
 
     JerseyClientSession session = createAnonymousSession();
-    Repository p42 = RepositoryTestData.create42Puzzle(REPOSITORY_TYPE);
+    T item = createTestData(3);
     boolean forbidden = false;
 
     try
     {
-      session.getRepositoryHandler().create(p42);
+      createHandler(session).create(item);
     }
     catch (ScmForbiddenException ex)
     {
@@ -188,19 +198,22 @@ public class JerseyClientRepositoryClientHandlerITCase
     setAnonymousAccess(true);
 
     JerseyClientSession session = createAdminSession();
-    Repository rateotu =
-      RepositoryTestData.createRestaurantAtTheEndOfTheUniverse(REPOSITORY_TYPE);
+    T item = createTestData(4);
 
-    session.getRepositoryHandler().create(rateotu);
+    createHandler(session).create(item);
+    assertIsValid(item);
     session.close();
     session = createAnonymousSession();
-    rateotu.setDescription("Modify Test");
+
+    ModifyTest<T> mt = createModifyTest();
+
+    mt.modify(item);
 
     boolean notfound = false;
 
     try
     {
-      session.getRepositoryHandler().modify(rateotu);
+      createHandler(session).modify(item);
     }
     catch (ScmForbiddenException ex)
     {
@@ -210,7 +223,7 @@ public class JerseyClientRepositoryClientHandlerITCase
     setAnonymousAccess(false);
     session.close();
     session = createAdminSession();
-    session.getRepositoryHandler().delete(rateotu);
+    createHandler(session).delete(item);
     session.close();
     assertTrue(notfound);
   }
@@ -224,22 +237,58 @@ public class JerseyClientRepositoryClientHandlerITCase
   {
     long start = System.currentTimeMillis();
     JerseyClientSession session = createAdminSession();
-    Repository rateotu =
-      RepositoryTestData.createRestaurantAtTheEndOfTheUniverse(REPOSITORY_TYPE);
-    RepositoryClientHandler handler = session.getRepositoryHandler();
+    T item = createTestData(4);
+    ClientHandler<T> handler = createHandler(session);
 
-    handler.create(rateotu);
-    assertNotNull(rateotu.getId());
-    assertNotNull(rateotu.getCreationDate());
-    rateotu.setDescription("Modify Test");
-    handler.modify(rateotu);
-    rateotu = handler.get(rateotu.getId());
-    assertNotNull(rateotu);
-    assertEquals(rateotu.getDescription(), "Modify Test");
-    assertNotNull(rateotu.getLastModified());
-    assertTrue(rateotu.getLastModified() > start);
-    assertTrue(rateotu.getLastModified() < System.currentTimeMillis());
-    handler.delete(rateotu);
+    handler.create(item);
+    assertIsValid(item);
+
+    ModifyTest<T> mt = createModifyTest();
+
+    mt.modify(item);
+    handler.modify(item);
+    item = handler.get(item.getId());
+    assertIsValid(item);
+    assertTrue(mt.isCorrectModified(item));
+    assertNotNull(item.getLastModified());
+    assertTrue(item.getLastModified() > start);
+    assertTrue(item.getLastModified() < System.currentTimeMillis());
+    handler.delete(item);
     session.close();
+  }
+
+  //~--- inner interfaces -----------------------------------------------------
+
+  /**
+   * Interface description
+   *
+   *
+   * @param <T>
+   *
+   * @version        Enter version here..., 11/05/13
+   * @author         Enter your name here...    
+   */
+  protected interface ModifyTest<T>
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @param item
+     */
+    public void modify(T item);
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param item
+     *
+     * @return
+     */
+    public boolean isCorrectModified(T item);
   }
 }
