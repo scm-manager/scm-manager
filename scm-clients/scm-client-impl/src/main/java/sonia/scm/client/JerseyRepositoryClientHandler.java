@@ -41,10 +41,8 @@ import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
-import com.sun.jersey.api.client.WebResource;
 
 import java.util.Collection;
 import java.util.List;
@@ -53,7 +51,9 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class JerseyRepositoryClientHandler implements RepositoryClientHandler
+public class JerseyRepositoryClientHandler
+        extends AbstractClientHandler<Repository>
+        implements RepositoryClientHandler
 {
 
   /**
@@ -64,160 +64,10 @@ public class JerseyRepositoryClientHandler implements RepositoryClientHandler
    */
   public JerseyRepositoryClientHandler(JerseyClientSession session)
   {
-    this.session = session;
-    this.client = session.getClient();
-    this.urlProvider = session.getUrlProvider();
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   */
-  @Override
-  public void create(Repository repository)
-  {
-    AssertUtil.assertIsNotNull(repository);
-
-    WebResource resource = client.resource(urlProvider.getRepositoriesUrl());
-    ClientResponse response = null;
-
-    try
-    {
-      response = resource.post(ClientResponse.class, repository);
-      ClientUtil.checkResponse(response, 201);
-
-      String url = response.getHeaders().get("Location").get(0);
-
-      AssertUtil.assertIsNotEmpty(url);
-
-      Repository newRepository = getRepository(url);
-
-      AssertUtil.assertIsNotNull(newRepository);
-      newRepository.copyProperties(repository);
-
-      // copyProperties does not copy the repository id
-      repository.setId(newRepository.getId());
-    }
-    finally
-    {
-      ClientUtil.close(response);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  @Override
-  public void delete(String id)
-  {
-    AssertUtil.assertIsNotEmpty(id);
-
-    WebResource resource = client.resource(urlProvider.getRepositoryUrl(id));
-    ClientResponse response = null;
-
-    try
-    {
-      response = resource.delete(ClientResponse.class);
-      ClientUtil.checkResponse(response, 204);
-    }
-    finally
-    {
-      ClientUtil.close(response);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   */
-  @Override
-  public void delete(Repository repository)
-  {
-    AssertUtil.assertIsNotNull(repository);
-    delete(repository.getId());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   */
-  @Override
-  public void modify(Repository repository)
-  {
-    AssertUtil.assertIsNotNull(repository);
-
-    String id = repository.getId();
-
-    AssertUtil.assertIsNotEmpty(id);
-
-    WebResource resource = client.resource(urlProvider.getRepositoryUrl(id));
-    ClientResponse response = null;
-
-    try
-    {
-      response = resource.put(ClientResponse.class, repository);
-      ClientUtil.checkResponse(response, 204);
-    }
-    finally
-    {
-      ClientUtil.close(response);
-    }
+    super(session, Repository.class);
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  @Override
-  public Repository get(String id)
-  {
-    return getRepository(urlProvider.getRepositoryUrl(id));
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public List<Repository> getAll()
-  {
-    List<Repository> repositories = null;
-    WebResource resource = client.resource(urlProvider.getRepositoriesUrl());
-    ClientResponse response = null;
-
-    try
-    {
-      response = resource.get(ClientResponse.class);
-      ClientUtil.checkResponse(response, 200);
-      repositories = response.getEntity(new GenericType<List<Repository>>() {}
-      );
-    }
-    finally
-    {
-      ClientUtil.close(response);
-    }
-
-    return repositories;
-  }
 
   /**
    * Method description
@@ -231,48 +81,68 @@ public class JerseyRepositoryClientHandler implements RepositoryClientHandler
     return session.getState().getRepositoryTypes();
   }
 
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
    *
-   * @param url
+   * @return
+   */
+  @Override
+  protected GenericType<List<Repository>> createGenericListType()
+  {
+    return new GenericType<List<Repository>>() {};
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   * @param repository
+   */
+  @Override
+  protected void postCreate(ClientResponse response, Repository repository)
+  {
+    String url = response.getHeaders().get("Location").get(0);
+
+    AssertUtil.assertIsNotEmpty(url);
+
+    Repository newRepository = getItemByUrl(url);
+
+    AssertUtil.assertIsNotNull(newRepository);
+    newRepository.copyProperties(repository);
+
+    // copyProperties does not copy the repository id
+    repository.setId(newRepository.getId());
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param itemId
    *
    * @return
    */
-  private Repository getRepository(String url)
+  @Override
+  protected String getItemUrl(String itemId)
   {
-    Repository repository = null;
-    WebResource resource = client.resource(url);
-    ClientResponse response = null;
-
-    try
-    {
-      response = resource.get(ClientResponse.class);
-
-      int sc = response.getStatus();
-
-      if (sc != ScmClientException.SC_NOTFOUND)
-      {
-        ClientUtil.checkResponse(response, 200);
-        repository = response.getEntity(Repository.class);
-      }
-    }
-    finally
-    {
-      ClientUtil.close(response);
-    }
-
-    return repository;
+    return urlProvider.getRepositoryUrl(itemId);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Client client;
-
-  /** Field description */
-  private JerseyClientSession session;
-
-  /** Field description */
-  private ScmUrlProvider urlProvider;
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected String getItemsUrl()
+  {
+    return urlProvider.getRepositoriesUrl();
+  }
 }
