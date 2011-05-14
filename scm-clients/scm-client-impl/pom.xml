@@ -16,6 +16,30 @@
   <name>scm-client-impl</name>
   
   <dependencies>
+    
+    <dependency>
+      <artifactId>scm-core</artifactId>
+      <groupId>sonia.scm</groupId>
+      <version>1.3-SNAPSHOT</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>aopalliance</artifactId>
+          <groupId>aopalliance</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>guice</artifactId>
+          <groupId>com.google.inject</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>guice-multibindings</artifactId>
+          <groupId>com.google.inject.extensions</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>guice-servlet</artifactId>
+          <groupId>com.google.inject.extensions</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   
     <dependency>
       <groupId>sonia.scm.clients</groupId>
@@ -33,6 +57,20 @@
       <groupId>org.sonatype.spice</groupId>
       <artifactId>jersey-ahc-client</artifactId>
       <version>1.0.1-patch1</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>jaxb-api</artifactId>
+          <groupId>javax.xml.bind</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>jaxb-impl</artifactId>
+          <groupId>com.sun.xml.bind</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>stax-api</artifactId>
+          <groupId>stax</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     
     <!-- test scope -->
@@ -57,7 +95,7 @@
       <version>1.3-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
-  
+    
   </dependencies>
 
 
