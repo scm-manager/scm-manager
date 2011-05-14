@@ -95,7 +95,8 @@ public class SubCommandHandler extends OptionHandler<SubCommand>
    * Method description
    *
    *
-   * @param prmtrs
+   *
+   * @param parameters
    *
    * @return
    *
@@ -106,15 +107,19 @@ public class SubCommandHandler extends OptionHandler<SubCommand>
   {
     String name = parameters.getParameter(0);
     CommandDescriptor desc = subCommands.get(name);
-    if ( desc != null )
+
+    if (desc != null)
     {
+
       // owner.stopOptionParsing();
-      setter.addValue( desc.createSubCommand() );
-    } 
-    else 
-    {
-      throw new CmdLineException(owner, "command ".concat(name).concat(" not found"));
+      setter.addValue(desc.createSubCommand());
     }
+    else
+    {
+      throw new CmdLineException(owner,
+                                 "command ".concat(name).concat(" not found"));
+    }
+
     return 1;
   }
 

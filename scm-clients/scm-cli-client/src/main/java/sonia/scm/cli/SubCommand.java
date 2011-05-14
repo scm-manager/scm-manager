@@ -76,13 +76,15 @@ public abstract class SubCommand
    *
    * @param input
    * @param output
+   * @param i18n
    * @param session
    */
-  public void init(BufferedReader input, PrintWriter output,
+  public void init(BufferedReader input, PrintWriter output, I18n i18n,
                    ScmClientSession session)
   {
     this.input = input;
     this.output = output;
+    this.i18n = i18n;
     this.session = session;
   }
 
@@ -102,7 +104,7 @@ public abstract class SubCommand
 
       if (help)
       {
-        parser.printUsage(output, I18n.getBundle());
+        parser.printUsage(output, i18n.getBundle());
         System.exit(1);
       }
       else
@@ -167,6 +169,9 @@ public abstract class SubCommand
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected I18n i18n;
 
   /** Field description */
   protected BufferedReader input;

@@ -139,9 +139,11 @@ public class App
       System.exit(1);
     }
 
+    I18n i18n = new I18n();
+
     if ((args.length == 0) || (subcommand == null) || help)
     {
-      parser.printUsage(output, I18n.getBundle());
+      parser.printUsage(output, i18n.getBundle());
     }
     else
     {
@@ -152,7 +154,7 @@ public class App
         session = createSession();
       }
 
-      subcommand.init(input, output, session);
+      subcommand.init(input, output, i18n, session);
       subcommand.run(arguments);
     }
   }
