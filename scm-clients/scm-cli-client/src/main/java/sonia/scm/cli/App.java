@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.client.ScmClient;
 import sonia.scm.client.ScmClientSession;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -167,7 +168,18 @@ public class App
    */
   private ScmClientSession createSession()
   {
-    return ScmClient.createSession(serverUrl, username, password);
+    ScmClientSession session = null;
+
+    if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
+    {
+      session = ScmClient.createSession(serverUrl, username, password);
+    }
+    else
+    {
+      session = ScmClient.createSession(serverUrl);
+    }
+
+    return session;
   }
 
   //~--- fields ---------------------------------------------------------------
