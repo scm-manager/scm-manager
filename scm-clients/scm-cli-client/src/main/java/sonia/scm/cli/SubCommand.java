@@ -37,6 +37,7 @@ package sonia.scm.cli;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,7 +99,16 @@ public abstract class SubCommand
     try
     {
       parser.parseArgument(args);
-      run();
+
+      if (help)
+      {
+        parser.printUsage(output, I18n.getBundle());
+        System.exit(1);
+      }
+      else
+      {
+        run();
+      }
     }
     catch (CmdLineException ex)
     {
@@ -169,6 +179,14 @@ public abstract class SubCommand
 
   /** Field description */
   protected ScmClientSession session;
+
+  /** Field description */
+  @Option(
+    name = "--help",
+    usage = "optionHelpText",
+    aliases = { "-h" }
+  )
+  private boolean help = false;
 
   /** Field description */
   private boolean sessionRequired = true;
