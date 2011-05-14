@@ -65,7 +65,7 @@ public class SubCommandHandler extends OptionHandler<SubCommand>
 
   /** Field description */
   public static final String RESOURCE_SERVICES =
-    "META-INF/services/".concat(SubCommand.class.getName());
+    "/META-INF/services/".concat(SubCommand.class.getName());
 
   /** the logger for SubCommandHandler */
   private static final Logger logger =
@@ -151,7 +151,7 @@ public class SubCommandHandler extends OptionHandler<SubCommand>
     {
       reader = new BufferedReader(
           new InputStreamReader(
-              getClass().getResourceAsStream(RESOURCE_SERVICES)));
+              SubCommand.class.getResourceAsStream(RESOURCE_SERVICES)));
 
       String line = reader.readLine();
 
