@@ -63,6 +63,7 @@ public class CommandDescriptor
   public CommandDescriptor(Class<? extends SubCommand> commandClass)
   {
     AssertUtil.assertIsNotNull(commandClass);
+    this.commandClass = commandClass;
 
     Command cmd = commandClass.getAnnotation(Command.class);
 

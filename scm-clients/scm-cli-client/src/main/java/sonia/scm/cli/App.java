@@ -155,8 +155,18 @@ public class App
         session = createSession();
       }
 
-      subcommand.init(input, output, i18n, session);
-      subcommand.run(arguments);
+      try
+      {
+        subcommand.init(input, output, i18n, session);
+        subcommand.run(arguments);
+      }
+      finally
+      {
+        if (session != null)
+        {
+          session.close();
+        }
+      }
     }
   }
 
@@ -222,7 +232,6 @@ public class App
   @Argument(
     index = 0,
     metaVar = "metaVar_command",
-    required = true,
     handler = SubCommandHandler.class
   )
   private SubCommand subcommand;

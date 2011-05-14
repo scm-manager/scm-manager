@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -134,7 +135,7 @@ public class SubCommandHandler extends OptionHandler<SubCommand>
   @Override
   public String getDefaultMetaVariable()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return "metaVar_command";
   }
 
   //~--- methods --------------------------------------------------------------
@@ -181,7 +182,7 @@ public class SubCommandHandler extends OptionHandler<SubCommand>
   {
     line = line.trim();
 
-    if (!line.startsWith("#"))
+    if (Util.isNotEmpty(line) &&!line.startsWith("#"))
     {
       try
       {
