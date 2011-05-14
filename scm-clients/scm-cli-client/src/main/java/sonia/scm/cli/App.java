@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.client.ScmClient;
 import sonia.scm.client.ScmClientSession;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -168,6 +169,9 @@ public class App
         }
       }
     }
+
+    IOUtil.close(input);
+    IOUtil.close(output);
   }
 
   /**
