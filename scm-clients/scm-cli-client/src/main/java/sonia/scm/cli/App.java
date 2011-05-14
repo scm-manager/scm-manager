@@ -33,6 +33,30 @@
 
 package sonia.scm.cli;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.kohsuke.args4j.Argument;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.client.ScmClient;
+import sonia.scm.client.ScmClientSession;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -40,11 +64,160 @@ package sonia.scm.cli;
 public class App
 {
 
+  /** the logger for App */
+  private static final Logger logger = LoggerFactory.getLogger(App.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  public App()
+  {
+    this(System.in, System.out);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param input
+   * @param output
+   */
+  public App(BufferedReader input, PrintWriter output)
+  {
+    this.input = input;
+    this.output = output;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param input
+   * @param output
+   */
+  public App(InputStream input, OutputStream output)
+  {
+    this.input = new BufferedReader(new InputStreamReader(input));
+    this.output = new PrintWriter(output);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
    *
    * @param args
    */
-  public static void main(String[] args) {}
+  public static void main(String[] args)
+  {
+    new App().run(args);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param args
+   */
+  protected void run(String[] args)
+  {
+    CmdLineParser parser = new CmdLineParser(this);
+
+    try
+    {
+      parser.parseArgument(args);
+    }
+    catch (CmdLineException ex)
+    {
+
+      // todo error handling
+      logger.warn("could not parse commandline", ex);
+      System.exit(1);
+    }
+
+    if ((args.length == 0) || (subcommand == null) || help)
+    {
+      parser.printUsage(output, I18n.getBundle());
+    }
+    else
+    {
+      ScmClientSession session = null;
+
+      if (subcommand.isSessionRequired())
+      {
+        session = createSession();
+      }
+
+      subcommand.init(input, output, session);
+      subcommand.run(arguments);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private ScmClientSession createSession()
+  {
+    return ScmClient.createSession(serverUrl, username, password);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @Option(
+    name = "--help",
+    usage = "optionHelpText",
+    aliases = { "-h" }
+  )
+  private boolean help = false;
+
+  /** Field description */
+  @Argument(index = 1, metaVar = "metaVar_arg")
+  private List<String> arguments = new ArrayList<String>();
+
+  /** Field description */
+  private BufferedReader input;
+
+  /** Field description */
+  private PrintWriter output;
+
+  /** Field description */
+  @Option(
+    name = "--password",
+    usage = "optionPassword",
+    aliases = { "-p" }
+  )
+  private String password;
+
+  /** Field description */
+  @Option(
+    name = "--server",
+    usage = "optionServerUrl",
+    aliases = { "-s" }
+  )
+  private String serverUrl;
+
+  /** Field description */
+  @Argument(
+    index = 0,
+    metaVar = "metaVar_command",
+    required = true,
+    handler = SubCommandHandler.class
+  )
+  private SubCommand subcommand;
+
+  /** Field description */
+  @Option(
+    name = "--user",
+    usage = "optionUsername",
+    aliases = { "-u" }
+  )
+  private String username;
 }
