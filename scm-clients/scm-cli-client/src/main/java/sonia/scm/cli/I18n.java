@@ -94,7 +94,7 @@ public class I18n
 
     try
     {
-      key = bundle.getString(key);
+      value = bundle.getString(key);
     }
     catch (MissingResourceException ex)
     {
