@@ -214,8 +214,7 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
             }
             catch (NamingException e2)
             {
-              logger.debug("groupOfUniqueNames not found: " + e2.getMessage(),
-                           e2);
+              logger.debug("groupOfUniqueNames not found", e2);
             }
 
             // read dynamic group attribute
