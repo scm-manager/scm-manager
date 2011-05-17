@@ -17,6 +17,7 @@
 
   <modules>
     <module>scm-client-api</module>
+    <module>scm-client-impl</module>
     <module>scm-cli-client</module>
   </modules>
   
