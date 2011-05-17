@@ -178,39 +178,46 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
                   config.getAttributeNameMail()).get());
             user.setType(TYPE);
 
-            // read group of unique names
             HashSet<String> groups = new HashSet<String>();
 
-            searchControls = new SearchControls();
-            searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-            searchControls.setReturningAttributes(new String[] { "cn" });
-            baseDn = config.getUnitGroup() + "," + config.getBaseDn();
-
-            NamingEnumeration<SearchResult> searchResult2 =
-              context.search(baseDn,
-                             "(&(objectClass=groupOfUniqueNames)(uniqueMember="
-                             + userDn + "))", searchControls);
-
-            //
-            while (searchResult2.hasMore())
+            try
             {
-              SearchResult sr2 = searchResult2.next();
-              Attributes groupAttributes = sr2.getAttributes();
-              Attribute cnAttribute = groupAttributes.get("cn");
 
-              if (cnAttribute != null)
+              // read group of unique names
+              searchControls = new SearchControls();
+              searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+              searchControls.setReturningAttributes(new String[] { "cn" });
+              baseDn = config.getUnitGroup() + "," + config.getBaseDn();
+
+              NamingEnumeration<SearchResult> searchResult2 =
+                context.search(
+                    baseDn,
+                    "(&(objectClass=groupOfUniqueNames)(uniqueMember=" + userDn
+                    + "))", searchControls);
+
+              //
+              while (searchResult2.hasMore())
               {
-                String cn = (String) cnAttribute.get();
+                SearchResult sr2 = searchResult2.next();
+                Attributes groupAttributes = sr2.getAttributes();
+                Attribute cnAttribute = groupAttributes.get("cn");
 
-                if ((cn != null) && (cn.trim().length() > 0))
+                if (cnAttribute != null)
                 {
-                  groups.add(cn);
+                  String cn = (String) cnAttribute.get();
+
+                  if ((cn != null) && (cn.trim().length() > 0))
+                  {
+                    groups.add(cn);
+                  }
                 }
               }
             }
-
-            //
-            result = new AuthenticationResult(user, groups);
+            catch (NamingException e2)
+            {
+              logger.debug("groupOfUniqueNames not found: " + e2.getMessage(),
+                           e2);
+            }
 
             // read dynamic group attribute
             getGroups(userAttributes, groups);
