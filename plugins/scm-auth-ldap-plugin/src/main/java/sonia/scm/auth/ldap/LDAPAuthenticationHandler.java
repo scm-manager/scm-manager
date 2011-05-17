@@ -57,8 +57,8 @@ import java.io.IOException;
 import java.text.MessageFormat;
 
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -153,7 +153,8 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
         {
           SearchResult sr = searchResult.next();
           String userDn = sr.getName() + "," + baseDn;
-          Properties userProperties = new Properties(ldapProperties);
+          Hashtable<String, String> userProperties = new Hashtable<String,
+                                                       String>(ldapProperties);
 
           userProperties.put(Context.SECURITY_PRINCIPAL, userDn);
           userProperties.put(Context.SECURITY_CREDENTIALS, password);
@@ -213,7 +214,6 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
 
             // read dynamic group attribute
             getGroups(userAttributes, groups);
-
             result = new AuthenticationResult(user, groups);
           }
           catch (NamingException ex)
@@ -350,7 +350,7 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
    */
   private void buildLdapProperties()
   {
-    ldapProperties = new Properties();
+    ldapProperties = new Hashtable<String, String>();
     ldapProperties.put(Context.INITIAL_CONTEXT_FACTORY,
                        "com.sun.jndi.ldap.LdapCtxFactory");
     ldapProperties.put(Context.PROVIDER_URL, config.getHostUrl());
@@ -411,7 +411,7 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
   private LDAPConfig config;
 
   /** Field description */
-  private Properties ldapProperties;
+  private Hashtable<String, String> ldapProperties;
 
   /** Field description */
   private Store<LDAPConfig> store;
