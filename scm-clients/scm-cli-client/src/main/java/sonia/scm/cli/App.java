@@ -43,6 +43,9 @@ import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.cli.config.ConfigOptionHandler;
+import sonia.scm.cli.config.ScmClientConfig;
+import sonia.scm.cli.config.ServerConfig;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 

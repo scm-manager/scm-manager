@@ -31,59 +31,38 @@
 
 
 
-package sonia.scm.cli;
+package sonia.scm.cli.config;
 
-//~--- non-JDK imports --------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
 
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.OptionDef;
-import org.kohsuke.args4j.spi.OptionHandler;
-import org.kohsuke.args4j.spi.Parameters;
-import org.kohsuke.args4j.spi.Setter;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ConfigOptionHandler extends OptionHandler<ServerConfig>
+@XmlRootElement(name = "client-config")
+public class ScmClientConfig
 {
+
+  /** Field description */
+  public static final String DEFAULT_NAME = "default";
+
+  /** Field description */
+  private static volatile ScmClientConfig instance;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
-   *
-   * @param parser
-   * @param option
-   * @param setter
    */
-  public ConfigOptionHandler(CmdLineParser parser, OptionDef option,
-                             Setter<? super ServerConfig> setter)
+  public ScmClientConfig()
   {
-    super(parser, option, setter);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param parameters
-   *
-   * @return
-   *
-   * @throws CmdLineException
-   */
-  @Override
-  public int parseArguments(Parameters parameters) throws CmdLineException
-  {
-    String name = parameters.getParameter(0);
-    ServerConfig config = ScmClientConfig.getInstance().getConfig(name);
-
-    setter.addValue(config);
-
-    return 1;
+    this.serverConfigMap = new HashMap<String, ServerConfig>();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -94,9 +73,82 @@ public class ConfigOptionHandler extends OptionHandler<ServerConfig>
    *
    * @return
    */
-  @Override
-  public String getDefaultMetaVariable()
+  public static ScmClientConfig getInstance()
   {
-    return "metaVar_config";
+    if (instance == null)
+    {
+      synchronized (ScmClientConfig.class)
+      {
+        if (instance == null)
+        {
+          instance = load();
+        }
+      }
+    }
+
+    return instance;
   }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private static ScmClientConfig load()
+  {
+
+    // TODO load config
+    return new ScmClientConfig();
+  }
+
+  /**
+   * Method description
+   *
+   */
+  public void store()
+  {
+
+    // TODO
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   */
+  public ServerConfig getConfig(String name)
+  {
+    ServerConfig config = serverConfigMap.get(name);
+
+    if (config == null)
+    {
+      config = new ServerConfig();
+    }
+
+    return config;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public ServerConfig getDefaultConfig()
+  {
+    return getConfig(DEFAULT_NAME);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Map<String, ServerConfig> serverConfigMap;
 }

@@ -83,7 +83,7 @@ public class SubCommandOptionHandler extends OptionHandler<SubCommand>
    * @param setter
    */
   public SubCommandOptionHandler(CmdLineParser parser, OptionDef option,
-                           Setter<? super SubCommand> setter)
+                                 Setter<? super SubCommand> setter)
   {
     super(parser, option, setter);
     subCommands = new HashMap<String, CommandDescriptor>();

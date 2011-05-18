@@ -31,38 +31,59 @@
 
 
 
-package sonia.scm.cli;
+package sonia.scm.cli.config;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Validateable;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.OptionDef;
+import org.kohsuke.args4j.spi.OptionHandler;
+import org.kohsuke.args4j.spi.Parameters;
+import org.kohsuke.args4j.spi.Setter;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ServerConfig implements Validateable
+public class ConfigOptionHandler extends OptionHandler<ServerConfig>
 {
 
   /**
    * Constructs ...
    *
+   *
+   * @param parser
+   * @param option
+   * @param setter
    */
-  public ServerConfig() {}
+  public ConfigOptionHandler(CmdLineParser parser, OptionDef option,
+                             Setter<? super ServerConfig> setter)
+  {
+    super(parser, option, setter);
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Method description
    *
    *
-   * @param serverUrl
-   * @param username
-   * @param password
+   * @param parameters
+   *
+   * @return
+   *
+   * @throws CmdLineException
    */
-  public ServerConfig(String serverUrl, String username, String password)
+  @Override
+  public int parseArguments(Parameters parameters) throws CmdLineException
   {
-    this.serverUrl = serverUrl;
-    this.username = username;
-    this.password = password;
+    String name = parameters.getParameter(0);
+    ServerConfig config = ScmClientConfig.getInstance().getConfig(name);
+
+    setter.addValue(config);
+
+    return 1;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -73,90 +94,9 @@ public class ServerConfig implements Validateable
    *
    * @return
    */
-  public String getPassword()
-  {
-    return password;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getServerUrl()
-  {
-    return serverUrl;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getUsername()
-  {
-    return username;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public boolean isValid()
+  public String getDefaultMetaVariable()
   {
-
-    // TODO
-    return true;
+    return "metaVar_config";
   }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param password
-   */
-  public void setPassword(String password)
-  {
-    this.password = password;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param serverUrl
-   */
-  public void setServerUrl(String serverUrl)
-  {
-    this.serverUrl = serverUrl;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param username
-   */
-  public void setUsername(String username)
-  {
-    this.username = username;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String password;
-
-  /** Field description */
-  private String serverUrl;
-
-  /** Field description */
-  private String username;
 }

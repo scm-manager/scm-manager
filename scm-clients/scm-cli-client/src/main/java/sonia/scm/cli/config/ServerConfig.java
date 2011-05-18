@@ -31,35 +31,38 @@
 
 
 
-package sonia.scm.cli;
+package sonia.scm.cli.config;
 
-//~--- JDK imports ------------------------------------------------------------
+//~--- non-JDK imports --------------------------------------------------------
 
-import java.util.HashMap;
-import java.util.Map;
+import sonia.scm.Validateable;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ScmClientConfig
+public class ServerConfig implements Validateable
 {
-
-  /** Field description */
-  public static final String DEFAULT_NAME = "default";
-
-  /** Field description */
-  private static volatile ScmClientConfig instance;
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    */
-  public ScmClientConfig()
+  public ServerConfig() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param serverUrl
+   * @param username
+   * @param password
+   */
+  public ServerConfig(String serverUrl, String username, String password)
   {
-    this.serverConfigMap = new HashMap<String, ServerConfig>();
+    this.serverUrl = serverUrl;
+    this.username = username;
+    this.password = password;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -70,42 +73,9 @@ public class ScmClientConfig
    *
    * @return
    */
-  public static ScmClientConfig getInstance()
+  public String getPassword()
   {
-    if (instance == null)
-    {
-      synchronized (ScmClientConfig.class)
-      {
-        if (instance == null)
-        {
-
-          // TODO load config
-          instance = new ScmClientConfig();
-        }
-      }
-    }
-
-    return instance;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   */
-  public ServerConfig getConfig(String name)
-  {
-    ServerConfig config = serverConfigMap.get(name);
-
-    if (config == null)
-    {
-      config = new ServerConfig();
-    }
-
-    return config;
+    return password;
   }
 
   /**
@@ -114,13 +84,79 @@ public class ScmClientConfig
    *
    * @return
    */
-  public ServerConfig getDefaultConfig()
+  public String getServerUrl()
   {
-    return getConfig(DEFAULT_NAME);
+    return serverUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getUsername()
+  {
+    return username;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isValid()
+  {
+
+    // TODO
+    return true;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param password
+   */
+  public void setPassword(String password)
+  {
+    this.password = password;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param serverUrl
+   */
+  public void setServerUrl(String serverUrl)
+  {
+    this.serverUrl = serverUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param username
+   */
+  public void setUsername(String username)
+  {
+    this.username = username;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Map<String, ServerConfig> serverConfigMap;
+  private String password;
+
+  /** Field description */
+  private String serverUrl;
+
+  /** Field description */
+  private String username;
 }
