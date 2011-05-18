@@ -199,13 +199,13 @@ public abstract class SubCommand
   protected PrintWriter output;
 
   /** Field description */
-  protected ScmClientSession session;
-
-  /** Field description */
   @Option(
     name = "--help",
     usage = "optionHelpText",
     aliases = { "-h" }
   )
   private boolean help = false;
+
+  /** Field description */
+  private ScmClientSession session;
 }

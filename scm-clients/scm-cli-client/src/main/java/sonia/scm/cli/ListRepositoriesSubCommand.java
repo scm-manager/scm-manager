@@ -33,6 +33,15 @@
 
 package sonia.scm.cli;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.client.ScmClientSession;
+import sonia.scm.repository.Repository;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.List;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -48,6 +57,12 @@ public class ListRepositoriesSubCommand extends SubCommand
   @Override
   protected void run()
   {
-    output.println( "list-repositoies" );
+    ScmClientSession session = createSession();
+    List<Repository> repositories = session.getRepositoryHandler().getAll();
+
+    for (Repository r : repositories)
+    {
+      output.println(r);
+    }
   }
 }
