@@ -191,6 +191,7 @@ public class App
     name = "--config",
     usage = "optionConfig",
     metaVar = "metaVar_config",
+    handler = ConfigOptionHandler.class,
     aliases = { "-c" }
   )
   private ServerConfig config;

@@ -61,7 +61,6 @@ public class ConfigOptionHandler extends OptionHandler<ServerConfig>
                              Setter<? super ServerConfig> setter)
   {
     super(parser, option, setter);
-    loadClientConfig();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -80,7 +79,7 @@ public class ConfigOptionHandler extends OptionHandler<ServerConfig>
   public int parseArguments(Parameters parameters) throws CmdLineException
   {
     String name = parameters.getParameter(0);
-    ServerConfig config = clientConfig.getConfig(name);
+    ServerConfig config = ScmClientConfig.getInstance().getConfig(name);
 
     setter.addValue(config);
 
@@ -100,22 +99,4 @@ public class ConfigOptionHandler extends OptionHandler<ServerConfig>
   {
     return "metaVar_config";
   }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  private void loadClientConfig()
-  {
-
-    // todo
-    clientConfig = new ScmClientConfig();
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ScmClientConfig clientConfig;
 }
