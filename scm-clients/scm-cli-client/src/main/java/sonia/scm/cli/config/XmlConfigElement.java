@@ -35,106 +35,47 @@ package sonia.scm.cli.config;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.HashMap;
-import java.util.Map;
-
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "client-config")
-public class ScmClientConfig
+@XmlAccessorType(XmlAccessType.FIELD)
+public class XmlConfigElement
 {
-
-  /** Field description */
-  public static final String DEFAULT_NAME = "default";
-
-  /** Field description */
-  private static volatile ScmClientConfig instance;
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    */
-  public ScmClientConfig()
-  {
-    this.serverConfigMap = new HashMap<String, ServerConfig>();
-  }
-
-  //~--- get methods ----------------------------------------------------------
+  public XmlConfigElement() {}
 
   /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static ScmClientConfig getInstance()
-  {
-    if (instance == null)
-    {
-      synchronized (ScmClientConfig.class)
-      {
-        if (instance == null)
-        {
-          instance = load();
-        }
-      }
-    }
-
-    return instance;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private static ScmClientConfig load()
-  {
-
-    // TODO load config
-    return new ScmClientConfig();
-  }
-
-  /**
-   * Method description
-   *
-   */
-  public void store()
-  {
-
-    // TODO
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
+   * Constructs ...
    *
    *
    * @param name
+   * @param config
+   */
+  public XmlConfigElement(String name, ServerConfig config)
+  {
+    this.name = name;
+    this.config = config;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
    *
    * @return
    */
-  public ServerConfig getConfig(String name)
+  public ServerConfig getConfig()
   {
-    ServerConfig config = serverConfigMap.get(name);
-
-    if (config == null)
-    {
-      config = new ServerConfig();
-    }
-
     return config;
   }
 
@@ -144,14 +85,41 @@ public class ScmClientConfig
    *
    * @return
    */
-  public ServerConfig getDefaultConfig()
+  public String getName()
   {
-    return getConfig(DEFAULT_NAME);
+    return name;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param config
+   */
+  public void setConfig(ServerConfig config)
+  {
+    this.config = config;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   */
+  public void setName(String name)
+  {
+    this.name = name;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlJavaTypeAdapter(XmlConfigAdapter.class)
-  private Map<String, ServerConfig> serverConfigMap;
+  @XmlElement(name = "server-config")
+  private ServerConfig config;
+
+  /** Field description */
+  private String name;
 }

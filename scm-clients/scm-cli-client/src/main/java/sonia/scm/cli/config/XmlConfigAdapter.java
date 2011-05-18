@@ -36,122 +36,65 @@ package sonia.scm.cli.config;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "client-config")
-public class ScmClientConfig
+public class XmlConfigAdapter
+        extends XmlAdapter<Set<XmlConfigElement>, Map<String, ServerConfig>>
 {
 
-  /** Field description */
-  public static final String DEFAULT_NAME = "default";
-
-  /** Field description */
-  private static volatile ScmClientConfig instance;
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public ScmClientConfig()
-  {
-    this.serverConfigMap = new HashMap<String, ServerConfig>();
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Method description
    *
    *
+   * @param map
+   *
    * @return
+   *
+   * @throws Exception
    */
-  public static ScmClientConfig getInstance()
+  @Override
+  public Set<XmlConfigElement> marshal(Map<String, ServerConfig> map)
+          throws Exception
   {
-    if (instance == null)
+    Set<XmlConfigElement> set = new HashSet<XmlConfigElement>();
+
+    for (Map.Entry<String, ServerConfig> e : map.entrySet())
     {
-      synchronized (ScmClientConfig.class)
-      {
-        if (instance == null)
-        {
-          instance = load();
-        }
-      }
+      set.add(new XmlConfigElement(e.getKey(), e.getValue()));
     }
 
-    return instance;
+    return set;
   }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @param set
    *
    * @return
+   *
+   * @throws Exception
    */
-  private static ScmClientConfig load()
+  @Override
+  public Map<String, ServerConfig> unmarshal(Set<XmlConfigElement> set)
+          throws Exception
   {
+    Map<String, ServerConfig> map = new HashMap<String, ServerConfig>();
 
-    // TODO load config
-    return new ScmClientConfig();
-  }
-
-  /**
-   * Method description
-   *
-   */
-  public void store()
-  {
-
-    // TODO
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   */
-  public ServerConfig getConfig(String name)
-  {
-    ServerConfig config = serverConfigMap.get(name);
-
-    if (config == null)
+    for (XmlConfigElement e : set)
     {
-      config = new ServerConfig();
+      map.put(e.getName(), e.getConfig());
     }
 
-    return config;
+    return map;
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public ServerConfig getDefaultConfig()
-  {
-    return getConfig(DEFAULT_NAME);
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlJavaTypeAdapter(XmlConfigAdapter.class)
-  private Map<String, ServerConfig> serverConfigMap;
 }
