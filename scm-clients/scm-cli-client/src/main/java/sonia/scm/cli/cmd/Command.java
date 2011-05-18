@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.cli;
+package sonia.scm.cli.cmd;
 
 //~--- JDK imports ------------------------------------------------------------
 

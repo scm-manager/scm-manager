@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.cli;
+package sonia.scm.cli.cmd;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -42,6 +42,7 @@ import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.cli.I18n;
 import sonia.scm.cli.config.ServerConfig;
 import sonia.scm.client.ScmClient;
 import sonia.scm.client.ScmClientSession;
