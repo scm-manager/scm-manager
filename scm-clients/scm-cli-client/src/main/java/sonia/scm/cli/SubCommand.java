@@ -42,7 +42,10 @@ import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.client.ScmClient;
 import sonia.scm.client.ScmClientSession;
+import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -77,15 +80,15 @@ public abstract class SubCommand
    * @param input
    * @param output
    * @param i18n
-   * @param session
+   * @param config
    */
   public void init(BufferedReader input, PrintWriter output, I18n i18n,
-                   ScmClientSession session)
+                   ServerConfig config)
   {
     this.input = input;
     this.output = output;
     this.i18n = i18n;
-    this.session = session;
+    this.config = config;
   }
 
   /**
@@ -109,7 +112,14 @@ public abstract class SubCommand
       }
       else
       {
-        run();
+        try
+        {
+          run();
+        }
+        finally
+        {
+          IOUtil.close(session);
+        }
       }
     }
     catch (CmdLineException ex)
@@ -133,17 +143,6 @@ public abstract class SubCommand
     return name;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public boolean isSessionRequired()
-  {
-    return sessionRequired;
-  }
-
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -157,18 +156,35 @@ public abstract class SubCommand
     this.name = name;
   }
 
+  //~--- methods --------------------------------------------------------------
+
   /**
-   * Method description
+   *  Method description
    *
    *
-   * @param sessionRequired
+   *  @return
    */
-  public void setSessionRequired(boolean sessionRequired)
+  protected ScmClientSession createSession()
   {
-    this.sessionRequired = sessionRequired;
+    if (Util.isNotEmpty(config.getUsername())
+        && Util.isNotEmpty(config.getPassword()))
+    {
+      session = ScmClient.createSession(config.getServerUrl(),
+                                        config.getUsername(),
+                                        config.getPassword());
+    }
+    else
+    {
+      session = ScmClient.createSession(config.getServerUrl());
+    }
+
+    return session;
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected ServerConfig config;
 
   /** Field description */
   protected I18n i18n;
@@ -192,7 +208,4 @@ public abstract class SubCommand
     aliases = { "-h" }
   )
   private boolean help = false;
-
-  /** Field description */
-  private boolean sessionRequired = true;
 }

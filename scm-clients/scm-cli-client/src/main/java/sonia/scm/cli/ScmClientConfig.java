@@ -35,18 +35,92 @@ package sonia.scm.cli;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Documented
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Command
+public class ScmClientConfig
 {
-  String value()            default "";
-  String usage()            default "";
+
+  /** Field description */
+  public static final String DEFAULT_NAME = "default";
+
+  /** Field description */
+  private static volatile ScmClientConfig instance;
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  public ScmClientConfig()
+  {
+    this.serverConfigMap = new HashMap<String, ServerConfig>();
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static ScmClientConfig getInstance()
+  {
+    if (instance == null)
+    {
+      synchronized (ScmClientConfig.class)
+      {
+        if (instance == null)
+        {
+
+          // TODO load config
+          instance = new ScmClientConfig();
+        }
+      }
+    }
+
+    return instance;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   */
+  public ServerConfig getConfig(String name)
+  {
+    ServerConfig config = serverConfigMap.get(name);
+
+    if (config == null)
+    {
+      config = new ServerConfig();
+    }
+
+    return config;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public ServerConfig getDefaultConfig()
+  {
+    return getConfig(DEFAULT_NAME);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Map<String, ServerConfig> serverConfigMap;
 }

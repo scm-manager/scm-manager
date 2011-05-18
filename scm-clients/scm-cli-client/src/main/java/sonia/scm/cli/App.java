@@ -43,8 +43,6 @@ import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.client.ScmClient;
-import sonia.scm.client.ScmClientSession;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -141,6 +139,8 @@ public class App
       System.exit(1);
     }
 
+    loadConfig();
+
     I18n i18n = new I18n();
 
     if ((args.length == 0) || (subcommand == null) || help)
@@ -149,25 +149,8 @@ public class App
     }
     else
     {
-      ScmClientSession session = null;
-
-      if (subcommand.isSessionRequired())
-      {
-        session = createSession();
-      }
-
-      try
-      {
-        subcommand.init(input, output, i18n, session);
-        subcommand.run(arguments);
-      }
-      finally
-      {
-        if (session != null)
-        {
-          session.close();
-        }
-      }
+      subcommand.init(input, output, i18n, config);
+      subcommand.run(arguments);
     }
 
     IOUtil.close(input);
@@ -177,26 +160,40 @@ public class App
   /**
    * Method description
    *
-   *
-   * @return
    */
-  private ScmClientSession createSession()
+  private void loadConfig()
   {
-    ScmClientSession session = null;
-
-    if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
+    if (config == null)
     {
-      session = ScmClient.createSession(serverUrl, username, password);
-    }
-    else
-    {
-      session = ScmClient.createSession(serverUrl);
-    }
+      config = ScmClientConfig.getInstance().getDefaultConfig();
 
-    return session;
+      if (Util.isNotEmpty(serverUrl))
+      {
+        config.setServerUrl(serverUrl);
+      }
+
+      if (Util.isNotEmpty(username))
+      {
+        config.setUsername(username);
+      }
+
+      if (Util.isNotEmpty(password))
+      {
+        config.setPassword(password);
+      }
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @Option(
+    name = "--config",
+    usage = "optionConfig",
+    metaVar = "metaVar_config",
+    aliases = { "-c" }
+  )
+  private ServerConfig config;
 
   /** Field description */
   @Option(
@@ -236,7 +233,7 @@ public class App
   @Argument(
     index = 0,
     metaVar = "metaVar_command",
-    handler = SubCommandHandler.class
+    handler = SubCommandOptionHandler.class
   )
   private SubCommand subcommand;
 

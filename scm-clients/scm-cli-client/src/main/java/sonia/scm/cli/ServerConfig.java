@@ -35,91 +35,34 @@ package sonia.scm.cli;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.util.AssertUtil;
-import sonia.scm.util.Util;
+import sonia.scm.Validateable;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class CommandDescriptor
+public class ServerConfig implements Validateable
 {
 
-  /** the logger for CommandDescriptor */
-  private static final Logger logger =
-    LoggerFactory.getLogger(CommandDescriptor.class);
-
-  //~--- constructors ---------------------------------------------------------
+  /**
+   * Constructs ...
+   *
+   */
+  public ServerConfig() {}
 
   /**
    * Constructs ...
    *
    *
-   * @param commandClass
+   * @param serverUrl
+   * @param username
+   * @param password
    */
-  public CommandDescriptor(Class<? extends SubCommand> commandClass)
+  public ServerConfig(String serverUrl, String username, String password)
   {
-    AssertUtil.assertIsNotNull(commandClass);
-    this.commandClass = commandClass;
-
-    Command cmd = commandClass.getAnnotation(Command.class);
-
-    if (cmd != null)
-    {
-      this.name = cmd.value();
-      this.usage = cmd.usage();
-    }
-
-    if (Util.isEmpty(name))
-    {
-      name = commandClass.getSimpleName();
-    }
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param name
-   * @param usage
-   * @param sessionRequired
-   * @param commandClass
-   */
-  public CommandDescriptor(String name, String usage, boolean sessionRequired,
-                           Class<? extends SubCommand> commandClass)
-  {
-    this.name = name;
-    this.usage = usage;
-    this.sessionRequired = sessionRequired;
-    this.commandClass = commandClass;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public SubCommand createSubCommand()
-  {
-    SubCommand command = null;
-
-    try
-    {
-      command = commandClass.newInstance();
-      command.setName(name);
-    }
-    catch (Exception ex)
-    {
-      logger.error("could not create SubCommand {}", commandClass.getName());
-    }
-
-    return command;
+    this.serverUrl = serverUrl;
+    this.username = username;
+    this.password = password;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -130,9 +73,9 @@ public class CommandDescriptor
    *
    * @return
    */
-  public Class<? extends SubCommand> getCommandClass()
+  public String getPassword()
   {
-    return commandClass;
+    return password;
   }
 
   /**
@@ -141,9 +84,9 @@ public class CommandDescriptor
    *
    * @return
    */
-  public String getName()
+  public String getServerUrl()
   {
-    return name;
+    return serverUrl;
   }
 
   /**
@@ -152,9 +95,9 @@ public class CommandDescriptor
    *
    * @return
    */
-  public String getUsage()
+  public String getUsername()
   {
-    return usage;
+    return username;
   }
 
   /**
@@ -163,9 +106,12 @@ public class CommandDescriptor
    *
    * @return
    */
-  public boolean isSessionRequired()
+  @Override
+  public boolean isValid()
   {
-    return sessionRequired;
+
+    // TODO
+    return true;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -174,24 +120,43 @@ public class CommandDescriptor
    * Method description
    *
    *
-   * @param sessionRequired
+   * @param password
    */
-  public void setSessionRequired(boolean sessionRequired)
+  public void setPassword(String password)
   {
-    this.sessionRequired = sessionRequired;
+    this.password = password;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param serverUrl
+   */
+  public void setServerUrl(String serverUrl)
+  {
+    this.serverUrl = serverUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param username
+   */
+  public void setUsername(String username)
+  {
+    this.username = username;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Class<? extends SubCommand> commandClass;
+  private String password;
 
   /** Field description */
-  private String name;
+  private String serverUrl;
 
   /** Field description */
-  private boolean sessionRequired;
-
-  /** Field description */
-  private String usage;
+  private String username;
 }

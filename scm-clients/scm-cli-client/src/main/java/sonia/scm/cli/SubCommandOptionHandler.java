@@ -61,16 +61,16 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-public class SubCommandHandler extends OptionHandler<SubCommand>
+public class SubCommandOptionHandler extends OptionHandler<SubCommand>
 {
 
   /** Field description */
   public static final String RESOURCE_SERVICES =
     "/META-INF/services/".concat(SubCommand.class.getName());
 
-  /** the logger for SubCommandHandler */
+  /** the logger for SubCommandOptionHandler */
   private static final Logger logger =
-    LoggerFactory.getLogger(SubCommandHandler.class);
+    LoggerFactory.getLogger(SubCommandOptionHandler.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -82,7 +82,7 @@ public class SubCommandHandler extends OptionHandler<SubCommand>
    * @param option
    * @param setter
    */
-  public SubCommandHandler(CmdLineParser parser, OptionDef option,
+  public SubCommandOptionHandler(CmdLineParser parser, OptionDef option,
                            Setter<? super SubCommand> setter)
   {
     super(parser, option, setter);
