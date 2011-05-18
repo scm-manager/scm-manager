@@ -27,4 +27,4 @@
 # http://bitbucket.org/sdorra/scm-manager
 # 
 
-sonia.scm.cli.ListRepositoriesSubCommand
+sonia.scm.cli.cmd.ListRepositoriesSubCommand

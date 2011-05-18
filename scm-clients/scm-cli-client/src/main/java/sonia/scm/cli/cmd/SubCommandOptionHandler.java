@@ -152,7 +152,8 @@ public class SubCommandOptionHandler extends OptionHandler<SubCommand>
     {
       reader = new BufferedReader(
           new InputStreamReader(
-              SubCommand.class.getResourceAsStream(RESOURCE_SERVICES)));
+              SubCommandOptionHandler.class.getResourceAsStream(
+                RESOURCE_SERVICES)));
 
       String line = reader.readLine();
 
