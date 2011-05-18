@@ -28,3 +28,4 @@
 # 
 
 sonia.scm.cli.cmd.ListRepositoriesSubCommand
+sonia.scm.cli.cmd.StoreConfigSubCommand
