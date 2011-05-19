@@ -122,6 +122,15 @@ public class ScmClientConfig
    * Method description
    *
    */
+  public void delete()
+  {
+    fileHandler.delete();
+  }
+
+  /**
+   * Method description
+   *
+   */
   public void store()
   {
     fileHandler.write(this);

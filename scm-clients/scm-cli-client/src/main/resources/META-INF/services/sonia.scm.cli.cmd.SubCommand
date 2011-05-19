@@ -29,3 +29,4 @@
 
 sonia.scm.cli.cmd.ListRepositoriesSubCommand
 sonia.scm.cli.cmd.StoreConfigSubCommand
+sonia.scm.cli.cmd.DeleteConfigSubCommand

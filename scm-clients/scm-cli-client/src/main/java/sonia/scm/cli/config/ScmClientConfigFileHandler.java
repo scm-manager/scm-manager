@@ -101,9 +101,7 @@ public class ScmClientConfigFileHandler
    */
   public ScmClientConfigFileHandler()
   {
-    Preferences prefs =
-      Preferences.userNodeForPackage(ScmClientConfigFileHandler.class);
-
+    prefs = Preferences.userNodeForPackage(ScmClientConfigFileHandler.class);
     key = prefs.get(PREF_SECRET_KEY, null);
 
     if (Util.isEmpty(key))
@@ -124,6 +122,22 @@ public class ScmClientConfigFileHandler
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  public void delete()
+  {
+    File configFile = getConfigFile();
+
+    if (configFile.exists() &&!configFile.delete())
+    {
+      throw new ScmConfigException("could not delete config file");
+    }
+
+    prefs.remove(PREF_SECRET_KEY);
+  }
 
   /**
    * Method description
@@ -286,4 +300,7 @@ public class ScmClientConfigFileHandler
 
   /** Field description */
   private String key;
+
+  /** Field description */
+  private Preferences prefs;
 }
