@@ -85,15 +85,13 @@ public class CommandDescriptor
    *
    * @param name
    * @param usage
-   * @param sessionRequired
    * @param commandClass
    */
-  public CommandDescriptor(String name, String usage, boolean sessionRequired,
+  public CommandDescriptor(String name, String usage,
                            Class<? extends SubCommand> commandClass)
   {
     this.name = name;
     this.usage = usage;
-    this.sessionRequired = sessionRequired;
     this.commandClass = commandClass;
   }
 
@@ -157,30 +155,6 @@ public class CommandDescriptor
     return usage;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public boolean isSessionRequired()
-  {
-    return sessionRequired;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param sessionRequired
-   */
-  public void setSessionRequired(boolean sessionRequired)
-  {
-    this.sessionRequired = sessionRequired;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -188,9 +162,6 @@ public class CommandDescriptor
 
   /** Field description */
   private String name;
-
-  /** Field description */
-  private boolean sessionRequired;
 
   /** Field description */
   private String usage;
