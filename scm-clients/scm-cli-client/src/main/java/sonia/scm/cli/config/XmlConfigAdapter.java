@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  * @author Sebastian Sdorra
  */
 public class XmlConfigAdapter
-        extends XmlAdapter<Set<XmlConfigElement>, Map<String, ServerConfig>>
+        extends XmlAdapter<XmlConfigSet, Map<String, ServerConfig>>
 {
 
   /**
@@ -61,8 +61,7 @@ public class XmlConfigAdapter
    * @throws Exception
    */
   @Override
-  public Set<XmlConfigElement> marshal(Map<String, ServerConfig> map)
-          throws Exception
+  public XmlConfigSet marshal(Map<String, ServerConfig> map) throws Exception
   {
     Set<XmlConfigElement> set = new HashSet<XmlConfigElement>();
 
@@ -71,7 +70,7 @@ public class XmlConfigAdapter
       set.add(new XmlConfigElement(e.getKey(), e.getValue()));
     }
 
-    return set;
+    return new XmlConfigSet(set);
   }
 
   /**
@@ -85,8 +84,7 @@ public class XmlConfigAdapter
    * @throws Exception
    */
   @Override
-  public Map<String, ServerConfig> unmarshal(Set<XmlConfigElement> set)
-          throws Exception
+  public Map<String, ServerConfig> unmarshal(XmlConfigSet set) throws Exception
   {
     Map<String, ServerConfig> map = new HashMap<String, ServerConfig>();
 

@@ -35,64 +35,38 @@ package sonia.scm.cli.config;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "client-config")
+@XmlRootElement(name = "server-config")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ScmClientConfig
+public class XmlConfigSet implements Iterable<XmlConfigElement>
 {
-
-  /** Field description */
-  public static final String DEFAULT_NAME = "default";
-
-  /** Field description */
-  private static volatile ScmClientConfig instance;
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    */
-  private ScmClientConfig()
-  {
-    this.serverConfigMap = new HashMap<String, ServerConfig>();
-  }
-
-  //~--- get methods ----------------------------------------------------------
+  public XmlConfigSet() {}
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @return
+   * @param configSet
    */
-  public static ScmClientConfig getInstance()
+  public XmlConfigSet(Set<XmlConfigElement> configSet)
   {
-    if (instance == null)
-    {
-      synchronized (ScmClientConfig.class)
-      {
-        if (instance == null)
-        {
-          instance = load();
-        }
-      }
-    }
-
-    return instance;
+    this.configSet = configSet;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -103,28 +77,10 @@ public class ScmClientConfig
    *
    * @return
    */
-  private static ScmClientConfig load()
+  @Override
+  public Iterator<XmlConfigElement> iterator()
   {
-    ScmClientConfigFileHandler fileHandler = new ScmClientConfigFileHandler();
-    ScmClientConfig config = fileHandler.read();
-
-    if (config == null)
-    {
-      config = new ScmClientConfig();
-    }
-
-    config.setFileHandler(fileHandler);
-
-    return config;
-  }
-
-  /**
-   * Method description
-   *
-   */
-  public void store()
-  {
-    fileHandler.write(this);
+    return configSet.iterator();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -133,32 +89,11 @@ public class ScmClientConfig
    * Method description
    *
    *
-   * @param name
-   *
    * @return
    */
-  public ServerConfig getConfig(String name)
+  public Set<XmlConfigElement> getConfigSet()
   {
-    ServerConfig config = serverConfigMap.get(name);
-
-    if (config == null)
-    {
-      config = new ServerConfig();
-      serverConfigMap.put(name, config);
-    }
-
-    return config;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public ServerConfig getDefaultConfig()
-  {
-    return getConfig(DEFAULT_NAME);
+    return configSet;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -167,21 +102,16 @@ public class ScmClientConfig
    * Method description
    *
    *
-   * @param fileHandler
+   * @param configSet
    */
-  private void setFileHandler(ScmClientConfigFileHandler fileHandler)
+  public void setConfigSet(Set<XmlConfigElement> configSet)
   {
-    this.fileHandler = fileHandler;
+    this.configSet = configSet;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlTransient
-  private ScmClientConfigFileHandler fileHandler;
-
-  /** Field description */
-  @XmlElement(name = "server-config")
-  @XmlJavaTypeAdapter(XmlConfigAdapter.class)
-  private Map<String, ServerConfig> serverConfigMap;
+  @XmlElement(name = "server")
+  private Set<XmlConfigElement> configSet;
 }

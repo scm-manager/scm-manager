@@ -33,95 +33,58 @@
 
 package sonia.scm.cli.config;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "server")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class XmlConfigElement
+public class ScmConfigException extends RuntimeException
 {
 
+  /** Field description */
+  private static final long serialVersionUID = -4226165375815233654L;
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructs ...
    *
    */
-  public XmlConfigElement() {}
+  public ScmConfigException()
+  {
+    super();
+  }
 
   /**
    * Constructs ...
    *
    *
-   * @param name
-   * @param config
+   * @param message
    */
-  public XmlConfigElement(String name, ServerConfig config)
+  public ScmConfigException(String message)
   {
-    this.name = name;
-    this.config = config;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public ServerConfig getConfig()
-  {
-    return config;
+    super(message);
   }
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @return
+   * @param cause
    */
-  public String getName()
+  public ScmConfigException(Throwable cause)
   {
-    return name;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param config
-   */
-  public void setConfig(ServerConfig config)
-  {
-    this.config = config;
+    super(cause);
   }
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param name
+   * @param message
+   * @param cause
    */
-  public void setName(String name)
+  public ScmConfigException(String message, Throwable cause)
   {
-    this.name = name;
+    super(message, cause);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "server-config")
-  private ServerConfig config;
-
-  /** Field description */
-  private String name;
 }
