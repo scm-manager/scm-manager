@@ -171,21 +171,21 @@ public class App
     if (config == null)
     {
       config = ScmClientConfig.getInstance().getDefaultConfig();
+    }
 
-      if (Util.isNotEmpty(serverUrl))
-      {
-        config.setServerUrl(serverUrl);
-      }
+    if (Util.isNotEmpty(serverUrl))
+    {
+      config.setServerUrl(serverUrl);
+    }
 
-      if (Util.isNotEmpty(username))
-      {
-        config.setUsername(username);
-      }
+    if (Util.isNotEmpty(username))
+    {
+      config.setUsername(username);
+    }
 
-      if (Util.isNotEmpty(password))
-      {
-        config.setPassword(password);
-      }
+    if (Util.isNotEmpty(password))
+    {
+      config.setPassword(password);
     }
   }
 
