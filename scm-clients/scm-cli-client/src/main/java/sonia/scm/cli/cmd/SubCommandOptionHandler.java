@@ -111,8 +111,7 @@ public class SubCommandOptionHandler extends OptionHandler<SubCommand>
 
     if (desc != null)
     {
-
-      // owner.stopOptionParsing();
+      owner.stopOptionParsing();
       setter.addValue(desc.createSubCommand());
     }
     else

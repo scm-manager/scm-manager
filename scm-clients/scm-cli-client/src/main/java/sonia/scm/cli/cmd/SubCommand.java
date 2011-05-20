@@ -102,7 +102,7 @@ public abstract class SubCommand
   public void run(Collection<String> args)
   {
     CmdLineParser parser = new CmdLineParser(this);
-
+    
     try
     {
       parser.parseArgument(args);
