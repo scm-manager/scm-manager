@@ -38,6 +38,9 @@ sonia.scm.cli.cmd.GetRepositorySubCommand
 sonia.scm.cli.cmd.ListRepositoriesSubCommand
 sonia.scm.cli.cmd.DeleteRepositorySubCommand
 
-# permissions
+# permission
 sonia.scm.cli.cmd.AddPermissionSubCommand
 sonia.scm.cli.cmd.DeletePermissionSubCommand
+
+# user
+sonia.scm.cli.cmd.ListUsersSubCommand
