@@ -36,37 +36,36 @@ package sonia.scm.cli.cmd;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.kohsuke.args4j.Argument;
-import org.kohsuke.args4j.Option;
 
 import sonia.scm.cli.I18n;
 import sonia.scm.client.RepositoryClientHandler;
 import sonia.scm.client.ScmClientSession;
+import sonia.scm.repository.Permission;
 import sonia.scm.repository.Repository;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Command("modify-repository")
-public class ModifyRepositorySubCommand extends TemplateSubCommand
+public abstract class PermissionSubCommand extends TemplateSubCommand
 {
 
   /**
    * Method description
    *
    *
-   * @return
+   * @param permissions
    */
-  public String getContact()
-  {
-    return contact;
-  }
+  protected abstract void modifyPermissions(List<Permission> permissions);
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -74,9 +73,9 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
    *
    * @return
    */
-  public String getDescription()
+  public String getId()
   {
-    return description;
+    return id;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -85,22 +84,11 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
    * Method description
    *
    *
-   * @param contact
+   * @param id
    */
-  public void setContact(String contact)
+  public void setId(String id)
   {
-    this.contact = contact;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param description
-   */
-  public void setDescription(String description)
-  {
-    this.description = description;
+    this.id = id;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -118,16 +106,15 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
 
     if (repository != null)
     {
-      if (Util.isNotEmpty(contact))
+      List<Permission> permissions = repository.getPermissions();
+
+      if (permissions == null)
       {
-        repository.setContact(contact);
+        permissions = new ArrayList<Permission>();
       }
 
-      if (Util.isNotEmpty(description))
-      {
-        repository.setDescription(description);
-      }
-
+      modifyPermissions(permissions);
+      repository.setPermissions(permissions);
       handler.modify(repository);
 
       Map<String, Object> env = new HashMap<String, Object>();
@@ -142,26 +129,6 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /**
-   * TODO: public parameter
-   */
-
-  /** Field description */
-  @Option(
-    name = "--contact",
-    usage = "optionRepositoryContact",
-    aliases = { "-c" }
-  )
-  private String contact;
-
-  /** Field description */
-  @Option(
-    name = "--description",
-    usage = "optionRepositoryDescription",
-    aliases = { "-d" }
-  )
-  private String description;
 
   /** Field description */
   @Argument(usage = "optionRepositoryId", required = true)

@@ -35,26 +35,21 @@ package sonia.scm.cli.cmd;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
-import sonia.scm.cli.I18n;
-import sonia.scm.client.RepositoryClientHandler;
-import sonia.scm.client.ScmClientSession;
-import sonia.scm.repository.Repository;
-import sonia.scm.util.Util;
+import sonia.scm.repository.Permission;
+import sonia.scm.repository.PermissionType;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Command("modify-repository")
-public class ModifyRepositorySubCommand extends TemplateSubCommand
+@Command("add-permission")
+public class AddPermissionSubCommand extends PermissionSubCommand
 {
 
   /**
@@ -63,9 +58,9 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
    *
    * @return
    */
-  public String getContact()
+  public PermissionType getType()
   {
-    return contact;
+    return type;
   }
 
   /**
@@ -74,9 +69,9 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
    *
    * @return
    */
-  public String getDescription()
+  public boolean isGroup()
   {
-    return description;
+    return group;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -85,22 +80,22 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
    * Method description
    *
    *
-   * @param contact
+   * @param group
    */
-  public void setContact(String contact)
+  public void setGroup(boolean group)
   {
-    this.contact = contact;
+    this.group = group;
   }
 
   /**
    * Method description
    *
    *
-   * @param description
+   * @param type
    */
-  public void setDescription(String description)
+  public void setType(PermissionType type)
   {
-    this.description = description;
+    this.type = type;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -108,62 +103,40 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
   /**
    * Method description
    *
+   *
+   * @param permissions
    */
   @Override
-  protected void run()
+  protected void modifyPermissions(List<Permission> permissions)
   {
-    ScmClientSession session = createSession();
-    RepositoryClientHandler handler = session.getRepositoryHandler();
-    Repository repository = handler.get(id);
-
-    if (repository != null)
-    {
-      if (Util.isNotEmpty(contact))
-      {
-        repository.setContact(contact);
-      }
-
-      if (Util.isNotEmpty(description))
-      {
-        repository.setDescription(description);
-      }
-
-      handler.modify(repository);
-
-      Map<String, Object> env = new HashMap<String, Object>();
-
-      env.put("repository", repository);
-      renderTemplate(env, GetRepositorySubCommand.TEMPLATE);
-    }
-    else
-    {
-      output.println(i18n.getMessage(I18n.REPOSITORY_NOT_FOUND));
-    }
+    permissions.add(new Permission(name, type, group));
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /**
-   * TODO: public parameter
-   */
+  /** Field description */
+  @Option(
+    name = "--group",
+    usage = "optionPermissionGroup",
+    aliases = { "-g" }
+  )
+  private boolean group = false;
 
   /** Field description */
   @Option(
-    name = "--contact",
-    usage = "optionRepositoryContact",
-    aliases = { "-c" }
+    name = "--name",
+    usage = "optionPermissionName",
+    required = true,
+    aliases = { "-n" }
   )
-  private String contact;
+  private String name;
 
   /** Field description */
   @Option(
-    name = "--description",
-    usage = "optionRepositoryDescription",
-    aliases = { "-d" }
+    name = "--type",
+    usage = "optionPermissionType",
+    required = true,
+    aliases = { "-t" }
   )
-  private String description;
-
-  /** Field description */
-  @Argument(usage = "optionRepositoryId", required = true)
-  private String id;
+  private PermissionType type;
 }
