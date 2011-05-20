@@ -40,15 +40,23 @@ import sonia.scm.repository.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Command("list-repositories")
-public class ListRepositoriesSubCommand extends SubCommand
+public class ListRepositoriesSubCommand extends TemplateSubCommand
 {
+
+  /** Field description */
+  public static final String TEMPLATE =
+    "/sonia/resources/list-repositories.ftl";
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -59,10 +67,9 @@ public class ListRepositoriesSubCommand extends SubCommand
   {
     ScmClientSession session = createSession();
     List<Repository> repositories = session.getRepositoryHandler().getAll();
+    Map<String, Object> env = new HashMap<String, Object>();
 
-    for (Repository r : repositories)
-    {
-      output.println(r);
-    }
+    env.put("repositories", repositories);
+    renderTemplate(env, TEMPLATE);
   }
 }

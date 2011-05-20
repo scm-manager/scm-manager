@@ -54,6 +54,12 @@
       <artifactId>logback-classic</artifactId>
       <version>0.9.28</version>
     </dependency>
+    
+    <dependency>
+      <groupId>org.freemarker</groupId>
+      <artifactId>freemarker</artifactId>
+      <version>2.3.16</version>
+    </dependency>
 
   </dependencies>
   
