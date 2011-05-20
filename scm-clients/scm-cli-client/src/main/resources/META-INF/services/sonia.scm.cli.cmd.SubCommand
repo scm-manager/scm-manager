@@ -46,3 +46,4 @@ sonia.scm.cli.cmd.DeletePermissionSubCommand
 sonia.scm.cli.cmd.ListUsersSubCommand
 sonia.scm.cli.cmd.GetUserSubCommand
 sonia.scm.cli.cmd.CreateUserSubCommand
+sonia.scm.cli.cmd.DeleteUserSubCommand
