@@ -35,103 +35,22 @@ package sonia.scm.cli.cmd;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.kohsuke.args4j.Option;
 
-import sonia.scm.util.AssertUtil;
-import sonia.scm.util.Util;
+import sonia.scm.repository.Permission;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class CommandDescriptor
+@Command("delete-permission")
+public class DeletePermissionSubCommand extends PermissionSubCommand
 {
-
-  /** the logger for CommandDescriptor */
-  private static final Logger logger =
-    LoggerFactory.getLogger(CommandDescriptor.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param commandClass
-   */
-  public CommandDescriptor(Class<? extends SubCommand> commandClass)
-  {
-    AssertUtil.assertIsNotNull(commandClass);
-    this.commandClass = commandClass;
-
-    Command cmd = commandClass.getAnnotation(Command.class);
-
-    if (cmd != null)
-    {
-      this.name = cmd.value();
-      this.usage = cmd.usage();
-    }
-
-    if (Util.isEmpty(name))
-    {
-      name = commandClass.getSimpleName();
-    }
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param name
-   * @param usage
-   * @param commandClass
-   */
-  public CommandDescriptor(String name, String usage,
-                           Class<? extends SubCommand> commandClass)
-  {
-    this.name = name;
-    this.usage = usage;
-    this.commandClass = commandClass;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public SubCommand createSubCommand()
-  {
-    SubCommand command = null;
-
-    try
-    {
-      command = commandClass.newInstance();
-      command.setCommandName(name);
-    }
-    catch (Exception ex)
-    {
-      logger.error("could not create SubCommand {}", commandClass.getName());
-    }
-
-    return command;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Class<? extends SubCommand> getCommandClass()
-  {
-    return commandClass;
-  }
 
   /**
    * Method description
@@ -144,25 +63,51 @@ public class CommandDescriptor
     return name;
   }
 
+  //~--- set methods ----------------------------------------------------------
+
   /**
    * Method description
    *
    *
-   * @return
+   * @param name
    */
-  public String getUsage()
+  public void setName(String name)
   {
-    return usage;
+    this.name = name;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param permissions
+   */
+  @Override
+  protected void modifyPermissions(List<Permission> permissions)
+  {
+    Iterator<Permission> it = permissions.iterator();
+
+    while (it.hasNext())
+    {
+      Permission p = it.next();
+
+      if (name.equals(p.getName()))
+      {
+        it.remove();
+      }
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Class<? extends SubCommand> commandClass;
-
-  /** Field description */
+  @Option(
+    name = "--name",
+    usage = "optionPermissionName",
+    required = true,
+    aliases = { "-n" }
+  )
   private String name;
-
-  /** Field description */
-  private String usage;
 }

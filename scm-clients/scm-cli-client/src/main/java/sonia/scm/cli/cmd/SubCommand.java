@@ -140,9 +140,9 @@ public abstract class SubCommand
    *
    * @return
    */
-  public String getName()
+  public String getCommandName()
   {
-    return name;
+    return commandName;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -153,9 +153,9 @@ public abstract class SubCommand
    *
    * @param name
    */
-  public void setName(String name)
+  public void setCommandName(String name)
   {
-    this.name = name;
+    this.commandName = name;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -198,15 +198,15 @@ public abstract class SubCommand
   protected PrintWriter output;
 
   /** Field description */
+  private String commandName;
+
+  /** Field description */
   @Option(
     name = "--help",
     usage = "optionHelpText",
     aliases = { "-h" }
   )
   private boolean help = false;
-
-  /** Field description */
-  private String name;
 
   /** Field description */
   private ScmClientSession session;

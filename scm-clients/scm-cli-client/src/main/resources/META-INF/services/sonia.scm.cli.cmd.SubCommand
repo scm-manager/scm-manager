@@ -40,3 +40,4 @@ sonia.scm.cli.cmd.DeleteRepositorySubCommand
 
 # permissions
 sonia.scm.cli.cmd.AddPermissionSubCommand
+sonia.scm.cli.cmd.DeletePermissionSubCommand
