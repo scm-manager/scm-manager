@@ -2,8 +2,8 @@
 ID:             ${repository.id}
 Name:           ${repository.name}
 Type:           ${repository.type}
-E-Mail:         ${repository.contact}
-Description:    ${repository.description}
+E-Mail:         ${repository.contact!""}
+Description:    ${repository.description!""}
 Public:         ${repository.publicReadable?string}
 Creation-Date:  ${repository.creationDate!""?string}
 Last-Modified:  ${repository.lastModified!""?string}
