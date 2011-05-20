@@ -31,84 +31,60 @@
 
 
 
-package sonia.scm.cli;
+package sonia.scm.cli.cmd;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.kohsuke.args4j.Argument;
+
+import sonia.scm.cli.I18n;
+import sonia.scm.client.ScmClientSession;
+import sonia.scm.repository.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class I18n
+@Command("get-repository")
+public class GetRepositorySubCommand extends TemplateSubCommand
 {
 
   /** Field description */
-  public static final String REPOSITORY_NOT_FOUND = "repositoryNotFound";
+  public static final String TEMPLATE = "/sonia/resources/get-repository.ftl";
 
-  /** Field description */
-  public static final String RESOURCE_BUNDLE = "sonia.resources.i18n";
-
-  /** the logger for I18n */
-  private static final Logger logger = LoggerFactory.getLogger(I18n.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public I18n()
-  {
-    bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE);
-  }
-
-  //~--- get methods ----------------------------------------------------------
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
-   *
-   * @return
    */
-  public ResourceBundle getBundle()
+  @Override
+  protected void run()
   {
-    return bundle;
-  }
+    ScmClientSession session = createSession();
+    Repository repository = session.getRepositoryHandler().get(id);
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
-  public String getMessage(String key)
-  {
-    String value = key;
-
-    try
+    if (repository != null)
     {
-      value = bundle.getString(key);
-    }
-    catch (MissingResourceException ex)
-    {
-      logger.warn("could not find resource for key {}", key);
-    }
+      Map<String, Object> env = new HashMap<String, Object>();
 
-    return value;
+      env.put("repository", repository);
+      renderTemplate(env, TEMPLATE);
+    }
+    else
+    {
+      output.println(i18n.getMessage(I18n.REPOSITORY_NOT_FOUND));
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ResourceBundle bundle;
+  @Argument(usage = "optionRepositoryId", required = true)
+  private String id;
 }
