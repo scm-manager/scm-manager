@@ -35,32 +35,22 @@ package sonia.scm.cli.cmd;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-
 import org.kohsuke.args4j.Option;
 
-import sonia.scm.ConfigurationException;
-import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
+import sonia.scm.client.ScmClientSession;
+import sonia.scm.repository.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
-
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public abstract class TemplateSubCommand extends SubCommand
+@Command("create-repository")
+public class CreateRepositorySubCommand extends TemplateSubCommand
 {
 
   /**
@@ -69,9 +59,9 @@ public abstract class TemplateSubCommand extends SubCommand
    *
    * @return
    */
-  public String getTemplate()
+  public String getContact()
   {
-    return template;
+    return contact;
   }
 
   /**
@@ -80,9 +70,31 @@ public abstract class TemplateSubCommand extends SubCommand
    *
    * @return
    */
-  public File getTemplateFile()
+  public String getDescription()
   {
-    return templateFile;
+    return description;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getType()
+  {
+    return type;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isPublicReadable()
+  {
+    return publicReadable;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -91,22 +103,44 @@ public abstract class TemplateSubCommand extends SubCommand
    * Method description
    *
    *
-   * @param template
+   * @param contact
    */
-  public void setTemplate(String template)
+  public void setContact(String contact)
   {
-    this.template = template;
+    this.contact = contact;
   }
 
   /**
    * Method description
    *
    *
-   * @param templateFile
+   * @param description
    */
-  public void setTemplateFile(File templateFile)
+  public void setDescription(String description)
   {
-    this.templateFile = templateFile;
+    this.description = description;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param publicReadable
+   */
+  public void setPublicReadable(boolean publicReadable)
+  {
+    this.publicReadable = publicReadable;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   */
+  public void setType(String type)
+  {
+    this.type = type;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -114,56 +148,68 @@ public abstract class TemplateSubCommand extends SubCommand
   /**
    * Method description
    *
-   *
-   * @param env
-   * @param defaultTemplate
    */
-  protected void renderTemplate(Map<String, Object> env, String defaultTemplate)
+  @Override
+  protected void run()
   {
-    Configuration configuration = new Configuration();
-    Reader reader = null;
+    Repository repository = new Repository();
 
-    try
-    {
-      if ((templateFile != null) && templateFile.exists())
-      {
-        reader = new FileReader(templateFile);
-      }
-      else if (Util.isNotEmpty(template))
-      {
-        reader = new StringReader(template);
-      }
-      else
-      {
-        reader = new InputStreamReader(
-            TemplateSubCommand.class.getResourceAsStream(defaultTemplate));
-      }
+    repository.setName(name);
+    repository.setType(type);
+    repository.setContact(contact);
+    repository.setDescription(description);
 
-      Template tpl = new Template("default-template", reader, configuration);
+    ScmClientSession session = createSession();
 
-      tpl.process(env, output);
-    }
-    catch (TemplateException ex)
-    {
-      throw new ConfigurationException("could not render template", ex);
-    }
-    catch (IOException ex)
-    {
-      throw new ConfigurationException("could not render template", ex);
-    }
-    finally
-    {
-      IOUtil.close(reader);
-    }
+    session.getRepositoryHandler().create(repository);
+
+    Map<String, Object> env = new HashMap<String, Object>();
+
+    env.put("repository", repository);
+    renderTemplate(env, GetRepositorySubCommand.TEMPLATE);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @Option(name = "--template", usage = "optionTemplate")
-  private String template;
+  @Option(
+    name = "--contact",
+    usage = "optionRepositoryContact",
+    aliases = { "-c" }
+  )
+  private String contact;
 
   /** Field description */
-  @Option(name = "--template-file", usage = "optionTemplateFile")
-  private File templateFile;
+  @Option(
+    name = "--description",
+    usage = "optionRepositoryDescription",
+    aliases = { "-d" }
+  )
+  private String description;
+
+  /** Field description */
+  @Option(
+    name = "--name",
+    required = true,
+    usage = "optionRepositoryName",
+    aliases = { "-n" }
+  )
+  private String name;
+
+  /** Field description */
+  @Option(
+    name = "--public",
+    usage = "optionRepositoryPublic",
+    aliases = { "-p" }
+  )
+  private boolean publicReadable;
+
+  /** Field description */
+  @Option(
+    name = "--type",
+    required = true,
+    usage = "optionRepositoryType",
+    aliases = { "-t" }
+  )
+  private String type;
 }

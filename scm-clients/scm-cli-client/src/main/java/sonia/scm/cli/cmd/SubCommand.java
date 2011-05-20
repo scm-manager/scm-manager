@@ -102,7 +102,7 @@ public abstract class SubCommand
   public void run(Collection<String> args)
   {
     CmdLineParser parser = new CmdLineParser(this);
-    
+
     try
     {
       parser.parseArgument(args);
@@ -195,9 +195,6 @@ public abstract class SubCommand
   protected BufferedReader input;
 
   /** Field description */
-  protected String name;
-
-  /** Field description */
   protected PrintWriter output;
 
   /** Field description */
@@ -207,6 +204,9 @@ public abstract class SubCommand
     aliases = { "-h" }
   )
   private boolean help = false;
+
+  /** Field description */
+  private String name;
 
   /** Field description */
   private ScmClientSession session;
