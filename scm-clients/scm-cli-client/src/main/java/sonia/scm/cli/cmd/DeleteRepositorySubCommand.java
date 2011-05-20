@@ -37,27 +37,15 @@ package sonia.scm.cli.cmd;
 
 import org.kohsuke.args4j.Argument;
 
-import sonia.scm.cli.I18n;
 import sonia.scm.client.ScmClientSession;
-import sonia.scm.repository.Repository;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Command("get-repository")
-public class GetRepositorySubCommand extends TemplateSubCommand
+@Command("delete-repository")
+public class DeleteRepositorySubCommand extends SubCommand
 {
-
-  /** Field description */
-  public static final String TEMPLATE = "/sonia/resources/get-repository.ftl";
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -93,19 +81,8 @@ public class GetRepositorySubCommand extends TemplateSubCommand
   protected void run()
   {
     ScmClientSession session = createSession();
-    Repository repository = session.getRepositoryHandler().get(id);
 
-    if (repository != null)
-    {
-      Map<String, Object> env = new HashMap<String, Object>();
-
-      env.put("repository", repository);
-      renderTemplate(env, TEMPLATE);
-    }
-    else
-    {
-      output.println(i18n.getMessage(I18n.REPOSITORY_NOT_FOUND));
-    }
+    session.getRepositoryHandler().delete(id);
   }
 
   //~--- fields ---------------------------------------------------------------
