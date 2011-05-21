@@ -38,6 +38,7 @@ package sonia.scm.cli.cmd;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.ConfigurationException;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -47,6 +48,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import java.net.URL;
+
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,7 +63,7 @@ public class SubCommandHandler
 
   /** Field description */
   public static final String RESOURCE_SERVICES =
-    "/META-INF/services/".concat(SubCommand.class.getName());
+    "META-INF/services/".concat(SubCommand.class.getName());
 
   /** Field description */
   private static volatile SubCommandHandler instance;
@@ -122,17 +126,16 @@ public class SubCommandHandler
   /**
    * Method description
    *
+   *
+   * @param url
    */
-  private void loadSubCommands()
+  private void loadSubCommand(URL url)
   {
     BufferedReader reader = null;
 
     try
     {
-      reader = new BufferedReader(
-          new InputStreamReader(
-              SubCommandOptionHandler.class.getResourceAsStream(
-                RESOURCE_SERVICES)));
+      reader = new BufferedReader(new InputStreamReader(url.openStream()));
 
       String line = reader.readLine();
 
@@ -149,6 +152,31 @@ public class SubCommandHandler
     finally
     {
       IOUtil.close(reader);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   */
+  private void loadSubCommands()
+  {
+    try
+    {
+      Enumeration<URL> enm =
+        SubCommandHandler.class.getClassLoader().getResources(
+            RESOURCE_SERVICES);
+
+      while (enm.hasMoreElements())
+      {
+        URL url = enm.nextElement();
+
+        loadSubCommand(url);
+      }
+    }
+    catch (IOException ex)
+    {
+      throw new ConfigurationException("could not load SubComamnds", ex);
     }
   }
 
