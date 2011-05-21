@@ -45,8 +45,8 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-@Command("add-members")
-public class AddMembersSubCommand extends MembersSubCommand
+@Command("delete-members")
+public class DeleteMembersSubCommand extends MembersSubCommand
 {
 
   /**
@@ -59,6 +59,6 @@ public class AddMembersSubCommand extends MembersSubCommand
   @Override
   protected void modifyMembers(Group group, List<String> members)
   {
-    group.getMembers().addAll(members);
+    group.getMembers().removeAll(members);
   }
 }

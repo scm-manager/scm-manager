@@ -57,3 +57,4 @@ sonia.scm.cli.cmd.DeleteGroupSubCommand
 
 # member
 sonia.scm.cli.cmd.AddMembersSubCommand
+sonia.scm.cli.cmd.DeleteMembersSubCommand
