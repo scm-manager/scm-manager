@@ -50,8 +50,11 @@ import java.io.InputStreamReader;
 
 import java.net.URL;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -119,6 +122,22 @@ public class SubCommandHandler
   public CommandDescriptor getDescriptor(String name)
   {
     return subCommands.get(name);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<CommandDescriptor> getDescriptors()
+  {
+    List<CommandDescriptor> descs =
+      new ArrayList<CommandDescriptor>(subCommands.values());
+
+    Collections.sort(descs);
+
+    return descs;
   }
 
   //~--- methods --------------------------------------------------------------

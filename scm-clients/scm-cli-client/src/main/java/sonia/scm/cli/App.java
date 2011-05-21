@@ -43,7 +43,9 @@ import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.cli.cmd.CommandDescriptor;
 import sonia.scm.cli.cmd.SubCommand;
+import sonia.scm.cli.cmd.SubCommandHandler;
 import sonia.scm.cli.cmd.SubCommandOptionHandler;
 import sonia.scm.cli.config.ConfigOptionHandler;
 import sonia.scm.cli.config.ScmClientConfig;
@@ -151,6 +153,14 @@ public class App
     if ((args.length == 0) || (subcommand == null) || help)
     {
       parser.printUsage(output, i18n.getBundle());
+      output.println();
+      output.println(i18n.getMessage(I18n.SUBCOMMANDS_TITLE));
+
+      for (CommandDescriptor desc :
+              SubCommandHandler.getInstance().getDescriptors())
+      {
+        output.append("  ").println(desc.getName());
+      }
     }
     else
     {

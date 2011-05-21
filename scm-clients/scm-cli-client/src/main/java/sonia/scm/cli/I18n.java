@@ -60,6 +60,9 @@ public class I18n
   public static final String RESOURCE_BUNDLE = "sonia.resources.i18n";
 
   /** Field description */
+  public static final String SUBCOMMANDS_TITLE = "subCommandsTitle";
+
+  /** Field description */
   public static final String USER_NOT_FOUND = "userNotFound";
 
   /** the logger for I18n */

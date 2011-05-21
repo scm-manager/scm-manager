@@ -45,7 +45,7 @@ import sonia.scm.util.Util;
  *
  * @author Sebastian Sdorra
  */
-public class CommandDescriptor
+public class CommandDescriptor implements Comparable<CommandDescriptor>
 {
 
   /** the logger for CommandDescriptor */
@@ -96,6 +96,20 @@ public class CommandDescriptor
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param desc
+   *
+   * @return
+   */
+  @Override
+  public int compareTo(CommandDescriptor desc)
+  {
+    return name.compareTo(desc.name);
+  }
 
   /**
    * Method description
