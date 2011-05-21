@@ -31,50 +31,31 @@
 
 
 
-package sonia.scm.cli;
+package sonia.scm.cli.cmd;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.kohsuke.args4j.Argument;
+
+import sonia.scm.cli.I18n;
+import sonia.scm.client.ScmClientSession;
+import sonia.scm.group.Group;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class I18n
+@Command("get-group")
+public class GetGroupSubCommand extends TemplateSubCommand
 {
 
   /** Field description */
-  public static final String GROUP_NOT_FOUND = "groupNotFound";
-
-  /** Field description */
-  public static final String REPOSITORY_NOT_FOUND = "repositoryNotFound";
-
-  /** Field description */
-  public static final String RESOURCE_BUNDLE = "sonia.resources.i18n";
-
-  /** Field description */
-  public static final String USER_NOT_FOUND = "userNotFound";
-
-  /** the logger for I18n */
-  private static final Logger logger = LoggerFactory.getLogger(I18n.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   */
-  public I18n()
-  {
-    bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE);
-  }
+  public static final String TEMPLATE = "/sonia/resources/get-group.ftl";
 
   //~--- get methods ----------------------------------------------------------
 
@@ -84,37 +65,52 @@ public class I18n
    *
    * @return
    */
-  public ResourceBundle getBundle()
+  public String getName()
   {
-    return bundle;
+    return name;
   }
+
+  //~--- set methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param key
-   *
-   * @return
+   * @param name
    */
-  public String getMessage(String key)
+  public void setName(String name)
   {
-    String value = key;
+    this.name = name;
+  }
 
-    try
-    {
-      value = bundle.getString(key);
-    }
-    catch (MissingResourceException ex)
-    {
-      logger.warn("could not find resource for key {}", key);
-    }
+  //~--- methods --------------------------------------------------------------
 
-    return value;
+  /**
+   * Method description
+   *
+   */
+  @Override
+  protected void run()
+  {
+    ScmClientSession session = createSession();
+    Group group = session.getGroupHandler().get(name);
+
+    if (group != null)
+    {
+      Map<String, Object> env = new HashMap<String, Object>();
+
+      env.put("group", group);
+      renderTemplate(env, TEMPLATE);
+    }
+    else
+    {
+      output.println(i18n.getMessage(I18n.GROUP_NOT_FOUND));
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ResourceBundle bundle;
+  @Argument(usage = "optionGroupName", required = true)
+  private String name;
 }
