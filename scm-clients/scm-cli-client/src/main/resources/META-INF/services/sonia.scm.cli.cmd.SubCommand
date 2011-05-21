@@ -52,3 +52,4 @@ sonia.scm.cli.cmd.ModifyUserSubCommand
 # group
 sonia.scm.cli.cmd.ListGroupsSubCommand
 sonia.scm.cli.cmd.GetGroupSubCommand
+sonia.scm.cli.cmd.CreateGroupSubCommand

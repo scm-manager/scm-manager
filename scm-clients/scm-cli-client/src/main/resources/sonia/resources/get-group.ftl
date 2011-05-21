@@ -1,6 +1,6 @@
 Name:           ${group.name}
 Type:           ${group.type}
-Description:    ${group.description}
+Description:    ${group.description!""}
 Creation-Date:  ${group.creationDate!""?string}
 Last-Modified:  ${group.lastModified!""?string}
 Members:
