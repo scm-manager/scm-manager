@@ -42,37 +42,12 @@ import org.kohsuke.args4j.spi.OptionHandler;
 import org.kohsuke.args4j.spi.Parameters;
 import org.kohsuke.args4j.spi.Setter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  *
  * @author Sebastian Sdorra
  */
 public class SubCommandOptionHandler extends OptionHandler<SubCommand>
 {
-
-  /** Field description */
-  public static final String RESOURCE_SERVICES =
-    "/META-INF/services/".concat(SubCommand.class.getName());
-
-  /** the logger for SubCommandOptionHandler */
-  private static final Logger logger =
-    LoggerFactory.getLogger(SubCommandOptionHandler.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -86,8 +61,6 @@ public class SubCommandOptionHandler extends OptionHandler<SubCommand>
                                  Setter<? super SubCommand> setter)
   {
     super(parser, option, setter);
-    subCommands = new HashMap<String, CommandDescriptor>();
-    loadSubCommands();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -107,7 +80,8 @@ public class SubCommandOptionHandler extends OptionHandler<SubCommand>
   public int parseArguments(Parameters parameters) throws CmdLineException
   {
     String name = parameters.getParameter(0);
-    CommandDescriptor desc = subCommands.get(name);
+    CommandDescriptor desc =
+      SubCommandHandler.getInstance().getDescriptor(name);
 
     if (desc != null)
     {
@@ -136,71 +110,4 @@ public class SubCommandOptionHandler extends OptionHandler<SubCommand>
   {
     return "metaVar_command";
   }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  private void loadSubCommands()
-  {
-    BufferedReader reader = null;
-
-    try
-    {
-      reader = new BufferedReader(
-          new InputStreamReader(
-              SubCommandOptionHandler.class.getResourceAsStream(
-                RESOURCE_SERVICES)));
-
-      String line = reader.readLine();
-
-      while (line != null)
-      {
-        parseLine(line);
-        line = reader.readLine();
-      }
-    }
-    catch (IOException ex)
-    {
-      logger.error("could not load commands");
-    }
-    finally
-    {
-      IOUtil.close(reader);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param line
-   */
-  private void parseLine(String line)
-  {
-    line = line.trim();
-
-    if (Util.isNotEmpty(line) &&!line.startsWith("#"))
-    {
-      try
-      {
-        Class<? extends SubCommand> clazz =
-          (Class<? extends SubCommand>) Class.forName(line);
-        CommandDescriptor desc = new CommandDescriptor(clazz);
-
-        subCommands.put(desc.getName(), desc);
-      }
-      catch (ClassNotFoundException ex)
-      {
-        logger.warn("could not found command class {}", line);
-      }
-    }
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Map<String, CommandDescriptor> subCommands;
 }
