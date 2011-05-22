@@ -152,15 +152,7 @@ public class App
 
     if ((args.length == 0) || (subcommand == null) || help)
     {
-      parser.printUsage(output, i18n.getBundle());
-      output.println();
-      output.println(i18n.getMessage(I18n.SUBCOMMANDS_TITLE));
-
-      for (CommandDescriptor desc :
-              SubCommandHandler.getInstance().getDescriptors())
-      {
-        output.append("  ").println(desc.getName());
-      }
+      printHelp(parser, i18n);
     }
     else
     {
@@ -196,6 +188,37 @@ public class App
     if (Util.isNotEmpty(password))
     {
       config.setPassword(password);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param parser
+   * @param i18n
+   */
+  private void printHelp(CmdLineParser parser, I18n i18n)
+  {
+    parser.printUsage(output, i18n.getBundle());
+    output.println();
+    output.println(i18n.getMessage(I18n.SUBCOMMANDS_TITLE));
+    output.println();
+
+    String group = null;
+
+    for (CommandDescriptor desc :
+            SubCommandHandler.getInstance().getDescriptors())
+    {
+      if ((group == null) ||!group.equals(desc.getGroup()))
+      {
+        output.println();
+        group = desc.getGroup();
+        output.append(i18n.getMessage(group)).println(":");
+        output.println();
+      }
+
+      output.append("  ").println(desc.getName());
     }
   }
 

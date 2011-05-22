@@ -69,7 +69,8 @@ public class CommandDescriptor implements Comparable<CommandDescriptor>
 
     if (cmd != null)
     {
-      this.name = cmd.value();
+      this.name = cmd.name();
+      this.group = cmd.group();
       this.usage = cmd.usage();
     }
 
@@ -108,7 +109,14 @@ public class CommandDescriptor implements Comparable<CommandDescriptor>
   @Override
   public int compareTo(CommandDescriptor desc)
   {
-    return name.compareTo(desc.name);
+    int result = group.compareTo(desc.group);
+
+    if (result == 0)
+    {
+      result = name.compareTo(desc.name);
+    }
+
+    return result;
   }
 
   /**
@@ -153,6 +161,17 @@ public class CommandDescriptor implements Comparable<CommandDescriptor>
    *
    * @return
    */
+  public String getGroup()
+  {
+    return group;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getName()
   {
     return name;
@@ -173,6 +192,9 @@ public class CommandDescriptor implements Comparable<CommandDescriptor>
 
   /** Field description */
   private Class<? extends SubCommand> commandClass;
+
+  /** Field description */
+  private String group = "misc";
 
   /** Field description */
   private String name;

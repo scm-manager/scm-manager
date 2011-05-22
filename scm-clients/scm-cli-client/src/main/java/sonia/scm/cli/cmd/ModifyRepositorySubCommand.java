@@ -53,7 +53,7 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-@Command("modify-repository")
+@Command(name="modify-repository",group="repository")
 public class ModifyRepositorySubCommand extends TemplateSubCommand
 {
 

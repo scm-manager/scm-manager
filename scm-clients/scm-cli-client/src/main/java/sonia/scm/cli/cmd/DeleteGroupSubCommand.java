@@ -43,7 +43,7 @@ import sonia.scm.client.ScmClientSession;
  *
  * @author Sebastian Sdorra
  */
-@Command("delete-group")
+@Command(name="delete-group",group="group")
 public class DeleteGroupSubCommand extends SubCommand
 {
 

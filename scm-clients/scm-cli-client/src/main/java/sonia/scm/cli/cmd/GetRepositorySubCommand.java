@@ -50,7 +50,7 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-@Command("get-repository")
+@Command(name="get-repository",group="repository")
 public class GetRepositorySubCommand extends TemplateSubCommand
 {
 

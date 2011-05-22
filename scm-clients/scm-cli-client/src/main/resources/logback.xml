@@ -18,7 +18,7 @@
     </encoder>
   </appender>
 
-  <logger name="sonia.scm.cli" level="TRACE" />
+  <logger name="sonia.scm.cli" level="ERROR" />
 
   <root level="ERROR">
     <appender-ref ref="STDOUT" />

@@ -49,7 +49,7 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-@Command("create-user")
+@Command(name="create-user", group="user")
 public class CreateUserSubCommand extends TemplateSubCommand
 {
 

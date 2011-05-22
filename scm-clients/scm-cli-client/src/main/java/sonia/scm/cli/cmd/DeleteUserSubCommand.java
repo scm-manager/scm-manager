@@ -43,7 +43,7 @@ import sonia.scm.client.ScmClientSession;
  *
  * @author Sebastian Sdorra
  */
-@Command("delete-user")
+@Command(name="delete-user",group="user")
 public class DeleteUserSubCommand extends SubCommand
 {
 

@@ -50,7 +50,7 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-@Command("get-user")
+@Command(name="get-user",group="user")
 public class GetUserSubCommand extends TemplateSubCommand
 {
 

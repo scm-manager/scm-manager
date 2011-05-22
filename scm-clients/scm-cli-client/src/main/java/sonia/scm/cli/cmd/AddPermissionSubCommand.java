@@ -48,7 +48,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-@Command("add-permission")
+@Command(name="add-permission", group="repository")
 public class AddPermissionSubCommand extends PermissionSubCommand
 {
 

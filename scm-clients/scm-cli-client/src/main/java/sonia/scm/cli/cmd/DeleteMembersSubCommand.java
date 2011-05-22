@@ -45,7 +45,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-@Command("delete-members")
+@Command(name="delete-members",group="group")
 public class DeleteMembersSubCommand extends MembersSubCommand
 {
 

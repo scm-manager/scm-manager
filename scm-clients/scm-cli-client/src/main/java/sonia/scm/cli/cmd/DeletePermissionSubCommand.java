@@ -48,7 +48,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-@Command("delete-permission")
+@Command(name="delete-permission",group="repository")
 public class DeletePermissionSubCommand extends PermissionSubCommand
 {
 

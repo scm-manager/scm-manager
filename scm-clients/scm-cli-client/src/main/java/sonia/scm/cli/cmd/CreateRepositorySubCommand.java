@@ -49,7 +49,7 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-@Command("create-repository")
+@Command(name="create-repository",group="repository")
 public class CreateRepositorySubCommand extends TemplateSubCommand
 {
 

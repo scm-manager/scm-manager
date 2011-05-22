@@ -53,7 +53,7 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-@Command("modify-user")
+@Command(name="modify-user",group="user")
 public class ModifyUserSubCommand extends TemplateSubCommand
 {
 

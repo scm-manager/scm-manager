@@ -41,7 +41,7 @@ import sonia.scm.cli.config.ScmClientConfig;
  *
  * @author Sebastian Sdorra
  */
-@Command("delete-config")
+@Command(name="delete-config", group="config")
 public class DeleteConfigSubCommand extends SubCommand
 {
 

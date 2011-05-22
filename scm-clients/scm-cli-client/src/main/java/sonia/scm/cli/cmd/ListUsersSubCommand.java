@@ -48,7 +48,7 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-@Command("list-users")
+@Command(name="list-users",group="user")
 public class ListUsersSubCommand extends TemplateSubCommand
 {
 
