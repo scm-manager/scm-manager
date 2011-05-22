@@ -51,6 +51,9 @@ public class I18n
 {
 
   /** Field description */
+  public static final String ERROR = "error";
+
+  /** Field description */
   public static final String GROUP_NOT_FOUND = "groupNotFound";
 
   /** Field description */

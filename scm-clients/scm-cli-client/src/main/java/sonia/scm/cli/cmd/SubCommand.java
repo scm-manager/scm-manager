@@ -126,9 +126,19 @@ public abstract class SubCommand
     }
     catch (CmdLineException ex)
     {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("could not parse comannd line", ex);
+      }
 
-      // todo error handling
-      logger.error("could not parse command line", ex);
+      if (!help)
+      {
+        output.append(i18n.getMessage(I18n.ERROR)).append(": ");
+        output.println(ex.getMessage());
+        output.println();
+      }
+
+      printHelp(parser);
     }
   }
 
@@ -181,6 +191,18 @@ public abstract class SubCommand
     }
 
     return session;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param parser
+   */
+  protected void printHelp(CmdLineParser parser)
+  {
+    parser.printUsage(output, i18n.getBundle());
+    System.exit(1);
   }
 
   //~--- fields ---------------------------------------------------------------
