@@ -131,6 +131,10 @@ public abstract class PermissionSubCommand extends TemplateSubCommand
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @Argument(usage = "optionRepositoryId", required = true)
+  @Argument(
+    usage = "optionRepositoryId",
+    metaVar = "repositoryid",
+    required = true
+  )
   private String id;
 }
