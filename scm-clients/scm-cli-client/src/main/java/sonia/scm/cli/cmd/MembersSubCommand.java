@@ -154,6 +154,10 @@ public abstract class MembersSubCommand extends TemplateSubCommand
   private List<String> members;
 
   /** Field description */
-  @Argument(usage = "optionGroupName", required = true)
+  @Argument(
+    usage = "optionGroupName",
+    metaVar = "metaVar_groupName",
+    required = true
+  )
   private String name;
 }
