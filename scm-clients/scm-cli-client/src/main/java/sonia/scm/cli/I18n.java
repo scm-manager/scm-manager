@@ -57,6 +57,9 @@ public class I18n
   public static final String GROUP_NOT_FOUND = "groupNotFound";
 
   /** Field description */
+  public static final String OPTIONS = "options";
+
+  /** Field description */
   public static final String REPOSITORY_NOT_FOUND = "repositoryNotFound";
 
   /** Field description */
@@ -64,6 +67,9 @@ public class I18n
 
   /** Field description */
   public static final String SUBCOMMANDS_TITLE = "subCommandsTitle";
+
+  /** Field description */
+  public static final String USAGE = "usage";
 
   /** Field description */
   public static final String USER_NOT_FOUND = "userNotFound";

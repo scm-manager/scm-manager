@@ -200,9 +200,13 @@ public class App
    */
   private void printHelp(CmdLineParser parser, I18n i18n)
   {
+    output.println(i18n.getMessage(I18n.USAGE));
+    output.println();
+    output.append(i18n.getMessage(I18n.OPTIONS)).println(":");
+    output.println();
     parser.printUsage(output, i18n.getBundle());
     output.println();
-    output.println(i18n.getMessage(I18n.SUBCOMMANDS_TITLE));
+    output.append(i18n.getMessage(I18n.SUBCOMMANDS_TITLE)).println(":");
     output.println();
 
     String group = null;
