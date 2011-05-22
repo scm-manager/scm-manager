@@ -220,7 +220,7 @@ public class App
       }
     }
 
-    length += 2;
+    length += 5;
 
     for (CommandDescriptor desc :
             SubCommandHandler.getInstance().getDescriptors())

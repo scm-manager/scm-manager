@@ -45,7 +45,11 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-@Command(name = "add-members", group = "group")
+@Command(
+  name = "add-members",
+  usage = "usageAddMember",
+  group = "group"
+)
 public class AddMembersSubCommand extends MembersSubCommand
 {
 

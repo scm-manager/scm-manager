@@ -41,7 +41,11 @@ import sonia.scm.cli.config.ScmClientConfig;
  *
  * @author Sebastian Sdorra
  */
-@Command(name = "store-config", group = "config")
+@Command(
+  name = "store-config",
+  usage = "usageStoreConfig",
+  group = "config"
+)
 public class StoreConfigSubCommand extends SubCommand
 {
 

@@ -48,7 +48,11 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-@Command(name="list-repositories",group="repository")
+@Command(
+  name = "list-repositories",
+  usage = "usageListRepositories",
+  group = "repository"
+)
 public class ListRepositoriesSubCommand extends TemplateSubCommand
 {
 

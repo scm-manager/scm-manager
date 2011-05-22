@@ -53,7 +53,11 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-@Command(name="modify-group",group="group")
+@Command(
+  name = "modify-group",
+  usage = "usageModifyGroup",
+  group = "group"
+)
 public class ModifyGroupSubCommand extends TemplateSubCommand
 {
 

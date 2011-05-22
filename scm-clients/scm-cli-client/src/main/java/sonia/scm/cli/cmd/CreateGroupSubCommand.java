@@ -50,7 +50,11 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-@Command(name="create-group", group="group")
+@Command(
+  name = "create-group",
+  usage = "usageCreateGroup",
+  group = "group"
+)
 public class CreateGroupSubCommand extends TemplateSubCommand
 {
 

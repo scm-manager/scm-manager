@@ -43,7 +43,11 @@ import sonia.scm.client.ScmClientSession;
  *
  * @author Sebastian Sdorra
  */
-@Command(name="delete-repository",group="repository")
+@Command(
+  name = "delete-repository",
+  usage = "usageDeleteRepository",
+  group = "repository"
+)
 public class DeleteRepositorySubCommand extends SubCommand
 {
 

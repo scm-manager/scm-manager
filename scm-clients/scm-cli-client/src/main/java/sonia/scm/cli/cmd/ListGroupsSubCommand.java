@@ -48,7 +48,11 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-@Command(name="list-groups",group="group")
+@Command(
+  name = "list-groups",
+  usage = "usageListGroups",
+  group = "group"
+)
 public class ListGroupsSubCommand extends TemplateSubCommand
 {
 
