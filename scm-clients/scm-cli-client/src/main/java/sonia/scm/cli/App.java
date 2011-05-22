@@ -206,6 +206,21 @@ public class App
     output.println();
 
     String group = null;
+    List<CommandDescriptor> descList =
+      SubCommandHandler.getInstance().getDescriptors();
+    int length = 0;
+
+    for (CommandDescriptor desc : descList)
+    {
+      int l = desc.getName().length();
+
+      if (l > length)
+      {
+        length = l;
+      }
+    }
+
+    length += 2;
 
     for (CommandDescriptor desc :
             SubCommandHandler.getInstance().getDescriptors())
@@ -218,7 +233,17 @@ public class App
         output.println();
       }
 
-      output.append("  ").println(desc.getName());
+      int l = desc.getName().length();
+
+      output.append("  ").append(desc.getName());
+      l = length - l;
+
+      for (int i = 0; i < l; i++)
+      {
+        output.append(" ");
+      }
+
+      output.println(i18n.getMessage(desc.getUsage()));
     }
   }
 

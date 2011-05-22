@@ -200,5 +200,5 @@ public class CommandDescriptor implements Comparable<CommandDescriptor>
   private String name;
 
   /** Field description */
-  private String usage;
+  private String usage = "";
 }
