@@ -115,6 +115,6 @@ public class GetUserSubCommand extends TemplateSubCommand
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @Argument(usage = "optionUserName", required = true)
+  @Argument(usage = "optionUserName", metaVar="username", required = true)
   private String name;
 }

@@ -129,6 +129,10 @@ public class ModifyGroupSubCommand extends TemplateSubCommand
   private String description;
 
   /** Field description */
-  @Argument(usage = "optionGroupName", required = true)
+  @Argument(
+    usage = "optionGroupName",
+    metaVar = "groupname",
+    required = true
+  )
   private String name;
 }

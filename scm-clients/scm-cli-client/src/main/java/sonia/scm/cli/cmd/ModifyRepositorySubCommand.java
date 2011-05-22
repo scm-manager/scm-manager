@@ -168,6 +168,10 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
   private String description;
 
   /** Field description */
-  @Argument(usage = "optionRepositoryId", required = true)
+  @Argument(
+    usage = "optionRepositoryId",
+    metaVar = "repositoryid",
+    required = true
+  )
   private String id;
 }

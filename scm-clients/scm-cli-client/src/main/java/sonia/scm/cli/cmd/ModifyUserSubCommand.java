@@ -214,7 +214,11 @@ public class ModifyUserSubCommand extends TemplateSubCommand
   private String mail;
 
   /** Field description */
-  @Argument(usage = "optionUserName", required = true)
+  @Argument(
+    usage = "optionUserName",
+    metaVar = "username",
+    required = true
+  )
   private String name;
 
   /** Field description */
