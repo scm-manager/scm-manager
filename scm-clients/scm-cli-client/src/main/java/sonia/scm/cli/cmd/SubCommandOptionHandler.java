@@ -108,6 +108,6 @@ public class SubCommandOptionHandler extends OptionHandler<SubCommand>
   @Override
   public String getDefaultMetaVariable()
   {
-    return "metaVar_command";
+    return "command";
   }
 }

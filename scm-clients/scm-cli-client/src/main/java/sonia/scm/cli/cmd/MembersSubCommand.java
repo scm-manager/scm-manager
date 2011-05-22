@@ -156,7 +156,7 @@ public abstract class MembersSubCommand extends TemplateSubCommand
   /** Field description */
   @Argument(
     usage = "optionGroupName",
-    metaVar = "metaVar_groupName",
+    metaVar = "groupname",
     required = true
   )
   private String name;

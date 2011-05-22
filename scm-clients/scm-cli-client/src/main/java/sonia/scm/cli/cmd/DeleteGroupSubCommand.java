@@ -92,6 +92,10 @@ public class DeleteGroupSubCommand extends SubCommand
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @Argument(usage = "optionGroupName", required = true)
+  @Argument(
+    usage = "optionGroupName",
+    metaVar = "groupname",
+    required = true
+  )
   private String name;
 }
