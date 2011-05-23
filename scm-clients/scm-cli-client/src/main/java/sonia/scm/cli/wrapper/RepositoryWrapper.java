@@ -162,6 +162,17 @@ public class RepositoryWrapper extends AbstractWrapper
     return repository.getUrl();
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isPublicReadable()
+  {
+    return repository.isPublicReadable();
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */

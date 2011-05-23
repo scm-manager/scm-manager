@@ -138,6 +138,17 @@ public class UserWrapper extends AbstractWrapper
     return user.getType();
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isAdmin()
+  {
+    return user.isAdmin();
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
