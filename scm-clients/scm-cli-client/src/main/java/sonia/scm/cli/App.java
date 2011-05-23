@@ -35,6 +35,9 @@ package sonia.scm.cli;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
+
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -146,6 +149,7 @@ public class App
       System.exit(1);
     }
 
+    configureLogger();
     loadConfig();
 
     I18n i18n = new I18n();
@@ -162,6 +166,17 @@ public class App
 
     IOUtil.close(input);
     IOUtil.close(output);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  private void configureLogger()
+  {
+    LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+    lc.getLogger(Logger.ROOT_LOGGER_NAME).setLevel(loggingLevel);
   }
 
   /**
@@ -277,6 +292,15 @@ public class App
 
   /** Field description */
   private BufferedReader input;
+
+  /** Field description */
+  @Option(
+    name = "--logging-level",
+    usage = "optionLoggingLevel",
+    handler = LoggingLevelOptionHandler.class,
+    aliases = { "-l" }
+  )
+  private Level loggingLevel = Level.ERROR;
 
   /** Field description */
   private PrintWriter output;

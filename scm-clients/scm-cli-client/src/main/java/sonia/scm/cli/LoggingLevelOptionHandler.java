@@ -35,60 +35,57 @@ package sonia.scm.cli;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import ch.qos.logback.classic.Level;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.OptionDef;
+import org.kohsuke.args4j.spi.OptionHandler;
+import org.kohsuke.args4j.spi.Parameters;
+import org.kohsuke.args4j.spi.Setter;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class I18n
+public class LoggingLevelOptionHandler extends OptionHandler<Level>
 {
-
-  /** Field description */
-  public static final String ERROR = "error";
-
-  /** Field description */
-  public static final String GROUP_NOT_FOUND = "groupNotFound";
-
-  /** Field description */
-  public static final String LEVEL = "level";
-
-  /** Field description */
-  public static final String OPTIONS = "options";
-
-  /** Field description */
-  public static final String REPOSITORY_NOT_FOUND = "repositoryNotFound";
-
-  /** Field description */
-  public static final String RESOURCE_BUNDLE = "sonia.resources.i18n";
-
-  /** Field description */
-  public static final String SUBCOMMANDS_TITLE = "subCommandsTitle";
-
-  /** Field description */
-  public static final String USAGE = "usage";
-
-  /** Field description */
-  public static final String USER_NOT_FOUND = "userNotFound";
-
-  /** the logger for I18n */
-  private static final Logger logger = LoggerFactory.getLogger(I18n.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
+   *
+   * @param parser
+   * @param option
+   * @param setter
    */
-  public I18n()
+  public LoggingLevelOptionHandler(CmdLineParser parser, OptionDef option,
+                                   Setter<? super Level> setter)
   {
-    bundle = ResourceBundle.getBundle(RESOURCE_BUNDLE);
+    super(parser, option, setter);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param params
+   *
+   * @return
+   *
+   * @throws CmdLineException
+   */
+  @Override
+  public int parseArguments(Parameters params) throws CmdLineException
+  {
+    String value = params.getParameter(0);
+    Level l = Level.toLevel(value);
+
+    setter.addValue(l);
+
+    return 1;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -99,37 +96,9 @@ public class I18n
    *
    * @return
    */
-  public ResourceBundle getBundle()
+  @Override
+  public String getDefaultMetaVariable()
   {
-    return bundle;
+    return I18n.LEVEL;
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
-  public String getMessage(String key)
-  {
-    String value = key;
-
-    try
-    {
-      value = bundle.getString(key);
-    }
-    catch (MissingResourceException ex)
-    {
-      logger.warn("could not find resource for key {}", key);
-    }
-
-    return value;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ResourceBundle bundle;
 }
