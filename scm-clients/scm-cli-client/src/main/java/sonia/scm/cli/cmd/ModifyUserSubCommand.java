@@ -201,7 +201,6 @@ public class ModifyUserSubCommand extends TemplateSubCommand
   @Option(
     name = "--display-name",
     usage = "optionUserDisplayName",
-    required = true,
     aliases = { "-d" }
   )
   private String displayName;
