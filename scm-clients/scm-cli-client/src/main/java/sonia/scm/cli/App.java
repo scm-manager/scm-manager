@@ -257,7 +257,7 @@ public class App
   @Option(
     name = "--config",
     usage = "optionConfig",
-    metaVar = "metaVar_config",
+    metaVar = "config",
     handler = ConfigOptionHandler.class,
     aliases = { "-c" }
   )
@@ -272,7 +272,7 @@ public class App
   private boolean help = false;
 
   /** Field description */
-  @Argument(index = 1, metaVar = "metaVar_arg")
+  @Argument(index = 1, metaVar = "arg")
   private List<String> arguments = new ArrayList<String>();
 
   /** Field description */
