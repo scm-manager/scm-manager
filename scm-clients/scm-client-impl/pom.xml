@@ -70,6 +70,10 @@
           <artifactId>stax-api</artifactId>
           <groupId>stax</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>jersey-json</artifactId>
+          <groupId>com.sun.jersey</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
     
