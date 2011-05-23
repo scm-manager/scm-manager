@@ -35,6 +35,7 @@ package sonia.scm.cli.cmd;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.cli.wrapper.WrapperUtil;
 import sonia.scm.client.ScmClientSession;
 import sonia.scm.group.Group;
 
@@ -72,7 +73,7 @@ public class ListGroupsSubCommand extends TemplateSubCommand
     List<Group> groups = session.getGroupHandler().getAll();
     Map<String, Object> env = new HashMap<String, Object>();
 
-    env.put("groups", groups);
+    env.put("groups", WrapperUtil.wrapGroups(groups));
     renderTemplate(env, TEMPLATE);
   }
 }

@@ -35,6 +35,7 @@ package sonia.scm.cli.cmd;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.cli.wrapper.WrapperUtil;
 import sonia.scm.client.ScmClientSession;
 import sonia.scm.repository.Repository;
 
@@ -73,7 +74,7 @@ public class ListRepositoriesSubCommand extends TemplateSubCommand
     List<Repository> repositories = session.getRepositoryHandler().getAll();
     Map<String, Object> env = new HashMap<String, Object>();
 
-    env.put("repositories", repositories);
+    env.put("repositories", WrapperUtil.wrapRepositories(repositories));
     renderTemplate(env, TEMPLATE);
   }
 }

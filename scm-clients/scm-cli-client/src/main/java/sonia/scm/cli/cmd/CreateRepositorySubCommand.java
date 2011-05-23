@@ -37,6 +37,7 @@ package sonia.scm.cli.cmd;
 
 import org.kohsuke.args4j.Option;
 
+import sonia.scm.cli.wrapper.RepositoryWrapper;
 import sonia.scm.client.ScmClientSession;
 import sonia.scm.repository.Repository;
 
@@ -169,7 +170,7 @@ public class CreateRepositorySubCommand extends TemplateSubCommand
 
     Map<String, Object> env = new HashMap<String, Object>();
 
-    env.put("repository", repository);
+    env.put("repository", new RepositoryWrapper(repository));
     renderTemplate(env, GetRepositorySubCommand.TEMPLATE);
   }
 

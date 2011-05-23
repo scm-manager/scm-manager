@@ -35,6 +35,7 @@ package sonia.scm.cli.cmd;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.cli.wrapper.WrapperUtil;
 import sonia.scm.client.ScmClientSession;
 import sonia.scm.user.User;
 
@@ -72,7 +73,7 @@ public class ListUsersSubCommand extends TemplateSubCommand
     List<User> users = session.getUserHandler().getAll();
     Map<String, Object> env = new HashMap<String, Object>();
 
-    env.put("users", users);
+    env.put("users", WrapperUtil.wrapUsers(users));
     renderTemplate(env, TEMPLATE);
   }
 }

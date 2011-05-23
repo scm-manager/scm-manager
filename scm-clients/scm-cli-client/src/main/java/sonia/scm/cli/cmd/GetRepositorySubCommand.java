@@ -38,6 +38,7 @@ package sonia.scm.cli.cmd;
 import org.kohsuke.args4j.Argument;
 
 import sonia.scm.cli.I18n;
+import sonia.scm.cli.wrapper.RepositoryWrapper;
 import sonia.scm.client.ScmClientSession;
 import sonia.scm.repository.Repository;
 
@@ -103,7 +104,7 @@ public class GetRepositorySubCommand extends TemplateSubCommand
     {
       Map<String, Object> env = new HashMap<String, Object>();
 
-      env.put("repository", repository);
+      env.put("repository", new RepositoryWrapper(repository));
       renderTemplate(env, TEMPLATE);
     }
     else
@@ -115,6 +116,10 @@ public class GetRepositorySubCommand extends TemplateSubCommand
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @Argument(usage = "optionRepositoryId", metaVar="repositoryid", required = true)
+  @Argument(
+    usage = "optionRepositoryId",
+    metaVar = "repositoryid",
+    required = true
+  )
   private String id;
 }

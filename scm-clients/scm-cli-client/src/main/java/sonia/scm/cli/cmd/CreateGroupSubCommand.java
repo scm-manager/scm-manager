@@ -37,6 +37,7 @@ package sonia.scm.cli.cmd;
 
 import org.kohsuke.args4j.Option;
 
+import sonia.scm.cli.wrapper.GroupWrapper;
 import sonia.scm.client.ScmClientSession;
 import sonia.scm.group.Group;
 
@@ -170,7 +171,7 @@ public class CreateGroupSubCommand extends TemplateSubCommand
 
     Map<String, Object> env = new HashMap<String, Object>();
 
-    env.put("group", group);
+    env.put("group", new GroupWrapper(group));
     renderTemplate(env, GetGroupSubCommand.TEMPLATE);
   }
 

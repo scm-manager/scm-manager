@@ -38,6 +38,7 @@ package sonia.scm.cli.cmd;
 import org.kohsuke.args4j.Argument;
 
 import sonia.scm.cli.I18n;
+import sonia.scm.cli.wrapper.UserWrapper;
 import sonia.scm.client.ScmClientSession;
 import sonia.scm.user.User;
 
@@ -103,7 +104,7 @@ public class GetUserSubCommand extends TemplateSubCommand
     {
       Map<String, Object> env = new HashMap<String, Object>();
 
-      env.put("user", user);
+      env.put("user", new UserWrapper(user));
       renderTemplate(env, TEMPLATE);
     }
     else
@@ -115,6 +116,10 @@ public class GetUserSubCommand extends TemplateSubCommand
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @Argument(usage = "optionUserName", metaVar="username", required = true)
+  @Argument(
+    usage = "optionUserName",
+    metaVar = "username",
+    required = true
+  )
   private String name;
 }

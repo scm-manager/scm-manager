@@ -140,7 +140,7 @@ public class AddPermissionSubCommand extends PermissionSubCommand
     name = "--type",
     usage = "optionPermissionType",
     required = true,
-    metaVar="permissiontype",
+    metaVar = "permissiontype",
     aliases = { "-t" }
   )
   private PermissionType type;

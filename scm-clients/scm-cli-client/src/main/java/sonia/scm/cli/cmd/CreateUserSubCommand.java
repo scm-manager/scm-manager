@@ -37,6 +37,7 @@ package sonia.scm.cli.cmd;
 
 import org.kohsuke.args4j.Option;
 
+import sonia.scm.cli.wrapper.UserWrapper;
 import sonia.scm.client.ScmClientSession;
 import sonia.scm.user.User;
 
@@ -215,7 +216,7 @@ public class CreateUserSubCommand extends TemplateSubCommand
 
     Map<String, Object> env = new HashMap<String, Object>();
 
-    env.put("user", user);
+    env.put("user", new UserWrapper(user));
     renderTemplate(env, GetUserSubCommand.TEMPLATE);
   }
 
