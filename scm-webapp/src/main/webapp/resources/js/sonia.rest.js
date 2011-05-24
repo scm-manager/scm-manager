@@ -38,7 +38,7 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
 
   constructor: function(config) {
     var baseConfig = {
-      autoLoad: false,
+      autoLoad: true,
       listeners: {
         // fix jersey empty array problem
         exception: {
@@ -106,12 +106,6 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.rest.Grid.superclass.initComponent.apply(this, arguments);
-
-    // load store
-    if ( debug ){
-      console.debug( 'load store' );
-    }
-    this.store.load();
   },
 
   resize: function(){
