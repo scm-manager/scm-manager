@@ -84,7 +84,12 @@
                   <platforms>
                     <platform>commons-daemon</platform>
                   </platforms>
-
+                  
+                  <jvmSettings>
+                    <systemProperties>
+                      <arg>logback.configurationFile=logging.xml</arg>
+                    </systemProperties>
+                  </jvmSettings>
 
                   <generatorConfigurations>
                     <generatorConfiguration>

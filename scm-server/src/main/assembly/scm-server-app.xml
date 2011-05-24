@@ -71,8 +71,21 @@
       <filtered>false</filtered>
       <outputDirectory>var/webapp/docroot</outputDirectory>
     </fileSet>
-
     
   </fileSets>
+  
+  <files>
+    
+    <!-- 
+      copy release logging configuration to config directory 
+    -->
+    
+    <file>
+      <source>../scm-webapp/src/main/resources/logback.release.xml</source>
+      <outputDirectory>conf</outputDirectory>
+      <destName>logging.xml</destName>
+    </file>
+    
+  </files>
   
 </assembly>
