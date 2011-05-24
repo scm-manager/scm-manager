@@ -199,7 +199,7 @@ Sonia.plugin.Store = Ext.extend(Sonia.rest.JsonStore, {
         field: 'name'
       }
     };
-    Sonia.plugin.Store.superclass.constructor.call(this, Ext.apply(config, baseConfig));
+    Sonia.plugin.Store.superclass.constructor.call(this, Ext.apply(baseConfig, config));
   }
 
 });
@@ -246,6 +246,9 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
     };
 
     Sonia.plugin.CenterInstance.addListener('changed', function(){
+      if (debug){
+        console.debug( 'receive change event, reload plugin store' );
+      }
       this.getStore().reload();
     }, this);
 

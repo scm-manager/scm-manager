@@ -62,7 +62,7 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
         }
       }
     };
-    Sonia.rest.JsonStore.superclass.constructor.call(this, Ext.apply(config, baseConfig));
+    Sonia.rest.JsonStore.superclass.constructor.call(this, Ext.apply(baseConfig, config));
   }
 
 });
