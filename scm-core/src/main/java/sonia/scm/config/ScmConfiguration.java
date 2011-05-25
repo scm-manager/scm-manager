@@ -37,18 +37,26 @@ package sonia.scm.config;
 
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.ConfigChangedListener;
+import sonia.scm.ListenerSupport;
 import sonia.scm.xml.XmlSetStringAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
@@ -58,7 +66,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @Singleton
 @XmlRootElement(name = "scm-config")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ScmConfiguration
+public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
 {
 
   /** Field description */
@@ -76,7 +84,57 @@ public class ScmConfiguration
   public static final String PATH =
     "config".concat(File.separator).concat("config.xml");
 
+  /** the logger for ScmConfiguration */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ScmConfiguration.class);
+
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param listener
+   */
+  @Override
+  public void addListener(ConfigChangedListener listener)
+  {
+    listeners.add(listener);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param listeners
+   */
+  @Override
+  public void addListeners(Collection<ConfigChangedListener> listeners)
+  {
+    listeners.addAll(listeners);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  public void fireChangeEvent()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fire config changed event");
+    }
+
+    for (ConfigChangedListener listener : listeners)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("call listener {}", listener.getClass().getName());
+      }
+
+      listener.configChanged(this);
+    }
+  }
 
   /**
    * Method description
@@ -99,6 +157,18 @@ public class ScmConfiguration
     this.enableProxy = other.enableProxy;
     this.proxyPort = other.proxyPort;
     this.proxyServer = other.proxyServer;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param listener
+   */
+  @Override
+  public void removeListener(ConfigChangedListener listener)
+  {
+    listeners.remove(listener);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -430,6 +500,11 @@ public class ScmConfiguration
 
   /** Field description */
   private int sslPort = 8181;
+
+  /** Field description */
+  @XmlTransient
+  private Set<ConfigChangedListener> listeners =
+    new HashSet<ConfigChangedListener>();
 
   /**
    * JavaScript date format, see http://jacwright.com/projects/javascript/date_format

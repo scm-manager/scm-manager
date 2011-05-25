@@ -172,6 +172,7 @@ public class ScmConfigurationUtil
 
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
       marshaller.marshal(configuration, file);
+      configuration.fireChangeEvent();
     }
     catch (Exception ex)
     {
