@@ -40,6 +40,7 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.Util;
 
@@ -67,6 +68,12 @@ public class URLHttpClient implements HttpClient
   /** Field description */
   public static final String ENCODING = "UTF-8";
 
+  /** Field description */
+  public static final String HEADER_USERAGENT = "User-Agent";
+
+  /** Field description */
+  public static final String HEADER_USERAGENT_VALUE = "SCM-Manager ";
+
   /** the logger for URLHttpClient */
   private static final Logger logger =
     LoggerFactory.getLogger(URLHttpClient.class);
@@ -77,11 +84,15 @@ public class URLHttpClient implements HttpClient
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param configuration
    */
   @Inject
-  public URLHttpClient(ScmConfiguration configuration)
+  public URLHttpClient(SCMContextProvider context,
+                       ScmConfiguration configuration)
   {
+    this.context = context;
     this.configuration = configuration;
   }
 
@@ -268,6 +279,8 @@ public class URLHttpClient implements HttpClient
       connection = url.openConnection();
     }
 
+    connection.setRequestProperty(HEADER_USERAGENT, HEADER_USERAGENT_VALUE);
+
     return connection;
   }
 
@@ -275,4 +288,7 @@ public class URLHttpClient implements HttpClient
 
   /** Field description */
   private ScmConfiguration configuration;
+
+  /** Field description */
+  private SCMContextProvider context;
 }
