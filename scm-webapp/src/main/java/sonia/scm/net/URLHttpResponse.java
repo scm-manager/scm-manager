@@ -36,6 +36,7 @@ package sonia.scm.net;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -48,6 +49,7 @@ import java.net.URLConnection;
 
 import java.util.List;
 import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 /**
  *
@@ -55,6 +57,11 @@ import java.util.Map;
  */
 public class URLHttpResponse implements HttpResponse
 {
+
+  /** Field description */
+  public static final String ENCODING_GZIP = "gzip";
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -104,7 +111,19 @@ public class URLHttpResponse implements HttpResponse
   {
     clientClose = true;
 
-    return connection.getInputStream();
+    String enc = connection.getContentEncoding();
+    InputStream input = null;
+
+    if (Util.isNotEmpty(enc) && enc.contains(ENCODING_GZIP))
+    {
+      input = new GZIPInputStream(connection.getInputStream());
+    }
+    else
+    {
+      input = connection.getInputStream();
+    }
+
+    return input;
   }
 
   /**
@@ -128,15 +147,7 @@ public class URLHttpResponse implements HttpResponse
       baos = new ByteArrayOutputStream();
       IOUtil.copy(in, baos);
       baos.flush();
-
-      String enc = connection.getContentEncoding();
-
-      if (enc == null)
-      {
-        enc = "UTF-8";
-      }
-
-      result = new String(baos.toByteArray(), enc);
+      result = new String(baos.toByteArray());
     }
     finally
     {

@@ -73,6 +73,12 @@ public class URLHttpClient implements HttpClient
   public static final String ENCODING = "UTF-8";
 
   /** Field description */
+  public static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
+
+  /** Field description */
+  public static final String HEADER_ACCEPT_ENCODING_VALUE = "gzip";
+
+  /** Field description */
   public static final String HEADER_USERAGENT = "User-Agent";
 
   /** Field description */
@@ -334,6 +340,8 @@ public class URLHttpClient implements HttpClient
       connection = url.openConnection();
     }
 
+    connection.setRequestProperty(HEADER_ACCEPT_ENCODING,
+                                  HEADER_ACCEPT_ENCODING_VALUE);
     connection.setRequestProperty(
         HEADER_USERAGENT, HEADER_USERAGENT_VALUE.concat(context.getVersion()));
 
