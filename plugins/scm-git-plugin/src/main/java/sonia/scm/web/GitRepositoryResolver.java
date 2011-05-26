@@ -169,13 +169,6 @@ public class GitRepositoryResolver
     {
       throw new RepositoryNotFoundException(repositoryName, e);
     }
-    finally
-    {
-      if (repository != null)
-      {
-        repository.close();
-      }
-    }
 
     return repository;
   }
