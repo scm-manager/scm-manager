@@ -87,6 +87,12 @@ public class URLHttpClient implements HttpClient
   /** Field description */
   public static final String METHOD_POST = "POST";
 
+  /** Field description */
+  public static final int TIMEOUT_CONNECTION = 30000;
+
+  /** Field description */
+  public static final int TIMEOUT_RAED = 1200000;
+
   /** the logger for URLHttpClient */
   private static final Logger logger =
     LoggerFactory.getLogger(URLHttpClient.class);
@@ -340,6 +346,8 @@ public class URLHttpClient implements HttpClient
       connection = url.openConnection();
     }
 
+    connection.setReadTimeout(TIMEOUT_RAED);
+    connection.setConnectTimeout(TIMEOUT_CONNECTION);
     connection.setRequestProperty(HEADER_ACCEPT_ENCODING,
                                   HEADER_ACCEPT_ENCODING_VALUE);
     connection.setRequestProperty(
