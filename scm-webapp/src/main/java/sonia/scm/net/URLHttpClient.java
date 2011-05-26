@@ -42,12 +42,15 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
+import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.SocketAddress;
@@ -55,6 +58,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +77,9 @@ public class URLHttpClient implements HttpClient
 
   /** Field description */
   public static final String HEADER_USERAGENT_VALUE = "SCM-Manager ";
+
+  /** Field description */
+  public static final String METHOD_POST = "POST";
 
   /** the logger for URLHttpClient */
   private static final Logger logger =
@@ -111,7 +118,11 @@ public class URLHttpClient implements HttpClient
   @Override
   public HttpResponse post(String url) throws IOException
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    HttpURLConnection connection = (HttpURLConnection) openConnection(url);
+
+    connection.setRequestMethod(METHOD_POST);
+
+    return new URLHttpResponse(connection);
   }
 
   /**
@@ -129,7 +140,51 @@ public class URLHttpClient implements HttpClient
   public HttpResponse post(String url, Map<String, List<String>> parameters)
           throws IOException
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    HttpURLConnection connection = (HttpURLConnection) openConnection(url);
+
+    connection.setRequestMethod(METHOD_POST);
+
+    if (Util.isNotEmpty(parameters))
+    {
+      connection.setDoOutput(true);
+
+      OutputStreamWriter writer = null;
+
+      try
+      {
+        writer = new OutputStreamWriter(connection.getOutputStream());
+
+        Iterator<Map.Entry<String, List<String>>> it =
+          parameters.entrySet().iterator();
+
+        while (it.hasNext())
+        {
+          Map.Entry<String, List<String>> p = it.next();
+          List<String> values = p.getValue();
+
+          if (Util.isNotEmpty(values))
+          {
+            String key = encode(p.getKey());
+
+            for (String value : values)
+            {
+              writer.append(key).append("=").append(encode(value));
+            }
+
+            if (it.hasNext())
+            {
+              writer.write("&");
+            }
+          }
+        }
+      }
+      finally
+      {
+        IOUtil.close(writer);
+      }
+    }
+
+    return new URLHttpResponse(connection);
   }
 
   //~--- get methods ----------------------------------------------------------
