@@ -38,6 +38,7 @@ package sonia.scm.repository;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import sonia.scm.Type;
@@ -146,8 +147,21 @@ public class GitRepositoryHandler
   protected void create(Repository repository, File directory)
           throws RepositoryException, IOException
   {
-    new FileRepositoryBuilder().setGitDir(
-        directory).readEnvironment().findGitDir().build().create(true);
+    FileRepository fr = null;
+
+    try
+    {
+      fr = new FileRepositoryBuilder().setGitDir(
+        directory).readEnvironment().findGitDir().build();
+      fr.create(true);
+    }
+    finally
+    {
+      if (fr != null)
+      {
+        fr.close();
+      }
+    }
   }
 
   /**
