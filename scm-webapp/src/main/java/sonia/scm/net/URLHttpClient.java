@@ -279,7 +279,8 @@ public class URLHttpClient implements HttpClient
       connection = url.openConnection();
     }
 
-    connection.setRequestProperty(HEADER_USERAGENT, HEADER_USERAGENT_VALUE);
+    connection.setRequestProperty(
+        HEADER_USERAGENT, HEADER_USERAGENT_VALUE.concat(context.getVersion()));
 
     return connection;
   }
