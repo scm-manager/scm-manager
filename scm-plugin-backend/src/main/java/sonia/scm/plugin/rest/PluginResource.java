@@ -38,17 +38,23 @@ package sonia.scm.plugin.rest;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.plugin.BackendConfiguration;
 import sonia.scm.plugin.PluginBackend;
+import sonia.scm.plugin.PluginBackendListener;
 import sonia.scm.plugin.PluginCenter;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginVersion;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -69,8 +75,14 @@ import javax.ws.rs.core.Response;
  */
 @Singleton
 @Path("{version}/plugins")
-public class PluginResource
+public class PluginResource implements PluginBackendListener
 {
+
+  /** Field description */
+  public static final String CACHE = "sonia.cache.plugin-backend";
+
+  /** Field description */
+  public static final String CONFIG = "/config/ehcache.xml";
 
   /** the logger for PluginResource */
   private static final Logger logger =
@@ -91,6 +103,33 @@ public class PluginResource
   {
     this.backend = backend;
     this.configuration = configuration;
+
+    // added listener to clear the cache on a event
+    this.backend.addListener(this);
+
+    CacheManager cacheManager =
+      new CacheManager(PluginResource.class.getResource(CONFIG));
+
+    cache = cacheManager.getCache(CACHE);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param plugins
+   */
+  @Override
+  public void addedNewPlugins(Collection<PluginInformation> plugins)
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("clear cache {}", CACHE);
+    }
+
+    cache.removeAll();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -120,15 +159,64 @@ public class PluginResource
                    version, Boolean.toString(snapshot));
     }
 
-    List<PluginInformation> plugins =
-      backend.getPlugins(new DefaultPluginFilter(version, os, arch, snapshot));
-    PluginCenter pc = new PluginCenter();
+    PluginCenter pc = null;
+    String key = createCacheKey(version, os, arch, snapshot);
+    Element el = cache.get(key);
 
-    pc.setPlugins(getNewestPlugins(plugins));
-    pc.setRepositories(configuration.getRepositories());
+    if (el != null)
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("load plugin center from cache");
+      }
+
+      pc = (PluginCenter) el.getObjectValue();
+    }
+    else
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("load plugin center from backend");
+      }
+
+      List<PluginInformation> plugins =
+        backend.getPlugins(new DefaultPluginFilter(version, os, arch,
+          snapshot));
+
+      pc = new PluginCenter();
+      pc.setPlugins(getNewestPlugins(plugins));
+      pc.setRepositories(configuration.getRepositories());
+      cache.put(new Element(key, pc));
+    }
 
     return Response.ok(pc).build();
   }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param version
+   * @param os
+   * @param arch
+   * @param snapshot
+   *
+   * @return
+   */
+  private String createCacheKey(String version, String os, String arch,
+                                boolean snapshot)
+  {
+    StringBuilder key = new StringBuilder(version);
+
+    key.append(":").append(os).append(":").append(arch).append(":");
+    key.append(Boolean.toString(snapshot));
+
+    return key.toString();
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -205,6 +293,9 @@ public class PluginResource
 
   /** Field description */
   private PluginBackend backend;
+
+  /** Field description */
+  private Cache cache;
 
   /** Field description */
   private BackendConfiguration configuration;
