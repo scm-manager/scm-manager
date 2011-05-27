@@ -31,95 +31,52 @@
 
 
 
-package sonia.scm.plugin.scanner;
+package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.plugin.BackendConfiguration;
-import sonia.scm.plugin.PluginBackend;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 
-import java.util.TimerTask;
+import java.util.Arrays;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class PluginScannerTimerTask extends TimerTask
+public abstract class AbstractPluginBackend implements PluginBackend
 {
-
-  /** the logger for PluginScannerTimerTask */
-  private static final Logger logger =
-    LoggerFactory.getLogger(PluginScannerTimerTask.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param backend
-   * @param configuration
-   * @param scannerFactory
-   */
-  public PluginScannerTimerTask(PluginBackend backend,
-                                BackendConfiguration configuration,
-                                PluginScannerFactory scannerFactory)
-  {
-    this.backend = backend;
-    this.configuration = configuration;
-    this.scannerFactory = scannerFactory;
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @param plugins
    */
   @Override
-  public void run()
+  public void addPlugins(PluginInformation... plugins)
   {
-    if (logger.isInfoEnabled())
+    if (Util.isNotEmpty(plugins))
     {
-      logger.info("start scann");
-    }
-
-    for (File directory : configuration.getDirectories())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.info("scann directory {}", directory.getPath());
-      }
-
-      PluginScanner scanner = scannerFactory.createScanner();
-
-      if (configuration.isMultithreaded())
-      {
-        new Thread(new PluginScannerRunnable(backend, scanner,
-                directory)).start();
-      }
-      else
-      {
-        scanner.scannDirectory(backend, directory);
-      }
+      addPlugins(Arrays.asList(plugins));
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private PluginBackend backend;
-
-  /** Field description */
-  private BackendConfiguration configuration;
-
-  /** Field description */
-  private PluginScannerFactory scannerFactory;
+  /**
+   * Method description
+   *
+   *
+   * @param scannedFiles
+   */
+  @Override
+  public void addScannedFiles(File... scannedFiles)
+  {
+    if (Util.isNotEmpty(scannedFiles))
+    {
+      addScannedFiles(Arrays.asList(scannedFiles));
+    }
+  }
 }

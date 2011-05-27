@@ -76,6 +76,17 @@ public class BackendConfiguration
    *
    * @return
    */
+  public Set<String> getExcludes()
+  {
+    return excludes;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public Set<PluginRepository> getRepositories()
   {
     return repositories;
@@ -120,6 +131,17 @@ public class BackendConfiguration
    * Method description
    *
    *
+   * @param excludes
+   */
+  public void setExcludes(Set<String> excludes)
+  {
+    this.excludes = excludes;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param multithreaded
    */
   public void setMultithreaded(boolean multithreaded)
@@ -155,6 +177,11 @@ public class BackendConfiguration
   @XmlElement(name = "directory")
   @XmlElementWrapper(name = "directories")
   private Set<File> directories;
+
+  /** Field description */
+  @XmlElement(name = "exclude")
+  @XmlElementWrapper(name = "excludes")
+  private Set<String> excludes;
 
   /** Field description */
   private boolean multithreaded = true;

@@ -83,9 +83,12 @@ public class DefaultPluginFilter implements PluginFilter
   public boolean accept(PluginInformation plugin)
   {
     PluginCondition condition = plugin.getCondition();
+
     return ((condition != null) && condition.isSupported(version, os, arch))
-           || (condition == null) &&
-           (snapshot || !plugin.getVersion().toUpperCase().contains(VERSION_SNAPSHOT));
+           || (condition == null)
+              && (snapshot
+                  ||!plugin.getVersion().toUpperCase().contains(
+                      VERSION_SNAPSHOT));
   }
 
   //~--- fields ---------------------------------------------------------------

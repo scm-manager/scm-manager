@@ -42,13 +42,19 @@ import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginBackend;
 import sonia.scm.plugin.PluginCondition;
 import sonia.scm.plugin.PluginException;
+import sonia.scm.plugin.PluginInformation;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.IOException;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
@@ -66,7 +72,6 @@ public class DefaultPluginScanner implements PluginScanner
   public static final String PLUGIN_DESCRIPTOR = "META-INF/scm/plugin.xml";
 
   /** Field description */
-  public static final String PLUGIN_EXTENSION = ".jar";
 
   /** the logger for DefaultPluginScanner */
   private static final Logger logger =
@@ -102,23 +107,30 @@ public class DefaultPluginScanner implements PluginScanner
   @Override
   public void scannDirectory(PluginBackend backend, File directory)
   {
-    if (logger.isDebugEnabled())
+    if (logger.isInfoEnabled())
     {
-      logger.debug("scann directory {}", directory.getPath());
+      logger.info("start scann of basedirectory {}", directory.getPath());
     }
 
-    File[] files = directory.listFiles();
+    Set<File> scannedFiles = new HashSet<File>();
+    Set<PluginInformation> plugins = new HashSet<PluginInformation>();
+    FileFilter filter = new DefaultFileFilter(backend.getExcludes());
 
-    for (File file : files)
+    scannDirectory(backend, scannedFiles, plugins, directory, filter);
+
+    if (Util.isNotEmpty(plugins))
     {
-      if (file.isDirectory())
-      {
-        scannDirectory(backend, file);
-      }
-      else if (file.getName().endsWith(PLUGIN_EXTENSION))
-      {
-        scannFile(backend, file);
-      }
+      backend.addPlugins(plugins);
+    }
+
+    if (Util.isNotEmpty(scannedFiles))
+    {
+      backend.addScannedFiles(scannedFiles);
+    }
+
+    if (logger.isInfoEnabled())
+    {
+      logger.info("finish scann of basedirectory {}", directory.getPath());
     }
   }
 
@@ -127,9 +139,57 @@ public class DefaultPluginScanner implements PluginScanner
    *
    *
    * @param backend
-   * @param file
+   * @param scannedFiles
+   * @param plugins
+   * @param directory
+   * @param filter
    */
-  private void scannFile(PluginBackend backend, File file)
+  private void scannDirectory(PluginBackend backend, Set<File> scannedFiles,
+                              Set<PluginInformation> plugins, File directory,
+                              FileFilter filter)
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("scann directory {}", directory.getPath());
+    }
+
+    File[] files = directory.listFiles(filter);
+
+    for (File file : files)
+    {
+      if (file.isDirectory())
+      {
+        scannDirectory(backend, scannedFiles, plugins, file, filter);
+      }
+      else if (!backend.getScannedFiles().contains(file))
+      {
+        try
+        {
+          scannFile(plugins, file);
+          scannedFiles.add(file);
+        }
+        catch (Exception ex)
+        {
+          logger.error(
+              "could not read plugin descriptor ".concat(file.getPath()), ex);
+        }
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param plugins
+   * @param file
+   *
+   * @throws IOException
+   * @throws JAXBException
+   */
+  private void scannFile(Set<PluginInformation> plugins, File file)
+          throws IOException, JAXBException
   {
     if (logger.isDebugEnabled())
     {
@@ -171,7 +231,7 @@ public class DefaultPluginScanner implements PluginScanner
               logger.info("add plugin {} to backend", file.getPath());
             }
 
-            backend.addPlugin(plugin.getInformation());
+            plugins.add(plugin.getInformation());
           }
           else if (logger.isWarnEnabled())
           {
@@ -186,11 +246,6 @@ public class DefaultPluginScanner implements PluginScanner
           entry = inputStream.getNextJarEntry();
         }
       }
-    }
-    catch (Exception ex)
-    {
-      logger.error("could not read plugin descriptor ".concat(file.getPath()),
-                   ex);
     }
     finally
     {

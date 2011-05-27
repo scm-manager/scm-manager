@@ -37,7 +37,9 @@ package sonia.scm.plugin;
 
 import java.io.File;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -50,9 +52,35 @@ public interface PluginBackend
    * Method description
    *
    *
-   * @param plugin
+   *
+   * @param plugins
    */
-  public void addPlugin(PluginInformation plugin);
+  public void addPlugins(PluginInformation... plugins);
+
+  /**
+   * Method description
+   *
+   *
+   * @param plugins
+   */
+  public void addPlugins(Collection<PluginInformation> plugins);
+
+  /**
+   * Method description
+   *
+   *
+   * @param scannedFiles
+   */
+  public void addScannedFiles(Collection<File> scannedFiles);
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param scannedFiles
+   */
+  public void addScannedFiles(File... scannedFiles);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -63,6 +91,14 @@ public interface PluginBackend
    * @return
    */
   public File getBaseDirectory();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Set<String> getExcludes();
 
   /**
    * Method description
@@ -81,4 +117,12 @@ public interface PluginBackend
    * @return
    */
   public List<PluginInformation> getPlugins(PluginFilter filter);
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Set<File> getScannedFiles();
 }

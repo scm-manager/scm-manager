@@ -42,13 +42,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
+import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -57,18 +66,24 @@ import javax.xml.bind.JAXBException;
  *
  * @author Sebastian Sdorra
  */
-public class DefaultPluginBackend implements PluginBackend
+public class DefaultPluginBackend extends AbstractPluginBackend
 {
+
+  /** Field description */
+  public static final String FILE_SCANNED = "scanned-files";
 
   /** Field description */
   public static final String FILE_STORE = "store.xml";
 
   /** Field description */
-  private static final Object LOCK_OBJECT = new Object();
+  private static final Object LOCK_PLUGINS = new Object();
 
   /** the logger for DefaultPluginBackend */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultPluginBackend.class);
+
+  /** Field description */
+  private static final Object LOCK_SCANNEDFILE = new Object();
 
   //~--- constructors ---------------------------------------------------------
 
@@ -78,12 +93,15 @@ public class DefaultPluginBackend implements PluginBackend
    *
    *
    * @param baseDirectory
+   * @param configuration
    */
   @Inject
   public DefaultPluginBackend(
-          @Named(ScmBackendModule.DIRECTORY_PROPERTY) File baseDirectory)
+          @Named(ScmBackendModule.DIRECTORY_PROPERTY) File baseDirectory,
+          BackendConfiguration configuration)
   {
     this.baseDirectory = baseDirectory;
+    this.configuration = configuration;
     this.storeFile = new File(baseDirectory, FILE_STORE);
 
     try
@@ -100,10 +118,16 @@ public class DefaultPluginBackend implements PluginBackend
       {
         pluginStore = new PluginBackendStore();
       }
+
+      readScannedFiles();
     }
     catch (JAXBException ex)
     {
-      throw new ConfigurationException(ex);
+      throw new ConfigurationException("could not read store", ex);
+    }
+    catch (IOException ex)
+    {
+      throw new ConfigurationException("could not read scanned files", ex);
     }
   }
 
@@ -113,17 +137,57 @@ public class DefaultPluginBackend implements PluginBackend
    * Method description
    *
    *
-   * @param plugin
+   *
+   * @param plugins
    */
   @Override
-  public void addPlugin(PluginInformation plugin)
+  public void addPlugins(Collection<PluginInformation> plugins)
   {
-    if (!pluginStore.contains(plugin))
+    synchronized (LOCK_PLUGINS)
     {
-      synchronized (LOCK_OBJECT)
+      boolean changed = false;
+
+      for (PluginInformation plugin : plugins)
       {
-        pluginStore.add(plugin);
+        if (!pluginStore.contains(plugin))
+        {
+          pluginStore.add(plugin);
+          changed = true;
+        }
+      }
+
+      if (changed)
+      {
         store();
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param scannedFiles
+   */
+  @Override
+  public void addScannedFiles(Collection<File> scannedFiles)
+  {
+    synchronized (LOCK_SCANNEDFILE)
+    {
+      boolean changed = false;
+
+      for (File file : scannedFiles)
+      {
+        if (!this.scannedFiles.contains(file))
+        {
+          changed = true;
+          this.scannedFiles.add(file);
+        }
+      }
+
+      if (changed)
+      {
+        writeScannedFiles();
       }
     }
   }
@@ -140,6 +204,18 @@ public class DefaultPluginBackend implements PluginBackend
   public File getBaseDirectory()
   {
     return baseDirectory;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Set<String> getExcludes()
+  {
+    return configuration.getExcludes();
   }
 
   /**
@@ -179,7 +255,62 @@ public class DefaultPluginBackend implements PluginBackend
     return filteredPlugins;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Set<File> getScannedFiles()
+  {
+    return scannedFiles;
+  }
+
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @throws IOException
+   */
+  private void readScannedFiles() throws IOException
+  {
+    File file = new File(baseDirectory, FILE_SCANNED);
+
+    if (file.exists())
+    {
+      BufferedReader reader = null;
+
+      try
+      {
+        reader = new BufferedReader(new FileReader(file));
+
+        String line = reader.readLine();
+
+        while (line != null)
+        {
+          if (Util.isNotEmpty(line))
+          {
+            File jar = new File(line);
+
+            if (jar.exists())
+            {
+              scannedFiles.add(jar);
+            }
+          }
+
+          line = reader.readLine();
+        }
+      }
+      finally
+      {
+        IOUtil.close(reader);
+      }
+    }
+  }
 
   /**
    * Method description
@@ -187,6 +318,11 @@ public class DefaultPluginBackend implements PluginBackend
    */
   private void store()
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("store plugins");
+    }
+
     try
     {
       storeContext.createMarshaller().marshal(pluginStore, storeFile);
@@ -197,13 +333,52 @@ public class DefaultPluginBackend implements PluginBackend
     }
   }
 
+  /**
+   * Method description
+   *
+   */
+  private void writeScannedFiles()
+  {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("store scanned files");
+    }
+
+    File file = new File(baseDirectory, FILE_SCANNED);
+    PrintWriter writer = null;
+
+    try
+    {
+      writer = new PrintWriter(file);
+
+      for (File f : scannedFiles)
+      {
+        writer.println(f.getAbsolutePath());
+      }
+    }
+    catch (IOException ex)
+    {
+      logger.error("could not write scanned files", ex);
+    }
+    finally
+    {
+      IOUtil.close(writer);
+    }
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private File baseDirectory;
 
   /** Field description */
+  private BackendConfiguration configuration;
+
+  /** Field description */
   private PluginBackendStore pluginStore;
+
+  /** Field description */
+  private Set<File> scannedFiles = new HashSet<File>();
 
   /** Field description */
   private JAXBContext storeContext;

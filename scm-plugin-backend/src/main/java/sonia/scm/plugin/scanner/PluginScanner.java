@@ -33,10 +33,13 @@
 
 package sonia.scm.plugin.scanner;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.plugin.PluginBackend;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import sonia.scm.plugin.PluginBackend;
 
 /**
  *

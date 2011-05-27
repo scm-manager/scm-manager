@@ -33,48 +33,51 @@
 
 package sonia.scm.plugin.scanner;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.plugin.BackendConfiguration;
-import sonia.scm.plugin.PluginBackend;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.FileFilter;
 
-import java.util.TimerTask;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class PluginScannerTimerTask extends TimerTask
+public class DefaultFileFilter implements FileFilter
 {
 
-  /** the logger for PluginScannerTimerTask */
-  private static final Logger logger =
-    LoggerFactory.getLogger(PluginScannerTimerTask.class);
+  /** Field description */
+  public static final String PLUGIN_EXTENSION = ".jar";
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
-   *
-   * @param backend
-   * @param configuration
-   * @param scannerFactory
    */
-  public PluginScannerTimerTask(PluginBackend backend,
-                                BackendConfiguration configuration,
-                                PluginScannerFactory scannerFactory)
+  public DefaultFileFilter()
   {
-    this.backend = backend;
-    this.configuration = configuration;
-    this.scannerFactory = scannerFactory;
+    this(null);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param excludes
+   */
+  public DefaultFileFilter(Collection<String> excludes)
+  {
+    if (excludes == null)
+    {
+      excludes = Collections.emptySet();
+    }
+    else
+    {
+      this.excludes = excludes;
+    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -82,44 +85,45 @@ public class PluginScannerTimerTask extends TimerTask
   /**
    * Method description
    *
+   *
+   * @param file
+   *
+   * @return
    */
   @Override
-  public void run()
+  public boolean accept(File file)
   {
-    if (logger.isInfoEnabled())
+    boolean accepted = false;
+
+    if (file.isDirectory())
     {
-      logger.info("start scann");
+      accepted = true;
+    }
+    else
+    {
+      String name = file.getName();
+
+      if (name.endsWith(PLUGIN_EXTENSION))
+      {
+        accepted = true;
+
+        for (String exclude : excludes)
+        {
+          if (name.matches(exclude))
+          {
+            accepted = false;
+
+            break;
+          }
+        }
+      }
     }
 
-    for (File directory : configuration.getDirectories())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.info("scann directory {}", directory.getPath());
-      }
-
-      PluginScanner scanner = scannerFactory.createScanner();
-
-      if (configuration.isMultithreaded())
-      {
-        new Thread(new PluginScannerRunnable(backend, scanner,
-                directory)).start();
-      }
-      else
-      {
-        scanner.scannDirectory(backend, directory);
-      }
-    }
+    return accepted;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private PluginBackend backend;
-
-  /** Field description */
-  private BackendConfiguration configuration;
-
-  /** Field description */
-  private PluginScannerFactory scannerFactory;
+  private Collection<String> excludes;
 }
