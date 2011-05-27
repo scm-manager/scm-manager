@@ -12,6 +12,7 @@
 package org.tmatesoft.svn.core.internal.server.dav;
 
 import java.io.File;
+import java.net.URLDecoder;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -260,6 +261,8 @@ public class DAVRepositoryManager {
         String pathInfo = request.getPathInfo();
         if (pathInfo == null || "".equals(pathInfo)) {
             pathInfo = "/";
+        } else {
+          pathInfo = SVNEncodingUtil.uriDecode(pathInfo);
         }
         
         if (getDAVConfig().isUsingRepositoryPathDirective()) {
