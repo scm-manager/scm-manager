@@ -158,6 +158,7 @@ public class DefaultPluginBackend extends AbstractPluginBackend
 
       if (changed)
       {
+        fireEvent(plugins);
         store();
       }
     }

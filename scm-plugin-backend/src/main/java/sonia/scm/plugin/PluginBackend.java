@@ -33,6 +33,10 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.ListenerSupport;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -45,7 +49,7 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
-public interface PluginBackend
+public interface PluginBackend extends ListenerSupport<PluginBackendListener>
 {
 
   /**

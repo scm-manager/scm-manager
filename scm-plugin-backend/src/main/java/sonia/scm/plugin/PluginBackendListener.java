@@ -33,110 +33,22 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.util.Util;
-
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public abstract class AbstractPluginBackend implements PluginBackend
+public interface PluginBackendListener
 {
 
   /**
-   *   Method description
-   *
-   *
-   *   @param listener
-   */
-  @Override
-  public void addListener(PluginBackendListener listener)
-  {
-    listenerSet.add(listener);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param listeners
-   */
-  @Override
-  public void addListeners(Collection<PluginBackendListener> listeners)
-  {
-    listenerSet.addAll(listeners);
-  }
-
-  /**
    * Method description
    *
    *
    * @param plugins
    */
-  @Override
-  public void addPlugins(PluginInformation... plugins)
-  {
-    if (Util.isNotEmpty(plugins))
-    {
-      addPlugins(Arrays.asList(plugins));
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param scannedFiles
-   */
-  @Override
-  public void addScannedFiles(File... scannedFiles)
-  {
-    if (Util.isNotEmpty(scannedFiles))
-    {
-      addScannedFiles(Arrays.asList(scannedFiles));
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param listener
-   */
-  @Override
-  public void removeListener(PluginBackendListener listener)
-  {
-    listenerSet.remove(listener);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param plugins
-   */
-  protected void fireEvent(Collection<PluginInformation> plugins)
-  {
-    for (PluginBackendListener listener : listenerSet)
-    {
-      listener.addedNewPlugins(plugins);
-    }
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Set<PluginBackendListener> listenerSet =
-    new HashSet<PluginBackendListener>();
+  public void addedNewPlugins(Collection<PluginInformation> plugins);
 }
