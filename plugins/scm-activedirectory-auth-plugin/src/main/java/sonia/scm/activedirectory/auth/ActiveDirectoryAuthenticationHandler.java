@@ -132,8 +132,11 @@ public class ActiveDirectoryAuthenticationHandler implements
   @Override
   public void close() throws IOException
   {
-    con.close();
-    con.dispose();
+    if ( con != null )
+    {
+      con.close();
+      con.dispose();
+    }
   }
 
   /**
