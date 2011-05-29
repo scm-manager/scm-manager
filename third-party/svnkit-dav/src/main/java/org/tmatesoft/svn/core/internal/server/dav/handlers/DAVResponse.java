@@ -11,6 +11,7 @@
  */
 package org.tmatesoft.svn.core.internal.server.dav.handlers;
 
+import org.tmatesoft.svn.core.internal.util.SVNEncodingUtil;
 
 /**
  * @version 1.1.2
@@ -25,7 +26,8 @@ public class DAVResponse {
     
     public DAVResponse(String description, String href, DAVResponse nextResponse, DAVPropsResult propResult, int statusCode) {
         myDescription = description;
-        myHref = href;
+        // encode href to fix scm-manager issue #22
+        myHref = SVNEncodingUtil.uriEncode(href);
         myNextResponse = nextResponse;
         myStatusCode = statusCode;
         myPropResult = propResult;

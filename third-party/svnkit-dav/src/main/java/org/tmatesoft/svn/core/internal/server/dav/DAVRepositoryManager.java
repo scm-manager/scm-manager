@@ -12,7 +12,6 @@
 package org.tmatesoft.svn.core.internal.server.dav;
 
 import java.io.File;
-import java.net.URLDecoder;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +64,7 @@ public class DAVRepositoryManager {
         myUserPrincipal = request.getUserPrincipal();
         myRepositoryRootDir = getRepositoryRootDir(request.getPathInfo());
         myResourcePathInfo = getResourcePathInfo(request);
-            
+        
         if (config.isUsingPBA()) {
             String path = null;
             if (!DAVHandlerFactory.METHOD_MERGE.equals(request.getMethod())) {
