@@ -264,13 +264,12 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         }
         this.execCallback(this.onUpdate, item);
       },
-      failure: function(){
-        Ext.MessageBox.show({
-          title: this.errorTitleText,
-          msg: this.updateErrorMsgText,
-          buttons: Ext.MessageBox.OK,
-          icon:Ext.MessageBox.ERROR
-        });
+      failure: function(result){
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.updateErrorMsgText
+        );
       }
     });
     
@@ -296,13 +295,12 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         this.getForm().reset();
         this.execCallback(this.onCreate, user);
       },
-      failure: function(){
-        Ext.MessageBox.show({
-          title: this.errorTitleText,
-          msg: this.createErrorMsgText,
-          buttons: Ext.MessageBox.OK,
-          icon:Ext.MessageBox.ERROR
-        });
+      failure: function(result){
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.createErrorMsgText
+        );
       }
     });
   },
@@ -421,13 +419,12 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
                 this.reload();
                 this.resetPanel();
               },
-              failure: function(){
-                Ext.MessageBox.show({
-                  title: this.errorTitleText,
-                  msg: this.errorMsgText,
-                  buttons: Ext.MessageBox.OK,
-                  icon:Ext.MessageBox.ERROR
-                });
+              failure: function(result){
+                main.handleFailure(
+                  result.status, 
+                  this.errorTitleText, 
+                  this.errorMsgText
+                );
               }
             });
           }

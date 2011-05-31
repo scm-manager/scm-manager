@@ -58,6 +58,12 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   navLogoutText: 'Log out',
 
   logoutFailedText: 'Logout Failed!',
+  
+  errorTitle: 'Error',
+  errorMessage: 'Unknown error occurred.',
+  
+  errorSessionExpiredTitle: 'Session expired',
+  errorSessionExpiredMessage: 'Your session is expired. Please relogin.',
 
   mainTabPanel: null,
   
@@ -334,6 +340,38 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         console.debug( "callback is not a function or object. " + callback );
       }
     }, this);
+  }, 
+  
+  handleFailure: function(status, title, message){
+    if (debug){
+      console.debug( 'handle failure for status code: ' + status );
+    }
+    if ( status == 401 ){
+      Ext.Msg.show({
+        title: this.errorSessionExpiredTitle,
+        msg: this.errorSessionExpiredMessage,
+        buttons: Ext.Msg.OKCANCEL,
+        fn: function(btn){
+          if ( btn == 'ok' ){
+            this.login();
+          }
+        },
+        scope: this
+      });
+    } else {
+      if ( title == null ){
+        title = this.errorTitle;
+      }
+      if ( message == null ){
+        message = this.errorMessage;
+      }
+      Ext.MessageBox.show({
+        title: title,
+        msg: String.format(message, status),
+        buttons: Ext.MessageBox.OK,
+        icon:Ext.MessageBox.ERROR
+      });
+    }
   }
 
 });

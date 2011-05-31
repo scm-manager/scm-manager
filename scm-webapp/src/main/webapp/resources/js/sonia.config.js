@@ -270,15 +270,13 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
             success: function(){
               this.el.unmask();
             },
-            failure: function(){
+            failure: function(result){
               this.el.unmask();
-              Ext.MessageBox.show({
-                title: this.errorTitleText,
-                msg: this.errorMsgText,
-                scope: this,
-                buttons: Ext.MessageBox.OK,
-                icon:Ext.MessageBox.ERROR
-              });
+              main.handleFailure(
+                result.status, 
+                this.errorTitleText, 
+                this.errorMsgText
+              );
             }
           });
         },
@@ -306,16 +304,14 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
               clearTimeout(tid);
               el.unmask();
             },
-            failure: function(){
+            failure: function(result){
               el.unmask();
               clearTimeout(tid);
-              Ext.MessageBox.show({
-                title: this.errorTitleText,
-                msg: this.errorMsgText,
-                scope: this,
-                buttons: Ext.MessageBox.OK,
-                icon:Ext.MessageBox.ERROR
-              });
+              main.handleFailure(
+                result.status, 
+                this.errorTitleText, 
+                this.errorMsgText
+              );
             }
           });
         }
@@ -441,9 +437,13 @@ Sonia.config.SimpleConfigForm = Ext.extend(Sonia.config.ConfigForm,{
       success: function(response){
         this.el.unmask();
       },
-      failure: function(){
+      failure: function(result){
         this.el.unmask();
-        Ext.Msg.alert( this.failedText );
+        main.handleFailure(
+          result.status, 
+          null, 
+          this.failedText
+        );
       }
     });
   },
@@ -461,10 +461,14 @@ Sonia.config.SimpleConfigForm = Ext.extend(Sonia.config.ConfigForm,{
         clearTimeout(tid);
         el.unmask();
       },
-      failure: function(){
+      failure: function(result){
         el.unmask();
         clearTimeout(tid);
-        Ext.Msg.alert( this.failedText );
+        main.handleFailure(
+          result.status, 
+          null, 
+          this.failedText
+        );
       }
     });
   }

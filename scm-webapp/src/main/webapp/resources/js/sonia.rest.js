@@ -50,12 +50,11 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
               }
               this.removeAll();
             } else {
-              Ext.MessageBox.show({
-                title: this.errorTitleText,
-                msg: String.format( this.errorMsgText, status ),
-                buttons: Ext.MessageBox.OK,
-                icon:Ext.MessageBox.ERROR
-              });
+              main.handleFailure(
+                status, 
+                this.errorTitleText, 
+                this.errorMsgText
+              );
             }
           },
           scope: this

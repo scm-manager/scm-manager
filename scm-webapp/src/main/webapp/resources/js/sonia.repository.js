@@ -439,16 +439,15 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         el.unmask();
         this.execCallback(this.onUpdate, item);
       },
-      failure: function(){
+      failure: function(result){
         this.fireEvent('updateFailed', item);
         clearTimeout(tid);
         el.unmask();
-        Ext.MessageBox.show({
-          title: this.errorTitleText,
-          msg: this.updateErrorMsgText,
-          buttons: Ext.MessageBox.OK,
-          icon:Ext.MessageBox.ERROR
-        });
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.updateErrorMsgText
+        );
       }
     });
   },
@@ -478,16 +477,15 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         el.unmask();
         this.execCallback(this.onCreate, item);
       },
-      failure: function(){
+      failure: function(result){
         this.fireEvent('creationFailed', item);
         clearTimeout(tid);
         el.unmask();
-        Ext.MessageBox.show({
-          title: this.errorTitleText,
-          msg: this.createErrorMsgText,
-          buttons: Ext.MessageBox.OK,
-          icon:Ext.MessageBox.ERROR
-        });
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.createErrorMsgText
+        );
       }
     });
   },
@@ -841,13 +839,12 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
                 this.reload();
                 this.resetPanel();
               },
-              failure: function(){
-                Ext.MessageBox.show({
-                  title: this.errorTitleText,
-                  msg: this.errorMsgText,
-                  buttons: Ext.MessageBox.OK,
-                  icon:Ext.MessageBox.ERROR
-                });
+              failure: function(result){
+                main.handleFailure(
+                  result.status, 
+                  this.errorTitleText, 
+                  this.errorMsgText
+                );
               }
             });
           }

@@ -491,7 +491,13 @@ if (Sonia.scm.Main){
     sectionLogoutText: 'Abmelden',
     navLogoutText: 'Abmelden',
 
-    logoutFailedText: 'Abmeldung Fehlgeschlagen!'
+    logoutFailedText: 'Abmeldung Fehlgeschlagen!',
+    
+    errorTitle: 'Fehler',
+    errorMessage: 'Es ist ein unbekannter Fehler aufgetreten.',
+    
+    errorSessionExpiredTitle: 'Session abgelaufen',
+    errorSessionExpiredMessage: 'Ihre Session ist abgelaufen. Bitte melden sie sich neu an.'
   });
 
 }

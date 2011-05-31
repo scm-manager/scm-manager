@@ -97,17 +97,16 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
           this.restartText);
         this.fireEvents('installed', pluginId);
       },
-      failure: function(){
+      failure: function(result){
         if ( debug ){
           console.debug('plugin installation failed');
         }
         loadingBox.hide();
-        Ext.MessageBox.show({
-          title: this.errorTitleText,
-          msg: this.installFailedText,
-          buttons: Ext.MessageBox.OK,
-          icon:Ext.MessageBox.ERROR
-        });
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.installFailedText
+        );
       }
     });
   },
@@ -132,17 +131,16 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
           this.restartText);
         this.fireEvents('uninstalled', pluginId);
       },
-      failure: function(){
+      failure: function(result){
         if ( debug ){
           console.debug('plugin uninstallation failed');
         }
         loadingBox.hide();
-        Ext.MessageBox.show({
-          title: this.errorTitleText,
-          msg: this.uninstallFailedText,
-          buttons: Ext.MessageBox.OK,
-          icon:Ext.MessageBox.ERROR
-        });
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.uninstallFailedText
+        );
       }
     });
   },
@@ -168,17 +166,16 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
           this.restartText);
         this.fireEvents('updated', pluginId);
       },
-      failure: function(){
+      failure: function(result){
         if ( debug ){
           console.debug('plugin update failed');
         }
         loadingBox.hide();
-        Ext.MessageBox.show({
-          title: this.errorTitleText,
-          msg: this.updateFailedText,
-          buttons: Ext.MessageBox.OK,
-          icon:Ext.MessageBox.ERROR
-        });
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.updateFailedText
+        );
       }
     });
   }
