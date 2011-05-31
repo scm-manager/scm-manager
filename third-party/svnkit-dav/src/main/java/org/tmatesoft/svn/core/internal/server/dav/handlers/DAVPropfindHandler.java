@@ -325,7 +325,10 @@ public class DAVPropfindHandler extends ServletDAVHandler implements IDAVResourc
                         filledNamespaces = true;
                     }
                     continue;
-                } 
+                // skip not supported properties, see #24 of SCM-Manager
+                } else if ( doneAction == DAVInsertPropAction.NOT_SUPP ){
+                  continue;
+                }
             }
             
             if (propsProvider.isDeferred()) {
