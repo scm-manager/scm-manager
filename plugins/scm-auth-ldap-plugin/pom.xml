@@ -30,7 +30,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>1.3-SNAPSHOT</version>
+      <version>1.3</version>
       <scope>test</scope>
     </dependency>
 
