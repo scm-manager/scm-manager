@@ -51,7 +51,7 @@
   </dependencies>
 
   <properties>
-    <jetty.version>7.4.1.v20110513</jetty.version>
+    <jetty.version>7.4.2.v20110526</jetty.version>
   </properties>
 
   <build>
