@@ -17,7 +17,6 @@
 
   <modules>
     <module>svnkit-dav</module>
-    <module>shared-libs</module>
   </modules>
 
 </project>
