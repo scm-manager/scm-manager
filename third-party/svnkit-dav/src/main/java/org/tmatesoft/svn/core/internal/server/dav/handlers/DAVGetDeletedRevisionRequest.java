@@ -18,6 +18,7 @@ import org.tmatesoft.svn.core.SVNErrorCode;
 import org.tmatesoft.svn.core.SVNErrorMessage;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.internal.io.dav.DAVElement;
+import org.tmatesoft.svn.core.internal.io.dav.ScmDAVElement;
 import org.tmatesoft.svn.core.internal.server.dav.DAVPathUtil;
 import org.tmatesoft.svn.core.internal.wc.SVNErrorManager;
 import org.tmatesoft.svn.util.SVNLogType;
@@ -55,19 +56,19 @@ public class DAVGetDeletedRevisionRequest extends DAVRequest {
                     continue;
                 }
                 
-                if (childElementName == DAVElement.PEG_REVISION) {
+                if (childElementName == ScmDAVElement.PEG_REVISION) {
                     try {
                         myPegRevision = Long.parseLong(childElement.getFirstValue(true));
                     } catch (NumberFormatException nfe) {
                         SVNErrorManager.error(SVNErrorMessage.create(SVNErrorCode.RA_DAV_REQUEST_FAILED, nfe), SVNLogType.NETWORK);
                     }
-                } else if (childElementName == DAVElement.END_REVISION) {
+                } else if (childElementName == ScmDAVElement.END_REVISION) {
                     try {
                         myEndRevision = Long.parseLong(childElement.getFirstValue(true));
                     } catch (NumberFormatException nfe) {
                         SVNErrorManager.error(SVNErrorMessage.create(SVNErrorCode.RA_DAV_REQUEST_FAILED, nfe), SVNLogType.NETWORK);
                     }
-                } else if (childElementName == DAVElement.PATH) {
+                } else if (childElementName == ScmDAVElement.PATH) {
                     String path = childElement.getFirstValue(false);
                     DAVPathUtil.testCanonical(path);
                     myPath = path;

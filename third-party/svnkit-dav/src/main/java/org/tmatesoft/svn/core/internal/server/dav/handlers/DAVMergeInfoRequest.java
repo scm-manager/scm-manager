@@ -20,6 +20,7 @@ import org.tmatesoft.svn.core.SVNErrorMessage;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNMergeInfoInheritance;
 import org.tmatesoft.svn.core.internal.io.dav.DAVElement;
+import org.tmatesoft.svn.core.internal.io.dav.ScmDAVElement;
 import org.tmatesoft.svn.core.internal.server.dav.DAVResource;
 import org.tmatesoft.svn.core.internal.wc.SVNErrorManager;
 import org.tmatesoft.svn.util.SVNLogType;
@@ -65,7 +66,7 @@ public class DAVMergeInfoRequest extends DAVRequest {
         for (Iterator iterator = children.iterator(); iterator.hasNext();) {
             DAVElementProperty property = (DAVElementProperty) iterator.next();
             DAVElement element = property.getName();
-            if (element == DAVElement.REVISION) {
+            if (element == ScmDAVElement.REVISION) {
                 try {
                     setRevision(Long.parseLong(property.getFirstValue(true)));
                 } catch (NumberFormatException nfe) {
@@ -76,7 +77,7 @@ public class DAVMergeInfoRequest extends DAVRequest {
                 if (getInherit() == null) {
                     invalidXML();
                 }
-            } else if (element == DAVElement.PATH) {
+            } else if (element == ScmDAVElement.PATH) {
                 Collection paths = property.getValues();
                 String[] targetPaths = new String[paths.size()];
                 targetPaths = (String[]) paths.toArray(targetPaths);

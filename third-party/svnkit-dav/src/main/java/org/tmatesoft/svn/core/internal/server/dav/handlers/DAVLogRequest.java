@@ -22,6 +22,7 @@ import org.tmatesoft.svn.core.SVNErrorMessage;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNRevisionProperty;
 import org.tmatesoft.svn.core.internal.io.dav.DAVElement;
+import org.tmatesoft.svn.core.internal.io.dav.ScmDAVElement;
 import org.tmatesoft.svn.core.internal.server.dav.DAVResource;
 import org.tmatesoft.svn.core.internal.wc.SVNErrorManager;
 import org.tmatesoft.svn.util.SVNLogType;
@@ -165,14 +166,14 @@ public class DAVLogRequest extends DAVRequest {
                 setIncludeMergedRevisions(true);
             } else if (element == OMIT_LOG_TEXT) {
                 setOmitLogText(true);
-            } else if (element == DAVElement.START_REVISION) {
+            } else if (element == ScmDAVElement.START_REVISION) {
                 String revisionString = property.getFirstValue(true);
                 try {
                     setStartRevision(Long.parseLong(revisionString));
                 } catch (NumberFormatException nfe) {
                     SVNErrorManager.error(SVNErrorMessage.create(SVNErrorCode.RA_DAV_REQUEST_FAILED, nfe), SVNLogType.NETWORK);
                 }
-            } else if (element == DAVElement.END_REVISION) {
+            } else if (element == ScmDAVElement.END_REVISION) {
                 String revisionString = property.getFirstValue(true);
                 try {
                     setEndRevision(Long.parseLong(revisionString));
@@ -182,7 +183,7 @@ public class DAVLogRequest extends DAVRequest {
             } else if (element == LIMIT) {
                 String limitString = property.getFirstValue(true);
                 setLimit(Integer.parseInt(limitString));
-            } else if (element == DAVElement.PATH) {
+            } else if (element == ScmDAVElement.PATH) {
                 Collection paths = property.getValues();
                 if (paths != null) {
                     addTargetPaths(paths);

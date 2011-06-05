@@ -24,6 +24,7 @@ import org.tmatesoft.svn.core.SVNErrorCode;
 import org.tmatesoft.svn.core.SVNErrorMessage;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.internal.io.dav.DAVElement;
+import org.tmatesoft.svn.core.internal.io.dav.ScmDAVElement;
 import org.tmatesoft.svn.core.internal.io.fs.FSLocationsFinder;
 import org.tmatesoft.svn.core.internal.server.dav.DAVException;
 import org.tmatesoft.svn.core.internal.server.dav.DAVPathUtil;
@@ -83,24 +84,24 @@ public class DAVGetLocationSegmentsHandler extends DAVReportHandler implements I
                 continue;
             }
             
-            if (childElementName == DAVElement.PATH) {
+            if (childElementName == ScmDAVElement.PATH) {
                 path = childElement.getFirstValue(false);
                 DAVPathUtil.testCanonical(path);
                 String resourcePath = resource.getResourceURI().getPath();
                 path = SVNPathUtil.append(resourcePath, path);
-            } else if (childElementName == DAVElement.START_REVISION) {
+            } else if (childElementName == ScmDAVElement.START_REVISION) {
                 try {
                     startRev = Long.parseLong(childElement.getFirstValue(true));
                 } catch (NumberFormatException nfe) {
                     SVNErrorManager.error(SVNErrorMessage.create(SVNErrorCode.RA_DAV_REQUEST_FAILED, nfe), SVNLogType.NETWORK);
                 }
-            } else if (childElementName == DAVElement.END_REVISION) {
+            } else if (childElementName == ScmDAVElement.END_REVISION) {
                 try {
                     endRev = Long.parseLong(childElement.getFirstValue(true));
                 } catch (NumberFormatException nfe) {
                     SVNErrorManager.error(SVNErrorMessage.create(SVNErrorCode.RA_DAV_REQUEST_FAILED, nfe), SVNLogType.NETWORK);
                 }
-            } else if (childElementName == DAVElement.PEG_REVISION) {
+            } else if (childElementName == ScmDAVElement.PEG_REVISION) {
                 try {
                     pegRev = Long.parseLong(childElement.getFirstValue(true));
                 } catch (NumberFormatException nfe) {

@@ -18,6 +18,7 @@ import org.tmatesoft.svn.core.SVNErrorCode;
 import org.tmatesoft.svn.core.SVNErrorMessage;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.internal.io.dav.DAVElement;
+import org.tmatesoft.svn.core.internal.io.dav.ScmDAVElement;
 import org.tmatesoft.svn.core.internal.server.dav.DAVResource;
 import org.tmatesoft.svn.core.internal.wc.SVNErrorManager;
 import org.tmatesoft.svn.core.wc.SVNRevision;
@@ -69,7 +70,7 @@ public class DAVReplayRequest extends DAVRequest {
         for (Iterator iterator = children.iterator(); iterator.hasNext();) {
             DAVElementProperty property = (DAVElementProperty) iterator.next();
             DAVElement element = property.getName();
-            if (element == DAVElement.REVISION) {
+            if (element == ScmDAVElement.REVISION) {
                 assertNullCData(element, property);
                 try {
                     setRevision(Long.parseLong(property.getFirstValue(true)));

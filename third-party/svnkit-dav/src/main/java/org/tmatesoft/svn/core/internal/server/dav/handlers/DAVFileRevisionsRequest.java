@@ -18,6 +18,7 @@ import org.tmatesoft.svn.core.SVNErrorCode;
 import org.tmatesoft.svn.core.SVNErrorMessage;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.internal.io.dav.DAVElement;
+import org.tmatesoft.svn.core.internal.io.dav.ScmDAVElement;
 import org.tmatesoft.svn.core.internal.server.dav.DAVPathUtil;
 import org.tmatesoft.svn.core.internal.server.dav.DAVResource;
 import org.tmatesoft.svn.core.internal.wc.SVNErrorManager;
@@ -59,23 +60,23 @@ public class DAVFileRevisionsRequest extends DAVRequest {
             if (!DAVElement.SVN_NAMESPACE.equals(childElementName.getNamespace())) {
                 continue;
             }
-            if (childElementName == DAVElement.PATH) {
+            if (childElementName == ScmDAVElement.PATH) {
                 String path = childElement.getFirstValue(false);
                 DAVPathUtil.testCanonical(path);
                 myPath = path;
-            } else if (childElementName == DAVElement.START_REVISION) {
+            } else if (childElementName == ScmDAVElement.START_REVISION) {
                 try {
                     myStartRevision = Long.parseLong(childElement.getFirstValue(true));
                 } catch (NumberFormatException nfe) {
                     SVNErrorManager.error(SVNErrorMessage.create(SVNErrorCode.RA_DAV_REQUEST_FAILED, nfe), SVNLogType.NETWORK);
                 }
-            } else if (childElementName == DAVElement.END_REVISION) {
+            } else if (childElementName == ScmDAVElement.END_REVISION) {
                 try {
                     myEndRevision = Long.parseLong(childElement.getFirstValue(true));
                 } catch (NumberFormatException nfe) {
                     SVNErrorManager.error(SVNErrorMessage.create(SVNErrorCode.RA_DAV_REQUEST_FAILED, nfe), SVNLogType.NETWORK);
                 }
-            } else if (childElementName == DAVElement.INCLUDE_MERGED_REVISIONS) {
+            } else if (childElementName == ScmDAVElement.INCLUDE_MERGED_REVISIONS) {
                 myIsIncludeMergedRevisions = true;
             }
         }

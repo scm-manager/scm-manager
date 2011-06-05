@@ -20,6 +20,7 @@ import org.tmatesoft.svn.core.SVNErrorCode;
 import org.tmatesoft.svn.core.SVNErrorMessage;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.internal.io.dav.DAVElement;
+import org.tmatesoft.svn.core.internal.io.dav.ScmDAVElement;
 import org.tmatesoft.svn.core.internal.server.dav.DAVPathUtil;
 import org.tmatesoft.svn.core.internal.server.dav.DAVResource;
 import org.tmatesoft.svn.core.internal.wc.SVNErrorManager;
@@ -88,7 +89,7 @@ public class DAVGetLocationsRequest extends DAVRequest {
         for (Iterator iterator = children.iterator(); iterator.hasNext();) {
             DAVElementProperty property = (DAVElementProperty) iterator.next();
             DAVElement element = property.getName();
-            if (element == DAVElement.PATH) {
+            if (element == ScmDAVElement.PATH) {
                 String path = property.getFirstValue(false);
                 DAVPathUtil.testCanonical(path);
                 setPath(path);
