@@ -32,10 +32,13 @@
 // register namespace
 Ext.ns('Sonia.group');
 
-Sonia.group.setEditPanel = function(panel){
+Sonia.group.setEditPanel = function(panels){
   var editPanel = Ext.getCmp('groupEditPanel');
   editPanel.removeAll();
-  editPanel.add(panel);
+  Ext.each(panels, function(panel){
+    editPanel.add(panel);
+  });
+  editPanel.setActiveTab(0);
   editPanel.doLayout();
 }
 
@@ -46,6 +49,7 @@ Sonia.group.DefaultPanel = {
   region: 'south',
   title: 'Group Form',
   xtype: 'panel',
+  bodyCssClass: 'x-panel-mc',
   padding: 5,
   html: 'Add or select a Group'
 }
@@ -138,11 +142,9 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
     }
 
     Ext.getCmp('groupRmButton').setDisabled(false);
-    var panel = new Sonia.group.FormPanel({
+    Sonia.group.setEditPanel([{
       item: group,
-      region: 'south',
-      title:this.groupFormTitleText,
-      padding: 5,
+      xtype: 'groupPropertiesForm',
       onUpdate: {
         fn: this.reload,
         scope: this
@@ -151,8 +153,20 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
         fn: this.reload,
         scope: this
       }
-    });
-    Sonia.group.setEditPanel(panel);
+    },{
+      item: group,
+      xtype: 'groupPermissionsForm',
+      listeners: {
+        updated: {
+          fn: this.reload,
+          scope: this
+        },
+        created: {
+          fn: this.reload,
+          scope: this
+        }
+      }
+    }]);
   }
 
 });
@@ -176,11 +190,144 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   nameHelpText: 'Unique name of the group.',
   descriptionHelpText: 'A short description of the group.',
   membersHelpText: 'Usernames of the group members.',
-  
-  memberStore: null,
 
   initComponent: function(){
+    this.addEvents('preCreate', 'created', 'preUpdate', 'updated', 'updateFailed', 'creationFailed');
+    Sonia.repository.FormPanel.superclass.initComponent.apply(this, arguments);
+  },
 
+  update: function(group){
+    if ( debug ){
+      console.debug( 'update group ' + group.name );
+    }
+    group = Ext.apply( this.item, group );
+
+    // this.updateMembers(group);
+    this.fireEvent('preUpdate', group);
+
+    var url = restUrl + 'groups/' + group.name + '.json';
+    var el = this.el;
+    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
+
+    Ext.Ajax.request({
+      url: url,
+      jsonData: group,
+      method: 'PUT',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('update success');
+        }
+        this.fireEvent('updated', group);
+        clearTimeout(tid);
+        el.unmask();
+        this.execCallback(this.onUpdate, group);
+      },
+      failure: function(result){
+        this.fireEvent('updateFailed', group);
+        clearTimeout(tid);
+        el.unmask();
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.updateErrorMsgText
+        );
+      }
+    });
+  },
+
+  create: function(item){
+    if ( debug ){
+      console.debug( 'create group: ' + item.name );
+    }
+    item.type = 'xml';
+
+    var url = restUrl + 'groups.json';
+    var el = this.el;
+    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
+    
+    this.fireEvent('preCreate', item);
+
+    // this.updateMembers(item);
+
+    Ext.Ajax.request({
+      url: url,
+      jsonData: item,
+      method: 'POST',
+      scope: this,
+      success: function(){
+        if ( debug ){
+          console.debug('create success');
+        }
+        this.fireEvent('created', item);
+        // this.memberStore.removeAll();
+        this.getForm().reset();
+        clearTimeout(tid);
+        el.unmask();
+        this.execCallback(this.onCreate, item);
+      },
+      failure: function(result){
+        this.fireEvent('creationFailed', item);
+        clearTimeout(tid);
+        el.unmask();
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.createErrorMsgText
+        );
+      }
+    });
+  },
+
+  cancel: function(){
+    if ( debug ){
+      console.debug( 'cancel form' );
+    }
+    Sonia.group.setEditPanel( Sonia.group.DefaultPanel );
+  }
+
+});
+
+// register xtype
+Ext.reg('groupFormPanel', Sonia.group.FormPanel);
+
+// group properties
+
+Sonia.group.PropertiesFormPanel = Ext.extend(Sonia.group.FormPanel, {
+  
+  initComponent: function(){
+    var config = {
+      title: this.titleText,
+      items: [{
+        fieldLabel: this.nameText,
+        name: 'name',
+        allowBlank: false,
+        readOnly: this.item != null,
+        helpText: this.nameHelpText
+      },{
+        fieldLabel: this.descriptionText,
+        name: 'description',
+        xtype: 'textarea',
+        helpText: this.descriptionHelpText
+      }]
+    }
+    
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.group.PropertiesFormPanel.superclass.initComponent.apply(this, arguments);
+  }
+  
+});
+
+// register xtype
+Ext.reg('groupPropertiesForm', Sonia.group.PropertiesFormPanel);
+
+// group permissions
+
+Sonia.group.PermissionFormPanel = Ext.extend(Sonia.group.FormPanel, {
+    
+  memberStore: null,
+  
+  initComponent: function(){  
     this.memberStore = new Ext.data.SimpleStore({
       fields: ['member'],
       sortInfo: {
@@ -225,79 +372,65 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       }
       this.memberStore.loadData( data );
     }
-
-    var items = [{
-      xtype : 'fieldset',
-      checkboxToggle : false,
-      title : this.titleText,
-      collapsible : true,
-      autoHeight : true,
-      autoWidth: true,
-      autoScroll: true,
-      defaults: {width: 240},
-      defaultType: 'textfield',
-      buttonAlign: 'center',
-      items: [{
-        fieldLabel: this.nameText,
-        name: 'name',
-        allowBlank: false,
-        readOnly: this.item != null,
-        helpText: this.nameHelpText
-      },{
-        fieldLabel: this.descriptionText,
-        name: 'description',
-        xtype: 'textarea',
-        helpText: this.descriptionHelpText
-      }]
-    },{
-      id: 'memberGrid',
-      xtype: 'editorgrid',
+    
+    var config = { 
       title: this.membersText,
-      clicksToEdit: 1,
-      frame: true,
-      width: '100%',
-      autoHeight: true,
-      autoScroll: false,
-      colModel: memberColModel,
-      sm: selectionModel,
-      store: this.memberStore,
-      viewConfig: {
-        forceFit:true
+      listeners: {
+        updated: this.clearModifications,
+        preUpdate: {
+          fn: this.updateMembers,
+          scope: this
+        }
       },
-      tbar: [{
-        text: this.addText,
-        scope: this,
-        handler : function(){
-          var Member = this.memberStore.recordType;
-          var grid = Ext.getCmp('memberGrid');
-          grid.stopEditing();
-          this.memberStore.insert(0, new Member());
-          grid.startEditing(0, 0);
-        }
-      },{
-        text: this.removeText,
-        scope: this,
-        handler: function(){
-          var grid = Ext.getCmp('memberGrid');
-          var selected = grid.getSelectionModel().getSelected();
-          if ( selected ){
-            this.memberStore.remove(selected);
+      items: [{
+        id: 'memberGrid',
+        xtype: 'editorgrid',
+        clicksToEdit: 1,
+        frame: true,
+        width: '100%',
+        autoHeight: true,
+        autoScroll: false,
+        colModel: memberColModel,
+        sm: selectionModel,
+        store: this.memberStore,
+        viewConfig: {
+          forceFit:true
+        },
+        tbar: [{
+          text: this.addText,
+          scope: this,
+          handler : function(){
+            var Member = this.memberStore.recordType;
+            var grid = Ext.getCmp('memberGrid');
+            grid.stopEditing();
+            this.memberStore.insert(0, new Member());
+            grid.startEditing(0, 0);
           }
-        }
-      },'->',{
-        id: 'memberGridHelp',
-        xtype: 'box',
-        autoEl: {
-          tag: 'img',
-          src: 'resources/images/help.gif'
-        }
+        },{
+          text: this.removeText,
+          scope: this,
+          handler: function(){
+            var grid = Ext.getCmp('memberGrid');
+            var selected = grid.getSelectionModel().getSelected();
+            if ( selected ){
+              this.memberStore.remove(selected);
+            }
+          }
+        },'->',{
+          id: 'memberGridHelp',
+          xtype: 'box',
+          autoEl: {
+            tag: 'img',
+            src: 'resources/images/help.gif'
+          }
+        }]
       }]
-    }];
-
-    Ext.apply(this, Ext.apply(this.initialConfig, {items: items}));
-    Sonia.group.FormPanel.superclass.initComponent.apply(this, arguments);
+    };
+    
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.group.PermissionFormPanel.superclass.initComponent.apply(this, arguments);
   },
-
+  
   afterRender: function(){
     // call super
     Sonia.group.FormPanel.superclass.afterRender.apply(this, arguments);
@@ -320,96 +453,11 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
   clearModifications: function(){
     Ext.getCmp('memberGrid').getStore().commitChanges();
-  },
-
-  update: function(group){
-    if ( debug ){
-      console.debug( 'update group ' + group.name );
-    }
-    group = Ext.apply( this.item, group );
-
-    this.updateMembers(group);
-
-    var url = restUrl + 'groups/' + group.id + '.json';
-    var el = this.el;
-    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
-
-    Ext.Ajax.request({
-      url: url,
-      jsonData: group,
-      method: 'PUT',
-      scope: this,
-      success: function(){
-        if ( debug ){
-          console.debug('update success');
-        }
-        this.clearModifications();
-        clearTimeout(tid);
-        el.unmask();
-        this.execCallback(this.onUpdate, group);
-      },
-      failure: function(result){
-        clearTimeout(tid);
-        el.unmask();
-        main.handleFailure(
-          result.status, 
-          this.errorTitleText, 
-          this.updateErrorMsgText
-        );
-      }
-    });
-  },
-
-  create: function(item){
-    if ( debug ){
-      console.debug( 'create group: ' + item.name );
-    }
-    item.type = 'xml';
-
-    var url = restUrl + 'groups.json';
-    var el = this.el;
-    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
-
-    this.updateMembers(item);
-
-    Ext.Ajax.request({
-      url: url,
-      jsonData: item,
-      method: 'POST',
-      scope: this,
-      success: function(){
-        if ( debug ){
-          console.debug('create success');
-        }
-        this.memberStore.removeAll();
-        this.getForm().reset();
-        clearTimeout(tid);
-        el.unmask();
-        this.execCallback(this.onCreate, item);
-      },
-      failure: function(result){
-        clearTimeout(tid);
-        el.unmask();
-        main.handleFailure(
-          result.status, 
-          this.errorTitleText, 
-          this.createErrorMsgText
-        );
-      }
-    });
-  },
-
-  cancel: function(){
-    if ( debug ){
-      console.debug( 'cancel form' );
-    }
-    Sonia.group.setEditPanel( Sonia.group.DefaultPanel );
   }
-
+  
 });
 
-// register xtype
-Ext.reg('groupFormPanel', Sonia.group.FormPanel);
+Ext.reg('groupPermissionsForm', Sonia.group.PermissionFormPanel);
 
 
 // RepositoryPanel
@@ -429,7 +477,6 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
     var config = {
       layout: 'border',
       hideMode: 'offsets',
-      bodyCssClass: 'x-panel-mc',
       enableTabScroll: true,
       region:'center',
       autoScroll: true,
@@ -445,18 +492,18 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
           region: 'center'
         }, {
           id: 'groupEditPanel',
-          layout: 'fit',
-          items: [{
-            region: 'south',
-            title: this.titleText,
-            xtype: 'panel',
-            padding: 5,
-            html: this.emptyText
-          }],
+          xtype: 'tabpanel',
+          activeTab: 0,
           height: 250,
           split: true,
-          border: false,
-          region: 'south'
+          border: true,
+          region: 'south',
+          items: [{
+            bodyCssClass: 'x-panel-mc',
+            title: this.titleText,
+            padding: 5,
+            html: this.emptyText
+          }]
         }
       ]
     }
@@ -513,8 +560,8 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
 
   showAddForm: function(){
     Ext.getCmp('groupRmButton').setDisabled(true);
-    var panel = new Sonia.group.FormPanel({
-      region: 'south',
+    Sonia.group.setEditPanel({
+      xtype: 'groupPropertiesForm',
       title: this.titleText,
       padding: 5,
       onUpdate: {
@@ -526,7 +573,6 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
         scope: this
       }
     });
-    Sonia.group.setEditPanel(panel);
   },
 
   resetPanel: function(){
