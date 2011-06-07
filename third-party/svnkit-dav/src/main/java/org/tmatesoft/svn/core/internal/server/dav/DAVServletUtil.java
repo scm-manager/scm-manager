@@ -46,6 +46,8 @@ import org.tmatesoft.svn.util.SVNLogType;
  * @author  TMate Software Ltd.
  */
 public class DAVServletUtil {
+  
+    public static final String HEADER_FORWARDHOST = "X-Forwarded-Host";
     
     public static long getSafeCreatedRevision(FSRevisionRoot root, String path) {
         long revision = root.getRevision();
@@ -106,26 +108,37 @@ public class DAVServletUtil {
             throw new DAVException("Destination URI contains invalid components (a query or a fragment).", HttpServletResponse.SC_BAD_REQUEST, 0);
         }
         
-        if (parsedURI.getScheme() != null || parsedURI.getPort() != -1 || mustBeAbsolute) {
-            String scheme = request.getScheme();
-            if (scheme == null) {
-                //TODO: replace this code in future 
-                scheme = "http";
-            }
-            int parsedPort = parsedURI.getPort();
-            if (parsedURI.getPort() == -1) {
-                parsedPort = request.getServerPort();
-            }
-            
-            if (!scheme.equals(parsedURI.getScheme()) || parsedPort != request.getServerPort()) {
-                throw new DAVException("Destination URI refers to different scheme or port ({0}://hostname:{1})\n(want: {2}://hostname:{3})", 
-                        new Object[] { parsedURI.getScheme() != null ? parsedURI.getScheme() : scheme, String.valueOf(parsedPort), scheme, 
-                                String.valueOf(request.getServerPort()) }, HttpServletResponse.SC_BAD_REQUEST, 0);
-            }
+        String serverHost = request.getServerName();
+        String forwardedHost = request.getHeader(HEADER_FORWARDHOST);
+        
+        // skip scheme and port check if the request is forwarded, see scmmanager #25
+        if ( forwardedHost == null || forwardedHost.length() == 0 ){
+        
+          if (parsedURI.getScheme() != null || parsedURI.getPort() != -1 || mustBeAbsolute) {
+              String scheme = request.getScheme();
+              if (scheme == null) {
+                  //TODO: replace this code in future 
+                  scheme = "http";
+              }
+              int parsedPort = parsedURI.getPort();
+              if (parsedURI.getPort() == -1) {
+                  parsedPort = request.getServerPort();
+              }
+
+              if (!scheme.equals(parsedURI.getScheme()) || parsedPort != request.getServerPort()) {
+                  throw new DAVException("Destination URI refers to different scheme or port ({0}://hostname:{1})\n(want: {2}://hostname:{3})", 
+                          new Object[] { parsedURI.getScheme() != null ? parsedURI.getScheme() : scheme, String.valueOf(parsedPort), scheme, 
+                                  String.valueOf(request.getServerPort()) }, HttpServletResponse.SC_BAD_REQUEST, 0);
+              }
+          }
+        
+        } else {
+          // use forward host for host check
+          serverHost = forwardedHost;
         }
         
         String parsedHost = parsedURI.getHost();
-        String serverHost = request.getServerName();
+        
         String domain = null;
         int domainInd = serverHost != null ? serverHost.indexOf('.') : -1;  
         if (domainInd != -1) {
@@ -136,7 +149,7 @@ public class DAVServletUtil {
             parsedHost += domain;
         }
         
-        if (parsedHost != null && !parsedHost.equals(request.getServerName())) {
+        if (parsedHost != null && !parsedHost.equals(serverHost)) {
             throw new DAVException("Destination URI refers to a different server.", HttpServletResponse.SC_BAD_GATEWAY, 0);
         }
         return parsedURI;
