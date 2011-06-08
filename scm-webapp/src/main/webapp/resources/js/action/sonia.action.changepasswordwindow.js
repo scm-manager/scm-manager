@@ -29,7 +29,6 @@
  * 
  */
 
-Ext.ns('Sonia.action');
 
 Sonia.action.ChangePasswordWindow = Ext.extend(Ext.Window,{
 
