@@ -1,4 +1,4 @@
-/**
+/* *
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
  * 
@@ -29,44 +29,6 @@
  * 
  */
 
-Ext.ns("Sonia.rest");
-
-Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
-
-  errorTitleText: 'Error',
-  errorMsgText: 'Could not load items. Server returned status: {0}',
-
-  constructor: function(config) {
-    var baseConfig = {
-      autoLoad: true,
-      listeners: {
-        // fix jersey empty array problem
-        exception: {
-          fn: function(proxy, type, action, options, response, arg){
-            var status = response.status;
-            if ( status == 200 && action == 'read' && response.responseText == 'null' ){
-              if ( debug ){
-                console.debug( 'empty array, clear whole store' );
-              }
-              this.removeAll();
-            } else {
-              main.handleFailure(
-                status, 
-                this.errorTitleText, 
-                this.errorMsgText
-              );
-            }
-          },
-          scope: this
-        }
-      }
-    };
-    Sonia.rest.JsonStore.superclass.constructor.call(this, Ext.apply(baseConfig, config));
-  }
-
-});
-
-// Grid
 
 Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
@@ -171,91 +133,3 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
 });
 
-// FormPanel
-
-Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
-
-  okText: 'Ok',
-  cancelText: 'Cancel',
-  addText: 'Add',
-  removeText: 'Remove',
-
-  item: null,
-  onUpdate: null,
-  onCreate: null,
-
-  initComponent: function(){
-    var config = {
-      bodyCssClass: 'x-panel-mc',
-      padding: 5,
-      labelWidth: 100,
-      defaults: {width: 240},
-      autoScroll: true,
-      monitorValid: true,
-      defaultType: 'textfield',
-      buttonAlign: 'center',
-      footerCfg: {
-        cls: 'x-panel-mc'
-      },
-      buttons: [
-        {text: this.okText, formBind: true, scope: this, handler: this.submit},
-        {text: this.cancelText, scope: this, handler: this.cancel}
-      ]
-    }
-
-    Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.rest.FormPanel.superclass.initComponent.apply(this, arguments);
-
-    if ( this.item != null ){
-      this.loadData(this.item);
-    }
-  },
-
-  loadData: function(item){
-    this.item = item;
-    var data = {success: true, data: item};
-    this.getForm().loadRecord(data);
-  },
-
-  submit: function(){
-    if ( debug ){
-      console.debug( 'form submitted' );
-    }
-    var item = this.getForm().getFieldValues();
-    if ( this.item != null ){
-      this.update(item);
-    } else {
-      this.create(item);
-    }
-  },
-  
-  cancel: function(){
-    if ( debug ){
-      console.debug( 'reset form' );
-    }
-    this.getForm().reset();
-  },
-
-  execCallback: function(obj, item){
-    if ( Ext.isFunction( obj ) ){
-      obj(item);
-    } else if ( Ext.isObject( obj )){
-      obj.fn.call( obj.scope, item );
-    }
-  },
-
-  update: function(item){
-    if ( debug ){
-      console.debug( 'update item: ' );
-      console.debug( item );
-    }
-  },
-
-  create: function(item){
-    if (debug){
-      console.debug( 'create item: ' );
-      console.debug( item );
-    }
-  }
-
-});
