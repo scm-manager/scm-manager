@@ -36,6 +36,8 @@ package sonia.scm.util;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Platform;
+import sonia.scm.ServletContainer;
+import sonia.scm.ServletContainerDetector;
 
 /**
  *
@@ -58,6 +60,10 @@ public class SystemUtil
     new Platform(System.getProperty(PROPERTY_OSNAME),
                  System.getProperty(PROPERTY_ARCH),
                  System.getProperty(PROPERTY_OSARCH));
+
+  /** Field description */
+  private static ServletContainer servletContainer =
+    ServletContainerDetector.detect();
 
   //~--- methods --------------------------------------------------------------
 
@@ -105,6 +111,17 @@ public class SystemUtil
   public static Platform getPlatform()
   {
     return platform;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static ServletContainer getServletContainer()
+  {
+    return servletContainer;
   }
 
   /**
