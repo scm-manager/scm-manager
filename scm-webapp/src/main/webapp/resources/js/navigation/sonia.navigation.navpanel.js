@@ -1,4 +1,4 @@
-/**
+/* *
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
  * 
@@ -29,97 +29,6 @@
  * 
  */
 
-Ext.ns('Sonia.navigation');
-
-Sonia.navigation.NavSection = Ext.extend(Ext.Panel, {
-
-  links: null,
-  tpl: new Ext.XTemplate(
-        '<ul class="scm-nav-list">',
-        '<tpl for="links">',
-            '<li class="scm-nav-item">',
-                '<a id="{id}" class="scm-nav-item">{label}</a>',
-            '</li>',
-        '</tpl>',
-        '</ul>'
-      ),
-
-
-  initComponent: function(){
-    if ( this.links == null ){
-      this.links = this.items;
-    }
-    if ( this.links == null ){
-      this.links = [];
-    }
-
-    Ext.each(this.links, function(link){
-      Ext.id( link );
-    });
-
-    var config = {
-      frame: true,
-      collapsible:true,
-      style: 'margin: 5px'
-    }
-
-    Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.navigation.NavSection.superclass.initComponent.apply(this, arguments);
-  },
-
-  doAction: function(e, t){
-    e.stopEvent();
-    Ext.each(this.links, function(navItem){
-      if ( navItem.id == t.id && Ext.isFunction(navItem.fn) ){
-        var scope = navItem.scope;
-        if ( Ext.isObject( scope )){
-          navItem.fn.call(scope);
-        } else {
-          navItem.fn();
-        }
-      }
-    });
-  },
-  
-  afterRender: function(){
-    Sonia.navigation.NavSection.superclass.afterRender.apply(this, arguments);
-
-    // create list items
-    this.tpl.overwrite(this.body, {
-        links: this.links
-    });
-
-    this.body.on('mousedown', this.doAction, this, {delegate:'a'});
-    this.body.on('click', Ext.emptyFn, null, {delegate:'a', preventDefault:true});
-  },
-
-
-  addLink: function(link){
-    Ext.id(link);
-    this.links.push(link);
-  },
-
-  addLinks: function(links){
-    if ( Ext.isArray(links) && links.length > 0 ){
-      for ( var i=0; i<links.length; i++ ){
-        this.addLink(links[i]);
-      }
-    } else {
-      this.addLink(links);
-    }
-  },
-
-  insertLink: function(pos, link){
-    this.links.splice(pos, 0, link);
-  },
-
-  count: function(){
-    return this.links.length;
-  }
-
-});
-
-Ext.reg('navSection', Sonia.navigation.NavSection);
 
 Sonia.navigation.NavPanel = Ext.extend(Ext.Panel, {
 
