@@ -443,6 +443,8 @@ public class XmlUserManager extends AbstractUserManager
   public Collection<User> getAll(Comparator<User> comaparator, int start,
                                  int limit)
   {
+    SecurityUtil.assertIsAdmin(scurityContextProvider);
+
     return Util.createSubCollection(userDB.values(), comaparator,
                                     new CollectionAppender<User>()
     {

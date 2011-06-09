@@ -401,6 +401,8 @@ public class XmlGroupManager extends AbstractGroupManager
   public Collection<Group> getAll(Comparator<Group> comparator, int start,
                                   int limit)
   {
+    SecurityUtil.assertIsAdmin(securityContextProvider);
+
     return Util.createSubCollection(groupDB.values(), comparator,
                                     new CollectionAppender<Group>()
     {
