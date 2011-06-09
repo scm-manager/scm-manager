@@ -35,6 +35,8 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.apache.commons.beanutils.BeanComparator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +50,7 @@ import sonia.scm.util.Util;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 
 import javax.ws.rs.Consumes;
@@ -488,6 +491,31 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    * Method description
    *
    *
+   * @param sortby
+   * @param desc
+   *
+   * @return
+   */
+  private Comparator<T> createComparator(String sortby, boolean desc)
+  {
+    Comparator comparator = null;
+
+    if (desc)
+    {
+      comparator = new BeanReverseComparator(sortby);
+    }
+    else
+    {
+      comparator = new BeanComparator(sortby);
+    }
+
+    return comparator;
+  }
+
+  /**
+   * Method description
+   *
+   *
    *
    * @param sortby
    * @param desc
@@ -505,13 +533,20 @@ public abstract class AbstractManagerResource<T extends ModelObject,
 
     if (limit > 0)
     {
+      if (Util.isEmpty(sortby))
+      {
 
-      // TODO create comparator
-      items = manager.getAll(start, limit);
+        // replace with somethind useful
+        sortby = "id";
+      }
+
+      items = manager.getAll(createComparator(sortby, desc), start, limit);
     }
     else
     {
       items = manager.getAll();
+
+      // TODO sort result if sortby is not empty
     }
 
     return items;
@@ -539,6 +574,53 @@ public abstract class AbstractManagerResource<T extends ModelObject,
 
     return lastModified;
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 11/06/09
+   * @author         Enter your name here...
+   */
+  private static class BeanReverseComparator extends BeanComparator
+  {
+
+    /** Field description */
+    private static final long serialVersionUID = -8535047820348790009L;
+
+    //~--- constructors -------------------------------------------------------
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param sortby
+     */
+    private BeanReverseComparator(String sortby)
+    {
+      super(sortby);
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param o1
+     * @param o2
+     *
+     * @return
+     */
+    @Override
+    public int compare(Object o1, Object o2)
+    {
+      return super.compare(o1, o2) * -1;
+    }
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
