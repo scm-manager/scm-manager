@@ -505,7 +505,9 @@ public abstract class AbstractManagerResource<T extends ModelObject,
 
     if (limit > 0)
     {
-      items = manager.getAll(sortby, desc, start, limit);
+
+      // TODO create comparator
+      items = manager.getAll(start, limit);
     }
     else
     {

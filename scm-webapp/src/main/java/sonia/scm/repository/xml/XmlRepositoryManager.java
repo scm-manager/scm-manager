@@ -71,6 +71,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -400,20 +401,18 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * Method description
    *
    *
-   * @param sortby
-   * @param desc
+   *
+   * @param comparator
    * @param start
    * @param limit
    *
    * @return
    */
   @Override
-  public Collection<Repository> getAll(String sortby, boolean desc, int start,
-          int limit)
+  public Collection<Repository> getAll(Comparator<Repository> comparator,
+          int start, int limit)
   {
-
-    // TODO sort
-    return Util.createSubCollection(repositoryDB.values(),
+    return Util.createSubCollection(repositoryDB.values(), comparator,
                                     new CollectionAppender<Repository>()
     {
       @Override
@@ -422,6 +421,21 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
         collection.add(item.clone());
       }
     }, start, limit);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param start
+   * @param limit
+   *
+   * @return
+   */
+  @Override
+  public Collection<Repository> getAll(int start, int limit)
+  {
+    return getAll(null, start, limit);
   }
 
   /**

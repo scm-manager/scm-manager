@@ -63,6 +63,7 @@ import sonia.scm.util.Util;
 import java.io.IOException;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.LinkedList;
 
 /**
@@ -367,20 +368,18 @@ public class XmlGroupManager extends AbstractGroupManager
    * Method description
    *
    *
-   * @param sortby
-   * @param desc
+   *
+   * @param comparator
    * @param start
    * @param limit
    *
    * @return
    */
   @Override
-  public Collection<Group> getAll(String sortby, boolean desc, int start,
+  public Collection<Group> getAll(Comparator<Group> comparator, int start,
                                   int limit)
   {
-
-    // TODO sort
-    return Util.createSubCollection(groupDB.values(),
+    return Util.createSubCollection(groupDB.values(), comparator,
                                     new CollectionAppender<Group>()
     {
       @Override
@@ -389,6 +388,21 @@ public class XmlGroupManager extends AbstractGroupManager
         collection.add(item.clone());
       }
     }, start, limit);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param start
+   * @param limit
+   *
+   * @return
+   */
+  @Override
+  public Collection<Group> getAll(int start, int limit)
+  {
+    return getAll(null, start, limit);
   }
 
   /**

@@ -38,6 +38,7 @@ package sonia.scm;
 import java.io.IOException;
 
 import java.util.Collection;
+import java.util.Comparator;
 
 /**
  *
@@ -86,15 +87,26 @@ public interface Manager<T extends ModelObject, E extends Exception>
    * Method description
    *
    *
-   *
-   * @param sortby
-   * @param desc
    * @param start
    * @param limit
    *
    * @return
    * @since 1.4
    */
-  public Collection<T> getAll(String sortby, boolean desc, int start,
-                              int limit);
+  public Collection<T> getAll(int start, int limit);
+
+  /**
+   * Method description
+   *
+   *
+   *
+   *
+   * @param comparator
+   * @param start
+   * @param limit
+   *
+   * @return
+   * @since 1.4
+   */
+  public Collection<T> getAll(Comparator<T> comparator, int start, int limit);
 }

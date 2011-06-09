@@ -69,6 +69,7 @@ import java.io.InputStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -411,20 +412,18 @@ public class XmlUserManager extends AbstractUserManager
    * Method description
    *
    *
-   * @param sortby
-   * @param desc
+   *
+   * @param comaparator
    * @param start
    * @param limit
    *
    * @return
    */
   @Override
-  public Collection<User> getAll(String sortby, boolean desc, int start,
+  public Collection<User> getAll(Comparator<User> comaparator, int start,
                                  int limit)
   {
-
-    // TODO sort
-    return Util.createSubCollection(userDB.values(),
+    return Util.createSubCollection(userDB.values(), comaparator,
                                     new CollectionAppender<User>()
     {
       @Override
@@ -433,6 +432,21 @@ public class XmlUserManager extends AbstractUserManager
         collection.add(item.clone());
       }
     }, start, limit);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param start
+   * @param limit
+   *
+   * @return
+   */
+  @Override
+  public Collection<User> getAll(int start, int limit)
+  {
+    return getAll(null, start, limit);
   }
 
   /**
