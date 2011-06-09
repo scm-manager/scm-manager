@@ -42,6 +42,7 @@ import sonia.scm.LastModifiedAware;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.security.ScmSecurityException;
+import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -51,12 +52,14 @@ import java.util.Date;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.EntityTag;
@@ -296,13 +299,21 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    *
    * @param request
+   * @param start
+   * @param limit
+   * @param sortby
+   * @param desc
    * @return
    */
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response getAll(@Context Request request)
+  public Response getAll(@Context Request request, @DefaultValue("0")
+  @QueryParam("start") int start, @DefaultValue("-1")
+  @QueryParam("limit") int limit, @QueryParam("sortby") String sortby,
+                                  @DefaultValue("false")
+  @QueryParam("desc") boolean desc)
   {
-    Collection<T> items = manager.getAll();
+    Collection<T> items = fetchItems(sortby, desc, start, limit);
 
     if (Util.isNotEmpty(items))
     {
@@ -471,6 +482,37 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     addCacheControl(builder);
 
     return builder.build();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param sortby
+   * @param desc
+   * @param start
+   * @param limit
+   *
+   * @return
+   */
+  private Collection<T> fetchItems(String sortby, boolean desc, int start,
+                                   int limit)
+  {
+    AssertUtil.assertPositive(start);
+
+    Collection<T> items = null;
+
+    if (limit > 0)
+    {
+      items = manager.getAll(sortby, desc, start, limit);
+    }
+    else
+    {
+      items = manager.getAll();
+    }
+
+    return items;
   }
 
   //~--- get methods ----------------------------------------------------------

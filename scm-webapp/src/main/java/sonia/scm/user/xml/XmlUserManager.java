@@ -35,6 +35,7 @@ package sonia.scm.user.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Collections2;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -55,6 +56,7 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserAllreadyExistException;
 import sonia.scm.user.UserException;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
@@ -65,8 +67,11 @@ import sonia.scm.web.security.WebSecurityContext;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -400,6 +405,34 @@ public class XmlUserManager extends AbstractUserManager
     }
 
     return users;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param sortby
+   * @param desc
+   * @param start
+   * @param limit
+   *
+   * @return
+   */
+  @Override
+  public Collection<User> getAll(String sortby, boolean desc, int start,
+                                 int limit)
+  {
+
+    // TODO sort
+    return Util.createSubCollection(userDB.values(),
+                                    new CollectionAppender<User>()
+    {
+      @Override
+      public void append(Collection<User> collection, User item)
+      {
+        collection.add(item.clone());
+      }
+    }, start, limit);
   }
 
   /**

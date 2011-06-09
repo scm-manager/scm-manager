@@ -54,6 +54,7 @@ import sonia.scm.search.SearchUtil;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
 
@@ -360,6 +361,34 @@ public class XmlGroupManager extends AbstractGroupManager
     }
 
     return groups;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param sortby
+   * @param desc
+   * @param start
+   * @param limit
+   *
+   * @return
+   */
+  @Override
+  public Collection<Group> getAll(String sortby, boolean desc, int start,
+                                  int limit)
+  {
+
+    // TODO sort
+    return Util.createSubCollection(groupDB.values(),
+                                    new CollectionAppender<Group>()
+    {
+      @Override
+      public void append(Collection<Group> collection, Group item)
+      {
+        collection.add(item.clone());
+      }
+    }, start, limit);
   }
 
   /**

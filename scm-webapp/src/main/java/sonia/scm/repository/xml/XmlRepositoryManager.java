@@ -59,8 +59,10 @@ import sonia.scm.security.ScmSecurityException;
 import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SecurityUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -392,6 +394,34 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     return repositories;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param sortby
+   * @param desc
+   * @param start
+   * @param limit
+   *
+   * @return
+   */
+  @Override
+  public Collection<Repository> getAll(String sortby, boolean desc, int start,
+          int limit)
+  {
+
+    // TODO sort
+    return Util.createSubCollection(repositoryDB.values(),
+                                    new CollectionAppender<Repository>()
+    {
+      @Override
+      public void append(Collection<Repository> collection, Repository item)
+      {
+        collection.add(item.clone());
+      }
+    }, start, limit);
   }
 
   /**

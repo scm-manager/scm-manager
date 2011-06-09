@@ -119,4 +119,19 @@ public class AssertUtil
       throw new IllegalStateException("object is not valid");
     }
   }
+
+  /**
+   * throws an IllegalArgumentException if the value is smaller then 0
+   *
+   *
+   * @param value
+   * @since 1.4
+   */
+  public static void assertPositive(int value)
+  {
+    if (value < 0)
+    {
+      throw new IllegalArgumentException("value is smaller then 0");
+    }
+  }
 }

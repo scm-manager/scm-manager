@@ -38,9 +38,13 @@ package sonia.scm.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -175,6 +179,117 @@ public class Util
     }
 
     return time;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param values
+   * @param comparator
+   * @param start
+   * @param limit
+   * @param <T>
+   *
+   * @return
+   * @since 1.4
+   */
+  public static <T> Collection<T> createSubCollection(Collection<T> values,
+          Comparator<T> comparator, int start, int limit)
+  {
+    return createSubCollection(values, comparator, null, start, limit);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param values
+   * @param start
+   * @param limit
+   * @param <T>
+   *
+   * @return
+   * @since 1.4
+   */
+  public static <T> Collection<T> createSubCollection(Collection<T> values,
+          int start, int limit)
+  {
+    return createSubCollection(values, null, null, start, limit);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param values
+   * @param appender
+   * @param start
+   * @param limit
+   * @param <T>
+   *
+   * @return
+   * @since 1.4
+   */
+  public static <T> Collection<T> createSubCollection(Collection<T> values,
+          CollectionAppender<T> appender, int start, int limit)
+  {
+    return createSubCollection(values, null, appender, start, limit);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param values
+   * @param comparator
+   * @param appender
+   * @param start
+   * @param limit
+   * @param <T>
+   *
+   * @return
+   * @since 1.4
+   */
+  public static <T> Collection<T> createSubCollection(Collection<T> values,
+          Comparator<T> comparator, CollectionAppender<T> appender, int start,
+          int limit)
+  {
+    List<T> result = new ArrayList<T>();
+    List<T> valueList = new ArrayList(values);
+
+    if (comparator != null)
+    {
+      Collections.sort(valueList, comparator);
+    }
+
+    int length = valueList.size();
+    int end = start + limit;
+
+    if (length > start)
+    {
+      if (length < end)
+      {
+        end = length;
+      }
+
+      valueList = valueList.subList(start, end);
+
+      if (appender == null)
+      {
+        result = valueList;
+      }
+      else
+      {
+        for (T v : valueList)
+        {
+          appender.append(result, v);
+        }
+      }
+    }
+
+    return result;
   }
 
   /**

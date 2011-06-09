@@ -31,11 +31,9 @@
 
 
 
-package sonia.scm;
+package sonia.scm.util;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 import java.util.Collection;
 
@@ -44,57 +42,17 @@ import java.util.Collection;
  * @author Sebastian Sdorra
  *
  * @param <T>
- * @param <E>
+ * @since 1.4
  */
-public interface Manager<T extends ModelObject, E extends Exception>
-        extends HandlerBase<T, E>, LastModifiedAware
+public interface CollectionAppender<T>
 {
 
   /**
    * Method description
    *
    *
-   * @param object
-   *
-   * @throws E
-   * @throws IOException
+   * @param collection
+   * @param item
    */
-  public void refresh(T object) throws E, IOException;
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  public T get(String id);
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<T> getAll();
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param sortby
-   * @param desc
-   * @param start
-   * @param limit
-   *
-   * @return
-   * @since 1.4
-   */
-  public Collection<T> getAll(String sortby, boolean desc, int start,
-                              int limit);
+  public void append(Collection<T> collection, T item);
 }
