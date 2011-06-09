@@ -71,10 +71,10 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -377,12 +377,14 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * Method description
    *
    *
+   *
+   * @param comparator
    * @return
    */
   @Override
-  public Collection<Repository> getAll()
+  public Collection<Repository> getAll(Comparator<Repository> comparator)
   {
-    LinkedList<Repository> repositories = new LinkedList<Repository>();
+    List<Repository> repositories = new ArrayList<Repository>();
 
     for (Repository repository : repositoryDB.values())
     {
@@ -394,7 +396,24 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
       }
     }
 
+    if (comparator != null)
+    {
+      Collections.sort(repositories, comparator);
+    }
+
     return repositories;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Collection<Repository> getAll()
+  {
+    return getAll(null);
   }
 
   /**

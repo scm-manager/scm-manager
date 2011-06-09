@@ -87,6 +87,17 @@ public interface Manager<T extends ModelObject, E extends Exception>
    * Method description
    *
    *
+   *
+   * @param comparator
+   * @return
+   * @since 1.4
+   */
+  public Collection<T> getAll(Comparator<T> comparator);
+
+  /**
+   * Method description
+   *
+   *
    * @param start
    * @param limit
    *

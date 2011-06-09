@@ -69,6 +69,7 @@ import java.io.InputStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -396,13 +397,32 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public Collection<User> getAll()
   {
+    return getAll(null);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param comparator
+   *
+   * @return
+   */
+  @Override
+  public Collection<User> getAll(Comparator<User> comparator)
+  {
     SecurityUtil.assertIsAdmin(scurityContextProvider);
 
-    LinkedList<User> users = new LinkedList<User>();
+    List<User> users = new ArrayList<User>();
 
     for (User user : userDB.values())
     {
       users.add(user.clone());
+    }
+
+    if (comparator != null)
+    {
+      Collections.sort(users, comparator);
     }
 
     return users;

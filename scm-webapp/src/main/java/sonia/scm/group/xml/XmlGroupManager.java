@@ -62,9 +62,12 @@ import sonia.scm.util.Util;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -352,13 +355,32 @@ public class XmlGroupManager extends AbstractGroupManager
   @Override
   public Collection<Group> getAll()
   {
+    return getAll(null);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param comparator
+   *
+   * @return
+   */
+  @Override
+  public Collection<Group> getAll(Comparator<Group> comparator)
+  {
     SecurityUtil.assertIsAdmin(securityContextProvider);
 
-    LinkedList<Group> groups = new LinkedList<Group>();
+    List<Group> groups = new ArrayList<Group>();
 
     for (Group group : groupDB.values())
     {
       groups.add(group.clone());
+    }
+
+    if (comparator != null)
+    {
+      Collections.sort(groups, comparator);
     }
 
     return groups;
