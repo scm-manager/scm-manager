@@ -54,15 +54,9 @@
     </dependency>
     
     <dependency>
-      <groupId>com.ning</groupId>
-      <artifactId>async-http-client</artifactId>
-      <version>1.6.3</version>
-    </dependency>
-    
-    <dependency>
       <groupId>org.sonatype.spice</groupId>
       <artifactId>jersey-ahc-client</artifactId>
-      <version>1.0.1-patch1</version>
+      <version>1.0.2</version>
       <exclusions>
         <exclusion>
           <artifactId>jaxb-api</artifactId>
