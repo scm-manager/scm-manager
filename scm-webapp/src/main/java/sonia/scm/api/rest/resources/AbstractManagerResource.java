@@ -536,17 +536,19 @@ public abstract class AbstractManagerResource<T extends ModelObject,
       if (Util.isEmpty(sortby))
       {
 
-        // replace with somethind useful
+        // replace with something useful
         sortby = "id";
       }
 
       items = manager.getAll(createComparator(sortby, desc), start, limit);
     }
+    else if (Util.isNotEmpty(sortby))
+    {
+      items = manager.getAll(createComparator(sortby, desc));
+    }
     else
     {
       items = manager.getAll();
-
-      // TODO sort result if sortby is not empty
     }
 
     return items;
