@@ -50,8 +50,6 @@ public interface RepositoryBrowser
    *
    *
    * @param revision
-   * @param tag
-   * @param branch
    * @param path
    *
    * @return
@@ -59,7 +57,6 @@ public interface RepositoryBrowser
    * @throws IOException
    * @throws RepositoryException
    */
-  public BrowserResult getResult(String revision, String tag, String branch,
-                                 String path)
+  public BrowserResult getResult(String revision, String path)
           throws IOException, RepositoryException;
 }
