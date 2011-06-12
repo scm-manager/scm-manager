@@ -33,48 +33,53 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.ListenerSupport;
-import sonia.scm.Type;
-import sonia.scm.TypeManager;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.5
  */
-public interface RepositoryManager
-        extends TypeManager<Repository, RepositoryException>,
-                ListenerSupport<RepositoryListener>, RepositoryBrowserProvider
+@XmlRootElement(name="browser-result")
+public class BrowserResult
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
-   *
-   * @param type
-   * @param name
-   *
-   * @return
    */
-  public Repository get(String type, String name);
+  public BrowserResult() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param revision
+   * @param tag
+   * @param branch
+   * @param file
+   */
+  public BrowserResult(String revision, String tag, String branch,
+                       FileObject file)
+  {
+    this.revision = revision;
+    this.tag = tag;
+    this.branch = branch;
+    this.file = file;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   *
-   * @param repository
-   * @return null if ChangesetViewer is not supported
-   *
-   * @throws RepositoryException
+   * @return
    */
-  public ChangesetViewer getChangesetViewer(Repository repository)
-          throws RepositoryException;
+  public String getBranch()
+  {
+    return branch;
+  }
 
   /**
    * Method description
@@ -82,16 +87,90 @@ public interface RepositoryManager
    *
    * @return
    */
-  public Collection<Type> getConfiguredTypes();
+  public FileObject getFile()
+  {
+    return file;
+  }
 
   /**
    * Method description
    *
    *
-   * @param type
+   * @return
+   */
+  public String getRevision()
+  {
+    return revision;
+  }
+
+  /**
+   * Method description
+   *
    *
    * @return
    */
-  @Override
-  public RepositoryHandler getHandler(String type);
+  public String getTag()
+  {
+    return tag;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param branch
+   */
+  public void setBranch(String branch)
+  {
+    this.branch = branch;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param file
+   */
+  public void setFile(FileObject file)
+  {
+    this.file = file;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param revision
+   */
+  public void setRevision(String revision)
+  {
+    this.revision = revision;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param tag
+   */
+  public void setTag(String tag)
+  {
+    this.tag = tag;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String branch;
+
+  /** Field description */
+  private FileObject file;
+
+  /** Field description */
+  private String revision;
+
+  /** Field description */
+  private String tag;
 }
