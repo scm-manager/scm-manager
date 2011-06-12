@@ -39,7 +39,11 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.ChangesetPreProcessor;
@@ -48,6 +52,7 @@ import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryBrowser;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
@@ -86,6 +91,10 @@ public class RepositoryResource
   /** Field description */
   public static final String PATH_PART = "repositories";
 
+  /** the logger for RepositoryResource */
+  private static final Logger logger =
+    LoggerFactory.getLogger(RepositoryResource.class);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -115,6 +124,67 @@ public class RepositoryResource
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   * @param revision
+   * @param path
+   *
+   * @return
+   */
+  @GET
+  @Path("{id}/browse")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public Response getBrowserResult(@PathParam("id") String id,
+                                   @QueryParam("revision") String revision,
+                                   @QueryParam("path") String path)
+  {
+    Response response = null;
+    Repository repository = repositoryManager.get(id);
+
+    if (repository != null)
+    {
+      BrowserResult result = null;
+
+      try
+      {
+        RepositoryBrowser browser =
+          repositoryManager.getRepositoryBrowser(repository);
+
+        if (browser != null)
+        {
+          result = browser.getResult(revision, path);
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find repository browser for respository {}",
+                      repository.getId());
+        }
+      }
+      catch (Exception ex)
+      {
+        logger.error("could not retrive browserresult", ex);
+      }
+
+      if (result != null)
+      {
+        response = Response.ok(result).build();
+      }
+      else
+      {
+        response = Response.status(Response.Status.NOT_FOUND).build();
+      }
+    }
+    else
+    {
+      response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    return response;
+  }
 
   /**
    * Method description
