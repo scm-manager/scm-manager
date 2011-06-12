@@ -1,5 +1,3 @@
-#!/usr/bin/env ${python}
-
 import os
 
 pythonPath = os.environ['SCM_PYTHON_PATH']
