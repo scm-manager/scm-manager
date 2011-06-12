@@ -7,12 +7,12 @@
   <parent>
     <artifactId>scm</artifactId>
     <groupId>sonia.scm</groupId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-server</artifactId>
-  <version>1.4</version>
+  <version>1.5-SNAPSHOT</version>
   <name>scm-server</name>
   <packaging>jar</packaging>
 
