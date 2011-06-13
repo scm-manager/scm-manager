@@ -96,6 +96,17 @@ public class FileObject implements LastModifiedAware, Iterable<FileObject>
    *
    * @return
    */
+  public String getDescription()
+  {
+    return description;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
   public Long getLastModified()
   {
@@ -163,6 +174,17 @@ public class FileObject implements LastModifiedAware, Iterable<FileObject>
    * Method description
    *
    *
+   * @param description
+   */
+  public void setDescription(String description)
+  {
+    this.description = description;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param directory
    */
   public void setDirectory(boolean directory)
@@ -220,6 +242,9 @@ public class FileObject implements LastModifiedAware, Iterable<FileObject>
   @XmlElement(name = "file")
   @XmlElementWrapper(name = "children")
   private List<FileObject> children;
+
+  /** Field description */
+  private String description;
 
   /** Field description */
   private boolean directory;

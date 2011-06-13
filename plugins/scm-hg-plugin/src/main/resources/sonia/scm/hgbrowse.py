@@ -71,13 +71,15 @@ for dir in directories:
   print '    </file>'
     
 for file in files:
+  time = file.date()[0]
+  desc = repo[file.linkrev()].description()
   print '    <file>'
   print '      <name>' + getName(file.path()) + '</name>'
   print '      <path>' + file.path() + '</path>'
   print '      <directory>false</directory>'
   print '      <length>' + str(file.size()) + '</length>'
-  time = file.date()[0]
   print '      <lastModified>' + str(time).split('.')[0] + '</lastModified>'
+  print '      <description>' + desc + '</description>'
   print '    </file>'
 print '    </children>'
 print '  </file>'

@@ -46,7 +46,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         url: restUrl + 'repositories/' + this.repository.id  + '/browse.json',
         method: 'GET'
       }),
-      fields: ['path', 'name', 'length', 'lastModified', 'directory'],
+      fields: ['path', 'name', 'length', 'lastModified', 'directory', 'description'],
       root: 'file.children',
       idProperty: 'path',
       autoLoad: true,
@@ -80,10 +80,15 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         dataIndex: 'lastModified',
         header: 'LastModified',
         renderer: Ext.util.Format.formatTimestamp
+      },{
+        id: 'description',
+        dataIndex: 'description',
+        header: 'Description'
       }]
     });
     
     var config = {
+      autoExpandColumn: 'description',
       title: String.format(this.repositoryBrowserTitleText, this.repository.name),
       store: browserStore,
       colModel: browserColModel,
