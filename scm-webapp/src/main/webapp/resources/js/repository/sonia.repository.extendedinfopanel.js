@@ -39,6 +39,9 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
   // text
   checkoutText: 'Checkout: ',
   
+  // TODO i18n
+  repositoryBrowserText: 'RepositoryBrowser',
+  
   modifyDefaultConfig: function(config){
     var items = config.items;
     if ( items == null ){
@@ -55,8 +58,39 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
             )
     },
       this.createSpacer(), 
-      this.createChangesetViewerLink()
+      this.createChangesetViewerLink(),
+      this.createSpacer(),
+      this.createRepositoryBrowserLink()
     );
+  },
+  
+  createRepositoryBrowserLink: function(){
+    return {
+      xtype: 'link',
+      colspan: 2,
+      text: this.repositoryBrowserText,
+      listeners: {
+        click: {
+          fn: this.openRepositoryBrowser,
+          scope: this
+        }
+      }
+    };
+  },
+  
+  createRepositoryBrowser: function(){
+    return {
+      id: 'repositorybrowser-' + this.item.id,
+      xtype: 'repositoryBrowser',
+      repository: this.item
+    }
+  },
+  
+  openRepositoryBrowser: function(browser){
+    if ( browser == null ){
+      browser = this.createRepositoryBrowser();
+    }
+    main.addTab(browser);
   }
   
 });
