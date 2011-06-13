@@ -51,7 +51,13 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       root: 'file.children',
       idProperty: 'path',
       autoLoad: true,
-      autoDestroy: true
+      autoDestroy: true,
+      listeners: {
+        load: {
+          fn: this.loadStore,
+          scope: this
+        }
+      }
     });
     
     var browserColModel = new Ext.grid.ColumnModel({
@@ -107,16 +113,51 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     Sonia.repository.RepositoryBrowser.superclass.initComponent.apply(this, arguments);
   },
   
+  loadStore: function(store, records, extra){
+    var path = extra.params.path;
+    if ( path != null && path.length > 0 ){
+      
+      var index = path.lastIndexOf('/');
+      if ( index > 0 ){
+        path = path.substr(0, index);
+      } else {
+        path = '';
+      }
+      
+      var File = Ext.data.Record.create([{
+        name: 'name'
+      },{
+        name: 'path'
+      },{
+        name: 'directory'
+      },{
+        name: 'length'
+      },{
+        name: 'lastModified'
+      }]);
+    
+      store.insert(0, new File({
+        name: '..',
+        path: path,
+        directory: true,
+        length: 0
+      }));
+    }
+  },
+  
   onClick: function(e){
     var el = e.getTarget('.scm-browser');
     
-    var rel = el.rel.split(':');
-    var path = rel[1];
+    if ( el != null ){
     
-    if ( rel[0] == 'dir' ){
-      this.changeDirectory(path);
-    } else {
-      this.openFile(path);
+      var rel = el.rel.split(':');
+      var path = rel[1];
+
+      if ( rel[0] == 'dir' ){
+        this.changeDirectory(path);
+      } else {
+        this.openFile(path);
+      }
     }
   },
   
