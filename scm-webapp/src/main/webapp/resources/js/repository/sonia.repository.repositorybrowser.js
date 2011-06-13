@@ -69,7 +69,8 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         dataIndex: 'name',
         header: 'Name',
         renderer: this.renderName,
-        scope: this
+        scope: this,
+        width: 180
       },{
         id: 'length',
         dataIndex: 'length',
@@ -78,7 +79,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       },{
         id: 'lastModified',
         dataIndex: 'lastModified',
-        header: 'LastModified',
+        header: 'Last Modified',
         renderer: Ext.util.Format.formatTimestamp
       },{
         id: 'description',

@@ -48,6 +48,8 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.repository.ChangesetViewer;
+import sonia.scm.repository.FileObject;
+import sonia.scm.repository.FileObjectNameComparator;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
@@ -64,6 +66,8 @@ import sonia.scm.web.security.WebSecurityContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -157,6 +161,7 @@ public class RepositoryResource
         if (browser != null)
         {
           result = browser.getResult(revision, path);
+          sort(result);
         }
         else if (logger.isWarnEnabled())
         {
@@ -391,6 +396,27 @@ public class RepositoryResource
     else
     {
       repository.setPermissions(null);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param result
+   */
+  private void sort(BrowserResult result)
+  {
+    FileObject file = result.getFile();
+
+    if (file != null)
+    {
+      List<FileObject> children = file.getChildren();
+
+      if (children != null)
+      {
+        Collections.sort(children, FileObjectNameComparator.instance);
+      }
     }
   }
 
