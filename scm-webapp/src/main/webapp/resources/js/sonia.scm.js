@@ -68,6 +68,8 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   mainTabPanel: null,
   
   infoPanels: [],
+  scripts: [],
+  stylesheets: [],
 
   constructor : function(config) {
     this.addEvents('login', 'logout', 'init');
@@ -371,6 +373,27 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         buttons: Ext.MessageBox.OK,
         icon:Ext.MessageBox.ERROR
       });
+    }
+  },
+  
+  loadScript: function(url){
+    if ( this.scripts.indexOf(url) < 0 ){
+      var js = document.createElement('script');
+      js.type = "text/javascript";
+      js.src = url;
+      document.head.appendChild(js);
+      this.scripts.push(url);
+    }
+  },
+  
+  loadStylesheet: function(url){
+    if ( this.stylesheets.indexOf(url) < 0 ){
+      var css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.type = 'text/css';
+      css.href = url;
+      document.head.appendChild(css);
+      this.stylesheets.push(url);
     }
   }
 

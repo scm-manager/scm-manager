@@ -39,8 +39,15 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   iconDocument: 'resources/images/document.gif',
   templateIcon: '<img src="{0}" alt="{1}" title="{2}" />',
   templateLink: '<a class="scm-browser" rel="{1}" href="#">{0}</a>',
+  
+  syntaxes: null,
 
   initComponent: function(){
+    
+    this.syntaxes = new Array();
+    this.syntaxes['java'] = 'resources/syntaxhighlighter/scripts/shBrushJava.js';
+    this.syntaxes['xml'] = 'resources/syntaxhighlighter/scripts/shBrushXml.js';
+    this.syntaxes['txt'] = 'resources/syntaxhighlighter/scripts/shBrushPlain.js';
     
     var browserStore = new Sonia.rest.JsonStore({
       proxy: new Ext.data.HttpProxy({
@@ -105,12 +112,21 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         click: {
           fn: this.onClick,
           scope: this
-        }
+        },
+        afterRender: this.afterRender
       }
     };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.RepositoryBrowser.superclass.initComponent.apply(this, arguments);
+  },
+  
+  afterRender: function(){
+    // preload syntaxhighlighter
+    main.loadScript('resources/syntaxhighlighter/scripts/shCore.js');
+    main.loadStylesheet('resources/syntaxhighlighter/styles/shCore.css');
+    // theme onfigureable ??
+    main.loadStylesheet('resources/syntaxhighlighter/styles/shCoreDefault.css');
   },
   
   loadStore: function(store, records, extra){
@@ -170,10 +186,30 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     return name
   },
   
+  getExtension: function(path){
+    var ext = null;
+    var index = path.lastIndexOf('.');
+    if ( index > 0 ){
+      ext = path.substr(index + 1, path.length);
+    }
+    return ext;
+  },
+  
   openFile: function(path){
     if ( debug ){
       console.debug( 'open file: ' + path );
     }
+    
+    var ext = this.getExtension( path );
+    var url = this.syntaxes[ext];
+    if ( url == null ){
+      // load plain on default
+      ext = "plain";
+      url = this.syntaxes['txt'];
+    }
+    
+    main.loadScript(url);
+    
     main.addTab({
       id: this.repository.id + "-b-"  + path,
       xtype: 'panel',
@@ -186,7 +222,8 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
             Ext.Ajax.request({
               url: restUrl + 'repositories/' + this.repository.id  + '/content?path=' + path,
               success: function(response){
-                panel.update('<pre>' + Ext.util.Format.htmlEncode(response.responseText) + '</pre>');
+                panel.update('<pre class="brush: ' + ext + '">' + Ext.util.Format.htmlEncode(response.responseText) + '</pre>');
+                SyntaxHighlighter.highlight({}, panel.body.el);
               },
               failure: function(){
                 // TODO
