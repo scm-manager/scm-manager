@@ -125,15 +125,15 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }
       
       var File = Ext.data.Record.create([{
-        name: 'name'
-      },{
-        name: 'path'
-      },{
-        name: 'directory'
-      },{
-        name: 'length'
-      },{
-        name: 'lastModified'
+          name: 'name'
+        },{
+          name: 'path'
+        },{
+          name: 'directory'
+        },{
+          name: 'length'
+        },{
+          name: 'lastModified'
       }]);
     
       store.insert(0, new File({
