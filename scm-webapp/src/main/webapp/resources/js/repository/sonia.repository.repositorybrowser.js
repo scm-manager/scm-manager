@@ -161,10 +161,42 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     }
   },
   
+  getName: function(path){
+    var name = path;
+    var index = path.lastIndexOf('/');
+    if ( index > 0 ){
+      name = path.substr(0, path.length - 1);
+    }
+    return name
+  },
+  
   openFile: function(path){
     if ( debug ){
       console.debug( 'open file: ' + path );
     }
+    main.addTab({
+      id: this.repository.id + "-b-"  + path,
+      xtype: 'panel',
+      title: this.getName(path),
+      closeable: true,
+      autoScroll: true,
+      listeners: {
+        afterrender: {
+          fn: function(panel){
+            Ext.Ajax.request({
+              url: restUrl + 'repositories/' + this.repository.id  + '/content?path=' + path,
+              success: function(response){
+                panel.update('<pre>' + Ext.util.Format.htmlEncode(response.responseText) + '</pre>');
+              },
+              failure: function(){
+                // TODO
+              }
+            });
+          },
+          scope: this
+        }
+      }
+    });
   },
   
   changeDirectory: function(path){
