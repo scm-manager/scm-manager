@@ -43,6 +43,7 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -101,6 +102,47 @@ public class HgRepositoryBrowser implements RepositoryBrowser
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param revision
+   * @param path
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Override
+  public InputStream getContent(String revision, String path)
+          throws IOException, RepositoryException
+  {
+    if (Util.isEmpty(revision))
+    {
+      revision = DEFAULT_REVISION;
+    }
+
+    File directory = handler.getDirectory(repository);
+    ProcessBuilder builder =
+      new ProcessBuilder(handler.getConfig().getHgBinary(), "cat", "-r",
+                         revision, Util.nonNull(path));
+
+    if (logger.isDebugEnabled())
+    {
+      StringBuilder msg = new StringBuilder();
+
+      for (String param : builder.command())
+      {
+        msg.append(param).append(" ");
+      }
+
+      logger.debug(msg.toString());
+    }
+
+    return builder.directory(directory).start().getInputStream();
+  }
 
   /**
    * Method description

@@ -59,10 +59,15 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -78,9 +83,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 
 /**
  *
@@ -237,6 +244,79 @@ public class RepositoryResource
     }
 
     return response;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   * @param revision
+   * @param path
+   *
+   * @return
+   */
+  @GET
+  @Path("{id}/content")
+  @Produces({ MediaType.APPLICATION_OCTET_STREAM })
+  public StreamingOutput getContent(@PathParam("id") String id,
+                                    @QueryParam("revision") String revision,
+                                    @QueryParam("path") String path)
+  {
+    StreamingOutput output = null;
+    Repository repository = repositoryManager.get(id);
+
+    if (repository != null)
+    {
+      try
+      {
+        RepositoryBrowser browser =
+          repositoryManager.getRepositoryBrowser(repository);
+
+        if (browser != null)
+        {
+          final InputStream content = browser.getContent(revision, path);
+
+          if (content != null)
+          {
+            output = new StreamingOutput()
+            {
+              @Override
+              public void write(OutputStream output)
+                      throws IOException, WebApplicationException
+              {
+                try
+                {
+                  IOUtil.copy(content, output);
+                }
+                finally
+                {
+                  IOUtil.close(content);
+                }
+              }
+            };
+          }
+          else if (logger.isWarnEnabled())
+          {
+            logger.warn(
+                "could not find content, repository: {}, path: {}, revision: {}",
+                new Object[] { repository.getId(),
+                               path, revision });
+          }
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find repository browser for respository {}",
+                      repository.getId());
+        }
+      }
+      catch (Exception ex)
+      {
+        logger.error("could not retrive content", ex);
+      }
+    }
+
+    return output;
   }
 
   //~--- methods --------------------------------------------------------------

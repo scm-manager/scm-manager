@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *
@@ -44,6 +45,21 @@ import java.io.IOException;
  */
 public interface RepositoryBrowser
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param revision
+   * @param path
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  public InputStream getContent(String revision, String path)
+          throws IOException, RepositoryException;;
 
   /**
    * Method description
