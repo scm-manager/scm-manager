@@ -38,6 +38,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   iconFolder: 'resources/images/folder.gif',
   iconDocument: 'resources/images/document.gif',
   templateIcon: '<img src="{0}" alt="{1}" title="{2}" />',
+  templateLink: '<a class="scm-browser" rel="{1}" href="#">{0}</a>',
 
   initComponent: function(){
     
@@ -93,15 +94,39 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       title: String.format(this.repositoryBrowserTitleText, this.repository.name),
       store: browserStore,
       colModel: browserColModel,
-      loadMask: true
+      loadMask: true,
+      listeners: {
+        click: {
+          fn: this.onClick,
+          scope: this
+        }
+      }
     };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.RepositoryBrowser.superclass.initComponent.apply(this, arguments);
   },
   
+  onClick: function(e){
+    var el = e.getTarget('.scm-browser');
+    var path = el.rel;
+    if ( path.substr(-1) === '/' ){
+      path = path.substr( 0, path.length - 1 );
+    }
+    
+    if (debug){
+      console.debug( 'change directory: ' + path );
+    }
+    
+    this.getStore().load({
+      params: {
+        path: path
+      }
+    });
+  },
+  
   renderName: function(name, p, record){
-    return name;
+    return String.format(this.templateLink, name, record.data.path);
   },
   
   renderIcon: function(directory, p, record){
