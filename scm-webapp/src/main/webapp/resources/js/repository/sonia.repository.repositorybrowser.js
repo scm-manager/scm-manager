@@ -109,7 +109,24 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   
   onClick: function(e){
     var el = e.getTarget('.scm-browser');
-    var path = el.rel;
+    
+    var rel = el.rel.split(':');
+    var path = rel[1];
+    
+    if ( rel[0] == 'dir' ){
+      this.changeDirectory(path);
+    } else {
+      this.openFile(path);
+    }
+  },
+  
+  openFile: function(path){
+    if ( debug ){
+      console.debug( 'open file: ' + path );
+    }
+  },
+  
+  changeDirectory: function(path){
     if ( path.substr(-1) === '/' ){
       path = path.substr( 0, path.length - 1 );
     }
@@ -126,7 +143,9 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   },
   
   renderName: function(name, p, record){
-    return String.format(this.templateLink, name, record.data.path);
+    var path = record.data.directory ? 'dir:' : 'file:';
+    path += record.data.path;
+    return String.format(this.templateLink, name, path);
   },
   
   renderIcon: function(directory, p, record){
