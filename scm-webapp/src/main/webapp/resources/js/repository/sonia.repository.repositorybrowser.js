@@ -44,11 +44,6 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
 
   initComponent: function(){
     
-    this.syntaxes = new Array();
-    this.syntaxes['java'] = 'resources/syntaxhighlighter/scripts/shBrushJava.js';
-    this.syntaxes['xml'] = 'resources/syntaxhighlighter/scripts/shBrushXml.js';
-    this.syntaxes['txt'] = 'resources/syntaxhighlighter/scripts/shBrushPlain.js';
-    
     var browserStore = new Sonia.rest.JsonStore({
       proxy: new Ext.data.HttpProxy({
         url: restUrl + 'repositories/' + this.repository.id  + '/browse.json',
@@ -113,21 +108,12 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         click: {
           fn: this.onClick,
           scope: this
-        },
-        afterRender: this.afterRender
+        }
       }
     };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.RepositoryBrowser.superclass.initComponent.apply(this, arguments);
-  },
-  
-  afterRender: function(){
-    // preload syntaxhighlighter
-    main.loadScript('resources/syntaxhighlighter/scripts/shCore.js');
-    main.loadStylesheet('resources/syntaxhighlighter/styles/shCore.css');
-    // theme onfigureable ??
-    main.loadStylesheet('resources/syntaxhighlighter/styles/shCoreDefault.css');
   },
   
   loadStore: function(store, records, extra){
@@ -201,39 +187,16 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       console.debug( 'open file: ' + path );
     }
     
-    var ext = this.getExtension( path );
-    var url = this.syntaxes[ext];
-    if ( url == null ){
-      // load plain on default
-      ext = "plain";
-      url = this.syntaxes['txt'];
-    }
-    
-    main.loadScript(url);
+    var ext = this.getExtension( path );    
     
     main.addTab({
       id: this.repository.id + "-b-"  + path,
-      xtype: 'panel',
+      contentUrl: restUrl + 'repositories/' + this.repository.id  + '/content?path=' + path,
+      xtype: 'syntaxHighlighterPanel',
       title: this.getName(path),
       closable: true,
       autoScroll: true,
-      listeners: {
-        afterrender: {
-          fn: function(panel){
-            Ext.Ajax.request({
-              url: restUrl + 'repositories/' + this.repository.id  + '/content?path=' + path,
-              success: function(response){
-                panel.update('<pre class="brush: ' + ext + '">' + Ext.util.Format.htmlEncode(response.responseText) + '</pre>');
-                SyntaxHighlighter.highlight({}, panel.body.el);
-              },
-              failure: function(){
-                // TODO
-              }
-            });
-          },
-          scope: this
-        }
-      }
+      syntax: ext
     });
   },
   

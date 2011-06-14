@@ -376,13 +376,46 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     }
   },
   
-  loadScript: function(url){
+  loadScript: function(url, callback, scope){
+    var doCallback = function(){
+      if (debug){
+        console.debug('call callback for script ' + url);
+      }
+      if ( scope ){
+        callback.call(scope);
+      } else {
+        callback();
+      }
+    }
     if ( this.scripts.indexOf(url) < 0 ){
       var js = document.createElement('script');
       js.type = "text/javascript";
       js.src = url;
-      document.head.appendChild(js);
+      
+      if ( Ext.isIE ){
+        js.onreadystatechange = function (){
+          if (this.readyState === 'loaded' ||
+              this.readyState === 'complete'){
+              doCallback();
+          }
+        }
+      } else {
+        js.onload = doCallback;
+        js.onerror = doCallback;
+      }
+      
+      if (debug){
+        console.debug('load script ' + url);
+      }
+      
+      var head = document.getElementsByTagName('head')[0];
+      head.appendChild(js);
       this.scripts.push(url);
+    } else {
+      if (debug){
+        console.debug( 'script ' + url + ' allready loaded' );
+      }
+      doCallback();
     }
   },
   
