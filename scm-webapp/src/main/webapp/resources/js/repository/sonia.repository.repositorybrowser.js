@@ -214,7 +214,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       id: this.repository.id + "-b-"  + path,
       xtype: 'panel',
       title: this.getName(path),
-      closeable: true,
+      closable: true,
       autoScroll: true,
       listeners: {
         afterrender: {
