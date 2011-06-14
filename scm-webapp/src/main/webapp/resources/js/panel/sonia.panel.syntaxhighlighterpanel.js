@@ -233,6 +233,8 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
         console.debug('call SyntaxHighlighter.highlight()');
       }
       SyntaxHighlighter.highlight({}, this.body.el);
+      // ugly workaround
+      SyntaxHighlighter.vars.discoveredBrushes = null;
     }
   }
   
