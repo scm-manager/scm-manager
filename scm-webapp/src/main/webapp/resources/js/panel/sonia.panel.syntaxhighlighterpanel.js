@@ -131,6 +131,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
   }],
   
   syntax: 'plain',
+  brush: 'plain',
   brushUrl: 'shBrushPlain.js',
   theme: 'Default',
   shPath: 'resources/syntaxhighlighter',
@@ -153,7 +154,6 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
         for ( var j=0;j<s.aliases.length; j++ ){
           if ( this.syntax == s.aliases[j] ){
             found = true;
-            this.syntax = s.name;
             this.brushUrl = s.fileName;
             if (debug){
               console.debug( "found brush " + this.syntax + " at " + this.brushUrl );
@@ -174,6 +174,8 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
       }
     }
     
+    this.brush = this.syntax;
+    
     // load core stylesheet
     main.loadStylesheet( this.shPath + '/styles/shCore.css');
     // load theme stylesheet
@@ -186,31 +188,26 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
       autoScroll: true,
       listeners: {
         afterrender: {
-          fn: this.loadContent,
+          fn: this.loadBodyContent,
           scope: this
         }
       }
     };
     
-    this.loadContent();
-    
     Ext.apply(this, Ext.apply(this.initialConfig, config));
-    
-    if (debug){
-      console.debug(config);
-    }
-    
     Sonia.panel.SyntaxHighlighterPanel.superclass.initComponent.apply(this, arguments);
   },
   
-  loadContent: function(){
+  loadBodyContent: function(){
     main.loadScript(this.shPath + '/scripts/shCore.js', this.loadBrush, this);
     Ext.Ajax.request({
       url: this.contentUrl,
       scope: this,
       success: function(response){
-        console.debug( this.syntax );
-        this.update('<pre class="brush: ' + this.syntax + '">' + Ext.util.Format.htmlEncode(response.responseText) + '</pre>');
+        if (debug){
+          console.debug( 'load content for brush: ' + this.brush );
+        }
+        this.update('<pre class="brush: ' + this.brush + '; class-name: ' + this.brush + '">' + Ext.util.Format.htmlEncode(response.responseText) + '</pre>');
         this.contentLoaded = true;
         this.highlight();
       },

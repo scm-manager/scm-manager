@@ -390,6 +390,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     if ( this.scripts.indexOf(url) < 0 ){
       var js = document.createElement('script');
       js.type = "text/javascript";
+      js.language = 'javascript';
       js.src = url;
       
       if ( Ext.isIE ){
@@ -408,8 +409,9 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         console.debug('load script ' + url);
       }
       
-      var head = document.getElementsByTagName('head')[0];
-      head.appendChild(js);
+      document.body.appendChild(js);
+      // var head = document.getElementsByTagName('head')[0];
+      // head.appendChild(js);
       this.scripts.push(url);
     } else {
       if (debug){
