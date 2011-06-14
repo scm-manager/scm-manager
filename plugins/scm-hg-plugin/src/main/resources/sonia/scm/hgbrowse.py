@@ -71,8 +71,9 @@ for dir in directories:
   print '    </file>'
     
 for file in files:
-  time = file.date()[0]
-  desc = repo[file.linkrev()].description()
+  linkrev = repo[file.linkrev()]
+  time = int(linkrev.date()[0]) * 1000
+  desc = linkrev.description()
   print '    <file>'
   print '      <name>' + getName(file.path()) + '</name>'
   print '      <path>' + file.path() + '</path>'
