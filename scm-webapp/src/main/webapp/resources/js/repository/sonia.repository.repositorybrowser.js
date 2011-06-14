@@ -103,6 +103,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     });
     
     var config = {
+      autoHeight: true,
       autoExpandColumn: 'description',
       title: String.format(this.repositoryBrowserTitleText, this.repository.name),
       store: browserStore,
