@@ -39,8 +39,6 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   iconDocument: 'resources/images/document.gif',
   templateIcon: '<img src="{0}" alt="{1}" title="{2}" />',
   templateLink: '<a class="scm-browser" rel="{1}" href="#">{0}</a>',
-  
-  syntaxes: null,
 
   initComponent: function(){
     
