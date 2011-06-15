@@ -32,6 +32,7 @@
 Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   
   repository: null,
+  revision: null,
   
   // TODO i18n
   repositoryBrowserTitleText: 'RepositoryBrowser: {0}',
@@ -59,6 +60,12 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         }
       }
     });
+    
+    if ( this.revision ){
+      browserStore.baseParams = {
+        revision: this.revision
+      };
+    }
     
     var browserColModel = new Ext.grid.ColumnModel({
       defaults: {
@@ -186,9 +193,14 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     
     var ext = this.getExtension( path );    
     
+    var url = restUrl + 'repositories/' + this.repository.id  + '/content?path=' + path;
+    if ( this.revision ){
+      url += "&revision=" + this.revision;
+    }
+    
     main.addTab({
       id: this.repository.id + "-b-"  + path,
-      contentUrl: restUrl + 'repositories/' + this.repository.id  + '/content?path=' + path,
+      contentUrl: url,
       xtype: 'syntaxHighlighterPanel',
       title: this.getName(path),
       closable: true,
