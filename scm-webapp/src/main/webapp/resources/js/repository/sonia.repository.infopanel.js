@@ -143,12 +143,8 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
       xtype: 'link',
       colspan: 2,
       text: this.changesetViewerText,
-      listeners: {
-        click: {
-          fn: this.openChangesetViewer,
-          scope: this
-        }
-      }
+      handler: this.openChangesetViewer,
+      scope: this
     };
   },
 
