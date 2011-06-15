@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
 import sonia.scm.Type;
@@ -91,6 +92,9 @@ public class SvnRepositoryHandler
   public SvnRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem)
   {
     super(storeFactory, fileSystem);
+
+    // setup FSRepositoryFactory for SvnRepositoryBrowser
+    FSRepositoryFactory.setup();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -124,6 +128,22 @@ public class SvnRepositoryHandler
     }
 
     return changesetViewer;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  public RepositoryBrowser getRepositoryBrowser(Repository repository)
+  {
+    AssertUtil.assertIsNotNull(repository);
+
+    return new SvnRepositoryBrowser(this, repository);
   }
 
   /**
