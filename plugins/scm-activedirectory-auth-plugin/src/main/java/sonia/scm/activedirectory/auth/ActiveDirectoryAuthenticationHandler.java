@@ -29,16 +29,20 @@
  *
  */
 
+
+
 package sonia.scm.activedirectory.auth;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Singleton;
+
 import com4j.COM4J;
 import com4j.Com4jObject;
 import com4j.ComException;
 import com4j.ExecutionException;
 import com4j.Variant;
+
 import com4j.typelibs.activeDirectory.IADs;
 import com4j.typelibs.activeDirectory.IADsGroup;
 import com4j.typelibs.activeDirectory.IADsOpenDSObject;
@@ -80,27 +84,18 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Singleton
 @Extension
-public class ActiveDirectoryAuthenticationHandler implements
-    AuthenticationHandler
+public class ActiveDirectoryAuthenticationHandler
+        implements AuthenticationHandler
 {
 
   /** Field description */
   public static final String TYPE = "activedirectory";
 
   /** the logger for ActiveDirectoryAuthenticationHandler */
-  private static final Logger logger = LoggerFactory
-      .getLogger(ActiveDirectoryAuthenticationHandler.class);
+  private static final Logger logger =
+    LoggerFactory.getLogger(ActiveDirectoryAuthenticationHandler.class);
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * If true, we can do ADSI/COM based look up.  Otherwise, we would need an
-   * alternate approach, which has yet to be implemented.
-   */
-  public boolean canDoNativeAuth()
-  {
-    return SystemUtil.isWindows() && SystemUtil.is32bit();
-  }
 
   /**
    * Method description
@@ -115,12 +110,23 @@ public class ActiveDirectoryAuthenticationHandler implements
    */
   @Override
   public AuthenticationResult authenticate(HttpServletRequest request,
-      HttpServletResponse response, String username, String password)
+          HttpServletResponse response, String username, String password)
   {
     AssertUtil.assertIsNotEmpty(username);
     AssertUtil.assertIsNotEmpty(password);
 
     return authenticate(username, password);
+  }
+
+  /**
+   * If true, we can do ADSI/COM based look up.  Otherwise, we would need an
+   * alternate approach, which has yet to be implemented.
+   *
+   * @return
+   */
+  public boolean canDoNativeAuth()
+  {
+    return SystemUtil.isWindows() && SystemUtil.is32bit();
   }
 
   /**
@@ -132,7 +138,7 @@ public class ActiveDirectoryAuthenticationHandler implements
   @Override
   public void close() throws IOException
   {
-    if ( con != null )
+    if (con != null)
     {
       con.close();
       con.dispose();
@@ -148,26 +154,29 @@ public class ActiveDirectoryAuthenticationHandler implements
   @Override
   public void init(SCMContextProvider context)
   {
-
     if (!canDoNativeAuth())
     {
       if (logger.isErrorEnabled())
       {
-        logger.error("Currently, this plugin is only supported on Windows "
+        logger.error(
+            "Currently, this plugin is only supported on Windows "
             + "with a 32-bit JVM.  Active Directory information will not be "
             + "available.");
       }
+
       return;
     }
 
     try
     {
       IADs rootDSE = COM4J.getObject(IADs.class, "LDAP://RootDSE", null);
+
       defaultNamingContext = (String) rootDSE.get("defaultNamingContext");
       logger.info("Active Directory domain is " + defaultNamingContext);
       con = ClassFactory.createConnection();
       con.provider("ADsDSOObject");
-      con.open("Active Directory Provider", ""/*default*/, ""/*default*/, -1/*default*/);
+      con.open("Active Directory Provider", "" /* default */, "" /* default */,
+               -1 /* default */);
       logger.debug("Connected to Active Directory");
     }
     catch (ExecutionException ex)
@@ -190,6 +199,37 @@ public class ActiveDirectoryAuthenticationHandler implements
     return TYPE;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param userOrGroupname
+   *
+   * @return
+   */
+  protected String getDnOfUserOrGroup(String userOrGroupname)
+  {
+    String dn;
+    _Command cmd = ClassFactory.createCommand();
+
+    cmd.activeConnection(con);
+    cmd.commandText("<LDAP://" + defaultNamingContext + ">;(sAMAccountName="
+                    + userOrGroupname + ");distinguishedName;subTree");
+
+    _Recordset rs = cmd.execute(null, Variant.MISSING, -1 /* default */);
+
+    if (!rs.eof())
+    {
+      dn = rs.fields().item("distinguishedName").value().toString();
+    }
+    else
+    {
+      dn = null;    // No such user or group
+    }
+
+    return dn;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -207,6 +247,7 @@ public class ActiveDirectoryAuthenticationHandler implements
     {
       return null;
     }
+
     if (con == null)
     {
       return null;
@@ -214,28 +255,32 @@ public class ActiveDirectoryAuthenticationHandler implements
 
     AuthenticationResult result;
     String dn = getDnOfUserOrGroup(username);
+
     // now we got the DN of the user
     IADsOpenDSObject dso = COM4J.getObject(IADsOpenDSObject.class, "LDAP:",
-        null);
+                             null);
+
     try
     {
-      IADsUser usr = dso.openDSObject("LDAP://" + dn, dn, password, 0)
-          .queryInterface(IADsUser.class);
+      IADsUser usr = dso.openDSObject("LDAP://" + dn, dn, password,
+                                      0).queryInterface(IADsUser.class);
+
       if (usr != null)
       {
         if (!usr.accountDisabled())
         {
           User user = new User(username, usr.fullName(), usr.emailAddress());
+
           user.setType(TYPE);
           result = new AuthenticationResult(user, getGroups(usr));
         }
         else
-        { // Account disabled
+        {    // Account disabled
           result = AuthenticationResult.FAILED;
         }
       }
       else
-      {// the user name was in fact a group
+      {      // the user name was in fact a group
         result = AuthenticationResult.NOT_FOUND;
       }
     }
@@ -243,46 +288,42 @@ public class ActiveDirectoryAuthenticationHandler implements
     {
       result = AuthenticationResult.FAILED;
     }
+
     return result;
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param usr
+   *
+   * @return
+   */
   private Collection<String> getGroups(IADsUser usr)
   {
     Set<String> groups = new TreeSet<String>();
+
     for (Com4jObject g : usr.groups())
     {
       IADsGroup grp = g.queryInterface(IADsGroup.class);
+
       // cut "CN=" and make that the role name
       String groupName = grp.name().substring(3);
+
       groups.add(groupName);
     }
-    return groups;
-  }
 
-  protected String getDnOfUserOrGroup(String userOrGroupname)
-  {
-    String dn;
-    _Command cmd = ClassFactory.createCommand();
-    cmd.activeConnection(con);
-    cmd.commandText("<LDAP://" + defaultNamingContext + ">;(sAMAccountName="
-        + userOrGroupname + ");distinguishedName;subTree");
-    _Recordset rs = cmd.execute(null, Variant.MISSING, -1/*default*/);
-    if (!rs.eof())
-    {
-      dn = rs.fields().item("distinguishedName").value().toString();
-    }
-    else
-    {
-      dn = null; // No such user or group
-    }
-    return dn;
+    return groups;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String defaultNamingContext;
+  private _Connection con;
 
   /** Field description */
-  private _Connection con;
+  private String defaultNamingContext;
 }
