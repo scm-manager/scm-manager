@@ -156,10 +156,21 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
         svnRepository.getDir(Util.nonNull(path), revisionNumber, null,
                              (Collection) null);
       List<FileObject> children = new ArrayList<FileObject>();
+      String basePath = Util.EMPTY_STRING;
+
+      if (Util.isNotEmpty(path))
+      {
+        basePath = path;
+
+        if (!basePath.endsWith("/"))
+        {
+          basePath = basePath.concat("/");
+        }
+      }
 
       for (SVNDirEntry entry : entries)
       {
-        children.add(createFileObject(entry));
+        children.add(createFileObject(entry, basePath));
       }
 
       result = new BrowserResult();
@@ -192,15 +203,16 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
    *
    *
    * @param entry
+   * @param path
    *
    * @return
    */
-  private FileObject createFileObject(SVNDirEntry entry)
+  private FileObject createFileObject(SVNDirEntry entry, String path)
   {
     FileObject fileObject = new FileObject();
 
     fileObject.setName(entry.getName());
-    fileObject.setPath(entry.getRelativePath());
+    fileObject.setPath(path.concat(entry.getRelativePath()));
     fileObject.setDirectory(entry.getKind() == SVNNodeKind.DIR);
 
     if (entry.getDate() != null)
