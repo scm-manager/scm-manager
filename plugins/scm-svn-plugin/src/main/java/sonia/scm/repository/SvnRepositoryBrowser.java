@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNNodeKind;
+import org.tmatesoft.svn.core.SVNProperties;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
@@ -49,6 +50,8 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,7 +90,7 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * http://wiki.svnkit.com/Printing_Out_File_Contents
    *
    *
    * @param revision
@@ -103,8 +106,30 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
           throws IOException, RepositoryException
   {
 
-    // http://wiki.svnkit.com/Printing_Out_File_Contents
-    throw new UnsupportedOperationException("Not supported yet.");
+    // TODO change the api, to remove the ByteArray streams
+    InputStream content = null;
+    long revisionNumber = getRevisionNumber(revision);
+    SVNRepository svnRepository = null;
+
+    try
+    {
+      svnRepository = getSvnRepository();
+
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+      svnRepository.getFile(path, revisionNumber, new SVNProperties(), baos);
+      content = new ByteArrayInputStream(baos.toByteArray());
+    }
+    catch (SVNException ex)
+    {
+      logger.error("could not open repository", ex);
+    }
+    finally
+    {
+      svnRepository.closeSession();
+    }
+
+    return content;
   }
 
   /**
@@ -123,19 +148,7 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
   public BrowserResult getResult(String revision, String path)
           throws IOException, RepositoryException
   {
-    long revisionNumber = -1;
-
-    if (Util.isNotEmpty(revision))
-    {
-      try
-      {
-        revisionNumber = Long.parseLong(revision);
-      }
-      catch (NumberFormatException ex)
-      {
-        throw new RepositoryException("given revision is not a svnrevision");
-      }
-    }
+    long revisionNumber = getRevisionNumber(revision);
 
     if (logger.isDebugEnabled())
     {
@@ -144,13 +157,12 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
                                   path, revision });
     }
 
-    File directory = handler.getDirectory(repository);
     BrowserResult result = null;
     SVNRepository svnRepository = null;
 
     try
     {
-      svnRepository = SVNRepositoryFactory.create(SVNURL.fromFile(directory));
+      svnRepository = getSvnRepository();
 
       Collection<SVNDirEntry> entries =
         svnRepository.getDir(Util.nonNull(path), revisionNumber, null,
@@ -224,6 +236,52 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
     fileObject.setDescription(entry.getCommitMessage());
 
     return fileObject;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param revision
+   *
+   * @return
+   *
+   * @throws RepositoryException
+   */
+  private long getRevisionNumber(String revision) throws RepositoryException
+  {
+    long revisionNumber = -1;
+
+    if (Util.isNotEmpty(revision))
+    {
+      try
+      {
+        revisionNumber = Long.parseLong(revision);
+      }
+      catch (NumberFormatException ex)
+      {
+        throw new RepositoryException("given revision is not a svnrevision");
+      }
+    }
+
+    return revisionNumber;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws SVNException
+   */
+  private SVNRepository getSvnRepository() throws SVNException
+  {
+    File directory = handler.getDirectory(repository);
+
+    return SVNRepositoryFactory.create(SVNURL.fromFile(directory));
   }
 
   //~--- fields ---------------------------------------------------------------
