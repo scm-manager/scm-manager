@@ -48,6 +48,8 @@ import com4j.typelibs.activeDirectory.IADsGroup;
 import com4j.typelibs.activeDirectory.IADsOpenDSObject;
 import com4j.typelibs.activeDirectory.IADsUser;
 import com4j.typelibs.ado20.ClassFactory;
+import com4j.typelibs.ado20.Field;
+import com4j.typelibs.ado20.Fields;
 import com4j.typelibs.ado20._Command;
 import com4j.typelibs.ado20._Connection;
 import com4j.typelibs.ado20._Recordset;
@@ -60,6 +62,7 @@ import sonia.scm.plugin.ext.Extension;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.SystemUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.security.AuthenticationHandler;
 import sonia.scm.web.security.AuthenticationResult;
 
@@ -68,6 +71,8 @@ import sonia.scm.web.security.AuthenticationResult;
 import java.io.IOException;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -177,6 +182,7 @@ public class ActiveDirectoryAuthenticationHandler
       con.provider("ADsDSOObject");
       con.open("Active Directory Provider", "" /* default */, "" /* default */,
                -1 /* default */);
+      readDomains(rootDSE);
       logger.debug("Connected to Active Directory");
     }
     catch (ExecutionException ex)
@@ -203,24 +209,27 @@ public class ActiveDirectoryAuthenticationHandler
    * Method description
    *
    *
+   *
+   * @param domainContext
    * @param userOrGroupname
    *
    * @return
    */
-  protected String getDnOfUserOrGroup(String userOrGroupname)
+  protected String getDnOfUserOrGroup(String domainContext,
+          String userOrGroupname)
   {
     String dn;
     _Command cmd = ClassFactory.createCommand();
 
     cmd.activeConnection(con);
-    cmd.commandText("<LDAP://" + defaultNamingContext + ">;(sAMAccountName="
+    cmd.commandText("<LDAP://" + domainContext + ">;(sAMAccountName="
                     + userOrGroupname + ");distinguishedName;subTree");
 
     _Recordset rs = cmd.execute(null, Variant.MISSING, -1 /* default */);
 
     if (!rs.eof())
     {
-      dn = rs.fields().item("distinguishedName").value().toString();
+      dn = getString(rs, "distinguishedName");
     }
     else
     {
@@ -254,7 +263,43 @@ public class ActiveDirectoryAuthenticationHandler
     }
 
     AuthenticationResult result;
-    String dn = getDnOfUserOrGroup(username);
+    String host = "";
+    String internalName = username;
+    String domainContext = defaultNamingContext;
+    int index = username.indexOf("\\");
+
+    if (index > 0)
+    {
+      String domain = username.substring(0, index);
+
+      username = username.substring(index + 1);
+      internalName = domain.toLowerCase().concat("/").concat(username);
+
+      ActiveDirectoryDomain d = domainMap.get(domain.toUpperCase());
+
+      if (d != null)
+      {
+        domainContext = d.getDomainContext();
+        host = Util.nonNull(d.getHost());
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("could not find domain {}", domain);
+      }
+    }
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("try to autenticate user {} in context {}", username,
+                   domainContext);
+    }
+
+    String dn = getDnOfUserOrGroup(domainContext, username);
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("found user at {}", dn);
+    }
 
     // now we got the DN of the user
     IADsOpenDSObject dso = COM4J.getObject(IADsOpenDSObject.class, "LDAP:",
@@ -262,14 +307,21 @@ public class ActiveDirectoryAuthenticationHandler
 
     try
     {
-      IADsUser usr = dso.openDSObject("LDAP://" + dn, dn, password,
+      if (Util.isNotEmpty(host))
+      {
+        host = host.concat("/");
+      }
+
+      IADsUser usr = dso.openDSObject("LDAP://".concat(host).concat(dn), dn,
+                                      password,
                                       0).queryInterface(IADsUser.class);
 
       if (usr != null)
       {
         if (!usr.accountDisabled())
         {
-          User user = new User(username, usr.fullName(), usr.emailAddress());
+          User user = new User(internalName, usr.fullName(),
+                               usr.emailAddress());
 
           user.setType(TYPE);
           result = new AuthenticationResult(user, getGroups(usr));
@@ -292,10 +344,90 @@ public class ActiveDirectoryAuthenticationHandler
     return result;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param rootDSE
+   */
+  private void readDomains(IADs rootDSE)
+  {
+    try
+    {
+      String configNC = (String) rootDSE.get("configurationNamingContext");
+
+      if (Util.isNotEmpty(configNC))
+      {
+        _Command cmd = ClassFactory.createCommand();
+
+        cmd.activeConnection(con);
+        cmd.commandText("<LDAP://" + configNC
+                        + ">;(NETBIOSName=*);cn,dnsRoot,ncname;subTree");
+
+        _Recordset rs = cmd.execute(null, Variant.MISSING, -1 /* default */);
+
+        while (!rs.eof())
+        {
+          String cn = getString(rs, "cn");
+          String dn = getString(rs, "ncname");
+          String host = getFirstString(rs, "dnsRoot");
+
+          if (Util.isNotEmpty(cn) && Util.isNotEmpty(dn))
+          {
+            if (logger.isInfoEnabled())
+            {
+              logger.info("found domain: {}, {}, {}", new Object[] { cn, dn,
+                      host });
+            }
+
+            domainMap.put(cn, new ActiveDirectoryDomain(cn, dn, host));
+          }
+
+          rs.moveNext();
+        }
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("could not find a valid configurationNamingContext");
+      }
+    }
+    catch (Exception ex)
+    {
+      logger.error("could not read domains", ex);
+    }
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Get the first String of a multivalue recordset item
+   *
+   *
+   * @param rs
+   * @param item
+   *
+   * @return the first item of a recordset
+   */
+  private String getFirstString(_Recordset rs, String item)
+  {
+    String result = null;
+    Object[] values = (Object[]) getObject(rs, item);
+
+    if (Util.isNotEmpty(values))
+    {
+      Object value = values[0];
+
+      if (value != null)
+      {
+        result = value.toString();
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Fetch all groupnames of a user
    *
    *
    * @param usr
@@ -319,6 +451,55 @@ public class ActiveDirectoryAuthenticationHandler
     return groups;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param rs
+   * @param item
+   *
+   * @return
+   */
+  private Object getObject(_Recordset rs, String item)
+  {
+    Object value = null;
+    Fields fields = rs.fields();
+
+    if (fields != null)
+    {
+      Field field = fields.item(item);
+
+      if (field != null)
+      {
+        value = field.value();
+      }
+    }
+
+    return value;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param rs
+   * @param item
+   *
+   * @return
+   */
+  private String getString(_Recordset rs, String item)
+  {
+    String result = null;
+    Object value = getObject(rs, item);
+
+    if (value != null)
+    {
+      result = value.toString();
+    }
+
+    return result;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -326,4 +507,8 @@ public class ActiveDirectoryAuthenticationHandler
 
   /** Field description */
   private String defaultNamingContext;
+
+  /** Field description */
+  private Map<String, ActiveDirectoryDomain> domainMap =
+    new HashMap<String, ActiveDirectoryDomain>();
 }
