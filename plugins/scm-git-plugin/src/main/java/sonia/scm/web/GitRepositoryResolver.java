@@ -181,6 +181,15 @@ public class GitRepositoryResolver
         repository = RepositoryCache.open(FileKey.lenient(gitdir, FS.DETECTED),
                                           true);
       }
+      else
+      {
+        if (logger.isWarnEnabled())
+        {
+          logger.warn("gitconfig is not valid, the service is not available");
+        }
+
+        throw new ServiceNotEnabledException();
+      }
     }
     catch (RuntimeException e)
     {
