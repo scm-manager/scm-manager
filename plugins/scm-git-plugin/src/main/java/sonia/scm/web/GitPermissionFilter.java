@@ -57,7 +57,7 @@ public class GitPermissionFilter extends RegexPermissionFilter
 {
 
   /** Field description */
-  public static final String PATTERN_WRITEREQUEST = "git-receive-pack";
+  public static final String METHOD_READ = "GET";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -70,8 +70,9 @@ public class GitPermissionFilter extends RegexPermissionFilter
    * @param repositoryManager
    */
   @Inject
-  public GitPermissionFilter(Provider<WebSecurityContext> securityContextProvider,
-                             RepositoryManager repositoryManager)
+  public GitPermissionFilter(
+          Provider<WebSecurityContext> securityContextProvider,
+          RepositoryManager repositoryManager)
   {
     super(securityContextProvider, repositoryManager);
   }
@@ -101,6 +102,6 @@ public class GitPermissionFilter extends RegexPermissionFilter
   @Override
   protected boolean isWriteRequest(HttpServletRequest request)
   {
-    return request.getRequestURI().endsWith(PATTERN_WRITEREQUEST);
+    return !METHOD_READ.equalsIgnoreCase(request.getMethod());
   }
 }
