@@ -44,7 +44,11 @@ import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
 import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
 import org.eclipse.jgit.util.FS;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.repository.GitConfig;
+import sonia.scm.repository.GitRepositoryHandler;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -61,15 +65,22 @@ public class GitRepositoryResolver
         implements RepositoryResolver<HttpServletRequest>
 {
 
+  /** the logger for GitRepositoryResolver */
+  private static final Logger logger =
+    LoggerFactory.getLogger(GitRepositoryResolver.class);
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructs ...
    *
    *
-   * @param config
+   *
+   * @param handler
    */
-  public GitRepositoryResolver(GitConfig config)
+  public GitRepositoryResolver(GitRepositoryHandler handler)
   {
-    this.config = config;
+    this.handler = handler;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -151,15 +162,25 @@ public class GitRepositoryResolver
 
     try
     {
-      File gitdir = new File(config.getRepositoryDirectory(), repositoryName);
+      GitConfig config = handler.getConfig();
 
-      if (!gitdir.exists())
+      if (config.isValid())
       {
-        throw new RepositoryNotFoundException(repositoryName);
-      }
+        File gitdir = new File(config.getRepositoryDirectory(), repositoryName);
 
-      repository = RepositoryCache.open(FileKey.lenient(gitdir, FS.DETECTED),
-                                        true);
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("try to open git repository at {}", gitdir);
+        }
+
+        if (!gitdir.exists())
+        {
+          throw new RepositoryNotFoundException(repositoryName);
+        }
+
+        repository = RepositoryCache.open(FileKey.lenient(gitdir, FS.DETECTED),
+                                          true);
+      }
     }
     catch (RuntimeException e)
     {
@@ -176,5 +197,5 @@ public class GitRepositoryResolver
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private GitConfig config;
+  private GitRepositoryHandler handler;
 }

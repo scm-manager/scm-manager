@@ -86,7 +86,7 @@ public class ScmGitServlet extends GitServlet
   @Inject
   public ScmGitServlet(GitRepositoryHandler handler)
   {
-    resolver = new GitRepositoryResolver(handler.getConfig());
+    resolver = new GitRepositoryResolver(handler);
     setRepositoryResolver(resolver);
   }
 
