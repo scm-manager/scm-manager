@@ -151,7 +151,7 @@ public abstract class PermissionFilter extends HttpFilter
           {
             if (logger.isInfoEnabled())
             {
-              logger.info("{} access to repostitory {} for user {} denied",
+              logger.info("{} access to repository {} for user {} denied",
                           new Object[] { writeRequest
                                          ? "write"
                                          : "read", repository.getName(),
