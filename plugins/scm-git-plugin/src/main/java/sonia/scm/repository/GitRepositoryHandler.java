@@ -123,6 +123,22 @@ public class GitRepositoryHandler
    * Method description
    *
    *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  public RepositoryBrowser getRepositoryBrowser(Repository repository)
+  {
+    AssertUtil.assertIsNotNull(repository);
+
+    return new GitRepositoryBrowser(this, repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   @Override
