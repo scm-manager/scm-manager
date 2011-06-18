@@ -35,12 +35,15 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.FS;
@@ -95,7 +98,44 @@ public class GitRepositoryBrowser implements RepositoryBrowser
   public void getContent(String revision, String path, OutputStream output)
           throws IOException, RepositoryException
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    File directory = handler.getDirectory(repository);
+    org.eclipse.jgit.lib.Repository repo = open(directory);
+
+    try
+    {
+      ObjectId revId = getRevisionId(repo, revision);
+      RevWalk revWalk = new RevWalk(repo);
+      RevCommit entry = revWalk.parseCommit(revId);
+      RevTree revTree = entry.getTree();
+      TreeWalk treeWalk = TreeWalk.forPath(repo, path, revTree);
+
+      if (treeWalk.next())
+      {
+
+        // Path exists
+        if (treeWalk.getFileMode(0).getObjectType() == Constants.OBJ_BLOB)
+        {
+          ObjectId blobId = treeWalk.getObjectId(0);
+          ObjectLoader loader = repo.open(blobId);
+
+          loader.copyTo(output);
+        }
+        else
+        {
+
+          // Not a blob, its something else (tree, gitlink)
+          throw new PathNotFoundException(path);
+        }
+      }
+      else
+      {
+        throw new PathNotFoundException(path);
+      }
+    }
+    finally
+    {
+      close(repo);
+    }
   }
 
   /**
@@ -116,9 +156,7 @@ public class GitRepositoryBrowser implements RepositoryBrowser
   {
     BrowserResult result = null;
     File directory = handler.getDirectory(repository);
-    org.eclipse.jgit.lib.Repository repo =
-      RepositoryCache.open(RepositoryCache.FileKey.lenient(directory,
-        FS.DETECTED), true);
+    org.eclipse.jgit.lib.Repository repo = open(directory);
 
     try
     {
@@ -142,16 +180,27 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     }
     finally
     {
-      if (repo != null)
-      {
-        repo.close();
-      }
+      close(repo);
     }
 
     return result;
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repo
+   */
+  private void close(org.eclipse.jgit.lib.Repository repo)
+  {
+    if (repo != null)
+    {
+      repo.close();
+    }
+  }
 
   /**
    * Method description
@@ -182,6 +231,23 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     file.setLastModified(System.currentTimeMillis());
 
     return file;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private org.eclipse.jgit.lib.Repository open(File directory)
+          throws IOException
+  {
+    return RepositoryCache.open(RepositoryCache.FileKey.lenient(directory,
+            FS.DETECTED), true);
   }
 
   //~--- get methods ----------------------------------------------------------
