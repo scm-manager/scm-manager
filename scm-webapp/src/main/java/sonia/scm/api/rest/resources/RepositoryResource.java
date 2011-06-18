@@ -533,14 +533,26 @@ public class RepositoryResource
       }
       catch (PathNotFoundException ex)
       {
+        if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find path {}", ex.getPath());
+        }
+
         throw new WebApplicationException(Response.Status.NOT_FOUND);
       }
       catch (RevisionNotFoundException ex)
       {
+        if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find revision {}", ex.getRevision());
+        }
+
         throw new WebApplicationException(Response.Status.NOT_FOUND);
       }
       catch (RepositoryException ex)
       {
+        logger.error("could not write content to page", ex);
+
         throw new WebApplicationException(
             ex, Response.Status.INTERNAL_SERVER_ERROR);
       }
