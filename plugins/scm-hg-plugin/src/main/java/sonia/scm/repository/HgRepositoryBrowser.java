@@ -109,14 +109,14 @@ public class HgRepositoryBrowser implements RepositoryBrowser
    *
    * @param revision
    * @param path
+   * @param output
    *
-   * @return
    *
    * @throws IOException
    * @throws RepositoryException
    */
   @Override
-  public InputStream getContent(String revision, String path)
+  public void getContent(String revision, String path, OutputStream output)
           throws IOException, RepositoryException
   {
     if (Util.isEmpty(revision))
@@ -141,7 +141,18 @@ public class HgRepositoryBrowser implements RepositoryBrowser
       logger.debug(msg.toString());
     }
 
-    return builder.directory(directory).start().getInputStream();
+    Process p = builder.directory(directory).start();
+    InputStream input = null;
+
+    try
+    {
+      input = p.getInputStream();
+      IOUtil.copy(input, output);
+    }
+    finally
+    {
+      IOUtil.close(input);
+    }
   }
 
   /**

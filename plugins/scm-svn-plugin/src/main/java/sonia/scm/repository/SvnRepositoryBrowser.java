@@ -50,11 +50,9 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -95,30 +93,23 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
    *
    * @param revision
    * @param path
+   * @param output
    *
-   * @return
    *
    * @throws IOException
    * @throws RepositoryException
    */
   @Override
-  public InputStream getContent(String revision, String path)
+  public void getContent(String revision, String path, OutputStream output)
           throws IOException, RepositoryException
   {
-
-    // TODO change the api, to remove the ByteArray streams
-    InputStream content = null;
     long revisionNumber = getRevisionNumber(revision);
     SVNRepository svnRepository = null;
 
     try
     {
       svnRepository = getSvnRepository();
-
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-      svnRepository.getFile(path, revisionNumber, new SVNProperties(), baos);
-      content = new ByteArrayInputStream(baos.toByteArray());
+      svnRepository.getFile(path, revisionNumber, new SVNProperties(), output);
     }
     catch (SVNException ex)
     {
@@ -126,10 +117,8 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
     }
     finally
     {
-      svnRepository.closeSession();
+      close(svnRepository);
     }
-
-    return content;
   }
 
   /**
@@ -202,13 +191,27 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
     }
     finally
     {
-      svnRepository.closeSession();
+      close(svnRepository);
     }
 
     return result;
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param svnRepository
+   */
+  private void close(SVNRepository svnRepository)
+  {
+    if (svnRepository != null)
+    {
+      svnRepository.closeSession();
+    }
+  }
 
   /**
    * Method description

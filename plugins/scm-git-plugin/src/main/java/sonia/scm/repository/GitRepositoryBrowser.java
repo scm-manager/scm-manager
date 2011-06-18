@@ -37,7 +37,6 @@ package sonia.scm.repository;
 
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheIterator;
-import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -52,7 +51,7 @@ import sonia.scm.util.Util;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.OutputStream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,14 +85,14 @@ public class GitRepositoryBrowser implements RepositoryBrowser
    *
    * @param revision
    * @param path
+   * @param output
    *
-   * @return
    *
    * @throws IOException
    * @throws RepositoryException
    */
   @Override
-  public InputStream getContent(String revision, String path)
+  public void getContent(String revision, String path, OutputStream output)
           throws IOException, RepositoryException
   {
     throw new UnsupportedOperationException("Not supported yet.");
@@ -123,9 +122,7 @@ public class GitRepositoryBrowser implements RepositoryBrowser
 
     try
     {
-
       ObjectId revId = getRevisionId(repo, revision);
-
       DirCache cache = new DirCache(directory, FS.DETECTED);
       TreeWalk treeWalk = new TreeWalk(repo);
 
@@ -159,21 +156,6 @@ public class GitRepositoryBrowser implements RepositoryBrowser
 
     return result;
   }
-  
-  
-  private ObjectId getRevisionId( org.eclipse.jgit.lib.Repository repo, String revision ) throws IOException{
-          ObjectId revId = null;
-
-      if (Util.isNotEmpty(revision))
-      {
-        revId = repo.resolve(revision);
-      }
-      else
-      {
-        revId = repo.resolve(Constants.HEAD);
-      }
-      return revId;
-  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -187,7 +169,6 @@ public class GitRepositoryBrowser implements RepositoryBrowser
    * @return
    *
    * @throws IOException
-   * @throws MissingObjectException
    */
   private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
           TreeWalk treeWalk)
@@ -207,6 +188,37 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     file.setLastModified(System.currentTimeMillis());
 
     return file;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repo
+   * @param revision
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private ObjectId getRevisionId(org.eclipse.jgit.lib.Repository repo,
+                                 String revision)
+          throws IOException
+  {
+    ObjectId revId = null;
+
+    if (Util.isNotEmpty(revision))
+    {
+      revId = repo.resolve(revision);
+    }
+    else
+    {
+      revId = repo.resolve(Constants.HEAD);
+    }
+
+    return revId;
   }
 
   //~--- fields ---------------------------------------------------------------

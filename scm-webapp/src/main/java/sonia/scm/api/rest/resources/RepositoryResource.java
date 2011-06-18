@@ -50,6 +50,7 @@ import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.repository.ChangesetViewer;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.FileObjectNameComparator;
+import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
@@ -58,15 +59,14 @@ import sonia.scm.repository.RepositoryBrowser;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 import java.util.ArrayList;
@@ -275,34 +275,7 @@ public class RepositoryResource
 
         if (browser != null)
         {
-          final InputStream content = browser.getContent(revision, path);
-
-          if (content != null)
-          {
-            output = new StreamingOutput()
-            {
-              @Override
-              public void write(OutputStream output)
-                      throws IOException, WebApplicationException
-              {
-                try
-                {
-                  IOUtil.copy(content, output);
-                }
-                finally
-                {
-                  IOUtil.close(content);
-                }
-              }
-            };
-          }
-          else if (logger.isWarnEnabled())
-          {
-            logger.warn(
-                "could not find content, repository: {}, path: {}, revision: {}",
-                new Object[] { repository.getId(),
-                               path, revision });
-          }
+          output = new BrowserStreamingOutput(browser, revision, path);
         }
         else if (logger.isWarnEnabled())
         {
@@ -515,6 +488,81 @@ public class RepositoryResource
     return PermissionUtil.hasPermission(repository, securityContextProvider,
             PermissionType.OWNER);
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 11/06/18
+   * @author         Enter your name here...    
+   */
+  private static class BrowserStreamingOutput implements StreamingOutput
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param browser
+     * @param revision
+     * @param path
+     */
+    public BrowserStreamingOutput(RepositoryBrowser browser, String revision,
+                                  String path)
+    {
+      this.browser = browser;
+      this.revision = revision;
+      this.path = path;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param output
+     *
+     * @throws IOException
+     * @throws WebApplicationException
+     */
+    @Override
+    public void write(OutputStream output)
+            throws IOException, WebApplicationException
+    {
+      try
+      {
+        browser.getContent(revision, path, output);
+      }
+      catch (PathNotFoundException ex)
+      {
+        throw new WebApplicationException(Response.Status.NOT_FOUND);
+      }
+      catch (RevisionNotFoundException ex)
+      {
+        throw new WebApplicationException(Response.Status.NOT_FOUND);
+      }
+      catch (RepositoryException ex)
+      {
+        throw new WebApplicationException(
+            ex, Response.Status.INTERNAL_SERVER_ERROR);
+      }
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private RepositoryBrowser browser;
+
+    /** Field description */
+    private String path;
+
+    /** Field description */
+    private String revision;
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
