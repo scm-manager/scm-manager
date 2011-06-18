@@ -33,6 +33,15 @@
 
 package sonia.scm.repository;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Iterator;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -40,8 +49,9 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  * @since 1.5
  */
-@XmlRootElement(name="browser-result")
-public class BrowserResult
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "browser-result")
+public class BrowserResult implements Iterable<FileObject>
 {
 
   /**
@@ -57,15 +67,36 @@ public class BrowserResult
    * @param revision
    * @param tag
    * @param branch
-   * @param file
+   * @param files
    */
   public BrowserResult(String revision, String tag, String branch,
-                       FileObject file)
+                       List<FileObject> files)
   {
     this.revision = revision;
     this.tag = tag;
     this.branch = branch;
-    this.file = file;
+    this.files = files;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Iterator<FileObject> iterator()
+  {
+    Iterator<FileObject> it = null;
+
+    if (files != null)
+    {
+      it = files.iterator();
+    }
+
+    return it;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -87,9 +118,9 @@ public class BrowserResult
    *
    * @return
    */
-  public FileObject getFile()
+  public List<FileObject> getFiles()
   {
-    return file;
+    return files;
   }
 
   /**
@@ -131,11 +162,11 @@ public class BrowserResult
    * Method description
    *
    *
-   * @param file
+   * @param files
    */
-  public void setFile(FileObject file)
+  public void setFiles(List<FileObject> files)
   {
-    this.file = file;
+    this.files = files;
   }
 
   /**
@@ -166,7 +197,9 @@ public class BrowserResult
   private String branch;
 
   /** Field description */
-  private FileObject file;
+  @XmlElement(name = "file")
+  @XmlElementWrapper(name = "files")
+  private List<FileObject> files;
 
   /** Field description */
   private String revision;

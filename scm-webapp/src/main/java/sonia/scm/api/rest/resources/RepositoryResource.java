@@ -460,16 +460,11 @@ public class RepositoryResource
    */
   private void sort(BrowserResult result)
   {
-    FileObject file = result.getFile();
+    List<FileObject> files = result.getFiles();
 
-    if (file != null)
+    if (files != null)
     {
-      List<FileObject> children = file.getChildren();
-
-      if (children != null)
-      {
-        Collections.sort(children, FileObjectNameComparator.instance);
-      }
+      Collections.sort(files, FileObjectNameComparator.instance);
     }
   }
 
@@ -496,7 +491,7 @@ public class RepositoryResource
    *
    *
    * @version        Enter version here..., 11/06/18
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   private static class BrowserStreamingOutput implements StreamingOutput
   {

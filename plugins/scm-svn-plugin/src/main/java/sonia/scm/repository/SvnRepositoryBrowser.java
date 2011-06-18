@@ -176,14 +176,7 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
 
       result = new BrowserResult();
       result.setRevision(revision);
-
-      // TODO create full root file
-      FileObject dir = new FileObject();
-
-      dir.setDirectory(true);
-      dir.setChildren(children);
-      dir.setPath(path);
-      result.setFile(dir);
+      result.setFiles(children);
     }
     catch (SVNException ex)
     {

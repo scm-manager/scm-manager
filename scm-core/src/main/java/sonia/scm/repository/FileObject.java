@@ -39,13 +39,6 @@ import sonia.scm.LastModifiedAware;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Iterator;
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -54,41 +47,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @since 1.5
  */
 @XmlRootElement(name = "file")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class FileObject implements LastModifiedAware, Iterable<FileObject>
+public class FileObject implements LastModifiedAware
 {
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Iterator<FileObject> iterator()
-  {
-    Iterator<FileObject> iterator = null;
-
-    if (children != null)
-    {
-      iterator = children.iterator();
-    }
-
-    return iterator;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<FileObject> getChildren()
-  {
-    return children;
-  }
 
   /**
    * Method description
@@ -163,17 +123,6 @@ public class FileObject implements LastModifiedAware, Iterable<FileObject>
    * Method description
    *
    *
-   * @param children
-   */
-  public void setChildren(List<FileObject> children)
-  {
-    this.children = children;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param description
    */
   public void setDescription(String description)
@@ -237,11 +186,6 @@ public class FileObject implements LastModifiedAware, Iterable<FileObject>
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "file")
-  @XmlElementWrapper(name = "children")
-  private List<FileObject> children;
 
   /** Field description */
   private String description;

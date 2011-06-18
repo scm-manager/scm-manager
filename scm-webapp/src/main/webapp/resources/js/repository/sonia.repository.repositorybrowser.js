@@ -53,7 +53,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         method: 'GET'
       }),
       fields: ['path', 'name', 'length', 'lastModified', 'directory', 'description'],
-      root: 'file.children',
+      root: 'files',
       idProperty: 'path',
       autoLoad: true,
       autoDestroy: true,

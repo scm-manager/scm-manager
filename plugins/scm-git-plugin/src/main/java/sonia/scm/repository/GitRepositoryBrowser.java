@@ -130,21 +130,15 @@ public class GitRepositoryBrowser implements RepositoryBrowser
       treeWalk.addTree(new DirCacheIterator(cache));
       result = new BrowserResult();
 
-      FileObject root = new FileObject();
-
-      root.setDirectory(true);
-      root.setPath(Util.nonNull(path));
-
       List<FileObject> files = new ArrayList<FileObject>();
-
-      root.setChildren(files);
-      result.setFile(root);
-      result.setRevision(revId.getName());
 
       while (treeWalk.next())
       {
         files.add(createFileObject(repo, treeWalk));
       }
+
+      result.setFiles(files);
+      result.setRevision(revId.getName());
     }
     finally
     {
