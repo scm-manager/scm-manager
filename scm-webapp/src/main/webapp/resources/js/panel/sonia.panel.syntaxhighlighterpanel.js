@@ -137,6 +137,9 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
   shPath: 'resources/syntaxhighlighter',
   contentUrl: null,
   
+  loadErrorTitleText: 'Error',
+  loadErrorMsgText: 'Could not load file',
+  
   contentLoaded: false,
   scriptsLoaded: false,
   
@@ -211,8 +214,12 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
         this.contentLoaded = true;
         this.highlight();
       },
-      failure: function(){
-        // TODO
+      failure: function(result){
+        main.handleFailure(
+          result.status, 
+          this.loadErrorTitleText, 
+          this.loadErrorMsgText
+        );
       }
     });
   },

@@ -501,3 +501,12 @@ if (Sonia.scm.Main){
   });
 
 }
+
+if (Sonia.panel.SyntaxHighlighterPanel){
+  
+  Ext.override(Sonia.panel.SyntaxHighlighterPanel, {
+    loadErrorTitleText: 'Fehler',
+    loadErrorMsgText: 'Die Datei konnte nicht geladen werden'
+  });
+  
+}
