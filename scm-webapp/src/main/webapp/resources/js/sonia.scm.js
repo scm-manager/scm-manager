@@ -441,7 +441,8 @@ Ext.onReady(function(){
   var mainTabPanel = new Ext.TabPanel({
     id: 'mainTabPanel',
     region: 'center',
-    deferredRender: false
+    deferredRender: false,
+    enableTabScroll: true
   });
 
   new Ext.Viewport({
