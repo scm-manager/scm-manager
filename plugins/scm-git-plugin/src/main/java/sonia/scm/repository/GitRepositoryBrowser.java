@@ -46,6 +46,8 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
+import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.eclipse.jgit.util.FS;
 
 import sonia.scm.util.Util;
@@ -107,7 +109,10 @@ public class GitRepositoryBrowser implements RepositoryBrowser
       RevWalk revWalk = new RevWalk(repo);
       RevCommit entry = revWalk.parseCommit(revId);
       RevTree revTree = entry.getTree();
-      TreeWalk treeWalk = TreeWalk.forPath(repo, path, revTree);
+      TreeWalk treeWalk = new TreeWalk(repo);
+
+      treeWalk.addTree(revTree);
+      treeWalk.setFilter(PathFilter.create(path));
 
       if (treeWalk.next())
       {
