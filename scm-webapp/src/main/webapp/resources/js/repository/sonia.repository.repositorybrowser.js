@@ -176,7 +176,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     var name = path;
     var index = path.lastIndexOf('/');
     if ( index > 0 ){
-      name = path.substr(0, path.length - 1);
+      name = path.substr(index +1);
     }
     return name
   },
