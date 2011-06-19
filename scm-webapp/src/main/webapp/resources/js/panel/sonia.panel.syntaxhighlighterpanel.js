@@ -94,7 +94,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
     fileName: 'shBrushPhp.js'
   },{
     name: 'Plain Text',
-    aliases: ['plain', 'text', 'txt'],
+    aliases: ['plain', 'text'],
     fileName: 'shBrushPlain.js'
   },{
     name: 'PowerShell',
