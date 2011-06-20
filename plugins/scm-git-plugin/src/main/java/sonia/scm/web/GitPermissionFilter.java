@@ -57,7 +57,16 @@ public class GitPermissionFilter extends RegexPermissionFilter
 {
 
   /** Field description */
-  public static final String METHOD_READ = "GET";
+  public static final String PARAMETER_SERVICE = "service";
+
+  /** Field description */
+  public static final String PARAMETER_VALUE_RECEIVE = "git-receive-pack";
+
+  /** Field description */
+  public static final String URI_RECEIVE_PACK = "git-receive-pack";
+
+  /** Field description */
+  public static final String URI_REF_INFO = "/info/refs";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -102,6 +111,11 @@ public class GitPermissionFilter extends RegexPermissionFilter
   @Override
   protected boolean isWriteRequest(HttpServletRequest request)
   {
-    return !METHOD_READ.equalsIgnoreCase(request.getMethod());
+    String uri = request.getRequestURI();
+
+    return uri.endsWith(URI_RECEIVE_PACK)
+           || (uri.endsWith(URI_REF_INFO)
+               && PARAMETER_VALUE_RECEIVE.equals(
+                   request.getParameter(PARAMETER_SERVICE)));
   }
 }
