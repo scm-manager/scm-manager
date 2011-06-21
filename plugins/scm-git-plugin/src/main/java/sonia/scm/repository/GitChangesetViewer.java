@@ -41,12 +41,9 @@ import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.RepositoryCache;
-import org.eclipse.jgit.lib.RepositoryCache.FileKey;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
-import org.eclipse.jgit.util.FS;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,17 +104,20 @@ public class GitChangesetViewer implements ChangesetViewer
     ChangesetPagingResult changesets = null;
     File directory = handler.getDirectory(repository);
     org.eclipse.jgit.lib.Repository gr = null;
+    TreeWalk treeWalk = null;
 
     try
     {
-      gr = RepositoryCache.open(FileKey.lenient(directory, FS.DETECTED), true);
+      gr = GitUtil.open(directory);
 
       if (!gr.getAllRefs().isEmpty())
       {
         Git git = new Git(gr);
         List<Changeset> changesetList = new ArrayList<Changeset>();
         int counter = 0;
-        TreeWalk treeWalk = new TreeWalk(gr);
+
+        treeWalk = new TreeWalk(gr);
+
         Map<ObjectId, String> tags = createTagMap(gr);
 
         for (RevCommit commit : git.log().call())
@@ -130,7 +130,6 @@ public class GitChangesetViewer implements ChangesetViewer
           counter++;
         }
 
-        treeWalk.release();
         changesets = new ChangesetPagingResult(counter, changesetList);
       }
     }
@@ -144,10 +143,8 @@ public class GitChangesetViewer implements ChangesetViewer
     }
     finally
     {
-      if (gr != null)
-      {
-        gr.close();
-      }
+      GitUtil.release(treeWalk);
+      GitUtil.close(gr);
     }
 
     return changesets;
@@ -203,7 +200,6 @@ public class GitChangesetViewer implements ChangesetViewer
   {
     String id = commit.getId().abbreviate(ID_LENGTH).name();
     long date = GitUtil.getCommitTime(commit);
-
     PersonIdent authorIndent = commit.getCommitterIdent();
     Person author = new Person(authorIndent.getName(),
                                authorIndent.getEmailAddress());
