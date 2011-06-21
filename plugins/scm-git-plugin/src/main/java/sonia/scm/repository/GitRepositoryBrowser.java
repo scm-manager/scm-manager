@@ -35,7 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.lib.Constants;
@@ -47,7 +46,6 @@ import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
-import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.eclipse.jgit.util.FS;
 
 import sonia.scm.util.Util;
@@ -102,14 +100,16 @@ public class GitRepositoryBrowser implements RepositoryBrowser
   {
     File directory = handler.getDirectory(repository);
     org.eclipse.jgit.lib.Repository repo = open(directory);
+    TreeWalk treeWalk = null;
 
     try
     {
+      treeWalk = new TreeWalk(repo);
+
       ObjectId revId = getRevisionId(repo, revision);
       RevWalk revWalk = new RevWalk(repo);
       RevCommit entry = revWalk.parseCommit(revId);
       RevTree revTree = entry.getTree();
-      TreeWalk treeWalk = new TreeWalk(repo);
 
       treeWalk.addTree(revTree);
       treeWalk.setFilter(PathFilter.create(path));
@@ -140,6 +140,7 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     finally
     {
       close(repo);
+      release(treeWalk);
     }
   }
 
@@ -162,13 +163,14 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     BrowserResult result = null;
     File directory = handler.getDirectory(repository);
     org.eclipse.jgit.lib.Repository repo = open(directory);
+    TreeWalk treeWalk = null;
 
     try
     {
       ObjectId revId = getRevisionId(repo, revision);
       DirCache cache = new DirCache(directory, FS.DETECTED);
-      TreeWalk treeWalk = new TreeWalk(repo);
 
+      treeWalk = new TreeWalk(repo);
       treeWalk.addTree(new RevWalk(repo).parseTree(revId));
       treeWalk.addTree(new DirCacheIterator(cache));
       result = new BrowserResult();
@@ -186,6 +188,7 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     finally
     {
       close(repo);
+      release(treeWalk);
     }
 
     return result;
@@ -253,6 +256,20 @@ public class GitRepositoryBrowser implements RepositoryBrowser
   {
     return RepositoryCache.open(RepositoryCache.FileKey.lenient(directory,
             FS.DETECTED), true);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param walk
+   */
+  private void release(TreeWalk walk)
+  {
+    if (walk != null)
+    {
+      walk.release();
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
