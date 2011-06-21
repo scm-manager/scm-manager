@@ -202,9 +202,7 @@ public class GitChangesetViewer implements ChangesetViewer
           throws IOException
   {
     String id = commit.getId().abbreviate(ID_LENGTH).name();
-    long date = commit.getCommitTime();
-
-    date = date * 1000;
+    long date = GitUtil.getCommitTime(commit);
 
     PersonIdent authorIndent = commit.getCommitterIdent();
     Person author = new Person(authorIndent.getName(),

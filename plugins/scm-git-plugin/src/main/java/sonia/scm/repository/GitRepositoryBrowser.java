@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.lib.Constants;
@@ -48,6 +49,9 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.util.FS;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -57,6 +61,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -65,6 +70,12 @@ import java.util.List;
  */
 public class GitRepositoryBrowser implements RepositoryBrowser
 {
+
+  /** the logger for GitRepositoryBrowser */
+  private static final Logger logger =
+    LoggerFactory.getLogger(GitRepositoryBrowser.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -163,6 +174,7 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     BrowserResult result = null;
     File directory = handler.getDirectory(repository);
     org.eclipse.jgit.lib.Repository repo = open(directory);
+    Git git = new Git(repo);
     TreeWalk treeWalk = null;
 
     try
@@ -179,7 +191,7 @@ public class GitRepositoryBrowser implements RepositoryBrowser
 
       while (treeWalk.next())
       {
-        files.add(createFileObject(repo, treeWalk));
+        files.add(createFileObject(git, revId, treeWalk));
       }
 
       result.setFiles(files);
@@ -214,29 +226,41 @@ public class GitRepositoryBrowser implements RepositoryBrowser
    * Method description
    *
    *
-   * @param repo
+   *
+   * @param git
+   * @param revId
    * @param treeWalk
    *
    * @return
    *
    * @throws IOException
    */
-  private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
+  private FileObject createFileObject(Git git, ObjectId revId,
           TreeWalk treeWalk)
           throws IOException
   {
     FileObject file = new FileObject();
+    String path = treeWalk.getPathString();
 
     file.setName(treeWalk.getNameString());
-    file.setPath(treeWalk.getPathString());
+    file.setPath(path);
 
-    ObjectLoader loader = repo.open(treeWalk.getObjectId(0));
+    ObjectLoader loader = git.getRepository().open(treeWalk.getObjectId(0));
 
     file.setDirectory(loader.getType() == Constants.OBJ_TREE);
     file.setLength(loader.getSize());
 
-    // TODO
-    file.setLastModified(System.currentTimeMillis());
+    RevCommit commit = getLatestCommit(git, revId, path);
+
+    if (commit != null)
+    {
+      file.setLastModified(GitUtil.getCommitTime(commit));
+      file.setDescription(commit.getShortMessage());
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("could not find latest commit for {} on {}", path, revId);
+    }
 
     return file;
   }
@@ -273,6 +297,42 @@ public class GitRepositoryBrowser implements RepositoryBrowser
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param git
+   * @param revId
+   * @param path
+   *
+   * @return
+   */
+  private RevCommit getLatestCommit(Git git, ObjectId revId, String path)
+  {
+    RevCommit commit = null;
+
+    try
+    {
+      Iterable<RevCommit> iterable = git.log().add(revId).addPath(path).call();
+
+      if (iterable != null)
+      {
+        Iterator<RevCommit> it = iterable.iterator();
+
+        if ((it != null) && it.hasNext())
+        {
+          commit = it.next();
+        }
+      }
+    }
+    catch (Exception ex)
+    {
+      logger.error("could not fetch latest commit", ex);
+    }
+
+    return commit;
+  }
 
   /**
    * Method description
