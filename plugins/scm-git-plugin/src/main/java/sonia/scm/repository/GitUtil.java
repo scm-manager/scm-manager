@@ -35,7 +35,20 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.io.File;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.TreeWalk;
+
+import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+import org.eclipse.jgit.lib.RepositoryCache;
+import org.eclipse.jgit.util.FS;
 
 /**
  *
@@ -43,6 +56,50 @@ import org.eclipse.jgit.revwalk.RevCommit;
  */
 public class GitUtil
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param repo
+   */
+  public static void close(org.eclipse.jgit.lib.Repository repo)
+  {
+    if (repo != null)
+    {
+      repo.close();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param walk
+   */
+  public static void release(TreeWalk walk)
+  {
+    if (walk != null)
+    {
+      walk.release();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param walk
+   */
+  public static void release(RevWalk walk)
+  {
+    if (walk != null)
+    {
+      walk.release();
+    }
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -59,5 +116,52 @@ public class GitUtil
     date = date * 1000;
 
     return date;
+  }
+
+  
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public static org.eclipse.jgit.lib.Repository open(File directory)
+          throws IOException
+  {
+    return RepositoryCache.open(RepositoryCache.FileKey.lenient(directory,
+            FS.DETECTED), true);
+  }
+  
+  /**
+   * Method description
+   *
+   *
+   * @param repo
+   * @param revision
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public static ObjectId getRevisionId(org.eclipse.jgit.lib.Repository repo,
+          String revision)
+          throws IOException
+  {
+    ObjectId revId = null;
+
+    if (Util.isNotEmpty(revision))
+    {
+      revId = repo.resolve(revision);
+    }
+    else
+    {
+      revId = repo.resolve(Constants.HEAD);
+    }
+
+    return revId;
   }
 }

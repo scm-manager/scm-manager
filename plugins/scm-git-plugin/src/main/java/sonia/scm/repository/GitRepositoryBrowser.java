@@ -41,7 +41,6 @@ import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
-import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -51,8 +50,6 @@ import org.eclipse.jgit.util.FS;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -110,15 +107,18 @@ public class GitRepositoryBrowser implements RepositoryBrowser
           throws IOException, RepositoryException
   {
     File directory = handler.getDirectory(repository);
-    org.eclipse.jgit.lib.Repository repo = open(directory);
+    org.eclipse.jgit.lib.Repository repo = GitUtil.open(directory);
     TreeWalk treeWalk = null;
+    RevWalk revWalk = null;
 
     try
     {
       treeWalk = new TreeWalk(repo);
 
-      ObjectId revId = getRevisionId(repo, revision);
-      RevWalk revWalk = new RevWalk(repo);
+      ObjectId revId = GitUtil.getRevisionId(repo, revision);
+
+      revWalk = new RevWalk(repo);
+
       RevCommit entry = revWalk.parseCommit(revId);
       RevTree revTree = entry.getTree();
 
@@ -150,8 +150,9 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     }
     finally
     {
-      close(repo);
-      release(treeWalk);
+      GitUtil.release(revWalk);
+      GitUtil.release(treeWalk);
+      GitUtil.close(repo);
     }
   }
 
@@ -173,13 +174,13 @@ public class GitRepositoryBrowser implements RepositoryBrowser
   {
     BrowserResult result = null;
     File directory = handler.getDirectory(repository);
-    org.eclipse.jgit.lib.Repository repo = open(directory);
+    org.eclipse.jgit.lib.Repository repo = GitUtil.open(directory);
     Git git = new Git(repo);
     TreeWalk treeWalk = null;
 
     try
     {
-      ObjectId revId = getRevisionId(repo, revision);
+      ObjectId revId = GitUtil.getRevisionId(repo, revision);
       DirCache cache = new DirCache(directory, FS.DETECTED);
 
       treeWalk = new TreeWalk(repo);
@@ -199,28 +200,14 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     }
     finally
     {
-      close(repo);
-      release(treeWalk);
+      GitUtil.close(repo);
+      GitUtil.release(treeWalk);
     }
 
     return result;
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repo
-   */
-  private void close(org.eclipse.jgit.lib.Repository repo)
-  {
-    if (repo != null)
-    {
-      repo.close();
-    }
-  }
 
   /**
    * Method description
@@ -265,37 +252,6 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     return file;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private org.eclipse.jgit.lib.Repository open(File directory)
-          throws IOException
-  {
-    return RepositoryCache.open(RepositoryCache.FileKey.lenient(directory,
-            FS.DETECTED), true);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param walk
-   */
-  private void release(TreeWalk walk)
-  {
-    if (walk != null)
-    {
-      walk.release();
-    }
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -332,35 +288,6 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     }
 
     return commit;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repo
-   * @param revision
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private ObjectId getRevisionId(org.eclipse.jgit.lib.Repository repo,
-                                 String revision)
-          throws IOException
-  {
-    ObjectId revId = null;
-
-    if (Util.isNotEmpty(revision))
-    {
-      revId = repo.resolve(revision);
-    }
-    else
-    {
-      revId = repo.resolve(Constants.HEAD);
-    }
-
-    return revId;
   }
 
   //~--- fields ---------------------------------------------------------------
