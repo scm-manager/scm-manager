@@ -267,16 +267,20 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     file.setDirectory(loader.getType() == Constants.OBJ_TREE);
     file.setLength(loader.getSize());
 
-    RevCommit commit = getLatestCommit(repo, revId, path);
+    // don't show message and date for directories to improve performance
+    if (!file.isDirectory())
+    {
+      RevCommit commit = getLatestCommit(repo, revId, path);
 
-    if (commit != null)
-    {
-      file.setLastModified(GitUtil.getCommitTime(commit));
-      file.setDescription(commit.getShortMessage());
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("could not find latest commit for {} on {}", path, revId);
+      if (commit != null)
+      {
+        file.setLastModified(GitUtil.getCommitTime(commit));
+        file.setDescription(commit.getShortMessage());
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("could not find latest commit for {} on {}", path, revId);
+      }
     }
 
     return file;
