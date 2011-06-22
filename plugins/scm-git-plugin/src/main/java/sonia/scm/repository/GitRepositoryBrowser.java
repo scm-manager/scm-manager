@@ -113,6 +113,7 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     try
     {
       treeWalk = new TreeWalk(repo);
+      treeWalk.setRecursive(Util.nonNull(path).contains("/"));
 
       ObjectId revId = GitUtil.getRevisionId(repo, revision);
 
