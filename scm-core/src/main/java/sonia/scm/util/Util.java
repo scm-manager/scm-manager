@@ -443,6 +443,50 @@ public class Util
    * Method description
    *
    *
+   * @param iterable
+   * @param <T>
+   *
+   * @return
+   * @since 1.5
+   */
+  public static <T> T getFirst(Iterable<T> iterable)
+  {
+    T result = null;
+
+    if (iterable != null)
+    {
+      result = getFirst(iterable.iterator());
+    }
+
+    return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param iterator
+   * @param <T>
+   *
+   * @return
+   * @since 1.5
+   */
+  public static <T> T getFirst(Iterator<T> iterator)
+  {
+    T result = null;
+
+    if ((iterator != null) && iterator.hasNext())
+    {
+      result = iterator.next();
+    }
+
+    return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param value
    *
    * @return
