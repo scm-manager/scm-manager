@@ -230,8 +230,15 @@ public class RepositoryResource
         ChangesetPagingResult changesets = changesetViewer.getChangesets(start,
                                              limit);
 
-        callPreProcessors(changesets);
-        response = Response.ok(changesets).build();
+        if (changesets != null)
+        {
+          callPreProcessors(changesets);
+          response = Response.ok(changesets).build();
+        }
+        else
+        {
+          response = Response.ok().build();
+        }
       }
       else
       {
