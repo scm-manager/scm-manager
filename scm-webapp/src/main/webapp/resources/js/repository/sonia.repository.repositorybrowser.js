@@ -106,7 +106,17 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }]
     });
     
+    var bbar = [
+      '->',
+      this.repository.name
+    ];
+    
+    if ( this.revision != null ){
+      bbar.push(': ', this.revision);
+    }
+    
     var config = {
+      bbar: bbar,
       autoExpandColumn: 'description',
       title: String.format(this.repositoryBrowserTitleText, this.repository.name),
       store: browserStore,
