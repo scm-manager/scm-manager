@@ -106,17 +106,20 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }]
     });
     
-    var bbar = [
+    var bItems = [
       '->',
       this.repository.name
     ];
     
     if ( this.revision != null ){
-      bbar.push(': ', this.revision);
+      bItems.push(': ', this.revision);
     }
     
     var config = {
-      bbar: bbar,
+      bbar: {
+        id: 'bbar-' + this.repository.id,
+        items: bItems
+      },
       autoExpandColumn: 'description',
       title: String.format(this.repositoryBrowserTitleText, this.repository.name),
       store: browserStore,
@@ -237,6 +240,34 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         path: path
       }
     });
+    
+    this.renderPath(path);
+  },
+  
+  renderPath: function(path){
+    var bbar = Ext.getCmp('bbar-' + this.repository.id);
+    bbar.removeAll();
+    
+    var parts = path.split('/');
+    var items = [];
+    var currentPath = '';
+    for (var i=0; i<parts.length; i++){
+      currentPath += parts[i] + '/';
+      items.push({
+        xtype: 'button',
+        icon: this.iconFolder,
+        text: parts[i],
+        handler: this.changeDirectory.createDelegate(this, [currentPath])
+      });
+    }
+    
+    items.push('->', this.repository.name);
+    if ( this.revision != null ){
+      items.push(':', this.revision);
+    }
+    
+    bbar.add(items);
+    bbar.doLayout();
   },
   
   renderName: function(name, p, record){
