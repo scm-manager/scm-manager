@@ -188,9 +188,38 @@ public class GitRepositoryBrowser implements RepositoryBrowser
 
       List<FileObject> files = new ArrayList<FileObject>();
 
-      while (treeWalk.next())
+      if (Util.isEmpty(path))
       {
-        files.add(createFileObject(repo, revId, treeWalk));
+        while (treeWalk.next())
+        {
+          files.add(createFileObject(repo, revId, treeWalk));
+        }
+      }
+      else
+      {
+        String[] parts = path.split("/");
+        int current = 0;
+        int limit = parts.length;
+
+        while (treeWalk.next())
+        {
+          String name = treeWalk.getNameString();
+
+          if (current >= limit)
+          {
+            String p = treeWalk.getPathString();
+
+            if (p.split("/").length > limit)
+            {
+              files.add(createFileObject(repo, revId, treeWalk));
+            }
+          }
+          else if (name.equalsIgnoreCase(parts[current]))
+          {
+            current++;
+            treeWalk.enterSubtree();
+          }
+        }
       }
 
       result.setFiles(files);
