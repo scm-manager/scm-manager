@@ -35,9 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.dircache.DirCache;
-import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -48,7 +45,6 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
-import org.eclipse.jgit.util.FS;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -178,17 +174,16 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     BrowserResult result = null;
     File directory = handler.getDirectory(repository);
     org.eclipse.jgit.lib.Repository repo = GitUtil.open(directory);
-    Git git = new Git(repo);
+    RevWalk revWalk = null;
     TreeWalk treeWalk = null;
 
     try
     {
       ObjectId revId = GitUtil.getRevisionId(repo, revision);
-      DirCache cache = new DirCache(directory, FS.DETECTED);
 
       treeWalk = new TreeWalk(repo);
-      treeWalk.addTree(new RevWalk(repo).parseTree(revId));
-      treeWalk.addTree(new DirCacheIterator(cache));
+      revWalk = new RevWalk(repo);
+      treeWalk.addTree(revWalk.parseTree(revId));
       result = new BrowserResult();
 
       List<FileObject> files = new ArrayList<FileObject>();
@@ -204,6 +199,7 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     finally
     {
       GitUtil.close(repo);
+      GitUtil.release(revWalk);
       GitUtil.release(treeWalk);
     }
 
