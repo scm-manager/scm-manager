@@ -106,14 +106,11 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }]
     });
     
-    var bItems = [this.createFolderButton('', '')];
-    this.appendRepositoryProperties(bItems);
+    var bar = [this.createFolderButton('', '')];
+    this.appendRepositoryProperties(bar);
     
     var config = {
-      bbar: {
-        id: 'bbar-' + this.repository.id,
-        items: bItems
-      },
+      bbar: bar,
       autoExpandColumn: 'description',
       title: String.format(this.repositoryBrowserTitleText, this.repository.name),
       store: browserStore,
@@ -259,7 +256,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   },
   
   renderClickPath: function(path){
-    var bbar = Ext.getCmp('bbar-' + this.repository.id);
+    var bbar = this.getBottomToolbar();
     bbar.removeAll();
     
     var parts = path.split('/');
