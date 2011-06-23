@@ -158,7 +158,7 @@ public class BasicSecurityContext implements WebSecurityContext
       catch (Exception ex)
       {
         user = null;
-        logger.error(ex.getMessage(), ex);
+        logger.error("authentication failed", ex);
       }
     }
 

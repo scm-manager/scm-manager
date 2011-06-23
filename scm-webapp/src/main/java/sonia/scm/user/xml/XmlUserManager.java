@@ -35,7 +35,6 @@ package sonia.scm.user.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Collections2;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -71,8 +70,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -176,7 +173,7 @@ public class XmlUserManager extends AbstractUserManager
 
     if (userDB.contains(user.getName()))
     {
-      throw new UserAllreadyExistException();
+      throw new UserAllreadyExistException(user.getName());
     }
 
     String type = user.getType();
