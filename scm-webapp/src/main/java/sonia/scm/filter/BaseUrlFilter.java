@@ -39,6 +39,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.util.HttpUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.filter.HttpFilter;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -55,7 +57,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class SSLFilter extends HttpFilter
+public class BaseUrlFilter extends HttpFilter
 {
 
   /**
@@ -65,7 +67,7 @@ public class SSLFilter extends HttpFilter
    * @param configuration
    */
   @Inject
-  public SSLFilter(ScmConfiguration configuration)
+  public BaseUrlFilter(ScmConfiguration configuration)
   {
     this.configuration = configuration;
   }
@@ -88,18 +90,57 @@ public class SSLFilter extends HttpFilter
                           HttpServletResponse response, FilterChain chain)
           throws IOException, ServletException
   {
-    if (request.isSecure() ||!configuration.isEnableSSL())
+    if (Util.isEmpty(configuration.getBaseUrl()))
+    {
+      configuration.setBaseUrl(createDefaultBaseUrl(request));
+    }
+
+    if (!configuration.isForceBaseUrl() || isBaseUrl(request))
     {
       chain.doFilter(request, response);
     }
     else
     {
-      StringBuilder url = new StringBuilder("https://");
+      String url = HttpUtil.getCompleteUrl(configuration,
+                     HttpUtil.getStrippedURI(request));
 
-      url.append(request.getServerName()).append(":");
-      url.append(configuration.getSslPort()).append(request.getRequestURI());
-      response.sendRedirect(url.toString());
+      response.sendRedirect(url);
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  private String createDefaultBaseUrl(HttpServletRequest request)
+  {
+    StringBuilder sb = new StringBuilder(request.getScheme());
+
+    sb.append("://").append(request.getServerName()).append(":");
+    sb.append(String.valueOf(request.getServerPort()));
+    sb.append(request.getContextPath());
+
+    return sb.toString();
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  private boolean isBaseUrl(HttpServletRequest request)
+  {
+    return request.getRequestURL().toString().startsWith(
+        configuration.getBaseUrl());
   }
 
   //~--- fields ---------------------------------------------------------------

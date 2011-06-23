@@ -263,22 +263,10 @@ public class RepositoryResource
 
     if (handler != null)
     {
-      HttpServletRequest request = requestProvider.get();
-      StringBuilder url = new StringBuilder(request.getScheme());
+      String url = handler.createResourcePath(repository);
 
-      url.append("://").append(configuration.getServername());
-      url.append(":").append(HttpUtil.getServerPort(configuration, request));
-
-      String ctxPath = request.getContextPath();
-
-      if (ctxPath.endsWith("/"))
-      {
-        ctxPath = ctxPath.substring(0, ctxPath.length() - 1);
-      }
-
-      url.append(ctxPath);
-      url.append(handler.createResourcePath(repository));
-      repository.setUrl(url.toString());
+      url = HttpUtil.getCompleteUrl(configuration, url);
+      repository.setUrl(url);
     }
   }
 

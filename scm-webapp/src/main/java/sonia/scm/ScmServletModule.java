@@ -45,8 +45,8 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.EhCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.AdminSecurityFilter;
+import sonia.scm.filter.BaseUrlFilter;
 import sonia.scm.filter.GZipFilter;
-import sonia.scm.filter.SSLFilter;
 import sonia.scm.filter.SecurityFilter;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.xml.XmlGroupManager;
@@ -225,7 +225,7 @@ public class ScmServletModule extends ServletModule
      * filter(PATTERN_PAGE,
      *      PATTERN_STATIC_RESOURCES).through(StaticResourceFilter.class);
      */
-    filter(PATTERN_ALL).through(SSLFilter.class);
+    filter(PATTERN_ALL).through(BaseUrlFilter.class);
     filterRegex(RESOURCE_REGEX).through(GZipFilter.class);
     filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(SecurityFilter.class);
     filter(PATTERN_CONFIG, PATTERN_ADMIN).through(AdminSecurityFilter.class);

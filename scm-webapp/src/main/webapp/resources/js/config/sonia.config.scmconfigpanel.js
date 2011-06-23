@@ -54,6 +54,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   enableProxyText: 'Enable Proxy',
   proxyServerText: 'Proxy Server',
   proxyPortText: 'Proxy Port',
+  baseUrlText: 'Base Url',
+  forceBaseUrlText: 'Force Base Url',
   
 
   // help
@@ -74,6 +76,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   enableProxyHelpText: 'Enable Proxy',
   proxyServerHelpText: 'The proxy server',
   proxyPortHelpText: 'The proxy port',
+  baseUrlHelpText: 'The url of the application (with context path) i.e. http://localhost:8080/scm',
+  forceBaseUrlHelpText: 'Redirects to the base url if the request comes from a other url',
 
 
   initComponent: function(){
@@ -84,35 +88,22 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
         title: this.titleText,
         items: [{
           xtype: 'textfield',
-          fieldLabel: this.servnameText,
-          name: 'servername',
-          helpText: this.servernameHelpText,
+          fieldLabel: this.baseUrlText,
+          name: 'base-url',
+          helpText: this.baseUrlHelpText,
           allowBlank: false
+        },{
+          xtype: 'checkbox',
+          fieldLabel: this.forceBaseUrlText,
+          name: 'force-base-url',
+          inputValue: 'true',
+          helpText: this.forceBaseUrlHelpText
         },{
           xtype: 'textfield',
           fieldLabel: this.dateFormatText,
           name: 'dateFormat',
           helpText: this.dateFormatHelpText,
           allowBlank: false
-        },{
-          xtype: 'checkbox',
-          fieldLabel: this.enableForwardingText,
-          name: 'enablePortForward',
-          inputValue: 'true',
-          helpText: this.enableForwardingHelpText,
-          listeners: {
-            check: function(){
-              Ext.getCmp('serverport').setDisabled( ! this.checked );
-            }
-          }
-        },{
-          id: 'serverport',
-          xtype: 'numberfield',
-          fieldLabel: this.forwardPortText,
-          name: 'forwardPort',
-          disabled: true,
-          allowBlank: false,
-          helpText: this.forwardPortHelpText
         },{
           xtype: 'textfield',
           fieldLabel: this.pluginRepositoryText,
@@ -126,25 +117,6 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'anonymousAccessEnabled',
           inputValue: 'true',
           helpText: this.allowAnonymousAccessHelpText
-        },{
-          xtype: 'checkbox',
-          fieldLabel: this.enableSSLText,
-          name: 'enableSSL',
-          inputValue: 'true',
-          helpText: this.enableSSLHelpText,
-          listeners: {
-            check: function(){
-              Ext.getCmp('sslPort').setDisabled( ! this.checked );
-            }
-          }
-        },{
-          id: 'sslPort',
-          xtype: 'numberfield',
-          fieldLabel: this.sslPortText,
-          name: 'sslPort',
-          disabled: true,
-          allowBlank: false,
-          helpText: this.sslPortHelpText
         },{
           xtype: 'checkbox',
           fieldLabel: this.enableProxyText,
@@ -188,12 +160,6 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
         }],
       
         onSubmit: function(values){
-          if ( ! values.enableSSL ){
-            values.sslPort = Ext.getCmp('sslPort').getValue();
-          }
-          if ( ! values.enablePortForward ){
-            values.forwardPort = Ext.getCmp('serverport').getValue();
-          }
           this.el.mask(this.submitText);
           Ext.Ajax.request({
             url: restUrl + 'config.json',
@@ -225,12 +191,6 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
             success: function(response){
               var obj = Ext.decode(response.responseText);
               this.load(obj);
-              if ( obj.enablePortForward ){
-                Ext.getCmp('serverport').setDisabled(false);
-              }
-              if ( obj.enableSSL ){
-                Ext.getCmp('sslPort').setDisabled(false);
-              }
               if ( obj.enableProxy ){
                 Ext.getCmp('proxyServer').setDisabled(false);
                 Ext.getCmp('proxyPort').setDisabled(false);

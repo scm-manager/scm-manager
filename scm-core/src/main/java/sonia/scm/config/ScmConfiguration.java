@@ -147,16 +147,20 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
     this.servername = other.servername;
     this.dateFormat = other.dateFormat;
     this.pluginUrl = other.pluginUrl;
-    this.sslPort = other.sslPort;
-    this.enableSSL = other.enableSSL;
-    this.enablePortForward = other.enablePortForward;
-    this.forwardPort = other.forwardPort;
     this.anonymousAccessEnabled = other.anonymousAccessEnabled;
     this.adminUsers = other.adminUsers;
     this.adminGroups = other.adminGroups;
     this.enableProxy = other.enableProxy;
     this.proxyPort = other.proxyPort;
     this.proxyServer = other.proxyServer;
+    this.forceBaseUrl = other.forceBaseUrl;
+    this.baseUrl = other.baseUrl;
+    
+    // deprecated fields
+    this.sslPort = other.sslPort;
+    this.enableSSL = other.enableSSL;
+    this.enablePortForward = other.enablePortForward;
+    this.forwardPort = other.forwardPort;
   }
 
   /**
@@ -200,6 +204,18 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    *
    *
    * @return
+   * @since 1.5
+   */
+  public String getBaseUrl()
+  {
+    return baseUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
    */
   public String getDateFormat()
   {
@@ -211,7 +227,9 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    *
    *
    * @return
+   * @deprecated use {@link #getBaseUrl()}
    */
+  @Deprecated
   public int getForwardPort()
   {
     return forwardPort;
@@ -266,7 +284,9 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    *
    *
    * @return
+   * @deprecated use {@link #getBaseUrl()} and {@link #isForceBaseUrl()}
    */
+  @Deprecated
   public int getSslPort()
   {
     return sslPort;
@@ -288,7 +308,9 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    *
    *
    * @return
+   * @deprecated use {@link #getBaseUrl()}
    */
+  @Deprecated
   public boolean isEnablePortForward()
   {
     return enablePortForward;
@@ -310,10 +332,24 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    *
    *
    * @return
+   * @deprecated use {@link #getBaseUrl()} and {@link #isForceBaseUrl()}
    */
+  @Deprecated
   public boolean isEnableSSL()
   {
     return enableSSL;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.5
+   */
+  public boolean isForceBaseUrl()
+  {
+    return forceBaseUrl;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -355,6 +391,18 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    * Method description
    *
    *
+   * @param baseUrl
+   * @since 1.5
+   */
+  public void setBaseUrl(String baseUrl)
+  {
+    this.baseUrl = baseUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param dateFormat
    */
   public void setDateFormat(String dateFormat)
@@ -367,7 +415,9 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    *
    *
    * @param enablePortForward
+   * @deprecated use {@link #setBaseUrl(String)}
    */
+  @Deprecated
   public void setEnablePortForward(boolean enablePortForward)
   {
     this.enablePortForward = enablePortForward;
@@ -389,7 +439,9 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    *
    *
    * @param enableSSL
+   * @deprecated use {@link #setBaseUrl(String)} and {$link #setForceBaseUrl(boolean)}
    */
+  @Deprecated
   public void setEnableSSL(boolean enableSSL)
   {
     this.enableSSL = enableSSL;
@@ -399,8 +451,22 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    * Method description
    *
    *
-   * @param forwardPort
+   * @param forceBaseUrl
+   * @since 1.5
    */
+  public void setForceBaseUrl(boolean forceBaseUrl)
+  {
+    this.forceBaseUrl = forceBaseUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param forwardPort
+   * @deprecated use {@link #setBaseUrl(String)}
+   */
+  @Deprecated
   public void setForwardPort(int forwardPort)
   {
     this.forwardPort = forwardPort;
@@ -455,7 +521,9 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    *
    *
    * @param sslPort
+   * @deprecated use {@link #setBaseUrl(String)} and {$link #setForceBaseUrl(boolean)}
    */
+  @Deprecated
   public void setSslPort(int sslPort)
   {
     this.sslPort = sslPort;
@@ -474,9 +542,18 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   private Set<String> adminUsers;
 
   /** Field description */
+  @XmlElement(name = "base-url")
+  private String baseUrl;
+
+  /** Field description */
   private boolean enableProxy = false;
 
   /** Field description */
+  @XmlElement(name = "force-base-url")
+  private boolean forceBaseUrl;
+
+  /** @deprecated use {@link $baseUrl} */
+  @Deprecated
   private int forwardPort = 80;
 
   /** Field description */
@@ -492,13 +569,16 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   /** Field description */
   private String servername = "localhost";
 
-  /** Field description */
+  /** @deprecated use {@link $baseUrl} and {$link $foreceBaseUrl} */
+  @Deprecated
   private boolean enableSSL = false;
 
-  /** Field description */
+  /** @deprecated use {@link $baseUrl} */
+  @Deprecated
   private boolean enablePortForward = false;
 
-  /** Field description */
+  /** @deprecated use {@link $baseUrl} and {$link $foreceBaseUrl} */
+  @Deprecated
   private int sslPort = 8181;
 
   /** Field description */

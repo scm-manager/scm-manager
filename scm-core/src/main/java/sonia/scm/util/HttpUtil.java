@@ -88,10 +88,35 @@ public class HttpUtil
    *
    *
    * @param configuration
+   * @param path
+   *
+   * @return
+   * @since 1.5
+   */
+  public static String getCompleteUrl(ScmConfiguration configuration,
+          String path)
+  {
+    String url = configuration.getBaseUrl();
+
+    if (url.endsWith("/") && path.startsWith("/"))
+    {
+      url = url.substring(0, url.length());
+    }
+
+    return url.concat(path);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param configuration
    * @param request
    *
    * @return
+   * @deprecated use {@link #getCompleteUrl(sonia.scm.config.ScmConfiguration, java.lang.String)}
    */
+  @Deprecated
   public static int getServerPort(ScmConfiguration configuration,
                                   HttpServletRequest request)
   {
@@ -137,6 +162,6 @@ public class HttpUtil
    */
   public static String getStrippedURI(HttpServletRequest request, String uri)
   {
-    return request.getRequestURI().substring(request.getContextPath().length());
+    return uri.substring(request.getContextPath().length());
   }
 }
