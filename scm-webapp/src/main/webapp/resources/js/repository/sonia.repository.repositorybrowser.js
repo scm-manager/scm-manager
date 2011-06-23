@@ -106,15 +106,8 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }]
     });
     
-    var bItems = [
-      this.createFolderButton('', ''),
-      '->',
-      this.repository.name
-    ];
-    
-    if ( this.revision != null ){
-      bItems.push(': ', this.revision);
-    }
+    var bItems = [this.createFolderButton('', '')];
+    this.appendRepositoryProperties(bItems);
     
     var config = {
       bbar: {
@@ -204,6 +197,13 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     return ext;
   },
   
+  appendRepositoryProperties: function(bar){
+    bar.push('->',this.repository.name);
+    if ( this.revision != null ){
+      bar.push(': ', this.revision);
+    }
+  },
+  
   openFile: function(path){
     if ( debug ){
       console.debug( 'open file: ' + path );
@@ -216,6 +216,9 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       url += "&revision=" + this.revision;
     }
     
+    var bar = [path];
+    this.appendRepositoryProperties(bar);
+    
     main.addTab({
       id: this.repository.id + "-b-"  + path,
       contentUrl: url,
@@ -223,7 +226,8 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       title: this.getName(path),
       closable: true,
       autoScroll: true,
-      syntax: ext
+      syntax: ext,
+      bbar: bar
     });
   },
   
