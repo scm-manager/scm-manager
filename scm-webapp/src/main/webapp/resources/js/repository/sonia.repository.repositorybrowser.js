@@ -107,6 +107,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     });
     
     var bItems = [
+      this.createFolderButton('', ''),
       '->',
       this.repository.name
     ];
@@ -241,24 +242,31 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }
     });
     
-    this.renderPath(path);
+    this.renderClickPath(path);
   },
   
-  renderPath: function(path){
+  createFolderButton: function(path, name){
+    return {
+      xtype: 'button',
+      icon: this.iconFolder,
+      text: name + '/',
+      handler: this.changeDirectory.createDelegate(this, [path])
+    };
+  },
+  
+  renderClickPath: function(path){
     var bbar = Ext.getCmp('bbar-' + this.repository.id);
     bbar.removeAll();
     
     var parts = path.split('/');
-    var items = [];
     var currentPath = '';
-    for (var i=0; i<parts.length; i++){
-      currentPath += parts[i] + '/';
-      items.push({
-        xtype: 'button',
-        icon: this.iconFolder,
-        text: parts[i],
-        handler: this.changeDirectory.createDelegate(this, [currentPath])
-      });
+    var items = [this.createFolderButton(currentPath, '')];
+          
+    if ( path != '' ){
+      for (var i=0; i<parts.length; i++){
+        currentPath += parts[i] + '/';
+        items.push(this.createFolderButton(currentPath, parts[i]));
+      }
     }
     
     items.push('->', this.repository.name);
