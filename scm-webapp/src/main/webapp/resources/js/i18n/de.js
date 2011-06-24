@@ -210,8 +210,8 @@ if (Sonia.repository.InfoPanel){
     contactText: 'Kontakt: ',
     urlText: 'Url: ',
     // german ??
-    changesetViewerText: 'ChangesetViewer',
-    changesetViewerTitleText: 'ChangesetViewer {0}'
+    changesetViewerText: 'Commits',
+    changesetViewerTitleText: 'Commits: {0}'
   });
 
 }
@@ -220,9 +220,17 @@ if (Sonia.repository.ExtendedInfoPanel){
   
   Ext.override(Sonia.repository.ExtendedInfoPanel, {
     // german ??
-    checkoutText: 'Checkout: '
+    checkoutText: 'Checkout: ',
+    repositoryBrowserText: 'Source'
   });
   
+}
+
+if (Sonia.repository.RepositoryBrowser){
+  Ext.override(Sonia.repository.RepositoryBrowser, {
+    // german ??
+    repositoryBrowserTitleText: 'Source: {0}'
+  });
 }
 
 // sonia.config.js

@@ -34,8 +34,8 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   repository: null,
   revision: null,
   
-  // TODO i18n
   repositoryBrowserTitleText: 'Source: {0}',
+  
   iconFolder: 'resources/images/folder.gif',
   iconDocument: 'resources/images/document.gif',
   templateIcon: '<img src="{0}" alt="{1}" title="{2}" />',

@@ -39,7 +39,6 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
   // text
   checkoutText: 'Checkout: ',
   
-  // TODO i18n
   repositoryBrowserText: 'Source',
   
   enableRepositoryBrowser: true,
