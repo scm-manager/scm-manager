@@ -37,7 +37,13 @@ Sonia.util.Link = Ext.extend(Ext.BoxComponent, {
   constructor: function(config) {
     config = config || {};
     config.xtype = 'box';
-    config.autoEl = { tag: 'a', html: config.text, href: '#' };
+    config.autoEl = { 
+      tag: 'a', 
+      html: config.text, 
+      href: '#', 
+      style: config.style, 
+      'class': config['class'] 
+    };
     config.listeners = {
       render: function(c) {
         c.getEl().on('click', function(){

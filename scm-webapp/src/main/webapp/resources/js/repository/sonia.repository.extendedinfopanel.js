@@ -88,6 +88,7 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
   createRepositoryBrowserLink: function(){
     return {
       xtype: 'link',
+      style: 'font-weight: bold',
       text: this.repositoryBrowserText,
       handler: this.openRepositoryBrowser,
       scope: this

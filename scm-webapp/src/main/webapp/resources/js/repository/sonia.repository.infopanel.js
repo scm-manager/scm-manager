@@ -141,6 +141,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   createChangesetViewerLink: function(){
     return {
       xtype: 'link',
+      style: 'font-weight: bold',
       text: this.changesetViewerText,
       handler: this.openChangesetViewer,
       scope: this
