@@ -40,7 +40,10 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
   checkoutText: 'Checkout: ',
   
   // TODO i18n
-  repositoryBrowserText: 'RepositoryBrowser',
+  repositoryBrowserText: 'Source',
+  
+  enableRepositoryBrowser: true,
+  enableChangesetViewer: true,
   
   modifyDefaultConfig: function(config){
     var items = config.items;
@@ -56,18 +59,34 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
               this.checkoutTemplate, 
               this.getRepositoryUrlWithUsername()
             )
-    },
-      this.createSpacer(), 
-      this.createChangesetViewerLink(),
-      this.createSpacer(),
-      this.createRepositoryBrowserLink()
-    );
+    },this.createSpacer());
+    
+    var box = {
+      xtype: 'panel',
+      colspan: 2,
+      layout: 'column',
+      items: [
+        this.createChangesetViewerLink(),{
+          xtyle: 'box',
+          html: ', ',
+          width: 8
+        }, this.createRepositoryBrowserLink()
+      ]
+    }
+    
+    items.push(box);
+    
+    if ( this.enableChangesetViewer ){
+      // items.push(this.createChangesetViewerLink());
+    }
+    if ( this.enableRepositoryBrowser ){
+      // items.push(this.createRepositoryBrowserLink());
+    }
   },
   
   createRepositoryBrowserLink: function(){
     return {
       xtype: 'link',
-      colspan: 2,
       text: this.repositoryBrowserText,
       handler: this.openRepositoryBrowser,
       scope: this
