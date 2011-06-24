@@ -48,6 +48,7 @@
     <os>
       <name>windows</name>
     </os>
+    <min-version>1.5</min-version>
   </conditions>
   
 </plugin>
