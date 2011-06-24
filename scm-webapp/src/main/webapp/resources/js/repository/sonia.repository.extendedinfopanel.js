@@ -61,27 +61,28 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
             )
     },this.createSpacer());
     
-    var box = {
-      xtype: 'panel',
-      colspan: 2,
-      layout: 'column',
-      items: [
-        this.createChangesetViewerLink(),{
+    var box = [];
+    if ( this.enableChangesetViewer ){
+      box.push(this.createChangesetViewerLink());
+      if (this.enableRepositoryBrowser){
+        box.push({
           xtyle: 'box',
           html: ', ',
           width: 8
-        }, this.createRepositoryBrowserLink()
-      ]
+        });
+      }
     }
     
-    items.push(box);
+    if (this.enableRepositoryBrowser){
+      box.push(this.createRepositoryBrowserLink());
+    }
     
-    if ( this.enableChangesetViewer ){
-      // items.push(this.createChangesetViewerLink());
-    }
-    if ( this.enableRepositoryBrowser ){
-      // items.push(this.createRepositoryBrowserLink());
-    }
+    items.push({
+      xtype: 'panel',
+      colspan: 2,
+      layout: 'column',
+      items: box
+    });
   },
   
   createRepositoryBrowserLink: function(){
