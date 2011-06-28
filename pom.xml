@@ -158,6 +158,17 @@
         </configuration>
       </plugin>
       
+      <!--
+         fix maven troubleshooting part on 
+         https://bitbucket.org/sdorra/scm-manager/wiki/configure-eclipse
+      -->
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.6</version>
+      </plugin>
+      
     </plugins>
 
   </build>
