@@ -278,10 +278,10 @@ public class ActiveDirectoryAuthenticationHandler
 
     if (index > 0)
     {
-      String domain = username.substring(0, index);
+      String domain = username.substring(0, index).toUpperCase();
 
       username = username.substring(index + 1);
-      add = domainMap.get(domain.toUpperCase());
+      add = domainMap.get(domain);
 
       if (add != null)
       {
@@ -456,6 +456,8 @@ public class ActiveDirectoryAuthenticationHandler
 
           if (Util.isNotEmpty(cn) && Util.isNotEmpty(dn))
           {
+            cn = cn.toUpperCase();
+
             if (logger.isInfoEnabled())
             {
               logger.info("found domain: {}, {}, {}", new Object[] { cn, dn,

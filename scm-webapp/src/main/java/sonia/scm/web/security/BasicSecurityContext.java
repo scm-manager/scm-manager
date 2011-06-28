@@ -125,7 +125,7 @@ public class BasicSecurityContext implements WebSecurityContext
 
       try
       {
-        User dbUser = userManager.get(username);
+        User dbUser = userManager.get(user.getName());
 
         if ((dbUser != null) && user.copyProperties(dbUser, false))
         {
