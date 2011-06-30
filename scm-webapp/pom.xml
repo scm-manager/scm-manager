@@ -449,6 +449,21 @@
       </dependencies>
       
     </profile>
+    
+    <profile>
+      <id>ldap</id>
+    
+      <dependencies>
+          
+        <dependency>
+          <groupId>sonia.scm.plugins</groupId>
+          <artifactId>scm-auth-ldap-plugin</artifactId>
+          <version>1.4-SNAPSHOT</version>
+        </dependency>
+      
+      </dependencies>
+      
+    </profile>
 
     <profile>
       <id>it</id>

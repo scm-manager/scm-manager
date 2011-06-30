@@ -47,6 +47,7 @@ import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.security.AuthenticationHandler;
 import sonia.scm.web.security.AuthenticationResult;
 
@@ -56,8 +57,11 @@ import java.io.IOException;
 
 import java.text.MessageFormat;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Set;
 
 import javax.naming.Context;
 import javax.naming.NamingEnumeration;
@@ -80,6 +84,19 @@ import javax.servlet.http.HttpServletResponse;
 @Extension
 public class LDAPAuthenticationHandler implements AuthenticationHandler
 {
+
+  /** Field description */
+  public static final String ATTRIBUTE_GROUP_NAME = "cn";
+
+  /** Field description */
+  public static final String FILTER_GROUP =
+    "(&(objectClass=groupOfUniqueNames)(uniqueMember={0}))";
+
+  /** Field description */
+  public static final String SEARCHTYPE_GROUP = "group";
+
+  /** Field description */
+  public static final String SEARCHTYPE_USER = "user";
 
   /** Field description */
   public static final String TYPE = "ldap";
@@ -123,144 +140,38 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
     AssertUtil.assertIsNotEmpty(password);
 
     AuthenticationResult result = AuthenticationResult.NOT_FOUND;
-    DirContext context = null;
+    DirContext bindContext = null;
 
     try
     {
-      context = new InitialDirContext(ldapProperties);
+      bindContext = createBindContext();
 
-      SearchControls searchControls = new SearchControls();
-
-      searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-      searchControls.setCountLimit(1);
-      searchControls.setReturningAttributes(new String[] {
-        config.getAttributeNameId(),
-        config.getAttributeNameFullname(), config.getAttributeNameMail(),
-        config.getAttributeNameGroup() });
-
-      String filter = MessageFormat.format(config.getSearchFilter(), username);
-      String baseDn = config.getUnitPeople() + "," + config.getBaseDn();
-      NamingEnumeration<SearchResult> searchResult = context.search(baseDn,
-                                                       filter, searchControls);
-
-      if (searchResult.hasMore())
+      if (bindContext != null)
       {
-        result = AuthenticationResult.FAILED;
+        SearchResult searchResult = getUserSearchResult(bindContext, username);
 
-        // prevent empty passwords to avoid anonymous logins
-        if ((password != null) && (password.trim().length() > 0))
+        if (searchResult != null)
         {
-          SearchResult sr = searchResult.next();
-          String userDn = sr.getName() + "," + baseDn;
-          Hashtable<String, String> userProperties = new Hashtable<String,
-                                                       String>(ldapProperties);
+          result = AuthenticationResult.FAILED;
 
-          userProperties.put(Context.SECURITY_PRINCIPAL, userDn);
-          userProperties.put(Context.SECURITY_CREDENTIALS, password);
+          String userDN = searchResult.getNameInNamespace();
 
-          DirContext userContext = null;
-
-          try
+          if (authenticateUser(userDN, password))
           {
-            userContext = new InitialDirContext(userProperties);
+            Attributes attributes = searchResult.getAttributes();
+            User user = createUser(attributes);
+            Set<String> groups = new HashSet<String>();
 
-            User user = new User();
-            Attributes userAttributes = sr.getAttributes();
-
-            user.setName(
-                (String) userAttributes.get(config.getAttributeNameId()).get());
-            user.setDisplayName(
-                (String) userAttributes.get(
-                  config.getAttributeNameFullname()).get());
-            user.setMail(
-                (String) userAttributes.get(
-                  config.getAttributeNameMail()).get());
-            user.setType(TYPE);
-
-            HashSet<String> groups = new HashSet<String>();
-
-            try
-            {
-
-              // read group of unique names
-              searchControls = new SearchControls();
-              searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
-              searchControls.setReturningAttributes(new String[] { "cn" });
-              baseDn = config.getUnitGroup() + "," + config.getBaseDn();
-
-              NamingEnumeration<SearchResult> searchResult2 =
-                context.search(
-                    baseDn,
-                    "(&(objectClass=groupOfUniqueNames)(uniqueMember=" + userDn
-                    + "))", searchControls);
-
-              //
-              while (searchResult2.hasMore())
-              {
-                SearchResult sr2 = searchResult2.next();
-                Attributes groupAttributes = sr2.getAttributes();
-                Attribute cnAttribute = groupAttributes.get("cn");
-
-                if (cnAttribute != null)
-                {
-                  String cn = (String) cnAttribute.get();
-
-                  if ((cn != null) && (cn.trim().length() > 0))
-                  {
-                    groups.add(cn);
-                  }
-                }
-              }
-            }
-            catch (NamingException e2)
-            {
-              logger.debug("groupOfUniqueNames not found", e2);
-            }
-
-            // read dynamic group attribute
-            getGroups(userAttributes, groups);
+            fetchGroups(bindContext, groups, userDN);
+            getGroups(attributes, groups);
             result = new AuthenticationResult(user, groups);
-          }
-          catch (NamingException ex)
-          {
-            logger.trace(ex.getMessage(), ex);
-          }
-          finally
-          {
-            if (userContext != null)
-            {
-              try
-              {
-                userContext.close();
-              }
-              catch (NamingException ex)
-              {
-                logger.error(ex.getMessage(), ex);
-              }
-            }
-          }
-        }
-      }
-
-      searchResult.close();
-    }
-    catch (NamingException ex)
-    {
-      logger.error(ex.getMessage(), ex);
+          }    // password wrong ?
+        }      // user not found
+      }        // no bind context available
     }
     finally
     {
-      if (context != null)
-      {
-        try
-        {
-          context.close();
-        }
-        catch (NamingException ex)
-        {
-          logger.error(ex.getMessage(), ex);
-        }
-      }
+      LdapUtil.close(bindContext);
     }
 
     return result;
@@ -352,6 +263,70 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
   /**
    * Method description
    *
+   *
+   * @param list
+   * @param attribute
+   */
+  private void appendAttribute(List<String> list, String attribute)
+  {
+    if (Util.isNotEmpty(attribute))
+    {
+      list.add(attribute);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param userDN
+   * @param password
+   *
+   * @return
+   */
+  private boolean authenticateUser(String userDN, String password)
+  {
+    boolean authenticated = false;
+    Hashtable<String, String> userProperties = new Hashtable<String,
+                                                 String>(ldapProperties);
+
+    userProperties.put(Context.SECURITY_PRINCIPAL, userDN);
+    userProperties.put(Context.SECURITY_CREDENTIALS, password);
+
+    DirContext userContext = null;
+
+    try
+    {
+      userContext = new InitialDirContext(userProperties);
+      authenticated = true;
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("user {} successfully authenticated", userDN);
+      }
+    }
+    catch (NamingException ex)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("authentication failed for user ".concat(userDN), ex);
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.debug("authentication failed for user {}", userDN);
+      }
+    }
+    finally
+    {
+      LdapUtil.close(userContext);
+    }
+
+    return authenticated;
+  }
+
+  /**
+   * Method description
+   *
    */
   private void buildLdapProperties()
   {
@@ -360,19 +335,207 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
                        "com.sun.jndi.ldap.LdapCtxFactory");
     ldapProperties.put(Context.PROVIDER_URL, config.getHostUrl());
     ldapProperties.put(Context.SECURITY_AUTHENTICATION, "simple");
-
-    /*
-     * if( contextSecurityProtocol.equalsIgnoreCase( "ssl" ) )
-     * {
-     * ldapContextProperties.put( Context.SECURITY_PROTOCOL, "ssl" );
-     * ldapContextProperties.put( "java.naming.ldap.factory.socket",
-     *   "sonia.net.ssl.SSLSocketFactory" );
-     * }
-     */
     ldapProperties.put(Context.SECURITY_PRINCIPAL, config.getConnectionDn());
     ldapProperties.put(Context.SECURITY_CREDENTIALS,
                        config.getConnectionPassword());
     ldapProperties.put("java.naming.ldap.version", "3");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private DirContext createBindContext()
+  {
+    DirContext context = null;
+
+    try
+    {
+      context = new InitialDirContext(ldapProperties);
+    }
+    catch (NamingException ex)
+    {
+      logger.error(
+          "could not bind to ldap with dn ".concat(config.getConnectionDn()),
+          ex);
+    }
+
+    return context;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private String createGroupSearchBaseDN()
+  {
+    return createSearchBaseDN(SEARCHTYPE_GROUP, config.getUnitGroup());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   * @param prefix
+   *
+   * @return
+   */
+  private String createSearchBaseDN(String type, String prefix)
+  {
+    String dn = null;
+
+    if (Util.isNotEmpty(config.getBaseDn()))
+    {
+      if (Util.isNotEmpty(prefix))
+      {
+        dn = prefix.concat(",").concat(config.getBaseDn());
+      }
+      else
+      {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("no prefix for {} defined, using basedn for search",
+                       type);
+        }
+
+        dn = config.getBaseDn();
+      }
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("saarch base for {} search: {}", type, dn);
+      }
+    }
+    else
+    {
+      logger.error("no basedn defined");
+    }
+
+    return dn;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param attributes
+   *
+   * @return
+   */
+  private User createUser(Attributes attributes)
+  {
+    User user = new User();
+
+    user.setName(LdapUtil.getAttribute(attributes,
+                                       config.getAttributeNameId()));
+    user.setDisplayName(LdapUtil.getAttribute(attributes,
+            config.getAttributeNameFullname()));
+    user.setMail(LdapUtil.getAttribute(attributes,
+                                       config.getAttributeNameMail()));
+    user.setType(TYPE);
+
+    return user;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private String createUserSearchBaseDN()
+  {
+    return createSearchBaseDN(SEARCHTYPE_USER, config.getUnitPeople());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param username
+   *
+   * @return
+   */
+  private String createUserSearchFilter(String username)
+  {
+    String filter = null;
+
+    if (Util.isNotEmpty(config.getSearchFilter()))
+    {
+      filter = MessageFormat.format(config.getSearchFilter(), username);
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("search-filter for user search: {}", filter);
+      }
+    }
+    else
+    {
+      logger.error("search filter not defined");
+    }
+
+    return filter;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   * @param groups
+   * @param userDN
+   */
+  private void fetchGroups(DirContext context, Set<String> groups,
+                           String userDN)
+  {
+    NamingEnumeration<SearchResult> searchResultEnm = null;
+
+    try
+    {
+
+      // read group of unique names
+      SearchControls searchControls = new SearchControls();
+
+      searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+      searchControls.setReturningAttributes(new String[] { "cn" });
+
+      String filter = MessageFormat.format(FILTER_GROUP, userDN);
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("using filter {} for group search", filter);
+      }
+
+      String searchDN = createGroupSearchBaseDN();
+
+      searchResultEnm = context.search(searchDN, filter, searchControls);
+
+      while (searchResultEnm.hasMore())
+      {
+        SearchResult searchResult = searchResultEnm.next();
+        Attributes groupAttributes = searchResult.getAttributes();
+        String name = LdapUtil.getAttribute(groupAttributes,
+                        ATTRIBUTE_GROUP_NAME);
+
+        if (Util.isNotEmpty(name))
+        {
+          groups.add(name);
+        }
+      }
+    }
+    catch (NamingException ex)
+    {
+      logger.debug("groupOfUniqueNames not found", ex);
+    }
+    finally
+    {
+      LdapUtil.close(searchResultEnm);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -381,33 +544,127 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
    * Method description
    *
    *
-   * @param userAttributes
+   * @param attributes
    * @param groups
    *
-   * @throws NamingException
    */
-  private void getGroups(Attributes userAttributes, HashSet<String> groups)
-          throws NamingException
+  private void getGroups(Attributes attributes, Set<String> groups)
   {
-    Attribute groupsAttribute =
-      userAttributes.get(config.getAttributeNameGroup());
+    NamingEnumeration<?> userGroupsEnm = null;
 
-    if (groupsAttribute != null)
+    try
     {
-      NamingEnumeration<?> userGroups =
-        (NamingEnumeration<?>) groupsAttribute.getAll();
+      Attribute groupsAttribute =
+        attributes.get(config.getAttributeNameGroup());
 
-      while (userGroups.hasMore())
+      if (groupsAttribute != null)
       {
-        groups.add((String) userGroups.next());
-      }
+        userGroupsEnm = (NamingEnumeration<?>) groupsAttribute.getAll();
 
-      userGroups.close();
+        while (userGroupsEnm.hasMore())
+        {
+          groups.add((String) userGroupsEnm.next());
+        }
+      }
+      else
+      {
+        logger.info("user has no group attributes assigned");
+      }
     }
-    else
+    catch (NamingException ex)
     {
-      logger.info("user has no groups assigned");
+      logger.error("could not read group attribute", ex);
     }
+    finally
+    {
+      LdapUtil.close(userGroupsEnm);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private String[] getReturnAttributes()
+  {
+    List<String> list = new ArrayList<String>();
+
+    appendAttribute(list, config.getAttributeNameId());
+    appendAttribute(list, config.getAttributeNameFullname());
+    appendAttribute(list, config.getAttributeNameMail());
+    appendAttribute(list, config.getAttributeNameMail());
+
+    return list.toArray(new String[list.size()]);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param bindContext
+   * @param username
+   *
+   * @return
+   */
+  private SearchResult getUserSearchResult(DirContext bindContext,
+          String username)
+  {
+    SearchResult result = null;
+
+    if (bindContext != null)
+    {
+      NamingEnumeration<SearchResult> searchResultEnm = null;
+
+      try
+      {
+        SearchControls searchControls = new SearchControls();
+        int scope = LdapUtil.getSearchScope(config.getSearchScope());
+
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("using scope {} for user search",
+                       LdapUtil.getSearchScope(scope));
+        }
+
+        searchControls.setSearchScope(scope);
+        searchControls.setCountLimit(1);
+        searchControls.setReturningAttributes(getReturnAttributes());
+
+        String filter = createUserSearchFilter(username);
+
+        if (filter != null)
+        {
+          String baseDn = createUserSearchBaseDN();
+
+          if (baseDn != null)
+          {
+            searchResultEnm = bindContext.search(baseDn, filter,
+                    searchControls);
+
+            if (searchResultEnm.hasMore())
+            {
+              result = searchResultEnm.next();
+            }
+            else if (logger.isWarnEnabled())
+            {
+              logger.warn("no user with username {} found", username);
+            }
+          }
+        }
+      }
+      catch (NamingException ex)
+      {
+        logger.error("exception occured during user search", ex);
+      }
+      finally
+      {
+        LdapUtil.close(searchResultEnm);
+      }
+    }
+
+    return result;
   }
 
   //~--- fields ---------------------------------------------------------------
