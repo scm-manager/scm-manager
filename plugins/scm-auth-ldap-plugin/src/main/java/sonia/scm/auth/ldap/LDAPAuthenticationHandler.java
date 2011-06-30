@@ -136,42 +136,17 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
   public AuthenticationResult authenticate(HttpServletRequest request,
           HttpServletResponse response, String username, String password)
   {
-    AssertUtil.assertIsNotEmpty(username);
-    AssertUtil.assertIsNotEmpty(password);
-
     AuthenticationResult result = AuthenticationResult.NOT_FOUND;
-    DirContext bindContext = null;
 
-    try
+    if (config.isEnabled())
     {
-      bindContext = createBindContext();
-
-      if (bindContext != null)
-      {
-        SearchResult searchResult = getUserSearchResult(bindContext, username);
-
-        if (searchResult != null)
-        {
-          result = AuthenticationResult.FAILED;
-
-          String userDN = searchResult.getNameInNamespace();
-
-          if (authenticateUser(userDN, password))
-          {
-            Attributes attributes = searchResult.getAttributes();
-            User user = createUser(attributes);
-            Set<String> groups = new HashSet<String>();
-
-            fetchGroups(bindContext, groups, userDN);
-            getGroups(attributes, groups);
-            result = new AuthenticationResult(user, groups);
-          }    // password wrong ?
-        }      // user not found
-      }        // no bind context available
+      AssertUtil.assertIsNotEmpty(username);
+      AssertUtil.assertIsNotEmpty(password);
+      result = authenticate(username, password);
     }
-    finally
+    else if (logger.isWarnEnabled())
     {
-      LdapUtil.close(bindContext);
+      logger.warn("ldap plugin is disabled");
     }
 
     return result;
@@ -273,6 +248,55 @@ public class LDAPAuthenticationHandler implements AuthenticationHandler
     {
       list.add(attribute);
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param username
+   * @param password
+   *
+   * @return
+   */
+  private AuthenticationResult authenticate(String username, String password)
+  {
+    AuthenticationResult result = AuthenticationResult.NOT_FOUND;
+    DirContext bindContext = null;
+
+    try
+    {
+      bindContext = createBindContext();
+
+      if (bindContext != null)
+      {
+        SearchResult searchResult = getUserSearchResult(bindContext, username);
+
+        if (searchResult != null)
+        {
+          result = AuthenticationResult.FAILED;
+
+          String userDN = searchResult.getNameInNamespace();
+
+          if (authenticateUser(userDN, password))
+          {
+            Attributes attributes = searchResult.getAttributes();
+            User user = createUser(attributes);
+            Set<String> groups = new HashSet<String>();
+
+            fetchGroups(bindContext, groups, userDN);
+            getGroups(attributes, groups);
+            result = new AuthenticationResult(user, groups);
+          }    // password wrong ?
+        }      // user not found
+      }        // no bind context available
+    }
+    finally
+    {
+      LdapUtil.close(bindContext);
+    }
+
+    return result;
   }
 
   /**

@@ -69,6 +69,17 @@ public class LDAPConfig
    *
    * @return
    */
+  public String getAttributeNameGroup()
+  {
+    return attributeNameGroup;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getAttributeNameId()
   {
     return attributeNameId;
@@ -83,10 +94,6 @@ public class LDAPConfig
   public String getAttributeNameMail()
   {
     return attributeNameMail;
-  }
-
-  public String getAttributeNameGroup() {
-    return attributeNameGroup;
   }
 
   /**
@@ -177,29 +184,29 @@ public class LDAPConfig
     return unitPeople;
   }
 
-  //~--- methods --------------------------------------------------------------
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isEnabled()
+  {
+    return enabled;
+  }
+
+  //~--- set methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param rawString
    *
-   * @return
+   * @param enabled
    */
-  private Set<String> split(String rawString)
+  public void setEnabled(boolean enabled)
   {
-    Set<String> tokens = new HashSet<String>();
-
-    for (String token : rawString.split(","))
-    {
-      if (token.trim().length() > 0)
-      {
-        tokens.add(token.trim());
-      }
-    }
-
-    return tokens;
+    this.enabled = enabled;
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -209,15 +216,16 @@ public class LDAPConfig
   private String attributeNameFullname = "cn";
 
   /** Field description */
+  @XmlElement(name = "attribute-name-group")
+  private String attributeNameGroup = "group";
+
+  /** Field description */
   @XmlElement(name = "attribute-name-id")
   private String attributeNameId = "uid";
 
   /** Field description */
   @XmlElement(name = "attribute-name-mail")
   private String attributeNameMail = "mail";
-  
-  @XmlElement(name = "attribute-name-group")
-  private String attributeNameGroup = "group";
 
   /** Field description */
   @XmlElement(name = "base-dn")
@@ -250,4 +258,8 @@ public class LDAPConfig
   /** Field description */
   @XmlElement(name = "unit-people")
   private String unitPeople = "ou=people";
+
+  /** Field description */
+  @XmlElement(name = "enabled")
+  private boolean enabled = false;
 }

@@ -30,7 +30,6 @@
  */
 
 
-
 registerGeneralConfigPanel({
   xtype : 'configForm',
   title : 'LDAP Authentication',
@@ -39,57 +38,48 @@ registerGeneralConfigPanel({
     fieldLabel : 'Fullname Attribute Name',
     name : 'attribute-name-fullname',
     allowBlank : true
-  }
-  ,{
+  },{
     xtype : 'textfield',
     fieldLabel : 'ID Attribute Name',
     name : 'attribute-name-id',
     allowBlank : true
-  }
-  ,{
+  },{
     xtype : 'textfield',
     fieldLabel : 'Mail Attribute Name',
     name : 'attribute-name-mail',
     allowBlank : true
-  }
-  ,{
+  },{
     xtype : 'textfield',
     fieldLabel : 'Group Attribute Name',
     name : 'attribute-name-group',
     allowBlank : true
-  }
-  ,{
+  },{
     xtype : 'textfield',
     fieldLabel : 'Base DN',
     name : 'base-dn',
     allowBlank : true
-  }
-  ,{
+  },{
     xtype : 'textfield',
     fieldLabel : 'Connection DN',
     name : 'connection-dn',
     allowBlank : true
-  }
-  ,{
+  },{
     xtype : 'textfield',
     inputType: 'password',
     fieldLabel : 'Connection Password',
     name : 'connection-password',
     allowBlank : true
-  }
-  ,{
+  },{
     xtype : 'textfield',
     fieldLabel : 'Host URL',
     name : 'host-url',
     allowBlank : true
-  }
-  ,{
+  },{
     xtype : 'textfield',
     fieldLabel : 'Search Filter',
     name : 'search-filter',
     allowBlank : true
-  }
-  ,{
+  },{
     xtype : 'combo',
     fieldLabel : 'Search Scope',
     name : 'search-scope',
@@ -108,18 +98,20 @@ registerGeneralConfigPanel({
         ['sub']
       ]
     })
-  }
-  ,{
+  },{
     xtype : 'textfield',
     fieldLabel : 'Groups Unit',
     name : 'unit-groups',
     allowBlank : true
-  }
-  ,{
+  },{
     xtype : 'textfield',
     fieldLabel : 'Groups People',
     name : 'unit-people',
     allowBlank : true
+  },{
+    xtpye: 'checkbox',
+    fieldLabel : 'Enabled',
+    name: 'enabled'
   }],
 
   onSubmit: function(values){
