@@ -29,91 +29,100 @@
  * 
  */
 
+Ext.ns("Sonia.ldap");
 
-registerGeneralConfigPanel({
-  xtype : 'configForm',
-  title : 'LDAP Authentication',
-  items : [{
-    xtype : 'textfield',
-    fieldLabel : 'Fullname Attribute Name',
-    name : 'attribute-name-fullname',
-    allowBlank : true
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'ID Attribute Name',
-    name : 'attribute-name-id',
-    allowBlank : true
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Mail Attribute Name',
-    name : 'attribute-name-mail',
-    allowBlank : true
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Group Attribute Name',
-    name : 'attribute-name-group',
-    allowBlank : true
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Base DN',
-    name : 'base-dn',
-    allowBlank : true
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Connection DN',
-    name : 'connection-dn',
-    allowBlank : true
-  },{
-    xtype : 'textfield',
-    inputType: 'password',
-    fieldLabel : 'Connection Password',
-    name : 'connection-password',
-    allowBlank : true
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Host URL',
-    name : 'host-url',
-    allowBlank : true
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Search Filter',
-    name : 'search-filter',
-    allowBlank : true
-  },{
-    xtype : 'combo',
-    fieldLabel : 'Search Scope',
-    name : 'search-scope',
-    allowBlank : true,
-    valueField: 'scope',
-    displayField: 'scope',
-    typeAhead: false,
-    editable: false,
-    triggerAction: 'all',
-    mode: 'local',
-    store: new Ext.data.SimpleStore({
-      fields: ['scope'],
-      data: [
-        ['object'],
-        ['one'],
-        ['sub']
-      ]
-    })
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Groups Unit',
-    name : 'unit-groups',
-    allowBlank : true
-  },{
-    xtype : 'textfield',
-    fieldLabel : 'Groups People',
-    name : 'unit-people',
-    allowBlank : true
-  },{
-    xtpye: 'checkbox',
-    fieldLabel : 'Enabled',
-    name: 'enabled'
-  }],
-
+Sonia.ldap.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
+  
+  initComponent: function(){
+    
+    var config = {
+      title : 'LDAP Authentication',
+      items : [{
+        xtype : 'textfield',
+        fieldLabel : 'Fullname Attribute Name',
+        name : 'attribute-name-fullname',
+        allowBlank : true
+      },{
+        xtype : 'textfield',
+        fieldLabel : 'ID Attribute Name',
+        name : 'attribute-name-id',
+        allowBlank : true
+      },{
+        xtype : 'textfield',
+        fieldLabel : 'Mail Attribute Name',
+        name : 'attribute-name-mail',
+        allowBlank : true
+      },{
+        xtype : 'textfield',
+        fieldLabel : 'Group Attribute Name',
+        name : 'attribute-name-group',
+        allowBlank : true
+      },{
+        xtype : 'textfield',
+        fieldLabel : 'Base DN',
+        name : 'base-dn',
+        allowBlank : true
+      },{
+        xtype : 'textfield',
+        fieldLabel : 'Connection DN',
+        name : 'connection-dn',
+        allowBlank : true
+      },{
+        xtype : 'textfield',
+        inputType: 'password',
+        fieldLabel : 'Connection Password',
+        name : 'connection-password',
+        allowBlank : true
+      },{
+        xtype : 'textfield',
+        fieldLabel : 'Host URL',
+        name : 'host-url',
+        allowBlank : true
+      },{
+        xtype : 'textfield',
+        fieldLabel : 'Search Filter',
+        name : 'search-filter',
+        allowBlank : true
+      },{
+        xtype : 'combo',
+        fieldLabel : 'Search Scope',
+        name : 'search-scope',
+        allowBlank : true,
+        valueField: 'scope',
+        displayField: 'scope',
+        typeAhead: false,
+        editable: false,
+        triggerAction: 'all',
+        mode: 'local',
+        store: new Ext.data.SimpleStore({
+          fields: ['scope'],
+          data: [
+            ['object'],
+            ['one'],
+            ['sub']
+          ]
+        })
+      },{
+        xtype : 'textfield',
+        fieldLabel : 'Groups Unit',
+        name : 'unit-groups',
+        allowBlank : true
+      },{
+        xtype : 'textfield',
+        fieldLabel : 'Groups People',
+        name : 'unit-people',
+        allowBlank : true
+      },{
+        xtpye: 'checkbox',
+        fieldLabel : 'Enabled',
+        name: 'enabled'
+      }]
+    }
+    
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.ldap.ConfigPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
   onSubmit: function(values){
     this.el.mask('Submit ...');
     Ext.Ajax.request({
@@ -151,4 +160,14 @@ registerGeneralConfigPanel({
       }
     });
   }
+  
+});
+
+// register xtype
+Ext.reg("ldapConfigPanel", Sonia.ldap.ConfigPanel);
+
+// regist config panel
+registerGeneralConfigPanel({
+  id: 'ldapConfigPanel',
+  xtype: 'ldapConfigPanel'
 });
