@@ -56,7 +56,7 @@ Sonia.ldap.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   groupAttributeHelpText: 'The name of the ldap attribute which contains the group names of the user',
   baseDNHelpText: 'The basedn for example: dc=example,dc=com',
   connectionDNHelpText: 'The complete dn of the connection user. <strong>Note:<strong> \n\
-                         This user need read an search privileges for the id, mail and fullname attributes.',
+                         This user needs read an search privileges for the id, mail and fullname attributes.',
   connectionPasswordHelpText: 'The password for connection user.',
   hostURLHelpText: 'The url for the ldap server. For example: ldap://localhost:389/',
   searchFilterHelpText: 'The search filter to find the users. <strong>Note:</strong>\n\
