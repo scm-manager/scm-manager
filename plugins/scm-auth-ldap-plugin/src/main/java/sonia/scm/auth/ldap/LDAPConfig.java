@@ -35,8 +35,6 @@ package sonia.scm.auth.ldap;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
