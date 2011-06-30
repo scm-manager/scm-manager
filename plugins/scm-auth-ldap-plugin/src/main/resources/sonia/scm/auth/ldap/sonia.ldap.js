@@ -34,8 +34,8 @@ Ext.ns("Sonia.ldap");
 Sonia.ldap.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   
   titleText: 'LDAP Authentication',
-  fullnameAttributeText: 'Fullname Attribute Name',
   idAttributeText: 'ID Attribute Name',
+  fullnameAttributeText: 'Fullname Attribute Name',
   mailAttributeText: 'Mail Attribute Name',
   groupAttributeText: 'Group Attribute Name',
   baseDNText: 'Base DN',
@@ -45,8 +45,26 @@ Sonia.ldap.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   searchFilterText: 'Search Filter',
   searchScopeText: 'Search Scope',
   groupsUnitText: 'Groups Unit',
-  groupsPeopleText: 'Groups People',
+  peopleUnitText: 'People Unit',
   enabledText: 'Enabled',
+  
+  // help texts
+  idAttributeHelpText: 'The name of the ldap attribute which contains the username',
+  fullnameAttributeHelpText: 'The name of the ldap attribute which contains the displayname of the user',
+  mailAttributeHelpText: 'The name of the ldap attribute which contains the e-mail address of the user',
+  // TODO improve
+  groupAttributeHelpText: 'The name of the ldap attribute which contains the group names of the user',
+  baseDNHelpText: 'The basedn for example: dc=example,dc=com',
+  connectionDNHelpText: 'The complete dn of the connection user. <strong>Note:<strong> \n\
+                         This user need read an search privileges for the id, mail and fullname attributes.',
+  connectionPasswordHelpText: 'The password for connection user.',
+  hostURLHelpText: 'The url for the ldap server. For example: ldap://localhost:389/',
+  searchFilterHelpText: 'The search filter to find the users. <strong>Note:</strong>\n\
+                        {0} will be replaced by the username.',
+  searchScopeHelpText: 'The scope for the user search.',
+  peopleUnitHelpText: 'The relative location of the users. For example: ou=People',
+  groupsUnitHelpText: 'The relative location of the users. For example: ou=Groups',
+  enabledHelpText: 'Enables or disables the ldap authentication',
   
   initComponent: function(){
     
@@ -54,55 +72,65 @@ Sonia.ldap.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
       title : this.titleText,
       items : [{
         xtype : 'textfield',
-        fieldLabel : this.fullnameAttributeText,
-        name : 'attribute-name-fullname',
-        allowBlank : true
-      },{
-        xtype : 'textfield',
         fieldLabel : this.idAttributeText,
         name : 'attribute-name-id',
-        allowBlank : true
+        allowBlank : true,
+        helpText: this.idAttributeHelpText
+      },{
+        xtype : 'textfield',
+        fieldLabel : this.fullnameAttributeText,
+        name : 'attribute-name-fullname',
+        allowBlank : true,
+        helpText: this.fullnameAttributeHelpText
       },{
         xtype : 'textfield',
         fieldLabel : this.mailAttributeText,
         name : 'attribute-name-mail',
-        allowBlank : true
+        allowBlank : true,
+        helpText: this.mailAttributeHelpText
       },{
         xtype : 'textfield',
         fieldLabel : this.groupAttributeText,
         name : 'attribute-name-group',
-        allowBlank : true
+        allowBlank : true,
+        helpText: this.groupAttributeHelpText
       },{
         xtype : 'textfield',
         fieldLabel : this.baseDNText,
         name : 'base-dn',
-        allowBlank : true
+        allowBlank : true,
+        helpText: this.baseDNHelpText
       },{
         xtype : 'textfield',
         fieldLabel : this.connectionDNText,
         name : 'connection-dn',
-        allowBlank : true
+        allowBlank : true,
+        helpText: this.connectionDNHelpText
       },{
         xtype : 'textfield',
         inputType: 'password',
         fieldLabel : this.connectionPasswordText,
         name : 'connection-password',
-        allowBlank : true
+        allowBlank : true,
+        helpText: this.connectionPasswordHelpText
       },{
         xtype : 'textfield',
         fieldLabel : this.hostURLText,
         name : 'host-url',
-        allowBlank : true
+        allowBlank : true,
+        helpText: this.hostURLHelpText
       },{
         xtype : 'textfield',
         fieldLabel : this.searchFilterText,
         name : 'search-filter',
-        allowBlank : true
+        allowBlank : true,
+        helpText: this.searchFilterHelpText
       },{
         xtype : 'combo',
         fieldLabel : this.searchScopeText,
         name : 'search-scope',
         allowBlank : true,
+        helpText: this.searchScopeHelpText,
         valueField: 'scope',
         displayField: 'scope',
         typeAhead: false,
@@ -119,18 +147,21 @@ Sonia.ldap.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         })
       },{
         xtype : 'textfield',
-        fieldLabel : this.groupsUnitText,
-        name : 'unit-groups',
-        allowBlank : true
+        fieldLabel : this.peopleUnitText,
+        name : 'unit-people',
+        allowBlank : true,
+        helpText: this.peopleUnitHelpText
       },{
         xtype : 'textfield',
-        fieldLabel : this.groupsPeopleText,
-        name : 'unit-people',
-        allowBlank : true
+        fieldLabel : this.groupsUnitText,
+        name : 'unit-groups',
+        allowBlank : true,
+        helpText: this.groupsUnitHelpText
       },{
         xtpye: 'checkbox',
         fieldLabel : this.enabledText,
-        name: 'enabled'
+        name: 'enabled',
+        helpText: this.enabledHelpText
       }]
     }
     
@@ -180,6 +211,19 @@ Sonia.ldap.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
 
 // register xtype
 Ext.reg("ldapConfigPanel", Sonia.ldap.ConfigPanel);
+
+
+// i18n
+
+if ( i18n != null && i18n.country == 'de' ){
+
+  Ext.override(Sonia.ldap.ConfigPanel, {
+
+    // TODO
+
+  });
+
+}
 
 // regist config panel
 registerGeneralConfigPanel({

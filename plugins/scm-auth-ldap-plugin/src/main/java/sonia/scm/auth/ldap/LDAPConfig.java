@@ -251,11 +251,11 @@ public class LDAPConfig
 
   /** Field description */
   @XmlElement(name = "unit-groups")
-  private String unitGroup = "ou=group";
+  private String unitGroup = "ou=Groups";
 
   /** Field description */
   @XmlElement(name = "unit-people")
-  private String unitPeople = "ou=people";
+  private String unitPeople = "ou=People";
 
   /** Field description */
   @XmlElement(name = "enabled")
