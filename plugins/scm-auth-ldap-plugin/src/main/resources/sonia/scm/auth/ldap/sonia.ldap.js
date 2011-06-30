@@ -33,59 +33,74 @@ Ext.ns("Sonia.ldap");
 
 Sonia.ldap.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   
+  titleText: 'LDAP Authentication',
+  fullnameAttributeText: 'Fullname Attribute Name',
+  idAttributeText: 'ID Attribute Name',
+  mailAttributeText: 'Mail Attribute Name',
+  groupAttributeText: 'Group Attribute Name',
+  baseDNText: 'Base DN',
+  connectionDNText: 'Connection DN',
+  connectionPasswordText: 'Connection Password',
+  hostURLText: 'Host URL',
+  searchFilterText: 'Search Filter',
+  searchScopeText: 'Search Scope',
+  groupsUnitText: 'Groups Unit',
+  groupsPeopleText: 'Groups People',
+  enabledText: 'Enabled',
+  
   initComponent: function(){
     
     var config = {
-      title : 'LDAP Authentication',
+      title : this.titleText,
       items : [{
         xtype : 'textfield',
-        fieldLabel : 'Fullname Attribute Name',
+        fieldLabel : this.fullnameAttributeText,
         name : 'attribute-name-fullname',
         allowBlank : true
       },{
         xtype : 'textfield',
-        fieldLabel : 'ID Attribute Name',
+        fieldLabel : this.idAttributeText,
         name : 'attribute-name-id',
         allowBlank : true
       },{
         xtype : 'textfield',
-        fieldLabel : 'Mail Attribute Name',
+        fieldLabel : this.mailAttributeText,
         name : 'attribute-name-mail',
         allowBlank : true
       },{
         xtype : 'textfield',
-        fieldLabel : 'Group Attribute Name',
+        fieldLabel : this.groupAttributeText,
         name : 'attribute-name-group',
         allowBlank : true
       },{
         xtype : 'textfield',
-        fieldLabel : 'Base DN',
+        fieldLabel : this.baseDNText,
         name : 'base-dn',
         allowBlank : true
       },{
         xtype : 'textfield',
-        fieldLabel : 'Connection DN',
+        fieldLabel : this.connectionDNText,
         name : 'connection-dn',
         allowBlank : true
       },{
         xtype : 'textfield',
         inputType: 'password',
-        fieldLabel : 'Connection Password',
+        fieldLabel : this.connectionPasswordText,
         name : 'connection-password',
         allowBlank : true
       },{
         xtype : 'textfield',
-        fieldLabel : 'Host URL',
+        fieldLabel : this.hostURLText,
         name : 'host-url',
         allowBlank : true
       },{
         xtype : 'textfield',
-        fieldLabel : 'Search Filter',
+        fieldLabel : this.searchFilterText,
         name : 'search-filter',
         allowBlank : true
       },{
         xtype : 'combo',
-        fieldLabel : 'Search Scope',
+        fieldLabel : this.searchScopeText,
         name : 'search-scope',
         allowBlank : true,
         valueField: 'scope',
@@ -104,17 +119,17 @@ Sonia.ldap.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         })
       },{
         xtype : 'textfield',
-        fieldLabel : 'Groups Unit',
+        fieldLabel : this.groupsUnitText,
         name : 'unit-groups',
         allowBlank : true
       },{
         xtype : 'textfield',
-        fieldLabel : 'Groups People',
+        fieldLabel : this.groupsPeopleText,
         name : 'unit-people',
         allowBlank : true
       },{
         xtpye: 'checkbox',
-        fieldLabel : 'Enabled',
+        fieldLabel : this.enabledText,
         name: 'enabled'
       }]
     }
@@ -124,7 +139,7 @@ Sonia.ldap.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   },
   
   onSubmit: function(values){
-    this.el.mask('Submit ...');
+    this.el.mask(this.submitText);
     Ext.Ajax.request({
       url: restUrl + 'config/auth/ldap.json',
       method: 'POST',
@@ -141,7 +156,7 @@ Sonia.ldap.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   },
 
   onLoad: function(el){
-    var tid = setTimeout( function(){ el.mask('Loading ...'); }, 100);
+    var tid = setTimeout( function(){el.mask(this.loadingText);}, 100);
     Ext.Ajax.request({
       url: restUrl + 'config/auth/ldap.json',
       method: 'GET',
