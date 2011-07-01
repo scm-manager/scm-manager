@@ -51,7 +51,7 @@
     <module>scm-core</module>
     <module>scm-test</module>
     <module>maven</module>
-    <module>plugins</module>
+    <module>scm-plugins</module>
     <module>samples</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
