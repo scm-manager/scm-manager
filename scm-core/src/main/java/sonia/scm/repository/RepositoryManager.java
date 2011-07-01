@@ -49,7 +49,7 @@ import java.util.Collection;
  */
 public interface RepositoryManager
         extends TypeManager<Repository, RepositoryException>,
-                ListenerSupport<RepositoryListener>
+                ListenerSupport<RepositoryListener>, RepositoryBrowserProvider
 {
 
   /**

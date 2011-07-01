@@ -41,6 +41,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.ConfigurationException;
 import sonia.scm.Type;
 import sonia.scm.installer.HgInstaller;
 import sonia.scm.installer.HgInstallerFactory;
@@ -58,6 +59,10 @@ import sonia.scm.web.HgWebConfigWriter;
 
 import java.io.File;
 import java.io.IOException;
+
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 
 /**
  *
@@ -95,6 +100,15 @@ public class HgRepositoryHandler
   public HgRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem)
   {
     super(storeFactory, fileSystem);
+
+    try
+    {
+      this.browserResultContext = JAXBContext.newInstance(BrowserResult.class);
+    }
+    catch (JAXBException ex)
+    {
+      throw new ConfigurationException("could not create jaxbcontext", ex);
+    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -185,6 +199,20 @@ public class HgRepositoryHandler
    * Method description
    *
    *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  public RepositoryBrowser getRepositoryBrowser(Repository repository)
+  {
+    return new HgRepositoryBrowser(this, repository, browserResultContext);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   @Override
@@ -254,4 +282,9 @@ public class HgRepositoryHandler
   {
     return HgConfig.class;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private JAXBContext browserResultContext;
 }

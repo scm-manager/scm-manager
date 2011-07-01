@@ -52,6 +52,7 @@ import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryAllreadyExistExeption;
+import sonia.scm.repository.RepositoryBrowser;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHandlerNotFoundException;
@@ -523,6 +524,26 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   public Long getLastModified()
   {
     return repositoryDB.getLastModified();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   *
+   * @throws RepositoryException
+   */
+  @Override
+  public RepositoryBrowser getRepositoryBrowser(Repository repository)
+          throws RepositoryException
+  {
+    AssertUtil.assertIsNotNull(repository);
+    isReader(repository);
+
+    return getHandler(repository).getRepositoryBrowser(repository);
   }
 
   /**

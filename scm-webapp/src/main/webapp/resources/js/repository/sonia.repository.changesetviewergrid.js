@@ -44,7 +44,8 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
                             <img src="resources/images/modify.gif" alt="Modified"><span class="cs-mod-txt">{1}</span>\
                             <img src="resources/images/delete.gif" alt="Deleted"><span class="cs-mod-txt">{2}</span>\
                           </div>',
-  idsTemplate: 'Commit: {0}',
+  idsTemplate: '<div class="cs-commit">Commit: {0}</div>\
+                <div class="cs-tree">Tree: <a class="cs-tree-link" rel="{0}" href="#">{0}</a></div>',
   tagsAndBranchesTemplate: '<div class="changeset-tags">{0}</div>\
                             <div class="changeset-branches">{1}</div>',
 
@@ -86,11 +87,45 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
       autoHeight: true,
       hideHeaders: true,
       colModel: changesetColModel,
-      loadMask: true
+      loadMask: true,
+      listeners: {
+        click: {
+          fn: this.onClick,
+          scope: this
+        }
+      }
     }
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ChangesetViewerGrid.superclass.initComponent.apply(this, arguments);
+  },
+
+  onClick: function(e){
+    var el = e.getTarget('.cs-tree-link');
+    
+    if ( el != null ){
+      var revision = el.rel;
+      var index = revision.indexOf(':');
+      if ( index >= 0 ){
+        revision = revision.substr(index+1);
+      }
+      
+      if (debug){
+        console.debug('load repositorybrowser for ' + revision);
+      }
+      
+      this.openRepositoryBrowser(revision);
+    }
+  },
+  
+  openRepositoryBrowser: function(revision){
+    main.addTab({
+      id: 'repositorybrowser-' + this.repository.id + '-' + revision,
+      xtype: 'repositoryBrowser',
+      repository: this.repository,
+      revision: revision,
+      closable: true
+    });
   },
 
   renderChangesetMetadata: function(author, p, record){

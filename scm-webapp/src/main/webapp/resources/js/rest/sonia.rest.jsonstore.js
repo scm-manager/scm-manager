@@ -49,6 +49,9 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
               }
               this.removeAll();
             } else {
+              if (debug){
+                console.debug( 'error during store load, status: ' + status );
+              }
               main.handleFailure(
                 status, 
                 this.errorTitleText, 

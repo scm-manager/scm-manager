@@ -39,6 +39,11 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
   // text
   checkoutText: 'Checkout: ',
   
+  repositoryBrowserText: 'Source',
+  
+  enableRepositoryBrowser: true,
+  enableChangesetViewer: true,
+  
   modifyDefaultConfig: function(config){
     var items = config.items;
     if ( items == null ){
@@ -53,10 +58,56 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
               this.checkoutTemplate, 
               this.getRepositoryUrlWithUsername()
             )
-    },
-      this.createSpacer(), 
-      this.createChangesetViewerLink()
-    );
+    },this.createSpacer());
+    
+    var box = [];
+    if ( this.enableChangesetViewer ){
+      box.push(this.createChangesetViewerLink());
+      if (this.enableRepositoryBrowser){
+        box.push({
+          xtyle: 'box',
+          html: ', ',
+          width: 8
+        });
+      }
+    }
+    
+    if (this.enableRepositoryBrowser){
+      box.push(this.createRepositoryBrowserLink());
+    }
+    
+    items.push({
+      xtype: 'panel',
+      colspan: 2,
+      layout: 'column',
+      items: box
+    });
+  },
+  
+  createRepositoryBrowserLink: function(){
+    return {
+      xtype: 'link',
+      style: 'font-weight: bold',
+      text: this.repositoryBrowserText,
+      handler: this.openRepositoryBrowser,
+      scope: this
+    };
+  },
+  
+  createRepositoryBrowser: function(){
+    return {
+      id: 'repositorybrowser-' + this.item.id,
+      xtype: 'repositoryBrowser',
+      repository: this.item,
+      closable: true
+    }
+  },
+  
+  openRepositoryBrowser: function(browser){
+    if ( browser == null ){
+      browser = this.createRepositoryBrowser();
+    }
+    main.addTab(browser);
   }
   
 });

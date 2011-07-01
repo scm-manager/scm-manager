@@ -68,6 +68,8 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   mainTabPanel: null,
   
   infoPanels: [],
+  scripts: [],
+  stylesheets: [],
 
   constructor : function(config) {
     this.addEvents('login', 'logout', 'init');
@@ -372,6 +374,62 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         icon:Ext.MessageBox.ERROR
       });
     }
+  },
+  
+  loadScript: function(url, callback, scope){
+    var doCallback = function(){
+      if (debug){
+        console.debug('call callback for script ' + url);
+      }
+      if ( scope ){
+        callback.call(scope);
+      } else {
+        callback();
+      }
+    }
+    if ( this.scripts.indexOf(url) < 0 ){
+      var js = document.createElement('script');
+      js.type = "text/javascript";
+      js.language = 'javascript';
+      js.src = url;
+      
+      if ( Ext.isIE ){
+        js.onreadystatechange = function (){
+          if (this.readyState === 'loaded' ||
+              this.readyState === 'complete'){
+              doCallback();
+          }
+        }
+      } else {
+        js.onload = doCallback;
+        js.onerror = doCallback;
+      }
+      
+      if (debug){
+        console.debug('load script ' + url);
+      }
+      
+      document.body.appendChild(js);
+      // var head = document.getElementsByTagName('head')[0];
+      // head.appendChild(js);
+      this.scripts.push(url);
+    } else {
+      if (debug){
+        console.debug( 'script ' + url + ' allready loaded' );
+      }
+      doCallback();
+    }
+  },
+  
+  loadStylesheet: function(url){
+    if ( this.stylesheets.indexOf(url) < 0 ){
+      var css = document.createElement('link');
+      css.rel = 'stylesheet';
+      css.type = 'text/css';
+      css.href = url;
+      document.head.appendChild(css);
+      this.stylesheets.push(url);
+    }
   }
 
 });
@@ -383,7 +441,8 @@ Ext.onReady(function(){
   var mainTabPanel = new Ext.TabPanel({
     id: 'mainTabPanel',
     region: 'center',
-    deferredRender: false
+    deferredRender: false,
+    enableTabScroll: true
   });
 
   new Ext.Viewport({

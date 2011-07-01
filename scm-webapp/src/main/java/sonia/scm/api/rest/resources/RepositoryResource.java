@@ -39,26 +39,40 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.repository.ChangesetViewer;
+import sonia.scm.repository.FileObject;
+import sonia.scm.repository.FileObjectNameComparator;
+import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryBrowser;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -69,9 +83,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 
 /**
  *
@@ -85,6 +101,10 @@ public class RepositoryResource
 
   /** Field description */
   public static final String PATH_PART = "repositories";
+
+  /** the logger for RepositoryResource */
+  private static final Logger logger =
+    LoggerFactory.getLogger(RepositoryResource.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -121,6 +141,68 @@ public class RepositoryResource
    *
    *
    * @param id
+   * @param revision
+   * @param path
+   *
+   * @return
+   */
+  @GET
+  @Path("{id}/browse")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public Response getBrowserResult(@PathParam("id") String id,
+                                   @QueryParam("revision") String revision,
+                                   @QueryParam("path") String path)
+  {
+    Response response = null;
+    Repository repository = repositoryManager.get(id);
+
+    if (repository != null)
+    {
+      BrowserResult result = null;
+
+      try
+      {
+        RepositoryBrowser browser =
+          repositoryManager.getRepositoryBrowser(repository);
+
+        if (browser != null)
+        {
+          result = browser.getResult(revision, path);
+          sort(result);
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find repository browser for respository {}",
+                      repository.getId());
+        }
+      }
+      catch (Exception ex)
+      {
+        logger.error("could not retrive browserresult", ex);
+      }
+
+      if (result != null)
+      {
+        response = Response.ok(result).build();
+      }
+      else
+      {
+        response = Response.status(Response.Status.NOT_FOUND).build();
+      }
+    }
+    else
+    {
+      response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    return response;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
    * @param start
    * @param limit
    *
@@ -148,8 +230,15 @@ public class RepositoryResource
         ChangesetPagingResult changesets = changesetViewer.getChangesets(start,
                                              limit);
 
-        callPreProcessors(changesets);
-        response = Response.ok(changesets).build();
+        if (changesets != null)
+        {
+          callPreProcessors(changesets);
+          response = Response.ok(changesets).build();
+        }
+        else
+        {
+          response = Response.ok().build();
+        }
       }
       else
       {
@@ -162,6 +251,52 @@ public class RepositoryResource
     }
 
     return response;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   * @param revision
+   * @param path
+   *
+   * @return
+   */
+  @GET
+  @Path("{id}/content")
+  @Produces({ MediaType.APPLICATION_OCTET_STREAM })
+  public StreamingOutput getContent(@PathParam("id") String id,
+                                    @QueryParam("revision") String revision,
+                                    @QueryParam("path") String path)
+  {
+    StreamingOutput output = null;
+    Repository repository = repositoryManager.get(id);
+
+    if (repository != null)
+    {
+      try
+      {
+        RepositoryBrowser browser =
+          repositoryManager.getRepositoryBrowser(repository);
+
+        if (browser != null)
+        {
+          output = new BrowserStreamingOutput(browser, revision, path);
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find repository browser for respository {}",
+                      repository.getId());
+        }
+      }
+      catch (Exception ex)
+      {
+        logger.error("could not retrive content", ex);
+      }
+    }
+
+    return output;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -312,6 +447,22 @@ public class RepositoryResource
     }
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param result
+   */
+  private void sort(BrowserResult result)
+  {
+    List<FileObject> files = result.getFiles();
+
+    if (files != null)
+    {
+      Collections.sort(files, FileObjectNameComparator.instance);
+    }
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -327,6 +478,93 @@ public class RepositoryResource
     return PermissionUtil.hasPermission(repository, securityContextProvider,
             PermissionType.OWNER);
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 11/06/18
+   * @author         Enter your name here...
+   */
+  private static class BrowserStreamingOutput implements StreamingOutput
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param browser
+     * @param revision
+     * @param path
+     */
+    public BrowserStreamingOutput(RepositoryBrowser browser, String revision,
+                                  String path)
+    {
+      this.browser = browser;
+      this.revision = revision;
+      this.path = path;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param output
+     *
+     * @throws IOException
+     * @throws WebApplicationException
+     */
+    @Override
+    public void write(OutputStream output)
+            throws IOException, WebApplicationException
+    {
+      try
+      {
+        browser.getContent(revision, path, output);
+      }
+      catch (PathNotFoundException ex)
+      {
+        if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find path {}", ex.getPath());
+        }
+
+        throw new WebApplicationException(Response.Status.NOT_FOUND);
+      }
+      catch (RevisionNotFoundException ex)
+      {
+        if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find revision {}", ex.getRevision());
+        }
+
+        throw new WebApplicationException(Response.Status.NOT_FOUND);
+      }
+      catch (RepositoryException ex)
+      {
+        logger.error("could not write content to page", ex);
+
+        throw new WebApplicationException(
+            ex, Response.Status.INTERNAL_SERVER_ERROR);
+      }
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private RepositoryBrowser browser;
+
+    /** Field description */
+    private String path;
+
+    /** Field description */
+    private String revision;
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
