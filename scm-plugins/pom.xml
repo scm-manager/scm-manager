@@ -18,6 +18,10 @@
   <modules>
     <module>scm-activedirectory-auth-plugin</module>
     <module>scm-auth-ldap-plugin</module>
+    <!-- core plugins -->
+    <module>scm-hg-plugin</module>
+    <module>scm-git-plugin</module>
+    <module>scm-svn-plugin</module>
   </modules>
   
   <dependencies>
