@@ -20,7 +20,6 @@
     <module>scm-svn-plugin</module>
     <module>scm-git-plugin</module>
     <module>scm-activedirectory-auth-plugin</module>
-    <module>scm-bzr-plugin</module>
     <module>scm-auth-ldap-plugin</module>
   </modules>
   
