@@ -60,6 +60,8 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
+ * The main configuration object for SCM-Manager.
+ * This class is a singleton and is available via injection.
  *
  * @author Sebastian Sdorra
  */
@@ -69,18 +71,18 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
 {
 
-  /** Field description */
+  /** Default JavaScript date format */
   public static final String DEFAULT_DATEFORMAT = "Y-m-d H:i:s";
 
-  /** Field description */
+  /** Default plugin url */
   public static final String DEFAULT_PLUGINURL =
     "http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false";
 
-  /** Field description */
+  /** Default plugin url from version 1.0 */
   public static final String OLD_PLUGINURL =
     "http://plugins.scm-manager.org/plugins.xml.gz";
 
-  /** Field description */
+  /** Path to the configuration file */
   public static final String PATH =
     "config".concat(File.separator).concat("config.xml");
 
@@ -91,10 +93,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Register a {@link sonia.scm.ConfigChangedListener}
    *
    *
-   * @param listener
+   * @param a {@link sonia.scm.ConfigChangedListener}
    */
   @Override
   public void addListener(ConfigChangedListener listener)
@@ -103,10 +105,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Register a {@link java.util.Collection} of {@link sonia.scm.ConfigChangedListener}
    *
    *
-   * @param listeners
+   * @param a {@link java.util.Collection} of {@link sonia.scm.ConfigChangedListener}
    */
   @Override
   public void addListeners(Collection<ConfigChangedListener> listeners)
@@ -115,8 +117,8 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
-   *
+   * Calls the {@link sonia.scm.ConfigChangedListener#configChanged(Object)}
+   * method of all registered listeners.
    */
   public void fireChangeEvent()
   {
@@ -137,10 +139,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Load all properties from another {@link ScmConfiguration} object.
    *
    *
-   * @param other
+   * @param another {@link ScmConfiguration} object
    */
   public void load(ScmConfiguration other)
   {
@@ -155,7 +157,7 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
     this.proxyServer = other.proxyServer;
     this.forceBaseUrl = other.forceBaseUrl;
     this.baseUrl = other.baseUrl;
-    
+
     // deprecated fields
     this.sslPort = other.sslPort;
     this.enableSSL = other.enableSSL;
@@ -164,7 +166,7 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Unregister a listener object.
    *
    *
    * @param listener
@@ -178,10 +180,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a set of admin group names.
    *
    *
-   * @return
+   * @return set of admin group names
    */
   public Set<String> getAdminGroups()
   {
@@ -189,10 +191,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns a set of admin user names.
    *
    *
-   * @return
+   * @return set of admin user names
    */
   public Set<String> getAdminUsers()
   {
@@ -200,11 +202,11 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns the complete base url of the scm-manager including the context path.
+   * For example http://localhost:8080/scm
    *
-   *
-   * @return
    * @since 1.5
+   * @return complete base url of the scm-manager
    */
   public String getBaseUrl()
   {
@@ -212,10 +214,12 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns the date format for the user interface. This format is a 
+   * JavaScript date format, see 
+   * {@link http://jacwright.com/projects/javascript/date_format}.
    *
    *
-   * @return
+   * @return JavaScript date format
    */
   public String getDateFormat()
   {
@@ -223,10 +227,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns the forwarding port.
    *
    *
-   * @return
+   * @return forwarding port
    * @deprecated use {@link #getBaseUrl()}
    */
   @Deprecated
@@ -236,10 +240,16 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns the url of the plugin repository. This url can contain placeholders.
+   * Explanation of the {placeholders}:
+   * <ul>
+   * <li><b>version</b> = SCM-Manager Version</li>
+   * <li><b>os</b> = Operation System</li>
+   * <li><b>arch</b> = Architecture</li>
+   * </ul>
+   * For example {@link http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false"}
    *
-   *
-   * @return
+   * @return the complete plugin url.
    */
   public String getPluginUrl()
   {
@@ -247,10 +257,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns the proxy port.
    *
    *
-   * @return
+   * @return proxy port
    */
   public int getProxyPort()
   {
@@ -258,10 +268,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns the servername or ip of the proxyserver.
    *
    *
-   * @return
+   * @return servername or ip of the proxyserver
    */
   public String getProxyServer()
   {
@@ -269,10 +279,11 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns the servername of the SCM-Manager host.
    *
    *
-   * @return
+   * @return servername of the SCM-Manager host
+   * @deprecated use {@link #getBaseUrl()}
    */
   public String getServername()
   {
@@ -280,10 +291,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns the ssl port.
    *
    *
-   * @return
+   * @return ssl port
    * @deprecated use {@link #getBaseUrl()} and {@link #isForceBaseUrl()}
    */
   @Deprecated
@@ -293,10 +304,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns true if the anonymous access to the SCM-Manager is enabled.
    *
    *
-   * @return
+   * @return true if the anonymous access to the SCM-Manager is enabled
    */
   public boolean isAnonymousAccessEnabled()
   {
@@ -304,10 +315,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns true if port forwarding is enabled.
    *
    *
-   * @return
+   * @return true if port forwarding is enabled
    * @deprecated use {@link #getBaseUrl()}
    */
   @Deprecated
@@ -317,10 +328,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns true if proxy is enabled.
    *
    *
-   * @return
+   * @return true if proxy is enabled
    */
   public boolean isEnableProxy()
   {
@@ -328,10 +339,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns true if ssl is enabled.
    *
    *
-   * @return
+   * @return true if ssl is enabled
    * @deprecated use {@link #getBaseUrl()} and {@link #isForceBaseUrl()}
    */
   @Deprecated
@@ -341,11 +352,10 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Method description
+   * Returns true if force base url is enabled.
    *
-   *
-   * @return
    * @since 1.5
+   * @return true if force base url is enabled
    */
   public boolean isForceBaseUrl()
   {
@@ -521,7 +531,7 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    *
    *
    * @param sslPort
-   * @deprecated use {@link #setBaseUrl(String)} and {$link #setForceBaseUrl(boolean)}
+   * @deprecated use {@link #setBaseUrl(String)} and {@link #setForceBaseUrl(boolean)}
    */
   @Deprecated
   public void setSslPort(int sslPort)
@@ -552,7 +562,7 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   @XmlElement(name = "force-base-url")
   private boolean forceBaseUrl;
 
-  /** @deprecated use {@link $baseUrl} */
+  /** @deprecated use {@link #baseUrl} */
   @Deprecated
   private int forwardPort = 80;
 
@@ -566,22 +576,22 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   /** Field description */
   private String proxyServer = "proxy.mydomain.com";
 
-  /** Field description */
+  /** @deprecated use {@link #baseUrl} */
   private String servername = "localhost";
 
-  /** @deprecated use {@link $baseUrl} and {$link $foreceBaseUrl} */
+  /** @deprecated use {@link #baseUrl} and {@link #forceBaseUrl} */
   @Deprecated
   private boolean enableSSL = false;
 
-  /** @deprecated use {@link $baseUrl} */
+  /** @deprecated use {@link #baseUrl} */
   @Deprecated
   private boolean enablePortForward = false;
 
-  /** @deprecated use {@link $baseUrl} and {$link $foreceBaseUrl} */
+  /** @deprecated use {@link #baseUrl} and {@link #forceBaseUrl} */
   @Deprecated
   private int sslPort = 8181;
 
-  /** Field description */
+  /** Configuration change listeners */
   @XmlTransient
   private Set<ConfigChangedListener> listeners =
     new HashSet<ConfigChangedListener>();
