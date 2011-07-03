@@ -68,10 +68,10 @@ public class ScmState
    * Constructs {@link ScmState} object.
    *
    *
-   * @param provider
-   * @param securityContext
-   * @param repositoryTypes
-   * @param clientConfig
+   * @param provider - context provider
+   * @param securityContext - security context of the current user
+   * @param repositoryTypes - available repository types
+   * @param clientConfig - client configuration
    */
   public ScmState(SCMContextProvider provider,
                   WebSecurityContext securityContext,
@@ -161,7 +161,7 @@ public class ScmState
    *
    *
    *
-   * @param clientConfig
+   * @param clientConfig - client configuration
    */
   public void setClientConfig(ScmClientConfig clientConfig)
   {
@@ -173,7 +173,7 @@ public class ScmState
    *
    *
    *
-   * @param groups
+   * @param groups - collection of group names
    */
   public void setGroups(Collection<String> groups)
   {
@@ -185,7 +185,7 @@ public class ScmState
    *
    *
    *
-   * @param repositoryTypes
+   * @param repositoryTypes - collection of available repository types
    */
   public void setRepositoryTypes(Collection<Type> repositoryTypes)
   {
@@ -208,7 +208,7 @@ public class ScmState
    *
    *
    *
-   * @param user
+   * @param user - the current user
    */
   public void setUser(User user)
   {
@@ -219,8 +219,7 @@ public class ScmState
    * Setter for the SCM-Manager version.
    *
    *
-   *
-   * @param version
+   * @param version - SCM-Manager version
    */
   public void setVersion(String version)
   {

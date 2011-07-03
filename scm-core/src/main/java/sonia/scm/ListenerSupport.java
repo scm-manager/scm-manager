@@ -59,7 +59,7 @@ public interface ListenerSupport<T>
    * Register a {@link java.util.Collection} of listeners.
    *
    *
-   * @param listeners
+   * @param listeners to register
    */
   public void addListeners(Collection<T> listeners);
 

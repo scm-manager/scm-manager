@@ -46,7 +46,7 @@ public interface ConfigChangedListener
    *
    *
    *
-   * @param config
+   * @param config - the changed configuration object
    */
   public void configChanged(Object config);
 }

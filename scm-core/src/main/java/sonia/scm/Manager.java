@@ -56,7 +56,7 @@ public interface Manager<T extends ModelObject, E extends Exception>
    * Reloads a object from store and overwrites all changes.
    *
    *
-   * @param object
+   * @param object to refresh
    *
    * @throws E
    * @throws IOException
@@ -94,33 +94,32 @@ public interface Manager<T extends ModelObject, E extends Exception>
   public Collection<T> getAll(Comparator<T> comparator);
 
   /**
-   * Returns all objects from the store which are between the given start and
-   * end parameter.
+   * Returns objects from the store which are starts at the given start
+   * parameter. The objects returned are limited by the limit parameter.
    *
    *
    * @param start parameter
-   * @param limit
+   * @param limit parameter
    *
    * @since 1.4
-   * @returnall objects from the store which are between the given start and
-   * end parameter
-   *
-   * @return
+   * @return objects from the store which are starts at the given 
+   *         start parameter
    */
   public Collection<T> getAll(int start, int limit);
 
   /**
-   * Returns all objects from the store which are between the given start and
-   * end parameter sorted by the given comparator.
+   * Returns objects from the store which are starts at the given start
+   * parameter sorted by the given {@link java.util.Comparator}. 
+   * The objects returned are limited by the limit parameter.
    *
    *
    * @param comparator to sort the returned objects
    * @param start parameter
-   * @param limit
+   * @param limit parameter
    *
    * @since 1.4
-   * @return all objects from the store which are between the given start and
-   * end parameter sorted by the given comparator
+   * @return objects from the store which are starts at the given 
+   *         start parameter
    */
   public Collection<T> getAll(Comparator<T> comparator, int start, int limit);
 }

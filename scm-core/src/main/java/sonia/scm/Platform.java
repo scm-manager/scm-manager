@@ -51,8 +51,7 @@ public class Platform
    *
    * @param osName - name of the operation system
    * @param archModel - name of the host architecture model
-   * @param archModel - name of the operation system architecture
-   * @param osArch
+   * @param osArch - name of the operation system architecture
    */
   public Platform(String osName, String archModel, String osArch)
   {
@@ -76,10 +75,10 @@ public class Platform
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Returns true if the operating system is 32 bit operating system.
+   * Returns true if the operating system is a 32 bit operating system.
    *
    *
-   * @return true if the operating system is 32 bit operating system
+   * @return true if the operating system is a 32 bit operating system
    */
   public boolean is32Bit()
   {
@@ -87,10 +86,10 @@ public class Platform
   }
 
   /**
-   * Method description
+   * Returns true if the operating system is a 64 a bit operating system.
    *
    *
-   * @return
+   * @return true if the operating system is a 64 a bit operating system
    */
   public boolean is64Bit()
   {
@@ -100,10 +99,10 @@ public class Platform
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the architecture of the platform.
    *
    *
-   * @return
+   * @return the architecture of the platform
    */
   public String getArch()
   {
@@ -111,10 +110,10 @@ public class Platform
   }
 
   /**
-   * Method description
+   * Returns the name of the platform.
    *
    *
-   * @return
+   * @return name of the platform
    */
   public String getName()
   {
@@ -122,10 +121,10 @@ public class Platform
   }
 
   /**
-   * Method description
+   * Returns the type of the platform.
    *
    *
-   * @return
+   * @return type of the platform
    */
   public PlatformType getType()
   {
@@ -133,10 +132,10 @@ public class Platform
   }
 
   /**
-   * Method description
+   * Returns true if the operating system is a FreeBSD.
    *
    *
-   * @return
+   * @return true if the operating system is a FreeBSD
    */
   public boolean isFreeBSD()
   {
@@ -144,10 +143,10 @@ public class Platform
   }
 
   /**
-   * Method description
+   * Returns true if the operating system is a Linux.
    *
    *
-   * @return
+   * @return true if the operating system is a Linux
    */
   public boolean isLinux()
   {
@@ -155,10 +154,10 @@ public class Platform
   }
 
   /**
-   * Method description
+   * Returns true if the operating system is a Mac OS.
    *
    *
-   * @return
+   * @return true if the operating system is a Mac OS
    */
   public boolean isMac()
   {
@@ -166,10 +165,10 @@ public class Platform
   }
 
   /**
-   * Method description
+   * Returns true if the operating system is a OpenBSD.
    *
    *
-   * @return
+   * @return true if the operating system is a OpenBSD
    */
   public boolean isOpenBSD()
   {
@@ -177,10 +176,10 @@ public class Platform
   }
 
   /**
-   * Method description
+   * Returns true if the operating system has posix support.
    *
    *
-   * @return
+   * @return true if the operating system has posix support
    */
   public boolean isPosix()
   {
@@ -188,10 +187,10 @@ public class Platform
   }
 
   /**
-   * Method description
+   * Returns true if the operating system is a Solaris.
    *
    *
-   * @return
+   * @return true if the operating system is a Solaris
    */
   public boolean isSolaris()
   {
@@ -199,10 +198,10 @@ public class Platform
   }
 
   /**
-   * Method description
+   * Returns true if the operating system is a Unix system.
    *
    *
-   * @return
+   * @return true if the operating system is a Unix system
    */
   public boolean isUnix()
   {
@@ -210,10 +209,10 @@ public class Platform
   }
 
   /**
-   * Method description
+   * Returns true if the operating system is a Windows.
    *
    *
-   * @return
+   * @return true if the operating system is a Windows
    */
   public boolean isWindows()
   {

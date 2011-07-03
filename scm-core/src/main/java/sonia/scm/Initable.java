@@ -46,7 +46,7 @@ public interface Initable
    *
    *
    *
-   * @param context
+   * @param context - the context provider of the SCM-Manager
    */
   public void init(SCMContextProvider context);
 }
