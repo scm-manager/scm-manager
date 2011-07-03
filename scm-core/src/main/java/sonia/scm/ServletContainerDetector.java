@@ -34,9 +34,9 @@
 package sonia.scm;
 
 /**
- * Detects the servletcontainer
- *
- * inspired by com.liferay.portal.kernel.util.ServerDetector of liferay
+ * Detects the ServletContainer.
+ * This class is inspired by
+ * com.liferay.portal.kernel.util.ServerDetector of liferay.
  *
  * @author Sebastian Sdorra
  */
@@ -44,10 +44,10 @@ public class ServletContainerDetector
 {
 
   /**
-   * Method description
+   * Detects the ServletContainer.
    *
    *
-   * @return
+   * @return the detected ServletContainer
    */
   public static ServletContainer detect()
   {
@@ -55,10 +55,10 @@ public class ServletContainerDetector
   }
 
   /**
-   * Method description
+   * Detects the ServletContainer.
    *
    *
-   * @return
+   * @return the detected ServletContainer
    */
   public ServletContainer detectContainer()
   {
@@ -115,10 +115,10 @@ public class ServletContainerDetector
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns true if the ServletContainer is a Geronimo.
    *
    *
-   * @return
+   * @return true if the ServletContainer is a Geronimo
    */
   public boolean isGeronimo()
   {
@@ -126,10 +126,10 @@ public class ServletContainerDetector
   }
 
   /**
-   * Method description
+   * Returns true if the ServletContainer is a Glassfish.
    *
    *
-   * @return
+   * @return true if the ServletContainer is a Glassfish
    */
   public boolean isGlassfish()
   {
@@ -146,10 +146,10 @@ public class ServletContainerDetector
   }
 
   /**
-   * Method description
+   * Returns true if the ServletContainer is a JBoss.
    *
    *
-   * @return
+   * @return true if the ServletContainer is a JBos
    */
   public boolean isJBoss()
   {
@@ -157,10 +157,10 @@ public class ServletContainerDetector
   }
 
   /**
-   * Method description
+   * Returns true if the ServletContainer is a JOnAS.
    *
    *
-   * @return
+   * @return true if the ServletContainer is a JOnAS
    */
   public boolean isJOnAS()
   {
@@ -175,10 +175,10 @@ public class ServletContainerDetector
   }
 
   /**
-   * Method description
+   * Returns true if the ServletContainer is a Jetty.
    *
    *
-   * @return
+   * @return true if the ServletContainer is a Jetty
    */
   public boolean isJetty()
   {
@@ -186,10 +186,10 @@ public class ServletContainerDetector
   }
 
   /**
-   * Method description
+   * Returns true if the ServletContainer is a OC4J.
    *
    *
-   * @return
+   * @return true if the ServletContainer is a OC4J
    */
   public boolean isOC4J()
   {
@@ -197,10 +197,10 @@ public class ServletContainerDetector
   }
 
   /**
-   * Method description
+   * Returns true if the ServletContainer is a Resin.
    *
    *
-   * @return
+   * @return true if the ServletContainer is a Resin
    */
   public boolean isResin()
   {
@@ -208,10 +208,10 @@ public class ServletContainerDetector
   }
 
   /**
-   * Method description
+   * Returns true if the ServletContainer is a SCM-Server.
    *
    *
-   * @return
+   * @return true if the ServletContainer is a SCM-Server
    */
   public boolean isScmServer()
   {
@@ -219,10 +219,10 @@ public class ServletContainerDetector
   }
 
   /**
-   * Method description
+   * Returns true if the ServletContainer is a Tomcat.
    *
    *
-   * @return
+   * @return true if the ServletContainer is a Tomcat
    */
   public boolean isTomcat()
   {
@@ -237,10 +237,10 @@ public class ServletContainerDetector
   }
 
   /**
-   * Method description
+   * Returns true if the ServletContainer is a WebLogic.
    *
    *
-   * @return
+   * @return true if the ServletContainer is a WebLogic
    */
   public boolean isWebLogic()
   {
@@ -248,10 +248,10 @@ public class ServletContainerDetector
   }
 
   /**
-   * Method description
+   * Returns true if the ServletContainer is a WebSphere.
    *
    *
-   * @return
+   * @return true if the ServletContainer is a WebSpere
    */
   public boolean isWebSphere()
   {

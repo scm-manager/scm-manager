@@ -61,7 +61,7 @@ public class SCMContext
    * Returns the singleton instance of {@link SCMContextProvider}
    *
    *
-   * @return  singleton instance of {@link SCMContextProvider}
+   * @return singleton instance of {@link SCMContextProvider}
    */
   public static SCMContextProvider getContext()
   {

@@ -81,7 +81,7 @@ public class ScmClientConfig
    *
    *
    *
-   * @param dateFormat
+   * @param dateFormat - JavaScript date format
    */
   public void setDateFormat(String dateFormat)
   {
