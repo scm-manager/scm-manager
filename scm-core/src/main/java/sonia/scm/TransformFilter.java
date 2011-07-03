@@ -34,21 +34,22 @@
 package sonia.scm;
 
 /**
+ * Util class to transform multiple objects.
  *
  * @author Sebastian Sdorra
  *
- * @param <T>
+ * @param <T> type of objects to transform
  */
 public interface TransformFilter<T>
 {
 
   /**
-   * Method description
+   * Transform the given object.
    *
    *
-   * @param item
+   * @param object to transform
    *
-   * @return
+   * @return tranformed object
    */
   public T accept(T item);
 }

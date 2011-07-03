@@ -38,6 +38,7 @@ package sonia.scm;
 import sonia.scm.util.Util;
 
 /**
+ * Represents the platform on which the SCM manager running.
  *
  * @author Sebastian Sdorra
  */
@@ -45,12 +46,12 @@ public class Platform
 {
 
   /**
-   * Constructs ...
+   * Constructs a {@link Platform} object
    *
    *
-   * @param osName
-   * @param archModel
-   * @param osArch
+   * @param osName - name of the operation system
+   * @param archModel - name of the host architecture model
+   * @param archModel - name of the operation system architecture
    */
   public Platform(String osName, String archModel, String osArch)
   {
@@ -74,10 +75,10 @@ public class Platform
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Returns true if the operating system is 32 bit operating system.
    *
    *
-   * @return
+   * @return true if the operating system is 32 bit operating system
    */
   public boolean is32Bit()
   {

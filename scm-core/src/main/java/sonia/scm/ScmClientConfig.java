@@ -34,6 +34,8 @@
 package sonia.scm;
 
 /**
+ * Configuration object for the SCM-Manager
+ * client (WebInterface, RestClient, ...).
  *
  * @author Sebastian Sdorra
  */
@@ -41,13 +43,13 @@ public class ScmClientConfig
 {
 
   /**
-   * Constructs ...
+   * Constructs {@link ScmClientConfig} object
    *
    */
   public ScmClientConfig() {}
 
   /**
-   * Constructs ...
+   * Constructs {@link ScmClientConfig} object
    *
    *
    * @param dateFormat
@@ -60,10 +62,12 @@ public class ScmClientConfig
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the date format for the user interface. This format is a
+   * JavaScript date format, see
+   * {@link http://jacwright.com/projects/javascript/date_format}.
    *
    *
-   * @return
+   * @return JavaScript date format
    */
   public String getDateFormat()
   {
@@ -73,7 +77,8 @@ public class ScmClientConfig
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Setter for the date format
+   *
    *
    *
    * @param dateFormat

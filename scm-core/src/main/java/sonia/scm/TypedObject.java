@@ -34,6 +34,7 @@
 package sonia.scm;
 
 /**
+ * Base interface for all objects of specific type.
  *
  * @author Sebastian Sdorra
  */
@@ -41,10 +42,10 @@ public interface TypedObject
 {
 
   /**
-   * Method description
+   * Returns the type of the object.
    *
    *
-   * @return
+   * @return type of the object
    */
   public String getType();
 }

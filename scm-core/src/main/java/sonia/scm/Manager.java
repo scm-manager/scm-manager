@@ -41,18 +41,19 @@ import java.util.Collection;
 import java.util.Comparator;
 
 /**
+ * Base interface for all manager classes.
  *
  * @author Sebastian Sdorra
  *
- * @param <T>
- * @param <E>
+ * @param <T> type of the model object
+ * @param <E> type of the exception
  */
 public interface Manager<T extends ModelObject, E extends Exception>
         extends HandlerBase<T, E>, LastModifiedAware
 {
 
   /**
-   * Method description
+   * Reloads a object from store and overwrites all changes.
    *
    *
    * @param object
@@ -65,59 +66,61 @@ public interface Manager<T extends ModelObject, E extends Exception>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the object with the given id.
    *
    *
+   * @param id of the object
    *
-   * @param id
-   *
-   * @return
+   * @return object with the given id
    */
   public T get(String id);
 
   /**
-   * Method description
+   * Returns a {@link java.util.Collection} of all objects in the store.
    *
    *
-   * @return
+   * @return all object in the store
    */
   public Collection<T> getAll();
 
   /**
-   * Method description
+   * Returns all object of the store sorted by the given {@link java.util.Comparator}
    *
    *
-   *
-   * @param comparator
-   * @return
+   * @param comparator to sort the returned objects
    * @since 1.4
+   * @return all object of the store sorted by the given {@link java.util.Comparator}
    */
   public Collection<T> getAll(Comparator<T> comparator);
 
   /**
-   * Method description
+   * Returns all objects from the store which are between the given start and
+   * end parameter.
    *
    *
-   * @param start
+   * @param start parameter
    * @param limit
    *
-   * @return
    * @since 1.4
+   * @returnall objects from the store which are between the given start and
+   * end parameter
+   *
+   * @return
    */
   public Collection<T> getAll(int start, int limit);
 
   /**
-   * Method description
+   * Returns all objects from the store which are between the given start and
+   * end parameter sorted by the given comparator.
    *
    *
-   *
-   *
-   * @param comparator
-   * @param start
+   * @param comparator to sort the returned objects
+   * @param start parameter
    * @param limit
    *
-   * @return
    * @since 1.4
+   * @return all objects from the store which are between the given start and
+   * end parameter sorted by the given comparator
    */
   public Collection<T> getAll(Comparator<T> comparator, int start, int limit);
 }

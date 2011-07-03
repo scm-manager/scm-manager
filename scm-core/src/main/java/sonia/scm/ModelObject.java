@@ -38,6 +38,7 @@ package sonia.scm;
 import java.io.Serializable;
 
 /**
+ * Base interface for all model objects.
  *
  * @author Sebastian Sdorra
  */
@@ -47,10 +48,10 @@ public interface ModelObject
 {
 
   /**
-   * Method description
+   * Returns the unique id of the model object
    *
    *
-   * @return
+   * @return unique id
    */
   public String getId();
 }

@@ -38,32 +38,35 @@ package sonia.scm;
 import java.util.Collection;
 
 /**
+ * Base interface for all type manager classes.
  *
  * @author Sebastian Sdorra
  *
- * @param <T>
- * @param <E>
+ * @param <T> type of the model object
+ * @param <E> type of the exception
  */
 public interface TypeManager<T extends ModelObject, E extends Exception>
         extends Manager<T, E>
 {
 
   /**
-   * Method description
+   * Returns the handler for given type or
+   * null if no handler of that type is available.
    *
    *
-   * @param type
-   * @param <H>
+   * @param type name of the handler
+   * @param <H> type of the handler
    *
-   * @return
+   * @return the handler for given type
    */
   public <H extends Handler<T, E>> H getHandler(String type);
 
   /**
-   * Method description
+   * Returns a {@link java.util.Collection} of all
+   * available and configured types.
    *
    *
-   * @return
+   * @return all available types
    */
   public Collection<Type> getTypes();
 }

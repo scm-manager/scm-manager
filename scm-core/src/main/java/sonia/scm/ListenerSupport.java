@@ -38,24 +38,25 @@ package sonia.scm;
 import java.util.Collection;
 
 /**
+ * Base interface for all objects have support for listeners.
  *
  * @author Sebastian Sdorra
  *
- * @param <T>
+ * @param <T> type of the listeners
  */
 public interface ListenerSupport<T>
 {
 
   /**
-   * Method description
+   * Register a listener.
    *
    *
-   * @param listener
+   * @param listener to register
    */
   public void addListener(T listener);
 
   /**
-   * Method description
+   * Register a {@link java.util.Collection} of listeners.
    *
    *
    * @param listeners
@@ -63,10 +64,10 @@ public interface ListenerSupport<T>
   public void addListeners(Collection<T> listeners);
 
   /**
-   * Method description
+   * Unregister a listener.
    *
    *
-   * @param listener
+   * @param listener to unregister
    */
   public void removeListener(T listener);
 }

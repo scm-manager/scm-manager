@@ -34,6 +34,7 @@
 package sonia.scm;
 
 /**
+ * Type of the SCM-Manager host platform.
  *
  * @author Sebastian Sdorra
  */
@@ -44,11 +45,11 @@ public enum PlatformType
   OPENBSD(true, true);
 
   /**
-   * Constructs ...
+   * Constructs {@link PlatformType} object.
    *
    *
-   * @param unix
-   * @param posix
+   * @param unix - unix operating system
+   * @param posix - support for posix
    */
   private PlatformType(boolean unix, boolean posix)
   {
@@ -59,12 +60,12 @@ public enum PlatformType
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Returns {@link PlatformType} object for the given operating system name.
    *
    *
-   * @param osName
+   * @param osName - name of the operating system
    *
-   * @return
+   * @return {@link PlatformType} object for the given operating system name
    */
   public static PlatformType createPlatformType(String osName)
   {
@@ -103,10 +104,10 @@ public enum PlatformType
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns true if the platform has support for posix.
    *
    *
-   * @return
+   * @return true if the platform has support for posix
    */
   public boolean isPosix()
   {
@@ -114,10 +115,10 @@ public enum PlatformType
   }
 
   /**
-   * Method description
+   * Returns true if the platform is a unix system.
    *
    *
-   * @return
+   * @return true if the platform is a unix system
    */
   public boolean isUnix()
   {
@@ -126,9 +127,9 @@ public enum PlatformType
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** has the platform support for posix */
   private boolean posix;
 
-  /** Field description */
+  /** is the platform is a unix system */
   private boolean unix;
 }

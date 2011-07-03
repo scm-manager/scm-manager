@@ -29,9 +29,12 @@
  *
  */
 
+
+
 package sonia.scm;
 
 /**
+ * Callback listener for setting properties that are changed.
  *
  * @author Sebastian Sdorra
  */
@@ -39,7 +42,8 @@ public interface ConfigChangedListener
 {
 
   /**
-   * Method description
+   * This method is called when a configuration has changed
+   *
    *
    *
    * @param config

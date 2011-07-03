@@ -39,6 +39,7 @@ import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
 /**
+ * Base class for all objects which supports different types.
  *
  * @author Sebastian Sdorra
  */
@@ -46,13 +47,14 @@ public class Type
 {
 
   /**
-   * Constructor is required for JAXB
+   * Constructs {@link Type} object.
+   * This constructor is required for JAXB.
    *
    */
   public Type() {}
 
   /**
-   * Constructs ...
+   * Constructs {@link Type} object
    *
    *
    * @param name
@@ -76,12 +78,12 @@ public class Type
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Returns true if the given ovject is equals.
    *
    *
    * @param obj
    *
-   * @return
+   * @return true if the given ovject is equals
    */
   @Override
   public boolean equals(Object obj)
@@ -116,10 +118,10 @@ public class Type
   }
 
   /**
-   * Method description
+   * Returns the hash code of the object.
    *
    *
-   * @return
+   * @return hash code of the object
    */
   @Override
   public int hashCode()
@@ -137,10 +139,10 @@ public class Type
   }
 
   /**
-   * Method description
+   * Returns {@link String} representation of the type.
    *
    *
-   * @return
+   * @return {@link String} representation of the type
    */
   @Override
   public String toString()
@@ -155,10 +157,10 @@ public class Type
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the display name of the type.
    *
    *
-   * @return
+   * @return display name of the type
    */
   public String getDisplayName()
   {
@@ -166,10 +168,10 @@ public class Type
   }
 
   /**
-   * Method description
+   * Returns the unique name of the type.
    *
    *
-   * @return
+   * @return unique name of the type
    */
   public String getName()
   {
@@ -179,7 +181,8 @@ public class Type
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Setter for the display name of the type
+   *
    *
    *
    * @param displayName
@@ -190,10 +193,10 @@ public class Type
   }
 
   /**
-   * Method description
+   * Setter for the type name
    *
    *
-   * @param name
+   * @param name of the type
    */
   public void setName(String name)
   {
@@ -202,9 +205,9 @@ public class Type
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** display name of the type */
   private String displayName;
 
-  /** Field description */
+  /** unique name of the type */
   private String name;
 }

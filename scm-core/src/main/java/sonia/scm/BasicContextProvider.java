@@ -46,35 +46,36 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
+ * The default implementation of {@link SCMContextProvider}.
  *
  * @author Sebastian Sdorra
  */
 public class BasicContextProvider implements SCMContextProvider
 {
 
-  /** Field description */
+  /** Default version {@link String} */
   public static final String DEFAULT_VERSION = "unknown";
 
-  /** Field description */
+  /** Default name of the SCM-Manager base directory */
   public static final String DIRECTORY_DEFAULT = ".scm";
 
-  /** Field description */
+  /** Environment varibale for the SCM-Manager base directory */
   public static final String DIRECTORY_ENVIRONMENT = "SCM_HOME";
 
-  /** Field description */
+  /** Java system property for the SCM-Manager base directory */
   public static final String DIRECTORY_PROPERTY = "scm.home";
 
-  /** Field description */
+  /** Path to the maven properties file of the scm-core artifact */
   public static final String MAVEN_PROPERTIES =
     "/META-INF/maven/sonia.scm/scm-core/pom.properties";
 
-  /** Field description */
+  /** Maven property for the version of the artifact */
   public static final String MAVEN_PROPERTY_VERSION = "version";
 
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new {@link BasicContextProvider} object.
    *
    */
   public BasicContextProvider()
@@ -86,7 +87,7 @@ public class BasicContextProvider implements SCMContextProvider
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * {@see java.io.Closeable#close()}
    *
    *
    * @throws IOException
@@ -95,7 +96,7 @@ public class BasicContextProvider implements SCMContextProvider
   public void close() throws IOException {}
 
   /**
-   * Method description
+   * {@see SCMContextProvider#init()}
    *
    */
   @Override
@@ -104,10 +105,10 @@ public class BasicContextProvider implements SCMContextProvider
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * {@see SCMContextProvider#getBaseDirectory()}
    *
    *
-   * @return
+   * @return {@see SCMContextProvider#getBaseDirectory()}
    */
   @Override
   public File getBaseDirectory()
@@ -116,10 +117,11 @@ public class BasicContextProvider implements SCMContextProvider
   }
 
   /**
-   * Method description
+   * Returns the version of the SCM-Manager. If the version is not set, the
+   * {@link #DEFAULT_VERSION} is returned.
    *
    *
-   * @return
+   * @return the version of the SCM-Manager
    */
   @Override
   public String getVersion()
@@ -130,10 +132,10 @@ public class BasicContextProvider implements SCMContextProvider
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Find the base directory of SCM-Manager.
    *
    *
-   * @return
+   * @return base directory SCM-Manager
    */
   private File findBaseDirectory()
   {
@@ -161,10 +163,10 @@ public class BasicContextProvider implements SCMContextProvider
   }
 
   /**
-   * Method description
+   * Loads the version of the SCM-Manager from maven properties file.
    *
    *
-   * @return
+   * @return the version of the SCM-Manager
    */
   private String loadVersion()
   {
@@ -189,9 +191,9 @@ public class BasicContextProvider implements SCMContextProvider
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** The base directory of the SCM-Manager */
   private File baseDirectory;
 
-  /** Field description */
+  /** the version of the SCM-Manager */
   private String version;
 }

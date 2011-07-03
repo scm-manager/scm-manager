@@ -30,26 +30,7 @@
  */
 
 
-
-package sonia.scm;
-
 /**
- * Util class for filtering of objects.
- *
- * @author Sebastian Sdorra
- *
- * @param <T>
+ * Base classes and interfaces of the SCM-Manager.
  */
-public interface Filter<T>
-{
-
-  /**
-   * Tests whether the item is filtered.
-   *
-   *
-   * @param item for the accept test
-   *
-   * @return true if the object is accepted
-   */
-  public boolean accept(T item);
-}
+package sonia.scm;

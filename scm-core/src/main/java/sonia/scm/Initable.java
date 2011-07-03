@@ -32,6 +32,7 @@
 package sonia.scm;
 
 /**
+ * Base interface for all initable objects.
  *
  * @author Sebastian Sdorra
  */
@@ -39,10 +40,10 @@ public interface Initable
 {
 
   /**
-   * Method description
+   * This method is called when the SCM manager is started.
    *
    *
-   * @param context
+   * @param the context provider of the SCM-Manager
    */
   public void init(SCMContextProvider context);
 }

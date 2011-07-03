@@ -29,9 +29,12 @@
  *
  */
 
+
+
 package sonia.scm;
 
 /**
+ * Exception for problems with the SCM-Manager configuration.
  *
  * @author Sebastian Sdorra
  */
@@ -44,7 +47,7 @@ public class ConfigurationException extends RuntimeException
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a {@link ConfigurationException}
    *
    */
   public ConfigurationException()
@@ -53,7 +56,7 @@ public class ConfigurationException extends RuntimeException
   }
 
   /**
-   * Constructs ...
+   * Constructs a {@link ConfigurationException}
    *
    *
    * @param message
@@ -64,7 +67,7 @@ public class ConfigurationException extends RuntimeException
   }
 
   /**
-   * Constructs ...
+   * Constructs a {@link ConfigurationException}
    *
    *
    * @param cause
@@ -75,7 +78,7 @@ public class ConfigurationException extends RuntimeException
   }
 
   /**
-   * Constructs ...
+   * Constructs a {@link ConfigurationException}
    *
    *
    * @param message

@@ -57,15 +57,13 @@ public class ScmState
 {
 
   /**
-   * Constructs ...
+   * Constructs {@link ScmState} object. This constructor is required by JAXB.
    *
    */
   public ScmState() {}
 
   /**
-   * Constructs ...
-   *
-   *
+   * Constructs {@link ScmState} object.
    *
    *
    * @param provider

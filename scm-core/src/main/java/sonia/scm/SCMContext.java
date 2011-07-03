@@ -38,28 +38,30 @@ package sonia.scm;
 import sonia.scm.util.ServiceUtil;
 
 /**
+ * The SCMConext searches a implementation of {@link SCMContextProvider} and
+ * holds a singleton instance of this implementation.
  *
  * @author Sebastian Sdorra
  */
 public class SCMContext
 {
 
-  /** Field description */
+  /** Default java package for finding extensions */
   public static final String DEFAULT_PACKAGE = "sonia.scm";
 
-  /** Field description */
+  /** Name of the anonymous user */
   public static final String USER_ANONYMOUS = "anonymous";
 
-  /** Field description */
+  /** Singleton instance of {@link SCMContextProvider} */
   private static volatile SCMContextProvider provider;
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the singleton instance of {@link SCMContextProvider}
    *
    *
-   * @return
+   * @return  singleton instance of {@link SCMContextProvider}
    */
   public static SCMContextProvider getContext()
   {

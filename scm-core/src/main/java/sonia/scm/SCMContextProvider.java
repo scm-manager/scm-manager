@@ -39,6 +39,9 @@ import java.io.Closeable;
 import java.io.File;
 
 /**
+ * The main class for retrieving the home and the version of the SCM-Manager.
+ * This class is a singleton which can be retrieved via 
+ * inject or with the static {@link SCMContext#getContext()} method.
  *
  * @author Sebastian Sdorra
  */
@@ -46,7 +49,8 @@ public interface SCMContextProvider extends Closeable
 {
 
   /**
-   * Method description
+   * Initializes the {@link SCMContextProvider}.
+   * This method is called when the SCM manager is started.
    *
    */
   public void init();
@@ -54,18 +58,18 @@ public interface SCMContextProvider extends Closeable
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the base directory of the SCM-Manager.
    *
    *
-   * @return
+   * @return base directory of the SCM-Manager
    */
   public File getBaseDirectory();
 
   /**
-   * Method description
+   * Returns the version of the SCM-Manager.
    *
    *
-   * @return
+   * @return version of the SCM-Manager
    */
   public String getVersion();
 }

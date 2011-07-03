@@ -520,6 +520,7 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    *
    *
    * @param servername
+   * @deprecated use {@link #setBaseUrl(String)}
    */
   public void setServername(String servername)
   {

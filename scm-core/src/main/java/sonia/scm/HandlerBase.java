@@ -39,21 +39,22 @@ import java.io.Closeable;
 import java.io.IOException;
 
 /**
+ * The base class of all handlers.
  *
  * @author Sebastian Sdorra
  *
- * @param <T>
- * @param <E>
+ * @param <T> type object of the handler
+ * @param <E> exception type of the handler
  */
 public interface HandlerBase<T extends TypedObject, E extends Exception>
         extends Initable, Closeable
 {
 
   /**
-   * Method description
+   * Persists a new object.
    *
    *
-   * @param object
+   * @param object to store
    *
    * @throws E
    * @throws IOException
@@ -61,10 +62,10 @@ public interface HandlerBase<T extends TypedObject, E extends Exception>
   public void create(T object) throws E, IOException;
 
   /**
-   * Method description
+   * Removes a persistent object.
    *
    *
-   * @param object
+   * @param object to delete
    *
    * @throws E
    * @throws IOException
@@ -72,10 +73,10 @@ public interface HandlerBase<T extends TypedObject, E extends Exception>
   public void delete(T object) throws E, IOException;
 
   /**
-   * Method description
+   * Modifies a persistent object.
    *
    *
-   * @param object
+   * @param object to modify
    *
    * @throws E
    * @throws IOException
