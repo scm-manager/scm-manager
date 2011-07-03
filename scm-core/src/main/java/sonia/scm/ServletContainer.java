@@ -34,6 +34,7 @@
 package sonia.scm;
 
 /**
+ * Type of a servlet container.
  *
  * @author Sebastian Sdorra
  */

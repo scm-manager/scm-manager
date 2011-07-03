@@ -195,10 +195,12 @@ public class IOUtil
    * @param in
    * @param out
    * @param bufferSize
+   * @param byteCount
    *
    * @throws IOException
    */
-  public static void copy(InputStream in, OutputStream out, int bufferSize, int byteCount)
+  public static void copy(InputStream in, OutputStream out, int bufferSize,
+                          int byteCount)
           throws IOException
   {
     byte buffer[] = new byte[bufferSize];
@@ -237,10 +239,10 @@ public class IOUtil
         out.write(buffer, 0, len);
       }
     }
+
     out.flush();
   }
 
-  
   /**
    * Method description
    *

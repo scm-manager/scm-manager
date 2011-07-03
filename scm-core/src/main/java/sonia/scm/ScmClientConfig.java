@@ -34,7 +34,7 @@
 package sonia.scm;
 
 /**
- * Configuration object for the SCM-Manager
+ * Configuration object for a SCM-Manager
  * client (WebInterface, RestClient, ...).
  *
  * @author Sebastian Sdorra

@@ -221,16 +221,18 @@ public class PluginCondition
   private boolean isOs(String osType, PlatformType type)
   {
     osType = osType.toLowerCase();
-    
-    return
-      ( osType.indexOf("win") >= 0 && PlatformType.WINDOWS == type ) ||
-      ( osType.indexOf("unix") >= 0 && type.isUnix() ) ||
-      ( osType.indexOf("posix") >= 0 && type.isPosix() ) ||
-      ( osType.indexOf("mac") >= 0 && PlatformType.MAC == type) ||
-      ( osType.indexOf("linux") >= 0 && PlatformType.LINUX == type ) ||
-      ( osType.indexOf("solaris") >= 0 && PlatformType.SOLARIS == type ) ||
-      ( osType.indexOf("openbsd") >= 0 && PlatformType.OPENBSD == type ) ||
-      ( osType.indexOf("freebsd") >= 0 && PlatformType.FREEBSD == type );
+
+    return ((osType.indexOf("win") >= 0) && (PlatformType.WINDOWS == type))
+           || ((osType.indexOf("unix") >= 0) && type.isUnix())
+           || ((osType.indexOf("posix") >= 0) && type.isPosix())
+           || ((osType.indexOf("mac") >= 0) && (PlatformType.MAC == type))
+           || ((osType.indexOf("linux") >= 0) && (PlatformType.LINUX == type))
+           || ((osType.indexOf("solaris") >= 0)
+               && (PlatformType.SOLARIS
+                   == type)) || ((osType.indexOf("openbsd") >= 0)
+                                 && (PlatformType.OPENBSD
+                                     == type)) || ((osType.indexOf("freebsd")
+                                       >= 0) && (PlatformType.FREEBSD == type));
   }
 
   //~--- fields ---------------------------------------------------------------

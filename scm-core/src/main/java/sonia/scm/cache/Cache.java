@@ -54,6 +54,8 @@ public interface Cache<K, V>
    *
    *
    * @param key
+   *
+   * @return
    */
   public boolean contains(K key);
 

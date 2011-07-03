@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm;
 
 /**
@@ -36,12 +38,15 @@ package sonia.scm;
  *
  * @author Sebastian Sdorra
  */
-public enum HandlerEvent 
+public enum HandlerEvent
 {
+
   /** The type of the event, if a new object is stored by a handler. */
-  CREATE, 
+  CREATE,
+
   /** The type of the event, if a object is modified by a handler. */
   MODIFY,
+
   /** The type of the event, if a object is removed by a handler. */
-  DELETE 
+  DELETE
 }

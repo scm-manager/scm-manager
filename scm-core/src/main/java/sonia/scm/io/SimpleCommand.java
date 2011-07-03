@@ -176,13 +176,14 @@ public class SimpleCommand implements Command
       }
 
       int returnCode = process.waitFor();
-      
-      if ( logger.isDebugEnabled() )
+
+      if (logger.isDebugEnabled())
       {
-        logger.debug( "command returned with exitcode {}", returnCode );
-        if ( logger.isTraceEnabled() )
+        logger.debug("command returned with exitcode {}", returnCode);
+
+        if (logger.isTraceEnabled())
         {
-          logger.trace("command content: {}{}", s, content.toString() );
+          logger.trace("command content: {}{}", s, content.toString());
         }
       }
 

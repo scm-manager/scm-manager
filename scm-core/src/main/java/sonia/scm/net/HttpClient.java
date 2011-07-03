@@ -36,6 +36,7 @@ package sonia.scm.net;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,8 @@ public interface HttpClient
    * @param url
    *
    * @return
+   *
+   * @throws IOException
    */
   public HttpResponse post(String url) throws IOException;
 
@@ -64,8 +67,11 @@ public interface HttpClient
    * @param parameters
    *
    * @return
+   *
+   * @throws IOException
    */
-  public HttpResponse post(String url, Map<String, List<String>> parameters) throws IOException;
+  public HttpResponse post(String url, Map<String, List<String>> parameters)
+          throws IOException;
 
   //~--- get methods ----------------------------------------------------------
 
@@ -76,6 +82,8 @@ public interface HttpClient
    * @param url
    *
    * @return
+   *
+   * @throws IOException
    */
   public HttpResponse get(String url) throws IOException;
 
@@ -87,6 +95,9 @@ public interface HttpClient
    * @param parameters
    *
    * @return
+   *
+   * @throws IOException
    */
-  public HttpResponse get(String url, Map<String, List<String>> parameters) throws IOException;
+  public HttpResponse get(String url, Map<String, List<String>> parameters)
+          throws IOException;
 }

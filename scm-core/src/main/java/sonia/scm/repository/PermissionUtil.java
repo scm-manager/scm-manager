@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import com.google.inject.Provider;
 
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.security.WebSecurityContext;
@@ -45,7 +46,6 @@ import sonia.scm.web.security.WebSecurityContext;
 
 import java.util.Collection;
 import java.util.List;
-import sonia.scm.security.ScmSecurityException;
 
 /**
  *

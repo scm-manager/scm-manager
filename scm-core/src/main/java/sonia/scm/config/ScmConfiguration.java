@@ -96,7 +96,8 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    * Register a {@link sonia.scm.ConfigChangedListener}
    *
    *
-   * @param a {@link sonia.scm.ConfigChangedListener}
+   *
+   * @param listener
    */
   @Override
   public void addListener(ConfigChangedListener listener)
@@ -108,7 +109,8 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    * Register a {@link java.util.Collection} of {@link sonia.scm.ConfigChangedListener}
    *
    *
-   * @param a {@link java.util.Collection} of {@link sonia.scm.ConfigChangedListener}
+   *
+   * @param listeners
    */
   @Override
   public void addListeners(Collection<ConfigChangedListener> listeners)
@@ -142,7 +144,8 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    * Load all properties from another {@link ScmConfiguration} object.
    *
    *
-   * @param another {@link ScmConfiguration} object
+   *
+   * @param other
    */
   public void load(ScmConfiguration other)
   {
@@ -214,8 +217,8 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
-   * Returns the date format for the user interface. This format is a 
-   * JavaScript date format, see 
+   * Returns the date format for the user interface. This format is a
+   * JavaScript date format, see
    * {@link http://jacwright.com/projects/javascript/date_format}.
    *
    *

@@ -47,7 +47,8 @@ public interface TransformFilter<T>
    * Transform the given object.
    *
    *
-   * @param object to transform
+   *
+   * @param item
    *
    * @return tranformed object
    */

@@ -169,7 +169,7 @@ public class Plugin
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlElement(name="conditions")
+  @XmlElement(name = "conditions")
   private PluginCondition condition;
 
   /** Field description */

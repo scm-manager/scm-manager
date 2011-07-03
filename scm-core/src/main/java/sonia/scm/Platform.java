@@ -52,6 +52,7 @@ public class Platform
    * @param osName - name of the operation system
    * @param archModel - name of the host architecture model
    * @param archModel - name of the operation system architecture
+   * @param osArch
    */
   public Platform(String osName, String archModel, String osArch)
   {

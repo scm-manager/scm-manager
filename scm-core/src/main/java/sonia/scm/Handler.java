@@ -34,6 +34,7 @@
 package sonia.scm;
 
 /**
+ * Base interface for all handler objects.
  *
  * @author Sebastian Sdorra
  *

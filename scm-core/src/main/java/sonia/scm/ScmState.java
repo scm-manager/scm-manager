@@ -48,6 +48,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * This class represents the current state of the SCM-Manager.
  *
  * @author Sebastian Sdorra
  */
@@ -57,7 +58,8 @@ public class ScmState
 {
 
   /**
-   * Constructs {@link ScmState} object. This constructor is required by JAXB.
+   * Constructs {@link ScmState} object.
+   * This constructor is required by JAXB.
    *
    */
   public ScmState() {}
@@ -86,10 +88,10 @@ public class ScmState
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns configuration for SCM-Manager clients.
    *
    *
-   * @return
+   * @return configuration for SCM-Manager clients
    */
   public ScmClientConfig getClientConfig()
   {
@@ -97,10 +99,11 @@ public class ScmState
   }
 
   /**
-   * Method description
+   * Returns a {@link java.util.Collection} of groups names which are associated
+   * to the current user.
    *
    *
-   * @return
+   * @return a {@link java.util.Collection} of groups names
    */
   public Collection<String> getGroups()
   {
@@ -108,10 +111,10 @@ public class ScmState
   }
 
   /**
-   * Method description
+   * Returns all available repository types.
    *
    *
-   * @return
+   * @return all available repository types
    */
   public Collection<Type> getRepositoryTypes()
   {
@@ -119,10 +122,10 @@ public class ScmState
   }
 
   /**
-   * Method description
+   * Returns the current logged in user.
    *
    *
-   * @return
+   * @return current logged in user
    */
   public User getUser()
   {
@@ -130,10 +133,10 @@ public class ScmState
   }
 
   /**
-   * Method description
+   * Returns the version of the SCM-Manager.
    *
    *
-   * @return
+   * @return version of the SCM-Manager
    */
   public String getVersion()
   {
@@ -141,10 +144,10 @@ public class ScmState
   }
 
   /**
-   * Method description
+   * Returns true if the request was successful.
+   * This method is required by extjs.
    *
-   *
-   * @return
+   * @return true if the request was successful
    */
   public boolean isSuccess()
   {
@@ -154,7 +157,8 @@ public class ScmState
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Setter for the client configuration
+   *
    *
    *
    * @param clientConfig
@@ -165,7 +169,8 @@ public class ScmState
   }
 
   /**
-   * Method description
+   * Setter for the groups.
+   *
    *
    *
    * @param groups
@@ -176,7 +181,8 @@ public class ScmState
   }
 
   /**
-   * Method description
+   * Setter for the available repository types.
+   *
    *
    *
    * @param repositoryTypes
@@ -187,10 +193,10 @@ public class ScmState
   }
 
   /**
-   * Method description
+   * Setter for the success switch.
    *
    *
-   * @param success
+   * @param success switch
    */
   public void setSuccess(boolean success)
   {
@@ -198,7 +204,8 @@ public class ScmState
   }
 
   /**
-   * Method description
+   * Setter for the User
+   *
    *
    *
    * @param user
@@ -209,7 +216,8 @@ public class ScmState
   }
 
   /**
-   * Method description
+   * Setter for the SCM-Manager version.
+   *
    *
    *
    * @param version

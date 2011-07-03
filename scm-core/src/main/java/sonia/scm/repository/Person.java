@@ -109,7 +109,7 @@ public class Person implements Validateable
       if ((s > 0) && (e > 0))
       {
         name = value.substring(0, s).trim();
-        mail = value.substring(s+1, e).trim();
+        mail = value.substring(s + 1, e).trim();
       }
 
       person = new Person(name, mail);
