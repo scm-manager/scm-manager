@@ -43,7 +43,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * An OutputStream that flushes out to a Logger.
  * Based on LoggingOutputStream by Jim Moore
+ * 
  * @author Sebastian Sdorra
  */
 public class LoggingOutputStream extends OutputStream
@@ -72,10 +74,10 @@ public class LoggingOutputStream extends OutputStream
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Creates the LoggingOutputStream to flush to the given Category.
+   * Creates the LoggingOutputStream to flush to the given Logger.
    *
-   * @param logger   the Logger to write to
-   * @param level the Level to use when writing to the Logger
+   * @param logger - the Logger to write to
+   * @param level - the Level to use when writing to the Logger
    * @throws IllegalArgumentException if cat == null or priority ==
    *                                  null
    */
