@@ -50,6 +50,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Organizes users into a group for easier permissions management.
  *
  * @author Sebastian Sdorra
  */
@@ -70,12 +71,12 @@ public class Group implements ModelObject, Iterable<String>
   public Group() {}
 
   /**
-   * Constructs ...
+   * Constructs {@link Group} object.
    *
    *
    *
-   * @param type
-   * @param name
+   * @param type of the group
+   * @param name of the group
    */
   public Group(String type, String name)
   {
@@ -85,13 +86,13 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Constructs ...
+   * Constructs {@link Group} object.
    *
    *
    *
-   * @param type
-   * @param name
-   * @param members
+   * @param type of the group
+   * @param name of the group
+   * @param members of the groups
    */
   public Group(String type, String name, List<String> members)
   {
@@ -101,13 +102,13 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Constructs ...
+   * Constructs {@link Group} object.
    *
    *
    *
-   * @param type
-   * @param name
-   * @param members
+   * @param type of the group
+   * @param name of the group
+   * @param members of the groups
    */
   public Group(String type, String name, String... members)
   {
@@ -124,12 +125,12 @@ public class Group implements ModelObject, Iterable<String>
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Add a new member to the group.
    *
    *
-   * @param member
+   * @param member - The name of new group member
    *
-   * @return
+   * @return true if the operation was successful
    */
   public boolean add(String member)
   {
@@ -137,7 +138,7 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Remove all members of the group.
    *
    */
   public void clear()
@@ -146,10 +147,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns a clone of the group.
    *
    *
-   * @return
+   * @return a clone of the group
    *
    */
   @Override
@@ -170,10 +171,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Copies all properties of this group to the given one.
    *
    *
-   * @param group
+   * @param group to copies all properties of this one
    */
   public void copyProperties(Group group)
   {
@@ -184,12 +185,12 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns true if this {@link Group} is the same as the obj argument.
    *
    *
-   * @param obj
+   * @param obj - the reference object with which to compare
    *
-   * @return
+   * @return true if this {@link Group} is the same as the obj argument
    */
   @Override
   public boolean equals(Object obj)
@@ -251,10 +252,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns a hash code value for this {@link Group}.
    *
    *
-   * @return
+   * @return a hash code value for this {@link Group}
    */
   @Override
   public int hashCode()
@@ -284,10 +285,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns a {@link java.util.Iterator} for the members of this {@link Group}.
    *
    *
-   * @return
+   * @return a {@link java.util.Iterator} for the members of this {@link Group}
    */
   @Override
   public Iterator<String> iterator()
@@ -296,12 +297,12 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Remove the given member from this group.
    *
    *
-   * @param member
+   * @param member to remove from this group
    *
-   * @return
+   * @return true if the operation was successful
    */
   public boolean remove(String member)
   {
@@ -309,10 +310,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns a {@link String} that represents this group.
    *
    *
-   * @return
+   * @return a {@link String} that represents this group
    */
   @Override
   public String toString()
@@ -342,10 +343,10 @@ public class Group implements ModelObject, Iterable<String>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a timestamp of the creation date of this group.
    *
    *
-   * @return
+   * @return a timestamp of the creation date of this group
    */
   public Long getCreationDate()
   {
@@ -353,10 +354,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns the description of this group.
    *
    *
-   * @return
+   * @return  the description of this group
    */
   public String getDescription()
   {
@@ -364,10 +365,11 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns the unique name of this group. This method is an alias for the
+   * {@link #getName()} method.
    *
    *
-   * @return
+   * @return the unique name of this group
    */
   @Override
   public String getId()
@@ -376,10 +378,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns a timestamp of the last modified date of this group.
    *
    *
-   * @return
+   * @return a timestamp of the last modified date of this group
    */
   @Override
   public Long getLastModified()
@@ -388,10 +390,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns a {@link java.util.List} of all members of this group.
    *
    *
-   * @return
+   * @return a {@link java.util.List} of all members of this group
    */
   public List<String> getMembers()
   {
@@ -404,10 +406,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns the unique name of this group.
    *
    *
-   * @return
+   * @return the unique name of this group
    */
   public String getName()
   {
@@ -415,10 +417,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns the type of this group. The default type is xml.
    *
    *
-   * @return
+   * @return the type of this group
    */
   @Override
   public String getType()
@@ -427,12 +429,12 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns true if the member is a member of this group.
    *
    *
-   * @param member
+   * @param member - The name of the member
    *
-   * @return
+   * @return true if the member is a member of this group
    */
   public boolean isMember(String member)
   {
@@ -440,10 +442,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Returns true if the group is valid.
    *
    *
-   * @return
+   * @return true if the group is valid
    */
   @Override
   public boolean isValid()
@@ -454,10 +456,10 @@ public class Group implements ModelObject, Iterable<String>
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Sets the date the group was created.
    *
    *
-   * @param creationDate
+   * @param creationDate - date the group was last modified
    */
   public void setCreationDate(Long creationDate)
   {
@@ -465,10 +467,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Sets the description of the group.
    *
    *
-   * @param description
+   * @param description of the group
    */
   public void setDescription(String description)
   {
@@ -476,10 +478,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Sets the date the group was last modified.
    *
    *
-   * @param lastModified
+   * @param lastModified - date the group was last modified
    */
   public void setLastModified(Long lastModified)
   {
@@ -487,10 +489,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Sets the members of the group.
    *
    *
-   * @param members
+   * @param members of the group
    */
   public void setMembers(List<String> members)
   {
@@ -498,10 +500,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Sets the name of the group.
    *
    *
-   * @param name
+   * @param name of the group
    */
   public void setName(String name)
   {
@@ -509,10 +511,10 @@ public class Group implements ModelObject, Iterable<String>
   }
 
   /**
-   * Method description
+   * Sets the type of the group.
    *
    *
-   * @param type
+   * @param type of the group
    */
   public void setType(String type)
   {
@@ -521,21 +523,21 @@ public class Group implements ModelObject, Iterable<String>
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** timestamp of the creation date of this group */
   private Long creationDate;
 
-  /** Field description */
+  /** description of this group */
   private String description;
 
-  /** Field description */
+  /** timestamp of the last modified date of this group */
   private Long lastModified;
 
-  /** Field description */
+  /** members of this group */
   private List<String> members;
 
-  /** Field description */
+  /** name of this group */
   private String name;
 
-  /** Field description */
+  /** type of this group */
   private String type;
 }

@@ -39,6 +39,9 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
+ * Listener for group events. {@link GroupListener} can be registered with
+ * {@link sonia.scm.plugin.ext.Extension} annotation or with the 
+ * {@link GroupManager#addListener(java.lang.Object)}.
  *
  * @author Sebastian Sdorra
  */
@@ -47,11 +50,11 @@ public interface GroupListener
 {
 
   /**
-   * Method description
+   * Called when a group change event is fired.
    *
    *
-   * @param group
-   * @param event
+   * @param group that has changed
+   * @param event type of change event
    */
   public void onEvent(Group group, HandlerEvent event);
 }

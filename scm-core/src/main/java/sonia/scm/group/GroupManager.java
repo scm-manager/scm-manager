@@ -44,7 +44,8 @@ import sonia.scm.search.Searchable;
 import java.util.Collection;
 
 /**
- *
+ * The central class for managing {@link Group}s.
+ * This class is a singleton and is available via injection.
  * @author Sebastian Sdorra
  */
 public interface GroupManager
@@ -53,12 +54,12 @@ public interface GroupManager
 {
 
   /**
-   * Method description
+   * Returns a {@link Collection} of all groups assigned to the given member.
    *
    *
-   * @param member
+   * @param member - The name of the member
    *
-   * @return
+   * @return all groups assigned to the given member
    */
   public Collection<Group> getGroupsForMember(String member);
 }

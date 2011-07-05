@@ -34,6 +34,7 @@
 package sonia.scm.group;
 
 /**
+ * General {@link Exception} for group errors.
  *
  * @author Sebastian Sdorra
  */
@@ -46,7 +47,7 @@ public class GroupException extends Exception
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a {@link GroupException} object.
    *
    */
   public GroupException()
@@ -55,10 +56,10 @@ public class GroupException extends Exception
   }
 
   /**
-   * Constructs ...
+   * Constructs a {@link GroupException} object.
    *
    *
-   * @param message
+   * @param message for the exception
    */
   public GroupException(String message)
   {
@@ -66,10 +67,10 @@ public class GroupException extends Exception
   }
 
   /**
-   * Constructs ...
+   * Constructs a {@link GroupException} object.
    *
    *
-   * @param cause
+   * @param cause of the exception
    */
   public GroupException(Throwable cause)
   {
@@ -77,11 +78,11 @@ public class GroupException extends Exception
   }
 
   /**
-   * Constructs ...
+   * Constructs a {@link GroupException} object.
    *
    *
-   * @param message
-   * @param cause
+   * @param message of the exception
+   * @param cause of the exception
    */
   public GroupException(String message, Throwable cause)
   {

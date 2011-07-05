@@ -44,6 +44,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Abstract base class for {@link GroupManager} implementations. This class
+ * implements the listener methods of the {@link GroupManager} interface.
  *
  * @author Sebastian Sdorra
  */
@@ -51,10 +53,10 @@ public abstract class AbstractGroupManager implements GroupManager
 {
 
   /**
-   *   Method description
+   * Register a {@link GroupListener}.
    *
    *
-   *   @param listener
+   * @param listener - {@link GroupListener} to register
    */
   @Override
   public void addListener(GroupListener listener)
@@ -63,10 +65,10 @@ public abstract class AbstractGroupManager implements GroupManager
   }
 
   /**
-   * Method description
+   * Register a {@link java.util.Collection} of {@link GroupListener}s.
    *
    *
-   * @param listeners
+   * @param listeners - listeners to register
    */
   @Override
   public void addListeners(Collection<GroupListener> listeners)
@@ -75,10 +77,10 @@ public abstract class AbstractGroupManager implements GroupManager
   }
 
   /**
-   * Method description
+   * Remove specified {@link GroupListener}.
    *
    *
-   * @param listener
+   * @param listener to remove
    */
   @Override
   public void removeListener(GroupListener listener)
@@ -87,11 +89,11 @@ public abstract class AbstractGroupManager implements GroupManager
   }
 
   /**
-   * Method description
+   * Calls the {@link GroupListener#onEvent(Group,sonia.scm.HandlerEvent)}
+   * method of all registered listeners.
    *
-   *
-   * @param group
-   * @param event
+   * @param group that has changed
+   * @param event type of change event
    */
   protected void fireEvent(Group group, HandlerEvent event)
   {
@@ -103,6 +105,6 @@ public abstract class AbstractGroupManager implements GroupManager
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** registered listeners */
   private Set<GroupListener> listenerSet = new HashSet<GroupListener>();
 }

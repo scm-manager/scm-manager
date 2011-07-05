@@ -31,17 +31,7 @@
 
 
 
-package sonia.scm.group;
-
 /**
- * This {@link Exception} is thrown when trying to create a group 
- * that already exists.
- *
- * @author Sebastian Sdorra
+ * Package for the SCM-Manager group API.
  */
-public class GroupAllreadyExistExeption extends GroupException
-{
-
-  /** Field description */
-  private static final long serialVersionUID = 4042878550219750430L;
-}
+package sonia.scm.group;
