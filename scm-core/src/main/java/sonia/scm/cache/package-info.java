@@ -31,66 +31,7 @@
 
 
 
-package sonia.scm.cache;
-
 /**
- * The main interface for the cache. 
- * Provides methods to add, access, and remove entries from a cache. 
- *
- * @author Sebastian Sdorra
- *
- * @param <K> - The type of the keys for the cache
- * @param <V> - The type of cache elements
+ * This package contains the cache API.
  */
-public interface Cache<K, V>
-{
-
-  /**
-   * Remove all elements from this cache.
-   *
-   */
-  public void clear();
-
-  /**
-   * Returns true if this cache contains an element with the specified key.
-   *
-   *
-   * @param key - The key of the cached element
-   *
-   * @return true if this cache contains an element with the specified key
-   */
-  public boolean contains(K key);
-
-  /**
-   * Put a new element to this cache.
-   *
-   *
-   * @param key - The key of the element to cache
-   * @param value - The element that should be cached
-   */
-  public void put(K key, V value);
-
-  /**
-   * Remove the element with the specified key from this cache. The method
-   * returns true if the operation was successful.
-   *
-   *
-   * @param key - The key of the cached element
-   *
-   * @return true if the operation was successful
-   */
-  public boolean remove(K key);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns the element with the specified key.
-   * Returns null if the cache contains no element with the specified key.
-   *
-   *
-   * @param key - The key of the cached element
-   *
-   * @return The cached element with the specified key or null
-   */
-  public V get(K key);
-}
+package sonia.scm.cache;

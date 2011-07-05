@@ -40,8 +40,8 @@ import java.io.File;
 
 /**
  * The main class for retrieving the home and the version of the SCM-Manager.
- * This class is a singleton which can be retrieved via
- * inject or with the static {@link SCMContext#getContext()} method.
+ * This class is a singleton which can be retrieved via injection 
+ * or with the static {@link SCMContext#getContext()} method.
  *
  * @author Sebastian Sdorra
  */

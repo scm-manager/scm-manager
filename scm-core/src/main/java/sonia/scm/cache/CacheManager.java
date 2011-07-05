@@ -38,6 +38,9 @@ package sonia.scm.cache;
 import java.io.Closeable;
 
 /**
+ * The {@link CacheManager} holds references to {@link Cache} 
+ * and manages their creation.
+ * This class is a singleton which can be retrieved via injection.
  *
  * @author Sebastian Sdorra
  */
@@ -45,16 +48,17 @@ public interface CacheManager extends Closeable
 {
 
   /**
-   * Method description
+   * Returns the cache with the specified types and name. 
+   * If the cache does not exist, a new cache is created.
    *
    *
-   * @param key
-   * @param value
-   * @param name
-   * @param <K>
-   * @param <V>
+   * @param key - The type of the keys for the cache
+   * @param value - The type of cache elements
+   * @param name - The name of the cache
+   * @param <K> - The type of the keys for the cache
+   * @param <V>  - The type of cache elements
    *
-   * @return
+   * @return the cache with the specified types and name
    */
   public <K, V> Cache<K, V> getCache(Class<K> key, Class<V> value, String name);
 }
