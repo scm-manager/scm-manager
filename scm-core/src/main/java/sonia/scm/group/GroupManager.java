@@ -46,6 +46,7 @@ import java.util.Collection;
 /**
  * The central class for managing {@link Group}s.
  * This class is a singleton and is available via injection.
+ * 
  * @author Sebastian Sdorra
  */
 public interface GroupManager

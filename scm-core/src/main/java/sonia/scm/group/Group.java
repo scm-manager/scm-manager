@@ -65,7 +65,7 @@ public class Group implements ModelObject, Iterable<String>
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs {@link Group} object. This constructor is required by JAXB.
    *
    */
   public Group() {}
