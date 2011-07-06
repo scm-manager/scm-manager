@@ -30,11 +30,8 @@
  */
 
 
-Sonia.group.Panel = Ext.extend(Ext.Panel, {
+Sonia.group.Panel = Ext.extend(Sonia.rest.Panel, {
 
-  addText: 'Add',
-  removeText: 'Remove',
-  reloadText: 'Reload',
   titleText: 'Group Form',
   emptyText: 'Add or select a Group',
   removeTitleText: 'Remove Group',
@@ -44,11 +41,6 @@ Sonia.group.Panel = Ext.extend(Ext.Panel, {
 
   initComponent: function(){
     var config = {
-      layout: 'border',
-      hideMode: 'offsets',
-      enableTabScroll: true,
-      region:'center',
-      autoScroll: true,
       tbar: [
         {xtype: 'tbbutton', text: this.addText, scope: this, handler: this.showAddForm},
         {xtype: 'tbbutton', id: 'groupRmButton', disabled: true, text: this.removeText, scope: this, handler: this.removeGroup},

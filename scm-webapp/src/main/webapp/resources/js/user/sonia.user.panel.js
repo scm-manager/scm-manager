@@ -30,11 +30,8 @@
  */
 
 
-Sonia.user.Panel = Ext.extend(Ext.Panel, {
+Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
 
-  addText: 'Add',
-  removeText: 'Remove',
-  reloadText: 'Reload',
   titleText: 'User Form',
   emptyText: 'Add or select an User',
   removeTitleText: 'Remove User',
@@ -45,12 +42,7 @@ Sonia.user.Panel = Ext.extend(Ext.Panel, {
   initComponent: function(){
 
     var config = {
-      layout: 'border',
-      hideMode: 'offsets',
       bodyCssClass: 'x-panel-mc',
-      enableTabScroll: true,
-      region:'center',
-      autoScroll: true,
       tbar: [
         {xtype: 'tbbutton', text: this.addText, scope: this, handler: this.showAddPanel},
         {xtype: 'tbbutton', text: this.removeText, scope: this, handler: this.removeUser},

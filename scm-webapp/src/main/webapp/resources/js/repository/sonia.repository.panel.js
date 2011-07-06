@@ -31,12 +31,9 @@
 
 
 // RepositoryPanel
-Sonia.repository.Panel = Ext.extend(Ext.Panel, {
+Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
 
   titleText: 'Repository Form',
-  addText: 'Add',
-  removeText: 'Remove',
-  reloadText: 'Reload',
   emptyText: 'Add or select an Repository',
   removeTitleText: 'Remove Repository',
   removeMsgText: 'Remove Repository "{0}"?',
@@ -58,11 +55,6 @@ Sonia.repository.Panel = Ext.extend(Ext.Panel, {
     );
 
     var config = {
-      layout: 'border',
-      hideMode: 'offsets',
-      enableTabScroll: true,
-      region:'center',
-      autoScroll: true,
       tbar: toolbar,
       items: [{
           id: 'repositoryGrid',
