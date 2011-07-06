@@ -98,7 +98,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
 
   cancel: function(){
     this.fireEvent('cancel');
-    checkLogin();
+    main.checkLogin();
   },
 
   authenticate: function(){
