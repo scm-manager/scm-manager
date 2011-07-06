@@ -42,10 +42,10 @@ Sonia.group.Panel = Ext.extend(Sonia.rest.Panel, {
   initComponent: function(){
     var config = {
       tbar: [
-        {xtype: 'tbbutton', text: this.addText, scope: this, handler: this.showAddForm},
-        {xtype: 'tbbutton', id: 'groupRmButton', disabled: true, text: this.removeText, scope: this, handler: this.removeGroup},
+        {xtype: 'tbbutton', text: this.addText, icon: this.addIcon, scope: this, handler: this.showAddForm},
+        {xtype: 'tbbutton', id: 'groupRmButton', disabled: true, text: this.removeText, icon: this.removeIcon, scope: this, handler: this.removeGroup},
         '-',
-        {xtype: 'tbbutton', text: this.reloadText, scope: this, handler: this.reload}
+        {xtype: 'tbbutton', text: this.reloadText, icon: this.reloadIcon, scope: this, handler: this.reload}
       ],
       items: [{
           id: 'groupGrid',

@@ -38,9 +38,9 @@ Sonia.rest.Panel = Ext.extend(Ext.Panel, {
   reloadText: 'Reload',
   
   // icons
-  addIcon: '',
-  removeIcon: '',
-  reloadIcon: '',
+  addIcon: 'resources/images/add.gif',
+  removeIcon: 'resources/images/delete.gif',
+  reloadIcon: 'resources/images/reload.gif',
   
   initComponent: function(){
     

@@ -44,10 +44,10 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
     var config = {
       bodyCssClass: 'x-panel-mc',
       tbar: [
-        {xtype: 'tbbutton', text: this.addText, scope: this, handler: this.showAddPanel},
-        {xtype: 'tbbutton', text: this.removeText, scope: this, handler: this.removeUser},
+        {xtype: 'tbbutton', text: this.addText, icon: this.addIcon, scope: this, handler: this.showAddPanel},
+        {xtype: 'tbbutton', text: this.removeText, icon: this.removeIcon, scope: this, handler: this.removeUser},
         '-',
-        {xtype: 'tbbutton', text: this.reloadText, scope: this, handler: this.reload}
+        {xtype: 'tbbutton', text: this.reloadText, icon: this.reloadIcon, scope: this, handler: this.reload}
       ],
       items: [{
         id: 'userGrid',

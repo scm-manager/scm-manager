@@ -45,13 +45,13 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
     var toolbar = [];
     if ( admin ){
       toolbar.push(
-        {xtype: 'tbbutton', text: this.addText, scope: this, handler: this.showAddForm}
+        {xtype: 'tbbutton', text: this.addText, icon: this.addIcon, scope: this, handler: this.showAddForm}
       );
     }
     toolbar.push(
-      {xtype: 'tbbutton', id: 'repoRmButton', disabled: true, text: this.removeText, scope: this, handler: this.removeRepository},
+      {xtype: 'tbbutton', id: 'repoRmButton', disabled: true, text: this.removeText, icon: this.removeIcon, scope: this, handler: this.removeRepository},
       '-',
-      {xtype: 'tbbutton', text: this.reloadText, scope: this, handler: this.reload}
+      {xtype: 'tbbutton', text: this.reloadText, icon: this.reloadIcon, scope: this, handler: this.reload}
     );
 
     var config = {
