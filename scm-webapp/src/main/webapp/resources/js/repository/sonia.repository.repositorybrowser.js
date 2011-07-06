@@ -56,14 +56,11 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       root: 'files',
       idProperty: 'path',
       autoLoad: true,
-      autoDestroy: true,
-      listeners: {
-        load: {
-          fn: this.loadStore,
-          scope: this
-        }
-      }
+      autoDestroy: true
     });
+    
+    // register listener
+    browserStore.addListener('load', this.loadStore, this);
     
     if ( this.revision ){
       browserStore.baseParams = {
