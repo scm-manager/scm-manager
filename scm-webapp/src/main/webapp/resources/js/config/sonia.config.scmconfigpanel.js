@@ -50,7 +50,6 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   errorMsgText: 'Could not load config.',
   errorSubmitMsgText: 'Could not submit config.',
   
-  // TODO i18n
   enableProxyText: 'Enable Proxy',
   proxyServerText: 'Proxy Server',
   proxyPortText: 'Proxy Port',
@@ -72,7 +71,6 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   adminGroupsHelpText: 'Comma seperated list of groups with admin permissions.',
   adminUsersHelpText: 'Comma seperated list of users with admin permissions.',
   
-  // TODO i18n
   enableProxyHelpText: 'Enable Proxy',
   proxyServerHelpText: 'The proxy server',
   proxyPortHelpText: 'The proxy port',

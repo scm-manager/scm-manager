@@ -246,6 +246,13 @@ if (Sonia.config.ScmConfigPanel){
     sslPortText: 'SSL Port',
     adminGroupsText: 'Admin Gruppen',
     adminUsersText: 'Admin Benutzer',
+    
+    enableProxyText: 'Proxy aktivieren',
+    proxyServerText: 'Proxy Server',
+    proxyPortText: 'Proxy Port',
+    baseUrlText: 'Basis-URL',
+    forceBaseUrlText: 'Basis-URL forcieren',
+    
     submitText: 'Senden ...',
     loadingText: 'Laden ...',
     errorTitleText: 'Fehler',
@@ -264,7 +271,13 @@ if (Sonia.config.ScmConfigPanel){
     enableSSLHelpText: 'Aktiviere sichere Verbindungen über HTTPS.',
     sslPortHelpText: 'Der SSL-Port.',
     adminGroupsHelpText: 'Komma getrennte Liste von Gruppen mit Administrationsrechten.',
-    adminUsersHelpText: 'Komma getrennte Liste von Benutzern mit Administrationsrechten.'
+    adminUsersHelpText: 'Komma getrennte Liste von Benutzern mit Administrationsrechten.',
+    
+    enableProxyHelpText: 'Proxy-Einstellungen verwenden.',
+    proxyServerHelpText: 'Der Proxy-Server.',
+    proxyPortHelpText: 'Der Proxy-Port',
+    baseUrlHelpText: 'Die vollständige URL des Server, inclusive Context-Pfad z.B.: http://localhost:8080/scm.',
+    forceBaseUrlHelpText: 'Leitet alle Zugriffe die nicht von der Basis-URL kommen auf die Basis-URL um.'
   });
 
 }

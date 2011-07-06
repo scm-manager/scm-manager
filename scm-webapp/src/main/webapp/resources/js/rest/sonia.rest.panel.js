@@ -32,7 +32,6 @@
 
 Sonia.rest.Panel = Ext.extend(Ext.Panel, {
   
-  // TODO i18n
   addText: 'Add',
   removeText: 'Remove',
   reloadText: 'Reload',
