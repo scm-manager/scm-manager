@@ -182,9 +182,6 @@ if (Sonia.repository.Panel){
 
   Ext.override(Sonia.repository.Panel, {
     titleText: 'Repository',
-    addText: 'Hinzufügen',
-    removeText: 'Entfernen',
-    reloadText: 'Aktualisieren',
     emptyText: 'Es wurde kein Repository selektiert',
     removeTitleText: 'Repository entfernen',
     removeMsgText: 'Repository entfernen "{0}"?',
@@ -339,9 +336,6 @@ if (Sonia.user.FormPanel){
 if (Sonia.user.Panel){
 
   Ext.override(Sonia.user.Panel, {
-    addText: 'Hinzufügen',
-    removeText: 'Entfernen',
-    reloadText: 'Aktualisieren',
     titleText: 'Benutzer',
     emptyText: 'Es wurde kein Benutzer selektiert',
     removeTitleText: 'Benutzer entfernen',
@@ -401,9 +395,6 @@ if (Sonia.group.FormPanel){
 if (Sonia.group.Panel){
 
   Ext.override(Sonia.group.Panel, {
-    addText: 'Hinzufügen',
-    removeText: 'Entfernen',
-    reloadText: 'Aktualisieren',
     titleText: 'Gruppe',
     emptyText: 'Es wurde keine Gruppe selektiert',
     removeTitleText: 'Gruppe entfernen',
@@ -515,6 +506,19 @@ if (Sonia.panel.SyntaxHighlighterPanel){
   Ext.override(Sonia.panel.SyntaxHighlighterPanel, {
     loadErrorTitleText: 'Fehler',
     loadErrorMsgText: 'Die Datei konnte nicht geladen werden'
+  });
+  
+}
+
+
+if (Sonia.rest.Panel){
+  
+  Ext.override(Sonia.rest.Panel, {
+    
+    addText: 'Hinzufügen',
+    removeText: 'Entfernen',
+    reloadText: 'Aktualisieren'
+    
   });
   
 }
