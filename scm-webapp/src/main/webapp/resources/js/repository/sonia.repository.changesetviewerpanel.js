@@ -34,10 +34,10 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
 
   repository: null,
   pageSize: 20,
-
+  
   initComponent: function(){
 
-    var changesetStore = new Ext.data.JsonStore({
+    var changesetStore = new Sonia.rest.JsonStore({
       id: 'changesetStore',
       proxy: new Ext.data.HttpProxy({
         url: restUrl + 'repositories/' + this.repository.id  + '/changesets.json',
