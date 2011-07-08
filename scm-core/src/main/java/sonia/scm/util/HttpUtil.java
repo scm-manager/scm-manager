@@ -35,6 +35,9 @@ package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.config.ScmConfiguration;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -57,9 +60,48 @@ public class HttpUtil
   /** Field description */
   public static final String HEADER_WWW_AUTHENTICATE = "WWW-Authenticate";
 
+  /**
+   * Default http port
+   * @since 1.5
+   */
+  public static final int PORT_HTTP = 80;
+
+  /**
+   * Default https port
+   * @since 1.5
+   */
+  public static final int PORT_HTTPS = 443;
+
+  /**
+   * Default http scheme
+   * @since 1.5
+   */
+  public static final String SCHEME_HTTP = "http";
+
+  /**
+   * Default https scheme
+   * @since 1.5
+   */
+  public static final String SCHEME_HTTPS = "https";
+
+  /**
+   * Url folder separator
+   * @since 1.5
+   */
+  public static final char SEPARATOR_FOLDER = '/';
+
+  /**
+   * Url port separator
+   * @since 1.5
+   */
+  public static final char SEPARATOR_PORT = ':';
+
   /** Field description */
   public static final String STATUS_UNAUTHORIZED_MESSAGE =
     "Authorization Required";
+
+  /** the logger for HttpUtil */
+  private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -107,32 +149,67 @@ public class HttpUtil
   }
 
   /**
-   * Method description
+   * Returns the port of the url parameter.
+   *
+   * @param url
+   * @return port of url
+   */
+  public static int getPortFromUrl(String url)
+  {
+    AssertUtil.assertIsNotEmpty(url);
+
+    int port = PORT_HTTP;
+    int index = url.indexOf(SEPARATOR_PORT);
+
+    if (index > 0)
+    {
+      String portString = url.substring(index);
+      int slIndex = portString.indexOf(SEPARATOR_FOLDER);
+
+      if (slIndex > 0)
+      {
+        portString = portString.substring(0, slIndex);
+      }
+
+      try
+      {
+        port = Integer.parseInt(portString);
+      }
+      catch (NumberFormatException ex)
+      {
+        logger.error("could not parse port part of url", ex);
+      }
+    }
+    else if (url.startsWith(SCHEME_HTTPS))
+    {
+      port = PORT_HTTPS;
+    }
+
+    return port;
+  }
+
+  /**
+   * Returns the server port
    *
    *
    * @param configuration
    * @param request
    *
-   * @return
-   * @deprecated use {@link #getCompleteUrl(sonia.scm.config.ScmConfiguration, java.lang.String)}
+   * @return the server port
    */
-  @Deprecated
   public static int getServerPort(ScmConfiguration configuration,
                                   HttpServletRequest request)
   {
-    int port = 0;
+    int port = PORT_HTTP;
+    String baseUrl = configuration.getBaseUrl();
 
-    if (configuration.isEnableSSL())
+    if (Util.isNotEmpty(baseUrl))
     {
-      port = configuration.getSslPort();
-    }
-    else if (configuration.isEnablePortForward())
-    {
-      port = configuration.getForwardPort();
+      port = getPortFromUrl(baseUrl);
     }
     else
     {
-      port = request.getLocalPort();
+      port = request.getServerPort();
     }
 
     return port;
