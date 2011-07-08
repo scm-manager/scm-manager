@@ -48,16 +48,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Util method for the http protocol.
  *
  * @author Sebastian Sdorra
  */
 public class HttpUtil
 {
 
-  /** Field description */
+  /** authentication realm for basic authentication */
   public static final String AUTHENTICATION_REALM = "SONIA :: SCM Manager";
 
-  /** Field description */
+  /** authentication header */
   public static final String HEADER_WWW_AUTHENTICATE = "WWW-Authenticate";
 
   /**
@@ -102,7 +103,7 @@ public class HttpUtil
    */
   public static final String SEPARATOR_SCHEME = "://";
 
-  /** Field description */
+  /** message for unauthorized request */
   public static final String STATUS_UNAUTHORIZED_MESSAGE =
     "Authorization Required";
 
@@ -112,10 +113,10 @@ public class HttpUtil
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Send an unauthorized header back to the client
    *
    *
-   * @param response
+   * @param response - the http response
    *
    * @throws IOException
    */
@@ -234,12 +235,12 @@ public class HttpUtil
   }
 
   /**
-   * Method description
+   * Return the request uri with out the context path.
    *
    *
-   * @param request
+   * @param request - the http client request
    *
-   * @return
+   * @return the request uri with out the context path
    */
   public static String getStrippedURI(HttpServletRequest request)
   {
@@ -247,13 +248,13 @@ public class HttpUtil
   }
 
   /**
-   * Method description
+   * Returns the given uri without the context path.
    *
    *
-   * @param request
-   * @param uri
+   * @param request - the http client request
+   * @param uri - the uri to get the stripped uri from
    *
-   * @return
+   * @return uri without context path
    */
   public static String getStrippedURI(HttpServletRequest request, String uri)
   {
