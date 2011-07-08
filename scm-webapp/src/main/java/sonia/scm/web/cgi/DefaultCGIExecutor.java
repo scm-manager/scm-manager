@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
@@ -210,8 +211,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
   private EnvList createEnvironment()
   {
     String pathInfo = request.getPathInfo();
-
-    // int serverPort = HttpUtil.getServerPort(configuration, request);
     String scriptName = request.getRequestURI().substring(0,
                           request.getRequestURI().length() - pathInfo.length());
     String scriptPath = context.getRealPath(scriptName);
@@ -261,7 +260,9 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     env.set(ENV_SCRIPT_FILENAME, scriptPath);
     env.set(ENV_SERVER_NAME, Util.nonNull(request.getServerName()));
 
-    // env.set(ENV_SERVER_PORT, Integer.toString(serverPort));
+    int serverPort = HttpUtil.getServerPort(configuration, request);
+
+    env.set(ENV_SERVER_PORT, Integer.toString(serverPort));
     env.set(ENV_SERVER_PROTOCOL, Util.nonNull(request.getProtocol()));
     env.set(
         ENV_SERVER_SOFTWARE,
