@@ -88,13 +88,13 @@ public class HttpUtil
    * Url folder separator
    * @since 1.5
    */
-  public static final char SEPARATOR_FOLDER = '/';
+  public static final String SEPARATOR_PATH = "/";
 
   /**
    * Url port separator
    * @since 1.5
    */
-  public static final char SEPARATOR_PORT = ':';
+  public static final String SEPARATOR_PORT = ":";
 
   /**
    * Url scheme separator
@@ -132,23 +132,28 @@ public class HttpUtil
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Return the complete url of the given path.
    *
    *
-   * @param configuration
-   * @param path
+   * @param configuration - main SCM-Manager configuration
+   * @param path to get the url from
    *
-   * @return
    * @since 1.5
+   *
+   * @return the complete url of the given path
    */
   public static String getCompleteUrl(ScmConfiguration configuration,
           String path)
   {
     String url = configuration.getBaseUrl();
 
-    if (url.endsWith("/") && path.startsWith("/"))
+    if (url.endsWith(SEPARATOR_PATH) && path.startsWith(SEPARATOR_PATH))
     {
       url = url.substring(0, url.length());
+    }
+    else if (!path.startsWith(SEPARATOR_PATH))
+    {
+      path = SEPARATOR_PATH.concat(path);
     }
 
     return url.concat(path);
@@ -176,7 +181,7 @@ public class HttpUtil
       if (portIndex > 0)
       {
         String portString = urlWithoutScheme.substring(portIndex + 1);
-        int slIndex = portString.indexOf(SEPARATOR_FOLDER);
+        int slIndex = portString.indexOf(SEPARATOR_PATH);
 
         if (slIndex > 0)
         {
