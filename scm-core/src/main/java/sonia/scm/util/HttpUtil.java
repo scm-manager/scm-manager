@@ -96,6 +96,12 @@ public class HttpUtil
    */
   public static final char SEPARATOR_PORT = ':';
 
+  /**
+   * Url scheme separator
+   * @since 1.5
+   */
+  public static final String SEPARATOR_SCHEME = "://";
+
   /** Field description */
   public static final String STATUS_UNAUTHORIZED_MESSAGE =
     "Authorization Required";
@@ -159,30 +165,37 @@ public class HttpUtil
     AssertUtil.assertIsNotEmpty(url);
 
     int port = PORT_HTTP;
-    int index = url.indexOf(SEPARATOR_PORT);
+    int schemeIndex = url.indexOf(SEPARATOR_SCHEME);
 
-    if (index > 0)
+    if (schemeIndex > 0)
     {
-      String portString = url.substring(index);
-      int slIndex = portString.indexOf(SEPARATOR_FOLDER);
+      String urlWithoutScheme = url.substring(schemeIndex
+                                  + SEPARATOR_SCHEME.length());
+      int portIndex = urlWithoutScheme.lastIndexOf(SEPARATOR_PORT);
 
-      if (slIndex > 0)
+      if (portIndex > 0)
       {
-        portString = portString.substring(0, slIndex);
-      }
+        String portString = urlWithoutScheme.substring(portIndex + 1);
+        int slIndex = portString.indexOf(SEPARATOR_FOLDER);
 
-      try
-      {
-        port = Integer.parseInt(portString);
+        if (slIndex > 0)
+        {
+          portString = portString.substring(0, slIndex);
+        }
+
+        try
+        {
+          port = Integer.parseInt(portString);
+        }
+        catch (NumberFormatException ex)
+        {
+          logger.error("could not parse port part of url", ex);
+        }
       }
-      catch (NumberFormatException ex)
+      else if (url.startsWith(SCHEME_HTTPS))
       {
-        logger.error("could not parse port part of url", ex);
+        port = PORT_HTTPS;
       }
-    }
-    else if (url.startsWith(SCHEME_HTTPS))
-    {
-      port = PORT_HTTPS;
     }
 
     return port;
