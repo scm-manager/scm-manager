@@ -37,7 +37,15 @@ package sonia.scm.util;
 
 import org.junit.Test;
 
+import sonia.scm.config.ScmConfiguration;
+
 import static org.junit.Assert.*;
+
+import static org.mockito.Mockito.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -60,5 +68,23 @@ public class HttpUtilTest
     assertTrue(
         HttpUtil.getPortFromUrl("http://www.scm-manager.org:8181/test/folder")
         == 8181);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void getServerPortTest()
+  {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+
+    when(request.getServerPort()).thenReturn(443);
+
+    ScmConfiguration config = new ScmConfiguration();
+
+    assertTrue(HttpUtil.getServerPort(config, request) == 443);
+    config.setBaseUrl("http://www.scm-manager.org:8080");
+    assertTrue(HttpUtil.getServerPort(config, request) == 8080);
   }
 }
