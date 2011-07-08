@@ -87,4 +87,30 @@ public class HttpUtilTest
     config.setBaseUrl("http://www.scm-manager.org:8080");
     assertTrue(HttpUtil.getServerPort(config, request) == 8080);
   }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void getStrippedURITest()
+  {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+
+    when(request.getRequestURI()).thenReturn("/scm/test/path");
+    when(request.getContextPath()).thenReturn("/scm");
+    assertEquals("/test/path",
+                 HttpUtil.getStrippedURI(request, "/scm/test/path"));
+    assertEquals("/test/path", HttpUtil.getStrippedURI(request));
+  }
+  
+  @Test
+  public void getCompleteUrlTest()
+  {
+    ScmConfiguration config = new ScmConfiguration();
+    config.setBaseUrl("http://www.scm-manager.org/scm");
+    
+    assertEquals("http://www.scm-manager.org/scm/test/path", HttpUtil.getCompleteUrl(config, "test/path"));
+    assertEquals("http://www.scm-manager.org/scm/test/path", HttpUtil.getCompleteUrl(config, "/test/path"));
+  }
 }
