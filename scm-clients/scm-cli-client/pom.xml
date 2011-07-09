@@ -16,6 +16,22 @@
   <name>scm-cli-client</name>
 
   <dependencies>
+  
+    <!-- fix javadoc -->
+    
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>${servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>    
+      <groupId>javax.transaction</groupId>
+      <artifactId>jta</artifactId>
+      <version>1.1</version>
+      <scope>provided</scope>
+    </dependency>
     
     <dependency>
       <artifactId>scm-core</artifactId>

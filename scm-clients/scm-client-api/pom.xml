@@ -15,4 +15,17 @@
   <version>1.5-SNAPSHOT</version>
   <name>scm-client-api</name>
   
+  <dependencies>
+  
+    <!-- fix javadoc -->
+    
+    <dependency>    
+      <groupId>javax.transaction</groupId>
+      <artifactId>jta</artifactId>
+      <version>1.1</version>
+      <scope>provided</scope>
+    </dependency>
+  
+  </dependencies>
+  
 </project>
