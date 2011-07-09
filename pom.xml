@@ -186,6 +186,18 @@
           <additionalJOption>-J-Xmx1024m</additionalJOption>
         </configuration>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>1.3</version>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>1.0</version>
+      </plugin>
       
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
