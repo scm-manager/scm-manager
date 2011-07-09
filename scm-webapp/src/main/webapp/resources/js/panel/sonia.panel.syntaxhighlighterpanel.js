@@ -133,7 +133,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
   syntax: 'plain',
   brush: 'plain',
   brushUrl: 'shBrushPlain.js',
-  theme: 'Default',
+  theme: 'Netbeans',
   shPath: 'resources/syntaxhighlighter',
   contentUrl: null,
   
