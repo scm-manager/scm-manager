@@ -36,9 +36,7 @@ package sonia.scm.xml;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
@@ -47,7 +45,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  * @author Sebastian Sdorra
  */
 public class XmlMapStringAdapter
-        extends XmlAdapter<Set<XmlMapStringElement>, Map<String, String>>
+        extends XmlAdapter<XmlMapStringElement[], Map<String, String>>
 {
 
   /**
@@ -61,36 +59,36 @@ public class XmlMapStringAdapter
    * @throws Exception
    */
   @Override
-  public Set<XmlMapStringElement> marshal(Map<String, String> map)
-          throws Exception
+  public XmlMapStringElement[] marshal(Map<String, String> map) throws Exception
   {
-    Set<XmlMapStringElement> set = new HashSet<XmlMapStringElement>();
+    XmlMapStringElement[] elements = new XmlMapStringElement[map.size()];
+    int i = 0;
 
     for (Map.Entry<String, String> e : map.entrySet())
     {
-      set.add(new XmlMapStringElement(e.getKey(), e.getValue()));
+      elements[i++] = new XmlMapStringElement(e.getKey(), e.getValue());
     }
 
-    return set;
+    return elements;
   }
 
   /**
    * Method description
    *
    *
-   * @param set
+   * @param elements
    *
    * @return
    *
    * @throws Exception
    */
   @Override
-  public Map<String, String> unmarshal(Set<XmlMapStringElement> set)
+  public Map<String, String> unmarshal(XmlMapStringElement[] elements)
           throws Exception
   {
     Map<String, String> map = new HashMap<String, String>();
 
-    for (XmlMapStringElement e : set)
+    for (XmlMapStringElement e : elements)
     {
       map.put(e.getKey(), e.getValue());
     }
