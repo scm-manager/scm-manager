@@ -42,6 +42,16 @@
     <system>bitbucket</system>
     <url>http://bitbucket.org/sdorra/scm-manager/issues</url>
   </issueManagement>
+  
+  <mailingLists>
+    <mailingList>
+      <name>SCM-Manager</name>
+      <subscribe>scmmanager-subscribe@googlegroups.com</subscribe>
+      <unsubscribe>scmmanager-unsubscribe@googlegroups.com</unsubscribe>
+      <post>scmmanager@googlegroups.com</post>
+      <archive>http://groups.google.com/group/scmmanager</archive>
+    </mailingList>
+  </mailingLists>
 
   <prerequisites>
     <maven>2.1</maven>
