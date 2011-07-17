@@ -243,7 +243,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   {
     Repository repository = repositoryDB.get(type, name);
 
-    if (repository != null)
+    if (repository == null)
     {
       throw new RepositoryNotFoundException();
     }
@@ -266,7 +266,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   {
     Repository repository = repositoryDB.get(id);
 
-    if (repository != null)
+    if (repository == null)
     {
       throw new RepositoryNotFoundException();
     }
