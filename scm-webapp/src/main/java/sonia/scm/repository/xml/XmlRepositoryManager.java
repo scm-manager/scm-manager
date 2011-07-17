@@ -47,9 +47,11 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.repository.AbstractRepositoryManager;
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetViewer;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
+import sonia.scm.repository.PostReceiveHook;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryAllreadyExistExeption;
 import sonia.scm.repository.RepositoryBrowser;
@@ -559,6 +561,29 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param hook
+   * @param repository
+   * @param changesets
+   */
+  @Override
+  protected void firePostReceiveEvent(PostReceiveHook hook,
+          Repository repository, List<Changeset> changesets)
+  {
+    if (hook.isAsynchronous())
+    {
+
+      // todo
+    }
+    else
+    {
+      hook.onPostReceive(repository, changesets);
+    }
+  }
 
   /**
    * Method description

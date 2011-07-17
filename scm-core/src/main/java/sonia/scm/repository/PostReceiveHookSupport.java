@@ -33,66 +33,44 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.ListenerSupport;
-import sonia.scm.Type;
-import sonia.scm.TypeManager;
-
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
+import java.util.List;
 
 /**
+ * Support for post receive hooks.
  *
  * @author Sebastian Sdorra
+ * @since 1.6
  */
-public interface RepositoryManager
-        extends TypeManager<Repository, RepositoryException>,
-                ListenerSupport<RepositoryListener>, RepositoryBrowserProvider,
-                PostReceiveHookSupport
+public interface PostReceiveHookSupport
 {
 
   /**
-   * Method description
+   * Registers a new {@link PostReceiveHook}.
    *
    *
-   * @param type
-   * @param name
-   *
-   * @return
+   * @param hook to register
    */
-  public Repository get(String type, String name);
+  public void addPostReceiveHook(PostReceiveHook hook);
 
   /**
-   * Method description
+   * Fires a post receive hook event. This methods calls the
+   * {@link PostReceiveHook#onPostReceive(Repository, List)} of each registered
+   * {@link PostReceiveHook}.
    *
    *
-   *
-   * @param repository
-   * @return null if ChangesetViewer is not supported
-   *
-   * @throws RepositoryException
+   * @param repository that has changed
+   * @param changesets which modified the repository
    */
-  public ChangesetViewer getChangesetViewer(Repository repository)
-          throws RepositoryException;
+  public void firePostReceiveEvent(Repository repository,
+                                  List<Changeset> changesets);
 
   /**
-   * Method description
+   * Unregisters the given {@link PostReceiveHook}.
    *
    *
-   * @return
+   * @param hook to unregister
    */
-  public Collection<Type> getConfiguredTypes();
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
-  @Override
-  public RepositoryHandler getHandler(String type);
+  public void removePostReceiveHook(PostReceiveHook hook);
 }

@@ -36,11 +36,13 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.HandlerEvent;
+import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -49,6 +51,17 @@ import java.util.Set;
  */
 public abstract class AbstractRepositoryManager implements RepositoryManager
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param hook
+   * @param repository
+   * @param changesets
+   */
+  protected abstract void firePostReceiveEvent(PostReceiveHook hook,
+          Repository repository, List<Changeset> changesets);
 
   /**
    * Method description
@@ -78,12 +91,56 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
    * Method description
    *
    *
+   * @param hook
+   */
+  @Override
+  public void addPostReceiveHook(PostReceiveHook hook)
+  {
+    postReceiveHookSet.add(hook);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param changesets
+   */
+  @Override
+  public void firePostReceiveEvent(Repository repository,
+                                   List<Changeset> changesets)
+  {
+    AssertUtil.assertIsNotNull(repository);
+    AssertUtil.assertIsNotEmpty(changesets);
+
+    for (PostReceiveHook hook : postReceiveHookSet)
+    {
+      firePostReceiveEvent(hook, repository, changesets);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param listener
    */
   @Override
   public void removeListener(RepositoryListener listener)
   {
     listenerSet.remove(listener);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param hook
+   */
+  @Override
+  public void removePostReceiveHook(PostReceiveHook hook)
+  {
+    removePostReceiveHook(hook);
   }
 
   /**
@@ -102,6 +159,10 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Set<PostReceiveHook> postReceiveHookSet =
+    new HashSet<PostReceiveHook>();
 
   /** Field description */
   private Set<RepositoryListener> listenerSet =
