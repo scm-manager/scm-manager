@@ -36,6 +36,7 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevSort;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.PostReceiveHook;
 import org.eclipse.jgit.transport.ReceiveCommand;
@@ -109,13 +110,23 @@ public class GitPostReceiveHook implements PostReceiveHook
 
       for (ReceiveCommand rc : receiveCommands)
       {
-        if (isCreateOrUpdateCommand(rc))
+        if (rc.getResult() == ReceiveCommand.Result.OK)
         {
-          RevCommit commit = walk.parseCommit(rc.getNewId());
+          walk.reset();
+          walk.sort(RevSort.NONE);
+          walk.markStart(walk.parseCommit(rc.getNewId()));
 
-          if (commit != null)
+          if (isUpdateCommand(rc))
+          {
+            walk.markUninteresting(walk.parseCommit(rc.getOldId()));
+          }
+
+          RevCommit commit = walk.next();
+
+          while (commit != null)
           {
             changesets.add(converter.createChangeset(commit));
+            commit = walk.next();
           }
         }
       }
@@ -150,12 +161,10 @@ public class GitPostReceiveHook implements PostReceiveHook
    *
    * @return
    */
-  private boolean isCreateOrUpdateCommand(ReceiveCommand rc)
+  private boolean isUpdateCommand(ReceiveCommand rc)
   {
-    return (rc.getResult() == ReceiveCommand.Result.OK)
-           && ((rc.getType() == ReceiveCommand.Type.CREATE)
-               || (rc.getType() == ReceiveCommand.Type.UPDATE)
-               || (rc.getType() == ReceiveCommand.Type.UPDATE_NONFASTFORWARD));
+    return (rc.getType() == ReceiveCommand.Type.UPDATE)
+           || (rc.getType() == ReceiveCommand.Type.UPDATE_NONFASTFORWARD);
   }
 
   //~--- fields ---------------------------------------------------------------
