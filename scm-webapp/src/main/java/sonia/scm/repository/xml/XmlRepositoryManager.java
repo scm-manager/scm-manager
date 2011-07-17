@@ -577,10 +577,17 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     if (hook.isAsynchronous())
     {
 
-      // todo
+      // TODO add queue
+      new Thread(new PostReceiveHookTask(hook, repository, changesets)).start();
     }
     else
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("execute PostReceiveHook {} for repository {}",
+                     hook.getClass().getName(), repository.getName());
+      }
+
       hook.onPostReceive(repository, changesets);
     }
   }
