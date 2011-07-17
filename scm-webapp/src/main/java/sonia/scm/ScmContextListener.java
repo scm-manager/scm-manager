@@ -148,6 +148,8 @@ public class ScmContextListener extends GuiceServletContextListener
       injector.getInstance(RepositoryManager.class);
 
     repositoryManager.addListeners(bindExtProcessor.getRepositoryListeners());
+    repositoryManager.addPostReceiveHooks(
+        bindExtProcessor.getPostReceiveHooks());
     repositoryManager.init(context);
 
     // init UserManager
