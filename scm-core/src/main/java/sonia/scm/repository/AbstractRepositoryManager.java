@@ -103,6 +103,18 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
    * Method description
    *
    *
+   * @param hooks
+   */
+  @Override
+  public void addPostReceiveHooks(Collection<PostReceiveHook> hooks)
+  {
+    postReceiveHookSet.addAll(hooks);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repository
    * @param changesets
    */

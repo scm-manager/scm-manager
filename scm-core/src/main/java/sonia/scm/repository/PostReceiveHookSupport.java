@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -53,6 +54,13 @@ public interface PostReceiveHookSupport
    * @param hook to register
    */
   public void addPostReceiveHook(PostReceiveHook hook);
+  
+  /**
+   * Register a {@link java.util.Collection} of hooks.
+   * 
+   * @param hooks to register
+   */
+  public void addPostReceiveHooks(Collection<PostReceiveHook> hooks);
 
   /**
    * Fires a post receive hook event. This methods calls the
