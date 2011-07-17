@@ -47,6 +47,7 @@ import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionProcessor;
 import sonia.scm.repository.ChangesetPreProcessor;
+import sonia.scm.repository.PostReceiveHook;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryListener;
 import sonia.scm.resources.ResourceHandler;
@@ -211,6 +212,17 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
           changesetPreProcessorBinder.addBinding().to(extensionClass);
         }
+        else if (PostReceiveHook.class.isAssignableFrom(extensionClass))
+        {
+          if (logger.isInfoEnabled())
+          {
+            logger.info("bind PostReceiveHook {}", extensionClass.getName());
+          }
+
+          PostReceiveHook hook = (PostReceiveHook) extensionClass.newInstance();
+
+          postReceiveHooks.add(hook);
+        }
         else
         {
           if (logger.isInfoEnabled())
@@ -309,6 +321,17 @@ public class BindingExtensionProcessor implements ExtensionProcessor
    *
    * @return
    */
+  public Set<PostReceiveHook> getPostReceiveHooks()
+  {
+    return postReceiveHooks;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public Set<RepositoryListener> getRepositoryListeners()
   {
     return repositoryListeners;
@@ -380,6 +403,10 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
   /** Field description */
   private Set<Module> moduleSet;
+
+  /** Field description */
+  private Set<PostReceiveHook> postReceiveHooks =
+    new HashSet<PostReceiveHook>();
 
   /** Field description */
   private Set<RepositoryListener> repositoryListeners =
