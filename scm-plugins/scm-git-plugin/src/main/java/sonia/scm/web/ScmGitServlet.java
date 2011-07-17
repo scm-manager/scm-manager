@@ -42,7 +42,6 @@ import org.eclipse.jgit.http.server.GitServlet;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.resolver.RepositoryResolver;
 
-import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -81,13 +80,16 @@ public class ScmGitServlet extends GitServlet
    * Constructs ...
    *
    *
-   * @param handler
+   *
+   * @param repositoryResolver
+   * @param receivePackFactory
    */
   @Inject
-  public ScmGitServlet(GitRepositoryHandler handler)
+  public ScmGitServlet(GitRepositoryResolver repositoryResolver,
+                       GitReceivePackFactory receivePackFactory)
   {
-    resolver = new GitRepositoryResolver(handler);
-    setRepositoryResolver(resolver);
+    setRepositoryResolver(repositoryResolver);
+    setReceivePackFactory(receivePackFactory);
   }
 
   //~--- methods --------------------------------------------------------------

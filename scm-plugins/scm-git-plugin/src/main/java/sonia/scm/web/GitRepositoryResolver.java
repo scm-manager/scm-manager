@@ -35,6 +35,8 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
+
 import org.eclipse.jgit.errors.RepositoryNotFoundException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
@@ -78,6 +80,7 @@ public class GitRepositoryResolver
    *
    * @param handler
    */
+  @Inject
   public GitRepositoryResolver(GitRepositoryHandler handler)
   {
     this.handler = handler;

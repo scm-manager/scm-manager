@@ -35,37 +35,72 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.servlet.ServletModule;
+import com.google.inject.Inject;
 
-import sonia.scm.plugin.ext.Extension;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
+import org.eclipse.jgit.http.server.resolver.DefaultReceivePackFactory;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.ReceivePack;
+import org.eclipse.jgit.transport.resolver.ReceivePackFactory;
+import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
+import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
+
+import sonia.scm.repository.RepositoryManager;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Extension
-public class GitServletModule extends ServletModule
+public class GitReceivePackFactory
+        implements ReceivePackFactory<HttpServletRequest>
 {
 
-  /** Field description */
-  public static final String PATTERN_GIT = "/git/*";
+  /**
+   * Constructs ...
+   *
+   *
+   * @param repositoryManager
+   */
+  @Inject
+  public GitReceivePackFactory(RepositoryManager repositoryManager)
+  {
+    hook = new GitPostReceiveHook(repositoryManager);
+  }
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @param request
+   * @param repository
+   *
+   * @return
+   *
+   * @throws ServiceNotAuthorizedException
+   * @throws ServiceNotEnabledException
    */
   @Override
-  protected void configureServlets()
+  public ReceivePack create(HttpServletRequest request, Repository repository)
+          throws ServiceNotEnabledException, ServiceNotAuthorizedException
   {
-    bind(GitRepositoryResolver.class);
-    bind(GitReceivePackFactory.class);
+    ReceivePack rpack = defaultFactory.create(request, repository);
 
-    // serlvelts and filters
-    filter(PATTERN_GIT).through(BasicAuthenticationFilter.class);
-    filter(PATTERN_GIT).through(GitPermissionFilter.class);
-    serve(PATTERN_GIT).with(ScmGitServlet.class);
+    rpack.setPostReceiveHook(hook);
+
+    return rpack;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private DefaultReceivePackFactory defaultFactory =
+    new DefaultReceivePackFactory();
+
+  /** Field description */
+  private GitPostReceiveHook hook;
 }

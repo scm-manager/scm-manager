@@ -57,6 +57,9 @@ import org.eclipse.jgit.util.FS;
 public class GitUtil
 {
 
+    /** Field description */
+  public static final int ID_LENGTH = 20;
+  
   /**
    * Method description
    *

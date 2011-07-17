@@ -31,37 +31,45 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.PostReceiveHook;
+import org.eclipse.jgit.transport.ReceiveCommand;
+import org.eclipse.jgit.transport.ReceivePack;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.GitChangesetConverter;
+import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GitChangesetViewer implements ChangesetViewer
+public class GitPostReceiveHook implements PostReceiveHook
 {
 
-  /** the logger for GitChangesetViewer */
+  /** the logger for GitPostReceiveHook */
   private static final Logger logger =
-    LoggerFactory.getLogger(GitChangesetViewer.class);
+    LoggerFactory.getLogger(GitPostReceiveHook.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -69,13 +77,67 @@ public class GitChangesetViewer implements ChangesetViewer
    * Constructs ...
    *
    *
-   * @param handler
-   * @param repository
+   * @param repositoryManager
    */
-  public GitChangesetViewer(GitRepositoryHandler handler, Repository repository)
+  public GitPostReceiveHook(RepositoryManager repositoryManager)
   {
-    this.handler = handler;
-    this.repository = repository;
+    this.repositoryManager = repositoryManager;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param rpack
+   * @param receiveCommands
+   */
+  @Override
+  public void onPostReceive(ReceivePack rpack,
+                            Collection<ReceiveCommand> receiveCommands)
+  {
+    GitChangesetConverter converter = null;
+    RevWalk walk = rpack.getRevWalk();
+
+    try
+    {
+      List<Changeset> changesets = new ArrayList<Changeset>();
+
+      converter = new GitChangesetConverter(rpack.getRepository(),
+              GitUtil.ID_LENGTH);
+
+      for (ReceiveCommand rc : receiveCommands)
+      {
+        if (isCreateCommand(rc))
+        {
+          RevCommit commit = walk.parseCommit(rc.getNewId());
+
+          if (commit != null)
+          {
+            changesets.add(converter.createChangeset(commit));
+          }
+        }
+      }
+
+      String repositoryName = rpack.getRepository().getDirectory().getName();
+
+      repositoryManager.firePostReceiveEvent(GitRepositoryHandler.TYPE_NAME,
+              repositoryName, changesets);
+    }
+    catch (RepositoryNotFoundException ex)
+    {
+      logger.error("repository could not be found", ex);
+    }
+    catch (IOException ex)
+    {
+      logger.error("could not parse PostReceiveHook", ex);
+    }
+    finally
+    {
+      IOUtil.close(converter);
+      GitUtil.release(walk);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -84,65 +146,18 @@ public class GitChangesetViewer implements ChangesetViewer
    * Method description
    *
    *
-   * @param start
-   * @param max
+   * @param rc
    *
    * @return
    */
-  @Override
-  public ChangesetPagingResult getChangesets(int start, int max)
+  private boolean isCreateCommand(ReceiveCommand rc)
   {
-    ChangesetPagingResult changesets = null;
-    File directory = handler.getDirectory(repository);
-    org.eclipse.jgit.lib.Repository gr = null;
-    GitChangesetConverter converter = null;
-
-    try
-    {
-      gr = GitUtil.open(directory);
-
-      if (!gr.getAllRefs().isEmpty())
-      {
-        converter = new GitChangesetConverter(gr, GitUtil.ID_LENGTH);
-        Git git = new Git(gr);
-        List<Changeset> changesetList = new ArrayList<Changeset>();
-        int counter = 0;
-
-        for (RevCommit commit : git.log().call())
-        {
-          if ((counter >= start) && (counter < start + max))
-          {
-            changesetList.add(converter.createChangeset(commit));
-          }
-
-          counter++;
-        }
-
-        changesets = new ChangesetPagingResult(counter, changesetList);
-      }
-    }
-    catch (NoHeadException ex)
-    {
-      logger.error("could not read changesets", ex);
-    }
-    catch (IOException ex)
-    {
-      logger.error("could not open repository", ex);
-    }
-    finally
-    {
-      IOUtil.close(converter);
-      GitUtil.close(gr);
-    }
-
-    return changesets;
+    return (rc.getResult() == ReceiveCommand.Result.OK)
+           && (rc.getType() == ReceiveCommand.Type.CREATE);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private GitRepositoryHandler handler;
-
-  /** Field description */
-  private Repository repository;
+  private RepositoryManager repositoryManager;
 }
