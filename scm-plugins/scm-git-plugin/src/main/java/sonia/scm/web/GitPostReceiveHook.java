@@ -109,7 +109,7 @@ public class GitPostReceiveHook implements PostReceiveHook
 
       for (ReceiveCommand rc : receiveCommands)
       {
-        if (isCreateCommand(rc))
+        if (isCreateOrUpdateCommand(rc))
         {
           RevCommit commit = walk.parseCommit(rc.getNewId());
 
@@ -150,10 +150,12 @@ public class GitPostReceiveHook implements PostReceiveHook
    *
    * @return
    */
-  private boolean isCreateCommand(ReceiveCommand rc)
+  private boolean isCreateOrUpdateCommand(ReceiveCommand rc)
   {
     return (rc.getResult() == ReceiveCommand.Result.OK)
-           && (rc.getType() == ReceiveCommand.Type.CREATE);
+           && ((rc.getType() == ReceiveCommand.Type.CREATE)
+               || (rc.getType() == ReceiveCommand.Type.UPDATE)
+               || (rc.getType() == ReceiveCommand.Type.UPDATE_NONFASTFORWARD));
   }
 
   //~--- fields ---------------------------------------------------------------
