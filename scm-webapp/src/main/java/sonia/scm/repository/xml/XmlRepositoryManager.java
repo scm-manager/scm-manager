@@ -58,6 +58,7 @@ import sonia.scm.repository.RepositoryBrowser;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHandlerNotFoundException;
+import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
@@ -223,6 +224,54 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     fireEvent(repository, HandlerEvent.DELETE);
+  }
+
+  /**
+   * TODO protect
+   *
+   *
+   * @param type
+   * @param name
+   * @param changesets
+   *
+   * @throws RepositoryNotFoundException
+   */
+  @Override
+  public void firePostReceiveEvent(String type, String name,
+                                   List<Changeset> changesets)
+          throws RepositoryNotFoundException
+  {
+    Repository repository = repositoryDB.get(type, name);
+
+    if (repository != null)
+    {
+      throw new RepositoryNotFoundException();
+    }
+
+    firePostReceiveEvent(repository, changesets);
+  }
+
+  /**
+   * TODO protect
+   *
+   *
+   * @param id
+   * @param changesets
+   *
+   * @throws RepositoryNotFoundException
+   */
+  @Override
+  public void firePostReceiveEvent(String id, List<Changeset> changesets)
+          throws RepositoryNotFoundException
+  {
+    Repository repository = repositoryDB.get(id);
+
+    if (repository != null)
+    {
+      throw new RepositoryNotFoundException();
+    }
+
+    firePostReceiveEvent(repository, changesets);
   }
 
   /**

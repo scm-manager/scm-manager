@@ -64,7 +64,37 @@ public interface PostReceiveHookSupport
    * @param changesets which modified the repository
    */
   public void firePostReceiveEvent(Repository repository,
-                                  List<Changeset> changesets);
+                                   List<Changeset> changesets);
+
+  /**
+   * Fires a post receive hook event. This methods calls the
+   * {@link PostReceiveHook#onPostReceive(Repository, List)} of each registered
+   * {@link PostReceiveHook}.
+   *
+   *
+   * @param type of the repository
+   * @param name of the repository
+   * @param changesets which modified the repository
+   *
+   * @throws RepositoryNotFoundException if the repository could not be found.
+   */
+  public void firePostReceiveEvent(String type, String name,
+                                   List<Changeset> changesets)
+          throws RepositoryNotFoundException;
+
+  /**
+   * Fires a post receive hook event. This methods calls the
+   * {@link PostReceiveHook#onPostReceive(Repository, List)} of each registered
+   * {@link PostReceiveHook}.
+   *
+   *
+   * @param id of the repository
+   * @param changesets which modified the repository
+   *
+   * @throws RepositoryNotFoundException if the repository could not be found
+   */
+  public void firePostReceiveEvent(String id, List<Changeset> changesets)
+          throws RepositoryNotFoundException;
 
   /**
    * Unregisters the given {@link PostReceiveHook}.
