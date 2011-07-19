@@ -35,9 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevSort;
-import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.transport.PostReceiveHook;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
@@ -45,23 +43,16 @@ import org.eclipse.jgit.transport.ReceivePack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.repository.AbstractRepositoryHookEvent;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.RepositoryHookType;
+import sonia.scm.repository.GitRepositoryHookEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
+import java.io.File;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  *
@@ -100,57 +91,33 @@ public class GitPostReceiveHook implements PostReceiveHook
   public void onPostReceive(ReceivePack rpack,
                             Collection<ReceiveCommand> receiveCommands)
   {
-    GitChangesetConverter converter = null;
-    RevWalk walk = rpack.getRevWalk();
-
     try
     {
-      List<Changeset> changesets = new ArrayList<Changeset>();
-
-      converter = new GitChangesetConverter(rpack.getRepository(),
-              GitUtil.ID_LENGTH);
-
       for (ReceiveCommand rc : receiveCommands)
       {
         if (rc.getResult() == ReceiveCommand.Result.OK)
         {
-          walk.reset();
-          walk.sort(RevSort.NONE);
-          walk.markStart(walk.parseCommit(rc.getNewId()));
+          ObjectId newId = rc.getNewId();
+          ObjectId oldId = null;
 
           if (isUpdateCommand(rc))
           {
-            walk.markUninteresting(walk.parseCommit(rc.getOldId()));
+            oldId = rc.getOldId();
           }
 
-          RevCommit commit = walk.next();
+          File directory = rpack.getRepository().getDirectory();
+          String repositoryName = directory.getName();
+          GitRepositoryHookEvent e = new GitRepositoryHookEvent(directory,
+                                       newId, oldId);
 
-          while (commit != null)
-          {
-            changesets.add(converter.createChangeset(commit));
-            commit = walk.next();
-          }
+          repositoryManager.fireHookEvent(GitRepositoryHandler.TYPE_NAME,
+                                          repositoryName, e);
         }
       }
-
-      String repositoryName = rpack.getRepository().getDirectory().getName();
-
-      repositoryManager.fireHookEvent(GitRepositoryHandler.TYPE_NAME,
-                                      repositoryName,
-                                      new GitRepositoryHook(changesets));
     }
     catch (RepositoryNotFoundException ex)
     {
       logger.error("repository could not be found", ex);
-    }
-    catch (IOException ex)
-    {
-      logger.error("could not parse PostReceiveHook", ex);
-    }
-    finally
-    {
-      IOUtil.close(converter);
-      GitUtil.release(walk);
     }
   }
 
@@ -169,62 +136,6 @@ public class GitPostReceiveHook implements PostReceiveHook
     return (rc.getType() == ReceiveCommand.Type.UPDATE)
            || (rc.getType() == ReceiveCommand.Type.UPDATE_NONFASTFORWARD);
   }
-
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 11/07/19
-   * @author         Enter your name here...
-   */
-  private static class GitRepositoryHook extends AbstractRepositoryHookEvent
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param changesets
-     */
-    public GitRepositoryHook(Collection<Changeset> changesets)
-    {
-      this.changesets = changesets;
-    }
-
-    //~--- get methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    @Override
-    public Collection<Changeset> getChangesets()
-    {
-      return changesets;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    @Override
-    public RepositoryHookType getType()
-    {
-      return RepositoryHookType.POST_RECEIVE;
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private Collection<Changeset> changesets;
-  }
-
 
   //~--- fields ---------------------------------------------------------------
 
