@@ -45,10 +45,12 @@ import org.eclipse.jgit.transport.ReceivePack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.repository.AbstractRepositoryHookEvent;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.util.IOUtil;
@@ -133,8 +135,9 @@ public class GitPostReceiveHook implements PostReceiveHook
 
       String repositoryName = rpack.getRepository().getDirectory().getName();
 
-      repositoryManager.firePostReceiveEvent(GitRepositoryHandler.TYPE_NAME,
-              repositoryName, changesets);
+      repositoryManager.fireHookEvent(GitRepositoryHandler.TYPE_NAME,
+                                      repositoryName,
+                                      new GitRepositoryHook(changesets));
     }
     catch (RepositoryNotFoundException ex)
     {
@@ -166,6 +169,62 @@ public class GitPostReceiveHook implements PostReceiveHook
     return (rc.getType() == ReceiveCommand.Type.UPDATE)
            || (rc.getType() == ReceiveCommand.Type.UPDATE_NONFASTFORWARD);
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 11/07/19
+   * @author         Enter your name here...
+   */
+  private static class GitRepositoryHook extends AbstractRepositoryHookEvent
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param changesets
+     */
+    public GitRepositoryHook(Collection<Changeset> changesets)
+    {
+      this.changesets = changesets;
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public Collection<Changeset> getChangesets()
+    {
+      return changesets;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public RepositoryHookType getType()
+    {
+      return RepositoryHookType.POST_RECEIVE;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private Collection<Changeset> changesets;
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 

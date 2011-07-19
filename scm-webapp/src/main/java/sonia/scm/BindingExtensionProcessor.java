@@ -47,8 +47,8 @@ import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionProcessor;
 import sonia.scm.repository.ChangesetPreProcessor;
-import sonia.scm.repository.PostReceiveHook;
 import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.repository.RepositoryHook;
 import sonia.scm.repository.RepositoryListener;
 import sonia.scm.resources.ResourceHandler;
 import sonia.scm.security.EncryptionHandler;
@@ -212,16 +212,16 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
           changesetPreProcessorBinder.addBinding().to(extensionClass);
         }
-        else if (PostReceiveHook.class.isAssignableFrom(extensionClass))
+        else if (RepositoryHook.class.isAssignableFrom(extensionClass))
         {
           if (logger.isInfoEnabled())
           {
-            logger.info("bind PostReceiveHook {}", extensionClass.getName());
+            logger.info("bind RepositoryHook {}", extensionClass.getName());
           }
 
-          PostReceiveHook hook = (PostReceiveHook) extensionClass.newInstance();
+          RepositoryHook hook = (RepositoryHook) extensionClass.newInstance();
 
-          postReceiveHooks.add(hook);
+          hooks.add(hook);
         }
         else
         {
@@ -310,9 +310,9 @@ public class BindingExtensionProcessor implements ExtensionProcessor
    *
    * @return
    */
-  public Set<Module> getModuleSet()
+  public Set<RepositoryHook> getHooks()
   {
-    return moduleSet;
+    return hooks;
   }
 
   /**
@@ -321,9 +321,9 @@ public class BindingExtensionProcessor implements ExtensionProcessor
    *
    * @return
    */
-  public Set<PostReceiveHook> getPostReceiveHooks()
+  public Set<Module> getModuleSet()
   {
-    return postReceiveHooks;
+    return moduleSet;
   }
 
   /**
@@ -402,11 +402,10 @@ public class BindingExtensionProcessor implements ExtensionProcessor
   private Class<? extends FileSystem> fileSystemClass;
 
   /** Field description */
-  private Set<Module> moduleSet;
+  private Set<RepositoryHook> hooks = new HashSet<RepositoryHook>();
 
   /** Field description */
-  private Set<PostReceiveHook> postReceiveHooks =
-    new HashSet<PostReceiveHook>();
+  private Set<Module> moduleSet;
 
   /** Field description */
   private Set<RepositoryListener> repositoryListeners =

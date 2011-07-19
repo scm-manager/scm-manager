@@ -33,12 +33,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.ListenerSupport;
-import sonia.scm.Type;
-import sonia.scm.TypeManager;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
@@ -46,53 +40,42 @@ import java.util.Collection;
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.6
  */
-public interface RepositoryManager
-        extends TypeManager<Repository, RepositoryException>,
-                ListenerSupport<RepositoryListener>, RepositoryBrowserProvider,
-                RepositoryHookSupport
+public interface RepositoryHookEvent
 {
 
   /**
    * Method description
    *
    *
-   * @param type
-   * @param name
-   *
    * @return
    */
-  public Repository get(String type, String name);
+  public Collection<Changeset> getChangesets();
 
   /**
    * Method description
    *
+   *
+   * @return
+   */
+  public Repository getRepository();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public RepositoryHookType getType();
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
    *
    *
    * @param repository
-   * @return null if ChangesetViewer is not supported
-   *
-   * @throws RepositoryException
    */
-  public ChangesetViewer getChangesetViewer(Repository repository)
-          throws RepositoryException;
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<Type> getConfiguredTypes();
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
-  @Override
-  public RepositoryHandler getHandler(String type);
+  void setRepository(Repository repository);
 }

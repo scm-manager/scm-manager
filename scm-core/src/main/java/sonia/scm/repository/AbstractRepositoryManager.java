@@ -35,14 +35,21 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.HandlerEvent;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -52,16 +59,76 @@ import java.util.Set;
 public abstract class AbstractRepositoryManager implements RepositoryManager
 {
 
+  /** the logger for AbstractRepositoryManager */
+  private static final Logger logger =
+    LoggerFactory.getLogger(AbstractRepositoryManager.class);
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
    *
    * @param hook
-   * @param repository
-   * @param changesets
+   * @param event
    */
-  protected abstract void firePostReceiveEvent(PostReceiveHook hook,
-          Repository repository, List<Changeset> changesets);
+  protected abstract void fireHookEvent(RepositoryHook hook,
+          RepositoryHookEvent event);
+
+  /**
+   * Method description
+   *
+   *
+   * @param hook
+   */
+  @Override
+  public void addHook(RepositoryHook hook)
+  {
+    Collection<RepositoryHookType> types = hook.getTypes();
+
+    if (types != null)
+    {
+      for (RepositoryHookType type : types)
+      {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("register {} hook {}", type, hook.getClass());
+        }
+
+        synchronized (AbstractRepositoryManager.class)
+        {
+          List<RepositoryHook> hooks = hookMap.get(type);
+
+          if (hooks == null)
+          {
+            hooks = new ArrayList<RepositoryHook>();
+            hookMap.put(type, hooks);
+          }
+
+          hooks.add(hook);
+        }
+      }
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("could not find any repository type");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param hooks
+   */
+  @Override
+  public void addHooks(Collection<RepositoryHook> hooks)
+  {
+    for (RepositoryHook hook : hooks)
+    {
+      addHook(hook);
+    }
+  }
 
   /**
    * Method description
@@ -91,43 +158,50 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
    * Method description
    *
    *
+   * @param repository
+   * @param event
+   */
+  @Override
+  public void fireHookEvent(Repository repository, RepositoryHookEvent event)
+  {
+    AssertUtil.assertIsNotNull(repository);
+    AssertUtil.assertIsNotNull(event);
+    AssertUtil.assertIsNotNull(event.getType());
+    event.setRepository(repository);
+
+    List<RepositoryHook> hooks = hookMap.get(event.getType());
+
+    if (Util.isNotEmpty(hooks))
+    {
+      for (RepositoryHook hook : hooks)
+      {
+        fireHookEvent(hook, event);
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param hook
    */
   @Override
-  public void addPostReceiveHook(PostReceiveHook hook)
+  public void removeHook(RepositoryHook hook)
   {
-    postReceiveHookSet.add(hook);
-  }
+    Collection<RepositoryHookType> types = hook.getTypes();
 
-  /**
-   * Method description
-   *
-   *
-   * @param hooks
-   */
-  @Override
-  public void addPostReceiveHooks(Collection<PostReceiveHook> hooks)
-  {
-    postReceiveHookSet.addAll(hooks);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param changesets
-   */
-  @Override
-  public void firePostReceiveEvent(Repository repository,
-                                   List<Changeset> changesets)
-  {
-    AssertUtil.assertIsNotNull(repository);
-    AssertUtil.assertIsNotEmpty(changesets);
-
-    for (PostReceiveHook hook : postReceiveHookSet)
+    if (types != null)
     {
-      firePostReceiveEvent(hook, repository, changesets);
+      for (RepositoryHookType type : types)
+      {
+        List<RepositoryHook> hooks = hookMap.get(type);
+
+        if (hooks != null)
+        {
+          hooks.remove(hook);
+        }
+      }
     }
   }
 
@@ -141,18 +215,6 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   public void removeListener(RepositoryListener listener)
   {
     listenerSet.remove(listener);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param hook
-   */
-  @Override
-  public void removePostReceiveHook(PostReceiveHook hook)
-  {
-    removePostReceiveHook(hook);
   }
 
   /**
@@ -173,8 +235,9 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Set<PostReceiveHook> postReceiveHookSet =
-    new HashSet<PostReceiveHook>();
+  private Map<RepositoryHookType, List<RepositoryHook>> hookMap =
+    new EnumMap<RepositoryHookType,
+                List<RepositoryHook>>(RepositoryHookType.class);
 
   /** Field description */
   private Set<RepositoryListener> listenerSet =

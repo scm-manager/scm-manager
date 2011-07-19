@@ -31,75 +31,43 @@
 
 
 
-package sonia.scm.repository.xml;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.PostReceiveHook;
-import sonia.scm.repository.Repository;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
+package sonia.scm.repository;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.6
  */
-public class PostReceiveHookTask implements Runnable
+public abstract class AbstractRepositoryHookEvent implements RepositoryHookEvent
 {
-
-  /** the logger for PostReceiveHookTask */
-  private static final Logger logger =
-    LoggerFactory.getLogger(PostReceiveHookTask.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param hook
-   * @param repository
-   * @param changesets
-   */
-  public PostReceiveHookTask(PostReceiveHook hook, Repository repository,
-                             List<Changeset> changesets)
-  {
-    this.hook = hook;
-    this.repository = repository;
-    this.changesets = changesets;
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @return
    */
   @Override
-  public void run()
+  public Repository getRepository()
   {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("execute async PostReceiveHook {} for repository {}",
-                   hook.getClass().getName(), repository.getName());
-    }
+    return repository;
+  }
 
-    hook.onPostReceive(repository, changesets);
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   */
+  @Override
+  public void setRepository(Repository repository)
+  {
+    this.repository = repository;
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private List<Changeset> changesets;
-
-  /** Field description */
-  private PostReceiveHook hook;
 
   /** Field description */
   private Repository repository;

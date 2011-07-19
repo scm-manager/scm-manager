@@ -33,40 +33,43 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.plugin.ExtensionPoint;
-
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.List;
+import java.util.Collection;
+import sonia.scm.plugin.ExtensionPoint;
 
 /**
- * Hook for post receive events.
  *
  * @author Sebastian Sdorra
  * @since 1.6
  */
 @ExtensionPoint
-public interface PostReceiveHook
+public interface RepositoryHook
 {
 
   /**
-   * This method is invoked after a repository has changed.
+   * Method description
    *
    *
-   * @param repository that has changed
-   * @param changesets which  modified the repository
+   * @param event
    */
-  public void onPostReceive(Repository repository, List<Changeset> changesets);
+  public void onEvent(RepositoryHookEvent event);
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns true if the hook is executed asynchronous.
+   * Method description
    *
    *
-   * @return true if the hook is executed asynchronous
+   * @return
    */
-  public boolean isAsynchronous();
+  public Collection<RepositoryHookType> getTypes();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isAsync();
 }

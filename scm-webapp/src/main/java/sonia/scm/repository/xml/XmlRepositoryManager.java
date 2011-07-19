@@ -47,17 +47,17 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.repository.AbstractRepositoryManager;
-import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetViewer;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
-import sonia.scm.repository.PostReceiveHook;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryAllreadyExistExeption;
 import sonia.scm.repository.RepositoryBrowser;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHandlerNotFoundException;
+import sonia.scm.repository.RepositoryHook;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.store.Store;
@@ -227,18 +227,17 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   }
 
   /**
-   * TODO protect
+   * Method description
    *
    *
    * @param type
    * @param name
-   * @param changesets
+   * @param event
    *
    * @throws RepositoryNotFoundException
    */
   @Override
-  public void firePostReceiveEvent(String type, String name,
-                                   List<Changeset> changesets)
+  public void fireHookEvent(String type, String name, RepositoryHookEvent event)
           throws RepositoryNotFoundException
   {
     Repository repository = repositoryDB.get(type, name);
@@ -248,20 +247,20 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
       throw new RepositoryNotFoundException();
     }
 
-    firePostReceiveEvent(repository, changesets);
+    fireHookEvent(repository, event);
   }
 
   /**
-   * TODO protect
+   * Method description
    *
    *
    * @param id
-   * @param changesets
+   * @param event
    *
    * @throws RepositoryNotFoundException
    */
   @Override
-  public void firePostReceiveEvent(String id, List<Changeset> changesets)
+  public void fireHookEvent(String id, RepositoryHookEvent event)
           throws RepositoryNotFoundException
   {
     Repository repository = repositoryDB.get(id);
@@ -271,7 +270,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
       throw new RepositoryNotFoundException();
     }
 
-    firePostReceiveEvent(repository, changesets);
+    fireHookEvent(repository, event);
   }
 
   /**
@@ -616,28 +615,27 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    *
    *
    * @param hook
-   * @param repository
-   * @param changesets
+   * @param event
    */
   @Override
-  protected void firePostReceiveEvent(PostReceiveHook hook,
-          Repository repository, List<Changeset> changesets)
+  protected void fireHookEvent(RepositoryHook hook, RepositoryHookEvent event)
   {
-    if (hook.isAsynchronous())
+    if (hook.isAsync())
     {
-
-      // TODO add queue
-      new Thread(new PostReceiveHookTask(hook, repository, changesets)).start();
+      new Thread(new RepositoryHookTask(hook, event)).start();
     }
     else
     {
       if (logger.isDebugEnabled())
       {
-        logger.debug("execute PostReceiveHook {} for repository {}",
-                     hook.getClass().getName(), repository.getName());
+        Object[] args = new Object[] { event.getType(),
+                                       hook.getClass().getName(),
+                                       event.getRepository().getName() };
+
+        logger.debug("execute {} hook {} for repository {}", args);
       }
 
-      hook.onPostReceive(repository, changesets);
+      hook.onEvent(event);
     }
   }
 

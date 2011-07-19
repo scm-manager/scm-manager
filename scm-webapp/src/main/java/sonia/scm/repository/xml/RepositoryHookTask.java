@@ -31,68 +31,67 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm.repository.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.ListenerSupport;
-import sonia.scm.Type;
-import sonia.scm.TypeManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
+import sonia.scm.repository.RepositoryHook;
+import sonia.scm.repository.RepositoryHookEvent;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface RepositoryManager
-        extends TypeManager<Repository, RepositoryException>,
-                ListenerSupport<RepositoryListener>, RepositoryBrowserProvider,
-                RepositoryHookSupport
+public class RepositoryHookTask implements Runnable
 {
 
+  /** the logger for RepositoryHookTask */
+  private static final Logger logger =
+    LoggerFactory.getLogger(RepositoryHookTask.class);
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param type
-   * @param name
-   *
-   * @return
+   * @param hook
+   * @param event
    */
-  public Repository get(String type, String name);
+  public RepositoryHookTask(RepositoryHook hook, RepositoryHookEvent event)
+  {
+    this.hook = hook;
+    this.event = event;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
-   *
-   *
-   * @param repository
-   * @return null if ChangesetViewer is not supported
-   *
-   * @throws RepositoryException
-   */
-  public ChangesetViewer getChangesetViewer(Repository repository)
-          throws RepositoryException;
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<Type> getConfiguredTypes();
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
    */
   @Override
-  public RepositoryHandler getHandler(String type);
+  public void run()
+  {
+    if (logger.isDebugEnabled())
+    {
+      Object[] args = new Object[] { event.getType(), hook.getClass().getName(),
+                                     event.getRepository().getName() };
+
+      logger.debug("execute async {} hook {} for repository {}", args);
+    }
+
+    hook.onEvent(event);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private RepositoryHookEvent event;
+
+  /** Field description */
+  private RepositoryHook hook;
 }

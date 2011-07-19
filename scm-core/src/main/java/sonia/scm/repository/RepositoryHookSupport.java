@@ -36,31 +36,29 @@ package sonia.scm.repository;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
-import java.util.List;
 
 /**
- * Support for post receive hooks.
  *
  * @author Sebastian Sdorra
  * @since 1.6
  */
-public interface PostReceiveHookSupport
+public interface RepositoryHookSupport
 {
 
   /**
-   * Registers a new {@link PostReceiveHook}.
+   * Registers a new {@link RepositoryHook}.
    *
    *
    * @param hook to register
    */
-  public void addPostReceiveHook(PostReceiveHook hook);
-  
+  public void addHook(RepositoryHook hook);
+
   /**
    * Register a {@link java.util.Collection} of hooks.
-   * 
+   *
    * @param hooks to register
    */
-  public void addPostReceiveHooks(Collection<PostReceiveHook> hooks);
+  public void addHooks(Collection<RepositoryHook> hooks);
 
   /**
    * Fires a post receive hook event. This methods calls the
@@ -69,10 +67,9 @@ public interface PostReceiveHookSupport
    *
    *
    * @param repository that has changed
-   * @param changesets which modified the repository
+   * @param event
    */
-  public void firePostReceiveEvent(Repository repository,
-                                   List<Changeset> changesets);
+  public void fireHookEvent(Repository repository, RepositoryHookEvent event);
 
   /**
    * Fires a post receive hook event. This methods calls the
@@ -82,33 +79,32 @@ public interface PostReceiveHookSupport
    *
    * @param type of the repository
    * @param name of the repository
-   * @param changesets which modified the repository
+   * @param event
    *
    * @throws RepositoryNotFoundException if the repository could not be found.
    */
-  public void firePostReceiveEvent(String type, String name,
-                                   List<Changeset> changesets)
+  public void fireHookEvent(String type, String name, RepositoryHookEvent event)
           throws RepositoryNotFoundException;
 
   /**
-   * Fires a post receive hook event. This methods calls the
-   * {@link PostReceiveHook#onPostReceive(Repository, List)} of each registered
-   * {@link PostReceiveHook}.
+   * Fires a hook event. This methods calls the
+   * {@link RepositoryHook#onEvent(RepositoryHookEvent} of each registered
+   * {@link RepositoryHook}.
    *
    *
    * @param id of the repository
-   * @param changesets which modified the repository
+   * @param event
    *
    * @throws RepositoryNotFoundException if the repository could not be found
    */
-  public void firePostReceiveEvent(String id, List<Changeset> changesets)
+  public void fireHookEvent(String id, RepositoryHookEvent event)
           throws RepositoryNotFoundException;
 
   /**
-   * Unregisters the given {@link PostReceiveHook}.
+   * Unregisters the given {@link RepositoryHook}.
    *
    *
    * @param hook to unregister
    */
-  public void removePostReceiveHook(PostReceiveHook hook);
+  public void removeHook(RepositoryHook hook);
 }
