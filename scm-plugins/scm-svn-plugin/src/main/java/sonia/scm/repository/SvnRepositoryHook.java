@@ -38,12 +38,9 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.SVNLogEntry;
-import org.tmatesoft.svn.core.SVNLogEntryPath;
-import org.tmatesoft.svn.core.SVNURL;
-import org.tmatesoft.svn.core.io.SVNRepository;
-import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
+import org.tmatesoft.svn.core.internal.io.fs.FSHook;
+import org.tmatesoft.svn.core.internal.io.fs.FSHookEvent;
+import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
 
 import sonia.scm.util.Util;
 
@@ -51,21 +48,16 @@ import sonia.scm.util.Util;
 
 import java.io.File;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SvnChangesetViewer implements ChangesetViewer
+public class SvnRepositoryHook implements FSHook
 {
 
-  /** the logger for SvnChangesetViewer */
+  /** the logger for SvnRepositoryHook */
   private static final Logger logger =
-    LoggerFactory.getLogger(SvnChangesetViewer.class);
+    LoggerFactory.getLogger(SvnRepositoryHook.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -73,74 +65,59 @@ public class SvnChangesetViewer implements ChangesetViewer
    * Constructs ...
    *
    *
-   * @param handler
-   * @param repostory
+   * @param repositoryManager
    */
-  public SvnChangesetViewer(SvnRepositoryHandler handler, Repository repostory)
+  public SvnRepositoryHook(RepositoryManager repositoryManager)
   {
-    this.handler = handler;
-    this.repostory = repostory;
+    this.repositoryManager = repositoryManager;
   }
 
-  //~--- get methods ----------------------------------------------------------
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param start
-   * @param max
-   *
-   * @return
+   * @param event
    */
   @Override
-  public ChangesetPagingResult getChangesets(int start, int max)
+  public void onHook(FSHookEvent event)
   {
-    ChangesetPagingResult changesets = null;
-    File directory = handler.getDirectory(repostory);
-    SVNRepository repository = null;
+    File directory = event.getReposRootDir();
 
-    try
+    if (FSHooks.SVN_REPOS_HOOK_POST_COMMIT.equals(event.getType()))
     {
-      repository = SVNRepositoryFactory.create(SVNURL.fromFile(directory));
+      String[] args = event.getArgs();
 
-      long total = repository.getLatestRevision();
-      long startRev = total - start;
-      long endRev = total - start - (max - 1);
-
-      if (endRev < 0)
+      if (Util.isNotEmpty(args))
       {
-        endRev = 0;
+        try
+        {
+          long revision = Long.parseLong(args[0]);
+
+          repositoryManager.fireHookEvent(SvnRepositoryHandler.TYPE_NAME,
+                                          directory.getName(),
+                                          new SvnRepositoryHookEvent(directory,
+                                            revision));
+        }
+        catch (NumberFormatException ex)
+        {
+          logger.error("could not parse revision of post commit hook");
+        }
+        catch (RepositoryNotFoundException ex)
+        {
+          logger.error("could not find repository {}", directory.getName());
+        }
       }
-
-      List<Changeset> changesetList = new ArrayList<Changeset>();
-      Collection<SVNLogEntry> entries = repository.log(new String[] { "" },
-                                          null, startRev, endRev, true, true);
-
-      for (SVNLogEntry entry : entries)
+      else if (logger.isWarnEnabled())
       {
-        changesetList.add(SvnUtil.createChangeset(entry));
+        logger.warn("no arguments found on post commit hook");
       }
-
-      changesets = new ChangesetPagingResult((int) total, changesetList);
     }
-    catch (SVNException ex)
-    {
-      logger.error("could not open repository", ex);
-    }
-    finally
-    {
-      repository.closeSession();
-    }
-
-    return changesets;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SvnRepositoryHandler handler;
-
-  /** Field description */
-  private Repository repostory;
+  private RepositoryManager repositoryManager;
 }

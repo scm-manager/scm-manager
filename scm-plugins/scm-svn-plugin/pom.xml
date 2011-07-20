@@ -26,7 +26,7 @@
     </dependency>
 
     <dependency>
-      <groupId>org.tmatesoft.svnkit</groupId>
+      <groupId>sonia.svnkit</groupId>
       <artifactId>svnkit-dav</artifactId>
       <version>${svnkit-dav.version}</version>
       <exclusions>
@@ -53,7 +53,7 @@
   </dependencies>
 
   <properties>
-    <svnkit-dav.version>1.3.5.4</svnkit-dav.version>
+    <svnkit-dav.version>1.3.5.5-SNAPSHOT</svnkit-dav.version>
   </properties>
   
   <repositories>

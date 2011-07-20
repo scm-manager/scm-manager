@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
 import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
@@ -87,14 +88,27 @@ public class SvnRepositoryHandler
    *
    * @param storeFactory
    * @param fileSystem
+   * @param repositoryManager
    */
   @Inject
-  public SvnRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem)
+  public SvnRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem,
+                              RepositoryManager repositoryManager)
   {
     super(storeFactory, fileSystem);
 
     // setup FSRepositoryFactory for SvnRepositoryBrowser
     FSRepositoryFactory.setup();
+
+    // register hook
+    if (repositoryManager != null)
+    {
+      FSHooks.registerHook(new SvnRepositoryHook(repositoryManager));
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn(
+          "unable to register hook, beacause of missing repositorymanager");
+    }
   }
 
   //~--- get methods ----------------------------------------------------------

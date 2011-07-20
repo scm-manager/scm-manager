@@ -35,65 +35,78 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.io.DefaultFileSystem;
-import sonia.scm.store.StoreFactory;
+import org.tmatesoft.svn.core.SVNLogEntry;
+import org.tmatesoft.svn.core.SVNLogEntryPath;
 
-import static org.junit.Assert.*;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SvnRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
+public class SvnUtil
 {
 
   /**
    * Method description
    *
    *
-   * @param directory
-   */
-  @Override
-  protected void checkDirectory(File directory)
-  {
-    File format = new File(directory, "format");
-
-    assertTrue(format.exists());
-    assertTrue(format.isFile());
-
-    File db = new File(directory, "db");
-
-    assertTrue(db.exists());
-    assertTrue(db.isDirectory());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param factory
-   * @param directory
+   * @param entry
    *
    * @return
    */
-  @Override
-  protected RepositoryHandler createRepositoryHandler(StoreFactory factory,
-          File directory)
+  @SuppressWarnings("unchecked")
+  public static Changeset createChangeset(SVNLogEntry entry)
   {
-    SvnRepositoryHandler handler = new SvnRepositoryHandler(factory,
-                                     new DefaultFileSystem(), null);
+    Changeset changeset = new Changeset(String.valueOf(entry.getRevision()),
+                            entry.getDate().getTime(),
+                            Person.toPerson(entry.getAuthor()),
+                            entry.getMessage());
+    Map<String, SVNLogEntryPath> changeMap = entry.getChangedPaths();
 
-    handler.init(contextProvider);
+    if (Util.isNotEmpty(changeMap))
+    {
+      Modifications modifications = changeset.getModifications();
 
-    SvnConfig config = new SvnConfig();
+      for (SVNLogEntryPath e : changeMap.values())
+      {
+        appendModification(modifications, e);
+      }
+    }
 
-    config.setRepositoryDirectory(directory);
-    handler.setConfig(config);
+    return changeset;
+  }
 
-    return handler;
+  /**
+   * TODO: type replaced
+   *
+   *
+   * @param modifications
+   * @param entry
+   */
+  private static void appendModification(Modifications modifications,
+          SVNLogEntryPath entry)
+  {
+    switch (entry.getType())
+    {
+      case SVNLogEntryPath.TYPE_ADDED :
+        modifications.getAdded().add(entry.getPath());
+
+        break;
+
+      case SVNLogEntryPath.TYPE_DELETED :
+        modifications.getRemoved().add(entry.getPath());
+
+        break;
+
+      case SVNLogEntryPath.TYPE_MODIFIED :
+        modifications.getModified().add(entry.getPath());
+
+        break;
+    }
   }
 }

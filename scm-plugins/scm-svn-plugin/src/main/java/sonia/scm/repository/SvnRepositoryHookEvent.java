@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLogEntry;
-import org.tmatesoft.svn.core.SVNLogEntryPath;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
@@ -54,18 +53,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SvnChangesetViewer implements ChangesetViewer
+public class SvnRepositoryHookEvent extends AbstractRepositoryHookEvent
 {
 
-  /** the logger for SvnChangesetViewer */
+  /** the logger for SvnRepositoryHookEvent */
   private static final Logger logger =
-    LoggerFactory.getLogger(SvnChangesetViewer.class);
+    LoggerFactory.getLogger(SvnRepositoryHookEvent.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -73,13 +71,13 @@ public class SvnChangesetViewer implements ChangesetViewer
    * Constructs ...
    *
    *
-   * @param handler
-   * @param repostory
+   * @param repositoryDirectory
+   * @param revision
    */
-  public SvnChangesetViewer(SvnRepositoryHandler handler, Repository repostory)
+  public SvnRepositoryHookEvent(File repositoryDirectory, long revision)
   {
-    this.handler = handler;
-    this.repostory = repostory;
+    this.repositoryDirectory = repositoryDirectory;
+    this.revision = revision;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -88,41 +86,61 @@ public class SvnChangesetViewer implements ChangesetViewer
    * Method description
    *
    *
-   * @param start
-   * @param max
+   * @return
+   */
+  @Override
+  public Collection<Changeset> getChangesets()
+  {
+    if (changesets == null)
+    {
+      changesets = fetchChangesets();
+    }
+
+    return changesets;
+  }
+
+  /**
+   * Method description
+   *
    *
    * @return
    */
   @Override
-  public ChangesetPagingResult getChangesets(int start, int max)
+  public RepositoryHookType getType()
   {
-    ChangesetPagingResult changesets = null;
-    File directory = handler.getDirectory(repostory);
+    return RepositoryHookType.POST_RECEIVE;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private List<Changeset> fetchChangesets()
+  {
+    List<Changeset> result = new ArrayList<Changeset>();
     SVNRepository repository = null;
 
     try
     {
-      repository = SVNRepositoryFactory.create(SVNURL.fromFile(directory));
+      repository =
+        SVNRepositoryFactory.create(SVNURL.fromFile(repositoryDirectory));
 
-      long total = repository.getLatestRevision();
-      long startRev = total - start;
-      long endRev = total - start - (max - 1);
+      Collection<SVNLogEntry> enties = repository.log(new String[] { "" },
+                                         null, revision, revision, true, true);
 
-      if (endRev < 0)
+      if (Util.isNotEmpty(enties))
       {
-        endRev = 0;
+        SVNLogEntry entry = enties.iterator().next();
+
+        if (entry != null)
+        {
+          result.add(SvnUtil.createChangeset(entry));
+        }
       }
-
-      List<Changeset> changesetList = new ArrayList<Changeset>();
-      Collection<SVNLogEntry> entries = repository.log(new String[] { "" },
-                                          null, startRev, endRev, true, true);
-
-      for (SVNLogEntry entry : entries)
-      {
-        changesetList.add(SvnUtil.createChangeset(entry));
-      }
-
-      changesets = new ChangesetPagingResult((int) total, changesetList);
     }
     catch (SVNException ex)
     {
@@ -133,14 +151,17 @@ public class SvnChangesetViewer implements ChangesetViewer
       repository.closeSession();
     }
 
-    return changesets;
+    return result;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SvnRepositoryHandler handler;
+  private List<Changeset> changesets;
 
   /** Field description */
-  private Repository repostory;
+  private File repositoryDirectory;
+
+  /** Field description */
+  private long revision;
 }
