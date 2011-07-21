@@ -146,7 +146,7 @@ public class HgCGIServlet extends HttpServlet
     {
       throw new ServletException("repository not found");
     }
-
+    
     String name = repository.getName();
     File directory = handler.getDirectory(repository);
     String pythonPath = "";

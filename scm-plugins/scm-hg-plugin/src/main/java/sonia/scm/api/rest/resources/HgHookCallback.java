@@ -31,45 +31,50 @@
 
 
 
-package sonia.scm.web;
+package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.servlet.ServletModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import sonia.scm.plugin.ext.Extension;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
+//~--- JDK imports ------------------------------------------------------------
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Extension
-public class HgServletModule extends ServletModule
+@Path("hook/hg/{repository}/{type}")
+public class HgHookCallback
 {
 
-  /** Field description */
-  public static final String MAPPING_ALL = "/*";
-
-  /** Field description */
-  public static final String MAPPING_HG = "/hg/*";
+  /** the logger for HgHookCallback */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgHookCallback.class);
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   *
+   * @param repositoryName
+   * @param type
+   *
+   * @return
    */
-  @Override
-  protected void configureServlets()
+  @GET
+  public Response hookCallback(@PathParam("repository") String repositoryName,
+                               @PathParam("type") String type)
   {
+    logger.warn("retrive hg hook {}", type);
 
-    // write hook script
-    filter(MAPPING_ALL).through(HgHookScriptFilter.class);
-
-    // register hg cgi servlet
-    filter(MAPPING_HG).through(BasicAuthenticationFilter.class);
-    filter(MAPPING_HG).through(HgPermissionFilter.class);
-    serve(MAPPING_HG).with(HgCGIServlet.class);
+    return Response.ok().build();
   }
 }
