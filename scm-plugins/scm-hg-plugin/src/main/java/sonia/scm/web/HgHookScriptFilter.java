@@ -147,7 +147,7 @@ public class HgHookScriptFilter extends HttpFilter
 
     IOUtil.mkdirs(cgiDirectory);
 
-    File hgHookScript = new File(cgiDirectory, "hg-hook.py");
+    File hgHookScript = new File(cgiDirectory, "scmhooks.py");
 
     if (logger.isDebugEnabled())
     {
