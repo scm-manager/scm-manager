@@ -101,8 +101,20 @@ public class HgChangesetViewer implements ChangesetViewer
    */
   public HgChangesetViewer(HgRepositoryHandler handler, Repository repository)
   {
+    this(handler, handler.getDirectory(repository).getAbsolutePath());
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param handler
+   * @param repositoryPath
+   */
+  public HgChangesetViewer(HgRepositoryHandler handler, String repositoryPath)
+  {
     this.handler = handler;
-    this.repository = repository;
+    this.repositoryPath = repositoryPath;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -123,7 +135,6 @@ public class HgChangesetViewer implements ChangesetViewer
 
     try
     {
-      String repositoryPath = getRepositoryPath(repository);
       int total = getTotalChangesets(repositoryPath);
       int startRev = total - start;
       int endRev = total - start - (max - 1);
@@ -133,44 +144,17 @@ public class HgChangesetViewer implements ChangesetViewer
         endRev = 0;
       }
 
-      Command command = new SimpleCommand(handler.getConfig().getHgBinary(),
-                          "-R", repositoryPath, "log", "-r",
-                          startRev + ":" + endRev, "--template",
-                          TEMPLATE_CHANGESETS);
-      CommandResult result = command.execute();
+      List<Changeset> changesetList = getChangesets(Integer.toString(startRev),
+                                        Integer.toString(endRev));
 
-      if (result.isSuccessfull())
+      if (changesetList != null)
       {
-        StringBuilder sb = new StringBuilder("<changesets>");
-
-        sb.append(result.getOutput()).append("</changesets>");
-
-        List<Changeset> changesetList = new HgChangesetParser().parse(
-                                          new InputSource(
-                                            new StringReader(sb.toString())));
-
         changesets = new ChangesetPagingResult(total, changesetList);
-      } 
-      else if ( logger.isErrorEnabled() )
-      {
-        logger.error( 
-          "command for fetching changesets failed with exit code {} and output {}", 
-          result.getReturnCode(), 
-          result.getOutput() 
-        );
       }
-    }
-    catch (ParserConfigurationException ex)
-    {
-      logger.error("could not parse changesets", ex);
     }
     catch (IOException ex)
     {
       logger.error("could not load changesets", ex);
-    }
-    catch (SAXException ex)
-    {
-      logger.error("could not unmarshall changesets", ex);
     }
     finally
     {
@@ -184,13 +168,56 @@ public class HgChangesetViewer implements ChangesetViewer
    * Method description
    *
    *
-   * @param repository
+   * @param startRev
+   * @param endRev
    *
    * @return
+   *
+   * @throws IOException
    */
-  private String getRepositoryPath(Repository repository)
+  public List<Changeset> getChangesets(String startRev, String endRev)
+          throws IOException
   {
-    return handler.getDirectory(repository).getAbsolutePath();
+    List<Changeset> changesetList = null;
+    InputStream in = null;
+
+    try
+    {
+      Command command = new SimpleCommand(handler.getConfig().getHgBinary(),
+                          "-R", repositoryPath, "log", "-r",
+                          startRev + ":" + endRev, "--template",
+                          TEMPLATE_CHANGESETS);
+      CommandResult result = command.execute();
+
+      if (result.isSuccessfull())
+      {
+        StringBuilder sb = new StringBuilder("<changesets>");
+
+        sb.append(result.getOutput()).append("</changesets>");
+        changesetList = new HgChangesetParser().parse(
+          new InputSource(new StringReader(sb.toString())));
+      }
+      else if (logger.isErrorEnabled())
+      {
+        logger.error(
+            "command for fetching changesets failed with exit code {} and output {}",
+            result.getReturnCode(), result.getOutput());
+      }
+    }
+    catch (ParserConfigurationException ex)
+    {
+      logger.error("could not parse changesets", ex);
+    }
+    catch (SAXException ex)
+    {
+      logger.error("could not unmarshall changesets", ex);
+    }
+    finally
+    {
+      IOUtil.close(in);
+    }
+
+    return changesetList;
   }
 
   /**
@@ -215,13 +242,11 @@ public class HgChangesetViewer implements ChangesetViewer
     {
       total = Integer.parseInt(result.getOutput().trim());
     }
-    else if ( logger.isErrorEnabled() )
+    else if (logger.isErrorEnabled())
     {
       logger.error(
-        "could not read tip revision, command returned with exit code {} and content {}",
-        result.getReturnCode(),
-        result.getOutput()
-      );
+          "could not read tip revision, command returned with exit code {} and content {}",
+          result.getReturnCode(), result.getOutput());
     }
 
     return total;
@@ -233,5 +258,5 @@ public class HgChangesetViewer implements ChangesetViewer
   private HgRepositoryHandler handler;
 
   /** Field description */
-  private Repository repository;
+  private String repositoryPath;
 }

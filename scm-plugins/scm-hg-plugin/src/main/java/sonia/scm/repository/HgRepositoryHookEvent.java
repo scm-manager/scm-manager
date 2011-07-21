@@ -31,39 +31,34 @@
 
 
 
-package sonia.scm.api.rest.resources;
+package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.HgRepositoryHookEvent;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryNotFoundException;
-
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Response;
+import java.io.File;
+import java.io.IOException;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Path("hook/hg/{repository}/{type}")
-public class HgHookCallback
+public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
 {
 
-  /** the logger for HgHookCallback */
+  /** Field description */
+  public static final String REV_TIP = "tip";
+
+  /** the logger for HgRepositoryHookEvent */
   private static final Logger logger =
-    LoggerFactory.getLogger(HgHookCallback.class);
+    LoggerFactory.getLogger(HgRepositoryHookEvent.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -71,68 +66,84 @@ public class HgHookCallback
    * Constructs ...
    *
    *
-   * @param repositoryManager
    * @param handler
+   * @param repositoryName
+   * @param startRev
    */
-  @Inject
-  public HgHookCallback(RepositoryManager repositoryManager,
-                        HgRepositoryHandler handler)
+  public HgRepositoryHookEvent(HgRepositoryHandler handler,
+                               String repositoryName, String startRev)
   {
-    this.repositoryManager = repositoryManager;
     this.handler = handler;
+    this.repositoryName = repositoryName;
+    this.startRev = startRev;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Collection<Changeset> getChangesets()
+  {
+    if (changesets == null)
+    {
+      try
+      {
+        changesets = createChangesetViewer().getChangesets(startRev, REV_TIP);
+      }
+      catch (IOException ex)
+      {
+        logger.error("could not load changesets", ex);
+      }
+    }
+
+    return changesets;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public RepositoryHookType getType()
+  {
+    return RepositoryHookType.POST_RECEIVE;
   }
 
   //~--- methods --------------------------------------------------------------
 
   /**
-   * TODO: protect
+   * Method description
    *
-   *
-   *
-   * @param repositoryName
-   * @param type
-   * @param node
    *
    * @return
    */
-  @GET
-  public Response hookCallback(@PathParam("repository") String repositoryName,
-                               @PathParam("type") String type,
-                               @QueryParam("node") String node)
+  private HgChangesetViewer createChangesetViewer()
   {
-    Response response = null;
+    File directory = handler.getConfig().getRepositoryDirectory();
+    File repositoryDirectory = new File(directory, repositoryName);
 
-    try
-    {
-      repositoryManager.fireHookEvent(HgRepositoryHandler.TYPE_NAME,
-                                      repositoryName,
-                                      new HgRepositoryHookEvent(handler,
-                                        repositoryName, node));
-      response = Response.ok().build();
-    }
-    catch (RepositoryNotFoundException ex)
-    {
-      if (logger.isErrorEnabled())
-      {
-        logger.error("could not find repository {}", repositoryName);
-
-        if (logger.isTraceEnabled())
-        {
-          logger.trace("repository not found", ex);
-        }
-      }
-
-      response = Response.status(Response.Status.NOT_FOUND).build();
-    }
-
-    return response;
+    return new HgChangesetViewer(handler,
+                                 repositoryDirectory.getAbsolutePath());
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private List<Changeset> changesets;
+
+  /** Field description */
   private HgRepositoryHandler handler;
 
   /** Field description */
-  private RepositoryManager repositoryManager;
+  private String repositoryName;
+
+  /** Field description */
+  private String startRev;
 }
