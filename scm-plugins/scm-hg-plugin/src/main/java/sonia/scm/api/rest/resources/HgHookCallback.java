@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -66,14 +67,16 @@ public class HgHookCallback
    *
    * @param repositoryName
    * @param type
+   * @param node
    *
    * @return
    */
   @GET
   public Response hookCallback(@PathParam("repository") String repositoryName,
-                               @PathParam("type") String type)
+                               @PathParam("type") String type,
+                               @QueryParam("node") String node)
   {
-    logger.warn("retrive hg hook {}", type);
+    logger.warn("retrive hg hook {}, node {}", type, node);
 
     return Response.ok().build();
   }
