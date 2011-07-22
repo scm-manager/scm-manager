@@ -22,4 +22,7 @@ def callback(ui, repo, hooktype, node=None, source=None, **kwargs):
   if node != None:
     url = baseUrl + os.path.basename(repo.root) + "/" + hooktype + "?node=" + node
     conn = urllib.urlopen(url);
-    # todo validate (if conn.code == 200:)
+    if conn.code == 200:
+      print( "scm-hook executed successfully" )
+    else:
+      print( "scm-hook failed" )
