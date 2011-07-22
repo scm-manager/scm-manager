@@ -60,7 +60,6 @@ import sonia.scm.web.HgWebConfigWriter;
 import java.io.File;
 import java.io.IOException;
 
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
@@ -241,7 +240,7 @@ public class HgRepositoryHandler
   }
 
   /**
-   * Writes .hg/hgrc and disables hg access control
+   * Writes .hg/hgrc, disables hg access control and added scm hook support.
    * see HgPermissionFilter
    *
    * @param repository
@@ -263,6 +262,11 @@ public class HgRepositoryHandler
     webSection.setParameter("allow_read", "*");
     webSection.setParameter("allow_push", "*");
     hgrc.addSection(webSection);
+
+    INISection hooksSection = new INISection("hooks");
+
+    hooksSection.setParameter("changegroup.scm", "python:scmhooks.callback");
+    hgrc.addSection(hooksSection);
 
     INIConfigurationWriter writer = new INIConfigurationWriter();
 
