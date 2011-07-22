@@ -40,6 +40,7 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgRepositoryHookEvent;
 import sonia.scm.repository.RepositoryManager;
@@ -47,10 +48,10 @@ import sonia.scm.repository.RepositoryNotFoundException;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.ws.rs.GET;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
 /**
@@ -73,13 +74,15 @@ public class HgHookCallback
    *
    * @param repositoryManager
    * @param handler
+   * @param hookManager
    */
   @Inject
   public HgHookCallback(RepositoryManager repositoryManager,
-                        HgRepositoryHandler handler)
+                        HgRepositoryHandler handler, HgHookManager hookManager)
   {
     this.repositoryManager = repositoryManager;
     this.handler = handler;
+    this.hookManager = hookManager;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -91,38 +94,52 @@ public class HgHookCallback
    *
    * @param repositoryName
    * @param type
+   * @param challenge
    * @param node
    *
    * @return
    */
-  @GET
+  @POST
   public Response hookCallback(@PathParam("repository") String repositoryName,
                                @PathParam("type") String type,
-                               @QueryParam("node") String node)
+                               @FormParam("challenge") String challenge,
+                               @FormParam("node") String node)
   {
     Response response = null;
 
-    try
+    if (hookManager.isAcceptAble(challenge))
     {
-      repositoryManager.fireHookEvent(HgRepositoryHandler.TYPE_NAME,
-                                      repositoryName,
-                                      new HgRepositoryHookEvent(handler,
-                                        repositoryName, node));
-      response = Response.ok().build();
-    }
-    catch (RepositoryNotFoundException ex)
-    {
-      if (logger.isErrorEnabled())
+      try
       {
-        logger.error("could not find repository {}", repositoryName);
-
-        if (logger.isTraceEnabled())
+        repositoryManager.fireHookEvent(HgRepositoryHandler.TYPE_NAME,
+                                        repositoryName,
+                                        new HgRepositoryHookEvent(handler,
+                                          repositoryName, node));
+        response = Response.ok().build();
+      }
+      catch (RepositoryNotFoundException ex)
+      {
+        if (logger.isErrorEnabled())
         {
-          logger.trace("repository not found", ex);
+          logger.error("could not find repository {}", repositoryName);
+
+          if (logger.isTraceEnabled())
+          {
+            logger.trace("repository not found", ex);
+          }
         }
+
+        response = Response.status(Response.Status.NOT_FOUND).build();
+      }
+    }
+    else
+    {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("hg hook challenge is not accept able");
       }
 
-      response = Response.status(Response.Status.NOT_FOUND).build();
+      response = Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     return response;
@@ -132,6 +149,9 @@ public class HgHookCallback
 
   /** Field description */
   private HgRepositoryHandler handler;
+
+  /** Field description */
+  private HgHookManager hookManager;
 
   /** Field description */
   private RepositoryManager repositoryManager;

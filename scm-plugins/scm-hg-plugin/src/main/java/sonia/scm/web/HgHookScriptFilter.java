@@ -45,6 +45,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.io.RegexResourceProcessor;
 import sonia.scm.io.ResourceProcessor;
 import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
@@ -86,13 +87,16 @@ public class HgHookScriptFilter extends HttpFilter
    *
    * @param context
    * @param handler
+   * @param hookManager
    */
   @Inject
   public HgHookScriptFilter(SCMContextProvider context,
-                            HgRepositoryHandler handler)
+                            HgRepositoryHandler handler,
+                            HgHookManager hookManager)
   {
     this.context = context;
     this.handler = handler;
+    this.hookManager = hookManager;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -183,6 +187,7 @@ public class HgHookScriptFilter extends HttpFilter
       rp.addVariable("python", config.getPythonBinary());
       rp.addVariable("path", Util.nonNull(config.getPythonPath()));
       rp.addVariable("url", url);
+      rp.addVariable("challenge", hookManager.getChallenge());
       rp.process(input, output);
       script.setExecutable(true);
     }
@@ -200,6 +205,9 @@ public class HgHookScriptFilter extends HttpFilter
 
   /** Field description */
   private HgRepositoryHandler handler;
+
+  /** Field description */
+  private HgHookManager hookManager;
 
   /** Field description */
   private volatile boolean written = false;

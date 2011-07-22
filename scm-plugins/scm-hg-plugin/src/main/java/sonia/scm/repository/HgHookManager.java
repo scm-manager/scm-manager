@@ -31,47 +31,50 @@
 
 
 
-package sonia.scm.web;
+package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.servlet.ServletModule;
+import com.google.inject.Singleton;
 
-import sonia.scm.plugin.ext.Extension;
-import sonia.scm.repository.HgHookManager;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.UUID;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Extension
-public class HgServletModule extends ServletModule
+@Singleton
+public class HgHookManager
 {
-
-  /** Field description */
-  public static final String MAPPING_ALL = "/*";
-
-  /** Field description */
-  public static final String MAPPING_HG = "/hg/*";
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @return
    */
-  @Override
-  protected void configureServlets()
+  public String getChallenge()
   {
-    bind(HgHookManager.class);
-
-    // write hook script
-    filter(MAPPING_ALL).through(HgHookScriptFilter.class);
-
-    // register hg cgi servlet
-    filter(MAPPING_HG).through(BasicAuthenticationFilter.class);
-    filter(MAPPING_HG).through(HgPermissionFilter.class);
-    serve(MAPPING_HG).with(HgCGIServlet.class);
+    return challenge;
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param challenge
+   *
+   * @return
+   */
+  public boolean isAcceptAble(String challenge)
+  {
+    return challenge.equals(challenge);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String challenge = UUID.randomUUID().toString();
 }

@@ -17,11 +17,13 @@ if len(pythonPath) > 0:
     sys.path.insert(i, pathParts[i])
 
 baseUrl = "${url}"
+challenge = "${challenge}"
 
 def callback(ui, repo, hooktype, node=None, source=None, **kwargs):
   if node != None:
-    url = baseUrl + os.path.basename(repo.root) + "/" + hooktype + "?node=" + node
-    conn = urllib.urlopen(url);
+    url = baseUrl + os.path.basename(repo.root) + "/" + hooktype
+    data = urllib.urlencode({'node': node, 'challenge': challenge})
+    conn = urllib.urlopen(url, data);
     if conn.code == 200:
       print( "scm-hook executed successfully" )
     else:
