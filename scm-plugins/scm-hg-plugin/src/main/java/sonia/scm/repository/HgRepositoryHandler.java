@@ -42,17 +42,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.installer.HgInstaller;
 import sonia.scm.installer.HgInstallerFactory;
+import sonia.scm.io.DirectoryFileFilter;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.FileSystem;
 import sonia.scm.io.INIConfiguration;
+import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.HgWebConfigWriter;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -74,6 +78,9 @@ public class HgRepositoryHandler
 {
 
   /** Field description */
+  public static final String PATH_HOOK1_6 = ".hook-1.6";
+
+  /** Field description */
   public static final String TYPE_DISPLAYNAME = "Mercurial";
 
   /** Field description */
@@ -85,6 +92,10 @@ public class HgRepositoryHandler
   /** the logger for HgRepositoryHandler */
   private static final Logger logger =
     LoggerFactory.getLogger(HgRepositoryHandler.class);
+
+  /** Field description */
+  public static final String PATH_HGRC =
+    ".hg".concat(File.separator).concat("hgrc");
 
   //~--- constructors ---------------------------------------------------------
 
@@ -144,6 +155,19 @@ public class HgRepositoryHandler
             + "HgWeb may not function until a new Hg config is set", ioe);
       }
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   */
+  @Override
+  public void init(SCMContextProvider context)
+  {
+    super.init(context);
+    registerMissingHooks();
   }
 
   /**
@@ -253,8 +277,7 @@ public class HgRepositoryHandler
   protected void postCreate(Repository repository, File directory)
           throws IOException, RepositoryException
   {
-    File hgrcFile = new File(directory,
-                             ".hg".concat(File.separator).concat("hgrc"));
+    File hgrcFile = new File(directory, PATH_HGRC);
     INIConfiguration hgrc = new INIConfiguration();
     INISection webSection = new INISection("web");
 
@@ -285,6 +308,139 @@ public class HgRepositoryHandler
   protected Class<HgConfig> getConfigClass()
   {
     return HgConfig.class;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param file
+   */
+  private void createNewFile(File file)
+  {
+    try
+    {
+      if (!file.createNewFile() && logger.isErrorEnabled())
+      {
+        logger.error("could not create file {}", file);
+      }
+    }
+    catch (IOException ex)
+    {
+      logger.error("could not create file {}".concat(file.getPath()), ex);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryDir
+   *
+   * @return
+   */
+  private boolean registerMissingHook(File repositoryDir)
+  {
+    boolean result = false;
+    File hgrc = new File(repositoryDir, PATH_HGRC);
+
+    if (hgrc.exists())
+    {
+      try
+      {
+        INIConfigurationReader reader = new INIConfigurationReader();
+        INIConfiguration c = reader.read(hgrc);
+        INISection hooks = c.getSection("hooks");
+
+        if (hooks == null)
+        {
+          hooks = new INISection("hooks");
+          c.addSection(hooks);
+        }
+
+        String hook = hooks.getParameter("changegroup.scm");
+
+        if (Util.isEmpty(hook))
+        {
+          if (logger.isInfoEnabled())
+          {
+            logger.info("register missing hg hook for respository {}",
+                        repositoryDir.getName());
+          }
+
+          hooks.setParameter("changegroup.scm", "python:scmhooks.callback");
+
+          INIConfigurationWriter writer = new INIConfigurationWriter();
+
+          writer.write(c, hgrc);
+        }
+
+        result = true;
+      }
+      catch (IOException ex)
+      {
+        logger.error("could not register missing hook", ex);
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Method description
+   *
+   */
+  private void registerMissingHooks()
+  {
+    HgConfig c = getConfig();
+
+    if (c != null)
+    {
+      File repositoryDirectroy = c.getRepositoryDirectory();
+
+      if (repositoryDirectroy.exists())
+      {
+        File lockFile = new File(repositoryDirectroy, PATH_HOOK1_6);
+
+        if (!lockFile.exists())
+        {
+          File[] dirs =
+            repositoryDirectroy.listFiles(DirectoryFileFilter.instance);
+          boolean success = true;
+
+          if (Util.isNotEmpty(dirs))
+          {
+            for (File dir : dirs)
+            {
+              if (!registerMissingHook(dir))
+              {
+                success = false;
+              }
+            }
+          }
+
+          if (success)
+          {
+            createNewFile(lockFile);
+          }
+        }
+        else if (logger.isDebugEnabled())
+        {
+          logger.debug("hooks allready registered");
+        }
+      }
+      else if (logger.isDebugEnabled())
+      {
+        logger.debug(
+            "repository directory does not exists, could not register missing hooks");
+      }
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("config is not available, could not register missing hooks");
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
