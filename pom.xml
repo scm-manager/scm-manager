@@ -188,7 +188,7 @@
              -federationxml JDK http://doclava.googlecode.com/svn/static/api/openjdk-6.xml
              -hdf project.name "${project.name}"
              -d ${project.build.directory}/apidocs
-           </additionalparam>
+          </additionalparam>
           <useStandardDocletOptions>false</useStandardDocletOptions>
           <!--
             | Apple's JVM sometimes requires more memory
@@ -346,6 +346,33 @@
         </plugins>
       </build>
 
+    </profile>
+    
+    
+    <profile>
+      <id>jrebel</id>
+      
+      <build>
+        <plugins>
+          
+          <plugin>
+            <groupId>org.zeroturnaround</groupId>
+            <artifactId>jrebel-maven-plugin</artifactId>
+            <version>1.0.7</version>
+            <executions>
+              <execution>
+                <id>generate-rebel-xml</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          
+        </plugins>
+      </build>
+      
     </profile>
 
   </profiles>
