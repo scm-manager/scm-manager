@@ -224,12 +224,12 @@ public class DefaultPluginLoader implements PluginLoader
    */
   private void loadPlugin(URL url)
   {
+    String path = url.toExternalForm();
+
     try
     {
 
       // jar:file:/some/path/file.jar!/META-INF/scm/plugin.xml
-      String path = url.toExternalForm();
-
       path = path.substring("jar:file:".length(), path.lastIndexOf("!"));
       path = decodePath(path);
 
@@ -263,7 +263,7 @@ public class DefaultPluginLoader implements PluginLoader
     }
     catch (Exception ex)
     {
-      logger.error(ex.getMessage(), ex);
+      logger.error("could not load plugin ".concat(path), ex);
     }
   }
 
