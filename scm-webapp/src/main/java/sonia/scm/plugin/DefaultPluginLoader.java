@@ -228,10 +228,17 @@ public class DefaultPluginLoader implements PluginLoader
 
     try
     {
+      if (path.startsWith("file:"))
+      {
+        path = path.substring("file:".length());
+      }
+      else
+      {
 
-      // jar:file:/some/path/file.jar!/META-INF/scm/plugin.xml
-      path = path.substring("jar:file:".length(), path.lastIndexOf("!"));
-      path = decodePath(path);
+        // jar:file:/some/path/file.jar!/META-INF/scm/plugin.xml
+        path = path.substring("jar:file:".length(), path.lastIndexOf("!"));
+        path = decodePath(path);
+      }
 
       boolean corePlugin = path.matches(REGE_COREPLUGIN);
 
