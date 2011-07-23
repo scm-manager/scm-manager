@@ -136,7 +136,7 @@ public class DefaultPluginLoader implements PluginLoader
       }
       catch (IOException ex)
       {
-        logger.error(ex.getMessage(), ex);
+        logger.error("error during extension processing", ex);
       }
       finally
       {
