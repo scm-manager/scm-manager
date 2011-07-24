@@ -42,6 +42,7 @@ import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -52,21 +53,20 @@ import java.util.jar.JarInputStream;
 /**
  *
  * @author Sebastian Sdorra
- * @deprecated use {@link DefaultExtensionScanner} instead
+ * @since 1.6
  */
-@Deprecated
-public class JARExtensionScanner implements ExtensionScanner
+public class DefaultExtensionScanner
+        implements ExtensionScanner, DirectoryExtensionScanner
 {
 
-  /** the logger for JARExtensionScanner */
+  /** the logger for DefaultExtensionScanner */
   private static final Logger logger =
-    LoggerFactory.getLogger(JARExtensionScanner.class);
+    LoggerFactory.getLogger(DefaultExtensionScanner.class);
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
-   *
    *
    *
    * @param classLoader
@@ -112,6 +112,36 @@ public class JARExtensionScanner implements ExtensionScanner
    *
    *
    * @param classLoader
+   * @param extensionObjects
+   * @param directory
+   * @param packages
+   *
+   * @throws IOException
+   */
+  @Override
+  public void processExtensions(ClassLoader classLoader,
+                                Collection<ExtensionObject> extensionObjects,
+                                File directory, Collection<String> packages)
+          throws IOException
+  {
+    String basePath = directory.getAbsolutePath();
+
+    if (directory.exists() && directory.isDirectory())
+    {
+      processDirectory(classLoader, extensionObjects, directory, packages,
+                       basePath);
+    }
+    else
+    {
+      logger.error("directory is required");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param classLoader
    * @param name
    *
    * @return
@@ -126,10 +156,92 @@ public class JARExtensionScanner implements ExtensionScanner
     }
     catch (Exception ex)
     {
-      logger.error(ex.getMessage(), ex);
+      logger.error("could not class ".concat(name), ex);
     }
 
     return clazz;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param classLoader
+   * @param extensionObjects
+   * @param packages
+   * @param name
+   */
+  private void processClass(ClassLoader classLoader,
+                            Collection<ExtensionObject> extensionObjects,
+                            Collection<String> packages, String name)
+  {
+    if (isManagedClass(packages, name))
+    {
+      Class<?> managedClass = createClass(classLoader, name);
+
+      if (managedClass != null)
+      {
+        processManagedClass(extensionObjects, managedClass);
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param classLoader
+   * @param extensionObjects
+   * @param packages
+   * @param basePath
+   * @param file
+   */
+  private void processClassFile(ClassLoader classLoader,
+                                Collection<ExtensionObject> extensionObjects,
+                                Collection<String> packages, String basePath,
+                                File file)
+  {
+    String name = file.getAbsolutePath().substring(basePath.length());
+
+    if (name.startsWith("/"))
+    {
+      name = name.substring(1);
+    }
+
+    name = getClassName(name);
+    processClass(classLoader, extensionObjects, packages, name);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param classLoader
+   * @param extensionObjects
+   * @param directory
+   * @param packages
+   * @param basePath
+   */
+  private void processDirectory(ClassLoader classLoader,
+                                Collection<ExtensionObject> extensionObjects,
+                                File directory, Collection<String> packages,
+                                String basePath)
+  {
+    File[] children = directory.listFiles();
+
+    for (File child : children)
+    {
+      if (child.isDirectory())
+      {
+        processDirectory(classLoader, extensionObjects, child, packages,
+                         basePath);
+      }
+      else if (child.getName().endsWith(".class"))
+      {
+        processClassFile(classLoader, extensionObjects, packages, basePath,
+                         child);
+      }
+    }
   }
 
   /**
@@ -151,16 +263,7 @@ public class JARExtensionScanner implements ExtensionScanner
     if (name.endsWith(".class"))
     {
       name = getClassName(name);
-
-      if (isManagedClass(packages, name))
-      {
-        Class<?> managedClass = createClass(classLoader, name);
-
-        if (managedClass != null)
-        {
-          processManagedClass(extensionObjects, managedClass);
-        }
-      }
+      processClass(classLoader, extensionObjects, packages, name);
     }
   }
 

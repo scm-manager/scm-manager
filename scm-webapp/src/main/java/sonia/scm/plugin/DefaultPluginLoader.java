@@ -39,9 +39,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
+import sonia.scm.plugin.ext.DefaultExtensionScanner;
 import sonia.scm.plugin.ext.ExtensionObject;
 import sonia.scm.plugin.ext.ExtensionProcessor;
-import sonia.scm.plugin.ext.JARExtensionScanner;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -115,7 +115,7 @@ public class DefaultPluginLoader implements PluginLoader
   {
     Set<ExtensionObject> extensions = new HashSet<ExtensionObject>();
     ClassLoader classLoader = getClassLoader();
-    JARExtensionScanner scanner = new JARExtensionScanner();
+    DefaultExtensionScanner scanner = new DefaultExtensionScanner();
 
     for (Plugin plugin : installedPlugins)
     {
@@ -131,8 +131,27 @@ public class DefaultPluginLoader implements PluginLoader
         }
 
         packageSet.add(SCMContext.DEFAULT_PACKAGE);
-        input = new FileInputStream(plugin.getPath());
-        scanner.processExtensions(classLoader, extensions, input, packageSet);
+
+        File pluginFile = new File(plugin.getPath());
+
+        if (pluginFile.exists())
+        {
+          if (pluginFile.isDirectory())
+          {
+            scanner.processExtensions(classLoader, extensions, pluginFile,
+                                      packageSet);
+          }
+          else
+          {
+            input = new FileInputStream(plugin.getPath());
+            scanner.processExtensions(classLoader, extensions, input,
+                                      packageSet);
+          }
+        }
+        else
+        {
+          logger.error("could not find plugin file {}", plugin.getPath());
+        }
       }
       catch (IOException ex)
       {
@@ -230,7 +249,9 @@ public class DefaultPluginLoader implements PluginLoader
     {
       if (path.startsWith("file:"))
       {
-        path = path.substring("file:".length());
+        path = path.substring("file:".length(),
+                              path.length()
+                              - "/META-INF/scm/plugin.xml".length());
       }
       else
       {
