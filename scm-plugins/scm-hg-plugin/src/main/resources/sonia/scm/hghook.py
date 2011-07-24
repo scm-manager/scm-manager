@@ -1,5 +1,3 @@
-#!/usr/bin/env ${python}
-
 #
 # registration .hg/hgrc:
 #
@@ -7,14 +5,7 @@
 # changegroup.scm = python:scmhooks.callback
 #
 
-import os, sys, urllib
-
-pythonPath = "${path}"
-
-if len(pythonPath) > 0:
-  pathParts = pythonPath.split(os.pathsep)
-  for i in range(len(pathParts)):
-    sys.path.insert(i, pathParts[i])
+import os, urllib
 
 baseUrl = "${url}"
 challenge = "${challenge}"

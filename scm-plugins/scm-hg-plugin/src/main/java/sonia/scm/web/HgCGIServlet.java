@@ -40,6 +40,7 @@ import com.google.inject.Singleton;
 
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -97,17 +98,19 @@ public class HgCGIServlet extends HttpServlet
    * @param configuration
    * @param repositoryManager
    * @param handler
+   * @param hookManager
    */
   @Inject
   public HgCGIServlet(CGIExecutorFactory cgiExecutorFactory,
                       ScmConfiguration configuration,
                       RepositoryManager repositoryManager,
-                      HgRepositoryHandler handler)
+                      HgRepositoryHandler handler, HgHookManager hookManager)
   {
     this.cgiExecutorFactory = cgiExecutorFactory;
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.handler = handler;
+    this.hookManager = hookManager;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -146,7 +149,7 @@ public class HgCGIServlet extends HttpServlet
     {
       throw new ServletException("repository not found");
     }
-    
+
     String name = repository.getName();
     File directory = handler.getDirectory(repository);
     String pythonPath = "";
@@ -161,6 +164,8 @@ public class HgCGIServlet extends HttpServlet
         pythonPath = "";
       }
     }
+
+    hookManager.writeHookScript(request);
 
     CGIExecutor executor = cgiExecutorFactory.createExecutor(configuration,
                              getServletContext(), request, response);
@@ -257,6 +262,9 @@ public class HgCGIServlet extends HttpServlet
 
   /** Field description */
   private HgRepositoryHandler handler;
+
+  /** Field description */
+  private HgHookManager hookManager;
 
   /** Field description */
   private RepositoryManager repositoryManager;

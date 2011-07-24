@@ -35,11 +35,29 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.SCMContextProvider;
+import sonia.scm.io.RegexResourceProcessor;
+import sonia.scm.io.ResourceProcessor;
+import sonia.scm.util.IOUtil;
+import sonia.scm.web.HgWebConfigWriter;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -48,6 +66,71 @@ import java.util.UUID;
 @Singleton
 public class HgHookManager
 {
+
+  /** Field description */
+  public static final String SCRIPT_TEMPLATE = "/sonia/scm/hghook.py";
+
+  /** the logger for HgHookManager */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgHookManager.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param context
+   */
+  @Inject
+  public HgHookManager(SCMContextProvider context)
+  {
+    this.context = context;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * TODO check if file exists
+   *
+   *
+   * @param request
+   *
+   * @throws IOException
+   */
+  public void writeHookScript(HttpServletRequest request) throws IOException
+  {
+    if (isScriptWriteAble())
+    {
+      synchronized (this)
+      {
+        if (isScriptWriteAble())
+        {
+          StringBuilder url = new StringBuilder(request.getScheme());
+
+          url.append("://localhost:").append(request.getServerPort());
+          url.append(request.getContextPath()).append("/api/rest/hook/hg/");
+
+          if (hgHookScript == null)
+          {
+            File cgiDirectory = new File(context.getBaseDirectory(), "cgi-bin");
+
+            IOUtil.mkdirs(cgiDirectory);
+            hgHookScript = new File(cgiDirectory, "scmhooks.py");
+          }
+
+          if (logger.isDebugEnabled())
+          {
+            logger.debug("write hg hook script to '{}'", hgHookScript);
+          }
+
+          writeScript(hgHookScript, url.toString());
+        }
+      }
+    }
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -73,8 +156,63 @@ public class HgHookManager
     return challenge.equals(challenge);
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param script
+   * @param url
+   *
+   * @throws IOException
+   */
+  private void writeScript(File script, String url) throws IOException
+  {
+    InputStream input = null;
+    OutputStream output = null;
+
+    try
+    {
+      input = HgWebConfigWriter.class.getResourceAsStream(SCRIPT_TEMPLATE);
+      output = new FileOutputStream(script);
+
+      ResourceProcessor rp = new RegexResourceProcessor();
+
+      rp.addVariable("url", url);
+      rp.addVariable("challenge", getChallenge());
+      rp.process(input, output);
+      script.setExecutable(true);
+    }
+    finally
+    {
+      IOUtil.close(input);
+      IOUtil.close(output);
+    }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private boolean isScriptWriteAble()
+  {
+    return (hgHookScript == null) ||!hgHookScript.exists();
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private String challenge = UUID.randomUUID().toString();
+
+  /** Field description */
+  private SCMContextProvider context;
+
+  /** Field description */
+  private volatile File hgHookScript;
 }
