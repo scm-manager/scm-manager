@@ -88,6 +88,7 @@ public class ScmGitServlet extends GitServlet
   public ScmGitServlet(GitRepositoryResolver repositoryResolver,
                        GitReceivePackFactory receivePackFactory)
   {
+    this.resolver = repositoryResolver;
     setRepositoryResolver(repositoryResolver);
     setReceivePackFactory(receivePackFactory);
   }
