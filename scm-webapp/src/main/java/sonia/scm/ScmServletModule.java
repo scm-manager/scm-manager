@@ -59,6 +59,7 @@ import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.ScriptResourceServlet;
+import sonia.scm.repository.ChangesetViewerUtil;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.xml.XmlRepositoryManager;
 import sonia.scm.security.EncryptionHandler;
@@ -217,6 +218,7 @@ public class ScmServletModule extends ServletModule
     bind(UserManager.class).to(XmlUserManager.class);
     bind(GroupManager.class).to(XmlGroupManager.class);
     bind(CGIExecutorFactory.class).to(DefaultCGIExecutorFactory.class);
+    bind(ChangesetViewerUtil.class);
 
     // bind httpclient
     bind(HttpClient.class).to(URLHttpClient.class);

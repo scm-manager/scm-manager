@@ -31,18 +31,18 @@
 
 
 
-package sonia.scm.repository;
+package sonia.scm;
 
 /**
  *
  * @author Sebastian Sdorra
- * @since 1.6
+ * @version 1.6
  */
-public class RepositoryNotFoundException extends RepositoryException
+public class NotSupportedFeatuerException extends Exception
 {
 
   /** Field description */
-  private static final long serialVersionUID = -6583078808900520166L;
+  private static final long serialVersionUID = 256498734456613496L;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -50,7 +50,7 @@ public class RepositoryNotFoundException extends RepositoryException
    * Constructs ...
    *
    */
-  public RepositoryNotFoundException() {}
+  public NotSupportedFeatuerException() {}
 
   /**
    * Constructs ...
@@ -58,7 +58,7 @@ public class RepositoryNotFoundException extends RepositoryException
    *
    * @param message
    */
-  public RepositoryNotFoundException(String message)
+  public NotSupportedFeatuerException(String message)
   {
     super(message);
   }

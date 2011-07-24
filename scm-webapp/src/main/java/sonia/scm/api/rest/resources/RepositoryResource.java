@@ -42,12 +42,14 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.repository.ChangesetViewer;
+import sonia.scm.repository.ChangesetViewerUtil;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.FileObjectNameComparator;
 import sonia.scm.repository.PathNotFoundException;
@@ -59,6 +61,7 @@ import sonia.scm.repository.RepositoryBrowser;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
@@ -114,18 +117,21 @@ public class RepositoryResource
    * @param repositoryManager
    * @param securityContextProvider
    * @param changesetPreProcessorSet
+   * @param changesetViewerUtil
    */
   @Inject
   public RepositoryResource(
           ScmConfiguration configuration, RepositoryManager repositoryManager,
           Provider<WebSecurityContext> securityContextProvider,
-          Set<ChangesetPreProcessor> changesetPreProcessorSet)
+          Set<ChangesetPreProcessor> changesetPreProcessorSet,
+          ChangesetViewerUtil changesetViewerUtil)
   {
     super(repositoryManager);
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.securityContextProvider = securityContextProvider;
     this.changesetPreProcessorSet = changesetPreProcessorSet;
+    this.changesetViewerUtil = changesetViewerUtil;
     setDisableCache(false);
   }
 
@@ -213,36 +219,29 @@ public class RepositoryResource
   @QueryParam("limit") int limit) throws RepositoryException
   {
     Response response = null;
-    Repository repository = repositoryManager.get(id);
 
-    if (repository != null)
+    try
     {
-      ChangesetViewer changesetViewer =
-        repositoryManager.getChangesetViewer(repository);
+      ChangesetPagingResult changesets = changesetViewerUtil.getChangesets(id,
+                                           start, limit);
 
-      if (changesetViewer != null)
+      if (changesets != null)
       {
-        ChangesetPagingResult changesets = changesetViewer.getChangesets(start,
-                                             limit);
-
-        if (changesets != null)
-        {
-          callPreProcessors(changesets);
-          response = Response.ok(changesets).build();
-        }
-        else
-        {
-          response = Response.ok().build();
-        }
+        callPreProcessors(changesets);
+        response = Response.ok(changesets).build();
       }
       else
       {
-        response = Response.status(Response.Status.NOT_FOUND).build();
+        response = Response.ok().build();
       }
     }
-    else
+    catch (RepositoryNotFoundException ex)
     {
       response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+    catch (NotSupportedFeatuerException ex)
+    {
+      response = Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     return response;
@@ -565,6 +564,9 @@ public class RepositoryResource
 
   /** Field description */
   private Set<ChangesetPreProcessor> changesetPreProcessorSet;
+
+  /** Field description */
+  private ChangesetViewerUtil changesetViewerUtil;
 
   /** Field description */
   private ScmConfiguration configuration;
