@@ -48,7 +48,6 @@ import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.ChangesetPreProcessor;
-import sonia.scm.repository.ChangesetViewer;
 import sonia.scm.repository.ChangesetViewerUtil;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.FileObjectNameComparator;
