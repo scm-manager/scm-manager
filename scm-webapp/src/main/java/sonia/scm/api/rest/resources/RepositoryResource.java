@@ -75,8 +75,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -115,21 +113,18 @@ public class RepositoryResource
    * @param configuration
    * @param repositoryManager
    * @param securityContextProvider
-   * @param requestProvider
    * @param changesetPreProcessorSet
    */
   @Inject
   public RepositoryResource(
           ScmConfiguration configuration, RepositoryManager repositoryManager,
           Provider<WebSecurityContext> securityContextProvider,
-          Provider<HttpServletRequest> requestProvider,
           Set<ChangesetPreProcessor> changesetPreProcessorSet)
   {
     super(repositoryManager);
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.securityContextProvider = securityContextProvider;
-    this.requestProvider = requestProvider;
     this.changesetPreProcessorSet = changesetPreProcessorSet;
     setDisableCache(false);
   }
@@ -576,9 +571,6 @@ public class RepositoryResource
 
   /** Field description */
   private RepositoryManager repositoryManager;
-
-  /** Field description */
-  private Provider<HttpServletRequest> requestProvider;
 
   /** Field description */
   private Provider<WebSecurityContext> securityContextProvider;
