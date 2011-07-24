@@ -35,6 +35,7 @@ package sonia.scm.script;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -48,6 +49,56 @@ import java.util.Map;
  */
 public interface ScmScriptContext
 {
+
+  /**
+   * Executes the given script.
+   *
+   *
+   * @param file - the script
+   * @param additionalParams -
+   *        additional parameters for the execution of the script
+   *
+   * @throws IOException
+   * @throws ScmScriptException
+   */
+  public void eval(File file, Map<String, Object> additionalParams)
+          throws IOException, ScmScriptException;
+
+  /**
+   * Executes the given script.
+   *
+   *
+   * @param file - the script
+   *
+   * @throws IOException
+   * @throws ScmScriptException
+   */
+  public void eval(File file) throws IOException, ScmScriptException;
+
+  /**
+   * Executes the given script.
+   *
+   *
+   * @param path - classpath location of the script
+   * @param additionalParams -
+   *        additional parameters for the execution of the script
+   *
+   * @throws IOException
+   * @throws ScmScriptException
+   */
+  public void eval(String path, Map<String, Object> additionalParams)
+          throws IOException, ScmScriptException;
+
+  /**
+   * Executes the given script.
+   *
+   *
+   * @param path - classpath location of the script
+   *
+   * @throws IOException
+   * @throws ScmScriptException
+   */
+  public void eval(String path) throws IOException, ScmScriptException;
 
   /**
    * Executes the given script.
