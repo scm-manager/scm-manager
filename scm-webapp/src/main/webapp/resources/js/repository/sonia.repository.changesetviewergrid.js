@@ -48,7 +48,8 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
                 <div class="cs-tree">Tree: <a class="cs-tree-link" rel="{0}" href="#">{0}</a></div>',
   tagsAndBranchesTemplate: '<div class="changeset-tags">{0}</div>\
                             <div class="changeset-branches">{1}</div>',
-
+  
+  emptyText: 'No commits available',
 
   initComponent: function(){
 
@@ -88,6 +89,10 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
       hideHeaders: true,
       colModel: changesetColModel,
       loadMask: true,
+      viewConfig: {
+        deferEmptyText: false,
+        emptyText: this.emptyText
+      },
       listeners: {
         click: {
           fn: this.onClick,

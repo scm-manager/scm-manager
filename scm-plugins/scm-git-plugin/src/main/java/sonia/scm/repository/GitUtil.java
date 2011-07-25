@@ -35,20 +35,20 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.io.File;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.util.FS;
 
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.IOException;
-import org.eclipse.jgit.lib.RepositoryCache;
-import org.eclipse.jgit.util.FS;
 
 /**
  *
@@ -72,6 +72,23 @@ public class GitUtil
     {
       repo.close();
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public static org.eclipse.jgit.lib.Repository open(File directory)
+          throws IOException
+  {
+    return RepositoryCache.open(RepositoryCache.FileKey.lenient(directory,
+            FS.DETECTED), true);
   }
 
   /**
@@ -121,24 +138,6 @@ public class GitUtil
     return date;
   }
 
-  
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public static org.eclipse.jgit.lib.Repository open(File directory)
-          throws IOException
-  {
-    return RepositoryCache.open(RepositoryCache.FileKey.lenient(directory,
-            FS.DETECTED), true);
-  }
-  
   /**
    * Method description
    *

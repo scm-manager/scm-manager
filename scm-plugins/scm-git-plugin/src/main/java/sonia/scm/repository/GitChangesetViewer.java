@@ -101,12 +101,13 @@ public class GitChangesetViewer implements ChangesetViewer
     {
       gr = GitUtil.open(directory);
 
+      int counter = 0;
+      List<Changeset> changesetList = new ArrayList<Changeset>();
+
       if (!gr.getAllRefs().isEmpty())
       {
         converter = new GitChangesetConverter(gr, GitUtil.ID_LENGTH);
         Git git = new Git(gr);
-        List<Changeset> changesetList = new ArrayList<Changeset>();
-        int counter = 0;
 
         for (RevCommit commit : git.log().call())
         {
@@ -117,9 +118,9 @@ public class GitChangesetViewer implements ChangesetViewer
 
           counter++;
         }
-
-        changesets = new ChangesetPagingResult(counter, changesetList);
       }
+
+      changesets = new ChangesetPagingResult(counter, changesetList);
     }
     catch (NoHeadException ex)
     {
