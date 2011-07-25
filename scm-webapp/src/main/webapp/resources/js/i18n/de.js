@@ -224,10 +224,21 @@ if (Sonia.repository.ExtendedInfoPanel){
 }
 
 if (Sonia.repository.RepositoryBrowser){
+  
   Ext.override(Sonia.repository.RepositoryBrowser, {
     // german ??
-    repositoryBrowserTitleText: 'Source: {0}'
+    repositoryBrowserTitleText: 'Source: {0}',
+    emptyText: 'In diesem Verzeichnis befinden sich keine Dateien'
   });
+  
+}
+
+if (Sonia.repository.ChangesetViewerGrid){
+  
+  Ext.override(Sonia.repository.ChangesetViewerGrid, {
+    emptyText: 'Es konnten keine Commits gefunden werden'
+  });
+  
 }
 
 // sonia.config.js

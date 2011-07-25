@@ -117,12 +117,25 @@ public class GitRepositoryBrowser implements RepositoryBrowser
 
       ObjectId revId = GitUtil.getRevisionId(repo, revision);
 
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("load content for {} at {}", path, revId.name());
+      }
+
       revWalk = new RevWalk(repo);
 
       RevCommit entry = revWalk.parseCommit(revId);
       RevTree revTree = entry.getTree();
 
-      treeWalk.addTree(revTree);
+      if (revTree != null)
+      {
+        treeWalk.addTree(revTree);
+      }
+      else
+      {
+        logger.error("could not find tree for {}", revId.name());
+      }
+
       treeWalk.setFilter(PathFilter.create(path));
 
       if (treeWalk.next())
@@ -175,62 +188,33 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     BrowserResult result = null;
     File directory = handler.getDirectory(repository);
     org.eclipse.jgit.lib.Repository repo = GitUtil.open(directory);
-    RevWalk revWalk = null;
-    TreeWalk treeWalk = null;
 
     try
     {
       ObjectId revId = GitUtil.getRevisionId(repo, revision);
 
-      treeWalk = new TreeWalk(repo);
-      revWalk = new RevWalk(repo);
-      treeWalk.addTree(revWalk.parseTree(revId));
-      result = new BrowserResult();
-
-      List<FileObject> files = new ArrayList<FileObject>();
-
-      if (Util.isEmpty(path))
+      if (revId != null)
       {
-        while (treeWalk.next())
-        {
-          files.add(createFileObject(repo, revId, treeWalk));
-        }
+        result = getResult(repo, revId, path);
       }
       else
       {
-        String[] parts = path.split("/");
-        int current = 0;
-        int limit = parts.length;
-
-        while (treeWalk.next())
+        if (Util.isNotEmpty(revision))
         {
-          String name = treeWalk.getNameString();
-
-          if (current >= limit)
-          {
-            String p = treeWalk.getPathString();
-
-            if (p.split("/").length > limit)
-            {
-              files.add(createFileObject(repo, revId, treeWalk));
-            }
-          }
-          else if (name.equalsIgnoreCase(parts[current]))
-          {
-            current++;
-            treeWalk.enterSubtree();
-          }
+          logger.error("could not find revision {}", revision);
         }
-      }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("coul not find head of repository, empty?");
+        }
 
-      result.setFiles(files);
-      result.setRevision(revId.getName());
+        result = new BrowserResult(Constants.HEAD, null, null,
+                                   new ArrayList<FileObject>());
+      }
     }
     finally
     {
       GitUtil.close(repo);
-      GitUtil.release(revWalk);
-      GitUtil.release(treeWalk);
     }
 
     return result;
@@ -323,6 +307,97 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     finally
     {
       GitUtil.release(walk);
+    }
+
+    return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repo
+   * @param revId
+   * @param path
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private BrowserResult getResult(org.eclipse.jgit.lib.Repository repo,
+                                  ObjectId revId, String path)
+          throws IOException
+  {
+    BrowserResult result = null;
+    RevWalk revWalk = null;
+    TreeWalk treeWalk = null;
+
+    try
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("load repository browser for revision {}", revId.name());
+      }
+
+      treeWalk = new TreeWalk(repo);
+      revWalk = new RevWalk(repo);
+
+      RevTree tree = revWalk.parseTree(revId);
+
+      if (tree != null)
+      {
+        treeWalk.addTree(tree);
+      }
+      else
+      {
+        logger.error("could not find tree for {}", revId.name());
+      }
+
+      result = new BrowserResult();
+
+      List<FileObject> files = new ArrayList<FileObject>();
+
+      if (Util.isEmpty(path))
+      {
+        while (treeWalk.next())
+        {
+          files.add(createFileObject(repo, revId, treeWalk));
+        }
+      }
+      else
+      {
+        String[] parts = path.split("/");
+        int current = 0;
+        int limit = parts.length;
+
+        while (treeWalk.next())
+        {
+          String name = treeWalk.getNameString();
+
+          if (current >= limit)
+          {
+            String p = treeWalk.getPathString();
+
+            if (p.split("/").length > limit)
+            {
+              files.add(createFileObject(repo, revId, treeWalk));
+            }
+          }
+          else if (name.equalsIgnoreCase(parts[current]))
+          {
+            current++;
+            treeWalk.enterSubtree();
+          }
+        }
+      }
+
+      result.setFiles(files);
+      result.setRevision(revId.getName());
+    }
+    finally
+    {
+      GitUtil.release(revWalk);
+      GitUtil.release(treeWalk);
     }
 
     return result;

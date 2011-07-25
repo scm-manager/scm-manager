@@ -110,11 +110,12 @@ public class GitChangesetViewer implements ChangesetViewer
     {
       gr = GitUtil.open(directory);
 
+      int counter = 0;
+      List<Changeset> changesetList = new ArrayList<Changeset>();
+
       if (!gr.getAllRefs().isEmpty())
       {
         Git git = new Git(gr);
-        List<Changeset> changesetList = new ArrayList<Changeset>();
-        int counter = 0;
 
         treeWalk = new TreeWalk(gr);
 
@@ -129,9 +130,9 @@ public class GitChangesetViewer implements ChangesetViewer
 
           counter++;
         }
-
-        changesets = new ChangesetPagingResult(counter, changesetList);
       }
+
+      changesets = new ChangesetPagingResult(counter, changesetList);
     }
     catch (NoHeadException ex)
     {
