@@ -35,58 +35,63 @@ package sonia.scm.script;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
+
+import java.util.Map;
 
 /**
- * Returns a implementation of {@link ScmScript}.
  *
  * @author Sebastian Sdorra
  * @since 1.6
  */
-public interface ScmScriptContext
+public interface ScmScript
 {
 
   /**
-   * Returns a implementation of {@link ScmScript}.
+   * Invokes the script.
+   *
+   */
+  public void invoke();
+
+  /**
+   * Invokes the script.
    *
    *
-   * @param file - the script
+   * @param additonalParameters
+   */
+  public void invoke(Map<String, Object> additonalParameters);
+
+  /**
+   * Method description
    *
    *
-   * @return implementation of {@link ScmScript} for the given script
+   * @param function
+   * @param resultType
+   * @param additonalParameters
+   * @param <T>
+   *
+   * @return
+   *
    * @throws IOException
    * @throws ScmScriptException
    */
-  public ScmScript createScript(File file)
+  public <T> T invonke(String function, Class<T> resultType,
+                       Map<String, Object> additonalParameters)
           throws IOException, ScmScriptException;
 
   /**
-   * Returns a implementation of {@link ScmScript}.
+   * Method description
    *
    *
-   * @param path - classpath location of the script
+   * @param function
+   * @param resultType
+   * @param <T>
    *
+   * @return
    *
-   * @return implementation of {@link ScmScript} for the given script
    * @throws IOException
    * @throws ScmScriptException
    */
-  public ScmScript createScript(String path)
-          throws IOException, ScmScriptException;
-
-  /**
-   * Returns a implementation of {@link ScmScript}.
-   *
-   *
-   * @param reader - The script in form of a {@link Reader}
-   *
-   *
-   * @return implementation of {@link ScmScript} for the given script
-   * @throws IOException
-   * @throws ScmScriptException
-   */
-  public ScmScript createScript(Reader reader)
+  public <T> T invonke(String function, Class<T> resultType)
           throws IOException, ScmScriptException;
 }

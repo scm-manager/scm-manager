@@ -39,7 +39,7 @@ package sonia.scm.script;
  * @author Sebastian Sdorra
  * @since 1.6
  */
-public class ScmScriptLanguageNotFound extends ScmScriptException
+public class ScmScriptLanguageNotFoundException extends ScmScriptException
 {
 
   /** Field description */
@@ -51,7 +51,7 @@ public class ScmScriptLanguageNotFound extends ScmScriptException
    * Constructs ...
    *
    */
-  public ScmScriptLanguageNotFound() {}
+  public ScmScriptLanguageNotFoundException() {}
 
   /**
    * Constructs ...
@@ -59,7 +59,7 @@ public class ScmScriptLanguageNotFound extends ScmScriptException
    *
    * @param message
    */
-  public ScmScriptLanguageNotFound(String message)
+  public ScmScriptLanguageNotFoundException(String message)
   {
     super(message);
   }

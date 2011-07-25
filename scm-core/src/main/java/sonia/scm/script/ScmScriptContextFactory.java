@@ -34,7 +34,7 @@
 package sonia.scm.script;
 
 /**
- * {@link ScmScriptContextFactory} is used to get a instance of 
+ * {@link ScmScriptContextFactory} is used to get a instance of
  * {@link ScmScriptContext} for a specific language.
  *
  * @author Sebastian Sdorra
@@ -44,7 +44,7 @@ public interface ScmScriptContextFactory
 {
 
   /**
-   * Returns the {@link ScmScriptContext} for given language or null if no 
+   * Returns the {@link ScmScriptContext} for given language or null if no
    * {@link ScmScriptContext} for the language exists.
    *
    *

@@ -40,9 +40,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-
-import java.util.Map;
 
 /**
  *
@@ -57,13 +54,14 @@ public abstract class AbstractScmScriptContext implements ScmScriptContext
    *
    *
    * @param file
-   * @param additionalParams
+   *
+   * @return
    *
    * @throws IOException
    * @throws ScmScriptException
    */
   @Override
-  public void eval(File file, Map<String, Object> additionalParams)
+  public ScmScript createScript(File file)
           throws IOException, ScmScriptException
   {
     if (!file.exists() ||!file.isFile())
@@ -72,22 +70,7 @@ public abstract class AbstractScmScriptContext implements ScmScriptContext
           "could not find script ".concat(file.getPath()));
     }
 
-    eval(new FileReader(file), additionalParams);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   *
-   * @throws IOException
-   * @throws ScmScriptException
-   */
-  @Override
-  public void eval(File file) throws IOException, ScmScriptException
-  {
-    eval(file, null);
+    return createScript(new FileReader(file));
   }
 
   /**
@@ -95,13 +78,14 @@ public abstract class AbstractScmScriptContext implements ScmScriptContext
    *
    *
    * @param path
-   * @param additionalParams
+   *
+   * @return
    *
    * @throws IOException
    * @throws ScmScriptException
    */
   @Override
-  public void eval(String path, Map<String, Object> additionalParams)
+  public ScmScript createScript(String path)
           throws IOException, ScmScriptException
   {
     InputStream stream =
@@ -113,36 +97,6 @@ public abstract class AbstractScmScriptContext implements ScmScriptContext
           "could not find script ".concat(path));
     }
 
-    eval(new InputStreamReader(stream), additionalParams);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @throws IOException
-   * @throws ScmScriptException
-   */
-  @Override
-  public void eval(String path) throws IOException, ScmScriptException
-  {
-    eval(path, null);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param reader
-   *
-   * @throws IOException
-   * @throws ScmScriptException
-   */
-  @Override
-  public void eval(Reader reader) throws IOException, ScmScriptException
-  {
-    eval(reader, null);
+    return createScript(new InputStreamReader(stream));
   }
 }
