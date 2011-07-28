@@ -37,11 +37,15 @@ package sonia.scm.repository;
 
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.FS;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.Util;
 
@@ -50,6 +54,8 @@ import sonia.scm.util.Util;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.Map;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -57,9 +63,23 @@ import java.io.IOException;
 public class GitUtil
 {
 
-    /** Field description */
+  /** Field description */
   public static final int ID_LENGTH = 20;
-  
+
+  /** Field description */
+  public static final String REF_HEAD = "HEAD";
+
+  /** Field description */
+  public static final String REF_HEAD_PREFIX = "refs/heads/";
+
+  /** Field description */
+  public static final String REF_MASTER = "master";
+
+  /** the logger for GitUtil */
+  private static final Logger logger = LoggerFactory.getLogger(GitUtil.class);
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
@@ -136,6 +156,51 @@ public class GitUtil
     date = date * 1000;
 
     return date;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repo
+   *
+   * @return
+   */
+  public static ObjectId getRepositoryHead(org.eclipse.jgit.lib.Repository repo)
+  {
+    ObjectId id = null;
+    String head = null;
+    Map<String, Ref> refs = repo.getAllRefs();
+
+    for (Map.Entry<String, Ref> e : refs.entrySet())
+    {
+      String key = e.getKey();
+
+      if (REF_HEAD.equals(key))
+      {
+        head = REF_HEAD;
+        id = e.getValue().getObjectId();
+
+        break;
+      }
+      else if (key.startsWith(REF_HEAD_PREFIX))
+      {
+        id = e.getValue().getObjectId();
+        head = key.substring(REF_HEAD_PREFIX.length());
+
+        if (REF_MASTER.equals(head))
+        {
+          break;
+        }
+      }
+    }
+
+    if (logger.isInfoEnabled())
+    {
+      logger.info("use {}:{} as repository head", head, id);
+    }
+
+    return id;
   }
 
   /**

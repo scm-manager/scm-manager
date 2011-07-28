@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import org.slf4j.Logger;
@@ -51,6 +52,7 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.jgit.api.LogCommand;
 
 /**
  *
@@ -107,16 +109,26 @@ public class GitChangesetViewer implements ChangesetViewer
       if (!gr.getAllRefs().isEmpty())
       {
         converter = new GitChangesetConverter(gr, GitUtil.ID_LENGTH);
+
         Git git = new Git(gr);
+        ObjectId headId = GitUtil.getRepositoryHead(gr);
 
-        for (RevCommit commit : git.log().call())
+        if (headId != null)
         {
-          if ((counter >= start) && (counter < start + max))
+          for (RevCommit commit : git.log().add(headId).call())
           {
-            changesetList.add(converter.createChangeset(commit));
-          }
+            if ((counter >= start) && (counter < start + max))
+            {
+              changesetList.add(converter.createChangeset(commit));
+            }
 
-          counter++;
+            counter++;
+          }
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find repository head of repository {}",
+                      repository.getName());
         }
       }
 
