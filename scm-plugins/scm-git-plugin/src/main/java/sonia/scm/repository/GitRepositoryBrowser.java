@@ -191,7 +191,16 @@ public class GitRepositoryBrowser implements RepositoryBrowser
 
     try
     {
-      ObjectId revId = GitUtil.getRevisionId(repo, revision);
+      ObjectId revId = null;
+
+      if (Util.isEmpty(revision))
+      {
+        revId = GitUtil.getRepositoryHead(repo);
+      }
+      else
+      {
+        revId = GitUtil.getRevisionId(repo, revision);
+      }
 
       if (revId != null)
       {
