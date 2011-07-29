@@ -148,7 +148,7 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
       console.debug( 'update plugin to ' + pluginId );
     }
 
-    var loadingBox = createLoadingBox( this.updateWaitMsgText );
+    var loadingBox = this.createLoadingBox( this.updateWaitMsgText );
 
     Ext.Ajax.request({
       url: restUrl + 'plugins/update/' + pluginId + '.json',
