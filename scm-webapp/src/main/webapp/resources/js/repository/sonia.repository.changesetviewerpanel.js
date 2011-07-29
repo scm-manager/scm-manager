@@ -47,13 +47,10 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
       root: 'changesets',
       idProperty: 'id',
       totalProperty: 'total',
-      autoLoad: false,
-      autoDestroy: true
-    });
-
-    changesetStore.load({
-      params: {
-        start:0,
+      autoLoad: true,
+      autoDestroy: true,
+      baseParams: {
+        start: 0,
         limit: this.pageSize
       }
     });
