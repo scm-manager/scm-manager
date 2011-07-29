@@ -307,6 +307,12 @@ public class DefaultPluginManager implements PluginManager
 
     Set<PluginInformation> infoSet = new HashSet<PluginInformation>();
 
+    for (PluginInformation pi : getPluginCenter().getPlugins())
+    {
+      System.out.println(pi.getArtifactId() + ": " + pi.getVersion() + ":"
+                         + pi.getState());
+    }
+
     filter(infoSet, getInstalled(), filter);
     filter(infoSet, getPluginCenter().getPlugins(), filter);
 
@@ -612,11 +618,11 @@ public class DefaultPluginManager implements PluginManager
                           PluginInformation installed)
   {
     boolean result = false;
-    PluginVersion version = PluginVersion.createVersion(installed.getVersion());
+    PluginVersion version = PluginVersion.createVersion(available.getVersion());
 
     if (version != null)
     {
-      result = version.isNewer(available.getVersion());
+      result = version.isNewer(installed.getVersion());
     }
 
     return result;
