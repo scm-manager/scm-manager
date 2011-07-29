@@ -42,17 +42,14 @@ import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.OverviewPluginFilter;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginInformationComparator;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
