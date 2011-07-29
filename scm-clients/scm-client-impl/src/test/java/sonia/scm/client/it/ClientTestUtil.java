@@ -50,7 +50,7 @@ import com.sun.jersey.api.client.WebResource;
  *
  * @author Sebastian Sdorra
  */
-public class TestUtil
+public class ClientTestUtil
 {
 
   /** Field description */

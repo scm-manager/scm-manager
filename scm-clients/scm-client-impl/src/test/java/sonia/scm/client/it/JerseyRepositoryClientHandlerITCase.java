@@ -43,7 +43,7 @@ import sonia.scm.repository.RepositoryTestData;
 
 import static org.junit.Assert.*;
 
-import static sonia.scm.client.it.TestUtil.*;
+import static sonia.scm.client.it.ClientTestUtil.*;
 
 /**
  *

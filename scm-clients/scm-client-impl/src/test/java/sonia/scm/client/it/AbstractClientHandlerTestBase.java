@@ -45,7 +45,7 @@ import sonia.scm.client.ScmUnauthorizedException;
 
 import static org.junit.Assert.*;
 
-import static sonia.scm.client.it.TestUtil.*;
+import static sonia.scm.client.it.ClientTestUtil.*;
 
 /**
  *
