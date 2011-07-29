@@ -33,42 +33,56 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Comparator;
+
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.6
  */
-public enum PluginState
+public class PluginInformationComparator
+        implements Comparator<PluginInformation>
 {
-  CORE(100), AVAILABLE(60), INSTALLED(80), NEWER_VERSION_INSTALLED(20),
-  UPDATE_AVAILABLE(40);
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param compareValue
-   */
-  private PluginState(int compareValue)
-  {
-    this.compareValue = compareValue;
-  }
+  /** Field description */
+  public static final PluginInformationComparator INSTANCE =
+    new PluginInformationComparator();
 
-  //~--- get methods ----------------------------------------------------------
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @since 1.6
+   * @param plugin
+   * @param other
+   *
    * @return
    */
-  public int getCompareValue()
+  @Override
+  public int compare(PluginInformation plugin, PluginInformation other)
   {
-    return compareValue;
+    int result = 0;
+
+    result = Util.compare(plugin.getGroupId(), other.getGroupId());
+
+    if (result == 0)
+    {
+      result = Util.compare(plugin.getArtifactId(), other.getArtifactId());
+
+      if (result == 0)
+      {
+        result = plugin.getState().getCompareValue()
+                 - other.getState().getCompareValue();
+      }
+    }
+
+    return result;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  int compareValue;
 }

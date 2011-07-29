@@ -41,10 +41,18 @@ import com.google.inject.Singleton;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.OverviewPluginFilter;
 import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.PluginInformationComparator;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -196,7 +204,29 @@ public class PluginResource
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Collection<PluginInformation> getOverview()
   {
-    return pluginManager.get(OverviewPluginFilter.INSTANCE);
+    List<PluginInformation> plugins = new ArrayList<PluginInformation>(
+                                        pluginManager.get(
+                                          OverviewPluginFilter.INSTANCE));
+
+    Collections.sort(plugins, PluginInformationComparator.INSTANCE);
+
+    Iterator<PluginInformation> it = plugins.iterator();
+    String last = null;
+
+    while (it.hasNext())
+    {
+      PluginInformation pi = it.next();
+      String id = pi.getGroupId().concat(":").concat(pi.getArtifactId());
+
+      if ((last != null) && id.equals(last))
+      {
+        it.remove();
+      }
+
+      last = id;
+    }
+
+    return plugins;
   }
 
   //~--- fields ---------------------------------------------------------------

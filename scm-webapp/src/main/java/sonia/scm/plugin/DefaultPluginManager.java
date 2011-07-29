@@ -307,12 +307,12 @@ public class DefaultPluginManager implements PluginManager
 
     Set<PluginInformation> infoSet = new HashSet<PluginInformation>();
 
-    for (PluginInformation pi : getPluginCenter().getPlugins())
+    for ( PluginInformation pi : getPluginCenter().getPlugins() )
     {
-      System.out.println(pi.getArtifactId() + ": " + pi.getVersion() + ":"
-                         + pi.getState());
+      System.out.println( pi.getArtifactId() + ": " + pi.getVersion()  + ":" + pi.getState() );
+      
     }
-
+    
     filter(infoSet, getInstalled(), filter);
     filter(infoSet, getPluginCenter().getPlugins(), filter);
 
