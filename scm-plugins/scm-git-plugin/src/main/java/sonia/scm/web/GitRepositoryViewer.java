@@ -39,12 +39,14 @@ import org.apache.commons.lang.StringEscapeUtils;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 import sonia.scm.io.RegexResourceProcessor;
 import sonia.scm.io.ResourceProcessor;
+import sonia.scm.repository.GitUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -103,8 +105,9 @@ public class GitRepositoryViewer
     {
       Git git = new Git(repository);
       int c = 0;
+      ObjectId head = GitUtil.getRepositoryHead(repository);
 
-      for (RevCommit commit : git.log().call())
+      for (RevCommit commit : git.log().add(head).call())
       {
         appendCommit(sb, commit);
         c++;
