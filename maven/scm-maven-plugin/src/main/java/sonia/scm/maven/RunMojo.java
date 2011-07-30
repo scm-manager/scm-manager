@@ -36,6 +36,8 @@ package sonia.scm.maven;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.installer.ArtifactInstallationException;
@@ -57,11 +59,15 @@ import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import javax.xml.bind.JAXB;
 
@@ -77,6 +83,10 @@ public class RunMojo extends AbstractMojo
 
   /** Field description */
   private static final String FILE_CLASSPATH = "classpath.xml";
+
+  /** Field description */
+  private static final String RESOURCE_DEPENDENCY_LIST =
+    "WEB-INF/classes/config/dependencies.list";
 
   //~--- methods --------------------------------------------------------------
 
@@ -104,7 +114,9 @@ public class RunMojo extends AbstractMojo
         throw new MojoFailureException("could not find webapp artifact file");
       }
 
-      installArtifacts();
+      List<String> excludeList = createExcludeList(warFile);
+
+      installArtifacts(excludeList);
       runServletContainer(warFile);
     }
     catch (ArtifactNotFoundException ex)
@@ -115,6 +127,65 @@ public class RunMojo extends AbstractMojo
     {
       throw new MojoExecutionException("could not fetch war-file", ex);
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param warFile
+   *
+   * @return
+   *
+   * @throws MojoExecutionException
+   */
+  private List<String> createExcludeList(File warFile)
+          throws MojoExecutionException
+  {
+    List<String> excludeList = new ArrayList<String>();
+    InputStream input = null;
+
+    try
+    {
+      JarFile file = new JarFile(warFile);
+      JarEntry entry = file.getJarEntry(RESOURCE_DEPENDENCY_LIST);
+
+      if (entry == null)
+      {
+        throw new MojoExecutionException("could not find dependency list");
+      }
+
+      input = file.getInputStream(entry);
+
+      Scanner scanner = null;
+
+      try
+      {
+        scanner = new Scanner(input);
+
+        while (scanner.hasNextLine())
+        {
+          parseLine(excludeList, scanner.nextLine());
+        }
+      }
+      finally
+      {
+        if (scanner != null)
+        {
+          scanner.close();
+        }
+      }
+    }
+    catch (IOException ex)
+    {
+      throw new MojoExecutionException("could not read dependency file");
+    }
+    finally
+    {
+      IOUtils.closeQuietly(input);
+    }
+
+    return excludeList;
   }
 
   /**
@@ -165,6 +236,8 @@ public class RunMojo extends AbstractMojo
    *
    *
    *
+   *
+   * @param excludeList
    * @param pluginDirectoryPath
    * @param classpath
    * @param pluginRepository
@@ -172,31 +245,38 @@ public class RunMojo extends AbstractMojo
    *
    * @throws MojoExecutionException
    */
-  private void installArtifact(String pluginDirectoryPath,
+  private void installArtifact(List<String> excludeList,
+                               String pluginDirectoryPath,
                                List<String> classpath,
                                ArtifactRepository pluginRepository,
                                Artifact artifact)
           throws MojoExecutionException
   {
-    if (artifact.getFile() != null)
-    {
-      try
-      {
+    String id =
+      artifact.getGroupId().concat(":").concat(artifact.getArtifactId());
 
-        // See: http://mail-archives.apache.org/mod_mbox/maven-dev/200511.mbox/%3c437288F4.4080003@apache.org%3e
-        artifact.isSnapshot();
-        install(pluginDirectoryPath, classpath, artifact.getFile(), artifact,
-                pluginRepository);
-      }
-      catch (ArtifactInstallationException e)
-      {
-        throw new MojoExecutionException("Failed to copy artifact.", e);
-      }
-    }
-    else
+    if (!excludeList.contains(id))
     {
-      throw new MojoExecutionException(
-          "could not find file for ".concat(artifact.getId()));
+      if (artifact.getFile() != null)
+      {
+        try
+        {
+
+          // See: http://mail-archives.apache.org/mod_mbox/maven-dev/200511.mbox/%3c437288F4.4080003@apache.org%3e
+          artifact.isSnapshot();
+          install(pluginDirectoryPath, classpath, artifact.getFile(), artifact,
+                  pluginRepository);
+        }
+        catch (ArtifactInstallationException e)
+        {
+          throw new MojoExecutionException("Failed to copy artifact.", e);
+        }
+      }
+      else
+      {
+        throw new MojoExecutionException(
+            "could not find file for ".concat(artifact.getId()));
+      }
     }
   }
 
@@ -205,9 +285,12 @@ public class RunMojo extends AbstractMojo
    *
    *
    *
+   *
+   * @param excludeList
    * @throws MojoExecutionException
    */
-  private void installArtifacts() throws MojoExecutionException
+  private void installArtifacts(List<String> excludeList)
+          throws MojoExecutionException
   {
     File pluginDirectory = new File(scmHome, "plugins");
 
@@ -234,15 +317,15 @@ public class RunMojo extends AbstractMojo
     List<String> classpath = new ArrayList<String>();
     String pluginDirectoryPath = pluginDirectory.getAbsolutePath();
 
-    installArtifact(pluginDirectoryPath, classpath, pluginRepository,
-                    projectArtifact);
+    installArtifact(excludeList, pluginDirectoryPath, classpath,
+                    pluginRepository, projectArtifact);
 
     if (artifacts != null)
     {
       for (Artifact artifact : artifacts)
       {
-        installArtifact(pluginDirectoryPath, classpath, pluginRepository,
-                        artifact);
+        installArtifact(excludeList, pluginDirectoryPath, classpath,
+                        pluginRepository, artifact);
       }
     }
 
@@ -254,6 +337,29 @@ public class RunMojo extends AbstractMojo
     }
 
     writeClasspathFile(classpath, classpathFile);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param excludeList
+   * @param line
+   */
+  private void parseLine(List<String> excludeList, String line)
+  {
+    line = line.trim();
+
+    if (StringUtils.isNotEmpty(line))
+    {
+      String[] parts = line.split(":");
+
+      if (parts.length >= 2)
+      {
+        excludeList.add(parts[0].concat(":").concat(parts[1]));
+      }
+    }
   }
 
   /**
