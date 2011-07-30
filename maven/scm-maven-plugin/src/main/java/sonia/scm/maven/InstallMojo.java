@@ -38,10 +38,6 @@ package sonia.scm.maven;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
-import org.eclipse.jetty.webapp.WebAppContext;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -51,11 +47,11 @@ import java.util.List;
 /**
  *
  * @author Sebastian Sdorra
- * @goal run
+ * @goal install
  * @requiresDependencyResolution runtime
  * @phase package
  */
-public class RunMojo extends AbstractBaseScmMojo
+public class InstallMojo extends AbstractBaseScmMojo
 {
 
   /**
@@ -72,105 +68,5 @@ public class RunMojo extends AbstractBaseScmMojo
     List<String> excludeList = createExcludeList(warFile);
 
     installArtifacts(excludeList);
-    runServletContainer(warFile);
   }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getContextPath()
-  {
-    return contextPath;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public int getPort()
-  {
-    return port;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param contextPath
-   */
-  public void setContextPath(String contextPath)
-  {
-    this.contextPath = contextPath;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param port
-   */
-  public void setPort(int port)
-  {
-    this.port = port;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param warFile
-   *
-   * @throws MojoFailureException
-   */
-  private void runServletContainer(File warFile) throws MojoFailureException
-  {
-    getLog().info("start servletcontainer at port " + port);
-
-    try
-    {
-      System.setProperty("scm.home", scmHomeDirectory.getAbsolutePath());
-
-      Server server = new Server();
-      SelectChannelConnector connector = new SelectChannelConnector();
-
-      connector.setPort(port);
-      server.addConnector(connector);
-
-      WebAppContext warContext = new WebAppContext();
-
-      warContext.setContextPath(contextPath);
-      warContext.setExtractWAR(true);
-      warContext.setWar(warFile.getAbsolutePath());
-      server.setHandler(warContext);
-      server.start();
-      server.join();
-    }
-    catch (Exception ex)
-    {
-      throw new MojoFailureException("could not start servletcontainer", ex);
-    }
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * @parameter
-   */
-  private String contextPath = "/scm";
-
-  /**
-   * @parameter
-   */
-  private int port = 8081;
 }

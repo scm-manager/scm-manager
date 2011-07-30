@@ -45,6 +45,7 @@ import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -68,6 +69,9 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
 {
 
   /** Field description */
+  public static final String PROPERTY_SCM_HOME = "scm.home";
+
+  /** Field description */
   private static final String FILE_CLASSPATH = "classpath.xml";
 
   /** Field description */
@@ -75,6 +79,41 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     "WEB-INF/classes/config/dependencies.list";
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @throws MojoExecutionException
+   * @throws MojoFailureException
+   */
+  protected abstract void doExecute()
+          throws MojoExecutionException, MojoFailureException;
+
+  /**
+   * Method description
+   *
+   *
+   * @throws MojoExecutionException
+   * @throws MojoFailureException
+   */
+  @Override
+  public void execute() throws MojoExecutionException, MojoFailureException
+  {
+    String home = project.getProperties().getProperty(PROPERTY_SCM_HOME);
+
+    if (home != null)
+    {
+      scmHomeDirectory = new File(home);
+    }
+    else
+    {
+      scmHomeDirectory = new File(scmHome);
+    }
+
+    doExecute();
+  }
 
   /**
    * Method description
@@ -147,7 +186,7 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
   protected void installArtifacts(List<String> excludeList)
           throws MojoExecutionException
   {
-    File pluginDirectory = new File(scmHome, "plugins");
+    File pluginDirectory = new File(scmHomeDirectory, "plugins");
 
     if (!pluginDirectory.exists() &&!pluginDirectory.mkdirs())
     {
@@ -377,4 +416,9 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     c.setClasspathElements(classpath);
     JAXB.marshal(c, classpathFile);
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected File scmHomeDirectory;
 }

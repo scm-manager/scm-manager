@@ -42,6 +42,7 @@ import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.project.MavenProject;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -142,6 +143,17 @@ public abstract class AbstractScmMojo extends AbstractMojo
   public ArtifactRepository getLocalRepository()
   {
     return localRepository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public MavenProject getProject()
+  {
+    return project;
   }
 
   /**
@@ -306,6 +318,17 @@ public abstract class AbstractScmMojo extends AbstractMojo
    * Method description
    *
    *
+   * @param project
+   */
+  public void setProject(MavenProject project)
+  {
+    this.project = project;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param projectArtifact
    */
   public void setProjectArtifact(Artifact projectArtifact)
@@ -419,6 +442,14 @@ public abstract class AbstractScmMojo extends AbstractMojo
    * @parameter expression="${localRepository}"
    */
   protected ArtifactRepository localRepository;
+
+  /**
+   * The maven project in question.
+   * @parameter expression="${project}"
+   * @required
+   * @readonly
+   */
+  protected MavenProject project;
 
   /**
    * @readonly
