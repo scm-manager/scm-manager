@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : system-user.xml
+    Created on : July 30, 2011, 10:49 AM
+    Author     : sdorra
+    Description:
+        Purpose of the document follows.
+-->
+
+<users>
+  <name>scmsystem</name>
+  <displayName>SCM System</displayName>
+  <mail>scm-sytem@scm-manager.com</mail>
+  <password>*</password>
+  <admin>true</admin>
+  <type>xml</type>
+</users>

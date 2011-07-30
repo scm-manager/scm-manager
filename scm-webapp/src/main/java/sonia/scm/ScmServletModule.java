@@ -35,6 +35,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 
 import org.slf4j.Logger;
@@ -76,9 +77,13 @@ import sonia.scm.util.DebugServlet;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
+import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.AuthenticationManager;
 import sonia.scm.web.security.BasicSecurityContext;
 import sonia.scm.web.security.ChainAuthenticatonManager;
+import sonia.scm.web.security.DefaultAdministrationContext;
+import sonia.scm.web.security.LocalSecurityContextHolder;
+import sonia.scm.web.security.SecurityContextProvider;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -206,8 +211,12 @@ public class ScmServletModule extends ServletModule
 
     // bind security stuff
     bind(AuthenticationManager.class).to(ChainAuthenticatonManager.class);
-    bind(SecurityContext.class).to(BasicSecurityContext.class);
-    bind(WebSecurityContext.class).to(BasicSecurityContext.class);
+    bind(LocalSecurityContextHolder.class);
+    bind(WebSecurityContext.class).annotatedWith(Names.named("userSession")).to(
+        BasicSecurityContext.class);
+    bind(SecurityContext.class).toProvider(SecurityContextProvider.class);
+    bind(WebSecurityContext.class).toProvider(SecurityContextProvider.class);
+    bind(AdministrationContext.class).to(DefaultAdministrationContext.class);
 
     // bind security cache
     bind(CacheManager.class).to(EhCacheManager.class);
