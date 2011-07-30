@@ -39,15 +39,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.installer.ArtifactInstallationException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
-import org.apache.maven.artifact.repository.ArtifactRepositoryFactory;
 import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.artifact.resolver.ArtifactResolver;
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -63,9 +59,7 @@ import java.io.InputStream;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -78,7 +72,7 @@ import javax.xml.bind.JAXB;
  * @requiresDependencyResolution runtime
  * @phase package
  */
-public class RunMojo extends AbstractMojo
+public class RunMojo extends AbstractScmMojo
 {
 
   /** Field description */
@@ -128,6 +122,56 @@ public class RunMojo extends AbstractMojo
       throw new MojoExecutionException("could not fetch war-file", ex);
     }
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getContextPath()
+  {
+    return contextPath;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public int getPort()
+  {
+    return port;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param contextPath
+   */
+  public void setContextPath(String contextPath)
+  {
+    this.contextPath = contextPath;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param port
+   */
+  public void setPort(int port)
+  {
+    this.port = port;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -431,45 +475,6 @@ public class RunMojo extends AbstractMojo
   //~--- fields ---------------------------------------------------------------
 
   /**
-   * Used to look up Artifacts in the remote repository.
-   *
-   * @component role="org.apache.maven.artifact.factory.ArtifactFactory"
-   * @required
-   * @readonly
-   */
-  private ArtifactFactory artifactFactory;
-
-  /**
-   * @parameter
-   */
-  private String artifactId = "scm-webapp";
-
-  /**
-   * @component
-   */
-  private ArtifactRepositoryFactory artifactRepositoryFactory;
-
-  /**
-   * Used to look up Artifacts in the remote repository.
-   *
-   * @component role="org.apache.maven.artifact.resolver.ArtifactResolver"
-   * @required
-   * @readonly
-   */
-  private ArtifactResolver artifactResolver;
-
-  /**
-   * @readonly
-   * @parameter expression="${project.artifacts}"
-   */
-  private Set<Artifact> artifacts;
-
-  /**
-   * @component role="org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout"
-   */
-  private Map<String, ArtifactRepositoryLayout> availableRepositoryLayouts;
-
-  /**
    * @parameter
    */
   private String contextPath = "/scm";
@@ -477,51 +482,5 @@ public class RunMojo extends AbstractMojo
   /**
    * @parameter
    */
-  private String groupId = "sonia.scm";
-
-  /**
-   * @readonly
-   * @parameter expression="${localRepository}"
-   */
-  private ArtifactRepository localRepository;
-
-  /**
-   * @parameter
-   */
   private int port = 8081;
-
-  /**
-   * @readonly
-   * @parameter expression="${project.artifact}"
-   */
-  private Artifact projectArtifact;
-
-  /**
-   * List of Remote Repositories used by the resolver
-   *
-   * @parameter expression="${project.remoteArtifactRepositories}"
-   * @readonly
-   * @required
-   */
-  private List remoteRepositories;
-
-  /**
-   * @parameter
-   */
-  private String repositoryLayout = "default";
-
-  /**
-   * @parameter expression="${project.build.directory}/scm-home"
-   */
-  private String scmHome;
-
-  /**
-   * @parameter
-   */
-  private String type = "war";
-
-  /**
-   * @parameter expression="${project.parent.version}"
-   */
-  private String version;
 }
