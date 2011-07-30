@@ -280,7 +280,7 @@ public class RunMojo extends AbstractMojo
    */
   private void runServletContainer(File warFile) throws MojoFailureException
   {
-    getLog().error("start servletcontainer at port " + port);
+    getLog().info("start servletcontainer at port " + port);
 
     try
     {
