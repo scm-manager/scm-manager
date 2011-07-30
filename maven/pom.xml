@@ -17,6 +17,7 @@
 
   <modules>
     <module>scm-plugin-archetype</module>
+    <module>scm-maven-plugin</module>
   </modules>
   
   <dependencies>
