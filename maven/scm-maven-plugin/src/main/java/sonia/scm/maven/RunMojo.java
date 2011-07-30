@@ -195,7 +195,8 @@ public class RunMojo extends AbstractMojo
     }
     else
     {
-      getLog().error("could not find file for ".concat(artifact.getId()));
+      throw new MojoExecutionException(
+          "could not find file for ".concat(artifact.getId()));
     }
   }
 
