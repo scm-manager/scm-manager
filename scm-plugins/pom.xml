@@ -51,6 +51,19 @@
       </resource>
 
     </resources>
+    
+    <plugins>
+      
+      <plugin>
+        <groupId>sonia.scm.maven</groupId>
+        <artifactId>scm-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <configuration>
+          <version>${project.version}</version>
+        </configuration>
+      </plugin>
+      
+    </plugins>
   </build>
 
   <profiles>
