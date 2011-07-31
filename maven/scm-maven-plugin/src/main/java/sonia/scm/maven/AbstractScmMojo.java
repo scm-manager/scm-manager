@@ -472,7 +472,7 @@ public abstract class AbstractScmMojo extends AbstractMojo
   protected String repositoryLayout = "default";
 
   /**
-   * @parameter expression="${project.build.directory}/scm-home"
+   * @parameter expression="${scmHome}" default-value="${project.build.directory}/scm-home"
    */
   protected String scmHome;
 
