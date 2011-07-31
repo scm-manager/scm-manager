@@ -44,6 +44,8 @@ import org.eclipse.jetty.webapp.WebAppContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.awt.Desktop;
+
 import java.io.File;
 
 import java.util.List;
@@ -144,6 +146,12 @@ public class RunMojo extends AbstractBaseScmMojo
       Server server = new Server();
       SelectChannelConnector connector = new SelectChannelConnector();
 
+      if (startBrowser && Desktop.isDesktopSupported())
+      {
+        connector.addLifeCycleListener(new OpenBrowserListener(getLog(), port,
+                contextPath));
+      }
+
       connector.setPort(port);
       server.addConnector(connector);
 
@@ -173,4 +181,9 @@ public class RunMojo extends AbstractBaseScmMojo
    * @parameter
    */
   private int port = 8081;
+
+  /**
+   * @parameter expression="${startBrowser}" default-value="true"
+   */
+  private boolean startBrowser = true;
 }
