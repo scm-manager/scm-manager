@@ -84,41 +84,6 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
    * Method description
    *
    *
-   *
-   * @throws MojoExecutionException
-   * @throws MojoFailureException
-   */
-  protected abstract void doExecute()
-          throws MojoExecutionException, MojoFailureException;
-
-  /**
-   * Method description
-   *
-   *
-   * @throws MojoExecutionException
-   * @throws MojoFailureException
-   */
-  @Override
-  public void execute() throws MojoExecutionException, MojoFailureException
-  {
-    String home = project.getProperties().getProperty(PROPERTY_SCM_HOME);
-
-    if (home != null)
-    {
-      scmHomeDirectory = new File(home);
-    }
-    else
-    {
-      scmHomeDirectory = new File(scmHome);
-    }
-
-    doExecute();
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param warFile
    *
    * @return
@@ -186,7 +151,7 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
   protected void installArtifacts(List<String> excludeList)
           throws MojoExecutionException
   {
-    File pluginDirectory = new File(scmHomeDirectory, "plugins");
+    File pluginDirectory = new File(scmHome, "plugins");
 
     if (!pluginDirectory.exists() &&!pluginDirectory.mkdirs())
     {
@@ -416,9 +381,4 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     c.setClasspathElements(classpath);
     JAXB.marshal(c, classpathFile);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected File scmHomeDirectory;
 }

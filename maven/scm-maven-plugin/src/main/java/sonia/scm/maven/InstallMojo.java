@@ -62,7 +62,7 @@ public class InstallMojo extends AbstractBaseScmMojo
    * @throws MojoFailureException
    */
   @Override
-  public void doExecute() throws MojoExecutionException, MojoFailureException
+  public void execute() throws MojoExecutionException, MojoFailureException
   {
     File warFile = getWebApplicationArchive();
     List<String> excludeList = createExcludeList(warFile);

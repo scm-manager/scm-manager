@@ -66,7 +66,7 @@ public class RunMojo extends AbstractBaseScmMojo
    * @throws MojoFailureException
    */
   @Override
-  public void doExecute() throws MojoExecutionException, MojoFailureException
+  public void execute() throws MojoExecutionException, MojoFailureException
   {
     File warFile = getWebApplicationArchive();
     List<String> excludeList = createExcludeList(warFile);
@@ -139,7 +139,7 @@ public class RunMojo extends AbstractBaseScmMojo
 
     try
     {
-      System.setProperty("scm.home", scmHomeDirectory.getAbsolutePath());
+      System.setProperty("scm.home", scmHome);
 
       Server server = new Server();
       SelectChannelConnector connector = new SelectChannelConnector();
