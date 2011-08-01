@@ -118,9 +118,9 @@ public class RunMojo extends AbstractBaseScmMojo
    *
    * @return
    */
-  public boolean isStartBrowser()
+  public boolean isOpenBrowser()
   {
-    return startBrowser;
+    return openBrowser;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -151,22 +151,23 @@ public class RunMojo extends AbstractBaseScmMojo
    * Method description
    *
    *
-   * @param port
+   *
+   * @param openBrowser
    */
-  public void setPort(int port)
+  public void setOpenBrowser(boolean openBrowser)
   {
-    this.port = port;
+    this.openBrowser = openBrowser;
   }
 
   /**
    * Method description
    *
    *
-   * @param startBrowser
+   * @param port
    */
-  public void setStartBrowser(boolean startBrowser)
+  public void setPort(int port)
   {
-    this.startBrowser = startBrowser;
+    this.port = port;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -193,7 +194,7 @@ public class RunMojo extends AbstractBaseScmMojo
       Server server = new Server();
       SelectChannelConnector connector = new SelectChannelConnector();
 
-      if (startBrowser && Desktop.isDesktopSupported())
+      if (openBrowser && Desktop.isDesktopSupported())
       {
         connector.addLifeCycleListener(new OpenBrowserListener(getLog(), port,
                 contextPath));
@@ -235,7 +236,7 @@ public class RunMojo extends AbstractBaseScmMojo
   private int port = 8081;
 
   /**
-   * @parameter expression="${startBrowser}" default-value="true"
+   * @parameter expression="${openBrowser}" default-value="true"
    */
-  private boolean startBrowser = true;
+  private boolean openBrowser = true;
 }
