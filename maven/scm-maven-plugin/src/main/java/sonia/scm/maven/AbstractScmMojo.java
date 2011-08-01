@@ -74,17 +74,6 @@ public abstract class AbstractScmMojo extends AbstractMojo
    *
    * @return
    */
-  public String getArtifactId()
-  {
-    return artifactId;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public ArtifactRepositoryFactory getArtifactRepositoryFactory()
   {
     return artifactRepositoryFactory;
@@ -121,17 +110,6 @@ public abstract class AbstractScmMojo extends AbstractMojo
   public Map<String, ArtifactRepositoryLayout> getAvailableRepositoryLayouts()
   {
     return availableRepositoryLayouts;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getGroupId()
-  {
-    return groupId;
   }
 
   /**
@@ -206,20 +184,9 @@ public abstract class AbstractScmMojo extends AbstractMojo
    *
    * @return
    */
-  public String getType()
+  public WebApplication getWebApplication()
   {
-    return type;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getVersion()
-  {
-    return version;
+    return webApplication;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -233,17 +200,6 @@ public abstract class AbstractScmMojo extends AbstractMojo
   public void setArtifactFactory(ArtifactFactory artifactFactory)
   {
     this.artifactFactory = artifactFactory;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param artifactId
-   */
-  public void setArtifactId(String artifactId)
-  {
-    this.artifactId = artifactId;
   }
 
   /**
@@ -290,17 +246,6 @@ public abstract class AbstractScmMojo extends AbstractMojo
           ArtifactRepositoryLayout> availableRepositoryLayouts)
   {
     this.availableRepositoryLayouts = availableRepositoryLayouts;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param groupId
-   */
-  public void setGroupId(String groupId)
-  {
-    this.groupId = groupId;
   }
 
   /**
@@ -373,22 +318,11 @@ public abstract class AbstractScmMojo extends AbstractMojo
    * Method description
    *
    *
-   * @param type
+   * @param webApplication
    */
-  public void setType(String type)
+  public void setWebApplication(WebApplication webApplication)
   {
-    this.type = type;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param version
-   */
-  public void setVersion(String version)
-  {
-    this.version = version;
+    this.webApplication = webApplication;
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -401,11 +335,6 @@ public abstract class AbstractScmMojo extends AbstractMojo
    * @readonly
    */
   protected ArtifactFactory artifactFactory;
-
-  /**
-   * @parameter
-   */
-  protected String artifactId = "scm-webapp";
 
   /**
    * @component
@@ -431,11 +360,6 @@ public abstract class AbstractScmMojo extends AbstractMojo
    * @component role="org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout"
    */
   protected Map<String, ArtifactRepositoryLayout> availableRepositoryLayouts;
-
-  /**
-   * @parameter
-   */
-  protected String groupId = "sonia.scm";
 
   /**
    * @readonly
@@ -479,10 +403,5 @@ public abstract class AbstractScmMojo extends AbstractMojo
   /**
    * @parameter
    */
-  protected String type = "war";
-
-  /**
-   * @parameter expression="${project.parent.version}"
-   */
-  protected String version;
+  protected WebApplication webApplication = new WebApplication();
 }

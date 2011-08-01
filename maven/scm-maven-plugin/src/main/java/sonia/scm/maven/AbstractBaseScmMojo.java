@@ -45,7 +45,9 @@ import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
+
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -211,8 +213,29 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
   protected File getWebApplicationArchive() throws MojoExecutionException
   {
     File warFile = null;
-    Artifact artifact = artifactFactory.createArtifact(groupId, artifactId,
-                          version, "", type);
+
+    if (Util.isEmpty(webApplication.getVersion()))
+    {
+      String version = null;
+      MavenProject parent = project.getParent();
+
+      if (parent != null)
+      {
+        version = parent.getVersion();
+      }
+      else
+      {
+        version = project.getVersion();
+      }
+
+      webApplication.setVersion(version);
+    }
+
+    Artifact artifact =
+      artifactFactory.createArtifact(webApplication.getGroupId(),
+                                     webApplication.getArtifactId(),
+                                     webApplication.getVersion(), "",
+                                     webApplication.getType());
 
     try
     {
