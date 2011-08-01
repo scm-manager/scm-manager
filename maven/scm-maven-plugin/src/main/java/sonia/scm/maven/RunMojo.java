@@ -96,9 +96,31 @@ public class RunMojo extends AbstractBaseScmMojo
    *
    * @return
    */
+  public String getLoggginConfiguration()
+  {
+    return loggginConfiguration;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public int getPort()
   {
     return port;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isStartBrowser()
+  {
+    return startBrowser;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -118,11 +140,33 @@ public class RunMojo extends AbstractBaseScmMojo
    * Method description
    *
    *
+   * @param loggginConfiguration
+   */
+  public void setLoggginConfiguration(String loggginConfiguration)
+  {
+    this.loggginConfiguration = loggginConfiguration;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param port
    */
   public void setPort(int port)
   {
     this.port = port;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param startBrowser
+   */
+  public void setStartBrowser(boolean startBrowser)
+  {
+    this.startBrowser = startBrowser;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -142,6 +186,9 @@ public class RunMojo extends AbstractBaseScmMojo
     try
     {
       System.setProperty("scm.home", scmHome);
+
+      // enable debug logging
+      System.setProperty("logback.configurationFile", loggginConfiguration);
 
       Server server = new Server();
       SelectChannelConnector connector = new SelectChannelConnector();
@@ -176,6 +223,11 @@ public class RunMojo extends AbstractBaseScmMojo
    * @parameter
    */
   private String contextPath = "/scm";
+
+  /**
+   * @parameter expression="${loggingConfiguration}" default-value="/logback.default.xml"
+   */
+  private String loggginConfiguration;
 
   /**
    * @parameter
