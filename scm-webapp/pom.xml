@@ -176,6 +176,14 @@
           <artifactId>xbean-reflect</artifactId>
           <groupId>org.apache.xbean</groupId>
         </exclusion>
+        <exclusion>
+          <artifactId>sisu-inject-plexus</artifactId>
+          <groupId>org.sonatype.sisu</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>plexus-classworlds</artifactId>
+          <groupId>org.codehaus.plexus</groupId>
+        </exclusion>
       </exclusions>
     </dependency>
 
@@ -310,7 +318,7 @@
 
   <properties>
     <environment.profile>default</environment.profile>
-    <aether.version>1.11</aether.version>
+    <aether.version>1.12</aether.version>
     <wagon.version>1.0</wagon.version>
     <maven.version>3.0.3</maven.version>
     <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
