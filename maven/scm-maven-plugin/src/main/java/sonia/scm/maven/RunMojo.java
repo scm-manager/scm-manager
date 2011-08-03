@@ -55,7 +55,7 @@ import java.util.List;
  * @author Sebastian Sdorra
  * @goal run
  * @requiresDependencyResolution runtime
- * @phase package
+ * @execute phase="package"
  */
 public class RunMojo extends AbstractBaseScmMojo
 {

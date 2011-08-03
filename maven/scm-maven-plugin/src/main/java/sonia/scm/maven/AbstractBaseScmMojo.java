@@ -179,7 +179,7 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     String pluginDirectoryPath = pluginDirectory.getAbsolutePath();
 
     installArtifact(excludeList, pluginDirectoryPath, classpath,
-                    pluginRepository, projectArtifact);
+                    pluginRepository, getPluginArtifact());
 
     if (artifacts != null)
     {
@@ -201,6 +201,25 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected Artifact getPluginArtifact()
+  {
+    if (projectArtifact.getFile() == null)
+    {
+      File file = new File(project.getBuild().getDirectory(),
+                           project.getBuild().getFinalName().concat(".jar"));
+
+      projectArtifact.setFile(file);
+    }
+
+    return projectArtifact;
+  }
 
   /**
    * Method description

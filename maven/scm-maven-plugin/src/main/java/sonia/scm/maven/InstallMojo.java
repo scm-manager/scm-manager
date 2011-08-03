@@ -49,7 +49,7 @@ import java.util.List;
  * @author Sebastian Sdorra
  * @goal install
  * @requiresDependencyResolution runtime
- * @phase package
+ * @execute phase="package"
  */
 public class InstallMojo extends AbstractBaseScmMojo
 {
