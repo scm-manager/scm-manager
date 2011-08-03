@@ -43,6 +43,7 @@ import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheCheckout;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
+import org.eclipse.jgit.errors.NoRemoteRepositoryException;
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.lib.Constants;
@@ -155,9 +156,13 @@ public class GitRepositoryClient implements RepositoryClient
     try
     {
       final FetchResult r = runFetch();
-      final Ref branch = guessHEAD(r);
 
-      doCheckout(branch);
+      if (r != null)
+      {
+        final Ref branch = guessHEAD(r);
+
+        doCheckout(branch);
+      }
     }
     catch (Exception ex)
     {
@@ -383,28 +388,39 @@ public class GitRepositoryClient implements RepositoryClient
    * @return
    *
    * @throws NotSupportedException
+   * @throws RepositoryClientException
    * @throws TransportException
    * @throws URISyntaxException
    */
   private FetchResult runFetch()
-          throws NotSupportedException, URISyntaxException, TransportException
+          throws NotSupportedException, URISyntaxException, TransportException,
+                 RepositoryClientException
   {
-    Transport tn = Transport.open(repository, Constants.HEAD);
-
-    if (credentialsProvider != null)
-    {
-      tn.setCredentialsProvider(credentialsProvider);
-    }
-
-    FetchResult r;
+    FetchResult r = null;
 
     try
     {
-      r = tn.fetch(new TextProgressMonitor(), null);
+      Transport tn = Transport.open(repository, Constants.HEAD);
+
+      if (credentialsProvider != null)
+      {
+        tn.setCredentialsProvider(credentialsProvider);
+      }
+
+      try
+      {
+        r = tn.fetch(new TextProgressMonitor(), null);
+      }
+      finally
+      {
+        tn.close();
+      }
     }
-    finally
+    catch (NoRemoteRepositoryException ex)
     {
-      tn.close();
+
+      // empty repository, call init
+      init();
     }
 
     return r;
