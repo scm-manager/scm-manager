@@ -63,8 +63,7 @@ public class IntegrationTestUtil
 {
 
   /** Field description */
-  public static final String BASE_URL =
-    "http://localhost:8081/scm/api/rest/";
+  public static final String BASE_URL = "http://localhost:8081/scm/api/rest/";
 
   /** Field description */
   public static final String EXTENSION = ".xml";
@@ -99,6 +98,8 @@ public class IntegrationTestUtil
    *
    *
    * @param client
+   *
+   * @return
    */
   public static ScmState authenticateAdmin(Client client)
   {
@@ -119,7 +120,7 @@ public class IntegrationTestUtil
 
     assertNotNull(types);
     assertFalse(types.isEmpty());
-    
+
     return state;
   }
 

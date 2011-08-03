@@ -50,6 +50,7 @@ import sonia.scm.util.IOUtil;
 import static org.junit.Assert.*;
 
 import static sonia.scm.it.IntegrationTestUtil.*;
+import static sonia.scm.it.RepositoryITUtil.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -142,7 +143,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
     Repository repository =
       RepositoryTestData.createHeartOfGold(repositoryType);
 
-    createRepository(repository);
+    createRepository(client, repository);
   }
 
   /**
@@ -155,8 +156,8 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
     Repository repository =
       RepositoryTestData.createHappyVerticalPeopleTransporter(repositoryType);
 
-    repository = createRepository(repository);
-    deleteRepository(repository.getId());
+    repository = createRepository(client, repository);
+    deleteRepository(client, repository.getId());
   }
 
   /**
@@ -169,7 +170,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   {
     Repository repository = RepositoryTestData.create42Puzzle(repositoryType);
 
-    repository = createRepository(repository);
+    repository = createRepository(client, repository);
 
     // repository = createRepository(repository);
   }
@@ -184,7 +185,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
     Repository repository =
       RepositoryTestData.createHappyVerticalPeopleTransporter(repositoryType);
 
-    repository = createRepository(repository);
+    repository = createRepository(client, repository);
     repository.setPermissions(Arrays.asList(new Permission("dent",
             PermissionType.READ), new Permission("slarti",
               PermissionType.WRITE)));
@@ -197,10 +198,10 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
     assertTrue(response.getStatus() == 204);
     response.close();
 
-    Repository other = getRepositoryById(repository.getId());
+    Repository other = getRepositoryById(client, repository.getId());
 
     assertRepositoriesEquals(repository, other);
-    deleteRepository(repository.getId());
+    deleteRepository(client, repository.getId());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -215,7 +216,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
     Repository repository =
       RepositoryTestData.createHappyVerticalPeopleTransporter(repositoryType);
 
-    repository = createRepository(repository);
+    repository = createRepository(client, repository);
 
     WebResource wr = createResource(client, "repositories");
     ClientResponse response = wr.get(ClientResponse.class);
@@ -244,129 +245,6 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
     }
 
     assertNotNull(hvpt);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param other
-   */
-  private void assertRepositoriesEquals(Repository repository, Repository other)
-  {
-    assertEquals(repository.getName(), other.getName());
-    assertEquals(repository.getDescription(), other.getDescription());
-    assertEquals(repository.getContact(), other.getContact());
-    assertEquals(repository.getPermissions(), other.getPermissions());
-    assertEquals(repository.getType(), other.getType());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  private Repository createRepository(Repository repository)
-  {
-    WebResource wr = createResource(client, "repositories");
-    ClientResponse response = wr.post(ClientResponse.class, repository);
-
-    assertNotNull(response);
-    assertTrue(response.getStatus() == 201);
-
-    String url = response.getHeaders().get("Location").get(0);
-
-    response.close();
-
-    Repository other = getRepository(url);
-
-    assertNotNull(other);
-    assertNotNull(other.getType());
-    assertRepositoriesEquals(repository, other);
-    assertNotNull(other.getId());
-    assertNotNull(other.getCreationDate());
-
-    return other;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  private void deleteRepository(String id)
-  {
-    WebResource wr = createResource(client, "repositories/".concat(id));
-    ClientResponse response = wr.delete(ClientResponse.class);
-
-    assertNotNull(response);
-    assertTrue(response.getStatus() == 204);
-    response.close();
-    wr = createResource(client, "repositories/".concat(id));
-    response = wr.get(ClientResponse.class);
-    assertNotNull(response);
-    assertTrue(response.getStatus() == 404);
-    response.close();
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   *
-   * @param url
-   *
-   * @return
-   */
-  private Repository getRepository(String url)
-  {
-    WebResource wr = client.resource(url);
-    ClientResponse response = wr.get(ClientResponse.class);
-
-    assertNotNull(response);
-
-    Repository repository = response.getEntity(Repository.class);
-
-    response.close();
-    assertNotNull(repository);
-
-    return repository;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  private Repository getRepositoryById(String id)
-  {
-    WebResource wr = createResource(client, "repositories/".concat(id));
-    ClientResponse response = wr.get(ClientResponse.class);
-
-    assertNotNull(response);
-
-    Repository repository = response.getEntity(Repository.class);
-
-    response.close();
-    assertNotNull(repository);
-
-    return repository;
   }
 
   //~--- fields ---------------------------------------------------------------
