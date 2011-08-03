@@ -63,6 +63,12 @@ public class IntegrationTestUtil
 {
 
   /** Field description */
+  public static final String ADMIN_PASSWORD = "scmadmin";
+
+  /** Field description */
+  public static final String ADMIN_USERNAME = "scmadmin";
+
+  /** Field description */
   public static final String BASE_URL = "http://localhost:8081/scm/api/rest/";
 
   /** Field description */
@@ -103,7 +109,7 @@ public class IntegrationTestUtil
    */
   public static ScmState authenticateAdmin(Client client)
   {
-    ClientResponse cr = authenticate(client, "scmadmin", "scmadmin");
+    ClientResponse cr = authenticate(client, ADMIN_USERNAME, ADMIN_PASSWORD);
     ScmState state = cr.getEntity(ScmState.class);
 
     cr.close();
@@ -166,7 +172,20 @@ public class IntegrationTestUtil
    */
   public static WebResource createResource(Client client, String url)
   {
-    return client.resource(BASE_URL.concat(url).concat(EXTENSION));
+    return client.resource(createResourceUrl(url));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   *
+   * @return
+   */
+  public static String createResourceUrl(String url)
+  {
+    return BASE_URL.concat(url).concat(EXTENSION);
   }
 
   /**
