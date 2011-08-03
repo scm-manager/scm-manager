@@ -33,6 +33,10 @@
 
 package sonia.scm.xml;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.Util;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.HashMap;
@@ -61,12 +65,22 @@ public class XmlMapStringAdapter
   @Override
   public XmlMapStringElement[] marshal(Map<String, String> map) throws Exception
   {
-    XmlMapStringElement[] elements = new XmlMapStringElement[map.size()];
-    int i = 0;
+    XmlMapStringElement[] elements = null;
 
-    for (Map.Entry<String, String> e : map.entrySet())
+    if (Util.isNotEmpty(map))
     {
-      elements[i++] = new XmlMapStringElement(e.getKey(), e.getValue());
+      elements = new XmlMapStringElement[map.size()];
+
+      int i = 0;
+
+      for (Map.Entry<String, String> e : map.entrySet())
+      {
+        elements[i++] = new XmlMapStringElement(e.getKey(), e.getValue());
+      }
+    }
+    else
+    {
+      elements = new XmlMapStringElement[0];
     }
 
     return elements;
@@ -88,9 +102,12 @@ public class XmlMapStringAdapter
   {
     Map<String, String> map = new HashMap<String, String>();
 
-    for (XmlMapStringElement e : elements)
+    if (elements != null)
     {
-      map.put(e.getKey(), e.getValue());
+      for (XmlMapStringElement e : elements)
+      {
+        map.put(e.getKey(), e.getValue());
+      }
     }
 
     return map;
