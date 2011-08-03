@@ -67,7 +67,7 @@ public class GitReceivePackFactory
   @Inject
   public GitReceivePackFactory(RepositoryManager repositoryManager)
   {
-    hook = new GitPostReceiveHook(repositoryManager);
+    hook = new GitReceiveHook(repositoryManager);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -90,6 +90,7 @@ public class GitReceivePackFactory
   {
     ReceivePack rpack = defaultFactory.create(request, repository);
 
+    rpack.setPreReceiveHook(hook);
     rpack.setPostReceiveHook(hook);
 
     return rpack;
@@ -102,5 +103,5 @@ public class GitReceivePackFactory
     new DefaultReceivePackFactory();
 
   /** Field description */
-  private GitPostReceiveHook hook;
+  private GitReceiveHook hook;
 }

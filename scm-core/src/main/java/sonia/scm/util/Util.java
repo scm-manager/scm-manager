@@ -334,10 +334,10 @@ public class Util
    *
    * @return
    */
-  public static String nonNull(String value)
+  public static String nonNull(Object value)
   {
     return (value != null)
-           ? value
+           ? value.toString()
            : "";
   }
 

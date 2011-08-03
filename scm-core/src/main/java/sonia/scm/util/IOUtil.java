@@ -90,6 +90,14 @@ public class IOUtil
   };
 
   /** Field description */
+  private static final String[] EXTENSION_SCRIPT_UNIX = { ".sh", ".csh",
+          ".bsh" };
+
+  /** Field description */
+  private static final String[] EXTENSION_SCRIPT_WINDOWS = { ".bat", ".cmd",
+          ".exe" };
+
+  /** Field description */
   private static final Logger logger =
     LoggerFactory.getLogger(IOUtil.class.getName());
 
@@ -582,6 +590,38 @@ public class IOUtil
     return cmds;
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param basePath
+   *
+   * @since 1.6
+   * @return
+   */
+  public static File getScript(String basePath)
+  {
+    return getScript(new File(basePath), basePath);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param baseFile
+   *
+   * @since 1.6
+   * @return
+   */
+  public static File getScript(File baseFile)
+  {
+    return getScript(baseFile, baseFile.getAbsolutePath());
+  }
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
@@ -635,6 +675,53 @@ public class IOUtil
     }
 
     return extensions;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param baseFile
+   * @param basePath
+   *
+   * @since 1.6
+   * @return
+   */
+  private static File getScript(File baseFile, String basePath)
+  {
+    File script = null;
+
+    if (baseFile.exists())
+    {
+      script = baseFile;
+    }
+    else
+    {
+      String[] extensions = null;
+
+      if (SystemUtil.isWindows())
+      {
+        extensions = EXTENSION_SCRIPT_WINDOWS;
+      }
+      else
+      {
+        extensions = EXTENSION_SCRIPT_UNIX;
+      }
+
+      for (String ext : extensions)
+      {
+        File file = new File(basePath.concat(ext));
+
+        if (file.exists())
+        {
+          script = file;
+
+          break;
+        }
+      }
+    }
+
+    return script;
   }
 
   /**
