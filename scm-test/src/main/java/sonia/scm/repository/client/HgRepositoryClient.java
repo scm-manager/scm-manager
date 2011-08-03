@@ -110,6 +110,11 @@ public class HgRepositoryClient implements RepositoryClient
   @Override
   public void checkout() throws RepositoryClientException
   {
+    if (!isInitialized())
+    {
+      init();
+    }
+
     SimpleCommand cmd = new SimpleCommand(hg, "-R",
                           localRepository.getAbsolutePath(), "pull", remoteURL);
 
@@ -192,6 +197,19 @@ public class HgRepositoryClient implements RepositoryClient
     {
       throw new RepositoryClientException(ex);
     }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private boolean isInitialized()
+  {
+    return new File(localRepository, ".hg").exists();
   }
 
   //~--- fields ---------------------------------------------------------------
