@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,20 +46,28 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.util.AssertUtil;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
+import java.util.Collections;
+import java.util.List;
+
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.6
  */
-public class ChangesetViewerUtil extends CacheClearHook
+@Singleton
+public class RepositoryBrowserUtil extends CacheClearHook
 {
 
   /** Field description */
-  public static final String CACHE_NAME = "sonia.cache.repository.changesets";
+  public static final String CACHE_NAME = "sonia.cache.repository.browser";
 
-  /** the logger for ChangesetViewerUtil */
+  /** the logger for RepositoryBrowserUtil */
   private static final Logger logger =
-    LoggerFactory.getLogger(ChangesetViewerUtil.class);
+    LoggerFactory.getLogger(RepositoryBrowserUtil.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -70,12 +79,12 @@ public class ChangesetViewerUtil extends CacheClearHook
    * @param cacheManager
    */
   @Inject
-  public ChangesetViewerUtil(RepositoryManager repositoryManager,
-                             CacheManager cacheManager)
+  public RepositoryBrowserUtil(RepositoryManager repositoryManager,
+                               CacheManager cacheManager)
   {
     this.repositoryManager = repositoryManager;
-    cache = cacheManager.getCache(ChangesetViewerCacheKey.class,
-                                  ChangesetPagingResult.class, CACHE_NAME);
+    this.cache = cacheManager.getCache(RepositoryBrowserCacheKey.class,
+                                       BrowserResult.class, CACHE_NAME);
     init(repositoryManager, cache);
   }
 
@@ -86,17 +95,18 @@ public class ChangesetViewerUtil extends CacheClearHook
    *
    *
    * @param repositoryId
-   * @param start
-   * @param max
+   * @param revision
+   * @param path
    *
    * @return
    *
+   * @throws IOException
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    */
-  public ChangesetPagingResult getChangesets(String repositoryId, int start,
-          int max)
-          throws RepositoryException, NotSupportedFeatuerException
+  public BrowserResult getResult(String repositoryId, String revision,
+                                 String path)
+          throws RepositoryException, NotSupportedFeatuerException, IOException
   {
     AssertUtil.assertIsNotEmpty(repositoryId);
 
@@ -108,7 +118,7 @@ public class ChangesetViewerUtil extends CacheClearHook
           "could not find repository with id ".concat(repositoryId));
     }
 
-    return getChangesets(repository, start, max);
+    return getResult(repository, revision, path);
   }
 
   /**
@@ -116,44 +126,65 @@ public class ChangesetViewerUtil extends CacheClearHook
    *
    *
    * @param repository
-   * @param start
-   * @param max
+   * @param revision
+   * @param path
    *
    * @return
    *
+   * @throws IOException
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    */
-  public ChangesetPagingResult getChangesets(Repository repository, int start,
-          int max)
-          throws RepositoryException, NotSupportedFeatuerException
+  public BrowserResult getResult(Repository repository, String revision,
+                                 String path)
+          throws RepositoryException, NotSupportedFeatuerException, IOException
   {
     AssertUtil.assertIsNotNull(repository);
 
-    ChangesetViewer viewer = repositoryManager.getChangesetViewer(repository);
+    RepositoryBrowser browser =
+      repositoryManager.getRepositoryBrowser(repository);
 
-    if (viewer == null)
+    if (browser == null)
     {
       throw new NotSupportedFeatuerException(
-          "ChangesetViewer is not supported for type ".concat(
+          "RepositoryBrowser is not supported for type ".concat(
             repository.getType()));
     }
 
-    ChangesetViewerCacheKey key =
-      new ChangesetViewerCacheKey(repository.getId(), start, max);
-    ChangesetPagingResult result = cache.get(key);
+    RepositoryBrowserCacheKey key =
+      new RepositoryBrowserCacheKey(repository.getId(), revision, path);
+    BrowserResult result = cache.get(key);
 
     if (result == null)
     {
-      result = viewer.getChangesets(start, max);
+      result = browser.getResult(revision, path);
+      sort(result);
       cache.put(key, result);
     }
     else if (logger.isDebugEnabled())
     {
-      logger.debug("fetch changesetviewer results from cache");
+      logger.debug("fetch repositorybrowser results from cache");
     }
 
     return result;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param result
+   */
+  private void sort(BrowserResult result)
+  {
+    List<FileObject> files = result.getFiles();
+
+    if (files != null)
+    {
+      Collections.sort(files, FileObjectNameComparator.instance);
+    }
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -162,25 +193,26 @@ public class ChangesetViewerUtil extends CacheClearHook
    * Class description
    *
    *
-   * @version        Enter version here..., 11/07/24
+   * @version        Enter version here..., 11/08/03
    * @author         Enter your name here...
    */
-  private class ChangesetViewerCacheKey
+  private static class RepositoryBrowserCacheKey
   {
 
     /**
      * Constructs ...
      *
      *
-     * @param repository
-     * @param start
-     * @param max
+     * @param repositoryId
+     * @param revision
+     * @param path
      */
-    public ChangesetViewerCacheKey(String repository, int start, int max)
+    public RepositoryBrowserCacheKey(String repositoryId, String revision,
+                                     String path)
     {
-      this.repository = repository;
-      this.start = start;
-      this.max = max;
+      this.repositoryId = repositoryId;
+      this.revision = revision;
+      this.path = path;
     }
 
     //~--- methods ------------------------------------------------------------
@@ -206,21 +238,25 @@ public class ChangesetViewerUtil extends CacheClearHook
         return false;
       }
 
-      final ChangesetViewerCacheKey other = (ChangesetViewerCacheKey) obj;
+      final RepositoryBrowserCacheKey other = (RepositoryBrowserCacheKey) obj;
 
-      if ((this.repository == null)
-          ? (other.repository != null)
-          : !this.repository.equals(other.repository))
+      if ((this.repositoryId == null)
+          ? (other.repositoryId != null)
+          : !this.repositoryId.equals(other.repositoryId))
       {
         return false;
       }
 
-      if (this.start != other.start)
+      if ((this.revision == null)
+          ? (other.revision != null)
+          : !this.revision.equals(other.revision))
       {
         return false;
       }
 
-      if (this.max != other.max)
+      if ((this.path == null)
+          ? (other.path != null)
+          : !this.path.equals(other.path))
       {
         return false;
       }
@@ -239,11 +275,15 @@ public class ChangesetViewerUtil extends CacheClearHook
     {
       int hash = 3;
 
-      hash = 67 * hash + ((this.repository != null)
-                          ? this.repository.hashCode()
+      hash = 53 * hash + ((this.repositoryId != null)
+                          ? this.repositoryId.hashCode()
                           : 0);
-      hash = 67 * hash + this.start;
-      hash = 67 * hash + this.max;
+      hash = 53 * hash + ((this.revision != null)
+                          ? this.revision.hashCode()
+                          : 0);
+      hash = 53 * hash + ((this.path != null)
+                          ? this.path.hashCode()
+                          : 0);
 
       return hash;
     }
@@ -251,20 +291,20 @@ public class ChangesetViewerUtil extends CacheClearHook
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private int max;
+    private String path;
 
     /** Field description */
-    private String repository;
+    private String repositoryId;
 
     /** Field description */
-    private int start;
+    private String revision;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Cache<ChangesetViewerCacheKey, ChangesetPagingResult> cache;
+  private Cache<RepositoryBrowserCacheKey, BrowserResult> cache;
 
   /** Field description */
   private RepositoryManager repositoryManager;

@@ -49,14 +49,13 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.repository.ChangesetViewerUtil;
-import sonia.scm.repository.FileObject;
-import sonia.scm.repository.FileObjectNameComparator;
 import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryBrowser;
+import sonia.scm.repository.RepositoryBrowserUtil;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
@@ -73,8 +72,6 @@ import java.io.OutputStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.DefaultValue;
@@ -117,13 +114,15 @@ public class RepositoryResource
    * @param securityContextProvider
    * @param changesetPreProcessorSet
    * @param changesetViewerUtil
+   * @param repositoryBrowserUtil
    */
   @Inject
   public RepositoryResource(
           ScmConfiguration configuration, RepositoryManager repositoryManager,
           Provider<WebSecurityContext> securityContextProvider,
           Set<ChangesetPreProcessor> changesetPreProcessorSet,
-          ChangesetViewerUtil changesetViewerUtil)
+          ChangesetViewerUtil changesetViewerUtil,
+          RepositoryBrowserUtil repositoryBrowserUtil)
   {
     super(repositoryManager);
     this.configuration = configuration;
@@ -131,6 +130,7 @@ public class RepositoryResource
     this.securityContextProvider = securityContextProvider;
     this.changesetPreProcessorSet = changesetPreProcessorSet;
     this.changesetViewerUtil = changesetViewerUtil;
+    this.repositoryBrowserUtil = repositoryBrowserUtil;
     setDisableCache(false);
   }
 
@@ -145,6 +145,9 @@ public class RepositoryResource
    * @param path
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @GET
   @Path("{id}/browse")
@@ -152,34 +155,14 @@ public class RepositoryResource
   public Response getBrowserResult(@PathParam("id") String id,
                                    @QueryParam("revision") String revision,
                                    @QueryParam("path") String path)
+          throws RepositoryException, IOException
   {
     Response response = null;
-    Repository repository = repositoryManager.get(id);
 
-    if (repository != null)
+    try
     {
-      BrowserResult result = null;
-
-      try
-      {
-        RepositoryBrowser browser =
-          repositoryManager.getRepositoryBrowser(repository);
-
-        if (browser != null)
-        {
-          result = browser.getResult(revision, path);
-          sort(result);
-        }
-        else if (logger.isWarnEnabled())
-        {
-          logger.warn("could not find repository browser for respository {}",
-                      repository.getId());
-        }
-      }
-      catch (Exception ex)
-      {
-        logger.error("could not retrive browserresult", ex);
-      }
+      BrowserResult result = repositoryBrowserUtil.getResult(id, revision,
+                               path);
 
       if (result != null)
       {
@@ -190,9 +173,13 @@ public class RepositoryResource
         response = Response.status(Response.Status.NOT_FOUND).build();
       }
     }
-    else
+    catch (RepositoryNotFoundException ex)
     {
       response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+    catch (NotSupportedFeatuerException ex)
+    {
+      response = Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     return response;
@@ -440,22 +427,6 @@ public class RepositoryResource
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param result
-   */
-  private void sort(BrowserResult result)
-  {
-    List<FileObject> files = result.getFiles();
-
-    if (files != null)
-    {
-      Collections.sort(files, FileObjectNameComparator.instance);
-    }
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -569,6 +540,9 @@ public class RepositoryResource
 
   /** Field description */
   private ScmConfiguration configuration;
+
+  /** Field description */
+  private RepositoryBrowserUtil repositoryBrowserUtil;
 
   /** Field description */
   private RepositoryManager repositoryManager;

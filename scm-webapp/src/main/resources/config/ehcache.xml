@@ -142,5 +142,14 @@
         timeToLiveSeconds="5400"
         diskPersistent="false"
   />
-
+  
+  <cache
+        name="sonia.cache.repository.browser"
+        maxElementsInMemory="10000"
+        eternal="false"
+        overflowToDisk="false"
+        timeToLiveSeconds="5400"
+        diskPersistent="false"
+  />
+  
 </ehcache>
