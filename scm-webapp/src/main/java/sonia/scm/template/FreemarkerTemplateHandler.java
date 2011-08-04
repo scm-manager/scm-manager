@@ -92,32 +92,10 @@ public class FreemarkerTemplateHandler implements TemplateHandler
   @Inject
   public FreemarkerTemplateHandler(ServletContext servletContext)
   {
-    try
-    {
-      configuration = new Configuration();
-
-      String path = servletContext.getRealPath(DIRECTORY_TEMPLATES);
-
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("configure template handler for directory '{}'",
-                     Util.nonNull(path));
-      }
-
-      if (path == null)
-      {
-        throw new ConfigurationException(
-            "could not resolve template handler path");
-      }
-
-      configuration.setDirectoryForTemplateLoading(new File(path));
-      configuration.setEncoding(Locale.ENGLISH, ENCODING);
-    }
-    catch (IOException ex)
-    {
-      throw new ConfigurationException(
-          "could not create FreemarkerTemplateHandler", ex);
-    }
+    configuration = new Configuration();
+    configuration.setServletContextForTemplateLoading(servletContext,
+            DIRECTORY_TEMPLATES);
+    configuration.setEncoding(Locale.ENGLISH, ENCODING);
   }
 
   //~--- methods --------------------------------------------------------------
