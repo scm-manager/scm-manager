@@ -136,7 +136,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.4.3</version>
+        <version>2.5</version>
         <configuration>
           <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
@@ -226,13 +226,13 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
-        <version>2.2</version>
+        <version>2.3</version>
       </plugin>
 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>2.3.1</version>
+        <version>2.3.2</version>
       </plugin>
 
       <plugin>
@@ -289,13 +289,13 @@
                 <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-jxr-plugin</artifactId>
-                  <version>2.2</version>
+                  <version>2.3</version>
                 </plugin>
 
                 <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>findbugs-maven-plugin</artifactId>
-                  <version>2.3.1</version>
+                  <version>2.3.2</version>
                 </plugin>
 
                 <plugin>
