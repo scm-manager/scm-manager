@@ -78,6 +78,9 @@ public class FixDescriptorMojo extends AbstractMojo
     if (descriptor.exists() && descriptor.isFile())
     {
       Document document = createDocument(descriptor);
+
+      fixDescriptor(document);
+      writeDocument(document);
     }
     else
     {
@@ -175,8 +178,6 @@ public class FixDescriptorMojo extends AbstractMojo
       document =
         DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
           descriptor);
-      fixDescriptor(document);
-      writeDocument(document);
     }
     catch (Exception ex)
     {
