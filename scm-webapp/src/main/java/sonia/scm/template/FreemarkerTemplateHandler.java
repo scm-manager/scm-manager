@@ -42,9 +42,11 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -57,7 +59,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
-import org.slf4j.Logger;
 
 /**
  *
@@ -96,6 +97,18 @@ public class FreemarkerTemplateHandler implements TemplateHandler
       configuration = new Configuration();
 
       String path = servletContext.getRealPath(DIRECTORY_TEMPLATES);
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("configure template handler for directory '{}'",
+                     Util.nonNull(path));
+      }
+
+      if (path == null)
+      {
+        throw new ConfigurationException(
+            "could not resolve template handler path");
+      }
 
       configuration.setDirectoryForTemplateLoading(new File(path));
       configuration.setEncoding(Locale.ENGLISH, ENCODING);
