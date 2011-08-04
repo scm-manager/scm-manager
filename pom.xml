@@ -52,6 +52,11 @@
       <archive>http://groups.google.com/group/scmmanager</archive>
     </mailingList>
   </mailingLists>
+  
+  <ciManagement>
+    <system>Jenkins</system>
+    <url>https://scm-manager.ci.cloudbees.com/</url>
+  </ciManagement>
 
   <prerequisites>
     <maven>2.1</maven>
