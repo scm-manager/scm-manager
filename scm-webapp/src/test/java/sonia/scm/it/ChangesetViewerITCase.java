@@ -170,32 +170,29 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
 
     ChangesetPagingResult cpr = getChangesets(repository);
 
-    /*
-     * assertTrue((cpr.getTotal() > 0) && (cpr.getTotal() <= 2));    // hg/git == 1 & svn == 2
-     *
-     * List<Changeset> changesets = cpr.getChangesets();
-     *
-     * assertNotNull(changesets);
-     * assertTrue((changesets.size() > 0) && (changesets.size() <= 2));
-     *
-     * Changeset c = changesets.get(changesets.size() - 1);
-     *
-     * assertNotNull(c);
-     * assertEquals("added-a.txt", c.getDescription());
-     * assertTrue(c.isValid());
-     *
-     * Modifications m = c.getModifications();
-     *
-     * assertNotNull(m);
-     *
-     * List<String> added = m.getAdded();
-     *
-     * assertNotNull(added);
-     * assertFalse(added.isEmpty());
-     * assertTrue(added.size() == 1);
-     * assertEquals("a.txt", added.get(0));
-     *
-     */
+    assertTrue((cpr.getTotal() > 0) && (cpr.getTotal() <= 2));    // hg/git == 1 & svn == 2
+
+    List<Changeset> changesets = cpr.getChangesets();
+
+    assertNotNull(changesets);
+    assertTrue((changesets.size() > 0) && (changesets.size() <= 2));
+
+    Changeset c = changesets.get(0);
+
+    assertNotNull(c);
+    assertEquals("added-a.txt", c.getDescription());
+    assertTrue(c.isValid());
+
+    Modifications m = c.getModifications();
+
+    assertNotNull(m);
+
+    List<String> added = m.getAdded();
+
+    assertNotNull(added);
+    assertFalse(added.isEmpty());
+    assertTrue(added.size() == 1);
+    assertTrue("a.txt".equals(added.get(0)) || "/a.txt".equals(added.get(0)));
   }
 
   /**
