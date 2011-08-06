@@ -94,6 +94,29 @@ public class ValidationUtilTest
    *
    */
   @Test
+  public void testIsNameValid()
+  {
+
+    // true
+    assertTrue(ValidationUtil.isNameValid("test"));
+    assertTrue(ValidationUtil.isNameValid("test.git"));
+    assertTrue(ValidationUtil.isNameValid("Test123.git"));
+    assertTrue(ValidationUtil.isNameValid("Test123-git"));
+    assertTrue(ValidationUtil.isNameValid("Test_repository-123.git"));
+
+    // false
+    assertFalse(ValidationUtil.isNameValid("test 123"));
+    assertFalse(ValidationUtil.isNameValid("test@123"));
+    assertFalse(ValidationUtil.isNameValid("test/123"));
+    assertFalse(ValidationUtil.isNameValid("test%123"));
+    assertFalse(ValidationUtil.isNameValid("test:123"));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
   public void testIsNotContaining()
   {
 
@@ -105,5 +128,28 @@ public class ValidationUtilTest
     assertFalse(ValidationUtil.isNotContaining("test", "e", "s"));
     assertFalse(ValidationUtil.isNotContaining("test", "es"));
     assertFalse(ValidationUtil.isNotContaining("test", "t"));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testIsUsernameValid()
+  {
+
+    // true
+    assertTrue(ValidationUtil.isUsernameValid("test"));
+    assertTrue(ValidationUtil.isUsernameValid("test.git"));
+    assertTrue(ValidationUtil.isUsernameValid("Test123.git"));
+    assertTrue(ValidationUtil.isUsernameValid("Test123-git"));
+    assertTrue(ValidationUtil.isUsernameValid("Test_user-123.git"));
+    assertTrue(ValidationUtil.isUsernameValid("test@scm-manager.de"));
+
+    // false
+    assertFalse(ValidationUtil.isUsernameValid("test 123"));
+    assertFalse(ValidationUtil.isUsernameValid("test/123"));
+    assertFalse(ValidationUtil.isUsernameValid("test%123"));
+    assertFalse(ValidationUtil.isUsernameValid("test:123"));
   }
 }

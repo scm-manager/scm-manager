@@ -48,6 +48,12 @@ public class ValidationUtil
   private static final String REGEX_MAIL =
     "^[A-z0-9][\\w.-]*@[A-z0-9][\\w\\-\\.]+\\.[A-z0-9]{2,6}$";
 
+  /** Field description */
+  private static final String REGEX_NAME = "^[A-z0-9\\.\\-_]+$";
+
+  /** Field description */
+  private static final String REGEX_USERNAME = "^[A-z0-9\\.\\-_@]+$";
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -84,6 +90,21 @@ public class ValidationUtil
    * Method description
    *
    *
+   * @param name
+   *
+   * @return
+   */
+  public static boolean isNameValid(String name)
+  {
+    AssertUtil.assertIsNotNull(name);
+
+    return name.matches(REGEX_NAME);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param value
    * @param notAllowedStrings
    *
@@ -110,6 +131,21 @@ public class ValidationUtil
     }
 
     return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param username
+   *
+   * @return
+   */
+  public static boolean isUsernameValid(String username)
+  {
+    AssertUtil.assertIsNotNull(username);
+
+    return username.matches(REGEX_USERNAME);
   }
 
   /**
