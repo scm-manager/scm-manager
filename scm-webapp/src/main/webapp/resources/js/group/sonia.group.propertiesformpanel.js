@@ -40,7 +40,8 @@ Sonia.group.PropertiesFormPanel = Ext.extend(Sonia.group.FormPanel, {
         name: 'name',
         allowBlank: false,
         readOnly: this.item != null,
-        helpText: this.nameHelpText
+        helpText: this.nameHelpText,
+        vtype: 'name'
       },{
         fieldLabel: this.descriptionText,
         name: 'description',

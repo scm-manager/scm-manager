@@ -1,4 +1,4 @@
-/**
+/* *
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
  * 
@@ -29,27 +29,35 @@
  * 
  */
 
-// register namespace
-Ext.ns('Sonia.user');
 
+Ext.apply(Ext.form.VTypes, {
 
-// functions
+  // passord validator
 
-Sonia.user.setEditPanel = function(panel){
-  var editPanel = Ext.getCmp('userEditPanel');
-  editPanel.removeAll();
-  editPanel.add(panel);
-  editPanel.doLayout();
-}
-
-/**
- * Panels
- */
-Sonia.user.DefaultPanel = {
-  region: 'south',
-  title: 'User Form',
-  padding: 5,
-  xtype: 'panel',
-  html: 'Add or select an User'
-};
-
+  password: function(val, field) {
+    if (field.initialPassField) {
+      var pwd = Ext.getCmp(field.initialPassField);
+      return (val == pwd.getValue());
+    }
+    return true;
+  },
+  
+  passwordText: 'The passwords entered do not match!',
+  
+  // name validator
+  
+  name: function(val){
+    return /^[A-z0-9\.\-_]+$/.test(val);
+  },
+  
+  nameText: 'The name is invalid.',
+  
+  // username validator
+  
+  username: function(val){
+    return val.match(/^[A-z0-9\.\-_@]+$/);
+  },
+  
+  usernameText: 'The username is invalid.'
+  
+});

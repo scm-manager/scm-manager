@@ -38,8 +38,9 @@ if (Ext.form.VTypes){
     pluginurlText: 'Dieses Feld sollte eine URL enthalten. Format: \n\
       "http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false"',
 
-    // sonia.user.js
-    passwordText: 'Die Passwörter stimmen nicht überein!'
+    passwordText: 'Die Passwörter stimmen nicht überein!',
+    nameTest: 'Der Name ist invalid.',
+    usernameText: 'Der Benutzername ist invalid.'
   });
 
 }

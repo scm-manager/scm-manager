@@ -43,7 +43,8 @@ Sonia.repository.PropertiesFormPanel = Ext.extend(Sonia.repository.FormPanel, {
         name: 'name',
         readOnly: update,
         allowBlank: false,
-        helpText: this.nameHelpText
+        helpText: this.nameHelpText,
+        vtype: 'name'
       },{
        fieldLabel: this.typeText,
        name: 'type',
