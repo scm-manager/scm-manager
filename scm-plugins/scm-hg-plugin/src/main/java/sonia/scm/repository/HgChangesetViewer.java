@@ -149,6 +149,15 @@ public class HgChangesetViewer implements ChangesetViewer
 
       if (changesetList != null)
       {
+        if (total == -1)
+        {
+          total = 0;
+        }
+        else
+        {
+          total++;
+        }
+
         changesets = new ChangesetPagingResult(total, changesetList);
       }
     }
