@@ -66,9 +66,7 @@ public class ValidationUtil
    */
   public static boolean isFilenameValid(String value)
   {
-    AssertUtil.assertIsNotNull(value);
-
-    return isNotContaining(value, "/", "\\", ":");
+    return Util.isNotEmpty(value) && isNotContaining(value, "/", "\\", ":");
   }
 
   /**
@@ -81,9 +79,7 @@ public class ValidationUtil
    */
   public static boolean isMailAddressValid(String value)
   {
-    AssertUtil.assertIsNotNull(value);
-
-    return value.matches(REGEX_MAIL);
+    return Util.isNotEmpty(value) && value.matches(REGEX_MAIL);
   }
 
   /**
@@ -96,9 +92,7 @@ public class ValidationUtil
    */
   public static boolean isNameValid(String name)
   {
-    AssertUtil.assertIsNotNull(name);
-
-    return name.matches(REGEX_NAME);
+    return Util.isNotEmpty(name) && name.matches(REGEX_NAME);
   }
 
   /**
@@ -113,11 +107,9 @@ public class ValidationUtil
   public static boolean isNotContaining(String value,
           String... notAllowedStrings)
   {
-    AssertUtil.assertIsNotNull(value);
+    boolean result = Util.isNotEmpty(value);
 
-    boolean result = true;
-
-    if (notAllowedStrings != null)
+    if (result && (notAllowedStrings != null))
     {
       for (String nas : notAllowedStrings)
       {
@@ -143,9 +135,7 @@ public class ValidationUtil
    */
   public static boolean isUsernameValid(String username)
   {
-    AssertUtil.assertIsNotNull(username);
-
-    return username.matches(REGEX_USERNAME);
+    return Util.isNotEmpty(username) && username.matches(REGEX_USERNAME);
   }
 
   /**
