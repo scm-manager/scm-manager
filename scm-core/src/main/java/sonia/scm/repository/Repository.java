@@ -352,6 +352,7 @@ public class Repository implements ModelObject
    *
    * @return
    */
+  @Override
   public String getId()
   {
     return id;
@@ -434,7 +435,7 @@ public class Repository implements ModelObject
   @Override
   public boolean isValid()
   {
-    return Util.isNotEmpty(name) && Util.isNotEmpty(type)
+    return ValidationUtil.isNameValid(name) && Util.isNotEmpty(type)
            && ((Util.isEmpty(contact))
                || ValidationUtil.isMailAddressValid(contact));
   }

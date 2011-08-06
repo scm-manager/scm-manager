@@ -418,7 +418,7 @@ public class User implements Principal, ModelObject
   @Override
   public boolean isValid()
   {
-    return Util.isNotEmpty(name) && Util.isNotEmpty(displayName)
+    return ValidationUtil.isUsernameValid(name) && Util.isNotEmpty(displayName)
            && Util.isNotEmpty(type)
            && ((Util.isEmpty(mail)) || ValidationUtil.isMailAddressValid(mail));
   }

@@ -37,6 +37,7 @@ package sonia.scm.group;
 
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
+import sonia.scm.util.ValidationUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -450,7 +451,7 @@ public class Group implements ModelObject, Iterable<String>
   @Override
   public boolean isValid()
   {
-    return Util.isNotEmpty(name) && Util.isNotEmpty(type);
+    return ValidationUtil.isNameValid(name) && Util.isNotEmpty(type);
   }
 
   //~--- set methods ----------------------------------------------------------
