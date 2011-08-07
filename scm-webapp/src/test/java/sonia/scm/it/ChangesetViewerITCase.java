@@ -37,6 +37,7 @@ package sonia.scm.it;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -119,6 +120,26 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
    *
    *
    * @throws IOException
+   * @throws InterruptedException
+   * @throws RepositoryClientException
+   */
+  @Test
+  @Ignore
+  public void cachingTest()
+          throws RepositoryClientException, IOException, InterruptedException
+  {
+    RepositoryClient rc = createRepositoryClient();
+
+    rc.checkout();
+    addTestFile(rc, "a", 1, false);
+    addTestFile(rc, "b", 2, true);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
    */
   @After
   public void cleanup() throws IOException
@@ -148,46 +169,77 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
    *
    *
    * @throws IOException
+   * @throws InterruptedException
    * @throws RepositoryClientException
    */
   @Test
-  public void testChagensetViewer()
-          throws RepositoryClientException, IOException
+  public void simpleTest()
+          throws RepositoryClientException, IOException, InterruptedException
   {
-    String checkoutUrl = repository.getUrl();
-    RepositoryClient rc = RepositoryClientFactory.createClient(repositoryType,
-                            localDirectory, checkoutUrl,
-                            IntegrationTestUtil.ADMIN_USERNAME,
-                            IntegrationTestUtil.ADMIN_PASSWORD);
+    RepositoryClient rc = createRepositoryClient();
 
     rc.checkout();
+    addTestFile(rc, "a", 1, false);
+  }
 
-    File file = new File(localDirectory, "a.txt");
+  /**
+   * Method description
+   *
+   *
+   * @param rc
+   * @param name
+   * @param count
+   * @param sleep
+   *
+   * @throws IOException
+   * @throws InterruptedException
+   * @throws RepositoryClientException
+   */
+  private void addTestFile(RepositoryClient rc, String name, int count,
+                           boolean sleep)
+          throws IOException, RepositoryClientException, InterruptedException
+  {
+    File file = new File(localDirectory, name.concat(".txt"));
 
     writeRandomContent(file);
-    rc.add("a.txt");
-    rc.commit("added-a.txt");
+    rc.add(name.concat(".txt"));
+    rc.commit("added-".concat(name).concat(".txt"));
+
+    if (sleep)
+    {
+
+      // cache clear is async
+      Thread.sleep(500l);
+    }
 
     ChangesetPagingResult cpr = getChangesets(repository);
 
     if ("svn".equals(repositoryType))
     {
-      assertTrue(cpr.getTotal() == 2);
+      assertTrue(cpr.getTotal() == (count + 1));
     }
     else
     {
-      assertTrue(cpr.getTotal() == 1);
+      assertTrue(cpr.getTotal() == count);
     }
 
     List<Changeset> changesets = cpr.getChangesets();
 
     assertNotNull(changesets);
-    assertTrue((changesets.size() > 0) && (changesets.size() <= 2));
+
+    if ("svn".equals(repositoryType))
+    {
+      assertTrue(changesets.size() == (count + 1));
+    }
+    else
+    {
+      assertTrue(changesets.size() == count);
+    }
 
     Changeset c = changesets.get(0);
 
     assertNotNull(c);
-    assertEquals("added-a.txt", c.getDescription());
+    assertEquals("added-".concat(name).concat(".txt"), c.getDescription());
     assertTrue(c.isValid());
 
     Modifications m = c.getModifications();
@@ -199,7 +251,24 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
     assertNotNull(added);
     assertFalse(added.isEmpty());
     assertTrue(added.size() == 1);
-    assertTrue("a.txt".equals(added.get(0)) || "/a.txt".equals(added.get(0)));
+    assertTrue(name.concat(".txt").equals(added.get(0))
+               || "/".concat(name).concat(".txt").equals(added.get(0)));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws RepositoryClientException
+   */
+  private RepositoryClient createRepositoryClient()
+          throws RepositoryClientException
+  {
+    return RepositoryClientFactory.createClient(repositoryType, localDirectory,
+            repository.getUrl(), IntegrationTestUtil.ADMIN_USERNAME,
+            IntegrationTestUtil.ADMIN_PASSWORD);
   }
 
   /**
