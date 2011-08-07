@@ -109,7 +109,7 @@ public class HgHookManager
           StringBuilder url = new StringBuilder(request.getScheme());
 
           url.append("://localhost:").append(request.getServerPort());
-          url.append(request.getContextPath()).append("/api/rest/hook/hg/");
+          url.append(request.getContextPath()).append("/hook/hg/");
 
           if (hgHookScript == null)
           {

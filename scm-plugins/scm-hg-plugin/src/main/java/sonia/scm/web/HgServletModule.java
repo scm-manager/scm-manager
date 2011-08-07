@@ -52,6 +52,9 @@ public class HgServletModule extends ServletModule
   /** Field description */
   public static final String MAPPING_HG = "/hg/*";
 
+  /** Field description */
+  public static final String MAPPING_HOOK = "/hook/hg/*";
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -62,6 +65,7 @@ public class HgServletModule extends ServletModule
   protected void configureServlets()
   {
     bind(HgHookManager.class);
+    serve(MAPPING_HOOK).with(HgHookCallbackServlet.class);
 
     // register hg cgi servlet
     filter(MAPPING_HG).through(BasicAuthenticationFilter.class);

@@ -31,11 +31,12 @@
 
 
 
-package sonia.scm.api.rest.resources;
+package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,26 +46,41 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgRepositoryHookEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Response;
+import java.io.IOException;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Path("hook/hg/{repository}/{type}")
-public class HgHookCallback
+@Singleton
+public class HgHookCallbackServlet extends HttpServlet
 {
 
-  /** the logger for HgHookCallback */
+  /** Field description */
+  private static final String PARAM_CHALLENGE = "challenge";
+
+  /** Field description */
+  private static final String PARAM_NODE = "node";
+
+  /** Field description */
+  private static final Pattern REGEX_URL =
+    Pattern.compile("^/hook/hg/([^/]+)/([^/]+)$");
+
+  /** the logger for HgHookCallbackServlet */
   private static final Logger logger =
-    LoggerFactory.getLogger(HgHookCallback.class);
+    LoggerFactory.getLogger(HgHookCallbackServlet.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -77,8 +93,9 @@ public class HgHookCallback
    * @param hookManager
    */
   @Inject
-  public HgHookCallback(RepositoryManager repositoryManager,
-                        HgRepositoryHandler handler, HgHookManager hookManager)
+  public HgHookCallbackServlet(RepositoryManager repositoryManager,
+                               HgRepositoryHandler handler,
+                               HgHookManager hookManager)
   {
     this.repositoryManager = repositoryManager;
     this.handler = handler;
@@ -88,25 +105,21 @@ public class HgHookCallback
   //~--- methods --------------------------------------------------------------
 
   /**
-   * TODO: protect
+   * Method description
    *
    *
-   *
+   * @param response
    * @param repositoryName
    * @param type
    * @param challenge
    * @param node
    *
-   * @return
+   * @throws IOException
    */
-  @POST
-  public Response hookCallback(@PathParam("repository") String repositoryName,
-                               @PathParam("type") String type,
-                               @FormParam("challenge") String challenge,
-                               @FormParam("node") String node)
+  public void hookCallback(HttpServletResponse response, String repositoryName,
+                           String type, String challenge, String node)
+          throws IOException
   {
-    Response response = null;
-
     if (hookManager.isAcceptAble(challenge))
     {
       try
@@ -115,7 +128,6 @@ public class HgHookCallback
                                         repositoryName,
                                         new HgRepositoryHookEvent(handler,
                                           repositoryName, node));
-        response = Response.ok().build();
       }
       catch (RepositoryNotFoundException ex)
       {
@@ -129,7 +141,7 @@ public class HgHookCallback
           }
         }
 
-        response = Response.status(Response.Status.NOT_FOUND).build();
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
       }
     }
     else
@@ -139,10 +151,41 @@ public class HgHookCallback
         logger.warn("hg hook challenge is not accept able");
       }
 
-      response = Response.status(Response.Status.BAD_REQUEST).build();
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
+  }
 
-    return response;
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  @Override
+  protected void doPost(HttpServletRequest request,
+                        HttpServletResponse response)
+          throws ServletException, IOException
+  {
+    String strippedURI = HttpUtil.getStrippedURI(request);
+    Matcher m = REGEX_URL.matcher(strippedURI);
+
+    if (m.matches())
+    {
+      String repositoryId = m.group(1);
+      String type = m.group(2);
+      String challenge = request.getParameter(PARAM_CHALLENGE);
+      String node = request.getParameter(PARAM_NODE);
+
+      hookCallback(response, repositoryId, type, challenge, node);
+    }
+    else
+    {
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
