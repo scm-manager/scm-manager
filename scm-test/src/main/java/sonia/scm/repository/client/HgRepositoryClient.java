@@ -48,7 +48,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class HgRepositoryClient implements RepositoryClient
+public class HgRepositoryClient extends AbstractRepositoryClient
 {
 
   /**
@@ -63,7 +63,7 @@ public class HgRepositoryClient implements RepositoryClient
   HgRepositoryClient(File localRepository, String remoteRepository,
                      String username, String password)
   {
-    this.localRepository = localRepository;
+    super(localRepository, remoteRepository);
 
     String scheme = remoteRepository.substring(0,
                       remoteRepository.indexOf("://") + 3);
@@ -216,9 +216,6 @@ public class HgRepositoryClient implements RepositoryClient
 
   /** Field description */
   private String hg;
-
-  /** Field description */
-  private File localRepository;
 
   /** Field description */
   private String remoteURL;

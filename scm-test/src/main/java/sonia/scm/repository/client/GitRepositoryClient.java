@@ -80,7 +80,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class GitRepositoryClient implements RepositoryClient
+public class GitRepositoryClient extends AbstractRepositoryClient
 {
 
   /**
@@ -100,6 +100,7 @@ public class GitRepositoryClient implements RepositoryClient
                       String username, String password)
           throws URISyntaxException, IOException
   {
+    super(localRepository, remoteRepository);
     uri = new URIish(remoteRepository);
 
     if ((username != null) && (password != null))

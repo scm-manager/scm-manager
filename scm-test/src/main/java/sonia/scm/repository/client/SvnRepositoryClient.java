@@ -57,7 +57,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class SvnRepositoryClient implements RepositoryClient
+public class SvnRepositoryClient extends AbstractRepositoryClient
 {
 
   /**
@@ -75,7 +75,7 @@ public class SvnRepositoryClient implements RepositoryClient
                       String username, String password)
           throws SVNException
   {
-    this.localRepository = localRepository;
+    super(localRepository, remoteRepository);
 
     DefaultSVNOptions options = new DefaultSVNOptions();
 
@@ -88,7 +88,7 @@ public class SvnRepositoryClient implements RepositoryClient
       client = SVNClientManager.newInstance(options);
     }
 
-    removeRepositoryURL = SVNURL.parseURIDecoded(remoteRepository);
+    remoteRepositoryURL = SVNURL.parseURIDecoded(remoteRepository);
     DAVRepositoryFactory.setup();
   }
 
@@ -128,7 +128,7 @@ public class SvnRepositoryClient implements RepositoryClient
     {
       SVNUpdateClient updateClient = client.getUpdateClient();
 
-      updateClient.doCheckout(removeRepositoryURL, localRepository,
+      updateClient.doCheckout(remoteRepositoryURL, localRepository,
                               SVNRevision.UNDEFINED, SVNRevision.HEAD,
                               SVNDepth.FILES, false);
     }
@@ -159,7 +159,7 @@ public class SvnRepositoryClient implements RepositoryClient
       {
         File file = new File(localRepository, name);
 
-        cc.doImport(file, removeRepositoryURL.appendPath(name, true), message,
+        cc.doImport(file, remoteRepositoryURL.appendPath(name, true), message,
                     null, false, true, SVNDepth.FILES);
       }
     }
@@ -191,8 +191,5 @@ public class SvnRepositoryClient implements RepositoryClient
   private List<String> files = new ArrayList<String>();
 
   /** Field description */
-  private File localRepository;
-
-  /** Field description */
-  private SVNURL removeRepositoryURL;
+  private SVNURL remoteRepositoryURL;
 }

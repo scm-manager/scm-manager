@@ -41,46 +41,21 @@ import java.io.File;
  *
  * @author Sebastian Sdorra
  */
-public interface RepositoryClient
+public abstract class AbstractRepositoryClient implements RepositoryClient
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param file
-   * @param others
-   *
-   * @throws RepositoryClientException
+   * @param localRepository
+   * @param remoteRepository
    */
-  public void add(String file, String... others)
-          throws RepositoryClientException;
-
-  /**
-   * Method description
-   *
-   *
-   * @throws RepositoryClientException
-   */
-  public void checkout() throws RepositoryClientException;
-
-  /**
-   * Method description
-   *
-   *
-   * @param message
-   *
-   * @throws RepositoryClientException
-   */
-  public void commit(String message) throws RepositoryClientException;
-
-  /**
-   * Method description
-   *
-   *
-   * @throws RepositoryClientException
-   */
-  public void init() throws RepositoryClientException;
+  public AbstractRepositoryClient(File localRepository, String remoteRepository)
+  {
+    this.localRepository = localRepository;
+    this.remoteRepository = remoteRepository;
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -90,7 +65,10 @@ public interface RepositoryClient
    *
    * @return
    */
-  public File getLocalRepository();
+  public File getLocalRepository()
+  {
+    return localRepository;
+  }
 
   /**
    * Method description
@@ -98,5 +76,17 @@ public interface RepositoryClient
    *
    * @return
    */
-  public String getRemoteRepository();
+  public String getRemoteRepository()
+  {
+    return remoteRepository;
+  }
+
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected File localRepository;
+
+  /** Field description */
+  protected String remoteRepository;
 }
