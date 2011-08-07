@@ -116,7 +116,8 @@ public class HgRepositoryClient extends AbstractRepositoryClient
     }
 
     SimpleCommand cmd = new SimpleCommand(hg, "-R",
-                          localRepository.getAbsolutePath(), "pull", remoteURL);
+                          localRepository.getAbsolutePath(), "pull", "-u",
+                          remoteURL);
 
     execute(cmd);
   }
