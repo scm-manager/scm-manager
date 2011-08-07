@@ -40,12 +40,9 @@ import org.slf4j.LoggerFactory;
 
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLogEntry;
-import org.tmatesoft.svn.core.SVNLogEntryPath;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
-
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -54,7 +51,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -122,6 +118,7 @@ public class SvnChangesetViewer implements ChangesetViewer
         changesetList.add(SvnUtil.createChangeset(entry));
       }
 
+      total++;
       changesets = new ChangesetPagingResult((int) total, changesetList);
     }
     catch (SVNException ex)
