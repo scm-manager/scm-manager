@@ -170,7 +170,14 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
 
     ChangesetPagingResult cpr = getChangesets(repository);
 
-    assertTrue((cpr.getTotal() > 0) && (cpr.getTotal() <= 2));    // hg/git == 1 & svn == 2
+    if ("svn".equals(repositoryType))
+    {
+      assertTrue(cpr.getTotal() == 2);
+    }
+    else
+    {
+      assertTrue(cpr.getTotal() == 1);
+    }
 
     List<Changeset> changesets = cpr.getChangesets();
 
