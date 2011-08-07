@@ -37,7 +37,10 @@ package sonia.scm.it;
 
 import sonia.scm.ScmState;
 import sonia.scm.Type;
+import sonia.scm.repository.client.RepositoryClient;
+import sonia.scm.repository.client.RepositoryClientException;
 import sonia.scm.user.User;
+import sonia.scm.util.IOUtil;
 
 import static org.junit.Assert.*;
 
@@ -51,7 +54,12 @@ import com.sun.jersey.client.apache.config.ApacheHttpClientConfig;
 import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import java.util.Collection;
+import java.util.UUID;
 
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -165,6 +173,36 @@ public class IntegrationTestUtil
    * Method description
    *
    *
+   *
+   * @param client
+   *
+   * @throws IOException
+   * @throws RepositoryClientException
+   */
+  public static void createRandomFile(RepositoryClient client)
+          throws IOException, RepositoryClientException
+  {
+    String uuid = UUID.randomUUID().toString();
+    String name = "file-" + uuid + ".uuid";
+    FileOutputStream out = null;
+
+    try
+    {
+      out = new FileOutputStream(new File(client.getLocalRepository(), name));
+      out.write(uuid.getBytes());
+    }
+    finally
+    {
+      IOUtil.close(out);
+    }
+
+    client.add(name);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param client
    * @param url
    *
@@ -186,6 +224,22 @@ public class IntegrationTestUtil
   public static String createResourceUrl(String url)
   {
     return BASE_URL.concat(url).concat(EXTENSION);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static File createTempDirectory()
+  {
+    File directory = new File(System.getProperty("java.io.tmpdir"),
+                              UUID.randomUUID().toString());
+
+    IOUtil.mkdirs(directory);
+
+    return directory;
   }
 
   /**
