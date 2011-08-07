@@ -34,6 +34,9 @@ Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
 
   permissionStore: null,
   
+  addIcon: 'resources/images/add.gif',
+  removeIcon: 'resources/images/delete.gif',
+  
   titleText: 'Permissions',
 
   initComponent: function(){
@@ -158,6 +161,7 @@ Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
         tbar: [{
           text: this.addText,
           scope: this,
+          icon: this.addIcon,
           handler : function(){
             var Permission = this.permissionStore.recordType;
             var p = new Permission({
@@ -171,6 +175,7 @@ Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
         },{
           text: this.removeText,
           scope: this,
+          icon: this.removeIcon,
           handler: function(){
             var grid = Ext.getCmp('permissionGrid');
             var selected = grid.getSelectionModel().getSelected();

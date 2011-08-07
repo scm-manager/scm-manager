@@ -33,6 +33,8 @@
 Sonia.group.MemberFormPanel = Ext.extend(Sonia.group.FormPanel, {
     
   memberStore: null,
+  addIcon: 'resources/images/add.gif',
+  removeIcon: 'resources/images/delete.gif',
   
   initComponent: function(){  
     this.memberStore = new Ext.data.SimpleStore({
@@ -106,6 +108,7 @@ Sonia.group.MemberFormPanel = Ext.extend(Sonia.group.FormPanel, {
         tbar: [{
           text: this.addText,
           scope: this,
+          icon: this.addIcon,
           handler : function(){
             var Member = this.memberStore.recordType;
             var grid = Ext.getCmp('memberGrid');
@@ -116,6 +119,7 @@ Sonia.group.MemberFormPanel = Ext.extend(Sonia.group.FormPanel, {
         },{
           text: this.removeText,
           scope: this,
+          icon: this.removeIcon,
           handler: function(){
             var grid = Ext.getCmp('memberGrid');
             var selected = grid.getSelectionModel().getSelected();
