@@ -419,7 +419,7 @@ public class GitRepositoryClient extends AbstractRepositoryClient
     }
     catch (NoRemoteRepositoryException ex)
     {
-
+      
       // empty repository, call init
       init();
     }

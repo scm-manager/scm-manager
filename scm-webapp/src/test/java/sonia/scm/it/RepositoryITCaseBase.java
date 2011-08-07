@@ -83,15 +83,17 @@ public class RepositoryITCaseBase
    * @param owner
    * @param write
    * @param read
+   * @param noperm
    * @param password
    */
   public RepositoryITCaseBase(Repository repository, User owner, User write,
-                              User read, String password)
+                              User read, User noperm, String password)
   {
     this.repository = repository;
     this.ownerUser = owner;
     this.writeUser = write;
     this.readUser = read;
+    this.nopermUser = noperm;
     this.password = password;
   }
 
@@ -135,8 +137,6 @@ public class RepositoryITCaseBase
   {
     File directory = createTempDirectory();
 
-    System.out.println( repository.getUrl() );
-    
     try
     {
       RepositoryClient rc =
@@ -164,6 +164,7 @@ public class RepositoryITCaseBase
     deleteUser(client, UserTestData.createTrillian());
     deleteUser(client, UserTestData.createZaphod());
     deleteUser(client, UserTestData.createMarvin());
+    deleteUser(client, UserTestData.createPerfect());
 
     Collection<Repository> repositories =
       createResource(client, "repositories").get(
@@ -213,6 +214,10 @@ public class RepositoryITCaseBase
 
     createUser(read);
 
+    User noperm = UserTestData.createPerfect();
+
+    createUser(noperm);
+
     for (Type t : state.getRepositoryTypes())
     {
       if (t.getName().equals("git"))
@@ -220,23 +225,30 @@ public class RepositoryITCaseBase
         Repository gitRepository = createTestRepository("git", owner, write,
                                      read);
 
-        params.add(new Object[] { gitRepository, owner, write, read,
-                                  "secret" });
+        params.add(new Object[]
+        {
+          gitRepository, owner, write, read, noperm, "secret"
+        });
       }
       else if (t.getName().equals("svn"))
       {
         Repository svnRepository = createTestRepository("svn", owner, write,
                                      read);
 
-        params.add(new Object[] { svnRepository, owner, write, read,
-                                  "secret" });
+        params.add(new Object[]
+        {
+          svnRepository, owner, write, read, noperm, "secret"
+        });
       }
       else if (t.getName().equals("hg"))
       {
         Repository hgRepository = createTestRepository("hg", owner, write,
                                     read);
 
-        params.add(new Object[] { hgRepository, owner, write, read, "secret" });
+        params.add(new Object[]
+        {
+          hgRepository, owner, write, read, noperm, "secret"
+        });
       }
     }
 
@@ -305,7 +317,28 @@ public class RepositoryITCaseBase
     createResource(client, "users/".concat(user.getName())).delete();
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param directory
+   *
+   * @return
+   *
+   * @throws RepositoryClientException
+   */
+  protected RepositoryClient createRepositoryClient(User user, File directory)
+          throws RepositoryClientException
+  {
+    return RepositoryClientFactory.createClient(repository.getType(),
+            directory, repository.getUrl(), user.getName(), password);
+  }
+
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected User nopermUser;
 
   /** Field description */
   protected User ownerUser;
