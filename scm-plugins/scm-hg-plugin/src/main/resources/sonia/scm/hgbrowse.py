@@ -29,7 +29,7 @@
 #
 #
 
-import os
+import sys, os
 
 pythonPath = os.environ['SCM_PYTHON_PATH']
 
