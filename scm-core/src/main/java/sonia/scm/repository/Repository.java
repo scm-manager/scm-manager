@@ -49,6 +49,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import sonia.scm.BasicPropertiesAware;
 
 /**
  *
@@ -56,7 +57,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "repositories")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Repository implements ModelObject
+public class Repository extends BasicPropertiesAware implements ModelObject
 {
 
   /** Field description */

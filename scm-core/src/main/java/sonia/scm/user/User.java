@@ -35,6 +35,7 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
@@ -53,7 +54,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class User implements Principal, ModelObject
+public class User extends BasicPropertiesAware implements Principal, ModelObject
 {
 
   /** Field description */

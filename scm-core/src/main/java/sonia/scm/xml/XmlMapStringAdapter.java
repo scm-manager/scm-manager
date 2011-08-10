@@ -39,6 +39,7 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,7 +50,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
  * @author Sebastian Sdorra
  */
 public class XmlMapStringAdapter
-        extends XmlAdapter<XmlMapStringElement[], Map<String, String>>
+        extends XmlAdapter<ArrayList<XmlMapStringElement>, Map<String, String>>
 {
 
   /**
@@ -63,24 +64,20 @@ public class XmlMapStringAdapter
    * @throws Exception
    */
   @Override
-  public XmlMapStringElement[] marshal(Map<String, String> map) throws Exception
+  public ArrayList<XmlMapStringElement> marshal(Map<String, String> map)
+          throws Exception
   {
-    XmlMapStringElement[] elements = null;
+    ArrayList<XmlMapStringElement> elements =
+      new ArrayList<XmlMapStringElement>();
 
     if (Util.isNotEmpty(map))
     {
-      elements = new XmlMapStringElement[map.size()];
-
       int i = 0;
 
       for (Map.Entry<String, String> e : map.entrySet())
       {
-        elements[i++] = new XmlMapStringElement(e.getKey(), e.getValue());
+        elements.add(new XmlMapStringElement(e.getKey(), e.getValue()));
       }
-    }
-    else
-    {
-      elements = new XmlMapStringElement[0];
     }
 
     return elements;
@@ -97,7 +94,7 @@ public class XmlMapStringAdapter
    * @throws Exception
    */
   @Override
-  public Map<String, String> unmarshal(XmlMapStringElement[] elements)
+  public Map<String, String> unmarshal(ArrayList<XmlMapStringElement> elements)
           throws Exception
   {
     Map<String, String> map = new HashMap<String, String>();

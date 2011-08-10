@@ -35,6 +35,7 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
@@ -57,7 +58,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Group implements ModelObject, Iterable<String>
+public class Group extends BasicPropertiesAware
+        implements ModelObject, Iterable<String>
 {
 
   /** Field description */

@@ -44,7 +44,6 @@ import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
@@ -177,7 +176,6 @@ public class BasicPropertiesAware implements PropertiesAware
   //~--- fields ---------------------------------------------------------------
 
   /** map to hold the properties */
-  @XmlElement(name = "properties")
   @XmlJavaTypeAdapter(XmlMapStringAdapter.class)
   protected Map<String, String> properties = new HashMap<String, String>();
 }
