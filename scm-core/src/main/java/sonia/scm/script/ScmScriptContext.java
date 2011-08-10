@@ -43,7 +43,7 @@ import java.io.Reader;
  * Returns a implementation of {@link ScmScript}.
  *
  * @author Sebastian Sdorra
- * @since 1.6
+ * @since 1.7
  */
 public interface ScmScriptContext
 {

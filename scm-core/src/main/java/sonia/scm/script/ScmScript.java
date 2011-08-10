@@ -42,7 +42,7 @@ import java.util.Map;
 /**
  *
  * @author Sebastian Sdorra
- * @since 1.6
+ * @since 1.7
  */
 public interface ScmScript
 {

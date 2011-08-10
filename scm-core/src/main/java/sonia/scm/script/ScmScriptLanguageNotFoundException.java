@@ -37,7 +37,7 @@ package sonia.scm.script;
  * This exception is thrown when a script language cannot be found.
  *
  * @author Sebastian Sdorra
- * @since 1.6
+ * @since 1.7
  */
 public class ScmScriptLanguageNotFoundException extends ScmScriptException
 {
