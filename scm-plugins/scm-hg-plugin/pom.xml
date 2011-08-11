@@ -6,12 +6,12 @@
   <parent>
     <groupId>sonia.scm.plugins</groupId>
     <artifactId>scm-plugins</artifactId>
-    <version>1.6</version>
+    <version>1.7-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-hg-plugin</artifactId>
-  <version>1.6</version>
+  <version>1.7-SNAPSHOT</version>
   <name>scm-hg-plugin</name>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>Plugin for the version control system Mercurial</description>
@@ -30,7 +30,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>1.6</version>
+      <version>1.7-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
