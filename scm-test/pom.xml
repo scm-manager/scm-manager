@@ -6,12 +6,12 @@
   <parent>
     <artifactId>scm</artifactId>
     <groupId>sonia.scm</groupId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.6</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-test</artifactId>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6</version>
   <name>scm-test</name>
   
   <dependencies>
@@ -25,7 +25,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>1.6-SNAPSHOT</version>
+      <version>1.6</version>
     </dependency>
     
     <dependency>
