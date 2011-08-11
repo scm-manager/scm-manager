@@ -1,4 +1,4 @@
-/**
+/* *
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
  * 
@@ -29,64 +29,15 @@
  * 
  */
 
-// enable debug mode, if console is available
-var debug = typeof console != 'undefined';
 
-var state = null;
-var admin = false;
-
-// sonia.scm.api.rest.resources.UserResource.DUMMY_PASSWORT
-var dummyPassword = '__dummypassword__';
-
-/**
- * functions called after login
- *
- * @deprecated use main.addListener('login', fn, scope)
- */
-var loginCallbacks = [];
-
-/**
- * functions called after logout
- *
- * @deprecated use main.addListener('logout', fn, scope)
- */
-var logoutCallbacks = [];
-
-/**
- * functions called after initialisation
- */
-var initCallbacks = [];
-
-/**
- * The base url for the rest api
- */
-var restUrl = "api/rest/";
-
-var userSearchStore = new Ext.data.JsonStore({
-  root: 'results',
-  idProperty: 'value',
-  fields: ['value','label'],
-  proxy: new Ext.data.HttpProxy({
-    url: restUrl + 'search/users.json',
-    method: 'GET'
-  })
+Ext.History.on('change', function(token){
+  if(token){
+    var parts = token.split('|');
+    var tab = parts[0];
+    if ( debug ){
+      console.debug( 'handle history event for ' + tab );
+    }    
+  } else if (debug) {
+    console.debug('history token is empty');
+  }
 });
-
-var groupSearchStore = new Ext.data.JsonStore({
-  root: 'results',
-  idProperty: 'value',
-  fields: ['value','label'],
-  proxy: new Ext.data.HttpProxy({
-    url: restUrl + 'search/groups.json',
-    method: 'GET'
-  })
-});
-
-// the main object (sonia.scm)
-var main = null;
-
-// enable extjs quicktips
-Ext.QuickTips.init();
-
-// enable history
-Ext.History.init();

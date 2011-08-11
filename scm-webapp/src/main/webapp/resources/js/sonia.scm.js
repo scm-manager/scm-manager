@@ -442,7 +442,14 @@ Ext.onReady(function(){
     id: 'mainTabPanel',
     region: 'center',
     deferredRender: false,
-    enableTabScroll: true
+    enableTabScroll: true,
+    listeners: {
+      tabchange: function(tabPanel, tab){
+        if ( Ext.isDefined(tab) ){
+          Ext.History.add(tab.id);
+        }
+      }
+    }
   });
 
   new Ext.Viewport({

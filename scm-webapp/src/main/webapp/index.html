@@ -62,11 +62,12 @@
 
     <!-- sonia.global -->
     <script type="text/javascript" src="resources/js/sonia.global.js"></script>
-    
+    <script type="text/javascript" src="resources/js/sonia.history.js"></script>
+
     <!-- sonia.util -->
     <script type="text/javascript" src="resources/js/util/sonia.util.js"></script>
     <script type="text/javascript" src="resources/js/util/sonia.util.link.js"></script>
-    
+
     <!-- sonia.override -->
     <script type="text/javascript" src="resources/js/override/ext.form.vtypes.js"></script>
     <script type="text/javascript" src="resources/js/override/ext.form.field.js"></script>
@@ -74,28 +75,28 @@
     <script type="text/javascript" src="resources/js/override/ext.data.store.js"></script>
     <script type="text/javascript" src="resources/js/override/ext.grid.columnmodel.js"></script>
     <script type="text/javascript" src="resources/js/override/ext.grid.gridpanel.js"></script>
-    
+
     <!-- sonia.navigation -->
     <script type="text/javascript" src="resources/js/navigation/sonia.navigation.js"></script>
     <script type="text/javascript" src="resources/js/navigation/sonia.navigation.navsection.js"></script>
     <script type="text/javascript" src="resources/js/navigation/sonia.navigation.navpanel.js"></script>
-    
+
     <!-- sonia.login -->
     <script type="text/javascript" src="resources/js/login/sonia.login.js"></script>
     <script type="text/javascript" src="resources/js/login/sonia.login.form.js"></script>
     <script type="text/javascript" src="resources/js/login/sonia.login.window.js"></script>
-    
+
     <!-- sonia.panel -->
     <script type="text/javascript" src="resources/js/panel/sonia.panel.js"></script>
     <script type="text/javascript" src="resources/js/panel/sonia.panel.syntaxhighlighterpanel.js"></script>
-    
+
     <!-- sonia.rest -->
     <script type="text/javascript" src="resources/js/rest/sonia.rest.js"></script>
     <script type="text/javascript" src="resources/js/rest/sonia.rest.jsonstore.js"></script>
     <script type="text/javascript" src="resources/js/rest/sonia.rest.panel.js"></script>
     <script type="text/javascript" src="resources/js/rest/sonia.rest.grid.js"></script>
     <script type="text/javascript" src="resources/js/rest/sonia.rest.formpanel.js"></script>
-    
+
     <!-- sonia.repository -->
     <script type="text/javascript" src="resources/js/repository/sonia.repository.js"></script>
     <script type="text/javascript" src="resources/js/repository/sonia.repository.grid.js"></script>
@@ -108,13 +109,13 @@
     <script type="text/javascript" src="resources/js/repository/sonia.repository.changesetviewergrid.js"></script>
     <script type="text/javascript" src="resources/js/repository/sonia.repository.changesetviewerpanel.js"></script>
     <script type="text/javascript" src="resources/js/repository/sonia.repository.repositorybrowser.js"></script>
-    
+
     <!-- sonia.user -->
     <script type="text/javascript" src="resources/js/user/sonia.user.js"></script>
     <script type="text/javascript" src="resources/js/user/sonia.user.grid.js"></script>
     <script type="text/javascript" src="resources/js/user/sonia.user.formpanel.js"></script>
     <script type="text/javascript" src="resources/js/user/sonia.user.panel.js"></script>
-    
+
     <!-- sonia.group -->
     <script type="text/javascript" src="resources/js/group/sonia.group.js"></script>
     <script type="text/javascript" src="resources/js/group/sonia.group.grid.js"></script>
@@ -122,7 +123,7 @@
     <script type="text/javascript" src="resources/js/group/sonia.group.propertiesformpanel.js"></script>
     <script type="text/javascript" src="resources/js/group/sonia.group.memberformpanel.js"></script>
     <script type="text/javascript" src="resources/js/group/sonia.group.panel.js"></script>
-    
+
     <!-- sonia.config -->
     <script type="text/javascript" src="resources/js/config/sonia.config.js"></script>
     <script type="text/javascript" src="resources/js/config/sonia.config.configpanel.js"></script>
@@ -130,17 +131,17 @@
     <script type="text/javascript" src="resources/js/config/sonia.config.scmconfigpanel.js"></script>
     <script type="text/javascript" src="resources/js/config/sonia.config.configform.js"></script>
     <script type="text/javascript" src="resources/js/config/sonia.config.simpleconfigform.js"></script>
-    
+
     <!-- sonia.action -->
     <script type="text/javascript" src="resources/js/action/sonia.action.js"></script>
     <script type="text/javascript" src="resources/js/action/sonia.action.changepasswordwindow.js"></script>
-    
+
     <!-- sonia.plugin -->
     <script type="text/javascript" src="resources/js/plugin/sonia.plugin.js"></script>
     <script type="text/javascript" src="resources/js/plugin/sonia.plugin.center.js"></script>
     <script type="text/javascript" src="resources/js/plugin/sonia.plugin.store.js"></script>
     <script type="text/javascript" src="resources/js/plugin/sonia.plugin.grid.js"></script>
-    
+
     <!-- sonia.scm -->
     <script type="text/javascript" src="resources/js/sonia.scm.js"></script>
     <!--/compress-->
@@ -189,6 +190,12 @@
       </div>
 
     </div>
+
+    <!-- Fields required for history management -->
+    <form id="history-form" class="x-hidden">
+      <input type="hidden" id="x-history-field" />
+      <iframe id="x-history-frame"></iframe>
+    </form>
 
   </body>
 </html>
