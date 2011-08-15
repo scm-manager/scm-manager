@@ -75,6 +75,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     this.addEvents('login', 'logout', 'init');
     this.mainTabPanel = Ext.getCmp('mainTabPanel');
     this.addListener('login', this.postLogin, this);
+    this.createHistory();
     Sonia.scm.Main.superclass.constructor.call(this, config);
   },
   
@@ -117,6 +118,58 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     });
     this.mainTabPanel.setActiveTab('repositories');
   },
+  
+  addRepositoriesTabPanel: function(){
+    this.mainTabPanel.setActiveTab('repositories');
+  },
+  
+  addScmConfigTabPanel: function(){
+    if (admin){
+      this.addTabPanel("scmConfig", "scmConfig", this.navGeneralConfigText);
+    }
+  },
+  
+  addRepositoryConfigTabPanel: function(){
+    if (admin){
+      this.addTabPanel('repositoryConfig', 'repositoryConfig', this.tabRepositoryTypesText);
+    }
+  },
+  
+  addPluginTabPanel: function(){
+    if (admin){
+      this.addTabPanel('plugins', 'pluginGrid', this.navPluginsText);
+    }
+  },
+  
+  addUsersTabPanel: function(){
+    if (admin){
+      this.addTabPanel('users', 'userPanel', this.navUsersText);
+    }
+  },
+  
+  addGroupsTabPanel: function(){
+    if (admin){
+      this.addTabPanel('groups', 'groupPanel', this.tabGroupsText);
+    }
+  },
+  
+  createHistory: function(){
+    Sonia.History.register('repositories', function(params){
+      this.addRepositoriesTabPanel();
+      // todo handle params
+    }, this);
+    Sonia.History.register('scmConfig', this.addScmConfigTabPanel, this);
+    Sonia.History.register('repositoryConfig', this.addRepositoryConfigTabPanel, this);
+    Sonia.History.register('plugins', this.addPluginTabPanel, this);
+    Sonia.History.register('users', function(params){
+      this.addUsersTabPanel();
+      // todo handle params
+    }, this);
+    Sonia.History.register('groups', function(params){
+      this.addUsersTabPanel();
+      // todo handle params
+    }, this);
+  },
 
   createMainMenu: function(){
     if ( debug ){
@@ -128,9 +181,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       title: this.sectionMainText,
       links: [{
         label: this.navRepositoriesText,
-        fn: function(){
-          this.mainTabPanel.setActiveTab('repositories');
-        },
+        fn: this.addRepositoriesTabPanel,
         scope: this
       }]
     });
@@ -156,21 +207,15 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         title: this.sectionConfigText,
         links: [{
           label: this.navGeneralConfigText,
-          fn: function(){
-            this.addTabPanel("scmConfig", "scmConfig", this.navGeneralConfigText);
-          },
+          fn: this.addScmConfigTabPanel,
           scope: this
         },{
           label: this.navRepositoryTypesText,
-          fn: function(){
-            this.addTabPanel('repositoryConfig', 'repositoryConfig', this.tabRepositoryTypesText);
-          },
+          fn: this.addRepositoryConfigTabPanel,
           scope: this
         },{
           label: this.navPluginsText,
-          fn: function(){
-            this.addTabPanel('plugins', 'pluginGrid', this.navPluginsText);
-          },
+          fn: this.addPluginTabPanel,
           scope: this
         }]
       }]);
@@ -184,16 +229,12 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
       securitySection.links.push({
         label: this.navUsersText,
-        fn: function(){
-          this.addTabPanel('users', 'userPanel', this.navUsersText);
-        },
+        fn: this.addUsersTabPanel,
         scope: this
       });
       securitySection.links.push({
         label: this.navGroupsText,
-        fn: function(){
-          this.addTabPanel('groups', 'groupPanel', this.tabGroupsText);
-        },
+        fn: this.addGroupsTabPanel,
         scope: this
       });
     }

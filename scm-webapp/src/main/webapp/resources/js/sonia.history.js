@@ -49,21 +49,31 @@ Sonia.History = {
     }
   },
   
-  register: function(id, fn){
-    this.historyElements.push({
-      'id': id,
-      'fn': fn
-    });
+  register: function(id, fn, scope){
+    if (scope){
+      this.historyElements[id] = {
+        'fn': fn,
+        'scope': scope
+      };
+    } else {
+      this.historyElements[id] = fn;
+    }
+    
   },
   
   handleChange: function(id, params){
-    if ( debug ){
-      console.debug( 'handle ' + id + ' with "' + params + '"' );
-    }
-    for (var i=0; i<this.historyElements.length; i++){
-      if (this.historyElements.id == id){
-        el.fn(params);
+    var el = this.historyElements[id];
+    if (el){
+      if (debug){
+        console.debug('handle history event for ' + id + ' with "' + params + '"');
       }
+      if (Ext.isFunction(el) ){
+        el();
+      } else {
+        el.fn.call(el.scope, params);
+      }
+    } else if (debug){
+      console.debug('could not find history element for ' + id);
     }
   }
 
