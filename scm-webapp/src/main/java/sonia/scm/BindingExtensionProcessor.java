@@ -47,7 +47,7 @@ import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionProcessor;
 import sonia.scm.repository.ChangesetPreProcessor;
-import sonia.scm.repository.ExtendedChangesetPreProcessor;
+import sonia.scm.repository.ChangesetPreProcessorFactory;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHook;
 import sonia.scm.repository.RepositoryListener;
@@ -106,8 +106,8 @@ public class BindingExtensionProcessor implements ExtensionProcessor
       Multibinder.newSetBinder(binder, ResourceHandler.class);
     Multibinder<ChangesetPreProcessor> changesetPreProcessorBinder =
       Multibinder.newSetBinder(binder, ChangesetPreProcessor.class);
-    Multibinder<ExtendedChangesetPreProcessor> extChangesetPreProcessorBinder =
-      Multibinder.newSetBinder(binder, ExtendedChangesetPreProcessor.class);
+    Multibinder<ChangesetPreProcessorFactory> changesetPreProcessorFactoryBinder =
+      Multibinder.newSetBinder(binder, ChangesetPreProcessorFactory.class);
 
     authenticators.addBinding().to(XmlAuthenticationHandler.class);
 
@@ -215,16 +215,16 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
           changesetPreProcessorBinder.addBinding().to(extensionClass);
         }
-        else if (ExtendedChangesetPreProcessor.class.isAssignableFrom(
+        else if (ChangesetPreProcessorFactory.class.isAssignableFrom(
                 extensionClass))
         {
           if (logger.isInfoEnabled())
           {
-            logger.info("bind ExtendedChangesetPreProcessor {}",
+            logger.info("bind ChangesetPreProcessorFactory {}",
                         extensionClass.getName());
           }
 
-          extChangesetPreProcessorBinder.addBinding().to(extensionClass);
+          changesetPreProcessorFactoryBinder.addBinding().to(extensionClass);
         }
         else if (RepositoryHook.class.isAssignableFrom(extensionClass))
         {

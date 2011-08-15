@@ -40,9 +40,7 @@ import sonia.scm.plugin.ExtensionPoint;
 /**
  *
  * @author Sebastian Sdorra
- * @deprecated use {@link ExtendedChangesetPreProcessor} instead.
  */
-@Deprecated
 @ExtensionPoint
 public interface ChangesetPreProcessor
 {
