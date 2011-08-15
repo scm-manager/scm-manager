@@ -49,6 +49,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.repository.ChangesetViewerUtil;
+import sonia.scm.repository.ExtendedChangesetPreProcessor;
 import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
@@ -113,6 +114,7 @@ public class RepositoryResource
    * @param repositoryManager
    * @param securityContextProvider
    * @param changesetPreProcessorSet
+   * @param extChangesetPreProcessorSet
    * @param changesetViewerUtil
    * @param repositoryBrowserUtil
    */
@@ -121,6 +123,7 @@ public class RepositoryResource
           ScmConfiguration configuration, RepositoryManager repositoryManager,
           Provider<WebSecurityContext> securityContextProvider,
           Set<ChangesetPreProcessor> changesetPreProcessorSet,
+          Set<ExtendedChangesetPreProcessor> extChangesetPreProcessorSet,
           ChangesetViewerUtil changesetViewerUtil,
           RepositoryBrowserUtil repositoryBrowserUtil)
   {
@@ -129,6 +132,7 @@ public class RepositoryResource
     this.repositoryManager = repositoryManager;
     this.securityContextProvider = securityContextProvider;
     this.changesetPreProcessorSet = changesetPreProcessorSet;
+    this.extChangesetPreProcessorSet = extChangesetPreProcessorSet;
     this.changesetViewerUtil = changesetViewerUtil;
     this.repositoryBrowserUtil = repositoryBrowserUtil;
     setDisableCache(false);
@@ -213,7 +217,12 @@ public class RepositoryResource
 
       if (changesets != null)
       {
-        callPreProcessors(changesets);
+        if (Util.isNotEmpty(changesets.getChangesets()))
+        {
+          callPreProcessors(changesets);
+          callExtendedPreProcessors(id, changesets);
+        }
+
         response = Response.ok(changesets).build();
       }
       else
@@ -389,12 +398,42 @@ public class RepositoryResource
    * Method description
    *
    *
+   * @param id
+   * @param changesets
+   */
+  private void callExtendedPreProcessors(String id,
+          ChangesetPagingResult changesets)
+  {
+    if (Util.isNotEmpty(extChangesetPreProcessorSet))
+    {
+      Repository repository = repositoryManager.get(id);
+
+      if (repository != null)
+      {
+        for (Changeset c : changesets.getChangesets())
+        {
+          for (ExtendedChangesetPreProcessor ecpp : extChangesetPreProcessorSet)
+          {
+            ecpp.process(repository, c);
+          }
+        }
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("could not find repository {}", id);
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param changesets
    */
   private void callPreProcessors(ChangesetPagingResult changesets)
   {
-    if (Util.isNotEmpty(changesetPreProcessorSet)
-        && Util.isNotEmpty(changesets.getChangesets()))
+    if (Util.isNotEmpty(changesetPreProcessorSet))
     {
       for (Changeset c : changesets.getChangesets())
       {
@@ -540,6 +579,9 @@ public class RepositoryResource
 
   /** Field description */
   private ScmConfiguration configuration;
+
+  /** Field description */
+  private Set<ExtendedChangesetPreProcessor> extChangesetPreProcessorSet;
 
   /** Field description */
   private RepositoryBrowserUtil repositoryBrowserUtil;
