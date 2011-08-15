@@ -43,6 +43,20 @@ Sonia.util.clone = function(obj) {
   } return newObj;
 };
 
+Sonia.util.parseInt = function(string, defaultValue){
+  var result = defaultValue;
+  try {
+    result = parseInt(string);
+  } catch (e){
+    if (debug){
+      console.debug(e);
+    }
+  }
+  if (isNaN(result)){
+    result = defaultValue;
+  }
+  return result;
+}
 
 Sonia.util.getStringFromArray = function(array){
   var value = '';

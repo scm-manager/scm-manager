@@ -34,16 +34,16 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
 
   repository: null,
   start: 0,
-  limit: -1,
   pageSize: 20,
   historyId: null,
+  changesetStore: null,
   
   changesetViewerTitleText: 'Commits {0}',
   
   initComponent: function(){
     this.historyId = 'changesetviewer|' + this.repository.id;
 
-    var changesetStore = new Sonia.rest.JsonStore({
+    this.changesetStore = new Sonia.rest.JsonStore({
       id: 'changesetStore',
       proxy: new Ext.data.HttpProxy({
         url: restUrl + 'repositories/' + this.repository.id  + '/changesets.json',
@@ -57,7 +57,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
       autoDestroy: true,
       baseParams: {
         start: this.start,
-        limit: this.limit > 0 ? this.limit : this.pageSize
+        limit: this.pageSize
       },
       listeners: {
         load: {
@@ -72,11 +72,11 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
       items: [{
         xtype: 'repositoryChangesetViewerGrid',
         repository: this.repository,
-        store: changesetStore
+        store: this.changesetStore
       }],
       bbar: {
         xtype: 'paging',
-        store: changesetStore,
+        store: this.changesetStore,
         displayInfo: true,
         pageSize: this.pageSize,
         prependButtons: true
@@ -92,6 +92,13 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
     if (id){
       this.historyId = id;
     }
+  },
+  
+  loadChangesets: function(start, limit){
+    this.changesetStore.load({params: {
+      start: start,
+      limit: limit
+    }});
   }
 
 });
@@ -103,28 +110,42 @@ Ext.reg('repositoryChangesetViewerPanel', Sonia.repository.ChangesetViewerPanel)
 Sonia.History.register('changesetviewer', function(params){
   
   if (params){
-  
-    Ext.Ajax.request({
-      url: restUrl + 'repositories/' + params[0] + '.json',
-      method: 'GET',
-      scope: this,
-      success: function(response){
-        var item = Ext.decode(response.responseText);
-        main.addTab({
-          id: item.id + '-changesetViewer',
-          xtype: 'repositoryChangesetViewerPanel',
-          repository: item,
-          start: parseInt(params[1]),
-          limit: parseInt(params[2]),
-          closable: true
-        })
-      },
-      failure: function(result){
-        main.handleFailure(
-          result.status
-        );
-      }
-    });
+    
+    var id = params[0] + '-changesetViewer';
+    var start = Sonia.util.parseInt(params[1], 0);
+    var pageSize = Sonia.util.parseInt(params[2], 20);
+    
+    if (debug){
+      console.debug('load changesetviewer for ' + id + ', ' + start + ', ' + pageSize );
+    }
+    
+    var tab = Ext.getCmp(id);
+    
+    if ( tab ){
+      tab.loadChangesets(start, pageSize);
+    } else {  
+      Ext.Ajax.request({
+        url: restUrl + 'repositories/' + params[0] + '.json',
+        method: 'GET',
+        scope: this,
+        success: function(response){
+          var item = Ext.decode(response.responseText);
+          main.addTab({
+            id: item.id + '-changesetViewer',
+            xtype: 'repositoryChangesetViewerPanel',
+            repository: item,
+            start: start,
+            pageSize: pageSize,
+            closable: true
+          })
+        },
+        failure: function(result){
+          main.handleFailure(
+            result.status
+          );
+        }
+      });
+    }
   
   }
   
