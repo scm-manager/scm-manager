@@ -200,6 +200,15 @@ if (Sonia.repository.PermissionFormPanel){
   
 }
 
+if (Sonia.repository.ChangesetViewerPanel){
+  
+  Ext.override(Sonia.repository.ChangesetViewerPanel,{
+    // german ??
+    changesetViewerTitleText: 'Commits {0}'
+  });
+  
+}
+
 if (Sonia.repository.InfoPanel){
 
   Ext.override(Sonia.repository.InfoPanel, {
@@ -208,8 +217,7 @@ if (Sonia.repository.InfoPanel){
     contactText: 'Kontakt: ',
     urlText: 'Url: ',
     // german ??
-    changesetViewerText: 'Commits',
-    changesetViewerTitleText: 'Commits: {0}'
+    changesetViewerText: 'Commits'
   });
 
 }

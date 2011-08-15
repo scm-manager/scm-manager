@@ -44,7 +44,6 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   contactText: 'Contact: ',
   urlText: 'Url: ',
   changesetViewerText: 'Commits',
-  changesetViewerTitleText: 'Commits {0}',
 
   initComponent: function(){
     
@@ -151,7 +150,6 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   createChangesetViewer: function(){
     return {
       id: this.item.id + '-changesetViewer',
-      title: String.format(this.changesetViewerTitleText, this.item.name),
       repository: this.item,
       xtype: 'repositoryChangesetViewerPanel',
       closable: true,

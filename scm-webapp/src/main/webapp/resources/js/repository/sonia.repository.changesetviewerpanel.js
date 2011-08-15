@@ -38,6 +38,8 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   pageSize: 20,
   historyId: null,
   
+  changesetViewerTitleText: 'Commits {0}',
+  
   initComponent: function(){
     this.historyId = 'changesetviewer|' + this.repository.id;
 
@@ -66,6 +68,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
     });
 
     var config = {
+      title: String.format(this.changesetViewerTitleText, this.repository.name),
       items: [{
         xtype: 'repositoryChangesetViewerGrid',
         repository: this.repository,
