@@ -486,6 +486,21 @@
       </dependencies>
       
     </profile>
+    
+    <profile>
+      <id>jira</id>
+    
+      <dependencies>
+          
+        <dependency>
+          <groupId>sonia.scm.plugins</groupId>
+          <artifactId>scm-jira-plugin</artifactId>
+          <version>1.0-SNAPSHOT</version>
+        </dependency>
+      
+      </dependencies>
+      
+    </profile>
 
     <profile>
       <id>it</id>

@@ -140,7 +140,11 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       
       // call open listeners
       Ext.each(Sonia.repository.openListeners, function(listener){
-        listener.onOpen(item, panels);
+        if (Ext.isFunction(listener)){
+          listener(item, panels);
+        } else {
+          listener.call(listener.scope, item, panels);
+        }
       });
       
     } else {
