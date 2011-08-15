@@ -29,14 +29,64 @@
  * 
  */
 
+Ext.ns('Sonia');
+
+Sonia.History = {
+ 
+  historyElements: [],
+  recentlyAdded: [],
+  
+  add: function(token){
+    this.recentlyAdded.push(token);
+    Ext.History.add(token, true);
+  },
+  
+  append: function(item){
+    var token = Ext.History.getToken();
+    if ( token ){
+      var parts = token.split('|');
+      this.add(parts[0] + '|' + item);
+    }
+  },
+  
+  register: function(id, fn){
+    this.historyElements.push({
+      'id': id,
+      'fn': fn
+    });
+  },
+  
+  handleChange: function(id, params){
+    if ( debug ){
+      console.debug( 'handle ' + id + ' with "' + params + '"' );
+    }
+    for (var i=0; i<this.historyElements.length; i++){
+      if (this.historyElements.id == id){
+        el.fn(params);
+      }
+    }
+  }
+
+};
+
 
 Ext.History.on('change', function(token){
   if(token){
-    var parts = token.split('|');
-    var tab = parts[0];
-    if ( debug ){
-      console.debug( 'handle history event for ' + tab );
-    }    
+    var found = false;
+    for ( var i=0; i<Sonia.History.recentlyAdded.length; i++ ){
+      if (Sonia.History.recentlyAdded[i] == token){
+        found = true;
+        Sonia.History.recentlyAdded.splice(i);
+        break;
+      }
+    }
+    
+    if (!found){  
+      var parts = token.split('|');
+      var id = parts[0];
+      Sonia.History.handleChange(id, parts.splice(1));
+    }
+    
   } else if (debug) {
     console.debug('history token is empty');
   }

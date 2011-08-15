@@ -103,11 +103,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       console.debug( item.name + ' selected' );
     }
     
-    var token = Ext.History.getToken();
-    if ( token ){
-      var parts = token.split('|');
-      Ext.History.add(parts[0] + '|' + item.name);
-    }
+    Sonia.History.append(item.name);
 
     var infoPanel = main.getInfoPanel(item.type);
     infoPanel.item = item;

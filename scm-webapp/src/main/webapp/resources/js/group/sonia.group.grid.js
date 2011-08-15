@@ -116,11 +116,7 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
       console.debug( group.name + ' selected' );
     }
     
-    var token = Ext.History.getToken();
-    if ( token ){
-      var parts = token.split('|');
-      Ext.History.add(parts[0] + '|' + group.name);
-    }
+    Sonia.History.append(group.name);
 
     Ext.getCmp('groupRmButton').setDisabled(false);
     Sonia.group.setEditPanel([{

@@ -446,7 +446,7 @@ Ext.onReady(function(){
     listeners: {
       tabchange: function(tabPanel, tab){
         if ( Ext.isDefined(tab) ){
-          Ext.History.add(tab.id);
+          Sonia.History.add(tab.id, true);
         }
       }
     }
