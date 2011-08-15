@@ -44,6 +44,8 @@ loginCallbacks.push( loadRepositoryTypes );
 // register namespace
 Ext.ns('Sonia.repository');
 
+Sonia.repository.openListeners = [];
+
 // functions
 
 Sonia.repository.isOwner = function(repository){
