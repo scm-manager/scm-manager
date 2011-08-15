@@ -129,6 +129,15 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
       param = "checked='checked' ";
     }
     return String.format( this.checkboxTemplate, param );
+  },
+  
+  handleHistory: function(params){
+    if (params){
+      var index = this.getStore().indexOfId(params[0]);
+      if ( index >= 0 ){
+        this.getSelectionModel().selectRow(index);
+      }
+    }
   }
 
 });

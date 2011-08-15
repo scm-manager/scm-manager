@@ -156,18 +156,33 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   createHistory: function(){
     Sonia.History.register('repositories', function(params){
       this.addRepositoriesTabPanel();
-      // todo handle params
+      var grid = Ext.getCmp('repositoryGrid');
+      if (grid){
+        grid.handleHistory(params);
+      } else if (debug){
+        console.debug('could not find repository grid');
+      }
     }, this);
     Sonia.History.register('scmConfig', this.addScmConfigTabPanel, this);
     Sonia.History.register('repositoryConfig', this.addRepositoryConfigTabPanel, this);
     Sonia.History.register('plugins', this.addPluginTabPanel, this);
     Sonia.History.register('users', function(params){
       this.addUsersTabPanel();
-      // todo handle params
+      var grid = Ext.getCmp('userGrid');
+      if (grid){
+        grid.handleHistory(params);
+      } else if (debug){
+        console.debug('could not find user grid');
+      }
     }, this);
     Sonia.History.register('groups', function(params){
-      this.addUsersTabPanel();
-      // todo handle params
+      this.addGroupsTabPanel();
+      var grid = Ext.getCmp('groupGrid');
+      if (grid){
+        grid.handleHistory(params);
+      } else if (debug){
+        console.debug('could not find group grid');
+      }
     }, this);
   },
 

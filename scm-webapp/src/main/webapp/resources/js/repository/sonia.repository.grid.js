@@ -43,7 +43,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   initComponent: function(){
 
     var repositoryStore = new Sonia.rest.JsonStore({
-      id: 'repositoryStore',
+      id: 'id',
       proxy: new Ext.data.HttpProxy({
         url: restUrl + 'repositories.json',
         disableCaching: false
@@ -103,7 +103,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       console.debug( item.name + ' selected' );
     }
     
-    Sonia.History.append(item.name);
+    Sonia.History.append(item.id);
 
     var infoPanel = main.getInfoPanel(item.type);
     infoPanel.item = item;
