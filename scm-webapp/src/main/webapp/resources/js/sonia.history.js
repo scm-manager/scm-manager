@@ -35,13 +35,16 @@ Sonia.History = {
  
   historyElements: [],
   recentlyAdded: [],
+  recentlyChanged: [],
   
   add: function(token){
     if ( debug ){
       console.debug('add history element ' + token);
     }
-    this.recentlyAdded.push(token);
-    Ext.History.add(token, true);
+    if (this.isInvokeable(this.recentlyChanged, token)){
+      this.recentlyAdded.push(token);
+      Ext.History.add(token, true);
+    }
   },
   
   append: function(item){
@@ -87,6 +90,29 @@ Sonia.History = {
     
   },
   
+  isInvokeable: function(lockList, item){
+    var invokeable = true;
+    var index = lockList.indexOf(item);
+    if ( index >= 0 ){
+      invokeable = false;
+      lockList.splice(index);
+    }
+    return invokeable;
+  },
+  
+  onChange: function(token){
+    if(token){
+      if (this.isInvokeable(this.recentlyAdded, token)){  
+        var parts = token.split('|');
+        var id = parts[0];
+        this.recentlyChanged.push(token);
+        Sonia.History.handleChange(id, parts.splice(1));
+      }
+    } else if (debug) {
+      console.debug('history token is empty');
+    }
+  },
+  
   handleChange: function(id, params){
     var el = this.historyElements[id];
     if (el){
@@ -107,23 +133,5 @@ Sonia.History = {
 
 
 Ext.History.on('change', function(token){
-  if(token){
-    var found = false;
-    for ( var i=0; i<Sonia.History.recentlyAdded.length; i++ ){
-      if (Sonia.History.recentlyAdded[i] == token){
-        found = true;
-        Sonia.History.recentlyAdded.splice(i);
-        break;
-      }
-    }
-    
-    if (!found){  
-      var parts = token.split('|');
-      var id = parts[0];
-      Sonia.History.handleChange(id, parts.splice(1));
-    }
-    
-  } else if (debug) {
-    console.debug('history token is empty');
-  }
+  Sonia.History.onChange(token);
 });
