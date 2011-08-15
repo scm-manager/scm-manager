@@ -502,7 +502,10 @@ Ext.onReady(function(){
     listeners: {
       tabchange: function(tabPanel, tab){
         if ( Ext.isDefined(tab) ){
-          Sonia.History.add(tab.id, true);
+          var id = tab.historyId ? tab.historyId : tab.id;
+          if (id){
+            Sonia.History.add(id, true);
+          }
         }
       }
     }

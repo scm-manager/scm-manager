@@ -37,16 +37,42 @@ Sonia.History = {
   recentlyAdded: [],
   
   add: function(token){
+    if ( debug ){
+      console.debug('add history element ' + token);
+    }
     this.recentlyAdded.push(token);
     Ext.History.add(token, true);
   },
   
   append: function(item){
+    return this.appendWithDepth(item, 1);
+  },
+  
+  appendWithDepth: function(item, depth){
     var token = Ext.History.getToken();
     if ( token ){
+      var tokenSuffix = '';
+      if (Ext.isArray(item)){
+        for (var i=0; i<item.length; i++){
+          tokenSuffix += item[i];
+          if ( (i+1)<item.length ){
+            tokenSuffix += '|';
+          }
+        }
+      } else {
+        tokenSuffix = item;
+      }
+      
       var parts = token.split('|');
-      this.add(parts[0] + '|' + item);
+      var newToken = '';
+      for (var j=0; j<depth; j++){
+        newToken += parts[j] + '|';
+      }
+      newToken += tokenSuffix;
+      this.add(newToken);
+      token = newToken;
     }
+    return token;
   },
   
   register: function(id, fn, scope){
@@ -68,7 +94,7 @@ Sonia.History = {
         console.debug('handle history event for ' + id + ' with "' + params + '"');
       }
       if (Ext.isFunction(el) ){
-        el();
+        el(params);
       } else {
         el.fn.call(el.scope, params);
       }
