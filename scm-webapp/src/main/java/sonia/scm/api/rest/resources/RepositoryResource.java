@@ -415,9 +415,12 @@ public class RepositoryResource
         {
           ChangesetPreProcessor cpp = factory.createPreProcessor(repository);
 
-          for (Changeset c : changesets.getChangesets())
+          if (cpp != null)
           {
-            cpp.process(c);
+            for (Changeset c : changesets.getChangesets())
+            {
+              cpp.process(c);
+            }
           }
         }
       }
