@@ -47,7 +47,7 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
         disableCaching: false
       }),
       id: 'name',
-      fields: [ 'name', 'members', 'description', 'creationDate', 'type'],
+      fields: [ 'name', 'members', 'description', 'creationDate', 'type', 'properties'],
       sortInfo: {
         field: 'name'
       }
