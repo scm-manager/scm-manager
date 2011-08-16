@@ -58,6 +58,7 @@ import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHandlerNotFoundException;
 import sonia.scm.repository.RepositoryHook;
 import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.RepositoryListener;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.store.Store;
@@ -111,15 +112,18 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * @param securityContextProvider
    * @param storeFactory
    * @param handlerSet
+   * @param repositoryListenersProvider
    */
   @Inject
   public XmlRepositoryManager(
           SCMContextProvider contextProvider,
           Provider<WebSecurityContext> securityContextProvider,
-          StoreFactory storeFactory, Set<RepositoryHandler> handlerSet)
+          StoreFactory storeFactory, Set<RepositoryHandler> handlerSet,
+          Provider<Set<RepositoryListener>> repositoryListenersProvider)
   {
     this.securityContextProvider = securityContextProvider;
     this.store = storeFactory.getStore(XmlRepositoryDatabase.class, STORE_NAME);
+    this.repositoryListenersProvider = repositoryListenersProvider;
     handlerMap = new HashMap<String, RepositoryHandler>();
     types = new HashSet<Type>();
 
@@ -287,6 +291,13 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     if (repositoryDB == null)
     {
       repositoryDB = new XmlRepositoryDatabase();
+    }
+
+    Set<RepositoryListener> listeners = repositoryListenersProvider.get();
+
+    if (Util.isNotEmpty(listeners))
+    {
+      addListeners(listeners);
     }
   }
 
@@ -763,6 +774,9 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private XmlRepositoryDatabase repositoryDB;
+
+  /** Field description */
+  private Provider<Set<RepositoryListener>> repositoryListenersProvider;
 
   /** Field description */
   private Provider<WebSecurityContext> securityContextProvider;

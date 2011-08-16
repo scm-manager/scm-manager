@@ -35,11 +35,15 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Provider;
+
 import sonia.scm.Manager;
 import sonia.scm.repository.xml.XmlRepositoryManager;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.MockUtil;
+
+import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -68,8 +72,12 @@ public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
     factory.init(contextProvider);
     handlerSet.add(new DummyRepositoryHandler(factory));
 
+    Provider<Set<RepositoryListener>> listenerProvider = mock(Provider.class);
+
+    when(listenerProvider.get()).thenReturn(new HashSet<RepositoryListener>());
+
     return new XmlRepositoryManager(contextProvider,
                                     MockUtil.getAdminSecurityContextProvider(),
-                                    factory, handlerSet);
+                                    factory, handlerSet, listenerProvider);
   }
 }

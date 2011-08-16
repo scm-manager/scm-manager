@@ -49,6 +49,7 @@ import sonia.scm.group.AbstractGroupManager;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupAllreadyExistExeption;
 import sonia.scm.group.GroupException;
+import sonia.scm.group.GroupListener;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.security.SecurityContext;
@@ -68,6 +69,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -95,13 +97,16 @@ public class XmlGroupManager extends AbstractGroupManager
    *
    * @param securityContextProvider
    * @param storeFactory
+   * @param groupListenerProvider
    */
   @Inject
   public XmlGroupManager(Provider<SecurityContext> securityContextProvider,
-                         StoreFactory storeFactory)
+                         StoreFactory storeFactory,
+                         Provider<Set<GroupListener>> groupListenerProvider)
   {
     this.securityContextProvider = securityContextProvider;
     this.store = storeFactory.getStore(XmlGroupDatabase.class, STORE_NAME);
+    this.groupListenerProvider = groupListenerProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -214,6 +219,13 @@ public class XmlGroupManager extends AbstractGroupManager
     if (groupDB == null)
     {
       groupDB = new XmlGroupDatabase();
+    }
+
+    Set<GroupListener> listeners = groupListenerProvider.get();
+
+    if (Util.isNotEmpty(listeners))
+    {
+      addListeners(listeners);
     }
   }
 
@@ -481,6 +493,9 @@ public class XmlGroupManager extends AbstractGroupManager
 
   /** Field description */
   private XmlGroupDatabase groupDB;
+
+  /** Field description */
+  private Provider<Set<GroupListener>> groupListenerProvider;
 
   /** Field description */
   private Provider<SecurityContext> securityContextProvider;

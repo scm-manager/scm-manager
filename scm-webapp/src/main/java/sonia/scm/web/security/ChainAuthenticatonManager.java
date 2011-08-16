@@ -36,6 +36,7 @@ package sonia.scm.web.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -48,6 +49,7 @@ import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -82,19 +84,24 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    * @param authenticationHandlerSet
    * @param encryptionHandler
    * @param cacheManager
+   * @param authenticationListenerProvider
    */
   @Inject
   public ChainAuthenticatonManager(
           Set<AuthenticationHandler> authenticationHandlerSet,
-          EncryptionHandler encryptionHandler, CacheManager cacheManager)
+          EncryptionHandler encryptionHandler, CacheManager cacheManager,
+          Provider<Set<AuthenticationListener>> authenticationListenerProvider)
   {
     AssertUtil.assertIsNotEmpty(authenticationHandlerSet);
     AssertUtil.assertIsNotNull(cacheManager);
     this.authenticationHandlerSet = authenticationHandlerSet;
     this.encryptionHandler = encryptionHandler;
+    this.authenticationListenerProvider = authenticationListenerProvider;
     this.cache = cacheManager.getCache(String.class,
                                        AuthenticationCacheValue.class,
                                        CACHE_NAME);
+
+    // addListeners(authenticationListeners);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -165,6 +172,14 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
     for (AuthenticationHandler authenticator : authenticationHandlerSet)
     {
       authenticator.init(context);
+    }
+
+    Set<AuthenticationListener> listeners =
+      authenticationListenerProvider.get();
+
+    if (Util.isNotEmpty(listeners))
+    {
+      addListeners(listeners);
     }
   }
 
@@ -296,6 +311,9 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
 
   /** Field description */
   private Set<AuthenticationHandler> authenticationHandlerSet;
+
+  /** Field description */
+  private Provider<Set<AuthenticationListener>> authenticationListenerProvider;
 
   /** Field description */
   private Cache<String, AuthenticationCacheValue> cache;

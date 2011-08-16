@@ -35,10 +35,19 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.MockUtil;
+import com.google.inject.Provider;
+
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.user.xml.XmlUserManager;
+import sonia.scm.util.MockUtil;
+
+import static org.mockito.Mockito.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -60,7 +69,11 @@ public class XmlUserManagerTest extends UserManagerTestBase
 
     factory.init(contextProvider);
 
+    Provider<Set<UserListener>> listenerProvider = mock(Provider.class);
+
+    when(listenerProvider.get()).thenReturn(new HashSet<UserListener>());
+
     return new XmlUserManager(MockUtil.getAdminSecurityContextProvider(),
-                              factory);
+                              factory, listenerProvider);
   }
 }

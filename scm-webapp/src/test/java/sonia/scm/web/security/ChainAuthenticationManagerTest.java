@@ -35,6 +35,8 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Provider;
+
 import org.junit.Test;
 
 import sonia.scm.AbstractTestBase;
@@ -47,6 +49,8 @@ import sonia.scm.user.UserTestData;
 import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
+
+import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -130,8 +134,15 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
     trillian.setPassword("trillian123");
     handlerSet.add(new SingleUserAuthenticaionHandler("trilliansType",
             trillian));
+
+    Provider<Set<AuthenticationListener>> listenerProvider =
+      mock(Provider.class);
+
+    when(listenerProvider.get()).thenReturn(
+        new HashSet<AuthenticationListener>());
     manager = new ChainAuthenticatonManager(handlerSet,
-            new MessageDigestEncryptionHandler(), cacheManager);
+            new MessageDigestEncryptionHandler(), cacheManager,
+            listenerProvider);
     manager.init(contextProvider);
     request = MockUtil.getHttpServletRequest();
     response = MockUtil.getHttpServletResponse();

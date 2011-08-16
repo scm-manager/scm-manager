@@ -54,6 +54,7 @@ import sonia.scm.user.AbstractUserManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserAllreadyExistException;
 import sonia.scm.user.UserException;
+import sonia.scm.user.UserListener;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.IOUtil;
@@ -71,6 +72,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -109,13 +111,16 @@ public class XmlUserManager extends AbstractUserManager
    *
    * @param scurityContextProvider
    * @param storeFactory
+   * @param userListenerProvider
    */
   @Inject
   public XmlUserManager(Provider<WebSecurityContext> scurityContextProvider,
-                        StoreFactory storeFactory)
+                        StoreFactory storeFactory,
+                        Provider<Set<UserListener>> userListenerProvider)
   {
     this.scurityContextProvider = scurityContextProvider;
     this.store = storeFactory.getStore(XmlUserDatabase.class, STORE_NAME);
+    this.userListenerProvider = userListenerProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -247,6 +252,13 @@ public class XmlUserManager extends AbstractUserManager
     {
       userDB = new XmlUserDatabase();
       createDefaultAccounts();
+    }
+
+    Set<UserListener> listeners = userListenerProvider.get();
+
+    if (Util.isNotEmpty(listeners))
+    {
+      addListeners(listeners);
     }
   }
 
@@ -551,4 +563,7 @@ public class XmlUserManager extends AbstractUserManager
 
   /** Field description */
   private XmlUserDatabase userDB;
+
+  /** Field description */
+  private Provider<Set<UserListener>> userListenerProvider;
 }

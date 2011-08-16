@@ -151,20 +151,17 @@ public class ScmContextListener extends GuiceServletContextListener
     RepositoryManager repositoryManager =
       injector.getInstance(RepositoryManager.class);
 
-    repositoryManager.addListeners(bindExtProcessor.getRepositoryListeners());
     repositoryManager.addHooks(bindExtProcessor.getHooks());
     repositoryManager.init(context);
 
     // init UserManager
     UserManager userManager = injector.getInstance(UserManager.class);
 
-    userManager.addListeners(bindExtProcessor.getUserListeners());
     userManager.init(context);
 
     // init GroupManager
     GroupManager groupManager = injector.getInstance(GroupManager.class);
 
-    groupManager.addListeners(bindExtProcessor.getGroupListeners());
     groupManager.init(context);
 
     // init Authenticator
@@ -172,8 +169,6 @@ public class ScmContextListener extends GuiceServletContextListener
       injector.getInstance(AuthenticationManager.class);
 
     authenticationManager.init(context);
-    authenticationManager.addListeners(
-        bindExtProcessor.getAuthenticationListeners());
 
     return injector;
   }

@@ -109,6 +109,16 @@ public class BindingExtensionProcessor implements ExtensionProcessor
     Multibinder<ChangesetPreProcessorFactory> changesetPreProcessorFactoryBinder =
       Multibinder.newSetBinder(binder, ChangesetPreProcessorFactory.class);
 
+    // listeners
+    Multibinder<RepositoryListener> repositoryListenerBinder =
+      Multibinder.newSetBinder(binder, RepositoryListener.class);
+    Multibinder<UserListener> userListenerBinder =
+      Multibinder.newSetBinder(binder, UserListener.class);
+    Multibinder<GroupListener> groupListenerBinder =
+      Multibinder.newSetBinder(binder, GroupListener.class);
+    Multibinder<AuthenticationListener> authenticationListenerBinder =
+      Multibinder.newSetBinder(binder, AuthenticationListener.class);
+
     authenticators.addBinding().to(XmlAuthenticationHandler.class);
 
     for (Class extensionClass : extensions)
@@ -147,9 +157,8 @@ public class BindingExtensionProcessor implements ExtensionProcessor
             logger.info("bind GroupListener {}", extensionClass.getName());
           }
 
-          GroupListener listener = (GroupListener) extensionClass.newInstance();
-
-          groupListeners.add(listener);
+          binder.bind(extensionClass);
+          groupListenerBinder.addBinding().to(extensionClass);
         }
         else if (UserListener.class.isAssignableFrom(extensionClass))
         {
@@ -158,9 +167,8 @@ public class BindingExtensionProcessor implements ExtensionProcessor
             logger.info("bind UserListener {}", extensionClass.getName());
           }
 
-          UserListener listener = (UserListener) extensionClass.newInstance();
-
-          userListeners.add(listener);
+          binder.bind(extensionClass);
+          userListenerBinder.addBinding().to(extensionClass);
         }
         else if (RepositoryListener.class.isAssignableFrom(extensionClass))
         {
@@ -169,10 +177,8 @@ public class BindingExtensionProcessor implements ExtensionProcessor
             logger.info("bind RepositoryListener {}", extensionClass.getName());
           }
 
-          RepositoryListener listener =
-            (RepositoryListener) extensionClass.newInstance();
-
-          repositoryListeners.add(listener);
+          binder.bind(extensionClass);
+          repositoryListenerBinder.addBinding().to(extensionClass);
         }
         else if (AuthenticationListener.class.isAssignableFrom(extensionClass))
         {
@@ -182,10 +188,8 @@ public class BindingExtensionProcessor implements ExtensionProcessor
                         extensionClass.getName());
           }
 
-          AuthenticationListener listener =
-            (AuthenticationListener) extensionClass.newInstance();
-
-          authenticationListeners.add(listener);
+          binder.bind(extensionClass);
+          authenticationListenerBinder.addBinding().to(extensionClass);
         }
         else if (ResourceHandler.class.isAssignableFrom(extensionClass))
         {
@@ -291,31 +295,9 @@ public class BindingExtensionProcessor implements ExtensionProcessor
    *
    * @return
    */
-  public Set<AuthenticationListener> getAuthenticationListeners()
-  {
-    return authenticationListeners;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public Class<? extends FileSystem> getFileSystemClass()
   {
     return fileSystemClass;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Set<GroupListener> getGroupListeners()
-  {
-    return groupListeners;
   }
 
   /**
@@ -338,28 +320,6 @@ public class BindingExtensionProcessor implements ExtensionProcessor
   public Set<Module> getModuleSet()
   {
     return moduleSet;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Set<RepositoryListener> getRepositoryListeners()
-  {
-    return repositoryListeners;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Set<UserListener> getUserListeners()
-  {
-    return userListeners;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -420,18 +380,4 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
   /** Field description */
   private Set<Module> moduleSet;
-
-  /** Field description */
-  private Set<RepositoryListener> repositoryListeners =
-    new HashSet<RepositoryListener>();
-
-  /** Field description */
-  private Set<AuthenticationListener> authenticationListeners =
-    new HashSet<AuthenticationListener>();
-
-  /** Field description */
-  private Set<UserListener> userListeners = new HashSet<UserListener>();
-
-  /** Field description */
-  private Set<GroupListener> groupListeners = new HashSet<GroupListener>();
 }
