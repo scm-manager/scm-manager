@@ -44,6 +44,11 @@ import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Set;
 
 /**
  *
@@ -68,12 +73,18 @@ public class ChangesetViewerUtil extends CacheClearHook
    *
    * @param repositoryManager
    * @param cacheManager
+   * @param changesetPreProcessorSet
+   * @param changesetPreProcessorFactorySet
    */
   @Inject
-  public ChangesetViewerUtil(RepositoryManager repositoryManager,
-                             CacheManager cacheManager)
+  public ChangesetViewerUtil(
+          RepositoryManager repositoryManager, CacheManager cacheManager,
+          Set<ChangesetPreProcessor> changesetPreProcessorSet,
+          Set<ChangesetPreProcessorFactory> changesetPreProcessorFactorySet)
   {
     this.repositoryManager = repositoryManager;
+    this.changesetPreProcessorSet = changesetPreProcessorSet;
+    this.changesetPreProcessorFactorySet = changesetPreProcessorFactorySet;
     cache = cacheManager.getCache(ChangesetViewerCacheKey.class,
                                   ChangesetPagingResult.class, CACHE_NAME);
     init(repositoryManager, cache);
@@ -146,6 +157,13 @@ public class ChangesetViewerUtil extends CacheClearHook
     if (result == null)
     {
       result = viewer.getChangesets(start, max);
+
+      if (Util.isNotEmpty(result.getChangesets()))
+      {
+        callPreProcessors(result);
+        callPreProcessorFactories(repository, result);
+      }
+
       cache.put(key, result);
     }
     else if (logger.isDebugEnabled())
@@ -154,6 +172,57 @@ public class ChangesetViewerUtil extends CacheClearHook
     }
 
     return result;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param repository
+   * @param changesets
+   */
+  private void callPreProcessorFactories(Repository repository,
+          ChangesetPagingResult changesets)
+  {
+    if (Util.isNotEmpty(changesetPreProcessorFactorySet))
+    {
+      for (ChangesetPreProcessorFactory factory :
+              changesetPreProcessorFactorySet)
+      {
+        ChangesetPreProcessor cpp = factory.createPreProcessor(repository);
+
+        if (cpp != null)
+        {
+          for (Changeset c : changesets.getChangesets())
+          {
+            cpp.process(c);
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param changesets
+   */
+  private void callPreProcessors(ChangesetPagingResult changesets)
+  {
+    if (Util.isNotEmpty(changesetPreProcessorSet))
+    {
+      for (Changeset c : changesets.getChangesets())
+      {
+        for (ChangesetPreProcessor cpp : changesetPreProcessorSet)
+        {
+          cpp.process(c);
+        }
+      }
+    }
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -265,6 +334,12 @@ public class ChangesetViewerUtil extends CacheClearHook
 
   /** Field description */
   private Cache<ChangesetViewerCacheKey, ChangesetPagingResult> cache;
+
+  /** Field description */
+  private Set<ChangesetPreProcessorFactory> changesetPreProcessorFactorySet;
+
+  /** Field description */
+  private Set<ChangesetPreProcessor> changesetPreProcessorSet;
 
   /** Field description */
   private RepositoryManager repositoryManager;

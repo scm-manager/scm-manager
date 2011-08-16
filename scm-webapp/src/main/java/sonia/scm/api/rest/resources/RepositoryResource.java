@@ -45,10 +45,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.BrowserResult;
-import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.ChangesetPreProcessor;
-import sonia.scm.repository.ChangesetPreProcessorFactory;
 import sonia.scm.repository.ChangesetViewerUtil;
 import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.Permission;
@@ -63,7 +60,6 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -73,7 +69,6 @@ import java.io.OutputStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -113,8 +108,6 @@ public class RepositoryResource
    * @param configuration
    * @param repositoryManager
    * @param securityContextProvider
-   * @param changesetPreProcessorSet
-   * @param changesetPreProcessorFactorySet
    * @param changesetViewerUtil
    * @param repositoryBrowserUtil
    */
@@ -122,8 +115,6 @@ public class RepositoryResource
   public RepositoryResource(
           ScmConfiguration configuration, RepositoryManager repositoryManager,
           Provider<WebSecurityContext> securityContextProvider,
-          Set<ChangesetPreProcessor> changesetPreProcessorSet,
-          Set<ChangesetPreProcessorFactory> changesetPreProcessorFactorySet,
           ChangesetViewerUtil changesetViewerUtil,
           RepositoryBrowserUtil repositoryBrowserUtil)
   {
@@ -131,8 +122,6 @@ public class RepositoryResource
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.securityContextProvider = securityContextProvider;
-    this.changesetPreProcessorSet = changesetPreProcessorSet;
-    this.changesetPreProcessorFactorySet = changesetPreProcessorFactorySet;
     this.changesetViewerUtil = changesetViewerUtil;
     this.repositoryBrowserUtil = repositoryBrowserUtil;
     setDisableCache(false);
@@ -217,12 +206,6 @@ public class RepositoryResource
 
       if (changesets != null)
       {
-        if (Util.isNotEmpty(changesets.getChangesets()))
-        {
-          callPreProcessors(changesets);
-          callPreProcessorFactories(id, changesets);
-        }
-
         response = Response.ok(changesets).build();
       }
       else
@@ -398,63 +381,6 @@ public class RepositoryResource
    * Method description
    *
    *
-   * @param id
-   * @param changesets
-   */
-  private void callPreProcessorFactories(String id,
-          ChangesetPagingResult changesets)
-  {
-    if (Util.isNotEmpty(changesetPreProcessorFactorySet))
-    {
-      Repository repository = repositoryManager.get(id);
-
-      if (repository != null)
-      {
-        for (ChangesetPreProcessorFactory factory :
-                changesetPreProcessorFactorySet)
-        {
-          ChangesetPreProcessor cpp = factory.createPreProcessor(repository);
-
-          if (cpp != null)
-          {
-            for (Changeset c : changesets.getChangesets())
-            {
-              cpp.process(c);
-            }
-          }
-        }
-      }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("could not find repository {}", id);
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param changesets
-   */
-  private void callPreProcessors(ChangesetPagingResult changesets)
-  {
-    if (Util.isNotEmpty(changesetPreProcessorSet))
-    {
-      for (Changeset c : changesets.getChangesets())
-      {
-        for (ChangesetPreProcessor cpp : changesetPreProcessorSet)
-        {
-          cpp.process(c);
-        }
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param repository
    */
   private void prepareRepository(Repository repository)
@@ -576,12 +502,6 @@ public class RepositoryResource
 
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Set<ChangesetPreProcessorFactory> changesetPreProcessorFactorySet;
-
-  /** Field description */
-  private Set<ChangesetPreProcessor> changesetPreProcessorSet;
 
   /** Field description */
   private ChangesetViewerUtil changesetViewerUtil;

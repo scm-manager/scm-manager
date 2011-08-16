@@ -62,6 +62,21 @@ public class CacheClearHook implements RepositoryHook
   /**
    * Method description
    *
+   * @since 1.7
+   */
+  public void clearCache()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("clear cache");
+    }
+
+    cache.clear();
+  }
+
+  /**
+   * Method description
+   *
    *
    * @param event
    */
