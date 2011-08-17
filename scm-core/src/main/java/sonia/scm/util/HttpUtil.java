@@ -260,4 +260,42 @@ public class HttpUtil
   {
     return uri.substring(request.getContextPath().length());
   }
+
+  /**
+   * Returns the given uri without ending separator.
+   *
+   *
+   * @param uri - to strip ending separator
+   *
+   * @return the given uri without a ending separator
+   * @since 1.7
+   */
+  public static String getUriWithoutEndSeperator(String uri)
+  {
+    if (uri.endsWith(SEPARATOR_PATH))
+    {
+      uri = uri.substring(0, uri.length() - 1);
+    }
+
+    return uri;
+  }
+
+  /**
+   * Returns the given uri without leading separator.
+   *
+   *
+   * @param uri - to strip leading separator
+   *
+   * @return the given uri without leading separator
+   * @since 1.7
+   */
+  public static String getUriWithoutStartSeperator(String uri)
+  {
+    if (uri.startsWith(SEPARATOR_PATH))
+    {
+      uri = uri.substring(1);
+    }
+
+    return uri;
+  }
 }

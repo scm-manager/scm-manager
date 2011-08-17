@@ -59,6 +59,22 @@ public class HttpUtilTest
    *
    */
   @Test
+  public void getCompleteUrlTest()
+  {
+    ScmConfiguration config = new ScmConfiguration();
+
+    config.setBaseUrl("http://www.scm-manager.org/scm");
+    assertEquals("http://www.scm-manager.org/scm/test/path",
+                 HttpUtil.getCompleteUrl(config, "test/path"));
+    assertEquals("http://www.scm-manager.org/scm/test/path",
+                 HttpUtil.getCompleteUrl(config, "/test/path"));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
   public void getPortFromUrlTest()
   {
     assertTrue(HttpUtil.getPortFromUrl("http://www.scm-manager.org") == 80);
@@ -103,14 +119,31 @@ public class HttpUtilTest
                  HttpUtil.getStrippedURI(request, "/scm/test/path"));
     assertEquals("/test/path", HttpUtil.getStrippedURI(request));
   }
-  
+
+  /**
+   * Method description
+   *
+   */
   @Test
-  public void getCompleteUrlTest()
+  public void getUriWithoutEndSeperatorTest()
   {
-    ScmConfiguration config = new ScmConfiguration();
-    config.setBaseUrl("http://www.scm-manager.org/scm");
-    
-    assertEquals("http://www.scm-manager.org/scm/test/path", HttpUtil.getCompleteUrl(config, "test/path"));
-    assertEquals("http://www.scm-manager.org/scm/test/path", HttpUtil.getCompleteUrl(config, "/test/path"));
+    assertEquals("/test", HttpUtil.getUriWithoutEndSeperator("/test/"));
+    assertEquals("/test/two", HttpUtil.getUriWithoutEndSeperator("/test/two/"));
+    assertEquals("/test/two/three",
+                 HttpUtil.getUriWithoutEndSeperator("/test/two/three"));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void getUriWithoutStartSeperator()
+  {
+    assertEquals("test/", HttpUtil.getUriWithoutStartSeperator("/test/"));
+    assertEquals("test/two/",
+                 HttpUtil.getUriWithoutStartSeperator("/test/two/"));
+    assertEquals("test/two/three",
+                 HttpUtil.getUriWithoutStartSeperator("test/two/three"));
   }
 }
