@@ -38,13 +38,28 @@ Sonia.History = {
   recentlyChanged: [],
   
   add: function(token){
-    if ( debug ){
-      console.debug('add history element ' + token);
+    if (token != Ext.History.getToken()){
+      if (this.isInvokeable(this.recentlyChanged, token)){
+        if ( debug ){
+          console.debug('add history element ' + token);
+        }
+        this.recentlyAdded.push(token);
+        Ext.History.add(token, true);
+      }
     }
-    if (this.isInvokeable(this.recentlyChanged, token)){
-      this.recentlyAdded.push(token);
-      Ext.History.add(token, true);
+  },
+  
+  createToken: function(elements){
+    var token = '';
+    if (Ext.isArray(elements)){
+      for (var i=0; i<elements.length; i++){
+        token += elements[i];
+        if ( (i+1)<elements.length ){
+          token += '|';
+        }
+      }
     }
+    return token;
   },
   
   append: function(item){

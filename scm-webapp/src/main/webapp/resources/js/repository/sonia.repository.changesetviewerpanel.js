@@ -41,7 +41,12 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   changesetViewerTitleText: 'Commits {0}',
   
   initComponent: function(){
-    this.historyId = 'changesetviewer|' + this.repository.id;
+    this.historyId = Sonia.History.createToken([
+      'changesetviewer', 
+      this.repository.id, 
+      this.start, 
+      this.pageSize 
+    ]);
 
     this.changesetStore = new Sonia.rest.JsonStore({
       id: 'changesetStore',
