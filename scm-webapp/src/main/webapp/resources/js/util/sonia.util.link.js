@@ -36,13 +36,16 @@ Sonia.util.Link = Ext.extend(Ext.BoxComponent, {
 
   constructor: function(config) {
     config = config || {};
+    var cl = 'scm-link';
+    if (config['class']){
+      cl += ' ' +config['class'];
+    }
     config.xtype = 'box';
     config.autoEl = { 
       tag: 'a', 
-      html: config.text, 
-      href: '#', 
+      html: config.text,
       style: config.style, 
-      'class': config['class'] 
+      'class': cl
     };
     config.listeners = {
       render: function(c) {

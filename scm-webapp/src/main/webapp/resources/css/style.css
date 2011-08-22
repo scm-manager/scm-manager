@@ -59,6 +59,14 @@ a:visited {
   color: #004077;
 }
 
+a.scm-browser:hover {
+  cursor: pointer;
+}
+
+a.scm-link:hover {
+  cursor: pointer;
+}
+
 #header {
   margin: 5px;
 }

@@ -33,13 +33,14 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   
   repository: null,
   revision: null,
+  historyId: null,
   
   repositoryBrowserTitleText: 'Source: {0}',
   
   iconFolder: 'resources/images/folder.gif',
   iconDocument: 'resources/images/document.gif',
   templateIcon: '<img src="{0}" alt="{1}" title="{2}" />',
-  templateLink: '<a class="scm-browser" rel="{1}" href="#">{0}</a>',
+  templateLink: '<a class="scm-browser" rel="{1}">{0}</a>',
   
   emptyText: 'This directory is empty',
 
