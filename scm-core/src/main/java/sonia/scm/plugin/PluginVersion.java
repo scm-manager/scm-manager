@@ -161,7 +161,7 @@ public class PluginVersion implements Comparable<PluginVersion>
             {
               if (o.snapshot &&!snapshot)
               {
-                result = 0;
+                result = -1;
               }
               else if (!o.snapshot && snapshot)
               {
