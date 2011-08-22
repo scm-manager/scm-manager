@@ -122,6 +122,7 @@ Sonia.History.register('changesetviewer', function(params){
     var tab = Ext.getCmp(id);
     
     if ( tab ){
+      main.getMainTabPanel().setActiveTab(id);
       tab.loadChangesets(start, pageSize);
     } else {  
       Ext.Ajax.request({

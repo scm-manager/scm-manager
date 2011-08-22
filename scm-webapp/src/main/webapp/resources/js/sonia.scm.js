@@ -486,6 +486,10 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       document.head.appendChild(css);
       this.stylesheets.push(url);
     }
+  },
+  
+  getMainTabPanel: function(){
+    return this.mainTabPanel;
   }
 
 });
