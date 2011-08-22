@@ -19,15 +19,5 @@
     <module>scm-plugin-archetype</module>
     <module>scm-maven-plugin</module>
   </modules>
-  
-  <dependencies>
-
-    <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-core</artifactId>
-      <version>1.7-SNAPSHOT</version>
-    </dependency>
-
-  </dependencies>
 
 </project>

@@ -47,8 +47,6 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
-import sonia.scm.util.Util;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
