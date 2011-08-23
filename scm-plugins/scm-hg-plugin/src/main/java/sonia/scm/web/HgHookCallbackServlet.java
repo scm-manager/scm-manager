@@ -47,6 +47,7 @@ import sonia.scm.repository.HgRepositoryHookEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -108,6 +109,59 @@ public class HgHookCallbackServlet extends HttpServlet
    * Method description
    *
    *
+   * @param request
+   * @param response
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  @Override
+  protected void doPost(HttpServletRequest request,
+                        HttpServletResponse response)
+          throws ServletException, IOException
+  {
+    String strippedURI = HttpUtil.getStrippedURI(request);
+    Matcher m = REGEX_URL.matcher(strippedURI);
+
+    if (m.matches())
+    {
+      String repositoryId = m.group(1);
+      String type = m.group(2);
+      String challenge = request.getParameter(PARAM_CHALLENGE);
+
+      if (Util.isNotEmpty(challenge))
+      {
+        String node = request.getParameter(PARAM_NODE);
+
+        if (Util.isNotEmpty(node))
+        {
+          hookCallback(response, repositoryId, type, challenge, node);
+        }
+        else if (logger.isDebugEnabled())
+        {
+          logger.debug("node parameter not found");
+        }
+      }
+      else if (logger.isDebugEnabled())
+      {
+        logger.debug("challenge parameter not found");
+      }
+    }
+    else
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("url does not match");
+      }
+
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param response
    * @param repositoryName
    * @param type
@@ -116,8 +170,9 @@ public class HgHookCallbackServlet extends HttpServlet
    *
    * @throws IOException
    */
-  public void hookCallback(HttpServletResponse response, String repositoryName,
-                           String type, String challenge, String node)
+  private void hookCallback(HttpServletResponse response,
+                            String repositoryName, String type,
+                            String challenge, String node)
           throws IOException
   {
     if (hookManager.isAcceptAble(challenge))
@@ -151,39 +206,6 @@ public class HgHookCallbackServlet extends HttpServlet
         logger.warn("hg hook challenge is not accept able");
       }
 
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
-  @Override
-  protected void doPost(HttpServletRequest request,
-                        HttpServletResponse response)
-          throws ServletException, IOException
-  {
-    String strippedURI = HttpUtil.getStrippedURI(request);
-    Matcher m = REGEX_URL.matcher(strippedURI);
-
-    if (m.matches())
-    {
-      String repositoryId = m.group(1);
-      String type = m.group(2);
-      String challenge = request.getParameter(PARAM_CHALLENGE);
-      String node = request.getParameter(PARAM_NODE);
-
-      hookCallback(response, repositoryId, type, challenge, node);
-    }
-    else
-    {
       response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
   }
