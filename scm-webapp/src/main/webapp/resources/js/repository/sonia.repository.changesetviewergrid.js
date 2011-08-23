@@ -125,7 +125,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
   
   openRepositoryBrowser: function(revision){
     main.addTab({
-      id: 'repositorybrowser-' + this.repository.id + '-' + revision,
+      id: 'repositorybrowser-' + this.repository.id + ':' + revision,
       xtype: 'repositoryBrowser',
       repository: this.repository,
       revision: revision,

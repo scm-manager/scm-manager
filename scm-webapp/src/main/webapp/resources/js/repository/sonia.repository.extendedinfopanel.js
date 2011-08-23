@@ -96,7 +96,7 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
   
   createRepositoryBrowser: function(){
     return {
-      id: 'repositorybrowser-' + this.item.id,
+      id: 'repositorybrowser-' + this.item.id + ':_',
       xtype: 'repositoryBrowser',
       repository: this.item,
       closable: true

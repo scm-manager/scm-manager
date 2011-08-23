@@ -50,6 +50,12 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       console.debug('create new browser for repository ' + this.repository.name + " and revision " + this.revision);
     }
     
+    this.historyId = Sonia.History.createToken([
+      'repositorybrowser', 
+      this.repository.id, 
+      this.revision ? this.revision : '_'
+    ]);
+    
     var browserStore = new Sonia.rest.JsonStore({
       proxy: new Ext.data.HttpProxy({
         url: restUrl + 'repositories/' + this.repository.id  + '/browse.json',
@@ -161,6 +167,22 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         directory: true,
         length: 0
       }));
+    }
+    
+    var historyParams = [];
+    if ( this.revision ){
+      historyParams.push(this.revision)
+    } else {
+      historyParams.push('_');
+    }
+    
+    if ( extra.params.path ){
+      historyParams.push(extra.params.path);
+    }
+    
+    var id = Sonia.History.appendWithDepth(historyParams, 2);
+    if (id){
+      this.historyId = id;
     }
   },
   
@@ -313,3 +335,26 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
 
 // register xtype
 Ext.reg('repositoryBrowser', Sonia.repository.RepositoryBrowser);
+
+// register history handler
+Sonia.History.register('repositorybrowser', function(params){
+  
+  if (params){
+    
+    var id = 'repositorybrowser-' + params[0] + ':';
+    var revision = params[1];
+    id += revision;
+    var path = params[2] ? params[2] : '';
+    
+    if (debug){
+      console.debug('load repositorybrowser for ' + id + ', ' + revision + ', ' + path );
+    }
+    
+    var tab = Ext.getCmp(id);
+    
+    if ( tab ){
+      main.getMainTabPanel().setActiveTab(id); 
+      tab.changeDirectory(path);
+    }
+  }
+});
