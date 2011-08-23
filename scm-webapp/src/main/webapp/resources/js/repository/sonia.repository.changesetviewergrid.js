@@ -45,7 +45,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
                             <img src="resources/images/delete.gif" alt="Deleted"><span class="cs-mod-txt">{2}</span>\
                           </div>',
   idsTemplate: '<div class="cs-commit">Commit: {0}</div>\
-                <div class="cs-tree">Tree: <a class="cs-tree-link" rel="{0}" href="#">{0}</a></div>',
+                <div class="cs-tree">Tree: <a class="scm-link cs-tree-link" rel="{0}">{0}</a></div>',
   tagsAndBranchesTemplate: '<div class="changeset-tags">{0}</div>\
                             <div class="changeset-branches">{1}</div>',
   
