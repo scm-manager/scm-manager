@@ -34,6 +34,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   repository: null,
   revision: null,
   historyId: null,
+  path: null,
   
   repositoryBrowserTitleText: 'Source: {0}',
   
@@ -74,6 +75,12 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     if ( this.revision ){
       browserStore.baseParams = {
         revision: this.revision
+      };
+    }
+    
+    if ( this.path ){
+      browserStore.baseParams = {
+        path: this.path
       };
     }
     
@@ -346,6 +353,10 @@ Sonia.History.register('repositorybrowser', function(params){
     id += revision;
     var path = params[2] ? params[2] : '';
     
+    if ( revision == '_' ){
+      revision = null;
+    }
+    
     if (debug){
       console.debug('load repositorybrowser for ' + id + ', ' + revision + ', ' + path );
     }
@@ -355,6 +366,28 @@ Sonia.History.register('repositorybrowser', function(params){
     if ( tab ){
       main.getMainTabPanel().setActiveTab(id); 
       tab.changeDirectory(path);
+    } else {
+      Ext.Ajax.request({
+        url: restUrl + 'repositories/' + params[0] + '.json',
+        method: 'GET',
+        scope: this,
+        success: function(response){
+          var item = Ext.decode(response.responseText);
+          main.addTab({
+            id: id,
+            xtype: 'repositoryBrowser',
+            repository: item,
+            revision: revision,
+            path: path,
+            closable: true
+          })
+        },
+        failure: function(result){
+          main.handleFailure(
+            result.status
+          );
+        }
+      });
     }
   }
 });
