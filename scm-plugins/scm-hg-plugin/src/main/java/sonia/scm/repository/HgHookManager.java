@@ -153,7 +153,7 @@ public class HgHookManager
    */
   public boolean isAcceptAble(String challenge)
   {
-    return challenge.equals(challenge);
+    return this.challenge.equals(challenge);
   }
 
   //~--- methods --------------------------------------------------------------
