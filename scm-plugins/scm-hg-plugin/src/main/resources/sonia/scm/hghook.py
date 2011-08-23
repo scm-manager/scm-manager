@@ -49,4 +49,4 @@ def callback(ui, repo, hooktype, node=None, source=None, **kwargs):
     if conn.code == 200:
       print( "scm-hook executed successfully" )
     else:
-      print( "scm-hook failed" )
+      print( "scm-hook failed with error code " + str(conn.code) )
