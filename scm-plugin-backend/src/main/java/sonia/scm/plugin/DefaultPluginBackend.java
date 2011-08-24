@@ -36,6 +36,7 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 import org.slf4j.Logger;
@@ -66,6 +67,7 @@ import javax.xml.bind.JAXBException;
  *
  * @author Sebastian Sdorra
  */
+@Singleton
 public class DefaultPluginBackend extends AbstractPluginBackend
 {
 
