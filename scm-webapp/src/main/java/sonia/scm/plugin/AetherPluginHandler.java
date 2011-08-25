@@ -58,7 +58,6 @@ import org.sonatype.aether.impl.VersionResolver;
 import org.sonatype.aether.impl.internal.DefaultServiceLocator;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.Proxy;
-import org.sonatype.aether.repository.ProxySelector;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.resolution.DependencyRequest;
 import org.sonatype.aether.spi.connector.RepositoryConnectorFactory;
