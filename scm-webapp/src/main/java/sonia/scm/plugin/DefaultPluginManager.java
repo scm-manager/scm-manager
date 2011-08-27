@@ -558,12 +558,17 @@ public class DefaultPluginManager implements PluginManager
           }
           catch (Exception ex)
           {
-            throw new PluginLoadException(ex);
+            logger.error("could not load plugins from plugin center", ex);
           }
           finally
           {
             IOUtil.close(input);
           }
+        }
+
+        if (center == null)
+        {
+          center = new PluginCenter();
         }
       }
     }
