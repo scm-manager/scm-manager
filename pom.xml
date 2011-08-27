@@ -382,7 +382,7 @@
     <servlet.version>2.5</servlet.version>
     <guice.version>3.0</guice.version>
     <jersey.version>1.8</jersey.version>
-    <ehcache.version>2.4.3</ehcache.version>
+    <ehcache.version>2.4.4</ehcache.version>
     <freemarker.version>2.3.18</freemarker.version>
     <jetty.version>7.4.5.v20110725</jetty.version>
     <project.build.javaLevel>1.6</project.build.javaLevel>
