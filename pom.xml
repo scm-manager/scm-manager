@@ -378,7 +378,7 @@
   <properties>
     <mokito.version>1.8.5</mokito.version>
     <junit.version>4.9</junit.version>
-    <slf4j.version>1.6.1</slf4j.version>
+    <slf4j.version>1.6.2</slf4j.version>
     <servlet.version>2.5</servlet.version>
     <guice.version>3.0</guice.version>
     <jersey.version>1.8</jersey.version>
