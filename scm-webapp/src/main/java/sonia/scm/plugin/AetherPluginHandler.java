@@ -56,6 +56,7 @@ import org.sonatype.aether.impl.ArtifactDescriptorReader;
 import org.sonatype.aether.impl.VersionRangeResolver;
 import org.sonatype.aether.impl.VersionResolver;
 import org.sonatype.aether.impl.internal.DefaultServiceLocator;
+import org.sonatype.aether.repository.Authentication;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.Proxy;
 import org.sonatype.aether.repository.RemoteRepository;
@@ -325,8 +326,18 @@ public class AetherPluginHandler
    */
   private Proxy createProxy()
   {
+    Authentication authentication = null;
+    String username = configuration.getProxyUser();
+    String password = configuration.getProxyPassword();
+
+    if (Util.isNotEmpty(username) || Util.isNotEmpty(password))
+    {
+      authentication = new Authentication(Util.nonNull(username),
+              Util.nonNull(password));
+    }
+
     return new Proxy(Proxy.TYPE_HTTP, configuration.getProxyServer(),
-                     configuration.getProxyPort(), null);
+                     configuration.getProxyPort(), authentication);
   }
 
   /**
