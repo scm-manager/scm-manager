@@ -36,8 +36,8 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-
 import com.google.inject.Singleton;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,9 +60,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+import java.util.Arrays;
+
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
@@ -81,6 +82,12 @@ public class DefaultCipherHandler implements CipherHandler
 
   /** Field description */
   public static final String ENCODING = "UTF-8";
+
+  /** Field description */
+  public static final int KEY_LENGTH = 16;
+
+  /** Field description */
+  public static final int SALT_LENGTH = 16;
 
   /** Field description */
   private static final String CIPHERKEY_FILENAME = ".cipherkey";
@@ -165,17 +172,18 @@ public class DefaultCipherHandler implements CipherHandler
     try
     {
       byte[] encodedInput = Base64.decode(value);
-      byte[] salt = new byte[8];
-      byte[] encoded = new byte[encodedInput.length - 8];
+      byte[] salt = new byte[SALT_LENGTH];
+      byte[] encoded = new byte[encodedInput.length - SALT_LENGTH];
 
-      System.arraycopy(encodedInput, 0, salt, 0, 8);
-      System.arraycopy(encodedInput, 8, encoded, 0, encodedInput.length - 8);
+      System.arraycopy(encodedInput, 0, salt, 0, SALT_LENGTH);
+      System.arraycopy(encodedInput, SALT_LENGTH, encoded, 0,
+                       encodedInput.length - SALT_LENGTH);
 
-      PBEParameterSpec parameterSpec = new PBEParameterSpec(salt, 20);
+      IvParameterSpec iv = new IvParameterSpec(salt);
       SecretKey secretKey = buildSecretKey(plainKey);
       javax.crypto.Cipher cipher = javax.crypto.Cipher.getInstance(CIPHER_TYPE);
 
-      cipher.init(javax.crypto.Cipher.DECRYPT_MODE, secretKey, parameterSpec);
+      cipher.init(javax.crypto.Cipher.DECRYPT_MODE, secretKey, iv);
 
       byte[] decoded = cipher.doFinal(encoded);
 
@@ -220,7 +228,7 @@ public class DefaultCipherHandler implements CipherHandler
 
     try
     {
-      byte[] salt = new byte[8];
+      byte[] salt = new byte[SALT_LENGTH];
 
       random.nextBytes(salt);
 
@@ -234,8 +242,9 @@ public class DefaultCipherHandler implements CipherHandler
       byte[] encodedInput = cipher.doFinal(inputBytes);
       byte[] result = new byte[salt.length + encodedInput.length];
 
-      System.arraycopy(salt, 0, result, 0, 8);
-      System.arraycopy(encodedInput, 0, result, 8, result.length - 8);
+      System.arraycopy(salt, 0, result, 0, SALT_LENGTH);
+      System.arraycopy(encodedInput, 0, result, SALT_LENGTH,
+                       result.length - SALT_LENGTH);
       res = new String(Base64.encode(result), ENCODING);
     }
     catch (Exception ex)
@@ -266,6 +275,7 @@ public class DefaultCipherHandler implements CipherHandler
     MessageDigest digest = MessageDigest.getInstance(DIGEST_TYPE);
 
     raw = digest.digest(raw);
+    raw = Arrays.copyOf(raw, KEY_LENGTH);
 
     return new SecretKeySpec(raw, KEY_TYPE);
   }
