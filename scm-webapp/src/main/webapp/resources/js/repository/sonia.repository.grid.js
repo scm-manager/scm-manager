@@ -41,6 +41,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   formTitleText: 'Repository Form',
   
   searchValue: null,
+  typeFilter: null,
 
   initComponent: function(){
 
@@ -95,9 +96,9 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     Sonia.repository.Grid.superclass.initComponent.apply(this, arguments);
   },
   
-  storeLoad: function(store){
+  storeLoad: function(){
     if (this.searchValue){
-      this.searchStore(store);
+      this.filterStore();
     }
   },
 
@@ -113,22 +114,31 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   },
   
   search: function(value){
-    this.searchValue = value; 
-    var store = this.getStore();
-    if ( ! value ){
-      store.clearFilter();
-    } else {
-      this.searchStore(store);
-    }
+    this.searchValue = value;
+    this.filterStore();
   },
   
-  searchStore: function(store){
-    var value = this.searchValue.toLowerCase();
-    store.filterBy(function(rec){
-      return ! value || 
-        rec.get('name').toLowerCase().indexOf(value) >= 0 || 
-        rec.get('description').toLowerCase().indexOf(value) >= 0;
-    });
+  filter: function(type){
+    this.typeFilter = type;
+    this.filterStore();
+  },
+  
+  filterStore: function(){
+    var store = this.getStore();
+    if ( ! this.searchValue && ! this.typeFilter ){
+      store.clearFilter();
+    } else {    
+      var search = null;
+      if ( this.searchValue ){
+        search = this.searchValue.toLowerCase();
+      }
+      store.filterBy(function(rec){
+        return (! search || 
+          rec.get('name').toLowerCase().indexOf(search) >= 0 || 
+          rec.get('description').toLowerCase().indexOf(search) >= 0) && 
+          (! this.typeFilter || rec.get('type') == this.typeFilter);
+      }, this);
+    }
   },
 
   selectItem: function(item){
