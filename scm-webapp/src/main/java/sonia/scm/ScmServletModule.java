@@ -64,9 +64,13 @@ import sonia.scm.repository.ChangesetViewerUtil;
 import sonia.scm.repository.RepositoryBrowserUtil;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.xml.XmlRepositoryManager;
+import sonia.scm.security.CipherHandler;
+import sonia.scm.security.DefaultCipherHandler;
 import sonia.scm.security.EncryptionHandler;
+import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.security.SecurityContext;
+import sonia.scm.security.UUIDKeyGenerator;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.template.FreemarkerTemplateHandler;
@@ -197,7 +201,9 @@ public class ScmServletModule extends ServletModule
     bind(ScmConfiguration.class).toInstance(config);
     bind(PluginLoader.class).toInstance(pluginLoader);
     bind(PluginManager.class).to(DefaultPluginManager.class);
+    bind(KeyGenerator.class).to(UUIDKeyGenerator.class);
     bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
+    bind(CipherHandler.class).to(DefaultCipherHandler.class);
     bindExtProcessor.bindExtensions(binder());
 
     Class<? extends FileSystem> fileSystem =

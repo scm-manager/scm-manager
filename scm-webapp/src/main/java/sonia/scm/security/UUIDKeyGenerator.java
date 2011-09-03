@@ -33,32 +33,26 @@
 
 package sonia.scm.security;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.UUID;
 
 /**
  *
  * @author Sebastian Sdorra
- * @since 1.7
  */
-public interface CipherHandler
+public class UUIDKeyGenerator implements KeyGenerator
 {
 
   /**
    * Method description
    *
    *
-   * @param value
-   *
    * @return
    */
-  public String decode(String value);
-
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
-  public String encode(String value);
+  @Override
+  public String createKey()
+  {
+    return UUID.randomUUID().toString();
+  }
 }
