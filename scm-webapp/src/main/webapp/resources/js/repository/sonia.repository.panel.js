@@ -130,11 +130,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   },
   
   filterByType: function(combo, rec){
-    var name = rec.get('name');
-    
-    console.debug(name);
-    
-    Ext.getCmp('repositoryGrid').filter(name);
+    Ext.getCmp('repositoryGrid').filter(rec.get('name'));
   },
   
   search: function(field){
