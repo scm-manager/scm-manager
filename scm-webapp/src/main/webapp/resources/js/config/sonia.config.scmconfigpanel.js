@@ -125,6 +125,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
             check: function(){
               Ext.getCmp('proxyServer').setDisabled( ! this.checked );
               Ext.getCmp('proxyPort').setDisabled( ! this.checked );
+              Ext.getCmp('proxyUser').setDisabled( ! this.checked );
+              Ext.getCmp('proxyPassword').setDisabled( ! this.checked );
             }
           }
         },{
@@ -143,6 +145,23 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           disabled: true,
           allowBlank: false,
           helpText: this.proxyPortHelpText
+        },{
+          id: 'proxyUser',
+          xtype: 'textfield',
+          fieldLabel: this.proxyUserText,
+          name: 'proxyUser',
+          disabled: true,
+          helpText: this.proxyUserHelpText,
+          allowBlank: true
+        },{
+          id: 'proxyPassword',
+          xtype: 'textfield',
+          inputType: 'password',
+          fieldLabel: this.proxyPasswordText,
+          name: 'proxyPassword',
+          disabled: true,
+          helpText: this.proxyPasswordHelpText,
+          allowBlank: true
         },{
           xtype : 'textfield',
           fieldLabel : this.adminGroupsText,

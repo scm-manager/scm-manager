@@ -47,6 +47,8 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.core.util.Base64;
+
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
@@ -70,6 +72,9 @@ public class URLHttpClient implements HttpClient
 {
 
   /** Field description */
+  public static final String CREDENTIAL_SEPARATOR = ":";
+
+  /** Field description */
   public static final String ENCODING = "UTF-8";
 
   /** Field description */
@@ -79,6 +84,9 @@ public class URLHttpClient implements HttpClient
   public static final String HEADER_ACCEPT_ENCODING_VALUE = "gzip";
 
   /** Field description */
+  public static final String HEADER_PROXY_AUTHORIZATION = "Proxy-Authorization";
+
+  /** Field description */
   public static final String HEADER_USERAGENT = "User-Agent";
 
   /** Field description */
@@ -86,6 +94,9 @@ public class URLHttpClient implements HttpClient
 
   /** Field description */
   public static final String METHOD_POST = "POST";
+
+  /** Field description */
+  public static final String PREFIX_BASIC_AUTHENTICATION = "Basic ";
 
   /** Field description */
   public static final int TIMEOUT_CONNECTION = 30000;
@@ -352,6 +363,25 @@ public class URLHttpClient implements HttpClient
                                   HEADER_ACCEPT_ENCODING_VALUE);
     connection.setRequestProperty(
         HEADER_USERAGENT, HEADER_USERAGENT_VALUE.concat(context.getVersion()));
+
+    String username = configuration.getProxyUser();
+    String password = configuration.getProxyPassword();
+
+    if (Util.isNotEmpty(username) || Util.isNotEmpty(password))
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("enable proxy authentication for user '{}'",
+                     Util.nonNull(username));
+      }
+
+      String auth = Util.nonNull(username).concat(CREDENTIAL_SEPARATOR).concat(
+                        Util.nonNull(password));
+
+      auth = PREFIX_BASIC_AUTHENTICATION.concat(
+        new String(Base64.encode(auth.getBytes())));
+      connection.setRequestProperty(HEADER_PROXY_AUTHORIZATION, auth);
+    }
 
     return connection;
   }

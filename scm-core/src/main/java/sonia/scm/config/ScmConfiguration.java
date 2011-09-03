@@ -158,6 +158,8 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
     this.enableProxy = other.enableProxy;
     this.proxyPort = other.proxyPort;
     this.proxyServer = other.proxyServer;
+    this.proxyUser = other.proxyUser;
+    this.proxyPassword = other.proxyPassword;
     this.forceBaseUrl = other.forceBaseUrl;
     this.baseUrl = other.baseUrl;
 
@@ -260,6 +262,18 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   }
 
   /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.7
+   */
+  public String getProxyPassword()
+  {
+    return proxyPassword;
+  }
+
+  /**
    * Returns the proxy port.
    *
    *
@@ -279,6 +293,18 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   public String getProxyServer()
   {
     return proxyServer;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.7
+   */
+  public String getProxyUser()
+  {
+    return proxyUser;
   }
 
   /**
@@ -500,6 +526,18 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    * Method description
    *
    *
+   * @param proxyPassword
+   * @since 1.7
+   */
+  public void setProxyPassword(String proxyPassword)
+  {
+    this.proxyPassword = proxyPassword;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param proxyPort
    */
   public void setProxyPort(int proxyPort)
@@ -516,6 +554,18 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   public void setProxyServer(String proxyServer)
   {
     this.proxyServer = proxyServer;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param proxyUser
+   * @since 1.7
+   */
+  public void setProxyUser(String proxyUser)
+  {
+    this.proxyUser = proxyUser;
   }
 
   /**
@@ -575,10 +625,16 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
   private String pluginUrl = DEFAULT_PLUGINURL;
 
   /** Field description */
+  private String proxyPassword;
+
+  /** Field description */
   private int proxyPort = 8080;
 
   /** Field description */
   private String proxyServer = "proxy.mydomain.com";
+
+  /** Field description */
+  private String proxyUser;
 
   /** @deprecated use {@link #baseUrl} */
   private String servername = "localhost";
