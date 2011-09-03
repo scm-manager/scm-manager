@@ -35,9 +35,6 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,8 +66,8 @@ import javax.crypto.spec.SecretKeySpec;
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.7
  */
-@Singleton
 public class DefaultCipherHandler implements CipherHandler
 {
 
@@ -117,26 +114,30 @@ public class DefaultCipherHandler implements CipherHandler
    * @param keyGenerator
    *
    *
-   * @throws IOException
    */
-  @Inject
   public DefaultCipherHandler(SCMContextProvider context,
                               KeyGenerator keyGenerator)
-          throws IOException
   {
     File configDirectory = new File(context.getBaseDirectory(), "config");
 
     IOUtil.mkdirs(configDirectory);
     cipherKeyFile = new File(configDirectory, CIPHERKEY_FILENAME);
 
-    if (cipherKeyFile.exists())
+    try
     {
-      loadKey();
+      if (cipherKeyFile.exists())
+      {
+        loadKey();
+      }
+      else
+      {
+        key = keyGenerator.createKey().toCharArray();
+        storeKey();
+      }
     }
-    else
+    catch (IOException ex)
     {
-      key = keyGenerator.createKey().toCharArray();
-      storeKey();
+      throw new CipherException("could not create CipherHandler", ex);
     }
   }
 

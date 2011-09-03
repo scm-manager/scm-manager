@@ -33,15 +33,78 @@
 
 package sonia.scm.security;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.SCMContext;
+import sonia.scm.util.ServiceUtil;
+
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.7
  */
-public class CipherSingleton
+public class CipherUtil
 {
 
   /** Field description */
-  private static CipherHandler cipherHandler;
+  private static volatile CipherUtil instance;
+
+  //~--- constructors ---------------------------------------------------------
+
+  private KeyGenerator keyGenerator;
+  
+  /**
+   * Constructs ...
+   *
+   */
+  private CipherUtil()
+  {
+    keyGenerator = ServiceUtil.getService(KeyGenerator.class);
+
+    if (keyGenerator == null)
+    {
+      keyGenerator = new UUIDKeyGenerator();
+    }
+
+    cipherHandler = ServiceUtil.getService(CipherHandler.class);
+
+    if (cipherHandler == null)
+    {
+      cipherHandler = new DefaultCipherHandler(SCMContext.getContext(),
+              keyGenerator);
+    }
+  }
+
+  public KeyGenerator getKeyGenerator()
+  {
+    return keyGenerator;
+  }
+  
+  
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static CipherUtil getInstance()
+  {
+    if (instance == null)
+    {
+      synchronized (CipherUtil.class)
+      {
+        if (instance == null)
+        {
+          instance = new CipherUtil();
+        }
+      }
+    }
+
+    return instance;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -53,13 +116,8 @@ public class CipherSingleton
    *
    * @return
    */
-  public static String decode(String value)
+  public String decode(String value)
   {
-    if (cipherHandler == null)
-    {
-      throw new CipherException("CipherSingleton is not initialized");
-    }
-
     return cipherHandler.decode(value);
   }
 
@@ -71,24 +129,26 @@ public class CipherSingleton
    *
    * @return
    */
-  public static String encode(String value)
+  public String encode(String value)
   {
-    if (cipherHandler == null)
-    {
-      throw new CipherException("CipherSingleton is not initialized");
-    }
-
     return cipherHandler.encode(value);
   }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param handler
+   * @return
    */
-  public static void init(CipherHandler handler)
+  public CipherHandler getCipherHandler()
   {
-    cipherHandler = handler;
+    return cipherHandler;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private CipherHandler cipherHandler;
 }

@@ -58,7 +58,7 @@ import java.util.List;
 
 import javax.servlet.ServletContextEvent;
 import sonia.scm.security.CipherHandler;
-import sonia.scm.security.CipherSingleton;
+import sonia.scm.security.CipherUtil;
 
 /**
  *
@@ -145,10 +145,6 @@ public class ScmContextListener extends GuiceServletContextListener
     injector = Guice.createInjector(moduleList);
 
     SCMContextProvider context = SCMContext.getContext();
-    
-    // init CipherSingleton
-    CipherHandler ch = injector.getInstance(CipherHandler.class);
-    CipherSingleton.init(ch);
 
     // init StoreFactory
     injector.getInstance(StoreFactory.class).init(context);

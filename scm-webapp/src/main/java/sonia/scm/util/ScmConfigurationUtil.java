@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.CipherUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -131,6 +132,13 @@ public class ScmConfigurationUtil
         Unmarshaller unmarshaller = context.createUnmarshaller();
         ScmConfiguration loadedConfig =
           (ScmConfiguration) unmarshaller.unmarshal(file);
+        String password = loadedConfig.getProxyPassword();
+
+        if (Util.isNotEmpty(password))
+        {
+          password = CipherUtil.getInstance().decode(password);
+          loadedConfig.setProxyPassword(password);
+        }
 
         if (loadedConfig != null)
         {
@@ -168,10 +176,22 @@ public class ScmConfigurationUtil
         IOUtil.mkdirs(file.getParentFile());
       }
 
+      ScmConfiguration config = new ScmConfiguration();
+
+      config.load(configuration);
+
+      String password = config.getProxyPassword();
+
+      if (Util.isNotEmpty(password))
+      {
+        password = CipherUtil.getInstance().encode(password);
+        config.setProxyPassword(password);
+      }
+
       Marshaller marshaller = context.createMarshaller();
 
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-      marshaller.marshal(configuration, file);
+      marshaller.marshal(config, file);
       configuration.fireChangeEvent();
     }
     catch (Exception ex)

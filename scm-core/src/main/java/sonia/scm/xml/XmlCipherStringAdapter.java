@@ -35,7 +35,7 @@ package sonia.scm.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.security.CipherSingleton;
+import sonia.scm.security.CipherUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -62,7 +62,7 @@ public class XmlCipherStringAdapter extends XmlAdapter<String, String>
   @Override
   public String marshal(String v) throws Exception
   {
-    return CipherSingleton.encode(v);
+    return CipherUtil.getInstance().encode(v);
   }
 
   /**
@@ -78,6 +78,6 @@ public class XmlCipherStringAdapter extends XmlAdapter<String, String>
   @Override
   public String unmarshal(String v) throws Exception
   {
-    return CipherSingleton.decode(v);
+    return CipherUtil.getInstance().decode(v);
   }
 }
