@@ -39,6 +39,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   colUrlText: 'Url',
   emptyText: 'No repository is configured',
   formTitleText: 'Repository Form',
+  
+  searchValue: null,
 
   initComponent: function(){
 
@@ -51,6 +53,12 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       fields: [ 'id', 'name', 'type', 'contact', 'description', 'creationDate', 'url', 'public', 'permissions', 'properties' ],
       sortInfo: {
         field: 'name'
+      },
+      listeners: {
+        load: {
+          fn: this.storeLoad,
+          scope: this
+        }
       }
     });
 
@@ -86,6 +94,12 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Grid.superclass.initComponent.apply(this, arguments);
   },
+  
+  storeLoad: function(store){
+    if (this.searchValue){
+      this.searchStore(store);
+    }
+  },
 
   onFallBelowMinHeight: function(height, minHeight){
     var p = Ext.getCmp('repositoryEditPanel');
@@ -99,8 +113,18 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   },
   
   search: function(value){
-    value = value.toLowerCase();
-    this.getStore().filterBy(function(rec){
+    this.searchValue = value; 
+    var store = this.getStore();
+    if ( ! value ){
+      store.clearFilter();
+    } else {
+      this.searchStore(store);
+    }
+  },
+  
+  searchStore: function(store){
+    var value = this.searchValue.toLowerCase();
+    store.filterBy(function(rec){
       return ! value || 
         rec.get('name').toLowerCase().indexOf(value) >= 0 || 
         rec.get('description').toLowerCase().indexOf(value) >= 0;
