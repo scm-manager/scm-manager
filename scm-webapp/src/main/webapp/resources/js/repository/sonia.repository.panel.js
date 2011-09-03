@@ -42,6 +42,23 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
 
   initComponent: function(){
 
+    // create new store for repository types
+    var typeStore = new Ext.data.JsonStore({
+      id: 1,
+      fields: [ 'displayName', 'name' ]
+    });
+    
+    // load types from server state
+    typeStore.loadData(state.repositoryTypes);
+    
+    // add empty value
+    var t = new typeStore.recordType({
+      displayName: '',
+      name: ''
+    });
+    
+    typeStore.insert(0, t);
+
     var toolbar = [];
     if ( admin ){
       toolbar.push({
@@ -77,7 +94,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
       lazyRender: true,
       mode: 'local',
       editable: false,
-      store: repositoryTypeStore,
+      store: typeStore,
       valueField: 'name',
       displayField: 'displayName',
       allowBlank: true,
@@ -86,7 +103,11 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
           fn: this.filterByType,
           scope: this
         }
-      }
+      },
+      tpl:'<tpl for=".">' +
+        '<div class="x-combo-list-item">' +
+          '{displayName}&nbsp;' +
+        '</div></tpl>'
     }, '  ',{
       xtype: 'label',
       text: 'Search: '
