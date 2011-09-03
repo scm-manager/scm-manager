@@ -44,15 +44,41 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
 
     var toolbar = [];
     if ( admin ){
-      toolbar.push(
-        {xtype: 'tbbutton', text: this.addText, icon: this.addIcon, scope: this, handler: this.showAddForm}
-      );
+      toolbar.push({
+        xtype: 'tbbutton', 
+        text: this.addText, 
+        icon: this.addIcon, 
+        scope: this, 
+        handler: this.showAddForm
+      });
     }
-    toolbar.push(
-      {xtype: 'tbbutton', id: 'repoRmButton', disabled: true, text: this.removeText, icon: this.removeIcon, scope: this, handler: this.removeRepository},
-      '-',
-      {xtype: 'tbbutton', text: this.reloadText, icon: this.reloadIcon, scope: this, handler: this.reload}
-    );
+    toolbar.push({
+      xtype: 'tbbutton', 
+      id: 'repoRmButton', 
+      disabled: true, 
+      text: this.removeText, 
+      icon: this.removeIcon, 
+      scope: this,
+      handler: this.removeRepository
+    },'-', {
+      xtype: 'tbbutton', 
+      text: this.reloadText, 
+      icon: this.reloadIcon, 
+      scope: this, 
+      handler: this.reload
+    },'-',{
+      xtype: 'label',
+      text: 'Search: '
+    }, ' ',{
+      xtype: 'textfield',
+      enableKeyEvents: true,
+      listeners: {
+        keyup: {
+          fn: this.search,
+          scope: this
+        }
+      }
+    });
 
     var config = {
       tbar: toolbar,
@@ -80,6 +106,10 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Panel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  search: function(field){
+    Ext.getCmp('repositoryGrid').search(field.getValue());
   },
 
   removeRepository: function(){

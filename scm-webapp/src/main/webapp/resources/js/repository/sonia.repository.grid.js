@@ -97,6 +97,15 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     p.doLayout();
     this.ownerCt.doLayout();
   },
+  
+  search: function(value){
+    value = value.toLowerCase();
+    this.getStore().filterBy(function(rec){
+      return ! value || 
+        rec.get('name').toLowerCase().indexOf(value) >= 0 || 
+        rec.get('description').toLowerCase().indexOf(value) >= 0;
+    });
+  },
 
   selectItem: function(item){
     if ( debug ){
