@@ -53,6 +53,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   enableProxyText: 'Enable Proxy',
   proxyServerText: 'Proxy Server',
   proxyPortText: 'Proxy Port',
+  proxyUserText: 'Proxy User',
+  proxyPasswordText: 'Proxy Password',
   baseUrlText: 'Base Url',
   forceBaseUrlText: 'Force Base Url',
   
@@ -74,6 +76,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   enableProxyHelpText: 'Enable Proxy',
   proxyServerHelpText: 'The proxy server',
   proxyPortHelpText: 'The proxy port',
+  proxyUserHelpText: 'The username for the proxy server authentication.',
+  proxyPasswordHelpText: 'The password for the proxy server authentication.',
   baseUrlHelpText: 'The url of the application (with context path) i.e. http://localhost:8080/scm',
   forceBaseUrlHelpText: 'Redirects to the base url if the request comes from a other url',
 

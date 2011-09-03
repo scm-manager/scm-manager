@@ -270,6 +270,8 @@ if (Sonia.config.ScmConfigPanel){
     enableProxyText: 'Proxy aktivieren',
     proxyServerText: 'Proxy Server',
     proxyPortText: 'Proxy Port',
+    proxyUserText: 'Proxy User',
+    proxyPasswordText: 'Proxy Passwort',
     baseUrlText: 'Basis-URL',
     forceBaseUrlText: 'Basis-URL forcieren',
     
@@ -296,6 +298,8 @@ if (Sonia.config.ScmConfigPanel){
     enableProxyHelpText: 'Proxy-Einstellungen verwenden.',
     proxyServerHelpText: 'Der Proxy-Server.',
     proxyPortHelpText: 'Der Proxy-Port',
+    proxyUserHelpText: 'Der Benutzername für die Authentifizierung am Proxy-Server.',
+    proxyPasswordHelpText: 'Das Passwort für die Authentifizierung am Proxy-Server.',
     baseUrlHelpText: 'Die vollständige URL des Server, inclusive Context-Pfad z.B.: http://localhost:8080/scm.',
     forceBaseUrlHelpText: 'Leitet alle Zugriffe die nicht von der Basis-URL kommen auf die Basis-URL um.'
   });
