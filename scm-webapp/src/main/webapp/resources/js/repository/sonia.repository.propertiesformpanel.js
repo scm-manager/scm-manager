@@ -54,7 +54,7 @@ Sonia.repository.PropertiesFormPanel = Ext.extend(Sonia.repository.FormPanel, {
   
   loadProperties: function(){
     this.items.each(function(field){
-      if (field.property){
+      if (!Ext.isEmpty(field.property)){
         this.properties.push({
           'name': field.name,
           'property': field.property
@@ -75,15 +75,31 @@ Sonia.repository.PropertiesFormPanel = Ext.extend(Sonia.repository.FormPanel, {
     // create properties if they are empty
     if (!item.properties){
       item.properties = [];
+    } else {
+      var filtered = item.properties.filter(function(p){
+        var result = !Ext.isEmpty(p.key);
+        if ( result ){
+          for (var i in this.properties){
+            if ( p.key == this.properties[i].property ){
+              result = false;
+              break;
+            }
+          }
+        }
+        return result;
+      }, this);
+      item.properties = filtered;
     }
     
     // copy fields to properties
-    for ( var i in this.properties ){
-      var property = this.properties[i];
-      item.properties.push({
-        key: property.property,
-        value: item[property.name]
-      });
+    for ( var k in this.properties ){
+      var property = this.properties[k];
+      if (!Ext.isEmpty(property.name)){
+        item.properties.push({
+          key: property.property,
+          value: item[property.name]
+        });
+      }
       delete item[property.name];
     }
   }

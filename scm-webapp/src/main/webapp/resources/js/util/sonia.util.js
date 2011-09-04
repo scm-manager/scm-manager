@@ -40,7 +40,8 @@ Sonia.util.clone = function(obj) {
     if (obj[i] && typeof obj[i] == "object") {
       newObj[i] = Sonia.util.clone(obj[i]);
     } else newObj[i] = obj[i]
-  } return newObj;
+  }
+  return newObj;
 };
 
 Sonia.util.parseInt = function(string, defaultValue){
@@ -70,4 +71,23 @@ Sonia.util.getStringFromArray = function(array){
   }
 
   return value;
+}
+
+if (!Array.prototype.filter) {
+  
+  Array.prototype.filter = function(fn, scope){
+    var results = [],
+    i = 0,
+    ln = array.length;
+
+    for (; i < ln; i++) {
+      if (fn.call(scope, array[i], i, array)) {
+        results.push(array[i]);
+      }
+    }
+
+    return results;
+
+  }
+  
 }
