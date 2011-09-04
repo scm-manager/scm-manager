@@ -114,7 +114,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       Ext.getCmp('repoRmButton').setDisabled(false);
       panels.push({
         item: item,
-        xtype: 'repositoryPropertiesForm',
+        xtype: 'repositorySettingsForm',
         onUpdate: {
           fn: this.reload,
           scope: this

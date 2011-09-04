@@ -135,7 +135,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   showAddForm: function(){
     Ext.getCmp('repoRmButton').setDisabled(true);
     Sonia.repository.setEditPanel([{
-      xtype: 'repositoryPropertiesForm',
+      xtype: 'repositorySettingsForm',
       listeners: {
         updated: {
           fn: this.reload,

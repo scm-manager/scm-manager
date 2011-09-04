@@ -30,7 +30,7 @@
  */
 
 
-Sonia.repository.PropertiesFormPanel = Ext.extend(Sonia.repository.FormPanel, {
+Sonia.repository.SettingsFormPanel = Ext.extend(Sonia.repository.FormPanel, {
 
   initComponent: function(){
     var update = this.item != null;
@@ -80,10 +80,10 @@ Sonia.repository.PropertiesFormPanel = Ext.extend(Sonia.repository.FormPanel, {
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.repository.PropertiesFormPanel.superclass.initComponent.apply(this, arguments);
+    Sonia.repository.SettingsFormPanel.superclass.initComponent.apply(this, arguments);
   }
 
 });
 
 // register xtype
-Ext.reg('repositoryPropertiesForm', Sonia.repository.PropertiesFormPanel);
+Ext.reg('repositorySettingsForm', Sonia.repository.SettingsFormPanel);
