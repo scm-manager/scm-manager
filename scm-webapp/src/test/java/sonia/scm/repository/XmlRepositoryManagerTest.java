@@ -76,8 +76,13 @@ public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
 
     when(listenerProvider.get()).thenReturn(new HashSet<RepositoryListener>());
 
+    Provider<Set<RepositoryHook>> hookProvider = mock(Provider.class);
+
+    when(hookProvider.get()).thenReturn(new HashSet<RepositoryHook>());
+
     return new XmlRepositoryManager(contextProvider,
                                     MockUtil.getAdminSecurityContextProvider(),
-                                    factory, handlerSet, listenerProvider);
+                                    factory, handlerSet, listenerProvider,
+                                    hookProvider);
   }
 }

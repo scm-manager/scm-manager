@@ -108,6 +108,8 @@ public class BindingExtensionProcessor implements ExtensionProcessor
       Multibinder.newSetBinder(binder, ChangesetPreProcessor.class);
     Multibinder<ChangesetPreProcessorFactory> changesetPreProcessorFactoryBinder =
       Multibinder.newSetBinder(binder, ChangesetPreProcessorFactory.class);
+    Multibinder<RepositoryHook> repositoryHookBinder =
+      Multibinder.newSetBinder(binder, RepositoryHook.class);
 
     // listeners
     Multibinder<RepositoryListener> repositoryListenerBinder =
@@ -123,141 +125,128 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
     for (Class extensionClass : extensions)
     {
-      try
+      if (RepositoryHandler.class.isAssignableFrom(extensionClass))
       {
-        if (RepositoryHandler.class.isAssignableFrom(extensionClass))
+        if (logger.isInfoEnabled())
         {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("bind RepositoryHandler {}", extensionClass.getName());
-          }
-
-          binder.bind(extensionClass);
-          repositoryHandlers.addBinding().to(extensionClass);
+          logger.info("bind RepositoryHandler {}", extensionClass.getName());
         }
-        else if (EncryptionHandler.class.isAssignableFrom(extensionClass))
-        {
-          bind(binder, EncryptionHandler.class, extensionClass);
-        }
-        else if (AuthenticationHandler.class.isAssignableFrom(extensionClass))
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("bind AuthenticationHandler {}",
-                        extensionClass.getName());
-          }
 
-          binder.bind(extensionClass);
-          authenticators.addBinding().to(extensionClass);
-        }
-        else if (GroupListener.class.isAssignableFrom(extensionClass))
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("bind GroupListener {}", extensionClass.getName());
-          }
-
-          binder.bind(extensionClass);
-          groupListenerBinder.addBinding().to(extensionClass);
-        }
-        else if (UserListener.class.isAssignableFrom(extensionClass))
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("bind UserListener {}", extensionClass.getName());
-          }
-
-          binder.bind(extensionClass);
-          userListenerBinder.addBinding().to(extensionClass);
-        }
-        else if (RepositoryListener.class.isAssignableFrom(extensionClass))
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("bind RepositoryListener {}", extensionClass.getName());
-          }
-
-          binder.bind(extensionClass);
-          repositoryListenerBinder.addBinding().to(extensionClass);
-        }
-        else if (AuthenticationListener.class.isAssignableFrom(extensionClass))
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("bind AuthenticaitonListener {}",
-                        extensionClass.getName());
-          }
-
-          binder.bind(extensionClass);
-          authenticationListenerBinder.addBinding().to(extensionClass);
-        }
-        else if (ResourceHandler.class.isAssignableFrom(extensionClass))
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("bind ResourceHandler {}", extensionClass.getName());
-          }
-
-          resourceHandler.addBinding().to(extensionClass);
-        }
-        else if (FileSystem.class.isAssignableFrom(extensionClass))
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("bind FileSystem {}", extensionClass.getName());
-          }
-
-          fileSystemClass = extensionClass;
-        }
-        else if (ChangesetPreProcessor.class.isAssignableFrom(extensionClass))
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("bind ChangesetPreProcessor {}",
-                        extensionClass.getName());
-          }
-
-          changesetPreProcessorBinder.addBinding().to(extensionClass);
-        }
-        else if (ChangesetPreProcessorFactory.class.isAssignableFrom(
-                extensionClass))
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("bind ChangesetPreProcessorFactory {}",
-                        extensionClass.getName());
-          }
-
-          changesetPreProcessorFactoryBinder.addBinding().to(extensionClass);
-        }
-        else if (RepositoryHook.class.isAssignableFrom(extensionClass))
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("bind RepositoryHook {}", extensionClass.getName());
-          }
-
-          RepositoryHook hook = (RepositoryHook) extensionClass.newInstance();
-
-          hooks.add(hook);
-        }
-        else
-        {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("bind {}", extensionClass.getName());
-          }
-
-          binder.bind(extensionClass);
-        }
+        binder.bind(extensionClass);
+        repositoryHandlers.addBinding().to(extensionClass);
       }
-      catch (IllegalAccessException ex)
+      else if (EncryptionHandler.class.isAssignableFrom(extensionClass))
       {
-        logger.error(ex.getMessage(), ex);
+        bind(binder, EncryptionHandler.class, extensionClass);
       }
-      catch (InstantiationException ex)
+      else if (AuthenticationHandler.class.isAssignableFrom(extensionClass))
       {
-        logger.error(ex.getMessage(), ex);
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind AuthenticationHandler {}",
+                      extensionClass.getName());
+        }
+
+        binder.bind(extensionClass);
+        authenticators.addBinding().to(extensionClass);
+      }
+      else if (GroupListener.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind GroupListener {}", extensionClass.getName());
+        }
+
+        binder.bind(extensionClass);
+        groupListenerBinder.addBinding().to(extensionClass);
+      }
+      else if (UserListener.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind UserListener {}", extensionClass.getName());
+        }
+
+        binder.bind(extensionClass);
+        userListenerBinder.addBinding().to(extensionClass);
+      }
+      else if (RepositoryListener.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind RepositoryListener {}", extensionClass.getName());
+        }
+
+        binder.bind(extensionClass);
+        repositoryListenerBinder.addBinding().to(extensionClass);
+      }
+      else if (AuthenticationListener.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind AuthenticaitonListener {}",
+                      extensionClass.getName());
+        }
+
+        binder.bind(extensionClass);
+        authenticationListenerBinder.addBinding().to(extensionClass);
+      }
+      else if (ResourceHandler.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind ResourceHandler {}", extensionClass.getName());
+        }
+
+        resourceHandler.addBinding().to(extensionClass);
+      }
+      else if (FileSystem.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind FileSystem {}", extensionClass.getName());
+        }
+
+        fileSystemClass = extensionClass;
+      }
+      else if (ChangesetPreProcessor.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind ChangesetPreProcessor {}",
+                      extensionClass.getName());
+        }
+
+        changesetPreProcessorBinder.addBinding().to(extensionClass);
+      }
+      else if (ChangesetPreProcessorFactory.class.isAssignableFrom(
+              extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind ChangesetPreProcessorFactory {}",
+                      extensionClass.getName());
+        }
+
+        changesetPreProcessorFactoryBinder.addBinding().to(extensionClass);
+      }
+      else if (RepositoryHook.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind RepositoryHook {}", extensionClass.getName());
+        }
+
+        repositoryHookBinder.addBinding().to(extensionClass);
+      }
+      else
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind {}", extensionClass.getName());
+        }
+
+        binder.bind(extensionClass);
       }
     }
   }

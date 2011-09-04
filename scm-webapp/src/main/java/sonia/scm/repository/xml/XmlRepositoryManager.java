@@ -113,17 +113,20 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * @param storeFactory
    * @param handlerSet
    * @param repositoryListenersProvider
+   * @param repositoryHooksProvider
    */
   @Inject
   public XmlRepositoryManager(
           SCMContextProvider contextProvider,
           Provider<WebSecurityContext> securityContextProvider,
           StoreFactory storeFactory, Set<RepositoryHandler> handlerSet,
-          Provider<Set<RepositoryListener>> repositoryListenersProvider)
+          Provider<Set<RepositoryListener>> repositoryListenersProvider,
+          Provider<Set<RepositoryHook>> repositoryHooksProvider)
   {
     this.securityContextProvider = securityContextProvider;
     this.store = storeFactory.getStore(XmlRepositoryDatabase.class, STORE_NAME);
     this.repositoryListenersProvider = repositoryListenersProvider;
+    this.repositoryHooksProvider = repositoryHooksProvider;
     handlerMap = new HashMap<String, RepositoryHandler>();
     types = new HashSet<Type>();
 
@@ -298,6 +301,13 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     if (Util.isNotEmpty(listeners))
     {
       addListeners(listeners);
+    }
+
+    Set<RepositoryHook> hooks = repositoryHooksProvider.get();
+
+    if (Util.isNotEmpty(hooks))
+    {
+      addHooks(hooks);
     }
   }
 
@@ -774,6 +784,9 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private XmlRepositoryDatabase repositoryDB;
+
+  /** Field description */
+  private Provider<Set<RepositoryHook>> repositoryHooksProvider;
 
   /** Field description */
   private Provider<Set<RepositoryListener>> repositoryListenersProvider;
