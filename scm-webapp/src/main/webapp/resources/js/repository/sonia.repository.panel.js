@@ -87,6 +87,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
       xtype: 'label',
       text: 'Filter: '
     }, '  ', {
+      id: 'repositoryTypeFilter',
       xtype: 'combo',
       hiddenName : 'type',
       typeAhead: true,
@@ -112,6 +113,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
       xtype: 'label',
       text: 'Search: '
     }, '  ',{
+      id: 'repositorySearch',
       xtype: 'textfield',
       enableKeyEvents: true,
       listeners: {
@@ -218,11 +220,23 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
           scope: this
         },
         created: {
-          fn: this.reload,
+          fn: this.clearRepositoryFilter,
           scope: this
         }
       }
     }]);
+  },
+  
+  clearRepositoryFilter: function(){
+    if (debug){
+      console.debug('clear repository filter');
+    }
+    Ext.getCmp('repositorySearch').setValue('');
+    Ext.getCmp('repositoryTypeFilter').setValue('');
+    var grid = Ext.getCmp('repositoryGrid');
+    grid.clearStoreFilter();
+    grid.reload();
+
   },
 
   reload: function(){

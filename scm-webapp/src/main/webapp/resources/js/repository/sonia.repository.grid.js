@@ -123,6 +123,13 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     this.filterStore();
   },
   
+  clearStoreFilter: function(){
+    this.searchValue = null;
+    this.typeFilter = null;
+    this.getStore().clearFilter();
+  },
+  
+  
   filterStore: function(){
     var store = this.getStore();
     if ( ! this.searchValue && ! this.typeFilter ){
