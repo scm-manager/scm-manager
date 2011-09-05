@@ -42,17 +42,87 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
 
   initComponent: function(){
 
+    // create new store for repository types
+    var typeStore = new Ext.data.JsonStore({
+      id: 1,
+      fields: [ 'displayName', 'name' ]
+    });
+    
+    // load types from server state
+    typeStore.loadData(state.repositoryTypes);
+    
+    // add empty value
+    var t = new typeStore.recordType({
+      displayName: '',
+      name: ''
+    });
+    
+    typeStore.insert(0, t);
+
     var toolbar = [];
     if ( admin ){
-      toolbar.push(
-        {xtype: 'tbbutton', text: this.addText, icon: this.addIcon, scope: this, handler: this.showAddForm}
-      );
+      toolbar.push({
+        xtype: 'tbbutton', 
+        text: this.addText, 
+        icon: this.addIcon, 
+        scope: this, 
+        handler: this.showAddForm
+      });
     }
-    toolbar.push(
-      {xtype: 'tbbutton', id: 'repoRmButton', disabled: true, text: this.removeText, icon: this.removeIcon, scope: this, handler: this.removeRepository},
-      '-',
-      {xtype: 'tbbutton', text: this.reloadText, icon: this.reloadIcon, scope: this, handler: this.reload}
-    );
+    toolbar.push({
+      xtype: 'tbbutton', 
+      id: 'repoRmButton', 
+      disabled: true, 
+      text: this.removeText, 
+      icon: this.removeIcon, 
+      scope: this,
+      handler: this.removeRepository
+    },'-', {
+      xtype: 'tbbutton', 
+      text: this.reloadText, 
+      icon: this.reloadIcon, 
+      scope: this, 
+      handler: this.reload
+    },'-',{
+      xtype: 'label',
+      text: 'Filter: '
+    }, '  ', {
+      id: 'repositoryTypeFilter',
+      xtype: 'combo',
+      hiddenName : 'type',
+      typeAhead: true,
+      triggerAction: 'all',
+      lazyRender: true,
+      mode: 'local',
+      editable: false,
+      store: typeStore,
+      valueField: 'name',
+      displayField: 'displayName',
+      allowBlank: true,
+      listeners: {
+        select: {
+          fn: this.filterByType,
+          scope: this
+        }
+      },
+      tpl:'<tpl for=".">' +
+        '<div class="x-combo-list-item">' +
+          '{displayName}&nbsp;' +
+        '</div></tpl>'
+    }, '  ',{
+      xtype: 'label',
+      text: 'Search: '
+    }, '  ',{
+      id: 'repositorySearch',
+      xtype: 'textfield',
+      enableKeyEvents: true,
+      listeners: {
+        keyup: {
+          fn: this.search,
+          scope: this
+        }
+      } 
+    });
 
     var config = {
       tbar: toolbar,
@@ -80,6 +150,14 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Panel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  filterByType: function(combo, rec){
+    Ext.getCmp('repositoryGrid').filter(rec.get('name'));
+  },
+  
+  search: function(field){
+    Ext.getCmp('repositoryGrid').search(field.getValue());
   },
 
   removeRepository: function(){
@@ -142,11 +220,35 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
           scope: this
         },
         created: {
-          fn: this.reload,
+          fn: this.repositoryCreated,
           scope: this
         }
       }
     }]);
+  },
+  
+  repositoryCreated: function(item){
+    var grid = Ext.getCmp('repositoryGrid');
+    this.clearRepositoryFilter(grid);
+    
+    grid.reload(function(){
+      if (debug){
+        console.debug('select repository ' + item.id + " after creation");
+      }
+      grid.selectById(item.id);
+    });
+  },
+  
+  clearRepositoryFilter: function(grid){
+    if (debug){
+      console.debug('clear repository filter');
+    }
+    if (! grid ){
+      grid = Ext.getCmp('repositoryGrid');
+    }
+    Ext.getCmp('repositorySearch').setValue('');
+    Ext.getCmp('repositoryTypeFilter').setValue('');
+    grid.clearStoreFilter();
   },
 
   reload: function(){

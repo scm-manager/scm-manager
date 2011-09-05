@@ -39,6 +39,9 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   colUrlText: 'Url',
   emptyText: 'No repository is configured',
   formTitleText: 'Repository Form',
+  
+  searchValue: null,
+  typeFilter: null,
 
   initComponent: function(){
 
@@ -51,6 +54,12 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       fields: [ 'id', 'name', 'type', 'contact', 'description', 'creationDate', 'url', 'public', 'permissions', 'properties' ],
       sortInfo: {
         field: 'name'
+      },
+      listeners: {
+        load: {
+          fn: this.storeLoad,
+          scope: this
+        }
       }
     });
 
@@ -86,6 +95,12 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Grid.superclass.initComponent.apply(this, arguments);
   },
+  
+  storeLoad: function(){
+    if (this.searchValue){
+      this.filterStore();
+    }
+  },
 
   onFallBelowMinHeight: function(height, minHeight){
     var p = Ext.getCmp('repositoryEditPanel');
@@ -96,6 +111,41 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     this.doLayout();
     p.doLayout();
     this.ownerCt.doLayout();
+  },
+  
+  search: function(value){
+    this.searchValue = value;
+    this.filterStore();
+  },
+  
+  filter: function(type){
+    this.typeFilter = type;
+    this.filterStore();
+  },
+  
+  clearStoreFilter: function(){
+    this.searchValue = null;
+    this.typeFilter = null;
+    this.getStore().clearFilter();
+  },
+  
+  
+  filterStore: function(){
+    var store = this.getStore();
+    if ( ! this.searchValue && ! this.typeFilter ){
+      store.clearFilter();
+    } else {    
+      var search = null;
+      if ( this.searchValue ){
+        search = this.searchValue.toLowerCase();
+      }
+      store.filterBy(function(rec){
+        return (! search || 
+          rec.get('name').toLowerCase().indexOf(search) >= 0 || 
+          rec.get('description').toLowerCase().indexOf(search) >= 0) && 
+          (! this.typeFilter || rec.get('type') == this.typeFilter);
+      }, this);
+    }
   },
 
   selectItem: function(item){
