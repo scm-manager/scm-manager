@@ -87,11 +87,14 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
     Sonia.rest.Grid.superclass.onDestroy.apply(this, arguments);
   },
 
-  reload: function(){
+  reload: function(callback, scope){
     if ( debug ){
       console.debug('reload store');
     }
-    this.store.load();
+    this.store.load({
+      callback: callback,
+      scope: scope
+    });
   },
 
   selectionChanged: function(sm){
@@ -131,12 +134,18 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
     return String.format( this.checkboxTemplate, param );
   },
   
+  selectById: function(id){
+    var index = this.getStore().indexOfId(id);
+    if ( index >= 0 ){
+      this.getSelectionModel().selectRow(index);
+    } else if (debug) {
+      console.debug('could not find item with id ' + id);
+    }
+  },
+  
   handleHistory: function(params){    
     if (params && params.length > 0){
-      var index = this.getStore().indexOfId(params[0]);
-      if ( index >= 0 ){
-        this.getSelectionModel().selectRow(index);
-      }
+      this.selectById(params[0])
     } else {
       if (debug){
         console.debug( 'clear selection' );

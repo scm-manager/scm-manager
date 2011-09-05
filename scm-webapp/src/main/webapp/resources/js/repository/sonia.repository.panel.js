@@ -220,23 +220,35 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
           scope: this
         },
         created: {
-          fn: this.clearRepositoryFilter,
+          fn: this.repositoryCreated,
           scope: this
         }
       }
     }]);
   },
   
-  clearRepositoryFilter: function(){
+  repositoryCreated: function(item){
+    var grid = Ext.getCmp('repositoryGrid');
+    this.clearRepositoryFilter(grid);
+    
+    grid.reload(function(){
+      if (debug){
+        console.debug('select repository ' + item.id + " after creation");
+      }
+      grid.selectById(item.id);
+    });
+  },
+  
+  clearRepositoryFilter: function(grid){
     if (debug){
       console.debug('clear repository filter');
     }
+    if (! grid ){
+      grid = Ext.getCmp('repositoryGrid');
+    }
     Ext.getCmp('repositorySearch').setValue('');
     Ext.getCmp('repositoryTypeFilter').setValue('');
-    var grid = Ext.getCmp('repositoryGrid');
     grid.clearStoreFilter();
-    grid.reload();
-
   },
 
   reload: function(){

@@ -99,6 +99,16 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       }
     });
   },
+  
+  getIdFromResponse: function(response){
+    var id = null;
+    var location = response.getResponseHeader('Location')
+    if (location){
+      var parts = location.split('/');
+      id = parts[parts.length - 1];
+    }
+    return id;
+  },
 
   create: function(item){
     if ( debug ){
@@ -115,10 +125,16 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       jsonData: item,
       method: 'POST',
       scope: this,
-      success: function(){
+      success: function(response){
         if ( debug ){
           console.debug('create success');
         }
+        
+        var id = this.getIdFromResponse(response);
+        if (id){
+          item.id = id;
+        }
+        
         this.fireEvent('created', item);
         this.getForm().reset();
         clearTimeout(tid);
