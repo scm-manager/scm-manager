@@ -40,7 +40,6 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.plugin.PluginManager;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.web.security.WebSecurityContext;
@@ -72,16 +71,14 @@ public class ConfigurationResource
    *
    * @param configuration
    * @param securityContextProvider
-   * @param pluginManager
    */
   @Inject
   public ConfigurationResource(
           Provider<WebSecurityContext> securityContextProvider,
-          ScmConfiguration configuration, PluginManager pluginManager)
+          ScmConfiguration configuration)
   {
     this.securityContextProvider = securityContextProvider;
     this.configuration = configuration;
-    this.pluginManager = pluginManager;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -127,12 +124,6 @@ public class ConfigurationResource
                             ScmConfiguration newConfig)
   {
     SecurityUtil.assertIsAdmin(securityContextProvider);
-
-    if (!configuration.getPluginUrl().equals(newConfig.getPluginUrl()))
-    {
-      pluginManager.clearCache();
-    }
-
     configuration.load(newConfig);
 
     synchronized (ScmConfiguration.class)
@@ -147,9 +138,6 @@ public class ConfigurationResource
 
   /** Field description */
   public ScmConfiguration configuration;
-
-  /** Field description */
-  private PluginManager pluginManager;
 
   /** Field description */
   private Provider<WebSecurityContext> securityContextProvider;

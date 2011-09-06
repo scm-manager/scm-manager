@@ -42,6 +42,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.ConfigChangedListener;
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
@@ -80,7 +81,8 @@ import javax.xml.bind.Unmarshaller;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class DefaultPluginManager implements PluginManager
+public class DefaultPluginManager
+        implements PluginManager, ConfigChangedListener
 {
 
   /** Field description */
@@ -111,21 +113,22 @@ public class DefaultPluginManager implements PluginManager
    * @param configuration
    * @param pluginLoader
    * @param cacheManager
-   * @param client
+   * @param clientProvider
    */
   @Inject
   public DefaultPluginManager(
           SCMContextProvider context,
           Provider<SecurityContext> securityContextProvicer,
           ScmConfiguration configuration, PluginLoader pluginLoader,
-          CacheManager cacheManager, HttpClient client)
+          CacheManager cacheManager, Provider<HttpClient> clientProvider)
   {
     this.context = context;
     this.securityContextProvicer = securityContextProvicer;
     this.configuration = configuration;
+    this.configuration.addListener(this);
     this.cache = cacheManager.getCache(String.class, PluginCenter.class,
                                        CACHE_NAME);
-    this.client = client;
+    this.clientProvider = clientProvider;
     installedPlugins = new HashMap<String, Plugin>();
 
     for (Plugin plugin : pluginLoader.getInstalledPlugins())
@@ -158,7 +161,24 @@ public class DefaultPluginManager implements PluginManager
   @Override
   public void clearCache()
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("clear plugin cache");
+    }
+
     cache.clear();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param config
+   */
+  @Override
+  public void configChanged(Object config)
+  {
+    clearCache();
   }
 
   /**
@@ -534,7 +554,7 @@ public class DefaultPluginManager implements PluginManager
 
           try
           {
-            input = client.get(pluginUrl).getContent();
+            input = clientProvider.get().get(pluginUrl).getContent();
 
             /*
              *  TODO: add gzip support
@@ -648,7 +668,7 @@ public class DefaultPluginManager implements PluginManager
   private Cache<String, PluginCenter> cache;
 
   /** Field description */
-  private HttpClient client;
+  private Provider<HttpClient> clientProvider;
 
   /** Field description */
   private ScmConfiguration configuration;
