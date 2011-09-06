@@ -35,6 +35,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -64,6 +65,9 @@ public class BasicContextProvider implements SCMContextProvider
 
   /** Java system property for the SCM-Manager base directory */
   public static final String DIRECTORY_PROPERTY = "scm.home";
+
+  /** Classpath resource for the SCM-Manager base directory */
+  public static final String DIRECTORY_RESOURCE = "/scm.properties";
 
   /** Path to the maven properties file of the scm-core artifact */
   public static final String MAVEN_PROPERTIES =
@@ -139,16 +143,21 @@ public class BasicContextProvider implements SCMContextProvider
    */
   private File findBaseDirectory()
   {
-    String path = System.getProperty(DIRECTORY_PROPERTY);
+    String path = getPathFromResource();
 
     if (Util.isEmpty(path))
     {
-      path = System.getenv(DIRECTORY_ENVIRONMENT);
+      path = System.getProperty(DIRECTORY_PROPERTY);
 
       if (Util.isEmpty(path))
       {
-        path = System.getProperty("user.home").concat(File.separator).concat(
-          DIRECTORY_DEFAULT);
+        path = System.getenv(DIRECTORY_ENVIRONMENT);
+
+        if (Util.isEmpty(path))
+        {
+          path = System.getProperty("user.home").concat(File.separator).concat(
+            DIRECTORY_DEFAULT);
+        }
       }
     }
 
@@ -187,6 +196,46 @@ public class BasicContextProvider implements SCMContextProvider
     }
 
     return properties.getProperty(MAVEN_PROPERTY_VERSION, DEFAULT_VERSION);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Load path from classpath resource.
+   *
+   *
+   * @return path from classpath resource or null
+   */
+  private String getPathFromResource()
+  {
+    String path = null;
+    InputStream input = null;
+
+    try
+    {
+      input =
+        BasicContextProvider.class.getResourceAsStream(DIRECTORY_RESOURCE);
+
+      if (input != null)
+      {
+        Properties properties = new Properties();
+
+        properties.load(input);
+        path = properties.getProperty(DIRECTORY_PROPERTY);
+      }
+    }
+    catch (IOException ex)
+    {
+      throw new ConfigurationException(
+          "could not load properties form resource ".concat(
+            DIRECTORY_RESOURCE), ex);
+    }
+    finally
+    {
+      IOUtil.close(input);
+    }
+
+    return path;
   }
 
   //~--- fields ---------------------------------------------------------------
