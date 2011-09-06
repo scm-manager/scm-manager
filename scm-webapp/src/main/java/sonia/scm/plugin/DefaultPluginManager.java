@@ -125,7 +125,6 @@ public class DefaultPluginManager
     this.context = context;
     this.securityContextProvicer = securityContextProvicer;
     this.configuration = configuration;
-    this.configuration.addListener(this);
     this.cache = cacheManager.getCache(String.class, PluginCenter.class,
                                        CACHE_NAME);
     this.clientProvider = clientProvider;
@@ -150,6 +149,8 @@ public class DefaultPluginManager
     {
       throw new ConfigurationException(ex);
     }
+
+    this.configuration.addListener(this);
   }
 
   //~--- methods --------------------------------------------------------------
