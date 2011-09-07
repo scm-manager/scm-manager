@@ -82,7 +82,7 @@ import javax.xml.bind.Unmarshaller;
  */
 @Singleton
 public class DefaultPluginManager
-        implements PluginManager, ConfigChangedListener
+        implements PluginManager, ConfigChangedListener<ScmConfiguration>
 {
 
   /** Field description */
@@ -177,7 +177,7 @@ public class DefaultPluginManager
    * @param config
    */
   @Override
-  public void configChanged(Object config)
+  public void configChanged(ScmConfiguration config)
   {
     clearCache();
   }

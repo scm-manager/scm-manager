@@ -68,7 +68,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @Singleton
 @XmlRootElement(name = "scm-config")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
+public class ScmConfiguration
+        implements ListenerSupport<ConfigChangedListener<ScmConfiguration>>
 {
 
   /** Default JavaScript date format */
@@ -100,7 +101,7 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    * @param listener
    */
   @Override
-  public void addListener(ConfigChangedListener listener)
+  public void addListener(ConfigChangedListener<ScmConfiguration> listener)
   {
     listeners.add(listener);
   }
@@ -113,7 +114,8 @@ public class ScmConfiguration implements ListenerSupport<ConfigChangedListener>
    * @param listeners
    */
   @Override
-  public void addListeners(Collection<ConfigChangedListener> listeners)
+  public void addListeners(
+          Collection<ConfigChangedListener<ScmConfiguration>> listeners)
   {
     listeners.addAll(listeners);
   }

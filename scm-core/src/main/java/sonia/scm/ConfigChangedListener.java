@@ -37,8 +37,10 @@ package sonia.scm;
  * Callback listener for setting properties that are changed.
  *
  * @author Sebastian Sdorra
+ *
+ * @param <T> the type of configuration.
  */
-public interface ConfigChangedListener
+public interface ConfigChangedListener<T>
 {
 
   /**
@@ -48,5 +50,5 @@ public interface ConfigChangedListener
    *
    * @param config - the changed configuration object
    */
-  public void configChanged(Object config);
+  public void configChanged(T config);
 }
