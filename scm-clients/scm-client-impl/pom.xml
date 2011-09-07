@@ -6,13 +6,13 @@
   <parent>
     <groupId>sonia.scm.clients</groupId>
     <artifactId>scm-clients</artifactId>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.7</version>
   </parent>
 
   <groupId>sonia.scm.clients</groupId>
   <artifactId>scm-client-impl</artifactId>
   <packaging>jar</packaging>
-  <version>1.7-SNAPSHOT</version>
+  <version>1.7</version>
   <name>scm-client-impl</name>
   
   <dependencies>
@@ -36,7 +36,7 @@
     <dependency>
       <artifactId>scm-core</artifactId>
       <groupId>sonia.scm</groupId>
-      <version>1.7-SNAPSHOT</version>
+      <version>1.7</version>
       <exclusions>
         <exclusion>
           <artifactId>aopalliance</artifactId>
@@ -60,7 +60,7 @@
     <dependency>
       <groupId>sonia.scm.clients</groupId>
       <artifactId>scm-client-api</artifactId>
-      <version>1.7-SNAPSHOT</version>
+      <version>1.7</version>
     </dependency>
     
     <dependency>
@@ -112,7 +112,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>1.7-SNAPSHOT</version>
+      <version>1.7</version>
       <scope>test</scope>
     </dependency>
     
