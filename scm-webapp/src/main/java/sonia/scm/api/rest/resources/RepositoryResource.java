@@ -394,6 +394,7 @@ public class RepositoryResource
     }
     else
     {
+      repository.setProperties(null);
       repository.setPermissions(null);
     }
   }
