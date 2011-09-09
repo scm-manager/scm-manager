@@ -229,6 +229,22 @@ public class DefaultPluginManager
 
     if (plugin == null)
     {
+      String pluginPrefix = getPluginIdPrefix(id);
+
+      for (String nid : installedPlugins.keySet())
+      {
+        if (nid.startsWith(pluginPrefix))
+        {
+          id = nid;
+          plugin = installedPlugins.get(nid);
+
+          break;
+        }
+      }
+    }
+
+    if (plugin == null)
+    {
       throw new PluginNotInstalledException(id.concat(" is not install"));
     }
 
@@ -595,6 +611,19 @@ public class DefaultPluginManager
     }
 
     return center;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param pluginId
+   *
+   * @return
+   */
+  private String getPluginIdPrefix(String pluginId)
+  {
+    return pluginId.substring(0, pluginId.lastIndexOf(":"));
   }
 
   /**
