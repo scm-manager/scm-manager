@@ -74,7 +74,7 @@ import javax.ws.rs.core.Response;
  * @author Sebastian Sdorra
  */
 @Singleton
-@Path("{version}/plugins")
+@Path("api/{version}/plugins")
 public class PluginResource implements PluginBackendListener
 {
 

@@ -77,7 +77,7 @@ public class ScmBackendModule extends ServletModule
   public static final String FILE_CONFIG = "config.xml";
 
   /** Field description */
-  public static final String PATTERN_API = "/api/*";
+  public static final String PATTERN_API = "/*";
 
   //~--- methods --------------------------------------------------------------
 
