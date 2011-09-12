@@ -35,59 +35,39 @@ package sonia.scm.plugin.rest;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.inject.Inject;
+import sonia.scm.plugin.PluginBackend;
+import sonia.scm.plugin.PluginInformation;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.api.container.ContainerException;
 import com.sun.jersey.api.view.Viewable;
-import com.sun.jersey.spi.template.ViewProcessor;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.servlet.ServletContext;
-
-import javax.ws.rs.core.Context;
-import javax.ws.rs.ext.Provider;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Provider
-public class FreemarkerTemplateProvider implements ViewProcessor<String>
+@Path("/index.html")
+public class ViewResource
 {
-
-  /** Field description */
-  public static final String DIRECTORY_TEMPLATES = "/";
-
-  /** Field description */
-  private static final String EXTENSION = ".html";
-
-  /** the logger for FreemarkerTemplateProvider */
-  private static final Logger logger =
-    LoggerFactory.getLogger(FreemarkerTemplateProvider.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param servletContext
+   * @param backend
    */
-  public FreemarkerTemplateProvider(@Context ServletContext servletContext)
+  @Inject
+  public ViewResource(PluginBackend backend)
   {
-    configuration = new Configuration();
-    configuration.setServletContextForTemplateLoading(servletContext,
-            DIRECTORY_TEMPLATES);
+    this.backend = backend;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -96,58 +76,21 @@ public class FreemarkerTemplateProvider implements ViewProcessor<String>
    * Method description
    *
    *
-   * @param path
-   *
    * @return
    */
-  @Override
-  public String resolve(String path)
+  @GET
+  public Viewable overview()
   {
-    if (!path.endsWith(EXTENSION))
-    {
-      path = path.concat(EXTENSION);
-    }
+    List<PluginInformation> plugins = backend.getPlugins();
+    Map<String, Object> vars = new HashMap<String, Object>();
 
-    return path;
-  }
+    vars.put("plugins", plugins);
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param resolvedPath
-   * @param viewable
-   * @param out
-   *
-   * @throws IOException
-   */
-  @Override
-  public void writeTo(String resolvedPath, Viewable viewable, OutputStream out)
-          throws IOException
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("render template {}", resolvedPath);
-    }
-
-    // Commit the status and headers to the HttpServletResponse
-    out.flush();
-
-    final Template template = configuration.getTemplate(resolvedPath);
-
-    try
-    {
-      template.process(viewable.getModel(), new OutputStreamWriter(out));
-    }
-    catch (TemplateException te)
-    {
-      throw new ContainerException(te);
-    }
+    return new Viewable("/index", vars);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final Configuration configuration;
+  private PluginBackend backend;
 }
