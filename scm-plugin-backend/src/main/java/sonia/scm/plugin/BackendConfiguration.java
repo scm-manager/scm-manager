@@ -41,6 +41,8 @@ import sonia.scm.xml.XmlIntervalAdapter;
 
 import java.io.File;
 
+import java.net.URL;
+
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -79,6 +81,17 @@ public class BackendConfiguration
   public Set<String> getExcludes()
   {
     return excludes;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public URL getNewsUrl()
+  {
+    return newsUrl;
   }
 
   /**
@@ -153,6 +166,17 @@ public class BackendConfiguration
    * Method description
    *
    *
+   * @param newsUrl
+   */
+  public void setNewsUrl(URL newsUrl)
+  {
+    this.newsUrl = newsUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repositories
    */
   public void setRepositories(Set<PluginRepository> repositories)
@@ -185,6 +209,10 @@ public class BackendConfiguration
 
   /** Field description */
   private boolean multithreaded = true;
+
+  /** Field description */
+  @XmlElement(name= "news-url")
+  private URL newsUrl;
 
   /** Field description */
   @XmlElement(name = "repository")
