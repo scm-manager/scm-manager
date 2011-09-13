@@ -1,11 +1,22 @@
 <#include "template/header.html">
 
-<ul>
+<div id="plugins">
 <#list plugins as plugin>
-  <li>
-    <a href="${contextPath}/page/detail/${plugin.groupId}/${plugin.artifactId}.html">${plugin.name}</a>
-  </li>
+  <h3><a href="#">${plugin.name}</a></h3>
+  <p>
+    ${plugin.description}<br />
+    <a href="${contextPath}/page/detail/${plugin.groupId}/${plugin.artifactId}.html">more</a>
+  </p>
+  
 </#list>
-</ul>
+</div>
+
+<script type="text/javascript">
+  jQuery(document).ready(function(){
+    $( "#plugins" ).accordion({
+      active: false
+    });
+  });
+</script>
 
 <#include "template/footer.html">
