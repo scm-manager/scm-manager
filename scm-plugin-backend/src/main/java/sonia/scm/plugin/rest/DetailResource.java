@@ -53,9 +53,11 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
 
@@ -90,15 +92,18 @@ public class DetailResource extends ViewableResource
    *
    * @param groupId
    * @param artifactId
+   * @param snapshot
    *
    * @return
    */
   @GET
   public Viewable getPluginDetails(@PathParam("groupId") String groupId,
-                                   @PathParam("artifactId") String artifactId)
+                                   @PathParam("artifactId") String artifactId,
+                                   @DefaultValue("false")
+                                   @QueryParam("snapshot") boolean snapshot)
   {
     List<PluginInformation> pluginVersions = getPluginVersions(groupId,
-                                               artifactId);
+                                               artifactId, snapshot);
 
     if (Util.isEmpty(pluginVersions))
     {
@@ -154,11 +159,12 @@ public class DetailResource extends ViewableResource
    *
    * @param groupId
    * @param artifactId
+   * @param snapshot
    *
    * @return
    */
   private List<PluginInformation> getPluginVersions(final String groupId,
-          final String artifactId)
+          final String artifactId, final boolean snapshot)
   {
     List<PluginInformation> pluginVersions =
       backend.getPlugins(new PluginFilter()
@@ -167,7 +173,8 @@ public class DetailResource extends ViewableResource
       public boolean accept(PluginInformation plugin)
       {
         return groupId.equals(plugin.getGroupId())
-               && artifactId.equals(plugin.getArtifactId());
+               && artifactId.equals(plugin.getArtifactId())
+               && (snapshot ||!plugin.getVersion().contains("SNAPSHOT"));
       }
     });
 
