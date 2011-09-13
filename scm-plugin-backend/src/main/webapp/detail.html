@@ -39,8 +39,40 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   </head>
   <body>
-    <h1>SCM-Manager Plugin-Backend</h1>
+    <h1>${latest.name}</h1>
+    
+    <p>${latest.description}</p>
+    
+    <h2>Plugin Informations</h2>
+    
+    <table>
+      <tr>
+        <th>Name</th>
+        <td>${latest.name}</td>
+      </tr>
+      <tr>
+        <th>GroupId</th>
+        <td>${latest.groupId}</td>
+      </tr>
+      <tr>
+        <th>ArtifactId</th>
+        <td>${latest.artifactId}</td>
+      </tr>
+      <tr>
+        <th>Author</th>
+        <td>${latest.author}</td>
+      </tr>
+    </table>
+    
+    <h2>Plugin Versions</h2>
 
-
+    <ul>
+    <#list versions as version>
+      <li>${version.version}</li>
+    </#list>
+    </ul>
+    
+    <a href="../../index.html">Overview</a>
+    
   </body>
 </html>
