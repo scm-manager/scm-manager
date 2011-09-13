@@ -100,10 +100,10 @@ public class DetailResource extends ViewableResource
   public Viewable getPluginDetails(@PathParam("groupId") String groupId,
                                    @PathParam("artifactId") String artifactId,
                                    @DefaultValue("false")
-                                   @QueryParam("snapshot") boolean snapshot)
+  @QueryParam("snapshot") boolean snapshot)
   {
     List<PluginInformation> pluginVersions = getPluginVersions(groupId,
-                                               artifactId, snapshot);
+                                               artifactId);
 
     if (Util.isEmpty(pluginVersions))
     {
@@ -114,6 +114,12 @@ public class DetailResource extends ViewableResource
     pluginVersions = filterSameVersions(pluginVersions);
 
     PluginInformation latest = pluginVersions.get(0);
+
+    if (!snapshot)
+    {
+      pluginVersions = filterSnapshots(pluginVersions);
+    }
+
     Map<String, Object> vars = createVarMap(latest.getName());
 
     vars.put("latest", latest);
@@ -151,6 +157,30 @@ public class DetailResource extends ViewableResource
     return filteredPlugins;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param allVersions
+   *
+   * @return
+   */
+  private List<PluginInformation> filterSnapshots(
+          List<PluginInformation> allVersions)
+  {
+    List<PluginInformation> filtered = new ArrayList<PluginInformation>();
+
+    for (PluginInformation plugin : allVersions)
+    {
+      if (!plugin.getVersion().contains("SNAPSHOT"))
+      {
+        filtered.add(plugin);
+      }
+    }
+
+    return filtered;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -159,12 +189,11 @@ public class DetailResource extends ViewableResource
    *
    * @param groupId
    * @param artifactId
-   * @param snapshot
    *
    * @return
    */
   private List<PluginInformation> getPluginVersions(final String groupId,
-          final String artifactId, final boolean snapshot)
+          final String artifactId)
   {
     List<PluginInformation> pluginVersions =
       backend.getPlugins(new PluginFilter()
@@ -173,8 +202,7 @@ public class DetailResource extends ViewableResource
       public boolean accept(PluginInformation plugin)
       {
         return groupId.equals(plugin.getGroupId())
-               && artifactId.equals(plugin.getArtifactId())
-               && (snapshot ||!plugin.getVersion().contains("SNAPSHOT"));
+               && artifactId.equals(plugin.getArtifactId());
       }
     });
 
