@@ -36,6 +36,7 @@ package sonia.scm.plugin.rest;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.PluginVersion;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -75,7 +76,12 @@ public class PluginInformationComparator
 
       if (c == 0)
       {
-        c = plugin.getVersion().compareTo(otherPlugin.getVersion());
+        PluginVersion version =
+          PluginVersion.createVersion(plugin.getVersion());
+        PluginVersion otherVersion =
+          PluginVersion.createVersion(otherPlugin.getVersion());
+
+        c = version.compareTo(otherVersion);
       }
     }
 
