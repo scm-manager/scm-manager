@@ -33,49 +33,29 @@
 
 package sonia.scm.plugin.rest;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Inject;
-
-import sonia.scm.plugin.PluginBackend;
-import sonia.scm.plugin.PluginInformation;
-import sonia.scm.plugin.PluginInformationNameComparator;
-
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.api.view.Viewable;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Path("/index.html")
-public class OverviewResource extends ViewableResource
+public class ViewableResource
 {
 
   /**
    * Constructs ...
    *
    *
-   *
    * @param context
-   * @param backend
    */
-  @Inject
-  public OverviewResource(ServletContext context, PluginBackend backend)
+  public ViewableResource(ServletContext context)
   {
-    super(context);
-    this.backend = backend;
+    this.contextPath = context.getContextPath();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -84,54 +64,22 @@ public class OverviewResource extends ViewableResource
    * Method description
    *
    *
+   *
+   * @param title
    * @return
    */
-  @GET
-  public Viewable overview()
+  protected Map<String, Object> createVarMap(String title)
   {
-    List<PluginInformation> plugins = getPluginOverview();
-    Map<String, Object> vars = createVarMap("Plugin Overview");
+    Map<String, Object> vars = new HashMap<String, Object>();
 
-    vars.put("plugins", plugins);
+    vars.put("contextPath", contextPath);
+    vars.put("title", title);
 
-    return new Viewable("/index", vars);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private List<PluginInformation> getPluginOverview()
-  {
-    List<PluginInformation> allPlugins = backend.getPlugins();
-
-    Collections.sort(allPlugins, PluginInformationComparator.INSTANCE);
-
-    List<PluginInformation> plugins = new ArrayList<PluginInformation>();
-    String pid = "";
-
-    for (PluginInformation p : allPlugins)
-    {
-      String currentPid = p.getGroupId().concat(":").concat(p.getArtifactId());
-
-      if (!currentPid.equals(pid))
-      {
-        pid = currentPid;
-        plugins.add(p);
-      }
-    }
-
-    Collections.sort(plugins, PluginInformationNameComparator.INSTANCE);
-
-    return plugins;
+    return vars;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private PluginBackend backend;
+  private String contextPath;
 }

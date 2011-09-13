@@ -77,7 +77,10 @@ public class ScmBackendModule extends ServletModule
   public static final String FILE_CONFIG = "config.xml";
 
   /** Field description */
-  public static final String PATTERN_API = "/*";
+  public static final String PATTERN_API = "/api/*";
+
+  /** Field description */
+  public static final String PATTERN_PAGE = "/page/*";
 
   //~--- methods --------------------------------------------------------------
 
@@ -118,7 +121,7 @@ public class ScmBackendModule extends ServletModule
 
     params.put(PackagesResourceConfig.PROPERTY_PACKAGES,
                "sonia.scm.plugin.rest");
-    serve(PATTERN_API).with(GuiceContainer.class, params);
+    serve(PATTERN_API, PATTERN_PAGE).with(GuiceContainer.class, params);
   }
 
   /**

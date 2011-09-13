@@ -48,9 +48,10 @@ import com.sun.jersey.api.view.Viewable;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -63,18 +64,21 @@ import javax.ws.rs.core.Response.Status;
  * @author Sebastian Sdorra
  */
 @Path("/detail/{groupId}/{artifactId}.html")
-public class DetailResource
+public class DetailResource extends ViewableResource
 {
 
   /**
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param backend
    */
   @Inject
-  public DetailResource(PluginBackend backend)
+  public DetailResource(ServletContext context, PluginBackend backend)
   {
+    super(context);
     this.backend = backend;
   }
 
@@ -104,9 +108,10 @@ public class DetailResource
     Collections.sort(pluginVersions, PluginInformationComparator.INSTANCE);
     pluginVersions = filterSameVersions(pluginVersions);
 
-    Map<String, Object> vars = new HashMap<String, Object>();
+    PluginInformation latest = pluginVersions.get(0);
+    Map<String, Object> vars = createVarMap(latest.getName());
 
-    vars.put("latest", pluginVersions.get(0));
+    vars.put("latest", latest);
     vars.put("versions", pluginVersions);
 
     return new Viewable("/detail", vars);
