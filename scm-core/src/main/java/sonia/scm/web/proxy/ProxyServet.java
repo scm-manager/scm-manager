@@ -35,6 +35,7 @@ package sonia.scm.web.proxy;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -81,20 +82,10 @@ public class ProxyServet extends HttpServlet
    *
    * @param urlProvider
    */
+  @Inject
   public ProxyServet(ProxyURLProvider urlProvider)
   {
     this.urlProvider = urlProvider;
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param url
-   */
-  public ProxyServet(URL url)
-  {
-    this.urlProvider = new BasicProxyURLProvider(url);
   }
 
   //~--- methods --------------------------------------------------------------
