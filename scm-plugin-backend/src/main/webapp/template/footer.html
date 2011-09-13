@@ -4,13 +4,17 @@
             </div>
             <div class="primary" id="sidebar">
               <ul class="xoxo">
-                <li class="widget-container widget_recent_entries" id="recent-posts-3">
+                <li class="widget-container widget_recent_entries">
                   <h3 class="widget-title">Latest News</h3>
-                  <ul>
-                    <li><a title="Bamboo Plugin" href="http://www.scm-manager.org/plugins/bamboo-plugin/">Bamboo Plugin</a></li>
-                    <li><a title="Jenkins and JIRA Plugin" href="http://www.scm-manager.org/plugins/jenkins-and-jira-plugin/">Jenkins and JIRA Plugin</a></li>
-                    <li><a title="New Server Part 2" href="http://www.scm-manager.org/server/new-server-part-2/">New Server Part 2</a></li>
-                  </ul>
+                  <div id="news"></div>
+                  <script type="text/javascript">
+                  $(document).ready(function(){
+                    $('#news').feeds('${contextPath}/news', {
+                      loadingImage: '${contextPath}/template/css/images/load.gif',
+                      maxItems: 5
+                    });
+                  });
+                </script>
                 </li> 
                 <li class="widget-container widget_links">
                   <h3 class="widget-title">Social</h3>
