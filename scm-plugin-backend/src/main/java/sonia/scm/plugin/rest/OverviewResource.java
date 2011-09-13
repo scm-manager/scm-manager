@@ -59,7 +59,7 @@ import javax.ws.rs.Path;
  * @author Sebastian Sdorra
  */
 @Path("/index.html")
-public class ViewResource
+public class OverviewResource
 {
 
   /**
@@ -69,7 +69,7 @@ public class ViewResource
    * @param backend
    */
   @Inject
-  public ViewResource(PluginBackend backend)
+  public OverviewResource(PluginBackend backend)
   {
     this.backend = backend;
   }
