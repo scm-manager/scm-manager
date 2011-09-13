@@ -3,11 +3,10 @@
 <div id="plugins">
 <#list plugins as plugin>
   <h3><a href="#">${plugin.name}</a></h3>
-  <p>
+  <div>
     ${plugin.description}<br />
-    <a href="${contextPath}/page/detail/${plugin.groupId}/${plugin.artifactId}.html">more</a>
-  </p>
-  
+    <a href="${contextPath}/page/detail/${plugin.groupId}/${plugin.artifactId}.html" style="color: #1C94C4;">more</a>
+  </div>
 </#list>
 </div>
 
