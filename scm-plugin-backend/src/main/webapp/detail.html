@@ -25,12 +25,25 @@
 
 <h2>Plugin Versions</h2>
 
-<ul>
-  <#list versions as version>
-  <li>${version.version}</li>
-  </#list>
-</ul>
+<div id="accordion">
+<#list versions as version>
+  <h5><a href="#">${version.version}</a></h5>
+  <div>
+    <p>${version.description}</p>
+  </div>
+</#list>
+</div>
+
+<p>&nbsp;</p>
 
 <a href="${contextPath}/page/index.html">Overview</a>
+
+<script type="text/javascript">
+  jQuery(document).ready(function(){
+    $( "#accordion" ).accordion({
+      active: false
+    });
+  });
+</script>
 
 <#include "template/footer.html">
