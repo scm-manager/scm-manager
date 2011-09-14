@@ -57,8 +57,7 @@ import java.util.List;
  * Class description
  *
  *
- * @version        Enter version here..., 11/09/14
- * @author         Enter your name here...
+ * @author Sebastian Sdorra
  */
 public class GitBlameViewer implements BlameViewer
 {
@@ -129,6 +128,10 @@ public class GitBlameViewer implements BlameViewer
         blameLine.setName(author.getName());
         blameLine.setEmailAddress(author.getEmailAddress());
         blameLine.setWhen(author.getWhen());
+
+        String rev = blameResult.getSourceCommit(i).getId().getName();
+
+        blameLine.setRevision(rev);
 
         String content = blameResult.getResultContents().getString(i);
 

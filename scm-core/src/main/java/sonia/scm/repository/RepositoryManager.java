@@ -73,6 +73,7 @@ public interface RepositoryManager
    * @return null if BlameViewer is not supported
    *
    * @throws RepositoryException
+   * @since 1.8
    */
   public BlameViewer getBlameViewer(Repository repository)
           throws RepositoryException;

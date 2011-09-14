@@ -47,8 +47,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * Class description
  *
  *
- * @version        Enter version here..., 11/09/14
- * @author         Enter your name here...    
+ * @author Sebastian Sdorra
+ * @since 1.8
  */
 @XmlRootElement(name = "blame-paging")
 @XmlAccessorType(XmlAccessType.FIELD)

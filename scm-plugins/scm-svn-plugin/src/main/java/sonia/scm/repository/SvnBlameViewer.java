@@ -131,7 +131,9 @@ public class SvnBlameViewer implements BlameViewer
                                String mergedPath, int lineNumber)
                 throws SVNException
         {
-          blameLines.add(new BlameLine(null, author, date, line, lineNumber));
+          blameLines.add(new BlameLine(null, author, date,
+                                       String.valueOf(revision), line,
+                                       lineNumber));
         }
         @Override
         public boolean handleRevision(Date date, long revision, String author,

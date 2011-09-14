@@ -118,11 +118,11 @@ public class PlainBlameProvider
 
     for (BlameLine line : bpr.getBlameLines())
     {
-      String name = line.getName();
+      String revision = line.getRevision();
 
-      if (Util.isNotEmpty(name))
+      if (Util.isNotEmpty(revision))
       {
-        writer.append(name).append("  ");
+        writer.append(revision).append("  ");
       }
 
       writer.println(line.getCode());

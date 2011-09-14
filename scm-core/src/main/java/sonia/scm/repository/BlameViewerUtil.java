@@ -49,9 +49,8 @@ import sonia.scm.util.AssertUtil;
 /**
  * Class description
  *
- *
- * @version        Enter version here..., 11/09/14
- * @author         Enter your name here...    
+ * @author Sebastian Sdorra
+ * @since 1.8
  */
 @Singleton
 public class BlameViewerUtil extends CacheClearHook

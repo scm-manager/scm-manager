@@ -40,9 +40,8 @@ import java.util.Date;
 /**
  * Class description
  *
- *
- * @version        Enter version here..., 11/09/14
- * @author         Enter your name here...
+ * @author Sebastian Sdorra
+ * @since 1.8
  */
 public class BlameLine
 {
@@ -60,15 +59,17 @@ public class BlameLine
    * @param emailAddress
    * @param name
    * @param when
+   * @param revision
    * @param code
    * @param lineNumber
    */
-  public BlameLine(String emailAddress, String name, Date when, String code,
-                   int lineNumber)
+  public BlameLine(String emailAddress, String name, Date when,
+                   String revision, String code, int lineNumber)
   {
     this.emailAddress = emailAddress;
     this.name = name;
     this.when = when;
+    this.revision = revision;
     this.code = code;
     this.lineNumber = lineNumber;
   }
@@ -117,6 +118,17 @@ public class BlameLine
   public String getName()
   {
     return name;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getRevision()
+  {
+    return revision;
   }
 
   /**
@@ -180,6 +192,17 @@ public class BlameLine
    * Method description
    *
    *
+   * @param revision
+   */
+  public void setRevision(String revision)
+  {
+    this.revision = revision;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param when
    */
   public void setWhen(Date when)
@@ -200,6 +223,9 @@ public class BlameLine
 
   /** Field description */
   private String name;
+
+  /** Field description */
+  private String revision;
 
   /** Field description */
   private Date when;
