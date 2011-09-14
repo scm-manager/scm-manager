@@ -190,6 +190,20 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
    * Method description
    *
    *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  public BlameViewer getBlameViewer(Repository repository)
+  {
+    return null;
+  }
+
+  /**
+   * Method description
+   *
+   *
    *
    * @param repository
    * @return

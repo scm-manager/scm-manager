@@ -196,6 +196,20 @@ public class HgRepositoryHandler
    * @return
    */
   @Override
+  public BlameViewer getBlameViewer(Repository repository)
+  {
+    return null;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
   public ChangesetViewer getChangesetViewer(Repository repository)
   {
     HgChangesetViewer changesetViewer = null;

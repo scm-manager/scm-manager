@@ -97,6 +97,37 @@ public class GitRepositoryHandler
    * @return
    */
   @Override
+  public BlameViewer getBlameViewer(Repository repository)
+  {
+    GitBlameViewer blameViewer = null;
+
+    AssertUtil.assertIsNotNull(repository);
+
+    String type = repository.getType();
+
+    AssertUtil.assertIsNotEmpty(type);
+
+    if (TYPE_NAME.equals(type))
+    {
+      blameViewer = new GitBlameViewer(this, repository);
+    }
+    else
+    {
+      throw new IllegalArgumentException("git repository is required");
+    }
+
+    return blameViewer;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
   public ChangesetViewer getChangesetViewer(Repository repository)
   {
     GitChangesetViewer changesetViewer = null;

@@ -67,6 +67,19 @@ public interface RepositoryHandler
    * Method description
    *
    *
+   * @param repository
+   *
+   * @return
+   *
+   * @throws RepositoryException
+   */
+  public BlameViewer getBlameViewer(Repository repository)
+          throws RepositoryException;
+
+  /**
+   * Method description
+   *
+   *
    *
    * @param repository
    * @return null if ChangesetViewer is not supported

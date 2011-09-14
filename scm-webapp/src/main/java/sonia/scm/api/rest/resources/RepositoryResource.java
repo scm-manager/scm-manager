@@ -44,6 +44,8 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.BlamePagingResult;
+import sonia.scm.repository.BlameViewerUtil;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.ChangesetViewerUtil;
@@ -59,6 +61,7 @@ import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RevisionNotFoundException;
+import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -116,7 +119,8 @@ public class RepositoryResource
           ScmConfiguration configuration, RepositoryManager repositoryManager,
           Provider<WebSecurityContext> securityContextProvider,
           ChangesetViewerUtil changesetViewerUtil,
-          RepositoryBrowserUtil repositoryBrowserUtil)
+          RepositoryBrowserUtil repositoryBrowserUtil,
+          BlameViewerUtil blameViewerUtil)
   {
     super(repositoryManager);
     this.configuration = configuration;
@@ -124,6 +128,7 @@ public class RepositoryResource
     this.securityContextProvider = securityContextProvider;
     this.changesetViewerUtil = changesetViewerUtil;
     this.repositoryBrowserUtil = repositoryBrowserUtil;
+    this.blameViewerUtil = blameViewerUtil;
     setDisableCache(false);
   }
 
@@ -224,6 +229,37 @@ public class RepositoryResource
 
     return response;
   }
+  
+  @GET
+  @Path("{id}/blame")
+  public Response blame(@PathParam("id") String id,
+  			@QueryParam("revision") String revision,
+  			@QueryParam("path") String path)
+  {
+  	Response response = null;
+  	
+    try {
+    	AssertUtil.assertIsNotNull(path);
+	  	BlamePagingResult blamePagingResult = blameViewerUtil.getBlame(id, revision, path);
+	  	
+	  	if (blamePagingResult != null) {
+	  		response = Response.ok(blamePagingResult).build();
+	  	}
+	  	else 
+	  	{
+	  		response = Response.ok().build();
+	  	}
+    } catch (IllegalStateException ex) {
+    	response = Response.status(Response.Status.NOT_FOUND).build();
+    } catch (RepositoryException ex) {
+      response = Response.status(Response.Status.NOT_FOUND).build();
+    } catch (NotSupportedFeatuerException ex) {
+      response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    
+    return response;
+  }
+
 
   /**
    * Method description
@@ -512,10 +548,13 @@ public class RepositoryResource
 
   /** Field description */
   private RepositoryBrowserUtil repositoryBrowserUtil;
+  
+  /** Field description */
+  private BlameViewerUtil blameViewerUtil;
 
   /** Field description */
   private RepositoryManager repositoryManager;
-
+  
   /** Field description */
   private Provider<WebSecurityContext> securityContextProvider;
 }

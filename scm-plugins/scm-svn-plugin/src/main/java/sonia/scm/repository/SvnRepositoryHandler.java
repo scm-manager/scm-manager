@@ -144,7 +144,29 @@ public class SvnRepositoryHandler
     return changesetViewer;
   }
 
-  /**
+  @Override
+  public BlameViewer getBlameViewer(Repository repository) {
+  	SvnBlameViewer blameViewer = null;
+
+  	AssertUtil.assertIsNotNull(repository);
+
+  	String type = repository.getType();
+
+  	AssertUtil.assertIsNotEmpty(type);
+
+  	if (TYPE_NAME.equals(type))
+  	{
+  		blameViewer = new SvnBlameViewer(this, repository);
+  	}
+  	else
+  	{
+  		throw new IllegalArgumentException("svn repository is required");
+  	}
+
+  	return blameViewer;
+  }
+
+	/**
    * Method description
    *
    *

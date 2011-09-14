@@ -33,79 +33,24 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.ListenerSupport;
-import sonia.scm.Type;
-import sonia.scm.TypeManager;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
-
 /**
+ * Interface description
  *
- * @author Sebastian Sdorra
+ *
+ * @version        Enter version here..., 11/09/14
+ * @author         Enter your name here...
  */
-public interface RepositoryManager
-        extends TypeManager<Repository, RepositoryException>,
-                ListenerSupport<RepositoryListener>, RepositoryBrowserProvider,
-                RepositoryHookSupport
+public interface BlameViewer
 {
 
   /**
    * Method description
    *
    *
-   * @param type
-   * @param name
+   * @param revision
+   * @param path
    *
    * @return
    */
-  public Repository get(String type, String name);
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param repository
-   * @return null if BlameViewer is not supported
-   *
-   * @throws RepositoryException
-   */
-  public BlameViewer getBlameViewer(Repository repository)
-          throws RepositoryException;
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param repository
-   * @return null if ChangesetViewer is not supported
-   *
-   * @throws RepositoryException
-   */
-  public ChangesetViewer getChangesetViewer(Repository repository)
-          throws RepositoryException;
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<Type> getConfiguredTypes();
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
-  @Override
-  public RepositoryHandler getHandler(String type);
+  public BlamePagingResult getBlame(String revision, String path);
 }

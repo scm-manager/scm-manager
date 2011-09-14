@@ -33,62 +33,48 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.ListenerSupport;
-import sonia.scm.Type;
-import sonia.scm.TypeManager;
-
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Class description
  *
- * @author Sebastian Sdorra
+ *
+ * @version        Enter version here..., 11/09/14
+ * @author         Enter your name here...    
  */
-public interface RepositoryManager
-        extends TypeManager<Repository, RepositoryException>,
-                ListenerSupport<RepositoryListener>, RepositoryBrowserProvider,
-                RepositoryHookSupport
+@XmlRootElement(name = "blame-paging")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class BlamePagingResult
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
-   *
-   * @param type
-   * @param name
-   *
-   * @return
    */
-  public Repository get(String type, String name);
+  public BlamePagingResult() {}
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   *
-   * @param repository
-   * @return null if BlameViewer is not supported
-   *
-   * @throws RepositoryException
+   * @param total
+   * @param blameLines
    */
-  public BlameViewer getBlameViewer(Repository repository)
-          throws RepositoryException;
+  public BlamePagingResult(int total, List<BlameLine> blameLines)
+  {
+    this.total = total;
+    this.blameLines = blameLines;
+  }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param repository
-   * @return null if ChangesetViewer is not supported
-   *
-   * @throws RepositoryException
-   */
-  public ChangesetViewer getChangesetViewer(Repository repository)
-          throws RepositoryException;
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -96,16 +82,53 @@ public interface RepositoryManager
    *
    * @return
    */
-  public Collection<Type> getConfiguredTypes();
+  public List<BlameLine> getBlameLines()
+  {
+    return blameLines;
+  }
 
   /**
    * Method description
    *
    *
-   * @param type
-   *
    * @return
    */
-  @Override
-  public RepositoryHandler getHandler(String type);
+  public int getTotal()
+  {
+    return total;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param blameLines
+   */
+  public void setBlameLines(List<BlameLine> blameLines)
+  {
+    this.blameLines = blameLines;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param total
+   */
+  public void setTotal(int total)
+  {
+    this.total = total;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @XmlElement(name = "blameline")
+  @XmlElementWrapper(name = "blamelines")
+  private List<BlameLine> blameLines;
+
+  /** Field description */
+  private int total;
 }
