@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.api.rest;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -49,6 +51,9 @@ public class UriExtensionsConfig extends PackagesResourceConfig
 
   /** Field description */
   public static final String EXTENSION_JSON = "json";
+
+  /** Field description */
+  public static final String EXTENSION_TXT = "txt";
 
   /** Field description */
   public static final String EXTENSION_XML = "xml";
@@ -102,6 +107,7 @@ public class UriExtensionsConfig extends PackagesResourceConfig
       mediaTypeMap = new HashMap<String, MediaType>();
       mediaTypeMap.put(EXTENSION_JSON, MediaType.APPLICATION_JSON_TYPE);
       mediaTypeMap.put(EXTENSION_XML, MediaType.APPLICATION_XML_TYPE);
+      mediaTypeMap.put(EXTENSION_TXT, MediaType.TEXT_PLAIN_TYPE);
     }
 
     return mediaTypeMap;
