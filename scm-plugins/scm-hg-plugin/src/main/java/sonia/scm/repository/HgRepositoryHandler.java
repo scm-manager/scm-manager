@@ -198,7 +198,24 @@ public class HgRepositoryHandler
   @Override
   public BlameViewer getBlameViewer(Repository repository)
   {
-    return null;
+    BlameViewer blameViewer = null;
+
+    AssertUtil.assertIsNotNull(repository);
+
+    String type = repository.getType();
+
+    AssertUtil.assertIsNotEmpty(type);
+
+    if (TYPE_NAME.equals(type))
+    {
+      blameViewer = new HgBlameViewer(this, repository);
+    }
+    else
+    {
+      throw new IllegalArgumentException("mercurial repository is required");
+    }
+
+    return blameViewer;
   }
 
   /**
