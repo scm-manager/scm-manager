@@ -125,7 +125,7 @@ public class GitBlameViewer implements BlameViewer
         PersonIdent author = blameResult.getSourceAuthor(i);
         BlameLine blameLine = new BlameLine();
 
-        blameLine.setLineNumber(i);
+        blameLine.setLineNumber(i + 1);
         blameLine.setAuthor(new Person(author.getName(),
                                        author.getEmailAddress()));
 
