@@ -47,11 +47,14 @@ import sonia.scm.util.Util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -206,20 +209,50 @@ public class HgBlameViewer implements BlameViewer
 
     if (m.matches())
     {
-      String author = m.group(1);
-
-      // todo extract mail
-      Person authorPerson = new Person(author);
-      String whenString = m.group(3);
+      Person authorPerson = Person.toPerson(m.group(1));
 
       // todo parse date
-      Long when = null;
+      Long when = getDate(m.group(3));
 
       blameLine = new BlameLine(authorPerson, when, m.group(2), m.group(5),
                                 Integer.parseInt(m.group(4)));
     }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("line '{}' does not match", line);
+    }
 
     return blameLine;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param dateString
+   *
+   * @return
+   */
+  private Long getDate(String dateString)
+  {
+    Long date = null;
+
+    // Wed Sep 08 10:22:46 2010 +0200
+    try
+    {
+      SimpleDateFormat sdf =
+        new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy zzzz", Locale.ENGLISH);
+
+      date = sdf.parse(dateString).getTime();
+    }
+    catch (ParseException ex)
+    {
+      logger.warn("could not parse date string ".concat(dateString), ex);
+    }
+
+    return date;
   }
 
   //~--- fields ---------------------------------------------------------------
