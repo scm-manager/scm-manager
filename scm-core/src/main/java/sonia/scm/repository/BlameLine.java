@@ -33,10 +33,6 @@
 
 package sonia.scm.repository;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Date;
-
 /**
  * Class description
  *
@@ -63,7 +59,7 @@ public class BlameLine
    * @param code
    * @param lineNumber
    */
-  public BlameLine(Person author, Date when, String revision, String code,
+  public BlameLine(Person author, Long when, String revision, String code,
                    int lineNumber)
   {
     this.author = author;
@@ -125,7 +121,7 @@ public class BlameLine
    *
    * @return
    */
-  public Date getWhen()
+  public Long getWhen()
   {
     return when;
   }
@@ -182,7 +178,7 @@ public class BlameLine
    *
    * @param when
    */
-  public void setWhen(Date when)
+  public void setWhen(Long when)
   {
     this.when = when;
   }
@@ -202,5 +198,5 @@ public class BlameLine
   private String revision;
 
   /** Field description */
-  private Date when;
+  private Long when;
 }

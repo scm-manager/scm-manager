@@ -39,6 +39,7 @@ import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.revwalk.RevCommit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,9 +128,13 @@ public class GitBlameViewer implements BlameViewer
         blameLine.setLineNumber(i);
         blameLine.setAuthor(new Person(author.getName(),
                                        author.getEmailAddress()));
-        blameLine.setWhen(author.getWhen());
 
-        String rev = blameResult.getSourceCommit(i).getId().getName();
+        RevCommit commit = blameResult.getSourceCommit(i);
+        long when = GitUtil.getCommitTime(commit);
+
+        blameLine.setWhen(when);
+
+        String rev = commit.getId().getName();
 
         blameLine.setRevision(rev);
 

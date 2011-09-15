@@ -125,8 +125,8 @@ public class SvnBlameHandler implements ISVNAnnotateHandler
       authorPerson = new Person(author);
     }
 
-    blameLines.add(new BlameLine(authorPerson, date, String.valueOf(revision),
-                                 line, lineNumber));
+    blameLines.add(new BlameLine(authorPerson, date.getTime(),
+                                 String.valueOf(revision), line, lineNumber));
   }
 
   /**
