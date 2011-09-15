@@ -45,6 +45,8 @@ import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import org.tmatesoft.svn.core.wc.SVNLogClient;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 
+import sonia.scm.util.Util;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -95,11 +97,20 @@ public class SvnBlameViewer implements BlameViewer
   @Override
   public BlamePagingResult getBlame(String revision, String path)
   {
-    final List<BlameLine> blameLines = new ArrayList<BlameLine>();
+    List<BlameLine> blameLines = new ArrayList<BlameLine>();
     File directory = handler.getDirectory(repository);
     SVNRepository svnRepository = null;
     SVNURL svnurl = null;
-    int total = 0;
+    SVNRevision endRevision = null;
+
+    if (Util.isNotEmpty(revision))
+    {
+      endRevision = SVNRevision.create(Long.parseLong(revision));
+    }
+    else
+    {
+      endRevision = SVNRevision.HEAD;
+    }
 
     try
     {
@@ -110,8 +121,8 @@ public class SvnBlameViewer implements BlameViewer
         svnRepository.getAuthenticationManager();
       SVNLogClient svnLogClient = new SVNLogClient(svnManager, null);
 
-      svnLogClient.doAnnotate(svnurl, SVNRevision.HEAD, SVNRevision.HEAD,
-                              SVNRevision.HEAD,
+      svnLogClient.doAnnotate(svnurl, SVNRevision.UNDEFINED,
+                              SVNRevision.create(1l), endRevision,
                               new SvnBlameHandler(blameLines));
     }
     catch (Exception ex)
@@ -119,9 +130,7 @@ public class SvnBlameViewer implements BlameViewer
       logger.error("could not create blame view", ex);
     }
 
-    total = blameLines.get(blameLines.size() - 1).getLineNumber();
-
-    return new BlamePagingResult(total, blameLines);
+    return new BlamePagingResult(blameLines.size(), blameLines);
   }
 
   //~--- fields ---------------------------------------------------------------
