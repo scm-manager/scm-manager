@@ -133,7 +133,7 @@ public class SvnBlameHandler implements ISVNAnnotateHandler
     }
 
     blameLines.add(new BlameLine(authorPerson, when, String.valueOf(revision),
-                                 line, lineNumber));
+                                 line, lineNumber + 1));
   }
 
   /**
