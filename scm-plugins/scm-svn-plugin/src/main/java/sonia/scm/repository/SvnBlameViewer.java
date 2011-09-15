@@ -114,7 +114,10 @@ public class SvnBlameViewer implements BlameViewer
                               SVNRevision.HEAD,
                               new SvnBlameHandler(blameLines));
     }
-    catch (Exception ex) {}
+    catch (Exception ex)
+    {
+      logger.error("could not create blame view", ex);
+    }
 
     total = blameLines.get(blameLines.size() - 1).getLineNumber();
 
