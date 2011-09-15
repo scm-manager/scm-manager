@@ -53,6 +53,8 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.jgit.lib.ObjectId;
+import sonia.scm.util.Util;
 
 /**
  * Class description
@@ -96,6 +98,8 @@ public class GitBlameViewer implements BlameViewer
   @Override
   public BlamePagingResult getBlame(String revision, String path)
   {
+    AssertUtil.assertIsNotEmpty(path);
+    
     BlameResult blameResult = null;
     BlamePagingResult blamePagingResult = null;
     org.eclipse.jgit.lib.Repository gr = null;
@@ -108,11 +112,11 @@ public class GitBlameViewer implements BlameViewer
       git = new Git(gr);
 
       BlameCommand blame = git.blame();
-
-      if (path != null)
-      {
-        blame.setFilePath(path);
-      }
+      blame.setFilePath(path);
+      
+      ObjectId revId = GitUtil.getRevisionId(gr, revision);
+      blame.setStartCommit(revId);
+      
 
       blameResult = blame.call();
       AssertUtil.assertIsNotNull(blameResult);
