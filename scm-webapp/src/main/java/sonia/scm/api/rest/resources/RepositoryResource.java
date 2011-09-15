@@ -133,7 +133,7 @@ public class RepositoryResource
     setDisableCache(false);
   }
 
-  //~--- methods --------------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -150,9 +150,9 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/blame")
-  public Response blame(@PathParam("id") String id,
-                        @QueryParam("revision") String revision,
-                        @QueryParam("path") String path)
+  public Response getBlame(@PathParam("id") String id,
+                           @QueryParam("revision") String revision,
+                           @QueryParam("path") String path)
           throws RepositoryException, IOException
   {
     Response response = null;
@@ -188,8 +188,6 @@ public class RepositoryResource
 
     return response;
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
