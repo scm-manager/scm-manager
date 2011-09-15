@@ -33,6 +33,10 @@
 
 package sonia.scm.repository;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
 /**
  * Interface description
  *
@@ -51,6 +55,10 @@ public interface BlameViewer
    * @param path
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
-  public BlamePagingResult getBlame(String revision, String path);
+  public BlamePagingResult getBlame(String revision, String path)
+          throws IOException, RepositoryException;
 }
