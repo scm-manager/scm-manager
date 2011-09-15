@@ -125,8 +125,8 @@ public class GitBlameViewer implements BlameViewer
         BlameLine blameLine = new BlameLine();
 
         blameLine.setLineNumber(i);
-        blameLine.setName(author.getName());
-        blameLine.setEmailAddress(author.getEmailAddress());
+        blameLine.setAuthor(new Person(author.getName(),
+                                       author.getEmailAddress()));
         blameLine.setWhen(author.getWhen());
 
         String rev = blameResult.getSourceCommit(i).getId().getName();

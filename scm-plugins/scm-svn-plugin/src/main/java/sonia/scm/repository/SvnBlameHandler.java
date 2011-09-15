@@ -33,174 +33,125 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.wc.ISVNAnnotateHandler;
+
+import sonia.scm.util.Util;
+
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
+
 import java.util.Date;
+import java.util.List;
 
 /**
- * Class description
  *
  * @author Sebastian Sdorra
- * @since 1.8
  */
-public class BlameLine
+public class SvnBlameHandler implements ISVNAnnotateHandler
 {
 
   /**
    * Constructs ...
    *
+   *
+   * @param blameLines
    */
-  public BlameLine() {}
+  public SvnBlameHandler(List<BlameLine> blameLines)
+  {
+    this.blameLines = blameLines;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Method description
+   *
+   */
+  @Override
+  public void handleEOF()
+  {
+
+    // do nothing
+  }
+
+  /**
+   * Method description
    *
    *
-   *
-   * @param author
-   * @param when
+   * @param date
    * @param revision
-   * @param code
-   * @param lineNumber
-   */
-  public BlameLine(Person author, Date when, String revision, String code,
-                   int lineNumber)
-  {
-    this.author = author;
-    this.when = when;
-    this.revision = revision;
-    this.code = code;
-    this.lineNumber = lineNumber;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Person getAuthor()
-  {
-    return author;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getCode()
-  {
-    return code;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public int getLineNumber()
-  {
-    return lineNumber;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getRevision()
-  {
-    return revision;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Date getWhen()
-  {
-    return when;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
    * @param author
+   * @param line
+   *
+   * @throws SVNException
    */
-  public void setAuthor(Person author)
+  @Override
+  public void handleLine(Date date, long revision, String author, String line)
+          throws SVNException
   {
-    this.author = author;
+    handleLine(date, revision, author, line, null, -1, null, null, 0);
   }
 
   /**
    * Method description
    *
    *
-   * @param code
-   */
-  public void setCode(String code)
-  {
-    this.code = code;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param lineNumber
-   */
-  public void setLineNumber(int lineNumber)
-  {
-    this.lineNumber = lineNumber;
-  }
-
-  /**
-   * Method description
-   *
-   *
+   * @param date
    * @param revision
+   * @param author
+   * @param line
+   * @param mergedDate
+   * @param mergedRevision
+   * @param mergedAuthor
+   * @param mergedPath
+   * @param lineNumber
+   *
+   * @throws SVNException
    */
-  public void setRevision(String revision)
+  @Override
+  public void handleLine(Date date, long revision, String author, String line,
+                         Date mergedDate, long mergedRevision,
+                         String mergedAuthor, String mergedPath, int lineNumber)
+          throws SVNException
   {
-    this.revision = revision;
+    Person authorPerson = null;
+
+    if (Util.isNotEmpty(author))
+    {
+      authorPerson = new Person(author);
+    }
+
+    blameLines.add(new BlameLine(authorPerson, date, String.valueOf(revision),
+                                 line, lineNumber));
   }
 
   /**
    * Method description
    *
    *
-   * @param when
+   * @param date
+   * @param revision
+   * @param author
+   * @param contents
+   *
+   * @return
+   *
+   * @throws SVNException
    */
-  public void setWhen(Date when)
+  @Override
+  public boolean handleRevision(Date date, long revision, String author,
+                                File contents)
+          throws SVNException
   {
-    this.when = when;
+    return false;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Person author;
-
-  /** Field description */
-  private String code;
-
-  /** Field description */
-  private int lineNumber;
-
-  /** Field description */
-  private String revision;
-
-  /** Field description */
-  private Date when;
+  private List<BlameLine> blameLines;
 }

@@ -38,12 +38,10 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.ISVNAuthenticationManager;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
-import org.tmatesoft.svn.core.wc.ISVNAnnotateHandler;
 import org.tmatesoft.svn.core.wc.SVNLogClient;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 
@@ -52,7 +50,6 @@ import org.tmatesoft.svn.core.wc.SVNRevision;
 import java.io.File;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -100,51 +97,22 @@ public class SvnBlameViewer implements BlameViewer
   {
     final List<BlameLine> blameLines = new ArrayList<BlameLine>();
     File directory = handler.getDirectory(repository);
-    SVNRepository repository = null;
+    SVNRepository svnRepository = null;
     SVNURL svnurl = null;
     int total = 0;
 
     try
     {
       svnurl = SVNURL.fromFile(new File(directory, path));
-      repository = SVNRepositoryFactory.create(SVNURL.fromFile(directory));
+      svnRepository = SVNRepositoryFactory.create(SVNURL.fromFile(directory));
 
       ISVNAuthenticationManager svnManager =
-        repository.getAuthenticationManager();
+        svnRepository.getAuthenticationManager();
       SVNLogClient svnLogClient = new SVNLogClient(svnManager, null);
 
       svnLogClient.doAnnotate(svnurl, SVNRevision.HEAD, SVNRevision.HEAD,
-                              SVNRevision.HEAD, new ISVNAnnotateHandler()
-      {
-        @Override
-        public void handleLine(Date date, long revision, String author,
-                               String line)
-                throws SVNException
-        {
-
-          // Not Used
-        }
-        @Override
-        public void handleLine(Date date, long revision, String author,
-                               String line, Date mergedDate,
-                               long mergedRevision, String mergedAuthor,
-                               String mergedPath, int lineNumber)
-                throws SVNException
-        {
-          blameLines.add(new BlameLine(null, author, date,
-                                       String.valueOf(revision), line,
-                                       lineNumber));
-        }
-        @Override
-        public boolean handleRevision(Date date, long revision, String author,
-                                      File contents)
-                throws SVNException
-        {
-          return false;
-        }
-        @Override
-        public void handleEOF() {}
-      });
+                              SVNRevision.HEAD,
+                              new SvnBlameHandler(blameLines));
     }
     catch (Exception ex) {}
 
