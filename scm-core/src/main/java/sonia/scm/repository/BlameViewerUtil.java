@@ -46,6 +46,10 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.util.AssertUtil;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
 /**
  * Class description
  *
@@ -95,12 +99,14 @@ public class BlameViewerUtil extends CacheClearHook
    *
    * @return
    *
+   *
+   * @throws IOException
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    */
   public BlamePagingResult getBlame(String repositoryId, String revision,
                                     String path)
-          throws RepositoryException, NotSupportedFeatuerException
+          throws RepositoryException, NotSupportedFeatuerException, IOException
   {
     AssertUtil.assertIsNotEmpty(repositoryId);
 
@@ -125,12 +131,14 @@ public class BlameViewerUtil extends CacheClearHook
    *
    * @return
    *
+   *
+   * @throws IOException
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    */
   public BlamePagingResult getBlame(Repository repository, String revision,
                                     String path)
-          throws RepositoryException, NotSupportedFeatuerException
+          throws RepositoryException, NotSupportedFeatuerException, IOException
   {
     AssertUtil.assertIsNotNull(repository);
 

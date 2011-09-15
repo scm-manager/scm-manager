@@ -113,6 +113,7 @@ public class RepositoryResource
    * @param securityContextProvider
    * @param changesetViewerUtil
    * @param repositoryBrowserUtil
+   * @param blameViewerUtil
    */
   @Inject
   public RepositoryResource(
@@ -130,6 +131,62 @@ public class RepositoryResource
     this.repositoryBrowserUtil = repositoryBrowserUtil;
     this.blameViewerUtil = blameViewerUtil;
     setDisableCache(false);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   * @param revision
+   * @param path
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @GET
+  @Path("{id}/blame")
+  public Response blame(@PathParam("id") String id,
+                        @QueryParam("revision") String revision,
+                        @QueryParam("path") String path)
+          throws RepositoryException, IOException
+  {
+    Response response = null;
+
+    try
+    {
+      AssertUtil.assertIsNotNull(path);
+
+      BlamePagingResult blamePagingResult = blameViewerUtil.getBlame(id,
+                                              revision, path);
+
+      if (blamePagingResult != null)
+      {
+        response = Response.ok(blamePagingResult).build();
+      }
+      else
+      {
+        response = Response.ok().build();
+      }
+    }
+    catch (IllegalStateException ex)
+    {
+      response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+    catch (RepositoryNotFoundException ex)
+    {
+      response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+    catch (NotSupportedFeatuerException ex)
+    {
+      response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    return response;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -229,37 +286,6 @@ public class RepositoryResource
 
     return response;
   }
-  
-  @GET
-  @Path("{id}/blame")
-  public Response blame(@PathParam("id") String id,
-  			@QueryParam("revision") String revision,
-  			@QueryParam("path") String path)
-  {
-  	Response response = null;
-  	
-    try {
-    	AssertUtil.assertIsNotNull(path);
-	  	BlamePagingResult blamePagingResult = blameViewerUtil.getBlame(id, revision, path);
-	  	
-	  	if (blamePagingResult != null) {
-	  		response = Response.ok(blamePagingResult).build();
-	  	}
-	  	else 
-	  	{
-	  		response = Response.ok().build();
-	  	}
-    } catch (IllegalStateException ex) {
-    	response = Response.status(Response.Status.NOT_FOUND).build();
-    } catch (RepositoryException ex) {
-      response = Response.status(Response.Status.NOT_FOUND).build();
-    } catch (NotSupportedFeatuerException ex) {
-      response = Response.status(Response.Status.BAD_REQUEST).build();
-    }
-    
-    return response;
-  }
-
 
   /**
    * Method description
@@ -541,6 +567,9 @@ public class RepositoryResource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private BlameViewerUtil blameViewerUtil;
+
+  /** Field description */
   private ChangesetViewerUtil changesetViewerUtil;
 
   /** Field description */
@@ -548,13 +577,10 @@ public class RepositoryResource
 
   /** Field description */
   private RepositoryBrowserUtil repositoryBrowserUtil;
-  
-  /** Field description */
-  private BlameViewerUtil blameViewerUtil;
 
   /** Field description */
   private RepositoryManager repositoryManager;
-  
+
   /** Field description */
   private Provider<WebSecurityContext> securityContextProvider;
 }
