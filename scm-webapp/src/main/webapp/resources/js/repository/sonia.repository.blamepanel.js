@@ -51,8 +51,9 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
 
     var blameColModel = new Ext.grid.ColumnModel({
       columns: [{
-        id: 'lineNumber', 
-        dataIndex: 'lineNumber',
+        id: 'revision', 
+        dataIndex: 'revision',
+        renderer: this.renderRevision,
         width: 20
       },{
         id: 'code', 
@@ -67,6 +68,7 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
       autoExpandColumn: 'code',
       store: blameStore,
       colModel: blameColModel,
+      stripeRows: false,
       autoHeight: true,
       viewConfig: {
         forceFit: true
@@ -74,6 +76,17 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
     }
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.BlamePanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  renderRevision: function(value, metadata, record){
+    var title = 'Revision: ' + value;
+    var tip = 'Author: ' + record.get('author').name + '<br />';
+    var when = record.get('when');
+    if ( when ){
+      tip += 'When: ' + Ext.util.Format.formatTimestamp(when);
+    }
+    metadata.attr = 'ext:qtitle="' + title + '"' + ' ext:qtip="' + tip + '"';
+    return '<a>' + value + '</a>';
   },
   
   renderCode: function(value){
