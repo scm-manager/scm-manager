@@ -161,8 +161,8 @@ public class RepositoryResource
     {
       AssertUtil.assertIsNotNull(path);
 
-      BlameResult blamePagingResult = blameViewerUtil.getBlame(id,
-                                              revision, path);
+      BlameResult blamePagingResult = blameViewerUtil.getBlame(id, revision,
+                                        path);
 
       if (blamePagingResult != null)
       {
@@ -298,10 +298,11 @@ public class RepositoryResource
   @GET
   @Path("{id}/content")
   @Produces({ MediaType.APPLICATION_OCTET_STREAM })
-  public StreamingOutput getContent(@PathParam("id") String id,
-                                    @QueryParam("revision") String revision,
-                                    @QueryParam("path") String path)
+  public Response getContent(@PathParam("id") String id,
+                             @QueryParam("revision") String revision,
+                             @QueryParam("path") String path)
   {
+    Response response = null;
     StreamingOutput output = null;
     Repository repository = repositoryManager.get(id);
 
@@ -315,20 +316,28 @@ public class RepositoryResource
         if (browser != null)
         {
           output = new BrowserStreamingOutput(browser, revision, path);
+
+          String contentDispositionName = getContentDispositionName(path);
+
+          response = Response.ok(output).header("Content-Disposition",
+                                 contentDispositionName).build();
         }
         else if (logger.isWarnEnabled())
         {
           logger.warn("could not find repository browser for respository {}",
                       repository.getId());
+          response = Response.status(Response.Status.NOT_FOUND).build();
         }
       }
       catch (Exception ex)
       {
         logger.error("could not retrive content", ex);
+        response =
+          Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
       }
     }
 
-    return output;
+    return response;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -460,6 +469,27 @@ public class RepositoryResource
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param path
+   *
+   * @return
+   */
+  private String getContentDispositionName(String path)
+  {
+    String name = path;
+    int index = path.lastIndexOf("/");
+
+    if (index >= 0)
+    {
+      name = path.substring(0, index);
+    }
+
+    return "attachment; filename=\"".concat(name).concat("\"");
+  }
 
   /**
    * Method description
