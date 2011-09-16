@@ -56,7 +56,9 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
     var config = {
       title: name,
       tbar: [{
-        text: 'Default'
+        text: 'Default',
+        handler: this.openSyntaxPanel,
+        scope: this
       },{
         text: 'Raw',
         handler: this.downlaodFile,
@@ -78,17 +80,29 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
     Sonia.repository.ContentPanel.superclass.initComponent.apply(this, arguments);
   },
   
+  openSyntaxPanel: function(){
+    this.openPanel({
+      xtype: 'syntaxHighlighterPanel',
+      syntax: this.getExtension(this.path),
+      contentUrl: this.contentUrl
+    });
+  },
+  
   openBlamePanel: function(){
-    this.removeAll();
-    this.add({
+    this.openPanel({
       xtype: 'blamePanel',
       blameUrl: this.blameUrl
     });
-    this.doLayout();
   },
   
   downlaodFile: function(){
     window.open(this.contentUrl);
+  },
+  
+  openPanel: function(panel){
+    this.removeAll();
+    this.add(panel);
+    this.doLayout();
   },
   
   appendRepositoryProperties: function(bar){
