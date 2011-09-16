@@ -118,8 +118,7 @@ public class HgBlameViewer implements BlameViewer
    * @throws IOException
    */
   @Override
-  public BlameResult getBlame(String revision, String path)
-          throws IOException
+  public BlameResult getBlame(String revision, String path) throws IOException
   {
     AssertUtil.assertIsNotEmpty(path);
 
@@ -173,15 +172,15 @@ public class HgBlameViewer implements BlameViewer
    *
    * @throws IOException
    */
-  private BlameResult parseBlameInput(BufferedReader reader)
-          throws IOException
+  private BlameResult parseBlameInput(BufferedReader reader) throws IOException
   {
     List<BlameLine> blameLines = new ArrayList<BlameLine>();
     String line = reader.readLine();
+    int i = 1;
 
     while (line != null)
     {
-      BlameLine blameLine = parseBlameLine(line);
+      BlameLine blameLine = parseBlameLine(i, line);
 
       if (blameLine != null)
       {
@@ -189,6 +188,7 @@ public class HgBlameViewer implements BlameViewer
       }
 
       line = reader.readLine();
+      i++;
     }
 
     return new BlameResult(blameLines.size(), blameLines);
@@ -198,11 +198,13 @@ public class HgBlameViewer implements BlameViewer
    * Method description
    *
    *
+   *
+   * @param nr
    * @param line
    *
    * @return
    */
-  private BlameLine parseBlameLine(String line)
+  private BlameLine parseBlameLine(int nr, String line)
   {
     BlameLine blameLine = null;
     Matcher m = REGEX_FIRSTPART.matcher(line);
@@ -214,8 +216,7 @@ public class HgBlameViewer implements BlameViewer
       // todo parse date
       Long when = getDate(m.group(3));
 
-      blameLine = new BlameLine(authorPerson, when, m.group(2), m.group(5),
-                                Integer.parseInt(m.group(4)));
+      blameLine = new BlameLine(authorPerson, when, m.group(2), m.group(5), nr);
     }
     else if (logger.isWarnEnabled())
     {
