@@ -83,7 +83,7 @@ public class BlameViewerUtil extends CacheClearHook
   {
     this.repositoryManager = repositoryManager;
     this.cache = cacheManager.getCache(BlameViewerCacheKey.class,
-                                       BlamePagingResult.class, CACHE_NAME);
+                                       BlameResult.class, CACHE_NAME);
     init(repositoryManager, cache);
   }
 
@@ -104,7 +104,7 @@ public class BlameViewerUtil extends CacheClearHook
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    */
-  public BlamePagingResult getBlame(String repositoryId, String revision,
+  public BlameResult getBlame(String repositoryId, String revision,
                                     String path)
           throws RepositoryException, NotSupportedFeatuerException, IOException
   {
@@ -136,7 +136,7 @@ public class BlameViewerUtil extends CacheClearHook
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    */
-  public BlamePagingResult getBlame(Repository repository, String revision,
+  public BlameResult getBlame(Repository repository, String revision,
                                     String path)
           throws RepositoryException, NotSupportedFeatuerException, IOException
   {
@@ -153,7 +153,7 @@ public class BlameViewerUtil extends CacheClearHook
 
     BlameViewerCacheKey key = new BlameViewerCacheKey(repository.getId(),
                                 revision, path);
-    BlamePagingResult result = cache.get(key);
+    BlameResult result = cache.get(key);
 
     if (result == null)
     {
@@ -285,7 +285,7 @@ public class BlameViewerUtil extends CacheClearHook
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Cache<BlameViewerCacheKey, BlamePagingResult> cache;
+  private Cache<BlameViewerCacheKey, BlameResult> cache;
 
   /** Field description */
   private RepositoryManager repositoryManager;

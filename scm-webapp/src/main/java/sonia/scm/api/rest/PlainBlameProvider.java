@@ -36,7 +36,7 @@ package sonia.scm.api.rest;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.BlameLine;
-import sonia.scm.repository.BlamePagingResult;
+import sonia.scm.repository.BlameResult;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -62,7 +62,7 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 public class PlainBlameProvider
-        extends AbstractMessageReaderWriterProvider<BlamePagingResult>
+        extends AbstractMessageReaderWriterProvider<BlameResult>
 {
 
   /**
@@ -82,7 +82,7 @@ public class PlainBlameProvider
    * @throws WebApplicationException
    */
   @Override
-  public BlamePagingResult readFrom(Class<BlamePagingResult> type,
+  public BlameResult readFrom(Class<BlameResult> type,
                                     Type genericType, Annotation[] annotations,
                                     MediaType mediaType,
                                     MultivaluedMap<String, String> httpHeaders,
@@ -108,7 +108,7 @@ public class PlainBlameProvider
    * @throws WebApplicationException
    */
   @Override
-  public void writeTo(BlamePagingResult bpr, Class<?> type, Type genericType,
+  public void writeTo(BlameResult bpr, Class<?> type, Type genericType,
                       Annotation[] annotations, MediaType mediaType,
                       MultivaluedMap<String, Object> httpHeaders,
                       OutputStream entityStream)
@@ -166,7 +166,7 @@ public class PlainBlameProvider
   public boolean isWriteable(Class<?> type, Type genericType,
                              Annotation[] annotations, MediaType mediaType)
   {
-    return (type == BlamePagingResult.class)
+    return (type == BlameResult.class)
            && mediaType.equals(MediaType.TEXT_PLAIN_TYPE);
   }
 }

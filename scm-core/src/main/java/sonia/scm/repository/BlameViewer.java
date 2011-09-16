@@ -59,6 +59,6 @@ public interface BlameViewer
    * @throws IOException
    * @throws RepositoryException
    */
-  public BlamePagingResult getBlame(String revision, String path)
+  public BlameResult getBlame(String revision, String path)
           throws IOException, RepositoryException;
 }

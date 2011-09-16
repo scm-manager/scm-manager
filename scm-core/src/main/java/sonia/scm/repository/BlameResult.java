@@ -52,14 +52,26 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "blame-paging")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BlamePagingResult
+public class BlameResult
 {
 
   /**
    * Constructs ...
    *
    */
-  public BlamePagingResult() {}
+  public BlameResult() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param blameLines
+   */
+  public BlameResult(List<BlameLine> blameLines)
+  {
+    this.blameLines = blameLines;
+    this.total = blameLines.size();
+  }
 
   /**
    * Constructs ...
@@ -68,7 +80,7 @@ public class BlamePagingResult
    * @param total
    * @param blameLines
    */
-  public BlamePagingResult(int total, List<BlameLine> blameLines)
+  public BlameResult(int total, List<BlameLine> blameLines)
   {
     this.total = total;
     this.blameLines = blameLines;
@@ -85,6 +97,19 @@ public class BlamePagingResult
   public List<BlameLine> getBlameLines()
   {
     return blameLines;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param i
+   *
+   * @return
+   */
+  public BlameLine getLine(int i)
+  {
+    return blameLines.get(i);
   }
 
   /**

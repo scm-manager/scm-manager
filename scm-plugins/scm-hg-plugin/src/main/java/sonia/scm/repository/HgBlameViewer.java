@@ -118,7 +118,7 @@ public class HgBlameViewer implements BlameViewer
    * @throws IOException
    */
   @Override
-  public BlamePagingResult getBlame(String revision, String path)
+  public BlameResult getBlame(String revision, String path)
           throws IOException
   {
     AssertUtil.assertIsNotEmpty(path);
@@ -146,7 +146,7 @@ public class HgBlameViewer implements BlameViewer
 
     Process p = builder.directory(repositoryDirectory).start();
     BufferedReader reader = null;
-    BlamePagingResult result = null;
+    BlameResult result = null;
 
     try
     {
@@ -173,7 +173,7 @@ public class HgBlameViewer implements BlameViewer
    *
    * @throws IOException
    */
-  private BlamePagingResult parseBlameInput(BufferedReader reader)
+  private BlameResult parseBlameInput(BufferedReader reader)
           throws IOException
   {
     List<BlameLine> blameLines = new ArrayList<BlameLine>();
@@ -191,7 +191,7 @@ public class HgBlameViewer implements BlameViewer
       line = reader.readLine();
     }
 
-    return new BlamePagingResult(blameLines.size(), blameLines);
+    return new BlameResult(blameLines.size(), blameLines);
   }
 
   /**

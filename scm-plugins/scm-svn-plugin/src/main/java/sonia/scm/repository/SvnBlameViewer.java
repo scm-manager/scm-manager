@@ -95,7 +95,7 @@ public class SvnBlameViewer implements BlameViewer
    * @return
    */
   @Override
-  public BlamePagingResult getBlame(String revision, String path)
+  public BlameResult getBlame(String revision, String path)
   {
     List<BlameLine> blameLines = new ArrayList<BlameLine>();
     File directory = handler.getDirectory(repository);
@@ -130,7 +130,7 @@ public class SvnBlameViewer implements BlameViewer
       logger.error("could not create blame view", ex);
     }
 
-    return new BlamePagingResult(blameLines.size(), blameLines);
+    return new BlameResult(blameLines.size(), blameLines);
   }
 
   //~--- fields ---------------------------------------------------------------

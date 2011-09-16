@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.BlamePagingResult;
+import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.BlameViewerUtil;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -161,7 +161,7 @@ public class RepositoryResource
     {
       AssertUtil.assertIsNotNull(path);
 
-      BlamePagingResult blamePagingResult = blameViewerUtil.getBlame(id,
+      BlameResult blamePagingResult = blameViewerUtil.getBlame(id,
                                               revision, path);
 
       if (blamePagingResult != null)

@@ -38,6 +38,7 @@ package sonia.scm.repository;
 import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.blame.BlameResult;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 
@@ -53,8 +54,6 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.eclipse.jgit.lib.ObjectId;
-import sonia.scm.util.Util;
 
 /**
  * Class description
@@ -96,12 +95,12 @@ public class GitBlameViewer implements BlameViewer
    * @return
    */
   @Override
-  public BlamePagingResult getBlame(String revision, String path)
+  public sonia.scm.repository.BlameResult getBlame(String revision, String path)
   {
     AssertUtil.assertIsNotEmpty(path);
-    
-    BlameResult blameResult = null;
-    BlamePagingResult blamePagingResult = null;
+
+    BlameResult gitBlameResult = null;
+    sonia.scm.repository.BlameResult blameResult = null;
     org.eclipse.jgit.lib.Repository gr = null;
     File directory = handler.getDirectory(repository);
     Git git = null;
@@ -112,28 +111,28 @@ public class GitBlameViewer implements BlameViewer
       git = new Git(gr);
 
       BlameCommand blame = git.blame();
-      blame.setFilePath(path);
-      
-      ObjectId revId = GitUtil.getRevisionId(gr, revision);
-      blame.setStartCommit(revId);
-      
 
-      blameResult = blame.call();
-      AssertUtil.assertIsNotNull(blameResult);
+      blame.setFilePath(path);
+
+      ObjectId revId = GitUtil.getRevisionId(gr, revision);
+
+      blame.setStartCommit(revId);
+      gitBlameResult = blame.call();
+      AssertUtil.assertIsNotNull(gitBlameResult);
 
       List<BlameLine> blameLines = new ArrayList<BlameLine>();
-      int total = blameResult.getResultContents().size();
+      int total = gitBlameResult.getResultContents().size();
 
       for (int i = 0; i < total; i++)
       {
-        PersonIdent author = blameResult.getSourceAuthor(i);
+        PersonIdent author = gitBlameResult.getSourceAuthor(i);
         BlameLine blameLine = new BlameLine();
 
         blameLine.setLineNumber(i + 1);
         blameLine.setAuthor(new Person(author.getName(),
                                        author.getEmailAddress()));
 
-        RevCommit commit = blameResult.getSourceCommit(i);
+        RevCommit commit = gitBlameResult.getSourceCommit(i);
         long when = GitUtil.getCommitTime(commit);
 
         blameLine.setWhen(when);
@@ -142,20 +141,20 @@ public class GitBlameViewer implements BlameViewer
 
         blameLine.setRevision(rev);
 
-        String content = blameResult.getResultContents().getString(i);
+        String content = gitBlameResult.getResultContents().getString(i);
 
         blameLine.setCode(content);
         blameLines.add(blameLine);
       }
 
-      blamePagingResult = new BlamePagingResult(total, blameLines);
+      blameResult = new sonia.scm.repository.BlameResult(total, blameLines);
     }
     catch (IOException ex)
     {
       logger.error("could not open repository", ex);
     }
 
-    return blamePagingResult;
+    return blameResult;
   }
 
   //~--- fields ---------------------------------------------------------------
