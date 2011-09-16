@@ -209,24 +209,6 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     }
   },
   
-  getName: function(path){
-    var name = path;
-    var index = path.lastIndexOf('/');
-    if ( index > 0 ){
-      name = path.substr(index +1);
-    }
-    return name
-  },
-  
-  getExtension: function(path){
-    var ext = null;
-    var index = path.lastIndexOf('.');
-    if ( index > 0 ){
-      ext = path.substr(index + 1, path.length);
-    }
-    return ext;
-  },
-  
   appendRepositoryProperties: function(bar){
     bar.push('->',this.repository.name);
     if ( this.revision != null ){
@@ -239,25 +221,14 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       console.debug( 'open file: ' + path );
     }
     
-    var ext = this.getExtension( path );    
-    
-    var url = restUrl + 'repositories/' + this.repository.id  + '/content?path=' + path;
-    if ( this.revision ){
-      url += "&revision=" + this.revision;
-    }
-    
-    var bar = [path];
-    this.appendRepositoryProperties(bar);
-    
     main.addTab({
       id: this.repository.id + "-b-"  + path,
-      contentUrl: url,
-      xtype: 'syntaxHighlighterPanel',
-      title: this.getName(path),
+      path: path,
+      revision: this.revision,
+      repository: this.repository,
+      xtype: 'contentPanel',
       closable: true,
-      autoScroll: true,
-      syntax: ext,
-      bbar: bar
+      autoScroll: true
     });
   },
   
