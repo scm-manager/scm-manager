@@ -35,13 +35,19 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
   revision: null,
   path: null,
   contentUrl: null,
+  blameUrl: null,
   
   initComponent: function(){
     var name = this.getName(this.path);
     
-    this.contentUrl = restUrl + 'repositories/' + this.repository.id  + '/content?path=' + this.path;
+    var repositoryUrl = restUrl + 'repositories/' + this.repository.id  + '/';
+    
+    
+    this.contentUrl = repositoryUrl + 'content?path=' + this.path;
+    this.blameUrl = repositoryUrl + 'blame.json?path=' + this.path;
     if ( this.revision ){
       this.contentUrl += "&revision=" + this.revision;
+      this.blameUrl += "&revision=" + this.revision;
     }
     
     var bottomBar = [this.path];
@@ -55,8 +61,10 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
         text: 'Raw',
         handler: this.downlaodFile,
         scope: this
-      //},{
-      //  text: 'Blame'
+      },{
+        text: 'Blame',
+        handler: this.openBlamePanel,
+        scope: this
       }],
       bbar: bottomBar,
       items: [{
@@ -68,6 +76,15 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ContentPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  openBlamePanel: function(){
+    this.removeAll();
+    this.add({
+      xtype: 'blamePanel',
+      blameUrl: this.blameUrl
+    });
+    this.doLayout();
   },
   
   downlaodFile: function(){
