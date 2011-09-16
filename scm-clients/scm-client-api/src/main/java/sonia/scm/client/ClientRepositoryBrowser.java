@@ -33,42 +33,53 @@
 
 package sonia.scm.client;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.NotSupportedFeatuerException;
-import sonia.scm.Type;
-import sonia.scm.repository.Repository;
-
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
+import java.io.IOException;
+import java.io.InputStream;
+
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.8
  */
-public interface RepositoryClientHandler extends ClientHandler<Repository>
+public interface ClientRepositoryBrowser
 {
 
   /**
    * Method description
    *
    *
-   * @param repository
+   * @param revision
+   * @param path
    *
    * @return
-   * @since 1.8
    *
-   * @throws NotSupportedFeatuerException
+   * @throws IOException
    */
-  public ClientRepositoryBrowser getRepositoryBrowser(Repository repository)
-          throws NotSupportedFeatuerException;
+  public InputStream getContent(String revision, String path)
+          throws IOException;
 
   /**
    * Method description
    *
    *
+   * @param revision
+   * @param path
+   *
    * @return
    */
-  public Collection<Type> getRepositoryTypes();
+  public List<FileObjectWrapper> getFiles(String revision, String path);
+
+  /**
+   * Method description
+   *
+   *
+   * @param revision
+   *
+   * @return
+   */
+  public List<FileObjectWrapper> getFiles(String revision);
 }

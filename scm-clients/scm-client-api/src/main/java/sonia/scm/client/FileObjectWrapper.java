@@ -35,36 +35,37 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.NotSupportedFeatuerException;
-import sonia.scm.Type;
-import sonia.scm.repository.Repository;
+import sonia.scm.repository.FileObject;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
+import java.io.IOException;
+import java.io.InputStream;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.8
  */
-public class JerseyRepositoryClientHandler
-        extends AbstractClientHandler<Repository>
-        implements RepositoryClientHandler
+public class FileObjectWrapper
 {
 
   /**
    * Constructs ...
    *
    *
-   * @param session
+   *
+   * @param repositoryBrowser
+   * @param revision
+   * @param file
    */
-  public JerseyRepositoryClientHandler(JerseyClientSession session)
+  public FileObjectWrapper(ClientRepositoryBrowser repositoryBrowser,
+                           String revision, FileObject file)
   {
-    super(session, Repository.class);
+    this.repositoryBrowser = repositoryBrowser;
+    this.file = file;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -73,16 +74,31 @@ public class JerseyRepositoryClientHandler
    * Method description
    *
    *
-   * @param repository
+   * @return
+   */
+  public List<FileObjectWrapper> getChildren()
+  {
+    List<FileObjectWrapper> children = null;
+
+    if (isDirectory())
+    {
+      children = repositoryBrowser.getFiles(revision, getPath());
+    }
+
+    return children;
+  }
+
+  /**
+   * Method description
+   *
    *
    * @return
    *
+   * @throws IOException
    */
-  @Override
-  public JerseyClientRepositoryBrowser getRepositoryBrowser(
-          Repository repository)
+  public InputStream getContent() throws IOException
   {
-    return new JerseyClientRepositoryBrowser(session, repository);
+    return repositoryBrowser.getContent(revision, getPath());
   }
 
   /**
@@ -91,59 +107,9 @@ public class JerseyRepositoryClientHandler
    *
    * @return
    */
-  @Override
-  public Collection<Type> getRepositoryTypes()
+  public String getDescription()
   {
-    return session.getState().getRepositoryTypes();
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected GenericType<List<Repository>> createGenericListType()
-  {
-    return new GenericType<List<Repository>>() {}
-    ;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   * @param repository
-   * @param newRepository
-   */
-  @Override
-  protected void postCreate(ClientResponse response, Repository repository,
-                            Repository newRepository)
-  {
-    newRepository.copyProperties(repository);
-
-    // copyProperties does not copy the repository id
-    repository.setId(newRepository.getId());
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param itemId
-   *
-   * @return
-   */
-  @Override
-  protected String getItemUrl(String itemId)
-  {
-    return urlProvider.getRepositoryUrl(itemId);
+    return file.getDescription();
   }
 
   /**
@@ -152,9 +118,63 @@ public class JerseyRepositoryClientHandler
    *
    * @return
    */
-  @Override
-  protected String getItemsUrl()
+  public Long getLastModified()
   {
-    return urlProvider.getRepositoriesUrl();
+    return file.getLastModified();
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public long getLength()
+  {
+    return file.getLength();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getName()
+  {
+    return file.getName();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getPath()
+  {
+    return file.getPath();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isDirectory()
+  {
+    return file.isDirectory();
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private FileObject file;
+
+  /** Field description */
+  private ClientRepositoryBrowser repositoryBrowser;
+
+  /** Field description */
+  private String revision;
 }

@@ -38,6 +38,12 @@ package sonia.scm.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.text.MessageFormat;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -72,6 +78,12 @@ public class ScmUrlProvider
 
   /** Field description */
   public static final String URLPART_USERS = "users";
+
+  /** Field description */
+  public static final String URLPATTERN_BROWSE = "repositories/{0}/browse";
+
+  /** Field description */
+  public static final String URLPATTERN_CONTENT = "repositories/{0}/content";
 
   /** the logger for classVar */
   private static final Logger logger =
@@ -187,6 +199,65 @@ public class ScmUrlProvider
    * Method description
    *
    *
+   * @param repositoryId
+   * @param revision
+   * @param path
+   * @since 1.8
+   *
+   * @return
+   */
+  public String getRepositoryBrowseUrl(String repositoryId, String path,
+          String revision)
+  {
+    String url = MessageFormat.format(getResourceUrl(URLPATTERN_BROWSE),
+                                      repositoryId);
+    String s = "?";
+
+    if (Util.isNotEmpty(path))
+    {
+      url = url.concat(s).concat("path=").concat(path);
+      s = "&";
+    }
+
+    if (Util.isNotEmpty(revision))
+    {
+      url = url.concat(s).concat("revision=").concat(revision);
+    }
+
+    return url;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryId
+   * @param path
+   * @param revision
+   * @since 1.8
+   *
+   * @return
+   */
+  public String getRepositoryContentUrl(String repositoryId, String path,
+          String revision)
+  {
+    String url = MessageFormat.format(getResourceUrl(URLPATTERN_CONTENT,
+                   false), repositoryId);
+
+    url = url.concat("?path=").concat(path);
+
+    if (Util.isNotEmpty(revision))
+    {
+      url = url.concat("&revision=").concat(revision);
+    }
+
+    return url;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param id
    *
    * @return
@@ -206,7 +277,27 @@ public class ScmUrlProvider
    */
   public String getResourceUrl(String urlPart)
   {
-    String resourceUrl = baseUrl.concat(urlPart).concat(extension);
+    return getResourceUrl(urlPart, true);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param urlPart
+   * @param appendExtension
+   * @since 1.8
+   *
+   * @return
+   */
+  public String getResourceUrl(String urlPart, boolean appendExtension)
+  {
+    String resourceUrl = baseUrl.concat(urlPart);
+
+    if (appendExtension)
+    {
+      resourceUrl = resourceUrl.concat(extension);
+    }
 
     if (logger.isTraceEnabled())
     {
