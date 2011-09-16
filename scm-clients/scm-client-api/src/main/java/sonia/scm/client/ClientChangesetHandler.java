@@ -35,54 +35,24 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.NotSupportedFeatuerException;
-import sonia.scm.Type;
-import sonia.scm.repository.Repository;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
+import sonia.scm.repository.ChangesetPagingResult;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.8
  */
-public interface RepositoryClientHandler extends ClientHandler<Repository>
+public interface ClientChangesetHandler
 {
 
   /**
    * Method description
    *
    *
-   * @param repository
-   *
-   * @return
-   * @since 1.8
-   *
-   * @throws NotSupportedFeatuerException
-   */
-  public ClientChangesetHandler getChangesetHandler(Repository repository)
-          throws NotSupportedFeatuerException;
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   * @since 1.8
-   *
-   * @throws NotSupportedFeatuerException
-   */
-  public ClientRepositoryBrowser getRepositoryBrowser(Repository repository)
-          throws NotSupportedFeatuerException;
-
-  /**
-   * Method description
-   *
+   * @param start
+   * @param limit
    *
    * @return
    */
-  public Collection<Type> getRepositoryTypes();
+  public ChangesetPagingResult getChangesets(int start, int limit);
 }

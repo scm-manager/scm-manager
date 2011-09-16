@@ -35,25 +35,19 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.NotSupportedFeatuerException;
-import sonia.scm.Type;
+import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-
-import java.util.Collection;
-import java.util.List;
+import com.sun.jersey.api.client.WebResource;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JerseyRepositoryClientHandler
-        extends AbstractClientHandler<Repository>
-        implements RepositoryClientHandler
+public class JerseyClientChangesetHandler implements ClientChangesetHandler
 {
 
   /**
@@ -61,90 +55,13 @@ public class JerseyRepositoryClientHandler
    *
    *
    * @param session
-   */
-  public JerseyRepositoryClientHandler(JerseyClientSession session)
-  {
-    super(session, Repository.class);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
    * @param repository
-   *
-   * @return
-   *
-   * @throws NotSupportedFeatuerException
    */
-  @Override
-  public ClientChangesetHandler getChangesetHandler(Repository repository)
-          throws NotSupportedFeatuerException
-  {
-    return new JerseyClientChangesetHandler(session, repository);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   */
-  @Override
-  public JerseyClientRepositoryBrowser getRepositoryBrowser(
+  public JerseyClientChangesetHandler(JerseyClientSession session,
           Repository repository)
   {
-    return new JerseyClientRepositoryBrowser(session, repository);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Collection<Type> getRepositoryTypes()
-  {
-    return session.getState().getRepositoryTypes();
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected GenericType<List<Repository>> createGenericListType()
-  {
-    return new GenericType<List<Repository>>() {}
-    ;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   * @param repository
-   * @param newRepository
-   */
-  @Override
-  protected void postCreate(ClientResponse response, Repository repository,
-                            Repository newRepository)
-  {
-    newRepository.copyProperties(repository);
-
-    // copyProperties does not copy the repository id
-    repository.setId(newRepository.getId());
+    this.session = session;
+    this.repository = repository;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -153,25 +70,44 @@ public class JerseyRepositoryClientHandler
    * Method description
    *
    *
-   * @param itemId
+   * @param start
+   * @param limit
    *
    * @return
    */
   @Override
-  protected String getItemUrl(String itemId)
+  public ChangesetPagingResult getChangesets(int start, int limit)
   {
-    return urlProvider.getRepositoryUrl(itemId);
+    ChangesetPagingResult result = null;
+    String url =
+      session.getUrlProvider().getRepositoryChangesetUrl(repository.getId(),
+        start, limit);
+    WebResource resource = session.getClient().resource(url);
+    ClientResponse response = null;
+
+    try
+    {
+      response = resource.get(ClientResponse.class);
+
+      if (response.getStatus() != ScmClientException.SC_NOTFOUND)
+      {
+        ClientUtil.checkResponse(response, 200);
+        result = response.getEntity(ChangesetPagingResult.class);
+      }
+    }
+    finally
+    {
+      ClientUtil.close(response);
+    }
+
+    return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected String getItemsUrl()
-  {
-    return urlProvider.getRepositoriesUrl();
-  }
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Repository repository;
+
+  /** Field description */
+  private JerseyClientSession session;
 }

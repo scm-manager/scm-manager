@@ -83,6 +83,10 @@ public class ScmUrlProvider
   public static final String URLPATTERN_BROWSE = "repositories/{0}/browse";
 
   /** Field description */
+  public static final String URLPATTERN_CHANGESETS =
+    "repositories/{0}/changesets";
+
+  /** Field description */
   public static final String URLPATTERN_CONTENT = "repositories/{0}/content";
 
   /** the logger for classVar */
@@ -222,6 +226,38 @@ public class ScmUrlProvider
     if (Util.isNotEmpty(revision))
     {
       url = url.concat(s).concat("revision=").concat(revision);
+    }
+
+    return url;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryId
+   * @since 1.8
+   *
+   * @param start
+   * @param limit
+   * @return
+   */
+  public String getRepositoryChangesetUrl(String repositoryId, int start,
+          int limit)
+  {
+    String url = MessageFormat.format(getResourceUrl(URLPATTERN_CHANGESETS),
+                                      repositoryId);
+    String s = "?";
+
+    if (start >= 0)
+    {
+      url = url.concat(s).concat("start=").concat(String.valueOf(start));
+      s = "&";
+    }
+
+    if (limit > 0)
+    {
+      url = url.concat(s).concat("limit=").concat(String.valueOf(limit));
     }
 
     return url;
