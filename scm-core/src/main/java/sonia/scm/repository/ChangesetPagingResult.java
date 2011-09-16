@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -49,7 +50,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "changeset-paging")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ChangesetPagingResult
+public class ChangesetPagingResult implements Iterable<Changeset>
 {
 
   /**
@@ -69,6 +70,28 @@ public class ChangesetPagingResult
   {
     this.total = total;
     this.changesets = changesets;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.8
+   */
+  @Override
+  public Iterator<Changeset> iterator()
+  {
+    Iterator<Changeset> it = null;
+
+    if (changesets != null)
+    {
+      it = changesets.iterator();
+    }
+
+    return it;
   }
 
   //~--- get methods ----------------------------------------------------------
