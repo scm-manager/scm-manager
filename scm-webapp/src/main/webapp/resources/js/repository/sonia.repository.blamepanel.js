@@ -133,7 +133,7 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
     metadata.attr = 'ext:qtitle="' + title + '"' + ' ext:qtip="' + tip + '"';
     return String.format(
       this.linkTemplate,
-      value,
+      Ext.util.Format.ellipsis(value, 10),
       value
     );
   },
