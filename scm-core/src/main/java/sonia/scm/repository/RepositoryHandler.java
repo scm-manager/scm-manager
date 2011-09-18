@@ -50,7 +50,7 @@ public interface RepositoryHandler
         extends Handler<Repository, RepositoryException>,
                 ListenerSupport<ConfigChangedListener>,
                 RepositoryBrowserProvider, ChangesetViewerProvider,
-                DiffViewerProvider
+                DiffViewerProvider, BlameViewerProvider
 {
 
   /**
