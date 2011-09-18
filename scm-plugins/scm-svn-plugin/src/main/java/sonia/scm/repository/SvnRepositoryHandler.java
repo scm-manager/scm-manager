@@ -122,6 +122,37 @@ public class SvnRepositoryHandler
    * @return
    */
   @Override
+  public BlameViewer getBlameViewer(Repository repository)
+  {
+    SvnBlameViewer blameViewer = null;
+
+    AssertUtil.assertIsNotNull(repository);
+
+    String type = repository.getType();
+
+    AssertUtil.assertIsNotEmpty(type);
+
+    if (TYPE_NAME.equals(type))
+    {
+      blameViewer = new SvnBlameViewer(this, repository);
+    }
+    else
+    {
+      throw new IllegalArgumentException("svn repository is required");
+    }
+
+    return blameViewer;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
   public ChangesetViewer getChangesetViewer(Repository repository)
   {
     SvnChangesetViewer changesetViewer = null;
@@ -138,35 +169,44 @@ public class SvnRepositoryHandler
     }
     else
     {
-      throw new IllegalArgumentException("mercurial repository is required");
+      throw new IllegalArgumentException("svn repository is required");
     }
 
     return changesetViewer;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
   @Override
-  public BlameViewer getBlameViewer(Repository repository) {
-  	SvnBlameViewer blameViewer = null;
+  public DiffViewer getDiffViewer(Repository repository)
+  {
+    SvnDiffViewer diffViewer = null;
 
-  	AssertUtil.assertIsNotNull(repository);
+    AssertUtil.assertIsNotNull(repository);
 
-  	String type = repository.getType();
+    String type = repository.getType();
 
-  	AssertUtil.assertIsNotEmpty(type);
+    AssertUtil.assertIsNotEmpty(type);
 
-  	if (TYPE_NAME.equals(type))
-  	{
-  		blameViewer = new SvnBlameViewer(this, repository);
-  	}
-  	else
-  	{
-  		throw new IllegalArgumentException("svn repository is required");
-  	}
+    if (TYPE_NAME.equals(type))
+    {
+      diffViewer = new SvnDiffViewer(this, repository);
+    }
+    else
+    {
+      throw new IllegalArgumentException("svn repository is required");
+    }
 
-  	return blameViewer;
+    return diffViewer;
   }
 
-	/**
+  /**
    * Method description
    *
    *
