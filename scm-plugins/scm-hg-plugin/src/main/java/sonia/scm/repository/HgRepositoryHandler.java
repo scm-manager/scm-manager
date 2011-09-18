@@ -256,6 +256,40 @@ public class HgRepositoryHandler
    * @param repository
    *
    * @return
+   *
+   * @throws RepositoryException
+   */
+  @Override
+  public DiffViewer getDiffViewer(Repository repository)
+          throws RepositoryException
+  {
+    DiffViewer diffViewer = null;
+
+    AssertUtil.assertIsNotNull(repository);
+
+    String type = repository.getType();
+
+    AssertUtil.assertIsNotEmpty(type);
+
+    if (TYPE_NAME.equals(type))
+    {
+      diffViewer = new HgDiffViewer(this, repository);
+    }
+    else
+    {
+      throw new IllegalArgumentException("mercurial repository is required");
+    }
+
+    return diffViewer;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
    */
   @Override
   public RepositoryBrowser getRepositoryBrowser(Repository repository)
