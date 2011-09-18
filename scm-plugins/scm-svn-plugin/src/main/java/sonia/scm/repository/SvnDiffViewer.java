@@ -111,8 +111,6 @@ public class SvnDiffViewer implements DiffViewer
 
     try
     {
-
-      // TODO add diff for single path
       SVNURL svnurl = SVNURL.fromFile(directory);
 
       if (Util.isNotEmpty(path))
