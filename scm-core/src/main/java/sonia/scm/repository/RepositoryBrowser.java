@@ -59,7 +59,7 @@ public interface RepositoryBrowser
    * @throws RepositoryException
    */
   public void getContent(String revision, String path, OutputStream output)
-          throws IOException, RepositoryException;;
+          throws IOException, RepositoryException;
 
   /**
    * Method description

@@ -233,6 +233,23 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
    * @param repository
    *
    * @return
+   *
+   * @throws RepositoryException
+   */
+  @Override
+  public DiffViewer getDiffViewer(Repository repository)
+          throws RepositoryException
+  {
+    return null;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
    * @since 1.5
    */
   @Override

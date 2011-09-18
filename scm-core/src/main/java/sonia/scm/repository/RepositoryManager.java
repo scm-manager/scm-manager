@@ -51,7 +51,7 @@ public interface RepositoryManager
         extends TypeManager<Repository, RepositoryException>,
                 ListenerSupport<RepositoryListener>, RepositoryBrowserProvider,
                 RepositoryHookSupport, ChangesetViewerProvider,
-                BlameViewerProvider
+                BlameViewerProvider, DiffViewerProvider
 {
 
   /**

@@ -49,6 +49,7 @@ import sonia.scm.Type;
 import sonia.scm.repository.AbstractRepositoryManager;
 import sonia.scm.repository.BlameViewer;
 import sonia.scm.repository.ChangesetViewer;
+import sonia.scm.repository.DiffViewer;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
@@ -541,6 +542,32 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * @throws RepositoryException
    */
   @Override
+  public BlameViewer getBlameViewer(Repository repository)
+          throws RepositoryException
+  {
+    AssertUtil.assertIsNotNull(repository);
+
+    BlameViewer viewer = null;
+
+    if (isReader(repository))
+    {
+      viewer = getHandler(repository).getBlameViewer(repository);
+    }
+
+    return viewer;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   *
+   * @throws RepositoryException
+   */
+  @Override
   public ChangesetViewer getChangesetViewer(Repository repository)
           throws RepositoryException
   {
@@ -550,16 +577,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     return getHandler(repository).getChangesetViewer(repository);
   }
 
-  @Override
-  public BlameViewer getBlameViewer(Repository repository)
-		  		throws RepositoryException 
-	{
-  	AssertUtil.assertIsNotNull(repository);
-  	isReader(repository);
-  	return getHandler(repository).getBlameViewer(repository);
-	}
-
-	/**
+  /**
    * Method description
    *
    *
@@ -579,6 +597,32 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     return validTypes;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   *
+   * @throws RepositoryException
+   */
+  @Override
+  public DiffViewer getDiffViewer(Repository repository)
+          throws RepositoryException
+  {
+    AssertUtil.assertIsNotNull(repository);
+
+    DiffViewer viewer = null;
+
+    if (isReader(repository))
+    {
+      viewer = getHandler(repository).getDiffViewer(repository);
+    }
+
+    return viewer;
   }
 
   /**

@@ -38,7 +38,7 @@ package sonia.scm.repository;
  * @author Sebastian Sdorra
  * @since 1.8
  */
-public interface ChangesetViewerProvider
+public interface DiffViewerProvider
 {
 
   /**
@@ -47,10 +47,10 @@ public interface ChangesetViewerProvider
    *
    *
    * @param repository
-   * @return null if ChangesetViewer is not supported
+   * @return null if DiffViewer is not supported
    *
    * @throws RepositoryException
    */
-  public ChangesetViewer getChangesetViewer(Repository repository)
+  public DiffViewer getDiffViewer(Repository repository)
           throws RepositoryException;
 }

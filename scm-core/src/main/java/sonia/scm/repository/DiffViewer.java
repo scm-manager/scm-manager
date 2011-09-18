@@ -33,24 +33,30 @@
 
 package sonia.scm.repository;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+import java.io.OutputStream;
+
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.8
  */
-public interface ChangesetViewerProvider
+public interface DiffViewer
 {
 
   /**
    * Method description
    *
    *
+   * @param revision
+   * @param path
+   * @param output
    *
-   * @param repository
-   * @return null if ChangesetViewer is not supported
-   *
+   * @throws IOException
    * @throws RepositoryException
    */
-  public ChangesetViewer getChangesetViewer(Repository repository)
-          throws RepositoryException;
+  public void getDiff(String revision, String path, OutputStream output)
+          throws IOException, RepositoryException;
 }
