@@ -49,7 +49,8 @@ import sonia.scm.plugin.ExtensionPoint;
 public interface RepositoryHandler
         extends Handler<Repository, RepositoryException>,
                 ListenerSupport<ConfigChangedListener>,
-                RepositoryBrowserProvider
+                RepositoryBrowserProvider, ChangesetViewerProvider,
+                DiffViewerProvider
 {
 
   /**
@@ -61,32 +62,4 @@ public interface RepositoryHandler
    * @return
    */
   public String createResourcePath(Repository repository);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  public BlameViewer getBlameViewer(Repository repository)
-          throws RepositoryException;
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param repository
-   * @return null if ChangesetViewer is not supported
-   *
-   * @throws RepositoryException
-   */
-  public ChangesetViewer getChangesetViewer(Repository repository)
-          throws RepositoryException;
 }
