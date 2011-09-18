@@ -57,6 +57,14 @@ Sonia.repository.createContentUrl = function(repository, path, revision){
   return contentUrl;
 }
 
+Sonia.repository.createContentId = function(repository, path, revision){
+  var id = repository.id + '-b-'  + path;
+  if ( revision ){
+    id += '-r-' + revision;
+  }
+  return id;
+}
+
 Sonia.repository.isOwner = function(repository){
   return admin || repository.permissions != null;
 }

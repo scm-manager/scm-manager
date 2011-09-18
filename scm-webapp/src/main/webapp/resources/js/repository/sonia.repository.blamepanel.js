@@ -107,9 +107,13 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
   },
   
   openContentPanel: function(revision){
+    var id = Sonia.repository.createContentId(
+      this.repository, 
+      this.path, 
+      revision
+    );
     main.addTab({
-      // TODO create real id
-      id: Ext.id(),
+      id: id,
       xtype: 'contentPanel',
       repository: this.repository,
       revision: revision,
