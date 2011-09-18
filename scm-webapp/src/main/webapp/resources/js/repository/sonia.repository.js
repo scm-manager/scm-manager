@@ -48,6 +48,15 @@ Sonia.repository.openListeners = [];
 
 // functions
 
+Sonia.repository.createContentUrl = function(repository, path, revision){
+  var contentUrl = restUrl + 'repositories/' + repository.id  + '/';
+  contentUrl += 'content?path=' + path;
+  if ( revision ){
+    contentUrl += "&revision=" + revision;
+  }
+  return contentUrl;
+}
+
 Sonia.repository.isOwner = function(repository){
   return admin || repository.permissions != null;
 }

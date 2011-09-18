@@ -35,20 +35,12 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
   revision: null,
   path: null,
   contentUrl: null,
-  blameUrl: null,
   
   initComponent: function(){
-    var name = this.getName(this.path);
-    
-    var repositoryUrl = restUrl + 'repositories/' + this.repository.id  + '/';
-    
-    
-    this.contentUrl = repositoryUrl + 'content?path=' + this.path;
-    this.blameUrl = repositoryUrl + 'blame.json?path=' + this.path;
-    if ( this.revision ){
-      this.contentUrl += "&revision=" + this.revision;
-      this.blameUrl += "&revision=" + this.revision;
-    }
+    var name = Sonia.util.getName(this.path);
+    this.contentUrl = Sonia.repository.createContentUrl(
+      this.repository, this.path, this.revision
+    );
     
     var bottomBar = [this.path];
     this.appendRepositoryProperties(bottomBar);
@@ -71,7 +63,7 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
       bbar: bottomBar,
       items: [{
         xtype: 'syntaxHighlighterPanel',
-        syntax: this.getExtension(this.path),
+        syntax: Sonia.util.getExtension(this.path),
         contentUrl: this.contentUrl
       }]
     }
@@ -83,7 +75,7 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
   openSyntaxPanel: function(){
     this.openPanel({
       xtype: 'syntaxHighlighterPanel',
-      syntax: this.getExtension(this.path),
+      syntax: Sonia.util.getExtension(this.path),
       contentUrl: this.contentUrl
     });
   },
@@ -91,7 +83,9 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
   openBlamePanel: function(){
     this.openPanel({
       xtype: 'blamePanel',
-      blameUrl: this.blameUrl
+      repository: this.repository,
+      revision: this.revision,
+      path: this.path
     });
   },
   
@@ -110,15 +104,6 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
     if ( this.revision != null ){
       bar.push(': ', this.revision);
     }
-  },
-  
-  getName: function(path){
-    var name = path;
-    var index = path.lastIndexOf('/');
-    if ( index > 0 ){
-      name = path.substr(index +1);
-    }
-    return name;
   },
   
   getExtension: function(path){

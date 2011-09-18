@@ -33,12 +33,21 @@
 Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
   
   blameUrl: null,
+  repository: null,
+  path: null,
+  revision: null,
+  linkTemplate: '<a class="scm-link blame-link" rel="{1}">{0}</a>',
   
   initComponent: function(){
+    var blameUrl = restUrl + 'repositories/' + this.repository.id  + '/';
+    blameUrl += 'blame.json?path=' + this.path;
+    if ( this.revision ){
+      blameUrl += "&revision=" + this.revision;
+    }
     
     var blameStore = new Sonia.rest.JsonStore({
       proxy: new Ext.data.HttpProxy({
-        url: this.blameUrl,
+        url: blameUrl,
         disableCaching: false
       }),
       root: 'blamelines',
@@ -54,7 +63,8 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
         id: 'revision', 
         dataIndex: 'revision',
         renderer: this.renderRevision,
-        width: 20
+        width: 20,
+        scope: this
       },{
         id: 'code', 
         dataIndex: 'code',
@@ -72,10 +82,41 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
       autoHeight: true,
       viewConfig: {
         forceFit: true
+      },
+      listeners: {
+        click: {
+          fn: this.onClick,
+          scope: this
+        }
       }
     }
+    
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.BlamePanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  onClick: function(e){
+    var el = e.getTarget('.blame-link');
+    if ( el != null ){
+      var revision = el.rel;
+      if (debug){
+        console.debug('load content for ' + revision);
+      }
+      this.openContentPanel(revision)
+    }
+  },
+  
+  openContentPanel: function(revision){
+    main.addTab({
+      // TODO create real id
+      id: Ext.id(),
+      xtype: 'contentPanel',
+      repository: this.repository,
+      revision: revision,
+      path: this.path,
+      closable: true,
+      autoScroll: true
+    });
   },
   
   renderRevision: function(value, metadata, record){
@@ -86,7 +127,11 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
       tip += 'When: ' + Ext.util.Format.formatTimestamp(when);
     }
     metadata.attr = 'ext:qtitle="' + title + '"' + ' ext:qtip="' + tip + '"';
-    return '<a>' + value + '</a>';
+    return String.format(
+      this.linkTemplate,
+      value,
+      value
+    );
   },
   
   renderCode: function(value){

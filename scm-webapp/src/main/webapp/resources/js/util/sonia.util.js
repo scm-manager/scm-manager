@@ -33,6 +33,24 @@ Ext.ns('Sonia.util');
 
 // functions
 
+Sonia.util.getName = function(path){
+  var name = path;
+  var index = path.lastIndexOf('/');
+  if ( index > 0 ){
+    name = path.substr(index +1);
+  }
+  return name;
+}
+
+Sonia.util.getExtension = function(path){
+  var ext = null;
+  var index = path.lastIndexOf('.');
+  if ( index > 0 ){
+    ext = path.substr(index + 1, path.length);
+  }
+  return ext;
+}
+
 Sonia.util.clone = function(obj) {
   var newObj = (this instanceof Array) ? [] : {};
   for (i in obj) {
