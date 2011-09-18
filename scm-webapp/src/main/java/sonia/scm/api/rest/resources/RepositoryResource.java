@@ -314,7 +314,8 @@ public class RepositoryResource
         {
           output = new BrowserStreamingOutput(browser, revision, path);
 
-          String contentDispositionName = getContentDispositionName(path);
+          String contentDispositionName =
+            getContentDispositionNameFromPath(path);
 
           response = Response.ok(output).header("Content-Disposition",
                                  contentDispositionName).build();
@@ -372,8 +373,13 @@ public class RepositoryResource
 
         if (diffViewer != null)
         {
+          String name =
+            repository.getName().concat("-").concat(revision).concat(".diff");
+          String contentDispositionName = getContentDispositionName(name);
+
           response = Response.ok(new DiffStreamingOutput(diffViewer, revision,
-                  path)).build();
+                  path)).header("Content-Disposition",
+                                contentDispositionName).build();
         }
         else
         {
@@ -523,11 +529,25 @@ public class RepositoryResource
    * Method description
    *
    *
+   *
+   * @param name
+   *
+   * @return
+   */
+  private String getContentDispositionName(String name)
+  {
+    return "attachment; filename=\"".concat(name).concat("\"");
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param path
    *
    * @return
    */
-  private String getContentDispositionName(String path)
+  private String getContentDispositionNameFromPath(String path)
   {
     String name = path;
     int index = path.lastIndexOf("/");
@@ -537,7 +557,7 @@ public class RepositoryResource
       name = path.substring(0, index);
     }
 
-    return "attachment; filename=\"".concat(name).concat("\"");
+    return getContentDispositionName(name);
   }
 
   /**
