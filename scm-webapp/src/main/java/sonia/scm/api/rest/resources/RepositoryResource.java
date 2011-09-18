@@ -554,7 +554,7 @@ public class RepositoryResource
 
     if (index >= 0)
     {
-      name = path.substring(0, index);
+      name = path.substring(index + 1);
     }
 
     return getContentDispositionName(name);
