@@ -55,6 +55,7 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Map;
+import org.eclipse.jgit.diff.DiffFormatter;
 
 /**
  *
@@ -91,6 +92,12 @@ public class GitUtil
     if (repo != null)
     {
       repo.close();
+    }
+  }
+  
+  public static void release(DiffFormatter formatter){
+    if ( formatter != null ){
+      formatter.release();
     }
   }
 

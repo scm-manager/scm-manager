@@ -144,10 +144,41 @@ public class GitRepositoryHandler
     }
     else
     {
-      throw new IllegalArgumentException("mercurial repository is required");
+      throw new IllegalArgumentException("git repository is required");
     }
 
     return changesetViewer;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  public DiffViewer getDiffViewer(Repository repository)
+  {
+    GitDiffViewer diffViewer = null;
+
+    AssertUtil.assertIsNotNull(repository);
+
+    String type = repository.getType();
+
+    AssertUtil.assertIsNotEmpty(type);
+
+    if (TYPE_NAME.equals(type))
+    {
+      diffViewer = new GitDiffViewer(this, repository);
+    }
+    else
+    {
+      throw new IllegalArgumentException("git repository is required");
+    }
+
+    return diffViewer;
   }
 
   /**
