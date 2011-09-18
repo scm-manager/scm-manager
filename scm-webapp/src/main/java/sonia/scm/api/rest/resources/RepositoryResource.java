@@ -49,7 +49,7 @@ import sonia.scm.repository.BlameViewerUtil;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.ChangesetViewerUtil;
-import sonia.scm.repository.PathNotFoundException;
+import sonia.scm.repository.DiffViewer;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
@@ -60,7 +60,6 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.security.WebSecurityContext;
@@ -68,7 +67,6 @@ import sonia.scm.web.security.WebSecurityContext;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -79,7 +77,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -340,6 +337,58 @@ public class RepositoryResource
     return response;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   * @param revision
+   * @param path
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @GET
+  @Path("{id}/diff")
+  public Response getDiff(@PathParam("id") String id,
+                          @QueryParam("revision") String revision,
+                          @QueryParam("path") String path)
+          throws RepositoryException, IOException
+  {
+    AssertUtil.assertIsNotEmpty(id);
+    AssertUtil.assertIsNotEmpty(revision);
+
+    Response response = null;
+
+    try
+    {
+      Repository repository = repositoryManager.get(id);
+
+      if (repository != null)
+      {
+        DiffViewer diffViewer = repositoryManager.getDiffViewer(repository);
+
+        if (diffViewer != null)
+        {
+          response = Response.ok(new DiffStreamingOutput(diffViewer, revision,
+                  path)).build();
+        }
+        else
+        {
+          response = Response.status(Response.Status.NOT_FOUND).build();
+        }
+      }
+    }
+    catch (RepositoryNotFoundException ex)
+    {
+      response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    return response;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -504,93 +553,6 @@ public class RepositoryResource
     return PermissionUtil.hasPermission(repository, securityContextProvider,
             PermissionType.OWNER);
   }
-
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 11/06/18
-   * @author         Enter your name here...
-   */
-  private static class BrowserStreamingOutput implements StreamingOutput
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param browser
-     * @param revision
-     * @param path
-     */
-    public BrowserStreamingOutput(RepositoryBrowser browser, String revision,
-                                  String path)
-    {
-      this.browser = browser;
-      this.revision = revision;
-      this.path = path;
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param output
-     *
-     * @throws IOException
-     * @throws WebApplicationException
-     */
-    @Override
-    public void write(OutputStream output)
-            throws IOException, WebApplicationException
-    {
-      try
-      {
-        browser.getContent(revision, path, output);
-      }
-      catch (PathNotFoundException ex)
-      {
-        if (logger.isWarnEnabled())
-        {
-          logger.warn("could not find path {}", ex.getPath());
-        }
-
-        throw new WebApplicationException(Response.Status.NOT_FOUND);
-      }
-      catch (RevisionNotFoundException ex)
-      {
-        if (logger.isWarnEnabled())
-        {
-          logger.warn("could not find revision {}", ex.getRevision());
-        }
-
-        throw new WebApplicationException(Response.Status.NOT_FOUND);
-      }
-      catch (RepositoryException ex)
-      {
-        logger.error("could not write content to page", ex);
-
-        throw new WebApplicationException(
-            ex, Response.Status.INTERNAL_SERVER_ERROR);
-      }
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private RepositoryBrowser browser;
-
-    /** Field description */
-    private String path;
-
-    /** Field description */
-    private String revision;
-  }
-
 
   //~--- fields ---------------------------------------------------------------
 
