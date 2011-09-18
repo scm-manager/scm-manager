@@ -140,13 +140,11 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
   },
   
   openDiffViewer: function(revision){
-    var url = restUrl + 'repositories/' + this.repository.id  + '/diff?revision=' + revision;
     main.addTab({
       id: 'diff-' + this.repository.id + ':' + revision,
-      xtype: 'syntaxHighlighterPanel',
-      title: 'Diff ' + revision,
-      contentUrl: url,
-      syntax: 'diff',
+      xtype: 'diffPanel',
+      repository: this.repository,
+      revision: revision,
       closable: true
     });
   },
