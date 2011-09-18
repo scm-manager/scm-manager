@@ -44,7 +44,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
                             <img src="resources/images/modify.gif" alt="Modified"><span class="cs-mod-txt">{1}</span>\
                             <img src="resources/images/delete.gif" alt="Deleted"><span class="cs-mod-txt">{2}</span>\
                           </div>',
-  idsTemplate: '<div class="cs-commit">Commit: {0}</div>\
+  idsTemplate: '<div class="cs-commit">Commit: <a class="scm-link cs-diff-link" rel="{0}">{0}</a></div>\
                 <div class="cs-tree">Tree: <a class="scm-link cs-tree-link" rel="{0}">{0}</a></div>',
   tagsAndBranchesTemplate: '<div class="changeset-tags">{0}</div>\
                             <div class="changeset-branches">{1}</div>',
@@ -104,23 +104,51 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ChangesetViewerGrid.superclass.initComponent.apply(this, arguments);
   },
+  
+  getRevision: function(el){
+    var revision = el.rel;
+    var index = revision.indexOf(':');
+    if ( index >= 0 ){
+      revision = revision.substr(index+1);
+    }
+    return revision;
+  },
 
   onClick: function(e){
     var el = e.getTarget('.cs-tree-link');
+    var revision = null;
     
-    if ( el != null ){
-      var revision = el.rel;
-      var index = revision.indexOf(':');
-      if ( index >= 0 ){
-        revision = revision.substr(index+1);
-      }
-      
+    if (el){
+      revision = this.getRevision(el);
       if (debug){
         console.debug('load repositorybrowser for ' + revision);
       }
       
       this.openRepositoryBrowser(revision);
+    } else {      
+        el = e.getTarget('.cs-diff-link');
+
+        if ( el ){
+        revision = this.getRevision(el);
+        if (debug){
+          console.debug('load diff for ' + revision);
+        }
+
+        this.openDiffViewer(revision);
+      }
     }
+  },
+  
+  openDiffViewer: function(revision){
+    var url = restUrl + 'repositories/' + this.repository.id  + '/diff?revision=' + revision;
+    main.addTab({
+      id: 'diff-' + this.repository.id + ':' + revision,
+      xtype: 'syntaxHighlighterPanel',
+      title: 'Diff ' + revision,
+      contentUrl: url,
+      syntax: 'diff',
+      closable: true
+    });
   },
   
   openRepositoryBrowser: function(revision){
