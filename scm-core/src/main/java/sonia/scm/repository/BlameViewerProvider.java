@@ -33,54 +33,24 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.ListenerSupport;
-import sonia.scm.Type;
-import sonia.scm.TypeManager;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
-
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.8
  */
-public interface RepositoryManager
-        extends TypeManager<Repository, RepositoryException>,
-                ListenerSupport<RepositoryListener>, RepositoryBrowserProvider,
-                RepositoryHookSupport, ChangesetViewerProvider,
-                BlameViewerProvider
+public interface BlameViewerProvider
 {
 
   /**
    * Method description
    *
    *
-   * @param type
-   * @param name
    *
-   * @return
+   * @param repository
+   * @return null if BlameViewer is not supported
+   *
+   * @throws RepositoryException
    */
-  public Repository get(String type, String name);
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<Type> getConfiguredTypes();
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
-  @Override
-  public RepositoryHandler getHandler(String type);
+  public BlameViewer getBlameViewer(Repository repository)
+          throws RepositoryException;
 }
