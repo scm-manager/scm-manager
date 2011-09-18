@@ -42,6 +42,10 @@ import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
+import org.eclipse.jgit.treewalk.filter.TreeFilter;
+
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -106,8 +110,6 @@ public class GitDiffViewer implements DiffViewer
 
     try
     {
-
-      // TODO set path if is set
       walk = new RevWalk(gr);
 
       RevCommit commit = walk.parseCommit(gr.resolve(revision));
@@ -117,6 +119,11 @@ public class GitDiffViewer implements DiffViewer
       treeWalk = new TreeWalk(gr);
       treeWalk.reset();
       treeWalk.setRecursive(true);
+
+      if (Util.isNotEmpty(path))
+      {
+        treeWalk.setFilter(PathFilter.create(path));
+      }
 
       if (commit.getParentCount() > 0)
       {
