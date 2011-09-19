@@ -40,6 +40,8 @@ import org.slf4j.LoggerFactory;
 
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNURL;
+import org.tmatesoft.svn.core.wc.DefaultSVNDiffGenerator;
+import org.tmatesoft.svn.core.wc.ISVNDiffGenerator;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNDiffClient;
 import org.tmatesoft.svn.core.wc.SVNRevision;
@@ -120,6 +122,17 @@ public class SvnDiffViewer implements DiffViewer
 
       SVNClientManager clientManager = SVNClientManager.newInstance();
       SVNDiffClient diffClient = clientManager.getDiffClient();
+      ISVNDiffGenerator diffGenerator = diffClient.getDiffGenerator();
+
+      if (diffGenerator == null)
+      {
+        diffGenerator = new DefaultSVNDiffGenerator();
+      }
+
+      diffGenerator.setDiffAdded(true);
+      diffGenerator.setDiffDeleted(true);
+      diffClient.setDiffGenerator(diffGenerator);
+
       long currentRev = Long.parseLong(revision);
 
       diffClient.doDiff(svnurl, SVNRevision.HEAD,
