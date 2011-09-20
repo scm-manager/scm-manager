@@ -95,7 +95,7 @@ public class EnvList
   public String toString()
   {
     String s = System.getProperty("line.separator");
-    StringBuilder out = new StringBuilder("Enironment:");
+    StringBuilder out = new StringBuilder("Environment:");
 
     out.append(s);
 
