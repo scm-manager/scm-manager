@@ -382,7 +382,7 @@
     <servlet.version>2.5</servlet.version>
     <guice.version>3.0</guice.version>
     <jersey.version>1.9</jersey.version>
-    <ehcache.version>2.4.4</ehcache.version>
+    <ehcache.version>2.4.5</ehcache.version>
     <freemarker.version>2.3.18</freemarker.version>
     <jetty.version>7.4.5.v20110725</jetty.version>
     <logback.version>0.9.30</logback.version>
