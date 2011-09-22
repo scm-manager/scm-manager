@@ -35,18 +35,28 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.SCMContext;
+import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import java.util.Map;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 
 /**
  *
@@ -75,6 +85,9 @@ public class HgUtil
 
   /** Field description */
   public static final String REVISION_TIP = "tip";
+
+  /** the logger for HgUtil */
+  private static final Logger logger = LoggerFactory.getLogger(HgUtil.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -145,5 +158,59 @@ public class HgUtil
     return Util.isEmpty(revision)
            ? REVISION_TIP
            : revision;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param resultType
+   * @param context
+   * @param scriptResource
+   * @param handler
+   * @param repository
+   * @param revision
+   * @param path
+   * @param <T>
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public static <T> T getResultFromScript(Class<T> resultType, JAXBContext context,
+                                   String scriptResource,
+                                   HgRepositoryHandler handler,
+                                   Repository repository, String revision,
+                                   String path)
+          throws IOException
+  {
+    Process p = createPythonProcess(handler, repository, revision, path);
+    T result = null;
+    InputStream resource = null;
+    InputStream input = null;
+    OutputStream output = null;
+
+    try
+    {
+      resource = HgUtil.class.getResourceAsStream(scriptResource);
+      output = p.getOutputStream();
+      IOUtil.copy(resource, output);
+      output.close();
+      input = p.getInputStream();
+      result = (T) context.createUnmarshaller().unmarshal(input);
+      input.close();
+    }
+    catch (JAXBException ex)
+    {
+      logger.error("could not parse result", ex);
+    }
+    finally
+    {
+      IOUtil.close(resource);
+      IOUtil.close(input);
+      IOUtil.close(output);
+    }
+
+    return result;
   }
 }

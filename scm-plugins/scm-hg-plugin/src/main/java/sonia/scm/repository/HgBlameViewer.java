@@ -101,39 +101,9 @@ public class HgBlameViewer implements BlameViewer
   {
     AssertUtil.assertIsNotEmpty(path);
 
-    Process p = HgUtil.createPythonProcess(handler, repository, revision, path);
-    BlameResult result = null;
-    InputStream resource = null;
-    InputStream input = null;
-    OutputStream output = null;
-
-    try
-    {
-      resource = HgBlameViewer.class.getResourceAsStream(RESOURCE_BLAME);
-      output = p.getOutputStream();
-      IOUtil.copy(resource, output);
-      output.close();
-
-      // IOUtil.copy(p.getErrorStream(), System.err);
-      input = p.getInputStream();
-      result =
-        (BlameResult) blameResultContext.createUnmarshaller().unmarshal(input);
-
-      // IOUtil.copy(input, System.out);
-      input.close();
-    }
-    catch (JAXBException ex)
-    {
-      logger.error("could not parse result", ex);
-    }
-    finally
-    {
-      IOUtil.close(resource);
-      IOUtil.close(input);
-      IOUtil.close(output);
-    }
-
-    return result;
+    return HgUtil.getResultFromScript(BlameResult.class, blameResultContext,
+                                      RESOURCE_BLAME, handler, repository,
+                                      revision, path);
   }
 
   //~--- fields ---------------------------------------------------------------
