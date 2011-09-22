@@ -36,10 +36,17 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.SCMContext;
+import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.Repository;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
+
+import java.util.Map;
 
 /**
  *
@@ -53,6 +60,55 @@ public class HgUtil
 
   /** Field description */
   public static final String CGI_NAME = "hgweb.py";
+
+  /** Field description */
+  public static final String ENV_PATH = "SCM_PATH";
+
+  /** Field description */
+  public static final String ENV_PYTHON_PATH = "SCM_PYTHON_PATH";
+
+  /** Field description */
+  public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
+
+  /** Field description */
+  public static final String ENV_REVISION = "SCM_REVISION";
+
+  /** Field description */
+  public static final String REVISION_TIP = "tip";
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param handler
+   * @param repository
+   * @param revision
+   * @param path
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public static Process createPythonProcess(HgRepositoryHandler handler,
+          Repository repository, String revision, String path)
+          throws IOException
+  {
+    HgConfig config = handler.getConfig();
+    ProcessBuilder pb = new ProcessBuilder(config.getPythonBinary());
+    Map<String, String> env = pb.environment();
+
+    env.put(ENV_PYTHON_PATH, Util.nonNull(config.getPythonPath()));
+
+    String directory = handler.getDirectory(repository).getAbsolutePath();
+
+    env.put(ENV_REPOSITORY_PATH, directory);
+    env.put(ENV_REVISION, getRevision(revision));
+    env.put(ENV_PATH, Util.nonNull(path));
+
+    return pb.start();
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -74,5 +130,20 @@ public class HgUtil
     }
 
     return new File(cgiDirectory, CGI_NAME);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param revision
+   *
+   * @return
+   */
+  public static String getRevision(String revision)
+  {
+    return Util.isEmpty(revision)
+           ? REVISION_TIP
+           : revision;
   }
 }
