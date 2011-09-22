@@ -133,6 +133,9 @@ public class GitBlameViewer implements BlameViewer
                                        author.getEmailAddress()));
 
         RevCommit commit = gitBlameResult.getSourceCommit(i);
+
+        blameLine.setDescription(commit.getShortMessage());
+
         long when = GitUtil.getCommitTime(commit);
 
         blameLine.setWhen(when);

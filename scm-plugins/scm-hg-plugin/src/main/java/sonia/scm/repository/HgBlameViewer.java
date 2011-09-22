@@ -216,7 +216,8 @@ public class HgBlameViewer implements BlameViewer
       // todo parse date
       Long when = getDate(m.group(3));
 
-      blameLine = new BlameLine(authorPerson, when, m.group(2), m.group(5), nr);
+      blameLine = new BlameLine(nr, m.group(2), when, authorPerson, null,
+                                m.group(5));
     }
     else if (logger.isWarnEnabled())
     {

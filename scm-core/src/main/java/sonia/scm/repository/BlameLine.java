@@ -56,17 +56,19 @@ public class BlameLine
    * @param author
    * @param when
    * @param revision
+   * @param description
    * @param code
    * @param lineNumber
    */
-  public BlameLine(Person author, Long when, String revision, String code,
-                   int lineNumber)
+  public BlameLine(int lineNumber, String revision, Long when, Person author,
+                   String description, String code)
   {
-    this.author = author;
-    this.when = when;
-    this.revision = revision;
-    this.code = code;
     this.lineNumber = lineNumber;
+    this.revision = revision;
+    this.when = when;
+    this.author = author;
+    this.description = description;
+    this.code = code;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -91,6 +93,17 @@ public class BlameLine
   public String getCode()
   {
     return code;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getDescription()
+  {
+    return description;
   }
 
   /**
@@ -154,6 +167,17 @@ public class BlameLine
    * Method description
    *
    *
+   * @param description
+   */
+  public void setDescription(String description)
+  {
+    this.description = description;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param lineNumber
    */
   public void setLineNumber(int lineNumber)
@@ -190,6 +214,9 @@ public class BlameLine
 
   /** Field description */
   private String code;
+
+  /** Field description */
+  private String description;
 
   /** Field description */
   private int lineNumber;
