@@ -31,8 +31,7 @@
 
 import sys, os
 
-pythonPath = ''
-# pythonPath = os.environ['SCM_PYTHON_PATH']
+pythonPath = os.environ['SCM_PYTHON_PATH']
 
 if len(pythonPath) > 0:
   pathParts = pythonPath.split(os.pathsep)
