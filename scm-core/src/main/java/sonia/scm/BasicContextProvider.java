@@ -35,7 +35,6 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -232,7 +231,20 @@ public class BasicContextProvider implements SCMContextProvider
     }
     finally
     {
-      IOUtil.close(input);
+
+      // do not use logger or IOUtil,
+      // http://www.slf4j.org/codes.html#substituteLogger
+      if (input != null)
+      {
+        try
+        {
+          input.close();
+        }
+        catch (IOException ex)
+        {
+          ex.printStackTrace(System.err);
+        }
+      }
     }
 
     return path;
