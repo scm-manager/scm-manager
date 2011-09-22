@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
+import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -47,8 +48,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -171,25 +170,7 @@ public class HgRepositoryBrowser implements RepositoryBrowser
   public BrowserResult getResult(String revision, String path)
           throws IOException, RepositoryException
   {
-    HgConfig config = handler.getConfig();
-    ProcessBuilder pb = new ProcessBuilder(config.getPythonBinary());
-    Map<String, String> env = pb.environment();
-
-    env.put(ENV_PYTHON_PATH, Util.nonNull(config.getPythonPath()));
-
-    String directory = handler.getDirectory(repository).getAbsolutePath();
-
-    env.put(ENV_REPOSITORY_PATH, directory);
-
-    if (Util.isEmpty(revision))
-    {
-      revision = DEFAULT_REVISION;
-    }
-
-    env.put(ENV_REVISION, revision);
-    env.put(ENV_PATH, Util.nonNull(path));
-
-    Process p = pb.start();
+    Process p = HgUtil.createPythonProcess(handler, repository, revision, path);
     BrowserResult result = null;
     InputStream resource = null;
     InputStream input = null;
