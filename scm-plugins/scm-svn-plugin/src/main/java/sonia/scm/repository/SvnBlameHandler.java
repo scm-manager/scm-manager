@@ -35,7 +35,12 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNLogEntry;
+import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.ISVNAnnotateHandler;
 
 import sonia.scm.util.Util;
@@ -44,8 +49,11 @@ import sonia.scm.util.Util;
 
 import java.io.File;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -54,14 +62,26 @@ import java.util.List;
 public class SvnBlameHandler implements ISVNAnnotateHandler
 {
 
+  /** the logger for SvnBlameHandler */
+  private static final Logger logger =
+    LoggerFactory.getLogger(SvnBlameHandler.class);
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructs ...
    *
    *
+   *
+   * @param svnRepository
+   * @param path
    * @param blameLines
    */
-  public SvnBlameHandler(List<BlameLine> blameLines)
+  public SvnBlameHandler(SVNRepository svnRepository, String path,
+                         List<BlameLine> blameLines)
   {
+    this.svnRepository = svnRepository;
+    this.path = path;
     this.blameLines = blameLines;
   }
 
@@ -132,8 +152,10 @@ public class SvnBlameHandler implements ISVNAnnotateHandler
       when = date.getTime();
     }
 
+    String description = getDescription(revision);
+
     blameLines.add(new BlameLine(lineNumber + 1, String.valueOf(revision),
-                                 when, authorPerson, null, line));
+                                 when, authorPerson, description, line));
   }
 
   /**
@@ -157,8 +179,61 @@ public class SvnBlameHandler implements ISVNAnnotateHandler
     return false;
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param revision
+   *
+   * @return
+   */
+  private String getDescription(long revision)
+  {
+    String description = descriptionCache.get(revision);
+
+    if (description == null)
+    {
+      try
+      {
+        Collection<SVNLogEntry> entries = svnRepository.log(new String[] {
+                                            path }, null, revision, revision,
+                                              true, true);
+
+        for (SVNLogEntry entry : entries)
+        {
+          if (revision == entry.getRevision())
+          {
+            description = entry.getMessage();
+            descriptionCache.put(revision, description);
+
+            break;
+          }
+        }
+      }
+      catch (SVNException ex)
+      {
+        logger.warn(
+            "could not retrive description for revision ".concat(
+              String.valueOf(revision)), ex);
+      }
+    }
+
+    return description;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private List<BlameLine> blameLines;
+
+  /** Field description */
+  private Map<Long, String> descriptionCache = new HashMap<Long, String>();
+
+  /** Field description */
+  private String path;
+
+  /** Field description */
+  private SVNRepository svnRepository;
 }

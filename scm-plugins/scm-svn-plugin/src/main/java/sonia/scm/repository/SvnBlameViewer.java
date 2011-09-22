@@ -123,7 +123,8 @@ public class SvnBlameViewer implements BlameViewer
 
       svnLogClient.doAnnotate(svnurl, SVNRevision.UNDEFINED,
                               SVNRevision.create(1l), endRevision,
-                              new SvnBlameHandler(blameLines));
+                              new SvnBlameHandler(svnRepository, path,
+                                blameLines));
     }
     catch (Exception ex)
     {
