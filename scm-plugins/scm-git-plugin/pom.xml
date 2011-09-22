@@ -62,7 +62,7 @@
   </dependencies>
 
   <properties>
-    <jgit.version>1.0.0.201106090707-r</jgit.version>
+    <jgit.version>1.1.0.201109151100-r</jgit.version>
   </properties>
   
   <!-- for jgit -->
