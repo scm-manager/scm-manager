@@ -33,18 +33,21 @@ Ext.ns('Sonia');
 
 Sonia.History = {
  
+  initialized: false,
   historyElements: [],
   recentlyAdded: [],
   recentlyChanged: [],
   
   add: function(token){
-    if (token != Ext.History.getToken()){
-      if (this.isInvokeable(this.recentlyChanged, token)){
-        if ( debug ){
-          console.debug('add history element ' + token);
+    if (this.initialized){
+      if (token != Ext.History.getToken()){
+        if (this.isInvokeable(this.recentlyChanged, token)){
+          if ( debug ){
+            console.debug('add history element ' + token);
+          }
+          this.recentlyAdded.push(token);
+          Ext.History.add(token, true);
         }
-        this.recentlyAdded.push(token);
-        Ext.History.add(token, true);
       }
     }
   },
@@ -116,6 +119,9 @@ Sonia.History = {
   },
   
   onChange: function(token){
+    if (!this.initialized){
+      this.initialized = true;
+    }
     if(token){
       if (this.isInvokeable(this.recentlyAdded, token)){  
         var parts = token.split('|');
@@ -146,6 +152,20 @@ Sonia.History = {
 
 };
 
+
+Ext.History.on('ready', function(history){
+  var token = history.getToken();
+  if (!token || token == 'null'){
+    Sonia.History.initialized = true;  
+  } else {
+    setTimeout(function(){
+      if (debug){
+        console.debug('history ready, handle history token ' + token);
+      }      
+      Sonia.History.onChange(token);
+    }, 750);
+  }
+});
 
 Ext.History.on('change', function(token){
   Sonia.History.onChange(token);
