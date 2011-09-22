@@ -50,6 +50,7 @@ import sonia.scm.util.AssertUtil;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -158,7 +159,16 @@ public class RepositoryBrowserUtil extends CacheClearHook
     if (result == null)
     {
       result = browser.getResult(revision, path);
-      sort(result);
+
+      if (result != null)
+      {
+        sort(result);
+      }
+      else
+      {
+        result = new BrowserResult();
+      }
+
       cache.put(key, result);
     }
     else if (logger.isDebugEnabled())
