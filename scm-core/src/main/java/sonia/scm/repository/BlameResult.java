@@ -50,7 +50,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  * @since 1.8
  */
-@XmlRootElement(name = "blame-paging")
+@XmlRootElement(name = "blame-result")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class BlameResult
 {

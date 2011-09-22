@@ -114,6 +114,7 @@ public class HgRepositoryHandler
     try
     {
       this.browserResultContext = JAXBContext.newInstance(BrowserResult.class);
+      this.blameResultContext = JAXBContext.newInstance(BlameResult.class);
     }
     catch (JAXBException ex)
     {
@@ -208,7 +209,7 @@ public class HgRepositoryHandler
 
     if (TYPE_NAME.equals(type))
     {
-      blameViewer = new HgBlameViewer(this, repository);
+      blameViewer = new HgBlameViewer(this, repository, blameResultContext);
     }
     else
     {
@@ -509,6 +510,9 @@ public class HgRepositoryHandler
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private JAXBContext blameResultContext;
 
   /** Field description */
   private JAXBContext browserResultContext;

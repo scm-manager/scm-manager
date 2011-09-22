@@ -40,23 +40,16 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
+import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 
 /**
  *
@@ -65,16 +58,12 @@ import java.util.regex.Pattern;
 public class HgBlameViewer implements BlameViewer
 {
 
+  /** Field description */
+  public static final String RESOURCE_BLAME = "/sonia/scm/hgblame.py";
+
   /** the logger for HgBlameViewer */
   private static final Logger logger =
     LoggerFactory.getLogger(HgBlameViewer.class);
-
-  // sample: "Sebastian Sdorra <s.sdorra@ostfalia.de>  34  Wed Sep 08 10:22:46 2010 +0200:1: <?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-
-  /** Field description */
-  public static final Pattern REGEX_FIRSTPART =
-    Pattern.compile(
-        "(?i)^(.*)\\s+([0-9]+)\\s+([a-z]{3}\\s[a-z]{3}\\s[0-9]{2}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[0-9]{4}\\s[+-][0-9]{4}):([0-9]+):\\s(.*)$");
 
   //~--- constructors ---------------------------------------------------------
 
@@ -83,25 +72,15 @@ public class HgBlameViewer implements BlameViewer
    *
    *
    * @param handler
-   * @param repositoryDirectory
+   * @param repository
+   * @param blameResultContext
    */
-  public HgBlameViewer(HgRepositoryHandler handler, File repositoryDirectory)
+  public HgBlameViewer(HgRepositoryHandler handler, Repository repository,
+                       JAXBContext blameResultContext)
   {
     this.handler = handler;
-    this.repositoryDirectory = repositoryDirectory;
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param handler
-   * @param repository
-   */
-  public HgBlameViewer(HgRepositoryHandler handler, Repository repository)
-  {
-    this(handler, handler.getDirectory(repository));
+    this.repository = repository;
+    this.blameResultContext = blameResultContext;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -122,146 +101,49 @@ public class HgBlameViewer implements BlameViewer
   {
     AssertUtil.assertIsNotEmpty(path);
 
-    if (Util.isEmpty(revision))
-    {
-      revision = "tip";
-    }
-
-    ProcessBuilder builder =
-      new ProcessBuilder(handler.getConfig().getHgBinary(), "annotate", "-r",
-                         revision, "-dnulv", Util.nonNull(path));
-
-    if (logger.isDebugEnabled())
-    {
-      StringBuilder msg = new StringBuilder();
-
-      for (String param : builder.command())
-      {
-        msg.append(param).append(" ");
-      }
-
-      logger.debug(msg.toString());
-    }
-
-    Process p = builder.directory(repositoryDirectory).start();
-    BufferedReader reader = null;
+    Process p = HgUtil.createPythonProcess(handler, repository, revision, path);
     BlameResult result = null;
+    InputStream resource = null;
+    InputStream input = null;
+    OutputStream output = null;
 
     try
     {
-      reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-      result = parseBlameInput(reader);
+      resource = HgBlameViewer.class.getResourceAsStream(RESOURCE_BLAME);
+      output = p.getOutputStream();
+      IOUtil.copy(resource, output);
+      output.close();
+
+      // IOUtil.copy(p.getErrorStream(), System.err);
+      input = p.getInputStream();
+      result =
+        (BlameResult) blameResultContext.createUnmarshaller().unmarshal(input);
+
+      // IOUtil.copy(input, System.out);
+      input.close();
+    }
+    catch (JAXBException ex)
+    {
+      logger.error("could not parse result", ex);
     }
     finally
     {
-      IOUtil.close(reader);
+      IOUtil.close(resource);
+      IOUtil.close(input);
+      IOUtil.close(output);
     }
 
     return result;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param reader
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private BlameResult parseBlameInput(BufferedReader reader) throws IOException
-  {
-    List<BlameLine> blameLines = new ArrayList<BlameLine>();
-    String line = reader.readLine();
-    int i = 1;
-
-    while (line != null)
-    {
-      BlameLine blameLine = parseBlameLine(i, line);
-
-      if (blameLine != null)
-      {
-        blameLines.add(blameLine);
-      }
-
-      line = reader.readLine();
-      i++;
-    }
-
-    return new BlameResult(blameLines.size(), blameLines);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param nr
-   * @param line
-   *
-   * @return
-   */
-  private BlameLine parseBlameLine(int nr, String line)
-  {
-    BlameLine blameLine = null;
-    Matcher m = REGEX_FIRSTPART.matcher(line);
-
-    if (m.matches())
-    {
-      Person authorPerson = Person.toPerson(m.group(1));
-
-      // todo parse date
-      Long when = getDate(m.group(3));
-
-      blameLine = new BlameLine(nr, m.group(2), when, authorPerson, null,
-                                m.group(5));
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("line '{}' does not match", line);
-    }
-
-    return blameLine;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param dateString
-   *
-   * @return
-   */
-  private Long getDate(String dateString)
-  {
-    Long date = null;
-
-    // Wed Sep 08 10:22:46 2010 +0200
-    try
-    {
-      SimpleDateFormat sdf =
-        new SimpleDateFormat("EEE MMM dd HH:mm:ss yyyy zzzz", Locale.ENGLISH);
-
-      date = sdf.parse(dateString).getTime();
-    }
-    catch (ParseException ex)
-    {
-      logger.warn("could not parse date string ".concat(dateString), ex);
-    }
-
-    return date;
-  }
-
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private JAXBContext blameResultContext;
 
   /** Field description */
   private HgRepositoryHandler handler;
 
   /** Field description */
-  private File repositoryDirectory;
+  private Repository repository;
 }
