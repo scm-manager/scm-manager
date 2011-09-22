@@ -40,6 +40,7 @@ if len(pythonPath) > 0:
 
 
 from mercurial import hg, ui, commands
+from mercurial.node import hex
 from xml.sax.saxutils import escape
 import datetime, time
 
@@ -73,8 +74,7 @@ for line in lines:
   c += 1
   print '    <blameline>'
   print '      <lineNumber>' + str(c) + '</lineNumber>'
-  # get revision id not the number
-  print '      <revision>' + str(ctx.rev()) + '</revision>'
+  print '      <revision>' +  hex(ctx.node()[:6]) + '</revision>'
   print '      <when>' + str(time).split('.')[0] + '</when>'
   if authorName:
     print '      <author>'
