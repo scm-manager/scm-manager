@@ -52,7 +52,7 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
       }),
       root: 'blamelines',
       idProperty: 'lineNumber',
-      fields: [ 'lineNumber', 'author', 'revision', 'when', 'code'],
+      fields: [ 'lineNumber', 'author', 'revision', 'when', 'description', 'code'],
       sortInfo: {
         field: 'lineNumber'
       }
@@ -125,10 +125,14 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
   
   renderRevision: function(value, metadata, record){
     var title = 'Revision: ' + value;
-    var tip = 'Author: ' + record.get('author').name + '<br />';
+    var tip = 'Author: ' + record.get('author').name;
     var when = record.get('when');
     if ( when ){
-      tip += 'When: ' + Ext.util.Format.formatTimestamp(when);
+      tip += '<br />When: ' + Ext.util.Format.formatTimestamp(when);
+    }
+    var description = record.get('description');
+    if (description){
+      tip += '<br />Description: ' + description;
     }
     metadata.attr = 'ext:qtitle="' + title + '"' + ' ext:qtip="' + tip + '"';
     return String.format(
