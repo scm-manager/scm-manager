@@ -33,6 +33,10 @@
 
 package sonia.scm.client;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.repository.BlameLine;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
@@ -47,6 +51,17 @@ import java.util.List;
  */
 public interface ClientRepositoryBrowser
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param revision
+   * @param path
+   *
+   * @return
+   */
+  public List<BlameLine> getBlameLines(String revision, String path);
 
   /**
    * Method description

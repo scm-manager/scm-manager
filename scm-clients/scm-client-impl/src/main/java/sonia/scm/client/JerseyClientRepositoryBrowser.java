@@ -35,6 +35,8 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.repository.BlameLine;
+import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.Repository;
@@ -83,6 +85,47 @@ public class JerseyClientRepositoryBrowser implements ClientRepositoryBrowser
    * @param path
    *
    * @return
+   */
+  @Override
+  public List<BlameLine> getBlameLines(String revision, String path)
+  {
+    List<BlameLine> blameLines = null;
+    String url =
+      session.getUrlProvider().getBlameUrl(repository.getId(), path,
+        revision);
+    WebResource resource = session.getClient().resource(url);
+    ClientResponse response = null;
+
+    try
+    {
+      response = resource.get(ClientResponse.class);
+
+      if (response.getStatus() != ScmClientException.SC_NOTFOUND)
+      {
+        ClientUtil.checkResponse(response, 200);
+
+        BlameResult result = response.getEntity(BlameResult.class);
+
+        AssertUtil.assertIsNotNull(result);
+        blameLines = result.getBlameLines();
+      }
+    }
+    finally
+    {
+      ClientUtil.close(response);
+    }
+
+    return blameLines;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param revision
+   * @param path
+   *
+   * @return
    *
    * @throws IOException
    */
@@ -91,8 +134,8 @@ public class JerseyClientRepositoryBrowser implements ClientRepositoryBrowser
   {
     InputStream input = null;
     String url =
-      session.getUrlProvider().getRepositoryContentUrl(repository.getId(), path,
-        revision);
+      session.getUrlProvider().getRepositoryContentUrl(repository.getId(),
+        path, revision);
     WebResource resource = session.getClient().resource(url);
     ClientResponse response = null;
 

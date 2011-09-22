@@ -80,6 +80,9 @@ public class ScmUrlProvider
   public static final String URLPART_USERS = "users";
 
   /** Field description */
+  public static final String URLPATTERN_BLAME = "repositories/{0}/blame";
+
+  /** Field description */
   public static final String URLPATTERN_BROWSE = "repositories/{0}/browse";
 
   /** Field description */
@@ -157,6 +160,24 @@ public class ScmUrlProvider
    * Method description
    *
    *
+   * @param repositoryId
+   * @param path
+   * @param revision
+   *
+   * @return
+   */
+  public String getBlameUrl(String repositoryId, String path, String revision)
+  {
+    String url = MessageFormat.format(getResourceUrl(URLPATTERN_BLAME),
+                                      repositoryId);
+
+    return appendParameter(url, path, revision);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   public String getExtension()
@@ -215,20 +236,8 @@ public class ScmUrlProvider
   {
     String url = MessageFormat.format(getResourceUrl(URLPATTERN_BROWSE),
                                       repositoryId);
-    String s = "?";
 
-    if (Util.isNotEmpty(path))
-    {
-      url = url.concat(s).concat("path=").concat(path);
-      s = "&";
-    }
-
-    if (Util.isNotEmpty(revision))
-    {
-      url = url.concat(s).concat("revision=").concat(revision);
-    }
-
-    return url;
+    return appendParameter(url, path, revision);
   }
 
   /**
@@ -389,6 +398,36 @@ public class ScmUrlProvider
   public void setExtension(String extension)
   {
     this.extension = extension;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   * @param path
+   * @param revision
+   *
+   * @return
+   */
+  private String appendParameter(String url, String path, String revision)
+  {
+    String s = "?";
+
+    if (Util.isNotEmpty(path))
+    {
+      url = url.concat(s).concat("path=").concat(path);
+      s = "&";
+    }
+
+    if (Util.isNotEmpty(revision))
+    {
+      url = url.concat(s).concat("revision=").concat(revision);
+    }
+
+    return url;
   }
 
   //~--- fields ---------------------------------------------------------------

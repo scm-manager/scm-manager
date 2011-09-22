@@ -35,6 +35,7 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.FileObject;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -69,6 +70,17 @@ public class FileObjectWrapper
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<BlameLine> getBlameLines()
+  {
+    return repositoryBrowser.getBlameLines(revision, getPath());
+  }
 
   /**
    * Method description
