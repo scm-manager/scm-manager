@@ -102,28 +102,34 @@ Sonia.repository.get = function(id, callback){
     }
   }
   
+  var repository = null;
+  
   var grid = Ext.getCmp('repositoryGrid');
   if ( grid ){
     var store = grid.getStore();
     if (store){
       var rec = store.getById(id);
       if (rec){
-        execCallback(rec.data);
+        repository = rec.data;
       }
     }
   }
   
-  Ext.Ajax.request({
-    url: restUrl + 'repositories/' + id + '.json',
-    method: 'GET',
-    scope: this,
-    success: function(response){
-      execCallback(Ext.decode(response.responseText));
-    },
-    failure: function(result){
-      main.handleFailure(
-        result.status
-      );
-    }
-  });
+  if (repository){
+    execCallback(repository);
+  } else {
+    Ext.Ajax.request({
+      url: restUrl + 'repositories/' + id + '.json',
+      method: 'GET',
+      scope: this,
+      success: function(response){
+        execCallback(Ext.decode(response.responseText));
+      },
+      failure: function(result){
+        main.handleFailure(
+          result.status
+        );
+      }
+    }); 
+  }
 }
