@@ -130,26 +130,15 @@ Sonia.History.register('changesetviewer', function(params){
       main.getMainTabPanel().setActiveTab(id);
       tab.loadChangesets(start, pageSize);
     } else {  
-      Ext.Ajax.request({
-        url: restUrl + 'repositories/' + params[0] + '.json',
-        method: 'GET',
-        scope: this,
-        success: function(response){
-          var item = Ext.decode(response.responseText);
-          main.addTab({
-            id: item.id + '-changesetViewer',
-            xtype: 'repositoryChangesetViewerPanel',
-            repository: item,
-            start: start,
-            pageSize: pageSize,
-            closable: true
-          })
-        },
-        failure: function(result){
-          main.handleFailure(
-            result.status
-          );
-        }
+      Sonia.repository.get(params[0], function(repository){
+        main.addTab({
+          id: repository.id + '-changesetViewer',
+          xtype: 'repositoryChangesetViewerPanel',
+          repository: repository,
+          start: start,
+          pageSize: pageSize,
+          closable: true
+        })
       });
     }
   
