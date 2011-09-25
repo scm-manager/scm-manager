@@ -285,13 +285,18 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   },
 
   addTabPanel: function(id, xtype, title){
+    if (!xtype){
+      xtype = id;
+    }
     var panel = {
       id: id,
       xtype: xtype,
-      title: title,
       closable: true,
       autoScroll: true
     };
+    if (title){
+      panel.title = title;
+    }
     this.addTab(panel);
   },
 

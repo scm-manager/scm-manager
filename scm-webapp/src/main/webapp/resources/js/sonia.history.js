@@ -145,8 +145,16 @@ Sonia.History = {
       } else {
         el.fn.call(el.scope, params);
       }
-    } else if (debug){
-      console.debug('could not find history element for ' + id);
+    } else if (Ext.ComponentMgr.isRegistered(id)) {
+      try {
+        main.addTabPanel(id);
+      } catch (e){
+        if (debug){
+          console.debug('could not handle history event: ' + e );
+        }
+      }
+    } else if (debug) {
+      console.debug('could not find xtype ' + id);
     }
   }
 
