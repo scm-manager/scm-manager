@@ -90,3 +90,40 @@ Sonia.repository.DefaultPanel = {
   bodyCssClass: 'x-panel-mc',
   html: 'Add or select an Repository'
 }
+
+// load object from store or from web service
+
+Sonia.repository.get = function(id, callback){
+  function execCallback(item){
+    if (Ext.isFunction(callback)){
+      callback(item);
+    } else {
+      callback.call(callback.scope, item);
+    }
+  }
+  
+  var grid = Ext.getCmp('repositoryGrid');
+  if ( grid ){
+    var store = grid.getStore();
+    if (store){
+      var rec = store.getById(id);
+      if (rec){
+        execCallback(rec.data);
+      }
+    }
+  }
+  
+  Ext.Ajax.request({
+    url: restUrl + 'repositories/' + id + '.json',
+    method: 'GET',
+    scope: this,
+    success: function(response){
+      execCallback(Ext.decode(response.responseText));
+    },
+    failure: function(result){
+      main.handleFailure(
+        result.status
+      );
+    }
+  });
+}
