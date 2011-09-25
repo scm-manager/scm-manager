@@ -82,6 +82,30 @@ var groupSearchStore = new Ext.data.JsonStore({
   })
 });
 
+// SONIA
+
+Sonia = {
+  
+  idSeparator: '|',
+  idNoneObject: '-',
+  
+  id: function(){
+    var id = '';
+    for ( var i=0; i<arguments.length; i++ ){
+      id += arguments[i];
+      if ( (i+1) < arguments.length ){
+        id += '|';
+      }
+    }
+    if (id.length() == 0){
+      id = Ext.id();
+    }
+    return id;
+  }
+  
+}
+
+
 // the main object (sonia.scm)
 var main = null;
 
