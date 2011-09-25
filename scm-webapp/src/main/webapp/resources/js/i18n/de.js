@@ -236,7 +236,7 @@ if (Sonia.repository.RepositoryBrowser){
   
   Ext.override(Sonia.repository.RepositoryBrowser, {
     // german ??
-    repositoryBrowserTitleText: 'Source: {0}',
+    repositoryBrowserTitleText: 'Source {0}',
     emptyText: 'In diesem Verzeichnis befinden sich keine Dateien'
   });
   
