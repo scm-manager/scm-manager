@@ -102,12 +102,12 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
   postLogin: function(){
     this.createMainMenu();
-    this.createRepositoryPanel();
+    this.createHomePanel();
   },
 
-  createRepositoryPanel: function(){
+  createHomePanel: function(){
     if ( debug ){
-      console.debug('create repository panel');
+      console.debug('create home panel');
     }
     this.mainTabPanel.add({
       id: 'repositories',
@@ -120,7 +120,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   },
   
   addRepositoriesTabPanel: function(){
-    this.mainTabPanel.setActiveTab('repositories');
+    this.addTabPanel("repositories", "repositoryPanel", this.tabRepositoriesText);
   },
   
   addScmConfigTabPanel: function(){
