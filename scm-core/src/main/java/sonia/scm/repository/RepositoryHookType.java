@@ -38,4 +38,16 @@ package sonia.scm.repository;
  * @author Sebastian Sdorra
  * @since 1.6
  */
-public enum RepositoryHookType { POST_RECEIVE }
+public enum RepositoryHookType
+{
+
+  /**
+   * @since 1.8
+   */
+  PRE_RECEIVE,
+
+  /**
+   * @since 1.6
+   */
+  POST_RECEIVE
+}
