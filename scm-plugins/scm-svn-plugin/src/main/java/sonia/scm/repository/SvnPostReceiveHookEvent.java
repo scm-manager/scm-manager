@@ -58,12 +58,12 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class SvnRepositoryHookEvent extends AbstractRepositoryHookEvent
+public class SvnPostReceiveHookEvent extends AbstractRepositoryHookEvent
 {
 
-  /** the logger for SvnRepositoryHookEvent */
+  /** the logger for SvnPostReceiveHookEvent */
   private static final Logger logger =
-    LoggerFactory.getLogger(SvnRepositoryHookEvent.class);
+    LoggerFactory.getLogger(SvnPostReceiveHookEvent.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -74,7 +74,7 @@ public class SvnRepositoryHookEvent extends AbstractRepositoryHookEvent
    * @param repositoryDirectory
    * @param revision
    */
-  public SvnRepositoryHookEvent(File repositoryDirectory, long revision)
+  public SvnPostReceiveHookEvent(File repositoryDirectory, long revision)
   {
     this.repositoryDirectory = repositoryDirectory;
     this.revision = revision;

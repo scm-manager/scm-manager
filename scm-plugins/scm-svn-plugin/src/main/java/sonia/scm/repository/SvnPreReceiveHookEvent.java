@@ -38,26 +38,30 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.tmatesoft.svn.core.internal.io.fs.FSHook;
-import org.tmatesoft.svn.core.internal.io.fs.FSHookEvent;
-import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
-
-import sonia.scm.util.Util;
+import org.tmatesoft.svn.core.SVNLogEntry;
+import org.tmatesoft.svn.core.wc.ISVNOptions;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import org.tmatesoft.svn.core.wc.SVNWCUtil;
+import org.tmatesoft.svn.core.wc.admin.SVNLookClient;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SvnRepositoryHook implements FSHook
+public class SvnPreReceiveHookEvent extends AbstractRepositoryHookEvent
 {
 
-  /** the logger for SvnRepositoryHook */
+  /** the logger for SvnPreReceiveHookEvent */
   private static final Logger logger =
-    LoggerFactory.getLogger(SvnRepositoryHook.class);
+    LoggerFactory.getLogger(SvnPreReceiveHookEvent.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -65,11 +69,44 @@ public class SvnRepositoryHook implements FSHook
    * Constructs ...
    *
    *
-   * @param repositoryManager
+   * @param repositoryDirectory
+   * @param transaction
    */
-  public SvnRepositoryHook(RepositoryManager repositoryManager)
+  public SvnPreReceiveHookEvent(File repositoryDirectory, String transaction)
   {
-    this.repositoryManager = repositoryManager;
+    this.repositoryDirectory = repositoryDirectory;
+    this.transaction = transaction;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Collection<Changeset> getChangesets()
+  {
+    if (changesets == null)
+    {
+      changesets = fetchChangesets();
+    }
+
+    return changesets;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public RepositoryHookType getType()
+  {
+    return RepositoryHookType.PRE_RECEIVE;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -78,81 +115,43 @@ public class SvnRepositoryHook implements FSHook
    * Method description
    *
    *
-   * @param event
+   * @return
    */
-  @Override
-  public void onHook(FSHookEvent event)
+  private Collection<Changeset> fetchChangesets()
   {
-    File directory = event.getReposRootDir();
+    List<Changeset> csets = new ArrayList<Changeset>();
 
-    if (FSHooks.SVN_REPOS_HOOK_POST_COMMIT.equals(event.getType()))
-    {
-      String[] args = event.getArgs();
-
-      if (Util.isNotEmpty(args))
-      {
-        try
-        {
-          long revision = Long.parseLong(args[0]);
-
-          fireHook(directory, new SvnPostReceiveHookEvent(directory, revision));
-        }
-        catch (NumberFormatException ex)
-        {
-          logger.error("could not parse revision of post commit hook", ex);
-        }
-      }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("no arguments found on post commit hook");
-      }
-    }
-    else if (FSHooks.SVN_REPOS_HOOK_PRE_COMMIT.equals(event.getType()))
-    {
-      String[] args = event.getArgs();
-
-      if (Util.isNotEmpty(args))
-      {
-        String tx = args[0];
-
-        if (Util.isNotEmpty(tx))
-        {
-          fireHook(directory, new SvnPreReceiveHookEvent(directory, tx));
-        }
-        else if (logger.isWarnEnabled())
-        {
-          logger.warn("transaction of pre commit hook is empty");
-        }
-      }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("no arguments found on pre commit hook");
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   * @param hookEvent
-   */
-  private void fireHook(File directory, RepositoryHookEvent hookEvent)
-  {
     try
     {
-      repositoryManager.fireHookEvent(SvnRepositoryHandler.TYPE_NAME,
-                                      directory.getName(), hookEvent);
+      ISVNOptions options = SVNWCUtil.createDefaultOptions(true);
+      SVNClientManager cm = SVNClientManager.newInstance(options);
+      SVNLookClient clientManager = cm.getLookClient();
+      SVNLogEntry entry = clientManager.doGetInfo(repositoryDirectory,
+                            transaction);
+
+      if (entry != null)
+      {
+        csets.add(SvnUtil.createChangeset(entry));
+      }
     }
-    catch (RepositoryNotFoundException ex)
+    catch (Exception ex)
     {
-      logger.error("could not find repository {}", directory.getName());
+      logger.error(
+          "could not fetch changesets for transaction ".concat(transaction),
+          ex);
     }
+
+    return csets;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryManager repositoryManager;
+  private Collection<Changeset> changesets;
+
+  /** Field description */
+  private File repositoryDirectory;
+
+  /** Field description */
+  private String transaction;
 }
