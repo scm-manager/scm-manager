@@ -122,7 +122,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   public void onPreReceive(ReceivePack rpack,
                            Collection<ReceiveCommand> receiveCommands)
   {
-    onReceive(rpack, receiveCommands, FILE_HOOK_POST_RECEIVE, false);
+    onReceive(rpack, receiveCommands, FILE_HOOK_PRE_RECEIVE, false);
   }
 
   /**
