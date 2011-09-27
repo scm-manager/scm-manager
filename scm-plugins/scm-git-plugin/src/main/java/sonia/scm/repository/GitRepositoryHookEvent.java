@@ -65,18 +65,28 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
   private static final Logger logger =
     LoggerFactory.getLogger(GitRepositoryHookEvent.class);
 
-  //~--- get methods ----------------------------------------------------------
+  //~--- constructors ---------------------------------------------------------
 
-  public GitRepositoryHookEvent(File directory,
-    ObjectId newId, ObjectId oldId)
+  /**
+   * Constructs ...
+   *
+   *
+   * @param directory
+   * @param newId
+   * @param oldId
+   * @param type
+   */
+  public GitRepositoryHookEvent(File directory, ObjectId newId, ObjectId oldId,
+                                RepositoryHookType type)
   {
     this.directory = directory;
     this.newId = newId;
     this.oldId = oldId;
+    this.type = type;
   }
 
-  
-  
+  //~--- get methods ----------------------------------------------------------
+
   /**
    * Method description
    *
@@ -103,7 +113,7 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
   @Override
   public RepositoryHookType getType()
   {
-    return RepositoryHookType.POST_RECEIVE;
+    return type;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -174,4 +184,7 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
 
   /** Field description */
   private ObjectId oldId;
+
+  /** Field description */
+  private RepositoryHookType type;
 }

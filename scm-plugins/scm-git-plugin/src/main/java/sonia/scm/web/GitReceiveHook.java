@@ -49,6 +49,7 @@ import sonia.scm.io.CommandResult;
 import sonia.scm.io.SimpleCommand;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitRepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.util.IOUtil;
@@ -107,7 +108,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   public void onPostReceive(ReceivePack rpack,
                             Collection<ReceiveCommand> receiveCommands)
   {
-    onReceive(rpack, receiveCommands, FILE_HOOK_POST_RECEIVE, true);
+    onReceive(rpack, receiveCommands, RepositoryHookType.POST_RECEIVE);
   }
 
   /**
@@ -122,7 +123,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   public void onPreReceive(ReceivePack rpack,
                            Collection<ReceiveCommand> receiveCommands)
   {
-    onReceive(rpack, receiveCommands, FILE_HOOK_PRE_RECEIVE, false);
+    onReceive(rpack, receiveCommands, RepositoryHookType.PRE_RECEIVE);
   }
 
   /**
@@ -186,14 +187,16 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    * @param directory
    * @param oldId
    * @param newId
+   * @param type
    */
-  private void fireHookEvent(File directory, ObjectId oldId, ObjectId newId)
+  private void fireHookEvent(File directory, ObjectId oldId, ObjectId newId,
+                             RepositoryHookType type)
   {
     try
     {
       String repositoryName = directory.getName();
       GitRepositoryHookEvent e = new GitRepositoryHookEvent(directory, newId,
-                                   oldId);
+                                   oldId, type);
 
       repositoryManager.fireHookEvent(GitRepositoryHandler.TYPE_NAME,
                                       repositoryName, e);
@@ -210,16 +213,19 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    *
    * @param rpack
    * @param receiveCommands
-   * @param hook
-   * @param fireApiHook
+   * @param type
    */
   private void onReceive(ReceivePack rpack,
                          Collection<ReceiveCommand> receiveCommands,
-                         String hook, boolean fireApiHook)
+                         RepositoryHookType type)
   {
     for (ReceiveCommand rc : receiveCommands)
     {
-      if (rc.getResult() == ReceiveCommand.Result.OK)
+      if (((RepositoryHookType.PRE_RECEIVE == type)
+           && (rc.getResult()
+               == ReceiveCommand.Result.NOT_ATTEMPTED)) || ((RepositoryHookType
+                 .POST_RECEIVE == type) && (rc.getResult()
+                   == ReceiveCommand.Result.OK)))
       {
         ObjectId newId = rc.getNewId();
         ObjectId oldId = null;
@@ -230,17 +236,25 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
         }
 
         File directory = rpack.getRepository().getDirectory();
-        File hookScript = getHookScript(directory, hook);
+        String scriptName = null;
+
+        if (type == RepositoryHookType.POST_RECEIVE)
+        {
+          scriptName = FILE_HOOK_POST_RECEIVE;
+        }
+        else if (type == RepositoryHookType.PRE_RECEIVE)
+        {
+          scriptName = FILE_HOOK_PRE_RECEIVE;
+        }
+
+        File hookScript = getHookScript(directory, scriptName);
 
         if (hookScript != null)
         {
           executeFileHook(hookScript, oldId, newId, rc.getRefName());
         }
 
-        if (fireApiHook)
-        {
-          fireHookEvent(directory, oldId, newId);
-        }
+        fireHookEvent(directory, oldId, newId, type);
       }
     }
   }
