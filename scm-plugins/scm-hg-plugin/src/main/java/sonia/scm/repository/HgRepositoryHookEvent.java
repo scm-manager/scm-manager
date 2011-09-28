@@ -98,6 +98,18 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
       {
         boolean pending = type == RepositoryHookType.PRE_RECEIVE;
 
+        if (logger.isDebugEnabled())
+        {
+          String pendingString = "";
+
+          if (pending)
+          {
+            pendingString = "pending ";
+          }
+
+          logger.debug("load {}changesets for hook {}", type, pendingString);
+        }
+
         changesets = createChangesetViewer().getChangesets(startRev, REV_TIP,
                 pending);
       }
