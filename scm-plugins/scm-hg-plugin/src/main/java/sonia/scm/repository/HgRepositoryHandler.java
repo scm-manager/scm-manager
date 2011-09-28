@@ -352,9 +352,13 @@ public class HgRepositoryHandler
     webSection.setParameter("allow_push", "*");
     hgrc.addSection(webSection);
 
+    
+    // register hooks
     INISection hooksSection = new INISection("hooks");
 
     hooksSection.setParameter("changegroup.scm", "python:scmhooks.callback");
+    hooksSection.setParameter("pretxnchangegroup.scm",
+                              "python:scmhooks.callback");
     hgrc.addSection(hooksSection);
 
     INIConfigurationWriter writer = new INIConfigurationWriter();
