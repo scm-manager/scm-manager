@@ -107,7 +107,7 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
             pendingString = "pending ";
           }
 
-          logger.debug("load {}changesets for hook {}", type, pendingString);
+          logger.debug("load {}changesets for hook {}", pendingString, type);
         }
 
         changesets = createChangesetViewer().getChangesets(startRev, REV_TIP,
