@@ -47,6 +47,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import java.util.Map;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -68,6 +70,20 @@ public class SimpleCommand implements Command
    */
   public SimpleCommand(String... command)
   {
+    this(null, command);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param environment
+   * @param command
+   * @since 1.8
+   */
+  public SimpleCommand(Map<String, String> environment, String... command)
+  {
+    this.environment = environment;
     this.command = command;
   }
 
@@ -90,6 +106,18 @@ public class SimpleCommand implements Command
   }
 
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param environment
+   * @since 1.8
+   */
+  public void setEnvironment(Map<String, String> environment)
+  {
+    this.environment = environment;
+  }
 
   /**
    * Method description
@@ -132,6 +160,11 @@ public class SimpleCommand implements Command
     if (workDirectory != null)
     {
       processBuilder = processBuilder.directory(workDirectory);
+    }
+
+    if (environment != null)
+    {
+      processBuilder.environment().putAll(environment);
     }
 
     return processBuilder.redirectErrorStream(true).start();
@@ -207,6 +240,9 @@ public class SimpleCommand implements Command
 
   /** Field description */
   private String[] command;
+
+  /** Field description */
+  private Map<String, String> environment;
 
   /** Field description */
   private File workDirectory;

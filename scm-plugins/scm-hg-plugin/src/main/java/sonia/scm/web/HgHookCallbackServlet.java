@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgRepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.util.HttpUtil;
@@ -68,6 +69,12 @@ import javax.servlet.http.HttpServletResponse;
 @Singleton
 public class HgHookCallbackServlet extends HttpServlet
 {
+
+  /** Field description */
+  public static final String HGHOOK_POST_RECEIVE = "changegroup";
+
+  /** Field description */
+  public static final String HGHOOK_PRE_RECEIVE = "pretxnchangegroup";
 
   /** Field description */
   private static final String PARAM_CHALLENGE = "challenge";
@@ -164,39 +171,80 @@ public class HgHookCallbackServlet extends HttpServlet
    *
    * @param response
    * @param repositoryName
+   * @param node
    * @param type
+   *
+   * @throws IOException
+   */
+  private void fireHook(HttpServletResponse response, String repositoryName,
+                        String node, RepositoryHookType type)
+          throws IOException
+  {
+    try
+    {
+      repositoryManager.fireHookEvent(HgRepositoryHandler.TYPE_NAME,
+                                      repositoryName,
+                                      new HgRepositoryHookEvent(handler,
+                                        repositoryName, node, type));
+    }
+    catch (RepositoryNotFoundException ex)
+    {
+      if (logger.isErrorEnabled())
+      {
+        logger.error("could not find repository {}", repositoryName);
+
+        if (logger.isTraceEnabled())
+        {
+          logger.trace("repository not found", ex);
+        }
+      }
+
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   * @param repositoryName
+   * @param typeName
    * @param challenge
    * @param node
    *
    * @throws IOException
    */
   private void hookCallback(HttpServletResponse response,
-                            String repositoryName, String type,
+                            String repositoryName, String typeName,
                             String challenge, String node)
           throws IOException
   {
     if (hookManager.isAcceptAble(challenge))
     {
-      try
-      {
-        repositoryManager.fireHookEvent(HgRepositoryHandler.TYPE_NAME,
-                                        repositoryName,
-                                        new HgRepositoryHookEvent(handler,
-                                          repositoryName, node));
-      }
-      catch (RepositoryNotFoundException ex)
-      {
-        if (logger.isErrorEnabled())
-        {
-          logger.error("could not find repository {}", repositoryName);
+      RepositoryHookType type = null;
 
-          if (logger.isTraceEnabled())
-          {
-            logger.trace("repository not found", ex);
-          }
+      if (HGHOOK_PRE_RECEIVE.equals(typeName))
+      {
+        type = RepositoryHookType.PRE_RECEIVE;
+      }
+      else if (HGHOOK_POST_RECEIVE.equals(typeName))
+      {
+        type = RepositoryHookType.POST_RECEIVE;
+      }
+
+      if (type != null)
+      {
+        fireHook(response, repositoryName, node, type);
+      }
+      else
+      {
+        if (logger.isWarnEnabled())
+        {
+          logger.warn("unknown hook type {}", typeName);
         }
 
-        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST);
       }
     }
     else

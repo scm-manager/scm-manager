@@ -52,7 +52,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -81,6 +83,9 @@ public class HgChangesetViewer implements ChangesetViewer
       +   "<files-dels>{file_dels}</files-dels>"
       + "</changeset>\"";
   //J+
+
+  /** Field description */
+  public static final String ENV_PENDING = "HG_PENDING";
 
   /** Field description */
   public static final String TEMPLATE_TOTAL = "{rev}";
@@ -179,12 +184,14 @@ public class HgChangesetViewer implements ChangesetViewer
    *
    * @param startRev
    * @param endRev
+   * @param pending
    *
    * @return
    *
    * @throws IOException
    */
-  public List<Changeset> getChangesets(String startRev, String endRev)
+  public List<Changeset> getChangesets(String startRev, String endRev,
+          boolean pending)
           throws IOException
   {
     List<Changeset> changesetList = null;
@@ -192,10 +199,19 @@ public class HgChangesetViewer implements ChangesetViewer
 
     try
     {
-      Command command = new SimpleCommand(handler.getConfig().getHgBinary(),
-                          "-R", repositoryPath, "log", "-r",
-                          startRev + ":" + endRev, "--template",
-                          TEMPLATE_CHANGESETS);
+      SimpleCommand command =
+        new SimpleCommand(handler.getConfig().getHgBinary(), "-R",
+                          repositoryPath, "log", "-r", startRev + ":" + endRev,
+                          "--template", TEMPLATE_CHANGESETS);
+
+      if (pending)
+      {
+        Map<String, String> env = new HashMap<String, String>();
+
+        env.put(ENV_PENDING, repositoryPath);
+        command.setEnvironment(env);
+      }
+
       CommandResult result = command.execute();
 
       if (result.isSuccessfull())
@@ -227,6 +243,23 @@ public class HgChangesetViewer implements ChangesetViewer
     }
 
     return changesetList;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param startRev
+   * @param endRev
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public List<Changeset> getChangesets(String startRev, String endRev)
+          throws IOException
+  {
+    return getChangesets(startRev, endRev, false);
   }
 
   /**

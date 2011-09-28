@@ -69,13 +69,16 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
    * @param handler
    * @param repositoryName
    * @param startRev
+   * @param type
    */
   public HgRepositoryHookEvent(HgRepositoryHandler handler,
-                               String repositoryName, String startRev)
+                               String repositoryName, String startRev,
+                               RepositoryHookType type)
   {
     this.handler = handler;
     this.repositoryName = repositoryName;
     this.startRev = startRev;
+    this.type = type;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -93,7 +96,8 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
     {
       try
       {
-        changesets = createChangesetViewer().getChangesets(startRev, REV_TIP);
+        changesets = createChangesetViewer().getChangesets(startRev, REV_TIP,
+                true);
       }
       catch (IOException ex)
       {
@@ -113,7 +117,7 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
   @Override
   public RepositoryHookType getType()
   {
-    return RepositoryHookType.POST_RECEIVE;
+    return type;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -146,4 +150,7 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
 
   /** Field description */
   private String startRev;
+
+  /** Field description */
+  private RepositoryHookType type;
 }
