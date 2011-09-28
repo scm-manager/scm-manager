@@ -78,7 +78,7 @@ public class HgRepositoryHandler
 {
 
   /** Field description */
-  public static final String PATH_HOOK1_6 = ".hook-1.6";
+  public static final String PATH_HOOK = ".hook-1.8";
 
   /** Field description */
   public static final String TYPE_DISPLAYNAME = "Mercurial";
@@ -352,7 +352,6 @@ public class HgRepositoryHandler
     webSection.setParameter("allow_push", "*");
     hgrc.addSection(webSection);
 
-    
     // register hooks
     INISection hooksSection = new INISection("hooks");
 
@@ -381,6 +380,36 @@ public class HgRepositoryHandler
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryName
+   * @param hooks
+   * @param hookName
+   *
+   * @return
+   */
+  private boolean appendHook(String repositoryName, INISection hooks,
+                             String hookName)
+  {
+    boolean write = false;
+    String hook = hooks.getParameter(hookName);
+
+    if (Util.isEmpty(hook))
+    {
+      if (logger.isInfoEnabled())
+      {
+        logger.info("register missing {} hook for respository {}", hookName,
+                    repositoryName);
+      }
+
+      hooks.setParameter(hookName, "python:scmhooks.callback");
+    }
+
+    return write;
+  }
 
   /**
    * Method description
@@ -430,18 +459,21 @@ public class HgRepositoryHandler
           c.addSection(hooks);
         }
 
-        String hook = hooks.getParameter("changegroup.scm");
+        String repositoryName = repositoryDir.getName();
+        boolean write = false;
 
-        if (Util.isEmpty(hook))
+        if (appendHook(repositoryName, hooks, "changegroup.scm"))
         {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("register missing hg hook for respository {}",
-                        repositoryDir.getName());
-          }
+          write = true;
+        }
 
-          hooks.setParameter("changegroup.scm", "python:scmhooks.callback");
+        if (appendHook(repositoryName, hooks, "pretxnchangegroup.scm"))
+        {
+          write = true;
+        }
 
+        if (write)
+        {
           INIConfigurationWriter writer = new INIConfigurationWriter();
 
           writer.write(c, hgrc);
@@ -472,7 +504,7 @@ public class HgRepositoryHandler
 
       if (repositoryDirectroy.exists())
       {
-        File lockFile = new File(repositoryDirectroy, PATH_HOOK1_6);
+        File lockFile = new File(repositoryDirectroy, PATH_HOOK);
 
         if (!lockFile.exists())
         {
