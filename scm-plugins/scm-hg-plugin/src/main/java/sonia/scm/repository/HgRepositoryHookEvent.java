@@ -96,8 +96,10 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
     {
       try
       {
+        boolean pending = type == RepositoryHookType.PRE_RECEIVE;
+
         changesets = createChangesetViewer().getChangesets(startRev, REV_TIP,
-                true);
+                pending);
       }
       catch (IOException ex)
       {
