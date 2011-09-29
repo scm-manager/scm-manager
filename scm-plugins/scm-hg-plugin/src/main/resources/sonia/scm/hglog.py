@@ -105,16 +105,12 @@ for i in range(startRev, endRev, -1):
 
   # branches
   if branch != 'default':
-    print '      <branches>'
-    print '        <branch>' + branch + '</branch>'
-    print '      </branches>'
+    print '      <branches>' + branch + '</branches>'
 
   # tags
   if tags:
-    print '      <tags>'
     for t in tags:
-      print '        <tag>' + t + '</tag>'
-    print '      </tags>'
+      print '      <tags>' + t + '</tags>'
     
   # modifications
   print '      <modifications>'
