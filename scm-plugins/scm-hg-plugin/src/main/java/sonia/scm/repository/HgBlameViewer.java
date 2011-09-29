@@ -97,6 +97,12 @@ public class HgBlameViewer implements BlameViewer
   {
     AssertUtil.assertIsNotEmpty(path);
 
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("get blame result for {} at revision {}", path,
+                   HgUtil.getRevision(revision));
+    }
+
     return HgUtil.getResultFromScript(BlameResult.class, blameResultContext,
                                       RESOURCE_BLAME, handler, repository,
                                       revision, path);
