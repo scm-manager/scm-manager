@@ -37,7 +37,6 @@ package sonia.scm.repository;
 
 import com.google.inject.Inject;
 
-import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +47,8 @@ import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 import java.util.Set;
 
@@ -103,6 +104,8 @@ public class ChangesetViewerUtil extends CacheClearHook
    *
    * @return
    *
+   *
+   * @throws IOException
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    */
@@ -133,6 +136,8 @@ public class ChangesetViewerUtil extends CacheClearHook
    *
    * @return
    *
+   *
+   * @throws IOException
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    */

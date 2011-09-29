@@ -115,6 +115,8 @@ public class HgRepositoryHandler
     {
       this.browserResultContext = JAXBContext.newInstance(BrowserResult.class);
       this.blameResultContext = JAXBContext.newInstance(BlameResult.class);
+      this.changesetPagingResultContext =
+        JAXBContext.newInstance(ChangesetPagingResult.class);
     }
     catch (JAXBException ex)
     {
@@ -240,7 +242,8 @@ public class HgRepositoryHandler
 
     if (TYPE_NAME.equals(type))
     {
-      changesetViewer = new HgChangesetViewer(this, repository);
+      changesetViewer = new HgChangesetViewer(this, repository,
+              changesetPagingResultContext);
     }
     else
     {
@@ -308,6 +311,27 @@ public class HgRepositoryHandler
   public Type getType()
   {
     return TYPE;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryDirectory
+   *
+   * @return
+   */
+  HgChangesetViewer getChangesetViewer(File repositoryDirectory)
+  {
+    AssertUtil.assertIsNotNull(repositoryDirectory);
+
+    if (!repositoryDirectory.isDirectory())
+    {
+      throw new IllegalStateException("directory not found");
+    }
+
+    return new HgChangesetViewer(this, repositoryDirectory,
+                                 changesetPagingResultContext);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -552,4 +576,7 @@ public class HgRepositoryHandler
 
   /** Field description */
   private JAXBContext browserResultContext;
+
+  /** Field description */
+  private JAXBContext changesetPagingResultContext;
 }

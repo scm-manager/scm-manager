@@ -110,8 +110,13 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
           logger.debug("load {}changesets for hook {}", pendingString, type);
         }
 
-        changesets = createChangesetViewer().getChangesets(startRev, REV_TIP,
-                pending);
+        ChangesetPagingResult result =
+          createChangesetViewer().getChangesets(startRev, REV_TIP, pending);
+
+        if (result != null)
+        {
+          changesets = result.getChangesets();
+        }
       }
       catch (IOException ex)
       {
@@ -147,8 +152,7 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
     File directory = handler.getConfig().getRepositoryDirectory();
     File repositoryDirectory = new File(directory, repositoryName);
 
-    return new HgChangesetViewer(handler,
-                                 repositoryDirectory.getAbsolutePath());
+    return handler.getChangesetViewer(repositoryDirectory);
   }
 
   //~--- fields ---------------------------------------------------------------

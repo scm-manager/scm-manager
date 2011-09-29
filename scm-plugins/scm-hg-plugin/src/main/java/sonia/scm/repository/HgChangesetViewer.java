@@ -38,25 +38,18 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import sonia.scm.io.Command;
-import sonia.scm.io.CommandResult;
-import sonia.scm.io.SimpleCommand;
-import sonia.scm.util.IOUtil;
+import sonia.scm.util.AssertUtil;
+import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.bind.JAXBContext;
 
 /**
  *
@@ -66,29 +59,16 @@ public class HgChangesetViewer implements ChangesetViewer
 {
 
   /** Field description */
-  public static final String ID_TIP = "tip";
-
-  /** Field description */
-  //J-
-  public static final String TEMPLATE_CHANGESETS =
-        "\"<changeset>"
-      +   "<id>{rev}:{node|short}</id>"
-      +   "<author>{author|escape}</author>"
-      +   "<description>{desc|escape}</description>"
-      +   "<date>{date|isodatesec}</date>"
-      +   "<tags>{tags}</tags>"
-      +   "<branches>{branches}</branches>"
-      +   "<files-added>{file_adds}</files-added>"
-      +   "<files-mods>{file_mods}</files-mods>"
-      +   "<files-dels>{file_dels}</files-dels>"
-      + "</changeset>\"";
-  //J+
-
-  /** Field description */
   public static final String ENV_PENDING = "HG_PENDING";
 
   /** Field description */
-  public static final String TEMPLATE_TOTAL = "{rev}";
+  public static final String ENV_REVISION_LIMIT = "SCM_REVISION_LIMIT";
+
+  /** Field description */
+  public static final String ENV_REVISION_START = "SCM_REVISION_START";
+
+  /** Field description */
+  public static final String RESOURCE_LOG = "/sonia/scm/hglog.py";
 
   /** the logger for HgChangesetViewer */
   private static final Logger logger =
@@ -102,11 +82,16 @@ public class HgChangesetViewer implements ChangesetViewer
    *
    *
    * @param handler
-   * @param repository
+   * @param repositoryDirectory
+   * @param changesetPagingResultContext
    */
-  public HgChangesetViewer(HgRepositoryHandler handler, Repository repository)
+  public HgChangesetViewer(HgRepositoryHandler handler,
+                           File repositoryDirectory,
+                           JAXBContext changesetPagingResultContext)
   {
-    this(handler, handler.getDirectory(repository).getAbsolutePath());
+    this.handler = handler;
+    this.repositoryDirectory = repositoryDirectory;
+    this.changesetPagingResultContext = changesetPagingResultContext;
   }
 
   /**
@@ -114,12 +99,14 @@ public class HgChangesetViewer implements ChangesetViewer
    *
    *
    * @param handler
-   * @param repositoryPath
+   * @param repository
+   * @param changesetPagingResultContext
    */
-  public HgChangesetViewer(HgRepositoryHandler handler, String repositoryPath)
+  public HgChangesetViewer(HgRepositoryHandler handler, Repository repository,
+                           JAXBContext changesetPagingResultContext)
   {
-    this.handler = handler;
-    this.repositoryPath = repositoryPath;
+    this(handler, handler.getDirectory(repository),
+         changesetPagingResultContext);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -131,51 +118,14 @@ public class HgChangesetViewer implements ChangesetViewer
    * @param max
    *
    * @return
+   *
+   * @throws IOException
    */
   @Override
   public ChangesetPagingResult getChangesets(int start, int max)
+          throws IOException
   {
-    ChangesetPagingResult changesets = null;
-    InputStream in = null;
-
-    try
-    {
-      int total = getTotalChangesets(repositoryPath);
-      int startRev = total - start;
-      int endRev = total - start - (max - 1);
-
-      if (endRev < 0)
-      {
-        endRev = 0;
-      }
-
-      List<Changeset> changesetList = getChangesets(Integer.toString(startRev),
-                                        Integer.toString(endRev));
-
-      if (changesetList != null)
-      {
-        if (total == -1)
-        {
-          total = 0;
-        }
-        else
-        {
-          total++;
-        }
-
-        changesets = new ChangesetPagingResult(total, changesetList);
-      }
-    }
-    catch (IOException ex)
-    {
-      logger.error("could not load changesets", ex);
-    }
-    finally
-    {
-      IOUtil.close(in);
-    }
-
-    return changesets;
+    return getChangesets(String.valueOf(start), String.valueOf(max), false);
   }
 
   /**
@@ -183,66 +133,41 @@ public class HgChangesetViewer implements ChangesetViewer
    *
    *
    * @param startRev
-   * @param endRev
+   * @param limit
    * @param pending
    *
    * @return
    *
    * @throws IOException
    */
-  public List<Changeset> getChangesets(String startRev, String endRev,
+  public ChangesetPagingResult getChangesets(String startRev, String limit,
           boolean pending)
           throws IOException
   {
-    List<Changeset> changesetList = null;
-    InputStream in = null;
+    AssertUtil.assertIsNotEmpty(startRev);
+    AssertUtil.assertIsNotEmpty(limit);
 
-    try
+    if (logger.isDebugEnabled())
     {
-      SimpleCommand command =
-        new SimpleCommand(handler.getConfig().getHgBinary(), "-R",
-                          repositoryPath, "log", "-r", startRev + ":" + endRev,
-                          "--template", TEMPLATE_CHANGESETS);
-
-      if (pending)
-      {
-        Map<String, String> env = new HashMap<String, String>();
-
-        env.put(ENV_PENDING, repositoryPath);
-        command.setEnvironment(env);
-      }
-
-      CommandResult result = command.execute();
-
-      if (result.isSuccessfull())
-      {
-        StringBuilder sb = new StringBuilder("<changesets>");
-
-        sb.append(result.getOutput()).append("</changesets>");
-        changesetList = new HgChangesetParser().parse(
-          new InputSource(new StringReader(sb.toString())));
-      }
-      else if (logger.isErrorEnabled())
-      {
-        logger.error(
-            "command for fetching changesets failed with exit code {} and output {}",
-            result.getReturnCode(), result.getOutput());
-      }
-    }
-    catch (ParserConfigurationException ex)
-    {
-      logger.error("could not parse changesets", ex);
-    }
-    catch (SAXException ex)
-    {
-      logger.error("could not unmarshall changesets", ex);
-    }
-    finally
-    {
-      IOUtil.close(in);
+      logger.debug("get changesets for repository {}, start: {}, limit: {}",
+                   new Object[] { repositoryDirectory.getName(),
+                                  startRev, limit });
     }
 
-    return changesetList;
+    Map<String, String> env = new HashMap<String, String>();
+
+    if (pending)
+    {
+      env.put(ENV_PENDING, repositoryDirectory.getAbsolutePath());
+    }
+
+    env.put(ENV_REVISION_START, startRev);
+    env.put(ENV_REVISION_LIMIT, limit);
+
+    return HgUtil.getResultFromScript(ChangesetPagingResult.class,
+                                      changesetPagingResultContext,
+                                      RESOURCE_LOG, handler,
+                                      repositoryDirectory, env);
   }
 
   /**
@@ -250,55 +175,26 @@ public class HgChangesetViewer implements ChangesetViewer
    *
    *
    * @param startRev
-   * @param endRev
+   * @param limit
    *
    * @return
    *
    * @throws IOException
    */
-  public List<Changeset> getChangesets(String startRev, String endRev)
+  public ChangesetPagingResult getChangesets(String startRev, String limit)
           throws IOException
   {
-    return getChangesets(startRev, endRev, false);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryPath
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private int getTotalChangesets(String repositoryPath) throws IOException
-  {
-    int total = -1;
-    Command command = new SimpleCommand(handler.getConfig().getHgBinary(),
-                        "-R", repositoryPath, "tip", "--template",
-                        TEMPLATE_TOTAL);
-    CommandResult result = command.execute();
-
-    if (result.isSuccessfull())
-    {
-      total = Integer.parseInt(result.getOutput().trim());
-    }
-    else if (logger.isErrorEnabled())
-    {
-      logger.error(
-          "could not read tip revision, command returned with exit code {} and content {}",
-          result.getReturnCode(), result.getOutput());
-    }
-
-    return total;
+    return getChangesets(startRev, limit, false);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private JAXBContext changesetPagingResultContext;
+
+  /** Field description */
   private HgRepositoryHandler handler;
 
   /** Field description */
-  private String repositoryPath;
+  private File repositoryDirectory;
 }
