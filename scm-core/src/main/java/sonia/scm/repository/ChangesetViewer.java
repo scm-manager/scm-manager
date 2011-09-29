@@ -33,6 +33,10 @@
 
 package sonia.scm.repository;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -50,6 +54,10 @@ public interface ChangesetViewer
    * @param max
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
-  public ChangesetPagingResult getChangesets(int start, int max);
+  public ChangesetPagingResult getChangesets(int start, int max)
+          throws IOException, RepositoryException;
 }
