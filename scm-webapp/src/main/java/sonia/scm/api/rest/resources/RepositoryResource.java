@@ -245,6 +245,8 @@ public class RepositoryResource
    *
    * @return
    *
+   *
+   * @throws IOException
    * @throws RepositoryException
    */
   @GET
@@ -252,7 +254,7 @@ public class RepositoryResource
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getChangesets(@PathParam("id") String id, @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("20")
-  @QueryParam("limit") int limit) throws RepositoryException
+  @QueryParam("limit") int limit) throws RepositoryException, IOException
   {
     Response response = null;
 

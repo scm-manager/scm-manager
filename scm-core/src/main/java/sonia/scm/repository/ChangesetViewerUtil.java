@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import com.google.inject.Inject;
 
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,7 +108,7 @@ public class ChangesetViewerUtil extends CacheClearHook
    */
   public ChangesetPagingResult getChangesets(String repositoryId, int start,
           int max)
-          throws RepositoryException, NotSupportedFeatuerException
+          throws IOException, RepositoryException, NotSupportedFeatuerException
   {
     AssertUtil.assertIsNotEmpty(repositoryId);
 
@@ -137,7 +138,7 @@ public class ChangesetViewerUtil extends CacheClearHook
    */
   public ChangesetPagingResult getChangesets(Repository repository, int start,
           int max)
-          throws RepositoryException, NotSupportedFeatuerException
+          throws IOException, RepositoryException, NotSupportedFeatuerException
   {
     AssertUtil.assertIsNotNull(repository);
 
