@@ -79,13 +79,30 @@ for i in range(startRev, endRev, -1):
   mods = status[0]
   added = status[1]
   deleted = status[2]
+  authorName = ctx.user();
+  authorMail = None
+  
+  if authorName:
+    s = authorName.find('<')
+    e = authorName.find('>')
+    if s > 0 and e > 0:
+      authorMail = authorName[s + 1:e].strip()
+      authorName = authorName[0:s].strip()
   
   print '    <changeset>'
   print '      <id>' + str(i) + ':' + hex(ctx.node()[:6]) + '</id>'
   print '      <author>' + escape(ctx.user()) + '</author>'
   print '      <description>' + escape(ctx.description()) + '</description>'
   print '      <date>' + str(time).split('.')[0] + '</date>'
-  
+
+  # author
+  if authorName:
+    print '      <author>'
+    print '        <name>' + authorName + '</name>'
+    if authorMail:
+      print '        <mail>' + authorMail + '</mail>'
+    print '      </author>'
+
   # branches
   if branch != 'default':
     print '      <branches>'
