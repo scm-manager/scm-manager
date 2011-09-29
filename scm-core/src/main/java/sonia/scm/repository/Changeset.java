@@ -436,7 +436,7 @@ public class Changeset extends BasicPropertiesAware
   /** The author of the changeset */
   private Person author;
 
-  /** The tags associated with the changeset */
+  /** The name of the branches on which the changeset was committed. */
   private List<String> branches;
 
   /** The date when the changeset was committed */
@@ -452,6 +452,6 @@ public class Changeset extends BasicPropertiesAware
   @XmlElement(name = "modifications")
   private Modifications modifications;
 
-  /** The name of the branches on which the changeset was committed. */
+  /** The tags associated with the changeset */
   private List<String> tags;
 }
