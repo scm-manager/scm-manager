@@ -164,13 +164,20 @@ public class ChangesetViewerUtil extends CacheClearHook
     {
       result = viewer.getChangesets(start, max);
 
-      if (Util.isNotEmpty(result.getChangesets()))
+      if (result != null)
       {
-        callPreProcessors(result);
-        callPreProcessorFactories(repository, result);
-      }
+        if (Util.isNotEmpty(result.getChangesets()))
+        {
+          callPreProcessors(result);
+          callPreProcessorFactories(repository, result);
+        }
 
-      cache.put(key, result);
+        cache.put(key, result);
+      }
+      else
+      {
+        throw new RepositoryException("could not fetch changesets");
+      }
     }
     else if (logger.isDebugEnabled())
     {
