@@ -396,40 +396,14 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    */
   private void processErrorStream(InputStream in) throws IOException
   {
-    BufferedReader reader = null;
-
-    try
+    if (logger.isWarnEnabled())
     {
-      reader = new BufferedReader(new InputStreamReader(in));
+      String error = IOUtil.getContent(in);
 
-      StringBuilder error = new StringBuilder();
-      String s = System.getProperty("line.separator");
-      String line = reader.readLine();
-
-      while (line != null)
+      if (Util.isNotEmpty(error))
       {
-        error.append(line);
-        line = reader.readLine();
-
-        if (line != null)
-        {
-          error.append(s);
-        }
+        logger.warn(error.trim());
       }
-
-      if (logger.isWarnEnabled())
-      {
-        String msg = error.toString().trim();
-
-        if (Util.isNotEmpty(msg))
-        {
-          logger.warn(msg);
-        }
-      }
-    }
-    finally
-    {
-      IOUtil.close(reader);
     }
   }
 

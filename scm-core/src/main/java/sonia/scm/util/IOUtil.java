@@ -45,12 +45,14 @@ import sonia.scm.io.ZipUnArchiver;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
@@ -591,6 +593,48 @@ public class IOUtil
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param in
+   *
+   * @return
+   * @since 1.8
+   *
+   * @throws IOException
+   */
+  public static String getContent(InputStream in) throws IOException
+  {
+    StringBuilder content = new StringBuilder();
+    BufferedReader reader = null;
+
+    try
+    {
+      reader = new BufferedReader(new InputStreamReader(in));
+
+      String s = System.getProperty("line.separator");
+      String line = reader.readLine();
+
+      while (line != null)
+      {
+        content.append(line);
+        line = reader.readLine();
+
+        if (line != null)
+        {
+          content.append(s);
+        }
+      }
+    }
+    finally
+    {
+      close(reader);
+    }
+
+    return content.toString();
+  }
 
   /**
    * Method description
