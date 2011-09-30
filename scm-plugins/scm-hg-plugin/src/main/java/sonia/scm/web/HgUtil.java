@@ -174,6 +174,7 @@ public class HgUtil
       output = p.getOutputStream();
       IOUtil.copy(resource, output);
       output.close();
+      handleErrorStream(p.getErrorStream());
       input = p.getInputStream();
       result = (T) context.createUnmarshaller().unmarshal(input);
       input.close();
@@ -265,5 +266,40 @@ public class HgUtil
     return Util.isEmpty(revision)
            ? REVISION_TIP
            : revision;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param errorStream
+   */
+  private static void handleErrorStream(final InputStream errorStream)
+  {
+    if (errorStream != null)
+    {
+      new Thread(new Runnable()
+      {
+        @Override
+        public void run()
+        {
+          try
+          {
+            String content = IOUtil.getContent(errorStream);
+
+            if (Util.isNotEmpty(content))
+            {
+              logger.error(content.trim());
+            }
+          }
+          catch (IOException ex)
+          {
+            logger.error("error during logging", ex);
+          }
+        }
+      }).start();
+    }
   }
 }
