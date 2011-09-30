@@ -189,7 +189,7 @@
           <links>
             <link>http://download.oracle.com/javase/6/docs/api/</link>
             <link>http://download.oracle.com/docs/cd/E17802_01/products/products/servlet/2.5/docs/servlet-2_5-mr2/</link>
-            <link>http://jsr311.java.net/nonav/releases/1.1</link>
+            <link>http://jersey.java.net/nonav/apidocs/${jersey.version}/jersey/</link>
             <link>http://google-guice.googlecode.com/svn/tags/3.0/javadoc/</link>
             <link>http://www.slf4j.org/api/</link>
           </links>
@@ -434,7 +434,7 @@
     <slf4j.version>1.6.2</slf4j.version>
     <servlet.version>2.5</servlet.version>
     <guice.version>3.0</guice.version>
-    <jersey.version>1.9</jersey.version>
+    <jersey.version>1.9.1</jersey.version>
     <ehcache.version>2.4.5</ehcache.version>
     <freemarker.version>2.3.18</freemarker.version>
     <jetty.version>7.5.1.v20110908</jetty.version>
