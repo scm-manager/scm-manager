@@ -177,6 +177,22 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>2.8</version>
+        <configuration>
+          <useStandardDocletOptions>true</useStandardDocletOptions>
+          <charset>${project.build.sourceEncoding}</charset>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <docencoding>${project.build.sourceEncoding}</docencoding>
+          <breakiterator>true</breakiterator>
+          <version>true</version>
+          <author>true</author>
+          <keywords>true</keywords>
+          <additionalparam>
+            -link http://download.oracle.com/javase/6/docs/api/
+            -link http://download.oracle.com/docs/cd/E17802_01/products/products/servlet/2.5/docs/servlet-2_5-mr2/
+            -link http://google-guice.googlecode.com/svn/tags/3.0/javadoc/
+            -link http://www.slf4j.org/api/
+          </additionalparam>
+        </configuration>
       </plugin>
 
       <plugin>
