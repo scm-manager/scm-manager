@@ -46,31 +46,40 @@ import datetime, time
 repositoryPath = os.environ['SCM_REPOSITORY_PATH']
 repo = hg.repository(ui.ui(), path = repositoryPath)
 
-start =  os.environ['SCM_REVISION_START']
-limit = os.environ['SCM_REVISION_LIMIT']
+startNode = os.environ['SCM_REVISION_START']
+endNode = os.environ['SCM_REVISION_END']
 
 total = len(repo)
-limit = int(limit)
 
-try:
-  start = int(start)
-  startRev = total - start - 1
-  if startRev < 0:
-    startRev = 0
-except ValueError:
-  startRev = repo[start].rev()
+if len(startNode) > 0 and len(endNode) > 0:
+  # start and end revision
+  startRev = repo[startNode].rev() -1
+  endRev = repo[endNode].rev()
+  
+else:
+  # paging
+  start = os.environ['SCM_PAGE_START']
+  limit = os.environ['SCM_PAGE_LIMIT']
 
-endRev = startRev - limit
-if endRev < -1:
-  endRev = -1
+  limit = int(limit)
+
+  end = int(start)
+  endRev = total - end - 1
+
+  startRev = endRev - limit
+
+# fix negative start revisions
+if startRev < -1:
+  startRev = -1
 
 # header
+print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
 print '<changeset-paging>'
 print '  <total>' + str(total) + '</total>'
 print '  <changesets>'
 
 # changesets
-for i in range(startRev, endRev, -1):
+for i in range(endRev, startRev, -1):
   ctx = repo[i]
   time = int(ctx.date()[0]) * 1000
   branch = ctx.branch()

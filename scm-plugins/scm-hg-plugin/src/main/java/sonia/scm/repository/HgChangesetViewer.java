@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -59,10 +60,16 @@ public class HgChangesetViewer implements ChangesetViewer
 {
 
   /** Field description */
+  public static final String ENV_PAGE_LIMIT = "SCM_PAGE_LIMIT";
+
+  /** Field description */
+  public static final String ENV_PAGE_START = "SCM_PAGE_START";
+
+  /** Field description */
   public static final String ENV_PENDING = "HG_PENDING";
 
   /** Field description */
-  public static final String ENV_REVISION_LIMIT = "SCM_REVISION_LIMIT";
+  public static final String ENV_REVISION_END = "SCM_REVISION_END";
 
   /** Field description */
   public static final String ENV_REVISION_START = "SCM_REVISION_START";
@@ -125,33 +132,53 @@ public class HgChangesetViewer implements ChangesetViewer
   public ChangesetPagingResult getChangesets(int start, int max)
           throws IOException
   {
-    return getChangesets(String.valueOf(start), String.valueOf(max), false);
+    return getChangesets(start, max, false);
   }
 
   /**
    * Method description
    *
    *
-   * @param startRev
-   * @param limit
+   * @param start
+   * @param max
    * @param pending
    *
    * @return
    *
    * @throws IOException
    */
-  public ChangesetPagingResult getChangesets(String startRev, String limit,
+  public ChangesetPagingResult getChangesets(int start, int max,
           boolean pending)
           throws IOException
   {
-    AssertUtil.assertIsNotEmpty(startRev);
-    AssertUtil.assertIsNotEmpty(limit);
+    return getChangesets(String.valueOf(start), String.valueOf(max), null,
+                         null, pending);
+  }
 
+  /**
+   * Method description
+   *
+   *
+   * @param pageStart
+   * @param pageLimit
+   * @param revisionStart
+   * @param revisionEnd
+   * @param pending
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public ChangesetPagingResult getChangesets(String pageStart,
+          String pageLimit, String revisionStart, String revisionEnd,
+          boolean pending)
+          throws IOException
+  {
     if (logger.isDebugEnabled())
     {
       logger.debug("get changesets for repository {}, start: {}, limit: {}",
                    new Object[] { repositoryDirectory.getName(),
-                                  startRev, limit });
+                                  pageStart, pageLimit });
     }
 
     Map<String, String> env = new HashMap<String, String>();
@@ -161,8 +188,10 @@ public class HgChangesetViewer implements ChangesetViewer
       env.put(ENV_PENDING, repositoryDirectory.getAbsolutePath());
     }
 
-    env.put(ENV_REVISION_START, startRev);
-    env.put(ENV_REVISION_LIMIT, limit);
+    env.put(ENV_PAGE_START, Util.nonNull(pageStart));
+    env.put(ENV_PAGE_LIMIT, Util.nonNull(pageLimit));
+    env.put(ENV_REVISION_START, Util.nonNull(revisionStart));
+    env.put(ENV_REVISION_END, Util.nonNull(revisionEnd));
 
     return HgUtil.getResultFromScript(ChangesetPagingResult.class,
                                       changesetPagingResultContext,
@@ -174,17 +203,37 @@ public class HgChangesetViewer implements ChangesetViewer
    * Method description
    *
    *
-   * @param startRev
-   * @param limit
+   *
+   * @param startNode
+   * @param endNode
    *
    * @return
    *
    * @throws IOException
    */
-  public ChangesetPagingResult getChangesets(String startRev, String limit)
+  public ChangesetPagingResult getChangesets(String startNode, String endNode)
           throws IOException
   {
-    return getChangesets(startRev, limit, false);
+    return getChangesets(startNode, endNode, false);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param startNode
+   * @param endNode
+   * @param pending
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public ChangesetPagingResult getChangesets(String startNode, String endNode,
+          boolean pending)
+          throws IOException
+  {
+    return getChangesets(null, null, startNode, endNode, pending);
   }
 
   //~--- fields ---------------------------------------------------------------
