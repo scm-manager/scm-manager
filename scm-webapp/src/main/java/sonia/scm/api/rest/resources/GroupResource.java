@@ -39,6 +39,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
 
 import sonia.scm.group.Group;
@@ -50,11 +51,24 @@ import sonia.scm.web.security.WebSecurityContext;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
+import java.util.List;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -88,6 +102,62 @@ public class GroupResource
     this.securityContextProvider = securityContextProvider;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   *  Method description
+   *
+   *
+   *
+   * @param uriInfo
+   * @param group
+   *
+   *  @return
+   */
+  @POST
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Override
+  public Response create(@Context UriInfo uriInfo, Group group)
+  {
+    return super.create(uriInfo, group);
+  }
+
+  /**
+   *   Method description
+   *
+   *
+   *   @param name
+   *
+   *   @return
+   */
+  @DELETE
+  @Path("{id}")
+  @Override
+  public Response delete(@PathParam("id") String name)
+  {
+    return super.delete(name);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param uriInfo
+   * @param name
+   * @param group
+   *
+   * @return
+   */
+  @PUT
+  @Path("{id}")
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Override
+  public Response update(@Context UriInfo uriInfo,
+                         @PathParam("id") String name, Group group)
+  {
+    return super.update(uriInfo, name, group);
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -99,8 +169,12 @@ public class GroupResource
    *
    * @return
    */
+  @GET
+  @Path("{id}")
+  @TypeHint(Group.class)
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
-  public Response get(Request request, String id)
+  public Response get(@Context Request request, @PathParam("id") String id)
   {
     Response response = null;
 
@@ -114,6 +188,31 @@ public class GroupResource
     }
 
     return response;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param start
+   * @param limit
+   * @param sortby
+   * @param desc
+   *
+   * @return
+   */
+  @GET
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @TypeHint(List.class)
+  @Override
+  public Response getAll(@Context Request request, @DefaultValue("0")
+  @QueryParam("start") int start, @DefaultValue("-1")
+  @QueryParam("limit") int limit, @QueryParam("sortby") String sortby,
+                                  @DefaultValue("false")
+  @QueryParam("desc") boolean desc)
+  {
+    return super.getAll(request, start, limit, sortby, desc);
   }
 
   //~--- methods --------------------------------------------------------------

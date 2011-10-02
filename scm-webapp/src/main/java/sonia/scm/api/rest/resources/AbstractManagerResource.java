@@ -53,21 +53,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.CacheControl;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.GenericEntity;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
@@ -145,9 +133,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    *  @return
    */
-  @POST
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response create(@Context UriInfo uriInfo, T item)
+  public Response create(UriInfo uriInfo, T item)
   {
     preCreate(item);
 
@@ -182,9 +168,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    *   @return
    */
-  @DELETE
-  @Path("{id}")
-  public Response delete(@PathParam("id") String name)
+  public Response delete(String name)
   {
     Response response = null;
     T item = manager.get(name);
@@ -226,11 +210,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @return
    */
-  @PUT
-  @Path("{id}")
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response update(@Context UriInfo uriInfo,
-                         @PathParam("id") String name, T item)
+  public Response update(UriInfo uriInfo, String name, T item)
   {
     Response response = null;
 
@@ -267,10 +247,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    *  @return
    */
-  @GET
-  @Path("{id}")
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response get(@Context Request request, @PathParam("id") String id)
+  public Response get(Request request, String id)
   {
     Response response = null;
     T item = manager.get(id);
@@ -308,13 +285,8 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    * @param desc
    * @return
    */
-  @GET
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response getAll(@Context Request request, @DefaultValue("0")
-  @QueryParam("start") int start, @DefaultValue("-1")
-  @QueryParam("limit") int limit, @QueryParam("sortby") String sortby,
-                                  @DefaultValue("false")
-  @QueryParam("desc") boolean desc)
+  public Response getAll(Request request, int start, int limit, String sortby,
+                         boolean desc)
   {
     Collection<T> items = fetchItems(sortby, desc, start, limit);
 

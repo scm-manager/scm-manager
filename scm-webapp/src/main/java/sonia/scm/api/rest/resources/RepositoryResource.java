@@ -39,6 +39,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
 
 import org.slf4j.Logger;
@@ -64,6 +65,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.util.SecurityUtil;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -72,17 +74,25 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
 
 /**
  *
@@ -133,7 +143,118 @@ public class RepositoryResource
     setDisableCache(false);
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   *  Method description
+   *
+   *
+   *
+   * @param uriInfo
+   * @param repository
+   *
+   *  @return
+   */
+  @POST
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Override
+  public Response create(@Context UriInfo uriInfo, Repository repository)
+  {
+    return super.create(uriInfo, repository);
+  }
+
+  /**
+   *   Method description
+   *
+   *
+   *   @param name
+   *
+   *   @return
+   */
+  @DELETE
+  @Path("{id}")
+  @Override
+  public Response delete(@PathParam("id") String name)
+  {
+    return super.delete(name);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param uriInfo
+   * @param name
+   * @param repository
+   *
+   * @return
+   */
+  @PUT
+  @Path("{id}")
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Override
+  public Response update(@Context UriInfo uriInfo,
+                         @PathParam("id") String name, Repository repository)
+  {
+    return super.update(uriInfo, name, repository);
+  }
+
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param id
+   *
+   * @return
+   */
+  @GET
+  @Path("{id}")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @TypeHint(Repository.class)
+  @Override
+  public Response get(@Context Request request, @PathParam("id") String id)
+  {
+    Response response = null;
+
+    if (SecurityUtil.isAdmin(securityContextProvider))
+    {
+      response = super.get(request, id);
+    }
+    else
+    {
+      response = Response.status(Response.Status.FORBIDDEN).build();
+    }
+
+    return response;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param start
+   * @param limit
+   * @param sortby
+   * @param desc
+   *
+   * @return
+   */
+  @GET
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @TypeHint(List.class)
+  @Override
+  public Response getAll(@Context Request request, @DefaultValue("0")
+  @QueryParam("start") int start, @DefaultValue("-1")
+  @QueryParam("limit") int limit, @QueryParam("sortby") String sortby,
+                                  @DefaultValue("false")
+  @QueryParam("desc") boolean desc)
+  {
+    return super.getAll(request, start, limit, sortby, desc);
+  }
 
   /**
    * Method description
@@ -150,6 +271,8 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/blame")
+  @TypeHint(BlameResult.class)
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getBlame(@PathParam("id") String id,
                            @QueryParam("revision") String revision,
                            @QueryParam("path") String path)
@@ -204,6 +327,7 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/browse")
+  @TypeHint(BrowserResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getBrowserResult(@PathParam("id") String id,
                                    @QueryParam("revision") String revision,
@@ -254,6 +378,7 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/changesets")
+  @TypeHint(ChangesetPagingResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getChangesets(@PathParam("id") String id, @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("20")
@@ -299,6 +424,7 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/content")
+  @TypeHint(StreamingOutput.class)
   @Produces({ MediaType.APPLICATION_OCTET_STREAM })
   public Response getContent(@PathParam("id") String id,
                              @QueryParam("revision") String revision,
@@ -358,6 +484,8 @@ public class RepositoryResource
    */
   @GET
   @Path("{id}/diff")
+  @TypeHint(DiffStreamingOutput.class)
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getDiff(@PathParam("id") String id,
                           @QueryParam("revision") String revision,
                           @QueryParam("path") String path)
