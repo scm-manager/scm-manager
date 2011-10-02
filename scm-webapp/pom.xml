@@ -218,6 +218,12 @@
         </exclusion>
       </exclusions>
     </dependency>
+    
+    <dependency>
+      <groupId>org.codehaus.enunciate</groupId>
+      <artifactId>enunciate-jersey-rt</artifactId>
+      <version>${enunciate.version}</version>
+    </dependency>
 
     <!-- test scope -->
 
@@ -324,6 +330,7 @@
 
   <properties>
     <environment.profile>default</environment.profile>
+    <enunciate.version>1.24</enunciate.version>
     <aether.version>1.13</aether.version>
     <wagon.version>1.0</wagon.version>
     <maven.version>3.0.3</maven.version>
@@ -450,6 +457,52 @@
         </plugins>
       </build>
 
+    </profile>
+    
+    <profile>
+      <id>doc</id>
+      
+      <build>
+        <plugins>
+          
+          <plugin>
+            <groupId>org.codehaus.enunciate</groupId>
+            <artifactId>maven-enunciate-plugin</artifactId>
+            <version>${enunciate.version}</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>docs</goal>
+                </goals>
+                <phase>compile</phase>
+              </execution>
+            </executions>
+            <configuration>
+              <includes>
+                <param>sonia.scm.api.rest.resources.AuthenticationResource</param>
+                <param>sonia.scm.api.rest.resources.ChangePasswordResource</param>
+                <!--
+                <param>sonia.scm.api.rest.resources.ConfigurationResource</param>
+                -->
+                <param>sonia.scm.api.rest.resources.GroupResource</param>
+                <param>sonia.scm.api.rest.resources.UserResource</param>
+                <param>sonia.scm.api.rest.resources.RepositoryResource</param>
+                <param>sonia.scm.api.rest.resources.PluginResource</param>
+                <param>sonia.scm.api.rest.resources.SearchResource</param>
+              </includes>
+              <docsDir>${project.build.directory}/docs</docsDir>
+            </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>org.codehaus.enunciate</groupId>
+                <artifactId>enunciate-jersey</artifactId>
+                <version>${enunciate.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+          
+        </plugins>
+      </build>
     </profile>
 
   </profiles>

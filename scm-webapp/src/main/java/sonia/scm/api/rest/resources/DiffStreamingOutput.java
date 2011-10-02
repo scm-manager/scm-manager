@@ -67,8 +67,8 @@ public class DiffStreamingOutput implements StreamingOutput
 
   /**
    *   Constructs ...
-   *  
-   *  
+   *
+   *
    *   @param diffViewer
    *   @param revision
    *   @param path

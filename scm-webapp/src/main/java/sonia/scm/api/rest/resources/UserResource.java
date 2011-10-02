@@ -39,6 +39,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
+
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
@@ -63,6 +65,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("users")
 @Singleton
+@SpringManagedLifecycle
 public class UserResource extends AbstractManagerResource<User, UserException>
 {
 

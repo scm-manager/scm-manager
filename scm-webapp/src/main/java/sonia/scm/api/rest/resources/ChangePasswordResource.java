@@ -38,6 +38,8 @@ package sonia.scm.api.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,6 +68,7 @@ import javax.ws.rs.core.Response;
  *
  * @author Sebastian Sdorra
  */
+@SpringManagedLifecycle
 @Path("action/change-password")
 public class ChangePasswordResource
 {

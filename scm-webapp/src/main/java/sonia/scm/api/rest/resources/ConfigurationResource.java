@@ -39,6 +39,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
+
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.util.SecurityUtil;
@@ -62,6 +64,7 @@ import javax.ws.rs.core.UriInfo;
  */
 @Singleton
 @Path("config")
+@SpringManagedLifecycle
 public class ConfigurationResource
 {
 

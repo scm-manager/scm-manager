@@ -39,6 +39,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
+
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
@@ -60,6 +62,7 @@ import javax.ws.rs.core.Response;
  */
 @Path("groups")
 @Singleton
+@SpringManagedLifecycle
 public class GroupResource
         extends AbstractManagerResource<Group, GroupException>
 {
