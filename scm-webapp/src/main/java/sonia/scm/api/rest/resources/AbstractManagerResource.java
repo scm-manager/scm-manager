@@ -124,14 +124,14 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   //~--- methods --------------------------------------------------------------
 
   /**
-   *  Method description
+   * Method description
    *
    *
    *
    * @param uriInfo
    * @param item
    *
-   *  @return
+   * @return
    */
   public Response create(UriInfo uriInfo, T item)
   {
@@ -161,12 +161,12 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   }
 
   /**
-   *   Method description
+   * Method description
    *
    *
-   *   @param name
+   * @param name
    *
-   *   @return
+   * @return
    */
   public Response delete(String name)
   {

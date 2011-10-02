@@ -54,7 +54,6 @@ import sonia.scm.web.security.WebSecurityContext;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -112,12 +111,18 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Creates a new user.<br />
+   * This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>201 create success</li>
+   *   <li>403 forbidden, the current user has no admin privileges</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   *
-   * @param uriInfo
-   * @param user
+   * @param uriInfo current uri informations
+   * @param user the user to be created
    *
    * @return
    */
@@ -130,10 +135,17 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   }
 
   /**
-   * Method description
+   * Deletes a user.<br />
+   * This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *  <li>201 delete success</li>
+   *  <li>403 forbidden, the current user has no admin privileges</li>
+   *  <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param name
+   * @param name the name of the user to delete.
    *
    * @return
    */
@@ -146,12 +158,19 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   }
 
   /**
-   * Method description
+   * Modifies the given user.<br />
+   * This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>201 update successful</li>
+   *   <li>403 forbidden, the current user has no admin privileges</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param uriInfo
-   * @param name
-   * @param user
+   * @param uriInfo current uri informations
+   * @param name name of the user to be modified
+   * @param user user object to modify
    *
    * @return
    */
@@ -168,13 +187,21 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a user.<br />
+   * This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>403 forbidden, the current user has no admin privileges</li>
+   *   <li>404 not found, no user with the specified id/name available</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
+   * @param request the current request
+   * @param id the id/name of the user
    *
-   * @param request
-   * @param id
-   *
-   * @return
+   * @return the {@link User} with the specified id
    */
   @GET
   @Path("{id}")
@@ -198,14 +225,21 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param start
-   * @param limit
-   * @param sortby
-   * @param desc
+   * Returns all users.<br />
+   * This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>403 forbidden, the current user has no admin privileges</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   * 
+   * @param request the current request
+   * @param start the start value for paging
+   * @param limit the limit value for paging
+   * @param sortby sort parameter
+   * @param desc sort direction desc or aesc
    *
    * @return
    */
