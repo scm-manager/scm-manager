@@ -3,21 +3,31 @@
 <!--
     Document   : enunciate.xml
     Created on : October 2, 2011, 12:02 PM
-    Author     : sdorra
-    Description:
-        Purpose of the document follows.
+    Author     : Sebastian Sdorra
+    Description: Enunciate configuration
 -->
-<!-- Enunciate configuration -->
+
 <enunciate label="full" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:noNamespaceSchemaLocation="http://enunciate.codehaus.org/schemas/enunciate-1.24.xsd">
 
+  <api-classes>
+    <include pattern="sonia.scm.api.rest.resources.*" />
+    <exclude pattern="sonia.scm.api.rest.resources.ConfigurationResource" /> 
+  </api-classes>
+
+  <services>
+    <rest defaultRestSubcontext="/api/rest" />
+  </services>
+
   <modules>
+    
+    <docs title="SCM-Manager API" />
     
     <jersey resourceProviderFactory="com.sun.jersey.guice.spi.container.GuiceComponentProviderFactory">
       <init-param name="com.sun.jersey.api.json.POJOMappingFeature" value="true" />
       <init-param name="com.sun.jersey.config.feature.Redirect" value="true" />
       <init-param name="com.sun.jersey.config.property.resourceConfigClass" value="sonia.scm.api.rest.UriExtensionsConfig" /> 
-      <init-param name="com.sun.jersey.config.property.packages" value="sonia.scm.api.rest">
+      <init-param name="com.sun.jersey.config.property.packages" value="sonia.scm.api.rest" />
     </jersey>
   
   </modules>

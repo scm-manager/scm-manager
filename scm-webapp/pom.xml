@@ -478,18 +478,7 @@
               </execution>
             </executions>
             <configuration>
-              <includes>
-                <param>sonia.scm.api.rest.resources.AuthenticationResource</param>
-                <param>sonia.scm.api.rest.resources.ChangePasswordResource</param>
-                <!--
-                <param>sonia.scm.api.rest.resources.ConfigurationResource</param>
-                -->
-                <param>sonia.scm.api.rest.resources.GroupResource</param>
-                <param>sonia.scm.api.rest.resources.UserResource</param>
-                <param>sonia.scm.api.rest.resources.RepositoryResource</param>
-                <param>sonia.scm.api.rest.resources.PluginResource</param>
-                <param>sonia.scm.api.rest.resources.SearchResource</param>
-              </includes>
+              <configFile>src/main/doc/enunciate.xml</configFile>
               <docsDir>${project.build.directory}/docs</docsDir>
             </configuration>
             <dependencies>
