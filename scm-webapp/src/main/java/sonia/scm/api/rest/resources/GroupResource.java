@@ -51,7 +51,6 @@ import sonia.scm.web.security.WebSecurityContext;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -105,14 +104,14 @@ public class GroupResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   *  Method description
+   * Method description
    *
    *
    *
    * @param uriInfo
    * @param group
    *
-   *  @return
+   * @return
    */
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -123,12 +122,12 @@ public class GroupResource
   }
 
   /**
-   *   Method description
+   * Method description
    *
    *
-   *   @param name
+   * @param name
    *
-   *   @return
+   * @return
    */
   @DELETE
   @Path("{id}")
@@ -204,7 +203,7 @@ public class GroupResource
    */
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  @TypeHint(List.class)
+  @TypeHint(Group[].class)
   @Override
   public Response getAll(@Context Request request, @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("-1")

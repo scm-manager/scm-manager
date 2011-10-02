@@ -74,7 +74,6 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -146,14 +145,14 @@ public class RepositoryResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   *  Method description
+   * Method description
    *
    *
    *
    * @param uriInfo
    * @param repository
    *
-   *  @return
+   * @return
    */
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -164,12 +163,12 @@ public class RepositoryResource
   }
 
   /**
-   *   Method description
+   * Method description
    *
    *
-   *   @param name
+   * @param name
    *
-   *   @return
+   * @return
    */
   @DELETE
   @Path("{id}")
@@ -245,7 +244,7 @@ public class RepositoryResource
    */
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  @TypeHint(List.class)
+  @TypeHint(Repository[].class)
   @Override
   public Response getAll(@Context Request request, @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("-1")

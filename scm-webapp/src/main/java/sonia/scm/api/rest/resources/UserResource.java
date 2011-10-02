@@ -112,14 +112,14 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   //~--- methods --------------------------------------------------------------
 
   /**
-   *  Method description
+   * Method description
    *
    *
    *
    * @param uriInfo
    * @param user
    *
-   *  @return
+   * @return
    */
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -130,12 +130,12 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   }
 
   /**
-   *   Method description
+   * Method description
    *
    *
-   *   @param name
+   * @param name
    *
-   *   @return
+   * @return
    */
   @DELETE
   @Path("{id}")
@@ -210,7 +210,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
    * @return
    */
   @GET
-  @TypeHint(List.class)
+  @TypeHint(User[].class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
   public Response getAll(@Context Request request, @DefaultValue("0")
