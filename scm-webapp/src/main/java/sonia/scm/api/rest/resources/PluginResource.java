@@ -86,10 +86,14 @@ public class PluginResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Installs a plugin.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param id
+   * @param id id of the plugin to be installed
    *
    * @return
    */
@@ -103,10 +107,14 @@ public class PluginResource
   }
 
   /**
-   * Method description
+   * Uninstalls a plugin.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param id
+   * @param id id of the plugin to be uninstalled
    *
    * @return
    */
@@ -120,10 +128,14 @@ public class PluginResource
   }
 
   /**
-   * Method description
+   * Updates a plugin.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param id
+   * @param id id of the plugin to be updated
    *
    * @return
    */
@@ -139,10 +151,14 @@ public class PluginResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns all plugins.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @return
+   * @return all plugins
    */
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -152,10 +168,14 @@ public class PluginResource
   }
 
   /**
-   * Method description
+   * Returns all available plugins.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @return
+   * @return all available plugins
    */
   @GET
   @Path("available")
@@ -166,10 +186,14 @@ public class PluginResource
   }
 
   /**
-   * Method description
+   * Returns all plugins which are available for update.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @return
+   * @return all plugins which are available for update
    */
   @GET
   @Path("updates")
@@ -180,10 +204,14 @@ public class PluginResource
   }
 
   /**
-   * Method description
+   * Returns all installed plugins.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @return
+   * @return all installed plugins
    */
   @GET
   @Path("installed")
@@ -194,10 +222,14 @@ public class PluginResource
   }
 
   /**
-   * Method description
+   * Returns all plugins for the overview.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @return
+   * @return all plugins for the overview
    */
   @GET
   @Path("overview")
