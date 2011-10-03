@@ -38,6 +38,7 @@ package sonia.scm.api.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
+import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
 
 import org.slf4j.Logger;
@@ -100,11 +101,17 @@ public class ChangePasswordResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Changes the password of the current user.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>400 bad request, the old password is not correct</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param oldPassword
-   * @param newPassword
+   * @param oldPassword old password of the current user
+   * @param newPassword new password for the current user
    *
    * @return
    *
@@ -112,6 +119,7 @@ public class ChangePasswordResource
    * @throws UserException
    */
   @POST
+  @TypeHint(RestActionResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response changePassword(@FormParam("old-password") String oldPassword,
                                  @FormParam("new-password") String newPassword)
