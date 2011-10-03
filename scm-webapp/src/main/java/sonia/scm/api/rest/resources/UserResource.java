@@ -76,8 +76,8 @@ import javax.ws.rs.core.UriInfo;
  *
  * @author Sebastian Sdorra
  */
-@Path("users")
 @Singleton
+@Path("users")
 @SpringManagedLifecycle
 public class UserResource extends AbstractManagerResource<User, UserException>
 {

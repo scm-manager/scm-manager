@@ -50,6 +50,7 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.BlameViewerUtil;
 import sonia.scm.repository.BrowserResult;
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.ChangesetViewerUtil;
 import sonia.scm.repository.DiffViewer;
@@ -145,12 +146,18 @@ public class RepositoryResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Creates a new repository.<br />
+   * This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>201 create success</li>
+   *   <li>403 forbidden, the current user has no admin privileges</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   *
-   * @param uriInfo
-   * @param repository
+   * @param uriInfo current uri informations
+   * @param repository the repository to be created
    *
    * @return
    */
@@ -163,28 +170,42 @@ public class RepositoryResource
   }
 
   /**
-   * Method description
+   * Deletes a repository.<br />
+   * This method requires owner privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *  <li>201 delete success</li>
+   *  <li>403 forbidden, the current user has no owner privileges</li>
+   *  <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param name
+   * @param id the id of the repository to delete.
    *
    * @return
    */
   @DELETE
   @Path("{id}")
   @Override
-  public Response delete(@PathParam("id") String name)
+  public Response delete(@PathParam("id") String id)
   {
-    return super.delete(name);
+    return super.delete(id);
   }
 
   /**
-   * Method description
+   * Modifies the given repository.<br />
+   * This method requires owner privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>201 update successful</li>
+   *   <li>403 forbidden, the current user has no owner privileges</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param uriInfo
-   * @param name
-   * @param repository
+   * @param uriInfo current uri informations
+   * @param id id of the repository to be modified
+   * @param repository repository object to modify
    *
    * @return
    */
@@ -192,22 +213,28 @@ public class RepositoryResource
   @Path("{id}")
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
-  public Response update(@Context UriInfo uriInfo,
-                         @PathParam("id") String name, Repository repository)
+  public Response update(@Context UriInfo uriInfo, @PathParam("id") String id,
+                         Repository repository)
   {
-    return super.update(uriInfo, name, repository);
+    return super.update(uriInfo, id, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a repository.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>404 not found, no repository with the specified id available</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
+   * @param request the current request
+   * @param id the id/name of the user
    *
-   * @param request
-   * @param id
-   *
-   * @return
+   * @return the {@link Repository} with the specified id
    */
   @GET
   @Path("{id}")
@@ -231,14 +258,19 @@ public class RepositoryResource
   }
 
   /**
-   * Method description
+   * Returns all repositories.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param request
-   * @param start
-   * @param limit
-   * @param sortby
-   * @param desc
+   * @param request the current request
+   * @param start the start value for paging
+   * @param limit the limit value for paging
+   * @param sortby sort parameter
+   * @param desc sort direction desc or aesc
    *
    * @return
    */
@@ -256,12 +288,20 @@ public class RepositoryResource
   }
 
   /**
-   * Method description
+   * Returns a annotate/blame view for the given path.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>400 bad request, the blame feature is not
+   *       supported by this type of repositories.</li>
+   *   <li>404 not found, if the repository or the path could not be found</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param id
-   * @param revision
-   * @param path
+   * @param id the id of the repository
+   * @param revision the revision of the file
+   * @param path the path of the file
    *
    * @return
    *
@@ -312,12 +352,20 @@ public class RepositoryResource
   }
 
   /**
-   * Method description
+   * Returns a list of folders and files for the given folder.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>400 bad request, the browse feature is not
+   *       supported by this type of repositories.</li>
+   *   <li>404 not found, if the repository or the path could not be found</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param id
-   * @param revision
-   * @param path
+   * @param id the id of the repository
+   * @param revision the revision of the file
+   * @param path the path of the folder
    *
    * @return
    *
@@ -362,15 +410,22 @@ public class RepositoryResource
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param id
-   * @param start
-   * @param limit
-   *
-   * @return
-   *
+   *   Returns a list of {@link Changeset} for the given repository.<br />
+   *   <br />
+   *   Status codes:
+   *   <ul>
+   *     <li>200 get successful</li>
+   *     <li>400 bad request, the changeset feature is not
+   *         supported by this type of repositories.</li>
+   *     <li>404 not found, if the repository or the path could not be found</li>
+   *     <li>500 internal server error</li>
+   *   </ul>
+   *  
+   *   @param id the id of the repository
+   *   @param start the start value for paging
+   *   @param limit the limit value for paging
+   *  
+   *   @return
    *
    * @throws IOException
    * @throws RepositoryException
@@ -412,12 +467,20 @@ public class RepositoryResource
   }
 
   /**
-   * Method description
+   * Returns the content of a file.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>400 bad request, the content feature is not
+   *       supported by this type of repositories.</li>
+   *   <li>404 not found, if the repository or the path could not be found</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param id
-   * @param revision
-   * @param path
+   * @param id the id of the repository
+   * @param revision the revision of the file
+   * @param path path to the file
    *
    * @return
    */
@@ -469,12 +532,20 @@ public class RepositoryResource
   }
 
   /**
-   * Method description
+   * Returns the modifications of a {@link Changeset}.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>400 bad request, the content feature is not
+   *       supported by this type of repositories.</li>
+   *   <li>404 not found, if the repository or the path could not be found</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param id
-   * @param revision
-   * @param path
+   * @param id the id of the repository
+   * @param revision the revision of the file
+   * @param path path to the file
    *
    * @return
    *
