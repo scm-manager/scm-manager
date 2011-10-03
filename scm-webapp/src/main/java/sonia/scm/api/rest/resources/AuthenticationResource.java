@@ -39,6 +39,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
 
 import org.slf4j.Logger;
@@ -109,18 +110,24 @@ public class AuthenticationResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Authenticate a user and return the state of the application.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>401 unauthorized, the specified username or password is wrong</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param request
-   * @param response
-   * @param username
-   * @param password
+   * @param request the current http request
+   * @param response the current http response
+   * @param username the username for the authentication
+   * @param password the password for the authentication
    *
    * @return
    */
   @POST
   @Path("login")
+  @TypeHint(ScmState.class)
   public ScmState authenticate(@Context HttpServletRequest request,
                                @Context HttpServletResponse response,
                                @FormParam("username") String username,
@@ -144,16 +151,22 @@ public class AuthenticationResource
   }
 
   /**
-   * Method description
+   * Logout the current user. Returns the current state of the application,
+   * if public access is enabled.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param request
-   * @param response
+   * @param request the current http request
+   * @param response the current http response
    *
    * @return
    */
   @GET
   @Path("logout")
+  @TypeHint(ScmState.class)
   public Response logout(@Context HttpServletRequest request,
                          @Context HttpServletResponse response)
   {
@@ -181,14 +194,20 @@ public class AuthenticationResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the current state of the application.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>401 unauthorized, user is not authenticated and public access is disabled.</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param request
+   * @param request the current http request
    *
    * @return
    */
   @GET
+  @TypeHint(ScmState.class)
   public Response getState(@Context HttpServletRequest request)
   {
     Response response = null;
