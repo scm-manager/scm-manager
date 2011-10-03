@@ -145,10 +145,14 @@ public class SearchResource implements UserListener, GroupListener
   }
 
   /**
-   * Method description
+   * Returns a list of groups found by the given search string.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param queryString
+   * @param queryString the search string
    *
    * @return
    */
@@ -177,10 +181,14 @@ public class SearchResource implements UserListener, GroupListener
   }
 
   /**
-   * Method description
+   * Returns a list of users found by the given search string.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param queryString
+   * @param queryString the search string
    *
    * @return
    */
