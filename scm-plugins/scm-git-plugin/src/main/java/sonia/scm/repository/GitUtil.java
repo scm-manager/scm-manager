@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
@@ -55,7 +56,6 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Map;
-import org.eclipse.jgit.diff.DiffFormatter;
 
 /**
  *
@@ -94,12 +94,6 @@ public class GitUtil
       repo.close();
     }
   }
-  
-  public static void release(DiffFormatter formatter){
-    if ( formatter != null ){
-      formatter.release();
-    }
-  }
 
   /**
    * Method description
@@ -116,6 +110,20 @@ public class GitUtil
   {
     return RepositoryCache.open(RepositoryCache.FileKey.lenient(directory,
             FS.DETECTED), true);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param formatter
+   */
+  public static void release(DiffFormatter formatter)
+  {
+    if (formatter != null)
+    {
+      formatter.release();
+    }
   }
 
   /**
@@ -233,7 +241,7 @@ public class GitUtil
     }
     else
     {
-      revId = repo.resolve(Constants.HEAD);
+      revId = getRepositoryHead(repo);
     }
 
     return revId;
