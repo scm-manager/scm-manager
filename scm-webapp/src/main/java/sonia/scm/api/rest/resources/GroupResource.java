@@ -104,12 +104,18 @@ public class GroupResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Creates a new group.<br />
+   * This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>201 create success</li>
+   *   <li>403 forbidden, the current user has no admin privileges</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   *
-   * @param uriInfo
-   * @param group
+   * @param uriInfo current uri informations
+   * @param group the group to be created
    *
    * @return
    */
@@ -122,10 +128,17 @@ public class GroupResource
   }
 
   /**
-   * Method description
+   * Deletes a group.<br />
+   * This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *  <li>201 delete success</li>
+   *  <li>403 forbidden, the current user has no admin privileges</li>
+   *  <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param name
+   * @param name the name of the group to delete.
    *
    * @return
    */
@@ -138,12 +151,19 @@ public class GroupResource
   }
 
   /**
-   * Method description
+   * Modifies the given group.<br />
+   * This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>201 update successful</li>
+   *   <li>403 forbidden, the current user has no admin privileges</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param uriInfo
-   * @param name
-   * @param group
+   * @param uriInfo current uri informations
+   * @param name name of the group to be modified
+   * @param group group object to modify
    *
    * @return
    */
@@ -160,13 +180,21 @@ public class GroupResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a group.<br />
+   * This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>403 forbidden, the current user has no admin privileges</li>
+   *   <li>404 not found, no group with the specified id/name available</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
+   * @param request the current request
+   * @param id the id/name of the group
    *
-   * @param request
-   * @param id
-   *
-   * @return
+   * @return the {@link Group} with the specified id
    */
   @GET
   @Path("{id}")
@@ -190,14 +218,21 @@ public class GroupResource
   }
 
   /**
-   * Method description
+   * Returns all groups.<br />
+   * This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>403 forbidden, the current user has no admin privileges</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @param request
-   * @param start
-   * @param limit
-   * @param sortby
-   * @param desc
+   * @param request the current request
+   * @param start the start value for paging
+   * @param limit the limit value for paging
+   * @param sortby sort parameter
+   * @param desc sort direction desc or aesc
    *
    * @return
    */
