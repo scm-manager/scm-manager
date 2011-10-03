@@ -151,6 +151,27 @@ public class BasicAuthenticationFilter extends HttpFilter
    *
    * @param request
    * @param response
+   * @param chain
+   *
+   * @throws IOException
+   * @throws ServletException
+   *
+   * @since 1.8
+   */
+  protected void handleUnauthorized(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain)
+          throws IOException, ServletException
+  {
+    HttpUtil.sendUnauthorized(response);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
    * @param securityContext
    * @param authentication
    *

@@ -82,6 +82,7 @@ import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
 import sonia.scm.web.security.AdministrationContext;
+import sonia.scm.web.security.ApiBasicAuthenticationFilter;
 import sonia.scm.web.security.AuthenticationManager;
 import sonia.scm.web.security.BasicSecurityContext;
 import sonia.scm.web.security.ChainAuthenticatonManager;
@@ -246,6 +247,8 @@ public class ScmServletModule extends ServletModule
      */
     filter(PATTERN_ALL).through(BaseUrlFilter.class);
     filterRegex(RESOURCE_REGEX).through(GZipFilter.class);
+    filter(PATTERN_RESTAPI,
+           PATTERN_DEBUG).through(ApiBasicAuthenticationFilter.class);
     filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(SecurityFilter.class);
     filter(PATTERN_CONFIG, PATTERN_ADMIN).through(AdminSecurityFilter.class);
 
