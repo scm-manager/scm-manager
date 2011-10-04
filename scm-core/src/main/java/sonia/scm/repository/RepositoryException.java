@@ -34,6 +34,7 @@
 package sonia.scm.repository;
 
 /**
+ * Base class for all repository exceptions.
  *
  * @author Sebastian Sdorra
  */
@@ -46,7 +47,8 @@ public class RepositoryException extends Exception
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new {@link RepositoryException} with null as its 
+   * error detail message.
    *
    */
   public RepositoryException()
@@ -55,10 +57,11 @@ public class RepositoryException extends Exception
   }
 
   /**
-   * Constructs ...
+   * Constructs a new {@link RepositoryException} with the specified 
+   * detail message.
    *
    *
-   * @param message
+   * @param message detail message
    */
   public RepositoryException(String message)
   {
@@ -66,10 +69,11 @@ public class RepositoryException extends Exception
   }
 
   /**
-   * Constructs ...
+   * Constructs a new {@link RepositoryException} with the specified 
+   * detail message and cause.
    *
    *
-   * @param cause
+   * @param cause the cause for the exception
    */
   public RepositoryException(Throwable cause)
   {
@@ -77,11 +81,12 @@ public class RepositoryException extends Exception
   }
 
   /**
-   * Constructs ...
+   * Constructs a new {@link RepositoryException} with the specified 
+   * detail message and cause.
    *
    *
-   * @param message
-   * @param cause
+   * @param message detail message
+   * @param cause the cause for the exception
    */
   public RepositoryException(String message, Throwable cause)
   {
