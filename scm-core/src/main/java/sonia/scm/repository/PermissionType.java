@@ -34,15 +34,27 @@
 package sonia.scm.repository;
 
 /**
+ * Type of permission for a {@link Repository}.
  *
  * @author Sebastian Sdorra
  */
 public enum PermissionType
 {
-  READ(0), WRITE(10), OWNER(100);
+
+  /** read permision */
+  READ(0),
+
+  /** read and write permission */
+  WRITE(10),
 
   /**
-   * Constructs ...
+   * read, write and
+   * also the ability to manage the properties and permissions
+   */
+  OWNER(100);
+
+  /**
+   * Constructs a new permission type
    *
    *
    * @param value
@@ -55,10 +67,10 @@ public enum PermissionType
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the integer representation of the {@link PermissionType}
    *
    *
-   * @return
+   * @return integer representation
    */
   public int getValue()
   {
