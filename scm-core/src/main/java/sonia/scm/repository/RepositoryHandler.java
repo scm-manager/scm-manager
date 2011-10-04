@@ -41,6 +41,8 @@ import sonia.scm.ListenerSupport;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
+ * Handler class for a specific {@link Repository} type.
+ * These classes are singletons.
  *
  * @author Sebastian Sdorra
  */
@@ -53,12 +55,13 @@ public interface RepositoryHandler
 {
 
   /**
-   * Method description
+   * Returns the resource path for the given {@link Repository}.
+   * The resource path is part of the {@link Repository} url.
    *
    *
    *
-   * @param repository
-   * @return
+   * @param repository given {@link Repository}
+   * @return resource path of the {@link Repository}
    */
   public String createResourcePath(Repository repository);
 }
