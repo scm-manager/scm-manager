@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
@@ -49,9 +50,9 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import sonia.scm.BasicPropertiesAware;
 
 /**
+ * Source code repository.
  *
  * @author Sebastian Sdorra
  */
@@ -66,19 +67,20 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new {@link Repository}.
+   * This constructor is used by JAXB.
    *
    */
   public Repository() {}
 
   /**
-   * Constructs ...
+   * Constructs a new {@link Repository}.
    *
    *
    *
-   * @param id
-   * @param type
-   * @param name
+   * @param id id of the {@link Repository}
+   * @param type type of the {@link Repository}
+   * @param name name of the {@link Repository}
    */
   public Repository(String id, String type, String name)
   {
@@ -88,16 +90,17 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Constructs ...
+   * Constructs a new {@link Repository}.
    *
    *
    *
-   * @param id
-   * @param type
-   * @param name
-   * @param contact
-   * @param description
-   * @param permissions
+   * @param id id of the {@link Repository}
+   * @param type type of the {@link Repository}
+   * @param name name of the {@link Repository}
+   * @param contact email address of a person who is responsible for
+   *        this repository.
+   * @param description a short description of the repository
+   * @param permissions permissions for specific users and groups.
    */
   public Repository(String id, String type, String name, String contact,
                     String description, Permission... permissions)
@@ -118,10 +121,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Create a clone of this {@link Repository} object.
    *
    *
-   * @return
+   * @return clone of this {@link Repository}
    */
   @Override
   public Repository clone()
@@ -141,10 +144,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Copies all properties of the {@link Repository} to the given one.
    *
    *
-   * @param repository
+   * @param repository to copies all properties of this one
    */
   public void copyProperties(Repository repository)
   {
@@ -158,12 +161,12 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns true if the {@link Repository} is the same as the obj argument.
    *
    *
-   * @param obj
+   * @param obj the reference object with which to compare
    *
-   * @return
+   * @return true if the {@link Repository} is the same as the obj argument
    */
   @Override
   public boolean equals(Object obj)
@@ -252,10 +255,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns the hash code value for the {@link Repository}.
    *
    *
-   * @return
+   * @return the hash code value for the {@link Repository}
    */
   @Override
   public int hashCode()
@@ -297,10 +300,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns a {@link String} that represents the {@link Repository}.
    *
    *
-   * @return
+   * @return {@link String} that represents the {@link Repository}
    */
   @Override
   public String toString()
@@ -315,10 +318,11 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a contact email address of a person who is responsible for
+   * the {@link Repository}.
    *
    *
-   * @return
+   * @return contact email address
    */
   public String getContact()
   {
@@ -326,10 +330,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns a timestamp of the creation date of the {@link Repository}.
    *
    *
-   * @return
+   * @return a timestamp of the creation date of the {@link Repository}
    */
   public Long getCreationDate()
   {
@@ -337,10 +341,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns a short description of the {@link Repository}.
    *
    *
-   * @return
+   * @return short description
    */
   public String getDescription()
   {
@@ -348,10 +352,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns the unique id of the {@link Repository}.
    *
    *
-   * @return
+   * @return unique id
    */
   @Override
   public String getId()
@@ -360,10 +364,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns the timestamp of the last modified date of the {@link Repository}.
    *
    *
-   * @return
+   * @return timestamp of the last modified date
    */
   @Override
   public Long getLastModified()
@@ -372,10 +376,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns the name of the {@link Repository}.
    *
    *
-   * @return
+   * @return name of the {@link Repository}
    */
   public String getName()
   {
@@ -383,10 +387,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns the access permissions of the {@link Repository}.
    *
    *
-   * @return
+   * @return access permissions
    */
   public List<Permission> getPermissions()
   {
@@ -394,10 +398,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns the type (hg, git, svn ...) of the {@link Repository}.
    *
    *
-   * @return
+   * @return type of the repository
    */
   @Override
   public String getType()
@@ -406,10 +410,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns the base url of the {@link Repository}.
    *
    *
-   * @return
+   * @return base url
    */
   public String getUrl()
   {
@@ -417,10 +421,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns true if the {@link Repository} is public readable.
    *
    *
-   * @return
+   * @return true if the {@link Repository} is public readable
    */
   public boolean isPublicReadable()
   {
@@ -428,10 +432,15 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns true if the {@link Repository} is valid.
+   * <ul>
+   *   <li>The name is not empty and contains only A-z, 0-9, _, -</li>
+   *   <li>The type is not empty</li>
+   *   <li>The contact is empty or contains a valid email address</li>
+   * </ul>
    *
    *
-   * @return
+   * @return true if the {@link Repository} is valid
    */
   @Override
   public boolean isValid()
@@ -444,10 +453,12 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Sets the contact of the {@link Repository}. The contact address should be
+   * a email address of a person who is responsible for the {@link Repository}.
    *
    *
-   * @param contact
+   * @param contact email address of a person who is responsible for
+   *  the {@link Repository}
    */
   public void setContact(String contact)
   {
@@ -455,10 +466,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Set the creation date of the {@link Repository}.
    *
    *
-   * @param creationDate
+   * @param creationDate creation date of the {@link Repository}
    */
   public void setCreationDate(Long creationDate)
   {
@@ -466,10 +477,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Sets a short description of the {@link Repository}.
    *
    *
-   * @param description
+   * @param description short description
    */
   public void setDescription(String description)
   {
@@ -477,10 +488,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * The unique id of the {@link Repository}.
    *
    *
-   * @param id
+   * @param id unique id
    */
   public void setId(String id)
   {
@@ -488,10 +499,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Set the last modified timestamp of the {@link Repository}.
    *
    *
-   * @param lastModified
+   * @param lastModified last modified timestamp
    */
   public void setLastModified(Long lastModified)
   {
@@ -499,10 +510,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Set the name of the {@link Repository}.
    *
    *
-   * @param name
+   * @param name name of the {@link Repository}
    */
   public void setName(String name)
   {
@@ -510,10 +521,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Set the access permissions for the {@link Repository}.
    *
    *
-   * @param permissions
+   * @param permissions list of access permissions
    */
   public void setPermissions(List<Permission> permissions)
   {
@@ -521,10 +532,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Sets if the {@link Repository} is public readable.
    *
    *
-   * @param publicReadable
+   * @param publicReadable public readable
    */
   public void setPublicReadable(boolean publicReadable)
   {
@@ -532,10 +543,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Sets the type (hg, svn, git ...) of the {@link Repository}.
    *
    *
-   * @param type
+   * @param type type of the {@link Repository}
    */
   public void setType(String type)
   {
@@ -543,10 +554,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Sets the base url of the {@link Repository}
    *
    *
-   * @param url
+   * @param url base url
    */
   public void setUrl(String url)
   {
