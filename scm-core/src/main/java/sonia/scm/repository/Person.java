@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * the person (author) of a changeset
+ * The {@link Person} (author) of a changeset.
  *
  * @person Sebastian Sdorra
  */
@@ -56,16 +56,17 @@ public class Person implements Validateable
 {
 
   /**
-   * Constructs ...
+   * Constructs a new {@link Person}.
+   * This constructor is used by JAXB.
    *
    */
   public Person() {}
 
   /**
-   * Constructs ...
+   * Constructs a new {@link Person}.
    *
    *
-   * @param name
+   * @param name name of {@link Person}
    */
   public Person(String name)
   {
@@ -73,11 +74,11 @@ public class Person implements Validateable
   }
 
   /**
-   * Constructs ...
+   * Constructs a new {@link Person} with name and mail address.
    *
    *
-   * @param name
-   * @param mail
+   * @param name name of the {@link Person}
+   * @param mail mail address of the {@link Person}
    */
   public Person(String name, String mail)
   {
@@ -88,12 +89,14 @@ public class Person implements Validateable
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Parses the given string and returns a {@link Person} object. The string
+   * should be in the format "name &gt;mail&lt;". if the string contains no 
+   * "&gt;&lt;" the whole string is handled as the name of the {@link Person}.
    *
    *
-   * @param value
+   * @param value string representation of a {@link Person} object
    *
-   * @return
+   * @return {@link Person} object which is generated from the given string
    */
   public static Person toPerson(String value)
   {
@@ -119,10 +122,11 @@ public class Person implements Validateable
   }
 
   /**
-   * Method description
+   * Returns a string representation of the {@link Person} object, 
+   * in the format "name &gt;mail&lt;".
    *
    *
-   * @return
+   * @return string representation of {@link Person} object
    */
   @Override
   public String toString()
@@ -140,10 +144,10 @@ public class Person implements Validateable
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * returns the mail address of the changeset person
+   * Returns the mail address of the changeset author.
    *
    *
-   * @returnmail address of the changeset person
+   * @return mail address of the changeset author
    *
    * @return
    */
@@ -153,7 +157,7 @@ public class Person implements Validateable
   }
 
   /**
-   * return the name of the changeset person
+   * Returns the name of the changeset author.
    *
    *
    * @return name of the changeset person
@@ -164,7 +168,7 @@ public class Person implements Validateable
   }
 
   /**
-   * returns true if the person is valid
+   * Returns true if the person is valid.
    *
    *
    * @return true if the person is valid
@@ -179,10 +183,10 @@ public class Person implements Validateable
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * sets the mail address of the changeset person
+   * Sets the mail address of the changeset author.
    *
    *
-   * @param mail
+   * @param mail mail address of the author
    */
   public void setMail(String mail)
   {
@@ -190,10 +194,10 @@ public class Person implements Validateable
   }
 
   /**
-   * sets the name of the changeset person
+   * Sets the name of the changeset author.
    *
    *
-   * @param name
+   * @param name name of the author
    */
   public void setName(String name)
   {
