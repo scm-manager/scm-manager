@@ -532,7 +532,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Sets if the {@link Repository} is public readable.
+   * Sets true if the {@link Repository} is public readable.
    *
    *
    * @param publicReadable public readable

@@ -42,6 +42,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Permissions controls the access to {@link Repository}.
  *
  * @author Sebastian Sdorra
  */
@@ -56,16 +57,18 @@ public class Permission implements Serializable
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new {@link Permission}.
+   * This constructor is used by JAXB.
    *
    */
   public Permission() {}
 
   /**
-   * Constructs ...
+   * Constructs a new {@link Permission} with type = {@link PermissionType#READ}
+   * for the specified user.
    *
    *
-   * @param name
+   * @param name name of the user
    */
   public Permission(String name)
   {
@@ -74,11 +77,12 @@ public class Permission implements Serializable
   }
 
   /**
-   * Constructs ...
+   * Constructs a new {@link Permission} with the specified type for
+   * the given user.
    *
    *
-   * @param name
-   * @param type
+   * @param name name of the user
+   * @param type type of the permission
    */
   public Permission(String name, PermissionType type)
   {
@@ -87,12 +91,13 @@ public class Permission implements Serializable
   }
 
   /**
-   * Constructs ...
+   * Constructs a new {@link Permission} with the specified type for
+   * the given user or group.
    *
    *
-   * @param name
-   * @param type
-   * @param groupPermission
+   * @param name name of the user or group
+   * @param type type of the permission
+   * @param groupPermission true if the permission is a permission for a group
    */
   public Permission(String name, PermissionType type, boolean groupPermission)
   {
@@ -103,12 +108,12 @@ public class Permission implements Serializable
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Returns true if the {@link Permission} is the same as the obj argument.
    *
    *
-   * @param obj
+   * @param obj the reference object with which to compare
    *
-   * @return
+   * @return true if the {@link Permission} is the same as the obj argument
    */
   @Override
   public boolean equals(Object obj)
@@ -146,10 +151,10 @@ public class Permission implements Serializable
   }
 
   /**
-   * Method description
+   * Returns the hash code value for the {@link Permission}.
    *
    *
-   * @return
+   * @return the hash code value for the {@link Permission}
    */
   @Override
   public int hashCode()
@@ -172,10 +177,10 @@ public class Permission implements Serializable
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the name of the user or group.
    *
    *
-   * @return
+   * @return name of the user or group
    */
   public String getName()
   {
@@ -183,10 +188,10 @@ public class Permission implements Serializable
   }
 
   /**
-   * Method description
+   * Returns the {@link PermissionType} of the permission.
    *
    *
-   * @return
+   * @return {@link PermissionType} of the permission
    */
   public PermissionType getType()
   {
@@ -194,10 +199,10 @@ public class Permission implements Serializable
   }
 
   /**
-   * Method description
+   * Returns true if the permission is a permission which affects a group.
    *
    *
-   * @return
+   * @return true if the permision is a group permission
    */
   public boolean isGroupPermission()
   {
@@ -207,10 +212,10 @@ public class Permission implements Serializable
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Sets true if the permission is a group permission.
    *
    *
-   * @param groupPermission
+   * @param groupPermission true if the permission is a group permission
    */
   public void setGroupPermission(boolean groupPermission)
   {
@@ -218,10 +223,10 @@ public class Permission implements Serializable
   }
 
   /**
-   * Method description
+   * The name of the user or group.
    *
    *
-   * @param name
+   * @param name name of the user or group
    */
   public void setName(String name)
   {
@@ -229,10 +234,10 @@ public class Permission implements Serializable
   }
 
   /**
-   * Method description
+   * Sets the type of the permission.
    *
    *
-   * @param type
+   * @param type type of the permission
    */
   public void setType(PermissionType type)
   {
