@@ -38,6 +38,7 @@ package sonia.scm.repository;
 import sonia.scm.util.Util;
 
 /**
+ * Signals that the specified revision could be found.
  *
  * @author Sebastian Sdorra
  */
@@ -50,10 +51,11 @@ public class RevisionNotFoundException extends RepositoryException
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new {@link RevisionNotFoundException} 
+   * with the specified revision.
    *
    *
-   * @param revision
+   * @param revision revision which could not be found
    */
   public RevisionNotFoundException(String revision)
   {
@@ -64,10 +66,10 @@ public class RevisionNotFoundException extends RepositoryException
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Return the revision which could not be found.
    *
    *
-   * @return
+   * @return revision which could not be found
    */
   public String getRevision()
   {
