@@ -43,7 +43,6 @@ import sonia.scm.plugin.ExtensionPoint;
 /**
  *
  * @author Sebastian Sdorra
- * @since 1.8
  */
 @ExtensionPoint
 public interface RepositoryHandler
