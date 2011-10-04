@@ -34,6 +34,7 @@
 package sonia.scm.repository;
 
 /**
+ * Signals that the specified {@link Repository} could be found.
  *
  * @author Sebastian Sdorra
  * @since 1.6
@@ -47,16 +48,18 @@ public class RepositoryNotFoundException extends RepositoryException
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new {@link RepositoryNotFoundException} with null as its 
+   * error detail message.
    *
    */
   public RepositoryNotFoundException() {}
 
   /**
-   * Constructs ...
+   * Constructs a new {@link RepositoryNotFoundException} with the specified  
+   * error detail message.
    *
    *
-   * @param message
+   * @param message error detail message
    */
   public RepositoryNotFoundException(String message)
   {
