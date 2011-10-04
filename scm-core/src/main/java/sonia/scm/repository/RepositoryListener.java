@@ -39,7 +39,10 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
- *
+ * Listener for {@link Repository} events. {@link RepositoryListener} can be
+ * registered with {@link sonia.scm.plugin.ext.Extension} annotation or with the 
+ * {@link RepositoryManager#addListener(java.lang.Object)}.
+ * 
  * @author Sebastian Sdorra
  */
 @ExtensionPoint
@@ -47,11 +50,11 @@ public interface RepositoryListener
 {
 
   /**
-   * Method description
+   * Called when a repository change event is fired.
    *
    *
-   * @param repository
-   * @param event
+   * @param repository repository that has changed
+   * @param event type of change event
    */
   public void onEvent(Repository repository, HandlerEvent event);
 }
