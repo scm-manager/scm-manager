@@ -38,6 +38,7 @@ package sonia.scm.repository;
 import sonia.scm.util.Util;
 
 /**
+ * Signals that the specified path could be found.
  *
  * @author Sebastian Sdorra
  */
@@ -50,10 +51,11 @@ public class PathNotFoundException extends RepositoryException
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new {@link PathNotFoundException} 
+   * with the specified path.
    *
    *
-   * @param path
+   * @param path path which could not be found
    */
   public PathNotFoundException(String path)
   {
@@ -64,10 +66,10 @@ public class PathNotFoundException extends RepositoryException
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Return the path which could not be found.
    *
    *
-   * @return
+   * @return path which could not be found
    */
   public String getPath()
   {
