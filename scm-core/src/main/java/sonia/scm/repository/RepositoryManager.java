@@ -44,8 +44,12 @@ import sonia.scm.TypeManager;
 import java.util.Collection;
 
 /**
+ * The central class for managing {@link Repository} objects.
+ * This class is a singleton and is available via injection.
  *
  * @author Sebastian Sdorra
+ *
+ * @apiviz.uses sonia.scm.repository.RepositoryHandler
  */
 public interface RepositoryManager
         extends TypeManager<Repository, RepositoryException>,
@@ -55,31 +59,34 @@ public interface RepositoryManager
 {
 
   /**
-   * Method description
+   * Returns a {@link Repository} by its type and name or
+   * null if the {@link Repository} could not be found.
    *
    *
-   * @param type
-   * @param name
+   * @param type type of the {@link Repository}
+   * @param name name of the {@link Repository}
    *
-   * @return
+   *
+   * @return {@link Repository} by its type and name or null
+   * if the {@link Repository} could not be found
    */
   public Repository get(String type, String name);
 
   /**
-   * Method description
+   * Returns all configured repository types.
    *
    *
-   * @return
+   * @return all configured repository types
    */
   public Collection<Type> getConfiguredTypes();
 
   /**
-   * Method description
+   * Returns a {@link RepositoryHandler} by the given type (hg, git, svn ...).
    *
    *
-   * @param type
+   * @param type the type of the {@link RepositoryHandler}
    *
-   * @return
+   * @return {@link RepositoryHandler} by the given type
    */
   @Override
   public RepositoryHandler getHandler(String type);
