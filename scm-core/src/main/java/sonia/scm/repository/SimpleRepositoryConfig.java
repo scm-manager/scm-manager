@@ -44,6 +44,7 @@ import java.io.File;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Basic {@link Repository} configuration class.
  *
  * @author Sebastian Sdorra
  */
@@ -52,10 +53,10 @@ public class SimpleRepositoryConfig implements Validateable
 {
 
   /**
-   * Method description
+   * Returns the directory for the repositories.
    *
    *
-   * @return
+   * @return directory for the repositories
    */
   public File getRepositoryDirectory()
   {
@@ -63,10 +64,10 @@ public class SimpleRepositoryConfig implements Validateable
   }
 
   /**
-   * Method description
+   * Returns true if the configuration object is valid.
    *
    *
-   * @return
+   * @return true if the configuration object is valid
    */
   @Override
   public boolean isValid()
@@ -77,10 +78,10 @@ public class SimpleRepositoryConfig implements Validateable
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Sets the directory for the repositories
    *
    *
-   * @param repositoryDirectory
+   * @param repositoryDirectory directory for repositories
    */
   public void setRepositoryDirectory(File repositoryDirectory)
   {
