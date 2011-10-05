@@ -182,7 +182,7 @@
             <id>attach-javadoc</id>
             <phase>deploy</phase>
             <goals>
-              <goal>jar</goal>
+              <goal>jar-no-fork</goal>
             </goals>
           </execution>
         </executions>
