@@ -430,6 +430,7 @@ public class HgRepositoryHandler
       }
 
       hooks.setParameter(hookName, "python:scmhooks.callback");
+      write = true;
     }
 
     return write;
@@ -498,6 +499,11 @@ public class HgRepositoryHandler
 
         if (write)
         {
+          if (logger.isDebugEnabled())
+          {
+            logger.debug("rewrite hgrc for repository {}", repositoryName);
+          }
+
           INIConfigurationWriter writer = new INIConfigurationWriter();
 
           writer.write(c, hgrc);
