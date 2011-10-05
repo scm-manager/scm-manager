@@ -67,6 +67,6 @@ public abstract class PreReceiveRepositoryHook implements RepositoryHook
   @Override
   public boolean isAsync()
   {
-    return true;
+    return false;
   }
 }
