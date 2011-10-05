@@ -38,7 +38,6 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.HgUtil;
 
@@ -176,9 +175,20 @@ public class HgChangesetViewer implements ChangesetViewer
   {
     if (logger.isDebugEnabled())
     {
-      logger.debug("get changesets for repository {}, start: {}, limit: {}",
-                   new Object[] { repositoryDirectory.getName(),
-                                  pageStart, pageLimit });
+      StringBuilder msg = new StringBuilder("get changesets");
+
+      if (pending)
+      {
+        msg.append(" (include pending)");
+      }
+
+      msg.append(" for repository ").append(repositoryDirectory.getName());
+      msg.append(":");
+      msg.append(" start: ").append(pageStart);
+      msg.append(" limit: ").append(pageLimit);
+      msg.append(" rev-start: ").append(revisionStart);
+      msg.append(" rev-limit: ").append(revisionEnd);
+      logger.debug(msg.toString());
     }
 
     Map<String, String> env = new HashMap<String, String>();
