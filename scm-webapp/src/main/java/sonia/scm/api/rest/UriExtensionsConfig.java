@@ -53,9 +53,6 @@ public class UriExtensionsConfig extends PackagesResourceConfig
   public static final String EXTENSION_JSON = "json";
 
   /** Field description */
-  public static final String EXTENSION_TXT = "txt";
-
-  /** Field description */
   public static final String EXTENSION_XML = "xml";
 
   //~--- constructors ---------------------------------------------------------
@@ -107,7 +104,6 @@ public class UriExtensionsConfig extends PackagesResourceConfig
       mediaTypeMap = new HashMap<String, MediaType>();
       mediaTypeMap.put(EXTENSION_JSON, MediaType.APPLICATION_JSON_TYPE);
       mediaTypeMap.put(EXTENSION_XML, MediaType.APPLICATION_XML_TYPE);
-      mediaTypeMap.put(EXTENSION_TXT, MediaType.TEXT_PLAIN_TYPE);
     }
 
     return mediaTypeMap;
