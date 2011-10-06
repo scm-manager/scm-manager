@@ -58,6 +58,11 @@ import javax.servlet.http.HttpServletResponse;
 public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
 {
 
+  /** Field description */
+  public static final String URI_AUTHENTICATION = "/api/rest/authentication";
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructs ...
    *
@@ -72,6 +77,34 @@ public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   * @param chain
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  @Override
+  protected void doFilter(HttpServletRequest request,
+                          HttpServletResponse response, FilterChain chain)
+          throws IOException, ServletException
+  {
+
+    // skip filter on authentication resource
+    if (request.getRequestURI().contains(URI_AUTHENTICATION))
+    {
+      chain.doFilter(request, response);
+    }
+    else
+    {
+      super.doFilter(request, response, chain);
+    }
+  }
 
   /**
    * Method description
