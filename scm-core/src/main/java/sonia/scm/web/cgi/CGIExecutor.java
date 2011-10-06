@@ -160,6 +160,15 @@ public interface CGIExecutor
   public EnvList getEnvironment();
 
   /**
+   * Returns the cgi exception handler.
+   *
+   *
+   * @return cgi exception handler
+   * @since 1.8
+   */
+  public CGIExceptionHandler getExceptionHandler();
+
+  /**
    * Method description
    *
    *
@@ -208,6 +217,15 @@ public interface CGIExecutor
    * @param environment
    */
   public void setEnvironment(EnvList environment);
+
+  /**
+   * Sets the cgi exception handler.
+   *
+   *
+   * @param exceptionHandler cgi exception handler
+   * @since 1.8
+   */
+  public void setExceptionHandler(CGIExceptionHandler exceptionHandler);
 
   /**
    * Method description

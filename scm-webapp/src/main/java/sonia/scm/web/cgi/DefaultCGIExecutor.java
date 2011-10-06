@@ -47,11 +47,9 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 import java.util.Enumeration;
@@ -174,6 +172,10 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
                                     workDirectory);
       execute(p);
     }
+    catch (Throwable ex)
+    {
+      getExceptionHandler().handleException(request, response, ex);
+    }
     finally
     {
       if (p != null)
@@ -182,6 +184,41 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
       }
     }
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public CGIExceptionHandler getExceptionHandler()
+  {
+    if (exceptionHandler == null)
+    {
+      exceptionHandler = new DefaultCGIExceptionHandler();
+    }
+
+    return exceptionHandler;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param exceptionHandler
+   */
+  @Override
+  public void setExceptionHandler(CGIExceptionHandler exceptionHandler)
+  {
+    this.exceptionHandler = exceptionHandler;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -543,6 +580,9 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
   /** Field description */
   private ServletContext context;
+
+  /** Field description */
+  private CGIExceptionHandler exceptionHandler;
 
   /** Field description */
   private HttpServletRequest request;
