@@ -166,8 +166,6 @@
           <excludes>
             <exclude>target/**</exclude>
             <exclude>.hg/**</exclude>
-            <exclude>**/extjs/**</exclude>
-            <exclude>**/syntaxhighlighter/**</exclude>
           </excludes>
           <strictCheck>true</strictCheck>
         </configuration>

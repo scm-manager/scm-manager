@@ -259,6 +259,27 @@
   <build>
 
     <plugins>
+    
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <version>1.9.0</version>
+        <configuration>
+          <header>http://download.scm-manager.org/licenses/mvn-license.txt</header>
+          <includes>
+            <include>src/**</include>
+            <include>**/test/**</include>
+          </includes>
+          <excludes>
+            <exclude>target/**</exclude>
+            <exclude>.hg/**</exclude>
+            <exclude>**/extjs/**</exclude>
+            <exclude>**/syntaxhighlighter/**</exclude>
+          </excludes>
+          <strictCheck>true</strictCheck>
+        </configuration>
+      </plugin>
+      
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
