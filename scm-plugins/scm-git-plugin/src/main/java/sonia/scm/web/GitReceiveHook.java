@@ -78,6 +78,9 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   /** Field description */
   public static final String FILE_HOOK_PRE_RECEIVE = "pre-receive";
 
+  /** Field description */
+  public static final String PREFIX_MSG = "[SCM] ";
+
   /** the logger for GitReceiveHook */
   private static final Logger logger =
     LoggerFactory.getLogger(GitReceiveHook.class);
@@ -130,13 +133,18 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    * Method description
    *
    *
+   *
+   *
+   *
+   * @param rpack
+   * @param rc
    * @param hook
    * @param oldId
    * @param newId
    * @param refName
    */
-  private void executeFileHook(File hook, ObjectId oldId, ObjectId newId,
-                               String refName)
+  private void executeFileHook(ReceivePack rpack, ReceiveCommand rc, File hook,
+                               ObjectId oldId, ObjectId newId, String refName)
   {
     final Command cmd = new SimpleCommand(hook.getAbsolutePath(), getId(oldId),
                           getId(newId), Util.nonNull(refName));
@@ -162,9 +170,12 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
           }
         }
       }
-      else if (logger.isErrorEnabled())
+      else
       {
-        logger.error("failed to execute file hook");
+        if (logger.isErrorEnabled())
+        {
+          logger.error("failed to execute file hook");
+        }
 
         String out = result.getOutput();
 
@@ -172,6 +183,8 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
         {
           logger.error(out);
         }
+
+        sendError(rpack, rc, out);
       }
     }
     catch (IOException ex)
@@ -181,15 +194,21 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   }
 
   /**
-   * Method description
+   * Method description, ccurred
    *
    *
+   *
+   *
+   *
+   * @param rpack
+   * @param rc
    * @param directory
    * @param oldId
    * @param newId
    * @param type
    */
-  private void fireHookEvent(File directory, ObjectId oldId, ObjectId newId,
+  private void fireHookEvent(ReceivePack rpack, ReceiveCommand rc,
+                             File directory, ObjectId oldId, ObjectId newId,
                              RepositoryHookType type)
   {
     try
@@ -204,6 +223,15 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     catch (RepositoryNotFoundException ex)
     {
       logger.error("repository could not be found", ex);
+    }
+    catch (Exception ex)
+    {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("execption occurred during hook execution", ex);
+      }
+
+      sendError(rpack, rc, ex.getMessage());
     }
   }
 
@@ -251,12 +279,27 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
 
         if (hookScript != null)
         {
-          executeFileHook(hookScript, oldId, newId, rc.getRefName());
+          executeFileHook(rpack, rc, hookScript, oldId, newId, rc.getRefName());
         }
 
-        fireHookEvent(directory, oldId, newId, type);
+        fireHookEvent(rpack, rc, directory, oldId, newId, type);
       }
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param rpack
+   * @param rc
+   * @param message
+   */
+  private void sendError(ReceivePack rpack, ReceiveCommand rc, String message)
+  {
+    rpack.sendError(PREFIX_MSG.concat(Util.nonNull(message)));
+    rc.setResult(ReceiveCommand.Result.REJECTED_OTHER_REASON);
   }
 
   //~--- get methods ----------------------------------------------------------
