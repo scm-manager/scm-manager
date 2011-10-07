@@ -38,6 +38,10 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.tmatesoft.svn.core.SVNCancelException;
+import org.tmatesoft.svn.core.SVNErrorCode;
+import org.tmatesoft.svn.core.SVNErrorMessage;
+import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.internal.io.fs.FSHook;
 import org.tmatesoft.svn.core.internal.io.fs.FSHookEvent;
 import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
@@ -79,9 +83,11 @@ public class SvnRepositoryHook implements FSHook
    *
    *
    * @param event
+   *
+   * @throws SVNException
    */
   @Override
-  public void onHook(FSHookEvent event)
+  public void onHook(FSHookEvent event) throws SVNException
   {
     File directory = event.getReposRootDir();
 
@@ -137,17 +143,26 @@ public class SvnRepositoryHook implements FSHook
    *
    * @param directory
    * @param hookEvent
+   *
+   * @throws SVNCancelException
    */
   private void fireHook(File directory, RepositoryHookEvent hookEvent)
+          throws SVNCancelException
   {
     try
     {
       repositoryManager.fireHookEvent(SvnRepositoryHandler.TYPE_NAME,
                                       directory.getName(), hookEvent);
     }
-    catch (RepositoryNotFoundException ex)
+    catch (Exception ex)
     {
-      logger.error("could not find repository {}", directory.getName());
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("error during hook execution", ex);
+      }
+
+      throw new SVNCancelException(
+          SVNErrorMessage.create(SVNErrorCode.CANCELLED, ex.getMessage()));
     }
   }
 
