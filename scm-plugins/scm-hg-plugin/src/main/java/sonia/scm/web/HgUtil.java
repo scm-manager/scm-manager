@@ -35,28 +35,12 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.SCMContext;
-import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.Repository;
-import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 
 /**
  *
@@ -72,51 +56,7 @@ public class HgUtil
   public static final String CGI_NAME = "hgweb.py";
 
   /** Field description */
-  public static final String ENV_PATH = "SCM_PATH";
-
-  /** Field description */
-  public static final String ENV_PYTHON_PATH = "SCM_PYTHON_PATH";
-
-  /** Field description */
-  public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
-
-  /** Field description */
-  public static final String ENV_REVISION = "SCM_REVISION";
-
-  /** Field description */
   public static final String REVISION_TIP = "tip";
-
-  /** the logger for HgUtil */
-  private static final Logger logger = LoggerFactory.getLogger(HgUtil.class);
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param handler
-   * @param directory
-   * @param extraEnv
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public static Process createPythonProcess(HgRepositoryHandler handler,
-          File directory, Map<String, String> extraEnv)
-          throws IOException
-  {
-    HgConfig config = handler.getConfig();
-    ProcessBuilder pb = new ProcessBuilder(config.getPythonBinary());
-    Map<String, String> env = pb.environment();
-
-    env.put(ENV_PYTHON_PATH, Util.nonNull(config.getPythonPath()));
-    env.put(ENV_REPOSITORY_PATH, directory.getAbsolutePath());
-    env.putAll(extraEnv);
-
-    return pb.start();
-  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -144,119 +84,6 @@ public class HgUtil
    * Method description
    *
    *
-   * @param resultType
-   * @param context
-   * @param scriptResource
-   * @param handler
-   * @param directory
-   * @param extraEnv
-   * @param <T>
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public static <T> T getResultFromScript(Class<T> resultType,
-          JAXBContext context, String scriptResource,
-          HgRepositoryHandler handler, File directory,
-          Map<String, String> extraEnv)
-          throws IOException
-  {
-    Process p = createPythonProcess(handler, directory, extraEnv);
-    T result = null;
-    InputStream resource = null;
-    InputStream input = null;
-    OutputStream output = null;
-
-    try
-    {
-      resource = HgUtil.class.getResourceAsStream(scriptResource);
-      output = p.getOutputStream();
-      IOUtil.copy(resource, output);
-      output.close();
-      handleErrorStream(p.getErrorStream());
-      input = p.getInputStream();
-      result = (T) context.createUnmarshaller().unmarshal(input);
-      input.close();
-    }
-    catch (JAXBException ex)
-    {
-      logger.error("could not parse result", ex);
-    }
-    finally
-    {
-      IOUtil.close(resource);
-      IOUtil.close(input);
-      IOUtil.close(output);
-    }
-
-    return result;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param resultType
-   * @param context
-   * @param scriptResource
-   * @param handler
-   * @param repository
-   * @param extraEnv
-   * @param <T>
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public static <T> T getResultFromScript(Class<T> resultType,
-          JAXBContext context, String scriptResource,
-          HgRepositoryHandler handler, Repository repository,
-          Map<String, String> extraEnv)
-          throws IOException
-  {
-    File directory = handler.getDirectory(repository);
-
-    return getResultFromScript(resultType, context, scriptResource, handler,
-                               directory, extraEnv);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param resultType
-   * @param context
-   * @param scriptResource
-   * @param handler
-   * @param repository
-   * @param revision
-   * @param path
-   * @param <T>
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public static <T> T getResultFromScript(Class<T> resultType,
-          JAXBContext context, String scriptResource,
-          HgRepositoryHandler handler, Repository repository, String revision,
-          String path)
-          throws IOException
-  {
-    Map<String, String> extraEnv = new HashMap<String, String>();
-
-    extraEnv.put(ENV_REVISION, getRevision(revision));
-    extraEnv.put(ENV_PATH, Util.nonNull(path));
-
-    return getResultFromScript(resultType, context, scriptResource, handler,
-                               repository, extraEnv);
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param revision
    *
    * @return
@@ -266,40 +93,5 @@ public class HgUtil
     return Util.isEmpty(revision)
            ? REVISION_TIP
            : revision;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param errorStream
-   */
-  private static void handleErrorStream(final InputStream errorStream)
-  {
-    if (errorStream != null)
-    {
-      new Thread(new Runnable()
-      {
-        @Override
-        public void run()
-        {
-          try
-          {
-            String content = IOUtil.getContent(errorStream);
-
-            if (Util.isNotEmpty(content))
-            {
-              logger.error(content.trim());
-            }
-          }
-          catch (IOException ex)
-          {
-            logger.error("error during logging", ex);
-          }
-        }
-      }).start();
-    }
   }
 }
