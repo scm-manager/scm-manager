@@ -35,78 +35,67 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.util.AssertUtil;
-import sonia.scm.web.HgUtil;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
+import com.google.inject.servlet.RequestScoped;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgBlameViewer extends AbstractHgHandler implements BlameViewer
+@RequestScoped
+public class HgContext
 {
-
-  /** Field description */
-  public static final String RESOURCE_BLAME = "/sonia/scm/hgblame.py";
-
-  /** the logger for HgBlameViewer */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgBlameViewer.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param context
-   * @param repository
-   * @param blameResultContext
-   */
-  public HgBlameViewer(HgRepositoryHandler handler,
-                       JAXBContext blameResultContext, HgContext context,
-                       Repository repository)
-  {
-    super(handler, blameResultContext, context, repository);
-  }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param revision
-   * @param path
+   * @return
+   */
+  public boolean isPending()
+  {
+    return pending;
+  }
+
+  /**
+   * Method description
+   *
    *
    * @return
-   *
-   * @throws IOException
    */
-  @Override
-  public BlameResult getBlame(String revision, String path) throws IOException
+  public boolean isSystemEnvironment()
   {
-    AssertUtil.assertIsNotEmpty(path);
-
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("get blame result for {} at revision {}", path,
-                   HgUtil.getRevision(revision));
-    }
-
-    Map<String, String> env = createEnvironment(revision, path);
-
-    return getResultFromScript(BlameResult.class, RESOURCE_BLAME, env);
+    return systemEnvironment;
   }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param pending
+   */
+  public void setPending(boolean pending)
+  {
+    this.pending = pending;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param systemEnvironment
+   */
+  public void setSystemEnvironment(boolean systemEnvironment)
+  {
+    this.systemEnvironment = systemEnvironment;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean pending = false;
+
+  /** Field description */
+  private boolean systemEnvironment = true;
 }

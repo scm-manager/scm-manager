@@ -35,19 +35,17 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 
@@ -55,30 +53,12 @@ import javax.xml.bind.JAXBContext;
  *
  * @author Sebastian Sdorra
  */
-public class HgRepositoryBrowser implements RepositoryBrowser
+public class HgRepositoryBrowser extends AbstractHgHandler
+        implements RepositoryBrowser
 {
 
   /** Field description */
-  public static final String DEFAULT_REVISION = "tip";
-
-  /** Field description */
-  public static final String ENV_PATH = "SCM_PATH";
-
-  /** Field description */
-  public static final String ENV_PYTHON_PATH = "SCM_PYTHON_PATH";
-
-  /** Field description */
-  public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
-
-  /** Field description */
-  public static final String ENV_REVISION = "SCM_REVISION";
-
-  /** Field description */
   public static final String RESOURCE_BROWSE = "/sonia/scm/hgbrowse.py";
-
-  /** the logger for HgRepositoryBrowser */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgRepositoryBrowser.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -87,16 +67,15 @@ public class HgRepositoryBrowser implements RepositoryBrowser
    *
    *
    * @param handler
+   * @param context
    * @param repository
    * @param browserResultContext
    */
   public HgRepositoryBrowser(HgRepositoryHandler handler,
-                             Repository repository,
-                             JAXBContext browserResultContext)
+                             JAXBContext browserResultContext,
+                             HgContext context, Repository repository)
   {
-    this.handler = handler;
-    this.repository = repository;
-    this.browserResultContext = browserResultContext;
+    super(handler, browserResultContext, context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -117,33 +96,14 @@ public class HgRepositoryBrowser implements RepositoryBrowser
   public void getContent(String revision, String path, OutputStream output)
           throws IOException, RepositoryException
   {
-    if (Util.isEmpty(revision))
-    {
-      revision = DEFAULT_REVISION;
-    }
+    revision = HgUtil.getRevision(revision);
 
-    File directory = handler.getDirectory(repository);
-    ProcessBuilder builder =
-      new ProcessBuilder(handler.getConfig().getHgBinary(), "cat", "-r",
-                         revision, Util.nonNull(path));
-
-    if (logger.isDebugEnabled())
-    {
-      StringBuilder msg = new StringBuilder();
-
-      for (String param : builder.command())
-      {
-        msg.append(param).append(" ");
-      }
-
-      logger.debug(msg.toString());
-    }
-
-    Process p = builder.directory(directory).start();
+    Process p = createHgProcess("cat", "-r", revision, Util.nonNull(path));
     InputStream input = null;
 
     try
     {
+      handleErrorStream(p.getErrorStream());
       input = p.getInputStream();
       IOUtil.copy(input, output);
     }
@@ -169,19 +129,8 @@ public class HgRepositoryBrowser implements RepositoryBrowser
   public BrowserResult getResult(String revision, String path)
           throws IOException, RepositoryException
   {
-    return HgUtil.getResultFromScript(BrowserResult.class,
-                                      browserResultContext, RESOURCE_BROWSE,
-                                      handler, repository, revision, path);
+    Map<String, String> env = createEnvironment(revision, path);
+
+    return getResultFromScript(BrowserResult.class, RESOURCE_BROWSE, env);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private JAXBContext browserResultContext;
-
-  /** Field description */
-  private HgRepositoryHandler handler;
-
-  /** Field description */
-  private Repository repository;
 }

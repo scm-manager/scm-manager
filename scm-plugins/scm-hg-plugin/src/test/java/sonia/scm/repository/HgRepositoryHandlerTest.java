@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Provider;
+
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.StoreFactory;
 
@@ -87,18 +89,43 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
           File directory)
   {
     HgRepositoryHandler handler = new HgRepositoryHandler(factory,
-                                    new DefaultFileSystem());
+                                    new DefaultFileSystem(),
+                                    new HgContextProvider());
 
     handler.init(contextProvider);
     handler.getConfig().setRepositoryDirectory(directory);
 
     // skip tests if hg not in path
-    if (! handler.isConfigured())
+    if (!handler.isConfigured())
     {
       System.out.println("WARNING could not find hg, skipping test");
       assumeTrue(false);
     }
 
     return handler;
+  }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Dummy {@link Provider} for {@link HgContext}
+   *
+   *
+   * @author Sebastian Sdorra
+   */
+  private static class HgContextProvider implements Provider<HgContext>
+  {
+
+    /**
+     * Return context for mercurial
+     *
+     *
+     * @return context for mercurial
+     */
+    @Override
+    public HgContext get()
+    {
+      return new HgContext();
+    }
   }
 }

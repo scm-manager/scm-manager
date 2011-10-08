@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -105,11 +106,14 @@ public class HgRepositoryHandler
    *
    * @param storeFactory
    * @param fileSystem
+   * @param hgContextProvider
    */
   @Inject
-  public HgRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem)
+  public HgRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem,
+                             Provider<HgContext> hgContextProvider)
   {
     super(storeFactory, fileSystem);
+    this.hgContextProvider = hgContextProvider;
 
     try
     {
@@ -211,7 +215,8 @@ public class HgRepositoryHandler
 
     if (TYPE_NAME.equals(type))
     {
-      blameViewer = new HgBlameViewer(this, repository, blameResultContext);
+      blameViewer = new HgBlameViewer(this, blameResultContext,
+                                      hgContextProvider.get(), repository);
     }
     else
     {
@@ -242,8 +247,9 @@ public class HgRepositoryHandler
 
     if (TYPE_NAME.equals(type))
     {
-      changesetViewer = new HgChangesetViewer(this, repository,
-              changesetPagingResultContext);
+      changesetViewer = new HgChangesetViewer(this,
+              changesetPagingResultContext, hgContextProvider.get(),
+              repository);
     }
     else
     {
@@ -277,7 +283,7 @@ public class HgRepositoryHandler
 
     if (TYPE_NAME.equals(type))
     {
-      diffViewer = new HgDiffViewer(this, repository);
+      diffViewer = new HgDiffViewer(this, hgContextProvider.get(), repository);
     }
     else
     {
@@ -298,7 +304,8 @@ public class HgRepositoryHandler
   @Override
   public RepositoryBrowser getRepositoryBrowser(Repository repository)
   {
-    return new HgRepositoryBrowser(this, repository, browserResultContext);
+    return new HgRepositoryBrowser(this, browserResultContext,
+                                   hgContextProvider.get(), repository);
   }
 
   /**
@@ -330,8 +337,8 @@ public class HgRepositoryHandler
       throw new IllegalStateException("directory not found");
     }
 
-    return new HgChangesetViewer(this, repositoryDirectory,
-                                 changesetPagingResultContext);
+    return new HgChangesetViewer(this, changesetPagingResultContext, null,
+                                 null);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -585,4 +592,7 @@ public class HgRepositoryHandler
 
   /** Field description */
   private JAXBContext changesetPagingResultContext;
+
+  /** Field description */
+  private Provider<HgContext> hgContextProvider;
 }

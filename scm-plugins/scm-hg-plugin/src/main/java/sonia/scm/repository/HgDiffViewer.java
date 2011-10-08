@@ -35,16 +35,12 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -53,38 +49,21 @@ import java.io.OutputStream;
  *
  * @author Sebastian Sdorra
  */
-public class HgDiffViewer implements DiffViewer
+public class HgDiffViewer extends AbstractHgHandler implements DiffViewer
 {
 
-  /** the logger for HgDiffViewer */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgDiffViewer.class);
-
-  //~--- constructors ---------------------------------------------------------
-
   /**
    * Constructs ...
    *
    *
    * @param handler
-   * @param repositoryDirectory
-   */
-  public HgDiffViewer(HgRepositoryHandler handler, File repositoryDirectory)
-  {
-    this.handler = handler;
-    this.repositoryDirectory = repositoryDirectory;
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
+   * @param context
    * @param repository
    */
-  public HgDiffViewer(HgRepositoryHandler handler, Repository repository)
+  public HgDiffViewer(HgRepositoryHandler handler, HgContext context,
+                      Repository repository)
   {
-    this(handler, handler.getDirectory(repository));
+    super(handler, context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -107,27 +86,12 @@ public class HgDiffViewer implements DiffViewer
     AssertUtil.assertIsNotEmpty(revision);
     AssertUtil.assertIsNotNull(output);
 
-    ProcessBuilder builder =
-      new ProcessBuilder(handler.getConfig().getHgBinary(), "diff", "-c",
-                         revision, Util.nonNull(path));
-
-    if (logger.isDebugEnabled())
-    {
-      StringBuilder msg = new StringBuilder();
-
-      for (String param : builder.command())
-      {
-        msg.append(param).append(" ");
-      }
-
-      logger.debug(msg.toString());
-    }
-
-    Process p = builder.directory(repositoryDirectory).start();
+    Process p = createHgProcess("diff", "-c", revision, Util.nonNull(path));
     InputStream input = null;
 
     try
     {
+      handleErrorStream(p.getErrorStream());
       input = p.getInputStream();
       IOUtil.copy(input, output);
     }
@@ -136,12 +100,4 @@ public class HgDiffViewer implements DiffViewer
       IOUtil.close(input);
     }
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private HgRepositoryHandler handler;
-
-  /** Field description */
-  private File repositoryDirectory;
 }

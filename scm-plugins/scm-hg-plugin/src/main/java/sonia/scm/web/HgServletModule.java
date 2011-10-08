@@ -38,6 +38,7 @@ package sonia.scm.web;
 import com.google.inject.servlet.ServletModule;
 
 import sonia.scm.plugin.ext.Extension;
+import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
@@ -64,6 +65,7 @@ public class HgServletModule extends ServletModule
   @Override
   protected void configureServlets()
   {
+    bind(HgContext.class);
     bind(HgHookManager.class);
     serve(MAPPING_HOOK).with(HgHookCallbackServlet.class);
 

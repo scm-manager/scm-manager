@@ -35,15 +35,10 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.util.Util;
-import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.HashMap;
@@ -55,7 +50,8 @@ import javax.xml.bind.JAXBContext;
  *
  * @author Sebastian Sdorra
  */
-public class HgChangesetViewer implements ChangesetViewer
+public class HgChangesetViewer extends AbstractHgHandler
+        implements ChangesetViewer
 {
 
   /** Field description */
@@ -63,9 +59,6 @@ public class HgChangesetViewer implements ChangesetViewer
 
   /** Field description */
   public static final String ENV_PAGE_START = "SCM_PAGE_START";
-
-  /** Field description */
-  public static final String ENV_PENDING = "HG_PENDING";
 
   /** Field description */
   public static final String ENV_REVISION_END = "SCM_REVISION_END";
@@ -76,10 +69,6 @@ public class HgChangesetViewer implements ChangesetViewer
   /** Field description */
   public static final String RESOURCE_LOG = "/sonia/scm/hglog.py";
 
-  /** the logger for HgChangesetViewer */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgChangesetViewer.class);
-
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -88,31 +77,15 @@ public class HgChangesetViewer implements ChangesetViewer
    *
    *
    * @param handler
-   * @param repositoryDirectory
+   * @param context
    * @param changesetPagingResultContext
+   * @param repository
    */
   public HgChangesetViewer(HgRepositoryHandler handler,
-                           File repositoryDirectory,
-                           JAXBContext changesetPagingResultContext)
+                           JAXBContext changesetPagingResultContext,
+                           HgContext context, Repository repository)
   {
-    this.handler = handler;
-    this.repositoryDirectory = repositoryDirectory;
-    this.changesetPagingResultContext = changesetPagingResultContext;
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param repository
-   * @param changesetPagingResultContext
-   */
-  public HgChangesetViewer(HgRepositoryHandler handler, Repository repository,
-                           JAXBContext changesetPagingResultContext)
-  {
-    this(handler, handler.getDirectory(repository),
-         changesetPagingResultContext);
+    super(handler, changesetPagingResultContext, context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -131,27 +104,8 @@ public class HgChangesetViewer implements ChangesetViewer
   public ChangesetPagingResult getChangesets(int start, int max)
           throws IOException
   {
-    return getChangesets(start, max, false);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param start
-   * @param max
-   * @param pending
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public ChangesetPagingResult getChangesets(int start, int max,
-          boolean pending)
-          throws IOException
-  {
     return getChangesets(String.valueOf(start), String.valueOf(max), null,
-                         null, pending);
+                         null);
   }
 
   /**
@@ -162,56 +116,27 @@ public class HgChangesetViewer implements ChangesetViewer
    * @param pageLimit
    * @param revisionStart
    * @param revisionEnd
-   * @param pending
    *
    * @return
    *
    * @throws IOException
    */
   public ChangesetPagingResult getChangesets(String pageStart,
-          String pageLimit, String revisionStart, String revisionEnd,
-          boolean pending)
+          String pageLimit, String revisionStart, String revisionEnd)
           throws IOException
   {
-    if (logger.isDebugEnabled())
-    {
-      StringBuilder msg = new StringBuilder("get changesets");
-
-      if (pending)
-      {
-        msg.append(" (include pending)");
-      }
-
-      msg.append(" for repository ").append(repositoryDirectory.getName());
-      msg.append(":");
-      msg.append(" start: ").append(pageStart);
-      msg.append(" limit: ").append(pageLimit);
-      msg.append(" rev-start: ").append(revisionStart);
-      msg.append(" rev-limit: ").append(revisionEnd);
-      logger.debug(msg.toString());
-    }
-
     Map<String, String> env = new HashMap<String, String>();
-
-    if (pending)
-    {
-      env.put(ENV_PENDING, repositoryDirectory.getAbsolutePath());
-    }
 
     env.put(ENV_PAGE_START, Util.nonNull(pageStart));
     env.put(ENV_PAGE_LIMIT, Util.nonNull(pageLimit));
     env.put(ENV_REVISION_START, Util.nonNull(revisionStart));
     env.put(ENV_REVISION_END, Util.nonNull(revisionEnd));
 
-    return HgUtil.getResultFromScript(ChangesetPagingResult.class,
-                                      changesetPagingResultContext,
-                                      RESOURCE_LOG, handler,
-                                      repositoryDirectory, env);
+    return getResultFromScript(ChangesetPagingResult.class, RESOURCE_LOG, env);
   }
 
   /**
    * Method description
-   *
    *
    *
    * @param startNode
@@ -224,36 +149,6 @@ public class HgChangesetViewer implements ChangesetViewer
   public ChangesetPagingResult getChangesets(String startNode, String endNode)
           throws IOException
   {
-    return getChangesets(startNode, endNode, false);
+    return getChangesets(null, null, startNode, endNode);
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @param startNode
-   * @param endNode
-   * @param pending
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public ChangesetPagingResult getChangesets(String startNode, String endNode,
-          boolean pending)
-          throws IOException
-  {
-    return getChangesets(null, null, startNode, endNode, pending);
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private JAXBContext changesetPagingResultContext;
-
-  /** Field description */
-  private HgRepositoryHandler handler;
-
-  /** Field description */
-  private File repositoryDirectory;
 }

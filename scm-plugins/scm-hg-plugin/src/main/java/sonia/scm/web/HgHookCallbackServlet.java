@@ -36,11 +36,13 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgRepositoryHookEvent;
@@ -99,15 +101,18 @@ public class HgHookCallbackServlet extends HttpServlet
    * @param repositoryManager
    * @param handler
    * @param hookManager
+   * @param contextProvider
    */
   @Inject
   public HgHookCallbackServlet(RepositoryManager repositoryManager,
                                HgRepositoryHandler handler,
-                               HgHookManager hookManager)
+                               HgHookManager hookManager,
+                               Provider<HgContext> contextProvider)
   {
     this.repositoryManager = repositoryManager;
     this.handler = handler;
     this.hookManager = hookManager;
+    this.contextProvider = contextProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -182,6 +187,11 @@ public class HgHookCallbackServlet extends HttpServlet
   {
     try
     {
+      if (type == RepositoryHookType.PRE_RECEIVE)
+      {
+        contextProvider.get().setPending(true);
+      }
+
       repositoryManager.fireHookEvent(HgRepositoryHandler.TYPE_NAME,
                                       repositoryName,
                                       new HgRepositoryHookEvent(handler,
@@ -259,6 +269,9 @@ public class HgHookCallbackServlet extends HttpServlet
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Provider<HgContext> contextProvider;
 
   /** Field description */
   private HgRepositoryHandler handler;
