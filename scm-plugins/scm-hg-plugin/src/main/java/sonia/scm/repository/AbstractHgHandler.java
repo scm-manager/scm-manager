@@ -52,6 +52,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -363,6 +364,24 @@ public class AbstractHgHandler
       cmdList.addAll(Arrays.asList(args));
     }
 
+    if (logger.isDebugEnabled())
+    {
+      StringBuilder msg = new StringBuilder("create process for [");
+      Iterator<String> it = cmdList.iterator();
+
+      while (it.hasNext())
+      {
+        msg.append(it.next());
+
+        if (it.hasNext())
+        {
+          msg.append(", ");
+        }
+      }
+
+      msg.append("]");
+    }
+
     ProcessBuilder pb = new ProcessBuilder(cmdList);
 
     pb.directory(directory);
@@ -382,6 +401,22 @@ public class AbstractHgHandler
     env.put(ENV_PYTHON_PATH, Util.nonNull(config.getPythonPath()));
     env.put(ENV_REPOSITORY_PATH, directory.getAbsolutePath());
     env.putAll(extraEnv);
+
+    if (logger.isTraceEnabled())
+    {
+      StringBuilder msg = new StringBuilder("start process in directory '");
+
+      msg.append(directory.getAbsolutePath()).append("' with env: \n");
+
+      for (Map.Entry<String, String> e : env.entrySet())
+      {
+        msg.append("  ").append(e.getKey());
+        msg.append(" = ").append(e.getValue());
+        msg.append("\n");
+      }
+
+      logger.trace(msg.toString());
+    }
 
     return pb.start();
   }
