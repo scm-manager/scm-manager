@@ -337,8 +337,8 @@ public class HgRepositoryHandler
       throw new IllegalStateException("directory not found");
     }
 
-    return new HgChangesetViewer(this, changesetPagingResultContext, null,
-                                 null);
+    return new HgChangesetViewer(this, changesetPagingResultContext,
+                                 hgContextProvider.get(), repositoryDirectory);
   }
 
   //~--- methods --------------------------------------------------------------

@@ -39,6 +39,7 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.IOException;
 
 import java.util.HashMap;
@@ -70,6 +71,22 @@ public class HgChangesetViewer extends AbstractHgHandler
   public static final String RESOURCE_LOG = "/sonia/scm/hglog.py";
 
   //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param handler
+   * @param changesetPagingResultContext
+   * @param context
+   * @param repositoryDirectory
+   */
+  public HgChangesetViewer(HgRepositoryHandler handler,
+                           JAXBContext changesetPagingResultContext,
+                           HgContext context, File repositoryDirectory)
+  {
+    super(handler, changesetPagingResultContext, context, repositoryDirectory);
+  }
 
   /**
    * Constructs ...
