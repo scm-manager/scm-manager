@@ -60,6 +60,11 @@ import java.util.List;
 public class RunMojo extends AbstractBaseScmMojo
 {
 
+  /** Field description */
+  public static final int HEADERBUFFERSIZE = 16384;
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
@@ -193,6 +198,8 @@ public class RunMojo extends AbstractBaseScmMojo
 
       Server server = new Server();
       SelectChannelConnector connector = new SelectChannelConnector();
+
+      connector.setRequestHeaderSize(HEADERBUFFERSIZE);
 
       if (openBrowser && Desktop.isDesktopSupported())
       {
