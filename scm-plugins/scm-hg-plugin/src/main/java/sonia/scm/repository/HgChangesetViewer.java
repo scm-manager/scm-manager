@@ -56,18 +56,6 @@ public class HgChangesetViewer extends AbstractHgHandler
 {
 
   /** Field description */
-  public static final String ENV_PAGE_LIMIT = "SCM_PAGE_LIMIT";
-
-  /** Field description */
-  public static final String ENV_PAGE_START = "SCM_PAGE_START";
-
-  /** Field description */
-  public static final String ENV_REVISION_END = "SCM_REVISION_END";
-
-  /** Field description */
-  public static final String ENV_REVISION_START = "SCM_REVISION_START";
-
-  /** Field description */
   public static final String RESOURCE_LOG = "/sonia/scm/hglog.py";
 
   //~--- constructors ---------------------------------------------------------

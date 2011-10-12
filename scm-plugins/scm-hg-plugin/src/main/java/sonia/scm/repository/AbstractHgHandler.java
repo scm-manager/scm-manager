@@ -71,7 +71,7 @@ public class AbstractHgHandler
 
   /** Field description */
   public static final String ENV_PENDING = "HG_PENDING";
-
+  
   /** Field description */
   public static final String ENV_PYTHON_PATH = "SCM_PYTHON_PATH";
 
@@ -80,6 +80,21 @@ public class AbstractHgHandler
 
   /** Field description */
   public static final String ENV_REVISION = "SCM_REVISION";
+  
+    /** Field description */
+  public static final String ENV_PAGE_LIMIT = "SCM_PAGE_LIMIT";
+
+  /** Field description */
+  public static final String ENV_PAGE_START = "SCM_PAGE_START";
+
+  /** Field description */
+  public static final String ENV_REVISION_END = "SCM_REVISION_END";
+
+  /** Field description */
+  public static final String ENV_REVISION_START = "SCM_REVISION_START";
+  
+  /** Field description */
+  public static final String ENV_NODE = "HG_NODE";
 
   /** the logger for AbstractHgHandler */
   private static final Logger logger =
@@ -396,6 +411,11 @@ public class AbstractHgHandler
     if (context.isPending())
     {
       env.put(ENV_PENDING, directory.getAbsolutePath());
+      
+      if ( extraEnv.containsKey( ENV_REVISION_START ) )
+      {
+        env.put(ENV_NODE, extraEnv.get(ENV_REVISION_START));
+      }
     }
 
     env.put(ENV_PYTHON_PATH, Util.nonNull(config.getPythonPath()));
