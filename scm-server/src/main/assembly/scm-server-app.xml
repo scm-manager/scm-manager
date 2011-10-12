@@ -75,6 +75,12 @@
   </fileSets>
   
   <files>
+
+    <file>
+      <source>src/main/assembly/README.txt</source>
+      <destName>README.txt</destName>
+      <filtered>true</filtered>
+    </file>
     
     <!-- 
       copy release logging configuration to config directory 
