@@ -70,6 +70,11 @@ Sonia.repository.PropertiesFormPanel = Ext.extend(Sonia.repository.FormPanel, {
         }
       }
     }, this);
+    this.loadExtraProperties(this.item);
+  },
+  
+  loadExtraProperties: function(item){
+    
   },
   
   storeProperties: function(item){
@@ -103,6 +108,11 @@ Sonia.repository.PropertiesFormPanel = Ext.extend(Sonia.repository.FormPanel, {
       }
       delete item[property.name];
     }
+    this.storeExtraProperties(item);
+  },
+  
+  storeExtraProperties: function(item){
+    
   }
 
 });
