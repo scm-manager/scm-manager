@@ -47,12 +47,14 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
+import sonia.scm.web.cgi.EnvList;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
 
+import java.util.Enumeration;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,6 +62,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -77,6 +80,9 @@ public class HgCGIServlet extends HttpServlet
 
   /** Field description */
   public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
+
+  /** Field description */
+  public static final String ENV_SESSION_PREFIX = "SCM_";
 
   /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
@@ -175,6 +181,13 @@ public class HgCGIServlet extends HttpServlet
                                   directory.getAbsolutePath());
     executor.getEnvironment().set(ENV_PYTHON_PATH, pythonPath);
 
+    HttpSession session = request.getSession();
+
+    if (session != null)
+    {
+      passSessionAttributes(executor.getEnvironment(), session);
+    }
+
     String interpreter = getInterpreter();
 
     if (interpreter != null)
@@ -183,6 +196,28 @@ public class HgCGIServlet extends HttpServlet
     }
 
     executor.execute(command.getAbsolutePath());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param env
+   * @param session
+   */
+  private void passSessionAttributes(EnvList env, HttpSession session)
+  {
+    Enumeration<String> enm = session.getAttributeNames();
+
+    while (enm.hasMoreElements())
+    {
+      String key = enm.nextElement();
+
+      if (key.startsWith(ENV_SESSION_PREFIX))
+      {
+        env.set(key, session.getAttribute(key).toString());
+      }
+    }
   }
 
   //~--- get methods ----------------------------------------------------------

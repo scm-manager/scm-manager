@@ -49,8 +49,10 @@ import sonia.scm.repository.HgRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.security.CipherUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -82,6 +84,9 @@ public class HgHookCallbackServlet extends HttpServlet
   private static final String PARAM_CHALLENGE = "challenge";
 
   /** Field description */
+  private static final String PARAM_CREDENTIALS = "credentials";
+
+  /** Field description */
   private static final String PARAM_NODE = "node";
 
   /** Field description */
@@ -102,17 +107,19 @@ public class HgHookCallbackServlet extends HttpServlet
    * @param handler
    * @param hookManager
    * @param contextProvider
+   * @param securityContextProvider
    */
   @Inject
-  public HgHookCallbackServlet(RepositoryManager repositoryManager,
-                               HgRepositoryHandler handler,
-                               HgHookManager hookManager,
-                               Provider<HgContext> contextProvider)
+  public HgHookCallbackServlet(
+          RepositoryManager repositoryManager, HgRepositoryHandler handler,
+          HgHookManager hookManager, Provider<HgContext> contextProvider,
+          Provider<WebSecurityContext> securityContextProvider)
   {
     this.repositoryManager = repositoryManager;
     this.handler = handler;
     this.hookManager = hookManager;
     this.contextProvider = contextProvider;
+    this.securityContextProvider = securityContextProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -147,6 +154,13 @@ public class HgHookCallbackServlet extends HttpServlet
 
         if (Util.isNotEmpty(node))
         {
+          String credentials = request.getParameter(PARAM_CREDENTIALS);
+
+          if (Util.isNotEmpty(credentials))
+          {
+            authenticate(request, response, credentials);
+          }
+
           hookCallback(response, repositoryId, type, challenge, node);
         }
         else if (logger.isDebugEnabled())
@@ -167,6 +181,40 @@ public class HgHookCallbackServlet extends HttpServlet
       }
 
       response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   * @param credentials
+   */
+  private void authenticate(HttpServletRequest request,
+                            HttpServletResponse response, String credentials)
+  {
+    try
+    {
+      credentials = CipherUtil.getInstance().decode(credentials);
+
+      if (Util.isNotEmpty(credentials))
+      {
+        String[] credentialsArray = credentials.split(":");
+
+        if (credentialsArray.length >= 2)
+        {
+          WebSecurityContext context = securityContextProvider.get();
+
+          context.authenticate(request, response, credentialsArray[0],
+                               credentialsArray[1]);
+        }
+      }
+    }
+    catch (Exception ex)
+    {
+      logger.error("could not authenticate user", ex);
     }
   }
 
@@ -281,4 +329,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
   /** Field description */
   private RepositoryManager repositoryManager;
+
+  /** Field description */
+  private Provider<WebSecurityContext> securityContextProvider;
 }

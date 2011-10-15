@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
+import sonia.scm.security.CipherUtil;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.Util;
@@ -66,6 +67,9 @@ import javax.servlet.http.HttpSession;
 @SessionScoped
 public class BasicSecurityContext implements WebSecurityContext
 {
+
+  /** Field description */
+  public static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
 
   /** Field description */
   public static final String USER_ANONYMOUS = "anonymous";
@@ -154,6 +158,16 @@ public class BasicSecurityContext implements WebSecurityContext
         {
           logGroups();
         }
+
+        String credentials = dbUser.getName();
+
+        if (Util.isNotEmpty(password))
+        {
+          credentials = credentials.concat(":").concat(password);
+        }
+
+        credentials = CipherUtil.getInstance().encode(credentials);
+        request.getSession(true).setAttribute(SCM_CREDENTIALS, credentials);
       }
       catch (Exception ex)
       {
