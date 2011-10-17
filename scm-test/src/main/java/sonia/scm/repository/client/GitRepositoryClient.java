@@ -513,16 +513,19 @@ public class GitRepositoryClient extends AbstractRepositoryClient
 
     try
     {
-      Transport tn = Transport.open(repository, Constants.HEAD);
+      Transport tn = Transport.open(repository, "origin");
 
       if (credentialsProvider != null)
       {
         tn.setCredentialsProvider(credentialsProvider);
       }
 
+      List<RefSpec> refSpecs = new ArrayList<RefSpec>();
+      RefSpec rs = new RefSpec("+refs/heads/master:refs/heads/master");
+
       try
       {
-        r = tn.fetch(new TextProgressMonitor(), null);
+        r = tn.fetch(new TextProgressMonitor(), refSpecs);
       }
       finally
       {
