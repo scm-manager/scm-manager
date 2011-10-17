@@ -53,16 +53,19 @@ import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.storage.file.FileBasedConfig;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
+import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -160,10 +163,27 @@ public class GitRepositoryClient extends AbstractRepositoryClient
 
       if (r != null)
       {
-        final Ref branch = guessHEAD(r);
+        for (TrackingRefUpdate ru : r.getTrackingRefUpdates())
+        {
+          switch (ru.getResult())
+          {
+            case IO_FAILURE :
+            case LOCK_FAILURE :
+            case REJECTED :
+            case REJECTED_CURRENT_BRANCH :
+              throw new RepositoryClientException("could not checkout, status "
+                      + ru.getResult().name());
+          }
+        }
+
+        Ref branch = guessHEAD(r);
 
         doCheckout(branch);
       }
+    }
+    catch (RepositoryClientException ex)
+    {
+      throw ex;
     }
     catch (Exception ex)
     {
@@ -182,10 +202,6 @@ public class GitRepositoryClient extends AbstractRepositoryClient
   @Override
   public void commit(String message) throws RepositoryClientException
   {
-    List<RefSpec> refSpecs = new ArrayList<RefSpec>();
-
-    refSpecs.add(Transport.REFSPEC_PUSH_ALL);
-
     try
     {
       CommitCommand cmd = new Git(repository).commit();
@@ -193,30 +209,65 @@ public class GitRepositoryClient extends AbstractRepositoryClient
       cmd.setMessage(message);
       callCommand(cmd);
 
-      List<Transport> transports = Transport.openAll(repository, remoteConfig,
+      List<Transport> transports = Transport.openAll(repository, "origin",
                                      Transport.Operation.PUSH);
 
       for (Transport transport : transports)
       {
+        List<RefSpec> refSpecs = new ArrayList<RefSpec>();
+        RefSpec rs = new RefSpec("+refs/heads/master:refs/heads/master");
+
+        refSpecs.add(rs);
+
         if (credentialsProvider != null)
         {
           transport.setCredentialsProvider(credentialsProvider);
         }
-
-        transport.setPushThin(Transport.DEFAULT_PUSH_THIN);
 
         Collection<RemoteRefUpdate> toPush =
           transport.findRemoteRefUpdatesFor(refSpecs);
 
         try
         {
-          transport.push(new TextProgressMonitor(), toPush);
+          PushResult result = transport.push(new TextProgressMonitor(), toPush);
+          Collection<RemoteRefUpdate> refUpdates = result.getRemoteUpdates();
+
+          if (Util.isEmpty(refUpdates))
+          {
+            throw new RepositoryClientException("no ref updated");
+          }
+
+          for (RemoteRefUpdate refUpdate : refUpdates)
+          {
+            switch (refUpdate.getStatus())
+            {
+              case OK :
+              case UP_TO_DATE :
+              case NON_EXISTING :
+                break;
+
+              case NOT_ATTEMPTED :
+              case AWAITING_REPORT :
+              case REJECTED_NODELETE :
+              case REJECTED_NONFASTFORWARD :
+              case REJECTED_REMOTE_CHANGED :
+              case REJECTED_OTHER_REASON :
+                throw new RepositoryClientException(
+                    "could not update ref ".concat(
+                      refUpdate.getSrcRef()).concat(
+                      " status ".concat(refUpdate.getStatus().toString())));
+            }
+          }
         }
         finally
         {
           transport.close();
         }
       }
+    }
+    catch (RepositoryClientException ex)
+    {
+      throw ex;
     }
     catch (Exception ex)
     {
@@ -236,22 +287,83 @@ public class GitRepositoryClient extends AbstractRepositoryClient
     try
     {
       repository.create(false);
-
-      FileBasedConfig fc = repository.getConfig();
-
-      remoteConfig = new RemoteConfig(fc, Constants.HEAD);
-      remoteConfig.addURI(uri);
-      remoteConfig.addFetchRefSpec(
-          new RefSpec().setForceUpdate(true).setSourceDestination(
-            Constants.R_HEADS + "*",
-            Constants.R_REMOTES + Constants.HEAD + "/*"));
-      remoteConfig.update(fc);
-      fc.save();
+      addRemote("origin", new URIish(remoteRepository), "master", null, true,
+                null);
     }
     catch (Exception ex)
     {
       throw new RepositoryClientException(ex);
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param remoteName
+   * @param uri
+   * @param branchName
+   * @param tagName
+   * @param allSelected
+   * @param selectedBranches
+   *
+   * @throws IOException
+   * @throws URISyntaxException
+   */
+  private void addRemote(final String remoteName, final URIish uri,
+                         final String branchName, final String tagName,
+                         final boolean allSelected,
+                         final Collection<Ref> selectedBranches)
+          throws URISyntaxException, IOException
+  {
+
+//  add remote configuration
+    final RemoteConfig rc = new RemoteConfig(repository.getConfig(),
+                              remoteName);
+
+    rc.addURI(uri);
+
+    final String dst = Constants.R_REMOTES + rc.getName();
+    RefSpec wcrs = new RefSpec();
+
+    wcrs = wcrs.setForceUpdate(true);
+    wcrs = wcrs.setSourceDestination(Constants.R_HEADS + "*", dst + "/*");
+
+    if (allSelected)
+    {
+      rc.addFetchRefSpec(wcrs);
+    }
+    else
+    {
+      for (final Ref ref : selectedBranches)
+      {
+        if (wcrs.matchSource(ref))
+        {
+          rc.addFetchRefSpec(wcrs.expandFromSource(ref));
+        }
+      }
+    }
+
+    rc.update(repository.getConfig());
+    repository.getConfig().save();
+
+//  setup the default remote branch for branchName
+    repository.getConfig().setString("branch", branchName, "remote",
+                                     remoteName);
+
+    if (branchName != null)
+    {
+      repository.getConfig().setString("branch", branchName, "merge",
+                                       Constants.R_HEADS + branchName);
+    }
+
+    if (tagName != null)
+    {
+      repository.getConfig().setString("branch", branchName, "merge",
+                                       Constants.R_TAGS + branchName);
+    }
+
+    repository.getConfig().save();
   }
 
   /**
@@ -419,7 +531,7 @@ public class GitRepositoryClient extends AbstractRepositoryClient
     }
     catch (NoRemoteRepositoryException ex)
     {
-      
+
       // empty repository, call init
       init();
     }
