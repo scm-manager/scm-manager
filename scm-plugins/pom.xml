@@ -99,63 +99,6 @@
       </build>
     </profile>
 
-    <profile>
-        
-      <id>it</id>
-  
-      <build>
-        <plugins>
-          
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <version>2.9</version>
-            <executions>
-              <execution>
-                <id>integration-test</id>
-                <goals>
-                  <goal>integration-test</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>verify</id>
-                <goals>
-                  <goal>verify</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-      
-          <plugin>
-            <groupId>sonia.scm.maven</groupId>
-            <artifactId>scm-maven-plugin</artifactId>
-            <version>${project.parent.version}</version>
-            <configuration>
-              <backgroud>true</backgroud>
-              <openBrowser>false</openBrowser>
-            </configuration>
-            <executions>
-              <execution>
-                <id>start-scm-webapp</id>
-                <phase>pre-integration-test</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-              </execution>
-              <execution>
-                <id>stop-scm-webapp</id>
-                <phase>post-integration-test</phase>
-                <goals>
-                  <goal>stop</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-    
-        </plugins>
-      </build>
-  
-    </profile>
   </profiles>
 
 </project>
