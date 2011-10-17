@@ -123,12 +123,56 @@ public class RunMojo extends AbstractBaseScmMojo
    *
    * @return
    */
+  public String getStopKey()
+  {
+    return stopKey;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public int getStopPort()
+  {
+    return stopPort;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isBackgroud()
+  {
+    return backgroud;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public boolean isOpenBrowser()
   {
     return openBrowser;
   }
 
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param backgroud
+   */
+  public void setBackgroud(boolean backgroud)
+  {
+    this.backgroud = backgroud;
+  }
 
   /**
    * Method description
@@ -175,6 +219,28 @@ public class RunMojo extends AbstractBaseScmMojo
     this.port = port;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param stopKey
+   */
+  public void setStopKey(String stopKey)
+  {
+    this.stopKey = stopKey;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param stopPort
+   */
+  public void setStopPort(int stopPort)
+  {
+    this.stopPort = stopPort;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -216,8 +282,10 @@ public class RunMojo extends AbstractBaseScmMojo
       warContext.setExtractWAR(true);
       warContext.setWar(warFile.getAbsolutePath());
       server.setHandler(warContext);
+      new JettyStopMonitorThread(server, stopPort, stopKey).start();
       server.start();
-      server.join();
+
+      // server.join();
     }
     catch (Exception ex)
     {
@@ -226,6 +294,11 @@ public class RunMojo extends AbstractBaseScmMojo
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /**
+   * @parameter
+   */
+  private boolean backgroud = false;
 
   /**
    * @parameter
@@ -241,6 +314,16 @@ public class RunMojo extends AbstractBaseScmMojo
    * @parameter
    */
   private int port = 8081;
+
+  /**
+   * @parameter
+   */
+  private String stopKey = "stop";
+
+  /**
+   * @parameter
+   */
+  private int stopPort = 8085;
 
   /**
    * @parameter expression="${openBrowser}" default-value="true"
