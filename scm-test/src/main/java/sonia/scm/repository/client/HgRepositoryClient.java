@@ -133,11 +133,16 @@ public class HgRepositoryClient extends AbstractRepositoryClient
   @Override
   public void commit(String message) throws RepositoryClientException
   {
-    SimpleCommand cmd = new SimpleCommand(hg, "-R",
-                          localRepository.getAbsolutePath(), "commit", "-m",
-                          message);
+    SimpleCommand cmd = null;
 
-    execute(cmd);
+    if (pendingCommit)
+    {
+      cmd = new SimpleCommand(hg, "-R", localRepository.getAbsolutePath(),
+                              "commit", "-m", message);
+      execute(cmd);
+      pendingCommit = false;
+    }
+
     cmd = new SimpleCommand(hg, "-R", localRepository.getAbsolutePath(),
                             "push", remoteURL);
     execute(cmd);
@@ -173,6 +178,7 @@ public class HgRepositoryClient extends AbstractRepositoryClient
                           new File(localRepository, file).getAbsolutePath());
 
     execute(cmd);
+    pendingCommit = true;
   }
 
   /**
@@ -217,6 +223,9 @@ public class HgRepositoryClient extends AbstractRepositoryClient
 
   /** Field description */
   private String hg;
+
+  /** Field description */
+  private boolean pendingCommit = false;
 
   /** Field description */
   private String remoteURL;
