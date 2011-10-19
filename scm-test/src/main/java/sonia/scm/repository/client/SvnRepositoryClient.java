@@ -44,13 +44,13 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNCommitClient;
 import org.tmatesoft.svn.core.wc.SVNRevision;
 import org.tmatesoft.svn.core.wc.SVNUpdateClient;
+import org.tmatesoft.svn.core.wc.SVNWCClient;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -107,12 +107,22 @@ public class SvnRepositoryClient extends AbstractRepositoryClient
   public void add(String file, String... others)
           throws RepositoryClientException
   {
-    files.add(file);
+    checkout();
+
+    List<File> files = new ArrayList<File>();
+
+    files.add(new File(localRepository, file));
 
     if (others != null)
     {
-      files.addAll(Arrays.asList(others));
+      for (String f : others)
+      {
+        files.add(new File(localRepository, f));
+      }
     }
+
+    addFiles(files);
+    pendingFiles.addAll(files);
   }
 
   /**
@@ -155,13 +165,9 @@ public class SvnRepositoryClient extends AbstractRepositoryClient
 
     try
     {
-      for (String name : files)
-      {
-        File file = new File(localRepository, name);
-
-        cc.doImport(file, remoteRepositoryURL.appendPath(name, true), message,
-                    null, false, true, SVNDepth.FILES);
-      }
+      cc.doCommit(pendingFiles.toArray(new File[0]), true, message, null, null,
+                  true, true, SVNDepth.INFINITY);
+      pendingFiles.clear();
     }
     catch (SVNException ex)
     {
@@ -182,13 +188,37 @@ public class SvnRepositoryClient extends AbstractRepositoryClient
     // do nothing
   }
 
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param files
+   *
+   * @throws RepositoryClientException
+   */
+  private void addFiles(List<File> files) throws RepositoryClientException
+  {
+    SVNWCClient wClient = client.getWCClient();
+
+    try
+    {
+      wClient.doAdd(files.toArray(new File[0]), true, false, false,
+                    SVNDepth.INFINITY, false, false, false);
+    }
+    catch (SVNException ex)
+    {
+      throw new RepositoryClientException(ex);
+    }
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SVNClientManager client;
+  List<File> pendingFiles = new ArrayList<File>();
 
   /** Field description */
-  private List<String> files = new ArrayList<String>();
+  private SVNClientManager client;
 
   /** Field description */
   private SVNURL remoteRepositoryURL;
