@@ -104,10 +104,11 @@ public class HgChangesetViewer extends AbstractHgHandler
    * @return
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   @Override
   public ChangesetPagingResult getChangesets(int start, int max)
-          throws IOException
+          throws IOException, RepositoryException
   {
     return getChangesets(String.valueOf(start), String.valueOf(max), null,
                          null);
@@ -125,10 +126,11 @@ public class HgChangesetViewer extends AbstractHgHandler
    * @return
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   public ChangesetPagingResult getChangesets(String pageStart,
           String pageLimit, String revisionStart, String revisionEnd)
-          throws IOException
+          throws IOException, RepositoryException
   {
     Map<String, String> env = new HashMap<String, String>();
 
@@ -150,9 +152,10 @@ public class HgChangesetViewer extends AbstractHgHandler
    * @return
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   public ChangesetPagingResult getChangesets(String startNode, String endNode)
-          throws IOException
+          throws IOException, RepositoryException
   {
     return getChangesets(null, null, startNode, endNode);
   }

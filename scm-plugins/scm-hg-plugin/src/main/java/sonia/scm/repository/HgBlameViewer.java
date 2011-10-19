@@ -93,9 +93,11 @@ public class HgBlameViewer extends AbstractHgHandler implements BlameViewer
    * @return
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   @Override
-  public BlameResult getBlame(String revision, String path) throws IOException
+  public BlameResult getBlame(String revision, String path)
+          throws IOException, RepositoryException
   {
     AssertUtil.assertIsNotEmpty(path);
 

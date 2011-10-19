@@ -33,15 +33,9 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.IOException;
 
 import java.util.Collection;
 import java.util.List;
@@ -55,10 +49,6 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
 
   /** Field description */
   public static final String REV_TIP = "tip";
-
-  /** the logger for HgRepositoryHookEvent */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgRepositoryHookEvent.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -104,9 +94,9 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
           changesets = result.getChangesets();
         }
       }
-      catch (IOException ex)
+      catch (Exception ex)
       {
-        logger.error("could not load changesets", ex);
+        throw new RuntimeException("could not load changesets", ex);
       }
     }
 
