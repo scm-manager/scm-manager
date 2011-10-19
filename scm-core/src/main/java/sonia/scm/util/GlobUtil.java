@@ -34,7 +34,7 @@
 package sonia.scm.util;
 
 /**
- * Util for pattern matching with glob 
+ * Util for pattern matching with glob
  * (http://en.wikipedia.org/wiki/Glob_%28programming%29) syntax.
  *
  * @author Sebastian Sdorra
@@ -190,6 +190,6 @@ public class GlobUtil
    */
   public static boolean matches(String glob, String value)
   {
-    return value.matches(convertGlobToRegEx(value));
+    return value.matches(convertGlobToRegEx(glob));
   }
 }

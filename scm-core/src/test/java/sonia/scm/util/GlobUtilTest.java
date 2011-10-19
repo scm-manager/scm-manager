@@ -66,11 +66,11 @@ public class GlobUtilTest
   @Test
   public void matchesTest()
   {
-    assertTrue(GlobUtil.matches("/test/path/somefile.txt", "/test/path/*"));
-    assertTrue(GlobUtil.matches("/test/path/somefile.txt", "*/somefile.txt"));
-    assertTrue(GlobUtil.matches("asd", "a*d"));
-    assertTrue(GlobUtil.matches("asd", "a?d"));
-    assertFalse(GlobUtil.matches("asd", "a\\*d"));
-    assertFalse(GlobUtil.matches("asd", "a\\?d"));
+    assertTrue(GlobUtil.matches("/test/path/*", "/test/path/somefile.txt"));
+    assertTrue(GlobUtil.matches("*/somefile.txt", "/test/path/somefile.txt"));
+    assertTrue(GlobUtil.matches("a*d", "asd"));
+    assertTrue(GlobUtil.matches("a?d", "asd"));
+    assertFalse(GlobUtil.matches("a\\*d", "asd"));
+    assertFalse(GlobUtil.matches("a\\?d", "asd"));
   }
 }
