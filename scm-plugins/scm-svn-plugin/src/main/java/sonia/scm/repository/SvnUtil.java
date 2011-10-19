@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
+import org.tmatesoft.svn.core.wc.admin.SVNChangeEntry;
 
 import sonia.scm.util.Util;
 
@@ -50,6 +51,62 @@ import java.util.Map;
  */
 public class SvnUtil
 {
+
+  /**
+   * TODO: type replaced
+   *
+   *
+   * @param modifications
+   * @param entry
+   */
+  public static void appendModification(Modifications modifications,
+          SVNLogEntryPath entry)
+  {
+    appendModification(modifications, entry.getType(), entry.getPath());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param modifications
+   * @param entry
+   */
+  public static void appendModification(Modifications modifications,
+          SVNChangeEntry entry)
+  {
+    appendModification(modifications, entry.getType(), entry.getPath());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param modifications
+   * @param type
+   * @param path
+   */
+  public static void appendModification(Modifications modifications, char type,
+          String path)
+  {
+    switch (type)
+    {
+      case SVNLogEntryPath.TYPE_ADDED :
+        modifications.getAdded().add(path);
+
+        break;
+
+      case SVNLogEntryPath.TYPE_DELETED :
+        modifications.getRemoved().add(path);
+
+        break;
+
+      case SVNLogEntryPath.TYPE_MODIFIED :
+        modifications.getModified().add(path);
+
+        break;
+    }
+  }
 
   /**
    * Method description
@@ -79,34 +136,5 @@ public class SvnUtil
     }
 
     return changeset;
-  }
-
-  /**
-   * TODO: type replaced
-   *
-   *
-   * @param modifications
-   * @param entry
-   */
-  private static void appendModification(Modifications modifications,
-          SVNLogEntryPath entry)
-  {
-    switch (entry.getType())
-    {
-      case SVNLogEntryPath.TYPE_ADDED :
-        modifications.getAdded().add(entry.getPath());
-
-        break;
-
-      case SVNLogEntryPath.TYPE_DELETED :
-        modifications.getRemoved().add(entry.getPath());
-
-        break;
-
-      case SVNLogEntryPath.TYPE_MODIFIED :
-        modifications.getModified().add(entry.getPath());
-
-        break;
-    }
   }
 }

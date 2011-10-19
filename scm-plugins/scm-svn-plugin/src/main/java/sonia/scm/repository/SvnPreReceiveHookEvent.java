@@ -131,7 +131,15 @@ public class SvnPreReceiveHookEvent extends AbstractRepositoryHookEvent
 
       if (entry != null)
       {
-        csets.add(SvnUtil.createChangeset(entry));
+        Changeset c = SvnUtil.createChangeset(entry);
+
+        clientManager.doGetChanged(repositoryDirectory, transaction,
+                                   new SvnModificationHandler(c), true);
+        csets.add(c);
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("could not find log entry for pre receive hook");
       }
     }
     catch (Exception ex)
