@@ -285,7 +285,10 @@ public class RunMojo extends AbstractBaseScmMojo
       new JettyStopMonitorThread(server, stopPort, stopKey).start();
       server.start();
 
-      // server.join();
+      if (!backgroud)
+      {
+        server.join();
+      }
     }
     catch (Exception ex)
     {
