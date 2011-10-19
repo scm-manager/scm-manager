@@ -42,7 +42,9 @@ baseUrl = "${url}"
 challenge = "${challenge}"
 credentials = os.environ['SCM_CREDENTIALS']
 
-def callback(ui, repo, hooktype, node=None, source=None, **kwargs):
+def callback(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
+  if pending != None:
+    pending()
   failure = True
   if node != None:
     try:

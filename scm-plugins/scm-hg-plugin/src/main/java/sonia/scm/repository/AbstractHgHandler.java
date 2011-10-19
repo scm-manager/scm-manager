@@ -414,6 +414,11 @@ public class AbstractHgHandler
 
     if (context.isPending())
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("enable hg pending for {}", directory.getAbsolutePath());
+      }
+
       env.put(ENV_PENDING, directory.getAbsolutePath());
 
       if (extraEnv.containsKey(ENV_REVISION_START))
