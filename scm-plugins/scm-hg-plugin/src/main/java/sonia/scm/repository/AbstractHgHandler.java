@@ -180,7 +180,7 @@ public class AbstractHgHandler
   {
     Map<String, String> env = new HashMap<String, String>();
 
-    env.put(ENV_REVISION, Util.nonNull(revision));
+    env.put(ENV_REVISION, HgUtil.getRevision(revision));
     env.put(ENV_PATH, Util.nonNull(path));
 
     return env;
