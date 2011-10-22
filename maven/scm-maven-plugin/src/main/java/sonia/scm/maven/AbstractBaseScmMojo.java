@@ -59,7 +59,10 @@ import java.util.Scanner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 /**
  *
@@ -402,9 +405,17 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
    */
   private void readClasspathFile(List<String> classpath, File classpathFile)
   {
-    Classpath c = JAXB.unmarshal(classpathFile, Classpath.class);
-
-    classpath.addAll(c.getClasspathElements());
+  	try
+    {	
+	  JAXBContext context = JAXBContext.newInstance(Classpath.class);
+      Unmarshaller unmarshaller = context.createUnmarshaller();
+	  Classpath c = (Classpath) unmarshaller.unmarshal(classpathFile);
+	  classpath.addAll(c.getClasspathElements());
+	}
+	catch (JAXBException ex)
+	{
+	  throw new RuntimeException(ex);
+	}
   }
 
   /**
@@ -419,6 +430,16 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     Classpath c = new Classpath();
 
     c.setClasspathElements(classpath);
-    JAXB.marshal(c, classpathFile);
+	try
+    {	
+	  JAXBContext context = JAXBContext.newInstance(Classpath.class);
+      Marshaller marshaller = context.createMarshaller();
+	  marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+	  marshaller.marshal(c, classpathFile);
+	}
+	catch (JAXBException ex)
+	{
+	  throw new RuntimeException(ex);
+	}
   }
 }
