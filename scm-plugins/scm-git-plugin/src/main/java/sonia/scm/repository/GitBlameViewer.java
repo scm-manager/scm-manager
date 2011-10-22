@@ -122,35 +122,39 @@ public class GitBlameViewer implements BlameViewer
 
       List<BlameLine> blameLines = new ArrayList<BlameLine>();
       int total = gitBlameResult.getResultContents().size();
-
-      for (int i = 0; i < total; i++)
+      int i = 0;
+	  
+      for (; i < total; i++)
       {
-        PersonIdent author = gitBlameResult.getSourceAuthor(i);
-        BlameLine blameLine = new BlameLine();
+	    RevCommit commit = gitBlameResult.getSourceCommit(i);
+		
+		if ( commit != null )
+		{
+          PersonIdent author = gitBlameResult.getSourceAuthor(i);
+          BlameLine blameLine = new BlameLine();
 
-        blameLine.setLineNumber(i + 1);
-        blameLine.setAuthor(new Person(author.getName(),
-                                       author.getEmailAddress()));
+          blameLine.setLineNumber(i + 1);
+          blameLine.setAuthor(new Person(author.getName(),
+                                         author.getEmailAddress()));
 
-        RevCommit commit = gitBlameResult.getSourceCommit(i);
+          blameLine.setDescription(commit.getShortMessage());
 
-        blameLine.setDescription(commit.getShortMessage());
+          long when = GitUtil.getCommitTime(commit);
 
-        long when = GitUtil.getCommitTime(commit);
+          blameLine.setWhen(when);
 
-        blameLine.setWhen(when);
+          String rev = commit.getId().getName();
 
-        String rev = commit.getId().getName();
+          blameLine.setRevision(rev);
 
-        blameLine.setRevision(rev);
+          String content = gitBlameResult.getResultContents().getString(i);
 
-        String content = gitBlameResult.getResultContents().getString(i);
-
-        blameLine.setCode(content);
-        blameLines.add(blameLine);
+          blameLine.setCode(content);
+          blameLines.add(blameLine);
+		}  
       }
 
-      blameResult = new sonia.scm.repository.BlameResult(total, blameLines);
+      blameResult = new sonia.scm.repository.BlameResult(i, blameLines);
     }
     catch (IOException ex)
     {
