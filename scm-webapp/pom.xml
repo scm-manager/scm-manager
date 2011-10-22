@@ -6,13 +6,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.8</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-webapp</artifactId>
   <packaging>war</packaging>
-  <version>1.8-SNAPSHOT</version>
+  <version>1.8</version>
   <name>scm-webapp</name>
 
   <dependencies>
@@ -36,25 +36,25 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>1.8-SNAPSHOT</version>
+      <version>1.8</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
-      <version>1.8-SNAPSHOT</version>
+      <version>1.8</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
-      <version>1.8-SNAPSHOT</version>
+      <version>1.8</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-git-plugin</artifactId>
-      <version>1.8-SNAPSHOT</version>
+      <version>1.8</version>
     </dependency>
 
     <dependency>
@@ -230,7 +230,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>1.8-SNAPSHOT</version>
+      <version>1.8</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
