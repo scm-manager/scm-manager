@@ -592,6 +592,30 @@ public class IOUtil
     return cmds;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   * @since 1.9
+   */
+  public static String trimSeperatorChars(String name)
+  {
+    if (name.startsWith(File.separator))
+    {
+      name = name.substring(1);
+    }
+
+    if (name.endsWith(File.separator))
+    {
+      name = name.substring(0, name.length() - 1);
+    }
+
+    return name;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
