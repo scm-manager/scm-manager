@@ -48,9 +48,9 @@ def callback(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs)
   failure = True
   if node != None:
     try:
-      url = baseUrl + os.path.basename(repo.root) + "/" + hooktype
+      url = baseUrl + hooktype
       ui.debug( "send scm-hook to " + url + " and " + node + "\n" )
-      data = urllib.urlencode({'node': node, 'challenge': challenge, 'credentials': credentials})
+      data = urllib.urlencode({'node': node, 'challenge': challenge, 'credentials': credentials, 'repositoryPath': repo.root})
       conn = urllib.urlopen(url, data);
       if conn.code >= 200 and conn.code < 300:
         ui.debug( "scm-hook " + hooktype + " success with status code " + str(conn.code) + "\n" )

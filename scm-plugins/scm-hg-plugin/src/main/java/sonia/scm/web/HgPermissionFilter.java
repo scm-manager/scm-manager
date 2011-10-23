@@ -39,9 +39,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.web.filter.RegexPermissionFilter;
+import sonia.scm.repository.Repository;
+import sonia.scm.web.filter.ProviderPermissionFilter;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -53,7 +52,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgPermissionFilter extends RegexPermissionFilter
+public class HgPermissionFilter extends ProviderPermissionFilter
 {
 
   /**
@@ -61,29 +60,17 @@ public class HgPermissionFilter extends RegexPermissionFilter
    *
    *
    * @param securityContextProvider
-   * @param repositoryManager
+   * @param repositoryProvider
    */
   @Inject
   public HgPermissionFilter(
           Provider<WebSecurityContext> securityContextProvider,
-          RepositoryManager repositoryManager)
+          Provider<Repository> repositoryProvider)
   {
-    super(securityContextProvider, repositoryManager);
+    super(securityContextProvider, repositoryProvider);
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected String getType()
-  {
-    return HgRepositoryHandler.TYPE_NAME;
-  }
 
   /**
    * Method description

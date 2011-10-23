@@ -51,6 +51,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -81,6 +82,9 @@ public class HgHookCallbackServlet extends HttpServlet
   public static final String HGHOOK_PRE_RECEIVE = "pretxnchangegroup";
 
   /** Field description */
+  public static final String PARAM_REPOSITORYPATH = "repositoryPath";
+
+  /** Field description */
   private static final String PARAM_CHALLENGE = "challenge";
 
   /** Field description */
@@ -91,7 +95,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
   /** Field description */
   private static final Pattern REGEX_URL =
-    Pattern.compile("^/hook/hg/([^/]+)/([^/]+)$");
+    Pattern.compile("^/hook/hg/([^/]+)$");
 
   /** the logger for HgHookCallbackServlet */
   private static final Logger logger =
@@ -144,8 +148,8 @@ public class HgHookCallbackServlet extends HttpServlet
 
     if (m.matches())
     {
-      String repositoryId = m.group(1);
-      String type = m.group(2);
+      String repositoryId = getRepositoryName(request);
+      String type = m.group(1);
       String challenge = request.getParameter(PARAM_CHALLENGE);
 
       if (Util.isNotEmpty(challenge))
@@ -314,6 +318,43 @@ public class HgHookCallbackServlet extends HttpServlet
 
       response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  private String getRepositoryName(HttpServletRequest request)
+  {
+    String name = null;
+    String path = request.getParameter(PARAM_REPOSITORYPATH);
+
+    if (Util.isNotEmpty(path))
+    {
+      int directoryLength =
+        handler.getConfig().getRepositoryDirectory().getAbsolutePath().length();
+
+      if (directoryLength < path.length())
+      {
+        name = IOUtil.trimSeperatorChars(path.substring(directoryLength));
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("path is shorter as the main hg repository path");
+      }
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("no repository path parameter found");
+    }
+
+    return name;
   }
 
   //~--- fields ---------------------------------------------------------------
