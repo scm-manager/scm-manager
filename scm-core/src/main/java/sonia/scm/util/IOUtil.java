@@ -664,6 +664,29 @@ public class IOUtil
     return getScript(baseFile, baseFile.getAbsolutePath());
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param parent
+   * @param child
+   * @since 1.9
+   *
+   * @return
+   *
+   */
+  public static boolean isChild(File parent, File child)
+  {
+    try
+    {
+      return child.getCanonicalPath().startsWith(parent.getCanonicalPath());
+    }
+    catch (IOException ex)
+    {
+      throw new RuntimeException(ex);
+    }
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**

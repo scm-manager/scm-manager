@@ -37,15 +37,21 @@ package sonia.scm.repository;
 
 import com.google.inject.Provider;
 
-import sonia.scm.Manager;
+import org.junit.Test;
+
+import sonia.scm.Type;
 import sonia.scm.repository.xml.XmlRepositoryManager;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.MockUtil;
 
+import static org.junit.Assert.*;
+
 import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -61,16 +67,62 @@ public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
    * Method description
    *
    *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void getRepositoryFromRequestUriTest()
+          throws RepositoryException, IOException
+  {
+    RepositoryManager m = createManager();
+
+    m.init(contextProvider);
+    createRepository(m, new Repository("1", "hg", "scm"));
+    createRepository(m, new Repository("2", "hg", "scm-test"));
+    createRepository(m, new Repository("3", "git", "project1/test-1"));
+    createRepository(m, new Repository("4", "git", "project1/test-2"));
+    assertEquals("scm", m.getFromUri("hg/scm").getName());
+    assertEquals("scm-test", m.getFromUri("hg/scm-test").getName());
+    assertEquals("scm-test", m.getFromUri("/hg/scm-test").getName());
+    assertEquals("project1/test-1",
+                 m.getFromUri("/git/project1/test-1").getName());
+    assertEquals("project1/test-1",
+                 m.getFromUri("/git/project1/test-1/ka/some/path").getName());
+    assertNull(m.getFromUri("/git/project1/test-3/ka/some/path"));
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   @Override
-  protected Manager<Repository, RepositoryException> createManager()
+  protected XmlRepositoryManager createManager()
   {
     Set<RepositoryHandler> handlerSet = new HashSet<RepositoryHandler>();
     StoreFactory factory = new JAXBStoreFactory();
 
     factory.init(contextProvider);
     handlerSet.add(new DummyRepositoryHandler(factory));
+    handlerSet.add(new DummyRepositoryHandler(factory)
+    {
+      @Override
+      public Type getType()
+      {
+        return new Type("hg", "Mercurial");
+      }
+    });
+    handlerSet.add(new DummyRepositoryHandler(factory)
+    {
+      @Override
+      public Type getType()
+      {
+        return new Type("git", "Git");
+      }
+    });
 
     Provider<Set<RepositoryListener>> listenerProvider = mock(Provider.class);
 
@@ -84,5 +136,21 @@ public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
                                     MockUtil.getAdminSecurityContextProvider(),
                                     factory, handlerSet, listenerProvider,
                                     hookProvider);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param m
+   * @param repository
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  private void createRepository(RepositoryManager m, Repository repository)
+          throws RepositoryException, IOException
+  {
+    m.create(repository);
   }
 }

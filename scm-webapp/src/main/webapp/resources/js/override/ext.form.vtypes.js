@@ -51,6 +51,13 @@ Ext.apply(Ext.form.VTypes, {
   
   nameText: 'The name is invalid.',
   
+  // repository name validator
+  repositoryName: function(val){
+    return /^[A-z0-9\.\-_\/]+$/.test(val);
+  },
+  
+  repositoryNameText: 'The name of the repository is invalid.',
+  
   // username validator
   
   username: function(val){

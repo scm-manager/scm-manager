@@ -434,7 +434,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   /**
    * Returns true if the {@link Repository} is valid.
    * <ul>
-   *   <li>The name is not empty and contains only A-z, 0-9, _, -</li>
+   *   <li>The name is not empty and contains only A-z, 0-9, _, -, /</li>
    *   <li>The type is not empty</li>
    *   <li>The contact is empty or contains a valid email address</li>
    * </ul>
@@ -445,7 +445,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   @Override
   public boolean isValid()
   {
-    return ValidationUtil.isNameValid(name) && Util.isNotEmpty(type)
+    return ValidationUtil.isRepositoryNameValid(name) && Util.isNotEmpty(type)
            && ((Util.isEmpty(contact))
                || ValidationUtil.isMailAddressValid(contact));
   }

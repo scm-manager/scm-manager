@@ -219,8 +219,18 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
     if (isConfigured())
     {
-      directory = new File(config.getRepositoryDirectory(),
-                           repository.getName());
+      File repositoryDirectory = config.getRepositoryDirectory();
+
+      directory = new File(repositoryDirectory, repository.getName());
+
+      if (!IOUtil.isChild(repositoryDirectory, directory))
+      {
+        StringBuilder msg = new StringBuilder(directory.getPath());
+
+        msg.append("is not a child of ").append(repositoryDirectory.getPath());
+
+        throw new ConfigurationException(msg.toString());
+      }
     }
     else
     {
