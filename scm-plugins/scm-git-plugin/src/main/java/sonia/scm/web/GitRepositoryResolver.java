@@ -86,56 +86,6 @@ public class GitRepositoryResolver
     this.handler = handler;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   */
-  private static boolean isUnreasonableName(final String name)
-  {
-    if (name.length() == 0)
-    {
-      return true;    // no empty paths
-    }
-
-    if (name.indexOf('\\') >= 0)
-    {
-      return true;    // no windows/dos style paths
-    }
-
-    if (new File(name).isAbsolute())
-    {
-      return true;    // no absolute paths
-    }
-
-    if (name.startsWith("../"))
-    {
-      return true;    // no "l../etc/passwd"
-    }
-
-    if (name.contains("/../"))
-    {
-      return true;    // no "foo/../etc/passwd"
-    }
-
-    if (name.contains("/./"))
-    {
-      return true;    // "foo/./foo" is insane to ask
-    }
-
-    if (name.contains("//"))
-    {
-      return true;    // double slashes is sloppy, don't use it
-    }
-
-    return false;    // is a reasonable name
-  }
-
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -157,11 +107,6 @@ public class GitRepositoryResolver
                  ServiceNotEnabledException
   {
     Repository repository = null;
-
-    if (isUnreasonableName(repositoryName))
-    {
-      throw new RepositoryNotFoundException(repositoryName);
-    }
 
     try
     {
