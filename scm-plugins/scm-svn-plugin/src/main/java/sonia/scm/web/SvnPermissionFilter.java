@@ -39,9 +39,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.SvnRepositoryHandler;
-import sonia.scm.web.filter.RegexPermissionFilter;
+import sonia.scm.repository.Repository;
+import sonia.scm.web.filter.ProviderPermissionFilter;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -57,7 +56,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class SvnPermissionFilter extends RegexPermissionFilter
+public class SvnPermissionFilter extends ProviderPermissionFilter
 {
 
   /** Field description */
@@ -74,29 +73,17 @@ public class SvnPermissionFilter extends RegexPermissionFilter
    *
    *
    * @param securityContextProvider
-   * @param repositoryManager
+   * @param repository
    */
   @Inject
   public SvnPermissionFilter(
           Provider<WebSecurityContext> securityContextProvider,
-          RepositoryManager repositoryManager)
+          Provider<Repository> repository)
   {
-    super(securityContextProvider, repositoryManager);
+    super(securityContextProvider, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected String getType()
-  {
-    return SvnRepositoryHandler.TYPE_NAME;
-  }
 
   /**
    * Method description
