@@ -44,16 +44,21 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 
   initComponent: function(){
 
-    var repositoryStore = new Sonia.rest.JsonStore({
+    var repositoryStore = new Ext.data.GroupingStore({
       proxy: new Ext.data.HttpProxy({
         url: restUrl + 'repositories.json',
         disableCaching: false
       }),
+      reader: new Ext.data.JsonReader({
+        fields: [ 'id', 'name', 'type', 'contact', 'description', 'creationDate', 'url', 'public', 'permissions', 'properties' ]
+      }),
       id: 'id',
-      fields: [ 'id', 'name', 'type', 'contact', 'description', 'creationDate', 'url', 'public', 'permissions', 'properties' ],
       sortInfo: {
         field: 'name'
       },
+      autoDestroy: true,
+      autoLoad: true,
+      groupField: 'name',
       listeners: {
         load: {
           fn: this.storeLoad,
@@ -69,7 +74,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         width: 125
       },
       columns: [
-        {id: 'name', header: this.colNameText, dataIndex: 'name'},
+        {id: 'name', header: this.colNameText, dataIndex: 'name', renderer: this.renderName, groupRenderer: this.renderGroupName, scope: this},
         {id: 'type', header: this.colTypeText, dataIndex: 'type', renderer: this.renderRepositoryType, width: 80},
         {id: 'contact', header: this.colContactText, dataIndex: 'contact', renderer: this.renderMailto},
         {id: 'description', header: this.colDescriptionText, dataIndex: 'description'},
@@ -88,11 +93,36 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
           fn: this.onFallBelowMinHeight,
           scope: this
         }
-      }
+      },
+      view: new Ext.grid.GroupingView({
+        forceFit: true,
+        groupMode: 'display',
+        groupTextTpl: '{group} ({[values.rs.length]} {[values.rs.length > 1 ? "Repositories" : "Repository"]})'
+      })
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Grid.superclass.initComponent.apply(this, arguments);
+  },
+  
+  renderName: function(v, meta, record, rowIndex, colIndex, store){
+    // TODO check if grouping is enabled
+    var i = v.lastIndexOf('/');
+    if ( i > 0 ){
+      v = v.substring(i+1);
+    }
+    return v;
+  },
+  
+  renderGroupName: function(v){
+    var i = v.lastIndexOf('/');
+    if ( i > 0 ){
+      v = v.substring(0, i);
+    } else {
+      // TODO find better text
+      v = 'main';
+    }
+    return v;
   },
   
   storeLoad: function(){
