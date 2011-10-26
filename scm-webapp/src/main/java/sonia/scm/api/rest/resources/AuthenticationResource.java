@@ -248,7 +248,7 @@ public class AuthenticationResource
     return new ScmState(contextProvider, securityContext,
                         repositoryManger.getConfiguredTypes(),
                         new ScmClientConfig(configuration.getDateFormat(),
-                          configuration.isEnableGroupingGrid()));
+                          configuration.isDisableGroupingGrid()));
   }
 
   //~--- fields ---------------------------------------------------------------

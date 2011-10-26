@@ -58,7 +58,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   forceBaseUrlText: 'Force Base Url',
   
   // TODO i18n
-  enableGroupingGridText: 'Enable repository Groups',
+  disableGroupingGridText: 'Disable repository Groups',
   
 
   // help
@@ -84,7 +84,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   forceBaseUrlHelpText: 'Redirects to the base url if the request comes from a other url',
   
   // TODO i18n
-  enableGroupingGridHelpText: 'Enable repository Groups. A complete page reload is required after a change of this value.',
+  disableGroupingGridHelpText: 'Disable repository Groups. A complete page reload is required after a change of this value.',
 
 
   initComponent: function(){
@@ -107,10 +107,10 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           helpText: this.forceBaseUrlHelpText
         },{
           xtype: 'checkbox',
-          fieldLabel: this.enableGroupingGridText,
-          name: 'enableGroupingGrid',
+          fieldLabel: this.disableGroupingGridText,
+          name: 'disableGroupingGrid',
           inputValue: 'true',
-          helpText: this.enableGroupingGridHelpText
+          helpText: this.disableGroupingGridHelpText
         },{
           xtype: 'textfield',
           fieldLabel: this.dateFormatText,

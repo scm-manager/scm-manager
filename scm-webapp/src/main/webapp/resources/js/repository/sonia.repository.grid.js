@@ -146,10 +146,10 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 
     if (debug){
       var msg = "grouping is ";
-      if ( state.clientConfig.enableGroupingGrid ){
-        msg += "enabled";
-      } else {
+      if ( state.clientConfig.disableGroupingGrid ){
         msg += "disabled";
+      } else {
+        msg += "enabled";
       }
       console.debug( msg );
     }
@@ -166,7 +166,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         }
       },
       view: new Ext.grid.GroupingView({
-        enableGrouping: state.clientConfig.enableGroupingGrid,
+        enableGrouping: ! state.clientConfig.disableGroupingGrid,
         enableNoGroups: false,
         forceFit: true,
         groupMode: 'value',

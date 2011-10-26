@@ -65,12 +65,12 @@ public class ScmClientConfig
    * @since 1.9
    *
    * @param dateFormat
-   * @param enableGroupingGrid
+   * @param disableGroupingGrid true to disable repository grouping
    */
-  public ScmClientConfig(String dateFormat, boolean enableGroupingGrid)
+  public ScmClientConfig(String dateFormat, boolean disableGroupingGrid)
   {
     this.dateFormat = dateFormat;
-    this.enableGroupingGrid = enableGroupingGrid;
+    this.disableGroupingGrid = disableGroupingGrid;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -89,15 +89,15 @@ public class ScmClientConfig
   }
 
   /**
-   * Returns true if the grouping of repositories is enabled.
+   * Returns true if the grouping of repositories is disabled.
    *
    * @since 1.9
    *
-   * @return true if the grouping of repositories is enabled
+   * @return true if the grouping of repositories is disabled
    */
-  public boolean isEnableGroupingGrid()
+  public boolean isDisableGroupingGrid()
   {
-    return enableGroupingGrid;
+    return disableGroupingGrid;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -119,11 +119,12 @@ public class ScmClientConfig
    *
    * @since 1.9
    *
-   * @param enableGroupingGrid - true to enable repository grouping
+   *
+   * @param disableGroupingGrid
    */
-  public void setEnableGroupingGrid(boolean enableGroupingGrid)
+  public void setDisableGroupingGrid(boolean disableGroupingGrid)
   {
-    this.enableGroupingGrid = enableGroupingGrid;
+    this.disableGroupingGrid = disableGroupingGrid;
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -132,5 +133,5 @@ public class ScmClientConfig
   private String dateFormat;
 
   /** Field description */
-  private boolean enableGroupingGrid = true;
+  private boolean disableGroupingGrid = true;
 }

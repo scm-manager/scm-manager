@@ -164,7 +164,7 @@ public class ScmConfiguration
     this.proxyPassword = other.proxyPassword;
     this.forceBaseUrl = other.forceBaseUrl;
     this.baseUrl = other.baseUrl;
-    this.enableGroupingGrid = other.enableGroupingGrid;
+    this.disableGroupingGrid = other.disableGroupingGrid;
 
     // deprecated fields
     this.sslPort = other.sslPort;
@@ -349,14 +349,12 @@ public class ScmConfiguration
   /**
    * Method description
    *
-   *
    * @since 1.9
-   *
    * @return
    */
-  public boolean isEnableGroupingGrid()
+  public boolean isDisableGroupingGrid()
   {
-    return enableGroupingGrid;
+    return disableGroupingGrid;
   }
 
   /**
@@ -468,14 +466,13 @@ public class ScmConfiguration
   /**
    * Method description
    *
-   *
    * @since 1.9
    *
-   * @param enableGroupingGrid
+   * @param disableGroupingGrid
    */
-  public void setEnableGroupingGrid(boolean enableGroupingGrid)
+  public void setDisableGroupingGrid(boolean disableGroupingGrid)
   {
-    this.enableGroupingGrid = enableGroupingGrid;
+    this.disableGroupingGrid = disableGroupingGrid;
   }
 
   /**
@@ -686,7 +683,7 @@ public class ScmConfiguration
     new HashSet<ConfigChangedListener>();
 
   /** Field description */
-  private boolean enableGroupingGrid = false;
+  private boolean disableGroupingGrid = false;
 
   /**
    * JavaScript date format, see http://jacwright.com/projects/javascript/date_format
