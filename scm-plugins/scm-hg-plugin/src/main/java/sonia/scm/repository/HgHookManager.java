@@ -108,7 +108,7 @@ public class HgHookManager
         {
           StringBuilder url = new StringBuilder(request.getScheme());
 
-          url.append("://localhost:").append(request.getServerPort());
+          url.append("://localhost:").append(request.getLocalPort());
           url.append(request.getContextPath()).append("/hook/hg/");
 
           if (hgHookScript == null)
@@ -121,7 +121,8 @@ public class HgHookManager
 
           if (logger.isDebugEnabled())
           {
-            logger.debug("write hg hook script to '{}'", hgHookScript);
+            logger.debug("write hg hook script for '{}' to '{}'", url,
+                         hgHookScript);
           }
 
           writeScript(hgHookScript, url.toString());
