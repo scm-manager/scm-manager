@@ -43,6 +43,10 @@ import sonia.scm.config.ScmConfiguration;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,6 +61,9 @@ public class HttpUtil
 
   /** authentication realm for basic authentication */
   public static final String AUTHENTICATION_REALM = "SONIA :: SCM Manager";
+
+  /** Field description */
+  public static final String ENCODING = "UTF-8";
 
   /** authentication header */
   public static final String HEADER_WWW_AUTHENTICATE = "WWW-Authenticate";
@@ -111,6 +118,52 @@ public class HttpUtil
   private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param value
+   *
+   * @return
+   * @since 1.9
+   */
+  public static String decode(String value)
+  {
+    try
+    {
+      value = URLDecoder.decode(value, ENCODING);
+    }
+    catch (UnsupportedEncodingException ex)
+    {
+      throw new RuntimeException("could not decode", ex);
+    }
+
+    return value;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param value
+   *
+   * @return
+   * @since 1.9
+   */
+  public static String encode(String value)
+  {
+    try
+    {
+      value = URLEncoder.encode(value, ENCODING);
+    }
+    catch (UnsupportedEncodingException ex)
+    {
+      throw new RuntimeException("could not encode", ex);
+    }
+
+    return value;
+  }
 
   /**
    * Send an unauthorized header back to the client
