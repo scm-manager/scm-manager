@@ -10,6 +10,16 @@
     <td>${latest.name}</td>
   </tr>
   <tr>
+    <th>Category</th>
+    <td>
+      <#if latest.category??>
+        ${latest.category}
+      <#else>
+        Miscellaneous
+      </#if>
+    </td>
+  </tr>
+  <tr>
     <th>GroupId</th>
     <td>${latest.groupId}</td>
   </tr>
@@ -21,6 +31,16 @@
     <th>Author</th>
     <td>${latest.author}</td>
   </tr>
+  <#if latest.url??>
+  <tr>
+    <th>URL</th>
+    <td>
+      <a href="${latest.url}" target="_blank">
+        ${latest.url}
+      </a>
+    </td>
+  </tr>
+  </#if>
 </table>
 
 <p>&nbsp;</p>
