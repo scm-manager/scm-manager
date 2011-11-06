@@ -78,8 +78,21 @@ public class PluginInformationComparator
 
       if (result == 0)
       {
-        result = plugin.getState().getCompareValue()
-                 - other.getState().getCompareValue();
+        PluginState state = plugin.getState();
+        PluginState otherState = other.getState();
+
+        if ((state != null) && (otherState != null))
+        {
+          result = state.getCompareValue() - otherState.getCompareValue();
+        }
+        else if ((state == null) && (otherState != null))
+        {
+          result = 1;
+        }
+        else if ((state != null) && (otherState == null))
+        {
+          result = -1;
+        }
       }
     }
 
