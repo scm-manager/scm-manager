@@ -1,18 +1,23 @@
 <#include "template/header.html">
 
-<div id="plugins">
-<#list plugins as plugin>
-  <h3><a href="#">${plugin.name}</a></h3>
-  <div>
-    ${plugin.description}<br />
-    <a href="${contextPath}/page/detail/${plugin.groupId}/${plugin.artifactId}.html" style="color: #1C94C4;">more</a>
+<div id="categories">
+<#list categories as category>
+  <h2>${category.name}</h2>
+  <div class="plugins">
+    <#list category.plugins as plugin>
+      <h3><a href="#">${plugin.name}</a></h3>
+      <div>
+        ${plugin.description}<br />
+        <a href="${contextPath}/page/detail/${plugin.groupId}/${plugin.artifactId}.html" style="color: #1C94C4;">more</a>
+      </div>
+    </#list>
   </div>
 </#list>
 </div>
 
 <script type="text/javascript">
   jQuery(document).ready(function(){
-    $( "#plugins" ).accordion({
+    $( "div.plugins" ).accordion({
       active: false
     });
   });
