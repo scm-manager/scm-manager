@@ -40,7 +40,7 @@
         </#if>
         <#if version.condition.os??>
         <li>
-          Operatingsystems: 
+          Operatingsystems:
           <#list version.condition.os as os>
             ${os}<#if os_has_next>, </#if>
           </#list>
