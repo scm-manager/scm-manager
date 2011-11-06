@@ -45,6 +45,32 @@
 
 <p>&nbsp;</p>
 
+<#if latest.screenshots??>
+  <div class="screenshots">
+    <#list latest.screenshots as screenshot>
+      <a class="screenshot" href="${screenshot}">
+        <#if latest.screenshots?size == 1>
+          <#assign size="l">
+        <#elseif latest.screenshots?size == 2>
+          <#assign size="m">
+        <#else>
+          <#assign size="s">
+        </#if>
+        <img class="screenshot" src="${contextPath}/page/screenshot/${latest.groupId}/${latest.artifactId}/${screenshot_index}/${size}.jpg" alt="screenshot" />
+      </a>
+    </#list>
+  </div>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('a.screenshot').fancybox();
+    });
+  </script>
+
+  <p>&nbsp;</p>
+  
+</#if>
+
 <h2>Plugin Versions</h2>
 
 <div id="accordion">
