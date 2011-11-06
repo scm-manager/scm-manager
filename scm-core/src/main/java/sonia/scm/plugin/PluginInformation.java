@@ -40,6 +40,10 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -73,8 +77,16 @@ public class PluginInformation implements Validateable
 
     final PluginInformation other = (PluginInformation) obj;
 
-    if ((this.condition != other.condition)
-        && ((this.condition == null) ||!this.condition.equals(other.condition)))
+    if ((this.screenshots != other.screenshots)
+        && ((this.screenshots == null)
+            ||!this.screenshots.equals(other.screenshots)))
+    {
+      return false;
+    }
+
+    if ((this.category == null)
+        ? (other.category != null)
+        : !this.category.equals(other.category))
     {
       return false;
     }
@@ -89,6 +101,12 @@ public class PluginInformation implements Validateable
     if ((this.author == null)
         ? (other.author != null)
         : !this.author.equals(other.author))
+    {
+      return false;
+    }
+
+    if ((this.condition != other.condition)
+        && ((this.condition == null) ||!this.condition.equals(other.condition)))
     {
       return false;
     }
@@ -145,33 +163,39 @@ public class PluginInformation implements Validateable
   @Override
   public int hashCode()
   {
-    int hash = 5;
+    int hash = 7;
 
-    hash = 83 * hash + ((this.condition != null)
-                        ? this.condition.hashCode()
+    hash = 61 * hash + ((this.screenshots != null)
+                        ? this.screenshots.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.artifactId != null)
+    hash = 61 * hash + ((this.category != null)
+                        ? this.category.hashCode()
+                        : 0);
+    hash = 61 * hash + ((this.artifactId != null)
                         ? this.artifactId.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.author != null)
+    hash = 61 * hash + ((this.author != null)
                         ? this.author.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.description != null)
+    hash = 61 * hash + ((this.condition != null)
+                        ? this.condition.hashCode()
+                        : 0);
+    hash = 61 * hash + ((this.description != null)
                         ? this.description.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.groupId != null)
+    hash = 61 * hash + ((this.groupId != null)
                         ? this.groupId.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.name != null)
+    hash = 61 * hash + ((this.name != null)
                         ? this.name.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.state != null)
+    hash = 61 * hash + ((this.state != null)
                         ? this.state.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.url != null)
+    hash = 61 * hash + ((this.url != null)
                         ? this.url.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.version != null)
+    hash = 61 * hash + ((this.version != null)
                         ? this.version.hashCode()
                         : 0);
 
@@ -200,6 +224,17 @@ public class PluginInformation implements Validateable
   public String getAuthor()
   {
     return author;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getCategory()
+  {
+    return category;
   }
 
   /**
@@ -259,6 +294,17 @@ public class PluginInformation implements Validateable
   public String getName()
   {
     return name;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<String> getScreenshots()
+  {
+    return screenshots;
   }
 
   /**
@@ -335,6 +381,17 @@ public class PluginInformation implements Validateable
    * Method description
    *
    *
+   * @param category
+   */
+  public void setCategory(String category)
+  {
+    this.category = category;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param condition
    */
   public void setCondition(PluginCondition condition)
@@ -379,6 +436,17 @@ public class PluginInformation implements Validateable
    * Method description
    *
    *
+   * @param screenshots
+   */
+  public void setScreenshots(List<String> screenshots)
+  {
+    this.screenshots = screenshots;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param state
    */
   public void setState(PluginState state)
@@ -417,6 +485,9 @@ public class PluginInformation implements Validateable
   private String author;
 
   /** Field description */
+  private String category;
+
+  /** Field description */
   private PluginCondition condition;
 
   /** Field description */
@@ -427,6 +498,11 @@ public class PluginInformation implements Validateable
 
   /** Field description */
   private String name;
+
+  /** Field description */
+  @XmlElement(name = "screenshot")
+  @XmlElementWrapper(name = "screenshots")
+  private List<String> screenshots;
 
   /** Field description */
   private PluginState state;
