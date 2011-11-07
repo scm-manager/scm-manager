@@ -33,9 +33,13 @@
 
 package sonia.scm.cache;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.Filter;
+
 /**
- * The main interface for the cache. 
- * Provides methods to add, access, and remove entries from a cache. 
+ * The main interface for the cache.
+ * Provides methods to add, access, and remove entries from a cache.
  *
  * @author Sebastian Sdorra
  *
@@ -80,6 +84,18 @@ public interface Cache<K, V>
    * @return true if the operation was successful
    */
   public boolean remove(K key);
+
+  /**
+   * Remove all elements with matching {@link Filter} from this cache.
+   * The method returns true if the operation was successful.
+   *
+   * @since 1.9
+   *
+   * @param filter - The filter to match cache keys
+   *
+   * @return true if the operation was successful
+   */
+  public boolean removeAll(Filter<K> filter);
 
   //~--- get methods ----------------------------------------------------------
 

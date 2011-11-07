@@ -35,162 +35,125 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import net.sf.ehcache.Element;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import sonia.scm.Filter;
+import sonia.scm.util.IOUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Iterator;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Sebastian Sdorra
- *
- * @param <K>
- * @param <V>
  */
-public class EhCache<K, V> implements Cache<K, V>
+public class EhCacheTest
 {
 
-  /** the logger for EhCache */
-  private static final Logger logger = LoggerFactory.getLogger(EhCache.class);
-
-  //~--- constructors ---------------------------------------------------------
-
   /**
-   * Constructs ...
+   * Method description
    *
-   *
-   * @param cache
-   * @param name
    */
-  public EhCache(net.sf.ehcache.Cache cache, String name)
+  @After
+  public void after()
   {
-    this.cache = cache;
-    this.name = name;
+    IOUtil.close(cm);
   }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    */
-  @Override
-  public void clear()
+  @Before
+  public void before()
   {
-    if (logger.isDebugEnabled())
+    cm = new EhCacheManager();
+    cache = cm.getCache(String.class, String.class, "test");
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testClear()
+  {
+    cache.put("test", "test123");
+    cache.put("test-1", "test123");
+    cache.clear();
+    assertNull(cache.get("test"));
+    assertNull(cache.get("test-1"));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testContains()
+  {
+    cache.put("test", "test123");
+    cache.put("test-1", "test123");
+    assertTrue(cache.contains("test"));
+    assertTrue(cache.contains("test-1"));
+    assertFalse(cache.contains("test-2"));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testPutAndGet()
+  {
+    cache.put("test", "test123");
+    assertEquals("test123", cache.get("test"));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testRemove()
+  {
+    cache.put("test", "test123");
+    assertEquals("test123", cache.get("test"));
+    cache.remove("test");
+    assertNull(cache.get("test"));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testRemoveAll()
+  {
+    cache.put("test-1", "test123");
+    cache.put("test-2", "test123");
+    cache.put("a-1", "test123");
+    cache.put("a-2", "test123");
+    cache.removeAll(new Filter<String>()
     {
-      logger.debug("clear cache {}", name);
-    }
-
-    cache.removeAll();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
-  @Override
-  public boolean contains(K key)
-  {
-    return cache.get(key) != null;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   * @param value
-   */
-  @Override
-  public void put(K key, V value)
-  {
-    cache.put(new Element(key, value));
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
-  @Override
-  public boolean remove(K key)
-  {
-    return cache.remove(key);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param filter
-   *
-   * @return
-   */
-  @Override
-  public boolean removeAll(Filter<K> filter)
-  {
-    boolean result = true;
-    Iterator<K> it = cache.getKeys().iterator();
-
-    while (it.hasNext())
-    {
-      K key = it.next();
-
-      if (filter.accept(key))
+      @Override
+      public boolean accept(String item)
       {
-        if (!cache.remove(key))
-        {
-          result = false;
-        }
+        return item.startsWith("test");
       }
-    }
-
-    return result;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
-  @Override
-  public V get(K key)
-  {
-    V value = null;
-    Element el = cache.get(key);
-
-    if (el != null)
-    {
-      value = (V) el.getObjectValue();
-    }
-
-    return value;
+    });
+    assertNull(cache.get("test-1"));
+    assertNull(cache.get("test-2"));
+    assertNotNull(cache.get("a-1"));
+    assertNotNull(cache.get("a-2"));
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private net.sf.ehcache.Cache cache;
+  private Cache<String, String> cache;
 
   /** Field description */
-  private String name;
+  private CacheManager cm;
 }
