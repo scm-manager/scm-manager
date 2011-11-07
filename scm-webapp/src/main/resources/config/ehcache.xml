@@ -152,4 +152,13 @@
         diskPersistent="false"
   />
   
+  <cache
+        name="sonia.cache.repository.blame"
+        maxElementsInMemory="1000"
+        eternal="false"
+        overflowToDisk="false"
+        timeToLiveSeconds="5400"
+        diskPersistent="false"
+  />
+  
 </ehcache>
