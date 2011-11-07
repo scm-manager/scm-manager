@@ -62,3 +62,4 @@ sonia.scm.cli.cmd.DeleteMembersSubCommand
 
 # misc
 sonia.scm.cli.cmd.VersionSubCommand
+sonia.scm.cli.cmd.ServerVersionSubCommand
