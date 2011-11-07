@@ -40,6 +40,7 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.Filter;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
@@ -57,7 +58,7 @@ import java.util.Set;
  * @author Sebastian Sdorra
  * @since 1.6
  */
-public class ChangesetViewerUtil extends CacheClearHook
+public class ChangesetViewerUtil extends PartCacheClearHook
 {
 
   /** Field description */
@@ -91,7 +92,7 @@ public class ChangesetViewerUtil extends CacheClearHook
                                   ChangesetPagingResult.class, CACHE_NAME);
     init(repositoryManager, cache);
   }
-
+  
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -247,7 +248,7 @@ public class ChangesetViewerUtil extends CacheClearHook
    * @version        Enter version here..., 11/07/24
    * @author         Enter your name here...
    */
-  private class ChangesetViewerCacheKey
+  private class ChangesetViewerCacheKey implements RepositoryCacheKey
   {
 
     /**
@@ -340,6 +341,12 @@ public class ChangesetViewerUtil extends CacheClearHook
 
     /** Field description */
     private int start;
+
+    @Override
+    public String getRepositoryId()
+    {
+      return repository;
+    }
   }
 
 

@@ -35,115 +35,48 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.Filter;
-import sonia.scm.cache.Cache;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
- * @since 1.6
+ * @since 1.9
+ *
  */
-public class CacheClearHook implements RepositoryHook
+public class RepositoryFilter implements Filter<RepositoryCacheKey>
 {
 
-  /** the logger for CacheClearHook */
-  private static final Logger logger =
-    LoggerFactory.getLogger(CacheClearHook.class);
-
-  //~--- methods --------------------------------------------------------------
-
   /**
-   * Method description
+   * Constructs ...
    *
-   * @since 1.7
    *
+   * @param repository
    */
-  public void clearCache()
+  public RepositoryFilter(Repository repository)
   {
-    clearCache(null);
+    this(repository.getId());
   }
 
   /**
-   * Method description
-   *
-   * @since 1.9
-   *
-   * @param filter
-   */
-  public void clearCache(Filter filter)
-  {
-    if (filter != null)
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("clear cache, with filter");
-      }
-
-      cache.removeAll(filter);
-    }
-    else
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("clear cache");
-      }
-
-      cache.clear();
-    }
-  }
-
-  /**
-   * Method description
+   * Constructs ...
    *
    *
    * @param event
    */
-  @Override
-  public void onEvent(RepositoryHookEvent event)
+  public RepositoryFilter(RepositoryHookEvent event)
   {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("clear cache because repository {} has changed",
-                   event.getRepository().getName());
-    }
-
-    Filter filter = createFilter(event);
-
-    clearCache(filter);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Collection<RepositoryHookType> getTypes()
-  {
-    return types;
+    this(event.getRepository());
   }
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @return
+   * @param repositoryId
    */
-  @Override
-  public boolean isAsync()
+  public RepositoryFilter(String repositoryId)
   {
-    return true;
+    this.repositoryId = repositoryId;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -151,36 +84,19 @@ public class CacheClearHook implements RepositoryHook
   /**
    * Method description
    *
-   * @since 1.9
    *
+   * @param key
    *
-   * @param event
    * @return
    */
-  protected Filter<?> createFilter(RepositoryHookEvent event)
+  @Override
+  public boolean accept(RepositoryCacheKey key)
   {
-    return null;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param manager
-   * @param cache
-   */
-  protected void init(RepositoryManager manager, Cache<?, ?> cache)
-  {
-    manager.addHook(this);
-    this.cache = cache;
+    return repositoryId.equals(key.getRepositoryId());
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Cache<?, ?> cache;
-
-  /** Field description */
-  private Collection<RepositoryHookType> types =
-    Arrays.asList(RepositoryHookType.POST_RECEIVE);
+  private String repositoryId;
 }
