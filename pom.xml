@@ -434,7 +434,7 @@
     <ehcache.version>2.4.6</ehcache.version>
     <freemarker.version>2.3.18</freemarker.version>
     <jetty.version>7.5.4.v20111024</jetty.version>
-    <logback.version>0.9.30</logback.version>
+    <logback.version>1.0.0</logback.version>
     <project.build.javaLevel>1.6</project.build.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
