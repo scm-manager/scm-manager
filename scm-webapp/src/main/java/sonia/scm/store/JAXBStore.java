@@ -69,6 +69,8 @@ public class JAXBStore<T> implements Store<T>
    */
   public JAXBStore(Class<T> type, File configFile)
   {
+    this.type = type;
+
     try
     {
       context = JAXBContext.newInstance(type);
@@ -91,6 +93,11 @@ public class JAXBStore<T> implements Store<T>
   @Override
   public T get()
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("load {} from store {}", type, configFile);
+    }
+
     T result = null;
 
     if (configFile.exists())
@@ -106,6 +113,17 @@ public class JAXBStore<T> implements Store<T>
     }
 
     return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Class<T> getType()
+  {
+    return type;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -145,4 +163,7 @@ public class JAXBStore<T> implements Store<T>
 
   /** Field description */
   private JAXBContext context;
+
+  /** Field description */
+  private Class<T> type;
 }
