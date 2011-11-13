@@ -33,13 +33,16 @@
 
 package sonia.scm.plugin.rest;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.plugin.BackendConfiguration;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
-import sonia.scm.plugin.BackendConfiguration;
 
 /**
  *
@@ -53,14 +56,14 @@ public class ViewableResource
    *
    *
    * @param context
+   * @param configuration
    */
-  public ViewableResource(ServletContext context, BackendConfiguration configuration)
+  public ViewableResource(ServletContext context,
+                          BackendConfiguration configuration)
   {
     this.contextPath = context.getContextPath();
     this.configuration = configuration;
   }
-  
-  private BackendConfiguration configuration;
 
   //~--- methods --------------------------------------------------------------
 
@@ -84,6 +87,9 @@ public class ViewableResource
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private BackendConfiguration configuration;
 
   /** Field description */
   private String contextPath;
