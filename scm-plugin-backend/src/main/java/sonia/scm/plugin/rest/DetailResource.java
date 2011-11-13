@@ -37,6 +37,7 @@ package sonia.scm.plugin.rest;
 
 import com.google.inject.Inject;
 
+import sonia.scm.plugin.BackendConfiguration;
 import sonia.scm.plugin.PluginBackend;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginUtil;
@@ -74,11 +75,13 @@ public class DetailResource extends ViewableResource
    *
    * @param context
    * @param backend
+   * @param configuration
    */
   @Inject
-  public DetailResource(ServletContext context, PluginBackend backend)
+  public DetailResource(ServletContext context, PluginBackend backend,
+                        BackendConfiguration configuration)
   {
-    super(context);
+    super(context, configuration);
     this.backend = backend;
   }
 
@@ -100,10 +103,10 @@ public class DetailResource extends ViewableResource
                                    @DefaultValue("false")
   @QueryParam("snapshot") boolean snapshot)
   {
-    List<PluginInformation> pluginVersions = PluginUtil.getFilteredPluginVersions(
-      backend, groupId, artifactId);
-    
-        if (Util.isEmpty(pluginVersions))
+    List<PluginInformation> pluginVersions =
+      PluginUtil.getFilteredPluginVersions(backend, groupId, artifactId);
+
+    if (Util.isEmpty(pluginVersions))
     {
       throw new WebApplicationException(Status.NOT_FOUND);
     }

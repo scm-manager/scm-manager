@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import sonia.scm.plugin.BackendConfiguration;
 
 /**
  *
@@ -53,10 +54,13 @@ public class ViewableResource
    *
    * @param context
    */
-  public ViewableResource(ServletContext context)
+  public ViewableResource(ServletContext context, BackendConfiguration configuration)
   {
     this.contextPath = context.getContextPath();
+    this.configuration = configuration;
   }
+  
+  private BackendConfiguration configuration;
 
   //~--- methods --------------------------------------------------------------
 
@@ -73,6 +77,7 @@ public class ViewableResource
     Map<String, Object> vars = new HashMap<String, Object>();
 
     vars.put("contextPath", contextPath);
+    vars.put("configuration", configuration);
     vars.put("title", title);
 
     return vars;

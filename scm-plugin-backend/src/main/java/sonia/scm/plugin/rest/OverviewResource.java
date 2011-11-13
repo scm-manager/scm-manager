@@ -37,6 +37,7 @@ package sonia.scm.plugin.rest;
 
 import com.google.inject.Inject;
 
+import sonia.scm.plugin.BackendConfiguration;
 import sonia.scm.plugin.Category;
 import sonia.scm.plugin.CategoryNameComaparator;
 import sonia.scm.plugin.PluginBackend;
@@ -78,11 +79,13 @@ public class OverviewResource extends ViewableResource
    *
    * @param context
    * @param backend
+   * @param configuration
    */
   @Inject
-  public OverviewResource(ServletContext context, PluginBackend backend)
+  public OverviewResource(ServletContext context, PluginBackend backend,
+                          BackendConfiguration configuration)
   {
-    super(context);
+    super(context, configuration);
     this.backend = backend;
   }
 
