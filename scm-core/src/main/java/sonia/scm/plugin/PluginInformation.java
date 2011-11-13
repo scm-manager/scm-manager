@@ -80,20 +80,6 @@ public class PluginInformation implements Validateable
 
     final PluginInformation other = (PluginInformation) obj;
 
-    if ((this.screenshots != other.screenshots)
-        && ((this.screenshots == null)
-            ||!this.screenshots.equals(other.screenshots)))
-    {
-      return false;
-    }
-
-    if ((this.category == null)
-        ? (other.category != null)
-        : !this.category.equals(other.category))
-    {
-      return false;
-    }
-
     if ((this.artifactId == null)
         ? (other.artifactId != null)
         : !this.artifactId.equals(other.artifactId))
@@ -104,6 +90,13 @@ public class PluginInformation implements Validateable
     if ((this.author == null)
         ? (other.author != null)
         : !this.author.equals(other.author))
+    {
+      return false;
+    }
+
+    if ((this.category == null)
+        ? (other.category != null)
+        : !this.category.equals(other.category))
     {
       return false;
     }
@@ -135,6 +128,13 @@ public class PluginInformation implements Validateable
       return false;
     }
 
+    if ((this.screenshots != other.screenshots)
+        && ((this.screenshots == null)
+            ||!this.screenshots.equals(other.screenshots)))
+    {
+      return false;
+    }
+
     if (this.state != other.state)
     {
       return false;
@@ -154,6 +154,13 @@ public class PluginInformation implements Validateable
       return false;
     }
 
+    if ((this.wiki == null)
+        ? (other.wiki != null)
+        : !this.wiki.equals(other.wiki))
+    {
+      return false;
+    }
+
     return true;
   }
 
@@ -166,40 +173,43 @@ public class PluginInformation implements Validateable
   @Override
   public int hashCode()
   {
-    int hash = 7;
+    int hash = 5;
 
-    hash = 61 * hash + ((this.screenshots != null)
-                        ? this.screenshots.hashCode()
-                        : 0);
-    hash = 61 * hash + ((this.category != null)
-                        ? this.category.hashCode()
-                        : 0);
-    hash = 61 * hash + ((this.artifactId != null)
+    hash = 79 * hash + ((this.artifactId != null)
                         ? this.artifactId.hashCode()
                         : 0);
-    hash = 61 * hash + ((this.author != null)
+    hash = 79 * hash + ((this.author != null)
                         ? this.author.hashCode()
                         : 0);
-    hash = 61 * hash + ((this.condition != null)
+    hash = 79 * hash + ((this.category != null)
+                        ? this.category.hashCode()
+                        : 0);
+    hash = 79 * hash + ((this.condition != null)
                         ? this.condition.hashCode()
                         : 0);
-    hash = 61 * hash + ((this.description != null)
+    hash = 79 * hash + ((this.description != null)
                         ? this.description.hashCode()
                         : 0);
-    hash = 61 * hash + ((this.groupId != null)
+    hash = 79 * hash + ((this.groupId != null)
                         ? this.groupId.hashCode()
                         : 0);
-    hash = 61 * hash + ((this.name != null)
+    hash = 79 * hash + ((this.name != null)
                         ? this.name.hashCode()
                         : 0);
-    hash = 61 * hash + ((this.state != null)
+    hash = 79 * hash + ((this.screenshots != null)
+                        ? this.screenshots.hashCode()
+                        : 0);
+    hash = 79 * hash + ((this.state != null)
                         ? this.state.hashCode()
                         : 0);
-    hash = 61 * hash + ((this.url != null)
+    hash = 79 * hash + ((this.url != null)
                         ? this.url.hashCode()
                         : 0);
-    hash = 61 * hash + ((this.version != null)
+    hash = 79 * hash + ((this.version != null)
                         ? this.version.hashCode()
+                        : 0);
+    hash = 79 * hash + ((this.wiki != null)
+                        ? this.wiki.hashCode()
                         : 0);
 
     return hash;
@@ -349,6 +359,17 @@ public class PluginInformation implements Validateable
    *
    * @return
    */
+  public String getWiki()
+  {
+    return wiki;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
   public boolean isValid()
   {
@@ -479,6 +500,17 @@ public class PluginInformation implements Validateable
     this.version = version;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param wiki
+   */
+  public void setWiki(String wiki)
+  {
+    this.wiki = wiki;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -515,4 +547,7 @@ public class PluginInformation implements Validateable
 
   /** Field description */
   private String version;
+
+  /** Field description */
+  private String wiki;
 }
