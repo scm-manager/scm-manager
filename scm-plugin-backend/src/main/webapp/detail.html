@@ -84,31 +84,35 @@
 <h2>Plugin Versions</h2>
 
 <div id="accordion">
-<#list versions as version>
-  <h3><a href="#">${version.version}</a></h3>
-  <div>
-    <p>${version.description}</p>
-    <#if version.condition??>
-      <h4>Conditions</h4>
-      <ul>
-        <#if version.condition.minVersion??>
-        <li>Minimum Version: ${version.condition.minVersion}</li>
-        </#if>
-        <#if version.condition.os??>
-        <li>
-          Operatingsystems:
-          <#list version.condition.os as os>
-            ${os}<#if os_has_next>, </#if>
-          </#list>
-        </li>
-        </#if>
-        <#if version.condition.arch??>
-        <li>Architecture: ${version.condition.arch}</li>
-        </#if>
-      </ul>
-    </#if>
-  </div>
-</#list>
+<#if versions?has_content>
+  <#list versions as version>
+    <h3><a href="#">${version.version}</a></h3>
+    <div>
+      <p>${version.description}</p>
+      <#if version.condition??>
+        <h4>Conditions</h4>
+        <ul>
+          <#if version.condition.minVersion??>
+          <li>Minimum Version: ${version.condition.minVersion}</li>
+          </#if>
+          <#if version.condition.os??>
+          <li>
+            Operatingsystems:
+            <#list version.condition.os as os>
+              ${os}<#if os_has_next>, </#if>
+            </#list>
+          </li>
+          </#if>
+          <#if version.condition.arch??>
+          <li>Architecture: ${version.condition.arch}</li>
+          </#if>
+        </ul>
+      </#if>
+    </div>
+  </#list>
+<#else>
+  Plugin not yet released
+</#if>
 </div>
 
 <p>&nbsp;</p>
