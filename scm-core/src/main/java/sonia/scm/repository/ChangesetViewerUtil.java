@@ -389,9 +389,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
 
       final ChangesetViewerCacheKey other = (ChangesetViewerCacheKey) obj;
 
-      if ((this.repository == null)
-          ? (other.repository != null)
-          : !this.repository.equals(other.repository))
+      if (this.max != other.max)
       {
         return false;
       }
@@ -403,12 +401,14 @@ public class ChangesetViewerUtil extends PartCacheClearHook
         return false;
       }
 
-      if (this.start != other.start)
+      if ((this.repository == null)
+          ? (other.repository != null)
+          : !this.repository.equals(other.repository))
       {
         return false;
       }
 
-      if (this.max != other.max)
+      if (this.start != other.start)
       {
         return false;
       }
@@ -425,13 +425,16 @@ public class ChangesetViewerUtil extends PartCacheClearHook
     @Override
     public int hashCode()
     {
-      int hash = 3;
+      int hash = 7;
 
-      hash = 67 * hash + ((this.repository != null)
+      hash = 89 * hash + this.max;
+      hash = 89 * hash + ((this.path != null)
+                          ? this.path.hashCode()
+                          : 0);
+      hash = 89 * hash + ((this.repository != null)
                           ? this.repository.hashCode()
                           : 0);
-      hash = 67 * hash + this.start;
-      hash = 67 * hash + this.max;
+      hash = 89 * hash + this.start;
 
       return hash;
     }
