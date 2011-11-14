@@ -114,6 +114,13 @@ public class HgChangesetViewer extends AbstractHgHandler
                          null);
   }
 
+  @Override
+  public ChangesetPagingResult getChangesets(String path, int start, int max)
+      throws IOException, RepositoryException {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  
   /**
    * Method description
    *

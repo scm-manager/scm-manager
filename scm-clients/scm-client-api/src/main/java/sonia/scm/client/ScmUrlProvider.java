@@ -247,11 +247,12 @@ public class ScmUrlProvider
    * @param repositoryId
    * @since 1.8
    *
+   * @param path
    * @param start
    * @param limit
    * @return
    */
-  public String getRepositoryChangesetUrl(String repositoryId, int start,
+  public String getRepositoryChangesetUrl(String repositoryId, String path, int start,
           int limit)
   {
     String url = MessageFormat.format(getResourceUrl(URLPATTERN_CHANGESETS),
@@ -268,10 +269,31 @@ public class ScmUrlProvider
     {
       url = url.concat(s).concat("limit=").concat(String.valueOf(limit));
     }
+    
+    if (path != null) {
+      url = url.concat(s).concat("path=").concat(path);
+    }
 
     return url;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryId
+   * @since 1.8
+   *
+   * @param start
+   * @param limit
+   * @return
+   */
+  public String getRepositoryChangesetUrl(String repositoryId, int start,
+          int limit)
+  {
+    return getRepositoryChangesetUrl(repositoryId, null, start, limit);
+  }
+  
   /**
    * Method description
    *
