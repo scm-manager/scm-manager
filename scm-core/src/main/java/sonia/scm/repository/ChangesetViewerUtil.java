@@ -40,7 +40,6 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.Filter;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
@@ -92,7 +91,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
                                   ChangesetPagingResult.class, CACHE_NAME);
     init(repositoryManager, cache);
   }
-  
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -132,6 +131,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
    *
    *
    * @param repositoryId
+   * @param path
    * @param start
    * @param max
    *
@@ -142,7 +142,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    */
-  public ChangesetPagingResult getChangesets(String repositoryId, String path, 
+  public ChangesetPagingResult getChangesets(String repositoryId, String path,
           int start, int max)
           throws IOException, RepositoryException, NotSupportedFeatuerException
   {
@@ -158,7 +158,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
 
     return getChangesets(repository, path, start, max);
   }
-  
+
   /**
    * Method description
    *
@@ -190,7 +190,8 @@ public class ChangesetViewerUtil extends PartCacheClearHook
     }
 
     ChangesetViewerCacheKey key =
-      new ChangesetViewerCacheKey(repository.getId(), "", start, max);
+      new ChangesetViewerCacheKey(repository.getId(), Util.EMPTY_STRING, start,
+                                  max);
     ChangesetPagingResult result = cache.get(key);
 
     if (result == null)
@@ -236,8 +237,8 @@ public class ChangesetViewerUtil extends PartCacheClearHook
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    */
-  public ChangesetPagingResult getChangesets(Repository repository, String path,
-          int start, int max)
+  public ChangesetPagingResult getChangesets(Repository repository,
+          String path, int start, int max)
           throws IOException, RepositoryException, NotSupportedFeatuerException
   {
     AssertUtil.assertIsNotNull(repository);
@@ -281,6 +282,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
 
     return result;
   }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -349,10 +351,12 @@ public class ChangesetViewerUtil extends PartCacheClearHook
      *
      *
      * @param repository
+     * @param path
      * @param start
      * @param max
      */
-    public ChangesetViewerCacheKey(String repository, String path, int start, int max)
+    public ChangesetViewerCacheKey(String repository, String path, int start,
+                                   int max)
     {
       this.repository = repository;
       this.path = path;
@@ -391,7 +395,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
       {
         return false;
       }
-      
+
       if ((this.path == null)
           ? (other.path != null)
           : !this.path.equals(other.path))
@@ -432,25 +436,33 @@ public class ChangesetViewerUtil extends PartCacheClearHook
       return hash;
     }
 
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public String getRepositoryId()
+    {
+      return repository;
+    }
+
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
     private int max;
 
     /** Field description */
-    private String repository;
-    
-    /** Field description */
     private String path;
 
     /** Field description */
-    private int start;
+    private String repository;
 
-    @Override
-    public String getRepositoryId()
-    {
-      return repository;
-    }
+    /** Field description */
+    private int start;
   }
 
 
