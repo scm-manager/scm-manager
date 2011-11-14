@@ -29,8 +29,10 @@
 #
 #
 
+# import basic packages
 import sys, os
 
+# create python path
 pythonPath = os.environ['SCM_PYTHON_PATH']
 
 if len(pythonPath) > 0:
@@ -38,49 +40,21 @@ if len(pythonPath) > 0:
   for i in range(len(pathParts)):
     sys.path.insert(i, pathParts[i])
 
+# import mercurial packages
 from mercurial import hg, ui, commands
 from mercurial.node import hex
 from xml.sax.saxutils import escape
 import datetime, time
 
-repositoryPath = os.environ['SCM_REPOSITORY_PATH']
-repo = hg.repository(ui.ui(), path = repositoryPath)
-
-startNode = os.environ['SCM_REVISION_START']
-endNode = os.environ['SCM_REVISION_END']
-
-total = len(repo)
-
-if len(startNode) > 0 and len(endNode) > 0:
-  # start and end revision
-  startRev = repo[startNode].rev() -1
-  endRev = repo[endNode].rev()
-  
-else:
-  # paging
-  start = os.environ['SCM_PAGE_START']
-  limit = os.environ['SCM_PAGE_LIMIT']
-
-  limit = int(limit)
-
-  end = int(start)
-  endRev = total - end - 1
-
-  startRev = endRev - limit
-
-# fix negative start revisions
-if startRev < -1:
-  startRev = -1
-
 # header
-print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-print '<changeset-paging>'
-print '  <total>' + str(total) + '</total>'
-print '  <changesets>'
+def printHeader(total):
+  print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+  print '<changeset-paging>'
+  print '  <total>' + str(total) + '</total>'
+  print '  <changesets>'
 
-# changesets
-for i in range(endRev, startRev, -1):
-  ctx = repo[i]
+# changeset
+def printChangeset(repo, ctx):
   time = int(ctx.date()[0]) * 1000
   branch = ctx.branch()
   tags = ctx.tags()
@@ -99,7 +73,7 @@ for i in range(endRev, startRev, -1):
       authorName = authorName[0:s].strip()
   
   print '    <changeset>'
-  print '      <id>' + str(i) + ':' + hex(ctx.node()[:6]) + '</id>'
+  print '      <id>' + str(ctx.rev()) + ':' + hex(ctx.node()[:6]) + '</id>'
   print '      <author>' + escape(ctx.user()) + '</author>'
   print '      <description>' + escape(ctx.description()) + '</description>'
   print '      <date>' + str(time).split('.')[0] + '</date>'
@@ -147,7 +121,79 @@ for i in range(endRev, startRev, -1):
     
   print '      </modifications>'
   print '    </changeset>'
-  
+
 # footer
-print '  </changesets>'
-print '</changeset-paging>'
+def printFooter():
+  print '  </changesets>'
+  print '</changeset-paging>'
+
+def printChangesetsForPath(repo, path):
+  rev = os.environ['SCM_REVISION']
+  if len(rev) <= 0:
+    rev = "tip"
+  fctxs = repo[rev].filectx(path)
+  revs = []
+  for i in fctxs.filelog():
+    fctx = fctxs.filectx(i)
+    revs.append(fctx.changectx())
+  
+  # reverse changesets
+  revs.reverse()
+  
+  total = len(revs)
+  
+  # handle paging
+  start = os.environ['SCM_PAGE_START']
+  limit = os.environ['SCM_PAGE_LIMIT']
+  
+  if len(start) > 0:
+    revs = revs[int(start):]
+
+  if len(limit) > 0:
+    revs = revs[:int(limit)]
+
+  # output
+  printHeader(total)
+  for ctx in revs:
+    printChangeset(repo, ctx)
+  printFooter()
+  
+def printChangesetsForStartAndEnd(repo, startRev, endRev):
+  printHeader(len(repo))
+  for i in range(endRev, startRev, -1):
+    printChangeset(repo, repo[i])
+  printFooter()
+
+repositoryPath = os.environ['SCM_REPOSITORY_PATH']
+repo = hg.repository(ui.ui(), path = repositoryPath)
+
+path = os.environ['SCM_PATH']
+startNode = os.environ['SCM_REVISION_START']
+endNode = os.environ['SCM_REVISION_END']
+
+if len(path) > 0:
+  printChangesetsForPath(repo, path)
+else:
+  if len(startNode) > 0 and len(endNode) > 0:
+    # start and end revision
+    startRev = repo[startNode].rev() -1
+    endRev = repo[endNode].rev()
+  else:
+    # paging
+    start = os.environ['SCM_PAGE_START']
+    limit = os.environ['SCM_PAGE_LIMIT']
+
+    limit = int(limit)
+
+    end = int(start)
+    endRev = len(repo) - end - 1
+
+    startRev = endRev - limit
+
+  # fix negative start revisions
+  if startRev < -1:
+    startRev = -1
+  
+  # print
+  printChangesetsForStartAndEnd(repo, startRev, endRev)
+
