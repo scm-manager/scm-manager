@@ -67,6 +67,7 @@ import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.SecurityUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -422,7 +423,7 @@ public class RepositoryResource
    *   </ul>
    *
    *   @param id the id of the repository
-   * @param path
+   *   @param path path of a file
    *   @param start the start value for paging
    *   @param limit the limit value for paging
    *
@@ -435,8 +436,9 @@ public class RepositoryResource
   @Path("{id}/changesets")
   @TypeHint(ChangesetPagingResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response getChangesets(@PathParam("id") String id, @DefaultValue("")
-  @QueryParam("path") String path, @DefaultValue("0")
+  public Response getChangesets(@PathParam("id") String id,
+                                @QueryParam("path") String path,
+                                @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("20")
   @QueryParam("limit") int limit) throws RepositoryException, IOException
   {
@@ -444,9 +446,9 @@ public class RepositoryResource
 
     try
     {
-      ChangesetPagingResult changesets;
+      ChangesetPagingResult changesets = null;
 
-      if ("".equals(path))
+      if (Util.isNotEmpty(path))
       {
         changesets = changesetViewerUtil.getChangesets(id, start, limit);
       }
