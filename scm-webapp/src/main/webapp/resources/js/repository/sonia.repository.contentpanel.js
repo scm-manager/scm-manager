@@ -58,6 +58,10 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
         text: 'Blame',
         handler: this.openBlamePanel,
         scope: this
+      },{
+        text: 'History',
+        handler: this.openHistoryPanel,
+        scope: this
       }],
       bbar: bottomBar,
       items: [{
@@ -69,6 +73,18 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ContentPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  openHistoryPanel: function(){
+    this.openPanel({
+      xtype: 'repositoryChangesetViewerPanel',
+      repository: this.repository,
+      revision: this.revision,
+      path: this.path,
+      inline: true,
+      // TODO find a better way
+      pageSize: 9999
+    });
   },
   
   openSyntaxPanel: function(){

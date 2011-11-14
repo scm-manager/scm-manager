@@ -36,6 +36,8 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   pageSize: 20,
   historyId: null,
   changesetStore: null,
+  path: null,
+  inline: false,
   
   changesetViewerTitleText: 'Commits {0}',
   
@@ -47,10 +49,23 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
       this.pageSize 
     ]);
 
+    if (! this.url){
+      this.url = restUrl + 'repositories/' + this.repository.id  + '/changesets.json';
+    }
+    
+    var params = {
+      start: this.start,
+      limit: this.pageSize
+    }
+    
+    if (this.path){
+      params.path = this.path;
+    }
+
     this.changesetStore = new Sonia.rest.JsonStore({
       id: 'changesetStore',
       proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'repositories/' + this.repository.id  + '/changesets.json',
+        url: this.url,
         method: 'GET'
       }),
       fields: ['id', 'date', 'author', 'description', 'modifications', 'tags', 'branches', 'properties'],
@@ -59,10 +74,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
       totalProperty: 'total',
       autoLoad: true,
       autoDestroy: true,
-      baseParams: {
-        start: this.start,
-        limit: this.pageSize
-      },
+      baseParams: params,
       listeners: {
         load: {
           fn: this.updateHistory,
@@ -72,20 +84,23 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
     });
 
     var config = {
-      title: String.format(this.changesetViewerTitleText, this.repository.name),
       items: [{
         xtype: 'repositoryChangesetViewerGrid',
         repository: this.repository,
         store: this.changesetStore
-      }],
-      bbar: {
+      }]
+    };
+    
+    if ( ! this.inline ){
+      config.title = String.format(this.changesetViewerTitleText, this.repository.name)
+      config.bbar = {
         xtype: 'paging',
         store: this.changesetStore,
         displayInfo: true,
         pageSize: this.pageSize,
         prependButtons: true
       }
-    };
+    }
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ChangesetViewerPanel.superclass.initComponent.apply(this, arguments);
