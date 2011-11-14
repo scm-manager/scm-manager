@@ -35,6 +35,8 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import antlr.StringUtils;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -434,7 +436,8 @@ public class RepositoryResource
   @Path("{id}/changesets")
   @TypeHint(ChangesetPagingResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response getChangesets(@PathParam("id") String id, @DefaultValue("0")
+  public Response getChangesets(@PathParam("id") String id, @DefaultValue("")
+  @QueryParam("path") String path, @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("20")
   @QueryParam("limit") int limit) throws RepositoryException, IOException
   {
@@ -442,8 +445,13 @@ public class RepositoryResource
 
     try
     {
-      ChangesetPagingResult changesets = changesetViewerUtil.getChangesets(id,
-                                           start, limit);
+      ChangesetPagingResult changesets;
+      if ("".equals(path)) {
+        changesets = changesetViewerUtil.getChangesets(id, start, limit);
+      }
+      else {
+        changesets = changesetViewerUtil.getChangesets(id, path, start, limit);
+      }
 
       if (changesets != null)
       {
