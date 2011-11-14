@@ -33,15 +33,6 @@
       <scope>provided</scope>
     </dependency>
     
-    <!-- fix jenkins build -->
-    
-    <dependency>
-      <groupId>org.antlr</groupId>
-      <artifactId>antlr</artifactId>
-      <version>3.4</version>
-      <scope>provided</scope>
-    </dependency>
-    
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>

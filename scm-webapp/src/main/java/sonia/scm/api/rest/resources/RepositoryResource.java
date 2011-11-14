@@ -35,8 +35,6 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import antlr.StringUtils;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -422,11 +420,12 @@ public class RepositoryResource
    *     <li>404 not found, if the repository or the path could not be found</li>
    *     <li>500 internal server error</li>
    *   </ul>
-   *  
+   *
    *   @param id the id of the repository
+   * @param path
    *   @param start the start value for paging
    *   @param limit the limit value for paging
-   *  
+   *
    *   @return
    *
    * @throws IOException
@@ -446,10 +445,13 @@ public class RepositoryResource
     try
     {
       ChangesetPagingResult changesets;
-      if ("".equals(path)) {
+
+      if ("".equals(path))
+      {
         changesets = changesetViewerUtil.getChangesets(id, start, limit);
       }
-      else {
+      else
+      {
         changesets = changesetViewerUtil.getChangesets(id, path, start, limit);
       }
 
