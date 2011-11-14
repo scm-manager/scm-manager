@@ -448,7 +448,7 @@ public class RepositoryResource
     {
       ChangesetPagingResult changesets = null;
 
-      if (Util.isNotEmpty(path))
+      if (Util.isEmpty(path))
       {
         changesets = changesetViewerUtil.getChangesets(id, start, limit);
       }
