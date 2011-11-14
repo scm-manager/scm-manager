@@ -131,6 +131,38 @@ public class ChangesetViewerUtil extends PartCacheClearHook
    * Method description
    *
    *
+   * @param repositoryId
+   * @param start
+   * @param max
+   *
+   * @return
+   *
+   *
+   * @throws IOException
+   * @throws NotSupportedFeatuerException
+   * @throws RepositoryException
+   */
+  public ChangesetPagingResult getChangesets(String repositoryId, String path, 
+          int start, int max)
+          throws IOException, RepositoryException, NotSupportedFeatuerException
+  {
+    AssertUtil.assertIsNotEmpty(repositoryId);
+
+    Repository repository = repositoryManager.get(repositoryId);
+
+    if (repository == null)
+    {
+      throw new RepositoryNotFoundException(
+          "could not find repository with id ".concat(repositoryId));
+    }
+
+    return getChangesets(repository, path, start, max);
+  }
+  
+  /**
+   * Method description
+   *
+   *
    * @param repository
    * @param start
    * @param max
@@ -158,7 +190,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
     }
 
     ChangesetViewerCacheKey key =
-      new ChangesetViewerCacheKey(repository.getId(), start, max);
+      new ChangesetViewerCacheKey(repository.getId(), "", start, max);
     ChangesetPagingResult result = cache.get(key);
 
     if (result == null)
@@ -188,6 +220,67 @@ public class ChangesetViewerUtil extends PartCacheClearHook
     return result;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param path
+   * @param start
+   * @param max
+   *
+   * @return
+   *
+   *
+   * @throws IOException
+   * @throws NotSupportedFeatuerException
+   * @throws RepositoryException
+   */
+  public ChangesetPagingResult getChangesets(Repository repository, String path,
+          int start, int max)
+          throws IOException, RepositoryException, NotSupportedFeatuerException
+  {
+    AssertUtil.assertIsNotNull(repository);
+
+    ChangesetViewer viewer = repositoryManager.getChangesetViewer(repository);
+
+    if (viewer == null)
+    {
+      throw new NotSupportedFeatuerException(
+          "ChangesetViewer is not supported for type ".concat(
+            repository.getType()));
+    }
+
+    ChangesetViewerCacheKey key =
+      new ChangesetViewerCacheKey(repository.getId(), path, start, max);
+    ChangesetPagingResult result = cache.get(key);
+
+    if (result == null)
+    {
+      result = viewer.getChangesets(path, start, max);
+
+      if (result != null)
+      {
+        if (Util.isNotEmpty(result.getChangesets()))
+        {
+          callPreProcessors(result);
+          callPreProcessorFactories(repository, result);
+        }
+
+        cache.put(key, result);
+      }
+      else
+      {
+        throw new RepositoryException("could not fetch changesets");
+      }
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch changesetviewer results from cache");
+    }
+
+    return result;
+  }
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -259,9 +352,10 @@ public class ChangesetViewerUtil extends PartCacheClearHook
      * @param start
      * @param max
      */
-    public ChangesetViewerCacheKey(String repository, int start, int max)
+    public ChangesetViewerCacheKey(String repository, String path, int start, int max)
     {
       this.repository = repository;
+      this.path = path;
       this.start = start;
       this.max = max;
     }
@@ -294,6 +388,13 @@ public class ChangesetViewerUtil extends PartCacheClearHook
       if ((this.repository == null)
           ? (other.repository != null)
           : !this.repository.equals(other.repository))
+      {
+        return false;
+      }
+      
+      if ((this.path == null)
+          ? (other.path != null)
+          : !this.path.equals(other.path))
       {
         return false;
       }
@@ -338,6 +439,9 @@ public class ChangesetViewerUtil extends PartCacheClearHook
 
     /** Field description */
     private String repository;
+    
+    /** Field description */
+    private String path;
 
     /** Field description */
     private int start;

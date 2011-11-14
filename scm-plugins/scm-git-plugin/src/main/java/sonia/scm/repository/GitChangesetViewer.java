@@ -150,6 +150,76 @@ public class GitChangesetViewer implements ChangesetViewer
     return changesets;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param path
+   * @param start
+   * @param max
+   *
+   * @return
+   */
+  @Override
+  public ChangesetPagingResult getChangesets(String path, int start, int max)
+  {
+    ChangesetPagingResult changesets = null;
+    File directory = handler.getDirectory(repository);
+    org.eclipse.jgit.lib.Repository gr = null;
+    GitChangesetConverter converter = null;
+
+    try
+    {
+      gr = GitUtil.open(directory);
+
+      int counter = 0;
+      List<Changeset> changesetList = new ArrayList<Changeset>();
+
+      if (!gr.getAllRefs().isEmpty())
+      {
+        converter = new GitChangesetConverter(gr, GitUtil.ID_LENGTH);
+
+        Git git = new Git(gr);
+        ObjectId headId = GitUtil.getRepositoryHead(gr);
+
+        if (headId != null)
+        {
+          for (RevCommit commit : git.log().addPath(path).call())
+          {
+            if ((counter >= start) && (counter < start + max))
+            {
+              changesetList.add(converter.createChangeset(commit));
+            }
+
+            counter++;
+          }
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find repository head of repository {}",
+                      repository.getName());
+        }
+      }
+
+      changesets = new ChangesetPagingResult(counter, changesetList);
+    }
+    catch (NoHeadException ex)
+    {
+      logger.error("could not read changesets", ex);
+    }
+    catch (IOException ex)
+    {
+      logger.error("could not open repository", ex);
+    }
+    finally
+    {
+      IOUtil.close(converter);
+      GitUtil.close(gr);
+    }
+
+    return changesets;
+  }
+  
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */

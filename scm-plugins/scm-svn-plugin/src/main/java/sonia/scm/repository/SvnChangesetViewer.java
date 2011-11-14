@@ -47,6 +47,7 @@ import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -92,6 +93,21 @@ public class SvnChangesetViewer implements ChangesetViewer
   @Override
   public ChangesetPagingResult getChangesets(int start, int max)
   {
+    return getChangesets("", start, max);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param path
+   * @param start
+   * @param max
+   *
+   * @return
+   */
+  @Override
+  public ChangesetPagingResult getChangesets(String path, int start, int max) {
     ChangesetPagingResult changesets = null;
     File directory = handler.getDirectory(repostory);
     SVNRepository repository = null;
@@ -110,9 +126,9 @@ public class SvnChangesetViewer implements ChangesetViewer
       }
 
       List<Changeset> changesetList = new ArrayList<Changeset>();
-      Collection<SVNLogEntry> entries = repository.log(new String[] { "" },
+      Collection<SVNLogEntry> entries = repository.log(new String[] { path },
                                           null, startRev, endRev, true, true);
-
+      
       for (SVNLogEntry entry : entries)
       {
         changesetList.add(SvnUtil.createChangeset(entry));
@@ -132,12 +148,11 @@ public class SvnChangesetViewer implements ChangesetViewer
 
     return changesets;
   }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private SvnRepositoryHandler handler;
 
-  /** Field description */
-  private Repository repostory;
+	/** Field description */
+	private Repository repostory;
 }
