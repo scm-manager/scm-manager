@@ -132,6 +132,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
    *
    * @param repositoryId
    * @param path
+   * @param revision
    * @param start
    * @param max
    *
@@ -143,7 +144,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
    * @throws RepositoryException
    */
   public ChangesetPagingResult getChangesets(String repositoryId, String path,
-          int start, int max)
+          String revision, int start, int max)
           throws IOException, RepositoryException, NotSupportedFeatuerException
   {
     AssertUtil.assertIsNotEmpty(repositoryId);
@@ -156,7 +157,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
           "could not find repository with id ".concat(repositoryId));
     }
 
-    return getChangesets(repository, path, start, max);
+    return getChangesets(repository, path, revision, start, max);
   }
 
   /**
@@ -190,8 +191,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
     }
 
     ChangesetViewerCacheKey key =
-      new ChangesetViewerCacheKey(repository.getId(), Util.EMPTY_STRING, start,
-                                  max);
+      new ChangesetViewerCacheKey(repository.getId(), start, max);
     ChangesetPagingResult result = cache.get(key);
 
     if (result == null)
@@ -227,6 +227,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
    *
    * @param repository
    * @param path
+   * @param revision
    * @param start
    * @param max
    *
@@ -238,7 +239,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
    * @throws RepositoryException
    */
   public ChangesetPagingResult getChangesets(Repository repository,
-          String path, int start, int max)
+          String path, String revision, int start, int max)
           throws IOException, RepositoryException, NotSupportedFeatuerException
   {
     AssertUtil.assertIsNotNull(repository);
@@ -253,12 +254,13 @@ public class ChangesetViewerUtil extends PartCacheClearHook
     }
 
     ChangesetViewerCacheKey key =
-      new ChangesetViewerCacheKey(repository.getId(), path, start, max);
+      new ChangesetViewerCacheKey(repository.getId(), path, revision, start,
+                                  max);
     ChangesetPagingResult result = cache.get(key);
 
     if (result == null)
     {
-      result = viewer.getChangesets(path, start, max);
+      result = viewer.getChangesets(path, revision, start, max);
 
       if (result != null)
       {
@@ -351,15 +353,30 @@ public class ChangesetViewerUtil extends PartCacheClearHook
      *
      *
      * @param repository
-     * @param path
      * @param start
      * @param max
      */
-    public ChangesetViewerCacheKey(String repository, String path, int start,
-                                   int max)
+    public ChangesetViewerCacheKey(String repository, int start, int max)
+    {
+      this(repository, null, null, start, max);
+    }
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param repository
+     * @param path
+     * @param revision
+     * @param start
+     * @param max
+     */
+    public ChangesetViewerCacheKey(String repository, String path,
+                                   String revision, int start, int max)
     {
       this.repository = repository;
       this.path = path;
+      this.revision = revision;
       this.start = start;
       this.max = max;
     }
@@ -388,6 +405,13 @@ public class ChangesetViewerUtil extends PartCacheClearHook
       }
 
       final ChangesetViewerCacheKey other = (ChangesetViewerCacheKey) obj;
+
+      if ((this.revision == null)
+          ? (other.revision != null)
+          : !this.revision.equals(other.revision))
+      {
+        return false;
+      }
 
       if (this.max != other.max)
       {
@@ -425,16 +449,19 @@ public class ChangesetViewerUtil extends PartCacheClearHook
     @Override
     public int hashCode()
     {
-      int hash = 7;
+      int hash = 5;
 
-      hash = 89 * hash + this.max;
-      hash = 89 * hash + ((this.path != null)
+      hash = 47 * hash + ((this.revision != null)
+                          ? this.revision.hashCode()
+                          : 0);
+      hash = 47 * hash + this.max;
+      hash = 47 * hash + ((this.path != null)
                           ? this.path.hashCode()
                           : 0);
-      hash = 89 * hash + ((this.repository != null)
+      hash = 47 * hash + ((this.repository != null)
                           ? this.repository.hashCode()
                           : 0);
-      hash = 89 * hash + this.start;
+      hash = 47 * hash + this.start;
 
       return hash;
     }
@@ -463,6 +490,9 @@ public class ChangesetViewerUtil extends PartCacheClearHook
 
     /** Field description */
     private String repository;
+
+    /** Field description */
+    private String revision;
 
     /** Field description */
     private int start;

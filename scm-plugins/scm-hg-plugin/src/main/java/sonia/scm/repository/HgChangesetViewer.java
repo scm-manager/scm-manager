@@ -35,7 +35,11 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.util.Util;
+import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -57,6 +61,10 @@ public class HgChangesetViewer extends AbstractHgHandler
 
   /** Field description */
   public static final String RESOURCE_LOG = "/sonia/scm/hglog.py";
+
+  /** the logger for HgChangesetViewer */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgChangesetViewer.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -110,6 +118,11 @@ public class HgChangesetViewer extends AbstractHgHandler
   public ChangesetPagingResult getChangesets(int start, int max)
           throws IOException, RepositoryException
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch changesets. start: {}, max: {}", start, max);
+    }
+
     return getChangesets(null, null, String.valueOf(start),
                          String.valueOf(max), null, null);
   }
@@ -119,6 +132,7 @@ public class HgChangesetViewer extends AbstractHgHandler
    *
    *
    * @param path
+   * @param revision
    * @param start
    * @param max
    *
@@ -128,10 +142,21 @@ public class HgChangesetViewer extends AbstractHgHandler
    * @throws RepositoryException
    */
   @Override
-  public ChangesetPagingResult getChangesets(String path, int start, int max)
+  public ChangesetPagingResult getChangesets(String path, String revision,
+          int start, int max)
           throws IOException, RepositoryException
   {
-    return getChangesets(path, null, String.valueOf(start),
+    revision = HgUtil.getRevision(revision);
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug(
+          "fetch changesets for path {} and revision {}. start: {}, max: {}",
+          new Object[] { path,
+                         revision, start, max });
+    }
+
+    return getChangesets(path, revision, String.valueOf(start),
                          String.valueOf(max), null, null);
   }
 
@@ -184,6 +209,12 @@ public class HgChangesetViewer extends AbstractHgHandler
   public ChangesetPagingResult getChangesets(String startNode, String endNode)
           throws IOException, RepositoryException
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch changesets. start-node: {}, end-node: {}", startNode,
+                   endNode);
+    }
+
     return getChangesets(null, null, null, null, startNode, endNode);
   }
 }

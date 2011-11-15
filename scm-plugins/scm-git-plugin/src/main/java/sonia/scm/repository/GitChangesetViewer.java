@@ -155,13 +155,15 @@ public class GitChangesetViewer implements ChangesetViewer
    *
    *
    * @param path
+   * @param revision
    * @param start
    * @param max
    *
    * @return
    */
   @Override
-  public ChangesetPagingResult getChangesets(String path, int start, int max)
+  public ChangesetPagingResult getChangesets(String path, String revision,
+          int start, int max)
   {
     ChangesetPagingResult changesets = null;
     File directory = handler.getDirectory(repository);
@@ -180,11 +182,12 @@ public class GitChangesetViewer implements ChangesetViewer
         converter = new GitChangesetConverter(gr, GitUtil.ID_LENGTH);
 
         Git git = new Git(gr);
-        ObjectId headId = GitUtil.getRepositoryHead(gr);
+        ObjectId revisionId = GitUtil.getRevisionId(gr, revision);
 
-        if (headId != null)
+        if (revisionId != null)
         {
-          for (RevCommit commit : git.log().addPath(path).call())
+          for (RevCommit commit :
+                  git.log().add(revisionId).addPath(path).call())
           {
             if ((counter >= start) && (counter < start + max))
             {
@@ -219,7 +222,7 @@ public class GitChangesetViewer implements ChangesetViewer
 
     return changesets;
   }
-  
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */

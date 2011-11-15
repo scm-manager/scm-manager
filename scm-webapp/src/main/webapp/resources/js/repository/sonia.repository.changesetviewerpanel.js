@@ -36,8 +36,11 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   pageSize: 20,
   historyId: null,
   changesetStore: null,
-  path: null,
+  
+  // parameters for file history view
   inline: false,
+  path: null,
+  revision: null,
   
   changesetViewerTitleText: 'Commits {0}',
   
@@ -60,6 +63,10 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
     
     if (this.path){
       params.path = this.path;
+    }
+    
+    if (this.revision){
+      params.revision = this.revision;
     }
 
     this.changesetStore = new Sonia.rest.JsonStore({

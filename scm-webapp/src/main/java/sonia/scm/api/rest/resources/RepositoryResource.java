@@ -424,6 +424,7 @@ public class RepositoryResource
    *
    *   @param id the id of the repository
    *   @param path path of a file
+   *   @param revision the revision of the file specified by the path parameter
    *   @param start the start value for paging
    *   @param limit the limit value for paging
    *
@@ -438,6 +439,7 @@ public class RepositoryResource
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getChangesets(@PathParam("id") String id,
                                 @QueryParam("path") String path,
+                                @QueryParam("revision") String revision,
                                 @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("20")
   @QueryParam("limit") int limit) throws RepositoryException, IOException
@@ -454,7 +456,8 @@ public class RepositoryResource
       }
       else
       {
-        changesets = changesetViewerUtil.getChangesets(id, path, start, limit);
+        changesets = changesetViewerUtil.getChangesets(id, path, revision,
+                start, limit);
       }
 
       if (changesets != null)

@@ -60,7 +60,7 @@ public interface ChangesetViewer
    */
   public ChangesetPagingResult getChangesets(int start, int max)
           throws IOException, RepositoryException;
-  
+
   /**
    * Method description
    *
@@ -68,6 +68,7 @@ public interface ChangesetViewer
    *
    *
    * @param path
+   * @param revision
    * @param start
    * @param max
    *
@@ -76,6 +77,7 @@ public interface ChangesetViewer
    * @throws IOException
    * @throws RepositoryException
    */
-  public ChangesetPagingResult getChangesets(String path, int start, int max)
+  public ChangesetPagingResult getChangesets(String path, String revision,
+          int start, int max)
           throws IOException, RepositoryException;
 }

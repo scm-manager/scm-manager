@@ -93,7 +93,7 @@ public class SvnChangesetViewer implements ChangesetViewer
   @Override
   public ChangesetPagingResult getChangesets(int start, int max)
   {
-    return getChangesets("", start, max);
+    return getChangesets("", null, start, max);
   }
 
   /**
@@ -101,13 +101,18 @@ public class SvnChangesetViewer implements ChangesetViewer
    *
    *
    * @param path
+   * @param revision
    * @param start
    * @param max
    *
    * @return
    */
   @Override
-  public ChangesetPagingResult getChangesets(String path, int start, int max) {
+  public ChangesetPagingResult getChangesets(String path, String revision,
+          int start, int max)
+  {
+
+    // TODO implement revision
     ChangesetPagingResult changesets = null;
     File directory = handler.getDirectory(repostory);
     SVNRepository repository = null;
@@ -128,7 +133,7 @@ public class SvnChangesetViewer implements ChangesetViewer
       List<Changeset> changesetList = new ArrayList<Changeset>();
       Collection<SVNLogEntry> entries = repository.log(new String[] { path },
                                           null, startRev, endRev, true, true);
-      
+
       for (SVNLogEntry entry : entries)
       {
         changesetList.add(SvnUtil.createChangeset(entry));
@@ -148,11 +153,12 @@ public class SvnChangesetViewer implements ChangesetViewer
 
     return changesets;
   }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private SvnRepositoryHandler handler;
 
-	/** Field description */
-	private Repository repostory;
+  /** Field description */
+  private Repository repostory;
 }
