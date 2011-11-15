@@ -62,12 +62,14 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       fieldLabel: this.displayNameText,
       name: 'displayName',
       allowBlank: false,
+      readOnly: this.item != null && this.item != 'xml',
       helpText: this.displayNameHelpText
     },{
       fieldLabel: this.mailText,
       name: 'mail',
       allowBlank: true,
       vtype: 'email',
+      readOnly: this.item != null && this.item != 'xml',
       helpText: this.mailHelpText
     }];
 
