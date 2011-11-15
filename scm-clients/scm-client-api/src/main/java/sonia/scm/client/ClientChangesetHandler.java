@@ -55,12 +55,14 @@ public interface ClientChangesetHandler
    * @return
    */
   public ChangesetPagingResult getChangesets(int start, int limit);
-  
+
   /**
    * @param path
+   * @param revision
    * @param start
    * @param limit
    * @return
    */
-  public ChangesetPagingResult getChangesets(String path, int start, int limit);
+  public ChangesetPagingResult getChangesets(String path, String revision,
+          int start, int limit);
 }

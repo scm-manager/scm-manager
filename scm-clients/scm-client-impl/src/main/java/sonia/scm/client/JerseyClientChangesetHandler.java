@@ -107,18 +107,22 @@ public class JerseyClientChangesetHandler implements ClientChangesetHandler
    * Method description
    *
    *
+   *
+   * @param path
+   * @param revision
    * @param start
    * @param limit
    *
    * @return
    */
   @Override
-  public ChangesetPagingResult getChangesets(String path, int start, int limit)
+  public ChangesetPagingResult getChangesets(String path, String revision,
+          int start, int limit)
   {
     ChangesetPagingResult result = null;
     String url =
       session.getUrlProvider().getRepositoryChangesetUrl(repository.getId(),
-        start, limit);
+        path, revision, start, limit);
     WebResource resource = session.getClient().resource(url);
     ClientResponse response = null;
 
@@ -139,7 +143,7 @@ public class JerseyClientChangesetHandler implements ClientChangesetHandler
 
     return result;
   }
-  
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
