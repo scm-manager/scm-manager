@@ -95,6 +95,11 @@ public class SvnChangesetViewer implements ChangesetViewer
   @Override
   public ChangesetPagingResult getChangesets(int start, int max)
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch changesets. start: {}, max: {}", start, max);
+    }
+
     ChangesetPagingResult changesets = null;
     File directory = handler.getDirectory(repostory);
     SVNRepository repository = null;
@@ -151,6 +156,14 @@ public class SvnChangesetViewer implements ChangesetViewer
   public ChangesetPagingResult getChangesets(String path, String revision,
           int start, int max)
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug(
+          "fetch changesets for path {} and revision {}. start: {}, max: {}",
+          new Object[] { path,
+                         revision, start, max });
+    }
+
     ChangesetPagingResult changesets = null;
     File directory = handler.getDirectory(repostory);
     SVNRepository repository = null;
