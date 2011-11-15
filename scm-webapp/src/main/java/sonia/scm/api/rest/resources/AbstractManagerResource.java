@@ -45,6 +45,7 @@ import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -142,9 +143,13 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     try
     {
       manager.create(item);
+
+      String id = getId(item);
+
+      id = HttpUtil.encode(id);
       response = Response.created(
         uriInfo.getAbsolutePath().resolve(
-          getPathPart().concat("/").concat(getId(item)))).build();
+          getPathPart().concat("/").concat(id))).build();
     }
     catch (ScmSecurityException ex)
     {

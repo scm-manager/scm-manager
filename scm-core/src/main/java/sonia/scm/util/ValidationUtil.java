@@ -52,7 +52,7 @@ public class ValidationUtil
   private static final String REGEX_NAME = "^[A-z0-9\\.\\-_]+$";
 
   /** Field description */
-  private static final String REGEX_USERNAME = "^[A-z0-9\\.\\-_@]+$";
+  private static final String REGEX_USERNAME = "^[^ ][A-z0-9\\.\\-_@ ]+[^ ]$";
 
   //~--- get methods ----------------------------------------------------------
 
