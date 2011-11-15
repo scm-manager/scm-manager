@@ -131,11 +131,15 @@ def printChangesetsForPath(repo, path):
   rev = os.environ['SCM_REVISION']
   if len(rev) <= 0:
     rev = "tip"
+
   fctxs = repo[rev].filectx(path)
+  maxRev = fctxs.rev()
+  
   revs = []
   for i in fctxs.filelog():
     fctx = fctxs.filectx(i)
-    revs.append(fctx.changectx())
+    if fctx.rev() <= maxRev:
+      revs.append(fctx.changectx())
   
   # reverse changesets
   revs.reverse()
