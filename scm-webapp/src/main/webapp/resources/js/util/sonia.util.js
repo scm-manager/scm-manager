@@ -90,6 +90,40 @@ Sonia.util.getStringFromArray = function(array){
   return value;
 }
 
+Sonia.util.applySub = function(obj, name, p){
+  if (name){
+    obj = obj[name];
+  }
+  return Sonia.util.call(obj, p);
+}
+
+Sonia.util.apply = function(obj, p){
+  var result = null;
+  // use call instead of apply for compatiblity
+  if (Ext.isFunction(obj)) {
+    if (p){
+      if (Ext.isArray(p)){
+        result = obj(p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]);
+      } else {
+        result = obj(p);
+      }
+    } else {
+      result = obj();
+    }
+  } else {
+    if (p){
+      if ( Ext.isArray(p) ){
+        obj.fn.call(obj.scope, p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]);
+      } else {
+        obj.fn.call(obj.scope, p);
+      }
+    } else {
+      obj.fn.call(obj.scope);
+    }
+  }
+  return result;
+}
+
 if (!Array.prototype.filter) {
   
   Array.prototype.filter = function(fn, scope){

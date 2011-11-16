@@ -34,7 +34,6 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   repository: null,
   start: 0,
   pageSize: 20,
-  historyId: null,
   changesetStore: null,
   
   // parameters for file history view
@@ -45,13 +44,6 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   changesetViewerTitleText: 'Commits {0}',
   
   initComponent: function(){
-    this.historyId = Sonia.History.createToken([
-      'changesetviewer', 
-      this.repository.id, 
-      this.start, 
-      this.pageSize 
-    ]);
-
     if (! this.url){
       this.url = restUrl + 'repositories/' + this.repository.id  + '/changesets.json';
     }
@@ -114,10 +106,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   },
   
   updateHistory: function(store, records, options){
-    var id = Sonia.History.appendWithDepth([options.params.start, options.params.limit], 2);
-    if (id){
-      this.historyId = id;
-    }
+    
   },
   
   loadChangesets: function(start, limit){
@@ -131,38 +120,3 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
 
 // register xtype
 Ext.reg('repositoryChangesetViewerPanel', Sonia.repository.ChangesetViewerPanel);
-
-// register history handler
-Sonia.History.register('changesetviewer', function(params){
-  
-  if (params){
-    
-    var id = params[0] + '-changesetViewer';
-    var start = Sonia.util.parseInt(params[1], 0);
-    var pageSize = Sonia.util.parseInt(params[2], 20);
-    
-    if (debug){
-      console.debug('load changesetviewer for ' + id + ', ' + start + ', ' + pageSize );
-    }
-    
-    var tab = Ext.getCmp(id);
-    
-    if ( tab ){
-      main.getMainTabPanel().setActiveTab(id);
-      tab.loadChangesets(start, pageSize);
-    } else {  
-      Sonia.repository.get(params[0], function(repository){
-        main.addTab({
-          id: repository.id + '-changesetViewer',
-          xtype: 'repositoryChangesetViewerPanel',
-          repository: repository,
-          start: start,
-          pageSize: pageSize,
-          closable: true
-        })
-      });
-    }
-  
-  }
-  
-});

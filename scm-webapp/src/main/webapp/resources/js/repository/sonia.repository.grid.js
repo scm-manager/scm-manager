@@ -41,6 +41,9 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   
   searchValue: null,
   typeFilter: null,
+  
+  // for history
+  parentPanel: null,
 
   initComponent: function(){
 
@@ -93,6 +96,10 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Grid.superclass.initComponent.apply(this, arguments);
+    
+    if (this.parentPanel){
+      this.parentPanel.repositoryGrid = this;
+    }
   },
   
   storeLoad: function(){
@@ -152,7 +159,9 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       console.debug( item.name + ' selected' );
     }
     
-    Sonia.History.append(item.id);
+    if ( this.parentPanel ){
+      this.parentPanel.updateHistory(item);
+    }
 
     var infoPanel = main.getInfoPanel(item.type);
     infoPanel.item = item;
