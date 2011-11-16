@@ -113,12 +113,12 @@ Sonia.util.apply = function(obj, p){
   } else {
     if (p){
       if ( Ext.isArray(p) ){
-        obj.fn.call(obj.scope, p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]);
+        result = obj.fn.call(obj.scope, p[0], p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9]);
       } else {
-        obj.fn.call(obj.scope, p);
+        result = obj.fn.call(obj.scope, p);
       }
     } else {
-      obj.fn.call(obj.scope);
+      result = obj.fn.call(obj.scope);
     }
   }
   return result;

@@ -60,6 +60,8 @@ Sonia.History = {
           token += '|';
         }
       }
+    } else {
+      token = elements;
     }
     return token;
   },
