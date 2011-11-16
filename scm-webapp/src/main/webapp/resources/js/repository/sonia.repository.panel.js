@@ -300,4 +300,4 @@ Sonia.History.register('repositoryPanel', {
       panel.getGrid().selectById(repoId);
     }
   }
-})
+});

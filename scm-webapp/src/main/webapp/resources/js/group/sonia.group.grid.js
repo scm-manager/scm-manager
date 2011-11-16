@@ -38,6 +38,9 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
   colTypeText: 'Type',
   emptyGroupStoreText: 'No group is configured',
   groupFormTitleText: 'Group Form',
+  
+  // parent panel for history
+  parentPanel: null,
 
   initComponent: function(){
     var groupStore = new Sonia.rest.JsonStore({
@@ -82,6 +85,9 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.group.Grid.superclass.initComponent.apply(this, arguments);
+    
+    // store grid in parent panel
+    this.parentPanel.groupGrid = this;
   },
 
 
@@ -114,6 +120,10 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
   selectItem: function(group){
     if ( debug ){
       console.debug( group.name + ' selected' );
+    }
+    
+    if (this.parentPanel){
+      this.parentPanel.updateHistory(group);
     }
 
     Ext.getCmp('groupRmButton').setDisabled(false);
