@@ -87,7 +87,7 @@ Sonia.group.Panel = Ext.extend(Sonia.rest.Panel, {
   },
   
   updateHistory: function(group){
-    var token = Sonia.History.createToken(['groupPanel', group.name]);
+    var token = Sonia.History.createToken('groupPanel', group.name);
     Sonia.History.add(token);
   },
 
@@ -173,7 +173,7 @@ Sonia.History.register('groupPanel', {
   onActivate: function(panel){
     var token = null;
     var rec = panel.getGrid().getSelectionModel().getSelected();
-    if ( rec != null ){
+    if (rec){
       token = Sonia.History.createToken('groupPanel', rec.get('name'));
     } else {
       token = Sonia.History.createToken('groupPanel');

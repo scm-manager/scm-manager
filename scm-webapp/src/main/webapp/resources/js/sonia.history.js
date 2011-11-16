@@ -51,18 +51,14 @@ Sonia.History = {
     }
   },
   
-  createToken: function(elements){
+  createToken: function(){
     var token = '';
-    if (Ext.isArray(elements)){
-      for (var i=0; i<elements.length; i++){
-        token += elements[i];
-        if ( (i+1)<elements.length ){
-          token += '|';
-        }
+    for (var i=0; i<arguments.length; i++){
+      token += arguments[i];
+      if ( (i+1)<arguments.length ){
+        token += '|';
       }
-    } else {
-      token = elements;
-    }
+    }    
     return token;
   },
   

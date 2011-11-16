@@ -164,7 +164,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   },
   
   updateHistory: function(item){
-    var token = Sonia.History.createToken(['repositoryPanel', item.id]);
+    var token = Sonia.History.createToken('repositoryPanel', item.id);
     Sonia.History.add(token);
   },
   
@@ -282,7 +282,7 @@ Sonia.History.register('repositoryPanel', {
   onActivate: function(panel){
     var token = null;
     var rec = panel.getGrid().getSelectionModel().getSelected();
-    if ( rec != null ){
+    if (rec){
       token = Sonia.History.createToken('repositoryPanel', rec.get('id'));
     } else {
       token = Sonia.History.createToken('repositoryPanel');
