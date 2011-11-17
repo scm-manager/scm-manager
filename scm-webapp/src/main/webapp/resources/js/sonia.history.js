@@ -123,8 +123,11 @@ Sonia.History = {
         if (token){
           this.add(token);
         }
-      } else if (debug) {
-        console.debug('could not find xtype ' + tab.xtype);
+      } else {
+        if (debug){
+          console.debug('could not find xtype ' + tab.xtype + ' set xtype as id');
+        }
+        this.add(tab.xtype);
       }
     }
   },
