@@ -106,7 +106,17 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   },
   
   updateHistory: function(store, records, options){
-    
+    if ( options && options.params ){
+      this.start = options.params.start;
+      this.pageSize = options.params.limit;
+      var token = Sonia.History.createToken(
+        'repositoryChangesetViewerPanel', 
+        this.repository.id,
+        this.start, 
+        this.pageSize
+      );
+      Sonia.History.add(token);
+    }
   },
   
   loadChangesets: function(start, limit){
@@ -120,3 +130,38 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
 
 // register xtype
 Ext.reg('repositoryChangesetViewerPanel', Sonia.repository.ChangesetViewerPanel);
+
+// register history handler
+Sonia.History.register('repositoryChangesetViewerPanel', {
+  
+  onActivate: function(panel){
+    return Sonia.History.createToken(
+      'repositoryChangesetViewerPanel', 
+      panel.repository.id, 
+      panel.start, 
+      panel.pageSize
+    );
+  },
+  
+  // TODO fix wrong page number
+  onChange: function(repoId, start, limit){
+    var id = 'repositoryChangesetViewerPanel|' + repoId;
+    Sonia.repository.get(repoId, function(repository){
+      var panel = Ext.getCmp(id);
+      if (! panel){
+        panel = {
+          id: id,
+          xtype: 'repositoryChangesetViewerPanel',
+          repository : repository,
+          start: start,
+          pageSize: limit,
+          closable: true,
+          autoScroll: true
+        }
+      } else {
+        panel.loadChangesets(start, limit);
+      }
+      main.addTab(panel);
+    });
+  }
+});
