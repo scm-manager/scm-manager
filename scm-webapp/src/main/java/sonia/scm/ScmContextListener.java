@@ -57,8 +57,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContextEvent;
-import sonia.scm.security.CipherHandler;
-import sonia.scm.security.CipherUtil;
 
 /**
  *
