@@ -147,8 +147,13 @@ Sonia.History.register('repositoryChangesetViewerPanel', {
     );
   },
   
-  // TODO fix wrong page number
   onChange: function(repoId, start, limit){
+    if (start){
+      start = parseInt(start);
+    }
+    if (limit){
+      limit = parseInt(limit);
+    }
     var id = 'repositoryChangesetViewerPanel|' + repoId;
     Sonia.repository.get(repoId, function(repository){
       var panel = Ext.getCmp(id);
@@ -157,8 +162,8 @@ Sonia.History.register('repositoryChangesetViewerPanel', {
           id: id,
           xtype: 'repositoryChangesetViewerPanel',
           repository : repository,
-          start: parseInt(start),
-          pageSize: parseInt(limit),
+          start: start,
+          pageSize: limit,
           closable: true,
           autoScroll: true
         }
