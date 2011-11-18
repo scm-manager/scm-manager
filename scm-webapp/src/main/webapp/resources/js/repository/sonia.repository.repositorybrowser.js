@@ -229,7 +229,20 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }
     });
     
+    this.path = path;
+    this.updateHistory();
+    
     this.renderClickPath(path);
+  },
+  
+  updateHistory: function(){
+    var token = Sonia.History.createToken(
+      'repositoryBrowser', 
+      this.repository.id,
+      this.revision,
+      this.path
+    );
+    Sonia.History.add(token);
   },
   
   createFolderButton: function(path, name){
@@ -295,3 +308,46 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
 
 // register xtype
 Ext.reg('repositoryBrowser', Sonia.repository.RepositoryBrowser);
+
+
+// register history handler
+Sonia.History.register('repositoryBrowser', {
+  
+  onActivate: function(panel){
+    return Sonia.History.createToken(
+      'repositoryBrowser', 
+      panel.repository.id,
+      panel.revision,
+      panel.path
+    );
+  },
+  
+  onChange: function(repoId, revision, path){
+    if (revision == 'null'){
+      revision = null;
+    }
+    if (path == 'null'){
+      path = '';
+    }
+    var id = 'repositoryBrowser|' + repoId + "|" + revision;
+    Sonia.repository.get(repoId, function(repository){
+      var panel = Ext.getCmp(id);
+      if (! panel){
+        panel = {
+          id: id,
+          xtype: 'repositoryBrowser',
+          repository : repository,
+          revision: revision,
+          closable: true,
+          autoScroll: true
+        }
+        if (path){
+          panel.path = path;
+        }
+      } else {
+        panel.changeDirectory(path);
+      }
+      main.addTab(panel);
+    });
+  }
+});
