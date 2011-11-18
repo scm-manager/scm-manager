@@ -110,7 +110,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   },
   
   updateHistory: function(store, records, options){
-    if ( options && options.params ){
+    if ( ! this.inline && options && options.params ){
       this.start = options.params.start;
       this.pageSize = options.params.limit;
       var token = Sonia.History.createToken(
