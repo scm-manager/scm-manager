@@ -66,5 +66,35 @@ Sonia.repository.DiffPanel = Ext.extend(Ext.Panel, {
   
 });
 
-
+// register xtype
 Ext.reg('diffPanel', Sonia.repository.DiffPanel);
+
+// register history handler
+Sonia.History.register('diffPanel', {
+  
+  onActivate: function(panel){
+    return Sonia.History.createToken(
+      'diffPanel', 
+      panel.repository.id, 
+      panel.revision
+    );
+  },
+  
+  onChange: function(repoId, revision){
+    var id = 'diffPanel|' + repoId + '|' + revision;
+    Sonia.repository.get(repoId, function(repository){
+      var panel = Ext.getCmp(id);
+      if (! panel){
+        panel = {
+          id: id,
+          xtype: 'diffPanel',
+          repository : repository,
+          revision: revision,
+          closable: true,
+          autoScroll: true
+        }
+      }
+      main.addTab(panel);
+    });
+  }
+});
