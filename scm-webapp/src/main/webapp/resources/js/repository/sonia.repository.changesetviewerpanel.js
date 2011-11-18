@@ -53,12 +53,14 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
       limit: this.pageSize
     }
     
+    var baseParams = {};
+    
     if (this.path){
-      params.path = this.path;
+      baseParams.path = this.path;
     }
     
     if (this.revision){
-      params.revision = this.revision;
+      baseParams.revision = this.revision;
     }
 
     this.changesetStore = new Sonia.rest.JsonStore({
@@ -71,9 +73,11 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
       root: 'changesets',
       idProperty: 'id',
       totalProperty: 'total',
-      autoLoad: true,
+      baseParams: baseParams,
+      autoLoad: {
+        params: params
+      },
       autoDestroy: true,
-      baseParams: params,
       listeners: {
         load: {
           fn: this.updateHistory,
@@ -153,8 +157,8 @@ Sonia.History.register('repositoryChangesetViewerPanel', {
           id: id,
           xtype: 'repositoryChangesetViewerPanel',
           repository : repository,
-          start: start,
-          pageSize: limit,
+          start: parseInt(start),
+          pageSize: parseInt(limit),
           closable: true,
           autoScroll: true
         }
