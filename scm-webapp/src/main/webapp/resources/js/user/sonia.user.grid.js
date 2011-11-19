@@ -40,6 +40,9 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
   colCreationDateText: 'Creation Date',
   colLastModifiedText: 'Last modified',
   colTypeText: 'Type',
+  
+  // parent for history
+  parentPanel: null,
 
   initComponent: function(){
 
@@ -85,6 +88,10 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.user.Grid.superclass.initComponent.apply(this, arguments);
+    
+    if (this.parentPanel){
+      this.parentPanel.userGrid = this;
+    }
   },
 
   onFallBelowMinHeight: function(height, minHeight){

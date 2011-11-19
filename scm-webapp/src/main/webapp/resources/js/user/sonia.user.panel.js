@@ -37,6 +37,9 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
   removeMsgText: 'Remove User "{0}"?',
   errorTitleText: 'Error',
   errorMsgText: 'User deletion failed',
+  
+  // userGrid for history
+  userGrid: null,
 
   initComponent: function(){
 
@@ -51,7 +54,8 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
       items: [{
         id: 'userGrid',
         xtype: 'userGrid',
-        region: 'center'
+        region: 'center',
+        parentPanel: this
       },{
         id: 'userEditPanel',
         layout: 'fit',
@@ -71,6 +75,16 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.user.Panel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  getGrid: function(){
+    if (!this.userGrid){
+      if (debug){
+        console.debug('userGrid not found retrvie by id');
+      }
+      this.userGrid = Ext.getCmp('userGrid');
+    }
+    return this.userGrid;
   },
 
   showAddPanel: function(){
@@ -99,7 +113,7 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
 
   removeUser: function(){
 
-    var grid = Ext.getCmp('userGrid');
+    var grid = this.getGrid();
     var selected = grid.getSelectionModel().getSelected();
     if ( selected ){
       var item = selected.data;
@@ -153,3 +167,32 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
 
 // register xtype
 Ext.reg('userPanel', Sonia.user.Panel);
+
+
+// register history handler
+Sonia.History.register('userPanel', {
+  
+  onActivate: function(panel){
+    var token = null;
+    var rec = panel.getGrid().getSelectionModel().getSelected();
+    if (rec){
+      token = Sonia.History.createToken('userPanel', rec.get('name'));
+    } else {
+      token = Sonia.History.createToken('userPanel');
+    }
+    return token;
+  },
+  
+  onChange: function(userId){
+    var panel = Ext.getCmp('users');
+    if ( ! panel ){
+      main.addUsersTabPanel();
+      panel = Ext.getCmp('users');
+    } else {
+      main.addTab(panel);
+    }
+    if (userId){
+      panel.getGrid().selectById(userId);
+    }
+  }
+});
