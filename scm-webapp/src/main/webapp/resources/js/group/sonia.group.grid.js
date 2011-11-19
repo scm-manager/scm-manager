@@ -48,7 +48,7 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
         url: restUrl + 'groups.json',
         disableCaching: false
       }),
-      id: 'name',
+      idProperty: 'name',
       fields: [ 'name', 'members', 'description', 'creationDate', 'type', 'properties'],
       sortInfo: {
         field: 'name'

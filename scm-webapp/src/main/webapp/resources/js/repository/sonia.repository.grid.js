@@ -52,7 +52,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         url: restUrl + 'repositories.json',
         disableCaching: false
       }),
-      id: 'id',
+      idProperty: 'id',
       fields: [ 'id', 'name', 'type', 'contact', 'description', 'creationDate', 'url', 'public', 'permissions', 'properties' ],
       sortInfo: {
         field: 'name'

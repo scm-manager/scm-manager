@@ -134,6 +134,9 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
   },
   
   selectById: function(id){
+    if (debug){
+      console.debug( 'select by id ' + id );
+    }
     var index = this.getStore().indexOfId(id);
     if ( index >= 0 ){
       this.getSelectionModel().selectRow(index);

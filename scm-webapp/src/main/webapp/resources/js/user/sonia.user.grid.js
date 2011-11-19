@@ -51,7 +51,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
         url: restUrl + 'users.json',
         disableCaching: false
       }),
-      id: 'name',
+      idProperty: 'name',
       fields: [ 'name', 'displayName', 'mail', 'admin', 'creationDate', 'lastModified', 'type', 'properties'],
       sortInfo: {
         field: 'name'
