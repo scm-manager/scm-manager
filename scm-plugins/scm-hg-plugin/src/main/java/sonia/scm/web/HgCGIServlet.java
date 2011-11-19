@@ -102,7 +102,6 @@ public class HgCGIServlet extends HttpServlet
    *
    * @param cgiExecutorFactory
    * @param configuration
-   * @param repositoryManager
    * @param repositoryProvider
    * @param handler
    * @param hookManager
@@ -110,13 +109,11 @@ public class HgCGIServlet extends HttpServlet
   @Inject
   public HgCGIServlet(CGIExecutorFactory cgiExecutorFactory,
                       ScmConfiguration configuration,
-                      RepositoryManager repositoryManager,
                       Provider<Repository> repositoryProvider,
                       HgRepositoryHandler handler, HgHookManager hookManager)
   {
     this.cgiExecutorFactory = cgiExecutorFactory;
     this.configuration = configuration;
-    this.repositoryManager = repositoryManager;
     this.repositoryProvider = repositoryProvider;
     this.handler = handler;
     this.hookManager = hookManager;
@@ -263,9 +260,6 @@ public class HgCGIServlet extends HttpServlet
 
   /** Field description */
   private HgHookManager hookManager;
-
-  /** Field description */
-  private RepositoryManager repositoryManager;
 
   /** Field description */
   private Provider<Repository> repositoryProvider;
