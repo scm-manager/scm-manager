@@ -295,6 +295,8 @@ Sonia.History.register('repositoryPanel', {
     if ( ! panel ){
       main.addRepositoriesTabPanel();
       panel = Ext.getCmp('repositories');
+    } else {
+      main.addTab(panel);
     }
     if (repoId){
       panel.getGrid().selectById(repoId);

@@ -186,6 +186,8 @@ Sonia.History.register('groupPanel', {
     if ( ! panel ){
       main.addGroupsTabPanel();
       panel = Ext.getCmp('groups');
+    } else {
+      main.addTab(panel);
     }
     if (repoId){
       panel.getGrid().selectById(repoId);
