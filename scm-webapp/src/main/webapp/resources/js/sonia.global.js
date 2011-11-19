@@ -110,6 +110,3 @@ var main = null;
 
 // enable extjs quicktips
 Ext.QuickTips.init();
-
-// enable history
-// Ext.History.init();
