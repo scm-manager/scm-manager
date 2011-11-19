@@ -411,6 +411,47 @@ public class RepositoryResource
   }
 
   /**
+   * Returns a repository.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>404 not found,
+   *       no repository with the specified type and name available</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   *
+   * @param request the current request
+   * @param type the type of the repository
+   * @param name the name of the repository
+   *
+   * @return the {@link Repository} with the specified type and name
+   */
+  @GET
+  @Path("{type}/{name}")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @TypeHint(Repository.class)
+  public Response getByTypeAndName(@Context Request request,
+                                   @PathParam("type") String type,
+                                   @PathParam("name") String name)
+  {
+    Response response = null;
+    Repository repository = repositoryManager.get(type, name);
+
+    if (repository != null)
+    {
+      prepareForReturn(repository);
+      response = Response.ok(repository).build();
+    }
+    else
+    {
+      response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+
+    return response;
+  }
+
+  /**
    *   Returns a list of {@link Changeset} for the given repository.<br />
    *   <br />
    *   Status codes:
