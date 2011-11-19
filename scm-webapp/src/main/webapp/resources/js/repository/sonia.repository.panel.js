@@ -295,11 +295,20 @@ Sonia.History.register('repositoryPanel', {
     if ( ! panel ){
       main.addRepositoriesTabPanel();
       panel = Ext.getCmp('repositories');
+      if ( repoId ){
+        var selected = false;
+        panel.getGrid().getStore().addListener('load', function(){
+          if (!selected){
+            panel.getGrid().selectedById(repoId);
+            selected = true;
+          }
+        });
+      }
     } else {
       main.addTab(panel);
-    }
-    if (repoId){
-      panel.getGrid().selectById(repoId);
+      if (repoId){
+        panel.getGrid().selectById(repoId);
+      }
     }
   }
 });
