@@ -244,18 +244,7 @@ public class RepositoryResource
   @Override
   public Response get(@Context Request request, @PathParam("id") String id)
   {
-    Response response = null;
-
-    if (SecurityUtil.isAdmin(securityContextProvider))
-    {
-      response = super.get(request, id);
-    }
-    else
-    {
-      response = Response.status(Response.Status.FORBIDDEN).build();
-    }
-
-    return response;
+    return super.get(request, id);
   }
 
   /**
