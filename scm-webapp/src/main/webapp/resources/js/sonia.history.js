@@ -32,7 +32,6 @@ Ext.ns('Sonia');
 
 Sonia.History = {
  
-  initialized: false,
   historyElements: [],
   recentlyAdded: [],
   recentlyChanged: [],
@@ -133,9 +132,6 @@ Sonia.History = {
   },
   
   onChange: function(token){
-    if (!this.initialized){
-      this.initialized = true;
-    }
     if(token){
       if (this.isInvokeable(this.recentlyAdded, token)){  
         var parts = token.split('|');
@@ -173,15 +169,8 @@ Sonia.History = {
 
 Ext.History.on('ready', function(history){
   var token = history.getToken();
-  if (!token || token == 'null'){
-    Sonia.History.initialized = true;  
-  } else {
-    setTimeout(function(){
-      if (debug){
-        console.debug('history ready, handle history token ' + token);
-      }      
-      Sonia.History.onChange(token);
-    }, 750);
+  if (token && token != 'null'){
+    Sonia.History.onChange(token);
   }
 });
 

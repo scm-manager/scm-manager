@@ -112,4 +112,4 @@ var main = null;
 Ext.QuickTips.init();
 
 // enable history
-Ext.History.init();
+// Ext.History.init();

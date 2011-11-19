@@ -528,6 +528,10 @@ Ext.onReady(function(){
   main.addListeners('login', loginCallbacks);
   main.addListeners('logout', logoutCallbacks);
 
+  main.addListeners('login', function(){
+    Ext.History.init();
+  });
+
   main.init();
   main.checkLogin();
 });
