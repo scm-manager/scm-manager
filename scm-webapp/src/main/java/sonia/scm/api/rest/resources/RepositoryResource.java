@@ -67,6 +67,7 @@ import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.SecurityUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -420,11 +421,13 @@ public class RepositoryResource
    *     <li>404 not found, if the repository or the path could not be found</li>
    *     <li>500 internal server error</li>
    *   </ul>
-   *  
+   *
    *   @param id the id of the repository
+   *   @param path path of a file
+   *   @param revision the revision of the file specified by the path parameter
    *   @param start the start value for paging
    *   @param limit the limit value for paging
-   *  
+   *
    *   @return
    *
    * @throws IOException
@@ -434,7 +437,10 @@ public class RepositoryResource
   @Path("{id}/changesets")
   @TypeHint(ChangesetPagingResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response getChangesets(@PathParam("id") String id, @DefaultValue("0")
+  public Response getChangesets(@PathParam("id") String id,
+                                @QueryParam("path") String path,
+                                @QueryParam("revision") String revision,
+                                @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("20")
   @QueryParam("limit") int limit) throws RepositoryException, IOException
   {
@@ -442,8 +448,17 @@ public class RepositoryResource
 
     try
     {
-      ChangesetPagingResult changesets = changesetViewerUtil.getChangesets(id,
-                                           start, limit);
+      ChangesetPagingResult changesets = null;
+
+      if (Util.isEmpty(path))
+      {
+        changesets = changesetViewerUtil.getChangesets(id, start, limit);
+      }
+      else
+      {
+        changesets = changesetViewerUtil.getChangesets(id, path, revision,
+                start, limit);
+      }
 
       if (changesets != null)
       {

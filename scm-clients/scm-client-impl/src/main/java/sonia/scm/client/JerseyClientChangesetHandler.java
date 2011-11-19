@@ -103,6 +103,47 @@ public class JerseyClientChangesetHandler implements ClientChangesetHandler
     return result;
   }
 
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param path
+   * @param revision
+   * @param start
+   * @param limit
+   *
+   * @return
+   */
+  @Override
+  public ChangesetPagingResult getChangesets(String path, String revision,
+          int start, int limit)
+  {
+    ChangesetPagingResult result = null;
+    String url =
+      session.getUrlProvider().getRepositoryChangesetUrl(repository.getId(),
+        path, revision, start, limit);
+    WebResource resource = session.getClient().resource(url);
+    ClientResponse response = null;
+
+    try
+    {
+      response = resource.get(ClientResponse.class);
+
+      if (response.getStatus() != ScmClientException.SC_NOTFOUND)
+      {
+        ClientUtil.checkResponse(response, 200);
+        result = response.getEntity(ChangesetPagingResult.class);
+      }
+    }
+    finally
+    {
+      ClientUtil.close(response);
+    }
+
+    return result;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */

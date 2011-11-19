@@ -123,43 +123,82 @@ public class BasicSecurityContext implements WebSecurityContext
     AuthenticationResult ar = authenticator.authenticate(request, response,
                                 username, password);
 
-    if (ar != null)
+    if ((ar != null) && (ar.getState() == AuthenticationState.SUCCESS))
     {
       user = ar.getUser();
 
       try
       {
+        Set<String> groupSet = new HashSet<String>();
+
+        // load external groups
+        Collection<String> extGroups = ar.getGroups();
+
+        if (extGroups != null)
+        {
+          groupSet.addAll(extGroups);
+        }
+
+        // load internal groups
+        loadGroups(groupSet);
+
+        // check for admin user
+        if (!user.isAdmin())
+        {
+          user.setAdmin(isAdmin(groupSet));
+
+          if (logger.isDebugEnabled() && user.isAdmin())
+          {
+            logger.debug("user '{}' is marked as admin by configuration",
+                         user.getType(), user.getName());
+          }
+        }
+        else if (logger.isDebugEnabled())
+        {
+          logger.debug("authenticator {} marked user '{}' as admin",
+                       user.getType(), user.getName());
+        }
+
+        // store user
         User dbUser = userManager.get(user.getName());
 
-        if ((dbUser != null) && user.copyProperties(dbUser, false))
+        if (dbUser != null)
         {
-          userManager.modify(dbUser);
+
+          // if database user is an admin, set admin for the current user
+          if (dbUser.isAdmin())
+          {
+            if (logger.isDebugEnabled())
+            {
+              logger.debug("user '{}' is marked as admin by local database",
+                           user.getType(), user.getName());
+            }
+
+            user.setAdmin(true);
+          }
+
+          // modify existing user, copy properties except password and admin
+          if (user.copyProperties(dbUser, false))
+          {
+            userManager.modify(dbUser);
+          }
         }
+
+        // create new user
         else if (dbUser == null)
         {
           userManager.create(user);
         }
 
-        Collection<String> groupCollection = ar.getGroups();
-
-        if (groupCollection != null)
-        {
-          groups.addAll(groupCollection);
-        }
-
-        loadGroups();
-
-        if (!user.isAdmin())
-        {
-          user.setAdmin(isAdmin());
-        }
+        groups = groupSet;
 
         if (logger.isDebugEnabled())
         {
           logGroups();
         }
 
-        String credentials = dbUser.getName();
+        // store encrypted credentials in session
+        String credentials = user.getName();
 
         if (Util.isNotEmpty(password))
         {
@@ -172,6 +211,12 @@ public class BasicSecurityContext implements WebSecurityContext
       catch (Exception ex)
       {
         user = null;
+
+        if (groups != null)
+        {
+          groups.clear();
+        }
+
         logger.error("authentication failed", ex);
       }
     }
@@ -253,8 +298,10 @@ public class BasicSecurityContext implements WebSecurityContext
   /**
    * Method description
    *
+   *
+   * @param groupSet
    */
-  private void loadGroups()
+  private void loadGroups(Set<String> groupSet)
   {
     Collection<Group> groupCollection =
       groupManager.getGroupsForMember(user.getName());
@@ -263,7 +310,7 @@ public class BasicSecurityContext implements WebSecurityContext
     {
       for (Group group : groupCollection)
       {
-        groups.add(group.getName());
+        groupSet.add(group.getName());
       }
     }
   }
@@ -308,9 +355,11 @@ public class BasicSecurityContext implements WebSecurityContext
    * Method description
    *
    *
+   *
+   * @param groups
    * @return
    */
-  private boolean isAdmin()
+  private boolean isAdmin(Collection<String> groups)
   {
     boolean result = false;
     Set<String> adminUsers = configuration.getAdminUsers();

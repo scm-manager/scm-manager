@@ -50,7 +50,7 @@
     <file>${LOGDIR}/scm-manager.log</file>
 
     <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-      <fileNamePattern>scm-manager-%i.log</fileNamePattern>
+      <fileNamePattern>${LOGDIR}/scm-manager-%i.log</fileNamePattern>
       <minIndex>1</minIndex>
       <maxIndex>10</maxIndex>
     </rollingPolicy>

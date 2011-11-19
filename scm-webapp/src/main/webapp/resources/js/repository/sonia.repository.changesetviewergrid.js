@@ -140,7 +140,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
   
   openDiffViewer: function(revision){
     main.addTab({
-      id: 'diff-' + this.repository.id + ':' + revision,
+      id: 'diffPanel|' + this.repository.id + '|' + revision,
       xtype: 'diffPanel',
       repository: this.repository,
       revision: revision,
@@ -150,7 +150,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
   
   openRepositoryBrowser: function(revision){
     main.addTab({
-      id: 'repositorybrowser-' + this.repository.id + ':' + revision,
+      id: 'repositoryBrowser|' + this.repository.id + '|' + revision,
       xtype: 'repositoryBrowser',
       repository: this.repository,
       revision: revision,

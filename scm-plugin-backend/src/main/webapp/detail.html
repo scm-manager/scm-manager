@@ -10,6 +10,16 @@
     <td>${latest.name}</td>
   </tr>
   <tr>
+    <th>Category</th>
+    <td>
+      <#if latest.category??>
+        ${latest.category}
+      <#else>
+        Miscellaneous
+      </#if>
+    </td>
+  </tr>
+  <tr>
     <th>GroupId</th>
     <td>${latest.groupId}</td>
   </tr>
@@ -21,38 +31,88 @@
     <th>Author</th>
     <td>${latest.author}</td>
   </tr>
+  <#if latest.url??>
+  <tr>
+    <th>URL</th>
+    <td>
+      <a href="${latest.url}" target="_blank">
+        ${latest.url}
+      </a>
+    </td>
+  </tr>
+  </#if>
+  <#if latest.wiki??>
+  <tr>
+    <th>Wiki</th>
+    <td>
+      <a href="${latest.wiki}" target="_blank">
+        ${latest.wiki}
+      </a>
+    </td>
+  </tr>
+  </#if>
 </table>
 
 <p>&nbsp;</p>
 
+<#if latest.screenshots??>
+  <div class="screenshots">
+    <#list latest.screenshots as screenshot>
+      <a class="screenshot" href="${screenshot}">
+        <#if latest.screenshots?size == 1>
+          <#assign size="l">
+        <#elseif latest.screenshots?size == 2>
+          <#assign size="m">
+        <#else>
+          <#assign size="s">
+        </#if>
+        <img class="screenshot" src="${contextPath}/page/screenshot/${latest.groupId}/${latest.artifactId}/${screenshot_index}/${size}.jpg" alt="screenshot" />
+      </a>
+    </#list>
+  </div>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('a.screenshot').fancybox();
+    });
+  </script>
+
+  <p>&nbsp;</p>
+  
+</#if>
+
 <h2>Plugin Versions</h2>
 
 <div id="accordion">
-<#list versions as version>
-  <h3><a href="#">${version.version}</a></h3>
-  <div>
-    <p>${version.description}</p>
-    <#if version.condition??>
-      <h4>Conditions</h4>
-      <ul>
-        <#if version.condition.minVersion??>
-        <li>Minimum Version: ${version.condition.minVersion}</li>
-        </#if>
-        <#if version.condition.os??>
-        <li>
-          Operatingsystems: 
-          <#list version.condition.os as os>
-            ${os}<#if os_has_next>, </#if>
-          </#list>
-        </li>
-        </#if>
-        <#if version.condition.arch??>
-        <li>Architecture: ${version.condition.arch}</li>
-        </#if>
-      </ul>
-    </#if>
-  </div>
-</#list>
+<#if versions?has_content>
+  <#list versions as version>
+    <h3><a href="#">${version.version}</a></h3>
+    <div>
+      <p>${version.description}</p>
+      <#if version.condition??>
+        <h4>Conditions</h4>
+        <ul>
+          <#if version.condition.minVersion??>
+          <li>Minimum Version: ${version.condition.minVersion}</li>
+          </#if>
+          <#if version.condition.os??>
+          <li>
+            Operatingsystems:
+            <#list version.condition.os as os>
+              ${os}<#if os_has_next>, </#if>
+            </#list>
+          </li>
+          </#if>
+          <#if version.condition.arch??>
+          <li>Architecture: ${version.condition.arch}</li>
+          </#if>
+        </ul>
+      </#if>
+    </div>
+  </#list>
+<#else>
+  Plugin not yet released
+</#if>
 </div>
 
 <p>&nbsp;</p>

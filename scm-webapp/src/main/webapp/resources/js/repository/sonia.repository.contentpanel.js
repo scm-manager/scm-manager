@@ -35,6 +35,9 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
   path: null,
   contentUrl: null,
   
+  // view content/blame/history
+  view: 'content',
+  
   initComponent: function(){
     var name = Sonia.util.getName(this.path);
     this.contentUrl = Sonia.repository.createContentUrl(
@@ -43,6 +46,19 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
     
     var bottomBar = [this.path];
     this.appendRepositoryProperties(bottomBar);
+    
+    var panel = null;
+    
+    switch (this.view){
+      case 'blame':
+        panel = this.createBlamePanel();
+        break;
+      case 'history':
+        panel = this.createHistoryPanel();
+        break;
+      default:
+        panel = this.createSyntaxPanel();
+    }
     
     var config = {
       title: name,
@@ -58,34 +74,89 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
         text: 'Blame',
         handler: this.openBlamePanel,
         scope: this
+      },{
+        text: 'History',
+        handler: this.openHistoryPanel,
+        scope: this
       }],
       bbar: bottomBar,
-      items: [{
-        xtype: 'syntaxHighlighterPanel',
-        syntax: Sonia.util.getExtension(this.path),
-        contentUrl: this.contentUrl
-      }]
+      items: [panel]
     }
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ContentPanel.superclass.initComponent.apply(this, arguments);
   },
   
-  openSyntaxPanel: function(){
-    this.openPanel({
+  loadPanel: function(view){
+    switch (view){
+      case 'blame':
+        this.openBlamePanel();
+        break;
+      case 'history':
+        this.openHistoryPanel();
+        break;
+      default:
+        this.openSyntaxPanel();
+    }
+    
+  },
+  
+  createHistoryPanel: function(){
+    return {
+      xtype: 'repositoryChangesetViewerPanel',
+      repository: this.repository,
+      revision: this.revision,
+      path: this.path,
+      inline: true,
+      // TODO find a better way
+      pageSize: 9999
+    }
+  },
+  
+  openHistoryPanel: function(){
+    this.openPanel(this.createHistoryPanel());
+    this.view = 'history';
+    this.updateHistory();
+  },
+  
+  createSyntaxPanel: function(){
+    return {
       xtype: 'syntaxHighlighterPanel',
       syntax: Sonia.util.getExtension(this.path),
       contentUrl: this.contentUrl
-    });
+    }
   },
   
-  openBlamePanel: function(){
-    this.openPanel({
+  openSyntaxPanel: function(){
+    this.openPanel(this.createSyntaxPanel());
+    this.view = 'content';
+    this.updateHistory();
+  },
+  
+  createBlamePanel: function(){
+    return {
       xtype: 'blamePanel',
       repository: this.repository,
       revision: this.revision,
       path: this.path
-    });
+    }
+  },
+  
+  openBlamePanel: function(){
+    this.openPanel(this.createBlamePanel());
+    this.view = 'blame';
+    this.updateHistory();
+  },
+  
+  updateHistory: function(){
+    var token = Sonia.History.createToken(
+      'contentPanel', 
+      this.repository.id, 
+      this.revision, 
+      this.path,
+      this.view
+    );
+    Sonia.History.add(token);
   },
   
   downlaodFile: function(){
@@ -116,5 +187,47 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
   
 });
 
-
+// register xtype
 Ext.reg('contentPanel', Sonia.repository.ContentPanel);
+
+// register history handler
+Sonia.History.register('contentPanel', {
+  
+  onActivate: function(panel){
+    return Sonia.History.createToken(
+      'contentPanel', 
+      panel.repository.id, 
+      panel.revision, 
+      panel.path,
+      panel.view
+    );
+  },
+  
+  onChange: function(repoId, revision, path, view){
+    if (revision == 'null'){
+      revision = null;
+    }
+    if (!view || view == 'null'){
+      view = 'content';
+    }
+    var id = 'contentPanel|' + repoId + '|' + revision + '|' + path;
+    Sonia.repository.get(repoId, function(repository){
+      var panel = Ext.getCmp(id);
+      if (! panel){
+        panel = {
+          id: id,
+          xtype: 'contentPanel',
+          repository : repository,
+          revision: revision,
+          path: path,
+          view: view,
+          closable: true,
+          autoScroll: true
+        }
+      } else {
+        panel.loadPanel(view);
+      }
+      main.addTab(panel);
+    });
+  }
+});

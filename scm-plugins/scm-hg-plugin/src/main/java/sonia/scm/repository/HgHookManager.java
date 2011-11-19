@@ -41,9 +41,12 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.ConfigChangedListener;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.io.RegexResourceProcessor;
 import sonia.scm.io.ResourceProcessor;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.web.HgWebConfigWriter;
 
@@ -64,7 +67,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgHookManager
+public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
 {
 
   /** Field description */
@@ -81,14 +84,30 @@ public class HgHookManager
    *
    *
    * @param context
+   * @param configuration
    */
   @Inject
-  public HgHookManager(SCMContextProvider context)
+  public HgHookManager(SCMContextProvider context,
+                       ScmConfiguration configuration)
   {
     this.context = context;
+    this.configuration = configuration;
+    this.configuration.addListener(this);
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param config
+   */
+  @Override
+  public void configChanged(ScmConfiguration config)
+  {
+    this.changed = true;
+  }
 
   /**
    * TODO check if file exists
@@ -106,10 +125,7 @@ public class HgHookManager
       {
         if (isScriptWriteAble())
         {
-          StringBuilder url = new StringBuilder(request.getScheme());
-
-          url.append("://localhost:").append(request.getServerPort());
-          url.append(request.getContextPath()).append("/hook/hg/");
+          String url = createUrl(request);
 
           if (hgHookScript == null)
           {
@@ -121,10 +137,12 @@ public class HgHookManager
 
           if (logger.isDebugEnabled())
           {
-            logger.debug("write hg hook script to '{}'", hgHookScript);
+            logger.debug("write hg hook script for '{}' to '{}'", url,
+                         hgHookScript);
           }
 
           writeScript(hgHookScript, url.toString());
+          changed = false;
         }
       }
     }
@@ -157,6 +175,35 @@ public class HgHookManager
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  private String createUrl(HttpServletRequest request)
+  {
+    String url = null;
+
+    if (configuration.isForceBaseUrl())
+    {
+      url = HttpUtil.getUriWithoutEndSeperator(
+        configuration.getBaseUrl()).concat("/hook/hg/");
+    }
+    else
+    {
+      StringBuilder sb = new StringBuilder(request.getScheme());
+
+      sb.append("://localhost:").append(request.getLocalPort());
+      sb.append(request.getContextPath()).append("/hook/hg/");
+      url = sb.toString();
+    }
+
+    return url;
+  }
 
   /**
    * Method description
@@ -202,13 +249,19 @@ public class HgHookManager
    */
   private boolean isScriptWriteAble()
   {
-    return (hgHookScript == null) ||!hgHookScript.exists();
+    return (hgHookScript == null) ||!hgHookScript.exists() || changed;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private boolean changed = false;
+
+  /** Field description */
   private String challenge = UUID.randomUUID().toString();
+
+  /** Field description */
+  private ScmConfiguration configuration;
 
   /** Field description */
   private SCMContextProvider context;

@@ -74,7 +74,6 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     this.addEvents('login', 'logout', 'init');
     this.mainTabPanel = Ext.getCmp('mainTabPanel');
     this.addListener('login', this.postLogin, this);
-    this.createHistory();
     Sonia.scm.Main.superclass.constructor.call(this, config);
   },
   
@@ -150,39 +149,6 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     if (admin){
       this.addTabPanel('groups', 'groupPanel', this.tabGroupsText);
     }
-  },
-  
-  createHistory: function(){
-    Sonia.History.register('repositories', function(params){
-      this.addRepositoriesTabPanel();
-      var grid = Ext.getCmp('repositoryGrid');
-      if (grid){
-        grid.handleHistory(params);
-      } else if (debug){
-        console.debug('could not find repository grid');
-      }
-    }, this);
-    Sonia.History.register('scmConfig', this.addScmConfigTabPanel, this);
-    Sonia.History.register('repositoryConfig', this.addRepositoryConfigTabPanel, this);
-    Sonia.History.register('plugins', this.addPluginTabPanel, this);
-    Sonia.History.register('users', function(params){
-      this.addUsersTabPanel();
-      var grid = Ext.getCmp('userGrid');
-      if (grid){
-        grid.handleHistory(params);
-      } else if (debug){
-        console.debug('could not find user grid');
-      }
-    }, this);
-    Sonia.History.register('groups', function(params){
-      this.addGroupsTabPanel();
-      var grid = Ext.getCmp('groupGrid');
-      if (grid){
-        grid.handleHistory(params);
-      } else if (debug){
-        console.debug('could not find group grid');
-      }
-    }, this);
   },
 
   createMainMenu: function(){
@@ -510,10 +476,7 @@ Ext.onReady(function(){
     listeners: {
       tabchange: function(tabPanel, tab){
         if ( Ext.isDefined(tab) ){
-          var id = tab.historyId ? tab.historyId : tab.id;
-          if (id){
-            Sonia.History.add(id, true);
-          }
+          Sonia.History.onActivate(tab);
         }
       }
     }

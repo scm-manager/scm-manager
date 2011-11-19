@@ -59,7 +59,7 @@ import java.util.List;
  * @since 1.6
  */
 @Singleton
-public class RepositoryBrowserUtil extends CacheClearHook
+public class RepositoryBrowserUtil extends PartCacheClearHook
 {
 
   /** Field description */
@@ -205,7 +205,7 @@ public class RepositoryBrowserUtil extends CacheClearHook
    * @version        Enter version here..., 11/08/03
    * @author         Enter your name here...
    */
-  private static class RepositoryBrowserCacheKey
+  private static class RepositoryBrowserCacheKey implements RepositoryCacheKey
   {
 
     /**
@@ -295,6 +295,20 @@ public class RepositoryBrowserUtil extends CacheClearHook
                           : 0);
 
       return hash;
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public String getRepositoryId()
+    {
+      return repositoryId;
     }
 
     //~--- fields -------------------------------------------------------------

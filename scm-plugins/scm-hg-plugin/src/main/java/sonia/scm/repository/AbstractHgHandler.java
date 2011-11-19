@@ -399,6 +399,7 @@ public class AbstractHgHandler
       }
 
       msg.append("]");
+      logger.debug(msg.toString());
     }
 
     ProcessBuilder pb = new ProcessBuilder(cmdList);

@@ -57,7 +57,7 @@ import java.util.Set;
  * @author Sebastian Sdorra
  * @since 1.6
  */
-public class ChangesetViewerUtil extends CacheClearHook
+public class ChangesetViewerUtil extends PartCacheClearHook
 {
 
   /** Field description */
@@ -130,6 +130,40 @@ public class ChangesetViewerUtil extends CacheClearHook
    * Method description
    *
    *
+   * @param repositoryId
+   * @param path
+   * @param revision
+   * @param start
+   * @param max
+   *
+   * @return
+   *
+   *
+   * @throws IOException
+   * @throws NotSupportedFeatuerException
+   * @throws RepositoryException
+   */
+  public ChangesetPagingResult getChangesets(String repositoryId, String path,
+          String revision, int start, int max)
+          throws IOException, RepositoryException, NotSupportedFeatuerException
+  {
+    AssertUtil.assertIsNotEmpty(repositoryId);
+
+    Repository repository = repositoryManager.get(repositoryId);
+
+    if (repository == null)
+    {
+      throw new RepositoryNotFoundException(
+          "could not find repository with id ".concat(repositoryId));
+    }
+
+    return getChangesets(repository, path, revision, start, max);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repository
    * @param start
    * @param max
@@ -163,6 +197,70 @@ public class ChangesetViewerUtil extends CacheClearHook
     if (result == null)
     {
       result = viewer.getChangesets(start, max);
+
+      if (result != null)
+      {
+        if (Util.isNotEmpty(result.getChangesets()))
+        {
+          callPreProcessors(result);
+          callPreProcessorFactories(repository, result);
+        }
+
+        cache.put(key, result);
+      }
+      else
+      {
+        throw new RepositoryException("could not fetch changesets");
+      }
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch changesetviewer results from cache");
+    }
+
+    return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param path
+   * @param revision
+   * @param start
+   * @param max
+   *
+   * @return
+   *
+   *
+   * @throws IOException
+   * @throws NotSupportedFeatuerException
+   * @throws RepositoryException
+   */
+  public ChangesetPagingResult getChangesets(Repository repository,
+          String path, String revision, int start, int max)
+          throws IOException, RepositoryException, NotSupportedFeatuerException
+  {
+    AssertUtil.assertIsNotNull(repository);
+
+    ChangesetViewer viewer = repositoryManager.getChangesetViewer(repository);
+
+    if (viewer == null)
+    {
+      throw new NotSupportedFeatuerException(
+          "ChangesetViewer is not supported for type ".concat(
+            repository.getType()));
+    }
+
+    ChangesetViewerCacheKey key =
+      new ChangesetViewerCacheKey(repository.getId(), path, revision, start,
+                                  max);
+    ChangesetPagingResult result = cache.get(key);
+
+    if (result == null)
+    {
+      result = viewer.getChangesets(path, revision, start, max);
 
       if (result != null)
       {
@@ -247,7 +345,7 @@ public class ChangesetViewerUtil extends CacheClearHook
    * @version        Enter version here..., 11/07/24
    * @author         Enter your name here...
    */
-  private class ChangesetViewerCacheKey
+  private class ChangesetViewerCacheKey implements RepositoryCacheKey
   {
 
     /**
@@ -260,7 +358,25 @@ public class ChangesetViewerUtil extends CacheClearHook
      */
     public ChangesetViewerCacheKey(String repository, int start, int max)
     {
+      this(repository, null, null, start, max);
+    }
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param repository
+     * @param path
+     * @param revision
+     * @param start
+     * @param max
+     */
+    public ChangesetViewerCacheKey(String repository, String path,
+                                   String revision, int start, int max)
+    {
       this.repository = repository;
+      this.path = path;
+      this.revision = revision;
       this.start = start;
       this.max = max;
     }
@@ -290,6 +406,25 @@ public class ChangesetViewerUtil extends CacheClearHook
 
       final ChangesetViewerCacheKey other = (ChangesetViewerCacheKey) obj;
 
+      if ((this.revision == null)
+          ? (other.revision != null)
+          : !this.revision.equals(other.revision))
+      {
+        return false;
+      }
+
+      if (this.max != other.max)
+      {
+        return false;
+      }
+
+      if ((this.path == null)
+          ? (other.path != null)
+          : !this.path.equals(other.path))
+      {
+        return false;
+      }
+
       if ((this.repository == null)
           ? (other.repository != null)
           : !this.repository.equals(other.repository))
@@ -298,11 +433,6 @@ public class ChangesetViewerUtil extends CacheClearHook
       }
 
       if (this.start != other.start)
-      {
-        return false;
-      }
-
-      if (this.max != other.max)
       {
         return false;
       }
@@ -319,15 +449,35 @@ public class ChangesetViewerUtil extends CacheClearHook
     @Override
     public int hashCode()
     {
-      int hash = 3;
+      int hash = 5;
 
-      hash = 67 * hash + ((this.repository != null)
+      hash = 47 * hash + ((this.revision != null)
+                          ? this.revision.hashCode()
+                          : 0);
+      hash = 47 * hash + this.max;
+      hash = 47 * hash + ((this.path != null)
+                          ? this.path.hashCode()
+                          : 0);
+      hash = 47 * hash + ((this.repository != null)
                           ? this.repository.hashCode()
                           : 0);
-      hash = 67 * hash + this.start;
-      hash = 67 * hash + this.max;
+      hash = 47 * hash + this.start;
 
       return hash;
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public String getRepositoryId()
+    {
+      return repository;
     }
 
     //~--- fields -------------------------------------------------------------
@@ -336,7 +486,13 @@ public class ChangesetViewerUtil extends CacheClearHook
     private int max;
 
     /** Field description */
+    private String path;
+
+    /** Field description */
     private String repository;
+
+    /** Field description */
+    private String revision;
 
     /** Field description */
     private int start;

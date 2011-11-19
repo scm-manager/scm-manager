@@ -999,3 +999,11 @@ h3#pings {
 .clear {
         clear:both;
 }
+
+th {
+  text-align: left;
+}
+
+td, th {
+  padding-right: 5px;
+}

@@ -37,6 +37,9 @@ Sonia.group.Panel = Ext.extend(Sonia.rest.Panel, {
   removeMsgText: 'Remove Group "{0}"?',
   errorTitleText: 'Error',
   errorMsgText: 'Group deletion failed',
+  
+  // grid
+  groupGrid: null,
 
   initComponent: function(){
     var config = {
@@ -49,7 +52,8 @@ Sonia.group.Panel = Ext.extend(Sonia.rest.Panel, {
       items: [{
           id: 'groupGrid',
           xtype: 'groupGrid',
-          region: 'center'
+          region: 'center',
+          parentPanel: this
         }, {
           id: 'groupEditPanel',
           xtype: 'tabpanel',
@@ -71,9 +75,24 @@ Sonia.group.Panel = Ext.extend(Sonia.rest.Panel, {
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.group.Panel.superclass.initComponent.apply(this, arguments);
   },
+  
+  getGrid: function(){
+    if (!this.groupGrid){
+      if (debug){
+        console.debug('could not find group grid, fetch by id');
+      }
+      this.groupGrid = Ext.getCmp('groupGrid');
+    }
+    return this.groupGrid;
+  },
+  
+  updateHistory: function(group){
+    var token = Sonia.History.createToken('groupPanel', group.name);
+    Sonia.History.add(token);
+  },
 
   removeGroup: function(){
-    var grid = Ext.getCmp('groupGrid');
+    var grid = this.getGrid();
     var selected = grid.getSelectionModel().getSelected();
     if ( selected ){
       var item = selected.data;
@@ -140,10 +159,36 @@ Sonia.group.Panel = Ext.extend(Sonia.rest.Panel, {
   },
 
   reload: function(){
-    Ext.getCmp('groupGrid').reload();
+    this.getGrid().reload();
   }
 
 });
 
 // register xtype
 Ext.reg('groupPanel', Sonia.group.Panel);
+
+// register history handler
+Sonia.History.register('groupPanel', {
+  
+  onActivate: function(panel){
+    var token = null;
+    var rec = panel.getGrid().getSelectionModel().getSelected();
+    if (rec){
+      token = Sonia.History.createToken('groupPanel', rec.get('name'));
+    } else {
+      token = Sonia.History.createToken('groupPanel');
+    }
+    return token;
+  },
+  
+  onChange: function(repoId){
+    var panel = Ext.getCmp('groups');
+    if ( ! panel ){
+      main.addGroupsTabPanel();
+      panel = Ext.getCmp('groups');
+    }
+    if (repoId){
+      panel.getGrid().selectById(repoId);
+    }
+  }
+});

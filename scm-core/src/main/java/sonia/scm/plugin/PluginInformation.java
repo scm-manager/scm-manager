@@ -40,12 +40,19 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.List;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
+@XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "plugin-information")
 public class PluginInformation implements Validateable
 {
@@ -73,12 +80,6 @@ public class PluginInformation implements Validateable
 
     final PluginInformation other = (PluginInformation) obj;
 
-    if ((this.condition != other.condition)
-        && ((this.condition == null) ||!this.condition.equals(other.condition)))
-    {
-      return false;
-    }
-
     if ((this.artifactId == null)
         ? (other.artifactId != null)
         : !this.artifactId.equals(other.artifactId))
@@ -89,6 +90,19 @@ public class PluginInformation implements Validateable
     if ((this.author == null)
         ? (other.author != null)
         : !this.author.equals(other.author))
+    {
+      return false;
+    }
+
+    if ((this.category == null)
+        ? (other.category != null)
+        : !this.category.equals(other.category))
+    {
+      return false;
+    }
+
+    if ((this.condition != other.condition)
+        && ((this.condition == null) ||!this.condition.equals(other.condition)))
     {
       return false;
     }
@@ -114,6 +128,13 @@ public class PluginInformation implements Validateable
       return false;
     }
 
+    if ((this.screenshots != other.screenshots)
+        && ((this.screenshots == null)
+            ||!this.screenshots.equals(other.screenshots)))
+    {
+      return false;
+    }
+
     if (this.state != other.state)
     {
       return false;
@@ -133,6 +154,13 @@ public class PluginInformation implements Validateable
       return false;
     }
 
+    if ((this.wiki == null)
+        ? (other.wiki != null)
+        : !this.wiki.equals(other.wiki))
+    {
+      return false;
+    }
+
     return true;
   }
 
@@ -147,32 +175,41 @@ public class PluginInformation implements Validateable
   {
     int hash = 5;
 
-    hash = 83 * hash + ((this.condition != null)
-                        ? this.condition.hashCode()
-                        : 0);
-    hash = 83 * hash + ((this.artifactId != null)
+    hash = 79 * hash + ((this.artifactId != null)
                         ? this.artifactId.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.author != null)
+    hash = 79 * hash + ((this.author != null)
                         ? this.author.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.description != null)
+    hash = 79 * hash + ((this.category != null)
+                        ? this.category.hashCode()
+                        : 0);
+    hash = 79 * hash + ((this.condition != null)
+                        ? this.condition.hashCode()
+                        : 0);
+    hash = 79 * hash + ((this.description != null)
                         ? this.description.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.groupId != null)
+    hash = 79 * hash + ((this.groupId != null)
                         ? this.groupId.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.name != null)
+    hash = 79 * hash + ((this.name != null)
                         ? this.name.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.state != null)
+    hash = 79 * hash + ((this.screenshots != null)
+                        ? this.screenshots.hashCode()
+                        : 0);
+    hash = 79 * hash + ((this.state != null)
                         ? this.state.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.url != null)
+    hash = 79 * hash + ((this.url != null)
                         ? this.url.hashCode()
                         : 0);
-    hash = 83 * hash + ((this.version != null)
+    hash = 79 * hash + ((this.version != null)
                         ? this.version.hashCode()
+                        : 0);
+    hash = 79 * hash + ((this.wiki != null)
+                        ? this.wiki.hashCode()
                         : 0);
 
     return hash;
@@ -200,6 +237,17 @@ public class PluginInformation implements Validateable
   public String getAuthor()
   {
     return author;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getCategory()
+  {
+    return category;
   }
 
   /**
@@ -267,6 +315,17 @@ public class PluginInformation implements Validateable
    *
    * @return
    */
+  public List<String> getScreenshots()
+  {
+    return screenshots;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public PluginState getState()
   {
     return state;
@@ -292,6 +351,17 @@ public class PluginInformation implements Validateable
   public String getVersion()
   {
     return version;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getWiki()
+  {
+    return wiki;
   }
 
   /**
@@ -329,6 +399,17 @@ public class PluginInformation implements Validateable
   public void setAuthor(String author)
   {
     this.author = author;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param category
+   */
+  public void setCategory(String category)
+  {
+    this.category = category;
   }
 
   /**
@@ -379,6 +460,17 @@ public class PluginInformation implements Validateable
    * Method description
    *
    *
+   * @param screenshots
+   */
+  public void setScreenshots(List<String> screenshots)
+  {
+    this.screenshots = screenshots;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param state
    */
   public void setState(PluginState state)
@@ -408,6 +500,17 @@ public class PluginInformation implements Validateable
     this.version = version;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param wiki
+   */
+  public void setWiki(String wiki)
+  {
+    this.wiki = wiki;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -415,6 +518,9 @@ public class PluginInformation implements Validateable
 
   /** Field description */
   private String author;
+
+  /** Field description */
+  private String category;
 
   /** Field description */
   private PluginCondition condition;
@@ -429,6 +535,11 @@ public class PluginInformation implements Validateable
   private String name;
 
   /** Field description */
+  @XmlElement(name = "screenshot")
+  @XmlElementWrapper(name = "screenshots")
+  private List<String> screenshots;
+
+  /** Field description */
   private PluginState state;
 
   /** Field description */
@@ -436,4 +547,7 @@ public class PluginInformation implements Validateable
 
   /** Field description */
   private String version;
+
+  /** Field description */
+  private String wiki;
 }

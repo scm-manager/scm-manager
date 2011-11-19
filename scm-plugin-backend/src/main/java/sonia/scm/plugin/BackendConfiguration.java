@@ -122,6 +122,17 @@ public class BackendConfiguration
    *
    * @return
    */
+  public String getTrackingCode()
+  {
+    return trackingCode;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public boolean isMultithreaded()
   {
     return multithreaded;
@@ -195,6 +206,17 @@ public class BackendConfiguration
     this.scannInterval = scannInterval;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param trackingCode
+   */
+  public void setTrackingCode(String trackingCode)
+  {
+    this.trackingCode = trackingCode;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -211,7 +233,7 @@ public class BackendConfiguration
   private boolean multithreaded = true;
 
   /** Field description */
-  @XmlElement(name= "news-url")
+  @XmlElement(name = "news-url")
   private URL newsUrl;
 
   /** Field description */
@@ -223,4 +245,8 @@ public class BackendConfiguration
   @XmlElement(name = "scann-interval")
   @XmlJavaTypeAdapter(XmlIntervalAdapter.class)
   private Long scannInterval;
+
+  /** Field description */
+  @XmlElement(name = "tracking-code")
+  private String trackingCode;
 }

@@ -68,6 +68,12 @@
       <artifactId>ehcache-core</artifactId>
       <version>${ehcache.version}</version>
     </dependency>
+    
+    <dependency>
+      <groupId>com.thebuzzmedia</groupId>
+      <artifactId>imgscalr-lib</artifactId>
+      <version>3.2</version>
+    </dependency>
 
   </dependencies>
 
@@ -114,5 +120,12 @@
     <finalName>scm-plugin-backend</finalName>
   </build>
 
+
+  <repositories>
+    <repository>
+      <id>The Buzz Media Maven Repository</id>
+      <url>http://maven.thebuzzmedia.com</url>
+    </repository>
+  </repositories>
 
 </project>

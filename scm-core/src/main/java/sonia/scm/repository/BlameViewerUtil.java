@@ -57,7 +57,7 @@ import java.io.IOException;
  * @since 1.8
  */
 @Singleton
-public class BlameViewerUtil extends CacheClearHook
+public class BlameViewerUtil extends PartCacheClearHook
 {
 
   /** Field description */
@@ -104,8 +104,7 @@ public class BlameViewerUtil extends CacheClearHook
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    */
-  public BlameResult getBlame(String repositoryId, String revision,
-                                    String path)
+  public BlameResult getBlame(String repositoryId, String revision, String path)
           throws RepositoryException, NotSupportedFeatuerException, IOException
   {
     AssertUtil.assertIsNotEmpty(repositoryId);
@@ -137,7 +136,7 @@ public class BlameViewerUtil extends CacheClearHook
    * @throws RepositoryException
    */
   public BlameResult getBlame(Repository repository, String revision,
-                                    String path)
+                              String path)
           throws RepositoryException, NotSupportedFeatuerException, IOException
   {
     AssertUtil.assertIsNotNull(repository);
@@ -177,7 +176,7 @@ public class BlameViewerUtil extends CacheClearHook
    * @version        Enter version here...
    * @author         Enter your name here...
    */
-  private static class BlameViewerCacheKey
+  private static class BlameViewerCacheKey implements RepositoryCacheKey
   {
 
     /**
@@ -267,6 +266,20 @@ public class BlameViewerUtil extends CacheClearHook
                           : 0);
 
       return hash;
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public String getRepositoryId()
+    {
+      return repositoryId;
     }
 
     //~--- fields -------------------------------------------------------------

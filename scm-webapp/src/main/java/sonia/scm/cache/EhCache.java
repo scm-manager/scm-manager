@@ -40,6 +40,12 @@ import net.sf.ehcache.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.Filter;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Iterator;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -124,6 +130,36 @@ public class EhCache<K, V> implements Cache<K, V>
   public boolean remove(K key)
   {
     return cache.remove(key);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param filter
+   *
+   * @return
+   */
+  @Override
+  public boolean removeAll(Filter<K> filter)
+  {
+    boolean result = true;
+    Iterator<K> it = cache.getKeys().iterator();
+
+    while (it.hasNext())
+    {
+      K key = it.next();
+
+      if (filter.accept(key))
+      {
+        if (!cache.remove(key))
+        {
+          result = false;
+        }
+      }
+    }
+
+    return result;
   }
 
   //~--- get methods ----------------------------------------------------------

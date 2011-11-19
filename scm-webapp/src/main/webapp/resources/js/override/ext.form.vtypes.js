@@ -61,7 +61,7 @@ Ext.apply(Ext.form.VTypes, {
   // username validator
   
   username: function(val){
-    return val.match(/^[A-z0-9\.\-_@]+$/);
+    return val.match(/^[^ ][A-z0-9\.\-_@ ]*[^ ]$/);
   },
   
   usernameText: 'The username is invalid.'

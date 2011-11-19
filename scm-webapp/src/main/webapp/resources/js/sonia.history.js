@@ -51,16 +51,14 @@ Sonia.History = {
     }
   },
   
-  createToken: function(elements){
+  createToken: function(){
     var token = '';
-    if (Ext.isArray(elements)){
-      for (var i=0; i<elements.length; i++){
-        token += elements[i];
-        if ( (i+1)<elements.length ){
-          token += '|';
-        }
+    for (var i=0; i<arguments.length; i++){
+      token += arguments[i];
+      if ( (i+1)<arguments.length ){
+        token += '|';
       }
-    }
+    }    
     return token;
   },
   
@@ -117,6 +115,23 @@ Sonia.History = {
     return invokeable;
   },
   
+  onActivate: function(tab){
+    if (tab){
+      var el = this.historyElements[tab.xtype];
+      if (el){
+        var token = Sonia.util.apply(el.onActivate, tab);
+        if (token){
+          this.add(token);
+        }
+      } else {
+        if (debug){
+          console.debug('could not find xtype ' + tab.xtype + ' set xtype as id');
+        }
+        this.add(tab.xtype);
+      }
+    }
+  },
+  
   onChange: function(token){
     if (!this.initialized){
       this.initialized = true;
@@ -133,17 +148,13 @@ Sonia.History = {
     }
   },
   
-  handleChange: function(id, params){
+  handleChange: function(id, p){
     var el = this.historyElements[id];
     if (el){
       if (debug){
-        console.debug('handle history event for ' + id + ' with "' + params + '"');
+        console.debug('handle history event for ' + id + ' with "' + p + '"');
       }
-      if (Ext.isFunction(el) ){
-        el(params);
-      } else {
-        el.fn.call(el.scope, params);
-      }
+      Sonia.util.apply(el.onChange, p);
     } else if (Ext.ComponentMgr.isRegistered(id)) {
       try {
         main.addTabPanel(id);

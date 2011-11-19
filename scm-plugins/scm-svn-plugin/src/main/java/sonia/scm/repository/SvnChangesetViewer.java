@@ -44,9 +44,12 @@ import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
+import sonia.scm.util.Util;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -92,6 +95,11 @@ public class SvnChangesetViewer implements ChangesetViewer
   @Override
   public ChangesetPagingResult getChangesets(int start, int max)
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch changesets. start: {}, max: {}", start, max);
+    }
+
     ChangesetPagingResult changesets = null;
     File directory = handler.getDirectory(repostory);
     SVNRepository repository = null;
@@ -110,8 +118,8 @@ public class SvnChangesetViewer implements ChangesetViewer
       }
 
       List<Changeset> changesetList = new ArrayList<Changeset>();
-      Collection<SVNLogEntry> entries = repository.log(new String[] { "" },
-                                          null, startRev, endRev, true, true);
+      Collection<SVNLogEntry> entries = repository.log(null, null, startRev,
+                                          endRev, true, true);
 
       for (SVNLogEntry entry : entries)
       {
@@ -120,6 +128,93 @@ public class SvnChangesetViewer implements ChangesetViewer
 
       total++;
       changesets = new ChangesetPagingResult((int) total, changesetList);
+    }
+    catch (SVNException ex)
+    {
+      logger.error("could not open repository", ex);
+    }
+    finally
+    {
+      repository.closeSession();
+    }
+
+    return changesets;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param path
+   * @param revision
+   * @param start
+   * @param max
+   *
+   * @return
+   */
+  @Override
+  public ChangesetPagingResult getChangesets(String path, String revision,
+          int start, int max)
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug(
+          "fetch changesets for path {} and revision {}. start: {}, max: {}",
+          new Object[] { path,
+                         revision, start, max });
+    }
+
+    ChangesetPagingResult changesets = null;
+    File directory = handler.getDirectory(repostory);
+    SVNRepository repository = null;
+
+    try
+    {
+      repository = SVNRepositoryFactory.create(SVNURL.fromFile(directory));
+
+      long startRev = repository.getLatestRevision();
+      long endRev = 0;
+      long maxRev = startRev;
+
+      if (Util.isNotEmpty(revision))
+      {
+        try
+        {
+          maxRev = Long.parseLong(revision);
+        }
+        catch (NumberFormatException ex)
+        {
+          logger.error("could not parse revision ".concat(revision), ex);
+        }
+      }
+
+      List<Changeset> changesetList = new ArrayList<Changeset>();
+      Collection<SVNLogEntry> entries = repository.log(new String[] { path },
+                                          null, startRev, endRev, true, true);
+
+      for (SVNLogEntry entry : entries)
+      {
+        if (entry.getRevision() <= maxRev)
+        {
+          changesetList.add(SvnUtil.createChangeset(entry));
+        }
+      }
+
+      int total = changesetList.size();
+      int end = total - start;
+
+      if (end > max)
+      {
+        end = max;
+      }
+
+      if (start < 0)
+      {
+        start = 0;
+      }
+
+      changesetList = changesetList.subList(start, end);
+      changesets = new ChangesetPagingResult(total, changesetList);
     }
     catch (SVNException ex)
     {

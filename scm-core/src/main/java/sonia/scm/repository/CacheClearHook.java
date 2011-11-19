@@ -38,6 +38,7 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.Filter;
 import sonia.scm.cache.Cache;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -63,15 +64,40 @@ public class CacheClearHook implements RepositoryHook
    * Method description
    *
    * @since 1.7
+   *
    */
   public void clearCache()
   {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("clear cache");
-    }
+    clearCache(null);
+  }
 
-    cache.clear();
+  /**
+   * Method description
+   *
+   * @since 1.9
+   *
+   * @param filter
+   */
+  public void clearCache(Filter filter)
+  {
+    if (filter != null)
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("clear cache, with filter");
+      }
+
+      cache.removeAll(filter);
+    }
+    else
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("clear cache");
+      }
+
+      cache.clear();
+    }
   }
 
   /**
@@ -89,7 +115,9 @@ public class CacheClearHook implements RepositoryHook
                    event.getRepository().getName());
     }
 
-    cache.clear();
+    Filter filter = createFilter(event);
+
+    clearCache(filter);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -119,6 +147,20 @@ public class CacheClearHook implements RepositoryHook
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   * @since 1.9
+   *
+   *
+   * @param event
+   * @return
+   */
+  protected Filter<?> createFilter(RepositoryHookEvent event)
+  {
+    return null;
+  }
 
   /**
    * Method description

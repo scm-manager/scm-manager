@@ -37,17 +37,16 @@ package sonia.scm.plugin.rest;
 
 import com.google.inject.Inject;
 
+import sonia.scm.plugin.BackendConfiguration;
 import sonia.scm.plugin.PluginBackend;
-import sonia.scm.plugin.PluginFilter;
 import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.PluginUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.view.Viewable;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -76,11 +75,13 @@ public class DetailResource extends ViewableResource
    *
    * @param context
    * @param backend
+   * @param configuration
    */
   @Inject
-  public DetailResource(ServletContext context, PluginBackend backend)
+  public DetailResource(ServletContext context, PluginBackend backend,
+                        BackendConfiguration configuration)
   {
-    super(context);
+    super(context, configuration);
     this.backend = backend;
   }
 
@@ -102,22 +103,19 @@ public class DetailResource extends ViewableResource
                                    @DefaultValue("false")
   @QueryParam("snapshot") boolean snapshot)
   {
-    List<PluginInformation> pluginVersions = getPluginVersions(groupId,
-                                               artifactId);
+    List<PluginInformation> pluginVersions =
+      PluginUtil.getFilteredPluginVersions(backend, groupId, artifactId);
 
     if (Util.isEmpty(pluginVersions))
     {
       throw new WebApplicationException(Status.NOT_FOUND);
     }
 
-    Collections.sort(pluginVersions, PluginInformationComparator.INSTANCE);
-    pluginVersions = filterSameVersions(pluginVersions);
-
     PluginInformation latest = pluginVersions.get(0);
 
     if (!snapshot)
     {
-      pluginVersions = filterSnapshots(pluginVersions);
+      pluginVersions = PluginUtil.filterSnapshots(pluginVersions);
     }
 
     Map<String, Object> vars = createVarMap(latest.getName());
@@ -126,87 +124,6 @@ public class DetailResource extends ViewableResource
     vars.put("versions", pluginVersions);
 
     return new Viewable("/detail", vars);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param plugins
-   *
-   * @return
-   */
-  private List<PluginInformation> filterSameVersions(
-          List<PluginInformation> plugins)
-  {
-    List<PluginInformation> filteredPlugins =
-      new ArrayList<PluginInformation>();
-    String version = "";
-
-    for (PluginInformation plugin : plugins)
-    {
-      if (!version.equals(plugin.getVersion()))
-      {
-        version = plugin.getVersion();
-        filteredPlugins.add(plugin);
-      }
-    }
-
-    return filteredPlugins;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param allVersions
-   *
-   * @return
-   */
-  private List<PluginInformation> filterSnapshots(
-          List<PluginInformation> allVersions)
-  {
-    List<PluginInformation> filtered = new ArrayList<PluginInformation>();
-
-    for (PluginInformation plugin : allVersions)
-    {
-      if (!plugin.getVersion().contains("SNAPSHOT"))
-      {
-        filtered.add(plugin);
-      }
-    }
-
-    return filtered;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param groupId
-   * @param artifactId
-   *
-   * @return
-   */
-  private List<PluginInformation> getPluginVersions(final String groupId,
-          final String artifactId)
-  {
-    List<PluginInformation> pluginVersions =
-      backend.getPlugins(new PluginFilter()
-    {
-      @Override
-      public boolean accept(PluginInformation plugin)
-      {
-        return groupId.equals(plugin.getGroupId())
-               && artifactId.equals(plugin.getArtifactId());
-      }
-    });
-
-    return pluginVersions;
   }
 
   //~--- fields ---------------------------------------------------------------

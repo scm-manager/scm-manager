@@ -37,9 +37,12 @@ package sonia.scm.plugin.rest;
 
 import com.google.inject.Inject;
 
+import sonia.scm.plugin.BackendConfiguration;
+import sonia.scm.plugin.Category;
+import sonia.scm.plugin.CategoryNameComaparator;
 import sonia.scm.plugin.PluginBackend;
 import sonia.scm.plugin.PluginInformation;
-import sonia.scm.plugin.PluginInformationNameComparator;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -47,6 +50,7 @@ import com.sun.jersey.api.view.Viewable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +67,11 @@ import javax.ws.rs.Path;
 public class OverviewResource extends ViewableResource
 {
 
+  /** Field description */
+  public static final String DEFAULT_CATEGORY = "Miscellaneous";
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructs ...
    *
@@ -70,11 +79,13 @@ public class OverviewResource extends ViewableResource
    *
    * @param context
    * @param backend
+   * @param configuration
    */
   @Inject
-  public OverviewResource(ServletContext context, PluginBackend backend)
+  public OverviewResource(ServletContext context, PluginBackend backend,
+                          BackendConfiguration configuration)
   {
-    super(context);
+    super(context, configuration);
     this.backend = backend;
   }
 
@@ -89,12 +100,40 @@ public class OverviewResource extends ViewableResource
   @GET
   public Viewable overview()
   {
-    List<PluginInformation> plugins = getPluginOverview();
+    List<Category> categories = getPluginOverview();
     Map<String, Object> vars = createVarMap("Plugin Overview");
 
-    vars.put("plugins", plugins);
+    vars.put("categories", categories);
 
     return new Viewable("/index", vars);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param categories
+   * @param plugin
+   */
+  private void append(Map<String, Category> categories,
+                      PluginInformation plugin)
+  {
+    String name = plugin.getCategory();
+
+    if (Util.isEmpty(name))
+    {
+      name = DEFAULT_CATEGORY;
+    }
+
+    Category category = categories.get(name);
+
+    if (category == null)
+    {
+      category = new Category(name, plugin);
+      categories.put(name, category);
+    }
+
+    category.getPlugins().add(plugin);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -105,14 +144,14 @@ public class OverviewResource extends ViewableResource
    *
    * @return
    */
-  private List<PluginInformation> getPluginOverview()
+  private List<Category> getPluginOverview()
   {
     List<PluginInformation> allPlugins = backend.getPlugins();
 
     Collections.sort(allPlugins, PluginInformationComparator.INSTANCE);
 
-    List<PluginInformation> plugins = new ArrayList<PluginInformation>();
     String pid = "";
+    Map<String, Category> categoryMap = new HashMap<String, Category>();
 
     for (PluginInformation p : allPlugins)
     {
@@ -121,13 +160,15 @@ public class OverviewResource extends ViewableResource
       if (!currentPid.equals(pid))
       {
         pid = currentPid;
-        plugins.add(p);
+        append(categoryMap, p);
       }
     }
 
-    Collections.sort(plugins, PluginInformationNameComparator.INSTANCE);
+    List<Category> categories = new ArrayList<Category>(categoryMap.values());
 
-    return plugins;
+    Collections.sort(categories, CategoryNameComaparator.INSTANCE);
+
+    return categories;
   }
 
   //~--- fields ---------------------------------------------------------------

@@ -34,35 +34,50 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   repository: null,
   start: 0,
   pageSize: 20,
-  historyId: null,
   changesetStore: null,
+  
+  // parameters for file history view
+  inline: false,
+  path: null,
+  revision: null,
   
   changesetViewerTitleText: 'Commits {0}',
   
   initComponent: function(){
-    this.historyId = Sonia.History.createToken([
-      'changesetviewer', 
-      this.repository.id, 
-      this.start, 
-      this.pageSize 
-    ]);
+    if (! this.url){
+      this.url = restUrl + 'repositories/' + this.repository.id  + '/changesets.json';
+    }
+    
+    var params = {
+      start: this.start,
+      limit: this.pageSize
+    }
+    
+    var baseParams = {};
+    
+    if (this.path){
+      baseParams.path = this.path;
+    }
+    
+    if (this.revision){
+      baseParams.revision = this.revision;
+    }
 
     this.changesetStore = new Sonia.rest.JsonStore({
       id: 'changesetStore',
       proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'repositories/' + this.repository.id  + '/changesets.json',
+        url: this.url,
         method: 'GET'
       }),
       fields: ['id', 'date', 'author', 'description', 'modifications', 'tags', 'branches', 'properties'],
       root: 'changesets',
       idProperty: 'id',
       totalProperty: 'total',
-      autoLoad: true,
-      autoDestroy: true,
-      baseParams: {
-        start: this.start,
-        limit: this.pageSize
+      baseParams: baseParams,
+      autoLoad: {
+        params: params
       },
+      autoDestroy: true,
       listeners: {
         load: {
           fn: this.updateHistory,
@@ -72,29 +87,39 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
     });
 
     var config = {
-      title: String.format(this.changesetViewerTitleText, this.repository.name),
       items: [{
         xtype: 'repositoryChangesetViewerGrid',
         repository: this.repository,
         store: this.changesetStore
-      }],
-      bbar: {
+      }]
+    };
+    
+    if ( ! this.inline ){
+      config.title = String.format(this.changesetViewerTitleText, this.repository.name)
+      config.bbar = {
         xtype: 'paging',
         store: this.changesetStore,
         displayInfo: true,
         pageSize: this.pageSize,
         prependButtons: true
       }
-    };
+    }
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ChangesetViewerPanel.superclass.initComponent.apply(this, arguments);
   },
   
   updateHistory: function(store, records, options){
-    var id = Sonia.History.appendWithDepth([options.params.start, options.params.limit], 2);
-    if (id){
-      this.historyId = id;
+    if ( ! this.inline && options && options.params ){
+      this.start = options.params.start;
+      this.pageSize = options.params.limit;
+      var token = Sonia.History.createToken(
+        'repositoryChangesetViewerPanel', 
+        this.repository.id,
+        this.start, 
+        this.pageSize
+      );
+      Sonia.History.add(token);
     }
   },
   
@@ -111,36 +136,41 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
 Ext.reg('repositoryChangesetViewerPanel', Sonia.repository.ChangesetViewerPanel);
 
 // register history handler
-Sonia.History.register('changesetviewer', function(params){
+Sonia.History.register('repositoryChangesetViewerPanel', {
   
-  if (params){
-    
-    var id = params[0] + '-changesetViewer';
-    var start = Sonia.util.parseInt(params[1], 0);
-    var pageSize = Sonia.util.parseInt(params[2], 20);
-    
-    if (debug){
-      console.debug('load changesetviewer for ' + id + ', ' + start + ', ' + pageSize );
+  onActivate: function(panel){
+    return Sonia.History.createToken(
+      'repositoryChangesetViewerPanel', 
+      panel.repository.id, 
+      panel.start, 
+      panel.pageSize
+    );
+  },
+  
+  onChange: function(repoId, start, limit){
+    if (start){
+      start = parseInt(start);
     }
-    
-    var tab = Ext.getCmp(id);
-    
-    if ( tab ){
-      main.getMainTabPanel().setActiveTab(id);
-      tab.loadChangesets(start, pageSize);
-    } else {  
-      Sonia.repository.get(params[0], function(repository){
-        main.addTab({
-          id: repository.id + '-changesetViewer',
+    if (limit){
+      limit = parseInt(limit);
+    }
+    var id = 'repositoryChangesetViewerPanel|' + repoId;
+    Sonia.repository.get(repoId, function(repository){
+      var panel = Ext.getCmp(id);
+      if (! panel){
+        panel = {
+          id: id,
           xtype: 'repositoryChangesetViewerPanel',
-          repository: repository,
+          repository : repository,
           start: start,
-          pageSize: pageSize,
-          closable: true
-        })
-      });
-    }
-  
+          pageSize: limit,
+          closable: true,
+          autoScroll: true
+        }
+      } else {
+        panel.loadChangesets(start, limit);
+      }
+      main.addTab(panel);
+    });
   }
-  
 });

@@ -38,6 +38,8 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   removeMsgText: 'Remove Repository "{0}"?',
   errorTitleText: 'Error',
   errorMsgText: 'Repository deletion failed',
+  
+  repositoryGrid: null,
 
   initComponent: function(){
 
@@ -126,41 +128,56 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
     var config = {
       tbar: toolbar,
       items: [{
-          id: 'repositoryGrid',
-          xtype: 'repositoryGrid',
-          region: 'center'
-        }, {
-          id: 'repositoryEditPanel',
-          xtype: 'tabpanel',
-          activeTab: 0,
-          height: 250,
-          split: true,
-          border: true,
-          region: 'south',
-          items: [{
-            bodyCssClass: 'x-panel-mc',
-            title: this.titleText,
-            padding: 5,
-            html: this.emptyText
-          }]
-        }
-      ]
+        id: 'repositoryGrid',
+        xtype: 'repositoryGrid',
+        region: 'center',
+        parentPanel: this
+      },{
+        id: 'repositoryEditPanel',
+        xtype: 'tabpanel',
+        activeTab: 0,
+        height: 250,
+        split: true,
+        border: true,
+        region: 'south',
+        items: [{
+          bodyCssClass: 'x-panel-mc',
+          title: this.titleText,
+          padding: 5,
+          html: this.emptyText
+        }]
+      }]
     }
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Panel.superclass.initComponent.apply(this, arguments);
   },
   
+  getGrid: function(){
+    if ( ! this.repositoryGrid ){
+      if ( debug ){
+        console.debug('repository grid not found, retrive by cmp id');
+      }
+      this.repositoryGrid = Ext.getCmp('repositoryGrid');
+    }
+    return this.repositoryGrid;
+  },
+  
+  updateHistory: function(item){
+    var token = Sonia.History.createToken('repositoryPanel', item.id);
+    Sonia.History.add(token);
+  },
+  
   filterByType: function(combo, rec){
-    Ext.getCmp('repositoryGrid').filter(rec.get('name'));
+    this.getGrid().filter(rec.get('name'));
   },
   
   search: function(field){
-    Ext.getCmp('repositoryGrid').search(field.getValue());
+    this.getGrid().search(field.getValue());
   },
 
   removeRepository: function(){
-    var grid = Ext.getCmp('repositoryGrid');
+    var grid = this.getGrid();
     var selected = grid.getSelectionModel().getSelected();
     if ( selected ){
       var item = selected.data;
@@ -227,7 +244,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   },
   
   repositoryCreated: function(item){
-    var grid = Ext.getCmp('repositoryGrid');
+    var grid = this.getGrid();
     this.clearRepositoryFilter(grid);
     
     grid.reload(function(){
@@ -243,7 +260,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
       console.debug('clear repository filter');
     }
     if (! grid ){
-      grid = Ext.getCmp('repositoryGrid');
+      grid = this.getGrid();
     }
     Ext.getCmp('repositorySearch').setValue('');
     Ext.getCmp('repositoryTypeFilter').setValue('');
@@ -251,10 +268,36 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   },
 
   reload: function(){
-    Ext.getCmp('repositoryGrid').reload();
+    this.getGrid().reload();
   }
 
 });
 
 // register xtype
 Ext.reg('repositoryPanel', Sonia.repository.Panel);
+
+// register history handler
+Sonia.History.register('repositoryPanel', {
+  
+  onActivate: function(panel){
+    var token = null;
+    var rec = panel.getGrid().getSelectionModel().getSelected();
+    if (rec){
+      token = Sonia.History.createToken('repositoryPanel', rec.get('id'));
+    } else {
+      token = Sonia.History.createToken('repositoryPanel');
+    }
+    return token;
+  },
+  
+  onChange: function(repoId){
+    var panel = Ext.getCmp('repositories');
+    if ( ! panel ){
+      main.addRepositoriesTabPanel();
+      panel = Ext.getCmp('repositories');
+    }
+    if (repoId){
+      panel.getGrid().selectById(repoId);
+    }
+  }
+});

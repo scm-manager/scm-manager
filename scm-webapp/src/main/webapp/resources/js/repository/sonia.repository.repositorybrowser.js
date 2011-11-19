@@ -32,7 +32,6 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   
   repository: null,
   revision: null,
-  historyId: null,
   path: null,
   
   repositoryBrowserTitleText: 'Source {0}',
@@ -49,12 +48,6 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     if (debug){
       console.debug('create new browser for repository ' + this.repository.name + " and revision " + this.revision);
     }
-    
-    this.historyId = Sonia.History.createToken([
-      'repositorybrowser', 
-      this.repository.id, 
-      this.revision ? this.revision : '_'
-    ]);
     
     var browserStore = new Sonia.rest.JsonStore({
       proxy: new Ext.data.HttpProxy({
@@ -174,22 +167,6 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         length: 0
       }));
     }
-    
-    var historyParams = [];
-    if ( this.revision ){
-      historyParams.push(this.revision)
-    } else {
-      historyParams.push('_');
-    }
-    
-    if ( extra.params.path ){
-      historyParams.push(extra.params.path);
-    }
-    
-    var id = Sonia.History.appendWithDepth(historyParams, 2);
-    if (id){
-      this.historyId = id;
-    }
   },
   
   onClick: function(e){
@@ -252,7 +229,20 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }
     });
     
+    this.path = path;
+    this.updateHistory();
+    
     this.renderClickPath(path);
+  },
+  
+  updateHistory: function(){
+    var token = Sonia.History.createToken(
+      'repositoryBrowser', 
+      this.repository.id,
+      this.revision,
+      this.path
+    );
+    Sonia.History.add(token);
   },
   
   createFolderButton: function(path, name){
@@ -319,40 +309,45 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
 // register xtype
 Ext.reg('repositoryBrowser', Sonia.repository.RepositoryBrowser);
 
+
 // register history handler
-Sonia.History.register('repositorybrowser', function(params){
+Sonia.History.register('repositoryBrowser', {
   
-  if (params){
-    
-    var id = 'repositorybrowser-' + params[0] + ':';
-    var revision = params[1];
-    id += revision;
-    var path = params[2] ? params[2] : '';
-    
-    if ( revision == '_' ){
+  onActivate: function(panel){
+    return Sonia.History.createToken(
+      'repositoryBrowser', 
+      panel.repository.id,
+      panel.revision,
+      panel.path
+    );
+  },
+  
+  onChange: function(repoId, revision, path){
+    if (revision == 'null'){
       revision = null;
     }
-    
-    if (debug){
-      console.debug('load repositorybrowser for ' + id + ', ' + revision + ', ' + path );
+    if (path == 'null'){
+      path = '';
     }
-    
-    var tab = Ext.getCmp(id);
-    
-    if ( tab ){
-      main.getMainTabPanel().setActiveTab(id); 
-      tab.changeDirectory(path);
-    } else {
-      Sonia.repository.get(params[0], function(repository){
-        main.addTab({
+    var id = 'repositoryBrowser|' + repoId + "|" + revision;
+    Sonia.repository.get(repoId, function(repository){
+      var panel = Ext.getCmp(id);
+      if (! panel){
+        panel = {
           id: id,
           xtype: 'repositoryBrowser',
-          repository: repository,
+          repository : repository,
           revision: revision,
-          path: path,
-          closable: true
-        })
-      });
-    }
+          closable: true,
+          autoScroll: true
+        }
+        if (path){
+          panel.path = path;
+        }
+      } else {
+        panel.changeDirectory(path);
+      }
+      main.addTab(panel);
+    });
   }
 });
