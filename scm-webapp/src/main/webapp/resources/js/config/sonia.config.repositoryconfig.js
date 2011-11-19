@@ -34,6 +34,7 @@ Sonia.config.RepositoryConfig = Ext.extend(Sonia.config.ConfigPanel,{
    initComponent: function(){
 
     var config = {
+      title: main.tabRepositoryTypesText,
       panels: repositoryConfigPanels
     }
 
