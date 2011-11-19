@@ -247,19 +247,6 @@ public class HgCGIServlet extends HttpServlet
     return python;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryname
-   *
-   * @return
-   */
-  private Repository getRepository(String repositoryname)
-  {
-    return repositoryManager.get(HgRepositoryHandler.TYPE_NAME, repositoryname);
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
