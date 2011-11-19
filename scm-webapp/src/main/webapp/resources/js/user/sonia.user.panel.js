@@ -188,11 +188,20 @@ Sonia.History.register('userPanel', {
     if ( ! panel ){
       main.addUsersTabPanel();
       panel = Ext.getCmp('users');
+      if ( userId ){
+        var selected = false;
+        panel.getGrid().getStore().addListener('load', function(store){
+          if (!selected){
+            panel.getGrid().selectById(userId);
+            selected = true;
+          }
+        });
+      }
     } else {
       main.addTab(panel);
-    }
-    if (userId){
-      panel.getGrid().selectById(userId);
+      if (userId){
+        panel.getGrid().selectById(userId);
+      }
     }
   }
 });
