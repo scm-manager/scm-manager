@@ -160,7 +160,7 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
   },
 
   reload: function(){
-    Ext.getCmp('userGrid').reload();
+    this.getGrid().reload();
   }
 
 });
@@ -190,7 +190,7 @@ Sonia.History.register('userPanel', {
       panel = Ext.getCmp('users');
       if ( userId ){
         var selected = false;
-        panel.getGrid().getStore().addListener('load', function(store){
+        panel.getGrid().getStore().addListener('load', function(){
           if (!selected){
             panel.getGrid().selectById(userId);
             selected = true;
