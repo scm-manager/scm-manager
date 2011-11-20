@@ -66,7 +66,6 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
