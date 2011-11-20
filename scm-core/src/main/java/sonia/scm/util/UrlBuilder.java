@@ -77,7 +77,7 @@ public class UrlBuilder
    */
   public UrlBuilder append(String part)
   {
-    url = HttpUtil.append(url, part);
+    url = url.concat(part);
 
     return this;
   }
@@ -139,7 +139,28 @@ public class UrlBuilder
     {
       url = new StringBuilder(url).append(separator).append(name).append(
         HttpUtil.SEPARATOR_PARAMETER_VALUE).append(value).toString();
+      parameterAdded = true;
     }
+
+    return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param part
+   *
+   * @return
+   */
+  public UrlBuilder appendUrlPart(String part)
+  {
+    if (parameterAdded)
+    {
+      throw new IllegalStateException("parameter added");
+    }
+
+    url = HttpUtil.append(url, part);
 
     return this;
   }
@@ -175,6 +196,9 @@ public class UrlBuilder
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean parameterAdded = false;
 
   /** Field description */
   private String separator;
