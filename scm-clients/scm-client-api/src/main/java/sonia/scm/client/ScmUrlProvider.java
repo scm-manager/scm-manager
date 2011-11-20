@@ -38,6 +38,7 @@ package sonia.scm.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.url.UrlProvider;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -47,6 +48,16 @@ import java.text.MessageFormat;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated use {@link UrlProvider} instead. For example:
+ * <pre>
+ * {@code
+ * URLProvider provider = URLProviderFactory.createUrlProvider(
+ *                          baseUrl,
+ *                          UrlProviderFactory.TYPE_RESTAPI_XML
+ * );
+ * String authUrl = provider.getAuthenticationUrl();
+ * }
+ * </pre>
  */
 public class ScmUrlProvider
 {
