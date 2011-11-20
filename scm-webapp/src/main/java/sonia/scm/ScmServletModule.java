@@ -75,6 +75,11 @@ import sonia.scm.store.StoreFactory;
 import sonia.scm.template.FreemarkerTemplateHandler;
 import sonia.scm.template.TemplateHandler;
 import sonia.scm.template.TemplateServlet;
+import sonia.scm.url.RestJsonUrlProvider;
+import sonia.scm.url.RestXmlUrlProvider;
+import sonia.scm.url.UrlProvider;
+import sonia.scm.url.UrlProviderFactory;
+import sonia.scm.url.WebUIUrlProvider;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.xml.XmlUserManager;
 import sonia.scm.util.DebugServlet;
@@ -240,6 +245,17 @@ public class ScmServletModule extends ServletModule
 
     // bind httpclient
     bind(HttpClient.class).to(URLHttpClient.class);
+
+    // bind url provider staff
+    bind(UrlProvider.class).annotatedWith(
+        Names.named(UrlProviderFactory.TYPE_RESTAPI_JSON)).toProvider(
+        RestJsonUrlProvider.class);
+    bind(UrlProvider.class).annotatedWith(
+        Names.named(UrlProviderFactory.TYPE_RESTAPI_XML)).toProvider(
+        RestXmlUrlProvider.class);
+    bind(UrlProvider.class).annotatedWith(
+        Names.named(UrlProviderFactory.TYPE_WUI)).toProvider(
+        WebUIUrlProvider.class);
 
     /*
      * filter(PATTERN_PAGE,
