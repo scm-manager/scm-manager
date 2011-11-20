@@ -185,8 +185,7 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
   public String getContentUrl(String repositoryId, String path, String revision)
   {
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
-        PART_CONTENT).append(extension).appendParameter(
-        PARAMETER_PATH, path).appendParameter(
+        PART_CONTENT).appendParameter(PARAMETER_PATH, path).appendParameter(
         PARAMETER_REVISION, revision).toString();
   }
 
@@ -203,7 +202,6 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
   public String getDiffUrl(String repositoryId, String revision)
   {
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
-        PART_DIFF).append(extension).appendParameter(
-        PARAMETER_REVISION, revision).toString();
+        PART_DIFF).appendParameter(PARAMETER_REVISION, revision).toString();
   }
 }
