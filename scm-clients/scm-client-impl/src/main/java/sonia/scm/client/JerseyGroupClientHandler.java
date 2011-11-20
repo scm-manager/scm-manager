@@ -105,7 +105,7 @@ public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
   @Override
   protected String getItemUrl(String itemId)
   {
-    return urlProvider.getGroupUrl(itemId);
+    return urlProvider.getGroupUrlProvider().getDetailUrl(itemId);
   }
 
   /**
@@ -117,6 +117,6 @@ public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
   @Override
   protected String getItemsUrl()
   {
-    return urlProvider.getGroupsUrl();
+    return urlProvider.getGroupUrlProvider().getAllUrl();
   }
 }

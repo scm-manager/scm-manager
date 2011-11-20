@@ -52,6 +52,8 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import javax.ws.rs.core.MultivaluedMap;
+import sonia.scm.url.UrlProvider;
+import sonia.scm.url.UrlProviderFactory;
 
 /**
  *
@@ -114,7 +116,7 @@ public class JerseyClientProvider implements ScmClientProvider
       logger.info("create new session for {} with username {}", url, user);
     }
 
-    ScmUrlProvider urlProvider = new ScmUrlProvider(url);
+    UrlProvider urlProvider = UrlProviderFactory.createUrlProvider(url, UrlProviderFactory.TYPE_RESTAPI_XML);
     DefaultAhcConfig config = new DefaultAhcConfig();
     AhcHttpClient client = AhcHttpClient.create(config);
     ClientResponse response = null;
@@ -122,7 +124,7 @@ public class JerseyClientProvider implements ScmClientProvider
     if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
     {
       WebResource resource = ClientUtil.createResource(client,
-                               urlProvider.getAuthenticationLoginUrl(),
+                               urlProvider.getAuthenticationUrl(),
                                enableLogging);
 
       if (logger.isDebugEnabled())
@@ -140,7 +142,7 @@ public class JerseyClientProvider implements ScmClientProvider
     else
     {
       WebResource resource = ClientUtil.createResource(client,
-                               urlProvider.getAuthenticationUrl(),
+                               urlProvider.getStateUrl(),
                                enableLogging);
 
       if (logger.isDebugEnabled())

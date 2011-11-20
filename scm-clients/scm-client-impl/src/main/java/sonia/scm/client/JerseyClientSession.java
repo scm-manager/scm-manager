@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ScmState;
+import sonia.scm.url.UrlProvider;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -65,7 +66,7 @@ public class JerseyClientSession implements ScmClientSession
    * @param urlProvider
    * @param state
    */
-  public JerseyClientSession(Client client, ScmUrlProvider urlProvider,
+  public JerseyClientSession(Client client, UrlProvider urlProvider,
                              ScmState state)
   {
     this.client = client;
@@ -146,7 +147,7 @@ public class JerseyClientSession implements ScmClientSession
    *
    * @return
    */
-  public ScmUrlProvider getUrlProvider()
+  public UrlProvider getUrlProvider()
   {
     return urlProvider;
   }
@@ -172,5 +173,5 @@ public class JerseyClientSession implements ScmClientSession
   private ScmState state;
 
   /** Field description */
-  private ScmUrlProvider urlProvider;
+  private UrlProvider urlProvider;
 }

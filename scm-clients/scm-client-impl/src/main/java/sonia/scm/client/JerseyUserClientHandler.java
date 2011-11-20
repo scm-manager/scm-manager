@@ -105,7 +105,7 @@ public class JerseyUserClientHandler extends AbstractClientHandler<User>
   @Override
   protected String getItemUrl(String itemId)
   {
-    return urlProvider.getUserUrl(itemId);
+    return urlProvider.getUserUrlProvider().getDetailUrl(itemId);
   }
 
   /**
@@ -117,6 +117,6 @@ public class JerseyUserClientHandler extends AbstractClientHandler<User>
   @Override
   protected String getItemsUrl()
   {
-    return urlProvider.getUsersUrl();
+    return urlProvider.getUserUrlProvider().getAllUrl();
   }
 }

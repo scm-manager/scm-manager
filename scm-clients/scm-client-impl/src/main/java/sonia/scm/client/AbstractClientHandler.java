@@ -46,6 +46,7 @@ import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
 import java.util.List;
+import sonia.scm.url.UrlProvider;
 
 /**
  *
@@ -316,7 +317,7 @@ public abstract class AbstractClientHandler<T extends ModelObject>
   protected JerseyClientSession session;
 
   /** Field description */
-  protected ScmUrlProvider urlProvider;
+  protected UrlProvider urlProvider;
 
   /** Field description */
   private Class<T> itemClass;

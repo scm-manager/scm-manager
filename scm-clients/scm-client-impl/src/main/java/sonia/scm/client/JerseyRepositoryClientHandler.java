@@ -160,7 +160,7 @@ public class JerseyRepositoryClientHandler
   @Override
   protected String getItemUrl(String itemId)
   {
-    return urlProvider.getRepositoryUrl(itemId);
+    return urlProvider.getRepositoryUrlProvider().getDetailUrl(itemId);
   }
 
   /**
@@ -172,6 +172,6 @@ public class JerseyRepositoryClientHandler
   @Override
   protected String getItemsUrl()
   {
-    return urlProvider.getRepositoriesUrl();
+    return urlProvider.getRepositoryUrlProvider().getAllUrl();
   }
 }

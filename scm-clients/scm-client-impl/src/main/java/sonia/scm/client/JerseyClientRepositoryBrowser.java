@@ -91,8 +91,8 @@ public class JerseyClientRepositoryBrowser implements ClientRepositoryBrowser
   {
     List<BlameLine> blameLines = null;
     String url =
-      session.getUrlProvider().getBlameUrl(repository.getId(), path,
-        revision);
+      session.getUrlProvider().getRepositoryUrlProvider().getBlameUrl(
+          repository.getId(), path, revision);
     WebResource resource = session.getClient().resource(url);
     ClientResponse response = null;
 
@@ -134,8 +134,8 @@ public class JerseyClientRepositoryBrowser implements ClientRepositoryBrowser
   {
     InputStream input = null;
     String url =
-      session.getUrlProvider().getRepositoryContentUrl(repository.getId(),
-        path, revision);
+      session.getUrlProvider().getRepositoryUrlProvider().getContentUrl(
+          repository.getId(), path, revision);
     WebResource resource = session.getClient().resource(url);
     ClientResponse response = null;
 
@@ -171,8 +171,8 @@ public class JerseyClientRepositoryBrowser implements ClientRepositoryBrowser
   {
     List<FileObjectWrapper> files = null;
     String url =
-      session.getUrlProvider().getRepositoryBrowseUrl(repository.getId(), path,
-        revision);
+      session.getUrlProvider().getRepositoryUrlProvider().getBrowseUrl(
+          repository.getId(), path, revision);
     WebResource resource = session.getClient().resource(url);
     ClientResponse response = null;
 
@@ -219,7 +219,7 @@ public class JerseyClientRepositoryBrowser implements ClientRepositoryBrowser
   @Override
   public List<FileObjectWrapper> getFiles(String revision)
   {
-    return getFiles(revision, "");
+    return getFiles(revision, Util.EMPTY_STRING);
   }
 
   //~--- fields ---------------------------------------------------------------
