@@ -36,7 +36,6 @@ package sonia.scm.client;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.ScmState;
-import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
