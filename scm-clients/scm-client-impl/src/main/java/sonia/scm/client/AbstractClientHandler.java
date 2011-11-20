@@ -36,6 +36,7 @@ package sonia.scm.client;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.ModelObject;
+import sonia.scm.url.UrlProvider;
 import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -46,7 +47,6 @@ import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
 
 import java.util.List;
-import sonia.scm.url.UrlProvider;
 
 /**
  *
@@ -321,6 +321,5 @@ public abstract class AbstractClientHandler<T extends ModelObject>
 
   /** Field description */
   private Class<T> itemClass;
-
   ;
 }

@@ -42,6 +42,8 @@ import org.sonatype.spice.jersey.client.ahc.AhcHttpClient;
 import org.sonatype.spice.jersey.client.ahc.config.DefaultAhcConfig;
 
 import sonia.scm.ScmState;
+import sonia.scm.url.UrlProvider;
+import sonia.scm.url.UrlProviderFactory;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
@@ -52,8 +54,6 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import javax.ws.rs.core.MultivaluedMap;
-import sonia.scm.url.UrlProvider;
-import sonia.scm.url.UrlProviderFactory;
 
 /**
  *
@@ -116,7 +116,8 @@ public class JerseyClientProvider implements ScmClientProvider
       logger.info("create new session for {} with username {}", url, user);
     }
 
-    UrlProvider urlProvider = UrlProviderFactory.createUrlProvider(url, UrlProviderFactory.TYPE_RESTAPI_XML);
+    UrlProvider urlProvider = UrlProviderFactory.createUrlProvider(url,
+                                UrlProviderFactory.TYPE_RESTAPI_XML);
     DefaultAhcConfig config = new DefaultAhcConfig();
     AhcHttpClient client = AhcHttpClient.create(config);
     ClientResponse response = null;
@@ -142,8 +143,7 @@ public class JerseyClientProvider implements ScmClientProvider
     else
     {
       WebResource resource = ClientUtil.createResource(client,
-                               urlProvider.getStateUrl(),
-                               enableLogging);
+                               urlProvider.getStateUrl(), enableLogging);
 
       if (logger.isDebugEnabled())
       {
