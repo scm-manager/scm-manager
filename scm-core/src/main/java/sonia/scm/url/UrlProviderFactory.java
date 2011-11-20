@@ -67,7 +67,7 @@ public class UrlProviderFactory
    *
    * @return
    */
-  public UrlProvider createUrlProvider(String baseUrl, String type)
+  public static UrlProvider createUrlProvider(String baseUrl, String type)
   {
     UrlProvider provider = null;
 
