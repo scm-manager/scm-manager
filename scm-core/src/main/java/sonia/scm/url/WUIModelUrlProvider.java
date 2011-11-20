@@ -33,57 +33,59 @@
 
 package sonia.scm.url;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.HttpUtil;
+
 /**
  * @since 1.9
  * @author Sebastian Sdorra
  */
-public class UrlProviderFactory
+public class WUIModelUrlProvider implements ModelUrlProvider
 {
 
-  /** Field description */
-  public static final String TYPE_RESTAPI_JSON = "json-rest-api";
+  /**
+   * Constructs ...
+   *
+   *
+   * @param baseUrl
+   * @param component
+   */
+  public WUIModelUrlProvider(String baseUrl, String component)
+  {
+    this.url = HttpUtil.appendHash(baseUrl, component);
+  }
 
-  /** Field description */
-  public static final String TYPE_RESTAPI_XML = "xml-rest-api";
-
-  /** Field description */
-  public static final String TYPE_WUI = "wui";
-
-  /** Field description */
-  private static final String EXTENSION_JSON = ".json";
-
-  /** Field description */
-  private static final String EXTENSION_XML = ".xml";
-
-  //~--- methods --------------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
+   * @return
+   */
+  @Override
+  public String getAllUrl()
+  {
+    return url;
+  }
+
+  /**
+   * Method description
    *
-   * @param baseUrl
-   * @param type
+   *
+   * @param name
    *
    * @return
    */
-  public UrlProvider createUrlProvider(String baseUrl, String type)
+  @Override
+  public String getDetailUrl(String name)
   {
-    UrlProvider provider = null;
-
-    if (TYPE_RESTAPI_JSON.equals(type))
-    {
-      provider = new RestUrlProvider(baseUrl, EXTENSION_JSON);
-    }
-    else if (TYPE_RESTAPI_XML.equals(type))
-    {
-      provider = new RestUrlProvider(baseUrl, EXTENSION_XML);
-    }
-    else if (TYPE_WUI.equals(type))
-    {
-      provider = new WUIUrlProvider(baseUrl);
-    }
-
-    return provider;
+    return url.concat(WUIUrlBuilder.SEPARATOR).concat(name);
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String url;
 }

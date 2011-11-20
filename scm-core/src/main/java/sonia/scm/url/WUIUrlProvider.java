@@ -33,57 +33,110 @@
 
 package sonia.scm.url;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.HttpUtil;
+
 /**
  * @since 1.9
  * @author Sebastian Sdorra
  */
-public class UrlProviderFactory
+public class WUIUrlProvider implements UrlProvider
 {
 
   /** Field description */
-  public static final String TYPE_RESTAPI_JSON = "json-rest-api";
+  public static final String COMPONENT_GROUP = "groupPanel";
 
   /** Field description */
-  public static final String TYPE_RESTAPI_XML = "xml-rest-api";
+  public static final String COMPONENT_REPOSITORY = "repositoryPanel";
 
   /** Field description */
-  public static final String TYPE_WUI = "wui";
+  public static final String COMPONENT_USER = "userPanel";
 
   /** Field description */
-  private static final String EXTENSION_JSON = ".json";
+  public static final String PART_INDEX = "index.html";
 
-  /** Field description */
-  private static final String EXTENSION_XML = ".xml";
+  //~--- constructors ---------------------------------------------------------
 
-  //~--- methods --------------------------------------------------------------
+  /**
+   * Constructs ...
+   *
+   *
+   * @param baseUrl
+   */
+  public WUIUrlProvider(String baseUrl)
+  {
+    this.baseUrl = HttpUtil.append(baseUrl, PART_INDEX);
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
+   * @return
+   */
+  @Override
+  public String getAuthenticationUrl()
+  {
+
+    // ???
+    return null;
+  }
+
+  /**
+   * Method description
    *
-   * @param baseUrl
-   * @param type
    *
    * @return
    */
-  public UrlProvider createUrlProvider(String baseUrl, String type)
+  @Override
+  public ModelUrlProvider getGroupUrlProvider()
   {
-    UrlProvider provider = null;
-
-    if (TYPE_RESTAPI_JSON.equals(type))
-    {
-      provider = new RestUrlProvider(baseUrl, EXTENSION_JSON);
-    }
-    else if (TYPE_RESTAPI_XML.equals(type))
-    {
-      provider = new RestUrlProvider(baseUrl, EXTENSION_XML);
-    }
-    else if (TYPE_WUI.equals(type))
-    {
-      provider = new WUIUrlProvider(baseUrl);
-    }
-
-    return provider;
+    return new WUIModelUrlProvider(baseUrl, COMPONENT_GROUP);
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public RepositoryUrlProvider getRepositoryUrlProvider()
+  {
+    return new WUIRepositoryUrlProvider(baseUrl, COMPONENT_REPOSITORY);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getStateUrl()
+  {
+
+    // ???
+    return null;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public ModelUrlProvider getUserUrlProvider()
+  {
+    return new WUIModelUrlProvider(baseUrl, COMPONENT_USER);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String baseUrl;
 }

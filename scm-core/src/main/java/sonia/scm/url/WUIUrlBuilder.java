@@ -33,27 +33,36 @@
 
 package sonia.scm.url;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.HttpUtil;
+
 /**
  * @since 1.9
  * @author Sebastian Sdorra
  */
-public class UrlProviderFactory
+public class WUIUrlBuilder
 {
 
   /** Field description */
-  public static final String TYPE_RESTAPI_JSON = "json-rest-api";
+  public static final String NULL = "null";
 
   /** Field description */
-  public static final String TYPE_RESTAPI_XML = "xml-rest-api";
+  public static final String SEPARATOR = "|";
 
-  /** Field description */
-  public static final String TYPE_WUI = "wui";
+  //~--- constructors ---------------------------------------------------------
 
-  /** Field description */
-  private static final String EXTENSION_JSON = ".json";
-
-  /** Field description */
-  private static final String EXTENSION_XML = ".xml";
+  /**
+   * Constructs ...
+   *
+   *
+   * @param baseUrl
+   * @param component
+   */
+  public WUIUrlBuilder(String baseUrl, String component)
+  {
+    this.url = HttpUtil.appendHash(baseUrl, component);
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -61,29 +70,49 @@ public class UrlProviderFactory
    * Method description
    *
    *
-   *
-   * @param baseUrl
-   * @param type
+   * @param value
    *
    * @return
    */
-  public UrlProvider createUrlProvider(String baseUrl, String type)
+  public WUIUrlBuilder append(String value)
   {
-    UrlProvider provider = null;
-
-    if (TYPE_RESTAPI_JSON.equals(type))
+    if (value == null)
     {
-      provider = new RestUrlProvider(baseUrl, EXTENSION_JSON);
-    }
-    else if (TYPE_RESTAPI_XML.equals(type))
-    {
-      provider = new RestUrlProvider(baseUrl, EXTENSION_XML);
-    }
-    else if (TYPE_WUI.equals(type))
-    {
-      provider = new WUIUrlProvider(baseUrl);
+      value = NULL;
     }
 
-    return provider;
+    this.url = this.url.concat(value);
+
+    return this;
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param value
+   *
+   * @return
+   */
+  public WUIUrlBuilder append(int value)
+  {
+    return append(String.valueOf(value));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    return url;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String url;
 }
