@@ -92,20 +92,26 @@ public class HttpUtil
    */
   public static final String SCHEME_HTTPS = "https";
 
-  /** 
-   * Url parameter separator 
+  /**
+   * Url hash separator
+   * @since 1.9
+   */
+  public static final String SEPARATOR_HASH = "#";
+
+  /**
+   * Url parameter separator
    * @since 1.9
    */
   public static final String SEPARATOR_PARAMETER = "&";
 
-  /** 
-   * Url parameters separator 
+  /**
+   * Url parameters separator
    * @since 1.9
    */
   public static final String SEPARATOR_PARAMETERS = "?";
 
-  /** 
-   * Url parameter value separator 
+  /**
+   * Url parameter value separator
    * @since 1.9
    */
   public static final String SEPARATOR_PARAMETER_VALUE = "=";
@@ -155,6 +161,21 @@ public class HttpUtil
     }
 
     return uri.concat(suffix);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param uri
+   * @param hash
+   *
+   * @return
+   * @since 1.9
+   */
+  public static String appendHash(String uri, String hash)
+  {
+    return uri.concat(SEPARATOR_HASH).concat(hash);
   }
 
   /**
