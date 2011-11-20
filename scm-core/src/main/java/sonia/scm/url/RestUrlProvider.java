@@ -45,7 +45,7 @@ public class RestUrlProvider implements UrlProvider
 {
 
   /** Field description */
-  public static final String PART_API = "/api/rest/";
+  public static final String PART_API = "api/rest/";
 
   /** Field description */
   public static final String PART_AUTHENTICATION = "authentication/login";
