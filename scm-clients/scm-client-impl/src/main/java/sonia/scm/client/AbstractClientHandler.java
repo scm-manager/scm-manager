@@ -35,6 +35,9 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.ModelObject;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.util.AssertUtil;
@@ -57,6 +60,12 @@ import java.util.List;
 public abstract class AbstractClientHandler<T extends ModelObject>
         implements ClientHandler<T>
 {
+
+  /** the logger for AbstractClientHandler */
+  private static final Logger logger =
+    LoggerFactory.getLogger(AbstractClientHandler.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -234,7 +243,15 @@ public abstract class AbstractClientHandler<T extends ModelObject>
   public List<T> getAll()
   {
     List<T> items = null;
-    WebResource resource = client.resource(getItemsUrl());
+    String url = getItemsUrl();
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch all items of {} from url", itemClass.getSimpleName(),
+                   url);
+    }
+
+    WebResource resource = client.resource(url);
     ClientResponse response = null;
 
     try
@@ -284,6 +301,11 @@ public abstract class AbstractClientHandler<T extends ModelObject>
    */
   protected T getItemByUrl(String url)
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch item {} from url {}", itemClass.getSimpleName(), url);
+    }
+
     T item = null;
     WebResource resource = client.resource(url);
     ClientResponse response = null;
@@ -321,5 +343,4 @@ public abstract class AbstractClientHandler<T extends ModelObject>
 
   /** Field description */
   private Class<T> itemClass;
-  ;
 }

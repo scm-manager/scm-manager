@@ -124,8 +124,14 @@ public class JerseyClientProvider implements ScmClientProvider
 
     if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
     {
-      WebResource resource = ClientUtil.createResource(client,
-                               urlProvider.getAuthenticationUrl(),
+      String authUrl = urlProvider.getAuthenticationUrl();
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("try login at {}", authUrl);
+      }
+
+      WebResource resource = ClientUtil.createResource(client, authUrl,
                                enableLogging);
 
       if (logger.isDebugEnabled())
@@ -142,8 +148,15 @@ public class JerseyClientProvider implements ScmClientProvider
     }
     else
     {
-      WebResource resource = ClientUtil.createResource(client,
-                               urlProvider.getStateUrl(), enableLogging);
+      String stateUrl = urlProvider.getStateUrl();
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("retrive state from {}", stateUrl);
+      }
+
+      WebResource resource = ClientUtil.createResource(client, stateUrl,
+                               enableLogging);
 
       if (logger.isDebugEnabled())
       {
