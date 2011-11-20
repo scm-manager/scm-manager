@@ -45,6 +45,9 @@ public class WUIUrlProvider implements UrlProvider
 {
 
   /** Field description */
+  public static final String COMPONENT_CONFIG = "scmConfig";
+
+  /** Field description */
   public static final String COMPONENT_GROUP = "groupPanel";
 
   /** Field description */
@@ -83,6 +86,18 @@ public class WUIUrlProvider implements UrlProvider
 
     // ???
     return null;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getConfigUrl()
+  {
+    return HttpUtil.appendHash(baseUrl, COMPONENT_CONFIG);
   }
 
   /**

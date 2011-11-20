@@ -51,6 +51,9 @@ public class RestUrlProvider implements UrlProvider
   public static final String PART_AUTHENTICATION = "authentication/login";
 
   /** Field description */
+  public static final String PART_CONFIG = "config";
+
+  /** Field description */
   public static final String PART_GROUP = "groups";
 
   /** Field description */
@@ -88,7 +91,19 @@ public class RestUrlProvider implements UrlProvider
   @Override
   public String getAuthenticationUrl()
   {
-    return HttpUtil.append(baseUrl, PART_AUTHENTICATION);
+    return HttpUtil.append(baseUrl, PART_AUTHENTICATION).concat(extension);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getConfigUrl()
+  {
+    return HttpUtil.append(baseUrl, PART_CONFIG).concat(extension);
   }
 
   /**
@@ -124,7 +139,7 @@ public class RestUrlProvider implements UrlProvider
   @Override
   public String getStateUrl()
   {
-    return HttpUtil.append(baseUrl, PART_STATE);
+    return HttpUtil.append(baseUrl, PART_STATE).concat(extension);
   }
 
   /**

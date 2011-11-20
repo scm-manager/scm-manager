@@ -54,6 +54,14 @@ public interface UrlProvider
    *
    * @return
    */
+  public String getConfigUrl();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public ModelUrlProvider getGroupUrlProvider();
 
   /**
