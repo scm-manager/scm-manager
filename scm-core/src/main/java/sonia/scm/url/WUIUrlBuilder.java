@@ -81,6 +81,11 @@ public class WUIUrlBuilder
       value = NULL;
     }
 
+    if (!this.url.endsWith(SEPARATOR))
+    {
+      this.url = this.url.concat(SEPARATOR);
+    }
+
     this.url = this.url.concat(value);
 
     return this;
