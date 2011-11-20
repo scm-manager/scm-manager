@@ -96,6 +96,7 @@
             <exclude>.hg/**</exclude>
             <exclude>**/html5.js</exclude>
             <exclude>**/*.html</exclude>
+            <exclude>**/fancybox/**</exclude>
           </excludes>
           <strictCheck>true</strictCheck>
         </configuration>
