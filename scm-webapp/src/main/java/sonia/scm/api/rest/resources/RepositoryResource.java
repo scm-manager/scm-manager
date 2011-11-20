@@ -599,7 +599,7 @@ public class RepositoryResource
   @GET
   @Path("{id}/diff")
   @TypeHint(DiffStreamingOutput.class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces(MediaType.APPLICATION_OCTET_STREAM)
   public Response getDiff(@PathParam("id") String id,
                           @QueryParam("revision") String revision,
                           @QueryParam("path") String path)
