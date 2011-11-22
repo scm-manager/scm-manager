@@ -55,7 +55,7 @@ Sonia.History = {
     for (var i=0; i<arguments.length; i++){
       token += arguments[i];
       if ( (i+1)<arguments.length ){
-        token += '|';
+        token += ';';
       }
     }    
     return token;
@@ -73,17 +73,17 @@ Sonia.History = {
         for (var i=0; i<item.length; i++){
           tokenSuffix += item[i];
           if ( (i+1)<item.length ){
-            tokenSuffix += '|';
+            tokenSuffix += ';';
           }
         }
       } else {
         tokenSuffix = item;
       }
       
-      var parts = token.split('|');
+      var parts = token.split(';');
       var newToken = '';
       for (var j=0; j<depth; j++){
-        newToken += parts[j] + '|';
+        newToken += parts[j] + ';';
       }
       newToken += tokenSuffix;
       this.add(newToken);
@@ -134,7 +134,7 @@ Sonia.History = {
   onChange: function(token){
     if(token){
       if (this.isInvokeable(this.recentlyAdded, token)){  
-        var parts = token.split('|');
+        var parts = token.split(';');
         var id = parts[0];
         this.recentlyChanged.push(token);
         Sonia.History.handleChange(id, parts.splice(1));

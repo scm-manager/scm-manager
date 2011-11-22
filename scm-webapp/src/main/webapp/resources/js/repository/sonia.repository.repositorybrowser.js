@@ -329,7 +329,7 @@ Sonia.History.register('repositoryBrowser', {
     if (path == 'null'){
       path = '';
     }
-    var id = 'repositoryBrowser|' + repoId + "|" + revision;
+    var id = 'repositoryBrowser;' + repoId + ';' + revision;
     Sonia.repository.get(repoId, function(repository){
       var panel = Ext.getCmp(id);
       if (! panel){

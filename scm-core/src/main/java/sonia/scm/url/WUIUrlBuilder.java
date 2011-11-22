@@ -48,7 +48,7 @@ public class WUIUrlBuilder
   public static final String NULL = "null";
 
   /** Field description */
-  public static final String SEPARATOR = "|";
+  public static final String SEPARATOR = ";";
 
   //~--- constructors ---------------------------------------------------------
 
