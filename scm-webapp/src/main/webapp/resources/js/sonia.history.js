@@ -37,15 +37,13 @@ Sonia.History = {
   recentlyChanged: [],
   
   add: function(token){
-    if (this.initialized){
-      if (token != Ext.History.getToken()){
-        if (this.isInvokeable(this.recentlyChanged, token)){
-          if ( debug ){
-            console.debug('add history element ' + token);
-          }
-          this.recentlyAdded.push(token);
-          Ext.History.add(token, true);
+    if (token != Ext.History.getToken()){
+      if (this.isInvokeable(this.recentlyChanged, token)){
+        if ( debug ){
+          console.debug('add history element ' + token);
         }
+        this.recentlyAdded.push(token);
+        Ext.History.add(token, true);
       }
     }
   },
