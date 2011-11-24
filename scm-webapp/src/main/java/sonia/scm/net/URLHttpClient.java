@@ -84,6 +84,9 @@ public class URLHttpClient implements HttpClient
   public static final String HEADER_ACCEPT_ENCODING_VALUE = "gzip";
 
   /** Field description */
+  public static final String HEADER_AUTHORIZATION = "Authorization";
+
+  /** Field description */
   public static final String HEADER_PROXY_AUTHORIZATION = "Proxy-Authorization";
 
   /** Field description */
@@ -141,7 +144,8 @@ public class URLHttpClient implements HttpClient
   @Override
   public HttpResponse post(String url) throws IOException
   {
-    HttpURLConnection connection = (HttpURLConnection) openConnection(url);
+    HttpURLConnection connection = (HttpURLConnection) openConnection(null,
+                                     url);
 
     connection.setRequestMethod(METHOD_POST);
 
@@ -163,10 +167,180 @@ public class URLHttpClient implements HttpClient
   public HttpResponse post(String url, Map<String, List<String>> parameters)
           throws IOException
   {
-    HttpURLConnection connection = (HttpURLConnection) openConnection(url);
+    HttpURLConnection connection = (HttpURLConnection) openConnection(null,
+                                     url);
 
     connection.setRequestMethod(METHOD_POST);
+    appendPostParameter(connection, parameters);
 
+    return new URLHttpResponse(connection);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  @Override
+  public HttpResponse post(HttpRequest request) throws IOException
+  {
+    HttpURLConnection connection = (HttpURLConnection) openConnection(request,
+                                     request.getUrl());
+
+    connection.setRequestMethod(METHOD_POST);
+    appendPostParameter(connection, request.getParameters());
+
+    return new URLHttpResponse(connection);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param spec
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  @Override
+  public HttpResponse get(String spec) throws IOException
+  {
+    return new URLHttpResponse(openConnection(null, spec));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   * @param parameters
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  @Override
+  public HttpResponse get(String url, Map<String, List<String>> parameters)
+          throws IOException
+  {
+    url = createGetUrl(url, parameters);
+
+    return new URLHttpResponse(openConnection(null, url));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  @Override
+  public HttpResponse get(HttpRequest request) throws IOException
+  {
+    String url = createGetUrl(request.getUrl(), request.getParameters());
+
+    return new URLHttpResponse(openConnection(request, url));
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param connection
+   * @param header
+   * @param username
+   * @param password
+   */
+  private void appendBasicAuthHeader(HttpURLConnection connection,
+                                     String header, String username,
+                                     String password)
+  {
+    if (Util.isNotEmpty(username) || Util.isNotEmpty(password))
+    {
+      username = Util.nonNull(username);
+      password = Util.nonNull(password);
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("append {} header for user {}", header, username);
+      }
+
+      String auth = username.concat(CREDENTIAL_SEPARATOR).concat(password);
+
+      auth = new String(Base64.encode(auth.getBytes()));
+      connection.addRequestProperty(header,
+                                    PREFIX_BASIC_AUTHENTICATION.concat(auth));
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param headers
+   * @param connection
+   */
+  private void appendHeaders(Map<String, List<String>> headers,
+                             URLConnection connection)
+  {
+    if (Util.isNotEmpty(headers))
+    {
+      for (Map.Entry<String, List<String>> e : headers.entrySet())
+      {
+        String name = e.getKey();
+        List<String> values = e.getValue();
+
+        if (Util.isNotEmpty(name) && Util.isNotEmpty(values))
+        {
+          for (String value : values)
+          {
+            if (logger.isTraceEnabled())
+            {
+              logger.trace("append header {}:{}", name, value);
+            }
+
+            connection.setRequestProperty(name, value);
+          }
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("value of {} header is empty", name);
+        }
+      }
+    }
+    else if (logger.isTraceEnabled())
+    {
+      logger.trace("header map is emtpy");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param connection
+   * @param parameters
+   *
+   * @throws IOException
+   */
+  private void appendPostParameter(HttpURLConnection connection,
+                                   Map<String, List<String>> parameters)
+          throws IOException
+  {
     if (Util.isNotEmpty(parameters))
     {
       connection.setDoOutput(true);
@@ -206,26 +380,6 @@ public class URLHttpClient implements HttpClient
         IOUtil.close(writer);
       }
     }
-
-    return new URLHttpResponse(connection);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param spec
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  @Override
-  public HttpResponse get(String spec) throws IOException
-  {
-    return new URLHttpResponse(openConnection(spec));
   }
 
   /**
@@ -236,12 +390,8 @@ public class URLHttpClient implements HttpClient
    * @param parameters
    *
    * @return
-   *
-   * @throws IOException
    */
-  @Override
-  public HttpResponse get(String url, Map<String, List<String>> parameters)
-          throws IOException
+  private String createGetUrl(String url, Map<String, List<String>> parameters)
   {
     if (Util.isNotEmpty(parameters))
     {
@@ -275,10 +425,8 @@ public class URLHttpClient implements HttpClient
       url = ub.toString();
     }
 
-    return new URLHttpResponse(openConnection(url));
+    return url;
   }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -306,30 +454,36 @@ public class URLHttpClient implements HttpClient
    * Method description
    *
    *
+   *
+   * @param request
    * @param spec
    *
    * @return
    *
    * @throws IOException
    */
-  private URLConnection openConnection(String spec) throws IOException
+  private HttpURLConnection openConnection(HttpRequest request, String spec)
+          throws IOException
   {
-    return openConnection(new URL(spec));
+    return openConnection(request, new URL(spec));
   }
 
   /**
    * Method description
    *
    *
+   *
+   * @param request
    * @param url
    *
    * @return
    *
    * @throws IOException
    */
-  private URLConnection openConnection(URL url) throws IOException
+  private HttpURLConnection openConnection(HttpRequest request, URL url)
+          throws IOException
   {
-    URLConnection connection = null;
+    HttpURLConnection connection = null;
 
     if (configuration.isEnableProxy())
     {
@@ -345,7 +499,9 @@ public class URLHttpClient implements HttpClient
         new InetSocketAddress(configuration.getProxyServer(),
                               configuration.getProxyPort());
 
-      connection = url.openConnection(new Proxy(Proxy.Type.HTTP, address));
+      connection =
+        (HttpURLConnection) url.openConnection(new Proxy(Proxy.Type.HTTP,
+          address));
     }
     else
     {
@@ -354,11 +510,25 @@ public class URLHttpClient implements HttpClient
         logger.debug("fetch '{}'", url.toExternalForm());
       }
 
-      connection = url.openConnection();
+      connection = (HttpURLConnection) url.openConnection();
     }
 
     connection.setReadTimeout(TIMEOUT_RAED);
     connection.setConnectTimeout(TIMEOUT_CONNECTION);
+
+    if (request != null)
+    {
+      Map<String, List<String>> headers = request.getHeaders();
+
+      appendHeaders(headers, connection);
+
+      String username = request.getUsername();
+      String password = request.getPassword();
+
+      appendBasicAuthHeader(connection, HEADER_AUTHORIZATION, username,
+                            password);
+    }
+
     connection.setRequestProperty(HEADER_ACCEPT_ENCODING,
                                   HEADER_ACCEPT_ENCODING_VALUE);
     connection.setRequestProperty(
@@ -367,21 +537,8 @@ public class URLHttpClient implements HttpClient
     String username = configuration.getProxyUser();
     String password = configuration.getProxyPassword();
 
-    if (Util.isNotEmpty(username) || Util.isNotEmpty(password))
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("enable proxy authentication for user '{}'",
-                     Util.nonNull(username));
-      }
-
-      String auth = Util.nonNull(username).concat(CREDENTIAL_SEPARATOR).concat(
-                        Util.nonNull(password));
-
-      auth = PREFIX_BASIC_AUTHENTICATION.concat(
-        new String(Base64.encode(auth.getBytes())));
-      connection.setRequestProperty(HEADER_PROXY_AUTHORIZATION, auth);
-    }
+    appendBasicAuthHeader(connection, HEADER_PROXY_AUTHORIZATION, username,
+                          password);
 
     return connection;
   }

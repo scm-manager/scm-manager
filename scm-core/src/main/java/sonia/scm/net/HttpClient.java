@@ -63,6 +63,19 @@ public interface HttpClient
    * Method description
    *
    *
+   * @param request
+   *
+   * @return
+   * @since 1.9
+   *
+   * @throws IOException
+   */
+  public HttpResponse post(HttpRequest request) throws IOException;
+
+  /**
+   * Method description
+   *
+   *
    * @param url
    * @param parameters
    *
@@ -86,6 +99,19 @@ public interface HttpClient
    * @throws IOException
    */
   public HttpResponse get(String url) throws IOException;
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   * @since 1.9
+   *
+   * @throws IOException
+   */
+  public HttpResponse get(HttpRequest request) throws IOException;
 
   /**
    * Method description
