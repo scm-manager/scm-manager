@@ -58,6 +58,10 @@ public class HgInstallerFactory
     {
       installer = new WindowsHgInstaller();
     }
+    else if (SystemUtil.isMac())
+    {
+      installer = new MacOSHgInstaller();
+    }
     else
     {
       installer = new UnixHgInstaller();
