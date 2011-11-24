@@ -148,7 +148,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
 
   createChangesetViewer: function(){
     return {
-      id: 'repositoryChangesetViewerPanel|' + this.item.id,
+      id: 'repositoryChangesetViewerPanel;' + this.item.id,
       repository: this.item,
       xtype: 'repositoryChangesetViewerPanel',
       closable: true,

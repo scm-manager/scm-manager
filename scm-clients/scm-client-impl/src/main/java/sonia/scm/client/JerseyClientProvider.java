@@ -42,6 +42,8 @@ import org.sonatype.spice.jersey.client.ahc.AhcHttpClient;
 import org.sonatype.spice.jersey.client.ahc.config.DefaultAhcConfig;
 
 import sonia.scm.ScmState;
+import sonia.scm.url.UrlProvider;
+import sonia.scm.url.UrlProviderFactory;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
@@ -114,15 +116,22 @@ public class JerseyClientProvider implements ScmClientProvider
       logger.info("create new session for {} with username {}", url, user);
     }
 
-    ScmUrlProvider urlProvider = new ScmUrlProvider(url);
+    UrlProvider urlProvider = UrlProviderFactory.createUrlProvider(url,
+                                UrlProviderFactory.TYPE_RESTAPI_XML);
     DefaultAhcConfig config = new DefaultAhcConfig();
     AhcHttpClient client = AhcHttpClient.create(config);
     ClientResponse response = null;
 
     if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
     {
-      WebResource resource = ClientUtil.createResource(client,
-                               urlProvider.getAuthenticationLoginUrl(),
+      String authUrl = urlProvider.getAuthenticationUrl();
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("try login at {}", authUrl);
+      }
+
+      WebResource resource = ClientUtil.createResource(client, authUrl,
                                enableLogging);
 
       if (logger.isDebugEnabled())
@@ -139,8 +148,14 @@ public class JerseyClientProvider implements ScmClientProvider
     }
     else
     {
-      WebResource resource = ClientUtil.createResource(client,
-                               urlProvider.getAuthenticationUrl(),
+      String stateUrl = urlProvider.getStateUrl();
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("retrive state from {}", stateUrl);
+      }
+
+      WebResource resource = ClientUtil.createResource(client, stateUrl,
                                enableLogging);
 
       if (logger.isDebugEnabled())

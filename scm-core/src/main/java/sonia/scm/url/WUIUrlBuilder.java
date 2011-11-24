@@ -31,36 +31,37 @@
 
 
 
-package sonia.scm.client;
+package sonia.scm.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.group.Group;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-
-import java.util.List;
+import sonia.scm.util.HttpUtil;
 
 /**
- *
+ * @since 1.9
  * @author Sebastian Sdorra
  */
-public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
-        implements GroupClientHandler
+public class WUIUrlBuilder
 {
+
+  /** Field description */
+  public static final String NULL = "null";
+
+  /** Field description */
+  public static final String SEPARATOR = ";";
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param session
+   * @param baseUrl
+   * @param component
    */
-  public JerseyGroupClientHandler(JerseyClientSession session)
+  public WUIUrlBuilder(String baseUrl, String component)
   {
-    super(session, Group.class);
+    this.url = HttpUtil.appendHash(baseUrl, component);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -69,43 +70,38 @@ public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
    * Method description
    *
    *
+   * @param value
+   *
    * @return
    */
-  @Override
-  protected GenericType<List<Group>> createGenericListType()
+  public WUIUrlBuilder append(String value)
   {
-    return new GenericType<List<Group>>() {}
-    ;
+    if (value == null)
+    {
+      value = NULL;
+    }
+
+    if (!this.url.endsWith(SEPARATOR))
+    {
+      this.url = this.url.concat(SEPARATOR);
+    }
+
+    this.url = this.url.concat(value);
+
+    return this;
   }
 
   /**
    * Method description
    *
    *
-   * @param response
-   * @param item
-   * @param newItem
-   */
-  @Override
-  protected void postCreate(ClientResponse response, Group item, Group newItem)
-  {
-    newItem.copyProperties(item);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param itemId
+   * @param value
    *
    * @return
    */
-  @Override
-  protected String getItemUrl(String itemId)
+  public WUIUrlBuilder append(int value)
   {
-    return urlProvider.getGroupUrlProvider().getDetailUrl(itemId);
+    return append(String.valueOf(value));
   }
 
   /**
@@ -115,8 +111,13 @@ public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
    * @return
    */
   @Override
-  protected String getItemsUrl()
+  public String toString()
   {
-    return urlProvider.getGroupUrlProvider().getAllUrl();
+    return url;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String url;
 }

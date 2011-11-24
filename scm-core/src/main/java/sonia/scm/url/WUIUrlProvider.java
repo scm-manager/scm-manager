@@ -31,65 +31,45 @@
 
 
 
-package sonia.scm.client;
+package sonia.scm.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.group.Group;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-
-import java.util.List;
+import sonia.scm.util.HttpUtil;
 
 /**
- *
+ * @since 1.9
  * @author Sebastian Sdorra
  */
-public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
-        implements GroupClientHandler
+public class WUIUrlProvider implements UrlProvider
 {
+
+  /** Field description */
+  public static final String COMPONENT_CONFIG = "scmConfig";
+
+  /** Field description */
+  public static final String COMPONENT_GROUP = "groupPanel";
+
+  /** Field description */
+  public static final String COMPONENT_REPOSITORY = "repositoryPanel";
+
+  /** Field description */
+  public static final String COMPONENT_USER = "userPanel";
+
+  /** Field description */
+  public static final String PART_INDEX = "index.html";
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param session
+   * @param baseUrl
    */
-  public JerseyGroupClientHandler(JerseyClientSession session)
+  public WUIUrlProvider(String baseUrl)
   {
-    super(session, Group.class);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected GenericType<List<Group>> createGenericListType()
-  {
-    return new GenericType<List<Group>>() {}
-    ;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   * @param item
-   * @param newItem
-   */
-  @Override
-  protected void postCreate(ClientResponse response, Group item, Group newItem)
-  {
-    newItem.copyProperties(item);
+    this.baseUrl = HttpUtil.append(baseUrl, PART_INDEX);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -98,14 +78,14 @@ public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
    * Method description
    *
    *
-   * @param itemId
-   *
    * @return
    */
   @Override
-  protected String getItemUrl(String itemId)
+  public String getAuthenticationUrl()
   {
-    return urlProvider.getGroupUrlProvider().getDetailUrl(itemId);
+
+    // ???
+    return null;
   }
 
   /**
@@ -115,8 +95,63 @@ public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
    * @return
    */
   @Override
-  protected String getItemsUrl()
+  public String getConfigUrl()
   {
-    return urlProvider.getGroupUrlProvider().getAllUrl();
+    return HttpUtil.appendHash(baseUrl, COMPONENT_CONFIG);
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public ModelUrlProvider getGroupUrlProvider()
+  {
+    return new WUIModelUrlProvider(baseUrl, COMPONENT_GROUP);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public RepositoryUrlProvider getRepositoryUrlProvider()
+  {
+    return new WUIRepositoryUrlProvider(baseUrl, COMPONENT_REPOSITORY);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getStateUrl()
+  {
+
+    // ???
+    return null;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public ModelUrlProvider getUserUrlProvider()
+  {
+    return new WUIModelUrlProvider(baseUrl, COMPONENT_USER);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String baseUrl;
 }

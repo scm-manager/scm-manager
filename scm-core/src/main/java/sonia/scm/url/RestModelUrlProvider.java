@@ -31,65 +31,32 @@
 
 
 
-package sonia.scm.client;
+package sonia.scm.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.group.Group;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-
-import java.util.List;
+import sonia.scm.util.HttpUtil;
 
 /**
- *
+ * @since 1.9
  * @author Sebastian Sdorra
  */
-public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
-        implements GroupClientHandler
+public class RestModelUrlProvider implements ModelUrlProvider
 {
 
   /**
    * Constructs ...
    *
    *
-   * @param session
+   * @param baseUrl
+   * @param modelSuffix
+   * @param extension
    */
-  public JerseyGroupClientHandler(JerseyClientSession session)
+  public RestModelUrlProvider(String baseUrl, String modelSuffix,
+                              String extension)
   {
-    super(session, Group.class);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected GenericType<List<Group>> createGenericListType()
-  {
-    return new GenericType<List<Group>>() {}
-    ;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   * @param item
-   * @param newItem
-   */
-  @Override
-  protected void postCreate(ClientResponse response, Group item, Group newItem)
-  {
-    newItem.copyProperties(item);
+    this.base = HttpUtil.append(baseUrl, modelSuffix);
+    this.extension = extension;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -98,25 +65,33 @@ public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
    * Method description
    *
    *
-   * @param itemId
-   *
    * @return
    */
   @Override
-  protected String getItemUrl(String itemId)
+  public String getAllUrl()
   {
-    return urlProvider.getGroupUrlProvider().getDetailUrl(itemId);
+    return base.concat(extension);
   }
 
   /**
    * Method description
    *
    *
+   * @param name
+   *
    * @return
    */
   @Override
-  protected String getItemsUrl()
+  public String getDetailUrl(String name)
   {
-    return urlProvider.getGroupUrlProvider().getAllUrl();
+    return HttpUtil.append(base, name).concat(extension);
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected String base;
+
+  /** Field description */
+  protected String extension;
 }

@@ -90,6 +90,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   initComponent: function(){
 
     var config = {
+      title: main.navGeneralConfigText,
       panels: [{
         xtype: 'configForm',
         title: this.titleText,

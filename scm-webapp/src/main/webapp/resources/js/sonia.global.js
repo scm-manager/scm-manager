@@ -85,7 +85,7 @@ var groupSearchStore = new Ext.data.JsonStore({
 
 Sonia = {
   
-  idSeparator: '|',
+  idSeparator: ';',
   idNoneObject: '-',
   
   id: function(){
@@ -93,7 +93,7 @@ Sonia = {
     for ( var i=0; i<arguments.length; i++ ){
       id += arguments[i];
       if ( (i+1) < arguments.length ){
-        id += '|';
+        id += this.idSeparator;
       }
     }
     if (id.length() == 0){
@@ -110,6 +110,3 @@ var main = null;
 
 // enable extjs quicktips
 Ext.QuickTips.init();
-
-// enable history
-Ext.History.init();

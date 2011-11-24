@@ -31,87 +31,38 @@
 
 
 
-package sonia.scm.client;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.NotSupportedFeatuerException;
-import sonia.scm.Type;
-import sonia.scm.repository.Repository;
+package sonia.scm.util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-
-import java.util.Collection;
-import java.util.List;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
- *
+ * @since 1.9
  * @author Sebastian Sdorra
  */
-public class JerseyRepositoryClientHandler
-        extends AbstractClientHandler<Repository>
-        implements RepositoryClientHandler
+public class UrlBuilder
 {
 
   /**
    * Constructs ...
    *
    *
-   * @param session
+   * @param baseUrl
    */
-  public JerseyRepositoryClientHandler(JerseyClientSession session)
+  public UrlBuilder(String baseUrl)
   {
-    super(session, Repository.class);
-  }
+    this.url = baseUrl;
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws NotSupportedFeatuerException
-   */
-  @Override
-  public ClientChangesetHandler getChangesetHandler(Repository repository)
-          throws NotSupportedFeatuerException
-  {
-    return new JerseyClientChangesetHandler(session, repository);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   */
-  @Override
-  public JerseyClientRepositoryBrowser getRepositoryBrowser(
-          Repository repository)
-  {
-    return new JerseyClientRepositoryBrowser(session, repository);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Collection<Type> getRepositoryTypes()
-  {
-    return session.getState().getRepositoryTypes();
+    if (baseUrl.contains(HttpUtil.SEPARATOR_PARAMETERS))
+    {
+      separator = HttpUtil.SEPARATOR_PARAMETER;
+    }
+    else
+    {
+      separator = HttpUtil.SEPARATOR_PARAMETERS;
+    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -120,58 +71,138 @@ public class JerseyRepositoryClientHandler
    * Method description
    *
    *
+   * @param part
+   *
    * @return
    */
-  @Override
-  protected GenericType<List<Repository>> createGenericListType()
+  public UrlBuilder append(String part)
   {
-    return new GenericType<List<Repository>>() {}
-    ;
+    url = url.concat(part);
+
+    return this;
   }
 
   /**
    * Method description
    *
    *
-   * @param response
-   * @param repository
-   * @param newRepository
-   */
-  @Override
-  protected void postCreate(ClientResponse response, Repository repository,
-                            Repository newRepository)
-  {
-    newRepository.copyProperties(repository);
-
-    // copyProperties does not copy the repository id
-    repository.setId(newRepository.getId());
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param itemId
+   * @param name
+   * @param value
    *
    * @return
    */
-  @Override
-  protected String getItemUrl(String itemId)
+  public UrlBuilder appendParameter(String name, boolean value)
   {
-    return urlProvider.getRepositoryUrlProvider().getDetailUrl(itemId);
+    return appendParameter(name, String.valueOf(value));
   }
 
   /**
    * Method description
    *
    *
+   * @param name
+   * @param value
+   *
+   * @return
+   */
+  public UrlBuilder appendParameter(String name, int value)
+  {
+    return appendParameter(name, String.valueOf(value));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   * @param value
+   *
+   * @return
+   */
+  public UrlBuilder appendParameter(String name, long value)
+  {
+    return appendParameter(name, String.valueOf(value));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   * @param value
+   *
+   * @return
+   */
+  public UrlBuilder appendParameter(String name, String value)
+  {
+    if (Util.isNotEmpty(name) && Util.isNotEmpty(value))
+    {
+      url = new StringBuilder(url).append(separator).append(name).append(
+        HttpUtil.SEPARATOR_PARAMETER_VALUE).append(value).toString();
+      parameterAdded = true;
+    }
+
+    return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param part
+   *
+   * @return
+   */
+  public UrlBuilder appendUrlPart(String part)
+  {
+    if (parameterAdded)
+    {
+      throw new IllegalStateException("parameter added");
+    }
+
+    url = HttpUtil.append(url, part);
+
+    return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   @Override
-  protected String getItemsUrl()
+  public String toString()
   {
-    return urlProvider.getRepositoryUrlProvider().getAllUrl();
+    return url;
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public URL toURL()
+  {
+    try
+    {
+      return new URL(url);
+    }
+    catch (MalformedURLException ex)
+    {
+      throw new RuntimeException(ex);
+    }
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean parameterAdded = false;
+
+  /** Field description */
+  private String separator;
+
+  /** Field description */
+  private String url;
 }

@@ -40,6 +40,7 @@ import sonia.scm.client.JerseyClientProvider;
 import sonia.scm.client.JerseyClientSession;
 import sonia.scm.client.ScmUrlProvider;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.url.UrlProvider;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -124,10 +125,10 @@ public class ClientTestUtil
   public static void setAnonymousAccess(boolean access)
   {
     JerseyClientSession adminSession = createAdminSession();
-    ScmUrlProvider up = adminSession.getUrlProvider();
+    UrlProvider up = adminSession.getUrlProvider();
     Client client = adminSession.getClient();
-    WebResource resource = ClientUtil.createResource(client,
-                             up.getResourceUrl("config"), REQUEST_LOGGING);
+    WebResource resource = ClientUtil.createResource(client, up.getConfigUrl(),
+                             REQUEST_LOGGING);
     ScmConfiguration config = resource.get(ScmConfiguration.class);
 
     config.setAnonymousAccessEnabled(access);

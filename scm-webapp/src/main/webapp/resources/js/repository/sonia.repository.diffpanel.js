@@ -81,7 +81,7 @@ Sonia.History.register('diffPanel', {
   },
   
   onChange: function(repoId, revision){
-    var id = 'diffPanel|' + repoId + '|' + revision;
+    var id = 'diffPanel;' + repoId + ';' + revision;
     Sonia.repository.get(repoId, function(repository){
       var panel = Ext.getCmp(id);
       if (! panel){

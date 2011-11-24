@@ -93,6 +93,30 @@ public class HttpUtil
   public static final String SCHEME_HTTPS = "https";
 
   /**
+   * Url hash separator
+   * @since 1.9
+   */
+  public static final String SEPARATOR_HASH = "#";
+
+  /**
+   * Url parameter separator
+   * @since 1.9
+   */
+  public static final String SEPARATOR_PARAMETER = "&";
+
+  /**
+   * Url parameters separator
+   * @since 1.9
+   */
+  public static final String SEPARATOR_PARAMETERS = "?";
+
+  /**
+   * Url parameter value separator
+   * @since 1.9
+   */
+  public static final String SEPARATOR_PARAMETER_VALUE = "=";
+
+  /**
    * Url folder separator
    * @since 1.5
    */
@@ -118,6 +142,69 @@ public class HttpUtil
   private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param uri
+   * @param suffix
+   *
+   * @return
+   * @since 1.9
+   */
+  public static String append(String uri, String suffix)
+  {
+    if (!uri.endsWith(SEPARATOR_PATH))
+    {
+      uri = uri.concat(SEPARATOR_PATH);
+    }
+
+    return uri.concat(suffix);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param uri
+   * @param hash
+   *
+   * @return
+   * @since 1.9
+   */
+  public static String appendHash(String uri, String hash)
+  {
+    return uri.concat(SEPARATOR_HASH).concat(hash);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param uri
+   * @param name
+   * @param value
+   *
+   * @return
+   * @since 1.9
+   */
+  public static String appendParameter(String uri, String name, String value)
+  {
+    String s = null;
+
+    if (uri.contains(SEPARATOR_PARAMETERS))
+    {
+      s = SEPARATOR_PARAMETERS;
+    }
+    else
+    {
+      s = SEPARATOR_PARAMETER;
+    }
+
+    return new StringBuilder(uri).append(s).append(name).append(
+        SEPARATOR_PARAMETER_VALUE).append(value).toString();
+  }
 
   /**
    * Method description

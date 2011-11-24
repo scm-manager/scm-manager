@@ -107,7 +107,20 @@ Sonia.repository.get = function(id, callback){
   if ( grid ){
     var store = grid.getStore();
     if (store){
-      var rec = store.getById(id);
+      var rec = null;
+      var index = id.indexOf('/');
+      if ( index > 0 ){
+        var type = id.substring(0, index);
+        var name = id.substring(index);
+        index = store.findBy(function(rec){
+          return rec.get('name') == name && rec.get('type') == type;
+        });
+        if ( index >= 0 ){
+          rec = store.getAt(index);
+        }
+      } else {
+        rec = store.getById(id);
+      }
       if (rec){
         repository = rec.data;
       }

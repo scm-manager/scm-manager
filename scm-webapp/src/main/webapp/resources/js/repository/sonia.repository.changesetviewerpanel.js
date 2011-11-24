@@ -154,7 +154,7 @@ Sonia.History.register('repositoryChangesetViewerPanel', {
     if (limit){
       limit = parseInt(limit);
     }
-    var id = 'repositoryChangesetViewerPanel|' + repoId;
+    var id = 'repositoryChangesetViewerPanel;' + repoId;
     Sonia.repository.get(repoId, function(repository){
       var panel = Ext.getCmp(id);
       if (! panel){

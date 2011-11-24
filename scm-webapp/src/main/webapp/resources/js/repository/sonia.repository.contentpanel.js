@@ -210,7 +210,7 @@ Sonia.History.register('contentPanel', {
     if (!view || view == 'null'){
       view = 'content';
     }
-    var id = 'contentPanel|' + repoId + '|' + revision + '|' + path;
+    var id = 'contentPanel;' + repoId + ';' + revision + ';' + path;
     Sonia.repository.get(repoId, function(repository){
       var panel = Ext.getCmp(id);
       if (! panel){

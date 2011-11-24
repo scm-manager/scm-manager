@@ -31,92 +31,87 @@
 
 
 
-package sonia.scm.client;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.group.Group;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-
-import java.util.List;
+package sonia.scm.url;
 
 /**
- *
+ * @since 1.9
  * @author Sebastian Sdorra
  */
-public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
-        implements GroupClientHandler
+public interface RepositoryUrlProvider extends ModelUrlProvider
 {
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param session
-   */
-  public JerseyGroupClientHandler(JerseyClientSession session)
-  {
-    super(session, Group.class);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
    * Method description
    *
+   *
+   * @param repositoryId
+   * @param path
+   * @param revision
    *
    * @return
    */
-  @Override
-  protected GenericType<List<Group>> createGenericListType()
-  {
-    return new GenericType<List<Group>>() {}
-    ;
-  }
+  public String getBlameUrl(String repositoryId, String path, String revision);
 
   /**
    * Method description
    *
    *
-   * @param response
-   * @param item
-   * @param newItem
-   */
-  @Override
-  protected void postCreate(ClientResponse response, Group item, Group newItem)
-  {
-    newItem.copyProperties(item);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param itemId
+   * @param repositoryId
+   * @param path
+   * @param revision
    *
    * @return
    */
-  @Override
-  protected String getItemUrl(String itemId)
-  {
-    return urlProvider.getGroupUrlProvider().getDetailUrl(itemId);
-  }
+  public String getBrowseUrl(String repositoryId, String path, String revision);
 
   /**
    * Method description
    *
    *
+   * @param repositoryId
+   * @param path
+   * @param revision
+   * @param start
+   * @param limit
+   *
    * @return
    */
-  @Override
-  protected String getItemsUrl()
-  {
-    return urlProvider.getGroupUrlProvider().getAllUrl();
-  }
+  public String getChangesetUrl(String repositoryId, String path,
+                                String revision, int start, int limit);
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryId
+   * @param start
+   * @param limit
+   *
+   * @return
+   */
+  public String getChangesetUrl(String repositoryId, int start, int limit);
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryId
+   * @param path
+   * @param revision
+   *
+   * @return
+   */
+  public String getContentUrl(String repositoryId, String path,
+                              String revision);
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryId
+   * @param revision
+   *
+   * @return
+   */
+  public String getDiffUrl(String repositoryId, String revision);
 }

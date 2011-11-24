@@ -31,65 +31,32 @@
 
 
 
-package sonia.scm.client;
+package sonia.scm.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.group.Group;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-
-import java.util.List;
+import sonia.scm.config.ScmConfiguration;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
-        implements GroupClientHandler
+public class WebUIUrlProvider implements Provider<UrlProvider>
 {
 
   /**
    * Constructs ...
    *
    *
-   * @param session
+   * @param configuration
    */
-  public JerseyGroupClientHandler(JerseyClientSession session)
+  @Inject
+  public WebUIUrlProvider(ScmConfiguration configuration)
   {
-    super(session, Group.class);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected GenericType<List<Group>> createGenericListType()
-  {
-    return new GenericType<List<Group>>() {}
-    ;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   * @param item
-   * @param newItem
-   */
-  @Override
-  protected void postCreate(ClientResponse response, Group item, Group newItem)
-  {
-    newItem.copyProperties(item);
+    this.configuration = configuration;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -98,25 +65,17 @@ public class JerseyGroupClientHandler extends AbstractClientHandler<Group>
    * Method description
    *
    *
-   * @param itemId
-   *
    * @return
    */
   @Override
-  protected String getItemUrl(String itemId)
+  public UrlProvider get()
   {
-    return urlProvider.getGroupUrlProvider().getDetailUrl(itemId);
+    return UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
+            UrlProviderFactory.TYPE_WUI);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected String getItemsUrl()
-  {
-    return urlProvider.getGroupUrlProvider().getAllUrl();
-  }
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private ScmConfiguration configuration;
 }

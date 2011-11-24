@@ -181,14 +181,25 @@ Sonia.History.register('groupPanel', {
     return token;
   },
   
-  onChange: function(repoId){
+  onChange: function(groupId){
     var panel = Ext.getCmp('groups');
     if ( ! panel ){
       main.addGroupsTabPanel();
       panel = Ext.getCmp('groups');
-    }
-    if (repoId){
-      panel.getGrid().selectById(repoId);
+      if (groupId){
+        var selected = false;
+        panel.getGrid().getStore().addListener('load', function(){
+          if (!selected){
+            panel.getGrid().selectById(groupId);
+            selected = true;
+          }
+        });
+      }
+    } else {
+      main.addTab(panel);
+      if (groupId){
+        panel.getGrid().selectById(groupId);
+      }
     }
   }
 });

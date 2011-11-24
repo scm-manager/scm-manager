@@ -55,6 +55,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         url: restUrl + 'repositories.json',
         disableCaching: false
       }),
+      idProperty: 'id',
       reader: new Ext.data.JsonReader({
         fields: [{
           name: 'id'
@@ -81,7 +82,6 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
           name: 'properties'
         }]
       }),
-      id: 'id',
       sortInfo: {
         field: 'name'
       },

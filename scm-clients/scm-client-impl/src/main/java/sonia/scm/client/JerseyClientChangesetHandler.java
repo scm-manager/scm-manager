@@ -80,8 +80,8 @@ public class JerseyClientChangesetHandler implements ClientChangesetHandler
   {
     ChangesetPagingResult result = null;
     String url =
-      session.getUrlProvider().getRepositoryChangesetUrl(repository.getId(),
-        start, limit);
+      session.getUrlProvider().getRepositoryUrlProvider().getChangesetUrl(
+          repository.getId(), start, limit);
     WebResource resource = session.getClient().resource(url);
     ClientResponse response = null;
 
@@ -121,8 +121,8 @@ public class JerseyClientChangesetHandler implements ClientChangesetHandler
   {
     ChangesetPagingResult result = null;
     String url =
-      session.getUrlProvider().getRepositoryChangesetUrl(repository.getId(),
-        path, revision, start, limit);
+      session.getUrlProvider().getRepositoryUrlProvider().getChangesetUrl(
+          repository.getId(), path, revision, start, limit);
     WebResource resource = session.getClient().resource(url);
     ClientResponse response = null;
 

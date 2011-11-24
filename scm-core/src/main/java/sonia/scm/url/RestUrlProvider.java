@@ -31,40 +31,53 @@
 
 
 
-package sonia.scm.client;
+package sonia.scm.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.NotSupportedFeatuerException;
-import sonia.scm.Type;
-import sonia.scm.repository.Repository;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.GenericType;
-
-import java.util.Collection;
-import java.util.List;
+import sonia.scm.util.HttpUtil;
 
 /**
- *
+ * @since 1.9
  * @author Sebastian Sdorra
  */
-public class JerseyRepositoryClientHandler
-        extends AbstractClientHandler<Repository>
-        implements RepositoryClientHandler
+public class RestUrlProvider implements UrlProvider
 {
+
+  /** Field description */
+  public static final String PART_API = "api/rest/";
+
+  /** Field description */
+  public static final String PART_AUTHENTICATION = "authentication/login";
+
+  /** Field description */
+  public static final String PART_CONFIG = "config";
+
+  /** Field description */
+  public static final String PART_GROUP = "groups";
+
+  /** Field description */
+  public static final String PART_REPOSITORIES = "repositories";
+
+  /** Field description */
+  public static final String PART_STATE = "authentication";
+
+  /** Field description */
+  public static final String PART_USER = "users";
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param session
+   * @param baseUrl
+   * @param extension
    */
-  public JerseyRepositoryClientHandler(JerseyClientSession session)
+  public RestUrlProvider(String baseUrl, String extension)
   {
-    super(session, Repository.class);
+    this.baseUrl = HttpUtil.append(baseUrl, PART_API);
+    this.extension = extension;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -73,33 +86,12 @@ public class JerseyRepositoryClientHandler
    * Method description
    *
    *
-   * @param repository
-   *
    * @return
-   *
-   * @throws NotSupportedFeatuerException
    */
   @Override
-  public ClientChangesetHandler getChangesetHandler(Repository repository)
-          throws NotSupportedFeatuerException
+  public String getAuthenticationUrl()
   {
-    return new JerseyClientChangesetHandler(session, repository);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   */
-  @Override
-  public JerseyClientRepositoryBrowser getRepositoryBrowser(
-          Repository repository)
-  {
-    return new JerseyClientRepositoryBrowser(session, repository);
+    return HttpUtil.append(baseUrl, PART_AUTHENTICATION).concat(extension);
   }
 
   /**
@@ -109,58 +101,9 @@ public class JerseyRepositoryClientHandler
    * @return
    */
   @Override
-  public Collection<Type> getRepositoryTypes()
+  public String getConfigUrl()
   {
-    return session.getState().getRepositoryTypes();
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected GenericType<List<Repository>> createGenericListType()
-  {
-    return new GenericType<List<Repository>>() {}
-    ;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param response
-   * @param repository
-   * @param newRepository
-   */
-  @Override
-  protected void postCreate(ClientResponse response, Repository repository,
-                            Repository newRepository)
-  {
-    newRepository.copyProperties(repository);
-
-    // copyProperties does not copy the repository id
-    repository.setId(newRepository.getId());
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param itemId
-   *
-   * @return
-   */
-  @Override
-  protected String getItemUrl(String itemId)
-  {
-    return urlProvider.getRepositoryUrlProvider().getDetailUrl(itemId);
+    return HttpUtil.append(baseUrl, PART_CONFIG).concat(extension);
   }
 
   /**
@@ -170,8 +113,52 @@ public class JerseyRepositoryClientHandler
    * @return
    */
   @Override
-  protected String getItemsUrl()
+  public ModelUrlProvider getGroupUrlProvider()
   {
-    return urlProvider.getRepositoryUrlProvider().getAllUrl();
+    return new RestModelUrlProvider(baseUrl, PART_GROUP, extension);
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public RepositoryUrlProvider getRepositoryUrlProvider()
+  {
+    return new RestRepositoryUrlProvider(baseUrl, PART_REPOSITORIES, extension);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getStateUrl()
+  {
+    return HttpUtil.append(baseUrl, PART_STATE).concat(extension);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public ModelUrlProvider getUserUrlProvider()
+  {
+    return new RestModelUrlProvider(baseUrl, PART_USER, extension);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected String baseUrl;
+
+  /** Field description */
+  protected String extension;
 }

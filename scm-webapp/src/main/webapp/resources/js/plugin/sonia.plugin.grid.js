@@ -65,6 +65,7 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
     });
 
     var config = {
+      title: main.tabPluginsText,
       autoExpandColumn: 'description',
       store: new Sonia.plugin.Store({
         url: restUrl + 'plugins/overview.json'

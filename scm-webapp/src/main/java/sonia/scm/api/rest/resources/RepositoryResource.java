@@ -66,7 +66,6 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -244,18 +243,7 @@ public class RepositoryResource
   @Override
   public Response get(@Context Request request, @PathParam("id") String id)
   {
-    Response response = null;
-
-    if (SecurityUtil.isAdmin(securityContextProvider))
-    {
-      response = super.get(request, id);
-    }
-    else
-    {
-      response = Response.status(Response.Status.FORBIDDEN).build();
-    }
-
-    return response;
+    return super.get(request, id);
   }
 
   /**
@@ -405,6 +393,47 @@ public class RepositoryResource
     catch (NotSupportedFeatuerException ex)
     {
       response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+
+    return response;
+  }
+
+  /**
+   * Returns a repository.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>404 not found,
+   *       no repository with the specified type and name available</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   *
+   * @param request the current request
+   * @param type the type of the repository
+   * @param name the name of the repository
+   *
+   * @return the {@link Repository} with the specified type and name
+   */
+  @GET
+  @Path("{type}/{name}")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @TypeHint(Repository.class)
+  public Response getByTypeAndName(@Context Request request,
+                                   @PathParam("type") String type,
+                                   @PathParam("name") String name)
+  {
+    Response response = null;
+    Repository repository = repositoryManager.get(type, name);
+
+    if (repository != null)
+    {
+      prepareForReturn(repository);
+      response = Response.ok(repository).build();
+    }
+    else
+    {
+      response = Response.status(Response.Status.NOT_FOUND).build();
     }
 
     return response;
@@ -570,7 +599,7 @@ public class RepositoryResource
   @GET
   @Path("{id}/diff")
   @TypeHint(DiffStreamingOutput.class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  @Produces(MediaType.APPLICATION_OCTET_STREAM)
   public Response getDiff(@PathParam("id") String id,
                           @QueryParam("revision") String revision,
                           @QueryParam("path") String path)
