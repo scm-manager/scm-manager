@@ -63,6 +63,9 @@ public class GitRepositoryHandler
 {
 
   /** Field description */
+  public static final String DIRECTORY_REFS = "refs";
+
+  /** Field description */
   public static final String TYPE_DISPLAYNAME = "Git";
 
   /** Field description */
@@ -266,5 +269,19 @@ public class GitRepositoryHandler
   protected Class<GitConfig> getConfigClass()
   {
     return GitConfig.class;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   *
+   * @return
+   */
+  @Override
+  protected boolean isRepository(File directory)
+  {
+    return new File(directory, DIRECTORY_REFS).exists();
   }
 }
