@@ -343,10 +343,20 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     File repositoryDirectory = config.getRepositoryDirectory();
     File parent = directory.getParentFile();
 
-    while ((parent != null) && ! repositoryDirectory.equals(parent))
+    while ((parent != null) &&!repositoryDirectory.equals(parent))
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("check {} for existing repository", parent);
+      }
+
       if (isRepository(parent))
       {
+        if (logger.isErrorEnabled())
+        {
+          logger.error("parent path {} is a repository", parent);
+        }
+
         throw new RepositoryAllreadyExistExeption();
       }
 
