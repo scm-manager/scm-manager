@@ -416,11 +416,10 @@ public class RepositoryResource
    * @return the {@link Repository} with the specified type and name
    */
   @GET
-  @Path("{type}/{name}")
+  @Path("{type: [a-z]+}/{name: .*}")
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @TypeHint(Repository.class)
-  public Response getByTypeAndName(@Context Request request,
-                                   @PathParam("type") String type,
+  public Response getByTypeAndName(@PathParam("type") String type,
                                    @PathParam("name") String name)
   {
     Response response = null;
