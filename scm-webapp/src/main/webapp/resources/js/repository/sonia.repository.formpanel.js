@@ -69,6 +69,10 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     var url = restUrl + 'repositories/' + item.id + '.json';
     var el = this.el;
     var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
+    
+    if (item.group){
+      delete item.group;
+    }
 
     this.fireEvent('preUpdate', item);
 
