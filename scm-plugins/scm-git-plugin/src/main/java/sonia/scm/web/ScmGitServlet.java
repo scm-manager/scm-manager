@@ -36,20 +36,19 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.eclipse.jgit.http.server.GitServlet;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.resolver.RepositoryResolver;
 
+import sonia.scm.repository.GitUtil;
 import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -70,10 +69,6 @@ public class ScmGitServlet extends GitServlet
   /** Field description */
   private static final long serialVersionUID = -7712897339207470674L;
 
-  /** Field description */
-  private static final Pattern REGEX_REPOSITORYNAME =
-    Pattern.compile("/git/([^/]+)/?.*");
-
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -83,12 +78,16 @@ public class ScmGitServlet extends GitServlet
    *
    * @param repositoryResolver
    * @param receivePackFactory
+   * @param repositoryProvider
    */
   @Inject
-  public ScmGitServlet(GitRepositoryResolver repositoryResolver,
-                       GitReceivePackFactory receivePackFactory)
+  public ScmGitServlet(
+          GitRepositoryResolver repositoryResolver,
+          GitReceivePackFactory receivePackFactory,
+          Provider<sonia.scm.repository.Repository> repositoryProvider)
   {
     this.resolver = repositoryResolver;
+    this.repositoryProvider = repositoryProvider;
     setRepositoryResolver(repositoryResolver);
     setReceivePackFactory(receivePackFactory);
   }
@@ -137,42 +136,37 @@ public class ScmGitServlet extends GitServlet
                                    HttpServletResponse response)
           throws ServletException, IOException
   {
-    String uri = HttpUtil.getStrippedURI(request);
-    Matcher m = REGEX_REPOSITORYNAME.matcher(uri);
-    String name = null;
-    Repository repository = null;
+    sonia.scm.repository.Repository scmRepository = repositoryProvider.get();
 
-    try
+    if (scmRepository != null)
     {
-      if (m.matches())
-      {
-        name = m.group(1);
-        repository = resolver.open(request, name);
-      }
+      Repository repository = null;
 
-      if (repository != null)
+      try
       {
-        new GitRepositoryViewer().handleRequest(response, repository, name);
+        repository = resolver.open(request, scmRepository.getName());
+        new GitRepositoryViewer().handleRequest(response, repository,
+                scmRepository.getName());
       }
-      else
+      catch (Exception ex)
       {
-        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        throw new ServletException(ex);
+      }
+      finally
+      {
+        GitUtil.close(repository);
       }
     }
-    catch (Exception ex)
+    else
     {
-      throw new ServletException(ex);
-    }
-    finally
-    {
-      if (repository != null)
-      {
-        repository.close();
-      }
+      response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Provider<sonia.scm.repository.Repository> repositoryProvider;
 
   /** Field description */
   private RepositoryResolver<HttpServletRequest> resolver;

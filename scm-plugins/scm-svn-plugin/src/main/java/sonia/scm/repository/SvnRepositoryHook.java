@@ -46,6 +46,7 @@ import org.tmatesoft.svn.core.internal.io.fs.FSHook;
 import org.tmatesoft.svn.core.internal.io.fs.FSHookEvent;
 import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
 
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -70,10 +71,13 @@ public class SvnRepositoryHook implements FSHook
    *
    *
    * @param repositoryManager
+   * @param handler
    */
-  public SvnRepositoryHook(RepositoryManager repositoryManager)
+  public SvnRepositoryHook(RepositoryManager repositoryManager,
+                           SvnRepositoryHandler handler)
   {
     this.repositoryManager = repositoryManager;
+    this.handler = handler;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -151,8 +155,14 @@ public class SvnRepositoryHook implements FSHook
   {
     try
     {
-      repositoryManager.fireHookEvent(SvnRepositoryHandler.TYPE_NAME,
-                                      directory.getName(), hookEvent);
+      String name =
+        directory.getAbsolutePath()
+          .substring(handler.getConfig().getRepositoryDirectory()
+            .getAbsolutePath().length());
+
+      name = IOUtil.trimSeperatorChars(name);
+      repositoryManager.fireHookEvent(SvnRepositoryHandler.TYPE_NAME, name,
+                                      hookEvent);
     }
     catch (Exception ex)
     {
@@ -167,6 +177,9 @@ public class SvnRepositoryHook implements FSHook
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private SvnRepositoryHandler handler;
 
   /** Field description */
   private RepositoryManager repositoryManager;

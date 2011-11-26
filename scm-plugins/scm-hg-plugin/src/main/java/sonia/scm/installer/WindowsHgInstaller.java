@@ -272,8 +272,9 @@ public class WindowsHgInstaller extends AbstractHgInstaller
       IOUtil.copy(templateDirectory, new File(libDir, FILE_TEMPLATES));
     }
 
-    File hg = new File( hgDirectory, FILE_MERCURIAL_EXE );
-    if ( hg.exists() )
+    File hg = new File(hgDirectory, FILE_MERCURIAL_EXE);
+
+    if (hg.exists())
     {
       config.setHgBinary(hg.getAbsolutePath());
     }
@@ -322,8 +323,8 @@ public class WindowsHgInstaller extends AbstractHgInstaller
   private File getMercurialDirectory(String hgBinary)
   {
     File directory = null;
-    
-    if ( Util.isNotEmpty(hgBinary) )
+
+    if (Util.isNotEmpty(hgBinary))
     {
       File hg = new File(hgBinary);
 
@@ -332,8 +333,8 @@ public class WindowsHgInstaller extends AbstractHgInstaller
         directory = hg.getParentFile();
       }
     }
-    
-    if ( directory == null )
+
+    if (directory == null)
     {
       directory = getMercurialDirectoryFromRegistry();
     }

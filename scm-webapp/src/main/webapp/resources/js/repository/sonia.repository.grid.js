@@ -42,21 +42,55 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   searchValue: null,
   typeFilter: null,
   
+  // TODO find better text
+  mainGroup: 'main',
+  
   // for history
   parentPanel: null,
 
   initComponent: function(){
 
-    var repositoryStore = new Sonia.rest.JsonStore({
+    var repositoryStore = new Ext.data.GroupingStore({
       proxy: new Ext.data.HttpProxy({
         url: restUrl + 'repositories.json',
         disableCaching: false
       }),
       idProperty: 'id',
-      fields: [ 'id', 'name', 'type', 'contact', 'description', 'creationDate', 'url', 'public', 'permissions', 'properties' ],
+      reader: new Ext.data.JsonReader({
+        fields: [{
+          name: 'id'
+        },{
+          name: 'group',
+          convert: this.convertToGroup
+        },{
+          name: 'name'
+        },{
+          name: 'type'
+        },{
+          name: 'contact'
+        },{
+          name: 'description'
+        },{
+          name: 'creationDate'
+        },{
+          name:'url'
+        },{
+          name: 'public'
+        },{
+          name:'permissions'
+        },{
+          name: 'properties'
+        }]
+      }),
       sortInfo: {
         field: 'name'
       },
+      autoDestroy: true,
+      autoLoad: true,
+      remoteGroup: false,
+      groupOnSort: false,
+      groupField: 'group',
+      groupDir: 'AES',
       listeners: {
         load: {
           fn: this.storeLoad,
@@ -71,15 +105,57 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         scope: this,
         width: 125
       },
-      columns: [
-        {id: 'name', header: this.colNameText, dataIndex: 'name'},
-        {id: 'type', header: this.colTypeText, dataIndex: 'type', renderer: this.renderRepositoryType, width: 80},
-        {id: 'contact', header: this.colContactText, dataIndex: 'contact', renderer: this.renderMailto},
-        {id: 'description', header: this.colDescriptionText, dataIndex: 'description'},
-        {id: 'creationDate', header: this.colCreationDateText, dataIndex: 'creationDate', renderer: Ext.util.Format.formatTimestamp},
-        {id: 'Url', header: this.colUrlText, dataIndex: 'url', renderer: this.renderUrl, width: 250}
-      ]
+      columns: [{
+        id: 'name', 
+        header: this.colNameText, 
+        dataIndex: 'name', 
+        renderer: this.renderName,
+        scope: this
+      },{
+        id: 'type', 
+        header: this.colTypeText, 
+        dataIndex: 'type', 
+        renderer: this.renderRepositoryType, 
+        width: 80
+      },{
+        id: 'contact', 
+        header: this.colContactText, 
+        dataIndex: 'contact', 
+        renderer: this.renderMailto
+      },{
+        id: 'description', 
+        header: this.colDescriptionText, 
+        dataIndex: 'description'
+      },{
+        id: 'creationDate', 
+        header: this.colCreationDateText, 
+        dataIndex: 'creationDate', 
+        renderer: Ext.util.Format.formatTimestamp
+      },{
+        id: 'Url', 
+        header: this.colUrlText, 
+        dataIndex: 'url', 
+        renderer: this.renderUrl, 
+        width: 250
+      },{
+        id: 'group', 
+        dataIndex: 'group', 
+        hidden: true,
+        hideable: false,
+        groupRenderer: this.renderGroupName, 
+        scope: this
+      }]
     });
+
+    if (debug){
+      var msg = "grouping is ";
+      if ( state.clientConfig.disableGroupingGrid ){
+        msg += "disabled";
+      } else {
+        msg += "enabled";
+      }
+      console.debug( msg );
+    }
 
     var config = {
       autoExpandColumn: 'description',
@@ -91,7 +167,15 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
           fn: this.onFallBelowMinHeight,
           scope: this
         }
-      }
+      },
+      view: new Ext.grid.GroupingView({
+        enableGrouping: ! state.clientConfig.disableGroupingGrid,
+        enableNoGroups: false,
+        forceFit: true,
+        groupMode: 'value',
+        enableGroupingMenu: false,
+        groupTextTpl: '{group} ({[values.rs.length]} {[values.rs.length > 1 ? "Repositories" : "Repository"]})'
+      })
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
@@ -100,6 +184,33 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     if (this.parentPanel){
       this.parentPanel.repositoryGrid = this;
     }
+  },
+  
+  convertToGroup: function(v, data){
+    var name = data.name;
+    var i = name.lastIndexOf('/');
+    if ( i > 0 ){
+      name = name.substring(0, i);
+    } else {
+      name = "zzz__";
+    }
+    return name;
+  },
+  
+  renderName: function(v, meta, record, rowIndex, colIndex, store){
+    // TODO check if grouping is enabled
+    var i = v.lastIndexOf('/');
+    if ( i > 0 ){
+      v = v.substring(i+1);
+    }
+    return v;
+  },
+  
+  renderGroupName: function(v){
+    if (v == 'zzz__'){
+      v = this.mainGroup;
+    }
+    return v;
   },
   
   storeLoad: function(){

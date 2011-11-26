@@ -43,6 +43,8 @@ import sonia.scm.TypeManager;
 
 import java.util.Collection;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * The central class for managing {@link Repository} objects.
  * This class is a singleton and is available via injection.
@@ -79,6 +81,41 @@ public interface RepositoryManager
    * @return all configured repository types
    */
   public Collection<Type> getConfiguredTypes();
+
+  /**
+   * Returns the {@link Repository} associated to the request uri.
+   *
+   *
+   * @param request the current http request
+   *
+   * @return associated to the request uri
+   * @since 1.9
+   */
+  public Repository getFromRequest(HttpServletRequest request);
+
+  /**
+   * Returns the {@link Repository} associated to the given type and path.
+   *
+   *
+   * @param type type of the repository (hg, git ...)
+   * @param uri
+   *
+   * @return the {@link Repository} associated to the given type and path
+   * @since 1.9
+   */
+  public Repository getFromTypeAndUri(String type, String uri);
+
+  /**
+   * Returns the {@link Repository} associated to the request uri.
+   *
+   *
+   *
+   * @param uri request uri without context path
+   *
+   * @return  associated to the request uri
+   * @since 1.9
+   */
+  public Repository getFromUri(String uri);
 
   /**
    * Returns a {@link RepositoryHandler} by the given type (hg, git, svn ...).

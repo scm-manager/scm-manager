@@ -39,9 +39,8 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.web.filter.RegexPermissionFilter;
+import sonia.scm.repository.Repository;
+import sonia.scm.web.filter.ProviderPermissionFilter;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -53,7 +52,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class GitPermissionFilter extends RegexPermissionFilter
+public class GitPermissionFilter extends ProviderPermissionFilter
 {
 
   /** Field description */
@@ -76,29 +75,17 @@ public class GitPermissionFilter extends RegexPermissionFilter
    *
    *
    * @param securityContextProvider
-   * @param repositoryManager
+   * @param repositoryProvider
    */
   @Inject
   public GitPermissionFilter(
           Provider<WebSecurityContext> securityContextProvider,
-          RepositoryManager repositoryManager)
+          Provider<Repository> repositoryProvider)
   {
-    super(securityContextProvider, repositoryManager);
+    super(securityContextProvider, repositoryProvider);
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected String getType()
-  {
-    return GitRepositoryHandler.TYPE_NAME;
-  }
 
   /**
    * Method description

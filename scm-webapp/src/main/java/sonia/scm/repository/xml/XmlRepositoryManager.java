@@ -67,6 +67,7 @@ import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
@@ -86,6 +87,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -629,6 +632,89 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * Method description
    *
    *
+   * @param request
+   *
+   * @return
+   */
+  @Override
+  public Repository getFromRequest(HttpServletRequest request)
+  {
+    AssertUtil.assertIsNotNull(request);
+
+    return getFromUri(HttpUtil.getStrippedURI(request));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   * @param uri
+   *
+   * @return
+   */
+  @Override
+  public Repository getFromTypeAndUri(String type, String uri)
+  {
+    AssertUtil.assertIsNotEmpty(type);
+    AssertUtil.assertIsNotEmpty(uri);
+
+    Repository repository = null;
+
+    if (handlerMap.containsKey(type))
+    {
+      Collection<Repository> repositories = repositoryDB.values();
+
+      for (Repository r : repositories)
+      {
+        if (type.equals(r.getType()) && isNameMatching(r, uri))
+        {
+          if (isReader(r))
+          {
+            repository = r.clone();
+          }
+
+          break;
+        }
+      }
+    }
+
+    return repository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param uri
+   *
+   * @return
+   */
+  @Override
+  public Repository getFromUri(String uri)
+  {
+    AssertUtil.assertIsNotEmpty(uri);
+
+    if (uri.startsWith(HttpUtil.SEPARATOR_PATH))
+    {
+      uri = uri.substring(1);
+    }
+
+    int typeSeperator = uri.indexOf(HttpUtil.SEPARATOR_PATH);
+
+    AssertUtil.assertPositive(typeSeperator);
+
+    String type = uri.substring(0, typeSeperator);
+
+    uri = uri.substring(typeSeperator + 1);
+
+    return getFromTypeAndUri(type, uri);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param type
    *
    * @return
@@ -812,6 +898,30 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     return handler;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param path
+   *
+   * @return
+   */
+  private boolean isNameMatching(Repository repository, String path)
+  {
+    boolean result = false;
+    String name = repository.getName();
+
+    if (path.startsWith(name))
+    {
+      String sub = path.substring(name.length());
+
+      result = Util.isEmpty(sub) || sub.startsWith(HttpUtil.SEPARATOR_PATH);
+    }
+
+    return result;
   }
 
   /**

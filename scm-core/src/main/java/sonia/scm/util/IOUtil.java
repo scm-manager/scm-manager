@@ -592,6 +592,30 @@ public class IOUtil
     return cmds;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   * @since 1.9
+   */
+  public static String trimSeperatorChars(String name)
+  {
+    if (name.startsWith(File.separator))
+    {
+      name = name.substring(1);
+    }
+
+    if (name.endsWith(File.separator))
+    {
+      name = name.substring(0, name.length() - 1);
+    }
+
+    return name;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -662,6 +686,29 @@ public class IOUtil
   public static File getScript(File baseFile)
   {
     return getScript(baseFile, baseFile.getAbsolutePath());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param parent
+   * @param child
+   * @since 1.9
+   *
+   * @return
+   *
+   */
+  public static boolean isChild(File parent, File child)
+  {
+    try
+    {
+      return child.getCanonicalPath().startsWith(parent.getCanonicalPath());
+    }
+    catch (IOException ex)
+    {
+      throw new RuntimeException(ex);
+    }
   }
 
   //~--- methods --------------------------------------------------------------

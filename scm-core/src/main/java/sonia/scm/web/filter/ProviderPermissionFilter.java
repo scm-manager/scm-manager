@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
  *
@@ -29,41 +29,62 @@
  *
  */
 
-Ext.apply(Ext.form.VTypes, {
 
-  // passord validator
 
-  password: function(val, field) {
-    if (field.initialPassField) {
-      var pwd = Ext.getCmp(field.initialPassField);
-      return (val == pwd.getValue());
-    }
-    return true;
-  },
-  
-  passwordText: 'The passwords entered do not match!',
-  
-  // name validator
-  
-  name: function(val){
-    return /^[A-z0-9\.\-_]+$/.test(val);
-  },
-  
-  nameText: 'The name is invalid.',
-  
-  // repository name validator
-  repositoryName: function(val){
-    return /^[A-z0-9\.\-_\/]+$/.test(val);
-  },
-  
-  repositoryNameText: 'The name of the repository is invalid.',
-  
-  // username validator
-  
-  username: function(val){
-    return val.match(/^[^ ][A-z0-9\.\-_@ ]*[^ ]$/);
-  },
-  
-  usernameText: 'The username is invalid.'
-  
-});
+package sonia.scm.web.filter;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.inject.Provider;
+
+import sonia.scm.repository.Repository;
+import sonia.scm.web.security.WebSecurityContext;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import javax.servlet.http.HttpServletRequest;
+
+/**
+ *
+ * @author Sebastian Sdorra
+ * @since 1.9
+ */
+public abstract class ProviderPermissionFilter extends PermissionFilter
+{
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param securityContextProvider
+   * @param repositoryProvider
+   */
+  public ProviderPermissionFilter(
+          Provider<WebSecurityContext> securityContextProvider,
+          Provider<Repository> repositoryProvider)
+  {
+    super(securityContextProvider);
+    this.repositoryProvider = repositoryProvider;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  @Override
+  protected Repository getRepository(HttpServletRequest request)
+  {
+    return repositoryProvider.get();
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Provider<Repository> repositoryProvider;
+}

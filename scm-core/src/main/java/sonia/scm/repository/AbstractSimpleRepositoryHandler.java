@@ -64,6 +64,9 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
   /** Field description */
   public static final String DIRECTORY_REPOSITORY = "repositories";
 
+  /** Field description */
+  public static final String DOT = ".";
+
   /** the logger for AbstractSimpleRepositoryHandler */
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractSimpleRepositoryHandler.class);
@@ -106,6 +109,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       throw new RepositoryAllreadyExistExeption();
     }
 
+    checkPath(directory);
     fileSystem.create(directory);
     create(repository, directory);
     postCreate(repository, directory);
@@ -219,8 +223,18 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
 
     if (isConfigured())
     {
-      directory = new File(config.getRepositoryDirectory(),
-                           repository.getName());
+      File repositoryDirectory = config.getRepositoryDirectory();
+
+      directory = new File(repositoryDirectory, repository.getName());
+
+      if (!IOUtil.isChild(repositoryDirectory, directory))
+      {
+        StringBuilder msg = new StringBuilder(directory.getPath());
+
+        msg.append("is not a child of ").append(repositoryDirectory.getPath());
+
+        throw new ConfigurationException(msg.toString());
+      }
     }
     else
     {
@@ -297,6 +311,58 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    */
   protected void postCreate(Repository repository, File directory)
           throws IOException, RepositoryException {}
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns true if the directory is a repository.
+   *
+   *
+   * @param directory directory to check
+   *
+   * @return true if the directory is a repository
+   * @since 1.9
+   */
+  protected boolean isRepository(File directory)
+  {
+    return new File(directory, DOT.concat(getType().getName())).exists();
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Check path for existing repositories
+   *
+   *
+   * @param directory repository target directory
+   *
+   * @throws RepositoryAllreadyExistExeption
+   */
+  private void checkPath(File directory) throws RepositoryAllreadyExistExeption
+  {
+    File repositoryDirectory = config.getRepositoryDirectory();
+    File parent = directory.getParentFile();
+
+    while ((parent != null) &&!repositoryDirectory.equals(parent))
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("check {} for existing repository", parent);
+      }
+
+      if (isRepository(parent))
+      {
+        if (logger.isErrorEnabled())
+        {
+          logger.error("parent path {} is a repository", parent);
+        }
+
+        throw new RepositoryAllreadyExistExeption();
+      }
+
+      parent = parent.getParentFile();
+    }
+  }
 
   //~--- fields ---------------------------------------------------------------
 

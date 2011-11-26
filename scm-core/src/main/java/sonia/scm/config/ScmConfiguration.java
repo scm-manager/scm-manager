@@ -164,6 +164,7 @@ public class ScmConfiguration
     this.proxyPassword = other.proxyPassword;
     this.forceBaseUrl = other.forceBaseUrl;
     this.baseUrl = other.baseUrl;
+    this.disableGroupingGrid = other.disableGroupingGrid;
 
     // deprecated fields
     this.sslPort = other.sslPort;
@@ -346,6 +347,17 @@ public class ScmConfiguration
   }
 
   /**
+   * Method description
+   *
+   * @since 1.9
+   * @return
+   */
+  public boolean isDisableGroupingGrid()
+  {
+    return disableGroupingGrid;
+  }
+
+  /**
    * Returns true if port forwarding is enabled.
    *
    *
@@ -449,6 +461,18 @@ public class ScmConfiguration
   public void setDateFormat(String dateFormat)
   {
     this.dateFormat = dateFormat;
+  }
+
+  /**
+   * Method description
+   *
+   * @since 1.9
+   *
+   * @param disableGroupingGrid
+   */
+  public void setDisableGroupingGrid(boolean disableGroupingGrid)
+  {
+    this.disableGroupingGrid = disableGroupingGrid;
   }
 
   /**
@@ -657,6 +681,9 @@ public class ScmConfiguration
   @XmlTransient
   private Set<ConfigChangedListener> listeners =
     new HashSet<ConfigChangedListener>();
+
+  /** Field description */
+  private boolean disableGroupingGrid = false;
 
   /**
    * JavaScript date format, see http://jacwright.com/projects/javascript/date_format

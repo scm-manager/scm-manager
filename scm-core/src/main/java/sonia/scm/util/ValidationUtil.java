@@ -52,6 +52,9 @@ public class ValidationUtil
   private static final String REGEX_NAME = "^[A-z0-9\\.\\-_]+$";
 
   /** Field description */
+  private static final String REGEX_REPOSITORYNAME = "^[A-z0-9\\.\\-_/]+$";
+
+  /** Field description */
   private static final String REGEX_USERNAME = "^[^ ][A-z0-9\\.\\-_@ ]+[^ ]$";
 
   //~--- get methods ----------------------------------------------------------
@@ -123,6 +126,20 @@ public class ValidationUtil
     }
 
     return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   * @since 1.9
+   *
+   * @return
+   */
+  public static boolean isRepositoryNameValid(String name)
+  {
+    return Util.isNotEmpty(name) && name.matches(REGEX_REPOSITORYNAME);
   }
 
   /**

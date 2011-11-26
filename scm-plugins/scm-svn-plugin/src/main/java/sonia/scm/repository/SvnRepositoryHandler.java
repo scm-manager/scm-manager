@@ -102,7 +102,7 @@ public class SvnRepositoryHandler
     // register hook
     if (repositoryManager != null)
     {
-      FSHooks.registerHook(new SvnRepositoryHook(repositoryManager));
+      FSHooks.registerHook(new SvnRepositoryHook(repositoryManager, this));
     }
     else if (logger.isWarnEnabled())
     {

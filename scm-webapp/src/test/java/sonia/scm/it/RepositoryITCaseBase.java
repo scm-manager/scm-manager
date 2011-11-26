@@ -50,6 +50,7 @@ import sonia.scm.repository.client.RepositoryClientFactory;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 import static org.junit.Assert.*;
 
@@ -220,36 +221,7 @@ public class RepositoryITCaseBase
 
     for (Type t : state.getRepositoryTypes())
     {
-      if (t.getName().equals("git"))
-      {
-        Repository gitRepository = createTestRepository("git", owner, write,
-                                     read);
-
-        params.add(new Object[]
-        {
-          gitRepository, owner, write, read, noperm, "secret"
-        });
-      }
-      else if (t.getName().equals("svn"))
-      {
-        Repository svnRepository = createTestRepository("svn", owner, write,
-                                     read);
-
-        params.add(new Object[]
-        {
-          svnRepository, owner, write, read, noperm, "secret"
-        });
-      }
-      else if (t.getName().equals("hg"))
-      {
-        Repository hgRepository = createTestRepository("hg", owner, write,
-                                    read);
-
-        params.add(new Object[]
-        {
-          hgRepository, owner, write, read, noperm, "secret"
-        });
-      }
+      appendTestParemeter(params, t.getName(), owner, write, read, noperm);
     }
 
     return params;
@@ -259,6 +231,40 @@ public class RepositoryITCaseBase
    * Method description
    *
    *
+   * @param params
+   * @param type
+   * @param owner
+   * @param write
+   * @param read
+   * @param noperm
+   *
+   * @throws IOException
+   * @throws RepositoryClientException
+   */
+  private static void appendTestParemeter(Collection<Object[]> params,
+          String type, User owner, User write, User read, User noperm)
+          throws RepositoryClientException, IOException
+  {
+    Repository repository = createTestRepository(null, type, owner, write,
+                              read);
+
+    params.add(new Object[]
+    {
+      repository, owner, write, read, noperm, "secret"
+    });
+    repository = createTestRepository("test", type, owner, write, read);
+    params.add(new Object[]
+    {
+      repository, owner, write, read, noperm, "secret"
+    });
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param prefix
    * @param type
    * @param owner
    * @param write
@@ -269,12 +275,17 @@ public class RepositoryITCaseBase
    * @throws IOException
    * @throws RepositoryClientException
    */
-  private static Repository createTestRepository(String type, User owner,
-          User write, User read)
+  private static Repository createTestRepository(String prefix, String type,
+          User owner, User write, User read)
           throws RepositoryClientException, IOException
   {
     Client client = createAdminClient();
     Repository repository = RepositoryTestData.createHeartOfGold(type);
+
+    if (Util.isNotEmpty(prefix))
+    {
+      repository.setName(prefix.concat("/").concat(repository.getName()));
+    }
 
     //J-
     repository.setPermissions(Arrays.asList(

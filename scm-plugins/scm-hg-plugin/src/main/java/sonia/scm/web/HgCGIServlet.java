@@ -36,6 +36,7 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.config.ScmConfiguration;
@@ -55,7 +56,6 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Enumeration;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
@@ -102,19 +102,19 @@ public class HgCGIServlet extends HttpServlet
    *
    * @param cgiExecutorFactory
    * @param configuration
-   * @param repositoryManager
+   * @param repositoryProvider
    * @param handler
    * @param hookManager
    */
   @Inject
   public HgCGIServlet(CGIExecutorFactory cgiExecutorFactory,
                       ScmConfiguration configuration,
-                      RepositoryManager repositoryManager,
+                      Provider<Repository> repositoryProvider,
                       HgRepositoryHandler handler, HgHookManager hookManager)
   {
     this.cgiExecutorFactory = cgiExecutorFactory;
     this.configuration = configuration;
-    this.repositoryManager = repositoryManager;
+    this.repositoryProvider = repositoryProvider;
     this.handler = handler;
     this.hookManager = hookManager;
   }
@@ -149,7 +149,7 @@ public class HgCGIServlet extends HttpServlet
                          HttpServletResponse response)
           throws ServletException, IOException
   {
-    Repository repository = getRepository(request);
+    Repository repository = repositoryProvider.get();
 
     if (repository == null)
     {
@@ -244,46 +244,6 @@ public class HgCGIServlet extends HttpServlet
     return python;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  private Repository getRepository(HttpServletRequest request)
-  {
-    Repository repository = null;
-    String uri = request.getRequestURI();
-
-    uri = uri.substring(request.getContextPath().length());
-
-    Matcher m = PATTERN_REPOSITORYNAME.matcher(uri);
-
-    if (m.matches())
-    {
-      String repositoryname = m.group(1);
-
-      repository = getRepository(repositoryname);
-    }
-
-    return repository;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryname
-   *
-   * @return
-   */
-  private Repository getRepository(String repositoryname)
-  {
-    return repositoryManager.get(HgRepositoryHandler.TYPE_NAME, repositoryname);
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -302,5 +262,5 @@ public class HgCGIServlet extends HttpServlet
   private HgHookManager hookManager;
 
   /** Field description */
-  private RepositoryManager repositoryManager;
+  private Provider<Repository> repositoryProvider;
 }

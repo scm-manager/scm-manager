@@ -77,7 +77,6 @@ public class UnixHgInstaller extends AbstractHgInstaller
     super.install(baseDirectory, config);
 
     // search mercurial (hg)
-    
     if (Util.isEmpty(config.getHgBinary()))
     {
       String hg = IOUtil.search(COMMAND_HG);
@@ -100,9 +99,8 @@ public class UnixHgInstaller extends AbstractHgInstaller
         }
       }
     }
-    
-    // search python
 
+    // search python
     if (Util.isEmpty(config.getPythonBinary()))
     {
       config.setPythonBinary(IOUtil.search(COMMAND_PYTHON));

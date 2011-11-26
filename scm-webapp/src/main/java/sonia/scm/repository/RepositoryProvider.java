@@ -31,23 +31,15 @@
 
 
 
-package sonia.scm.web;
+package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.google.inject.Singleton;
-
-import sonia.scm.repository.Repository;
-import sonia.scm.web.filter.ProviderPermissionFilter;
-import sonia.scm.web.security.WebSecurityContext;
+import com.google.inject.servlet.RequestScoped;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -55,15 +47,12 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class SvnPermissionFilter extends ProviderPermissionFilter
+@RequestScoped
+public class RepositoryProvider implements Provider<Repository>
 {
 
   /** Field description */
-  private static Set<String> WRITEMETHOD_SET =
-    new HashSet<String>(Arrays.asList("MKACTIVITY", "PROPPATCH", "PUT",
-      "CHECKOUT", "MKCOL", "MOVE", "COPY", "DELETE", "LOCK", "UNLOCK",
-      "MERGE"));
+  public static final String ATTRIBUTE_NAME = "scm.request.repository";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -71,16 +60,15 @@ public class SvnPermissionFilter extends ProviderPermissionFilter
    * Constructs ...
    *
    *
-   *
-   * @param securityContextProvider
-   * @param repository
+   * @param requestProvider
+   * @param manager
    */
   @Inject
-  public SvnPermissionFilter(
-          Provider<WebSecurityContext> securityContextProvider,
-          Provider<Repository> repository)
+  public RepositoryProvider(Provider<HttpServletRequest> requestProvider,
+                            RepositoryManager manager)
   {
-    super(securityContextProvider, repository);
+    this.requestProvider = requestProvider;
+    this.manager = manager;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -89,13 +77,37 @@ public class SvnPermissionFilter extends ProviderPermissionFilter
    * Method description
    *
    *
-   * @param request
-   *
    * @return
    */
   @Override
-  protected boolean isWriteRequest(HttpServletRequest request)
+  public Repository get()
   {
-    return WRITEMETHOD_SET.contains(request.getMethod().toUpperCase());
+    Repository repository = null;
+    HttpServletRequest request = requestProvider.get();
+
+    if (request != null)
+    {
+      repository = (Repository) request.getAttribute(ATTRIBUTE_NAME);
+
+      if (repository == null)
+      {
+        repository = manager.getFromRequest(request);
+
+        if (repository != null)
+        {
+          request.setAttribute(ATTRIBUTE_NAME, repository);
+        }
+      }
+    }
+
+    return repository;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private RepositoryManager manager;
+
+  /** Field description */
+  private Provider<HttpServletRequest> requestProvider;
 }

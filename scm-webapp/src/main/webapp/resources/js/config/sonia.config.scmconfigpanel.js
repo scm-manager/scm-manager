@@ -57,6 +57,9 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   baseUrlText: 'Base Url',
   forceBaseUrlText: 'Force Base Url',
   
+  // TODO i18n
+  disableGroupingGridText: 'Disable repository Groups',
+  
 
   // help
   servernameHelpText: 'The name of this server. This name will be part of the repository url.',
@@ -79,6 +82,9 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   proxyPasswordHelpText: 'The password for the proxy server authentication.',
   baseUrlHelpText: 'The url of the application (with context path) i.e. http://localhost:8080/scm',
   forceBaseUrlHelpText: 'Redirects to the base url if the request comes from a other url',
+  
+  // TODO i18n
+  disableGroupingGridHelpText: 'Disable repository Groups. A complete page reload is required after a change of this value.',
 
 
   initComponent: function(){
@@ -100,6 +106,12 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'force-base-url',
           inputValue: 'true',
           helpText: this.forceBaseUrlHelpText
+        },{
+          xtype: 'checkbox',
+          fieldLabel: this.disableGroupingGridText,
+          name: 'disableGroupingGrid',
+          inputValue: 'true',
+          helpText: this.disableGroupingGridHelpText
         },{
           xtype: 'textfield',
           fieldLabel: this.dateFormatText,

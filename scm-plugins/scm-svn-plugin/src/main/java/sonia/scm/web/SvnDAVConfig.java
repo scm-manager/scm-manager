@@ -35,10 +35,17 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Provider;
+
 import org.tmatesoft.svn.core.internal.server.dav.DAVConfig;
 import org.tmatesoft.svn.core.internal.server.dav.SVNPathBasedAccess;
 
-import sonia.scm.repository.SvnConfig;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.SvnRepositoryHandler;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
 
 /**
  *
@@ -52,12 +59,15 @@ public class SvnDAVConfig extends DAVConfig
    *
    *
    * @param davConfig
-   * @param config
+   * @param handler
+   * @param repositoryProvider
    */
-  public SvnDAVConfig(DAVConfig davConfig, SvnConfig config)
+  public SvnDAVConfig(DAVConfig davConfig, SvnRepositoryHandler handler,
+                      Provider<Repository> repositoryProvider)
   {
     this.davConfig = davConfig;
-    this.config = config;
+    this.handler = handler;
+    this.repositoryProvider = repositoryProvider;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -71,7 +81,7 @@ public class SvnDAVConfig extends DAVConfig
   @Override
   public String getActivitiesDBPath()
   {
-    return davConfig.getActivitiesDBPath();
+    return null;
   }
 
   /**
@@ -95,7 +105,19 @@ public class SvnDAVConfig extends DAVConfig
   @Override
   public String getRepositoryParentPath()
   {
-    return config.getRepositoryDirectory().getAbsolutePath();
+    String path = null;
+    File directory = getRepositoryDirectory();
+
+    if (directory != null)
+    {
+      path = directory.getParent();
+    }
+    else
+    {
+      path = davConfig.getRepositoryPath();
+    }
+
+    return path;
   }
 
   /**
@@ -107,7 +129,19 @@ public class SvnDAVConfig extends DAVConfig
   @Override
   public String getRepositoryPath()
   {
-    return davConfig.getRepositoryPath();
+    String path = null;
+    File directory = getRepositoryDirectory();
+
+    if (directory != null)
+    {
+      path = directory.getAbsolutePath();
+    }
+    else
+    {
+      path = davConfig.getRepositoryPath();
+    }
+
+    return path;
   }
 
   /**
@@ -227,14 +261,36 @@ public class SvnDAVConfig extends DAVConfig
   @Override
   public boolean isUsingRepositoryPathDirective()
   {
-    return davConfig.isUsingRepositoryPathDirective();
+    return true;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private File getRepositoryDirectory()
+  {
+    File directory = null;
+    Repository repository = repositoryProvider.get();
+
+    if (repository != null)
+    {
+      directory = handler.getDirectory(repository);
+    }
+
+    return directory;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SvnConfig config;
+  private DAVConfig davConfig;
 
   /** Field description */
-  private DAVConfig davConfig;
+  private SvnRepositoryHandler handler;
+
+  /** Field description */
+  private Provider<Repository> repositoryProvider;
 }
