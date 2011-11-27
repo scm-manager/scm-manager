@@ -659,6 +659,9 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     AssertUtil.assertIsNotEmpty(type);
     AssertUtil.assertIsNotEmpty(uri);
 
+    // remove ;jsessionid, jetty bug?
+    uri = HttpUtil.removeMatrixParameter(uri);
+
     Repository repository = null;
 
     if (handlerMap.containsKey(type))
@@ -677,6 +680,12 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
           break;
         }
       }
+    }
+
+    if ((repository == null) && logger.isDebugEnabled())
+    {
+      logger.debug("could not find repository with type {} and uri {}", type,
+                   uri);
     }
 
     return repository;
