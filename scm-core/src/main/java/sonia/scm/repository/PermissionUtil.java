@@ -118,26 +118,33 @@ public class PermissionUtil
   public static boolean hasPermission(Repository repository,
           WebSecurityContext securityContext, PermissionType pt)
   {
-    User user = securityContext.getUser();
-    String username = user.getName();
-
-    AssertUtil.assertIsNotEmpty(username);
-
     boolean result = false;
 
-    if (user.isAdmin()
-        || ((pt == PermissionType.READ) && repository.isPublicReadable()))
+    if (securityContext != null)
     {
-      result = true;
-    }
-    else
-    {
-      List<Permission> permissions = repository.getPermissions();
+      User user = securityContext.getUser();
 
-      if (permissions != null)
+      if (user != null)
       {
-        result = hasPermission(permissions, username,
-                               securityContext.getGroups(), pt);
+        String username = user.getName();
+
+        AssertUtil.assertIsNotEmpty(username);
+
+        if (user.isAdmin()
+            || ((pt == PermissionType.READ) && repository.isPublicReadable()))
+        {
+          result = true;
+        }
+        else
+        {
+          List<Permission> permissions = repository.getPermissions();
+
+          if (permissions != null)
+          {
+            result = hasPermission(permissions, username,
+                                   securityContext.getGroups(), pt);
+          }
+        }
       }
     }
 
