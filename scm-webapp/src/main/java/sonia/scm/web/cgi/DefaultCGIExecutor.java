@@ -247,11 +247,14 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    */
   private EnvList createEnvironment()
   {
-    String pathInfo = request.getPathInfo();
-    String scriptName = request.getRequestURI().substring(0,
-                          request.getRequestURI().length() - pathInfo.length());
+
+    // remove ;jsessionid
+    String pathInfo = HttpUtil.removeMatrixParameter(request.getPathInfo());
+    String uri = HttpUtil.removeMatrixParameter(request.getRequestURI());
+    String scriptName = uri.substring(0, uri.length() - pathInfo.length());
     String scriptPath = context.getRealPath(scriptName);
-    String pathTranslated = request.getPathTranslated();
+    String pathTranslated =
+      HttpUtil.removeMatrixParameter(request.getPathTranslated());
     int len = request.getContentLength();
     EnvList env = new EnvList();
 
