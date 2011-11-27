@@ -46,7 +46,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
