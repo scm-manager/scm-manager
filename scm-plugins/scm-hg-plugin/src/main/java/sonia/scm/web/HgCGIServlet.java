@@ -39,11 +39,15 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
@@ -85,6 +89,10 @@ public class HgCGIServlet extends HttpServlet
   /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
 
+  /** the logger for HgCGIServlet */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgCGIServlet.class);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -99,18 +107,21 @@ public class HgCGIServlet extends HttpServlet
    * @param repositoryProvider
    * @param handler
    * @param hookManager
+   * @param requestListenerUtil
    */
   @Inject
   public HgCGIServlet(CGIExecutorFactory cgiExecutorFactory,
                       ScmConfiguration configuration,
                       Provider<Repository> repositoryProvider,
-                      HgRepositoryHandler handler, HgHookManager hookManager)
+                      HgRepositoryHandler handler, HgHookManager hookManager,
+                      RepositoryRequestListenerUtil requestListenerUtil)
   {
     this.cgiExecutorFactory = cgiExecutorFactory;
     this.configuration = configuration;
     this.repositoryProvider = repositoryProvider;
     this.handler = handler;
     this.hookManager = hookManager;
+    this.requestListenerUtil = requestListenerUtil;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -150,6 +161,53 @@ public class HgCGIServlet extends HttpServlet
       throw new ServletException("repository not found");
     }
 
+    if (requestListenerUtil.callListeners(request, response, repository))
+    {
+      process(request, response, repository);
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("request aborted by repository request listener");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param env
+   * @param session
+   */
+  private void passSessionAttributes(EnvList env, HttpSession session)
+  {
+    Enumeration<String> enm = session.getAttributeNames();
+
+    while (enm.hasMoreElements())
+    {
+      String key = enm.nextElement();
+
+      if (key.startsWith(ENV_SESSION_PREFIX))
+      {
+        env.set(key, session.getAttribute(key).toString());
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   * @param repository
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  private void process(HttpServletRequest request,
+                       HttpServletResponse response, Repository repository)
+          throws IOException, ServletException
+  {
     String name = repository.getName();
     File directory = handler.getDirectory(repository);
     String pythonPath = "";
@@ -190,28 +248,6 @@ public class HgCGIServlet extends HttpServlet
     }
 
     executor.execute(command.getAbsolutePath());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param env
-   * @param session
-   */
-  private void passSessionAttributes(EnvList env, HttpSession session)
-  {
-    Enumeration<String> enm = session.getAttributeNames();
-
-    while (enm.hasMoreElements())
-    {
-      String key = enm.nextElement();
-
-      if (key.startsWith(ENV_SESSION_PREFIX))
-      {
-        env.set(key, session.getAttribute(key).toString());
-      }
-    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -257,4 +293,7 @@ public class HgCGIServlet extends HttpServlet
 
   /** Field description */
   private Provider<Repository> repositoryProvider;
+
+  /** Field description */
+  private RepositoryRequestListenerUtil requestListenerUtil;
 }
