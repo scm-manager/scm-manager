@@ -701,14 +701,17 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     int typeSeperator = uri.indexOf(HttpUtil.SEPARATOR_PATH);
+    Repository repository = null;
 
-    AssertUtil.assertPositive(typeSeperator);
+    if (typeSeperator > 0)
+    {
+      String type = uri.substring(0, typeSeperator);
 
-    String type = uri.substring(0, typeSeperator);
+      uri = uri.substring(typeSeperator + 1);
+      repository = getFromTypeAndUri(type, uri);
+    }
 
-    uri = uri.substring(typeSeperator + 1);
-
-    return getFromTypeAndUri(type, uri);
+    return repository;
   }
 
   /**
