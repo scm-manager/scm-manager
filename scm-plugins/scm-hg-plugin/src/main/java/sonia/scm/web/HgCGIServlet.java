@@ -44,7 +44,6 @@ import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
@@ -56,7 +55,6 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Enumeration;
-import java.util.regex.Pattern;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -86,10 +84,6 @@ public class HgCGIServlet extends HttpServlet
 
   /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
-
-  /** Field description */
-  public static final Pattern PATTERN_REPOSITORYNAME =
-    Pattern.compile("/[^/]+/([^/]+)(?:/.*)?");
 
   //~--- constructors ---------------------------------------------------------
 
