@@ -253,6 +253,27 @@ public class HttpUtil
   }
 
   /**
+   * Method description
+   *
+   *
+   * @param uri
+   *
+   * @return
+   * @since 1.10
+   */
+  public static String removeMatrixParameter(String uri)
+  {
+    int index = uri.indexOf(";");
+
+    if (index > 0)
+    {
+      uri = uri.substring(0, index);
+    }
+
+    return uri;
+  }
+
+  /**
    * Send an unauthorized header back to the client
    *
    *
