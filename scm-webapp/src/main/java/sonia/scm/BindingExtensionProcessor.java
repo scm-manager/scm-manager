@@ -51,6 +51,7 @@ import sonia.scm.repository.ChangesetPreProcessorFactory;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHook;
 import sonia.scm.repository.RepositoryListener;
+import sonia.scm.repository.RepositoryRequestListener;
 import sonia.scm.resources.ResourceHandler;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.UserListener;
@@ -120,6 +121,8 @@ public class BindingExtensionProcessor implements ExtensionProcessor
       Multibinder.newSetBinder(binder, GroupListener.class);
     Multibinder<AuthenticationListener> authenticationListenerBinder =
       Multibinder.newSetBinder(binder, AuthenticationListener.class);
+    Multibinder<RepositoryRequestListener> repositoryRequestListenerBinder =
+      Multibinder.newSetBinder(binder, RepositoryRequestListener.class);
 
     authenticators.addBinding().to(XmlAuthenticationHandler.class);
 
@@ -239,6 +242,16 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
         repositoryHookBinder.addBinding().to(extensionClass);
       }
+      else if (RepositoryRequestListener.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind RepositoryRequestListener {}",
+                      extensionClass.getName());
+        }
+
+        repositoryRequestListenerBinder.addBinding().to(extensionClass);
+      }
       else
       {
         if (logger.isInfoEnabled())
@@ -343,7 +356,6 @@ public class BindingExtensionProcessor implements ExtensionProcessor
    * @param bindingType
    * @param <T>
    *
-   * @return
    */
   private <T> void bind(Binder binder, Class<T> type,
                         Class<? extends T> bindingType)
