@@ -40,7 +40,8 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   iconDocument: 'resources/images/document.gif',
   iconSubRepository: 'resources/images/folder-remote.gif',
   templateIcon: '<img src="{0}" alt="{1}" title="{2}" />',
-  templateLink: '<a class="scm-browser" rel="{1}">{0}</a>',
+  templateInternalLink: '<a class="scm-browser" rel="{1}">{0}</a>',
+  templateExternalLink: '<a class="scm-browser" href="{1}" target="_blank">{0}</a>',
   
   emptyText: 'This directory is empty',
 
@@ -301,18 +302,25 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     var subRepository = record.get('subRepositoryUrl');
     var folder = record.get('directory');
     var path = null;
+    var template = null;
     if ( subRepository ){
-      path = 'subrepo:' + subRepository;
+      // path = 'subrepo:' + subRepository;
+      // TODO check for internal link
+      
+      // internal
+      path = subRepository;
+      template = this.templateExternalLink;
     } else {
       if (folder){
         path = 'dir:';
       } else {
         path = 'file:';
       }
-      path += record.data.path;
+      path += record.get('path');
+      template = this.templateInternalLink;
     }
     
-    return String.format(this.templateLink, name, path);
+    return String.format(template, name, path);
   },
   
   renderIcon: function(directory, p, record){
