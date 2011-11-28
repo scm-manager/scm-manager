@@ -108,7 +108,7 @@ for dir in directories:
   print '      <directory>true</directory>'
   subrepo = subrepos[dir]
   if subrepo != None:
-    print '      <subRepositoryUrl>' + subrepo + '<subRepositoryUrl>'
+    print '      <subRepositoryUrl>' + subrepo + '</subRepositoryUrl>'
   print '    </file>'
     
 for file in files:
