@@ -39,10 +39,14 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.tmatesoft.svn.core.internal.server.dav.DAVConfig;
 import org.tmatesoft.svn.core.internal.server.dav.DAVServlet;
 
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
@@ -67,6 +71,10 @@ public class SvnDAVServlet extends DAVServlet
   /** Field description */
   private static final long serialVersionUID = -1462257085465785945L;
 
+  /** the logger for SvnDAVServlet */
+  private static final Logger logger =
+    LoggerFactory.getLogger(SvnDAVServlet.class);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -75,13 +83,17 @@ public class SvnDAVServlet extends DAVServlet
    *
    * @param handler
    * @param repositoryProvider
+   * @param repositoryRequestListenerUtil
    */
   @Inject
-  public SvnDAVServlet(SvnRepositoryHandler handler,
-                       Provider<Repository> repositoryProvider)
+  public SvnDAVServlet(
+          SvnRepositoryHandler handler,
+          Provider<Repository> repositoryProvider,
+          RepositoryRequestListenerUtil repositoryRequestListenerUtil)
   {
     this.handler = handler;
     this.repositoryProvider = repositoryProvider;
+    this.repositoryRequestListenerUtil = repositoryRequestListenerUtil;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -100,8 +112,26 @@ public class SvnDAVServlet extends DAVServlet
   public void service(HttpServletRequest request, HttpServletResponse response)
           throws ServletException, IOException
   {
-    super.service(new SvnHttpServletRequestWrapper(request,
-            repositoryProvider), response);
+    Repository repository = repositoryProvider.get();
+
+    if (repository != null)
+    {
+      if (repositoryRequestListenerUtil.callListeners(request, response,
+              repository))
+      {
+        super.service(new SvnHttpServletRequestWrapper(request,
+                repositoryProvider), response);
+      }
+      else if (logger.isDebugEnabled())
+      {
+        logger.debug("request aborted by repository request listener");
+      }
+    }
+    else
+    {
+      super.service(new SvnHttpServletRequestWrapper(request,
+              repositoryProvider), response);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -214,4 +244,7 @@ public class SvnDAVServlet extends DAVServlet
 
   /** Field description */
   private Provider<Repository> repositoryProvider;
+
+  /** Field description */
+  private RepositoryRequestListenerUtil repositoryRequestListenerUtil;
 }
