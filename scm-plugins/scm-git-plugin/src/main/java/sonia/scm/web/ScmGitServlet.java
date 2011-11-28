@@ -131,7 +131,7 @@ public class ScmGitServlet extends GitServlet
         if (repositoryRequestListenerUtil.callListeners(request, response,
                 repository))
         {
-          service(request, response);
+          super.service(request, response);
         }
         else if (logger.isDebugEnabled())
         {
