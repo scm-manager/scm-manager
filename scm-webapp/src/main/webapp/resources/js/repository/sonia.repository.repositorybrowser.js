@@ -38,6 +38,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   
   iconFolder: 'resources/images/folder.gif',
   iconDocument: 'resources/images/document.gif',
+  iconSubRepository: 'resources/images/folder-remote.gif',
   templateIcon: '<img src="{0}" alt="{1}" title="{2}" />',
   templateLink: '<a class="scm-browser" rel="{1}">{0}</a>',
   
@@ -54,7 +55,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         url: restUrl + 'repositories/' + this.repository.id  + '/browse.json',
         method: 'GET'
       }),
-      fields: ['path', 'name', 'length', 'lastModified', 'directory', 'description'],
+      fields: ['path', 'name', 'length', 'lastModified', 'directory', 'description', 'subRepositoryUrl'],
       root: 'files',
       idProperty: 'path',
       autoLoad: true,
@@ -108,6 +109,10 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         id: 'description',
         dataIndex: 'description',
         header: 'Description'
+      },{
+        id: 'subRepositoryUrl',
+        dataIndex: 'subRepositoryUrl',
+        hidden: true
       }]
     });
     
@@ -174,14 +179,28 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     
     if ( el != null ){
     
-      var rel = el.rel.split(':');
-      var path = rel[1];
+      var rel = el.rel;
+      var index = rel.indexOf(':');
+      if ( index > 0 ){
+        var prefix = rel.substring(0, index);
+        var path = rel.substring(index + 1);
 
-      if ( rel[0] == 'dir' ){
-        this.changeDirectory(path);
-      } else {
-        this.openFile(path);
+        console.debug( path );
+
+        if ( prefix == 'subrepo' ){
+          this.openSubRepository(path);
+        } else if ( prefix == 'dir' ){
+          this.changeDirectory(path);
+        } else {
+          this.openFile(path);
+        }
       }
+    }
+  },
+  
+  openSubRepository: function(subRepository){
+    if (debug){
+      console.debug('open sub repository ' + subRepository);
     }
   },
   
@@ -279,15 +298,30 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   },
   
   renderName: function(name, p, record){
-    var path = record.data.directory ? 'dir:' : 'file:';
-    path += record.data.path;
+    var subRepository = record.get('subRepositoryUrl');
+    var folder = record.get('directory');
+    var path = null;
+    if ( subRepository ){
+      path = 'subrepo:' + subRepository;
+    } else {
+      if (folder){
+        path = 'dir:';
+      } else {
+        path = 'file:';
+      }
+      path += record.data.path;
+    }
+    
     return String.format(this.templateLink, name, path);
   },
   
   renderIcon: function(directory, p, record){
     var icon = null;
-    var name = record.data.name;
-    if ( directory ){
+    var subRepository = record.get('subRepositoryUrl');
+    var name = record.get('name');
+    if ( subRepository ){
+      icon = this.iconSubRepository;
+    } else if (directory){
       icon = this.iconFolder;
     } else {
       icon = this.iconDocument;
