@@ -44,6 +44,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.resolver.RepositoryResolver;
 
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -79,15 +80,18 @@ public class ScmGitServlet extends GitServlet
    * @param repositoryResolver
    * @param receivePackFactory
    * @param repositoryProvider
+   * @param repositoryRequestListenerUtil
    */
   @Inject
   public ScmGitServlet(
           GitRepositoryResolver repositoryResolver,
           GitReceivePackFactory receivePackFactory,
-          Provider<sonia.scm.repository.Repository> repositoryProvider)
+          Provider<sonia.scm.repository.Repository> repositoryProvider,
+          RepositoryRequestListenerUtil repositoryRequestListenerUtil)
   {
     this.resolver = repositoryResolver;
     this.repositoryProvider = repositoryProvider;
+    this.repositoryRequestListenerUtil = repositoryRequestListenerUtil;
     setRepositoryResolver(repositoryResolver);
     setReceivePackFactory(receivePackFactory);
   }
@@ -113,6 +117,14 @@ public class ScmGitServlet extends GitServlet
 
     if (uri.matches(REGEX_GITHTTPBACKEND))
     {
+      sonia.scm.repository.Repository repository = repositoryProvider.get();
+
+      if (repository != null)
+      {
+        repositoryRequestListenerUtil.callListeners(request, response,
+                repository);
+      }
+
       super.service(request, response);
     }
     else
@@ -167,6 +179,9 @@ public class ScmGitServlet extends GitServlet
 
   /** Field description */
   private Provider<sonia.scm.repository.Repository> repositoryProvider;
+
+  /** Field description */
+  private RepositoryRequestListenerUtil repositoryRequestListenerUtil;
 
   /** Field description */
   private RepositoryResolver<HttpServletRequest> resolver;
