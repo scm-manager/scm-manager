@@ -43,6 +43,9 @@ import org.eclipse.jgit.http.server.GitServlet;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.resolver.RepositoryResolver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.util.HttpUtil;
@@ -69,6 +72,10 @@ public class ScmGitServlet extends GitServlet
 
   /** Field description */
   private static final long serialVersionUID = -7712897339207470674L;
+
+  /** the logger for ScmGitServlet */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ScmGitServlet.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -121,11 +128,20 @@ public class ScmGitServlet extends GitServlet
 
       if (repository != null)
       {
-        repositoryRequestListenerUtil.callListeners(request, response,
-                repository);
+        if (repositoryRequestListenerUtil.callListeners(request, response,
+                repository))
+        {
+          service(request, response);
+        }
+        else if (logger.isDebugEnabled())
+        {
+          logger.debug("request aborted by repository request listener");
+        }
       }
-
-      super.service(request, response);
+      else
+      {
+        super.service(request, response);
+      }
     }
     else
     {
