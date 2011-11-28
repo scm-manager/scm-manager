@@ -42,6 +42,7 @@ import org.tmatesoft.svn.core.SVNDirEntry;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNNodeKind;
 import org.tmatesoft.svn.core.SVNProperties;
+import org.tmatesoft.svn.core.SVNProperty;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
@@ -171,7 +172,8 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
 
       for (SVNDirEntry entry : entries)
       {
-        children.add(createFileObject(entry, basePath));
+        children.add(createFileObject(svnRepository, revisionNumber, entry,
+                                      basePath));
       }
 
       result = new BrowserResult();
@@ -210,12 +212,16 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
    * Method description
    *
    *
+   *
+   * @param repository
+   * @param revision
    * @param entry
    * @param path
    *
    * @return
    */
-  private FileObject createFileObject(SVNDirEntry entry, String path)
+  private FileObject createFileObject(SVNRepository repository, long revision,
+          SVNDirEntry entry, String path)
   {
     FileObject fileObject = new FileObject();
 
@@ -231,7 +237,43 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
     fileObject.setLength(entry.getSize());
     fileObject.setDescription(entry.getCommitMessage());
 
+    if (fileObject.isDirectory() && entry.hasProperties())
+    {
+      fetchExternalsProperty(repository, revision, entry, fileObject);
+    }
+
     return fileObject;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param revision
+   * @param entry
+   * @param fileObject
+   */
+  private void fetchExternalsProperty(SVNRepository repository, long revision,
+          SVNDirEntry entry, FileObject fileObject)
+  {
+    try
+    {
+      SVNProperties properties = new SVNProperties();
+
+      repository.getFile(entry.getRelativePath(), revision, properties, null);
+
+      String externals = properties.getStringValue(SVNProperty.EXTERNALS);
+
+      if (Util.isNotEmpty(externals))
+      {
+        fileObject.setSubRepositoryUrl(externals);
+      }
+    }
+    catch (SVNException ex)
+    {
+      logger.error("could not fetch file properties");
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
