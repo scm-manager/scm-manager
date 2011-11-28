@@ -57,7 +57,14 @@ name = getName(path)
 length = 0
 paths = []
 repo = hg.repository(ui.ui(), path = repositoryPath)
-mf = repo[revision].manifest()
+subrepos = {}
+revCtx = repo[revision]
+mf = revCtx.manifest()
+hgsub = revCtx.filectx('.hgsub').data().split('\n')
+for line in hgsub:
+  parts = line.split('=')
+  if len(parts) > 1:
+    subrepos[parts[0].strip()] = parts[1].strip()
 
 if path is "":
   length = 1
@@ -71,6 +78,10 @@ else:
 
 files = []
 directories = []
+
+for k, v in subrepos.iteritems():
+  if k.startswith(path):
+    directories.append(k)
 
 for p in paths:
   parts = p.split('/')
@@ -91,23 +102,26 @@ print '  <revision>' + revision + '</revision>'
 # todo print tag, and branch
 print '  <files>'
 for dir in directories:
-  print '  <file>'
-  print '    <name>' + getName(dir) + '</name>'
-  print '    <path>' + dir + '</path>'
-  print '    <directory>true</directory>'
-  print '  </file>'
+  print '    <file>'
+  print '      <name>' + getName(dir) + '</name>'
+  print '      <path>' + dir + '</path>'
+  print '      <directory>true</directory>'
+  subrepo = subrepos[dir]
+  if subrepo != None:
+    print '      <subRepositoryUrl>' + subrepo + '<subRepositoryUrl>'
+  print '    </file>'
     
 for file in files:
   linkrev = repo[file.linkrev()]
   time = int(linkrev.date()[0]) * 1000
   desc = linkrev.description()
-  print '  <file>'
-  print '    <name>' + getName(file.path()) + '</name>'
-  print '    <path>' + file.path() + '</path>'
-  print '    <directory>false</directory>'
-  print '    <length>' + str(file.size()) + '</length>'
-  print '    <lastModified>' + str(time).split('.')[0] + '</lastModified>'
-  print '    <description>' + desc + '</description>'
-  print '  </file>'
+  print '    <file>'
+  print '      <name>' + getName(file.path()) + '</name>'
+  print '      <path>' + file.path() + '</path>'
+  print '      <directory>false</directory>'
+  print '      <length>' + str(file.size()) + '</length>'
+  print '      <lastModified>' + str(time).split('.')[0] + '</lastModified>'
+  print '      <description>' + desc + '</description>'
+  print '    </file>'
 print '  </files>'
 print '</browser-result>'
