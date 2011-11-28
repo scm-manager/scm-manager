@@ -109,6 +109,17 @@ public class FileObject implements LastModifiedAware
   /**
    * Method description
    *
+   * @since 1.10
+   * @return
+   */
+  public String getSubRepositoryUrl()
+  {
+    return subRepositoryUrl;
+  }
+
+  /**
+   * Method description
+   *
    *
    * @return
    */
@@ -185,6 +196,18 @@ public class FileObject implements LastModifiedAware
     this.path = path;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param subRepositoryUrl
+   * @since 1.10
+   */
+  public void setSubRepositoryUrl(String subRepositoryUrl)
+  {
+    this.subRepositoryUrl = subRepositoryUrl;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -204,4 +227,7 @@ public class FileObject implements LastModifiedAware
 
   /** Field description */
   private String path;
+
+  /** Field description */
+  private String subRepositoryUrl;
 }
