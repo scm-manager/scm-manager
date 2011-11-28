@@ -45,6 +45,7 @@ import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -52,6 +53,7 @@ import java.io.IOException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -77,14 +79,20 @@ public class RepositoryBrowserUtil extends PartCacheClearHook
    *
    * @param repositoryManager
    * @param cacheManager
+   * @param preProcessorSet
+   * @param preProcessorFactorySet
    */
   @Inject
-  public RepositoryBrowserUtil(RepositoryManager repositoryManager,
-                               CacheManager cacheManager)
+  public RepositoryBrowserUtil(
+          RepositoryManager repositoryManager, CacheManager cacheManager,
+          Set<FileObjectPreProcessor> preProcessorSet,
+          Set<FileObjectPreProcessorFactory> preProcessorFactorySet)
   {
     this.repositoryManager = repositoryManager;
     this.cache = cacheManager.getCache(RepositoryBrowserCacheKey.class,
                                        BrowserResult.class, CACHE_NAME);
+    this.preProcessorSet = preProcessorSet;
+    this.preProcessorFactorySet = preProcessorFactorySet;
     init(repositoryManager, cache);
   }
 
@@ -162,6 +170,8 @@ public class RepositoryBrowserUtil extends PartCacheClearHook
       if (result != null)
       {
         sort(result);
+        callPreProcessors(result);
+        callPreProcessorFactories(repository, result);
       }
       else
       {
@@ -179,6 +189,70 @@ public class RepositoryBrowserUtil extends PartCacheClearHook
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param fopp
+   * @param result
+   */
+  private void callPreProcessor(FileObjectPreProcessor fopp,
+                                BrowserResult result)
+  {
+    if (fopp != null)
+    {
+      List<FileObject> foList = result.getFiles();
+
+      if (Util.isNotEmpty(foList))
+      {
+        for (FileObject fo : foList)
+        {
+          fopp.process(fo);
+        }
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param repository
+   * @param result
+   */
+  private void callPreProcessorFactories(Repository repository,
+          BrowserResult result)
+  {
+    if (Util.isNotEmpty(preProcessorFactorySet))
+    {
+      for (FileObjectPreProcessorFactory factory : preProcessorFactorySet)
+      {
+        FileObjectPreProcessor fopp = factory.createPreProcessor(repository);
+
+        callPreProcessor(fopp, result);
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param result
+   */
+  private void callPreProcessors(BrowserResult result)
+  {
+    if (Util.isNotEmpty(preProcessorSet))
+    {
+      for (FileObjectPreProcessor fopp : preProcessorSet)
+      {
+        callPreProcessor(fopp, result);
+      }
+    }
+  }
 
   /**
    * Method description
@@ -328,6 +402,12 @@ public class RepositoryBrowserUtil extends PartCacheClearHook
 
   /** Field description */
   private Cache<RepositoryBrowserCacheKey, BrowserResult> cache;
+
+  /** Field description */
+  private Set<FileObjectPreProcessorFactory> preProcessorFactorySet;
+
+  /** Field description */
+  private Set<FileObjectPreProcessor> preProcessorSet;
 
   /** Field description */
   private RepositoryManager repositoryManager;
