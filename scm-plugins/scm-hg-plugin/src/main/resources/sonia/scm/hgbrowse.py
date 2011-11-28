@@ -60,11 +60,16 @@ repo = hg.repository(ui.ui(), path = repositoryPath)
 subrepos = {}
 revCtx = repo[revision]
 mf = revCtx.manifest()
-hgsub = revCtx.filectx('.hgsub').data().split('\n')
-for line in hgsub:
-  parts = line.split('=')
-  if len(parts) > 1:
-    subrepos[parts[0].strip()] = parts[1].strip()
+try:
+  hgsub = revCtx.filectx('.hgsub').data().split('\n')
+  for line in hgsub:
+    parts = line.split('=')
+    if len(parts) > 1:
+      subrepos[parts[0].strip()] = parts[1].strip()
+  print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+except Exception:
+  # howto drop execptions
+  print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
 
 if path is "":
   length = 1
@@ -96,7 +101,6 @@ for p in paths:
     if not dirpath in directories:
       directories.append(dirpath)
     
-print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
 print '<browser-result>'
 print '  <revision>' + revision + '</revision>'
 # todo print tag, and branch
@@ -106,8 +110,8 @@ for dir in directories:
   print '      <name>' + getName(dir) + '</name>'
   print '      <path>' + dir + '</path>'
   print '      <directory>true</directory>'
-  subrepo = subrepos[dir]
-  if subrepo != None:
+  if dir in subrepos:
+    subrepo = subrepos[dir]
     print '      <subRepositoryUrl>' + subrepo + '</subRepositoryUrl>'
   print '    </file>'
     
