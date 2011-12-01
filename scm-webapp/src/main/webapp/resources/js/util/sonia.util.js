@@ -32,6 +32,33 @@ Ext.ns('Sonia.util');
 
 // functions
 
+
+Sonia.util.getServername = function(url){
+  var i = url.indexOf('://');
+  if ( i > 0 ){
+    url = url.substring(i+3);
+    i = url.indexOf(':');
+    if ( i <= 0 ){
+      i = url.indexof('/');
+    }
+    if ( i > 0 ){
+      url = url.substring(0, i);
+    }
+  }
+  return url;
+}
+  
+Sonia.util.getContextPath = function(){
+  var path = window.location.pathname;
+  if ( path.indexOf('.html') > 0 ){
+    var i = path.lastIndexOf('/');
+    if ( i > 0 ){
+      path = path.substring(0, i);
+    }
+  }
+  return path;
+}
+
 Sonia.util.getName = function(path){
   var name = path;
   var index = path.lastIndexOf('/');

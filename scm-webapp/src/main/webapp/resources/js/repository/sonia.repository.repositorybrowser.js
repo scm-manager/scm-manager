@@ -185,10 +185,8 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       if ( index > 0 ){
         var prefix = rel.substring(0, index);
         var path = rel.substring(index + 1);
-
-        console.debug( path );
-
-        if ( prefix == 'subrepo' ){
+        
+        if ( prefix == 'sub' ){
           this.openSubRepository(path);
         } else if ( prefix == 'dir' ){
           this.changeDirectory(path);
@@ -203,6 +201,21 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     if (debug){
       console.debug('open sub repository ' + subRepository);
     }
+    var id = 'repositoryBrowser;' + subRepository + ';null;null';
+    Sonia.repository.get(subRepository, function(repository){
+      var panel = Ext.getCmp(id);
+      if (! panel){
+        panel = {
+          id: id,
+          xtype: 'repositoryBrowser',
+          repository : repository,
+          revision: null,
+          closable: true,
+          autoScroll: true
+        }
+      }
+      main.addTab(panel);
+    });
   },
   
   appendRepositoryProperties: function(bar){
@@ -298,18 +311,44 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     bbar.doLayout();
   },
   
+  getRepositoryPath: function(url){
+    var ctxPath = Sonia.util.getContextPath();
+    var i = url.indexOf(ctxPath);
+    if ( i > 0 ){
+      url = url.substring( i + ctxPath.length );
+    }
+    if ( url.indexOf('/') == 0 ){
+      url = url.substring(1);
+    }
+    return url;
+  },
+  
+  transformLink: function(url){
+    var link = null;
+    var server = Sonia.util.getServername(url);
+    if ( server == window.location.hostname || server == 'localhost' ){
+      var repositoryPath = this.getRepositoryPath( url );
+      if (repositoryPath){
+        link = 'sub:' + repositoryPath;
+      }
+    }
+    return link;
+  },
+  
   renderName: function(name, p, record){
     var subRepository = record.get('subRepositoryUrl');
     var folder = record.get('directory');
     var path = null;
     var template = null;
     if ( subRepository ){
-      // path = 'subrepo:' + subRepository;
-      // TODO check for internal link
-      
-      // internal
-      path = subRepository;
-      template = this.templateExternalLink;
+      // get real revision (.hgsubstate)?
+      path = this.transformLink(subRepository);
+      if ( path ){
+        template = this.templateInternalLink;
+      } else {
+        path = subRepository;
+        template = this.templateExternalLink;
+      }
     } else {
       if (folder){
         path = 'dir:';
