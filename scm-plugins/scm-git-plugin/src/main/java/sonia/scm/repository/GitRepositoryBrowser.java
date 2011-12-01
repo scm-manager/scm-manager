@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
@@ -249,30 +250,46 @@ public class GitRepositoryBrowser implements RepositoryBrowser
           ObjectId revId, TreeWalk treeWalk)
           throws IOException
   {
-    FileObject file = new FileObject();
-    String path = treeWalk.getPathString();
+    FileObject file = null;
 
-    file.setName(treeWalk.getNameString());
-    file.setPath(path);
-
-    ObjectLoader loader = repo.open(treeWalk.getObjectId(0));
-
-    file.setDirectory(loader.getType() == Constants.OBJ_TREE);
-    file.setLength(loader.getSize());
-
-    // don't show message and date for directories to improve performance
-    if (!file.isDirectory())
+    try
     {
-      RevCommit commit = getLatestCommit(repo, revId, path);
+      file = new FileObject();
 
-      if (commit != null)
+      String path = treeWalk.getPathString();
+
+      file.setName(treeWalk.getNameString());
+      file.setPath(path);
+
+      ObjectLoader loader = repo.open(treeWalk.getObjectId(0));
+
+      file.setDirectory(loader.getType() == Constants.OBJ_TREE);
+      file.setLength(loader.getSize());
+
+      // don't show message and date for directories to improve performance
+      if (!file.isDirectory())
       {
-        file.setLastModified(GitUtil.getCommitTime(commit));
-        file.setDescription(commit.getShortMessage());
+        RevCommit commit = getLatestCommit(repo, revId, path);
+
+        if (commit != null)
+        {
+          file.setLastModified(GitUtil.getCommitTime(commit));
+          file.setDescription(commit.getShortMessage());
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find latest commit for {} on {}", path, revId);
+        }
       }
-      else if (logger.isWarnEnabled())
+    }
+    catch (MissingObjectException ex)
+    {
+      file = null;
+      logger.error("could not fetch object for id {}", revId);
+
+      if (logger.isTraceEnabled())
       {
-        logger.warn("could not find latest commit for {} on {}", path, revId);
+        logger.trace("could not fetch object", ex);
       }
     }
 
@@ -370,7 +387,12 @@ public class GitRepositoryBrowser implements RepositoryBrowser
       {
         while (treeWalk.next())
         {
-          files.add(createFileObject(repo, revId, treeWalk));
+          FileObject fo = createFileObject(repo, revId, treeWalk);
+
+          if (fo != null)
+          {
+            files.add(fo);
+          }
         }
       }
       else
@@ -389,7 +411,12 @@ public class GitRepositoryBrowser implements RepositoryBrowser
 
             if (p.split("/").length > limit)
             {
-              files.add(createFileObject(repo, revId, treeWalk));
+              FileObject fo = createFileObject(repo, revId, treeWalk);
+
+              if (fo != null)
+              {
+                files.add(fo);
+              }
             }
           }
           else if (name.equalsIgnoreCase(parts[current]))
