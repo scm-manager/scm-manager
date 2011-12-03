@@ -99,24 +99,6 @@ public abstract class AbstractCompareUrlBuilder implements CompareUrlBuilder
                             other.getVersion());
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param url
-   *
-   * @return
-   */
-  @Override
-  public boolean isCompareable(String url)
-  {
-    return url.contains(getServername());
-  }
-
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Method description
    *
@@ -127,8 +109,8 @@ public abstract class AbstractCompareUrlBuilder implements CompareUrlBuilder
    *
    * @return
    */
-  private String createCompareUrl(String urlString, String version,
-                                  String otherVersion)
+  public String createCompareUrl(String urlString, String version,
+                                 String otherVersion)
   {
     String result = null;
 
@@ -139,6 +121,8 @@ public abstract class AbstractCompareUrlBuilder implements CompareUrlBuilder
 
       if (Util.isNotEmpty(path))
       {
+        path = HttpUtil.getUriWithoutStartSeperator(path);
+
         String[] parts = path.split(HttpUtil.SEPARATOR_PATH);
 
         if (parts.length >= 2)
@@ -154,5 +138,21 @@ public abstract class AbstractCompareUrlBuilder implements CompareUrlBuilder
     }
 
     return result;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   *
+   * @return
+   */
+  @Override
+  public boolean isCompareable(String url)
+  {
+    return url.contains(getServername());
   }
 }
