@@ -37,11 +37,11 @@ package sonia.scm.plugin.rest.url;
  *
  * @author Sebastian Sdorra
  */
-public class BitbucketCompareUrlBuilder extends AbstractCompareUrlBuilder
+public class GithubCompareUrlBuilder extends AbstractCompareUrlBuilder
 {
 
   /** Field description */
-  public static final String SERVERNAME = "bitbucket.org";
+  public static final String SERVERNAME = "github.com";
 
   //~--- get methods ----------------------------------------------------------
 
