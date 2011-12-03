@@ -35,10 +35,15 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 
 import sonia.scm.ConfigurationException;
+import sonia.scm.plugin.rest.url.BitbucketCompareUrlBuilder;
+import sonia.scm.plugin.rest.url.CompareUrlBuilder;
+import sonia.scm.plugin.rest.url.CompareUrlBuilderFactory;
+import sonia.scm.plugin.rest.url.GithubCompareUrlBuilder;
 import sonia.scm.plugin.scanner.DefaultPluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerScheduler;
@@ -118,6 +123,16 @@ public class ScmBackendModule extends ServletModule
     bind(PluginBackend.class).to(DefaultPluginBackend.class);
     bind(PluginScannerFactory.class).to(DefaultPluginScannerFactory.class);
     bind(PluginScannerScheduler.class).to(TimerPluginScannerScheduler.class);
+
+    // compare url builder
+    Multibinder<CompareUrlBuilder> compareUrlBuilderBinder =
+      Multibinder.newSetBinder(binder(), CompareUrlBuilder.class);
+
+    compareUrlBuilderBinder.addBinding().to(BitbucketCompareUrlBuilder.class);
+    compareUrlBuilderBinder.addBinding().to(GithubCompareUrlBuilder.class);
+
+    // compare url builder factory
+    bind(CompareUrlBuilderFactory.class);
 
     // news proxy
     bind(ProxyURLProvider.class).to(NewsProxyURLProvider.class);
