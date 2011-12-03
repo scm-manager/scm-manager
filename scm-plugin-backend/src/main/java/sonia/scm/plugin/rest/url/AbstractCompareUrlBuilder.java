@@ -56,10 +56,6 @@ import java.text.MessageFormat;
 public abstract class AbstractCompareUrlBuilder implements CompareUrlBuilder
 {
 
-  /** Field description */
-  public static final String URL_PATTERN =
-    "https://{0}/{1}/{2}/compare/{3}..{4}";
-
   /** the logger for AbstractCompareUrlBuilder */
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractCompareUrlBuilder.class);
@@ -73,6 +69,14 @@ public abstract class AbstractCompareUrlBuilder implements CompareUrlBuilder
    * @return
    */
   protected abstract String getServername();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected abstract String getUrlPattern();
 
   //~--- methods --------------------------------------------------------------
 
@@ -139,8 +143,8 @@ public abstract class AbstractCompareUrlBuilder implements CompareUrlBuilder
 
         if (parts.length >= 2)
         {
-          result = MessageFormat.format(URL_PATTERN, getServername(), parts[0],
-                                        parts[1], version, otherVersion);
+          result = MessageFormat.format(getUrlPattern(), parts[0], parts[1],
+                                        version, otherVersion);
         }
       }
     }

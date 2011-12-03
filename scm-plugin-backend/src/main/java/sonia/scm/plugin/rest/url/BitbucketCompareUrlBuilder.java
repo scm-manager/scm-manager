@@ -43,6 +43,10 @@ public class BitbucketCompareUrlBuilder extends AbstractCompareUrlBuilder
   /** Field description */
   public static final String SERVERNAME = "bitbucket.org";
 
+  /** Field description */
+  public static final String URL_PATTERN =
+    "https://bitbucket.org/{0}/{1}/compare/{2}..{3}";
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -55,5 +59,17 @@ public class BitbucketCompareUrlBuilder extends AbstractCompareUrlBuilder
   protected String getServername()
   {
     return SERVERNAME;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected String getUrlPattern()
+  {
+    return URL_PATTERN;
   }
 }

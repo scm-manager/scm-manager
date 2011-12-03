@@ -43,6 +43,10 @@ public class GithubCompareUrlBuilder extends AbstractCompareUrlBuilder
   /** Field description */
   public static final String SERVERNAME = "github.com";
 
+  /** Field description */
+  public static final String URL_PATTERN =
+    "https://github.com/{0}/{1}/compare/{2}...{3}";
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -55,5 +59,17 @@ public class GithubCompareUrlBuilder extends AbstractCompareUrlBuilder
   protected String getServername()
   {
     return SERVERNAME;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected String getUrlPattern()
+  {
+    return URL_PATTERN;
   }
 }
