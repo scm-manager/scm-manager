@@ -35,6 +35,7 @@ package sonia.scm.plugin.rest.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import sonia.scm.plugin.PluginInformation;
@@ -58,6 +59,7 @@ public class CompareUrlBuilderFactory
    *
    * @param urlBuilderSet
    */
+  @Inject
   public CompareUrlBuilderFactory(Set<CompareUrlBuilder> urlBuilderSet)
   {
     this.urlBuilderSet = urlBuilderSet;
