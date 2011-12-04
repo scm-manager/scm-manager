@@ -81,9 +81,6 @@ public class PluginResource implements PluginBackendListener
   /** Field description */
   public static final String CACHE = "sonia.cache.plugin-backend";
 
-  /** Field description */
-  public static final String CONFIG = "/config/ehcache.xml";
-
   /** the logger for PluginResource */
   private static final Logger logger =
     LoggerFactory.getLogger(PluginResource.class);
@@ -96,21 +93,19 @@ public class PluginResource implements PluginBackendListener
    *
    * @param backend
    * @param configuration
+   * @param cacheManager
    */
   @Inject
   public PluginResource(PluginBackend backend,
-                        BackendConfiguration configuration)
+                        BackendConfiguration configuration,
+                        CacheManager cacheManager)
   {
     this.backend = backend;
     this.configuration = configuration;
+    cache = cacheManager.getCache(CACHE);
 
     // added listener to clear the cache on a event
     this.backend.addListener(this);
-
-    CacheManager cacheManager =
-      new CacheManager(PluginResource.class.getResource(CONFIG));
-
-    cache = cacheManager.getCache(CACHE);
   }
 
   //~--- methods --------------------------------------------------------------
