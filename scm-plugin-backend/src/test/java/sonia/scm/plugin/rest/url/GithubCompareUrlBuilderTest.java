@@ -57,7 +57,7 @@ public class GithubCompareUrlBuilderTest
     String url = g.createCompareUrl("https://github.com/sdorra/scm-manager",
                                     "1.8", "1.9");
 
-    assertEquals("https://github.com/sdorra/scm-manager/compare/1.8...1.9",
+    assertEquals("https://github.com/sdorra/scm-manager/compare/1.9...1.8",
                  url);
   }
 
