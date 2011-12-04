@@ -85,7 +85,8 @@
 
 <div id="accordion">
 <#if versions?has_content>
-  <#list versions as version>
+  <#list versions as versionWrapper>
+    <#assign version=versionWrapper.plugin>
     <h3><a href="#">${version.version}</a></h3>
     <div>
       <p>${version.description}</p>
@@ -107,6 +108,11 @@
           <li>Architecture: ${version.condition.arch}</li>
           </#if>
         </ul>
+      </#if>
+      <#if versionWrapper.compareUrl??>
+        <a href="${versionWrapper.compareUrl}" target="_blank" style="color: #1C94C4;">
+          compare
+        </a>
       </#if>
     </div>
   </#list>

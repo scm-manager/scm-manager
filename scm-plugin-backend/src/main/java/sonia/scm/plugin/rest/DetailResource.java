@@ -40,14 +40,21 @@ import com.google.inject.Inject;
 import sonia.scm.plugin.BackendConfiguration;
 import sonia.scm.plugin.PluginBackend;
 import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.PluginInformationVersionComparator;
 import sonia.scm.plugin.PluginUtil;
+import sonia.scm.plugin.rest.url.CompareUrlBuilder;
+import sonia.scm.plugin.rest.url.CompareUrlBuilderFactory;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.view.Viewable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -76,13 +83,16 @@ public class DetailResource extends ViewableResource
    * @param context
    * @param backend
    * @param configuration
+   * @param urlFactory
    */
   @Inject
   public DetailResource(ServletContext context, PluginBackend backend,
-                        BackendConfiguration configuration)
+                        BackendConfiguration configuration,
+                        CompareUrlBuilderFactory urlFactory)
   {
     super(context, configuration);
     this.backend = backend;
+    this.urlFactory = urlFactory;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -118,16 +128,68 @@ public class DetailResource extends ViewableResource
       pluginVersions = PluginUtil.filterSnapshots(pluginVersions);
     }
 
+    List<PluginDetailWrapper> detailList = createDetailList(latest,
+                                             pluginVersions);
     Map<String, Object> vars = createVarMap(latest.getName());
 
     vars.put("latest", latest);
-    vars.put("versions", pluginVersions);
+    vars.put("versions", detailList);
 
     return new Viewable("/detail", vars);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param latest
+   * @param pluginVersions
+   *
+   * @return
+   */
+  private List<PluginDetailWrapper> createDetailList(PluginInformation latest,
+          List<PluginInformation> pluginVersions)
+  {
+    List<PluginDetailWrapper> detailList = new ArrayList<PluginDetailWrapper>();
+
+    Collections.sort(pluginVersions,
+                     PluginInformationVersionComparator.INSTANCE);
+
+    Iterator<PluginInformation> pluginIterator = pluginVersions.iterator();
+    CompareUrlBuilder urlBuilder = urlFactory.createCompareUrlBuilder(latest);
+    PluginInformation last = null;
+
+    while (pluginIterator.hasNext())
+    {
+      PluginInformation current = pluginIterator.next();
+
+      if (last != null)
+      {
+        String url = null;
+
+        if (urlBuilder != null)
+        {
+          url = urlBuilder.createCompareUrl(latest, last, current);
+        }
+
+        detailList.add(new PluginDetailWrapper(last, url));
+      }
+
+      last = current;
+    }
+
+    detailList.add(new PluginDetailWrapper(last));
+
+    return detailList;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private PluginBackend backend;
+
+  /** Field description */
+  private CompareUrlBuilderFactory urlFactory;
 }
