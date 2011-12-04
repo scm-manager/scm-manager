@@ -45,7 +45,7 @@ public class GithubCompareUrlBuilder extends AbstractCompareUrlBuilder
 
   /** Field description */
   public static final String URL_PATTERN =
-    "https://github.com/{0}/{1}/compare/{2}...{3}";
+    "https://github.com/{0}/{1}/compare/{3}...{2}";
 
   //~--- get methods ----------------------------------------------------------
 
