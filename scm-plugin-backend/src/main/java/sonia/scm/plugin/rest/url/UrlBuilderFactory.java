@@ -35,48 +35,35 @@ package sonia.scm.plugin.rest.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import sonia.scm.plugin.PluginInformation;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import java.text.MessageFormat;
+import java.util.Set;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public abstract class AbstractCompareUrlBuilder implements CompareUrlBuilder
+@Singleton
+public class UrlBuilderFactory
 {
 
-  /** the logger for AbstractCompareUrlBuilder */
-  private static final Logger logger =
-    LoggerFactory.getLogger(AbstractCompareUrlBuilder.class);
-
-  //~--- get methods ----------------------------------------------------------
-
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @return
+   * @param urlBuilderSet
    */
-  protected abstract String getServername();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected abstract String getUrlPattern();
+  @Inject
+  public UrlBuilderFactory(Set<UrlBuilder> urlBuilderSet)
+  {
+    this.urlBuilderSet = urlBuilderSet;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -84,75 +71,45 @@ public abstract class AbstractCompareUrlBuilder implements CompareUrlBuilder
    * Method description
    *
    *
-   * @param latest
-   * @param plugin
-   * @param other
+   * @param pluginUrl
    *
    * @return
    */
-  @Override
-  public String createCompareUrl(PluginInformation latest,
-                                 PluginInformation plugin,
-                                 PluginInformation other)
+  public UrlBuilder createCompareUrlBuilder(String pluginUrl)
   {
-    return createCompareUrl(latest.getUrl(), plugin.getVersion(),
-                            other.getVersion());
-  }
+    UrlBuilder builder = null;
 
-  /**
-   * Method description
-   *
-   *
-   * @param urlString
-   * @param version
-   * @param otherVersion
-   *
-   * @return
-   */
-  public String createCompareUrl(String urlString, String version,
-                                 String otherVersion)
-  {
-    String result = null;
-
-    try
+    if (Util.isNotEmpty(pluginUrl) && Util.isNotEmpty(urlBuilderSet))
     {
-      URL url = new URL(urlString);
-      String path = url.getPath();
-
-      if (Util.isNotEmpty(path))
+      for (UrlBuilder cup : urlBuilderSet)
       {
-        path = HttpUtil.getUriWithoutStartSeperator(path);
-
-        String[] parts = path.split(HttpUtil.SEPARATOR_PATH);
-
-        if (parts.length >= 2)
+        if (cup.isCompareable(pluginUrl))
         {
-          result = MessageFormat.format(getUrlPattern(), parts[0], parts[1],
-                                        version, otherVersion);
+          builder = cup;
+
+          break;
         }
       }
     }
-    catch (MalformedURLException ex)
-    {
-      logger.error("could not parse url", ex);
-    }
 
-    return result;
+    return builder;
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param url
+   * @param plugin
    *
    * @return
    */
-  @Override
-  public boolean isCompareable(String url)
+  public UrlBuilder createCompareUrlBuilder(PluginInformation plugin)
   {
-    return url.contains(getServername());
+    return createCompareUrlBuilder(plugin.getUrl());
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Set<UrlBuilder> urlBuilderSet;
 }

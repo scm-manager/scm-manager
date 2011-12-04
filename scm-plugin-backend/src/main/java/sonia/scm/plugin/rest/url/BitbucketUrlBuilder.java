@@ -37,7 +37,7 @@ package sonia.scm.plugin.rest.url;
  *
  * @author Sebastian Sdorra
  */
-public class BitbucketCompareUrlBuilder extends AbstractCompareUrlBuilder
+public class BitbucketUrlBuilder extends AbstractUrlBuilder
 {
 
   /** Field description */

@@ -53,7 +53,7 @@ public class GithubCompareUrlBuilderTest
   @Test
   public void createCompareUrlTest()
   {
-    GithubCompareUrlBuilder g = new GithubCompareUrlBuilder();
+    GithubUrlBuilder g = new GithubUrlBuilder();
     String url = g.createCompareUrl("https://github.com/sdorra/scm-manager",
                                     "1.8", "1.9");
 
@@ -70,7 +70,7 @@ public class GithubCompareUrlBuilderTest
   @Test
   public void isCompareableTest()
   {
-    GithubCompareUrlBuilder g = new GithubCompareUrlBuilder();
+    GithubUrlBuilder g = new GithubUrlBuilder();
 
     assertTrue(g.isCompareable("https://github.com.org/sdorra/scm-manager"));
     assertFalse(g.isCompareable("https://google.com"));

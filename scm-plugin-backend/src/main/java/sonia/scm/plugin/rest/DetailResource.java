@@ -42,8 +42,8 @@ import sonia.scm.plugin.PluginBackend;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginInformationVersionComparator;
 import sonia.scm.plugin.PluginUtil;
-import sonia.scm.plugin.rest.url.CompareUrlBuilder;
-import sonia.scm.plugin.rest.url.CompareUrlBuilderFactory;
+import sonia.scm.plugin.rest.url.UrlBuilder;
+import sonia.scm.plugin.rest.url.UrlBuilderFactory;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -88,7 +88,7 @@ public class DetailResource extends ViewableResource
   @Inject
   public DetailResource(ServletContext context, PluginBackend backend,
                         BackendConfiguration configuration,
-                        CompareUrlBuilderFactory urlFactory)
+                        UrlBuilderFactory urlFactory)
   {
     super(context, configuration);
     this.backend = backend;
@@ -158,7 +158,7 @@ public class DetailResource extends ViewableResource
                      PluginInformationVersionComparator.INSTANCE);
 
     Iterator<PluginInformation> pluginIterator = pluginVersions.iterator();
-    CompareUrlBuilder urlBuilder = urlFactory.createCompareUrlBuilder(latest);
+    UrlBuilder urlBuilder = urlFactory.createCompareUrlBuilder(latest);
     PluginInformation last = null;
 
     while (pluginIterator.hasNext())
@@ -191,5 +191,5 @@ public class DetailResource extends ViewableResource
   private PluginBackend backend;
 
   /** Field description */
-  private CompareUrlBuilderFactory urlFactory;
+  private UrlBuilderFactory urlFactory;
 }

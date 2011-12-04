@@ -40,10 +40,10 @@ import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 
 import sonia.scm.ConfigurationException;
-import sonia.scm.plugin.rest.url.BitbucketCompareUrlBuilder;
-import sonia.scm.plugin.rest.url.CompareUrlBuilder;
-import sonia.scm.plugin.rest.url.CompareUrlBuilderFactory;
-import sonia.scm.plugin.rest.url.GithubCompareUrlBuilder;
+import sonia.scm.plugin.rest.url.BitbucketUrlBuilder;
+import sonia.scm.plugin.rest.url.UrlBuilder;
+import sonia.scm.plugin.rest.url.UrlBuilderFactory;
+import sonia.scm.plugin.rest.url.GithubUrlBuilder;
 import sonia.scm.plugin.scanner.DefaultPluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerScheduler;
@@ -125,14 +125,14 @@ public class ScmBackendModule extends ServletModule
     bind(PluginScannerScheduler.class).to(TimerPluginScannerScheduler.class);
 
     // compare url builder
-    Multibinder<CompareUrlBuilder> compareUrlBuilderBinder =
-      Multibinder.newSetBinder(binder(), CompareUrlBuilder.class);
+    Multibinder<UrlBuilder> compareUrlBuilderBinder =
+      Multibinder.newSetBinder(binder(), UrlBuilder.class);
 
-    compareUrlBuilderBinder.addBinding().to(BitbucketCompareUrlBuilder.class);
-    compareUrlBuilderBinder.addBinding().to(GithubCompareUrlBuilder.class);
+    compareUrlBuilderBinder.addBinding().to(BitbucketUrlBuilder.class);
+    compareUrlBuilderBinder.addBinding().to(GithubUrlBuilder.class);
 
     // compare url builder factory
-    bind(CompareUrlBuilderFactory.class);
+    bind(UrlBuilderFactory.class);
 
     // news proxy
     bind(ProxyURLProvider.class).to(NewsProxyURLProvider.class);

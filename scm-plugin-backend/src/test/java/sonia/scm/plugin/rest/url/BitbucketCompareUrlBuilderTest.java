@@ -53,7 +53,7 @@ public class BitbucketCompareUrlBuilderTest
   @Test
   public void createCompareUrlTest()
   {
-    BitbucketCompareUrlBuilder b = new BitbucketCompareUrlBuilder();
+    BitbucketUrlBuilder b = new BitbucketUrlBuilder();
     String url = b.createCompareUrl("https://bitbucket.org/sdorra/scm-manager",
                                     "1.8", "1.9");
 
@@ -70,7 +70,7 @@ public class BitbucketCompareUrlBuilderTest
   @Test
   public void isCompareableTest()
   {
-    BitbucketCompareUrlBuilder b = new BitbucketCompareUrlBuilder();
+    BitbucketUrlBuilder b = new BitbucketUrlBuilder();
 
     assertFalse(b.isCompareable("https://github.com.org/sdorra/scm-manager"));
     assertFalse(b.isCompareable("https://google.com"));

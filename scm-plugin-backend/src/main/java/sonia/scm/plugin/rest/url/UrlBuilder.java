@@ -33,19 +33,30 @@
 
 package sonia.scm.plugin.rest.url;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.plugin.PluginInformation;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GithubCompareUrlBuilder extends AbstractCompareUrlBuilder
+public interface UrlBuilder
 {
 
-  /** Field description */
-  public static final String SERVERNAME = "github.com";
-
-  /** Field description */
-  public static final String URL_PATTERN =
-    "https://github.com/{0}/{1}/compare/{3}...{2}";
+  /**
+   * Method description
+   *
+   *
+   * @param latest
+   * @param plugin
+   * @param other
+   *
+   * @return
+   */
+  public String createCompareUrl(PluginInformation latest,
+                                 PluginInformation plugin,
+                                 PluginInformation other);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -53,23 +64,9 @@ public class GithubCompareUrlBuilder extends AbstractCompareUrlBuilder
    * Method description
    *
    *
-   * @return
-   */
-  @Override
-  protected String getServername()
-  {
-    return SERVERNAME;
-  }
-
-  /**
-   * Method description
-   *
+   * @param url
    *
    * @return
    */
-  @Override
-  protected String getUrlPattern()
-  {
-    return URL_PATTERN;
-  }
+  public boolean isCompareable(String url);
 }
