@@ -106,5 +106,15 @@
         timeToLiveSeconds="3600"
         diskPersistent="false"
   />
+  
+  <cache
+        name="sonia.cache.plugin-detail"
+        maxElementsInMemory="20000"
+        eternal="false"
+        overflowToDisk="false"
+        timeToIdleSeconds="1800"
+        timeToLiveSeconds="3600"
+        diskPersistent="false"
+  />
 
 </ehcache>

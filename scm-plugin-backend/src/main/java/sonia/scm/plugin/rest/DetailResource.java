@@ -36,6 +36,12 @@ package sonia.scm.plugin.rest;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import net.sf.ehcache.CacheManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.plugin.BackendConfiguration;
 import sonia.scm.plugin.PluginBackend;
@@ -54,7 +60,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -71,9 +76,19 @@ import javax.ws.rs.core.Response.Status;
  *
  * @author Sebastian Sdorra
  */
+@Singleton
 @Path("/detail/{groupId}/{artifactId}.html")
-public class DetailResource extends ViewableResource
+public class DetailResource extends CachedViewableResource
 {
+
+  /** Field description */
+  public static final String CACHE = "sonia.cache.plugin-detail";
+
+  /** the logger for DetailResource */
+  private static final Logger logger =
+    LoggerFactory.getLogger(DetailResource.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -84,13 +99,14 @@ public class DetailResource extends ViewableResource
    * @param backend
    * @param configuration
    * @param urlFactory
+   * @param cacheManager
    */
   @Inject
   public DetailResource(ServletContext context, PluginBackend backend,
                         BackendConfiguration configuration,
-                        UrlBuilderFactory urlFactory)
+                        UrlBuilderFactory urlFactory, CacheManager cacheManager)
   {
-    super(context, configuration);
+    super(context, backend, configuration, cacheManager, CACHE);
     this.backend = backend;
     this.urlFactory = urlFactory;
   }
@@ -113,32 +129,66 @@ public class DetailResource extends ViewableResource
                                    @DefaultValue("false")
   @QueryParam("snapshot") boolean snapshot)
   {
-    List<PluginInformation> pluginVersions =
-      PluginUtil.getFilteredPluginVersions(backend, groupId, artifactId);
+    String cacheKey = createCacheKey(groupId, artifactId, snapshot);
+    Viewable viewable = getFromCache(cacheKey);
 
-    if (Util.isEmpty(pluginVersions))
+    if (viewable == null)
     {
-      throw new WebApplicationException(Status.NOT_FOUND);
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("create viewable from backend");
+      }
+
+      List<PluginInformation> pluginVersions =
+        PluginUtil.getFilteredPluginVersions(backend, groupId, artifactId);
+
+      if (Util.isEmpty(pluginVersions))
+      {
+        throw new WebApplicationException(Status.NOT_FOUND);
+      }
+
+      PluginInformation latest = pluginVersions.get(0);
+
+      if (!snapshot)
+      {
+        pluginVersions = PluginUtil.filterSnapshots(pluginVersions);
+      }
+
+      List<PluginDetailWrapper> detailList = createDetailList(latest,
+                                               pluginVersions);
+      Map<String, Object> vars = createVarMap(latest.getName());
+
+      vars.put("latest", latest);
+      vars.put("versions", detailList);
+      viewable = new Viewable("/detail", vars);
+      putToCache(cacheKey, viewable);
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("create viewable from cache");
     }
 
-    PluginInformation latest = pluginVersions.get(0);
-
-    if (!snapshot)
-    {
-      pluginVersions = PluginUtil.filterSnapshots(pluginVersions);
-    }
-
-    List<PluginDetailWrapper> detailList = createDetailList(latest,
-                                             pluginVersions);
-    Map<String, Object> vars = createVarMap(latest.getName());
-
-    vars.put("latest", latest);
-    vars.put("versions", detailList);
-
-    return new Viewable("/detail", vars);
+    return viewable;
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param groupId
+   * @param artifactId
+   * @param snapshot
+   *
+   * @return
+   */
+  private String createCacheKey(String groupId, String artifactId,
+                                boolean snapshot)
+  {
+    return new StringBuilder(Util.nonNull(groupId)).append(
+        Util.nonNull(artifactId)).append(Boolean.toString(snapshot)).toString();
+  }
 
   /**
    * Method description
