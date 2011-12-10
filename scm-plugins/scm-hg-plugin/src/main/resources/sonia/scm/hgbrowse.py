@@ -29,6 +29,10 @@
 #
 #
 
+class SubRepository:
+  url = None
+  revision = None
+
 import sys, os
 
 pythonPath = os.environ['SCM_PYTHON_PATH']
@@ -65,11 +69,25 @@ try:
   for line in hgsub:
     parts = line.split('=')
     if len(parts) > 1:
-      subrepos[parts[0].strip()] = parts[1].strip()
+      subrepo = SubRepository()
+      subrepo.url = parts[1].strip()
+      subrepos[parts[0].strip()] = subrepo
   print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
 except Exception:
-  # howto drop execptions
+  # howto drop execptions in python?
   print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
+  
+try:
+  hgsubstate = revCtx.filectx('.hgsubstate').data().split('\n')
+  for line in hgsubstate:
+    parts = line.split(' ')
+    if len(parts) > 1:
+      subrev = parts[0].strip()
+      subrepo = subrepos[parts[1].strip()]
+      subrepo.revision = subrev
+except Exception:
+  # howto drop execptions in python?
+  print ''
 
 if path is "":
   length = 1
@@ -112,7 +130,11 @@ for dir in directories:
   print '      <directory>true</directory>'
   if dir in subrepos:
     subrepo = subrepos[dir]
-    print '      <subRepositoryUrl>' + subrepo + '</subRepositoryUrl>'
+    print '      <subrepository>'
+    if subrepo.revision != None:
+      print '        <revision>' + subrepo.revision + '</revision>'
+    print '        <repository-url>' + subrepo.url + '</repository-url>'
+    print '      </subrepository>'
   print '    </file>'
     
 for file in files:

@@ -267,7 +267,9 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
 
       if (Util.isNotEmpty(externals))
       {
-        fileObject.setSubRepositoryUrl(externals);
+        SubRepository subRepository = new SubRepository(externals);
+
+        fileObject.setSubRepository(subRepository);
       }
     }
     catch (SVNException ex)

@@ -33,10 +33,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.LastModifiedAware;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -45,24 +41,70 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * @since 1.10
  * @author Sebastian Sdorra
- * @since 1.5
  */
-@XmlRootElement(name = "file")
+@XmlRootElement(name = "subrepository")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class FileObject implements LastModifiedAware
+public class SubRepository
 {
 
   /**
+   * Constructs ...
+   *
+   */
+  public SubRepository() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param repositoryUrl
+   */
+  public SubRepository(String repositoryUrl)
+  {
+    this.repositoryUrl = repositoryUrl;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param revision
+   * @param repositoryUrl
+   */
+  public SubRepository(String repositoryUrl, String revision)
+  {
+    this.repositoryUrl = repositoryUrl;
+    this.revision = revision;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param revision
+   * @param repositoryUrl
+   * @param browserUrl
+   */
+  public SubRepository(String repositoryUrl, String browserUrl, String revision)
+  {
+    this.repositoryUrl = repositoryUrl;
+    this.browserUrl = browserUrl;
+    this.revision = revision;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
    * Method description
    *
    *
    * @return
    */
-  public String getDescription()
+  public String getBrowserUrl()
   {
-    return description;
+    return browserUrl;
   }
 
   /**
@@ -71,10 +113,9 @@ public class FileObject implements LastModifiedAware
    *
    * @return
    */
-  @Override
-  public Long getLastModified()
+  public String getRepositoryUrl()
   {
-    return lastModified;
+    return repositoryUrl;
   }
 
   /**
@@ -83,53 +124,9 @@ public class FileObject implements LastModifiedAware
    *
    * @return
    */
-  public long getLength()
+  public String getRevision()
   {
-    return length;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getName()
-  {
-    return name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getPath()
-  {
-    return path;
-  }
-
-  /**
-   * Method description
-   *
-   * @since 1.10
-   * @return
-   */
-  public SubRepository getSubRepository()
-  {
-    return subRepository;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public boolean isDirectory()
-  {
-    return directory;
+    return revision;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -138,102 +135,45 @@ public class FileObject implements LastModifiedAware
    * Method description
    *
    *
-   * @param description
+   * @param browserUrl
    */
-  public void setDescription(String description)
+  public void setBrowserUrl(String browserUrl)
   {
-    this.description = description;
+    this.browserUrl = browserUrl;
   }
 
   /**
    * Method description
    *
    *
-   * @param directory
+   * @param repositoryUrl
    */
-  public void setDirectory(boolean directory)
+  public void setRepositoryUrl(String repositoryUrl)
   {
-    this.directory = directory;
+    this.repositoryUrl = repositoryUrl;
   }
 
   /**
    * Method description
    *
    *
-   * @param lastModified
+   * @param revision
    */
-  public void setLastModified(Long lastModified)
+  public void setRevision(String revision)
   {
-    this.lastModified = lastModified;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param length
-   */
-  public void setLength(long length)
-  {
-    this.length = length;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   */
-  public void setName(String name)
-  {
-    this.name = name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   */
-  public void setPath(String path)
-  {
-    this.path = path;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @since 1.10
-   *
-   * @param subRepository
-   */
-  public void setSubRepository(SubRepository subRepository)
-  {
-    this.subRepository = subRepository;
+    this.revision = revision;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String description;
+  @XmlElement(name = "browser-url")
+  private String browserUrl;
 
   /** Field description */
-  private boolean directory;
+  @XmlElement(name = "repository-url")
+  private String repositoryUrl;
 
   /** Field description */
-  private Long lastModified;
-
-  /** Field description */
-  private long length;
-
-  /** Field description */
-  private String name;
-
-  /** Field description */
-  private String path;
-
-  /** Field description */
-  @XmlElement(name = "subrepository")
-  private SubRepository subRepository;
+  private String revision;
 }

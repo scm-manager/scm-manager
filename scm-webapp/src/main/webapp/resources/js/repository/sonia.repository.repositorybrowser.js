@@ -56,7 +56,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         url: restUrl + 'repositories/' + this.repository.id  + '/browse.json',
         method: 'GET'
       }),
-      fields: ['path', 'name', 'length', 'lastModified', 'directory', 'description', 'subRepositoryUrl'],
+      fields: ['path', 'name', 'length', 'lastModified', 'directory', 'description', 'subrepository'],
       root: 'files',
       idProperty: 'path',
       autoLoad: true,
@@ -111,8 +111,8 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         dataIndex: 'description',
         header: 'Description'
       },{
-        id: 'subRepositoryUrl',
-        dataIndex: 'subRepositoryUrl',
+        id: 'subrepository',
+        dataIndex: 'subrepository',
         hidden: true
       }]
     });
@@ -336,17 +336,21 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   },
   
   renderName: function(name, p, record){
-    var subRepository = record.get('subRepositoryUrl');
+    var subRepository = record.get('subrepository');
     var folder = record.get('directory');
     var path = null;
     var template = null;
     if ( subRepository ){
       // get real revision (.hgsubstate)?
-      path = this.transformLink(subRepository);
+      var subRepositoryUrl = subRepository['browser-url'];
+      if (!subRepositoryUrl){
+        subRepositoryUrl = subRepository['repository-url'];
+      }
+      path = this.transformLink(subRepositoryUrl);
       if ( path ){
         template = this.templateInternalLink;
       } else {
-        path = subRepository;
+        path = subRepositoryUrl;
         template = this.templateExternalLink;
       }
     } else {
@@ -364,7 +368,8 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   
   renderIcon: function(directory, p, record){
     var icon = null;
-    var subRepository = record.get('subRepositoryUrl');
+    var subRepository = record.get('subrepository');
+    
     var name = record.get('name');
     if ( subRepository ){
       icon = this.iconSubRepository;
