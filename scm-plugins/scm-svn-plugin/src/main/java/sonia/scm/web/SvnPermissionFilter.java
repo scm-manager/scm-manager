@@ -39,7 +39,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.web.filter.ProviderPermissionFilter;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -78,7 +78,7 @@ public class SvnPermissionFilter extends ProviderPermissionFilter
   @Inject
   public SvnPermissionFilter(
           Provider<WebSecurityContext> securityContextProvider,
-          Provider<Repository> repository)
+          RepositoryProvider repository)
   {
     super(securityContextProvider, repository);
   }

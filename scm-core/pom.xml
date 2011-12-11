@@ -15,6 +15,8 @@
   <name>scm-core</name>
 
   <dependencies>
+    
+    <!-- servlet api -->
 
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -22,12 +24,16 @@
       <version>${servlet.version}</version>
       <scope>provided</scope>
     </dependency>
+    
+    <!-- logging -->
 
     <dependency>
       <artifactId>slf4j-api</artifactId>
       <groupId>org.slf4j</groupId>
       <version>${slf4j.version}</version>
     </dependency>
+    
+    <!-- injection -->
 
     <dependency>
       <groupId>com.google.inject</groupId>
@@ -46,6 +52,14 @@
       <artifactId>guice-servlet</artifactId>
       <version>${guice.version}</version>
     </dependency>
+    
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-throwingproviders</artifactId>
+      <version>${guice.version}</version>
+    </dependency>
+    
+    <!-- rest api -->
 
     <dependency>
       <groupId>com.sun.jersey</groupId>

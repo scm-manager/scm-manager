@@ -35,79 +35,26 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.servlet.RequestScoped;
+import com.google.inject.throwingproviders.CheckedProvider;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.servlet.http.HttpServletRequest;
+import sonia.scm.security.ScmSecurityException;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.10
  */
-@RequestScoped
-public class RepositoryProvider implements Provider<Repository>
+public interface RepositoryProvider extends CheckedProvider<Repository>
 {
-
-  /** Field description */
-  public static final String ATTRIBUTE_NAME = "scm.request.repository";
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param requestProvider
-   * @param manager
-   */
-  @Inject
-  public RepositoryProvider(Provider<HttpServletRequest> requestProvider,
-                            RepositoryManager manager)
-  {
-    this.requestProvider = requestProvider;
-    this.manager = manager;
-  }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
    * @return
+   *
+   * @throws ScmSecurityException
    */
   @Override
-  public Repository get()
-  {
-    Repository repository = null;
-    HttpServletRequest request = requestProvider.get();
-
-    if (request != null)
-    {
-      repository = (Repository) request.getAttribute(ATTRIBUTE_NAME);
-
-      if (repository == null)
-      {
-        repository = manager.getFromRequest(request);
-
-        if (repository != null)
-        {
-          request.setAttribute(ATTRIBUTE_NAME, repository);
-        }
-      }
-    }
-
-    return repository;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private RepositoryManager manager;
-
-  /** Field description */
-  private Provider<HttpServletRequest> requestProvider;
+  public Repository get() throws ScmSecurityException;
 }

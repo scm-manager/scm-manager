@@ -669,10 +669,8 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
       {
         if (type.equals(r.getType()) && isNameMatching(r, uri))
         {
-          if (isReader(r))
-          {
-            repository = r.clone();
-          }
+          assertIsReader(r);
+          repository = r.clone();
 
           break;
         }

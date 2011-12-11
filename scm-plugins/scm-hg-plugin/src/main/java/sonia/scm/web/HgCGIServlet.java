@@ -36,7 +36,6 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.config.ScmConfiguration;
@@ -44,7 +43,7 @@ import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
@@ -109,7 +108,7 @@ public class HgCGIServlet extends HttpServlet
   @Inject
   public HgCGIServlet(CGIExecutorFactory cgiExecutorFactory,
                       ScmConfiguration configuration,
-                      Provider<Repository> repositoryProvider,
+                      RepositoryProvider repositoryProvider,
                       HgRepositoryHandler handler, HgHookManager hookManager)
   {
     this.cgiExecutorFactory = cgiExecutorFactory;
@@ -262,5 +261,5 @@ public class HgCGIServlet extends HttpServlet
   private HgHookManager hookManager;
 
   /** Field description */
-  private Provider<Repository> repositoryProvider;
+  private RepositoryProvider repositoryProvider;
 }

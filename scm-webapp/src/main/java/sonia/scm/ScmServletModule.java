@@ -36,7 +36,9 @@ package sonia.scm;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.name.Names;
+import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
+import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +63,7 @@ import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.plugin.ScriptResourceServlet;
 import sonia.scm.repository.ChangesetViewerUtil;
+import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryBrowserUtil;
 import sonia.scm.repository.RepositoryManager;
@@ -198,6 +201,8 @@ public class ScmServletModule extends ServletModule
   @Override
   protected void configureServlets()
   {
+    install(ThrowingProviderBinder.forModule(this));
+
     SCMContextProvider context = SCMContext.getContext();
 
     bind(SCMContextProvider.class).toInstance(context);
@@ -205,7 +210,12 @@ public class ScmServletModule extends ServletModule
     ScmConfiguration config = getScmConfiguration(context);
     CipherUtil cu = CipherUtil.getInstance();
 
-    bind(Repository.class).toProvider(RepositoryProvider.class);
+    // bind repository provider
+    ThrowingProviderBinder.create(binder()).bind(
+        RepositoryProvider.class, Repository.class).to(
+        DefaultRepositoryProvider.class).in(RequestScoped.class);
+
+    // bind core
     bind(StoreFactory.class).to(JAXBStoreFactory.class);
     bind(ScmConfiguration.class).toInstance(config);
     bind(PluginLoader.class).toInstance(pluginLoader);
