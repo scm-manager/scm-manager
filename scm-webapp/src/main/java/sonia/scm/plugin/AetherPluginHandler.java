@@ -39,16 +39,13 @@ import org.apache.maven.repository.internal.DefaultArtifactDescriptorReader;
 import org.apache.maven.repository.internal.DefaultVersionRangeResolver;
 import org.apache.maven.repository.internal.DefaultVersionResolver;
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
-import org.apache.maven.wagon.Wagon;
-import org.apache.maven.wagon.providers.http.LightweightHttpWagon;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.collection.CollectRequest;
-import org.sonatype.aether.connector.wagon.WagonProvider;
-import org.sonatype.aether.connector.wagon.WagonRepositoryConnectorFactory;
+import org.sonatype.aether.connector.async.AsyncRepositoryConnectorFactory;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.graph.DependencyNode;
@@ -355,18 +352,8 @@ public class AetherPluginHandler
                        DefaultVersionRangeResolver.class);
     locator.addService(ArtifactDescriptorReader.class,
                        DefaultArtifactDescriptorReader.class);
-    locator.setServices(WagonProvider.class, new WagonProvider()
-    {
-      @Override
-      public Wagon lookup(String roleHint) throws Exception
-      {
-        return new LightweightHttpWagon();
-      }
-      @Override
-      public void release(Wagon wagon) {}
-    });
     locator.addService(RepositoryConnectorFactory.class,
-                       WagonRepositoryConnectorFactory.class);
+                       AsyncRepositoryConnectorFactory.class);
 
     return locator.getService(RepositorySystem.class);
   }
