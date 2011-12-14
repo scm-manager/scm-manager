@@ -181,48 +181,8 @@
 
     <dependency>
       <groupId>org.sonatype.aether</groupId>
-      <artifactId>aether-connector-wagon</artifactId>
+      <artifactId>aether-connector-asynchttpclient </artifactId>
       <version>${aether.version}</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>xbean-reflect</artifactId>
-          <groupId>org.apache.xbean</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>sisu-inject-plexus</artifactId>
-          <groupId>org.sonatype.sisu</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>plexus-classworlds</artifactId>
-          <groupId>org.codehaus.plexus</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-provider-api</artifactId>
-      <version>${wagon.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.maven.wagon</groupId>
-      <artifactId>wagon-http-lightweight</artifactId>
-      <version>${wagon.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>nekohtml</groupId>
-          <artifactId>nekohtml</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>nekohtml</groupId>
-          <artifactId>xercesMinimal</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>commons-logging</groupId>
-          <artifactId>commons-logging</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     
     <dependency>
