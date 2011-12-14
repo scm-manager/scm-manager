@@ -35,12 +35,11 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
-
 import org.tmatesoft.svn.core.internal.server.dav.DAVConfig;
 import org.tmatesoft.svn.core.internal.server.dav.SVNPathBasedAccess;
 
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.SvnRepositoryHandler;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -63,7 +62,7 @@ public class SvnDAVConfig extends DAVConfig
    * @param repositoryProvider
    */
   public SvnDAVConfig(DAVConfig davConfig, SvnRepositoryHandler handler,
-                      Provider<Repository> repositoryProvider)
+                      RepositoryProvider repositoryProvider)
   {
     this.davConfig = davConfig;
     this.handler = handler;
@@ -292,5 +291,5 @@ public class SvnDAVConfig extends DAVConfig
   private SvnRepositoryHandler handler;
 
   /** Field description */
-  private Provider<Repository> repositoryProvider;
+  private RepositoryProvider repositoryProvider;
 }

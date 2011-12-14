@@ -36,7 +36,6 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -47,6 +46,7 @@ import org.tmatesoft.svn.core.internal.server.dav.DAVServlet;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
+import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
@@ -88,7 +88,7 @@ public class SvnDAVServlet extends DAVServlet
   @Inject
   public SvnDAVServlet(
           SvnRepositoryHandler handler,
-          Provider<Repository> repositoryProvider,
+          RepositoryProvider repositoryProvider,
           RepositoryRequestListenerUtil repositoryRequestListenerUtil)
   {
     this.handler = handler;
@@ -169,7 +169,7 @@ public class SvnDAVServlet extends DAVServlet
      * @param repositoryProvider
      */
     public SvnHttpServletRequestWrapper(HttpServletRequest request,
-            Provider<Repository> repositoryProvider)
+            RepositoryProvider repositoryProvider)
     {
       super(request);
       this.repositoryProvider = repositoryProvider;
@@ -233,7 +233,7 @@ public class SvnDAVServlet extends DAVServlet
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private Provider<Repository> repositoryProvider;
+    private RepositoryProvider repositoryProvider;
   }
 
 
@@ -243,7 +243,7 @@ public class SvnDAVServlet extends DAVServlet
   private SvnRepositoryHandler handler;
 
   /** Field description */
-  private Provider<Repository> repositoryProvider;
+  private RepositoryProvider repositoryProvider;
 
   /** Field description */
   private RepositoryRequestListenerUtil repositoryRequestListenerUtil;

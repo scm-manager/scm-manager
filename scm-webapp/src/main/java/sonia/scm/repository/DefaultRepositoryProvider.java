@@ -31,15 +31,15 @@
 
 
 
-package sonia.scm.web.filter;
+package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.servlet.RequestScoped;
 
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryProvider;
-import sonia.scm.web.security.WebSecurityContext;
+import sonia.scm.security.ScmSecurityException;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -48,24 +48,30 @@ import javax.servlet.http.HttpServletRequest;
 /**
  *
  * @author Sebastian Sdorra
- * @since 1.9
  */
-public abstract class ProviderPermissionFilter extends PermissionFilter
+@RequestScoped
+public class DefaultRepositoryProvider implements RepositoryProvider
 {
+
+  /** Field description */
+  public static final String ATTRIBUTE_NAME = "scm.request.repository";
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param securityContextProvider
-   * @param repositoryProvider
+   * @param requestProvider
+   * @param manager
    */
-  public ProviderPermissionFilter(
-          Provider<WebSecurityContext> securityContextProvider,
-          RepositoryProvider repositoryProvider)
+  @Inject
+  public DefaultRepositoryProvider(
+          Provider<HttpServletRequest> requestProvider,
+          RepositoryManager manager)
   {
-    super(securityContextProvider);
-    this.repositoryProvider = repositoryProvider;
+    this.requestProvider = requestProvider;
+    this.manager = manager;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -74,18 +80,39 @@ public abstract class ProviderPermissionFilter extends PermissionFilter
    * Method description
    *
    *
-   * @param request
-   *
    * @return
+   *
+   * @throws ScmSecurityException
    */
   @Override
-  protected Repository getRepository(HttpServletRequest request)
+  public Repository get() throws ScmSecurityException
   {
-    return repositoryProvider.get();
+    Repository repository = null;
+    HttpServletRequest request = requestProvider.get();
+
+    if (request != null)
+    {
+      repository = (Repository) request.getAttribute(ATTRIBUTE_NAME);
+
+      if (repository == null)
+      {
+        repository = manager.getFromRequest(request);
+
+        if (repository != null)
+        {
+          request.setAttribute(ATTRIBUTE_NAME, repository);
+        }
+      }
+    }
+
+    return repository;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryProvider repositoryProvider;
+  private RepositoryManager manager;
+
+  /** Field description */
+  private Provider<HttpServletRequest> requestProvider;
 }
