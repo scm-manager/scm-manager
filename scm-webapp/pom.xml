@@ -181,7 +181,7 @@
 
     <dependency>
       <groupId>org.sonatype.aether</groupId>
-      <artifactId>aether-connector-asynchttpclient </artifactId>
+      <artifactId>aether-connector-asynchttpclient</artifactId>
       <version>${aether.version}</version>
     </dependency>
     
