@@ -47,6 +47,7 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -447,11 +448,13 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
   {
     if (logger.isWarnEnabled())
     {
-      String error = IOUtil.getContent(in);
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-      if (Util.isNotEmpty(error))
+      IOUtil.copy(in, baos);
+
+      if (baos.size() > 0)
       {
-        logger.warn(error.trim());
+        logger.warn(baos.toString());
       }
     }
   }
