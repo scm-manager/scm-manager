@@ -425,7 +425,7 @@
   </distributionManagement>
 
   <properties>
-    <mokito.version>1.8.5</mokito.version>
+    <mokito.version>1.9.0</mokito.version>
     <junit.version>4.10</junit.version>
     <slf4j.version>1.6.4</slf4j.version>
     <servlet.version>2.5</servlet.version>
