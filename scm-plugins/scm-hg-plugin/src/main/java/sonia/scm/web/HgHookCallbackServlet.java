@@ -57,6 +57,7 @@ import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.IOException;
 
 import java.util.regex.Matcher;
@@ -337,16 +338,31 @@ public class HgHookCallbackServlet extends HttpServlet
 
     if (Util.isNotEmpty(path))
     {
-      int directoryLength =
-        handler.getConfig().getRepositoryDirectory().getAbsolutePath().length();
 
-      if (directoryLength < path.length())
+      /**
+       * use canonical path to fix symbolic links
+       * https://bitbucket.org/sdorra/scm-manager/issue/82/symbolic-link-in-hg-repository-path
+       */
+      try
       {
-        name = IOUtil.trimSeperatorChars(path.substring(directoryLength));
+        path = new File(path).getCanonicalPath();
+
+        int directoryLength =
+          handler.getConfig().getRepositoryDirectory().getCanonicalPath()
+            .length();
+
+        if (directoryLength < path.length())
+        {
+          name = IOUtil.trimSeperatorChars(path.substring(directoryLength));
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("path is shorter as the main hg repository path");
+        }
       }
-      else if (logger.isWarnEnabled())
+      catch (IOException ex)
       {
-        logger.warn("path is shorter as the main hg repository path");
+        logger.error("could not find name of repository", ex);
       }
     }
     else if (logger.isWarnEnabled())
