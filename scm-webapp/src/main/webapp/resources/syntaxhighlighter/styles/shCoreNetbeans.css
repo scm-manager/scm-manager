@@ -39,7 +39,10 @@
   width: 100% !important;
   margin: 1em 0 1em 0 !important;
   position: relative !important;
-  overflow: auto !important;
+  /** fix vertical scollbar in webkit browsers  **/
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+
   font-size: 1em !important; }
   .syntaxhighlighter.source {
     overflow: hidden !important; }
