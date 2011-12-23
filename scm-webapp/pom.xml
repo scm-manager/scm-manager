@@ -335,7 +335,7 @@
   <properties>
     <environment.profile>default</environment.profile>
     <enunciate.version>1.24</enunciate.version>
-    <aether.version>1.13</aether.version>
+    <aether.version>1.13.1</aether.version>
     <wagon.version>1.0</wagon.version>
     <maven.version>3.0.3</maven.version>
     <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
