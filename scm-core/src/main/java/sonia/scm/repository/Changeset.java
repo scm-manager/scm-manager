@@ -110,6 +110,25 @@ public class Changeset extends BasicPropertiesAware
    * Method description
    *
    *
+   * @return
+   */
+  @Override
+  public Changeset clone()
+  {
+    Changeset changeset = new Changeset(id, date, author, description);
+
+    changeset.setBranches(branches);
+    changeset.setTags(tags);
+    changeset.setModifications(modifications);
+    changeset.setProperties(properties);
+
+    return changeset;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param obj
    *
    * @return

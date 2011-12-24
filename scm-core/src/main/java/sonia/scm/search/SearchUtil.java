@@ -35,7 +35,6 @@ package sonia.scm.search;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Filter;
 import sonia.scm.TransformFilter;
 import sonia.scm.util.Util;
 

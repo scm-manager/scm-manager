@@ -36,7 +36,6 @@ package sonia.scm.security;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.UUID;
-import sonia.scm.security.KeyGenerator;
 
 /**
  *

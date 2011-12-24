@@ -33,6 +33,10 @@
 
 package sonia.scm.script;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.IOUtil;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -40,6 +44,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 
 /**
  *
@@ -70,7 +75,20 @@ public abstract class AbstractScmScriptContext implements ScmScriptContext
           "could not find script ".concat(file.getPath()));
     }
 
-    return createScript(new FileReader(file));
+    ScmScript script = null;
+    Reader reader = null;
+
+    try
+    {
+      reader = new FileReader(file);
+      script = createScript(reader);
+    }
+    finally
+    {
+      IOUtil.close(reader);
+    }
+
+    return script;
   }
 
   /**
@@ -97,6 +115,17 @@ public abstract class AbstractScmScriptContext implements ScmScriptContext
           "could not find script ".concat(path));
     }
 
-    return createScript(new InputStreamReader(stream));
+    ScmScript script = null;
+
+    try
+    {
+      script = createScript(new InputStreamReader(stream));
+    }
+    finally
+    {
+      IOUtil.close(stream);
+    }
+
+    return script;
   }
 }

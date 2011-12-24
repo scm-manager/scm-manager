@@ -41,6 +41,8 @@ import sonia.scm.util.ValidationUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -52,8 +54,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "person")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Person implements Validateable
+public class Person implements Validateable, Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -4675080650527063196L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new {@link Person}.
@@ -90,7 +97,7 @@ public class Person implements Validateable
 
   /**
    * Parses the given string and returns a {@link Person} object. The string
-   * should be in the format "name &gt;mail&lt;". if the string contains no 
+   * should be in the format "name &gt;mail&lt;". if the string contains no
    * "&gt;&lt;" the whole string is handled as the name of the {@link Person}.
    *
    *
@@ -122,7 +129,7 @@ public class Person implements Validateable
   }
 
   /**
-   * Returns a string representation of the {@link Person} object, 
+   * Returns a string representation of the {@link Person} object,
    * in the format "name &gt;mail&lt;".
    *
    *

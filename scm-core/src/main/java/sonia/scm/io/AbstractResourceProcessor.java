@@ -33,6 +33,10 @@
 
 package sonia.scm.io;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.IOUtil;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.BufferedReader;
@@ -112,7 +116,20 @@ public abstract class AbstractResourceProcessor implements ResourceProcessor
   @Override
   public void process(File input, File output) throws IOException
   {
-    process(new FileReader(input), new FileWriter(input));
+    Reader reader = null;
+    Writer writer = null;
+
+    try
+    {
+      reader = new FileReader(input);
+      writer = new FileWriter(output);
+      process(reader, writer);
+    }
+    finally
+    {
+      IOUtil.close(reader);
+      IOUtil.close(writer);
+    }
   }
 
   /**

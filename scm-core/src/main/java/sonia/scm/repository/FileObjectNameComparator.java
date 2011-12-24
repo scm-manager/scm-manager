@@ -49,7 +49,7 @@ public class FileObjectNameComparator implements Comparator<FileObject>
 {
 
   /** Field description */
-  public static FileObjectNameComparator instance =
+  public static final FileObjectNameComparator instance =
     new FileObjectNameComparator();
 
   //~--- methods --------------------------------------------------------------

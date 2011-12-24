@@ -39,6 +39,8 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,8 +56,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "modifications")
-public class Modifications
+public class Modifications implements Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -8902033326668658140L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...

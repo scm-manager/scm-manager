@@ -192,6 +192,20 @@ public class BasicContextProvider implements SCMContextProvider
       {
         throw new ConfigurationException(ex);
       }
+      finally
+      {
+
+        // do not use logger or IOUtil,
+        // http://www.slf4j.org/codes.html#substituteLogger
+        try
+        {
+          input.close();
+        }
+        catch (IOException ex)
+        {
+          ex.printStackTrace(System.err);
+        }
+      }
     }
 
     return properties.getProperty(MAVEN_PROPERTY_VERSION, DEFAULT_VERSION);
