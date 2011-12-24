@@ -275,11 +275,15 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
           scriptName = FILE_HOOK_PRE_RECEIVE;
         }
 
-        File hookScript = getHookScript(directory, scriptName);
-
-        if (hookScript != null)
+        if (scriptName != null)
         {
-          executeFileHook(rpack, rc, hookScript, oldId, newId, rc.getRefName());
+          File hookScript = getHookScript(directory, scriptName);
+
+          if (hookScript != null)
+          {
+            executeFileHook(rpack, rc, hookScript, oldId, newId,
+                            rc.getRefName());
+          }
         }
 
         fireHookEvent(rpack, rc, directory, oldId, newId, type);

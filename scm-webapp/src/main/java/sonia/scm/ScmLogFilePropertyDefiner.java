@@ -62,9 +62,10 @@ public class ScmLogFilePropertyDefiner extends PropertyDefinerBase
     File logDirectory = new File(SCMContext.getContext().getBaseDirectory(),
                                  LOG_DIRECTORY);
 
-    if (!logDirectory.exists())
+    if (!logDirectory.exists() &&!logDirectory.mkdirs())
     {
-      logDirectory.mkdirs();
+      throw new ConfigurationException(
+          "could not create log directory ".concat(logDirectory.getPath()));
     }
 
     this.logDirectoryPath = logDirectory.getAbsolutePath();
