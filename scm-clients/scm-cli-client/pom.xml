@@ -127,4 +127,14 @@
     </plugins>
   </build>
   
+  <repositories>
+    
+    <repository>
+      <id>maven.jenkins-ci.org</id>
+      <name>jenkins release repository</name>
+      <url>http://maven.jenkins-ci.org/content/repositories/releases/</url>
+    </repository>
+    
+  </repositories>
+  
 </project>
