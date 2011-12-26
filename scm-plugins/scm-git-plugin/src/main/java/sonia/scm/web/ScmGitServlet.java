@@ -36,7 +36,6 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.eclipse.jgit.http.server.GitServlet;
@@ -47,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.util.HttpUtil;
 
@@ -93,7 +93,7 @@ public class ScmGitServlet extends GitServlet
   public ScmGitServlet(
           GitRepositoryResolver repositoryResolver,
           GitReceivePackFactory receivePackFactory,
-          Provider<sonia.scm.repository.Repository> repositoryProvider,
+          RepositoryProvider repositoryProvider,
           RepositoryRequestListenerUtil repositoryRequestListenerUtil)
   {
     this.resolver = repositoryResolver;
@@ -194,7 +194,7 @@ public class ScmGitServlet extends GitServlet
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Provider<sonia.scm.repository.Repository> repositoryProvider;
+  private RepositoryProvider repositoryProvider;
 
   /** Field description */
   private RepositoryRequestListenerUtil repositoryRequestListenerUtil;
