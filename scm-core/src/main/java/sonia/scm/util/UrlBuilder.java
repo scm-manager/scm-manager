@@ -58,6 +58,7 @@ public class UrlBuilder
     if (baseUrl.contains(HttpUtil.SEPARATOR_PARAMETERS))
     {
       separator = HttpUtil.SEPARATOR_PARAMETER;
+      parameterAdded = true;
     }
     else
     {
@@ -139,6 +140,7 @@ public class UrlBuilder
     {
       url = new StringBuilder(url).append(separator).append(name).append(
         HttpUtil.SEPARATOR_PARAMETER_VALUE).append(value).toString();
+      separator = HttpUtil.SEPARATOR_PARAMETER;
       parameterAdded = true;
     }
 
