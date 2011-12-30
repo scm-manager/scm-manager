@@ -46,12 +46,14 @@ import org.tmatesoft.svn.core.internal.io.fs.FSHook;
 import org.tmatesoft.svn.core.internal.io.fs.FSHookEvent;
 import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
 
+import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -155,10 +157,7 @@ public class SvnRepositoryHook implements FSHook
   {
     try
     {
-      String name =
-        directory.getAbsolutePath()
-          .substring(handler.getConfig().getRepositoryDirectory()
-            .getAbsolutePath().length());
+      String name = getRepositoryName(directory);
 
       name = IOUtil.trimSeperatorChars(name);
       repositoryManager.fireHookEvent(SvnRepositoryHandler.TYPE_NAME, name,
@@ -174,6 +173,39 @@ public class SvnRepositoryHook implements FSHook
       throw new SVNCancelException(
           SVNErrorMessage.create(SVNErrorCode.CANCELLED, ex.getMessage()));
     }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private String getRepositoryName(File directory) throws IOException
+  {
+    AssertUtil.assertIsNotNull(directory);
+
+    String name = null;
+    String path = directory.getCanonicalPath();
+    int directoryLength =
+      handler.getConfig().getRepositoryDirectory().getCanonicalPath().length();
+
+    if (directoryLength < path.length())
+    {
+      name = IOUtil.trimSeperatorChars(path.substring(directoryLength));
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("path is shorter as the main hg repository path");
+    }
+
+    return name;
   }
 
   //~--- fields ---------------------------------------------------------------
