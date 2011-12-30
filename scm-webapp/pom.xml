@@ -309,7 +309,7 @@
           <systemProperties>
             <systemProperty>
               <name>scm.home</name>
-              <value>target/scm-it</value>
+              <value>${scm.home}</value>
             </systemProperty>
           </systemProperties>
           <connectors>
@@ -333,6 +333,7 @@
   </build>
 
   <properties>
+    <scm.home>target/scm-it</scm.home>
     <environment.profile>default</environment.profile>
     <enunciate.version>1.24</enunciate.version>
     <aether.version>1.13.1</aether.version>
