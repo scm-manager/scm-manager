@@ -102,6 +102,9 @@ public class HgHookCallbackServlet extends HttpServlet
   private static final Logger logger =
     LoggerFactory.getLogger(HgHookCallbackServlet.class);
 
+  /** Field description */
+  private static final long serialVersionUID = 3531596724828189353L;
+
   //~--- constructors ---------------------------------------------------------
 
   /**
