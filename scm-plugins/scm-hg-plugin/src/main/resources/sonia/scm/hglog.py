@@ -62,8 +62,9 @@ def printChangeset(repo, ctx):
   mods = status[0]
   added = status[1]
   deleted = status[2]
-  authorName = ctx.user();
+  authorName = ctx.user()
   authorMail = None
+  parents = ctx.parents()
   
   if authorName:
     s = authorName.find('<')
@@ -74,6 +75,9 @@ def printChangeset(repo, ctx):
   
   print '    <changeset>'
   print '      <id>' + str(ctx.rev()) + ':' + hex(ctx.node()[:6]) + '</id>'
+  if parents:
+    for parent in parents:
+      print '      <parents>' + str(parent.rev()) + ':' + hex(parent.node()[:6]) + '</parents>'
   print '      <author>' + escape(ctx.user()) + '</author>'
   print '      <description>' + escape(ctx.description()) + '</description>'
   print '      <date>' + str(time).split('.')[0] + '</date>'
