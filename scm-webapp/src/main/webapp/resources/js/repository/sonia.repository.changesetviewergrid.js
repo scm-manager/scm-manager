@@ -44,7 +44,8 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
                             <img src="resources/images/delete.gif" alt="Deleted"><span class="cs-mod-txt">{2}</span>\
                           </div>',
   idsTemplate: '<div class="cs-commit">Commit: <a class="scm-link cs-diff-link" rel="{0}">{0}</a></div>\
-                <div class="cs-tree">Tree: <a class="scm-link cs-tree-link" rel="{0}">{0}</a></div>',
+                <div class="cs-tree">Tree: <a class="scm-link cs-tree-link" rel="{0}">{0}</a></div>\
+                <div class="cs-parent">Parent: <a class="scm-link cs-parent-link" rel="{1}">{1}</a></div>',
   tagsAndBranchesTemplate: '<div class="changeset-tags">{0}</div>\
                             <div class="changeset-branches">{1}</div>',
   
@@ -196,8 +197,9 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
     return result;
   },
 
-  renderIds: function(value){
-    return String.format(this.idsTemplate, value);
+  renderIds: function(value, p, record){
+    var parent = record.get('parents')[0];
+    return String.format(this.idsTemplate, value, parent);
   },
 
   renderModifications: function(value){

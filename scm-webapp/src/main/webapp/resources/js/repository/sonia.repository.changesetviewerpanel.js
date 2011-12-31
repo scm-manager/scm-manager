@@ -69,7 +69,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
         url: this.url,
         method: 'GET'
       }),
-      fields: ['id', 'date', 'author', 'description', 'modifications', 'tags', 'branches', 'properties'],
+      fields: ['id', 'date', 'author', 'description', 'parents', 'modifications', 'tags', 'branches', 'properties'],
       root: 'changesets',
       idProperty: 'id',
       totalProperty: 'total',
