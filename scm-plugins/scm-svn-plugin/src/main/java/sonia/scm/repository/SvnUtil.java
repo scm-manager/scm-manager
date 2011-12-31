@@ -119,10 +119,17 @@ public class SvnUtil
   @SuppressWarnings("unchecked")
   public static Changeset createChangeset(SVNLogEntry entry)
   {
-    Changeset changeset = new Changeset(String.valueOf(entry.getRevision()),
+    long revision = entry.getRevision();
+    Changeset changeset = new Changeset(String.valueOf(revision),
                             entry.getDate().getTime(),
                             Person.toPerson(entry.getAuthor()),
                             entry.getMessage());
+
+    if (revision > 0)
+    {
+      changeset.getParents().add(String.valueOf(revision - 1));
+    }
+
     Map<String, SVNLogEntryPath> changeMap = entry.getChangedPaths();
 
     if (Util.isNotEmpty(changeMap))
