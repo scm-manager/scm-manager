@@ -121,6 +121,7 @@ public class Changeset extends BasicPropertiesAware
     changeset.setTags(tags);
     changeset.setModifications(modifications);
     changeset.setProperties(properties);
+    changeset.setParents(parents);
 
     return changeset;
   }
@@ -194,6 +195,12 @@ public class Changeset extends BasicPropertiesAware
       return false;
     }
 
+    if ((this.parents != other.parents)
+        && ((this.parents == null) ||!this.parents.equals(other.parents)))
+    {
+      return false;
+    }
+
     return true;
   }
 
@@ -229,6 +236,9 @@ public class Changeset extends BasicPropertiesAware
     hash = 47 * hash + ((this.tags != null)
                         ? this.tags.hashCode()
                         : 0);
+    hash = 47 * hash + ((this.parents != null)
+                        ? this.parents.hashCode()
+                        : 0);
 
     return hash;
   }
@@ -245,6 +255,12 @@ public class Changeset extends BasicPropertiesAware
     StringBuilder out = new StringBuilder("changeset: ");
 
     out.append(id).append("\n");
+
+    if (parents != null)
+    {
+      out.append("parents: ").append(Util.toString(parents)).append("\n");
+    }
+
     out.append("author: ").append(author).append("\n");
 
     if (date != null)
@@ -340,6 +356,23 @@ public class Changeset extends BasicPropertiesAware
     }
 
     return modifications;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.11
+   */
+  public List<String> getParents()
+  {
+    if (parents == null)
+    {
+      parents = new ArrayList<String>();
+    }
+
+    return parents;
   }
 
   /**
@@ -443,6 +476,18 @@ public class Changeset extends BasicPropertiesAware
    * Method description
    *
    *
+   * @param parents
+   * @since 1.11
+   */
+  public void setParents(List<String> parents)
+  {
+    this.parents = parents;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param tags
    */
   public void setTags(List<String> tags)
@@ -470,6 +515,9 @@ public class Changeset extends BasicPropertiesAware
   /** List of files changed by this changeset */
   @XmlElement(name = "modifications")
   private Modifications modifications;
+
+  /** parent changeset ids */
+  private List<String> parents;
 
   /** The tags associated with the changeset */
   private List<String> tags;
