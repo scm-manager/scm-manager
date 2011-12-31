@@ -44,11 +44,14 @@ import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
 
+import sonia.scm.util.Util;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,12 +104,31 @@ public class GitChangesetConverter implements Closeable
   public Changeset createChangeset(RevCommit commit) throws IOException
   {
     String id = commit.getId().abbreviate(idLength).name();
+    List<String> parentList = null;
+    RevCommit[] parents = commit.getParents();
+
+    if (Util.isNotEmpty(parents))
+    {
+      parentList = new ArrayList<String>();
+
+      for (RevCommit parent : parents)
+      {
+        parentList.add(parent.getId().abbreviate(idLength).name());
+      }
+    }
+
     long date = GitUtil.getCommitTime(commit);
     PersonIdent authorIndent = commit.getCommitterIdent();
     Person author = new Person(authorIndent.getName(),
                                authorIndent.getEmailAddress());
     String message = commit.getShortMessage();
     Changeset changeset = new Changeset(id, date, author, message);
+
+    if (parentList != null)
+    {
+      changeset.setParents(parentList);
+    }
+
     Modifications modifications = createModifications(treeWalk, commit);
 
     if (modifications != null)
