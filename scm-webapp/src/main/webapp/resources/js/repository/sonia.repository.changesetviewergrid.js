@@ -34,20 +34,26 @@
 Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
   repository: null,
+  
   mailTemplate: '&lt;<a href="mailto: {0}">{0}</a>&gt;',
+  
   changesetMetadataTemplate: '<div class="cs-desc">{0}</div>\
                               <div class="cs-author">{1}</div>\
                               <div class="cs-date">{2}</div>',
+  
   modificationsTemplate: '<div class="cs-mod">\
                             <img src="resources/images/add.gif" alt="Added"><span class="cs-mod-txt">{0}</span>\
                             <img src="resources/images/modify.gif" alt="Modified"><span class="cs-mod-txt">{1}</span>\
                             <img src="resources/images/delete.gif" alt="Deleted"><span class="cs-mod-txt">{2}</span>\
                           </div>',
-  idsTemplate: '<div class="cs-commit">Commit: <a class="scm-link cs-diff-link" rel="{0}">{0}</a></div>\
-                <div class="cs-tree">Tree: <a class="scm-link cs-tree-link" rel="{0}">{0}</a></div>\
-                <div class="cs-parent">Parent: <a class="scm-link cs-parent-link" rel="{1}">{1}</a></div>',
-  tagsAndBranchesTemplate: '<div class="changeset-tags">{0}</div>\
-                            <div class="changeset-branches">{1}</div>',
+  
+  idsTemplate: new Ext.XTemplate('<div class="cs-commit">Commit: <a class="scm-link cs-diff-link" rel="{id}">{id}</a></div>\
+                <div class="cs-tree">Tree: <a class="scm-link cs-tree-link" rel="{id}">{id}</a></div>\
+                <tpl if="parent"><div class="cs-parent">Parent: <a class="scm-link cs-diff-link" rel="{parent}">{parent}</a></div></tpl>\
+                <tpl if="parent2"><div class="cs-parent">Parent: <a class="scm-link cs-diff-link" rel="{parent2}">{parent2}</a></div></tpl>'),
+  
+  tagsAndBranchesTemplate: new Ext.XTemplate('<div class="changeset-tags"><tpl if="tags"><tpl for="tags"><span class="cs-tag"><a title="Tag {.}">{.}</a></span></tpl></tpl></div>\
+                            <div class="changeset-branches"><tpl if="branches"><tpl for="branches"><span class="cs-branch"><a title="Branch {.}">{.}</a></span></tpl></tpl></div>'),
   
   emptyText: 'No commits available',
 
@@ -71,7 +77,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
         dataIndex: 'modifications',
         renderer: this.renderModifications,
         scope: this,
-        width: 100
+        width: 120
       },{
         id: 'ids',
         dataIndex: 'id',
@@ -126,15 +132,15 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
       
       this.openRepositoryBrowser(revision);
     } else {      
-        el = e.getTarget('.cs-diff-link');
+      el = e.getTarget('.cs-diff-link');
 
-        if ( el ){
+      if ( el ){
         revision = this.getRevision(el);
         if (debug){
           console.debug('load diff for ' + revision);
         }
 
-        this.openDiffViewer(revision);
+       this.openDiffViewer(revision);
       }
     }
   },
@@ -184,9 +190,10 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
   },
 
   renderTagsAndBranches: function(value, p, record){
-    var tags = this.getLabeledValue("Tags", record.data.tags);
-    var branches = this.getLabeledValue("Branches", record.data.branches);
-    return String.format(this.tagsAndBranchesTemplate, tags, branches);
+    return this.tagsAndBranchesTemplate.apply({
+      tags: record.get('tags'),
+      branches: record.get('branches')
+    });
   },
 
   getLabeledValue: function(label, array){
@@ -198,12 +205,20 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
   },
 
   renderIds: function(value, p, record){
-    var parent = '';
+    var parent = null;
+    var parent2 = null;
     var parents = record.get('parents');
     if ( parents ){
       parent = parents[0];
+      if ( parents.length >= 1 ){
+        parent2 = parents[1];
+      }
     }
-    return String.format(this.idsTemplate, value, parent);
+    return this.idsTemplate.apply({
+      id: value,
+      parent: parent,
+      parent2: parent2
+    });
   },
 
   renderModifications: function(value){

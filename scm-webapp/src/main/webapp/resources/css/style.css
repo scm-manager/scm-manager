@@ -131,3 +131,16 @@ a.scm-link:hover {
 .cs-mod-txt {
   margin: 0 3px;
 }
+
+.changeset-tags {
+  margin-bottom: 5px;
+}
+
+.cs-tag, .cs-branch {
+  border: 1px solid gray;
+  border-radius: 4px;
+}
+
+.cs-tag a, .cs-branch a {
+  padding: 5px;
+}
