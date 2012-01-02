@@ -48,7 +48,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
                           </div>',
   
   idsTemplate: new Ext.XTemplate('<div class="cs-commit">Commit: <a class="scm-link cs-diff-link" rel="{id}">{id}</a></div>\
-                <div class="cs-tree">Tree: <a class="scm-link cs-tree-link" rel="{id}">{id}</a></div>\
+                <div class="cs-tree">Source: <a class="scm-link cs-tree-link" rel="{id}">{id}</a></div>\
                 <tpl if="parent"><div class="cs-parent">Parent: <a class="scm-link cs-diff-link" rel="{parent}">{parent}</a></div></tpl>\
                 <tpl if="parent2"><div class="cs-parent">Parent: <a class="scm-link cs-diff-link" rel="{parent2}">{parent2}</a></div></tpl>'),
   
