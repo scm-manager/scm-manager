@@ -35,11 +35,15 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import sonia.scm.util.IOUtil;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -52,85 +56,114 @@ public class RepositoryUtil
   /** the logger for RepositoryUtil */
   private static final Logger logger =
     LoggerFactory.getLogger(RepositoryUtil.class);
-  
+
+  //~--- get methods ----------------------------------------------------------
+
   /**
    * Method description
    *
    *
+   *
+   * @param handler
+   * @param directoryPath
    * @return
    *
    * @throws IOException
    */
-  public static String getRepositoryName(AbstractRepositoryHandler handler, String directoryPath) throws IOException
+  public static String getRepositoryName(AbstractRepositoryHandler handler,
+          String directoryPath)
+          throws IOException
   {
-    return getRepositoryName(handler.getConfig().getRepositoryDirectory(), new File(directoryPath));
+    return getRepositoryName(handler.getConfig().getRepositoryDirectory(),
+                             new File(directoryPath));
   }
-  
+
   /**
    * Method description
    *
    *
-   * @return
    *
-   * @throws IOException
-   */ 
-  public static String getRepositoryName(SimpleRepositoryConfig config, String directoryPath) throws IOException
-  {
-    return getRepositoryName(config.getRepositoryDirectory(), new File(directoryPath));
-  }
-  
-  /**
-   * Method description
-   *
-   *
+   * @param config
+   * @param directoryPath
    * @return
    *
    * @throws IOException
    */
-  public static String getRepositoryName(AbstractRepositoryHandler handler, File directory) throws IOException
+  public static String getRepositoryName(SimpleRepositoryConfig config,
+          String directoryPath)
+          throws IOException
   {
-    return getRepositoryName(handler.getConfig().getRepositoryDirectory(), directory);
+    return getRepositoryName(config.getRepositoryDirectory(),
+                             new File(directoryPath));
   }
-  
+
   /**
    * Method description
    *
    *
+   *
+   * @param handler
+   * @param directory
    * @return
    *
    * @throws IOException
-   */ 
-  public static String getRepositoryName(SimpleRepositoryConfig config, File directory) throws IOException
+   */
+  public static String getRepositoryName(AbstractRepositoryHandler handler,
+          File directory)
+          throws IOException
+  {
+    return getRepositoryName(handler.getConfig().getRepositoryDirectory(),
+                             directory);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param config
+   * @param directory
+   * @return
+   *
+   * @throws IOException
+   */
+  public static String getRepositoryName(SimpleRepositoryConfig config,
+          File directory)
+          throws IOException
   {
     return getRepositoryName(config.getRepositoryDirectory(), directory);
   }
-  
+
   /**
    * Method description
    *
    *
+   *
+   * @param baseDirectory
+   * @param directory
    * @return
    *
    * @throws IOException
    */
-  public static String getRepositoryName(File baseDirectory, File directory) throws IOException
+  public static String getRepositoryName(File baseDirectory, File directory)
+          throws IOException
   {
-     String name = null;
-     
-     String path = directory.getCanonicalPath();
-     int directoryLength = baseDirectory.getCanonicalPath().length();
+    String name = null;
+    String path = directory.getCanonicalPath();
+    int directoryLength = baseDirectory.getCanonicalPath().length();
 
-     if (directoryLength < path.length())
-     {
-       name = IOUtil.trimSeperatorChars(path.substring(directoryLength));
-       // replace windows path seperator
-       name = name.replaceAll("\\\\", "/");
-     }
-     else if (logger.isWarnEnabled())
-     {
-        logger.warn("path is shorter as the main hg repository path");
-     }
-     
-     return name;
+    if (directoryLength < path.length())
+    {
+      name = IOUtil.trimSeperatorChars(path.substring(directoryLength));
+
+      // replace windows path seperator
+      name = name.replaceAll("\\\\", "/");
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("path is shorter as the main hg repository path");
+    }
+
+    return name;
   }
 }

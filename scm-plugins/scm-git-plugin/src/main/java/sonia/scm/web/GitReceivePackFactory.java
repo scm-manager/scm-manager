@@ -64,9 +64,11 @@ public class GitReceivePackFactory
    *
    *
    * @param repositoryManager
+   * @param handler
    */
   @Inject
-  public GitReceivePackFactory(RepositoryManager repositoryManager, GitRepositoryHandler handler)
+  public GitReceivePackFactory(RepositoryManager repositoryManager,
+                               GitRepositoryHandler handler)
   {
     hook = new GitReceiveHook(repositoryManager, handler);
   }
