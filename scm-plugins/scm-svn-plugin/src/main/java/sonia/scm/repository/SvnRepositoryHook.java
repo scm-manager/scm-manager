@@ -191,21 +191,7 @@ public class SvnRepositoryHook implements FSHook
   {
     AssertUtil.assertIsNotNull(directory);
 
-    String name = null;
-    String path = directory.getCanonicalPath();
-    int directoryLength =
-      handler.getConfig().getRepositoryDirectory().getCanonicalPath().length();
-
-    if (directoryLength < path.length())
-    {
-      name = IOUtil.trimSeperatorChars(path.substring(directoryLength));
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("path is shorter as the main hg repository path");
-    }
-
-    return name;
+    return RepositoryUtil.getRepositoryName(handler, directory);
   }
 
   //~--- fields ---------------------------------------------------------------
