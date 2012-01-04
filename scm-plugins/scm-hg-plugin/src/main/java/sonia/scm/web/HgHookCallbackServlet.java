@@ -49,15 +49,14 @@ import sonia.scm.repository.HgRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.regex.Matcher;
@@ -348,20 +347,7 @@ public class HgHookCallbackServlet extends HttpServlet
        */
       try
       {
-        path = new File(path).getCanonicalPath();
-
-        int directoryLength =
-          handler.getConfig().getRepositoryDirectory().getCanonicalPath()
-            .length();
-
-        if (directoryLength < path.length())
-        {
-          name = IOUtil.trimSeperatorChars(path.substring(directoryLength));
-        }
-        else if (logger.isWarnEnabled())
-        {
-          logger.warn("path is shorter as the main hg repository path");
-        }
+        name = RepositoryUtil.getRepositoryName(handler, path);
       }
       catch (IOException ex)
       {
