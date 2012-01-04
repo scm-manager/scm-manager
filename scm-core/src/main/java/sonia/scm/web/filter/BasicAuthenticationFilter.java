@@ -186,13 +186,13 @@ public class BasicAuthenticationFilter extends HttpFilter
 
     token = new String(Base64.decode(token.getBytes()));
 
-    String[] credentials = token.split(CREDENTIAL_SEPARATOR);
+    int index = token.indexOf(CREDENTIAL_SEPARATOR);
     User user = null;
 
-    if (credentials.length == 2)
+    if ((index > 0) && (index < token.length()))
     {
-      String username = credentials[0];
-      String password = credentials[1];
+      String username = token.substring(0, index);
+      String password = token.substring(index + 1);
 
       if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
       {
