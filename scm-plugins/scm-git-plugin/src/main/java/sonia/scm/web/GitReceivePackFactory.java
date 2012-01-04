@@ -44,6 +44,7 @@ import org.eclipse.jgit.transport.resolver.ReceivePackFactory;
 import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
 import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
 
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -65,9 +66,9 @@ public class GitReceivePackFactory
    * @param repositoryManager
    */
   @Inject
-  public GitReceivePackFactory(RepositoryManager repositoryManager)
+  public GitReceivePackFactory(RepositoryManager repositoryManager, GitRepositoryHandler handler)
   {
-    hook = new GitReceiveHook(repositoryManager);
+    hook = new GitReceiveHook(repositoryManager, handler);
   }
 
   //~--- methods --------------------------------------------------------------
