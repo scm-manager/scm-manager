@@ -103,6 +103,8 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
   @Override
   public String getBlameUrl(String repositoryId, String path, String revision)
   {
+    revision = UrlUtil.fixRevision(revision);
+
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
         PART_BLAME).append(extension).appendParameter(
         PARAMETER_PATH, path).appendParameter(
@@ -122,6 +124,8 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
   @Override
   public String getBrowseUrl(String repositoryId, String path, String revision)
   {
+    revision = UrlUtil.fixRevision(revision);
+
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
         PART_BROWSE).append(extension).appendParameter(
         PARAMETER_PATH, path).appendParameter(
@@ -144,6 +148,8 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
   public String getChangesetUrl(String repositoryId, String path,
                                 String revision, int start, int limit)
   {
+    revision = UrlUtil.fixRevision(revision);
+
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
         PART_CHANGESETS).append(extension).appendParameter(
         PARAMETER_PATH, path).appendParameter(
@@ -184,6 +190,8 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
   @Override
   public String getContentUrl(String repositoryId, String path, String revision)
   {
+    revision = UrlUtil.fixRevision(revision);
+
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
         PART_CONTENT).appendParameter(PARAMETER_PATH, path).appendParameter(
         PARAMETER_REVISION, revision).toString();
@@ -201,6 +209,8 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
   @Override
   public String getDiffUrl(String repositoryId, String revision)
   {
+    revision = UrlUtil.fixRevision(revision);
+
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
         PART_DIFF).appendParameter(PARAMETER_REVISION, revision).toString();
   }

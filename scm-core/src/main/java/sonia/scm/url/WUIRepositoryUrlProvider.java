@@ -93,6 +93,8 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   @Override
   public String getBlameUrl(String repositoryId, String path, String revision)
   {
+    revision = UrlUtil.fixRevision(revision);
+
     return new WUIUrlBuilder(baseUrl, COMPONENT_CONTENT).append(
         repositoryId).append(revision).append(path).append(
         VIEW_BLAME).toString();
@@ -111,6 +113,8 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   @Override
   public String getBrowseUrl(String repositoryId, String path, String revision)
   {
+    revision = UrlUtil.fixRevision(revision);
+
     return new WUIUrlBuilder(baseUrl, COMPONENT_BROWSER).append(
         repositoryId).append(revision).append(path).toString();
   }
@@ -131,6 +135,7 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   public String getChangesetUrl(String repositoryId, String path,
                                 String revision, int start, int limit)
   {
+    revision = UrlUtil.fixRevision(revision);
 
     // TODO handle start and limit
     return new WUIUrlBuilder(baseUrl, COMPONENT_CONTENT).append(
@@ -168,6 +173,8 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   @Override
   public String getContentUrl(String repositoryId, String path, String revision)
   {
+    revision = UrlUtil.fixRevision(revision);
+
     return new WUIUrlBuilder(baseUrl, COMPONENT_CONTENT).append(
         repositoryId).append(revision).append(path).append(
         VIEW_HISTORY).toString();
@@ -185,6 +192,8 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   @Override
   public String getDiffUrl(String repositoryId, String revision)
   {
+    revision = UrlUtil.fixRevision(revision);
+
     return new WUIUrlBuilder(baseUrl, COMPONENT_DIFF).append(
         repositoryId).append(revision).toString();
   }
