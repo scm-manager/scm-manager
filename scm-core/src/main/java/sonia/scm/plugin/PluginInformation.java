@@ -81,6 +81,8 @@ public class PluginInformation implements Validateable, Cloneable
     }
 
     clone.setDescription(description);
+    clone.setGroupId(groupId);
+    clone.setName(name);
 
     if (Util.isNotEmpty(screenshots))
     {
