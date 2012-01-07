@@ -158,7 +158,7 @@ public class DetailResource extends CachedViewableResource
                                                pluginVersions);
       Map<String, Object> vars = createVarMap(latest.getName());
 
-      vars.put("latest", latest);
+      vars.put("latest", PluginUtil.prepareForView(latest));
       vars.put("versions", detailList);
       viewable = new Viewable("/detail", vars);
       putToCache(cacheKey, viewable);

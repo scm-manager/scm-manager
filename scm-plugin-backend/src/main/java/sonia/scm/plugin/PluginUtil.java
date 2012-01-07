@@ -35,6 +35,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.util.LinkTextParser;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -101,6 +102,28 @@ public class PluginUtil
     return filtered;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param plugin
+   *
+   * @return
+   */
+  public static PluginInformation prepareForView(PluginInformation plugin)
+  {
+    String description = plugin.getDescription();
+
+    if (Util.isNotEmpty(description))
+    {
+      plugin = plugin.clone();
+      description = LinkTextParser.parseText(description);
+      plugin.setDescription(description);
+    }
+
+    return plugin;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -121,7 +144,8 @@ public class PluginUtil
 
     if (Util.isNotEmpty(pluginVersions))
     {
-      Collections.sort(pluginVersions, PluginInformationNameComparator.INSTANCE);
+      Collections.sort(pluginVersions,
+                       PluginInformationNameComparator.INSTANCE);
       pluginVersions = PluginUtil.filterSameVersions(pluginVersions);
     }
 

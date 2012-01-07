@@ -36,6 +36,7 @@ package sonia.scm.plugin.rest;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.PluginUtil;
 
 /**
  *
@@ -52,7 +53,7 @@ public class PluginDetailWrapper
    */
   public PluginDetailWrapper(PluginInformation plugin)
   {
-    this.plugin = plugin;
+    this(plugin, null);
   }
 
   /**
@@ -64,7 +65,7 @@ public class PluginDetailWrapper
    */
   public PluginDetailWrapper(PluginInformation plugin, String compareUrl)
   {
-    this.plugin = plugin;
+    this.plugin = PluginUtil.prepareForView(plugin);
     this.compareUrl = compareUrl;
   }
 

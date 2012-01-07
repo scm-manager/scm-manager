@@ -37,11 +37,13 @@ package sonia.scm.plugin.rest;
 
 import com.google.inject.Inject;
 
+import sonia.scm.plugin.*;
 import sonia.scm.plugin.BackendConfiguration;
 import sonia.scm.plugin.Category;
 import sonia.scm.plugin.CategoryNameComaparator;
 import sonia.scm.plugin.PluginBackend;
 import sonia.scm.plugin.PluginInformation;
+import sonia.scm.util.LinkTextParser;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -133,7 +135,7 @@ public class OverviewResource extends ViewableResource
       categories.put(name, category);
     }
 
-    category.getPlugins().add(plugin);
+    category.getPlugins().add(PluginUtil.prepareForView(plugin));
   }
 
   //~--- get methods ----------------------------------------------------------
