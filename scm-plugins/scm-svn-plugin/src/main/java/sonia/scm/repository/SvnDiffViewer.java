@@ -136,8 +136,8 @@ public class SvnDiffViewer implements DiffViewer
       long currentRev = Long.parseLong(revision);
 
       diffClient.doDiff(svnurl, SVNRevision.HEAD,
-                        SVNRevision.create(currentRev),
-                        SVNRevision.create(currentRev - 1), SVNDepth.INFINITY,
+                        SVNRevision.create(currentRev - 1),
+                        SVNRevision.create(currentRev), SVNDepth.INFINITY,
                         false, output);
     }
     catch (Exception ex)
