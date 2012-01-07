@@ -54,12 +54,15 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *
@@ -67,6 +70,9 @@ import java.util.List;
  */
 public class GitRepositoryBrowser implements RepositoryBrowser
 {
+
+  /** Field description */
+  public static final String PATH_MODULES = ".gitmodules";
 
   /** the logger for GitRepositoryBrowser */
   private static final Logger logger =
@@ -98,7 +104,6 @@ public class GitRepositoryBrowser implements RepositoryBrowser
    * @param path
    * @param output
    *
-   *
    * @throws IOException
    * @throws RepositoryException
    */
@@ -108,6 +113,37 @@ public class GitRepositoryBrowser implements RepositoryBrowser
   {
     File directory = handler.getDirectory(repository);
     org.eclipse.jgit.lib.Repository repo = GitUtil.open(directory);
+
+    try
+    {
+      ObjectId revId = GitUtil.getRevisionId(repo, revision);
+
+      getContent(repo, revId, path, output);
+    }
+    finally
+    {
+      GitUtil.close(repo);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param repo
+   * @param revId
+   * @param path
+   * @param output
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  public void getContent(org.eclipse.jgit.lib.Repository repo, ObjectId revId,
+                         String path, OutputStream output)
+          throws IOException, RepositoryException
+  {
     TreeWalk treeWalk = null;
     RevWalk revWalk = null;
 
@@ -115,8 +151,6 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     {
       treeWalk = new TreeWalk(repo);
       treeWalk.setRecursive(Util.nonNull(path).contains("/"));
-
-      ObjectId revId = GitUtil.getRevisionId(repo, revision);
 
       if (logger.isDebugEnabled())
       {
@@ -166,7 +200,6 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     {
       GitUtil.release(revWalk);
       GitUtil.release(treeWalk);
-      GitUtil.close(repo);
     }
   }
 
@@ -231,6 +264,64 @@ public class GitRepositoryBrowser implements RepositoryBrowser
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param files
+   * @param repo
+   * @param revId
+   * @param path
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  private void appendSubModules(List<FileObject> files,
+                                org.eclipse.jgit.lib.Repository repo,
+                                ObjectId revId, String path)
+          throws IOException, RepositoryException
+  {
+    path = Util.nonNull(path);
+
+    Map<String, SubRepository> subRepositories = getSubRepositories(repo,
+                                                   revId);
+
+    if (subRepositories != null)
+    {
+      for (Entry<String, SubRepository> e : subRepositories.entrySet())
+      {
+        String p = e.getKey();
+
+        if (p.startsWith(path))
+        {
+          p = p.substring(path.length());
+
+          if (p.startsWith("/"))
+          {
+            p = p.substring(1);
+          }
+
+          if (p.endsWith("/"))
+          {
+            p = p.substring(0, p.length() - 1);
+          }
+
+          if (!p.contains("/"))
+          {
+            FileObject fo = new FileObject();
+
+            fo.setDirectory(true);
+            fo.setPath(path);
+            fo.setName(p);
+            fo.setSubRepository(e.getValue());
+            
+            files.add(fo);
+          }
+        }
+      }
+    }
+  }
 
   /**
    * Method description
@@ -349,10 +440,11 @@ public class GitRepositoryBrowser implements RepositoryBrowser
    * @return
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   private BrowserResult getResult(org.eclipse.jgit.lib.Repository repo,
                                   ObjectId revId, String path)
-          throws IOException
+          throws IOException, RepositoryException
   {
     BrowserResult result = null;
     RevWalk revWalk = null;
@@ -382,6 +474,8 @@ public class GitRepositoryBrowser implements RepositoryBrowser
       result = new BrowserResult();
 
       List<FileObject> files = new ArrayList<FileObject>();
+
+      appendSubModules(files, repo, revId, path);
 
       if (Util.isEmpty(path))
       {
@@ -437,6 +531,44 @@ public class GitRepositoryBrowser implements RepositoryBrowser
     }
 
     return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repo
+   * @param revision
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  private Map<String, SubRepository> getSubRepositories(
+          org.eclipse.jgit.lib.Repository repo, ObjectId revision)
+          throws IOException, RepositoryException
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("read submodules of {} at {}", repository.getName(),
+                   revision);
+    }
+
+    Map<String, SubRepository> subRepositories = null;
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+    try
+    {
+      getContent(repo, revision, PATH_MODULES, baos);
+      subRepositories = GitSubModuleParser.parse(baos.toString());
+    }
+    catch (PathNotFoundException ex)
+    {
+      logger.trace("could not find .gitmodules", ex);
+    }
+
+    return subRepositories;
   }
 
   //~--- fields ---------------------------------------------------------------

@@ -1,0 +1,6 @@
+[submodule "gerrit"]
+	path = gerrit
+	url = http://localhost:8081/scm/git/gerrit
+[submodule "git-mod-1"]
+	path = git-mod-1
+	url = http://localhost:8081/scm/git/sub/git-mod-1
