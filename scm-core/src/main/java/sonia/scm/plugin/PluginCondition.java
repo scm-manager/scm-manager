@@ -42,6 +42,7 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -56,7 +57,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "conditions")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class PluginCondition
+public class PluginCondition implements Cloneable
 {
 
   /**
@@ -78,6 +79,28 @@ public class PluginCondition
     this.minVersion = minVersion;
     this.os = os;
     this.arch = arch;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.11
+   */
+  @Override
+  public PluginCondition clone()
+  {
+    PluginCondition clone = new PluginCondition(minVersion, null, arch);
+
+    if (Util.isNotEmpty(os))
+    {
+      clone.setOs(new ArrayList<String>(os));
+    }
+
+    return clone;
   }
 
   //~--- get methods ----------------------------------------------------------

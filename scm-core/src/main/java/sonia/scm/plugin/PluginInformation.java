@@ -40,6 +40,7 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -54,8 +55,45 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "plugin-information")
-public class PluginInformation implements Validateable
+public class PluginInformation implements Validateable, Cloneable
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @since 1.11
+   */
+  @Override
+  public PluginInformation clone()
+  {
+    PluginInformation clone = new PluginInformation();
+
+    clone.setArtifactId(artifactId);
+    clone.setAuthor(author);
+    clone.setCategory(category);
+
+    if (condition != null)
+    {
+      clone.setCondition(condition.clone());
+    }
+
+    clone.setDescription(description);
+
+    if (Util.isNotEmpty(screenshots))
+    {
+      clone.setScreenshots(new ArrayList<String>(screenshots));
+    }
+
+    clone.setState(state);
+    clone.setUrl(url);
+    clone.setVersion(version);
+    clone.setWiki(wiki);
+
+    return clone;
+  }
 
   /**
    * Method description
