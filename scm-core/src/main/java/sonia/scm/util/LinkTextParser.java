@@ -68,7 +68,7 @@ public class LinkTextParser
    *
    * @return
    */
-  public String parseText(String content)
+  public static String parseText(String content)
   {
     Matcher m = REGEX_URL.matcher(content);
     List<Token> tokens = new ArrayList<Token>();
