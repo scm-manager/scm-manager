@@ -54,6 +54,18 @@ public interface RepositoryClientHandler extends ClientHandler<Repository>
    * Method description
    *
    *
+   * @param type
+   * @param name
+   *
+   * @return
+   * @since 1.11
+   */
+  public Repository get(String type, String name);
+
+  /**
+   * Method description
+   *
+   *
    * @param repository
    *
    * @return

@@ -201,6 +201,23 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
    * Method description
    *
    *
+   * @param type
+   * @param name
+   *
+   * @return
+   * @since 1.11
+   */
+  @Override
+  public String getDetailUrl(String type, String name)
+  {
+    return new UrlBuilder(base).appendUrlPart(type).appendUrlPart(
+        name).toString();
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repositoryId
    * @param revision
    *

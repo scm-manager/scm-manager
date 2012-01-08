@@ -33,6 +33,10 @@
 
 package sonia.scm.url;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.HttpUtil;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -50,6 +54,9 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
 
   /** Field description */
   public static final String COMPONENT_CONTENT = "contentPanel";
+
+  /** Field description */
+  public static final String COMPONENT_DETAIL = "repositoryPanel";
 
   /** Field description */
   public static final String COMPONENT_DIFF = "diffPanel";
@@ -178,6 +185,24 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
     return new WUIUrlBuilder(baseUrl, COMPONENT_CONTENT).append(
         repositoryId).append(revision).append(path).append(
         VIEW_HISTORY).toString();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   * @param name
+   *
+   * @return
+   * @since 1.11
+   */
+  @Override
+  public String getDetailUrl(String type, String name)
+  {
+    name = name.concat(HttpUtil.SEPARATOR_PATH).concat(name);
+
+    return new WUIUrlBuilder(baseUrl, COMPONENT_DETAIL).append(name).toString();
   }
 
   /**

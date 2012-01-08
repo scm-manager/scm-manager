@@ -108,6 +108,18 @@ public interface RepositoryUrlProvider extends ModelUrlProvider
    * Method description
    *
    *
+   * @param type
+   * @param name
+   *
+   * @return
+   * @since 1.11
+   */
+  public String getDetailUrl(String type, String name);
+
+  /**
+   * Method description
+   *
+   *
    * @param repositoryId
    * @param revision
    *

@@ -73,6 +73,24 @@ public class JerseyRepositoryClientHandler
    * Method description
    *
    *
+   * @param type
+   * @param name
+   *
+   * @return
+   */
+  @Override
+  public Repository get(String type, String name)
+  {
+    String url = urlProvider.getRepositoryUrlProvider().getDetailUrl(type,
+                   name);
+
+    return getItemByUrl(url);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repository
    *
    * @return
