@@ -31,31 +31,29 @@
 
 package sonia.scm.url;
 
-//~--- non-JDK imports --------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
 
-import sonia.scm.util.HttpUtil;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public abstract class UrlTestBase
+public class WUIModelUrlProviderTest extends ModelUrlProviderTestBase
 {
 
-  /** Field description */
-  public static final String EXTENSION_JSON = ".json";
-
-  /** Field description */
-  public static final String EXTENSION_XML = ".xml";
-
-  /** Field description */
-  public static final String URLSUFFIX_INDEX = "/index.html";
-
-  /** Field description */
-  public static final String URLSUFFIX_RESTAPI = "/api/rest/";
-
-  /** Field description */
-  protected static final String BASEURL = "http://scm.scm-manager.org/scm";
+  /**
+   * Constructs ...
+   *
+   */
+  public WUIModelUrlProviderTest()
+  {
+    modelMap = new HashMap<String, String>();
+    modelMap.put(MODEL_REPOSITORY, "repositoryPanel");
+    modelMap.put(MODEL_USERS, "userPanel");
+    modelMap.put(MODEL_GROUPS, "groupPanel");
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -67,25 +65,10 @@ public abstract class UrlTestBase
    *
    * @return
    */
-  protected String createBaseRestUrl(String baseUrl)
+  @Override
+  protected ModelUrlProvider createGroupModelUrlProvider(String baseUrl)
   {
-    return baseUrl.concat(URLSUFFIX_RESTAPI);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseUrl
-   * @param urlPart
-   * @param extension
-   *
-   * @return
-   */
-  protected String createRestUrl(String baseUrl, String urlPart,
-                                 String extension)
-  {
-    return createBaseRestUrl(baseUrl).concat(urlPart).concat(extension);
+    return createWuiUrlProvider(baseUrl).getGroupUrlProvider();
   }
 
   /**
@@ -96,24 +79,10 @@ public abstract class UrlTestBase
    *
    * @return
    */
-  protected String createWuiUrl(String baseUrl)
+  @Override
+  protected ModelUrlProvider createRepositoryModelUrlProvider(String baseUrl)
   {
-    return baseUrl.concat(URLSUFFIX_INDEX);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseUrl
-   * @param param
-   *
-   * @return
-   */
-  protected String createWuiUrl(String baseUrl, String param)
-  {
-    return baseUrl.concat(URLSUFFIX_INDEX).concat(
-        HttpUtil.SEPARATOR_HASH).concat(param);
+    return createWuiUrlProvider(baseUrl).getRepositoryUrlProvider();
   }
 
   /**
@@ -124,9 +93,65 @@ public abstract class UrlTestBase
    *
    * @return
    */
-  protected UrlProvider createWuiUrlProvider(String baseUrl)
+  @Override
+  protected ModelUrlProvider createUserModelUrlProvider(String baseUrl)
   {
-    return UrlProviderFactory.createUrlProvider(baseUrl,
-            UrlProviderFactory.TYPE_WUI);
+    return createWuiUrlProvider(baseUrl).getUserUrlProvider();
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param baseUrl
+   * @param model
+   *
+   * @return
+   */
+  @Override
+  protected String getExpectedAllUrl(String baseUrl, String model)
+  {
+    return createModelBaseUrl(baseUrl, model);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param baseUrl
+   * @param model
+   * @param item
+   *
+   * @return
+   */
+  @Override
+  protected String getExpectedDetailUrl(String baseUrl, String model,
+          String item)
+  {
+    return createModelBaseUrl(baseUrl, model).concat(
+        WUIUrlBuilder.SEPARATOR).concat(item);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param baseUrl
+   * @param model
+   *
+   * @return
+   */
+  private String createModelBaseUrl(String baseUrl, String model)
+  {
+    return createWuiUrl(baseUrl, modelMap.get(model));
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Map<String, String> modelMap;
 }

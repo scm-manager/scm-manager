@@ -42,11 +42,6 @@ import sonia.scm.util.HttpUtil;
 public class WUIUrlProviderTest extends UrlProviderTestBase
 {
 
-  /** Field description */
-  public static final String URLSUFFIX_INDEX = "/index.html";
-
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Method description
    *
@@ -104,35 +99,5 @@ public class WUIUrlProviderTest extends UrlProviderTestBase
   protected String getExpectedStateUrl(String baseUrl)
   {
     return createWuiUrl(baseUrl);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseUrl
-   *
-   * @return
-   */
-  private String createWuiUrl(String baseUrl)
-  {
-    return baseUrl.concat(URLSUFFIX_INDEX);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseUrl
-   * @param param
-   *
-   * @return
-   */
-  private String createWuiUrl(String baseUrl, String param)
-  {
-    return baseUrl.concat(URLSUFFIX_INDEX).concat(
-        HttpUtil.SEPARATOR_HASH).concat(param);
   }
 }
