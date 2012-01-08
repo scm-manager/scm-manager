@@ -246,7 +246,7 @@
         <configuration>
           <pushChanges>false</pushChanges>
           <localCheckout>true</localCheckout>
-          <releaseProfiles>release</releaseProfiles>
+          <releaseProfiles>release,APIviz</releaseProfiles>
         </configuration>
       </plugin>
       
