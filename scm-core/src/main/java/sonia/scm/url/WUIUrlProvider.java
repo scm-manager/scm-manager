@@ -75,17 +75,17 @@ public class WUIUrlProvider implements UrlProvider
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the baseUrl, because there is no authentication url.
    *
+   *
+   * @returns the baseUrl, because there is no authentication url
    *
    * @return
    */
   @Override
   public String getAuthenticationUrl()
   {
-
-    // ???
-    return null;
+    return baseUrl;
   }
 
   /**
@@ -125,17 +125,15 @@ public class WUIUrlProvider implements UrlProvider
   }
 
   /**
-   * Method description
+   * Returns the baseUrl, because there is no state url.
    *
    *
-   * @return
+   * @return the baseUrl, because there is no state url
    */
   @Override
   public String getStateUrl()
   {
-
-    // ???
-    return null;
+    return baseUrl;
   }
 
   /**
