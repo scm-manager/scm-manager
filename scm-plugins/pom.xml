@@ -6,13 +6,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>1.11</version>
+    <version>1.12-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-plugins</artifactId>
   <packaging>pom</packaging>
-  <version>1.11</version>
+  <version>1.12-SNAPSHOT</version>
   <name>scm-plugins</name>
 
   <modules>
@@ -26,7 +26,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>1.11</version>
+      <version>1.12-SNAPSHOT</version>
     </dependency>
 
   </dependencies>
@@ -57,7 +57,7 @@
       <plugin>
         <groupId>sonia.scm.maven</groupId>
         <artifactId>scm-maven-plugin</artifactId>
-        <version>1.11</version>
+        <version>1.12-SNAPSHOT</version>
         <executions>
           <execution>
             <phase>process-resources</phase>

@@ -6,12 +6,12 @@
   <parent>
     <artifactId>scm-clients</artifactId>
     <groupId>sonia.scm.clients</groupId>
-    <version>1.11</version>
+    <version>1.12-SNAPSHOT</version>
   </parent>
   
   <groupId>sonia.scm.clients</groupId>
   <artifactId>scm-cli-client</artifactId>
-  <version>1.11</version>
+  <version>1.12-SNAPSHOT</version>
   <name>scm-cli-client</name>
 
   <dependencies>
@@ -35,7 +35,7 @@
     <dependency>
       <artifactId>scm-core</artifactId>
       <groupId>sonia.scm</groupId>
-      <version>1.11</version>
+      <version>1.12-SNAPSHOT</version>
       <exclusions>
         <exclusion>
           <artifactId>guice</artifactId>
@@ -55,7 +55,7 @@
     <dependency>
       <groupId>sonia.scm.clients</groupId>
       <artifactId>scm-client-impl</artifactId>
-      <version>1.11</version>
+      <version>1.12-SNAPSHOT</version>
     </dependency>
     
     <dependency>
