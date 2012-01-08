@@ -38,11 +38,6 @@ package sonia.scm.url;
 public abstract class RestUrlProviderTestBase extends UrlProviderTestBase
 {
 
-  /** Field description */
-  public static final String URLSUFFIX_RESTAPI = "/api/rest/";
-
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Method description
    *
@@ -50,6 +45,24 @@ public abstract class RestUrlProviderTestBase extends UrlProviderTestBase
    * @return
    */
   protected abstract String getExtension();
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param baseUrl
+   * @param urlPart
+   *
+   * @return
+   */
+  protected String createRestUrl(String baseUrl, String urlPart)
+  {
+    return createRestUrl(baseUrl, urlPart, getExtension());
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -91,34 +104,5 @@ public abstract class RestUrlProviderTestBase extends UrlProviderTestBase
   protected String getExpectedStateUrl(String baseUrl)
   {
     return createRestUrl(baseUrl, "authentication");
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseUrl
-   *
-   * @return
-   */
-  private String createBaseRestUrl(String baseUrl)
-  {
-    return baseUrl.concat(URLSUFFIX_RESTAPI);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseUrl
-   * @param urlPart
-   *
-   * @return
-   */
-  private String createRestUrl(String baseUrl, String urlPart)
-  {
-    return createBaseRestUrl(baseUrl).concat(urlPart).concat(getExtension());
   }
 }

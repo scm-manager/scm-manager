@@ -35,15 +35,15 @@ package sonia.scm.url;
  *
  * @author Sebastian Sdorra
  */
-public class JSONRestUrlProviderTest extends RestUrlProviderTestBase
+public class JSONRestModelUrlProviderTest extends RestModelUrlProviderTestBase
 {
 
   /**
    * Method description
    *
    *
-   *
    * @param baseUrl
+   *
    * @return
    */
   @Override

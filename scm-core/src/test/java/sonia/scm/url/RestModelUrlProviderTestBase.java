@@ -33,25 +33,22 @@ package sonia.scm.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import sonia.scm.util.HttpUtil;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public abstract class UrlProviderTestBase extends UrlTestBase
+public abstract class RestModelUrlProviderTestBase
+        extends ModelUrlProviderTestBase
 {
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   *
    * @param baseUrl
+   *
    * @return
    */
   protected abstract UrlProvider createUrlProvider(String baseUrl);
@@ -62,94 +59,100 @@ public abstract class UrlProviderTestBase extends UrlTestBase
    * Method description
    *
    *
-   * @param baseUrl
-   *
    * @return
    */
-  protected abstract String getExpectedAuthenticationUrl(String baseUrl);
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseUrl
-   *
-   * @return
-   */
-  protected abstract String getExpectedConfigUrl(String baseUrl);
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseUrl
-   *
-   * @return
-   */
-  protected abstract String getExpectedStateUrl(String baseUrl);
+  protected abstract String getExtension();
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @param baseUrl
+   *
+   * @return
    */
-  @Test
-  public void testGetAuthenticationUrl()
+  @Override
+  protected ModelUrlProvider createGroupModelUrlProvider(String baseUrl)
   {
-    assertEquals(getExpectedAuthenticationUrl(BASEURL),
-                 createUrlProvider(BASEURL).getAuthenticationUrl());
+    return createUrlProvider(baseUrl).getGroupUrlProvider();
   }
 
   /**
    * Method description
    *
+   *
+   * @param baseUrl
+   *
+   * @return
    */
-  @Test
-  public void testGetConfigUrl()
+  @Override
+  protected ModelUrlProvider createRepositoryModelUrlProvider(String baseUrl)
   {
-    assertEquals(getExpectedConfigUrl(BASEURL),
-                 createUrlProvider(BASEURL).getConfigUrl());
+    return createUrlProvider(baseUrl).getRepositoryUrlProvider();
   }
 
   /**
    * Method description
    *
+   *
+   * @param baseUrl
+   * @param urlPart
+   *
+   * @return
    */
-  @Test
-  public void testGetGroupUrlProvider()
+  protected String createRestUrl(String baseUrl, String urlPart)
   {
-    assertNotNull(createUrlProvider(BASEURL).getGroupUrlProvider());
+    return createRestUrl(baseUrl, urlPart, getExtension());
   }
 
   /**
    * Method description
    *
+   *
+   * @param baseUrl
+   *
+   * @return
    */
-  @Test
-  public void testGetStateUrl()
+  @Override
+  protected ModelUrlProvider createUserModelUrlProvider(String baseUrl)
   {
-    assertEquals(getExpectedStateUrl(BASEURL),
-                 createUrlProvider(BASEURL).getStateUrl());
+    return createUrlProvider(baseUrl).getUserUrlProvider();
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param baseUrl
+   * @param model
+   *
+   * @return
+   */
+  @Override
+  protected String getExpectedAllUrl(String baseUrl, String model)
+  {
+    return createRestUrl(baseUrl, model);
   }
 
   /**
    * Method description
    *
-   */
-  @Test
-  public void testGetUserRepositoryUrlProvider()
-  {
-    assertNotNull(createUrlProvider(BASEURL).getRepositoryUrlProvider());
-  }
-
-  /**
-   * Method description
    *
+   * @param baseUrl
+   * @param model
+   * @param item
+   *
+   * @return
    */
-  @Test
-  public void testGetUserUrlProvider()
+  @Override
+  protected String getExpectedDetailUrl(String baseUrl, String model,
+          String item)
   {
-    assertNotNull(createUrlProvider(BASEURL).getUserUrlProvider());
+    return createRestUrl(baseUrl,
+                         model.concat(HttpUtil.SEPARATOR_PATH).concat(item));
   }
 }

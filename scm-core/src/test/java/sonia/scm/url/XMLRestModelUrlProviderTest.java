@@ -35,22 +35,22 @@ package sonia.scm.url;
  *
  * @author Sebastian Sdorra
  */
-public class JSONRestUrlProviderTest extends RestUrlProviderTestBase
+public class XMLRestModelUrlProviderTest extends RestModelUrlProviderTestBase
 {
 
   /**
-   * Method description
-   *
-   *
-   *
-   * @param baseUrl
-   * @return
+   *   Method description
+   *  
+   *  
+   *   @param baseUrl
+   *  
+   *   @return
    */
   @Override
   protected UrlProvider createUrlProvider(String baseUrl)
   {
     return UrlProviderFactory.createUrlProvider(baseUrl,
-            UrlProviderFactory.TYPE_RESTAPI_JSON);
+            UrlProviderFactory.TYPE_RESTAPI_XML);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -64,6 +64,6 @@ public class JSONRestUrlProviderTest extends RestUrlProviderTestBase
   @Override
   protected String getExtension()
   {
-    return EXTENSION_JSON;
+    return EXTENSION_XML;
   }
 }

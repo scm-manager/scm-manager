@@ -38,11 +38,6 @@ package sonia.scm.url;
 public class XMLRestUrlProviderTest extends RestUrlProviderTestBase
 {
 
-  /** Field description */
-  public static final String EXTENSION = ".xml";
-
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Method description
    *
@@ -69,6 +64,6 @@ public class XMLRestUrlProviderTest extends RestUrlProviderTestBase
   @Override
   protected String getExtension()
   {
-    return EXTENSION;
+    return EXTENSION_XML;
   }
 }

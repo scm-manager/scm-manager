@@ -41,8 +41,24 @@ import static org.junit.Assert.*;
  *
  * @author Sebastian Sdorra
  */
-public abstract class UrlProviderTestBase extends UrlTestBase
+public abstract class ModelUrlProviderTestBase extends UrlTestBase
 {
+
+  /** Field description */
+  public static final String ITEM = "hitchhiker";
+
+  /** Field description */
+  public static final String MODEL_GROUPS = "groups";
+
+  /** Field description */
+  public static final String MODEL_REPOSITORY = "repositories";
+
+  /** Field description */
+  public static final String MODEL_USERS = "users";
+
+  /** Field description */
+  private static final String[] MODELS = new String[] { MODEL_REPOSITORY,
+          MODEL_USERS, MODEL_GROUPS };
 
   //~--- methods --------------------------------------------------------------
 
@@ -54,7 +70,30 @@ public abstract class UrlProviderTestBase extends UrlTestBase
    * @param baseUrl
    * @return
    */
-  protected abstract UrlProvider createUrlProvider(String baseUrl);
+  protected abstract ModelUrlProvider createGroupModelUrlProvider(
+          String baseUrl);
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param baseUrl
+   * @return
+   */
+  protected abstract ModelUrlProvider createRepositoryModelUrlProvider(
+          String baseUrl);
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param baseUrl
+   * @return
+   */
+  protected abstract ModelUrlProvider createUserModelUrlProvider(
+          String baseUrl);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -63,30 +102,24 @@ public abstract class UrlProviderTestBase extends UrlTestBase
    *
    *
    * @param baseUrl
+   * @param model
    *
    * @return
    */
-  protected abstract String getExpectedAuthenticationUrl(String baseUrl);
+  protected abstract String getExpectedAllUrl(String baseUrl, String model);
 
   /**
    * Method description
    *
    *
    * @param baseUrl
+   * @param model
+   * @param item
    *
    * @return
    */
-  protected abstract String getExpectedConfigUrl(String baseUrl);
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseUrl
-   *
-   * @return
-   */
-  protected abstract String getExpectedStateUrl(String baseUrl);
+  protected abstract String getExpectedDetailUrl(String baseUrl, String model,
+          String item);
 
   //~--- methods --------------------------------------------------------------
 
@@ -95,10 +128,13 @@ public abstract class UrlProviderTestBase extends UrlTestBase
    *
    */
   @Test
-  public void testGetAuthenticationUrl()
+  public void testGetAllUrl()
   {
-    assertEquals(getExpectedAuthenticationUrl(BASEURL),
-                 createUrlProvider(BASEURL).getAuthenticationUrl());
+    for (String model : MODELS)
+    {
+      assertEquals(getExpectedAllUrl(BASEURL, model),
+                   createModelUrlProvider(BASEURL, model).getAllUrl());
+    }
   }
 
   /**
@@ -106,50 +142,42 @@ public abstract class UrlProviderTestBase extends UrlTestBase
    *
    */
   @Test
-  public void testGetConfigUrl()
+  public void testGetDetailUrl()
   {
-    assertEquals(getExpectedConfigUrl(BASEURL),
-                 createUrlProvider(BASEURL).getConfigUrl());
+    for (String model : MODELS)
+    {
+      assertEquals(getExpectedDetailUrl(BASEURL, model, ITEM),
+                   createModelUrlProvider(BASEURL, model).getDetailUrl(ITEM));
+    }
   }
 
   /**
    * Method description
    *
-   */
-  @Test
-  public void testGetGroupUrlProvider()
-  {
-    assertNotNull(createUrlProvider(BASEURL).getGroupUrlProvider());
-  }
-
-  /**
-   * Method description
    *
-   */
-  @Test
-  public void testGetStateUrl()
-  {
-    assertEquals(getExpectedStateUrl(BASEURL),
-                 createUrlProvider(BASEURL).getStateUrl());
-  }
-
-  /**
-   * Method description
    *
-   */
-  @Test
-  public void testGetUserRepositoryUrlProvider()
-  {
-    assertNotNull(createUrlProvider(BASEURL).getRepositoryUrlProvider());
-  }
-
-  /**
-   * Method description
+   * @param baseUrl
+   * @param model
    *
+   * @return
    */
-  @Test
-  public void testGetUserUrlProvider()
+  private ModelUrlProvider createModelUrlProvider(String baseUrl, String model)
   {
-    assertNotNull(createUrlProvider(BASEURL).getUserUrlProvider());
+    ModelUrlProvider urlProvider = null;
+
+    if (MODEL_REPOSITORY.equals(model))
+    {
+      urlProvider = createRepositoryModelUrlProvider(baseUrl);
+    }
+    else if (MODEL_USERS.equals(model))
+    {
+      urlProvider = createUserModelUrlProvider(baseUrl);
+    }
+    else if (MODEL_GROUPS.equals(model))
+    {
+      urlProvider = createGroupModelUrlProvider(baseUrl);
+    }
+
+    return urlProvider;
   }
 }

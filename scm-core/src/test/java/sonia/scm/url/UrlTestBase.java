@@ -35,35 +35,49 @@ package sonia.scm.url;
  *
  * @author Sebastian Sdorra
  */
-public class JSONRestUrlProviderTest extends RestUrlProviderTestBase
+public abstract class UrlTestBase
 {
+
+  /** Field description */
+  public static final String EXTENSION_JSON = ".json";
+
+  /** Field description */
+  public static final String EXTENSION_XML = ".xml";
+
+  /** Field description */
+  public static final String URLSUFFIX_RESTAPI = "/api/rest/";
+
+  /** Field description */
+  protected static final String BASEURL = "http://scm.scm-manager.org/scm";
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
-   *
    *
    *
    * @param baseUrl
+   *
    * @return
    */
-  @Override
-  protected UrlProvider createUrlProvider(String baseUrl)
+  protected String createBaseRestUrl(String baseUrl)
   {
-    return UrlProviderFactory.createUrlProvider(baseUrl,
-            UrlProviderFactory.TYPE_RESTAPI_JSON);
+    return baseUrl.concat(URLSUFFIX_RESTAPI);
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
+   * @param baseUrl
+   * @param urlPart
+   * @param extension
+   *
    * @return
    */
-  @Override
-  protected String getExtension()
+  protected String createRestUrl(String baseUrl, String urlPart,
+                                 String extension)
   {
-    return EXTENSION_JSON;
+    return createBaseRestUrl(baseUrl).concat(urlPart).concat(extension);
   }
 }
