@@ -210,8 +210,8 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
   @Override
   public String getDetailUrl(String type, String name)
   {
-    return new UrlBuilder(base).appendUrlPart(type).appendUrlPart(
-        name).toString();
+    return new UrlBuilder(base).appendUrlPart(type).appendUrlPart(name).append(
+        extension).toString();
   }
 
   /**
