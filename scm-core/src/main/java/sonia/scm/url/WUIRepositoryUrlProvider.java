@@ -200,7 +200,7 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   @Override
   public String getDetailUrl(String type, String name)
   {
-    name = name.concat(HttpUtil.SEPARATOR_PATH).concat(name);
+    name = type.concat(HttpUtil.SEPARATOR_PATH).concat(name);
 
     return new WUIUrlBuilder(baseUrl, COMPONENT_DETAIL).append(name).toString();
   }
