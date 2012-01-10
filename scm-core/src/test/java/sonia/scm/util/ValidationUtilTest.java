@@ -146,6 +146,7 @@ public class ValidationUtilTest
     assertTrue(ValidationUtil.isUsernameValid("Test_user-123.git"));
     assertTrue(ValidationUtil.isUsernameValid("test@scm-manager.de"));
     assertTrue(ValidationUtil.isUsernameValid("test 123"));
+    assertTrue(ValidationUtil.isUsernameValid("t"));
 
     // false
     assertFalse(ValidationUtil.isUsernameValid(" test 123"));
@@ -154,5 +155,8 @@ public class ValidationUtilTest
     assertFalse(ValidationUtil.isUsernameValid("test/123"));
     assertFalse(ValidationUtil.isUsernameValid("test%123"));
     assertFalse(ValidationUtil.isUsernameValid("test:123"));
+    assertFalse(ValidationUtil.isUsernameValid("t "));
+    assertFalse(ValidationUtil.isUsernameValid(" t"));
+    assertFalse(ValidationUtil.isUsernameValid(" t "));
   }
 }
