@@ -222,7 +222,7 @@ public class RepositoryResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns a repository.<br />
+   * Returns the {@link Repository} with the specified id.<br />
    * <br />
    * Status codes:
    * <ul>
@@ -261,7 +261,7 @@ public class RepositoryResource
    * @param sortby sort parameter
    * @param desc sort direction desc or aesc
    *
-   * @return
+   * @return all repositories
    */
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -292,7 +292,7 @@ public class RepositoryResource
    * @param revision the revision of the file
    * @param path the path of the file
    *
-   * @return
+   * @return a annotate/blame view for the given path
    *
    * @throws IOException
    * @throws RepositoryException
@@ -356,7 +356,7 @@ public class RepositoryResource
    * @param revision the revision of the file
    * @param path the path of the folder
    *
-   * @return
+   * @return a list of folders and files for the given folder
    *
    * @throws IOException
    * @throws RepositoryException
@@ -399,7 +399,7 @@ public class RepositoryResource
   }
 
   /**
-   * Returns a repository.<br />
+   * Returns the {@link Repository} with the specified type and name.<br />
    * <br />
    * Status codes:
    * <ul>
@@ -439,24 +439,24 @@ public class RepositoryResource
   }
 
   /**
-   *   Returns a list of {@link Changeset} for the given repository.<br />
-   *   <br />
-   *   Status codes:
-   *   <ul>
-   *     <li>200 get successful</li>
-   *     <li>400 bad request, the changeset feature is not
-   *         supported by this type of repositories.</li>
-   *     <li>404 not found, if the repository or the path could not be found</li>
-   *     <li>500 internal server error</li>
-   *   </ul>
+   * Returns a list of {@link Changeset} for the given repository.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>400 bad request, the changeset feature is not
+   *       supported by this type of repositories.</li>
+   *   <li>404 not found, if the repository or the path could not be found</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *   @param id the id of the repository
-   *   @param path path of a file
-   *   @param revision the revision of the file specified by the path parameter
-   *   @param start the start value for paging
-   *   @param limit the limit value for paging
+   * @param id the id of the repository
+   * @param path path of a file
+   * @param revision the revision of the file specified by the path parameter
+   * @param start the start value for paging
+   * @param limit the limit value for paging
    *
-   *   @return
+   * @return a list of {@link Changeset} for the given repository
    *
    * @throws IOException
    * @throws RepositoryException
@@ -525,7 +525,7 @@ public class RepositoryResource
    * @param revision the revision of the file
    * @param path path to the file
    *
-   * @return
+   * @return the content of a file
    */
   @GET
   @Path("{id}/content")
@@ -590,7 +590,7 @@ public class RepositoryResource
    * @param revision the revision of the file
    * @param path path to the file
    *
-   * @return
+   * @return the modifications of a {@link Changeset}
    *
    * @throws IOException
    * @throws RepositoryException
