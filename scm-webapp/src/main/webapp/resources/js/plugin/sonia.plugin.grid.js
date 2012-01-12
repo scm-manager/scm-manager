@@ -42,6 +42,8 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
   colVersionText: 'Version',
   colActionText: 'Action',
   colUrlText: 'Url',
+  // TODO i18n
+  colCategoryText: 'Category',
   emptyText: 'No plugins avaiable',
 
   actionLinkTemplate: '<a style="cursor: pointer;" onclick="Sonia.plugin.CenterInstance.{1}(\'{2}\')">{0}</a>',
@@ -60,18 +62,45 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
         {id: 'description', header: this.colDescriptionText, dataIndex: 'description'},
         {id: 'version', header: this.colVersionText, dataIndex: 'version'},
         {id: 'action', header: this.colActionText, renderer: this.renderActionColumn},
-        {id: 'Url', header: this.colUrlText, dataIndex: 'url', renderer: this.renderUrl, width: 150}
+        {id: 'Url', header: this.colUrlText, dataIndex: 'url', renderer: this.renderUrl, width: 150},
+        {id: 'Category', header: this.colCategoryText, dataIndex: 'category', hidden: true, hideable: false}
       ]
+    });
+    
+    var pluginStore = new Ext.data.GroupingStore({
+      proxy: new Ext.data.HttpProxy({
+        url: restUrl + 'plugins/overview.json',
+        disableCaching: false
+      }),
+      reader: new Ext.data.JsonReader({
+        fields: [ 'name', 'author', 'description', 'url', 'version', 'state', 'groupId', 'artifactId', {
+          name: 'category',
+          convert: this.convertCategory,
+          scope: this
+        }]
+      }),
+      sortInfo: {
+        field: 'name'
+      },
+      autoLoad: true,
+      autoDestroy: true,
+      remoteGroup: false,
+      groupOnSort: false,
+      groupField: 'category',
+      groupDir: 'AES'
     });
 
     var config = {
       title: main.tabPluginsText,
       autoExpandColumn: 'description',
-      store: new Sonia.plugin.Store({
-        url: restUrl + 'plugins/overview.json'
-      }),
+      store: pluginStore,
       colModel: pluginColModel,
-      emptyText: this.emptyText
+      emptyText: this.emptyText,
+      view: new Ext.grid.GroupingView({
+        forceFit: true,
+        enableGroupingMenu: false,
+        groupTextTpl: '{group} ({[values.rs.length]} {[values.rs.length > 1 ? "Plugins" : "Plugin"]})'
+      })
     };
 
     Sonia.plugin.CenterInstance.addListener('changed', function(){
@@ -83,6 +112,10 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.plugin.Grid.superclass.initComponent.apply(this, arguments);
+  },
+  
+  convertCategory: function(category){
+    return category ? category : 'Miscellaneous';
   },
 
   renderActionColumn: function(val, meta, record){
