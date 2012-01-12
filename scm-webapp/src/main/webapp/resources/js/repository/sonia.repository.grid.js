@@ -257,10 +257,10 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         search = this.searchValue.toLowerCase();
       }
       store.filterBy(function(rec){
-        return (! search || 
-          rec.get('name').toLowerCase().indexOf(search) >= 0 || 
-          rec.get('description').toLowerCase().indexOf(search) >= 0) && 
-          (! this.typeFilter || rec.get('type') == this.typeFilter);
+        var desc = rec.get('description');
+        return (! search || rec.get('name').toLowerCase().indexOf(search) >= 0 ||
+               (desc && desc.toLowerCase().indexOf(search) >= 0)) && 
+               (! this.typeFilter || rec.get('type') == this.typeFilter);
       }, this);
     }
   },
