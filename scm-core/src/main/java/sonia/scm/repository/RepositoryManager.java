@@ -41,6 +41,8 @@ import sonia.scm.TypeManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+
 import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,6 +61,21 @@ public interface RepositoryManager
                 RepositoryHookSupport, ChangesetViewerProvider,
                 BlameViewerProvider, DiffViewerProvider
 {
+
+  /**
+   * Imports an existing {@link Repository}.
+   * Note: This method should only be called from a {@link RepositoryHandler}.
+   *
+   *
+   * @param repository {@link Repository} to import
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  public void importRepository(Repository repository)
+          throws IOException, RepositoryException;
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns a {@link Repository} by its type and name or

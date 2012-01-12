@@ -163,12 +163,12 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    *
    *
    * @param repository
+   * @param createRepository
    *
    * @throws IOException
    * @throws RepositoryException
    */
-  @Override
-  public void create(Repository repository)
+  public void create(Repository repository, boolean createRepository)
           throws RepositoryException, IOException
   {
     if (logger.isInfoEnabled())
@@ -187,7 +187,11 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
     repository.setId(UUID.randomUUID().toString());
     repository.setCreationDate(System.currentTimeMillis());
-    getHandler(repository).create(repository);
+
+    if (createRepository)
+    {
+      getHandler(repository).create(repository);
+    }
 
     synchronized (XmlRepositoryDatabase.class)
     {
@@ -196,6 +200,22 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     fireEvent(repository, HandlerEvent.CREATE);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Override
+  public void create(Repository repository)
+          throws RepositoryException, IOException
+  {
+    create(repository, true);
   }
 
   /**
@@ -283,6 +303,22 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     fireHookEvent(repository, event);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Override
+  public void importRepository(Repository repository)
+          throws RepositoryException, IOException
+  {
+    create(repository, false);
   }
 
   /**

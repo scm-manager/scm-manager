@@ -38,6 +38,7 @@ package sonia.scm.repository;
 import sonia.scm.ConfigChangedListener;
 import sonia.scm.Handler;
 import sonia.scm.ListenerSupport;
+import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
@@ -64,4 +65,17 @@ public interface RepositoryHandler
    * @return resource path of the {@link Repository}
    */
   public String createResourcePath(Repository repository);
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns the {@link ImportHandler} for the repository type of this handler.
+   *
+   *
+   * @return {@link ImportHandler} for the repository type of this handler
+   * @since 1.12
+   *
+   * @throws NotSupportedFeatuerException
+   */
+  public ImportHandler getImportHandler() throws NotSupportedFeatuerException;
 }
