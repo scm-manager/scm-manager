@@ -42,9 +42,9 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
                               <div class="cs-date">{2}</div>',
   
   modificationsTemplate: '<div class="cs-mod">\
-                            <img src="resources/images/add.gif" alt="Added"><span class="cs-mod-txt">{0}</span>\
+                            <img src="resources/images/add.png" alt="Added"><span class="cs-mod-txt">{0}</span>\
                             <img src="resources/images/modify.gif" alt="Modified"><span class="cs-mod-txt">{1}</span>\
-                            <img src="resources/images/delete.gif" alt="Deleted"><span class="cs-mod-txt">{2}</span>\
+                            <img src="resources/images/delete.png" alt="Deleted"><span class="cs-mod-txt">{2}</span>\
                           </div>',
   
   idsTemplate: new Ext.XTemplate('<div class="cs-commit">Commit: <a class="scm-link cs-diff-link" rel="{id}">{id}</a></div>\

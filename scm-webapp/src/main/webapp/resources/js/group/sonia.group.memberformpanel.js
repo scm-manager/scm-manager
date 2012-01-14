@@ -32,8 +32,8 @@
 Sonia.group.MemberFormPanel = Ext.extend(Sonia.group.FormPanel, {
     
   memberStore: null,
-  addIcon: 'resources/images/add.gif',
-  removeIcon: 'resources/images/delete.gif',
+  addIcon: 'resources/images/add.png',
+  removeIcon: 'resources/images/delete.png',
   
   initComponent: function(){  
     this.memberStore = new Ext.data.SimpleStore({
