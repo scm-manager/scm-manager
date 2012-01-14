@@ -753,3 +753,9 @@ td.x-date-mp-sel a{
 .x-list-selected {
     background-color:#fbf0d2;
 }
+
+/* scm changes */
+
+.x-tbar-loading {
+  background-image: url(../images/slate/grid/refresh.png) !important;
+}
