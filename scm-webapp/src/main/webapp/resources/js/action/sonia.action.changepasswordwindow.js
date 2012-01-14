@@ -52,10 +52,10 @@ Sonia.action.ChangePasswordWindow = Ext.extend(Ext.Window,{
       plain: true,
       border: false,
       modal: true,
+      title: this.titleText,
       items: [{
         id: 'changePasswordForm',
         url: restUrl + 'action/change-password.json',
-        title: this.titleText,
         frame: true,
         xtype: 'form',
         monitorValid: true,
