@@ -489,7 +489,7 @@ Ext.onReady(function(){
       region: 'north',
       id: 'north-panel',
       contentEl: 'north',
-      height: 75
+      height: 60
     }), {
       region: 'west',
       id: 'navigationPanel',
