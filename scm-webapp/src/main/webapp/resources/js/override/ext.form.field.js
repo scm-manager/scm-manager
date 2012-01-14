@@ -48,7 +48,7 @@ Ext.override(Ext.form.Field, {
       tag: 'img',
       width : 16,
       height : 16,
-      src: 'resources/images/help.gif',
+      src: 'resources/images/help.png',
       cls: cls
     });
 

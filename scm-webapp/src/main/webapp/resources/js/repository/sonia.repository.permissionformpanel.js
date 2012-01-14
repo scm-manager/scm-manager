@@ -187,7 +187,7 @@ Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
           xtype: 'box',
           autoEl: {
             tag: 'img',
-            src: 'resources/images/help.gif'
+            src: 'resources/images/help.png'
           }
         }]
       }]
