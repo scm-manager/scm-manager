@@ -92,6 +92,14 @@ if (Sonia.login.Form){
 
 }
 
+if (Sonia.login.Window){
+  
+  Ext.override(Sonia.login.Form, {
+    titleText: 'Anmeldung'
+  });
+
+}
+
 // sonia.rest.js
 
 if ( Sonia.rest.JsonStore ){

@@ -31,6 +31,8 @@
 
 Sonia.login.Window = Ext.extend(Ext.Window,{
 
+  titleText: 'Please Login',
+
   initComponent: function(){
     var form = new Sonia.login.Form();
     form.on('actioncomplete', function(){
@@ -50,6 +52,7 @@ Sonia.login.Window = Ext.extend(Ext.Window,{
       plain: true,
       border: false,
       modal: true,
+      title: this.titleText,
       items: [form]
     };
 

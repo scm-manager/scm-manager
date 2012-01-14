@@ -35,7 +35,6 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
   passwordText: 'Password',
   loginText: 'Login',
   cancelText: 'Cancel',
-  titleText: 'Please Login',
   waitTitleText: 'Connecting',
   WaitMsgText: 'Sending data...',
   failedMsgText: 'Login failed!',
