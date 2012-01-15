@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -83,13 +84,17 @@ public abstract class AbstactImportHandler implements ImportHandler
    *
    * @param manager
    *
+   *
+   * @return
    * @throws IOException
    * @throws RepositoryException
    */
   @Override
-  public void importRepositories(RepositoryManager manager)
+  public List<String> importRepositories(RepositoryManager manager)
           throws IOException, RepositoryException
   {
+    List<String> imported = new ArrayList<String>();
+
     if (logger.isTraceEnabled())
     {
       logger.trace("search for repositories to import");
@@ -110,13 +115,18 @@ public abstract class AbstactImportHandler implements ImportHandler
 
       if (repository == null)
       {
-        importRepository(manager, repositoryName);
+        if (importRepository(manager, repositoryName))
+        {
+          imported.add(repositoryName);
+        }
       }
       else if (logger.isDebugEnabled())
       {
         logger.debug("repository {} is allready managed", repositoryName);
       }
     }
+
+    return imported;
   }
 
   /**
@@ -151,13 +161,16 @@ public abstract class AbstactImportHandler implements ImportHandler
    * @param manager
    * @param repositoryName
    *
+   *
+   * @return
    * @throws IOException
    * @throws RepositoryException
    */
-  private void importRepository(RepositoryManager manager,
-                                String repositoryName)
+  private boolean importRepository(RepositoryManager manager,
+                                   String repositoryName)
           throws IOException, RepositoryException
   {
+    boolean result = false;
     Repository repository =
       createRepository(getRepositoryDirectory(repositoryName), repositoryName);
 
@@ -170,11 +183,14 @@ public abstract class AbstactImportHandler implements ImportHandler
       }
 
       manager.importRepository(repository);
+      result = true;
     }
     else if (logger.isWarnEnabled())
     {
       logger.warn("could not create repository object for {}", repositoryName);
     }
+
+    return result;
   }
 
   //~--- get methods ----------------------------------------------------------
