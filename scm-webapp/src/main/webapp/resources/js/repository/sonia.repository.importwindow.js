@@ -34,6 +34,11 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
   
   // TODO i18n
   titleText: 'Import Repositories',
+  okText: 'Ok',
+  cancelText: 'Cancel',
+  
+  // cache
+  importForm: null,
   
   initComponent: function(){
     var config = {
@@ -46,10 +51,111 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
       border: false,
       modal: true,
       title: this.titleText,
-      items: []
+      items: [{
+        id: 'importRepositoryForm',
+        frame: true,
+        xtype: 'form',
+        defaultType: 'checkbox'
+      }],
+      buttons: [{
+        id: 'startRepositoryImportButton',
+        text: this.okText,
+        formBind: true,
+        scope: this,
+        handler: this.importRepositories
+      },{
+        text: this.cancelText,
+        scope: this,
+        handler: this.close
+      }],
+      listeners: {
+        afterrender: {
+          fn: this.readImportableTypes,
+          scope: this
+        }
+      }
     }
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ImportWindow.superclass.initComponent.apply(this, arguments);
+  },
+  
+  readImportableTypes: function(){
+    if (debug){
+      console.debug('read importable types');
+    }
+    
+    Ext.Ajax.request({
+      url: restUrl + 'import/repositories.json',
+      method: 'GET',
+      scope: this,
+      success: function(response){
+        var obj = Ext.decode(response.responseText);
+        this.renderTypeCheckboxes(obj);
+        this.doLayout();
+      },
+      failure: function(result){
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.errorMsgText
+        );
+      }
+    });
+    
+  },
+  
+  renderTypeCheckboxes: function(types){
+    Ext.each(types, function(type){
+      this.renderCheckbox(type);
+    }, this);
+  },
+  
+  getImportForm: function(){
+    if (!this.importForm){
+      this.importForm = Ext.getCmp('importRepositoryForm');
+    }
+    return this.importForm;
+  },
+    
+  renderCheckbox: function(type){
+    this.getImportForm().add({
+      xtype: 'checkbox',
+      name: 'type',
+      fieldLabel: type.displayName,
+      inputValue: type.name
+    });
+  },
+  
+  importRepositories: function(){
+    if (debug){
+      console.debug('start import of repositories');
+    }
+    var form = this.getImportForm().getForm();
+    var values = form.getValues().type;
+    Ext.each(values, function(value){
+      this.importRepositoriesOfType(value);
+    }, this);
+  },
+  
+  importRepositoriesOfType: function(type){
+    if (debug){
+      console.debug('start import of ' + type + ' repositories');
+    }
+    Ext.Ajax.request({
+      url: restUrl + 'import/repositories/' + type + '.json',
+      method: 'POST',
+      scope: this,
+      success: function(response){
+        var obj = Ext.decode(response.responseText);
+      },
+      failure: function(result){
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.errorMsgText
+        );
+      }
+    });
   }
   
 });
