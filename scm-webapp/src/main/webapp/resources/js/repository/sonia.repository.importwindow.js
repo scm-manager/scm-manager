@@ -40,6 +40,10 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
   // cache
   importForm: null,
   
+  imported: [],
+  importJobsFinished: 0,
+  importJobs: 0,
+  
   initComponent: function(){
     var config = {
       layout:'fit',
@@ -132,9 +136,23 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
     }
     var form = this.getImportForm().getForm();
     var values = form.getValues().type;
+    this.importJobs = values.length;
     Ext.each(values, function(value){
       this.importRepositoriesOfType(value);
     }, this);
+  },
+  
+  appendImported: function(repositories){
+    for (var i=0; i<repositories.length; i++){
+      this.imported.push(repositories[i]);
+    }
+    this.importJobsFinished++;
+    if ( this.importJobsFinished >= this.importJobs ){
+      if (debug){
+        console.debug( 'import of ' + this.importJobsFinished + ' jobs finished'  );
+      }
+      // print repositories
+    }
   },
   
   importRepositoriesOfType: function(type){
@@ -147,6 +165,7 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
       scope: this,
       success: function(response){
         var obj = Ext.decode(response.responseText);
+        this.appendImported(obj);
       },
       failure: function(result){
         main.handleFailure(
