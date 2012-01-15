@@ -297,6 +297,18 @@ public class HgRepositoryHandler
    * Method description
    *
    *
+   * @return
+   */
+  @Override
+  public ImportHandler getImportHandler()
+  {
+    return new HgImportHandler(this);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repository
    *
    * @return
@@ -320,6 +332,72 @@ public class HgRepositoryHandler
     return TYPE;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param hgrc
+   */
+  void appendHookSection(INIConfiguration hgrc)
+  {
+    INISection hooksSection = new INISection("hooks");
+
+    setHookParameter(hooksSection);
+    hgrc.addSection(hooksSection);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param hgrc
+   */
+  void appendWebSection(INIConfiguration hgrc)
+  {
+    INISection webSection = new INISection("web");
+
+    setWebParameter(webSection);
+    hgrc.addSection(webSection);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param c
+   * @param repositoryName
+   *
+   * @return
+   */
+  boolean registerMissingHook(INIConfiguration c, String repositoryName)
+  {
+    INISection hooks = c.getSection("hooks");
+
+    if (hooks == null)
+    {
+      hooks = new INISection("hooks");
+      c.addSection(hooks);
+    }
+
+    boolean write = false;
+
+    if (appendHook(repositoryName, hooks, "changegroup.scm"))
+    {
+      write = true;
+    }
+
+    if (appendHook(repositoryName, hooks, "pretxnchangegroup.scm"))
+    {
+      write = true;
+    }
+
+    return write;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
   /**
    * Method description
    *
@@ -339,6 +417,34 @@ public class HgRepositoryHandler
 
     return new HgChangesetViewer(this, changesetPagingResultContext,
                                  hgContextProvider.get(), repositoryDirectory);
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param hooksSection
+   */
+  void setHookParameter(INISection hooksSection)
+  {
+    hooksSection.setParameter("changegroup.scm", "python:scmhooks.callback");
+    hooksSection.setParameter("pretxnchangegroup.scm",
+                              "python:scmhooks.callback");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param webSection
+   */
+  void setWebParameter(INISection webSection)
+  {
+    webSection.setParameter("push_ssl", "false");
+    webSection.setParameter("allow_read", "*");
+    webSection.setParameter("allow_push", "*");
   }
 
   //~--- methods --------------------------------------------------------------
@@ -376,20 +482,11 @@ public class HgRepositoryHandler
   {
     File hgrcFile = new File(directory, PATH_HGRC);
     INIConfiguration hgrc = new INIConfiguration();
-    INISection webSection = new INISection("web");
 
-    webSection.setParameter("push_ssl", "false");
-    webSection.setParameter("allow_read", "*");
-    webSection.setParameter("allow_push", "*");
-    hgrc.addSection(webSection);
+    appendWebSection(hgrc);
 
     // register hooks
-    INISection hooksSection = new INISection("hooks");
-
-    hooksSection.setParameter("changegroup.scm", "python:scmhooks.callback");
-    hooksSection.setParameter("pretxnchangegroup.scm",
-                              "python:scmhooks.callback");
-    hgrc.addSection(hooksSection);
+    appendHookSection(hgrc);
 
     INIConfigurationWriter writer = new INIConfigurationWriter();
 
@@ -483,28 +580,9 @@ public class HgRepositoryHandler
       {
         INIConfigurationReader reader = new INIConfigurationReader();
         INIConfiguration c = reader.read(hgrc);
-        INISection hooks = c.getSection("hooks");
-
-        if (hooks == null)
-        {
-          hooks = new INISection("hooks");
-          c.addSection(hooks);
-        }
-
         String repositoryName = repositoryDir.getName();
-        boolean write = false;
 
-        if (appendHook(repositoryName, hooks, "changegroup.scm"))
-        {
-          write = true;
-        }
-
-        if (appendHook(repositoryName, hooks, "pretxnchangegroup.scm"))
-        {
-          write = true;
-        }
-
-        if (write)
+        if (registerMissingHook(c, repositoryName))
         {
           if (logger.isDebugEnabled())
           {
