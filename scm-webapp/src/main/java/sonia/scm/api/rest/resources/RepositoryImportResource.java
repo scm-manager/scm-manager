@@ -56,8 +56,11 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 
@@ -93,6 +96,52 @@ public class RepositoryImportResource
   {
     this.manager = manager;
     this.securityContextProvider = securityContextProvider;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   *
+   * @return
+   */
+  @POST
+  @Path("{type}")
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public GenericEntity<List<String>> importRepositories(
+          @PathParam("type") String type)
+  {
+    SecurityUtil.assertIsAdmin(securityContextProvider);
+
+    List<String> repositories = null;
+    RepositoryHandler handler = manager.getHandler(type);
+
+    if (handler != null)
+    {
+      try
+      {
+        repositories = handler.getImportHandler().importRepositories(manager);
+      }
+      catch (Exception ex)
+      {
+        throw new WebApplicationException(ex);
+      }
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("could not find handler for type {}", type);
+    }
+
+    if (repositories == null)
+    {
+      repositories = new ArrayList<String>();
+    }
+
+    return new GenericEntity<List<String>>(repositories) {}
+    ;
   }
 
   //~--- get methods ----------------------------------------------------------
