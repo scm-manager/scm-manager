@@ -33,6 +33,8 @@ Ext.ns("Sonia.scm");
 Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
   tabRepositoriesText: 'Repositories',
+  // todo i18n
+  navImportRepositoriesText: 'Import Repositories',
   navChangePasswordText: 'Change Password',
   sectionMainText: 'Main',
   sectionSecurityText: 'Security',
@@ -156,14 +158,26 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       console.debug('create main menu');
     }
     var panel = Ext.getCmp('navigationPanel');
+    
+    var repositoryLinks = [{
+      label: this.navRepositoriesText,
+      fn: this.addRepositoriesTabPanel,
+      scope: this
+    }];
+    
+    if ( admin ){
+      repositoryLinks.push({
+        label: this.navImportRepositoriesText,
+        fn: function(){
+          new Sonia.repository.ImportWindow().show();
+        }
+      });
+    }
+    
     panel.addSection({
       id: 'navMain',
       title: this.sectionMainText,
-      links: [{
-        label: this.navRepositoriesText,
-        fn: this.addRepositoriesTabPanel,
-        scope: this
-      }]
+      links: repositoryLinks
     });
 
     var securitySection = null;
