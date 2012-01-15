@@ -36,17 +36,11 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.List;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GitImportHandler implements ImportHandler
+public class GitImportHandler extends AbstactImportHandler
 {
 
   /** Field description */
@@ -74,75 +68,42 @@ public class GitImportHandler implements ImportHandler
     this.handler = handler;
   }
 
-  //~--- methods --------------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param manager
-   *
-   * @throws IOException
-   * @throws RepositoryException
+   * @return
    */
   @Override
-  public void importRepositories(RepositoryManager manager)
-          throws IOException, RepositoryException
+  protected String[] getDirectoryNames()
   {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("search for git repositories for import");
-    }
-
-    List<String> repositoryNames = RepositoryUtil.getRepositoryNames(handler,
-                                     GIT_DIR, GIT_DIR_REFS);
-
-    for (String repositoryName : repositoryNames)
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("check git repository {} for import", repositoryName);
-      }
-
-      Repository repository = manager.get(GitRepositoryHandler.TYPE_NAME,
-                                repositoryName);
-
-      if (repository == null)
-      {
-        importRepository(manager, repositoryName);
-      }
-      else if (logger.isDebugEnabled())
-      {
-        logger.debug("repository {} is allready managed", repositoryName);
-      }
-    }
+    return new String[] { GIT_DIR, GIT_DIR_REFS };
   }
 
   /**
    * Method description
    *
    *
-   * @param manager
-   * @param repositoryName
-   *
-   * @throws IOException
-   * @throws RepositoryException
+   * @return
    */
-  private void importRepository(RepositoryManager manager,
-                                String repositoryName)
-          throws RepositoryException, IOException
+  @Override
+  protected AbstractRepositoryHandler<?> getRepositoryHandler()
   {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("try to import git repository {}", repositoryName);
-    }
+    return handler;
+  }
 
-    Repository repository = new Repository();
-
-    repository.setName(repositoryName);
-    repository.setType(GitRepositoryHandler.TYPE_NAME);
-    repository.setPublicReadable(false);
-    manager.importRepository(repository);
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected String getTypeName()
+  {
+    return GitRepositoryHandler.TYPE_NAME;
   }
 
   //~--- fields ---------------------------------------------------------------
