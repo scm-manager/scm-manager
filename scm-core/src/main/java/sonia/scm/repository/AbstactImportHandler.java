@@ -75,14 +75,6 @@ public abstract class AbstactImportHandler implements ImportHandler
    */
   protected abstract AbstractRepositoryHandler<?> getRepositoryHandler();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected abstract String getTypeName();
-
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -200,5 +192,16 @@ public abstract class AbstactImportHandler implements ImportHandler
     return new File(
         getRepositoryHandler().getConfig().getRepositoryDirectory(),
         repositoryName);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private String getTypeName()
+  {
+    return getRepositoryHandler().getType().getName();
   }
 }

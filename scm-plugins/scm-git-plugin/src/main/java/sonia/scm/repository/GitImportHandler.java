@@ -94,18 +94,6 @@ public class GitImportHandler extends AbstactImportHandler
     return handler;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected String getTypeName()
-  {
-    return GitRepositoryHandler.TYPE_NAME;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
