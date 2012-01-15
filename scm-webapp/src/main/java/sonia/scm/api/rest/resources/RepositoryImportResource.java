@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.SecurityUtil;
@@ -111,19 +112,38 @@ public class RepositoryImportResource
   @POST
   @Path("{type}")
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public GenericEntity<List<String>> importRepositories(
+  public GenericEntity<List<Repository>> importRepositories(
           @PathParam("type") String type)
   {
     SecurityUtil.assertIsAdmin(securityContextProvider);
 
-    List<String> repositories = null;
+    List<Repository> repositories = new ArrayList<Repository>();
     RepositoryHandler handler = manager.getHandler(type);
 
     if (handler != null)
     {
       try
       {
-        repositories = handler.getImportHandler().importRepositories(manager);
+        List<String> repositoryNames =
+          handler.getImportHandler().importRepositories(manager);
+
+        if (repositoryNames != null)
+        {
+          for (String repositoryName : repositoryNames)
+          {
+            Repository repository = manager.get(type, repositoryName);
+
+            if (repository != null)
+            {
+              repositories.add(repository);
+            }
+            else if (logger.isWarnEnabled())
+            {
+              logger.warn("could not find imported repository {}",
+                          repositoryName);
+            }
+          }
+        }
       }
       catch (Exception ex)
       {
@@ -135,12 +155,7 @@ public class RepositoryImportResource
       logger.warn("could not find handler for type {}", type);
     }
 
-    if (repositories == null)
-    {
-      repositories = new ArrayList<String>();
-    }
-
-    return new GenericEntity<List<String>>(repositories) {}
+    return new GenericEntity<List<Repository>>(repositories) {}
     ;
   }
 
