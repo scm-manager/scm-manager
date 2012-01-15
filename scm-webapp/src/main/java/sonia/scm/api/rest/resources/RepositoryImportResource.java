@@ -37,6 +37,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
 
 import org.slf4j.Logger;
@@ -111,6 +112,7 @@ public class RepositoryImportResource
    */
   @POST
   @Path("{type}")
+  @TypeHint(Repository[].class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public GenericEntity<List<Repository>> importRepositories(
           @PathParam("type") String type)
@@ -168,6 +170,7 @@ public class RepositoryImportResource
    * @return
    */
   @GET
+  @TypeHint(Type[].class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public GenericEntity<List<Type>> getImportableTypes()
   {
