@@ -35,7 +35,7 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
   // TODO i18n
   titleText: 'Import Repositories',
   okText: 'Ok',
-  cancelText: 'Cancel',
+  closeText: 'Close',
   
   // cache
   importForm: null,
@@ -68,7 +68,7 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
         scope: this,
         handler: this.importRepositories
       },{
-        text: this.cancelText,
+        text: this.closeText,
         scope: this,
         handler: this.close
       }],
@@ -136,7 +136,15 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
     }
     var form = this.getImportForm().getForm();
     var values = form.getValues().type;
-    this.importJobs = values.length;
+    if ( values ){
+      if ( Ext.isArray(values) ){
+        this.importJobs = values.length;
+      } else {
+        this.importJobs = 1;
+      }
+    } else {
+      this.importJobs = 0;
+    }
     Ext.each(values, function(value){
       this.importRepositoriesOfType(value);
     }, this);
@@ -151,13 +159,46 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
       if (debug){
         console.debug( 'import of ' + this.importJobsFinished + ' jobs finished'  );
       }
-      // print repositories
+      this.printImported();
     }
+  },
+  
+  printImported: function(){
+    var store = new Ext.data.JsonStore({
+      fields: ['type', 'name']
+    });
+    store.loadData(this.imported);
+    
+    var colModel = new Ext.grid.ColumnModel({
+      defaults: {
+        sortable: true,
+        scope: this
+      },
+      columns: [
+        {id: 'name', header: 'Name', dataIndex: 'name'},
+        {id: 'type', header: 'Type', dataIndex: 'type'}
+      ]
+    });
+    
+    this.getImportForm().add({
+      xtype: 'grid',
+      autoExpandColumn: 'name',
+      store: store,
+      colModel: colModel,
+      height: 100
+    });
+    var h = this.getHeight();
+    this.setHeight( h + 100 );
+    this.doLayout();
   },
   
   importRepositoriesOfType: function(type){
     if (debug){
       console.debug('start import of ' + type + ' repositories');
+    }
+    var b = Ext.getCmp('startRepositoryImportButton');
+    if ( b ){
+      b.setDisabled(true);
     }
     Ext.Ajax.request({
       url: restUrl + 'import/repositories/' + type + '.json',
