@@ -190,6 +190,12 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
     var h = this.getHeight();
     this.setHeight( h + 100 );
     this.doLayout();
+    
+    // reload repositories panel
+    var panel = Ext.getCmp('repositories');
+    if (panel){
+      panel.getGrid().reload();
+    }
   },
   
   importRepositoriesOfType: function(type){
