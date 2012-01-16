@@ -46,6 +46,7 @@ import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
 import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
+import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
@@ -204,6 +205,18 @@ public class SvnRepositoryHandler
     }
 
     return diffViewer;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public ImportHandler getImportHandler()
+  {
+    return new SvnImportHandler(this);
   }
 
   /**

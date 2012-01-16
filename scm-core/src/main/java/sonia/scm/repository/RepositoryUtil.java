@@ -38,12 +38,17 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.io.DirectoryFileFilter;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -56,6 +61,27 @@ public class RepositoryUtil
   /** the logger for RepositoryUtil */
   private static final Logger logger =
     LoggerFactory.getLogger(RepositoryUtil.class);
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   * @param names
+   *
+   * @return
+   */
+  public static List<File> searchRepositoryDirectories(File directory,
+          String... names)
+  {
+    List<File> repositories = new ArrayList<File>();
+
+    searchRepositoryDirectories(repositories, directory, Arrays.asList(names));
+
+    return repositories;
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -165,5 +191,116 @@ public class RepositoryUtil
     }
 
     return name;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param handler
+   * @param directoryNames
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public static List<String> getRepositoryNames(
+          AbstractRepositoryHandler handler, String... directoryNames)
+          throws IOException
+  {
+    return getRepositoryNames(handler.getConfig(), directoryNames);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param config
+   * @param directoryNames
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public static List<String> getRepositoryNames(SimpleRepositoryConfig config,
+          String... directoryNames)
+          throws IOException
+  {
+    return getRepositoryNames(config.getRepositoryDirectory(), directoryNames);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param baseDirectory
+   * @param directoryNames
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public static List<String> getRepositoryNames(File baseDirectory,
+          String... directoryNames)
+          throws IOException
+  {
+    List<String> repositories = new ArrayList<String>();
+    List<File> repositoryFiles = searchRepositoryDirectories(baseDirectory,
+                                   directoryNames);
+
+    for (File file : repositoryFiles)
+    {
+      String name = getRepositoryName(baseDirectory, file);
+
+      if (name != null)
+      {
+        repositories.add(name);
+      }
+    }
+
+    return repositories;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositories
+   * @param directory
+   * @param names
+   */
+  private static void searchRepositoryDirectories(List<File> repositories,
+          File directory, List<String> names)
+  {
+    boolean found = false;
+
+    for (String name : names)
+    {
+      if (new File(directory, name).exists())
+      {
+        found = true;
+
+        break;
+      }
+    }
+
+    if (found)
+    {
+      repositories.add(directory);
+    }
+    else
+    {
+      File[] directories = directory.listFiles(DirectoryFileFilter.instance);
+
+      if (directories != null)
+      {
+        for (File d : directories)
+        {
+          searchRepositoryDirectories(repositories, d, names);
+        }
+      }
+    }
   }
 }
