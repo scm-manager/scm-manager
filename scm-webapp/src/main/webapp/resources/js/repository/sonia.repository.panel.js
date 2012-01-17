@@ -301,7 +301,7 @@ Sonia.History.register('repositoryPanel', {
         var selected = false;
         panel.getGrid().getStore().addListener('load', function(){
           if (!selected){
-            panel.getGrid().selectedById(repoId);
+            panel.getGrid().selectById(repoId);
             selected = true;
           }
         });
