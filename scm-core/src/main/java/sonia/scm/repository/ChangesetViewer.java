@@ -48,6 +48,18 @@ public interface ChangesetViewer
    * Method description
    *
    *
+   * @param revision
+   *
+   * @return
+   * 
+   * @since 1.12
+   */
+  public Changeset getChangeset(String revision);
+
+  /**
+   * Method description
+   *
+   *
    *
    *
    * @param start

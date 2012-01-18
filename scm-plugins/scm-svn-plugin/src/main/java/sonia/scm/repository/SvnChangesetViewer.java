@@ -86,6 +86,20 @@ public class SvnChangesetViewer implements ChangesetViewer
    * Method description
    *
    *
+   * @param revision
+   *
+   * @return
+   */
+  @Override
+  public Changeset getChangeset(String revision)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param start
    * @param max
    *

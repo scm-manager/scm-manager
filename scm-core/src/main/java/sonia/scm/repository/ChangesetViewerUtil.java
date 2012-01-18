@@ -50,6 +50,7 @@ import sonia.scm.util.Util;
 
 import java.io.IOException;
 
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -93,6 +94,100 @@ public class ChangesetViewerUtil extends PartCacheClearHook
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param revision
+   *
+   * @return
+   * 
+   * @since 1.12
+   *
+   * @throws NotSupportedFeatuerException
+   * @throws RepositoryException
+   */
+  public Changeset getChangeset(Repository repository, String revision)
+          throws RepositoryException, NotSupportedFeatuerException
+  {
+    AssertUtil.assertIsNotNull(repository);
+
+    ChangesetViewer viewer = repositoryManager.getChangesetViewer(repository);
+
+    if (viewer == null)
+    {
+      throw new NotSupportedFeatuerException(
+          "ChangesetViewer is not supported for type ".concat(
+            repository.getType()));
+    }
+
+    Changeset changeset = null;
+    ChangesetViewerCacheKey key =
+      new ChangesetViewerCacheKey(repository.getId(), -1, -1);
+    ChangesetPagingResult result = cache.get(key);
+
+    if (result == null)
+    {
+      changeset = viewer.getChangeset(revision);
+
+      if (changeset != null)
+      {
+        callPreProcessors(changeset);
+        callPreProcessorFactories(repository, changeset);
+        result = new ChangesetPagingResult(1, Arrays.asList(changeset));
+        cache.put(key, result);
+      }
+      else
+      {
+        throw new RepositoryException("could not find changeset");
+      }
+    }
+    else
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("fetch changesetviewer result from cache");
+      }
+
+      changeset = result.getChangesets().get(0);
+    }
+
+    return changeset;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryId
+   * @param revision
+   *
+   * @return
+   * 
+   * @since 1.12
+   *
+   * @throws NotSupportedFeatuerException
+   * @throws RepositoryException
+   * @throws RepositoryNotFoundException
+   */
+  public Changeset getChangeset(String repositoryId, String revision)
+          throws RepositoryNotFoundException, RepositoryException,
+                 NotSupportedFeatuerException
+  {
+    AssertUtil.assertIsNotEmpty(repositoryId);
+
+    Repository repository = repositoryManager.get(repositoryId);
+
+    if (repository == null)
+    {
+      throw new RepositoryNotFoundException(
+          "could not find repository with id ".concat(repositoryId));
+    }
+
+    return getChangeset(repository, revision);
+  }
 
   /**
    * Method description
@@ -320,6 +415,30 @@ public class ChangesetViewerUtil extends PartCacheClearHook
    * Method description
    *
    *
+   * @param repository
+   * @param c
+   */
+  private void callPreProcessorFactories(Repository repository, Changeset c)
+  {
+    if (Util.isNotEmpty(changesetPreProcessorFactorySet))
+    {
+      for (ChangesetPreProcessorFactory factory :
+              changesetPreProcessorFactorySet)
+      {
+        ChangesetPreProcessor cpp = factory.createPreProcessor(repository);
+
+        if (cpp != null)
+        {
+          cpp.process(c);
+        }
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param changesets
    */
   private void callPreProcessors(ChangesetPagingResult changesets)
@@ -328,11 +447,22 @@ public class ChangesetViewerUtil extends PartCacheClearHook
     {
       for (Changeset c : changesets.getChangesets())
       {
-        for (ChangesetPreProcessor cpp : changesetPreProcessorSet)
-        {
-          cpp.process(c);
-        }
+        callPreProcessors(c);
       }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param c
+   */
+  private void callPreProcessors(Changeset c)
+  {
+    for (ChangesetPreProcessor cpp : changesetPreProcessorSet)
+    {
+      cpp.process(c);
     }
   }
 

@@ -104,6 +104,20 @@ public class HgChangesetViewer extends AbstractHgHandler
   //~--- get methods ----------------------------------------------------------
 
   /**
+   * Method description
+   *
+   *
+   * @param revision
+   *
+   * @return
+   */
+  @Override
+  public Changeset getChangeset(String revision)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
    *
    *
    * @param start

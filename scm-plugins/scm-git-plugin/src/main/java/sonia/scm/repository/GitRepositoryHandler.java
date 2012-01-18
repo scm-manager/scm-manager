@@ -41,7 +41,6 @@ import com.google.inject.Singleton;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
-import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
