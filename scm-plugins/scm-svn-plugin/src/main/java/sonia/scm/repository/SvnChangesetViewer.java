@@ -48,8 +48,6 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -93,7 +91,44 @@ public class SvnChangesetViewer implements ChangesetViewer
   @Override
   public Changeset getChangeset(String revision)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    Changeset changeset = null;
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch changeset {}", revision);
+    }
+
+    SVNRepository repository = null;
+
+    try
+    {
+      long revisioNumber = Long.parseLong(revision);
+
+      repository = createRepository();
+
+      Collection<SVNLogEntry> entries = repository.log(null, null,
+                                          revisioNumber, revisioNumber, true,
+                                          true);
+
+      if (Util.isNotEmpty(entries))
+      {
+        changeset = SvnUtil.createChangeset(entries.iterator().next());
+      }
+    }
+    catch (NumberFormatException ex)
+    {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("could not convert revision", ex);
+      }
+    }
+    catch (SVNException ex) {}
+    finally
+    {
+      close(repository);
+    }
+
+    return changeset;
   }
 
   /**
@@ -114,12 +149,11 @@ public class SvnChangesetViewer implements ChangesetViewer
     }
 
     ChangesetPagingResult changesets = null;
-    File directory = handler.getDirectory(repostory);
     SVNRepository repository = null;
 
     try
     {
-      repository = SVNRepositoryFactory.create(SVNURL.fromFile(directory));
+      repository = createRepository();
 
       long total = repository.getLatestRevision();
       long startRev = total - start;
@@ -148,7 +182,7 @@ public class SvnChangesetViewer implements ChangesetViewer
     }
     finally
     {
-      repository.closeSession();
+      close(repository);
     }
 
     return changesets;
@@ -178,12 +212,11 @@ public class SvnChangesetViewer implements ChangesetViewer
     }
 
     ChangesetPagingResult changesets = null;
-    File directory = handler.getDirectory(repostory);
     SVNRepository repository = null;
 
     try
     {
-      repository = SVNRepositoryFactory.create(SVNURL.fromFile(directory));
+      repository = createRepository();
 
       long startRev = repository.getLatestRevision();
       long endRev = 0;
@@ -235,10 +268,40 @@ public class SvnChangesetViewer implements ChangesetViewer
     }
     finally
     {
-      repository.closeSession();
+      close(repository);
     }
 
     return changesets;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   */
+  private void close(SVNRepository repository)
+  {
+    if (repository != null)
+    {
+      repository.closeSession();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws SVNException
+   */
+  private SVNRepository createRepository() throws SVNException
+  {
+    return SVNRepositoryFactory.create(
+        SVNURL.fromFile(handler.getDirectory(repostory)));
   }
 
   //~--- fields ---------------------------------------------------------------
