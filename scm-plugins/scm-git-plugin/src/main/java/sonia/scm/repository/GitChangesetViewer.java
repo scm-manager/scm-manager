@@ -39,6 +39,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +93,48 @@ public class GitChangesetViewer implements ChangesetViewer
   @Override
   public Changeset getChangeset(String revision)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch changeset {}", revision);
+    }
+
+    Changeset changeset = null;
+    File directory = handler.getDirectory(repository);
+    org.eclipse.jgit.lib.Repository gr = null;
+    GitChangesetConverter converter = null;
+
+    try
+    {
+      gr = GitUtil.open(directory);
+
+      if (!gr.getAllRefs().isEmpty())
+      {
+        RevWalk revWalk = new RevWalk(gr);
+        ObjectId id = GitUtil.getRevisionId(gr, revision);
+        RevCommit commit = revWalk.parseCommit(id);
+
+        if (commit != null)
+        {
+          converter = new GitChangesetConverter(gr, GitUtil.ID_LENGTH);
+          changeset = converter.createChangeset(commit);
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find revision {}", revision);
+        }
+      }
+    }
+    catch (IOException ex)
+    {
+      logger.error("could not open repository", ex);
+    }
+    finally
+    {
+      IOUtil.close(converter);
+      GitUtil.close(gr);
+    }
+
+    return changeset;
   }
 
   /**
