@@ -335,7 +335,7 @@
   <properties>
     <scm.home>target/scm-it</scm.home>
     <environment.profile>default</environment.profile>
-    <enunciate.version>1.24</enunciate.version>
+    <enunciate.version>1.25</enunciate.version>
     <aether.version>1.13.1</aether.version>
     <wagon.version>1.0</wagon.version>
     <maven.version>3.0.3</maven.version>
