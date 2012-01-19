@@ -119,6 +119,7 @@ public class HgRepositoryHandler
     {
       this.browserResultContext = JAXBContext.newInstance(BrowserResult.class);
       this.blameResultContext = JAXBContext.newInstance(BlameResult.class);
+      this.changesetContext = JAXBContext.newInstance(Changeset.class);
       this.changesetPagingResultContext =
         JAXBContext.newInstance(ChangesetPagingResult.class);
     }
@@ -248,8 +249,8 @@ public class HgRepositoryHandler
     if (TYPE_NAME.equals(type))
     {
       changesetViewer = new HgChangesetViewer(this,
-              changesetPagingResultContext, hgContextProvider.get(),
-              repository);
+              changesetPagingResultContext, changesetContext,
+              hgContextProvider.get(), repository);
     }
     else
     {
@@ -416,7 +417,8 @@ public class HgRepositoryHandler
     }
 
     return new HgChangesetViewer(this, changesetPagingResultContext,
-                                 hgContextProvider.get(), repositoryDirectory);
+                                 changesetContext, hgContextProvider.get(),
+                                 repositoryDirectory);
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -667,6 +669,9 @@ public class HgRepositoryHandler
 
   /** Field description */
   private JAXBContext browserResultContext;
+
+  /** Field description */
+  private JAXBContext changesetContext;
 
   /** Field description */
   private JAXBContext changesetPagingResultContext;

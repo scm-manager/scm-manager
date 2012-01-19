@@ -74,14 +74,17 @@ public class HgChangesetViewer extends AbstractHgHandler
    *
    * @param handler
    * @param changesetPagingResultContext
+   * @param changesetContext
    * @param context
    * @param repositoryDirectory
    */
   public HgChangesetViewer(HgRepositoryHandler handler,
                            JAXBContext changesetPagingResultContext,
-                           HgContext context, File repositoryDirectory)
+                           JAXBContext changesetContext, HgContext context,
+                           File repositoryDirectory)
   {
     super(handler, changesetPagingResultContext, context, repositoryDirectory);
+    this.changesetContext = changesetContext;
   }
 
   /**
@@ -90,15 +93,18 @@ public class HgChangesetViewer extends AbstractHgHandler
    *
    *
    * @param handler
+   * @param changesetContext
    * @param context
    * @param changesetPagingResultContext
    * @param repository
    */
   public HgChangesetViewer(HgRepositoryHandler handler,
                            JAXBContext changesetPagingResultContext,
-                           HgContext context, Repository repository)
+                           JAXBContext changesetContext, HgContext context,
+                           Repository repository)
   {
     super(handler, changesetPagingResultContext, context, repository);
+    this.changesetContext = changesetContext;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -110,11 +116,25 @@ public class HgChangesetViewer extends AbstractHgHandler
    * @param revision
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
   public Changeset getChangeset(String revision)
+          throws IOException, RepositoryException
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    Map<String, String> env = new HashMap<String, String>();
+
+    env.put(ENV_REVISION, HgUtil.getRevision(revision));
+    env.put(ENV_PATH, Util.EMPTY_STRING);
+    env.put(ENV_PAGE_START, Util.EMPTY_STRING);
+    env.put(ENV_PAGE_LIMIT, Util.EMPTY_STRING);
+    env.put(ENV_REVISION_START, Util.EMPTY_STRING);
+    env.put(ENV_REVISION_END, Util.EMPTY_STRING);
+
+    return getResultFromScript(Changeset.class, RESOURCE_LOG, changesetContext,
+                               env);
   }
 
   /**
@@ -231,4 +251,9 @@ public class HgChangesetViewer extends AbstractHgHandler
 
     return getChangesets(null, null, null, null, startNode, endNode);
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private JAXBContext changesetContext;
 }

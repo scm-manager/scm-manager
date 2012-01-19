@@ -322,6 +322,30 @@ public class AbstractHgHandler
           String scriptResource, Map<String, String> extraEnv)
           throws IOException, RepositoryException
   {
+    return getResultFromScript(resultType, scriptResource, jaxbContext,
+                               extraEnv);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param resultType
+   * @param scriptResource
+   * @param jaxbContext
+   * @param extraEnv
+   * @param <T>
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  protected <T> T getResultFromScript(Class<T> resultType,
+          String scriptResource, JAXBContext jaxbContext,
+          Map<String, String> extraEnv)
+          throws IOException, RepositoryException
+  {
     Process p = createPythonProcess(extraEnv);
     T result = null;
     InputStream resource = null;
