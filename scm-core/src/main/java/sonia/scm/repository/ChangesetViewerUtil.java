@@ -103,14 +103,16 @@ public class ChangesetViewerUtil extends PartCacheClearHook
    * @param revision
    *
    * @return
-   * 
+   *
    * @since 1.12
    *
+   *
+   * @throws IOException
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    */
   public Changeset getChangeset(Repository repository, String revision)
-          throws RepositoryException, NotSupportedFeatuerException
+          throws RepositoryException, IOException, NotSupportedFeatuerException
   {
     AssertUtil.assertIsNotNull(repository);
 
@@ -165,15 +167,17 @@ public class ChangesetViewerUtil extends PartCacheClearHook
    * @param revision
    *
    * @return
-   * 
+   *
    * @since 1.12
    *
+   *
+   * @throws IOException
    * @throws NotSupportedFeatuerException
    * @throws RepositoryException
    * @throws RepositoryNotFoundException
    */
   public Changeset getChangeset(String repositoryId, String revision)
-          throws RepositoryNotFoundException, RepositoryException,
+          throws RepositoryNotFoundException, IOException, RepositoryException,
                  NotSupportedFeatuerException
   {
     AssertUtil.assertIsNotEmpty(repositoryId);
