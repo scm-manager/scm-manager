@@ -41,8 +41,12 @@ import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.Util;
 
@@ -64,6 +68,14 @@ public class GitChangesetConverter implements Closeable
 {
 
   /**
+   * the logger for GitChangesetConverter
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(GitChangesetConverter.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
    * Constructs ...
    *
    *
@@ -73,7 +85,22 @@ public class GitChangesetConverter implements Closeable
   public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
                                int idLength)
   {
+    this(repository, null, idLength);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param repository
+   * @param revWalk
+   * @param idLength
+   */
+  public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
+                               RevWalk revWalk, int idLength)
+  {
     this.idLength = idLength;
+    this.revWalk = revWalk;
     createTagMap(repository);
     treeWalk = new TreeWalk(repository);
   }
@@ -195,7 +222,14 @@ public class GitChangesetConverter implements Closeable
 
     if (commit.getParentCount() > 0)
     {
-      RevTree tree = commit.getParent(0).getTree();
+      RevCommit parent = commit.getParent(0);
+      RevTree tree = parent.getTree();
+
+      if ((tree == null) && (revWalk != null))
+      {
+        revWalk.parseHeaders(parent);
+        tree = parent.getTree();
+      }
 
       if (tree != null)
       {
@@ -203,11 +237,21 @@ public class GitChangesetConverter implements Closeable
       }
       else
       {
+        if (logger.isWarnEnabled())
+        {
+          logger.warn("no parent at position 0 for commit {}", commit);
+        }
+
         treeWalk.addTree(new EmptyTreeIterator());
       }
     }
     else
     {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("no parent available for commit {}", commit);
+      }
+
       treeWalk.addTree(new EmptyTreeIterator());
     }
 
@@ -257,6 +301,9 @@ public class GitChangesetConverter implements Closeable
 
   /** Field description */
   private int idLength;
+
+  /** Field description */
+  private RevWalk revWalk;
 
   /** Field description */
   private Map<ObjectId, String> tags;

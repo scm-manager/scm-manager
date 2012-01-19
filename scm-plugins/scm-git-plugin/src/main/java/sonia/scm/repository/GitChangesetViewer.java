@@ -40,6 +40,7 @@ import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.TreeWalk;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,7 +116,7 @@ public class GitChangesetViewer implements ChangesetViewer
 
         if (commit != null)
         {
-          converter = new GitChangesetConverter(gr, GitUtil.ID_LENGTH);
+          converter = new GitChangesetConverter(gr, revWalk, GitUtil.ID_LENGTH);
           changeset = converter.createChangeset(commit);
         }
         else if (logger.isWarnEnabled())
