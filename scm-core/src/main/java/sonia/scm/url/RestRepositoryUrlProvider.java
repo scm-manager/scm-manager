@@ -63,6 +63,11 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
   /** Field description */
   public static final String PART_BROWSE = "browse";
 
+  /**
+   * @since 1.12
+   */
+  public static final String PART_CHANGESET = "changeset";
+
   /** Field description */
   public static final String PART_CHANGESETS = "changesets";
 
@@ -175,6 +180,26 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
         PART_CHANGESETS).append(extension).appendParameter(
         PARAMETER_START, start).appendParameter(
         PARAMETER_LIMIT, limit).toString();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryId
+   * @param revision
+   *
+   * @return
+   *
+   * @since 1.12
+   */
+  @Override
+  public String getChangesetUrl(String repositoryId, String revision)
+  {
+    revision = UrlUtil.fixRevision(revision);
+
+    return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
+        PART_CHANGESET).appendUrlPart(revision).append(extension).toString();
   }
 
   /**

@@ -35,6 +35,7 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 
 /**
@@ -44,6 +45,18 @@ import sonia.scm.repository.ChangesetPagingResult;
  */
 public interface ClientChangesetHandler
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param revision
+   *
+   * @return
+   * 
+   * @since 1.12
+   */
+  public Changeset getChangeset(String revision);
 
   /**
    * Method description

@@ -35,6 +35,7 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Repository;
 
@@ -65,6 +66,42 @@ public class JerseyClientChangesetHandler implements ClientChangesetHandler
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param revision
+   *
+   * @return
+   */
+  @Override
+  public Changeset getChangeset(String revision)
+  {
+    Changeset changeset = null;
+    String url =
+      session.getUrlProvider().getRepositoryUrlProvider().getChangesetUrl(
+          repository.getId(), revision);
+    WebResource resource = session.getClient().resource(url);
+    ClientResponse response = null;
+
+    try
+    {
+      response = resource.get(ClientResponse.class);
+
+      if (response.getStatus() != ScmClientException.SC_NOTFOUND)
+      {
+        ClientUtil.checkResponse(response, 200);
+        changeset = response.getEntity(Changeset.class);
+      }
+    }
+    finally
+    {
+      ClientUtil.close(response);
+    }
+
+    return changeset;
+  }
 
   /**
    * Method description

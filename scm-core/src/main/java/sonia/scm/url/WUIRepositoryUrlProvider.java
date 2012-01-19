@@ -64,6 +64,11 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   /** Field description */
   public static final String VIEW_BLAME = "blame";
 
+  /**
+   * @since 1.12
+   */
+  public static final String VIEW_CHANGESET = "changeset";
+
   /** Field description */
   public static final String VIEW_CONTENT = "content";
 
@@ -165,6 +170,26 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   {
     return new WUIUrlBuilder(baseUrl, COMPONENT_CHANGESETS).append(
         repositoryId).append(start).append(limit).toString();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryId
+   * @param revision
+   *
+   * @return
+   *
+   * @since 1.12
+   */
+  @Override
+  public String getChangesetUrl(String repositoryId, String revision)
+  {
+    revision = UrlUtil.fixRevision(revision);
+
+    return new WUIUrlBuilder(baseUrl, VIEW_CHANGESET).append(
+        repositoryId).append(revision).toString();
   }
 
   /**
