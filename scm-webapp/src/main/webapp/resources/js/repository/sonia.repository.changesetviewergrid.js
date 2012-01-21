@@ -140,19 +140,19 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
           console.debug('load diff for ' + revision);
         }
 
-       this.openDiffViewer(revision);
+       this.openChangeset(revision);
       }
     }
   },
   
-  openDiffViewer: function(revision){
+  openChangeset: function(revision){
     main.addTab({
-      id: 'diffPanel;' + this.repository.id + ';' + revision,
-      xtype: 'diffPanel',
+      id: 'changesetPanel;' + this.repository.id + ';' + revision,
+      xtype: 'changesetPanel',
       repository: this.repository,
       revision: revision,
       closable: true
-    });
+    });    
   },
   
   openRepositoryBrowser: function(revision){
