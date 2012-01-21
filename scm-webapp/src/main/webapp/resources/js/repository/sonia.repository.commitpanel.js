@@ -39,7 +39,6 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
   changeset: null,
   
   // templates
-  template: null,
   templateCommit: '<div class="scm-commit">\n\
                      <h1>Commit {id}</h1>\n\
                      <div class="left-side">\n\
@@ -57,14 +56,25 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
                <tpl if="modifications.removed"><tpl for="modifications.removed"><li class="scm-removed">{.}</li></tpl></tpl>\n\
              </ul>',
   
+  // header panel
+  commitPanel: null,
+  diffPanel: null,
+  
   initComponent: function(){
-    var template = this.templateCommit + this.templateModifications;
-    this.template = new Ext.XTemplate(template);
+    this.commitPanel = new Ext.Panel({
+      tpl: new Ext.XTemplate(this.templateCommit + this.templateModifications)
+    });
+    
+    this.diffPanel = new Sonia.panel.SyntaxHighlighterPanel({
+      syntax: 'diff',
+      contentUrl: restUrl + 'repositories/' + this.repository.id + '/diff?revision=' + this.revision
+    });
     
     var config = {
       bodyCssClass: 'x-panel-mc',
       padding: 10,
-      layout: 'fit'
+      layout: 'fit',
+      items: [this.commitPanel, this.diffPanel]
     }
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
@@ -77,7 +87,7 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
   update: function(changeset) {
     this.changeset = changeset;
     console.debug(changeset);
-    this.template.overwrite(this.body, this.changeset);
+    this.commitPanel.tpl.overwrite(this.commitPanel.body, this.changeset);
   },
   
   loadChangeset: function(){
