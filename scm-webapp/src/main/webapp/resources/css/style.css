@@ -146,3 +146,41 @@ a.scm-link:hover {
 .cs-tag a {
   margin-left: 16px;
 }
+
+.scm-commit {
+  margin-bottom: 50px;
+}
+
+.scm-commit h1 {
+  margin-bottom: 5px;
+}
+
+ul.scm-modifications {
+  border-top: 1px solid darkgray;
+  border-bottom: 1px solid darkgray;
+  clear: both;
+  vertical-align: middle;
+}
+
+ul.scm-modifications li {
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: 0 0.2em;
+  padding: 3px 3px 3px 20px;
+  display: block;
+  height: 20px;
+}
+
+li.scm-added {
+  background-image: url(../images/add.png);
+}
+
+li.scm-modified {
+  /* TODO create png image */
+  background-image: url(../images/modify.gif);
+}
+
+li.scm-removed {
+  background-image: url(../images/delete.png);
+}
+

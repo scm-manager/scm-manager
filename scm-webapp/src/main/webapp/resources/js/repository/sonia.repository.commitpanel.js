@@ -35,15 +35,72 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
   repository: null,
   revision: null,
   
+  // changeset
+  changeset: null,
+  
+  // templates
+  template: null,
+  templateCommit: '<div class="scm-commit">\n\
+                     <h1>Commit {id}</h1>\n\
+                     <div class="left-side">\n\
+                       <p>{description}</p>\n\
+                       <p><tpl for="author">{name}<tpl if="mail"> &lt;<a href="mailto:{mail}">{mail}</a>&gt;</tpl></tpl></p>\n\
+                     </div>\n\
+                     <div class="right-side">\n\
+                       Tags\n\
+                     </div>\n\
+                   </div>',
+  
+  templateModifications: '<ul class="scm-modifications">\n\
+               <tpl if="modifications.added"><tpl for="modifications.added"><li class="scm-added">{.}</li></tpl></tpl>\n\
+               <tpl if="modifications.modified"><tpl for="modifications.modified"><li class="scm-modified">{.}</li></tpl></tpl>\n\
+               <tpl if="modifications.removed"><tpl for="modifications.removed"><li class="scm-removed">{.}</li></tpl></tpl>\n\
+             </ul>',
+  
   initComponent: function(){
+    var template = this.templateCommit + this.templateModifications;
+    this.template = new Ext.XTemplate(template);
+    
     var config = {
-      items: [
-        
-      ]
+      bodyCssClass: 'x-panel-mc',
+      padding: 10,
+      layout: 'fit'
     }
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.CommitPanel.superclass.initComponent.apply(this, arguments);
+    
+    // loadChangeset
+    this.loadChangeset();
+  },
+  
+  update: function(changeset) {
+    this.changeset = changeset;
+    console.debug(changeset);
+    this.template.overwrite(this.body, this.changeset);
+  },
+  
+  loadChangeset: function(){
+    if (debug){
+      console.debug('read changeset ' + this.revision);
+    }
+    
+    Ext.Ajax.request({
+      url: restUrl + 'repositories/' + this.repository.id + '/changeset/' + this.revision + '.json',
+      method: 'GET',
+      scope: this,
+      success: function(response){
+        var changeset = Ext.decode(response.responseText);
+        this.update(changeset)
+      },
+      failure: function(result){
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.errorMsgText
+        );
+      }
+    });
   }
   
 });
