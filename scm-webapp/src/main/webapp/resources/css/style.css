@@ -148,7 +148,7 @@ a.scm-link:hover {
 }
 
 .scm-commit {
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .scm-commit h1 {
@@ -168,7 +168,6 @@ ul.scm-modifications li {
   background-position: 0 0.2em;
   padding: 3px 3px 3px 20px;
   display: block;
-  height: 20px;
 }
 
 li.scm-added {
