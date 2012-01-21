@@ -69,6 +69,7 @@ Sonia.repository.ChangesetPanel = Ext.extend(Ext.Panel, {
         handler: this.downloadRawDiff,
         scope: this
       }],
+      bbar: ['->', this.repository.name, ':', this.revision],
       items: [panel]
     }
 
