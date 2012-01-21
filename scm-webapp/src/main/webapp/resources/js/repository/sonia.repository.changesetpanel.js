@@ -56,6 +56,7 @@ Sonia.repository.ChangesetPanel = Ext.extend(Ext.Panel, {
     var config = {
       title: String.format(this.title, this.revision),
       autoScroll: true,
+      bodyCssClass: 'x-panel-mc',
       tbar: [{
         text: this.commitLabel,
         handler: this.showCommit,
