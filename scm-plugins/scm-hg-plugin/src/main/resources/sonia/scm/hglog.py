@@ -118,10 +118,10 @@ def printChangeset(repo, ctx):
 
   # files deleted
   if deleted:
-    print '        <deleted>'
+    print '        <removed>'
     for dele in deleted:
       print '          <file>' + dele + '</file>'
-    print '        </deleted>'    
+    print '        </removed>'    
     
   print '      </modifications>'
   print '    </changeset>'
