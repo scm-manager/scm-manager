@@ -127,7 +127,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
 
     Changeset changeset = null;
     ChangesetViewerCacheKey key =
-      new ChangesetViewerCacheKey(repository.getId(), -1, -1);
+      new ChangesetViewerCacheKey(repository.getId(), null, revision, -1, -1);
     ChangesetPagingResult result = cache.get(key);
 
     if (result == null)
