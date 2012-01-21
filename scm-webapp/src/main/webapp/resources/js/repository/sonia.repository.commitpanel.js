@@ -48,6 +48,7 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
                            {name}<tpl if="mail"> &lt;<a href="mailto:{mail}">{mail}</a>&gt;</tpl>\n\
                          </tpl>\n\
                        </p>\n\
+                       <p>{date:formatTimestamp}</p>\n\
                      </div>\n\
                      <div class="right-side">\n\
                        Tags\n\
