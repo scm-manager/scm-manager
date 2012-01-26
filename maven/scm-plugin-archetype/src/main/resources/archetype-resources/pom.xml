@@ -7,7 +7,7 @@
   <parent>
     <artifactId>scm-plugins</artifactId>
     <groupId>sonia.scm.plugins</groupId>
-    <version>1.6</version>
+    <version>1.8</version>
   </parent>
 
   <groupId>${groupId}</groupId>
@@ -31,10 +31,20 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>1.6</version>
+      <version>${dollar}{project.parent.version}</version>
       <scope>test</scope>
     </dependency>
 
   </dependencies>
+
+  <repositories>
+    
+    <repository>
+      <id>maven.scm-manager.org</id>
+      <name>scm-manager release repository</name>
+      <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
+    </repository>
+  
+  </repositories>
 
 </project>
