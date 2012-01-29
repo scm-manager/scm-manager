@@ -409,7 +409,23 @@ public class HgRepositoryHandler
    */
   HgChangesetViewer getChangesetViewer(File repositoryDirectory)
   {
+    return getChangesetViewer(repositoryDirectory, hgContextProvider.get());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryDirectory
+   * @param context
+   *
+   * @return
+   */
+  HgChangesetViewer getChangesetViewer(File repositoryDirectory,
+          HgContext context)
+  {
     AssertUtil.assertIsNotNull(repositoryDirectory);
+    AssertUtil.assertIsNotNull(context);
 
     if (!repositoryDirectory.isDirectory())
     {
@@ -417,7 +433,7 @@ public class HgRepositoryHandler
     }
 
     return new HgChangesetViewer(this, changesetPagingResultContext,
-                                 changesetContext, hgContextProvider.get(),
+                                 changesetContext, context,
                                  repositoryDirectory);
   }
 

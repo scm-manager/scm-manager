@@ -128,7 +128,7 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
     File directory = handler.getConfig().getRepositoryDirectory();
     File repositoryDirectory = new File(directory, repositoryName);
 
-    return handler.getChangesetViewer(repositoryDirectory);
+    return handler.getChangesetViewer(repositoryDirectory, new HgContext(true));
   }
 
   //~--- fields ---------------------------------------------------------------

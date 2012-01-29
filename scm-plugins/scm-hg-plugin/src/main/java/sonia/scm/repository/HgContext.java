@@ -46,6 +46,38 @@ public class HgContext
 {
 
   /**
+   * Constructs ...
+   *
+   */
+  public HgContext() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param pending
+   */
+  public HgContext(boolean pending)
+  {
+    this.pending = pending;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param pending
+   * @param systemEnvironment
+   */
+  public HgContext(boolean pending, boolean systemEnvironment)
+  {
+    this.pending = pending;
+    this.systemEnvironment = systemEnvironment;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
    * Method description
    *
    *
