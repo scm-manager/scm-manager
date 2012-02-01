@@ -116,6 +116,13 @@
     </dependency>
 
     <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
+      <version>${hamcrest.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
       <version>${mokito.version}</version>
@@ -426,6 +433,7 @@
 
   <properties>
     <mokito.version>1.9.0</mokito.version>
+    <hamcrest.version>1.2.1</hamcrest.version>
     <junit.version>4.10</junit.version>
     <slf4j.version>1.6.4</slf4j.version>
     <servlet.version>2.5</servlet.version>
