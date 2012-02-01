@@ -283,7 +283,8 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private CacheManager cacheManager = new EhCacheManager();
+  private CacheManager cacheManager =
+    new EhCacheManager(net.sf.ehcache.CacheManager.create());
 
   /** Field description */
   private ChainAuthenticatonManager manager;

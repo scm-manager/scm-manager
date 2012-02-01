@@ -71,6 +71,17 @@ public class EhCacheManager implements CacheManager
       new net.sf.ehcache.CacheManager(EhCacheManager.class.getResource(CONFIG));
   }
 
+  /**
+   * This constructor is only for unit tests
+   *
+   *
+   * @param cacheManager
+   */
+  public EhCacheManager(net.sf.ehcache.CacheManager cacheManager)
+  {
+    this.cacheManager = cacheManager;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**

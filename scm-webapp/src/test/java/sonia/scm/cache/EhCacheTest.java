@@ -68,7 +68,7 @@ public class EhCacheTest
   @Before
   public void before()
   {
-    cm = new EhCacheManager();
+    cm = new EhCacheManager(net.sf.ehcache.CacheManager.create());
     cache = cm.getCache(String.class, String.class, "test");
   }
 
