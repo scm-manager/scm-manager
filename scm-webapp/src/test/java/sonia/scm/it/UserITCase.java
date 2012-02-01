@@ -123,7 +123,7 @@ public class UserITCase extends AbstractAdminITCaseBase
       wr.type(MediaType.APPLICATION_XML).put(ClientResponse.class, marvin);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 204);
+    assertEquals(response.getStatus(), 204);
     response.close();
 
     User other = getUser(marvin.getName());
@@ -158,7 +158,7 @@ public class UserITCase extends AbstractAdminITCaseBase
     ClientResponse response = wr.get(ClientResponse.class);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 200);
+    assertEquals(response.getStatus(), 200);
 
     Collection<User> users =
       response.getEntity(new GenericType<Collection<User>>() {}
@@ -223,7 +223,7 @@ public class UserITCase extends AbstractAdminITCaseBase
       wr.type(MediaType.APPLICATION_XML).post(ClientResponse.class, user);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 201);
+    assertEquals(response.getStatus(), 201);
     response.close();
 
     User other = getUser(user.getName());
@@ -247,12 +247,12 @@ public class UserITCase extends AbstractAdminITCaseBase
     ClientResponse response = wr.delete(ClientResponse.class);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 204);
+    assertEquals(response.getStatus(), 204);
     response.close();
     wr = createResource(client, "users/".concat(user.getName()));
     response = wr.get(ClientResponse.class);
     assertNotNull(response);
-    assertTrue(response.getStatus() == 404);
+    assertEquals(response.getStatus(), 404);
     response.close();
   }
 
@@ -285,7 +285,7 @@ public class UserITCase extends AbstractAdminITCaseBase
     ClientResponse response = wr.get(ClientResponse.class);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 200);
+    assertEquals(response.getStatus(), 200);
 
     User user = response.getEntity(User.class);
 

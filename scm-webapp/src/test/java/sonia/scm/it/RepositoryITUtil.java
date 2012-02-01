@@ -88,7 +88,7 @@ public class RepositoryITUtil
     ClientResponse response = wr.post(ClientResponse.class, repository);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 201);
+    assertEquals(response.getStatus(), 201);
 
     String url = response.getHeaders().get("Location").get(0);
 
@@ -119,12 +119,12 @@ public class RepositoryITUtil
     ClientResponse response = wr.delete(ClientResponse.class);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 204);
+    assertEquals(response.getStatus(), 204);
     response.close();
     wr = createResource(client, "repositories/".concat(id));
     response = wr.get(ClientResponse.class);
     assertNotNull(response);
-    assertTrue(response.getStatus() == 404);
+    assertEquals(response.getStatus(), 404);
     response.close();
   }
 

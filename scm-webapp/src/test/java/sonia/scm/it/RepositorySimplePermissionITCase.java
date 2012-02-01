@@ -103,7 +103,7 @@ public class RepositorySimplePermissionITCase
     ClientResponse response = wr.post(ClientResponse.class, repository);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 201);
+    assertEquals(response.getStatus(), 201);
 
     String repositoryUrl = response.getHeaders().getFirst("Location");
 
@@ -112,7 +112,7 @@ public class RepositorySimplePermissionITCase
     wr = client.resource(repositoryUrl);
     response = wr.get(ClientResponse.class);
     assertNotNull(response);
-    assertTrue(response.getStatus() == 200);
+    assertEquals(response.getStatus(), 200);
     repository = response.getEntity(Repository.class);
     assertNotNull(repository);
     REPOSITORY_UUID = repository.getId();
@@ -148,7 +148,7 @@ public class RepositorySimplePermissionITCase
     if (!credentials.isAnonymous())
     {
       assertNotNull(response);
-      assertTrue(response.getStatus() == 200);
+      assertEquals(response.getStatus(), 200);
 
       Collection<Repository> repositories =
         response.getEntity(new GenericType<Collection<Repository>>() {}
@@ -172,7 +172,7 @@ public class RepositorySimplePermissionITCase
     if (!credentials.isAnonymous())
     {
       assertNotNull(response);
-      assertTrue(response.getStatus() == 403);
+      assertEquals(response.getStatus(), 403);
       response.close();
     }
   }

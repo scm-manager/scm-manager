@@ -53,6 +53,8 @@ import sonia.scm.repository.client.RepositoryClientException;
 import sonia.scm.repository.client.RepositoryClientFactory;
 import sonia.scm.util.IOUtil;
 
+import static org.hamcrest.Matchers.*;
+
 import static org.junit.Assert.*;
 
 import static sonia.scm.it.IntegrationTestUtil.*;
@@ -216,11 +218,11 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
 
     if ("svn".equals(repositoryType))
     {
-      assertTrue(cpr.getTotal() == (count + 1));
+      assertEquals(cpr.getTotal(), (count + 1));
     }
     else
     {
-      assertTrue(cpr.getTotal() == count);
+      assertEquals(cpr.getTotal(), count);
     }
 
     List<Changeset> changesets = cpr.getChangesets();
@@ -229,11 +231,11 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
 
     if ("svn".equals(repositoryType))
     {
-      assertTrue(changesets.size() == (count + 1));
+      assertEquals(changesets.size(), (count + 1));
     }
     else
     {
-      assertTrue(changesets.size() == count);
+      assertEquals(changesets.size(), count);
     }
 
     Changeset c = changesets.get(0);
@@ -250,9 +252,17 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
 
     assertNotNull(added);
     assertFalse(added.isEmpty());
-    assertTrue(added.size() == 1);
-    assertTrue(name.concat(".txt").equals(added.get(0))
-               || "/".concat(name).concat(".txt").equals(added.get(0)));
+    assertEquals(added.size(), 1);
+    
+    //J-
+    assertThat(
+      added.get(0),
+      anyOf(
+        equalTo(name.concat(".txt")),
+        equalTo("/".concat(name).concat(".txt"))
+      )
+    );
+    //J+
   }
 
   /**

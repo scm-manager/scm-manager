@@ -254,7 +254,7 @@ public class IntegrationTestUtil
     ClientResponse response = wr.get(ClientResponse.class);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 200);
+    assertEquals(response.getStatus(), 200);
     response.close();
     client.destroy();
   }

@@ -138,7 +138,7 @@ public class GroupITCase extends AbstractAdminITCaseBase
     ClientResponse response = wr.put(ClientResponse.class, group);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 204);
+    assertEquals(response.getStatus(), 204);
     response.close();
 
     Group other = getGroup("group-d");
@@ -202,7 +202,7 @@ public class GroupITCase extends AbstractAdminITCaseBase
     ClientResponse response = wr.post(ClientResponse.class, group);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 201);
+    assertEquals(response.getStatus(), 201);
     response.close();
 
     Group other = getGroup(group.getName());
@@ -228,12 +228,12 @@ public class GroupITCase extends AbstractAdminITCaseBase
     ClientResponse response = wr.delete(ClientResponse.class);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 204);
+    assertEquals(response.getStatus(), 204);
     response.close();
     wr = createResource(client, "groups/".concat(name));
     response = wr.get(ClientResponse.class);
     assertNotNull(response);
-    assertTrue(response.getStatus() == 404);
+    assertEquals(response.getStatus(), 404);
     response.close();
   }
 
