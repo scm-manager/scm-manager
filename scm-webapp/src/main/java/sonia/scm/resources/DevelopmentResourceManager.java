@@ -34,6 +34,7 @@ package sonia.scm.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import sonia.scm.plugin.PluginLoader;
 
@@ -51,6 +52,7 @@ import javax.servlet.ServletContext;
  *
  * @author Sebastian Sdorra
  */
+@Singleton
 public class DevelopmentResourceManager extends AbstractResourceManager
 {
 

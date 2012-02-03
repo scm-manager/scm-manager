@@ -34,6 +34,7 @@ package sonia.scm.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,7 @@ import javax.servlet.ServletContext;
  *
  * @author Sebastian Sdorra
  */
+@Singleton
 public class DefaultResourceManager extends AbstractResourceManager
 {
 
