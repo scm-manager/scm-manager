@@ -78,7 +78,8 @@ public class DefaultResource extends AbstractResource
     {
       appendResources(baos);
       this.content = baos.toByteArray();
-      this.name = ChecksumUtil.createChecksum(this.content);
+      this.name = ChecksumUtil.createChecksum(this.content).concat(".").concat(
+        type.getExtension());
     }
     finally
     {
