@@ -61,7 +61,6 @@ import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.plugin.ScriptResourceServlet;
 import sonia.scm.repository.ChangesetViewerUtil;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.Repository;
@@ -72,6 +71,7 @@ import sonia.scm.repository.xml.XmlRepositoryManager;
 import sonia.scm.resources.DefaultResourceManager;
 import sonia.scm.resources.DevelopmentResourceManager;
 import sonia.scm.resources.ResourceManager;
+import sonia.scm.resources.ScriptResourceServlet;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.security.EncryptionHandler;
@@ -147,7 +147,7 @@ public class ScmServletModule extends ServletModule
   public static final String PATTERN_PAGE = "*.html";
 
   /** Field description */
-  public static final String PATTERN_PLUGIN_SCRIPT = "/plugins/sonia.plugin.js";
+  public static final String PATTERN_PLUGIN_SCRIPT = "/plugins/resources/js/*";
 
   /** Field description */
   public static final String PATTERN_RESTAPI = "/api/rest/*";

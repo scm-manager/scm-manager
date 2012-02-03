@@ -39,6 +39,8 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.resources.ResourceManager;
+import sonia.scm.resources.ResourceType;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -81,12 +83,15 @@ public class TemplateServlet extends HttpServlet
    *
    * @param context
    * @param templateHandler
+   * @param resourceManager
    */
   @Inject
   public TemplateServlet(SCMContextProvider context,
-                         TemplateHandler templateHandler)
+                         TemplateHandler templateHandler,
+                         ResourceManager resourceManager)
   {
     this.templateHandler = templateHandler;
+    this.resourceManager = resourceManager;
     this.version = context.getVersion();
   }
 
@@ -111,6 +116,7 @@ public class TemplateServlet extends HttpServlet
 
     params.put("contextPath", contextPath);
     params.put("version", version);
+    params.put("scripts", resourceManager.getResources(ResourceType.SCRIPT));
 
     Locale l = request.getLocale();
 
@@ -173,6 +179,9 @@ public class TemplateServlet extends HttpServlet
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private ResourceManager resourceManager;
 
   /** Field description */
   private TemplateHandler templateHandler;

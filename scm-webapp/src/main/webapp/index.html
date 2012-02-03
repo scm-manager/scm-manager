@@ -152,7 +152,12 @@
     <!-- sonia.scm -->
     <script type="text/javascript" src="resources/js/sonia.scm.js"></script>
     <!--/compress-->
-    <script type="text/javascript" src="plugins/sonia.plugin.js"></script>
+    
+    <!-- plugins -->
+    <#list scripts as script>
+    <script type="text/javascript" src="plugins/resources/js/${script.name}"></script>
+    </#list>
+    
     <#if country != 'en'>
     <script type="text/javascript" src="resources/extjs/i18n/ext-lang-${country}.js"></script>
     <script type="text/javascript" src="resources/js/i18n/${country}.js"></script>
