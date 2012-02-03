@@ -75,6 +75,12 @@ public class BasicContextProvider implements SCMContextProvider
   /** Maven property for the version of the artifact */
   public static final String MAVEN_PROPERTY_VERSION = "version";
 
+  /**
+   * Java system property for the SCM-Manager project stage
+   * @since 1.12
+   */
+  public static final String STAGE_PROPERTY = "scm.stage";
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -85,6 +91,7 @@ public class BasicContextProvider implements SCMContextProvider
   {
     baseDirectory = findBaseDirectory();
     version = loadVersion();
+    stage = loadProjectStage();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -117,6 +124,17 @@ public class BasicContextProvider implements SCMContextProvider
   public File getBaseDirectory()
   {
     return baseDirectory;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @return
+   */
+  @Override
+  public Stage getStage()
+  {
+    return stage;
   }
 
   /**
@@ -168,6 +186,35 @@ public class BasicContextProvider implements SCMContextProvider
     }
 
     return directory;
+  }
+
+  /**
+   * Find the current stage.
+   *
+   *
+   * @return current stage
+   */
+  private Stage loadProjectStage()
+  {
+    Stage s = Stage.PRODUCTION;
+    String stageProperty = System.getProperty(STAGE_PROPERTY);
+
+    if (Util.isNotEmpty(stageProperty))
+    {
+      try
+      {
+        s = Stage.valueOf(stageProperty.toUpperCase());
+      }
+      catch (IllegalArgumentException ex)
+      {
+
+        // do not use logger or IOUtil,
+        // http://www.slf4j.org/codes.html#substituteLogger
+        ex.printStackTrace(System.err);
+      }
+    }
+
+    return s;
   }
 
   /**
@@ -268,6 +315,9 @@ public class BasicContextProvider implements SCMContextProvider
 
   /** The base directory of the SCM-Manager */
   private File baseDirectory;
+
+  /** stage of the current SCM-Manager instance */
+  private Stage stage;
 
   /** the version of the SCM-Manager */
   private String version;

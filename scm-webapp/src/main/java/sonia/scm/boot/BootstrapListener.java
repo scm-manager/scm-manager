@@ -102,6 +102,12 @@ public class BootstrapListener implements ServletContextListener
   @Override
   public void contextInitialized(ServletContextEvent sce)
   {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("start scm-manager in stage: {}",
+                  SCMContext.getContext().getStage());
+    }
+
     ClassLoader classLoader = null;
     File pluginDirectory = new File(SCMContext.getContext().getBaseDirectory(),
                                     PLUGIN_DIRECTORY);
@@ -130,7 +136,11 @@ public class BootstrapListener implements ServletContextListener
 
     if (classLoader != null)
     {
-      logger.info("try to use ScmBootstrapClassLoader");
+      if (logger.isInfoEnabled())
+      {
+        logger.info("try to use ScmBootstrapClassLoader");
+      }
+
       scmContextListener = BootstrapUtil.loadClass(classLoader,
               ServletContextListener.class, LISTENER);
       Thread.currentThread().setContextClassLoader(classLoader);
@@ -139,7 +149,11 @@ public class BootstrapListener implements ServletContextListener
 
     if (scmContextListener == null)
     {
-      logger.warn("fallback to default classloader");
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("fallback to default classloader");
+      }
+
       scmContextListener =
         BootstrapUtil.loadClass(ServletContextListener.class, LISTENER);
     }

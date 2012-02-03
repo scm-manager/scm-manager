@@ -311,6 +311,10 @@
               <name>scm.home</name>
               <value>${scm.home}</value>
             </systemProperty>
+            <systemProperty>
+              <name>scm.stage</name>
+              <value>${scm.stage}</value>
+            </systemProperty>
           </systemProperties>
           <connectors>
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
@@ -333,6 +337,7 @@
   </build>
 
   <properties>
+    <scm.stage>DEVELOPMENT</scm.stage>
     <scm.home>target/scm-it</scm.home>
     <environment.profile>default</environment.profile>
     <enunciate.version>1.25</enunciate.version>
