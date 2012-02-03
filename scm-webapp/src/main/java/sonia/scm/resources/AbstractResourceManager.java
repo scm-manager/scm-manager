@@ -65,13 +65,14 @@ public abstract class AbstractResourceManager implements ResourceManager
    * @param pluginLoader
    * @param resourceHandlers
    */
-  public AbstractResourceManager(ServletContext servletContext,
+  protected AbstractResourceManager(ServletContext servletContext,
                                  PluginLoader pluginLoader,
                                  Set<ResourceHandler> resourceHandlers)
   {
     this.servletContext = servletContext;
     this.pluginLoader = pluginLoader;
     this.resourceHandlers = resourceHandlers;
+    collectResources(resourceMap);
   }
 
   //~--- methods --------------------------------------------------------------
