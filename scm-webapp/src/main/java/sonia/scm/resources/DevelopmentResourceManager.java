@@ -92,10 +92,12 @@ public class DevelopmentResourceManager extends AbstractResourceManager
 
     for (String script : scripts)
     {
-      resourceMap.put(new ResourceKey(script, ResourceType.SCRIPT),
-                      new DevelopmentResource(servletContext,
-                        Arrays.asList(script), Collections.EMPTY_LIST, script,
-                        ResourceType.SCRIPT));
+      Resource resource = new DevelopmentResource(servletContext,
+                            Arrays.asList(script), Collections.EMPTY_LIST,
+                            script, ResourceType.SCRIPT);
+
+      resourceMap.put(new ResourceKey(resource.getName(), ResourceType.SCRIPT),
+                      resource);
     }
 
     for (ResourceHandler handler : resourceHandlers)

@@ -31,6 +31,10 @@
 
 package sonia.scm.resources;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.util.HttpUtil;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
@@ -64,8 +68,21 @@ public class DevelopmentResource extends AbstractResource
                              String name, ResourceType type)
   {
     super(servletContext, resources, resourceHandlers);
-    this.name = name;
     this.type = type;
+
+    if (name.startsWith(HttpUtil.SEPARATOR_PATH))
+    {
+      name = name.substring(1);
+    }
+
+    String ext = ".".concat(type.getExtension());
+
+    if (!name.endsWith(ext))
+    {
+      name = name.concat(ext);
+    }
+
+    this.name = name;
   }
 
   //~--- methods --------------------------------------------------------------
