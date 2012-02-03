@@ -34,7 +34,69 @@
 package sonia.scm.resources;
 
 /**
+ * This class represents the type of {@link Resource}.
  *
  * @author Sebastian Sdorra
  */
-public enum ResourceType { SCRIPT, STYLESHEET }
+public enum ResourceType
+{
+
+  /**
+   * Resource type for javascript resources
+   */
+  SCRIPT("text/javascript", "js"),
+
+  /**
+   * Resource type for stylesheet (css) resources
+   */
+  STYLESHEET("text/css", "css");
+
+  /**
+   * Constructs a new resource type
+   *
+   *
+   * @param contentType content type of the resource type
+   * @param extension file extension of the resource type
+   */
+  private ResourceType(String contentType, String extension)
+  {
+    this.contentType = contentType;
+    this.extension = extension;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns the content type of the resource type.
+   *
+   *
+   * @return content type of the resource type
+   *
+   * @since 1.12
+   */
+  public String getContentType()
+  {
+    return contentType;
+  }
+
+  /**
+   * Returns the file extension of the resource type.
+   *
+   *
+   * @return file extension of the resource type
+   *
+   * @since 1.12
+   */
+  public String getExtension()
+  {
+    return extension;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String contentType;
+
+  /** Field description */
+  private String extension;
+}
