@@ -35,6 +35,7 @@ package sonia.scm.util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -131,6 +132,23 @@ public class ChecksumUtil
   public static String createChecksum(File file) throws IOException
   {
     return createChecksum(new FileInputStream(file));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param content
+   *
+   * @return
+   *
+   * @throws IOException
+   * 
+   * @since 1.12
+   */
+  public static String createChecksum(byte[] content) throws IOException
+  {
+    return createChecksum(new ByteArrayInputStream(content));
   }
 
   //~--- get methods ----------------------------------------------------------
