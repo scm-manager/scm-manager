@@ -123,6 +123,17 @@ public class RunMojo extends AbstractBaseScmMojo
    *
    * @return
    */
+  public String getStage()
+  {
+    return stage;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getStopKey()
   {
     return stopKey;
@@ -223,6 +234,17 @@ public class RunMojo extends AbstractBaseScmMojo
    * Method description
    *
    *
+   * @param stage
+   */
+  public void setStage(String stage)
+  {
+    this.stage = stage;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param stopKey
    */
   public void setStopKey(String stopKey)
@@ -258,6 +280,8 @@ public class RunMojo extends AbstractBaseScmMojo
     try
     {
       System.setProperty("scm.home", scmHome);
+      System.setProperty("scm.stage", stage);
+      System.out.println("SET STAGE " + stage);
 
       // enable debug logging
       System.setProperty("logback.configurationFile", loggginConfiguration);
@@ -317,6 +341,11 @@ public class RunMojo extends AbstractBaseScmMojo
    * @parameter
    */
   private int port = 8081;
+
+  /**
+   * @parameter expression="${scm.stage}" default-value="DEVELOPMENT"
+   */
+  private String stage = "DEVELOPMENT";
 
   /**
    * @parameter

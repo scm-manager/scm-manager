@@ -405,17 +405,18 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
    */
   private void readClasspathFile(List<String> classpath, File classpathFile)
   {
-  	try
-    {	
-	  JAXBContext context = JAXBContext.newInstance(Classpath.class);
+    try
+    {
+      JAXBContext context = JAXBContext.newInstance(Classpath.class);
       Unmarshaller unmarshaller = context.createUnmarshaller();
-	  Classpath c = (Classpath) unmarshaller.unmarshal(classpathFile);
-	  classpath.addAll(c.getClasspathElements());
-	}
-	catch (JAXBException ex)
-	{
-	  throw new RuntimeException(ex);
-	}
+      Classpath c = (Classpath) unmarshaller.unmarshal(classpathFile);
+
+      classpath.addAll(c.getClasspathElements());
+    }
+    catch (JAXBException ex)
+    {
+      throw new RuntimeException(ex);
+    }
   }
 
   /**
@@ -430,16 +431,18 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     Classpath c = new Classpath();
 
     c.setClasspathElements(classpath);
-	try
-    {	
-	  JAXBContext context = JAXBContext.newInstance(Classpath.class);
+
+    try
+    {
+      JAXBContext context = JAXBContext.newInstance(Classpath.class);
       Marshaller marshaller = context.createMarshaller();
-	  marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-	  marshaller.marshal(c, classpathFile);
-	}
-	catch (JAXBException ex)
-	{
-	  throw new RuntimeException(ex);
-	}
+
+      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+      marshaller.marshal(c, classpathFile);
+    }
+    catch (JAXBException ex)
+    {
+      throw new RuntimeException(ex);
+    }
   }
 }
