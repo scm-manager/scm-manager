@@ -124,8 +124,7 @@ public abstract class AbstractResourceServlet extends HttpServlet
       {
         if (logger.isWarnEnabled())
         {
-          logger.warn("no resource with type {} and name {} found", resource,
-                      name);
+          logger.warn("no resource with type {} and name {} found", type, name);
         }
 
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
