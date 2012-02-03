@@ -69,6 +69,9 @@ import sonia.scm.repository.RepositoryBrowserUtil;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.xml.XmlRepositoryManager;
+import sonia.scm.resources.DefaultResourceManager;
+import sonia.scm.resources.DevelopmentResourceManager;
+import sonia.scm.resources.ResourceManager;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.security.EncryptionHandler;
@@ -258,6 +261,16 @@ public class ScmServletModule extends ServletModule
 
     // bind httpclient
     bind(HttpClient.class).to(URLHttpClient.class);
+
+    // bind resourcemanager
+    if (context.getStage() == Stage.DEVELOPMENT)
+    {
+      bind(ResourceManager.class).to(DevelopmentResourceManager.class);
+    }
+    else
+    {
+      bind(ResourceManager.class).to(DefaultResourceManager.class);
+    }
 
     // bind url provider staff
     bind(UrlProvider.class).annotatedWith(
