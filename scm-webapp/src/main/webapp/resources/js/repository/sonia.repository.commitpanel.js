@@ -51,7 +51,20 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
                        <p>{date:formatTimestamp}</p>\n\
                      </div>\n\
                      <div class="right-side">\n\
-                       Tags\n\
+                       <div class="changeset-tags">\n\
+                         <tpl if="tags">\n\
+                           <tpl for="tags">\n\
+                             <span class="cs-tag"><a title="Tag {.}">{.}</a></span>\n\
+                           </tpl>\n\
+                         </tpl>\n\
+                       </div>\n\
+                       <div class="changeset-branches">\n\
+                         <tpl if="branches">\n\
+                           <tpl for="branches">\n\
+                             <span class="cs-branch"><a title="Branch {.}">{.}</a></span>\n\
+                           </tpl>\n\
+                         </tpl>\n\
+                       </div>\n\
                      </div>\n\
                    </div>',
   
