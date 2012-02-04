@@ -145,7 +145,7 @@ public class GitChangesetConverter implements Closeable
     }
 
     long date = GitUtil.getCommitTime(commit);
-    PersonIdent authorIndent = commit.getCommitterIdent();
+    PersonIdent authorIndent = commit.getAuthorIdent();
     Person author = new Person(authorIndent.getName(),
                                authorIndent.getEmailAddress());
     String message = commit.getShortMessage();
