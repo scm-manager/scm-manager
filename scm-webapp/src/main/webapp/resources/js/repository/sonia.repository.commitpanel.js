@@ -104,7 +104,6 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
   
   update: function(changeset) {
     this.changeset = changeset;
-    console.debug(changeset);
     this.commitPanel.tpl.overwrite(this.commitPanel.body, this.changeset);
   },
   
