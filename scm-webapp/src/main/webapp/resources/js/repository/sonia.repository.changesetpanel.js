@@ -56,7 +56,6 @@ Sonia.repository.ChangesetPanel = Ext.extend(Ext.Panel, {
     var config = {
       title: String.format(this.title, this.revision),
       autoScroll: true,
-      bodyCssClass: 'x-panel-mc',
       tbar: [{
         text: this.commitLabel,
         handler: this.showCommit,
@@ -70,6 +69,7 @@ Sonia.repository.ChangesetPanel = Ext.extend(Ext.Panel, {
         handler: this.downloadRawDiff,
         scope: this
       }],
+      layout: 'fit',
       bbar: ['->', this.repository.name, ':', this.revision],
       items: [panel]
     }

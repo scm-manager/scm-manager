@@ -78,7 +78,7 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
     var config = {
       bodyCssClass: 'x-panel-mc',
       padding: 10,
-      layout: 'fit',
+      autoScroll: true,
       items: [this.commitPanel, this.diffPanel]
     }
     
