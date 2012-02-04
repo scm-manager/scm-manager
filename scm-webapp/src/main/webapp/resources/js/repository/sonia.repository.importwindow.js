@@ -45,6 +45,10 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
   importJobs: 0,
   
   initComponent: function(){
+    this.imported = [];
+    this.importJobsFinished = 0;
+    this.importJobs = 0;
+    
     var config = {
       layout:'fit',
       width:300,
