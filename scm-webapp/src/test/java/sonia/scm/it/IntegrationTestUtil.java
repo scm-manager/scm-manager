@@ -127,7 +127,7 @@ public class IntegrationTestUtil
     User user = state.getUser();
 
     assertNotNull(user);
-    assertEquals(user.getName(), "scmadmin");
+    assertEquals("scmadmin", user.getName());
     assertTrue(user.isAdmin());
 
     Collection<Type> types = state.getRepositoryTypes();
@@ -254,7 +254,7 @@ public class IntegrationTestUtil
     ClientResponse response = wr.get(ClientResponse.class);
 
     assertNotNull(response);
-    assertEquals(response.getStatus(), 200);
+    assertEquals(200, response.getStatus());
     response.close();
     client.destroy();
   }

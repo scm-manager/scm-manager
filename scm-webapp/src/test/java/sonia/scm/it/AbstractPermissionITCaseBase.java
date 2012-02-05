@@ -119,7 +119,7 @@ public abstract class AbstractPermissionITCaseBase<T>
     ClientResponse response = wr.post(ClientResponse.class, trillian);
 
     assertNotNull(response);
-    assertEquals(response.getStatus(), 201);
+    assertEquals(201, response.getStatus());
     response.close();
     logoutClient(client);
     client.destroy();
@@ -311,11 +311,11 @@ public abstract class AbstractPermissionITCaseBase<T>
 
     if (credentials.isAnonymous())
     {
-      assertEquals(response.getStatus(), 401);
+      assertEquals(401, response.getStatus());
     }
     else
     {
-      assertEquals(response.getStatus(), 403);
+      assertEquals(403, response.getStatus());
     }
 
     response.close();

@@ -103,7 +103,7 @@ public class GroupPermissionITCase extends AbstractPermissionITCaseBase<Group>
     ClientResponse response = wr.post(ClientResponse.class, testGroup);
 
     assertNotNull(response);
-    assertEquals(response.getStatus(), 201);
+    assertEquals(201, response.getStatus());
     response.close();
     logoutClient(client);
     client.destroy();

@@ -138,7 +138,7 @@ public class GroupITCase extends AbstractAdminITCaseBase
     ClientResponse response = wr.put(ClientResponse.class, group);
 
     assertNotNull(response);
-    assertEquals(response.getStatus(), 204);
+    assertEquals(204, response.getStatus());
     response.close();
 
     Group other = getGroup("group-d");
@@ -202,7 +202,7 @@ public class GroupITCase extends AbstractAdminITCaseBase
     ClientResponse response = wr.post(ClientResponse.class, group);
 
     assertNotNull(response);
-    assertEquals(response.getStatus(), 201);
+    assertEquals(201, response.getStatus());
     response.close();
 
     Group other = getGroup(group.getName());
@@ -211,8 +211,8 @@ public class GroupITCase extends AbstractAdminITCaseBase
     assertNotNull(other.getType());
     assertEquals(group.getName(), other.getName());
     assertEquals(group.getDescription(), other.getDescription());
-    assertArrayEquals(group.getMembers().toArray(new String[0]),
-                      other.getMembers().toArray(new String[0]));
+    assertArrayEquals(other.getMembers().toArray(new String[0]),
+                      group.getMembers().toArray(new String[0]));
     assertNotNull(other.getCreationDate());
   }
 
@@ -228,12 +228,12 @@ public class GroupITCase extends AbstractAdminITCaseBase
     ClientResponse response = wr.delete(ClientResponse.class);
 
     assertNotNull(response);
-    assertEquals(response.getStatus(), 204);
+    assertEquals(204, response.getStatus());
     response.close();
     wr = createResource(client, "groups/".concat(name));
     response = wr.get(ClientResponse.class);
     assertNotNull(response);
-    assertEquals(response.getStatus(), 404);
+    assertEquals(404, response.getStatus());
     response.close();
   }
 
@@ -258,7 +258,7 @@ public class GroupITCase extends AbstractAdminITCaseBase
 
     response.close();
     assertNotNull(group);
-    assertEquals(group.getName(), groupname);
+    assertEquals(groupname, group.getName());
 
     return group;
   }

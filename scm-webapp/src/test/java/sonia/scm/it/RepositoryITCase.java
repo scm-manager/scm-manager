@@ -195,7 +195,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
     ClientResponse response = wr.put(ClientResponse.class, repository);
 
     assertNotNull(response);
-    assertEquals(response.getStatus(), 204);
+    assertEquals(204, response.getStatus());
     response.close();
 
     Repository other = getRepositoryById(client, repository.getId());
@@ -222,7 +222,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
     ClientResponse response = wr.get(ClientResponse.class);
 
     assertNotNull(response);
-    assertEquals(response.getStatus(), 200);
+    assertEquals(200, response.getStatus());
 
     Collection<Repository> repositories =
       response.getEntity(new GenericType<Collection<Repository>>() {}

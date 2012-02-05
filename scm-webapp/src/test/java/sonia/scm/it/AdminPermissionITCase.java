@@ -286,11 +286,11 @@ public class AdminPermissionITCase
 
     if (credentials.isAnonymous())
     {
-      assertEquals(response.getStatus(), 401);
+      assertEquals(401, response.getStatus());
     }
     else
     {
-      assertEquals(response.getStatus(), 403);
+      assertEquals(403, response.getStatus());
     }
 
     // fix jersey-client bug

@@ -218,11 +218,11 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
 
     if ("svn".equals(repositoryType))
     {
-      assertEquals(cpr.getTotal(), (count + 1));
+      assertEquals((count + 1), cpr.getTotal());
     }
     else
     {
-      assertEquals(cpr.getTotal(), count);
+      assertEquals(count, cpr.getTotal());
     }
 
     List<Changeset> changesets = cpr.getChangesets();
@@ -231,11 +231,11 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
 
     if ("svn".equals(repositoryType))
     {
-      assertEquals(changesets.size(), (count + 1));
+      assertEquals((count + 1), changesets.size());
     }
     else
     {
-      assertEquals(changesets.size(), count);
+      assertEquals(count, changesets.size());
     }
 
     Changeset c = changesets.get(0);
@@ -252,8 +252,7 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
 
     assertNotNull(added);
     assertFalse(added.isEmpty());
-    assertEquals(added.size(), 1);
-    
+    assertEquals(1, added.size());
     //J-
     assertThat(
       added.get(0),
@@ -342,7 +341,7 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
     ClientResponse response = resource.get(ClientResponse.class);
 
     assertNotNull(response);
-    assertTrue(response.getStatus() == 200);
+    assertEquals(200, response.getStatus());
 
     ChangesetPagingResult cpr = response.getEntity(ChangesetPagingResult.class);
 

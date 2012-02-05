@@ -77,7 +77,7 @@ public class AuthenticationITCase
     ClientResponse response = authenticate(client, "dent", "trillian");
 
     assertNotNull(response);
-    assertEquals(response.getStatus(), 401);
+    assertEquals(401, response.getStatus());
     response.close();
   }
 
