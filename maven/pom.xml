@@ -6,13 +6,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>1.12-SNAPSHOT</version>
+    <version>1.12</version>
   </parent>
 
   <groupId>sonia.scm.maven</groupId>
   <artifactId>scm-maven-plugins</artifactId>
   <packaging>pom</packaging>
-  <version>1.12-SNAPSHOT</version>
+  <version>1.12</version>
   <name>scm-maven-plugins</name>
 
   <modules>
