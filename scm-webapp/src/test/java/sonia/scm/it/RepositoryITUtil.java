@@ -124,7 +124,7 @@ public class RepositoryITUtil
     wr = createResource(client, "repositories/".concat(id));
     response = wr.get(ClientResponse.class);
     assertNotNull(response);
-    assertEquals(204, response.getStatus());
+    assertEquals(404, response.getStatus());
     response.close();
   }
 
