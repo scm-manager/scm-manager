@@ -46,8 +46,8 @@ import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
@@ -228,6 +228,7 @@ public class HgCGIServlet extends HttpServlet
     CGIExecutor executor = cgiExecutorFactory.createExecutor(configuration,
                              getServletContext(), request, response);
 
+    executor.setContentLengthWorkaround(true);
     executor.getEnvironment().set(ENV_REPOSITORY_NAME, name);
     executor.getEnvironment().set(ENV_REPOSITORY_PATH,
                                   directory.getAbsolutePath());

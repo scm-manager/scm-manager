@@ -180,7 +180,7 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
   {
     RepositoryClient rc = createRepositoryClient();
 
-    rc.checkout();
+    rc.init();
     addTestFile(rc, "a", 1, false);
   }
 

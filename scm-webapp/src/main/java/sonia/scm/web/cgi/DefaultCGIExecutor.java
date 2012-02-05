@@ -128,6 +128,12 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     File command = new File(cmd);
     EnvList env = new EnvList(environment);
 
+    // workaround for mercurial 2.1
+    if (isContentLengthWorkaround())
+    {
+      env.set(ENV_CONTENT_LENGTH, Integer.toString(request.getContentLength()));
+    }
+
     if (workDirectory == null)
     {
       workDirectory = command.getParentFile();
@@ -161,7 +167,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
       if (logger.isTraceEnabled())
       {
-        logger.trace(environment.toString());
+        logger.trace(env.toString());
       }
     }
 
@@ -169,8 +175,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
     try
     {
-      p = Runtime.getRuntime().exec(execCmd, environment.getEnvArray(),
-                                    workDirectory);
+      p = Runtime.getRuntime().exec(execCmd, env.getEnvArray(), workDirectory);
       execute(p);
     }
     catch (Throwable ex)
@@ -205,7 +210,32 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     return exceptionHandler;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isContentLengthWorkaround()
+  {
+    return contentLengthWorkaround;
+  }
+
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param contentLengthWorkaround
+   */
+  @Override
+  public void setContentLengthWorkaround(boolean contentLengthWorkaround)
+  {
+    this.contentLengthWorkaround = contentLengthWorkaround;
+  }
 
   /**
    * Method description
@@ -592,6 +622,9 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
   /** Field description */
   private ScmConfiguration configuration;
+
+  /** Field description */
+  private boolean contentLengthWorkaround = false;
 
   /** Field description */
   private ServletContext context;

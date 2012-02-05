@@ -189,6 +189,15 @@ public interface CGIExecutor
    *
    *
    * @return
+   * @since 1.12
+   */
+  public boolean isContentLengthWorkaround();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
    */
   public boolean isIgnoreExitCode();
 
@@ -209,6 +218,14 @@ public interface CGIExecutor
    * @param bufferSize
    */
   public void setBufferSize(int bufferSize);
+
+  /**
+   * Method description
+   * @since 1.12
+   *
+   * @param contentLengthWorkaround
+   */
+  public void setContentLengthWorkaround(boolean contentLengthWorkaround);
 
   /**
    * Method description
