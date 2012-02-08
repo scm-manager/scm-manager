@@ -62,14 +62,14 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       fieldLabel: this.displayNameText,
       name: 'displayName',
       allowBlank: false,
-      readOnly: this.item != null && this.item != 'xml',
+      readOnly: this.isReadOnly(),
       helpText: this.displayNameHelpText
     },{
       fieldLabel: this.mailText,
       name: 'mail',
       allowBlank: true,
       vtype: 'email',
-      readOnly: this.item != null && this.item != 'xml',
+      readOnly: this.isReadOnly(),
       helpText: this.mailHelpText
     }];
 
@@ -104,6 +104,10 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
     Ext.apply(this, Ext.apply(this.initialConfig, {items: items}));
     Sonia.user.FormPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  isReadOnly: function(){
+    return this.item != null && this.item.type != 'xml';
   },
 
   fixRequest: function(user){
