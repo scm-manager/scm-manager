@@ -147,7 +147,7 @@ for file in files:
   print '      <directory>false</directory>'
   print '      <length>' + str(file.size()) + '</length>'
   print '      <lastModified>' + str(time).split('.')[0] + '</lastModified>'
-  print '      <description>' + desc + '</description>'
+  print '      <description>' + escape(desc.encode('UTF-8')) + '</description>'
   print '    </file>'
 print '  </files>'
 print '</browser-result>'

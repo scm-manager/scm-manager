@@ -79,7 +79,7 @@ def printChangeset(repo, ctx):
     for parent in parents:
       print '      <parents>' + str(parent.rev()) + ':' + hex(parent.node()[:6]) + '</parents>'
   print '      <author>' + escape(ctx.user()) + '</author>'
-  print '      <description>' + escape(ctx.description()) + '</description>'
+  print '      <description>' + escape(ctx.description().encode('UTF-8')) + '</description>'
   print '      <date>' + str(time).split('.')[0] + '</date>'
 
   # author
