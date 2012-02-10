@@ -45,6 +45,7 @@ if len(pythonPath) > 0:
 
 from mercurial import hg, ui
 import datetime, time
+from xml.sax.saxutils import escape
 
 def getName(path):
   parts = path.split('/')
@@ -147,7 +148,7 @@ for file in files:
   print '      <directory>false</directory>'
   print '      <length>' + str(file.size()) + '</length>'
   print '      <lastModified>' + str(time).split('.')[0] + '</lastModified>'
-  print '      <description>' + escape(desc.encode('UTF-8')) + '</description>'
+  print '      <description>' + escape(desc) + '</description>'
   print '    </file>'
 print '  </files>'
 print '</browser-result>'
