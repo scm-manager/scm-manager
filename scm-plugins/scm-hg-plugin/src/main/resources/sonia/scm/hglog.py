@@ -29,7 +29,8 @@
 #
 #
 
-# import basic packages
+
+# import basic modules
 import sys, os
 
 # create python path
@@ -40,139 +41,148 @@ if len(pythonPath) > 0:
   for i in range(len(pathParts)):
     sys.path.insert(i, pathParts[i])
 
-# import mercurial packages
+# import mercurial modules
 from mercurial import hg, ui, commands
 from mercurial.node import hex
-from xml.sax.saxutils import escape
-import datetime, time
+from xml.dom.minidom import Document
 
-# header
-def printHeader(total):
-  print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-  print '<changeset-paging>'
-  print '  <total>' + str(total) + '</total>'
-  print '  <changesets>'
+# util methods
+def openRepository():
+  repositoryPath = os.environ['SCM_REPOSITORY_PATH']
+  return hg.repository(ui.ui(), path = repositoryPath)
 
-# changeset
-def printChangeset(repo, ctx):
+def writeXml(doc):
+  # print doc.toprettyxml(indent="  ")
+  doc.writexml(sys.stdout, encoding='UTF-8')
+
+def createChildNode(doc, parentNode, name):
+  node = doc.createElement(name)
+  parentNode.appendChild(node)
+  return node
+
+def appendValue(doc, node, value):
+  textNode = doc.createTextNode(value)
+  node.appendChild(textNode)
+  
+def appendTextNode(doc, parentNode, name, value):
+  node = createChildNode(doc, parentNode, name)
+  appendValue(doc, node, value)
+
+def appendListNodes(doc, parentNode, name, values):
+  if values:
+    for value in values:
+      appendTextNode(doc, parentNode, name, value)
+
+def appendWrappedListNodes(doc, parentNode, wrapperName, name, values):
+  if values:
+    wrapperNode = createChildNode(doc, parentNode, wrapperName)
+    appendListNodes(doc, wrapperNode, name, values)
+
+# changeset methods
+
+def getId(ctx):
+  return str(ctx.rev()) + ':' + hex(ctx.node()[:6])
+
+def appendIdNode(doc, parentNode, ctx):
+  id = getId(ctx)
+  appendTextNode(doc, parentNode, 'id', id)
+
+def appendParentNodes(doc, parentNode, ctx):
+  parents = ctx.parents()
+  if parents:
+    for parent in parents:
+      parentId = getId(parent)
+      appendTextNode(doc, parentNode, 'parents', parentId)
+      
+def appendDateNode(doc, parentNode, ctx):
   time = int(ctx.date()[0]) * 1000
-  branch = ctx.branch()
-  tags = ctx.tags()
-  status = repo.status(ctx.p1().node(), ctx.node())
-  mods = status[0]
-  added = status[1]
-  deleted = status[2]
+  date = str(time).split('.')[0]
+  appendTextNode(doc, parentNode, 'date', date)
+
+def appendAuthorNodes(doc, parentNode, ctx):
   authorName = ctx.user()
   authorMail = None
-  parents = ctx.parents()
-  
   if authorName:
+    authorNode = createChildNode(doc, parentNode, 'author')
     s = authorName.find('<')
     e = authorName.find('>')
     if s > 0 and e > 0:
       authorMail = authorName[s + 1:e].strip()
       authorName = authorName[0:s].strip()
-  
-  print '    <changeset>'
-  print '      <id>' + str(ctx.rev()) + ':' + hex(ctx.node()[:6]) + '</id>'
-  if parents:
-    for parent in parents:
-      print '      <parents>' + str(parent.rev()) + ':' + hex(parent.node()[:6]) + '</parents>'
-  print '      <author>' + escape(ctx.user()) + '</author>'
-  print '      <description>' + escape(ctx.description()) + '</description>'
-  print '      <date>' + str(time).split('.')[0] + '</date>'
-
-  # author
-  if authorName:
-    print '      <author>'
-    print '        <name>' + authorName + '</name>'
-    if authorMail:
-      print '        <mail>' + authorMail + '</mail>'
-    print '      </author>'
-
-  # branches
+      appendTextNode(doc, authorNode, 'mail', authorMail)
+      
+    appendTextNode(doc, authorNode, 'name', authorName)
+    
+def appendBranchesNode(doc, parentNode, ctx):
+  branch = ctx.branch()
   if branch != 'default':
-    print '      <branches>' + branch + '</branches>'
-
-  # tags
-  if tags:
-    for t in tags:
-      print '      <tags>' + t + '</tags>'
+    appendTextNode(doc, parentNode, 'branches', branch)
     
-  # modifications
-  print '      <modifications>'
+def appendModifications(doc, parentNode, ctx):
+  status = repo.status(ctx.p1().node(), ctx.node())
+  if status:
+    modificationsNode = createChildNode(doc, parentNode, 'modifications')
+    appendWrappedListNodes(doc, modificationsNode, 'added', 'file', status[1])
+    appendWrappedListNodes(doc, modificationsNode, 'modified', 'file', status[0])
+    appendWrappedListNodes(doc, modificationsNode, 'removed', 'file', status[2])
   
-  # files added 
-  if added:
-    print '        <added>'
-    for add in added:
-      print '          <file>' + add + '</file>'
-    print '        </added>'
+def appendChangesetNode(doc, parentNode, ctx):
+  changesetNode = createChildNode(doc, parentNode, 'changeset')
+  appendIdNode(doc, changesetNode, ctx)
+  appendParentNodes(doc, changesetNode, ctx)
+  appendTextNode(doc, changesetNode, 'description', ctx.description())
+  appendDateNode(doc, changesetNode, ctx)
+  appendAuthorNodes(doc, changesetNode, ctx)
+  appendBranchesNode(doc, changesetNode, ctx)
+  appendListNodes(doc, changesetNode, 'tags', ctx.tags())
+  appendModifications(doc, changesetNode, ctx)
+  
+# changeset methods end
 
-  # files modified
-  if mods:
-    print '        <modified>'
-    for mod in mods:
-      print '          <file>' + mod + '</file>'
-    print '        </modified>'
+# change log methods
 
-  # files deleted
-  if deleted:
-    print '        <removed>'
-    for dele in deleted:
-      print '          <file>' + dele + '</file>'
-    print '        </removed>'    
-    
-  print '      </modifications>'
-  print '    </changeset>'
-
-# footer
-def printFooter():
-  print '  </changesets>'
-  print '</changeset-paging>'
-
-def printChangesetsForPath(repo, rev, path):
+def createBasicNodes(doc, ctxs):
+  rootNode = doc.createElement('changeset-paging')
+  doc.appendChild(rootNode)
+  total = str(len(repo))
+  appendTextNode(doc, rootNode, 'total', total)
+  return createChildNode(doc, rootNode, 'changesets')
+  
+def appendChangesetsForPath(doc, repo, rev, path):
   if len(rev) <= 0:
     rev = "tip"
-
   fctxs = repo[rev].filectx(path)
   maxRev = fctxs.rev()
-  
   revs = []
   for i in fctxs.filelog():
     fctx = fctxs.filectx(i)
     if fctx.rev() <= maxRev:
       revs.append(fctx.changectx())
-  
   # reverse changesets
   revs.reverse()
-  
-  total = len(revs)
-  
   # handle paging
   start = os.environ['SCM_PAGE_START']
   limit = os.environ['SCM_PAGE_LIMIT']
-  
   if len(start) > 0:
     revs = revs[int(start):]
-
   if len(limit) > 0:
     revs = revs[:int(limit)]
-
   # output
-  printHeader(total)
+  changesets = createBasicNodes(doc, revs)
   for ctx in revs:
-    printChangeset(repo, ctx)
-  printFooter()
+    appendChangesetNode(doc, changesets, ctx)
   
-def printChangesetsForStartAndEnd(repo, startRev, endRev):
-  printHeader(len(repo))
+def appendChangesetsForStartAndEnd(doc, repo, startRev, endRev):
+  changesets = createBasicNodes(doc, repo)
   for i in range(endRev, startRev, -1):
-    printChangeset(repo, repo[i])
-  printFooter()
+    appendChangesetNode(doc, changesets, repo[i])
+    
+# change log methods
+  
+# main method
 
-repositoryPath = os.environ['SCM_REPOSITORY_PATH']
-repo = hg.repository(ui.ui(), path = repositoryPath)
+repo = openRepository()
+doc = Document()
 
 path = os.environ['SCM_PATH']
 startNode = os.environ['SCM_REVISION_START']
@@ -180,11 +190,10 @@ endNode = os.environ['SCM_REVISION_END']
 rev = os.environ['SCM_REVISION']
 
 if len(path) > 0:
-  printChangesetsForPath(repo, rev, path)
+  appendChangesetsForPath(doc, repo, rev, path)
 elif len(rev) > 0:
   ctx = repo[rev]
-  print '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-  printChangeset(repo, ctx)
+  appendChangesetNode(doc, doc, ctx)
 else:
   if len(startNode) > 0 and len(endNode) > 0:
     # start and end revision
@@ -194,18 +203,15 @@ else:
     # paging
     start = os.environ['SCM_PAGE_START']
     limit = os.environ['SCM_PAGE_LIMIT']
-
     limit = int(limit)
-
     end = int(start)
     endRev = len(repo) - end - 1
-
     startRev = endRev - limit
-
   # fix negative start revisions
   if startRev < -1:
     startRev = -1
-  
   # print
-  printChangesetsForStartAndEnd(repo, startRev, endRev)
-
+  appendChangesetsForStartAndEnd(doc, repo, startRev, endRev)
+  
+# write document
+writeXml(doc)
