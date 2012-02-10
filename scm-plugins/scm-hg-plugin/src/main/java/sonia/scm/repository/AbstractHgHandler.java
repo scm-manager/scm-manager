@@ -95,7 +95,16 @@ public class AbstractHgHandler
 
   /** Field description */
   public static final String ENV_REVISION_START = "SCM_REVISION_START";
+  
+  /** Field description */
+  public static final String ENV_PYTHONIOENCODING = "PYTHONIOENCODING";
+  
+  /** Field description */
+  public static final String ENV_HGENCODING = "HGENCODING";
 
+  /** Field description */
+  public static final String ENCODING = "UTF-8";
+  
   /** the logger for AbstractHgHandler */
   private static final Logger logger =
     LoggerFactory.getLogger(AbstractHgHandler.class);
@@ -431,6 +440,10 @@ public class AbstractHgHandler
     pb.directory(directory);
 
     Map<String, String> env = pb.environment();
+    
+    // force utf-8 encoding for mercurial and python
+    env.put(ENV_PYTHONIOENCODING, ENCODING);
+    env.put(ENV_HGENCODING, ENCODING);
 
     if (context.isSystemEnvironment())
     {

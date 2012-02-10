@@ -53,7 +53,7 @@ def openRepository():
 
 def writeXml(doc):
   # print doc.toprettyxml(indent="  ")
-  print doc.toxml()
+  doc.writexml(sys.stdout, encoding='UTF-8')
 
 def createChildNode(doc, parentNode, name):
   node = doc.createElement(name)
