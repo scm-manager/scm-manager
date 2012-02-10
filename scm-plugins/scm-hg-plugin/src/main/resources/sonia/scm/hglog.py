@@ -193,8 +193,7 @@ if len(path) > 0:
   appendChangesetsForPath(doc, repo, rev, path)
 elif len(rev) > 0:
   ctx = repo[rev]
-  changesets = createBasicNodes(doc, repo)
-  appendChangesetNode(doc, changesets, repo, ctx)
+  appendChangesetNode(doc, doc, ctx)
 else:
   if len(startNode) > 0 and len(endNode) > 0:
     # start and end revision
