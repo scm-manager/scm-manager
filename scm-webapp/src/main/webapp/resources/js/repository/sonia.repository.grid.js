@@ -38,6 +38,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   colUrlText: 'Url',
   emptyText: 'No repository is configured',
   formTitleText: 'Repository Form',
+  unknownType: 'Unknown',
   
   searchValue: null,
   typeFilter: null,
@@ -324,9 +325,14 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   },
 
   renderRepositoryType: function(repositoryType){
-    return repositoryTypeStore.queryBy(function(rec){
+    var displayName = this.unknownType;
+    var rec = repositoryTypeStore.queryBy(function(rec){
       return rec.data.name == repositoryType;
-    }).itemAt(0).data.displayName;
+    }).itemAt(0);
+    if ( rec ){
+      displayName = rec.get('displayName');
+    }
+    return displayName;
   }
   
 });

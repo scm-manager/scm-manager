@@ -275,15 +275,15 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   }
 
   /**
-   * Method description
+   * Returns true if the plugin is configured and enabled.
    *
    *
-   * @return
+   * @return true if the plugin is configured and enabled
    */
   @Override
   public boolean isConfigured()
   {
-    return (config != null) && config.isValid();
+    return (config != null) && config.isValid() &&!config.isDisabled();
   }
 
   //~--- set methods ----------------------------------------------------------

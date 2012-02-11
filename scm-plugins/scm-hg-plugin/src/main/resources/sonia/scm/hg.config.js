@@ -43,6 +43,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   useOptimizedBytecodeText: 'Optimized Bytecode (.pyo)',
   configWizardText: 'Start Configuration Wizard',
   configWizardLabelText: 'Start Configuration Wizard',
+  disabledText: 'Disabled',
 
   // helpText
   hgBinaryHelpText: 'Location of Mercurial binary.',
@@ -50,6 +51,8 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   pythonPathHelpText: 'Python Module Search Path (PYTHONPATH).',
   repositoryDirectoryHelpText: 'Location of the Mercurial repositories.',
   useOptimizedBytecodeHelpText: 'Use the Python "-O" switch.',
+  disabledHelpText: 'Enable or disable the Mercurial plugin. \n\
+                    Note you have to reload the page, after changing this value.',
 
   initComponent: function(){
 
@@ -84,6 +87,12 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         fieldLabel: this.useOptimizedBytecodeText,
         inputValue: 'true',
         helpText: this.useOptimizedBytecodeHelpText
+      },{
+        xtype: 'checkbox',
+        name: 'disabled',
+        fieldLabel: this.disabledText,
+        inputValue: 'true',
+        helpText: this.disabledHelpText        
       },{
         xtype: 'button',
         text: this.configWizardText,
@@ -182,14 +191,16 @@ if ( i18n != null && i18n.country == 'de' ){
     autoConfigLabelText: 'Automatische Einstellung',
     configWizardText: 'Konfigurations-Assistenten starten',
     configWizardLabelText: 'Konfigurations-Assistent',
+    disabledText: 'Deaktivieren',
 
     // helpText
     hgBinaryHelpText: 'Pfad zum "hg" Befehl.',
     pythonBinaryHelpText: 'Pfad zum "python" Befehl.',
     pythonPathHelpText: 'Python Modul Suchpfad (PYTHONPATH).',
     repositoryDirectoryHelpText: 'Verzeichnis der Mercurial-Repositories.',
-    useOptimizedBytecodeHelpText: 'Optimierten Bytecode verwenden (python -O).'
-
+    useOptimizedBytecodeHelpText: 'Optimierten Bytecode verwenden (python -O).',
+    disabledHelpText: 'Aktivieren oder deaktivieren des Mercurial Plugins.\n\
+      Die Seite muss neu geladen werden wenn dieser Wert geändert wird.'
   });
 
 }

@@ -40,9 +40,12 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
   pre14CompatibleText: 'Pre 1.4 Compatible',
   pre15CompatibleText: 'Pre 1.5 Compatible',
   pre16CompatibleText: 'Pre 1.6 Compatible',
+  disabledText: 'Disabled',
 
   // helpTexts
   repositoryDirectoryHelpText: 'Location of the Suberversion repositories.',
+  disabledHelpText: 'Enable or disable the Subversion plugin.\n\
+                    Note you have to reload the page, after changing this value.',
 
   initComponent: function(){
 
@@ -76,6 +79,12 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
           inputValue: 'PRE16',
           name: 'compatibility'
         }]
+      },{
+        xtype: 'checkbox',
+        name: 'disabled',
+        fieldLabel: this.disabledText,
+        inputValue: 'true',
+        helpText: this.disabledHelpText
       }]
     }
 
@@ -100,10 +109,12 @@ if ( i18n != null && i18n.country == 'de' ){
     pre14CompatibleText: 'Mit Versionen vor 1.4 kompatibel',
     pre15CompatibleText: 'Mit Versionen vor 1.5 kompatibel',
     pre16CompatibleText: 'Mit Versionen vor 1.6 kompatibel',
+    disabledText: 'Deaktivieren',
 
     // helpTexts
-    repositoryDirectoryHelpText: 'Verzeichnis der Subversion-Repositories.'
-
+    repositoryDirectoryHelpText: 'Verzeichnis der Subversion-Repositories.',
+    disabledHelpText: 'Aktivieren oder deaktivieren des Subversion Plugins.\n\
+      Die Seite muss neu geladen werden wenn dieser Wert geändert wird.'
   });
 
 }

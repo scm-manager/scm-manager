@@ -151,7 +151,8 @@ if ( Sonia.repository.Grid ){
     colCreationDateText: 'Erstellungsdatum',
     colUrlText: 'Url',
     emptyText: 'Es wurde kein Repository konfiguriert',
-    formTitleText: 'Repository'
+    formTitleText: 'Repository',
+    unknownType: 'Unbekannt'
   });
 
 }

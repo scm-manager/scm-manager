@@ -36,9 +36,12 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
   // labels
   titleText: 'Git Settings',
   repositoryDirectoryText: 'Repository directory',
+  disabledText: 'Disabled',
 
   // helpTexts
   repositoryDirectoryHelpText: 'Location of the Git repositories.',
+  disabledHelpText: 'Enable or disable the Git plugin.\n\
+                    Note you have to reload the page, after changing this value.',
 
   initComponent: function(){
 
@@ -51,6 +54,12 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
         fieldLabel: this.repositoryDirectoryText,
         helpText: this.repositoryDirectoryHelpText,
         allowBlank : false
+      },{
+        xtype: 'checkbox',
+        name: 'disabled',
+        fieldLabel: this.disabledText,
+        inputValue: 'true',
+        helpText: this.disabledHelpText
       }]
     }
 
@@ -71,9 +80,12 @@ if ( i18n != null && i18n.country == 'de' ){
     // labels
     titleText: 'Git Einstellungen',
     repositoryDirectoryText: 'Repository-Verzeichnis',
+    disabledText: 'Deaktivieren',
 
     // helpTexts
-    repositoryDirectoryHelpText: 'Verzeichnis der Git-Repositories.'
+    repositoryDirectoryHelpText: 'Verzeichnis der Git-Repositories.',
+    disabledHelpText: 'Aktivieren oder deaktivieren des Git Plugins.\n\
+      Die Seite muss neu geladen werden wenn dieser Wert geändert wird.'
     
   });
 

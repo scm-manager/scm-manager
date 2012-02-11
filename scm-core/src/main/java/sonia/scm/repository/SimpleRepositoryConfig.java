@@ -64,6 +64,18 @@ public class SimpleRepositoryConfig implements Validateable
   }
 
   /**
+   * Returns true if the plugin is disabled.
+   *
+   *
+   * @return true if the plugin is disabled
+   * @since 1.13
+   */
+  public boolean isDisabled()
+  {
+    return disabled;
+  }
+
+  /**
    * Returns true if the configuration object is valid.
    *
    *
@@ -78,6 +90,18 @@ public class SimpleRepositoryConfig implements Validateable
   //~--- set methods ----------------------------------------------------------
 
   /**
+   * Enable or disable the plugin.
+   *
+   *
+   * @param disabled
+   * @since 1.13
+   */
+  public void setDisabled(boolean disabled)
+  {
+    this.disabled = disabled;
+  }
+
+  /**
    * Sets the directory for the repositories
    *
    *
@@ -90,6 +114,9 @@ public class SimpleRepositoryConfig implements Validateable
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** true if the plugin is disabled */
+  private boolean disabled = false;
+
+  /** directory for repositories */
   private File repositoryDirectory;
 }
