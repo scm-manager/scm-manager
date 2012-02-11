@@ -124,13 +124,10 @@ public class BasicAuthenticationFilter extends HttpFilter
     {
       user = securityContext.getUser();
     }
-    else if (Util.isNotEmpty(authentication))
+    else if (Util.isNotEmpty(authentication)
+             && authentication.toUpperCase().startsWith(
+               AUTHORIZATION_BASIC_PREFIX))
     {
-      if (!authentication.toUpperCase().startsWith(AUTHORIZATION_BASIC_PREFIX))
-      {
-        throw new ServletException("wrong basic header");
-      }
-
       user = authenticate(request, response, securityContext, authentication);
     }
 
