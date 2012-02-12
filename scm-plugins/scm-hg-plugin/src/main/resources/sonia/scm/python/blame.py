@@ -45,11 +45,12 @@ def appendBlameLine(doc, parent, lineCtx, lineNumber):
 
 def appendBlameLines(doc, repo, revision, path):
   blameResult = createChildNode(doc, doc, 'blame-result')
+  blameLines = createChildNode(doc, blameResult, 'blamelines')
   linesCtx = repo[revision][path].annotate()
   lineNumber = 0
   for lineCtx in linesCtx:
     lineNumber += 1
-    appendBlameLine(doc, blameResult, lineCtx, lineNumber)
+    appendBlameLine(doc, blameLines, lineCtx, lineNumber)
   appendTextNode(doc, blameResult, 'total', str(lineNumber))
 
 # main method
