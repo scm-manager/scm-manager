@@ -38,25 +38,10 @@ package sonia.scm.repository;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.ConfigChangedListener;
-import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.io.RegexResourceProcessor;
-import sonia.scm.io.ResourceProcessor;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.util.IOUtil;
-import sonia.scm.web.HgWebConfigWriter;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import java.util.UUID;
 
@@ -67,32 +52,19 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
+public class HgHookManager
 {
-
-  /** Field description */
-  public static final String SCRIPT_TEMPLATE = "/sonia/scm/hghook.py";
-
-  /** the logger for HgHookManager */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgHookManager.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param context
    * @param configuration
    */
   @Inject
-  public HgHookManager(SCMContextProvider context,
-                       ScmConfiguration configuration)
+  public HgHookManager(ScmConfiguration configuration)
   {
-    this.context = context;
     this.configuration = configuration;
-    this.configuration.addListener(this);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -101,51 +73,29 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
    * Method description
    *
    *
-   * @param config
-   */
-  @Override
-  public void configChanged(ScmConfiguration config)
-  {
-    this.changed = true;
-  }
-
-  /**
-   * TODO check if file exists
-   *
-   *
    * @param request
    *
-   * @throws IOException
+   * @return
    */
-  public void writeHookScript(HttpServletRequest request) throws IOException
+  public String createUrl(HttpServletRequest request)
   {
-    if (isScriptWriteAble())
+    String url = null;
+
+    if (configuration.isForceBaseUrl())
     {
-      synchronized (this)
-      {
-        if (isScriptWriteAble())
-        {
-          String url = createUrl(request);
-
-          if (hgHookScript == null)
-          {
-            File cgiDirectory = new File(context.getBaseDirectory(), "cgi-bin");
-
-            IOUtil.mkdirs(cgiDirectory);
-            hgHookScript = new File(cgiDirectory, "scmhooks.py");
-          }
-
-          if (logger.isDebugEnabled())
-          {
-            logger.debug("write hg hook script for '{}' to '{}'", url,
-                         hgHookScript);
-          }
-
-          writeScript(hgHookScript, url.toString());
-          changed = false;
-        }
-      }
+      url = HttpUtil.getUriWithoutEndSeperator(
+        configuration.getBaseUrl()).concat("/hook/hg/");
     }
+    else
+    {
+      StringBuilder sb = new StringBuilder(request.getScheme());
+
+      sb.append("://localhost:").append(request.getLocalPort());
+      sb.append(request.getContextPath()).append("/hook/hg/");
+      url = sb.toString();
+    }
+
+    return url;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -174,98 +124,11 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
     return this.challenge.equals(challenge);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  private String createUrl(HttpServletRequest request)
-  {
-    String url = null;
-
-    if (configuration.isForceBaseUrl())
-    {
-      url = HttpUtil.getUriWithoutEndSeperator(
-        configuration.getBaseUrl()).concat("/hook/hg/");
-    }
-    else
-    {
-      StringBuilder sb = new StringBuilder(request.getScheme());
-
-      sb.append("://localhost:").append(request.getLocalPort());
-      sb.append(request.getContextPath()).append("/hook/hg/");
-      url = sb.toString();
-    }
-
-    return url;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param script
-   * @param url
-   *
-   * @throws IOException
-   */
-  private void writeScript(File script, String url) throws IOException
-  {
-    InputStream input = null;
-    OutputStream output = null;
-
-    try
-    {
-      input = HgWebConfigWriter.class.getResourceAsStream(SCRIPT_TEMPLATE);
-      output = new FileOutputStream(script);
-
-      ResourceProcessor rp = new RegexResourceProcessor();
-
-      rp.addVariable("url", url);
-      rp.addVariable("challenge", getChallenge());
-      rp.process(input, output);
-      script.setExecutable(true);
-    }
-    finally
-    {
-      IOUtil.close(input);
-      IOUtil.close(output);
-    }
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private boolean isScriptWriteAble()
-  {
-    return (hgHookScript == null) ||!hgHookScript.exists() || changed;
-  }
-
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private boolean changed = false;
 
   /** Field description */
   private String challenge = UUID.randomUUID().toString();
 
   /** Field description */
   private ScmConfiguration configuration;
-
-  /** Field description */
-  private SCMContextProvider context;
-
-  /** Field description */
-  private volatile File hgHookScript;
 }

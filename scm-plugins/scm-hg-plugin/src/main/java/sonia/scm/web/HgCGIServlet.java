@@ -78,6 +78,9 @@ public class HgCGIServlet extends HttpServlet
 {
 
   /** Field description */
+  public static final String ENV_CHALLENGE = "SCM_CHALLENGE";
+
+  /** Field description */
   public static final String ENV_PYTHON_PATH = "PYTHONPATH";
 
   /** Field description */
@@ -88,6 +91,9 @@ public class HgCGIServlet extends HttpServlet
 
   /** Field description */
   public static final String ENV_SESSION_PREFIX = "SCM_";
+
+  /** Field description */
+  public static final String ENV_URL = "SCM_URL";
 
   /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
@@ -225,8 +231,6 @@ public class HgCGIServlet extends HttpServlet
       }
     }
 
-    hookManager.writeHookScript(request);
-
     CGIExecutor executor = cgiExecutorFactory.createExecutor(configuration,
                              getServletContext(), request, response);
 
@@ -234,6 +238,8 @@ public class HgCGIServlet extends HttpServlet
     executor.getEnvironment().set(ENV_REPOSITORY_NAME, name);
     executor.getEnvironment().set(ENV_REPOSITORY_PATH,
                                   directory.getAbsolutePath());
+    executor.getEnvironment().set(ENV_URL, hookManager.createUrl(request));
+    executor.getEnvironment().set(ENV_CHALLENGE, hookManager.getChallenge());
     executor.getEnvironment().set(ENV_PYTHON_PATH, pythonPath);
 
     HttpSession session = request.getSession();
