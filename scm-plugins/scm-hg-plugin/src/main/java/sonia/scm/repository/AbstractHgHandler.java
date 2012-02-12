@@ -38,6 +38,7 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContext;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.HgUtil;
@@ -91,7 +92,7 @@ public class AbstractHgHandler
   public static final String ENV_PYTHONIOENCODING = "PYTHONIOENCODING";
 
   /** Field description */
-  public static final String ENV_PYTHON_PATH = "SCM_PYTHON_PATH";
+  public static final String ENV_PYTHONPATH = "PYTHONPATH";
 
   /** Field description */
   public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
@@ -232,29 +233,20 @@ public class AbstractHgHandler
    * Method description
    *
    *
+   * @param script
    * @param extraEnv
    *
    * @return
    *
    * @throws IOException
    */
-  protected Process createPythonProcess(Map<String, String> extraEnv)
+  protected Process createScriptProcess(HgPythonScript script,
+          Map<String, String> extraEnv)
           throws IOException
   {
-    return createProcess(extraEnv, handler.getConfig().getPythonBinary());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  protected Process createPythonProcess() throws IOException
-  {
-    return createPythonProcess(new HashMap<String, String>());
+    return createProcess(
+        extraEnv, handler.getConfig().getPythonBinary(),
+        script.getFile(SCMContext.getContext()).getAbsolutePath());
   }
 
   /**
@@ -297,7 +289,7 @@ public class AbstractHgHandler
    *
    *
    * @param resultType
-   * @param scriptResource
+   * @param script
    * @param <T>
    *
    * @return
@@ -306,10 +298,10 @@ public class AbstractHgHandler
    * @throws RepositoryException
    */
   protected <T> T getResultFromScript(Class<T> resultType,
-          String scriptResource)
+          HgPythonScript script)
           throws IOException, RepositoryException
   {
-    return getResultFromScript(resultType, scriptResource,
+    return getResultFromScript(resultType, script,
                                new HashMap<String, String>());
   }
 
@@ -318,7 +310,7 @@ public class AbstractHgHandler
    *
    *
    * @param resultType
-   * @param scriptResource
+   * @param script
    * @param extraEnv
    * @param <T>
    *
@@ -328,11 +320,10 @@ public class AbstractHgHandler
    * @throws RepositoryException
    */
   protected <T> T getResultFromScript(Class<T> resultType,
-          String scriptResource, Map<String, String> extraEnv)
+          HgPythonScript script, Map<String, String> extraEnv)
           throws IOException, RepositoryException
   {
-    return getResultFromScript(resultType, scriptResource, jaxbContext,
-                               extraEnv);
+    return getResultFromScript(resultType, script, jaxbContext, extraEnv);
   }
 
   /**
@@ -340,7 +331,7 @@ public class AbstractHgHandler
    *
    *
    * @param resultType
-   * @param scriptResource
+   * @param script
    * @param jaxbContext
    * @param extraEnv
    * @param <T>
@@ -351,22 +342,17 @@ public class AbstractHgHandler
    * @throws RepositoryException
    */
   protected <T> T getResultFromScript(Class<T> resultType,
-          String scriptResource, JAXBContext jaxbContext,
+          HgPythonScript script, JAXBContext jaxbContext,
           Map<String, String> extraEnv)
           throws IOException, RepositoryException
   {
-    Process p = createPythonProcess(extraEnv);
+    Process p = createScriptProcess(script, extraEnv);
     T result = null;
-    InputStream resource = null;
     InputStream input = null;
     OutputStream output = null;
 
     try
     {
-      resource = HgUtil.class.getResourceAsStream(scriptResource);
-      output = p.getOutputStream();
-      IOUtil.copy(resource, output);
-      output.close();
       handleErrorStream(p.getErrorStream());
       input = p.getInputStream();
       result = (T) jaxbContext.createUnmarshaller().unmarshal(input);
@@ -380,7 +366,6 @@ public class AbstractHgHandler
     }
     finally
     {
-      IOUtil.close(resource);
       IOUtil.close(input);
       IOUtil.close(output);
     }
@@ -465,7 +450,21 @@ public class AbstractHgHandler
       }
     }
 
-    env.put(ENV_PYTHON_PATH, Util.nonNull(config.getPythonPath()));
+    String pythonPath = Util.nonNull(config.getPythonPath());
+
+    if (Util.isNotEmpty(pythonPath))
+    {
+      pythonPath = pythonPath.concat(":");
+    }
+
+    //J-
+    pythonPath = pythonPath.concat(
+      HgPythonScript.getScriptDirectory(
+        SCMContext.getContext()
+      ).getAbsolutePath()
+    );
+    //J+
+    env.put(ENV_PYTHONPATH, pythonPath);
     env.put(ENV_REPOSITORY_PATH, directory.getAbsolutePath());
     env.putAll(extraEnv);
 

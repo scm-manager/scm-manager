@@ -56,9 +56,6 @@ import javax.xml.bind.JAXBContext;
 public class HgBlameViewer extends AbstractHgHandler implements BlameViewer
 {
 
-  /** Field description */
-  public static final String RESOURCE_BLAME = "/sonia/scm/hgblame.py";
-
   /** the logger for HgBlameViewer */
   private static final Logger logger =
     LoggerFactory.getLogger(HgBlameViewer.class);
@@ -109,6 +106,6 @@ public class HgBlameViewer extends AbstractHgHandler implements BlameViewer
 
     Map<String, String> env = createEnvironment(revision, path);
 
-    return getResultFromScript(BlameResult.class, RESOURCE_BLAME, env);
+    return getResultFromScript(BlameResult.class, HgPythonScript.BLAME, env);
   }
 }

@@ -57,11 +57,6 @@ public class HgRepositoryBrowser extends AbstractHgHandler
         implements RepositoryBrowser
 {
 
-  /** Field description */
-  public static final String RESOURCE_BROWSE = "/sonia/scm/hgbrowse.py";
-
-  //~--- constructors ---------------------------------------------------------
-
   /**
    * Constructs ...
    *
@@ -131,6 +126,7 @@ public class HgRepositoryBrowser extends AbstractHgHandler
   {
     Map<String, String> env = createEnvironment(revision, path);
 
-    return getResultFromScript(BrowserResult.class, RESOURCE_BROWSE, env);
+    return getResultFromScript(BrowserResult.class, HgPythonScript.FILELOG,
+                               env);
   }
 }

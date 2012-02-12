@@ -59,9 +59,6 @@ public class HgChangesetViewer extends AbstractHgHandler
         implements ChangesetViewer
 {
 
-  /** Field description */
-  public static final String RESOURCE_LOG = "/sonia/scm/hglog.py";
-
   /** the logger for HgChangesetViewer */
   private static final Logger logger =
     LoggerFactory.getLogger(HgChangesetViewer.class);
@@ -133,8 +130,8 @@ public class HgChangesetViewer extends AbstractHgHandler
     env.put(ENV_REVISION_START, Util.EMPTY_STRING);
     env.put(ENV_REVISION_END, Util.EMPTY_STRING);
 
-    return getResultFromScript(Changeset.class, RESOURCE_LOG, changesetContext,
-                               env);
+    return getResultFromScript(Changeset.class, HgPythonScript.CHANGELOG,
+                               changesetContext, env);
   }
 
   /**
@@ -225,7 +222,8 @@ public class HgChangesetViewer extends AbstractHgHandler
     env.put(ENV_REVISION_START, Util.nonNull(revisionStart));
     env.put(ENV_REVISION_END, Util.nonNull(revisionEnd));
 
-    return getResultFromScript(ChangesetPagingResult.class, RESOURCE_LOG, env);
+    return getResultFromScript(ChangesetPagingResult.class,
+                               HgPythonScript.CHANGELOG, env);
   }
 
   /**
