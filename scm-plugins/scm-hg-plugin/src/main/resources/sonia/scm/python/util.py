@@ -32,14 +32,6 @@
 # import basic modules
 import sys, os
 
-# create python path
-pythonPath = os.environ['SCM_PYTHON_PATH']
-
-if len(pythonPath) > 0:
-  pathParts = pythonPath.split(os.pathsep)
-  for i in range(len(pathParts)):
-    sys.path.insert(i, pathParts[i])
-
 # import mercurial modules
 from mercurial import hg, ui, commands
 from mercurial.node import hex
