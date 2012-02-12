@@ -41,14 +41,17 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgHookManager;
+import sonia.scm.repository.HgPythonScript;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.EnvList;
@@ -75,7 +78,7 @@ public class HgCGIServlet extends HttpServlet
 {
 
   /** Field description */
-  public static final String ENV_PYTHON_PATH = "SCM_PYTHON_PATH";
+  public static final String ENV_PYTHON_PATH = "PYTHONPATH";
 
   /** Field description */
   public static final String ENV_REPOSITORY_NAME = "REPO_NAME";
@@ -135,7 +138,7 @@ public class HgCGIServlet extends HttpServlet
   @Override
   public void init() throws ServletException
   {
-    command = HgUtil.getCGI();
+    command = HgPythonScript.HGWEB.getFile(SCMContext.getContext());
     super.init();
   }
 
@@ -210,16 +213,15 @@ public class HgCGIServlet extends HttpServlet
   {
     String name = repository.getName();
     File directory = handler.getDirectory(repository);
-    String pythonPath = "";
+    String pythonPath = HgPythonScript.getScriptDirectory(
+                            SCMContext.getContext()).getAbsolutePath();
     HgConfig config = handler.getConfig();
 
     if (config != null)
     {
-      pythonPath = config.getPythonPath();
-
-      if (pythonPath == null)
+      if (Util.isNotEmpty(config.getPythonPath()))
       {
-        pythonPath = "";
+        pythonPath = pythonPath.concat(":").concat(config.getPythonPath());
       }
     }
 
