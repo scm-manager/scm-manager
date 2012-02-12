@@ -57,13 +57,17 @@ import sonia.scm.io.INISection;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.HgWebConfigWriter;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -176,6 +180,7 @@ public class HgRepositoryHandler
   {
     super.init(context);
     registerMissingHooks();
+    writePythonScripts(context);
   }
 
   /**
@@ -675,6 +680,45 @@ public class HgRepositoryHandler
     else if (logger.isDebugEnabled())
     {
       logger.debug("config is not available, could not register missing hooks");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   */
+  private void writePythonScripts(SCMContextProvider context)
+  {
+    IOUtil.mkdirs(HgPythonScript.getScriptDirectory(context));
+
+    for (HgPythonScript script : HgPythonScript.values())
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("write python script {}", script.getName());
+      }
+
+      InputStream content = null;
+      OutputStream output = null;
+
+      try
+      {
+        content = HgRepositoryHandler.class.getResourceAsStream(
+          script.getResourcePath());
+        output = new FileOutputStream(script.getFile(context));
+        IOUtil.copy(content, output);
+      }
+      catch (IOException ex)
+      {
+        logger.error("could not write script", ex);
+      }
+      finally
+      {
+        IOUtil.close(content);
+        IOUtil.close(output);
+      }
     }
   }
 
