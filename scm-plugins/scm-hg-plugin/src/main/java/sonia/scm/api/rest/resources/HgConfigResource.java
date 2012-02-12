@@ -47,7 +47,6 @@ import sonia.scm.installer.HgPackages;
 import sonia.scm.net.HttpClient;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.web.HgWebConfigWriter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -268,7 +267,6 @@ public class HgConfigResource
   {
     handler.setConfig(config);
     handler.storeConfig();
-    new HgWebConfigWriter(config).write();
 
     return Response.created(uriInfo.getRequestUri()).build();
   }

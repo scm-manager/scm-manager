@@ -35,12 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.SCMContext;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
 
 /**
  *
@@ -50,35 +45,9 @@ public class HgUtil
 {
 
   /** Field description */
-  public static final String CGI_DIRECTORY = "cgi-bin";
-
-  /** Field description */
-  public static final String CGI_NAME = "hgweb.py";
-
-  /** Field description */
   public static final String REVISION_TIP = "tip";
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static File getCGI()
-  {
-    File cgiDirectory = new File(SCMContext.getContext().getBaseDirectory(),
-                                 CGI_DIRECTORY);
-
-    if (!cgiDirectory.exists() &&!cgiDirectory.mkdirs())
-    {
-      throw new RuntimeException(
-          "could not create directory".concat(cgiDirectory.getPath()));
-    }
-
-    return new File(cgiDirectory, CGI_NAME);
-  }
 
   /**
    * Method description

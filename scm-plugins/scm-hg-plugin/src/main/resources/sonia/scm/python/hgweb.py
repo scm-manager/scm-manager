@@ -1,4 +1,3 @@
-#!/usr/bin/env ${python}
 #
 # Copyright (c) 2010, Sebastian Sdorra
 # All rights reserved.

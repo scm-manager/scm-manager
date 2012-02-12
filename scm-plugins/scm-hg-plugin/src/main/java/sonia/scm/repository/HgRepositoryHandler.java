@@ -59,7 +59,6 @@ import sonia.scm.store.StoreFactory;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.HgWebConfigWriter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -156,7 +155,6 @@ public class HgRepositoryHandler
       installer.install(baseDirectory, autoConfig);
       config = autoConfig;
       storeConfig();
-      new HgWebConfigWriter(config).write();
     }
     catch (IOException ioe)
     {
