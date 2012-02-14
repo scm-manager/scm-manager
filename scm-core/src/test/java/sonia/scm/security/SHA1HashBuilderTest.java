@@ -31,6 +31,12 @@
 
 package sonia.scm.security;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -48,5 +54,19 @@ public class SHA1HashBuilderTest extends HashBuilderTestBase
   public HashBuilder createHashBuilder()
   {
     return new SHA1HashBuilder();
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testCompatibility()
+  {
+    MessageDigestEncryptionHandler mdeh = new MessageDigestEncryptionHandler();
+    String hash = mdeh.encrypt("trillian123");
+    String newHash = createHashBuilder().setValue("trillian123").toHexString();
+
+    assertEquals(hash, newHash);
   }
 }
