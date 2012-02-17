@@ -69,4 +69,18 @@ public class SHA1HashBuilderTest extends HashBuilderTestBase
 
     assertEquals(hash, newHash);
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected String getLable()
+  {
+    return SHA1HashBuilder.DIGEST;
+  }
 }

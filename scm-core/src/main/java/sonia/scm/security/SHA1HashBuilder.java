@@ -50,7 +50,7 @@ public class SHA1HashBuilder extends MessageDigestHashBuilder
    */
   public SHA1HashBuilder()
   {
-    super(DIGEST, null, null, 0);
+    super(DIGEST, null, null, 0, false, false);
   }
 
   /**
@@ -61,7 +61,7 @@ public class SHA1HashBuilder extends MessageDigestHashBuilder
    */
   public SHA1HashBuilder(String value)
   {
-    super(DIGEST, value, null, 0);
+    super(DIGEST, value, null, 0, false, false);
   }
 
   /**
@@ -73,7 +73,7 @@ public class SHA1HashBuilder extends MessageDigestHashBuilder
    */
   public SHA1HashBuilder(String value, byte[] salt)
   {
-    super(DIGEST, value, salt, 0);
+    super(DIGEST, value, salt, 0, false, false);
   }
 
   /**
@@ -86,6 +86,37 @@ public class SHA1HashBuilder extends MessageDigestHashBuilder
    */
   public SHA1HashBuilder(String value, byte[] salt, int iterations)
   {
-    super(DIGEST, value, salt, iterations);
+    super(DIGEST, value, salt, iterations, false, false);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param value
+   * @param salt
+   * @param iterations
+   * @param appendSalt
+   */
+  public SHA1HashBuilder(String value, byte[] salt, int iterations,
+                         boolean appendSalt)
+  {
+    super(DIGEST, value, salt, iterations, appendSalt, false);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param value
+   * @param salt
+   * @param iterations
+   * @param appendSalt
+   * @param enableLable
+   */
+  public SHA1HashBuilder(String value, byte[] salt, int iterations,
+                         boolean appendSalt, boolean enableLabel)
+  {
+    super(DIGEST, value, salt, iterations, appendSalt, enableLabel);
   }
 }

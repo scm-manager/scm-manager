@@ -49,4 +49,18 @@ public class MD5HashBuilderTest extends HashBuilderTestBase
   {
     return new MD5HashBuilder();
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected String getLable()
+  {
+    return MD5HashBuilder.DIGEST;
+  }
 }

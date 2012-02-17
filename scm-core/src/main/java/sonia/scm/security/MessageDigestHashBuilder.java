@@ -43,6 +43,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -60,6 +63,9 @@ public class MessageDigestHashBuilder implements HashBuilder
   /** Field description */
   public static final String RANDOM_INSTANCE = "SHA1PRNG";
 
+  /** Field description */
+  private static Pattern PATTERN = Pattern.compile("\\{([^\\}]+)\\}(.*)");
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -70,17 +76,49 @@ public class MessageDigestHashBuilder implements HashBuilder
    * @param value
    * @param salt
    * @param iterations
+   * @param appendSalt
+   * @param enableLabel
    */
   public MessageDigestHashBuilder(String digest, String value, byte[] salt,
-                                  int iterations)
+                                  int iterations, boolean appendSalt,
+                                  boolean enableLabel)
   {
     this.digest = digest;
     this.value = value;
     this.salt = salt;
     this.iterations = iterations;
+    this.appendSalt = appendSalt;
+    this.enableLable = enableLabel;
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param hash
+   *
+   * @return
+   */
+  public static Extractor createExtractor(String hash)
+  {
+    return new Extractor(hash);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public HashBuilder appendSalt()
+  {
+    this.appendSalt = true;
+
+    return this;
+  }
 
   /**
    * Method description
@@ -127,6 +165,20 @@ public class MessageDigestHashBuilder implements HashBuilder
    * @return
    */
   @Override
+  public HashBuilder enableLabel()
+  {
+    this.enableLable = true;
+
+    return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public byte[] toByteArray()
   {
     byte[] input = null;
@@ -152,6 +204,15 @@ public class MessageDigestHashBuilder implements HashBuilder
           input = md.digest(input);
         }
       }
+
+      if ((salt != null) && appendSalt)
+      {
+        byte[] content = new byte[input.length + salt.length];
+
+        System.arraycopy(input, 0, content, 0, input.length);
+        System.arraycopy(salt, 0, content, input.length, salt.length);
+        input = content;
+      }
     }
     catch (UnsupportedEncodingException ex)
     {
@@ -174,7 +235,22 @@ public class MessageDigestHashBuilder implements HashBuilder
   @Override
   public String toHexString()
   {
-    return Util.toString(toByteArray());
+    String hexString = null;
+
+    if (enableLable)
+    {
+      StringBuilder buffer = new StringBuilder();
+
+      buffer.append("{").append(digest).append("}");
+      buffer.append(Util.toString(toByteArray()));
+      hexString = buffer.toString();
+    }
+    else
+    {
+      hexString = Util.toString(toByteArray());
+    }
+
+    return hexString;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -260,10 +336,154 @@ public class MessageDigestHashBuilder implements HashBuilder
     return this;
   }
 
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 12/02/17
+   * @author         Enter your name here...
+   */
+  public static class Extractor
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param hash
+     */
+    public Extractor(String hash)
+    {
+      this.hash = hash;
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public MessageDigestHashBuilder getHashBuilder()
+    {
+      return getHashBuilder(-1);
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @param saltLength
+     *
+     * @return
+     */
+    public MessageDigestHashBuilder getHashBuilder(int saltLength)
+    {
+      MessageDigestHashBuilder hashBuilder = null;
+      Matcher m = PATTERN.matcher(hash);
+
+      if (m.matches())
+      {
+        String digest = m.group(1);
+
+        if (digest != null)
+        {
+          byte[] salt = null;
+
+          if (saltLength > 0)
+          {
+            String hashWithoutPrefix = m.group(2);
+
+            salt = getSalt(hashWithoutPrefix, saltLength);
+          }
+
+          hashBuilder = new MessageDigestHashBuilder(digest, null, salt, 0,
+                  salt != null, true);
+        }
+      }
+
+      return hashBuilder;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public String getLabel()
+    {
+      String label = null;
+      Matcher m = PATTERN.matcher(hash);
+
+      if (m.matches())
+      {
+        label = m.group(1);
+      }
+
+      return label;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @param length
+     *
+     * @return
+     */
+    public byte[] getSalt(int length)
+    {
+      Matcher m = PATTERN.matcher(hash);
+      String hashWithoutPrefix = hash;
+
+      if (m.matches())
+      {
+        hashWithoutPrefix = m.group(2);
+      }
+
+      return getSalt(hashWithoutPrefix, length);
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @param hashWithoutPrefix
+     * @param length
+     *
+     * @return
+     */
+    private byte[] getSalt(String hashWithoutPrefix, int length)
+    {
+      byte[] content = Util.fromHexString(hashWithoutPrefix);
+      byte[] salt = new byte[length];
+
+      System.arraycopy(content, content.length - length, salt, 0, length);
+
+      return salt;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private String hash;
+  }
+
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private boolean appendSalt;
+
+  /** Field description */
   private String digest;
+
+  /** Field description */
+  private boolean enableLable;
 
   /** Field description */
   private int iterations;

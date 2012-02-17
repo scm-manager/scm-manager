@@ -49,4 +49,18 @@ public class SHA512HashBuilderTest extends HashBuilderTestBase
   {
     return new SHA512HashBuilder();
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected String getLable()
+  {
+    return SHA512HashBuilder.DIGEST;
+  }
 }

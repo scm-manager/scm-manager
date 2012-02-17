@@ -31,92 +31,33 @@
 
 package sonia.scm.security;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
 /**
  *
  * @author Sebastian Sdorra
- * @since 1.13
  */
-public class SHA512HashBuilder extends MessageDigestHashBuilder
+public class MessageDigestHashBuilderTest
 {
 
-  /** Field description */
-  public static final String DIGEST = "SHA-512";
-
-  //~--- constructors ---------------------------------------------------------
-
   /**
-   * Constructs ...
+   * Method description
    *
    */
-  public SHA512HashBuilder()
+  @Test
+  public void testExtractor()
   {
-    super(DIGEST, null, null, 0, false, false);
-  }
+    MessageDigestHashBuilder hashBuilder = new SHA1HashBuilder("hitcheker");
+    String hash =
+      hashBuilder.enableLabel().createSalt().appendSalt().toHexString();
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param value
-   */
-  public SHA512HashBuilder(String value)
-  {
-    super(DIGEST, value, null, 0, false, false);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param value
-   * @param salt
-   */
-  public SHA512HashBuilder(String value, byte[] salt)
-  {
-    super(DIGEST, value, salt, 0, false, false);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param value
-   * @param salt
-   * @param iterations
-   */
-  public SHA512HashBuilder(String value, byte[] salt, int iterations)
-  {
-    super(DIGEST, value, salt, iterations, false, false);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param value
-   * @param salt
-   * @param iterations
-   * @param appendSalt
-   */
-  public SHA512HashBuilder(String value, byte[] salt, int iterations,
-                           boolean appendSalt)
-  {
-    super(DIGEST, value, salt, iterations, appendSalt, false);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param value
-   * @param salt
-   * @param iterations
-   * @param appendSalt
-   * @param enableLabel
-   */
-  public SHA512HashBuilder(String value, byte[] salt, int iterations,
-                           boolean appendSalt, boolean enableLabel)
-  {
-    super(DIGEST, value, salt, iterations, appendSalt, enableLabel);
+    assertNotNull(hash);
+    hashBuilder =
+      MessageDigestHashBuilder.createExtractor(hash).getHashBuilder(8);
+    assertEquals(hash, hashBuilder.setValue("hitcheker").toHexString());
   }
 }

@@ -35,6 +35,8 @@ package sonia.scm.util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.math.BigInteger;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -331,6 +333,22 @@ public class Util
    *
    *
    * @param value
+   *
+   * @return
+   */
+  public static byte[] fromHexString(String value)
+  {
+    return new BigInteger(value, 16).toByteArray();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param value
+   *
+   *
+   * @since 1.13
    *
    * @return
    */

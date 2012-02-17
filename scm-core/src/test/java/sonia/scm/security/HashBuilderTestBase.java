@@ -39,6 +39,11 @@ import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -53,6 +58,18 @@ public abstract class HashBuilderTestBase
    * @return
    */
   public abstract HashBuilder createHashBuilder();
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected abstract String getLable();
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -72,6 +89,30 @@ public abstract class HashBuilderTestBase
                            "hitcheker").toHexString();
 
     checkHash("hitcheker", hash, otherHash);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testCreateLabledHash()
+  {
+    HashBuilder hashBuilder = createHashBuilder();
+    String hash = hashBuilder.enableLabel().setValue("hitcheker").toHexString();
+
+    System.out.println(hash);
+    checkHash("hitcheker", hash);
+
+    Pattern p = Pattern.compile("\\{([^\\}]+)\\}.*");
+    Matcher m = p.matcher(hash);
+
+    assertTrue(m.matches());
+
+    String lable = m.group(1);
+
+    assertNotNull(lable);
+    assertEquals(getLable(), lable);
   }
 
   /**
@@ -140,12 +181,24 @@ public abstract class HashBuilderTestBase
    *
    * @param plain
    * @param hash
+   */
+  private void checkHash(String plain, String hash)
+  {
+    assertNotNull(hash);
+    assertThat(hash, not(equalTo(plain)));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param plain
+   * @param hash
    * @param otherHash
    */
   private void checkHash(String plain, String hash, String otherHash)
   {
-    assertNotNull(hash);
-    assertThat(hash, not(equalTo("hitcheker")));
+    checkHash(plain, hash);
     assertNotNull(otherHash);
     assertThat(otherHash, not(equalTo("hitcheker")));
     assertEquals(hash, otherHash);

@@ -45,6 +45,14 @@ public interface HashBuilder
    *
    * @return
    */
+  public HashBuilder appendSalt();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public HashBuilder createSalt();
 
   /**
@@ -56,6 +64,14 @@ public interface HashBuilder
    * @return
    */
   public HashBuilder createSalt(int length);
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public HashBuilder enableLabel();
 
   /**
    * Method description

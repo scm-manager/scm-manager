@@ -49,7 +49,7 @@ public class MD5HashBuilder extends MessageDigestHashBuilder
    */
   public MD5HashBuilder()
   {
-    super(DIGEST, null, null, 0);
+    super(DIGEST, null, null, 0, false, false);
   }
 
   /**
@@ -60,7 +60,7 @@ public class MD5HashBuilder extends MessageDigestHashBuilder
    */
   public MD5HashBuilder(String value)
   {
-    super(DIGEST, value, null, 0);
+    super(DIGEST, value, null, 0, false, false);
   }
 
   /**
@@ -72,7 +72,7 @@ public class MD5HashBuilder extends MessageDigestHashBuilder
    */
   public MD5HashBuilder(String value, byte[] salt)
   {
-    super(DIGEST, value, salt, 0);
+    super(DIGEST, value, salt, 0, false, false);
   }
 
   /**
@@ -85,6 +85,37 @@ public class MD5HashBuilder extends MessageDigestHashBuilder
    */
   public MD5HashBuilder(String value, byte[] salt, int iterations)
   {
-    super(DIGEST, value, salt, iterations);
+    super(DIGEST, value, salt, iterations, false, false);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param value
+   * @param salt
+   * @param iterations
+   * @param appendSalt
+   */
+  public MD5HashBuilder(String value, byte[] salt, int iterations,
+                        boolean appendSalt)
+  {
+    super(DIGEST, value, salt, iterations, appendSalt, false);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param value
+   * @param salt
+   * @param iterations
+   * @param appendSalt
+   * @param enableLabel
+   */
+  public MD5HashBuilder(String value, byte[] salt, int iterations,
+                        boolean appendSalt, boolean enableLabel)
+  {
+    super(DIGEST, value, salt, iterations, appendSalt, enableLabel);
   }
 }
