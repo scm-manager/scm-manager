@@ -48,15 +48,6 @@ public interface PasswordAware
    */
   public String getPassword();
 
-  /**
-   * Return a string representation of the salt used for the password hash or
-   * returns null if no salt is used.
-   *
-   *
-   * @return string representation of a salt or null
-   */
-  public String getSalt();
-
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -66,12 +57,4 @@ public interface PasswordAware
    * @param password encrypted password
    */
   public void setPassword(String password);
-
-  /**
-   * Sets the salt used to encrypt the password
-   *
-   *
-   * @param salt string representation of the salt
-   */
-  public void setSalt(String salt);
 }
