@@ -49,6 +49,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.EnvList;
@@ -85,6 +86,9 @@ public class HgCGIServlet extends HttpServlet
 
   /** Field description */
   public static final String ENV_SESSION_PREFIX = "SCM_";
+
+  /** Field description */
+  public static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
 
   /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
@@ -190,6 +194,12 @@ public class HgCGIServlet extends HttpServlet
       {
         env.set(key, session.getAttribute(key).toString());
       }
+    }
+
+    // issue-97
+    if (!env.containsKey(SCM_CREDENTIALS))
+    {
+      env.set(SCM_CREDENTIALS, Util.EMPTY_STRING);
     }
   }
 
