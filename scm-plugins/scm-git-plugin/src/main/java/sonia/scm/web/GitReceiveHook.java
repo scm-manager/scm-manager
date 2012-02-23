@@ -136,22 +136,23 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   /**
    * Method description
    *
-   *
-   *
-   *
-   *
    * @param rpack
    * @param rc
+   * @param repositoryDirectory
    * @param hook
    * @param oldId
    * @param newId
    * @param refName
    */
-  private void executeFileHook(ReceivePack rpack, ReceiveCommand rc, File hook,
+  private void executeFileHook(ReceivePack rpack, ReceiveCommand rc,
+                               File repositoryDirectory, File hook,
                                ObjectId oldId, ObjectId newId, String refName)
   {
     final Command cmd = new SimpleCommand(hook.getAbsolutePath(), getId(oldId),
                           getId(newId), Util.nonNull(refName));
+
+    // issue-99
+    cmd.setWorkDirectory(repositoryDirectory);
 
     try
     {
@@ -286,7 +287,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
 
           if (hookScript != null)
           {
-            executeFileHook(rpack, rc, hookScript, oldId, newId,
+            executeFileHook(rpack, rc, directory, hookScript, oldId, newId,
                             rc.getRefName());
           }
         }
