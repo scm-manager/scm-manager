@@ -481,7 +481,7 @@ public class HgRepositoryHandler
           File directory)
   {
     ExtendedCommand cmd = new ExtendedCommand(config.getHgBinary(), "init",
-                            directory.getPath());
+                            directory.getAbsolutePath());
 
     // issue-97
     cmd.setWorkDirectory(baseDirectory);
