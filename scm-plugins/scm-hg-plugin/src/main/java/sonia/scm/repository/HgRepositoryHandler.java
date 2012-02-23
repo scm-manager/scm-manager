@@ -480,8 +480,13 @@ public class HgRepositoryHandler
   protected ExtendedCommand buildCreateCommand(Repository repository,
           File directory)
   {
-    return new ExtendedCommand(config.getHgBinary(), "init",
-                               directory.getPath());
+    ExtendedCommand cmd = new ExtendedCommand(config.getHgBinary(), "init",
+                            directory.getPath());
+
+    // issue-97
+    cmd.setWorkDirectory(baseDirectory);
+
+    return cmd;
   }
 
   /**
