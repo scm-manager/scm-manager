@@ -96,6 +96,9 @@ public class HgCGIServlet extends HttpServlet
   public static final String ENV_URL = "SCM_URL";
 
   /** Field description */
+  public static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
+
+  /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
 
   /** the logger for HgCGIServlet */
@@ -199,6 +202,12 @@ public class HgCGIServlet extends HttpServlet
       {
         env.set(key, session.getAttribute(key).toString());
       }
+    }
+
+    // issue-97
+    if (!env.containsKey(SCM_CREDENTIALS))
+    {
+      env.set(SCM_CREDENTIALS, Util.EMPTY_STRING);
     }
   }
 

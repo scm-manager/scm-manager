@@ -105,6 +105,9 @@ public class HgImportHandler extends AbstactImportHandler
         repository.setContact(web.getParameter("contact"));
         handler.setWebParameter(web);
       }
+      
+      // issue-97
+      handler.registerMissingHook(c, repositoryName);
 
       INIConfigurationWriter writer = new INIConfigurationWriter();
 
