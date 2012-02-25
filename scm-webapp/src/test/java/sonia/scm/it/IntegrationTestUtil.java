@@ -58,6 +58,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -197,6 +198,27 @@ public class IntegrationTestUtil
     }
 
     client.add(name);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static Collection<String[]> createRepositoryTypeParameters()
+  {
+    Collection<String[]> params = new ArrayList<String[]>();
+
+    params.add(new String[] { "git" });
+    params.add(new String[] { "svn" });
+
+    if (IOUtil.search("hg") != null)
+    {
+      params.add(new String[] { "hg" });
+    }
+
+    return params;
   }
 
   /**

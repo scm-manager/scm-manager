@@ -69,7 +69,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -104,17 +103,7 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
   @Parameters
   public static Collection<String[]> createParameters()
   {
-    Collection<String[]> params = new ArrayList<String[]>();
-
-    params.add(new String[] { "git" });
-    params.add(new String[] { "svn" });
-
-    if (IOUtil.search("hg") != null)
-    {
-      params.add(new String[] { "hg" });
-    }
-
-    return params;
+    return createRepositoryTypeParameters();
   }
 
   /**
