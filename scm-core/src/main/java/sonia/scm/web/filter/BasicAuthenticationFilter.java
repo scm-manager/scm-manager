@@ -120,15 +120,14 @@ public class BasicAuthenticationFilter extends HttpFilter
     User user = null;
     String authentication = request.getHeader(HEADER_AUTHORIZATION);
 
-    if (securityContext.isAuthenticated())
-    {
-      user = securityContext.getUser();
-    }
-    else if (Util.isNotEmpty(authentication)
-             && authentication.toUpperCase().startsWith(
-               AUTHORIZATION_BASIC_PREFIX))
+    if (Util.isNotEmpty(authentication)
+        && authentication.toUpperCase().startsWith(AUTHORIZATION_BASIC_PREFIX))
     {
       user = authenticate(request, response, securityContext, authentication);
+    }
+    else if (securityContext.isAuthenticated())
+    {
+      user = securityContext.getUser();
     }
 
     if (user == null)

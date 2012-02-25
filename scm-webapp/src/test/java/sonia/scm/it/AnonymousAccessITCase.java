@@ -182,7 +182,6 @@ public class AnonymousAccessITCase
    * @throws RepositoryClientException
    */
   @Test
-  @Ignore
   public void testSimpleAdminPush()
           throws RepositoryClientException, IOException
   {
