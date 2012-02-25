@@ -445,7 +445,7 @@
     <slf4j.version>1.6.4</slf4j.version>
     <servlet.version>2.5</servlet.version>
     <guice.version>3.0</guice.version>
-    <jersey.version>1.11</jersey.version>
+    <jersey.version>1.12</jersey.version>
     <ehcache.version>2.5.1</ehcache.version>
     <freemarker.version>2.3.18</freemarker.version>
     <jetty.version>7.6.0.v20120127</jetty.version>
