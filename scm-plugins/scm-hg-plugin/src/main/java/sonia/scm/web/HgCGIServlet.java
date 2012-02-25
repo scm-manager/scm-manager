@@ -236,7 +236,8 @@ public class HgCGIServlet extends HttpServlet
     {
       if (Util.isNotEmpty(config.getPythonPath()))
       {
-        pythonPath = pythonPath.concat(":").concat(config.getPythonPath());
+        pythonPath =
+          pythonPath.concat(File.pathSeparator).concat(config.getPythonPath());
       }
     }
 
