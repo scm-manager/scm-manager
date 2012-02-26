@@ -33,6 +33,10 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
@@ -84,6 +88,64 @@ public class BlameResult
   {
     this.total = total;
     this.blameLines = blameLines;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final BlameResult other = (BlameResult) obj;
+
+    return Objects.equal(total, other.total)
+           && Objects.equal(blameLines, other.blameLines);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(total, blameLines);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+            .add("total", total)
+            .add("blameLines", blameLines)
+            .toString();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------
