@@ -33,6 +33,10 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Iterator;
@@ -81,6 +85,47 @@ public class BrowserResult implements Iterable<FileObject>
   //~--- methods --------------------------------------------------------------
 
   /**
+   * {@inheritDoc}
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final BrowserResult other = (BrowserResult) obj;
+
+    return Objects.equal(revision, other.revision)
+           && Objects.equal(tag, other.tag)
+           && Objects.equal(branch, other.branch)
+           && Objects.equal(files, other.files);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(revision, tag, branch, files);
+  }
+
+  /**
    * Method description
    *
    *
@@ -97,6 +142,25 @@ public class BrowserResult implements Iterable<FileObject>
     }
 
     return it;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+            .add("revision", revision)
+            .add("tag", tag)
+            .add("branch", branch)
+            .add("files", files)
+            .toString();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------
