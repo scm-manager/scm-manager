@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+
 import sonia.scm.LastModifiedAware;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -53,6 +55,74 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class FileObject implements LastModifiedAware
 {
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final FileObject other = (FileObject) obj;
+
+    return Objects.equal(name, other.name) && Objects.equal(path, other.path)
+           && Objects.equal(directory, other.directory)
+           && Objects.equal(description, other.description)
+           && Objects.equal(length, other.length)
+           && Objects.equal(subRepository, other.subRepository)
+           && Objects.equal(lastModified, other.lastModified);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(name, path, directory, description, length,
+                            subRepository, lastModified);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+            .add("name", name)
+            .add("path", path)
+            .add("directory", directory)
+            .add("description", description)
+            .add("length", length)
+            .add("subRepository", subRepository)
+            .add("lastModified", lastModified)
+            .toString();
+    //J+
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
