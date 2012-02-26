@@ -40,7 +40,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
+import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import sonia.scm.HandlerEvent;
 import sonia.scm.cache.Cache;
@@ -70,7 +70,7 @@ import javax.ws.rs.core.MediaType;
  */
 @Singleton
 @Path("search")
-@SpringManagedLifecycle
+@ExternallyManagedLifecycle
 public class SearchResource implements UserListener, GroupListener
 {
 

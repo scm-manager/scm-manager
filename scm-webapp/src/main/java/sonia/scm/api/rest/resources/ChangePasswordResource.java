@@ -39,7 +39,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
+import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ import javax.ws.rs.core.Response;
  *
  * @author Sebastian Sdorra
  */
-@SpringManagedLifecycle
+@ExternallyManagedLifecycle
 @Path("action/change-password")
 public class ChangePasswordResource
 {

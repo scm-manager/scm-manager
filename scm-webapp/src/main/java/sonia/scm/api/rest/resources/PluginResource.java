@@ -38,7 +38,7 @@ package sonia.scm.api.rest.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
+import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.OverviewPluginFilter;
@@ -67,7 +67,7 @@ import javax.ws.rs.core.Response;
  */
 @Singleton
 @Path("plugins")
-@SpringManagedLifecycle
+@ExternallyManagedLifecycle
 public class PluginResource
 {
 

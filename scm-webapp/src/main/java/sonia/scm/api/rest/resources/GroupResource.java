@@ -40,7 +40,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
+import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
@@ -75,7 +75,7 @@ import javax.ws.rs.core.UriInfo;
  */
 @Path("groups")
 @Singleton
-@SpringManagedLifecycle
+@ExternallyManagedLifecycle
 public class GroupResource
         extends AbstractManagerResource<Group, GroupException>
 {

@@ -40,7 +40,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
+import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
@@ -78,7 +78,7 @@ import javax.ws.rs.core.UriInfo;
  */
 @Singleton
 @Path("users")
-@SpringManagedLifecycle
+@ExternallyManagedLifecycle
 public class UserResource extends AbstractManagerResource<User, UserException>
 {
 
@@ -234,7 +234,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
    *   <li>403 forbidden, the current user has no admin privileges</li>
    *   <li>500 internal server error</li>
    * </ul>
-   * 
+   *
    * @param request the current request
    * @param start the start value for paging
    * @param limit the limit value for paging

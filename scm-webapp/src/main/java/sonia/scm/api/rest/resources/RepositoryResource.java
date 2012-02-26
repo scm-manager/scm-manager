@@ -40,7 +40,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.SpringManagedLifecycle;
+import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +101,7 @@ import javax.ws.rs.core.UriInfo;
  */
 @Singleton
 @Path("repositories")
-@SpringManagedLifecycle
+@ExternallyManagedLifecycle
 public class RepositoryResource
         extends AbstractManagerResource<Repository, RepositoryException>
 {
