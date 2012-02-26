@@ -33,6 +33,10 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;
@@ -130,24 +134,8 @@ public class Permission implements Serializable
 
     final Permission other = (Permission) obj;
 
-    if (this.groupPermission != other.groupPermission)
-    {
-      return false;
-    }
-
-    if ((this.name == null)
-        ? (other.name != null)
-        : !this.name.equals(other.name))
-    {
-      return false;
-    }
-
-    if (this.type != other.type)
-    {
-      return false;
-    }
-
-    return true;
+    return Objects.equal(name, other.name) && Objects.equal(type, other.type)
+           && Objects.equal(groupPermission, groupPermission);
   }
 
   /**
@@ -159,19 +147,25 @@ public class Permission implements Serializable
   @Override
   public int hashCode()
   {
-    int hash = 7;
+    return Objects.hashCode(name, type, groupPermission);
+  }
 
-    hash = 97 * hash + (this.groupPermission
-                        ? 1
-                        : 0);
-    hash = 97 * hash + ((this.name != null)
-                        ? this.name.hashCode()
-                        : 0);
-    hash = 97 * hash + ((this.type != null)
-                        ? this.type.hashCode()
-                        : 0);
-
-    return hash;
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+            .add("name", name)
+            .add("type", type)
+            .add("groupPermission", groupPermission)
+            .toString();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------
