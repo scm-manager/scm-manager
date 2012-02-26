@@ -35,6 +35,8 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
@@ -209,61 +211,14 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
 
     final User other = (User) obj;
 
-    if (this.admin != other.admin)
-    {
-      return false;
-    }
-
-    if ((this.creationDate != other.creationDate)
-        && ((this.creationDate == null)
-            ||!this.creationDate.equals(other.creationDate)))
-    {
-      return false;
-    }
-
-    if ((this.displayName == null)
-        ? (other.displayName != null)
-        : !this.displayName.equals(other.displayName))
-    {
-      return false;
-    }
-
-    if ((this.lastModified != other.lastModified)
-        && ((this.lastModified == null)
-            ||!this.lastModified.equals(other.lastModified)))
-    {
-      return false;
-    }
-
-    if ((this.mail == null)
-        ? (other.mail != null)
-        : !this.mail.equals(other.mail))
-    {
-      return false;
-    }
-
-    if ((this.name == null)
-        ? (other.name != null)
-        : !this.name.equals(other.name))
-    {
-      return false;
-    }
-
-    if ((this.password == null)
-        ? (other.password != null)
-        : !this.password.equals(other.password))
-    {
-      return false;
-    }
-
-    if ((this.type == null)
-        ? (other.type != null)
-        : !this.type.equals(other.type))
-    {
-      return false;
-    }
-
-    return true;
+    return Objects.equal(name, other.name)
+           && Objects.equal(displayName, other.displayName)
+           && Objects.equal(mail, other.mail)
+           && Objects.equal(type, other.type)
+           && Objects.equal(admin, other.admin)
+           && Objects.equal(password, other.password)
+           && Objects.equal(creationDate, other.creationDate)
+           && Objects.equal(lastModified, other.lastModified);
   }
 
   /**
@@ -275,34 +230,35 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   @Override
   public int hashCode()
   {
-    int hash = 3;
+    return Objects.hashCode(name, displayName, mail, type, admin, password,
+                            creationDate, lastModified);
+  }
 
-    hash = 37 * hash + (this.admin
-                        ? 1
-                        : 0);
-    hash = 37 * hash + ((this.creationDate != null)
-                        ? this.creationDate.hashCode()
-                        : 0);
-    hash = 37 * hash + ((this.displayName != null)
-                        ? this.displayName.hashCode()
-                        : 0);
-    hash = 37 * hash + ((this.lastModified != null)
-                        ? this.lastModified.hashCode()
-                        : 0);
-    hash = 37 * hash + ((this.mail != null)
-                        ? this.mail.hashCode()
-                        : 0);
-    hash = 37 * hash + ((this.name != null)
-                        ? this.name.hashCode()
-                        : 0);
-    hash = 37 * hash + ((this.password != null)
-                        ? this.password.hashCode()
-                        : 0);
-    hash = 37 * hash + ((this.type != null)
-                        ? this.type.hashCode()
-                        : 0);
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    String pwd = (password != null)
+                 ? "(is set)"
+                 : "(not set)";
 
-    return hash;
+    //J-
+    return Objects.toStringHelper(this)
+            .add("name", name)
+            .add("displayName",displayName)
+            .add("mail", mail)
+            .add("password", pwd)
+            .add("admin", admin)
+            .add("type", type)
+            .add("creationDate", creationDate)
+            .add("lastModified", lastModified)
+            .toString();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------
