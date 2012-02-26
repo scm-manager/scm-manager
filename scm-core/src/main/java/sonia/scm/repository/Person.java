@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
@@ -126,6 +128,42 @@ public class Person implements Validateable, Serializable
     }
 
     return person;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    Person other = (Person) obj;
+
+    return Objects.equal(name, other.name) && Objects.equal(mail, other.mail);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(name, mail);
   }
 
   /**
