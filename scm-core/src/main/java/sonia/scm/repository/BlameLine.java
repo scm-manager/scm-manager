@@ -33,8 +33,12 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 /**
- * Class description
+ * Single line of a file, in a {@link  BlameResult}.
  *
  * @author Sebastian Sdorra
  * @since 1.8
@@ -69,6 +73,73 @@ public class BlameLine
     this.author = author;
     this.description = description;
     this.code = code;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final BlameLine other = (BlameLine) obj;
+
+    return Objects.equal(lineNumber, other.lineNumber)
+           && Objects.equal(revision, other.revision)
+           && Objects.equal(author, other.author)
+           && Objects.equal(when, other.when)
+           && Objects.equal(code, other.code)
+           && Objects.equal(description, other.description);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(lineNumber, revision, author, when, code,
+                            description);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+            .add("lineNumber", lineNumber)
+            .add("revision", revision)
+            .add("author", author)
+            .add("when", when)
+            .add("code", code)
+            .add("description", description)
+            .toString();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------
