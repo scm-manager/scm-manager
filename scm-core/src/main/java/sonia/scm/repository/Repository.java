@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
@@ -182,76 +184,19 @@ public class Repository extends BasicPropertiesAware implements ModelObject
     }
 
     final Repository other = (Repository) obj;
-
-    if ((this.contact == null)
-        ? (other.contact != null)
-        : !this.contact.equals(other.contact))
-    {
-      return false;
-    }
-
-    if ((this.creationDate != other.creationDate)
-        && ((this.creationDate == null)
-            ||!this.creationDate.equals(other.creationDate)))
-    {
-      return false;
-    }
-
-    if ((this.description == null)
-        ? (other.description != null)
-        : !this.description.equals(other.description))
-    {
-      return false;
-    }
-
-    if ((this.id == null)
-        ? (other.id != null)
-        : !this.id.equals(other.id))
-    {
-      return false;
-    }
-
-    if ((this.lastModified != other.lastModified)
-        && ((this.lastModified == null)
-            ||!this.lastModified.equals(other.lastModified)))
-    {
-      return false;
-    }
-
-    if ((this.name == null)
-        ? (other.name != null)
-        : !this.name.equals(other.name))
-    {
-      return false;
-    }
-
-    if ((this.permissions != other.permissions)
-        && ((this.permissions == null)
-            ||!this.permissions.equals(other.permissions)))
-    {
-      return false;
-    }
-
-    if (this.publicReadable != other.publicReadable)
-    {
-      return false;
-    }
-
-    if ((this.type == null)
-        ? (other.type != null)
-        : !this.type.equals(other.type))
-    {
-      return false;
-    }
-
-    if ((this.url == null)
-        ? (other.url != null)
-        : !this.url.equals(other.url))
-    {
-      return false;
-    }
-
-    return true;
+    
+    //J-
+    return Objects.equal(id, other.id) 
+           && Objects.equal(name, other.name)
+           && Objects.equal(contact, other.contact)
+           && Objects.equal(description, other.description)
+           && Objects.equal(publicReadable, other.publicReadable)
+           && Objects.equal(permissions, other.permissions)
+           && Objects.equal(type, other.type) 
+           && Objects.equal(url, other.url)
+           && Objects.equal(creationDate, other.creationDate)
+           && Objects.equal(lastModified, other.lastModified);
+    //J+
   }
 
   /**
@@ -263,40 +208,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   @Override
   public int hashCode()
   {
-    int hash = 7;
-
-    hash = 61 * hash + ((this.contact != null)
-                        ? this.contact.hashCode()
-                        : 0);
-    hash = 61 * hash + ((this.creationDate != null)
-                        ? this.creationDate.hashCode()
-                        : 0);
-    hash = 61 * hash + ((this.description != null)
-                        ? this.description.hashCode()
-                        : 0);
-    hash = 61 * hash + ((this.id != null)
-                        ? this.id.hashCode()
-                        : 0);
-    hash = 61 * hash + ((this.lastModified != null)
-                        ? this.lastModified.hashCode()
-                        : 0);
-    hash = 61 * hash + ((this.name != null)
-                        ? this.name.hashCode()
-                        : 0);
-    hash = 61 * hash + ((this.permissions != null)
-                        ? this.permissions.hashCode()
-                        : 0);
-    hash = 61 * hash + (this.publicReadable
-                        ? 1
-                        : 0);
-    hash = 61 * hash + ((this.type != null)
-                        ? this.type.hashCode()
-                        : 0);
-    hash = 61 * hash + ((this.url != null)
-                        ? this.url.hashCode()
-                        : 0);
-
-    return hash;
+    return Objects.hashCode(id, name, contact, description, publicReadable,
+                            permissions, type, url, creationDate, lastModified);
   }
 
   /**
@@ -308,11 +221,20 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   @Override
   public String toString()
   {
-    StringBuilder buffer = new StringBuilder("Repository{type=");
-
-    buffer.append(type).append(", name=").append(name).append("}");
-
-    return buffer.toString();
+    //J-
+    return Objects.toStringHelper(this)
+            .add("id", id)
+            .add("name", name)
+            .add("contact", contact)
+            .add("description", description)
+            .add("publicReadable", publicReadable)
+            .add("permissions", permissions)
+            .add("type", type)
+            .add("url", url)
+            .add("lastModified", lastModified)
+            .add("creationDate", creationDate)
+            .toString();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------
