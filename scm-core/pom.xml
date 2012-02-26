@@ -66,6 +66,14 @@
       <artifactId>jersey-core</artifactId>
       <version>${jersey.version}</version>
     </dependency>
+    
+    <!-- util -->
+    
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>11.0.2</version>
+    </dependency>
 
   </dependencies>
   

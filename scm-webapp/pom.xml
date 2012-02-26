@@ -131,14 +131,6 @@
       <version>${ehcache.version}</version>
     </dependency>
     
-    <!-- utils -->
-
-    <dependency>
-      <groupId>com.google.collections</groupId>
-      <artifactId>google-collections</artifactId>
-      <version>1.0</version>
-    </dependency>
-    
     <!-- only for BeanComparator, replace with own implementation -->
     
     <dependency>
