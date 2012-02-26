@@ -65,13 +65,21 @@ public class HgRepositoryClient extends AbstractRepositoryClient
   {
     super(localRepository, remoteRepository);
 
-    String scheme = remoteRepository.substring(0,
-                      remoteRepository.indexOf("://") + 3);
-    StringBuilder buffer = new StringBuilder(scheme);
+    if ((username != null) && (password != null))
+    {
+      String scheme = remoteRepository.substring(0,
+                        remoteRepository.indexOf("://") + 3);
+      StringBuilder buffer = new StringBuilder(scheme);
 
-    buffer.append(username).append(":").append(password).append("@");
-    buffer.append(remoteRepository.substring(scheme.length()));
-    remoteURL = buffer.toString();
+      buffer.append(username).append(":").append(password).append("@");
+      buffer.append(remoteRepository.substring(scheme.length()));
+      remoteURL = buffer.toString();
+    }
+    else
+    {
+      remoteURL = remoteRepository;
+    }
+
     hg = IOUtil.search("hg");
   }
 
