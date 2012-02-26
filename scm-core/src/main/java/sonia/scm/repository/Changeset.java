@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
@@ -107,7 +109,7 @@ public class Changeset extends BasicPropertiesAware
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -127,7 +129,7 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param obj
@@ -149,63 +151,18 @@ public class Changeset extends BasicPropertiesAware
 
     final Changeset other = (Changeset) obj;
 
-    if ((this.author == null)
-        ? (other.author != null)
-        : !this.author.equals(other.author))
-    {
-      return false;
-    }
-
-    if ((this.branches != other.branches)
-        && ((this.branches == null) ||!this.branches.equals(other.branches)))
-    {
-      return false;
-    }
-
-    if ((this.date != other.date)
-        && ((this.date == null) ||!this.date.equals(other.date)))
-    {
-      return false;
-    }
-
-    if ((this.description == null)
-        ? (other.description != null)
-        : !this.description.equals(other.description))
-    {
-      return false;
-    }
-
-    if ((this.id == null)
-        ? (other.id != null)
-        : !this.id.equals(other.id))
-    {
-      return false;
-    }
-
-    if ((this.modifications != other.modifications)
-        && ((this.modifications == null)
-            ||!this.modifications.equals(other.modifications)))
-    {
-      return false;
-    }
-
-    if ((this.tags != other.tags)
-        && ((this.tags == null) ||!this.tags.equals(other.tags)))
-    {
-      return false;
-    }
-
-    if ((this.parents != other.parents)
-        && ((this.parents == null) ||!this.parents.equals(other.parents)))
-    {
-      return false;
-    }
-
-    return true;
+    return Objects.equal(id, other.id) && Objects.equal(date, other.date)
+           && Objects.equal(author, other.author)
+           && Objects.equal(description, other.description)
+           && Objects.equal(parents, other.parents)
+           && Objects.equal(tags, other.tags)
+           && Objects.equal(branches, other.branches)
+           && Objects.equal(modifications, other.modifications)
+           && Objects.equal(properties, other.properties);
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -213,34 +170,8 @@ public class Changeset extends BasicPropertiesAware
   @Override
   public int hashCode()
   {
-    int hash = 7;
-
-    hash = 47 * hash + ((this.author != null)
-                        ? this.author.hashCode()
-                        : 0);
-    hash = 47 * hash + ((this.branches != null)
-                        ? this.branches.hashCode()
-                        : 0);
-    hash = 47 * hash + ((this.date != null)
-                        ? this.date.hashCode()
-                        : 0);
-    hash = 47 * hash + ((this.description != null)
-                        ? this.description.hashCode()
-                        : 0);
-    hash = 47 * hash + ((this.id != null)
-                        ? this.id.hashCode()
-                        : 0);
-    hash = 47 * hash + ((this.modifications != null)
-                        ? this.modifications.hashCode()
-                        : 0);
-    hash = 47 * hash + ((this.tags != null)
-                        ? this.tags.hashCode()
-                        : 0);
-    hash = 47 * hash + ((this.parents != null)
-                        ? this.parents.hashCode()
-                        : 0);
-
-    return hash;
+    return Objects.hashCode(id, date, author, description, parents, tags,
+                            branches, modifications, properties);
   }
 
   /**
