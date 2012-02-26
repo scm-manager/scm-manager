@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -112,7 +114,7 @@ public class Modifications implements Serializable
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param obj
@@ -134,29 +136,13 @@ public class Modifications implements Serializable
 
     final Modifications other = (Modifications) obj;
 
-    if ((this.added != other.added)
-        && ((this.added == null) ||!this.added.equals(other.added)))
-    {
-      return false;
-    }
-
-    if ((this.modified != other.modified)
-        && ((this.modified == null) ||!this.modified.equals(other.modified)))
-    {
-      return false;
-    }
-
-    if ((this.removed != other.removed)
-        && ((this.removed == null) ||!this.removed.equals(other.removed)))
-    {
-      return false;
-    }
-
-    return true;
+    return Objects.equal(added, other.added)
+           && Objects.equal(modified, other.modified)
+           && Objects.equal(removed, other.removed);
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -164,23 +150,11 @@ public class Modifications implements Serializable
   @Override
   public int hashCode()
   {
-    int hash = 7;
-
-    hash = 41 * hash + ((this.added != null)
-                        ? this.added.hashCode()
-                        : 0);
-    hash = 41 * hash + ((this.modified != null)
-                        ? this.modified.hashCode()
-                        : 0);
-    hash = 41 * hash + ((this.removed != null)
-                        ? this.removed.hashCode()
-                        : 0);
-
-    return hash;
+    return Objects.hashCode(added, modified, removed);
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
