@@ -35,7 +35,9 @@ package sonia.scm.repository.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.tmatesoft.svn.core.SVNCommitInfo;
 import org.tmatesoft.svn.core.SVNDepth;
+import org.tmatesoft.svn.core.SVNErrorMessage;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
@@ -78,6 +80,9 @@ public class SvnRepositoryClient extends AbstractRepositoryClient
     super(localRepository, remoteRepository);
 
     DefaultSVNOptions options = new DefaultSVNOptions();
+
+    options.setAuthStorageEnabled(false);
+    options.setUseAutoProperties(false);
 
     if ((username != null) && (password != null))
     {
@@ -165,8 +170,16 @@ public class SvnRepositoryClient extends AbstractRepositoryClient
 
     try
     {
-      cc.doCommit(pendingFiles.toArray(new File[0]), true, message, null, null,
-                  true, true, SVNDepth.INFINITY);
+      SVNCommitInfo info = cc.doCommit(pendingFiles.toArray(new File[0]), true,
+                                       message, null, null, true, true,
+                                       SVNDepth.INFINITY);
+      SVNErrorMessage msg = info.getErrorMessage();
+
+      if (msg != null)
+      {
+        throw new RepositoryClientException(msg.getFullMessage());
+      }
+
       pendingFiles.clear();
     }
     catch (SVNException ex)
