@@ -35,6 +35,8 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
@@ -210,48 +212,12 @@ public class Group extends BasicPropertiesAware
 
     final Group other = (Group) obj;
 
-    if ((this.creationDate != other.creationDate)
-        && ((this.creationDate == null)
-            ||!this.creationDate.equals(other.creationDate)))
-    {
-      return false;
-    }
-
-    if ((this.description == null)
-        ? (other.description != null)
-        : !this.description.equals(other.description))
-    {
-      return false;
-    }
-
-    if ((this.lastModified != other.lastModified)
-        && ((this.lastModified == null)
-            ||!this.lastModified.equals(other.lastModified)))
-    {
-      return false;
-    }
-
-    if ((this.members != other.members)
-        && ((this.members == null) ||!this.members.equals(other.members)))
-    {
-      return false;
-    }
-
-    if ((this.name == null)
-        ? (other.name != null)
-        : !this.name.equals(other.name))
-    {
-      return false;
-    }
-
-    if ((this.type == null)
-        ? (other.type != null)
-        : !this.type.equals(other.type))
-    {
-      return false;
-    }
-
-    return true;
+    return Objects.equal(name, other.name)
+           && Objects.equal(description, other.description)
+           && Objects.equal(members, other.members)
+           && Objects.equal(type, other.type)
+           && Objects.equal(creationDate, other.creationDate)
+           && Objects.equal(lastModified, lastModified);
   }
 
   /**
@@ -263,28 +229,8 @@ public class Group extends BasicPropertiesAware
   @Override
   public int hashCode()
   {
-    int hash = 7;
-
-    hash = 73 * hash + ((this.creationDate != null)
-                        ? this.creationDate.hashCode()
-                        : 0);
-    hash = 73 * hash + ((this.description != null)
-                        ? this.description.hashCode()
-                        : 0);
-    hash = 73 * hash + ((this.lastModified != null)
-                        ? this.lastModified.hashCode()
-                        : 0);
-    hash = 73 * hash + ((this.members != null)
-                        ? this.members.hashCode()
-                        : 0);
-    hash = 73 * hash + ((this.name != null)
-                        ? this.name.hashCode()
-                        : 0);
-    hash = 73 * hash + ((this.type != null)
-                        ? this.type.hashCode()
-                        : 0);
-
-    return hash;
+    return Objects.hashCode(name, description, members, type, creationDate,
+                            lastModified);
   }
 
   /**
@@ -321,26 +267,16 @@ public class Group extends BasicPropertiesAware
   @Override
   public String toString()
   {
-    StringBuilder msg = new StringBuilder();
-
-    msg.append(name).append(" [");
-
-    if (Util.isNotEmpty(members))
-    {
-      Iterator<String> it = members.iterator();
-
-      while (it.hasNext())
-      {
-        msg.append(it.next());
-
-        if (it.hasNext())
-        {
-          msg.append(",");
-        }
-      }
-    }
-
-    return msg.append("]").toString();
+    //J-
+    return Objects.toStringHelper(this)
+             .add("name", name)
+             .add("description", description)
+             .add("members", members)
+             .add("type", type)
+             .add("creationDate", creationDate)
+             .add("lastModified", lastModified)
+             .toString();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------
