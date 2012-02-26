@@ -189,7 +189,7 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param obj
@@ -218,11 +218,12 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
            && Objects.equal(admin, other.admin)
            && Objects.equal(password, other.password)
            && Objects.equal(creationDate, other.creationDate)
-           && Objects.equal(lastModified, other.lastModified);
+           && Objects.equal(lastModified, other.lastModified)
+           && Objects.equal(properties, other.properties);
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -231,11 +232,11 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   public int hashCode()
   {
     return Objects.hashCode(name, displayName, mail, type, admin, password,
-                            creationDate, lastModified);
+                            creationDate, lastModified, properties);
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -257,6 +258,7 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
             .add("type", type)
             .add("creationDate", creationDate)
             .add("lastModified", lastModified)
+            .add("properties", properties)
             .toString();
     //J+
   }

@@ -184,7 +184,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
     }
 
     final Repository other = (Repository) obj;
-    
+
     //J-
     return Objects.equal(id, other.id) 
            && Objects.equal(name, other.name)
@@ -195,7 +195,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject
            && Objects.equal(type, other.type) 
            && Objects.equal(url, other.url)
            && Objects.equal(creationDate, other.creationDate)
-           && Objects.equal(lastModified, other.lastModified);
+           && Objects.equal(lastModified, other.lastModified)
+           && Objects.equal(properties, other.properties);
     //J+
   }
 
@@ -209,7 +210,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   public int hashCode()
   {
     return Objects.hashCode(id, name, contact, description, publicReadable,
-                            permissions, type, url, creationDate, lastModified);
+                            permissions, type, url, creationDate, lastModified,
+                            properties);
   }
 
   /**
@@ -233,6 +235,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
             .add("url", url)
             .add("lastModified", lastModified)
             .add("creationDate", creationDate)
+            .add("properties", properties)
             .toString();
     //J+
   }

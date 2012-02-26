@@ -217,7 +217,8 @@ public class Group extends BasicPropertiesAware
            && Objects.equal(members, other.members)
            && Objects.equal(type, other.type)
            && Objects.equal(creationDate, other.creationDate)
-           && Objects.equal(lastModified, lastModified);
+           && Objects.equal(lastModified, other.lastModified)
+           && Objects.equal(properties, other.properties);
   }
 
   /**
@@ -230,7 +231,7 @@ public class Group extends BasicPropertiesAware
   public int hashCode()
   {
     return Objects.hashCode(name, description, members, type, creationDate,
-                            lastModified);
+                            lastModified, properties);
   }
 
   /**
@@ -275,6 +276,7 @@ public class Group extends BasicPropertiesAware
              .add("type", type)
              .add("creationDate", creationDate)
              .add("lastModified", lastModified)
+             .add("properties", properties)
              .toString();
     //J+
   }
