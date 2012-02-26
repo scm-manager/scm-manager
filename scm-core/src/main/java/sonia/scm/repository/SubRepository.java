@@ -33,6 +33,10 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -92,6 +96,66 @@ public class SubRepository
     this.repositoryUrl = repositoryUrl;
     this.browserUrl = browserUrl;
     this.revision = revision;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    SubRepository other = (SubRepository) obj;
+
+    return Objects.equal(repositoryUrl, other.repositoryUrl)
+           && Objects.equal(browserUrl, other.browserUrl)
+           && Objects.equal(revision, other.revision);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(repositoryUrl, browserUrl, revision);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+            .add("repositoryUrl", repositoryUrl)
+            .add("browserUrl", browserUrl)
+            .add("revision", revision)
+            .toString();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------
