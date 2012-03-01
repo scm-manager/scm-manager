@@ -309,7 +309,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     }
     else
     {
-      response = createCacheResponse(request, manager, entity);
+      response = createCacheResponse(request, manager, items, entity);
     }
 
     return response;
@@ -441,9 +441,27 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   private <I> Response createCacheResponse(Request request,
           LastModifiedAware timeItem, I item)
   {
+    return createCacheResponse(request, timeItem, item, item);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param timeItem
+   * @param entityItem
+   * @param item
+   * @param <I>
+   *
+   * @return
+   */
+  private <I> Response createCacheResponse(Request request,
+          LastModifiedAware timeItem, Object entityItem, I item)
+  {
     Response.ResponseBuilder builder = null;
     Date lastModified = getLastModified(timeItem);
-    EntityTag e = new EntityTag(Integer.toString(item.hashCode()));
+    EntityTag e = new EntityTag(Integer.toString(entityItem.hashCode()));
 
     if (lastModified != null)
     {
