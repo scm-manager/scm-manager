@@ -39,13 +39,15 @@ import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class AuthenticationResult
+public class AuthenticationResult implements Serializable
 {
 
   /** Field description */
@@ -55,6 +57,9 @@ public class AuthenticationResult
   /** Field description */
   public static final AuthenticationResult FAILED =
     new AuthenticationResult(AuthenticationState.FAILED);
+
+  /** Field description */
+  private static final long serialVersionUID = -1318200822398893598L;
 
   //~--- constructors ---------------------------------------------------------
 
