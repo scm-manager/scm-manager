@@ -54,6 +54,7 @@ import sonia.scm.util.Util;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import java.util.Set;
 
@@ -278,8 +279,13 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    * @version        Enter version here..., 2011-01-15
    * @author         Sebastian Sdorra
    */
-  private static class AuthenticationCacheValue
+  private static class AuthenticationCacheValue implements Serializable
   {
+
+    /** Field description */
+    private static final long serialVersionUID = 2201116145941277549L;
+
+    //~--- constructors -------------------------------------------------------
 
     /**
      * Constructs ...
