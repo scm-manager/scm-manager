@@ -447,7 +447,7 @@
     <guice.version>3.0</guice.version>
     <jersey.version>1.12</jersey.version>
     <ehcache.version>2.5.1</ehcache.version>
-    <freemarker.version>2.3.18</freemarker.version>
+    <freemarker.version>2.3.19</freemarker.version>
     <jetty.version>7.6.1.v20120215</jetty.version>
     <logback.version>1.0.0</logback.version>
     <project.build.javaLevel>1.6</project.build.javaLevel>
