@@ -450,21 +450,7 @@ public class AbstractHgHandler
       }
     }
 
-    String pythonPath = Util.nonNull(config.getPythonPath());
-
-    if (Util.isNotEmpty(pythonPath))
-    {
-      pythonPath = pythonPath.concat(":");
-    }
-
-    //J-
-    pythonPath = pythonPath.concat(
-      HgPythonScript.getScriptDirectory(
-        SCMContext.getContext()
-      ).getAbsolutePath()
-    );
-    //J+
-    env.put(ENV_PYTHONPATH, pythonPath);
+    env.put(ENV_PYTHONPATH, HgUtil.getPythonPath(config));
     env.put(ENV_REPOSITORY_PATH, directory.getAbsolutePath());
     env.putAll(extraEnv);
 

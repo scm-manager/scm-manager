@@ -228,19 +228,8 @@ public class HgCGIServlet extends HttpServlet
   {
     String name = repository.getName();
     File directory = handler.getDirectory(repository);
-    String pythonPath = HgPythonScript.getScriptDirectory(
-                            SCMContext.getContext()).getAbsolutePath();
-    HgConfig config = handler.getConfig();
-
-    if (config != null)
-    {
-      if (Util.isNotEmpty(config.getPythonPath()))
-      {
-        pythonPath =
-          pythonPath.concat(File.pathSeparator).concat(config.getPythonPath());
-      }
-    }
-
+    String pythonPath = HgUtil.getPythonPath(handler.getConfig());
+    
     CGIExecutor executor = cgiExecutorFactory.createExecutor(configuration,
                              getServletContext(), request, response);
 

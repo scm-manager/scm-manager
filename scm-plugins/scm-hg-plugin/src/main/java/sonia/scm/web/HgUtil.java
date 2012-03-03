@@ -35,6 +35,10 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.io.File;
+import sonia.scm.SCMContext;
+import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgPythonScript;
 import sonia.scm.util.Util;
 
 /**
@@ -49,6 +53,39 @@ public class HgUtil
 
   //~--- get methods ----------------------------------------------------------
 
+  /**
+   * Method description
+   *
+   *
+   * @param config
+   *
+   * @return
+   */
+  public static String getPythonPath(HgConfig config)
+  {
+    String pythonPath = Util.EMPTY_STRING;
+    
+    if ( config != null )
+    {
+      pythonPath = Util.nonNull(config.getPythonPath());
+    }
+
+    if (Util.isNotEmpty(pythonPath))
+    {
+      pythonPath = pythonPath.concat(File.pathSeparator);
+    }
+
+    //J-
+    pythonPath = pythonPath.concat(
+      HgPythonScript.getScriptDirectory(
+        SCMContext.getContext()
+      ).getAbsolutePath()
+    );
+    //J+
+    
+    return pythonPath;
+  }
+  
   /**
    * Method description
    *
