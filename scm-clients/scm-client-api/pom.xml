@@ -6,13 +6,13 @@
   <parent>
     <groupId>sonia.scm.clients</groupId>
     <artifactId>scm-clients</artifactId>
-    <version>1.13</version>
+    <version>1.14-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm.clients</groupId>
   <artifactId>scm-client-api</artifactId>
   <packaging>jar</packaging>
-  <version>1.13</version>
+  <version>1.14-SNAPSHOT</version>
   <name>scm-client-api</name>
   
   <dependencies>
