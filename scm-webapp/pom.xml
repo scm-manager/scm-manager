@@ -40,6 +40,12 @@
       <artifactId>scm-core</artifactId>
       <version>1.14-SNAPSHOT</version>
     </dependency>
+    
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-backend-xml</artifactId>
+      <version>1.14-SNAPSHOT</version>
+    </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
