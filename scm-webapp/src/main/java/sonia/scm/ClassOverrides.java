@@ -36,6 +36,8 @@ package sonia.scm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.util.AssertUtil;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
@@ -157,7 +159,19 @@ public class ClassOverrides implements Iterable<ClassOverride>
    */
   public void append(ClassOverrides overrides)
   {
-    getOverrides().addAll(overrides.getOverrides());
+    AssertUtil.assertIsNotNull(overrides);
+
+    for (ClassOverride co : overrides)
+    {
+      if (co.isValid())
+      {
+        getOverrides().add(co);
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("could not append ClassOverride, because it is not valid");
+      }
+    }
   }
 
   /**

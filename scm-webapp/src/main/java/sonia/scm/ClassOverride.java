@@ -41,7 +41,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
  * @author Sebastian Sdorra
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ClassOverride
+public class ClassOverride implements Validateable
 {
 
   /**
@@ -64,6 +64,18 @@ public class ClassOverride
   public Class<?> getTo()
   {
     return to;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isValid()
+  {
+    return (bind != null) && (to != null);
   }
 
   //~--- set methods ----------------------------------------------------------
