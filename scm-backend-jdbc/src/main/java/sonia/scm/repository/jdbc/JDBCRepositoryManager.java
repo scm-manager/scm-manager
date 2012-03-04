@@ -29,7 +29,7 @@
 
 
 
-package sonia.scm.repository.jdb;
+package sonia.scm.repository.jdbc;
 
 //~--- non-JDK imports --------------------------------------------------------
 
