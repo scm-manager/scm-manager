@@ -34,23 +34,23 @@ http://bitbucket.org/sdorra/scm-manager
 <overrides>
 
   <override>
-    <bind>sonia.​scm.​user.UserManager</bind>
-    <to>sonia.​scm.​user.jdbc.JDBCUserManager</to>
+    <bind>sonia.scm.user.UserManager</bind>
+    <to>sonia.scm.user.jdbc.JDBCUserManager</to>
   </override>
     
   <override>
-    <bind>sonia.​scm.​group.GroupManager</bind>
-    <to>sonia.​scm.​group.jdbc.JDBCGroupManager</to>
+    <bind>sonia.scm.group.GroupManager</bind>
+    <to>sonia.scm.group.jdbc.JDBCGroupManager</to>
   </override>
   
   <override>
-    <bind>sonia.​scm.​repository.RepositoryManager</bind>
-    <to>sonia.​scm.​repository.jdbc.JDBCRepositoryManager</to>
+    <bind>sonia.scm.repository.RepositoryManager</bind>
+    <to>sonia.scm.repository.jdbc.JDBCRepositoryManager</to>
   </override>
   
   <override>
-    <bind>sonia.​scm.​store.StoreFactory</bind>
-    <to>sonia.​scm.​store.jdbc.JDBCStoreFactory</to>
+    <bind>sonia.scm.store.StoreFactory</bind>
+    <to>sonia.scm.store.jdbc.JDBCStoreFactory</to>
   </override>
     
 </overrides>
