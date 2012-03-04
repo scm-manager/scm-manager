@@ -95,6 +95,11 @@ public class ClassOverrides implements Iterable<ClassOverride>
       {
         URL overrideUrl = overridesEnm.nextElement();
 
+        if (logger.isInfoEnabled())
+        {
+          logger.info("load override from {}", overrideUrl.toExternalForm());
+        }
+
         try
         {
           ClassOverrides co =
@@ -118,16 +123,6 @@ public class ClassOverrides implements Iterable<ClassOverride>
     }
 
     return overrides;
-  }
-  
-  public <T> Class<T> getOverride(Class<T> clazz){
-    Class<T> implementation = null;
-    for ( ClassOverride co : getOverrides() ){
-      if ( co.getBind().equals(clazz) ){
-        implementation = (Class<T>) co.getTo();
-      }
-    }
-    return implementation;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -176,6 +171,30 @@ public class ClassOverrides implements Iterable<ClassOverride>
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param clazz
+   * @param <T>
+   *
+   * @return
+   */
+  public <T> Class<T> getOverride(Class<T> clazz)
+  {
+    Class<T> implementation = null;
+
+    for (ClassOverride co : getOverrides())
+    {
+      if (co.getBind().equals(clazz))
+      {
+        implementation = (Class<T>) co.getTo();
+      }
+    }
+
+    return implementation;
+  }
 
   /**
    * Method description
