@@ -105,6 +105,8 @@ public class ClassOverrides implements Iterable<ClassOverride>
           ClassOverrides co =
             (ClassOverrides) context.createUnmarshaller().unmarshal(
                 overrideUrl);
+
+          overrides.append(overrides);
         }
         catch (Exception ex)
         {
