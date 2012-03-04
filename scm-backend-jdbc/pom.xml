@@ -11,9 +11,9 @@
   </parent>
   
   <groupId>sonia.scm</groupId>
-  <artifactId>scm-backend-xml</artifactId>
+  <artifactId>scm-backend-jdbc</artifactId>
   <version>1.14-SNAPSHOT</version>
-  <name>scm-backend-xml</name>
+  <name>scm-backend-jdbc</name>
   
   <dependencies>
     
@@ -40,5 +40,4 @@
     </dependency>
     
   </dependencies>
-  
 </project>

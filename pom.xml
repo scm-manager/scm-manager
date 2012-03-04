@@ -69,6 +69,7 @@
     <module>scm-plugins</module>
     <module>scm-samples</module>
     <module>scm-backend-xml</module>
+    <module>scm-backend-jdbc</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
     <module>scm-plugin-backend</module>
