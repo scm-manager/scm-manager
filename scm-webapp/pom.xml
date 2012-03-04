@@ -357,6 +357,20 @@
   </properties>
 
   <profiles>
+    
+    <profile>
+      <id>cluster</id>
+      
+      <dependencies>
+        
+        <dependency>
+          <groupId>sonia.scm</groupId>
+          <artifactId>scm-backend-jdbc</artifactId>
+          <version>1.14-SNAPSHOT</version>
+        </dependency>
+        
+      </dependencies>
+    </profile>
 
     <profile>
       <id>release</id>
