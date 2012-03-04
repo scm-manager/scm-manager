@@ -31,15 +31,12 @@
 
 
 
-package sonia.scm.repository.xml;
+package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.repository.RepositoryHook;
-import sonia.scm.repository.RepositoryHookEvent;
 
 /**
  *

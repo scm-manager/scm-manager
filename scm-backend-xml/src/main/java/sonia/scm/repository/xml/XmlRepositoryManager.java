@@ -60,6 +60,7 @@ import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHandlerNotFoundException;
 import sonia.scm.repository.RepositoryHook;
 import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookTask;
 import sonia.scm.repository.RepositoryListener;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.security.ScmSecurityException;
