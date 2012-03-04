@@ -402,7 +402,7 @@ public class ScmServletModule extends ServletModule
 
       if (logger.isDebugEnabled())
       {
-        logger.debug("bind {} to defaul implementation {}", clazz,
+        logger.debug("bind {} to default implementation {}", clazz,
                      implementation);
       }
     }
