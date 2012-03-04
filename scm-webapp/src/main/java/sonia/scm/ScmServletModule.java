@@ -193,6 +193,7 @@ public class ScmServletModule extends ServletModule
   {
     this.pluginLoader = pluginLoader;
     this.bindExtProcessor = bindExtProcessor;
+    this.overrides = ClassOverrides.findOverrides();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -219,13 +220,13 @@ public class ScmServletModule extends ServletModule
         DefaultRepositoryProvider.class).in(RequestScoped.class);
 
     // bind core
-    bind(StoreFactory.class).to(JAXBStoreFactory.class);
+    bind(StoreFactory.class, JAXBStoreFactory.class);
     bind(ScmConfiguration.class).toInstance(config);
     bind(PluginLoader.class).toInstance(pluginLoader);
-    bind(PluginManager.class).to(DefaultPluginManager.class);
+    bind(PluginManager.class, DefaultPluginManager.class);
     bind(KeyGenerator.class).toInstance(cu.getKeyGenerator());
     bind(CipherHandler.class).toInstance(cu.getCipherHandler());
-    bind(EncryptionHandler.class).to(MessageDigestEncryptionHandler.class);
+    bind(EncryptionHandler.class, MessageDigestEncryptionHandler.class);
     bindExtProcessor.bindExtensions(binder());
 
     Class<? extends FileSystem> fileSystem =
@@ -239,37 +240,37 @@ public class ScmServletModule extends ServletModule
     bind(FileSystem.class).to(fileSystem);
 
     // bind security stuff
-    bind(AuthenticationManager.class).to(ChainAuthenticatonManager.class);
+    bind(AuthenticationManager.class, ChainAuthenticatonManager.class);
     bind(LocalSecurityContextHolder.class);
     bind(WebSecurityContext.class).annotatedWith(Names.named("userSession")).to(
         BasicSecurityContext.class);
     bind(SecurityContext.class).toProvider(SecurityContextProvider.class);
     bind(WebSecurityContext.class).toProvider(SecurityContextProvider.class);
-    bind(AdministrationContext.class).to(DefaultAdministrationContext.class);
+    bind(AdministrationContext.class, DefaultAdministrationContext.class);
 
     // bind security cache
-    bind(CacheManager.class).to(EhCacheManager.class);
+    bind(CacheManager.class, EhCacheManager.class);
 
     // bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
     // BasicRepositoryManager.class);
-    bind(RepositoryManager.class).to(XmlRepositoryManager.class);
-    bind(UserManager.class).to(XmlUserManager.class);
-    bind(GroupManager.class).to(XmlGroupManager.class);
-    bind(CGIExecutorFactory.class).to(DefaultCGIExecutorFactory.class);
+    bind(RepositoryManager.class, XmlRepositoryManager.class);
+    bind(UserManager.class, XmlUserManager.class);
+    bind(GroupManager.class, XmlGroupManager.class);
+    bind(CGIExecutorFactory.class, DefaultCGIExecutorFactory.class);
     bind(ChangesetViewerUtil.class);
     bind(RepositoryBrowserUtil.class);
 
     // bind httpclient
-    bind(HttpClient.class).to(URLHttpClient.class);
+    bind(HttpClient.class, URLHttpClient.class);
 
     // bind resourcemanager
     if (context.getStage() == Stage.DEVELOPMENT)
     {
-      bind(ResourceManager.class).to(DevelopmentResourceManager.class);
+      bind(ResourceManager.class, DevelopmentResourceManager.class);
     }
     else
     {
-      bind(ResourceManager.class).to(DefaultResourceManager.class);
+      bind(ResourceManager.class, DefaultResourceManager.class);
     }
 
     // bind url provider staff
@@ -378,6 +379,37 @@ public class ScmServletModule extends ServletModule
     }
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param clazz
+   * @param defaultImplementation
+   * @param <T>
+   */
+  private <T> void bind(Class<T> clazz,
+                        Class<? extends T> defaultImplementation)
+  {
+    Class<? extends T> implementation = overrides.getOverride(clazz);
+
+    if (implementation != null)
+    {
+      logger.info("bind {} to override {}", clazz, implementation);
+    }
+    else
+    {
+      implementation = defaultImplementation;
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("bind {} to defaul implementation {}", clazz,
+                     implementation);
+      }
+    }
+
+    bind(clazz).to(implementation);
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -439,6 +471,9 @@ public class ScmServletModule extends ServletModule
 
   /** Field description */
   private BindingExtensionProcessor bindExtProcessor;
+
+  /** Field description */
+  private ClassOverrides overrides;
 
   /** Field description */
   private PluginLoader pluginLoader;
