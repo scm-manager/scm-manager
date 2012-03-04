@@ -31,6 +31,10 @@
 
 package sonia.scm;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -43,6 +47,63 @@ import javax.xml.bind.annotation.XmlAccessorType;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ClassOverride implements Validateable
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final ClassOverride other = (ClassOverride) obj;
+
+    return Objects.equal(bind, other.bind) && Objects.equal(to, other.to);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(bind, to);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+            .add("bind", bind)
+            .add("to", to)
+            .toString();
+    //J+
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
