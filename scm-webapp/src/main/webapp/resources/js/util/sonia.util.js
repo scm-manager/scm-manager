@@ -39,7 +39,7 @@ Sonia.util.getServername = function(url){
     url = url.substring(i+3);
     i = url.indexOf(':');
     if ( i <= 0 ){
-      i = url.indexof('/');
+      i = url.indexOf('/');
     }
     if ( i > 0 ){
       url = url.substring(0, i);
