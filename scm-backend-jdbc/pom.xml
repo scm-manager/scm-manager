@@ -39,5 +39,19 @@
       <scope>test</scope>
     </dependency>
     
+    <dependency>
+      <groupId>org.apache.derby</groupId>
+      <artifactId>derby</artifactId>
+      <version>10.8.2.2</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>tomcat</groupId>
+      <artifactId>catalina</artifactId>
+      <version>5.0.28</version>
+      <scope>test</scope>
+    </dependency>
+    
   </dependencies>
 </project>
