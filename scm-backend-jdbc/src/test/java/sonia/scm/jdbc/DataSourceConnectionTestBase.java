@@ -33,50 +33,32 @@ package sonia.scm.jdbc;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.BeforeClass;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import javax.naming.Context;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class DataSourceConnectionProviderTest
-        extends DataSourceConnectionTestBase
+public class DataSourceConnectionTestBase
 {
 
   /**
    * Method description
    *
-   */
-  @Test
-  public void testGet()
-  {
-    DataSourceConnectionProvider provider = new DataSourceConnectionProvider();
-
-    assertNotNull(provider.get());
-  }
-
-  /**
-   * Method description
    *
-   *
-   * @throws SQLException
+   * @throws Exception
    */
-  @Test
-  public void testGetAndClose() throws SQLException
+  @BeforeClass
+  public static void setUpClass() throws Exception
   {
-    DataSourceConnectionProvider provider = new DataSourceConnectionProvider();
-    Connection connection = provider.get();
+    System.setProperty("derby.stream.error.field", "java.lang.System.err");
 
-    assertNotNull(connection);
-    connection.close();
-    connection = provider.get();
-    assertNotNull(connection);
+    // Create initial context
+    System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
+                       TestIntialContextFactory.class.getName());
   }
 }
