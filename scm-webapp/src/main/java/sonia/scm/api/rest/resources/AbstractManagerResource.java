@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.LastModifiedAware;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
+import sonia.scm.api.rest.RestExceptionResult;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
@@ -59,6 +60,7 @@ import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -154,12 +156,12 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     catch (ScmSecurityException ex)
     {
       logger.warn("create is not allowd", ex);
-      response = Response.status(Response.Status.FORBIDDEN).build();
+      response = Response.status(Status.FORBIDDEN).build();
     }
     catch (Exception ex)
     {
       logger.error("error during create", ex);
-      response = Response.serverError().build();
+      response = createErrorResonse(ex);
     }
 
     return response;
@@ -195,7 +197,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
       catch (Exception ex)
       {
         logger.error("error during create", ex);
-        response = Response.serverError().build();
+        response = createErrorResonse(ex);
       }
     }
 
@@ -234,7 +236,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     catch (Exception ex)
     {
       logger.error("error during create", ex);
-      response = Response.serverError().build();
+      response = createErrorResonse(ex);
     }
 
     return response;
@@ -362,6 +364,51 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param throwable
+   *
+   * @return
+   */
+  protected Response createErrorResonse(Throwable throwable)
+  {
+    return createErrorResonse(Status.INTERNAL_SERVER_ERROR,
+                              throwable.getMessage(), throwable);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param status
+   * @param throwable
+   *
+   * @return
+   */
+  protected Response createErrorResonse(Status status, Throwable throwable)
+  {
+    return createErrorResonse(status, throwable.getMessage(), throwable);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param status
+   * @param message
+   * @param throwable
+   *
+   * @return
+   */
+  protected Response createErrorResonse(Status status, String message,
+          Throwable throwable)
+  {
+    return Response.status(status).entity(new RestExceptionResult(message,
+            throwable)).build();
+  }
 
   /**
    * Method description

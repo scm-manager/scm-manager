@@ -633,8 +633,7 @@ public class RepositoryResource
       catch (Exception ex)
       {
         logger.error("could not retrive content", ex);
-        response =
-          Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        response = createErrorResonse(ex);
       }
     }
 
