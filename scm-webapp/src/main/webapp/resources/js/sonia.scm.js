@@ -65,6 +65,14 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   
   errorSessionExpiredTitle: 'Session expired',
   errorSessionExpiredMessage: 'Your session is expired. Please relogin.',
+  
+  // TODO i18n
+  
+  errorNoPermissionsTitle: 'Not permitted',
+  errorNoPermissionsMessage: 'You have not enough permissions to execute this action.',
+  
+  errorNotFoundTitle: 'Not found',
+  errorNotFoundMessage: 'The resource could not be found.',
 
   mainTabPanel: null,
   
@@ -400,6 +408,18 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         },
         scope: this
       });
+    } else if ( status == 403 ){
+      Ext.Msg.show({
+        title: this.errorNoPermissionsTitle,
+        msg: this.errorNoPermissionsMessage,
+        buttons: Ext.Msg.OKCANCEL
+      });
+    } else if ( status == 404 ){
+      Ext.Msg.show({
+        title: this.errorNotFoundTitle,
+        msg: this.errorNotFoundMessage,
+        buttons: Ext.Msg.OKCANCEL
+      });      
     } else {
       if ( title == null ){
         title = this.errorTitle;
@@ -407,11 +427,12 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       if ( message == null ){
         message = this.errorMessage;
       }
+
       Ext.MessageBox.show({
         title: title,
         msg: String.format(message, status),
         buttons: Ext.MessageBox.OK,
-        icon:Ext.MessageBox.ERROR
+        icon: Ext.MessageBox.ERROR
       });
     }
   },
