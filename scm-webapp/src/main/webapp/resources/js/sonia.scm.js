@@ -392,7 +392,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     }, this);
   }, 
   
-  handleFailure: function(status, title, message){
+  handleFailure: function(status, title, message, serverException){
     if (debug){
       console.debug( 'handle failure for status code: ' + status );
     }
@@ -428,12 +428,41 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         message = this.errorMessage;
       }
 
-      Ext.MessageBox.show({
-        title: title,
-        msg: String.format(message, status),
-        buttons: Ext.MessageBox.OK,
-        icon: Ext.MessageBox.ERROR
-      });
+      var text = null;
+      if (serverException){
+        try {
+          if ( Ext.isString(serverException) ){
+            serverException = Ext.decode(serverException);
+          }
+          text = serverException.stacktrace;
+          if ( debug ){
+            console.debug( text );
+          }
+        } catch (e){
+          if ( debug ){
+            console.debug(e);
+          }
+        }
+      }
+      
+      message = String.format(message, status);
+      
+      if ( text == null ){
+
+        Ext.MessageBox.show({
+          title: title,
+          msg: message,
+          buttons: Ext.MessageBox.OK,
+          icon: Ext.MessageBox.ERROR
+        });
+      
+      } else {
+        new Sonia.action.ExceptionWindow({
+          title: title,
+          message: message,
+          stacktrace: text
+        }).show();
+      }
     }
   },
   
