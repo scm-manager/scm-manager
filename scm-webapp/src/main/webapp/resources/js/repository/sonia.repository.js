@@ -138,8 +138,8 @@ Sonia.repository.get = function(id, callback){
         execCallback(Ext.decode(response.responseText));
       },
       failure: function(result){
-        main.handleFailure(
-          result.status
+        main.handleRestFailure(
+          result
         );
       }
     }); 

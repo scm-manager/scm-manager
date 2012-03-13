@@ -54,8 +54,8 @@ Sonia.config.SimpleConfigForm = Ext.extend(Sonia.config.ConfigForm,{
       },
       failure: function(result){
         this.el.unmask();
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result, 
           null, 
           this.failedText
         );
@@ -79,8 +79,8 @@ Sonia.config.SimpleConfigForm = Ext.extend(Sonia.config.ConfigForm,{
       failure: function(result){
         el.unmask();
         clearTimeout(tid);
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result, 
           null, 
           this.failedText
         );

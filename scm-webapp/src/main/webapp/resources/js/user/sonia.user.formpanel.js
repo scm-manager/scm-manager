@@ -134,8 +134,8 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         this.execCallback(this.onUpdate, item);
       },
       failure: function(result){
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result, 
           this.errorTitleText, 
           this.updateErrorMsgText
         );
@@ -165,8 +165,8 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         this.execCallback(this.onCreate, user);
       },
       failure: function(result){
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result,
           this.errorTitleText, 
           this.createErrorMsgText
         );

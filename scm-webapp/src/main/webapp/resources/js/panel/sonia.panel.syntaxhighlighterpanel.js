@@ -214,8 +214,8 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
         this.highlight();
       },
       failure: function(result){
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result, 
           this.loadErrorTitleText, 
           this.loadErrorMsgText
         );
