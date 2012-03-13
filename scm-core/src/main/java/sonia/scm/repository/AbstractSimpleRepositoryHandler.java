@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Throwables;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,9 +112,30 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     }
 
     checkPath(directory);
-    fileSystem.create(directory);
-    create(repository, directory);
-    postCreate(repository, directory);
+
+    try
+    {
+      fileSystem.create(directory);
+      create(repository, directory);
+      postCreate(repository, directory);
+    }
+    catch (Exception ex)
+    {
+      if (directory.exists())
+      {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug(
+              "delete repository directory {}, because of failed repository creation",
+              directory);
+        }
+
+        fileSystem.destroy(directory);
+      }
+
+      Throwables.propagateIfPossible(ex, RepositoryException.class,
+                                     IOException.class);
+    }
   }
 
   /**
