@@ -390,7 +390,11 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         console.debug( "callback is not a function or object. " + callback );
       }
     }, this);
-  }, 
+  },
+  
+  handleRestFailure: function(response, title, message){
+    this.handleFailure(response.status, title, message, response.responseText);
+  },
   
   handleFailure: function(status, title, message, serverException){
     if (debug){
