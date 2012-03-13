@@ -400,6 +400,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
     if (debug){
       console.debug( 'handle failure for status code: ' + status );
     }
+    // TODO handle already exists exceptions specific
     if ( status == 401 ){
       Ext.Msg.show({
         title: this.errorSessionExpiredTitle,
