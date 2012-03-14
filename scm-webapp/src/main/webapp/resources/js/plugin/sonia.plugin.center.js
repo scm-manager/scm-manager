@@ -99,8 +99,8 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
           console.debug('plugin installation failed');
         }
         loadingBox.hide();
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result, 
           this.errorTitleText, 
           this.installFailedText
         );
@@ -133,8 +133,8 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
           console.debug('plugin uninstallation failed');
         }
         loadingBox.hide();
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result, 
           this.errorTitleText, 
           this.uninstallFailedText
         );
@@ -168,8 +168,8 @@ Sonia.plugin.Center = Ext.extend(Ext.util.Observable, {
           console.debug('plugin update failed');
         }
         loadingBox.hide();
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result, 
           this.errorTitleText, 
           this.updateFailedText
         );

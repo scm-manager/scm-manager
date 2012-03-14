@@ -140,8 +140,8 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
                 this.resetPanel();
               },
               failure: function(result){
-                main.handleFailure(
-                  result.status, 
+                main.handleRestFailure(
+                  result, 
                   this.errorTitleText, 
                   this.errorMsgText
                 );

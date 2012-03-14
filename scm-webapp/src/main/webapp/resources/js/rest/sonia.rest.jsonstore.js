@@ -51,8 +51,8 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
               if (debug){
                 console.debug( 'error during store load, status: ' + status );
               }
-              main.handleFailure(
-                status, 
+              main.handleRestFailure(
+                response, 
                 this.errorTitleText, 
                 this.errorMsgText
               );

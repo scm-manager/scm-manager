@@ -120,8 +120,8 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
         this.update(changeset)
       },
       failure: function(result){
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result, 
           this.errorTitleText, 
           this.errorMsgText
         );

@@ -101,8 +101,8 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
         this.doLayout();
       },
       failure: function(result){
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result, 
           this.errorTitleText, 
           this.errorMsgText
         );
@@ -218,8 +218,8 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
         this.appendImported(obj);
       },
       failure: function(result){
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result, 
           this.errorTitleText, 
           this.errorMsgText
         );

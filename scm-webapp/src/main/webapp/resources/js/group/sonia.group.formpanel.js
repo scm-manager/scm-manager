@@ -81,8 +81,8 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         this.fireEvent('updateFailed', group);
         clearTimeout(tid);
         el.unmask();
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result, 
           this.errorTitleText, 
           this.updateErrorMsgText
         );
@@ -124,8 +124,8 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
         this.fireEvent('creationFailed', item);
         clearTimeout(tid);
         el.unmask();
-        main.handleFailure(
-          result.status, 
+        main.handleRestFailure(
+          result, 
           this.errorTitleText, 
           this.createErrorMsgText
         );

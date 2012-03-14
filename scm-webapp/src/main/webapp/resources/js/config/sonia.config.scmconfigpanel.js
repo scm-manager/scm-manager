@@ -205,8 +205,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
             },
             failure: function(result){
               this.el.unmask();
-              main.handleFailure(
-                result.status, 
+              main.handleRestFailure(
+                result, 
                 this.errorTitleText, 
                 this.errorMsgText
               );
@@ -234,8 +234,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
             failure: function(result){
               el.unmask();
               clearTimeout(tid);
-              main.handleFailure(
-                result.status, 
+              main.handleRestFailure(
+                result, 
                 this.errorTitleText, 
                 this.errorMsgText
               );

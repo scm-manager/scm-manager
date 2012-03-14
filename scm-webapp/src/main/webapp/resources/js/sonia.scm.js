@@ -65,6 +65,14 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   
   errorSessionExpiredTitle: 'Session expired',
   errorSessionExpiredMessage: 'Your session is expired. Please relogin.',
+  
+  // TODO i18n
+  
+  errorNoPermissionsTitle: 'Not permitted',
+  errorNoPermissionsMessage: 'You have not enough permissions to execute this action.',
+  
+  errorNotFoundTitle: 'Not found',
+  errorNotFoundMessage: 'The resource could not be found.',
 
   mainTabPanel: null,
   
@@ -382,12 +390,17 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         console.debug( "callback is not a function or object. " + callback );
       }
     }, this);
-  }, 
+  },
   
-  handleFailure: function(status, title, message){
+  handleRestFailure: function(response, title, message){
+    this.handleFailure(response.status, title, message, response.responseText);
+  },
+  
+  handleFailure: function(status, title, message, serverException){
     if (debug){
       console.debug( 'handle failure for status code: ' + status );
     }
+    // TODO handle already exists exceptions specific
     if ( status == 401 ){
       Ext.Msg.show({
         title: this.errorSessionExpiredTitle,
@@ -400,6 +413,18 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         },
         scope: this
       });
+    } else if ( status == 403 ){
+      Ext.Msg.show({
+        title: this.errorNoPermissionsTitle,
+        msg: this.errorNoPermissionsMessage,
+        buttons: Ext.Msg.OKCANCEL
+      });
+    } else if ( status == 404 ){
+      Ext.Msg.show({
+        title: this.errorNotFoundTitle,
+        msg: this.errorNotFoundMessage,
+        buttons: Ext.Msg.OKCANCEL
+      });      
     } else {
       if ( title == null ){
         title = this.errorTitle;
@@ -407,12 +432,42 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       if ( message == null ){
         message = this.errorMessage;
       }
-      Ext.MessageBox.show({
-        title: title,
-        msg: String.format(message, status),
-        buttons: Ext.MessageBox.OK,
-        icon:Ext.MessageBox.ERROR
-      });
+
+      var text = null;
+      if (serverException){
+        try {
+          if ( Ext.isString(serverException) ){
+            serverException = Ext.decode(serverException);
+          }
+          text = serverException.stacktrace;
+          if ( debug ){
+            console.debug( text );
+          }
+        } catch (e){
+          if ( debug ){
+            console.debug(e);
+          }
+        }
+      }
+      
+      message = String.format(message, status);
+      
+      if ( text == null ){
+
+        Ext.MessageBox.show({
+          title: title,
+          msg: message,
+          buttons: Ext.MessageBox.OK,
+          icon: Ext.MessageBox.ERROR
+        });
+      
+      } else {
+        new Sonia.action.ExceptionWindow({
+          title: title,
+          message: message,
+          stacktrace: text
+        }).show();
+      }
     }
   },
   
