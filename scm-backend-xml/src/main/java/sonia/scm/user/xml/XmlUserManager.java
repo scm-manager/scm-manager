@@ -48,11 +48,10 @@ import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.security.ScmSecurityException;
-import sonia.scm.store.Store;
-import sonia.scm.store.StoreFactory;
 import sonia.scm.user.AbstractUserManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserAllreadyExistException;
+import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserListener;
 import sonia.scm.util.AssertUtil;
@@ -96,9 +95,6 @@ public class XmlUserManager extends AbstractUserManager
   /** Field description */
   public static final String STORE_NAME = "users";
 
-  /** Field description */
-  public static final String TYPE = "xml";
-
   /** the logger for XmlUserManager */
   private static final Logger logger =
     LoggerFactory.getLogger(XmlUserManager.class);
@@ -110,16 +106,16 @@ public class XmlUserManager extends AbstractUserManager
    *
    *
    * @param scurityContextProvider
-   * @param storeFactory
+   * @param userDAO
    * @param userListenerProvider
    */
   @Inject
   public XmlUserManager(Provider<WebSecurityContext> scurityContextProvider,
-                        StoreFactory storeFactory,
+                        UserDAO userDAO,
                         Provider<Set<UserListener>> userListenerProvider)
   {
     this.scurityContextProvider = scurityContextProvider;
-    this.store = storeFactory.getStore(XmlUserDatabase.class, STORE_NAME);
+    this.userDAO = userDAO;
     this.userListenerProvider = userListenerProvider;
   }
 
@@ -149,7 +145,7 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public boolean contains(String username)
   {
-    return userDB.contains(username);
+    return userDAO.contains(username);
   }
 
   /**
@@ -176,7 +172,7 @@ public class XmlUserManager extends AbstractUserManager
       throw new ScmSecurityException("admin account is required");
     }
 
-    if (userDB.contains(user.getName()))
+    if (userDAO.contains(user.getName()))
     {
       throw new UserAllreadyExistException(user.getName());
     }
@@ -185,18 +181,12 @@ public class XmlUserManager extends AbstractUserManager
 
     if (Util.isEmpty(type))
     {
-      user.setType(TYPE);
+      user.setType(userDAO.getType());
     }
 
     AssertUtil.assertIsValid(user);
     user.setCreationDate(System.currentTimeMillis());
-
-    synchronized (XmlUserManager.class)
-    {
-      userDB.add(user.clone());
-      storeDB();
-    }
-
+    userDAO.add(user);
     fireEvent(user, HandlerEvent.CREATE);
   }
 
@@ -221,14 +211,9 @@ public class XmlUserManager extends AbstractUserManager
 
     String name = user.getName();
 
-    if (userDB.contains(name))
+    if (userDAO.contains(name))
     {
-      synchronized (XmlUserManager.class)
-      {
-        userDB.remove(name);
-        storeDB();
-      }
-
+      userDAO.delete(user);
       fireEvent(user, HandlerEvent.DELETE);
     }
     else
@@ -246,11 +231,10 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void init(SCMContextProvider context)
   {
-    userDB = store.get();
 
-    if (userDB == null)
+    // TODO improve
+    if (!userDAO.contains("scmadmin") &&!userDAO.contains("anonymous"))
     {
-      userDB = new XmlUserDatabase();
       createDefaultAccounts();
     }
 
@@ -288,18 +272,11 @@ public class XmlUserManager extends AbstractUserManager
 
     String name = user.getName();
 
-    if (userDB.contains(name))
+    if (userDAO.contains(name))
     {
       AssertUtil.assertIsValid(user);
       user.setLastModified(System.currentTimeMillis());
-
-      synchronized (XmlUserManager.class)
-      {
-        userDB.remove(name);
-        userDB.add(user.clone());
-        storeDB();
-      }
-
+      userDAO.modify(user);
       fireEvent(user, HandlerEvent.MODIFY);
     }
     else
@@ -327,7 +304,7 @@ public class XmlUserManager extends AbstractUserManager
 
     SecurityUtil.assertIsAdmin(scurityContextProvider);
 
-    User fresh = userDB.get(user.getName());
+    User fresh = userDAO.get(user.getName());
 
     if (fresh == null)
     {
@@ -353,7 +330,7 @@ public class XmlUserManager extends AbstractUserManager
       logger.debug("search user with query {}", searchRequest.getQuery());
     }
 
-    return SearchUtil.search(searchRequest, userDB.values(),
+    return SearchUtil.search(searchRequest, userDAO.getAll(),
                              new TransformFilter<User>()
     {
       @Override
@@ -387,7 +364,7 @@ public class XmlUserManager extends AbstractUserManager
   {
 
     // SecurityUtil.assertIsAdmin(scurityContextProvider);
-    User user = userDB.get(id);
+    User user = userDAO.get(id);
 
     if (user != null)
     {
@@ -424,7 +401,7 @@ public class XmlUserManager extends AbstractUserManager
 
     List<User> users = new ArrayList<User>();
 
-    for (User user : userDB.values())
+    for (User user : userDAO.getAll())
     {
       users.add(user.clone());
     }
@@ -454,7 +431,7 @@ public class XmlUserManager extends AbstractUserManager
   {
     SecurityUtil.assertIsAdmin(scurityContextProvider);
 
-    return Util.createSubCollection(userDB.values(), comaparator,
+    return Util.createSubCollection(userDAO.getAll(), comaparator,
                                     new CollectionAppender<User>()
     {
       @Override
@@ -489,7 +466,7 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public Long getLastModified()
   {
-    return userDB.getLastModified();
+    return userDAO.getLastModified();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -510,8 +487,7 @@ public class XmlUserManager extends AbstractUserManager
       User user = (User) unmarshaller.unmarshal(input);
 
       user.setCreationDate(System.currentTimeMillis());
-      userDB.add(user);
-      storeDB();
+      userDAO.add(user);
     }
     catch (Exception ex)
     {
@@ -543,26 +519,13 @@ public class XmlUserManager extends AbstractUserManager
     }
   }
 
-  /**
-   * Method description
-   *
-   */
-  private void storeDB()
-  {
-    userDB.setLastModified(System.currentTimeMillis());
-    store.set(userDB);
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private Provider<WebSecurityContext> scurityContextProvider;
 
   /** Field description */
-  private Store<XmlUserDatabase> store;
-
-  /** Field description */
-  private XmlUserDatabase userDB;
+  private UserDAO userDAO;
 
   /** Field description */
   private Provider<Set<UserListener>> userListenerProvider;

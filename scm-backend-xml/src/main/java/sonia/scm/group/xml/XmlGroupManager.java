@@ -48,13 +48,12 @@ import sonia.scm.TransformFilter;
 import sonia.scm.group.AbstractGroupManager;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupAllreadyExistExeption;
+import sonia.scm.group.GroupDAO;
 import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupListener;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.security.SecurityContext;
-import sonia.scm.store.Store;
-import sonia.scm.store.StoreFactory;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
@@ -79,12 +78,6 @@ import java.util.Set;
 public class XmlGroupManager extends AbstractGroupManager
 {
 
-  /** Field description */
-  public static final String STORE_NAME = "groups";
-
-  /** Field description */
-  public static final String TYPE = "xml";
-
   /** the logger for XmlGroupManager */
   private static final Logger logger =
     LoggerFactory.getLogger(XmlGroupManager.class);
@@ -96,16 +89,16 @@ public class XmlGroupManager extends AbstractGroupManager
    *
    *
    * @param securityContextProvider
-   * @param storeFactory
+   * @param groupDAO
    * @param groupListenerProvider
    */
   @Inject
   public XmlGroupManager(Provider<SecurityContext> securityContextProvider,
-                         StoreFactory storeFactory,
+                         GroupDAO groupDAO,
                          Provider<Set<GroupListener>> groupListenerProvider)
   {
     this.securityContextProvider = securityContextProvider;
-    this.store = storeFactory.getStore(XmlGroupDatabase.class, STORE_NAME);
+    this.groupDAO = groupDAO;
     this.groupListenerProvider = groupListenerProvider;
   }
 
@@ -144,7 +137,7 @@ public class XmlGroupManager extends AbstractGroupManager
 
     SecurityUtil.assertIsAdmin(securityContextProvider);
 
-    if (groupDB.contains(group.getName()))
+    if (groupDAO.contains(group.getName()))
     {
       throw new GroupAllreadyExistExeption();
     }
@@ -153,17 +146,11 @@ public class XmlGroupManager extends AbstractGroupManager
 
     if (Util.isEmpty(type))
     {
-      group.setType(TYPE);
+      group.setType(groupDAO.getType());
     }
 
     group.setCreationDate(System.currentTimeMillis());
-
-    synchronized (XmlGroupManager.class)
-    {
-      groupDB.add(group.clone());
-      storeDB();
-    }
-
+    groupDAO.add(group);
     fireEvent(group, HandlerEvent.CREATE);
   }
 
@@ -189,14 +176,9 @@ public class XmlGroupManager extends AbstractGroupManager
 
     String name = group.getName();
 
-    if (groupDB.contains(name))
+    if (groupDAO.contains(name))
     {
-      synchronized (XmlGroupManager.class)
-      {
-        groupDB.remove(name);
-        storeDB();
-      }
-
+      groupDAO.delete(group);
       fireEvent(group, HandlerEvent.DELETE);
     }
     else
@@ -214,13 +196,6 @@ public class XmlGroupManager extends AbstractGroupManager
   @Override
   public void init(SCMContextProvider context)
   {
-    groupDB = store.get();
-
-    if (groupDB == null)
-    {
-      groupDB = new XmlGroupDatabase();
-    }
-
     Set<GroupListener> listeners = groupListenerProvider.get();
 
     if (Util.isNotEmpty(listeners))
@@ -251,17 +226,10 @@ public class XmlGroupManager extends AbstractGroupManager
 
     String name = group.getName();
 
-    if (groupDB.contains(name))
+    if (groupDAO.contains(name))
     {
       group.setLastModified(System.currentTimeMillis());
-
-      synchronized (XmlGroupManager.class)
-      {
-        groupDB.remove(name);
-        groupDB.add(group.clone());
-        storeDB();
-      }
-
+      groupDAO.modify(group);
       fireEvent(group, HandlerEvent.MODIFY);
     }
     else
@@ -290,7 +258,7 @@ public class XmlGroupManager extends AbstractGroupManager
 
     SecurityUtil.assertIsAdmin(securityContextProvider);
 
-    Group fresh = groupDB.get(group.getName());
+    Group fresh = groupDAO.get(group.getName());
 
     if (fresh == null)
     {
@@ -316,7 +284,7 @@ public class XmlGroupManager extends AbstractGroupManager
       logger.debug("search group with query {}", searchRequest.getQuery());
     }
 
-    return SearchUtil.search(searchRequest, groupDB.values(),
+    return SearchUtil.search(searchRequest, groupDAO.getAll(),
                              new TransformFilter<Group>()
     {
       @Override
@@ -348,7 +316,7 @@ public class XmlGroupManager extends AbstractGroupManager
   @Override
   public Group get(String id)
   {
-    Group group = groupDB.get(id);
+    Group group = groupDAO.get(id);
 
     if (group != null)
     {
@@ -385,7 +353,7 @@ public class XmlGroupManager extends AbstractGroupManager
 
     List<Group> groups = new ArrayList<Group>();
 
-    for (Group group : groupDB.values())
+    for (Group group : groupDAO.getAll())
     {
       groups.add(group.clone());
     }
@@ -415,7 +383,7 @@ public class XmlGroupManager extends AbstractGroupManager
   {
     SecurityUtil.assertIsAdmin(securityContextProvider);
 
-    return Util.createSubCollection(groupDB.values(), comparator,
+    return Util.createSubCollection(groupDAO.getAll(), comparator,
                                     new CollectionAppender<Group>()
     {
       @Override
@@ -454,7 +422,7 @@ public class XmlGroupManager extends AbstractGroupManager
   {
     LinkedList<Group> groups = new LinkedList<Group>();
 
-    for (Group group : groupDB.values())
+    for (Group group : groupDAO.getAll())
     {
       if (group.isMember(member))
       {
@@ -474,32 +442,17 @@ public class XmlGroupManager extends AbstractGroupManager
   @Override
   public Long getLastModified()
   {
-    return groupDB.getLastModified();
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  private void storeDB()
-  {
-    groupDB.setLastModified(System.currentTimeMillis());
-    store.set(groupDB);
+    return groupDAO.getLastModified();
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private XmlGroupDatabase groupDB;
+  private GroupDAO groupDAO;
 
   /** Field description */
   private Provider<Set<GroupListener>> groupListenerProvider;
 
   /** Field description */
   private Provider<SecurityContext> securityContextProvider;
-
-  /** Field description */
-  private Store<XmlGroupDatabase> store;
 }

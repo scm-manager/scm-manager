@@ -61,6 +61,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.user.xml.XmlUserDAO;
 
 /**
  *
@@ -139,9 +140,11 @@ public class XmlAuthenticationHandlerTest extends AbstractTestBase
 
     when(listenerProvider.get()).thenReturn(new HashSet<UserListener>());
 
+    XmlUserDAO userDAO = new XmlUserDAO(storeFactory);
+    
     XmlUserManager userManager =
       new XmlUserManager(MockUtil.getAdminSecurityContextProvider(),
-                         storeFactory, listenerProvider);
+                         userDAO, listenerProvider);
 
     userManager.init(contextProvider);
     userManager.create(slarti);

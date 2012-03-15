@@ -39,6 +39,7 @@ import com.google.inject.Provider;
 
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.user.xml.XmlUserManager;
 import sonia.scm.util.MockUtil;
 
@@ -73,7 +74,9 @@ public class XmlUserManagerTest extends UserManagerTestBase
 
     when(listenerProvider.get()).thenReturn(new HashSet<UserListener>());
 
+    XmlUserDAO userDAO = new XmlUserDAO(factory);
+
     return new XmlUserManager(MockUtil.getAdminSecurityContextProvider(),
-                              factory, listenerProvider);
+                              userDAO, listenerProvider);
   }
 }

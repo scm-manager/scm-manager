@@ -36,6 +36,7 @@ package sonia.scm.group.xml;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.group.Group;
+import sonia.scm.xml.XmlDatabase;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -55,7 +56,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @XmlRootElement(name = "group-db")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class XmlGroupDatabase
+public class XmlGroupDatabase implements XmlDatabase<Group>
 {
 
   /**
@@ -78,6 +79,7 @@ public class XmlGroupDatabase
    *
    * @param group
    */
+  @Override
   public void add(Group group)
   {
     groupMap.put(group.getName(), group);
@@ -91,6 +93,7 @@ public class XmlGroupDatabase
    *
    * @return
    */
+  @Override
   public boolean contains(String groupname)
   {
     return groupMap.containsKey(groupname);
@@ -104,6 +107,7 @@ public class XmlGroupDatabase
    *
    * @return
    */
+  @Override
   public Group remove(String groupname)
   {
     return groupMap.remove(groupname);
@@ -115,6 +119,7 @@ public class XmlGroupDatabase
    *
    * @return
    */
+  @Override
   public Collection<Group> values()
   {
     return groupMap.values();
@@ -130,6 +135,7 @@ public class XmlGroupDatabase
    *
    * @return
    */
+  @Override
   public Group get(String groupname)
   {
     return groupMap.get(groupname);
@@ -141,6 +147,7 @@ public class XmlGroupDatabase
    *
    * @return
    */
+  @Override
   public long getCreationTime()
   {
     return creationTime;
@@ -152,6 +159,7 @@ public class XmlGroupDatabase
    *
    * @return
    */
+  @Override
   public long getLastModified()
   {
     return lastModified;
@@ -165,6 +173,7 @@ public class XmlGroupDatabase
    *
    * @param creationTime
    */
+  @Override
   public void setCreationTime(long creationTime)
   {
     this.creationTime = creationTime;
@@ -176,6 +185,7 @@ public class XmlGroupDatabase
    *
    * @param lastModified
    */
+  @Override
   public void setLastModified(long lastModified)
   {
     this.lastModified = lastModified;

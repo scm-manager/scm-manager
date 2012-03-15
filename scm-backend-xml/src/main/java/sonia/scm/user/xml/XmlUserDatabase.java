@@ -36,6 +36,7 @@ package sonia.scm.user.xml;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.user.User;
+import sonia.scm.xml.XmlDatabase;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -55,7 +56,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @XmlRootElement(name = "user-db")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class XmlUserDatabase
+public class XmlUserDatabase implements XmlDatabase<User>
 {
 
   /**
@@ -78,6 +79,7 @@ public class XmlUserDatabase
    *
    * @param user
    */
+  @Override
   public void add(User user)
   {
     userMap.put(user.getName(), user);
@@ -91,6 +93,7 @@ public class XmlUserDatabase
    *
    * @return
    */
+  @Override
   public boolean contains(String username)
   {
     return userMap.containsKey(username);
@@ -104,6 +107,7 @@ public class XmlUserDatabase
    *
    * @return
    */
+  @Override
   public User remove(String username)
   {
     return userMap.remove(username);
@@ -115,6 +119,7 @@ public class XmlUserDatabase
    *
    * @return
    */
+  @Override
   public Collection<User> values()
   {
     return userMap.values();
@@ -130,6 +135,7 @@ public class XmlUserDatabase
    *
    * @return
    */
+  @Override
   public User get(String username)
   {
     return userMap.get(username);
@@ -141,6 +147,7 @@ public class XmlUserDatabase
    *
    * @return
    */
+  @Override
   public long getCreationTime()
   {
     return creationTime;
@@ -152,6 +159,7 @@ public class XmlUserDatabase
    *
    * @return
    */
+  @Override
   public long getLastModified()
   {
     return lastModified;
@@ -165,6 +173,7 @@ public class XmlUserDatabase
    *
    * @param creationTime
    */
+  @Override
   public void setCreationTime(long creationTime)
   {
     this.creationTime = creationTime;
@@ -176,6 +185,7 @@ public class XmlUserDatabase
    *
    * @param lastModified
    */
+  @Override
   public void setLastModified(long lastModified)
   {
     this.lastModified = lastModified;

@@ -118,6 +118,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import sonia.scm.group.GroupDAO;
+import sonia.scm.group.xml.XmlGroupDAO;
+import sonia.scm.user.UserDAO;
+import sonia.scm.user.xml.XmlUserDAO;
 
 /**
  *
@@ -251,6 +255,10 @@ public class ScmServletModule extends ServletModule
     // bind security cache
     bind(CacheManager.class, EhCacheManager.class);
 
+    // bind dao
+    bind(GroupDAO.class, XmlGroupDAO.class);
+    bind(UserDAO.class, XmlUserDAO.class);
+    
     // bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
     // BasicRepositoryManager.class);
     bind(RepositoryManager.class, XmlRepositoryManager.class);

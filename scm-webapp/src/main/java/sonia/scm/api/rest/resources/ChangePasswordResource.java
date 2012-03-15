@@ -64,6 +64,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import sonia.scm.user.xml.XmlUserDAO;
 
 /**
  *
@@ -144,7 +145,8 @@ public class ChangePasswordResource
       logger.info("password change for user {}", currentUser.getName());
     }
 
-    if (currentUser.getType().equals(XmlUserManager.TYPE))
+    // TODO remove dependency to xml implementation
+    if (currentUser.getType().equals(XmlUserDAO.TYPE))
     {
       User dbUser = userManager.get(currentUser.getName());
 
