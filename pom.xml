@@ -450,7 +450,7 @@
     <jersey.version>1.12</jersey.version>
     <ehcache.version>2.5.1</ehcache.version>
     <freemarker.version>2.3.19</freemarker.version>
-    <jetty.version>7.6.1.v20120215</jetty.version>
+    <jetty.version>7.6.2.v20120308</jetty.version>
     <logback.version>1.0.1</logback.version>
     <project.build.javaLevel>1.6</project.build.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
