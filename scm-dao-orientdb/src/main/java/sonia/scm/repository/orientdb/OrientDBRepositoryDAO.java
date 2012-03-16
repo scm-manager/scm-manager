@@ -61,7 +61,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Sebastian Sdorra
  */
-public class OrientDBRepositoryManager implements RepositoryManager
+public class OrientDBRepositoryDAO implements RepositoryManager
 {
 
   /**

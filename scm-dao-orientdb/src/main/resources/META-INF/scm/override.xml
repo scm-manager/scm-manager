@@ -44,7 +44,7 @@ http://bitbucket.org/sdorra/scm-manager
   
   <override>
     <bind>sonia.scm.repository.RepositoryDAO</bind>
-    <to>sonia.scm.repository.orientdb.OrientDBRepositoryManager</to>
+    <to>sonia.scm.repository.orientdb.OrientDBRepositoryDAO</to>
   </override>
   
   <override>
