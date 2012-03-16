@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.user.xml;
+package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -48,12 +48,6 @@ import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.security.ScmSecurityException;
-import sonia.scm.user.AbstractUserManager;
-import sonia.scm.user.User;
-import sonia.scm.user.UserAllreadyExistException;
-import sonia.scm.user.UserDAO;
-import sonia.scm.user.UserException;
-import sonia.scm.user.UserListener;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.IOUtil;
@@ -82,7 +76,7 @@ import javax.xml.bind.Unmarshaller;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class XmlUserManager extends AbstractUserManager
+public class DefaultUserManager extends AbstractUserManager
 {
 
   /** Field description */
@@ -97,7 +91,7 @@ public class XmlUserManager extends AbstractUserManager
 
   /** the logger for XmlUserManager */
   private static final Logger logger =
-    LoggerFactory.getLogger(XmlUserManager.class);
+    LoggerFactory.getLogger(DefaultUserManager.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -110,9 +104,9 @@ public class XmlUserManager extends AbstractUserManager
    * @param userListenerProvider
    */
   @Inject
-  public XmlUserManager(Provider<WebSecurityContext> scurityContextProvider,
-                        UserDAO userDAO,
-                        Provider<Set<UserListener>> userListenerProvider)
+  public DefaultUserManager(
+          Provider<WebSecurityContext> scurityContextProvider, UserDAO userDAO,
+          Provider<Set<UserListener>> userListenerProvider)
   {
     this.scurityContextProvider = scurityContextProvider;
     this.userDAO = userDAO;
@@ -492,7 +486,7 @@ public class XmlUserManager extends AbstractUserManager
    */
   private void createDefaultAccount(Unmarshaller unmarshaller, String path)
   {
-    InputStream input = XmlUserManager.class.getResourceAsStream(path);
+    InputStream input = DefaultUserManager.class.getResourceAsStream(path);
 
     try
     {

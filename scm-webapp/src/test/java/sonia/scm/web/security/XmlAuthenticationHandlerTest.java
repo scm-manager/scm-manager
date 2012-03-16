@@ -47,7 +47,7 @@ import sonia.scm.store.StoreFactory;
 import sonia.scm.user.User;
 import sonia.scm.user.UserListener;
 import sonia.scm.user.UserTestData;
-import sonia.scm.user.xml.XmlUserManager;
+import sonia.scm.user.DefaultUserManager;
 import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
@@ -142,8 +142,8 @@ public class XmlAuthenticationHandlerTest extends AbstractTestBase
 
     XmlUserDAO userDAO = new XmlUserDAO(storeFactory);
     
-    XmlUserManager userManager =
-      new XmlUserManager(MockUtil.getAdminSecurityContextProvider(),
+    DefaultUserManager userManager =
+      new DefaultUserManager(MockUtil.getAdminSecurityContextProvider(),
                          userDAO, listenerProvider);
 
     userManager.init(contextProvider);

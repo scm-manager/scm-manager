@@ -41,7 +41,6 @@ import org.junit.Test;
 
 import sonia.scm.Type;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
-import sonia.scm.repository.xml.XmlRepositoryManager;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.MockUtil;
@@ -61,7 +60,7 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
-public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
+public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
 {
 
   /**
@@ -101,7 +100,7 @@ public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
    * @return
    */
   @Override
-  protected XmlRepositoryManager createManager()
+  protected DefaultRepositoryManager createManager()
   {
     Set<RepositoryHandler> handlerSet = new HashSet<RepositoryHandler>();
     StoreFactory factory = new JAXBStoreFactory();
@@ -135,10 +134,9 @@ public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
 
     XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(factory);
 
-    return new XmlRepositoryManager(contextProvider,
-                                    MockUtil.getAdminSecurityContextProvider(),
-                                    repositoryDAO, handlerSet,
-                                    listenerProvider, hookProvider);
+    return new DefaultRepositoryManager(contextProvider,
+            MockUtil.getAdminSecurityContextProvider(), repositoryDAO,
+            handlerSet, listenerProvider, hookProvider);
   }
 
   /**

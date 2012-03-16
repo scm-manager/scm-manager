@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.repository.xml;
+package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -46,24 +46,6 @@ import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
-import sonia.scm.repository.AbstractRepositoryManager;
-import sonia.scm.repository.BlameViewer;
-import sonia.scm.repository.ChangesetViewer;
-import sonia.scm.repository.DiffViewer;
-import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.PermissionUtil;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryAllreadyExistExeption;
-import sonia.scm.repository.RepositoryBrowser;
-import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.RepositoryHandler;
-import sonia.scm.repository.RepositoryHandlerNotFoundException;
-import sonia.scm.repository.RepositoryHook;
-import sonia.scm.repository.RepositoryHookEvent;
-import sonia.scm.repository.RepositoryHookTask;
-import sonia.scm.repository.RepositoryListener;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
@@ -95,12 +77,12 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class XmlRepositoryManager extends AbstractRepositoryManager
+public class DefaultRepositoryManager extends AbstractRepositoryManager
 {
 
   /** Field description */
   private static final Logger logger =
-    LoggerFactory.getLogger(XmlRepositoryManager.class);
+    LoggerFactory.getLogger(DefaultRepositoryManager.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -118,7 +100,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    * @param repositoryHooksProvider
    */
   @Inject
-  public XmlRepositoryManager(
+  public DefaultRepositoryManager(
           SCMContextProvider contextProvider,
           Provider<WebSecurityContext> securityContextProvider,
           RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,

@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.group.xml;
+package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -45,12 +45,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
-import sonia.scm.group.AbstractGroupManager;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupAllreadyExistExeption;
-import sonia.scm.group.GroupDAO;
-import sonia.scm.group.GroupException;
-import sonia.scm.group.GroupListener;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.security.SecurityContext;
@@ -75,12 +69,12 @@ import java.util.Set;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class XmlGroupManager extends AbstractGroupManager
+public class DefaultGroupManager extends AbstractGroupManager
 {
 
   /** the logger for XmlGroupManager */
   private static final Logger logger =
-    LoggerFactory.getLogger(XmlGroupManager.class);
+    LoggerFactory.getLogger(DefaultGroupManager.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -93,9 +87,9 @@ public class XmlGroupManager extends AbstractGroupManager
    * @param groupListenerProvider
    */
   @Inject
-  public XmlGroupManager(Provider<SecurityContext> securityContextProvider,
-                         GroupDAO groupDAO,
-                         Provider<Set<GroupListener>> groupListenerProvider)
+  public DefaultGroupManager(Provider<SecurityContext> securityContextProvider,
+                             GroupDAO groupDAO,
+                             Provider<Set<GroupListener>> groupListenerProvider)
   {
     this.securityContextProvider = securityContextProvider;
     this.groupDAO = groupDAO;
