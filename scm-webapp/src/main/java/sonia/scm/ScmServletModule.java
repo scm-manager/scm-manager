@@ -51,7 +51,9 @@ import sonia.scm.filter.AdminSecurityFilter;
 import sonia.scm.filter.BaseUrlFilter;
 import sonia.scm.filter.GZipFilter;
 import sonia.scm.filter.SecurityFilter;
+import sonia.scm.group.GroupDAO;
 import sonia.scm.group.GroupManager;
+import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.group.xml.XmlGroupManager;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
@@ -65,8 +67,10 @@ import sonia.scm.repository.ChangesetViewerUtil;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryBrowserUtil;
+import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.repository.xml.XmlRepositoryManager;
 import sonia.scm.resources.DefaultResourceManager;
 import sonia.scm.resources.DevelopmentResourceManager;
@@ -88,7 +92,9 @@ import sonia.scm.url.RestXmlUrlProvider;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
 import sonia.scm.url.WebUIUrlProvider;
+import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserManager;
+import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.user.xml.XmlUserManager;
 import sonia.scm.util.DebugServlet;
 import sonia.scm.util.ScmConfigurationUtil;
@@ -118,10 +124,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import sonia.scm.group.GroupDAO;
-import sonia.scm.group.xml.XmlGroupDAO;
-import sonia.scm.user.UserDAO;
-import sonia.scm.user.xml.XmlUserDAO;
 
 /**
  *
@@ -258,7 +260,8 @@ public class ScmServletModule extends ServletModule
     // bind dao
     bind(GroupDAO.class, XmlGroupDAO.class);
     bind(UserDAO.class, XmlUserDAO.class);
-    
+    bind(RepositoryDAO.class, XmlRepositoryDAO.class);
+
     // bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
     // BasicRepositoryManager.class);
     bind(RepositoryManager.class, XmlRepositoryManager.class);

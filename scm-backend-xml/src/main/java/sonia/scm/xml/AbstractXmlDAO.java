@@ -273,7 +273,7 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
    * Method description
    *
    */
-  private void storeDB()
+  protected void storeDB()
   {
     if (logger.isTraceEnabled())
     {
@@ -290,5 +290,5 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
   private final Store<T> store;
 
   /** Field description */
-  private T db;
+  protected T db;
 }

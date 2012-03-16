@@ -40,6 +40,7 @@ import com.google.inject.Provider;
 import org.junit.Test;
 
 import sonia.scm.Type;
+import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.repository.xml.XmlRepositoryManager;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
@@ -132,10 +133,12 @@ public class XmlRepositoryManagerTest extends RepositoryManagerTestBase
 
     when(hookProvider.get()).thenReturn(new HashSet<RepositoryHook>());
 
+    XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(factory);
+
     return new XmlRepositoryManager(contextProvider,
                                     MockUtil.getAdminSecurityContextProvider(),
-                                    factory, handlerSet, listenerProvider,
-                                    hookProvider);
+                                    repositoryDAO, handlerSet,
+                                    listenerProvider, hookProvider);
   }
 
   /**

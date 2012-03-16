@@ -55,6 +55,7 @@ import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryAllreadyExistExeption;
 import sonia.scm.repository.RepositoryBrowser;
+import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHandlerNotFoundException;
@@ -64,8 +65,6 @@ import sonia.scm.repository.RepositoryHookTask;
 import sonia.scm.repository.RepositoryListener;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.security.ScmSecurityException;
-import sonia.scm.store.Store;
-import sonia.scm.store.StoreFactory;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.HttpUtil;
@@ -100,9 +99,6 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 {
 
   /** Field description */
-  public static final String STORE_NAME = "repositories";
-
-  /** Field description */
   private static final Logger logger =
     LoggerFactory.getLogger(XmlRepositoryManager.class);
 
@@ -116,7 +112,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    *
    * @param contextProvider
    * @param securityContextProvider
-   * @param storeFactory
+   * @param repositoryDAO
    * @param handlerSet
    * @param repositoryListenersProvider
    * @param repositoryHooksProvider
@@ -125,12 +121,12 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   public XmlRepositoryManager(
           SCMContextProvider contextProvider,
           Provider<WebSecurityContext> securityContextProvider,
-          StoreFactory storeFactory, Set<RepositoryHandler> handlerSet,
+          RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
           Provider<Set<RepositoryListener>> repositoryListenersProvider,
           Provider<Set<RepositoryHook>> repositoryHooksProvider)
   {
     this.securityContextProvider = securityContextProvider;
-    this.store = storeFactory.getStore(XmlRepositoryDatabase.class, STORE_NAME);
+    this.repositoryDAO = repositoryDAO;
     this.repositoryListenersProvider = repositoryListenersProvider;
     this.repositoryHooksProvider = repositoryHooksProvider;
     handlerMap = new HashMap<String, RepositoryHandler>();
@@ -181,7 +177,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     SecurityUtil.assertIsAdmin(securityContextProvider);
     AssertUtil.assertIsValid(repository);
 
-    if (repositoryDB.contains(repository))
+    if (repositoryDAO.contains(repository))
     {
       throw new RepositoryAllreadyExistExeption();
     }
@@ -194,12 +190,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
       getHandler(repository).create(repository);
     }
 
-    synchronized (XmlRepositoryDatabase.class)
-    {
-      repositoryDB.add(repository.clone());
-      storeDB();
-    }
-
+    repositoryDAO.add(repository);
     fireEvent(repository, HandlerEvent.CREATE);
   }
 
@@ -240,15 +231,10 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
     assertIsOwner(repository);
 
-    if (repositoryDB.contains(repository))
+    if (repositoryDAO.contains(repository))
     {
       getHandler(repository).delete(repository);
-
-      synchronized (XmlRepositoryDatabase.class)
-      {
-        repositoryDB.remove(repository);
-        storeDB();
-      }
+      repositoryDAO.delete(repository);
     }
     else
     {
@@ -273,7 +259,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   public void fireHookEvent(String type, String name, RepositoryHookEvent event)
           throws RepositoryNotFoundException
   {
-    Repository repository = repositoryDB.get(type, name);
+    Repository repository = repositoryDAO.get(type, name);
 
     if (repository == null)
     {
@@ -296,7 +282,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   public void fireHookEvent(String id, RepositoryHookEvent event)
           throws RepositoryNotFoundException
   {
-    Repository repository = repositoryDB.get(id);
+    Repository repository = repositoryDAO.get(id);
 
     if (repository == null)
     {
@@ -331,13 +317,6 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   @Override
   public void init(SCMContextProvider context)
   {
-    repositoryDB = store.get();
-
-    if (repositoryDB == null)
-    {
-      repositoryDB = new XmlRepositoryDatabase();
-    }
-
     Set<RepositoryListener> listeners = repositoryListenersProvider.get();
 
     if (Util.isNotEmpty(listeners))
@@ -374,7 +353,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
     AssertUtil.assertIsValid(repository);
 
-    Repository notModifiedRepository = repositoryDB.get(repository.getType(),
+    Repository notModifiedRepository = repositoryDAO.get(repository.getType(),
                                          repository.getName());
 
     if (notModifiedRepository != null)
@@ -382,13 +361,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
       assertIsOwner(notModifiedRepository);
       getHandler(repository).modify(repository);
       repository.setLastModified(System.currentTimeMillis());
-
-      synchronized (XmlRepositoryDatabase.class)
-      {
-        repositoryDB.remove(repository);
-        repositoryDB.add(repository.clone());
-        storeDB();
-      }
+      repositoryDAO.modify(repository);
     }
     else
     {
@@ -415,7 +388,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     AssertUtil.assertIsNotNull(repository);
     assertIsReader(repository);
 
-    Repository fresh = repositoryDB.get(repository.getType(),
+    Repository fresh = repositoryDAO.get(repository.getType(),
                          repository.getName());
 
     if (fresh != null)
@@ -444,7 +417,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   {
     AssertUtil.assertIsNotEmpty(id);
 
-    Repository repository = repositoryDB.get(id);
+    Repository repository = repositoryDAO.get(id);
 
     if (repository != null)
     {
@@ -470,7 +443,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     AssertUtil.assertIsNotEmpty(type);
     AssertUtil.assertIsNotEmpty(name);
 
-    Repository repository = repositoryDB.get(type, name);
+    Repository repository = repositoryDAO.get(type, name);
 
     if (repository != null)
     {
@@ -500,7 +473,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   {
     List<Repository> repositories = new ArrayList<Repository>();
 
-    for (Repository repository : repositoryDB.values())
+    for (Repository repository : repositoryDAO.getAll())
     {
       if (handlerMap.containsKey(repository.getType()) && isReader(repository))
       {
@@ -545,7 +518,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   public Collection<Repository> getAll(Comparator<Repository> comparator,
           int start, int limit)
   {
-    return Util.createSubCollection(repositoryDB.values(), comparator,
+    return Util.createSubCollection(repositoryDAO.getAll(), comparator,
                                     new CollectionAppender<Repository>()
     {
       @Override
@@ -703,7 +676,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
     if (handlerMap.containsKey(type))
     {
-      Collection<Repository> repositories = repositoryDB.values();
+      Collection<Repository> repositories = repositoryDAO.getAll();
 
       for (Repository r : repositories)
       {
@@ -781,7 +754,7 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   @Override
   public Long getLastModified()
   {
-    return repositoryDB.getLastModified();
+    return repositoryDAO.getLastModified();
   }
 
   /**
@@ -905,16 +878,6 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
                                     PermissionType.READ);
   }
 
-  /**
-   * Method description
-   *
-   */
-  private void storeDB()
-  {
-    repositoryDB.setLastModified(System.currentTimeMillis());
-    store.set(repositoryDB);
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -988,13 +951,10 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final Store<XmlRepositoryDatabase> store;
-
-  /** Field description */
   private Map<String, RepositoryHandler> handlerMap;
 
   /** Field description */
-  private XmlRepositoryDatabase repositoryDB;
+  private RepositoryDAO repositoryDAO;
 
   /** Field description */
   private Provider<Set<RepositoryHook>> repositoryHooksProvider;

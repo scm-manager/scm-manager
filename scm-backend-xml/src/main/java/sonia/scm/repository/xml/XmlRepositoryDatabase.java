@@ -36,6 +36,7 @@ package sonia.scm.repository.xml;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.Repository;
+import sonia.scm.xml.XmlDatabase;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -55,7 +56,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @XmlRootElement(name = "repository-db")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class XmlRepositoryDatabase
+public class XmlRepositoryDatabase implements XmlDatabase<Repository>
 {
 
   /**
@@ -105,6 +106,7 @@ public class XmlRepositoryDatabase
    *
    * @param repository
    */
+  @Override
   public void add(Repository repository)
   {
     repositoryMap.put(createKey(repository), repository);
@@ -133,6 +135,7 @@ public class XmlRepositoryDatabase
    *
    * @return
    */
+  @Override
   public boolean contains(String id)
   {
     return get(id) != null;
@@ -166,8 +169,27 @@ public class XmlRepositoryDatabase
    * Method description
    *
    *
+   * @param id
+   *
    * @return
    */
+  @Override
+  public Repository remove(String id)
+  {
+    Repository r = get(id);
+
+    remove(r);
+
+    return r;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public Collection<Repository> values()
   {
     return repositoryMap.values();
@@ -197,6 +219,7 @@ public class XmlRepositoryDatabase
    *
    * @return
    */
+  @Override
   public Repository get(String id)
   {
     Repository repository = null;
@@ -220,6 +243,7 @@ public class XmlRepositoryDatabase
    *
    * @return
    */
+  @Override
   public long getCreationTime()
   {
     return creationTime;
@@ -231,6 +255,7 @@ public class XmlRepositoryDatabase
    *
    * @return
    */
+  @Override
   public long getLastModified()
   {
     return lastModified;
@@ -244,6 +269,7 @@ public class XmlRepositoryDatabase
    *
    * @param creationTime
    */
+  @Override
   public void setCreationTime(long creationTime)
   {
     this.creationTime = creationTime;
@@ -255,6 +281,7 @@ public class XmlRepositoryDatabase
    *
    * @param lastModified
    */
+  @Override
   public void setLastModified(long lastModified)
   {
     this.lastModified = lastModified;
