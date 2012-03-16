@@ -249,6 +249,18 @@ public class JDBCUserManager extends AbstractUserManager
    * @return
    */
   @Override
+  public String getDefaultType()
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public Long getLastModified()
   {
     throw new UnsupportedOperationException("Not supported yet.");
