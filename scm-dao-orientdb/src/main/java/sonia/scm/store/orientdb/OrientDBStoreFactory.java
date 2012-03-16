@@ -33,20 +33,50 @@ package sonia.scm.store.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
+
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.metadata.schema.OClass;
+import com.orientechnologies.orient.core.metadata.schema.OClass.INDEX_TYPE;
+import com.orientechnologies.orient.core.metadata.schema.OSchema;
+import com.orientechnologies.orient.core.metadata.schema.OType;
+
 import sonia.scm.SCMContextProvider;
+import sonia.scm.orientdb.OrientDBUtil;
 import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+
 /**
  *
  * @author Sebastian Sdorra
  */
+@Singleton
 public class OrientDBStoreFactory implements StoreFactory
 {
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param connectionProvider
+   */
+  @Inject
+  public OrientDBStoreFactory(Provider<ODatabaseDocumentTx> connectionProvider)
+  {
+    this.connectionProvider = connectionProvider;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -57,7 +87,8 @@ public class OrientDBStoreFactory implements StoreFactory
   @Override
   public void close() throws IOException
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+
+    // do nothing
   }
 
   /**
@@ -69,7 +100,28 @@ public class OrientDBStoreFactory implements StoreFactory
   @Override
   public void init(SCMContextProvider context)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    ODatabaseDocumentTx connection = connectionProvider.get();
+
+    try
+    {
+      OSchema schema = connection.getMetadata().getSchema();
+      OClass oclass = schema.getClass(OrientDBStore.DOCUMENT_CLASS);
+
+      if (oclass == null)
+      {
+        oclass = schema.createClass(OrientDBStore.DOCUMENT_CLASS);
+        oclass.createProperty(OrientDBStore.FIELD_NAME, OType.STRING);
+        oclass.createProperty(OrientDBStore.FIELD_TYPE, OType.STRING);
+        oclass.createProperty(OrientDBStore.FIELD_DATA, OType.STRING);
+        oclass.createIndex(OrientDBStore.INDEX_NAME, INDEX_TYPE.UNIQUE,
+                           OrientDBStore.FIELD_NAME, OrientDBStore.FIELD_TYPE);
+        schema.save();
+      }
+    }
+    finally
+    {
+      OrientDBUtil.close(connection);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -87,6 +139,23 @@ public class OrientDBStoreFactory implements StoreFactory
   @Override
   public <T> Store<T> getStore(Class<T> type, String name)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    AssertUtil.assertIsNotNull(type);
+    AssertUtil.assertIsNotEmpty(name);
+
+    try
+    {
+      return new OrientDBStore<T>(connectionProvider,
+                               JAXBContext.newInstance(type), type, name);
+    }
+    catch (JAXBException ex)
+    {
+      throw new RuntimeException(
+          "could not create jaxb context for ".concat(type.getName()), ex);
+    }
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Provider<ODatabaseDocumentTx> connectionProvider;
 }
