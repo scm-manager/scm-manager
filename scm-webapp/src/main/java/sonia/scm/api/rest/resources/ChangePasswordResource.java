@@ -49,7 +49,6 @@ import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
-import sonia.scm.user.xml.XmlUserManager;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -64,7 +63,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import sonia.scm.user.xml.XmlUserDAO;
 
 /**
  *
@@ -145,8 +143,8 @@ public class ChangePasswordResource
       logger.info("password change for user {}", currentUser.getName());
     }
 
-    // TODO remove dependency to xml implementation
-    if (currentUser.getType().equals(XmlUserDAO.TYPE))
+    // Only account of the default type can change their password
+    if (currentUser.getType().equals(userManager.getDefaultType()))
     {
       User dbUser = userManager.get(currentUser.getName());
 
@@ -163,7 +161,12 @@ public class ChangePasswordResource
     }
     else
     {
-      logger.error("only xml user can change their passwor");
+      //J-
+      logger.error(
+        "Only account of the default type ({}) can change their password",
+        userManager.getDefaultType()
+      );
+      //J+
       response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     }
 

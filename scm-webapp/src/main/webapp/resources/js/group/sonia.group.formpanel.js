@@ -94,7 +94,7 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     if ( debug ){
       console.debug( 'create group: ' + item.name );
     }
-    item.type = 'xml';
+    // item.type = 'xml';
 
     var url = restUrl + 'groups.json';
     var el = this.el;

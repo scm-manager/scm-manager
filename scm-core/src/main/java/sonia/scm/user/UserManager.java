@@ -40,7 +40,9 @@ import sonia.scm.Manager;
 import sonia.scm.search.Searchable;
 
 /**
- *
+ * The central class for managing {@link User} objects.
+ * This class is a singleton and is available via injection.
+ * 
  * @author Sebastian Sdorra
  */
 public interface UserManager
@@ -49,12 +51,23 @@ public interface UserManager
 {
 
   /**
-   * Method description
+   * Returns true if a user with the specified username exists.
    *
    *
-   * @param username
+   * @param username username of the user
    *
-   * @return
+   * @return true if the user exists
    */
   public boolean contains(String username);
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns the default type for users.
+   *
+   *
+   * @return default user type
+   * @since 1.14
+   */
+  public String getDefaultType();
 }

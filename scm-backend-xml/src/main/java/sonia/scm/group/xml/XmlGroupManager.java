@@ -129,6 +129,13 @@ public class XmlGroupManager extends AbstractGroupManager
   @Override
   public void create(Group group) throws GroupException, IOException
   {
+    String type = group.getType();
+
+    if (Util.isEmpty(type))
+    {
+      group.setType(groupDAO.getType());
+    }
+
     if (logger.isInfoEnabled())
     {
       logger.info("create group {} of type {}", group.getName(),
@@ -140,13 +147,6 @@ public class XmlGroupManager extends AbstractGroupManager
     if (groupDAO.contains(group.getName()))
     {
       throw new GroupAllreadyExistExeption();
-    }
-
-    String type = group.getType();
-
-    if (Util.isEmpty(type))
-    {
-      group.setType(groupDAO.getType());
     }
 
     group.setCreationDate(System.currentTimeMillis());

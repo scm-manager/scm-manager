@@ -160,6 +160,13 @@ public class XmlUserManager extends AbstractUserManager
   @Override
   public void create(User user) throws UserException, IOException
   {
+    String type = user.getType();
+
+    if (Util.isEmpty(type))
+    {
+      user.setType(userDAO.getType());
+    }
+
     if (logger.isInfoEnabled())
     {
       logger.info("create user {} of type {}", user.getName(), user.getType());
@@ -175,13 +182,6 @@ public class XmlUserManager extends AbstractUserManager
     if (userDAO.contains(user.getName()))
     {
       throw new UserAllreadyExistException(user.getName());
-    }
-
-    String type = user.getType();
-
-    if (Util.isEmpty(type))
-    {
-      user.setType(userDAO.getType());
     }
 
     AssertUtil.assertIsValid(user);
@@ -455,6 +455,18 @@ public class XmlUserManager extends AbstractUserManager
   public Collection<User> getAll(int start, int limit)
   {
     return getAll(null, start, limit);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getDefaultType()
+  {
+    return userDAO.getType();
   }
 
   /**
