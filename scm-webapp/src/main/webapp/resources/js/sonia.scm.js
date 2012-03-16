@@ -190,7 +190,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
     var securitySection = null;
 
-    if ( state.user.type == 'xml' && state.user.name != 'anonymous' ){
+    if ( state.user.type == state.defaultUserType && state.user.name != 'anonymous' ){
       securitySection = {
         title: this.sectionSecurityText,
         links: [{

@@ -52,6 +52,7 @@ import sonia.scm.ScmState;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -93,17 +94,19 @@ public class AuthenticationResource
    * @param contextProvider
    * @param configuration
    * @param repositoryManger
+   * @param userManager
    * @param securityContextProvider
    */
   @Inject
   public AuthenticationResource(
           SCMContextProvider contextProvider, ScmConfiguration configuration,
-          RepositoryManager repositoryManger,
+          RepositoryManager repositoryManger, UserManager userManager,
           Provider<WebSecurityContext> securityContextProvider)
   {
     this.contextProvider = contextProvider;
     this.configuration = configuration;
     this.repositoryManger = repositoryManger;
+    this.userManager = userManager;
     this.securityContextProvider = securityContextProvider;
   }
 
@@ -247,6 +250,7 @@ public class AuthenticationResource
   {
     return new ScmState(contextProvider, securityContext,
                         repositoryManger.getConfiguredTypes(),
+                        userManager.getDefaultType(),
                         new ScmClientConfig(configuration.getDateFormat(),
                           configuration.isDisableGroupingGrid()));
   }
@@ -264,4 +268,7 @@ public class AuthenticationResource
 
   /** Field description */
   private Provider<WebSecurityContext> securityContextProvider;
+
+  /** Field description */
+  private UserManager userManager;
 }

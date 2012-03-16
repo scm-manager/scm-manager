@@ -126,7 +126,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
         scope: this
       }
     });
-    if ( item.type == 'xml' ){
+    if ( item.type == state.defaultUserType ){
       panel.getForm().setValues([
         {id: 'password', value: dummyPassword},
         {id: 'password-confirm', value: dummyPassword}

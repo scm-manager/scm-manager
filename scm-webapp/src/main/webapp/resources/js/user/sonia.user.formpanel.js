@@ -73,7 +73,7 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       helpText: this.mailHelpText
     }];
 
-    if ( this.item == null || this.item.type == 'xml' ){
+    if ( this.item == null || this.item.type == state.defaultUserType ){
       items.push({
         fieldLabel: this.passwordText,
         id: 'pwd',
@@ -107,7 +107,7 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   },
   
   isReadOnly: function(){
-    return this.item != null && this.item.type != 'xml';
+    return this.item != null && this.item.type != state.defaultUserType;
   },
 
   fixRequest: function(user){
@@ -150,7 +150,7 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     }
     this.fixRequest(user);
     // set user type
-    user.type = 'xml';
+    user.type = state.defaultUserType;
     var url = restUrl + 'users.json';
     Ext.Ajax.request({
       url: url,

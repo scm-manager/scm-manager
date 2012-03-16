@@ -78,11 +78,32 @@ public class ScmState
                   Collection<Type> repositoryTypes,
                   ScmClientConfig clientConfig)
   {
+    this(provider, securityContext, repositoryTypes, null, clientConfig);
+  }
+
+  /**
+   * Constructs {@link ScmState} object.
+   *
+   *
+   * @param provider - context provider
+   * @param securityContext - security context of the current user
+   * @param repositoryTypes - available repository types
+   * @param clientConfig - client configuration
+   * @param defaultUserType = Default user type
+   *
+   * @since 1.14
+   */
+  public ScmState(SCMContextProvider provider,
+                  WebSecurityContext securityContext,
+                  Collection<Type> repositoryTypes, String defaultUserType,
+                  ScmClientConfig clientConfig)
+  {
     this.version = provider.getVersion();
     this.user = securityContext.getUser();
     this.groups = securityContext.getGroups();
     this.repositoryTypes = repositoryTypes;
     this.clientConfig = clientConfig;
+    this.defaultUserType = defaultUserType;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -96,6 +117,19 @@ public class ScmState
   public ScmClientConfig getClientConfig()
   {
     return clientConfig;
+  }
+
+  /**
+   * Returns the default user type
+   *
+   *
+   * @return default user type
+   *
+   * @since 1.14
+   */
+  public String getDefaultUserType()
+  {
+    return defaultUserType;
   }
 
   /**
@@ -169,6 +203,18 @@ public class ScmState
   }
 
   /**
+   * Sets the default user type
+   *
+   *
+   * @param defaultUserType default user type
+   * @since 1.14
+   */
+  public void setDefaultUserType(String defaultUserType)
+  {
+    this.defaultUserType = defaultUserType;
+  }
+
+  /**
    * Setter for the groups.
    *
    *
@@ -230,6 +276,9 @@ public class ScmState
 
   /** Field description */
   private ScmClientConfig clientConfig;
+
+  /** Field description */
+  private String defaultUserType;
 
   /** Field description */
   private Collection<String> groups;
