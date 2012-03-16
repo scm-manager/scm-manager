@@ -51,6 +51,11 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
         implements GenericDAO<T>
 {
 
+  /** Field description */
+  public static final String TYPE = "orientdb";
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructs ...
    *
@@ -141,7 +146,8 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
    *
    * @param item
    */
-  public void remove(T item)
+  @Override
+  public void delete(T item)
   {
     ODatabaseDocumentTx connection = connectionProvider.get();
 
@@ -167,7 +173,8 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
    *
    * @param item
    */
-  public void update(T item)
+  @Override
+  public void modify(T item)
   {
     ODatabaseDocumentTx connection = connectionProvider.get();
 
@@ -218,6 +225,46 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
     }
 
     return item;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Long getCreationTime()
+  {
+
+    // TODO
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Long getLastModified()
+  {
+
+    // TODO
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getType()
+  {
+    return TYPE;
   }
 
   //~--- fields ---------------------------------------------------------------
