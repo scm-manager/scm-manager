@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
       
   <modelVersion>4.0.0</modelVersion>
   
@@ -30,6 +30,12 @@
       <version>1.14-SNAPSHOT</version>
     </dependency>
     
+    <dependency>
+      <groupId>com.orientechnologies</groupId>
+      <artifactId>orientdb-client</artifactId>
+      <version>1.0rc8</version>
+    </dependency>
+    
     <!-- test -->
     
     <dependency>
@@ -40,5 +46,18 @@
     </dependency>
     
   </dependencies>
+  
+  <repositories>
+    
+    <repository>
+      <id>orientechnologies-repository</id>
+      <name>Orient Technologies Maven2 Repository</name>
+      <url>http://www.orientechnologies.com/listing/m2</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+    
+  </repositories>
 
 </project>
