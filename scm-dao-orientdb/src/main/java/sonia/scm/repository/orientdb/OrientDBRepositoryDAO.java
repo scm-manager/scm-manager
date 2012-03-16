@@ -33,136 +33,28 @@ package sonia.scm.repository.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.SCMContextProvider;
-import sonia.scm.Type;
-import sonia.scm.repository.BlameViewer;
-import sonia.scm.repository.ChangesetViewer;
-import sonia.scm.repository.DiffViewer;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryBrowser;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.RepositoryHandler;
-import sonia.scm.repository.RepositoryHook;
-import sonia.scm.repository.RepositoryHookEvent;
-import sonia.scm.repository.RepositoryListener;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.repository.RepositoryDAO;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
 import java.util.Collection;
-import java.util.Comparator;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class OrientDBRepositoryDAO implements RepositoryManager
+public class OrientDBRepositoryDAO implements RepositoryDAO
 {
 
   /**
    * Method description
    *
    *
-   * @param hook
+   * @param item
    */
   @Override
-  public void addHook(RepositoryHook hook)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param hooks
-   */
-  @Override
-  public void addHooks(Collection<RepositoryHook> hooks)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param listener
-   */
-  @Override
-  public void addListener(RepositoryListener listener)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param listeners
-   */
-  @Override
-  public void addListeners(Collection<RepositoryListener> listeners)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Override
-  public void close() throws IOException
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Override
-  public void create(Repository object) throws RepositoryException, IOException
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Override
-  public void delete(Repository object) throws RepositoryException, IOException
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param event
-   */
-  @Override
-  public void fireHookEvent(Repository repository, RepositoryHookEvent event)
+  public void add(Repository item)
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }
@@ -173,13 +65,25 @@ public class OrientDBRepositoryDAO implements RepositoryManager
    *
    * @param type
    * @param name
-   * @param event
    *
-   * @throws RepositoryNotFoundException
+   * @return
    */
   @Override
-  public void fireHookEvent(String type, String name, RepositoryHookEvent event)
-          throws RepositoryNotFoundException
+  public boolean contains(String type, String name)
+  {
+    throw new UnsupportedOperationException("Not supported yet.");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param item
+   *
+   * @return
+   */
+  @Override
+  public boolean contains(Repository item)
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }
@@ -189,13 +93,11 @@ public class OrientDBRepositoryDAO implements RepositoryManager
    *
    *
    * @param id
-   * @param event
    *
-   * @throws RepositoryNotFoundException
+   * @return
    */
   @Override
-  public void fireHookEvent(String id, RepositoryHookEvent event)
-          throws RepositoryNotFoundException
+  public boolean contains(String id)
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }
@@ -204,14 +106,10 @@ public class OrientDBRepositoryDAO implements RepositoryManager
    * Method description
    *
    *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
+   * @param item
    */
   @Override
-  public void importRepository(Repository repository)
-          throws IOException, RepositoryException
+  public void delete(Repository item)
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }
@@ -220,64 +118,10 @@ public class OrientDBRepositoryDAO implements RepositoryManager
    * Method description
    *
    *
-   * @param context
+   * @param item
    */
   @Override
-  public void init(SCMContextProvider context)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Override
-  public void modify(Repository object) throws RepositoryException, IOException
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param object
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Override
-  public void refresh(Repository object) throws RepositoryException, IOException
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param hook
-   */
-  @Override
-  public void removeHook(RepositoryHook hook)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param listener
-   */
-  @Override
-  public void removeListener(RepositoryListener listener)
+  public void modify(Repository item)
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }
@@ -329,164 +173,10 @@ public class OrientDBRepositoryDAO implements RepositoryManager
    * Method description
    *
    *
-   * @param comparator
-   *
    * @return
    */
   @Override
-  public Collection<Repository> getAll(Comparator<Repository> comparator)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param start
-   * @param limit
-   *
-   * @return
-   */
-  @Override
-  public Collection<Repository> getAll(int start, int limit)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param comparator
-   * @param start
-   * @param limit
-   *
-   * @return
-   */
-  @Override
-  public Collection<Repository> getAll(Comparator<Repository> comparator,
-          int start, int limit)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public BlameViewer getBlameViewer(Repository repository)
-          throws RepositoryException
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public ChangesetViewer getChangesetViewer(Repository repository)
-          throws RepositoryException
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Collection<Type> getConfiguredTypes()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public DiffViewer getDiffViewer(Repository repository)
-          throws RepositoryException
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  @Override
-  public Repository getFromRequest(HttpServletRequest request)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param uri
-   *
-   * @return
-   */
-  @Override
-  public Repository getFromTypeAndUri(String type, String uri)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param uri
-   *
-   * @return
-   */
-  @Override
-  public Repository getFromUri(String uri)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
-  @Override
-  public RepositoryHandler getHandler(String type)
+  public Long getCreationTime()
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }
@@ -507,27 +197,10 @@ public class OrientDBRepositoryDAO implements RepositoryManager
    * Method description
    *
    *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public RepositoryBrowser getRepositoryBrowser(Repository repository)
-          throws RepositoryException
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @return
    */
   @Override
-  public Collection<Type> getTypes()
+  public String getType()
   {
     throw new UnsupportedOperationException("Not supported yet.");
   }
