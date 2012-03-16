@@ -43,7 +43,7 @@
     
     <dependency>
       <groupId>sonia.scm</groupId>
-      <artifactId>scm-backend-xml</artifactId>
+      <artifactId>scm-dao-xml</artifactId>
       <version>1.14-SNAPSHOT</version>
     </dependency>
 
@@ -363,11 +363,13 @@
       
       <dependencies>
         
+        <!--
         <dependency>
           <groupId>sonia.scm</groupId>
           <artifactId>scm-backend-jdbc</artifactId>
           <version>1.14-SNAPSHOT</version>
         </dependency>
+        -->
         
       </dependencies>
     </profile>
