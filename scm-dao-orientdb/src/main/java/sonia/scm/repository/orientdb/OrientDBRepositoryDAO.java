@@ -33,31 +33,62 @@ package sonia.scm.repository.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.metadata.schema.OClass;
+import com.orientechnologies.orient.core.metadata.schema.OClass.INDEX_TYPE;
+import com.orientechnologies.orient.core.metadata.schema.OSchema;
+import com.orientechnologies.orient.core.metadata.schema.OType;
+import com.orientechnologies.orient.core.record.impl.ODocument;
+
+import sonia.scm.orientdb.AbstractOrientDBModelDAO;
+import sonia.scm.orientdb.OrientDBUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class OrientDBRepositoryDAO implements RepositoryDAO
+public class OrientDBRepositoryDAO extends AbstractOrientDBModelDAO<Repository>
+        implements RepositoryDAO
 {
 
+  /** Field description */
+  public static final String QUERY_ALL = "select from Repository";
+
+  /** Field description */
+  public static final String QUERY_SINGLE_BYID =
+    "select from Repository where id = ?";
+
+  /** Field description */
+  public static final String QUERY_SINGLE_BYTYPEANDNAME =
+    "select from Repository where type = ? and name = ?";
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param item
+   * @param connectionProvider
    */
-  @Override
-  public void add(Repository item)
+  @Inject
+  public OrientDBRepositoryDAO(Provider<ODatabaseDocumentTx> connectionProvider)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    super(connectionProvider, RepositoryConverter.INSTANCE);
+    init();
   }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -71,59 +102,7 @@ public class OrientDBRepositoryDAO implements RepositoryDAO
   @Override
   public boolean contains(String type, String name)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   *
-   * @return
-   */
-  @Override
-  public boolean contains(Repository item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  @Override
-  public boolean contains(String id)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   */
-  @Override
-  public void delete(Repository item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   */
-  @Override
-  public void modify(Repository item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return get(type, name) != null;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -140,68 +119,157 @@ public class OrientDBRepositoryDAO implements RepositoryDAO
   @Override
   public Repository get(String type, String name)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    Repository repository = null;
+    ODatabaseDocumentTx connection = connectionProvider.get();
+
+    try
+    {
+      ODocument doc = getDocument(connection, type, name);
+
+      if (doc != null)
+      {
+        repository = converter.convert(doc);
+      }
+    }
+    finally
+    {
+      OrientDBUtil.close(connection);
+    }
+
+    return repository;
   }
 
   /**
    * Method description
    *
    *
+   * @return
+   */
+  @Override
+  public List<Repository> getAll()
+  {
+    List<Repository> repositories = null;
+    ODatabaseDocumentTx connection = connectionProvider.get();
+
+    try
+    {
+      List<ODocument> result = OrientDBUtil.executeListResultQuery(connection,
+                                 QUERY_ALL);
+
+      if (Util.isNotEmpty(result))
+      {
+        repositories = OrientDBUtil.transformToItems(converter, result);
+      }
+      else
+      {
+        repositories = Lists.newArrayList();
+      }
+    }
+    finally
+    {
+      OrientDBUtil.close(connection);
+    }
+
+    return repositories;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param connection
    * @param id
    *
    * @return
    */
   @Override
-  public Repository get(String id)
+  protected ODocument getDocument(ODatabaseDocumentTx connection, String id)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return OrientDBUtil.executeSingleResultQuery(connection, QUERY_SINGLE_BYID,
+            id);
   }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @return
    */
-  @Override
-  public Collection<Repository> getAll()
+  private void init()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    ODatabaseDocumentTx connection = connectionProvider.get();
+
+    try
+    {
+      OSchema schema = connection.getMetadata().getSchema();
+      OClass oclass = schema.getClass(RepositoryConverter.DOCUMENT_CLASS);
+
+      if (oclass == null)
+      {
+        oclass = schema.createClass(RepositoryConverter.DOCUMENT_CLASS);
+
+        // model properites
+        oclass.createProperty(RepositoryConverter.FIELD_ID, OType.STRING);
+        oclass.createProperty(RepositoryConverter.FIELD_TYPE, OType.STRING);
+        oclass.createProperty(RepositoryConverter.FIELD_LASTMODIFIED,
+                              OType.LONG);
+
+        // repository properties
+        oclass.createProperty(RepositoryConverter.FIELD_CONTACT, OType.STRING);
+        oclass.createProperty(RepositoryConverter.FIELD_CREATIONDATE,
+                              OType.LONG);
+        oclass.createProperty(RepositoryConverter.FIELD_DESCRIPTION,
+                              OType.STRING);
+        oclass.createProperty(RepositoryConverter.FIELD_NAME, OType.STRING);
+        oclass.createProperty(RepositoryConverter.FIELD_PERMISSIONS,
+                              OType.EMBEDDEDLIST);
+        oclass.createProperty(RepositoryConverter.FIELD_PROPERTIES,
+                              OType.EMBEDDEDMAP);
+        oclass.createProperty(RepositoryConverter.FIELD_PUBLIC, OType.BOOLEAN);
+
+        // indexes
+        oclass.createIndex(RepositoryConverter.INDEX_ID, INDEX_TYPE.UNIQUE,
+                           RepositoryConverter.FIELD_ID);
+        oclass.createIndex(RepositoryConverter.INDEX_TYPEANDNAME,
+                           INDEX_TYPE.UNIQUE, RepositoryConverter.FIELD_NAME,
+                           RepositoryConverter.FIELD_TYPE);
+        schema.save();
+      }
+
+      oclass = schema.getClass(PermissionConverter.DOCUMENT_CLASS);
+
+      if (oclass == null)
+      {
+        oclass = schema.createClass(PermissionConverter.DOCUMENT_CLASS);
+        oclass.createProperty(PermissionConverter.FIELD_NAME, OType.STRING);
+        oclass.createProperty(PermissionConverter.FIELD_TYPE, OType.STRING);
+        oclass.createProperty(PermissionConverter.FIELD_GROUP, OType.BOOLEAN);
+        schema.save();
+      }
+    }
+    finally
+    {
+      OrientDBUtil.close(connection);
+    }
   }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @return
-   */
-  @Override
-  public Long getCreationTime()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
+   * @param connection
+   * @param type
+   * @param name
    *
    * @return
    */
-  @Override
-  public Long getLastModified()
+  private ODocument getDocument(ODatabaseDocumentTx connection, String type,
+                                String name)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getType()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return OrientDBUtil.executeSingleResultQuery(connection,
+            QUERY_SINGLE_BYTYPEANDNAME, type, name);
   }
 }
