@@ -289,7 +289,7 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
   {
 
     // TODO
-    throw new UnsupportedOperationException("Not supported yet.");
+    return System.currentTimeMillis();
   }
 
   /**
@@ -303,7 +303,7 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
   {
 
     // TODO
-    throw new UnsupportedOperationException("Not supported yet.");
+    return System.currentTimeMillis();
   }
 
   /**
