@@ -492,6 +492,7 @@ public class DefaultUserManager extends AbstractUserManager
     {
       User user = (User) unmarshaller.unmarshal(input);
 
+      user.setType(userDAO.getType());
       user.setCreationDate(System.currentTimeMillis());
       userDAO.add(user);
     }
