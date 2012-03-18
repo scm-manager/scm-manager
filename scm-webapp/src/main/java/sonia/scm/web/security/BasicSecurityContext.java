@@ -150,7 +150,7 @@ public class BasicSecurityContext implements WebSecurityContext
           if (logger.isDebugEnabled() && user.isAdmin())
           {
             logger.debug("user '{}' is marked as admin by configuration",
-                         user.getType(), user.getName());
+                         user.getName());
           }
         }
         else if (logger.isDebugEnabled())
