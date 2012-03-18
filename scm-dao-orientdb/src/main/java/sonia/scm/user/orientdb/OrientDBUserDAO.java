@@ -42,7 +42,6 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 
 import sonia.scm.orientdb.AbstractOrientDBModelDAO;
 import sonia.scm.orientdb.OrientDBUtil;
-import sonia.scm.repository.orientdb.RepositoryConverter;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 
@@ -79,32 +78,6 @@ public class OrientDBUserDAO extends AbstractOrientDBModelDAO<User>
     init();
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  public void init()
-  {
-    ODatabaseDocumentTx connection = connectionProvider.get();
-
-    try
-    {
-      OSchema schema = connection.getMetadata().getSchema();
-      OClass oclass = schema.getClass(UserConverter.DOCUMENT_CLASS);
-
-      if (oclass == null)
-      {
-        UserConverter.INSTANCE.createShema(connection);
-      }
-    }
-    finally
-    {
-      OrientDBUtil.close(connection);
-    }
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -135,5 +108,25 @@ public class OrientDBUserDAO extends AbstractOrientDBModelDAO<User>
   {
     return OrientDBUtil.executeSingleResultQuery(connection, QUERY_SINGLE_BYID,
             id);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  private void init()
+  {
+    ODatabaseDocumentTx connection = connectionProvider.get();
+
+    try
+    {
+      UserConverter.INSTANCE.createShema(connection);
+    }
+    finally
+    {
+      OrientDBUtil.close(connection);
+    }
   }
 }

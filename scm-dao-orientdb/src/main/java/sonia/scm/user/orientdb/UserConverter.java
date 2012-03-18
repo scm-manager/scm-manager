@@ -35,16 +35,12 @@ package sonia.scm.user.orientdb;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.metadata.schema.OClass;
-import com.orientechnologies.orient.core.metadata.schema.OClass.INDEX_TYPE;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
 import sonia.scm.orientdb.AbstractConverter;
 import sonia.scm.orientdb.Converter;
-import sonia.scm.orientdb.OrientDBUtil;
-import sonia.scm.repository.orientdb.PermissionConverter;
-import sonia.scm.repository.orientdb.RepositoryConverter;
 import sonia.scm.user.User;
 
 /**
