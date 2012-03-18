@@ -363,13 +363,11 @@
       
       <dependencies>
         
-        <!--
         <dependency>
           <groupId>sonia.scm</groupId>
-          <artifactId>scm-backend-jdbc</artifactId>
+          <artifactId>scm-dao-orientdb</artifactId>
           <version>1.14-SNAPSHOT</version>
         </dependency>
-        -->
         
       </dependencies>
     </profile>
