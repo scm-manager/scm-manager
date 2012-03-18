@@ -33,82 +33,48 @@ package sonia.scm.group.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Provider;
+
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.record.impl.ODocument;
+
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupDAO;
+import sonia.scm.orientdb.AbstractOrientDBModelDAO;
+import sonia.scm.orientdb.OrientDBUtil;
+import sonia.scm.user.orientdb.UserConverter;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class OrientDBGroupDAO implements GroupDAO
+public class OrientDBGroupDAO extends AbstractOrientDBModelDAO<Group>
+        implements GroupDAO
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   */
-  @Override
-  public void add(Group item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
+  /** Field description */
+  public static final String QUERY_ALL = "select from Repository";
+
+  /** Field description */
+  public static final String QUERY_SINGLE_BYID =
+    "select from Repository where id = ?";
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param item
-   *
-   * @return
+   * @param connectionProvider
    */
-  @Override
-  public boolean contains(Group item)
+  public OrientDBGroupDAO(Provider<ODatabaseDocumentTx> connectionProvider)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  @Override
-  public boolean contains(String id)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   */
-  @Override
-  public void delete(Group item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   */
-  @Override
-  public void modify(Group item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
+    super(connectionProvider, GroupConverter.INSTANCE);
+    init();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -117,61 +83,49 @@ public class OrientDBGroupDAO implements GroupDAO
    * Method description
    *
    *
+   * @param connection
+   *
+   * @return
+   */
+  @Override
+  protected List<ODocument> getAllDocuments(ODatabaseDocumentTx connection)
+  {
+    return OrientDBUtil.executeListResultQuery(connection, QUERY_ALL);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param connection
    * @param id
    *
    * @return
    */
   @Override
-  public Group get(String id)
+  protected ODocument getDocument(ODatabaseDocumentTx connection, String id)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return OrientDBUtil.executeSingleResultQuery(connection, QUERY_SINGLE_BYID,
+            id);
   }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
-   *
-   * @return
    */
-  @Override
-  public Collection<Group> getAll()
+  private void init()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
+    ODatabaseDocumentTx connection = connectionProvider.get();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Long getCreationTime()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Long getLastModified()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getType()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
+    try
+    {
+      UserConverter.INSTANCE.createShema(connection);
+    }
+    finally
+    {
+      OrientDBUtil.close(connection);
+    }
   }
 }
