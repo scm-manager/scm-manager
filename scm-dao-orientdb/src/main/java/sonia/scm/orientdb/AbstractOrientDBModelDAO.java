@@ -39,6 +39,9 @@ import com.google.inject.Provider;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.GenericDAO;
 import sonia.scm.ModelObject;
 import sonia.scm.util.Util;
@@ -59,6 +62,12 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
 
   /** Field description */
   public static final String TYPE = "orientdb";
+
+  /**
+   * the logger for AbstractOrientDBModelDAO
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(AbstractOrientDBModelDAO.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -177,6 +186,10 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
       {
         doc.delete();
       }
+      else if (logger.isErrorEnabled())
+      {
+        logger.error("could not find document for delete");
+      }
     }
     finally
     {
@@ -204,6 +217,10 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
       {
         doc = converter.convert(doc, item);
         doc.save();
+      }
+      else if (logger.isErrorEnabled())
+      {
+        logger.error("could not find document for modify");
       }
     }
     finally
