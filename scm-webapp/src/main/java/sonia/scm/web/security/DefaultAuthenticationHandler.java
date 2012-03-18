@@ -58,18 +58,15 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class XmlAuthenticationHandler implements AuthenticationHandler
+public class DefaultAuthenticationHandler implements AuthenticationHandler
 {
 
   /** Field description */
   public static final String NAME_DIRECTORY = "users";
 
-  /** Field description */
-  public static final String TYPE = "xml";
-
   /** the logger for XmlAuthenticationHandler */
   private static final Logger logger =
-    LoggerFactory.getLogger(XmlAuthenticationHandler.class);
+    LoggerFactory.getLogger(DefaultAuthenticationHandler.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -81,8 +78,8 @@ public class XmlAuthenticationHandler implements AuthenticationHandler
    * @param encryptionHandler
    */
   @Inject
-  public XmlAuthenticationHandler(UserManager userManager,
-                                  EncryptionHandler encryptionHandler)
+  public DefaultAuthenticationHandler(UserManager userManager,
+          EncryptionHandler encryptionHandler)
   {
     this.userManager = userManager;
     this.encryptionHandler = encryptionHandler;
@@ -110,7 +107,7 @@ public class XmlAuthenticationHandler implements AuthenticationHandler
 
     if (user != null)
     {
-      if (TYPE.equals(user.getType()))
+      if (userManager.getDefaultType().equals(user.getType()))
       {
         result = authenticate(user, username, password);
       }
@@ -118,7 +115,8 @@ public class XmlAuthenticationHandler implements AuthenticationHandler
       {
         if (logger.isDebugEnabled())
         {
-          logger.debug("{} is not an xml user", username);
+          logger.debug("{} is not an {} user", username,
+                       userManager.getDefaultType());
         }
 
         result = AuthenticationResult.NOT_FOUND;
@@ -174,7 +172,7 @@ public class XmlAuthenticationHandler implements AuthenticationHandler
   @Override
   public String getType()
   {
-    return TYPE;
+    return userManager.getDefaultType();
   }
 
   //~--- methods --------------------------------------------------------------

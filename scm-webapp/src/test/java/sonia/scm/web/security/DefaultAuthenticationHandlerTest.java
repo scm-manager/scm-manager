@@ -67,7 +67,7 @@ import sonia.scm.user.xml.XmlUserDAO;
  *
  * @author Sebastian Sdorra
  */
-public class XmlAuthenticationHandlerTest extends AbstractTestBase
+public class DefaultAuthenticationHandlerTest extends AbstractTestBase
 {
 
   /**
@@ -148,7 +148,7 @@ public class XmlAuthenticationHandlerTest extends AbstractTestBase
 
     userManager.init(contextProvider);
     userManager.create(slarti);
-    handler = new XmlAuthenticationHandler(userManager, enc);
+    handler = new DefaultAuthenticationHandler(userManager, enc);
     handler.init(contextProvider);
     request = MockUtil.getHttpServletRequest();
     reponse = MockUtil.getHttpServletResponse();
@@ -169,7 +169,7 @@ public class XmlAuthenticationHandlerTest extends AbstractTestBase
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private XmlAuthenticationHandler handler;
+  private DefaultAuthenticationHandler handler;
 
   /** Field description */
   private HttpServletResponse reponse;

@@ -57,7 +57,7 @@ import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.UserListener;
 import sonia.scm.web.security.AuthenticationHandler;
 import sonia.scm.web.security.AuthenticationListener;
-import sonia.scm.web.security.XmlAuthenticationHandler;
+import sonia.scm.web.security.DefaultAuthenticationHandler;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -134,7 +134,7 @@ public class BindingExtensionProcessor implements ExtensionProcessor
     Multibinder<RepositoryRequestListener> repositoryRequestListenerBinder =
       Multibinder.newSetBinder(binder, RepositoryRequestListener.class);
 
-    authenticators.addBinding().to(XmlAuthenticationHandler.class);
+    authenticators.addBinding().to(DefaultAuthenticationHandler.class);
 
     for (Class extensionClass : extensions)
     {
