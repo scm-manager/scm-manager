@@ -57,11 +57,11 @@ public class OrientDBGroupDAO extends AbstractOrientDBModelDAO<Group>
 {
 
   /** Field description */
-  public static final String QUERY_ALL = "select from Repository";
+  public static final String QUERY_ALL = "select from Group";
 
   /** Field description */
   public static final String QUERY_SINGLE_BYID =
-    "select from Repository where id = ?";
+    "select from Group where id = ?";
 
   //~--- constructors ---------------------------------------------------------
 
