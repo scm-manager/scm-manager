@@ -33,17 +33,26 @@ package sonia.scm.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Resources;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.server.OServer;
+import com.orientechnologies.orient.server.OServerMain;
+import com.orientechnologies.orient.server.config.OServerConfiguration;
 
+import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+
+import java.net.URL;
+
+import java.nio.charset.Charset;
 
 import javax.xml.bind.JAXB;
 
@@ -68,6 +77,10 @@ public class ConnectionProvider implements Provider<ODatabaseDocumentTx>
   public static final String DEFAULT_USERNAME = "admin";
 
   /** Field description */
+  public static final String EMBEDDED_CONFIGURATION =
+    "sonia/scm/orientdb/server-configuration.xml";
+
+  /** Field description */
   public static final String PATH =
     "config".concat(File.separator).concat("orientdb.xml");
 
@@ -87,14 +100,44 @@ public class ConnectionProvider implements Provider<ODatabaseDocumentTx>
     }
     else
     {
+      try
+      {
 
-      // create default connection configuration
-      File directory = new File(SCMContext.getContext().getBaseDirectory(),
-                                DEFAULT_DB_DIRECTORY);
-      String url = DEFAULT_DB_SHEME.concat(directory.getAbsolutePath());
+        // create connection configuration for embedded server
+        File directory = new File(SCMContext.getContext().getBaseDirectory(),
+                                  DEFAULT_DB_DIRECTORY);
+        OServer server = OServerMain.create();
+        URL configUrl = Resources.getResource(EMBEDDED_CONFIGURATION);
+        String config = Resources.toString(configUrl, Charset.defaultCharset());
 
-      init(new ConnectionConfiguration(url, DEFAULT_USERNAME,
-                                       DEFAULT_PASSWORD));
+        server.startup(config);
+        server.activate();
+
+        String url = DEFAULT_DB_SHEME.concat(directory.getAbsolutePath());
+
+        if (!directory.exists())
+        {
+          ODatabaseDocumentTx connection = null;
+
+          try
+          {
+            connection = new ODatabaseDocumentTx(url);
+            connection.create();
+          }
+          finally
+          {
+            OrientDBUtil.close(connection);
+          }
+        }
+
+        init(new ConnectionConfiguration(url, DEFAULT_USERNAME,
+                                         DEFAULT_PASSWORD));
+      }
+      catch (Exception ex)
+      {
+        throw new ConfigurationException("could not start embedded database",
+                                         ex);
+      }
     }
   }
 
