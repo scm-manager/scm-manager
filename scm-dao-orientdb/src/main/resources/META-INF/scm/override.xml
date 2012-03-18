@@ -51,5 +51,7 @@ http://bitbucket.org/sdorra/scm-manager
     <bind>sonia.scm.store.StoreFactory</bind>
     <to>sonia.scm.store.orientdb.OrientDBStoreFactory</to>
   </override>
+  
+  <module>sonia.scm.orientdb.OrientDBModule</module>
     
 </overrides>
