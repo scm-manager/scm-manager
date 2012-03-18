@@ -35,6 +35,7 @@ package sonia.scm.user.orientdb;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.metadata.schema.OClass;
+import com.orientechnologies.orient.core.metadata.schema.OClass.INDEX_TYPE;
 import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
@@ -67,6 +68,9 @@ public class UserConverter extends AbstractConverter implements Converter<User>
 
   /** Field description */
   public static final String FIELD_PASSWORD = "password";
+
+  /** Field description */
+  public static final String INDEX_ID = "UserId";
 
   /** Field description */
   public static final UserConverter INSTANCE = new UserConverter();
@@ -164,6 +168,9 @@ public class UserConverter extends AbstractConverter implements Converter<User>
       oclass.createProperty(FIELD_MAIL, OType.STRING);
       oclass.createProperty(FIELD_PASSWORD, OType.STRING);
       oclass.createProperty(FIELD_PROPERTIES, OType.EMBEDDEDMAP);
+
+      // indexes
+      oclass.createIndex(INDEX_ID, INDEX_TYPE.UNIQUE, FIELD_ID);
       schema.save();
     }
   }
