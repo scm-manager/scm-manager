@@ -65,6 +65,9 @@ public class UserConverter extends AbstractConverter implements Converter<User>
   /** Field description */
   public static final String FIELD_PASSWORD = "password";
 
+  /** Field description */
+  public static final UserConverter INSTANCE = new UserConverter();
+
   //~--- methods --------------------------------------------------------------
 
   /**

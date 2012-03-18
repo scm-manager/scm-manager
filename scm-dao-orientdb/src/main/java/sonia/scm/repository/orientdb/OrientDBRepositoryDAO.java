@@ -33,7 +33,6 @@ package sonia.scm.repository.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -48,7 +47,6 @@ import sonia.scm.orientdb.AbstractOrientDBModelDAO;
 import sonia.scm.orientdb.OrientDBUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -143,34 +141,14 @@ public class OrientDBRepositoryDAO extends AbstractOrientDBModelDAO<Repository>
    * Method description
    *
    *
+   * @param connection
+   *
    * @return
    */
   @Override
-  public List<Repository> getAll()
+  protected List<ODocument> getAllDocuments(ODatabaseDocumentTx connection)
   {
-    List<Repository> repositories = null;
-    ODatabaseDocumentTx connection = connectionProvider.get();
-
-    try
-    {
-      List<ODocument> result = OrientDBUtil.executeListResultQuery(connection,
-                                 QUERY_ALL);
-
-      if (Util.isNotEmpty(result))
-      {
-        repositories = OrientDBUtil.transformToItems(converter, result);
-      }
-      else
-      {
-        repositories = Lists.newArrayList();
-      }
-    }
-    finally
-    {
-      OrientDBUtil.close(connection);
-    }
-
-    return repositories;
+    return OrientDBUtil.executeListResultQuery(connection, QUERY_ALL);
   }
 
   /**

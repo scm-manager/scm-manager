@@ -33,82 +33,46 @@ package sonia.scm.user.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Provider;
+
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.record.impl.ODocument;
+
+import sonia.scm.orientdb.AbstractOrientDBModelDAO;
+import sonia.scm.orientdb.OrientDBUtil;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class OrientDBUserDAO implements UserDAO
+public class OrientDBUserDAO extends AbstractOrientDBModelDAO<User>
+        implements UserDAO
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   */
-  @Override
-  public void add(User item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
+  /** Field description */
+  public static final String QUERY_ALL = "select from User";
+
+  /** Field description */
+  public static final String QUERY_SINGLE_BYID =
+    "select from User where id = ?";
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param item
-   *
-   * @return
+   * @param connectionProvider
    */
-  @Override
-  public boolean contains(User item)
+  public OrientDBUserDAO(Provider<ODatabaseDocumentTx> connectionProvider)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   *
-   * @return
-   */
-  @Override
-  public boolean contains(String id)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   */
-  @Override
-  public void delete(User item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   */
-  @Override
-  public void modify(User item)
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
+    super(connectionProvider, UserConverter.INSTANCE);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -117,61 +81,29 @@ public class OrientDBUserDAO implements UserDAO
    * Method description
    *
    *
+   * @param connection
+   *
+   * @return
+   */
+  @Override
+  protected List<ODocument> getAllDocuments(ODatabaseDocumentTx connection)
+  {
+    return OrientDBUtil.executeListResultQuery(connection, QUERY_ALL);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param connection
    * @param id
    *
    * @return
    */
   @Override
-  public User get(String id)
+  protected ODocument getDocument(ODatabaseDocumentTx connection, String id)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Collection<User> getAll()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Long getCreationTime()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Long getLastModified()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getType()
-  {
-    throw new UnsupportedOperationException("Not supported yet.");
+    return OrientDBUtil.executeSingleResultQuery(connection, QUERY_SINGLE_BYID,
+            id);
   }
 }

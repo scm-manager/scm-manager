@@ -33,6 +33,7 @@ package sonia.scm.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
 import com.google.inject.Provider;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -40,6 +41,11 @@ import com.orientechnologies.orient.core.record.impl.ODocument;
 
 import sonia.scm.GenericDAO;
 import sonia.scm.ModelObject;
+import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.List;
 
 /**
  *
@@ -72,6 +78,17 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param connection
+   *
+   * @return
+   */
+  protected abstract List<ODocument> getAllDocuments(
+          ODatabaseDocumentTx connection);
 
   /**
    * Method description
@@ -225,6 +242,39 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
     }
 
     return item;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public List<T> getAll()
+  {
+    List<T> items = null;
+    ODatabaseDocumentTx connection = connectionProvider.get();
+
+    try
+    {
+      List<ODocument> result = getAllDocuments(connection);
+
+      if (Util.isNotEmpty(result))
+      {
+        items = OrientDBUtil.transformToItems(converter, result);
+      }
+      else
+      {
+        items = Lists.newArrayList();
+      }
+    }
+    finally
+    {
+      OrientDBUtil.close(connection);
+    }
+
+    return items;
   }
 
   /**
