@@ -193,13 +193,15 @@ public class ScmServletModule extends ServletModule
    *
    * @param pluginLoader
    * @param bindExtProcessor
+   * @param overrides
    */
   ScmServletModule(PluginLoader pluginLoader,
-                   BindingExtensionProcessor bindExtProcessor)
+                   BindingExtensionProcessor bindExtProcessor,
+                   ClassOverrides overrides)
   {
     this.pluginLoader = pluginLoader;
     this.bindExtProcessor = bindExtProcessor;
-    this.overrides = ClassOverrides.findOverrides();
+    this.overrides = overrides;
   }
 
   //~--- methods --------------------------------------------------------------

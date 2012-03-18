@@ -134,11 +134,13 @@ public class ScmContextListener extends GuiceServletContextListener
 
     pluginLoader.processExtensions(bindExtProcessor);
 
+    ClassOverrides overrides = ClassOverrides.findOverrides();
     ScmServletModule main = new ScmServletModule(pluginLoader,
-                              bindExtProcessor);
-    List<Module> moduleList =
-      new ArrayList<Module>(bindExtProcessor.getModuleSet());
+                              bindExtProcessor, overrides);
+    List<Module> moduleList = new ArrayList<Module>();
 
+    moduleList.addAll(bindExtProcessor.getModuleSet());
+    moduleList.addAll(overrides.getModules());
     moduleList.add(0, main);
     injector = Guice.createInjector(moduleList);
 

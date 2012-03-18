@@ -33,6 +33,10 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
+import com.google.inject.Module;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -172,6 +176,8 @@ public class ClassOverrides implements Iterable<ClassOverride>
         logger.warn("could not append ClassOverride, because it is not valid");
       }
     }
+
+    getModuleClasses().addAll(overrides.getModuleClasses());
   }
 
   /**
@@ -187,6 +193,54 @@ public class ClassOverrides implements Iterable<ClassOverride>
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<Class<? extends Module>> getModuleClasses()
+  {
+    if (moduleClasses == null)
+    {
+      moduleClasses = new ArrayList<Class<? extends Module>>();
+    }
+
+    return moduleClasses;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<? extends Module> getModules()
+  {
+    return Lists.transform(moduleClasses,
+                           new Function<Class<? extends Module>, Module>()
+    {
+      @Override
+      public Module apply(Class<? extends Module> moduleClass)
+      {
+        Module module = null;
+
+        try
+        {
+          module = moduleClass.newInstance();
+        }
+        catch (Exception ex)
+        {
+          logger.error(
+              "could not create module instance of ".concat(
+                moduleClass.getName()), ex);
+        }
+
+        return module;
+      }
+    });
+  }
 
   /**
    * Method description
@@ -234,6 +288,18 @@ public class ClassOverrides implements Iterable<ClassOverride>
    * Method description
    *
    *
+   *
+   * @param moduleClasses
+   */
+  public void setModuleClasses(List<Class<? extends Module>> moduleClasses)
+  {
+    this.moduleClasses = moduleClasses;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param overrides
    */
   public void setOverrides(List<ClassOverride> overrides)
@@ -242,6 +308,10 @@ public class ClassOverrides implements Iterable<ClassOverride>
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @XmlElement(name = "module")
+  private List<Class<? extends Module>> moduleClasses;
 
   /** Field description */
   @XmlElement(name = "override")
