@@ -33,6 +33,7 @@ package sonia.scm.group.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
@@ -71,6 +72,7 @@ public class OrientDBGroupDAO extends AbstractOrientDBModelDAO<Group>
    *
    * @param connectionProvider
    */
+  @Inject
   public OrientDBGroupDAO(Provider<ODatabaseDocumentTx> connectionProvider)
   {
     super(connectionProvider, GroupConverter.INSTANCE);

@@ -33,11 +33,10 @@ package sonia.scm.user.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.metadata.schema.OClass;
-import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
 import sonia.scm.orientdb.AbstractOrientDBModelDAO;
@@ -72,6 +71,7 @@ public class OrientDBUserDAO extends AbstractOrientDBModelDAO<User>
    *
    * @param connectionProvider
    */
+  @Inject
   public OrientDBUserDAO(Provider<ODatabaseDocumentTx> connectionProvider)
   {
     super(connectionProvider, UserConverter.INSTANCE);
