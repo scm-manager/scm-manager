@@ -235,7 +235,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     }
     catch (Exception ex)
     {
-      logger.error("error during create", ex);
+      logger.error("error during update", ex);
       response = createErrorResonse(ex);
     }
 
