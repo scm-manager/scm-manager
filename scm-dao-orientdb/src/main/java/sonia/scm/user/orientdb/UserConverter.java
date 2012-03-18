@@ -33,11 +33,18 @@ package sonia.scm.user.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.metadata.schema.OClass;
+import com.orientechnologies.orient.core.metadata.schema.OClass.INDEX_TYPE;
+import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
 import sonia.scm.orientdb.AbstractConverter;
 import sonia.scm.orientdb.Converter;
+import sonia.scm.orientdb.OrientDBUtil;
+import sonia.scm.repository.orientdb.PermissionConverter;
+import sonia.scm.repository.orientdb.RepositoryConverter;
 import sonia.scm.user.User;
 
 /**
@@ -132,5 +139,36 @@ public class UserConverter extends AbstractConverter implements Converter<User>
     user.setCreationDate(getLongField(doc, FIELD_CREATIONDATE));
 
     return user;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param connection
+   */
+  public void createShema(ODatabaseDocumentTx connection)
+  {
+    OSchema schema = connection.getMetadata().getSchema();
+    OClass oclass = schema.getClass(DOCUMENT_CLASS);
+
+    if (oclass == null)
+    {
+      oclass = schema.createClass(DOCUMENT_CLASS);
+
+      // model properites
+      oclass.createProperty(FIELD_ID, OType.STRING);
+      oclass.createProperty(FIELD_TYPE, OType.STRING);
+      oclass.createProperty(FIELD_LASTMODIFIED, OType.LONG);
+
+      // user properties
+      oclass.createProperty(FIELD_ADMIN, OType.BOOLEAN);
+      oclass.createProperty(FIELD_CREATIONDATE, OType.LONG);
+      oclass.createProperty(FIELD_DISPLAYNAME, OType.STRING);
+      oclass.createProperty(FIELD_MAIL, OType.STRING);
+      oclass.createProperty(FIELD_PASSWORD, OType.STRING);
+      oclass.createProperty(FIELD_PROPERTIES, OType.EMBEDDEDMAP);
+      schema.save();
+    }
   }
 }

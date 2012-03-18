@@ -36,10 +36,13 @@ package sonia.scm.user.orientdb;
 import com.google.inject.Provider;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.metadata.schema.OClass;
+import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
 import sonia.scm.orientdb.AbstractOrientDBModelDAO;
 import sonia.scm.orientdb.OrientDBUtil;
+import sonia.scm.repository.orientdb.RepositoryConverter;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 
@@ -73,6 +76,33 @@ public class OrientDBUserDAO extends AbstractOrientDBModelDAO<User>
   public OrientDBUserDAO(Provider<ODatabaseDocumentTx> connectionProvider)
   {
     super(connectionProvider, UserConverter.INSTANCE);
+    init();
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  public void init()
+  {
+    ODatabaseDocumentTx connection = connectionProvider.get();
+
+    try
+    {
+      OSchema schema = connection.getMetadata().getSchema();
+      OClass oclass = schema.getClass(UserConverter.DOCUMENT_CLASS);
+
+      if (oclass == null)
+      {
+        UserConverter.INSTANCE.createShema(connection);
+      }
+    }
+    finally
+    {
+      OrientDBUtil.close(connection);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
