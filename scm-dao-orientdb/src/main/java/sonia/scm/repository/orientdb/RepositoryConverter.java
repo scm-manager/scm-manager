@@ -33,6 +33,10 @@ package sonia.scm.repository.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.metadata.schema.OClass;
+import com.orientechnologies.orient.core.metadata.schema.OClass.INDEX_TYPE;
+import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
@@ -164,5 +168,42 @@ public class RepositoryConverter extends AbstractConverter
           PermissionConverter.INSTANCE, permissions));
 
     return repository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param connection
+   */
+  void createShema(ODatabaseDocumentTx connection)
+  {
+    OSchema schema = connection.getMetadata().getSchema();
+    OClass oclass = schema.getClass(DOCUMENT_CLASS);
+
+    if (oclass == null)
+    {
+      oclass = schema.createClass(DOCUMENT_CLASS);
+
+      // model properites
+      oclass.createProperty(FIELD_ID, OType.STRING);
+      oclass.createProperty(FIELD_TYPE, OType.STRING);
+      oclass.createProperty(FIELD_LASTMODIFIED, OType.LONG);
+
+      // repository properties
+      oclass.createProperty(FIELD_CONTACT, OType.STRING);
+      oclass.createProperty(FIELD_CREATIONDATE, OType.LONG);
+      oclass.createProperty(FIELD_DESCRIPTION, OType.STRING);
+      oclass.createProperty(FIELD_NAME, OType.STRING);
+      oclass.createProperty(FIELD_PERMISSIONS, OType.EMBEDDEDLIST);
+      oclass.createProperty(FIELD_PROPERTIES, OType.EMBEDDEDMAP);
+      oclass.createProperty(FIELD_PUBLIC, OType.BOOLEAN);
+
+      // indexes
+      oclass.createIndex(INDEX_ID, INDEX_TYPE.UNIQUE, FIELD_ID);
+      oclass.createIndex(INDEX_TYPEANDNAME, INDEX_TYPE.UNIQUE, FIELD_NAME,
+                         FIELD_TYPE);
+      schema.save();
+    }
   }
 }

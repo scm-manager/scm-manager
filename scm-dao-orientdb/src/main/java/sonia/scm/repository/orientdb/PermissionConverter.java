@@ -33,6 +33,9 @@ package sonia.scm.repository.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import com.orientechnologies.orient.core.metadata.schema.OClass;
+import com.orientechnologies.orient.core.metadata.schema.OSchema;
 import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
@@ -126,5 +129,26 @@ public class PermissionConverter extends AbstractConverter
     permission.setGroupPermission(getBooleanField(doc, FIELD_GROUP));
 
     return permission;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param connection
+   */
+  void createShema(ODatabaseDocumentTx connection)
+  {
+    OSchema schema = connection.getMetadata().getSchema();
+    OClass oclass = schema.getClass(DOCUMENT_CLASS);
+
+    if (oclass == null)
+    {
+      oclass = schema.createClass(DOCUMENT_CLASS);
+      oclass.createProperty(FIELD_NAME, OType.STRING);
+      oclass.createProperty(FIELD_TYPE, OType.STRING);
+      oclass.createProperty(FIELD_GROUP, OType.BOOLEAN);
+      schema.save();
+    }
   }
 }

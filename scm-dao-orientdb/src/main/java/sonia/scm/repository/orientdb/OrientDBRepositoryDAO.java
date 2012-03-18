@@ -37,10 +37,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
-import com.orientechnologies.orient.core.metadata.schema.OClass;
-import com.orientechnologies.orient.core.metadata.schema.OClass.INDEX_TYPE;
-import com.orientechnologies.orient.core.metadata.schema.OSchema;
-import com.orientechnologies.orient.core.metadata.schema.OType;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
 import sonia.scm.orientdb.AbstractOrientDBModelDAO;
@@ -180,51 +176,8 @@ public class OrientDBRepositoryDAO extends AbstractOrientDBModelDAO<Repository>
 
     try
     {
-      OSchema schema = connection.getMetadata().getSchema();
-      OClass oclass = schema.getClass(RepositoryConverter.DOCUMENT_CLASS);
-
-      if (oclass == null)
-      {
-        oclass = schema.createClass(RepositoryConverter.DOCUMENT_CLASS);
-
-        // model properites
-        oclass.createProperty(RepositoryConverter.FIELD_ID, OType.STRING);
-        oclass.createProperty(RepositoryConverter.FIELD_TYPE, OType.STRING);
-        oclass.createProperty(RepositoryConverter.FIELD_LASTMODIFIED,
-                              OType.LONG);
-
-        // repository properties
-        oclass.createProperty(RepositoryConverter.FIELD_CONTACT, OType.STRING);
-        oclass.createProperty(RepositoryConverter.FIELD_CREATIONDATE,
-                              OType.LONG);
-        oclass.createProperty(RepositoryConverter.FIELD_DESCRIPTION,
-                              OType.STRING);
-        oclass.createProperty(RepositoryConverter.FIELD_NAME, OType.STRING);
-        oclass.createProperty(RepositoryConverter.FIELD_PERMISSIONS,
-                              OType.EMBEDDEDLIST);
-        oclass.createProperty(RepositoryConverter.FIELD_PROPERTIES,
-                              OType.EMBEDDEDMAP);
-        oclass.createProperty(RepositoryConverter.FIELD_PUBLIC, OType.BOOLEAN);
-
-        // indexes
-        oclass.createIndex(RepositoryConverter.INDEX_ID, INDEX_TYPE.UNIQUE,
-                           RepositoryConverter.FIELD_ID);
-        oclass.createIndex(RepositoryConverter.INDEX_TYPEANDNAME,
-                           INDEX_TYPE.UNIQUE, RepositoryConverter.FIELD_NAME,
-                           RepositoryConverter.FIELD_TYPE);
-        schema.save();
-      }
-
-      oclass = schema.getClass(PermissionConverter.DOCUMENT_CLASS);
-
-      if (oclass == null)
-      {
-        oclass = schema.createClass(PermissionConverter.DOCUMENT_CLASS);
-        oclass.createProperty(PermissionConverter.FIELD_NAME, OType.STRING);
-        oclass.createProperty(PermissionConverter.FIELD_TYPE, OType.STRING);
-        oclass.createProperty(PermissionConverter.FIELD_GROUP, OType.BOOLEAN);
-        schema.save();
-      }
+      RepositoryConverter.INSTANCE.createShema(connection);
+      PermissionConverter.INSTANCE.createShema(connection);
     }
     finally
     {
