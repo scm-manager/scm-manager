@@ -176,7 +176,8 @@ public class RepositoryConverter extends AbstractConverter
    *
    * @param connection
    */
-  void createShema(ODatabaseDocumentTx connection)
+  @Override
+  public void createShema(ODatabaseDocumentTx connection)
   {
     OSchema schema = connection.getMetadata().getSchema();
     OClass oclass = schema.getClass(DOCUMENT_CLASS);
@@ -205,5 +206,7 @@ public class RepositoryConverter extends AbstractConverter
                          FIELD_TYPE);
       schema.save();
     }
+
+    PermissionConverter.INSTANCE.createShema(connection);
   }
 }

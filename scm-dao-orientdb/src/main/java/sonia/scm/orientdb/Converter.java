@@ -33,6 +33,7 @@ package sonia.scm.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 
 /**
@@ -74,4 +75,12 @@ public interface Converter<T>
    * @return
    */
   public T convert(ODocument doc);
+
+  /**
+   * Method description
+   *
+   *
+   * @param connection
+   */
+  public void createShema(ODatabaseDocumentTx connection);
 }

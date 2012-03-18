@@ -150,7 +150,8 @@ public class GroupConverter extends AbstractConverter
    *
    * @param connection
    */
-  void createShema(ODatabaseDocumentTx connection)
+  @Override
+  public void createShema(ODatabaseDocumentTx connection)
   {
     OSchema schema = connection.getMetadata().getSchema();
     OClass oclass = schema.getClass(DOCUMENT_CLASS);
