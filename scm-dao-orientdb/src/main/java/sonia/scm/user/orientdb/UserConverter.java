@@ -44,6 +44,10 @@ import sonia.scm.orientdb.AbstractConverter;
 import sonia.scm.orientdb.Converter;
 import sonia.scm.user.User;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Map;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -137,6 +141,10 @@ public class UserConverter extends AbstractConverter implements Converter<User>
     user.setAdmin(getBooleanField(doc, FIELD_ADMIN));
     user.setLastModified(getLongField(doc, FIELD_LASTMODIFIED));
     user.setCreationDate(getLongField(doc, FIELD_CREATIONDATE));
+
+    Map<String, String> properties = doc.field(FIELD_PROPERTIES);
+
+    user.setProperties(properties);
 
     return user;
   }
