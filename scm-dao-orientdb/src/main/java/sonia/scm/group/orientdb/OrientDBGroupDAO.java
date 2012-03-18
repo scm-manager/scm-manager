@@ -43,7 +43,6 @@ import sonia.scm.group.Group;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.orientdb.AbstractOrientDBModelDAO;
 import sonia.scm.orientdb.OrientDBUtil;
-import sonia.scm.user.orientdb.UserConverter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -76,7 +75,6 @@ public class OrientDBGroupDAO extends AbstractOrientDBModelDAO<Group>
   public OrientDBGroupDAO(Provider<ODatabaseDocumentTx> connectionProvider)
   {
     super(connectionProvider, GroupConverter.INSTANCE);
-    init();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -109,25 +107,5 @@ public class OrientDBGroupDAO extends AbstractOrientDBModelDAO<Group>
   {
     return OrientDBUtil.executeSingleResultQuery(connection, QUERY_SINGLE_BYID,
             id);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  private void init()
-  {
-    ODatabaseDocumentTx connection = connectionProvider.get();
-
-    try
-    {
-      UserConverter.INSTANCE.createShema(connection);
-    }
-    finally
-    {
-      OrientDBUtil.close(connection);
-    }
   }
 }

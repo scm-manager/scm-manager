@@ -75,6 +75,7 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
   {
     this.connectionProvider = connectionProvider;
     this.converter = converter;
+    createShema();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -315,6 +316,26 @@ public abstract class AbstractOrientDBModelDAO<T extends ModelObject>
   public String getType()
   {
     return TYPE;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  private void createShema()
+  {
+    ODatabaseDocumentTx connection = connectionProvider.get();
+
+    try
+    {
+      converter.createShema(connection);
+    }
+    finally
+    {
+      OrientDBUtil.close(connection);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------

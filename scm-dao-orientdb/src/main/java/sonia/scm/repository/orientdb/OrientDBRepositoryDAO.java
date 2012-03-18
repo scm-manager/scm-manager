@@ -79,7 +79,6 @@ public class OrientDBRepositoryDAO extends AbstractOrientDBModelDAO<Repository>
   public OrientDBRepositoryDAO(Provider<ODatabaseDocumentTx> connectionProvider)
   {
     super(connectionProvider, RepositoryConverter.INSTANCE);
-    init();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -162,30 +161,6 @@ public class OrientDBRepositoryDAO extends AbstractOrientDBModelDAO<Repository>
     return OrientDBUtil.executeSingleResultQuery(connection, QUERY_SINGLE_BYID,
             id);
   }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   */
-  private void init()
-  {
-    ODatabaseDocumentTx connection = connectionProvider.get();
-
-    try
-    {
-      RepositoryConverter.INSTANCE.createShema(connection);
-      PermissionConverter.INSTANCE.createShema(connection);
-    }
-    finally
-    {
-      OrientDBUtil.close(connection);
-    }
-  }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description

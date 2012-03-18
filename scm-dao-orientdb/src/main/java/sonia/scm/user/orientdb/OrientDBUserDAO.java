@@ -75,7 +75,6 @@ public class OrientDBUserDAO extends AbstractOrientDBModelDAO<User>
   public OrientDBUserDAO(Provider<ODatabaseDocumentTx> connectionProvider)
   {
     super(connectionProvider, UserConverter.INSTANCE);
-    init();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -108,25 +107,5 @@ public class OrientDBUserDAO extends AbstractOrientDBModelDAO<User>
   {
     return OrientDBUtil.executeSingleResultQuery(connection, QUERY_SINGLE_BYID,
             id);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  private void init()
-  {
-    ODatabaseDocumentTx connection = connectionProvider.get();
-
-    try
-    {
-      UserConverter.INSTANCE.createShema(connection);
-    }
-    finally
-    {
-      OrientDBUtil.close(connection);
-    }
   }
 }
