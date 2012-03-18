@@ -62,7 +62,7 @@ public class UserConverter extends AbstractConverter implements Converter<User>
   public static final String FIELD_ADMIN = "admin";
 
   /** Field description */
-  public static final String FIELD_CREATIONDATE = "password";
+  public static final String FIELD_CREATIONDATE = "creationDate";
 
   /** Field description */
   public static final String FIELD_DISPLAYNAME = "displayName";
@@ -155,6 +155,7 @@ public class UserConverter extends AbstractConverter implements Converter<User>
    *
    * @param connection
    */
+  @Override
   public void createShema(ODatabaseDocumentTx connection)
   {
     OSchema schema = connection.getMetadata().getSchema();
