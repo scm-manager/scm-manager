@@ -56,6 +56,18 @@ public class ConnectionProvider implements Provider<ODatabaseDocumentTx>
 {
 
   /** Field description */
+  public static final String DEFAULT_DB_DIRECTORY = "db";
+
+  /** Field description */
+  public static final String DEFAULT_DB_SHEME = "local:";
+
+  /** Field description */
+  public static final String DEFAULT_PASSWORD = "admin";
+
+  /** Field description */
+  public static final String DEFAULT_USERNAME = "admin";
+
+  /** Field description */
   public static final String PATH =
     "config".concat(File.separator).concat("orientdb.xml");
 
@@ -76,7 +88,13 @@ public class ConnectionProvider implements Provider<ODatabaseDocumentTx>
     else
     {
 
-      // TODO
+      // create default connection configuration
+      File directory = new File(SCMContext.getContext().getBaseDirectory(),
+                                DEFAULT_DB_DIRECTORY);
+      String url = DEFAULT_DB_SHEME.concat(directory.getAbsolutePath());
+
+      init(new ConnectionConfiguration(url, DEFAULT_USERNAME,
+                                       DEFAULT_PASSWORD));
     }
   }
 
