@@ -43,12 +43,17 @@ import com.orientechnologies.orient.server.OServer;
 import com.orientechnologies.orient.server.OServerMain;
 import com.orientechnologies.orient.server.config.OServerConfiguration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
 
 import java.net.URL;
 
@@ -61,7 +66,8 @@ import javax.xml.bind.JAXB;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class ConnectionProvider implements Provider<ODatabaseDocumentTx>
+public class ConnectionProvider
+        implements Provider<ODatabaseDocumentTx>, Closeable
 {
 
   /** Field description */
@@ -84,6 +90,12 @@ public class ConnectionProvider implements Provider<ODatabaseDocumentTx>
   public static final String PATH =
     "config".concat(File.separator).concat("orientdb.xml");
 
+  /**
+   * the logger for ConnectionProvider
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ConnectionProvider.class);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -96,6 +108,11 @@ public class ConnectionProvider implements Provider<ODatabaseDocumentTx>
 
     if (file.exists())
     {
+      if (logger.isInfoEnabled())
+      {
+        logger.info("read database configuration from file {}", file);
+      }
+
       init(JAXB.unmarshal(file, ConnectionConfiguration.class));
     }
     else
@@ -106,6 +123,13 @@ public class ConnectionProvider implements Provider<ODatabaseDocumentTx>
         // create connection configuration for embedded server
         File directory = new File(SCMContext.getContext().getBaseDirectory(),
                                   DEFAULT_DB_DIRECTORY);
+
+        if (logger.isInfoEnabled())
+        {
+          logger.info("create configuration for embedded database at {}",
+                      directory);
+        }
+
         OServer server = OServerMain.create();
         URL configUrl = Resources.getResource(EMBEDDED_CONFIGURATION);
         String config = Resources.toString(configUrl, Charset.defaultCharset());
@@ -117,6 +141,11 @@ public class ConnectionProvider implements Provider<ODatabaseDocumentTx>
 
         if (!directory.exists())
         {
+          if (logger.isInfoEnabled())
+          {
+            logger.info("create new database at {}", directory);
+          }
+
           ODatabaseDocumentTx connection = null;
 
           try
@@ -152,6 +181,21 @@ public class ConnectionProvider implements Provider<ODatabaseDocumentTx>
     init(configuration);
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Override
+  public void close()
+  {
+    if (connectionPool != null)
+    {
+      connectionPool.close();
+    }
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -163,6 +207,12 @@ public class ConnectionProvider implements Provider<ODatabaseDocumentTx>
   @Override
   public ODatabaseDocumentTx get()
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("acquire new connection for database {}",
+                   configuration.getUrl());
+    }
+
     return connectionPool.acquire(configuration.getUrl(),
                                   configuration.getUsername(),
                                   configuration.getPassword());

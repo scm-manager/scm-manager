@@ -40,6 +40,9 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.core.record.impl.ODocument;
 import com.orientechnologies.orient.core.sql.query.OSQLSynchQuery;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -55,6 +58,12 @@ public class OrientDBUtil
 
   /** Field description */
   public static final String FETCH_PLAN = "*:-1";
+
+  /**
+   * the logger for OrientDBUtil
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(OrientDBUtil.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -85,6 +94,11 @@ public class OrientDBUtil
   public static List<ODocument> executeListResultQuery(
           ODatabaseDocumentTx connection, String query, Object... parameters)
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("execute list result query '{}'", query);
+    }
+
     OSQLSynchQuery<ODocument> osqlQuery = new OSQLSynchQuery<ODocument>(query);
 
     osqlQuery.setFetchPlan(FETCH_PLAN);
@@ -105,6 +119,11 @@ public class OrientDBUtil
   public static ODocument executeSingleResultQuery(
           ODatabaseDocumentTx connection, String query, Object... parameters)
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("execute single result query '{}'", query);
+    }
+
     ODocument result = null;
     OSQLSynchQuery<ODocument> osqlQuery = new OSQLSynchQuery<ODocument>(query);
 
