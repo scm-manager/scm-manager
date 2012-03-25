@@ -170,8 +170,9 @@ public class BasicSecurityContext implements WebSecurityContext
           {
             if (logger.isDebugEnabled())
             {
-              logger.debug("user '{}' is marked as admin by local database",
-                           user.getType(), user.getName());
+              logger.debug(
+                  "user '{}' of type '{}' is marked as admin by local database",
+                  user.getName(), user.getType());
             }
 
             user.setAdmin(true);
