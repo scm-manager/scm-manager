@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -49,6 +50,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -218,28 +220,39 @@ public class ClassOverrides implements Iterable<ClassOverride>
    */
   public List<? extends Module> getModules()
   {
-    return Lists.transform(moduleClasses,
-                           new Function<Class<? extends Module>, Module>()
+    List<? extends Module> modules = null;
+
+    if (Util.isNotEmpty(moduleClasses))
     {
-      @Override
-      public Module apply(Class<? extends Module> moduleClass)
+      modules = Lists.transform(moduleClasses,
+                                new Function<Class<? extends Module>, Module>()
       {
-        Module module = null;
-
-        try
+        @Override
+        public Module apply(Class<? extends Module> moduleClass)
         {
-          module = moduleClass.newInstance();
-        }
-        catch (Exception ex)
-        {
-          logger.error(
-              "could not create module instance of ".concat(
-                moduleClass.getName()), ex);
-        }
+          Module module = null;
 
-        return module;
-      }
-    });
+          try
+          {
+            module = moduleClass.newInstance();
+          }
+          catch (Exception ex)
+          {
+            logger.error(
+                "could not create module instance of ".concat(
+                  moduleClass.getName()), ex);
+          }
+
+          return module;
+        }
+      });
+    }
+    else
+    {
+      modules = Collections.EMPTY_LIST;
+    }
+
+    return modules;
   }
 
   /**
