@@ -33,35 +33,81 @@ package sonia.scm.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.AbstractModule;
-import com.google.inject.multibindings.Multibinder;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
-import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class OrientDBModule extends AbstractModule
+@Singleton
+public class OrientDBServletContextListener implements ServletContextListener
 {
+
+  /**
+   * the logger for OrientDBServletContextListener
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(OrientDBServletContextListener.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param connectionProvider
+   */
+  @Inject
+  public OrientDBServletContextListener(ConnectionProvider connectionProvider)
+  {
+    this.connectionProvider = connectionProvider;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @param sce
    */
   @Override
-  protected void configure()
+  public void contextDestroyed(ServletContextEvent sce)
   {
-    bind(ODatabaseDocumentTx.class).toProvider(ConnectionProvider.class);
+    connectionProvider.close();
 
-    Multibinder<ServletContextListener> servletContextListenerBinder =
-      Multibinder.newSetBinder(binder(), ServletContextListener.class);
-
-    servletContextListenerBinder.addBinding().to(
-        OrientDBServletContextListener.class);
+    if (logger.isInfoEnabled())
+    {
+      logger.info("orientdb context listener destroyed");
+    }
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param sce
+   */
+  @Override
+  public void contextInitialized(ServletContextEvent sce)
+  {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("orientdb context listener initialized");
+    }
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private ConnectionProvider connectionProvider;
 }

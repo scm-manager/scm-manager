@@ -41,7 +41,6 @@ import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.server.OServer;
 import com.orientechnologies.orient.server.OServerMain;
-import com.orientechnologies.orient.server.config.OServerConfiguration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +52,6 @@ import sonia.scm.SCMContext;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.IOException;
 
 import java.net.URL;
 
@@ -130,7 +128,8 @@ public class ConnectionProvider
                       directory);
         }
 
-        OServer server = OServerMain.create();
+        server = OServerMain.create();
+
         URL configUrl = Resources.getResource(EMBEDDED_CONFIGURATION);
         String config = Resources.toString(configUrl, Charset.defaultCharset());
 
@@ -192,7 +191,26 @@ public class ConnectionProvider
   {
     if (connectionPool != null)
     {
-      connectionPool.close();
+      try
+      {
+        connectionPool.close();
+      }
+      catch (Exception ex)
+      {
+        logger.error("could not close connection pool", ex);
+      }
+    }
+
+    if (server != null)
+    {
+      try
+      {
+        server.shutdown();
+      }
+      catch (Exception ex)
+      {
+        logger.error("shutdown of orientdb server failed", ex);
+      }
     }
   }
 
@@ -241,4 +259,7 @@ public class ConnectionProvider
 
   /** Field description */
   private ODatabaseDocumentPool connectionPool;
+
+  /** Field description */
+  private OServer server;
 }
