@@ -85,8 +85,8 @@ public class ConnectionProvider
     "sonia/scm/orientdb/server-configuration.xml";
 
   /** Field description */
-  public static final String PATH =
-    "config".concat(File.separator).concat("orientdb.xml");
+  public static final String CONFIG_PATH_CLIENT =
+    "config".concat(File.separator).concat("orientdb-client.xml");
 
   /**
    * the logger for ConnectionProvider
@@ -102,7 +102,8 @@ public class ConnectionProvider
    */
   public ConnectionProvider()
   {
-    File file = new File(SCMContext.getContext().getBaseDirectory(), PATH);
+    File file = new File(SCMContext.getContext().getBaseDirectory(),
+                         CONFIG_PATH_CLIENT);
 
     if (file.exists())
     {
