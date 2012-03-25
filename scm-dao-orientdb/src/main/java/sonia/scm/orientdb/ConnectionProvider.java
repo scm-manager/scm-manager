@@ -33,6 +33,7 @@ package sonia.scm.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -85,6 +86,10 @@ public class ConnectionProvider
     "sonia/scm/orientdb/server-configuration.xml";
 
   /** Field description */
+  public static final String CONFIG_PATH_SERVER =
+    "config".concat(File.separator).concat("orientdb-server.xml");
+
+  /** Field description */
   public static final String CONFIG_PATH_CLIENT =
     "config".concat(File.separator).concat("orientdb-client.xml");
 
@@ -118,10 +123,10 @@ public class ConnectionProvider
     {
       try
       {
+        File baseDirectory = SCMContext.getContext().getBaseDirectory();
 
         // create connection configuration for embedded server
-        File directory = new File(SCMContext.getContext().getBaseDirectory(),
-                                  DEFAULT_DB_DIRECTORY);
+        File directory = new File(baseDirectory, DEFAULT_DB_DIRECTORY);
 
         if (logger.isInfoEnabled())
         {
@@ -131,7 +136,23 @@ public class ConnectionProvider
 
         server = OServerMain.create();
 
-        URL configUrl = Resources.getResource(EMBEDDED_CONFIGURATION);
+        URL configUrl = null;
+        File serverConfiguration = new File(baseDirectory, CONFIG_PATH_SERVER);
+
+        if (serverConfiguration.exists())
+        {
+          configUrl = serverConfiguration.toURI().toURL();
+        }
+        else
+        {
+          configUrl = Resources.getResource(EMBEDDED_CONFIGURATION);
+        }
+
+        if (logger.isInfoEnabled())
+        {
+          logger.info("load orientdb server configuration from {}", configUrl);
+        }
+
         String config = Resources.toString(configUrl, Charset.defaultCharset());
 
         server.startup(config);
