@@ -33,7 +33,6 @@ package sonia.scm.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
