@@ -55,8 +55,10 @@ import sonia.scm.web.security.LocalSecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /**
  *
@@ -97,6 +99,8 @@ public class ScmContextListener extends GuiceServletContextListener
 
       // remove thread local store
       injector.getInstance(LocalSecurityContextHolder.class).destroy();
+      injector.getInstance(ServletContextListenerHolder.class).contextDestroyed(
+          servletContextEvent);
     }
 
     super.contextDestroyed(servletContextEvent);
@@ -115,6 +119,8 @@ public class ScmContextListener extends GuiceServletContextListener
 
     upgradeHandler.doUpgrade();
     super.contextInitialized(servletContextEvent);
+    injector.getInstance(ServletContextListenerHolder.class).contextInitialized(
+        servletContextEvent);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -172,6 +178,7 @@ public class ScmContextListener extends GuiceServletContextListener
 
     authenticationManager.init(context);
 
+    // fetch listeners
     return injector;
   }
 

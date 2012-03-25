@@ -48,6 +48,8 @@ import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionProcessor;
 import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.repository.ChangesetPreProcessorFactory;
+import sonia.scm.repository.FileObjectPreProcessor;
+import sonia.scm.repository.FileObjectPreProcessorFactory;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHook;
 import sonia.scm.repository.RepositoryListener;
@@ -63,8 +65,8 @@ import sonia.scm.web.security.DefaultAuthenticationHandler;
 
 import java.util.HashSet;
 import java.util.Set;
-import sonia.scm.repository.FileObjectPreProcessor;
-import sonia.scm.repository.FileObjectPreProcessorFactory;
+
+import javax.servlet.ServletContextListener;
 
 /**
  *
@@ -109,13 +111,13 @@ public class BindingExtensionProcessor implements ExtensionProcessor
       Multibinder.newSetBinder(binder, ResourceHandler.class);
     Multibinder<RepositoryHook> repositoryHookBinder =
       Multibinder.newSetBinder(binder, RepositoryHook.class);
-    
+
     // changeset pre processor
     Multibinder<ChangesetPreProcessor> changesetPreProcessorBinder =
       Multibinder.newSetBinder(binder, ChangesetPreProcessor.class);
     Multibinder<ChangesetPreProcessorFactory> changesetPreProcessorFactoryBinder =
       Multibinder.newSetBinder(binder, ChangesetPreProcessorFactory.class);
-    
+
     // fileobject pre processor
     Multibinder<FileObjectPreProcessor> fileObjectPreProcessorBinder =
       Multibinder.newSetBinder(binder, FileObjectPreProcessor.class);
@@ -133,6 +135,8 @@ public class BindingExtensionProcessor implements ExtensionProcessor
       Multibinder.newSetBinder(binder, AuthenticationListener.class);
     Multibinder<RepositoryRequestListener> repositoryRequestListenerBinder =
       Multibinder.newSetBinder(binder, RepositoryRequestListener.class);
+    Multibinder<ServletContextListener> servletContextListenerBinder =
+      Multibinder.newSetBinder(binder, ServletContextListener.class);
 
     authenticators.addBinding().to(DefaultAuthenticationHandler.class);
 
@@ -282,6 +286,16 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         }
 
         repositoryRequestListenerBinder.addBinding().to(extensionClass);
+      }
+      else if (ServletContextListener.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind ServletContextListener {}",
+                      extensionClass.getName());
+        }
+
+        servletContextListenerBinder.addBinding().to(extensionClass);
       }
       else
       {
