@@ -165,6 +165,7 @@ public class ScmConfiguration
     this.forceBaseUrl = other.forceBaseUrl;
     this.baseUrl = other.baseUrl;
     this.disableGroupingGrid = other.disableGroupingGrid;
+    this.enableRepositoryArchive = other.enableRepositoryArchive;
 
     // deprecated fields
     this.sslPort = other.sslPort;
@@ -382,6 +383,18 @@ public class ScmConfiguration
   }
 
   /**
+   * Returns true if the repository archive is enabled.
+   *
+   *
+   * @return true if the repository archive is enabled
+   * @since 1.14
+   */
+  public boolean isEnableRepositoryArchive()
+  {
+    return enableRepositoryArchive;
+  }
+
+  /**
    * Returns true if ssl is enabled.
    *
    *
@@ -473,6 +486,18 @@ public class ScmConfiguration
   public void setDisableGroupingGrid(boolean disableGroupingGrid)
   {
     this.disableGroupingGrid = disableGroupingGrid;
+  }
+
+  /**
+   * Enable or disable the repository archive. Default is disabled.
+   *
+   *
+   * @param enableRepositoryArchive true to disable the repository archive
+   * @since 1.14
+   */
+  public void setDisableRepositoryArchive(boolean enableRepositoryArchive)
+  {
+    this.enableRepositoryArchive = enableRepositoryArchive;
   }
 
   /**
@@ -681,6 +706,9 @@ public class ScmConfiguration
   @XmlTransient
   private Set<ConfigChangedListener> listeners =
     new HashSet<ConfigChangedListener>();
+
+  /** Field description */
+  private boolean enableRepositoryArchive = false;
 
   /** Field description */
   private boolean disableGroupingGrid = false;

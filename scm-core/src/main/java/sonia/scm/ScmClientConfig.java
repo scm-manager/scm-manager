@@ -33,6 +33,10 @@
 
 package sonia.scm;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.config.ScmConfiguration;
+
 /**
  * Configuration object for a SCM-Manager
  * client (WebInterface, RestClient, ...).
@@ -47,6 +51,20 @@ public class ScmClientConfig
    *
    */
   public ScmClientConfig() {}
+
+  /**
+   * Constructs {@link ScmClientConfig} object
+   *
+   *
+   * @param configuration SCM-Manager main configuration
+   * @since 1.14
+   */
+  public ScmClientConfig(ScmConfiguration configuration)
+  {
+    this.dateFormat = configuration.getDateFormat();
+    this.disableGroupingGrid = configuration.isDisableGroupingGrid();
+    this.enableRepositoryArchive = configuration.isEnableRepositoryArchive();
+  }
 
   /**
    * Constructs {@link ScmClientConfig} object
@@ -100,6 +118,18 @@ public class ScmClientConfig
     return disableGroupingGrid;
   }
 
+  /**
+   * Returns true if the repository archive is disabled.
+   *
+   *
+   * @return true if the repository archive is disabled
+   * @since 1.14
+   */
+  public boolean isEnableRepositoryArchive()
+  {
+    return enableRepositoryArchive;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -127,10 +157,25 @@ public class ScmClientConfig
     this.disableGroupingGrid = disableGroupingGrid;
   }
 
+  /**
+   * Enable or disable the repository archive. Default is disabled.
+   *
+   *
+   * @param enableRepositoryArchive true to disable the repository archive
+   * @since 1.14
+   */
+  public void setEnableRepositoryArchive(boolean enableRepositoryArchive)
+  {
+    this.enableRepositoryArchive = enableRepositoryArchive;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private String dateFormat;
+
+  /** Field description */
+  private boolean enableRepositoryArchive = true;
 
   /** Field description */
   private boolean disableGroupingGrid = true;
