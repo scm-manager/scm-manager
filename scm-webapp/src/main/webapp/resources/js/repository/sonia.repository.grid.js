@@ -36,11 +36,21 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   colDescriptionText: 'Description',
   colCreationDateText: 'Creation date',
   colUrlText: 'Url',
+  colArchiveText: 'Archive',
   emptyText: 'No repository is configured',
   formTitleText: 'Repository Form',
   unknownType: 'Unknown',
   
+  filterRequest: null,
+  
+  /**
+   * @deprecated use filterRequest
+   */
   searchValue: null,
+  
+  /**
+   * @deprecated use filterRequest
+   */
   typeFilter: null,
   
   // TODO find better text
@@ -81,6 +91,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
           name:'permissions'
         },{
           name: 'properties'
+        },{
+          name: 'archive'
         }]
       }),
       sortInfo: {
@@ -138,6 +150,12 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         dataIndex: 'url', 
         renderer: this.renderUrl, 
         width: 250
+      },{
+        id: 'Archive', 
+        header: this.colArchiveText, 
+        dataIndex: 'archive', 
+        width: 40,
+        hidden: true //! state.clientConfig.enableRepositoryArchive
       },{
         id: 'group', 
         dataIndex: 'group', 
@@ -231,23 +249,63 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     this.ownerCt.doLayout();
   },
   
+  getFilterRequest: function(){
+    if ( ! this.filterRequest ){
+      this.filterRequest = {};
+    }
+    return this.filterRequest;
+  },
+  
+  /**
+   * @deprecated use filterByRequest
+   */
   search: function(value){
     this.searchValue = value;
     this.filterStore();
   },
-  
+
+  /**
+   * @deprecated use filterByRequest
+   */
   filter: function(type){
     this.typeFilter = type;
     this.filterStore();
   },
   
   clearStoreFilter: function(){
+    this.filterRequest = null;
     this.searchValue = null;
     this.typeFilter = null;
     this.getStore().clearFilter();
   },
   
+  filterByRequest: function(){
+    if (debug){
+      console.debug('filter repository store by request:');
+      console.debug(this.filterRequest);
+    }
+    var store = this.getStore();
+    if ( ! this.filterRequest ){
+      store.clearFilter();
+    } else {
+      var query = this.filterRequest.query;
+      if ( query ){
+        query = query.toLowerCase();
+      }
+      var archived = ! state.clientConfig.enableRepositoryArchive || this.filterRequest.archived;
+      store.filterBy(function(rec){
+        var desc = rec.get('description');
+        return (! query || rec.get('name').toLowerCase().indexOf(query) >= 0 ||
+               (desc && desc.toLowerCase().indexOf(query) >= 0)) && 
+               (! this.filterRequest.type || rec.get('type') == this.filterRequest.type) &&
+               (archived || ! rec.get('archived'));
+      }, this);
+    }
+  },
   
+  /**
+   * @deprecated use filterByRequest
+   */
   filterStore: function(){
     var store = this.getStore();
     if ( ! this.searchValue && ! this.typeFilter ){

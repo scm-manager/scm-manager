@@ -124,8 +124,26 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
           fn: this.search,
           scope: this
         }
-      } 
+      }
     });
+    
+    // repository archive
+    if (state.clientConfig.enableRepositoryArchive){
+      toolbar.push('  ',{
+        id: 'displayArchived',
+        xtype: 'checkbox',
+        listeners: {
+          changed: {
+            fn: this.filterByArchived,
+            scope: this
+          }
+        }      
+      },{
+        xtype: 'label',
+        text: 'Archive',
+        cls: 'ytb-text'
+      })
+    }
 
     var config = {
       tbar: toolbar,
@@ -170,12 +188,22 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
     Sonia.History.add(token);
   },
   
+  filterByArchived: function(checkbox, checked){
+    var grid = this.getGrid();
+    grid.getFilterRequest().archived = checked;
+    grid.filterByRequest();
+  },
+  
   filterByType: function(combo, rec){
-    this.getGrid().filter(rec.get('name'));
+    var grid = this.getGrid();
+    grid.getFilterRequest().type = rec.get('name');
+    grid.filterByRequest();
   },
   
   search: function(field){
-    this.getGrid().search(field.getValue());
+    var grid = this.getGrid();
+    grid.getFilterRequest().query = field.getValue();
+    grid.filterByRequest();
   },
 
   removeRepository: function(){
