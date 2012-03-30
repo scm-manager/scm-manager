@@ -47,6 +47,8 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   errorTitleText: 'Error',
   errorMsgText: 'Repository deletion failed',
   
+  archiveIcon: 'resources/images/archive.png',
+  
   repositoryGrid: null,
 
   initComponent: function(){
@@ -85,9 +87,8 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
         xtype: 'tbbutton', 
         id: 'repoArchiveButton', 
         disabled: true, 
-        text: this.archiveText, 
-        // TODO find icon
-        icon: this.removeIcon, 
+        text: this.archiveText,
+        icon: this.archiveIcon,
         scope: this,
         handler: this.toggleArchive        
       });
