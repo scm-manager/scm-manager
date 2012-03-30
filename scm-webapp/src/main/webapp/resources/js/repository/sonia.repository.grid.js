@@ -179,6 +179,13 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       }
       console.debug( msg );
     }
+    
+    if ( state.clientConfig.enableRepositoryArchive ){
+      if ( !this.filterRequest ){
+        this.filterRequest = {};
+      }
+      this.filterRequest.archived = false;
+    }
 
     var config = {
       autoExpandColumn: 'description',
