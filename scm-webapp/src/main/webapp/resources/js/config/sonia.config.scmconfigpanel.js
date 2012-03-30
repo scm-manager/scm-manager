@@ -87,7 +87,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   // TODO i18n
   disableGroupingGridHelpText: 'Disable repository groups. A complete page reload is required after a change of this value.',
   // TODO
-  enableRepositoryArchiveHelpText: 'Enable repository archives.',
+  enableRepositoryArchiveHelpText: 'Enable repository archives. A complete page reload is required after a change of this value.',
 
 
   initComponent: function(){
