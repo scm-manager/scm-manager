@@ -489,18 +489,6 @@ public class ScmConfiguration
   }
 
   /**
-   * Enable or disable the repository archive. Default is disabled.
-   *
-   *
-   * @param enableRepositoryArchive true to disable the repository archive
-   * @since 1.14
-   */
-  public void setDisableRepositoryArchive(boolean enableRepositoryArchive)
-  {
-    this.enableRepositoryArchive = enableRepositoryArchive;
-  }
-
-  /**
    * Method description
    *
    *
@@ -522,6 +510,18 @@ public class ScmConfiguration
   public void setEnableProxy(boolean enableProxy)
   {
     this.enableProxy = enableProxy;
+  }
+
+  /**
+   * Enable or disable the repository archive. Default is disabled.
+   *
+   *
+   * @param enableRepositoryArchive true to disable the repository archive
+   * @since 1.14
+   */
+  public void setEnableRepositoryArchive(boolean enableRepositoryArchive)
+  {
+    this.enableRepositoryArchive = enableRepositoryArchive;
   }
 
   /**
