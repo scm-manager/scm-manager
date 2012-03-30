@@ -41,6 +41,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   formTitleText: 'Repository Form',
   unknownType: 'Unknown',
   
+  archiveIcon: 'resources/images/archive.png',
+  
   filterRequest: null,
   
   /**
@@ -155,7 +157,9 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         header: this.colArchiveText, 
         dataIndex: 'archived', 
         width: 40,
-        hidden: true //! state.clientConfig.enableRepositoryArchive
+        hidden: ! state.clientConfig.enableRepositoryArchive,
+        renderer: this.renderArchive,
+        scope: this
       },{
         id: 'group', 
         dataIndex: 'group', 
@@ -207,6 +211,10 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     }
   },
   
+  renderArchive: function(v){
+    return v ? '<img src=' + this.archiveIcon + ' alt=' + v + '>' : '';
+  },
+  
   convertToGroup: function(v, data){
     var name = data.name;
     var i = name.lastIndexOf('/');
@@ -237,6 +245,9 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   storeLoad: function(){
     if (this.searchValue){
       this.filterStore();
+    }
+    if (this.filterRequest){
+      this.filterByRequest();
     }
   },
 
