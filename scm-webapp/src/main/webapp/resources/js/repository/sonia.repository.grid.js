@@ -196,6 +196,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         groupTextTpl: '{group} ({[values.rs.length]} {[values.rs.length > 1 ? "Repositories" : "Repository"]})'
       })
     };
+    
+    this.addEvents('repositorySelected');
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Grid.superclass.initComponent.apply(this, arguments);
@@ -324,6 +326,9 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     }
   },
 
+  /**
+   * TODO move to panel
+   */
   selectItem: function(item){
     if ( debug ){
       console.debug( item.name + ' selected' );
@@ -332,14 +337,17 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     if ( this.parentPanel ){
       this.parentPanel.updateHistory(item);
     }
+    
+    var owner = Sonia.repository.isOwner(item);
+    
+    this.fireEvent('repositorySelected', item, owner);
 
     var infoPanel = main.getInfoPanel(item.type);
     infoPanel.item = item;
     
     var panels = [infoPanel];
     
-    if ( Sonia.repository.isOwner(item) ){
-      Ext.getCmp('repoRmButton').setDisabled(false);
+    if ( owner ){
       panels.push({
         item: item,
         xtype: 'repositorySettingsForm',

@@ -37,6 +37,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   
   // TODO i18n
   archiveText: 'Archive',
+  unarchiveText: 'Unarchive',
   archiveTitleText: 'Archive Repository',
   archiveMsgText: 'Archive Repository "{0}"?',
   errorArchiveMsgText: 'Repository  archival failed',
@@ -83,7 +84,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
       toolbar.push({
         xtype: 'tbbutton', 
         id: 'repoArchiveButton', 
-        disabled: false, 
+        disabled: true, 
         text: this.archiveText, 
         // TODO find icon
         icon: this.removeIcon, 
@@ -173,7 +174,13 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
         id: 'repositoryGrid',
         xtype: 'repositoryGrid',
         region: 'center',
-        parentPanel: this
+        parentPanel: this,
+        listeners: {
+          repositorySelected: {
+            fn: this.onRepositorySelection,
+            scope: this
+          }
+        }
       },{
         id: 'repositoryEditPanel',
         xtype: 'tabpanel',
@@ -326,6 +333,29 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
           );
         }
       );
+    }
+  },
+  
+  onRepositorySelection: function(item, owner){
+    if ( owner ){
+      if (state.clientConfig.enableRepositoryArchive){
+        var archiveBt = Ext.getCmp('repoArchiveButton');
+        if ( item.archived ){
+          archiveBt.setText(this.unarchiveText);
+          Ext.getCmp('repoRmButton').setDisabled(false);
+        } else {
+          archiveBt.setText(this.archiveText);
+          Ext.getCmp('repoRmButton').setDisabled(true);
+        }
+        archiveBt.setDisabled(false);
+      } else {
+        Ext.getCmp('repoRmButton').setDisabled(false);
+      }
+    } else {
+      Ext.getCmp('repoRmButton').setDisabled(false);
+      if (state.clientConfig.enableRepositoryArchive){
+        Ext.getCmp('repoArchiveButton').setDisabled(false);
+      }
     }
   },
 
