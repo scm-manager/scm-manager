@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
@@ -76,10 +77,14 @@ public abstract class PermissionFilter extends HttpFilter
    * Constructs ...
    *
    *
+   *
+   * @param configuration
    * @param securityContextProvider
    */
-  public PermissionFilter(Provider<WebSecurityContext> securityContextProvider)
+  public PermissionFilter(ScmConfiguration configuration,
+                          Provider<WebSecurityContext> securityContextProvider)
   {
+    this.configuration = configuration;
     this.securityContextProvider = securityContextProvider;
   }
 
@@ -139,10 +144,7 @@ public abstract class PermissionFilter extends HttpFilter
         {
           boolean writeRequest = isWriteRequest(request);
 
-          if (PermissionUtil.hasPermission(repository, securityContext,
-                                           writeRequest
-                                           ? PermissionType.WRITE
-                                           : PermissionType.READ))
+          if (hasPermission(repository, securityContext, writeRequest))
           {
             chain.doFilter(request, response);
           }
@@ -213,8 +215,43 @@ public abstract class PermissionFilter extends HttpFilter
     }
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param securityContext
+   * @param writeRequest
+   *
+   * @return
+   */
+  private boolean hasPermission(Repository repository,
+                                WebSecurityContext securityContext,
+                                boolean writeRequest)
+  {
+    boolean permitted = false;
+
+    if (writeRequest)
+    {
+      permitted = PermissionUtil.isWritable(configuration, repository,
+              securityContext);
+    }
+    else
+    {
+      permitted = PermissionUtil.hasPermission(repository, securityContext,
+              PermissionType.READ);
+    }
+
+    return permitted;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   protected Provider<WebSecurityContext> securityContextProvider;
+
+  /** Field description */
+  private ScmConfiguration configuration;
 }

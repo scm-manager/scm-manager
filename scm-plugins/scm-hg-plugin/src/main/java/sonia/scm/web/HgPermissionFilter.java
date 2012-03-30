@@ -46,6 +46,7 @@ import sonia.scm.web.security.WebSecurityContext;
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.servlet.http.HttpServletRequest;
+import sonia.scm.config.ScmConfiguration;
 
 /**
  *
@@ -64,10 +65,11 @@ public class HgPermissionFilter extends ProviderPermissionFilter
    */
   @Inject
   public HgPermissionFilter(
+          ScmConfiguration configuration,
           Provider<WebSecurityContext> securityContextProvider,
           RepositoryProvider repositoryProvider)
   {
-    super(securityContextProvider, repositoryProvider);
+    super(configuration, securityContextProvider, repositoryProvider);
   }
 
   //~--- get methods ----------------------------------------------------------
