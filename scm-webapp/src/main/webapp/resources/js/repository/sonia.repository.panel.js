@@ -407,6 +407,10 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
 
   reload: function(){
     this.getGrid().reload();
+    var repo = this.getSelectedRepository();
+    if ( repo ){
+      this.onRepositorySelection(repo, Sonia.repository.isOwner(repo));
+    }
   }
 
 });
