@@ -92,7 +92,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         },{
           name: 'properties'
         },{
-          name: 'archive'
+          name: 'archived'
         }]
       }),
       sortInfo: {
@@ -153,7 +153,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       },{
         id: 'Archive', 
         header: this.colArchiveText, 
-        dataIndex: 'archive', 
+        dataIndex: 'archived', 
         width: 40,
         hidden: true //! state.clientConfig.enableRepositoryArchive
       },{
