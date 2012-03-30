@@ -46,6 +46,7 @@ import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.AbstractRepositoryManager;
 import sonia.scm.repository.BlameViewer;
 import sonia.scm.repository.ChangesetViewer;
@@ -113,6 +114,8 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    *
    *
    *
+   *
+   * @param configuration
    * @param contextProvider
    * @param securityContextProvider
    * @param storeFactory
@@ -122,12 +125,13 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
    */
   @Inject
   public XmlRepositoryManager(
-          SCMContextProvider contextProvider,
+          ScmConfiguration configuration, SCMContextProvider contextProvider,
           Provider<WebSecurityContext> securityContextProvider,
           StoreFactory storeFactory, Set<RepositoryHandler> handlerSet,
           Provider<Set<RepositoryListener>> repositoryListenersProvider,
           Provider<Set<RepositoryHook>> repositoryHooksProvider)
   {
+    this.configuration = configuration;
     this.securityContextProvider = securityContextProvider;
     this.store = storeFactory.getStore(XmlRepositoryDatabase.class, STORE_NAME);
     this.repositoryListenersProvider = repositoryListenersProvider;
@@ -238,6 +242,12 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
     }
 
     assertIsOwner(repository);
+
+    if (configuration.isEnableRepositoryArchive() &&!repository.isArchived())
+    {
+      throw new RepositoryException(
+          "Repository could not deleted, because it is not archived.");
+    }
 
     if (repositoryDB.contains(repository))
     {
@@ -988,6 +998,9 @@ public class XmlRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private final Store<XmlRepositoryDatabase> store;
+
+  /** Field description */
+  private ScmConfiguration configuration;
 
   /** Field description */
   private Map<String, RepositoryHandler> handlerMap;
