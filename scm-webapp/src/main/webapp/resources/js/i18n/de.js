@@ -84,7 +84,6 @@ if (Sonia.login.Form){
     passwordText: 'Passwort',
     loginText: 'Anmelden',
     cancelText: 'Abbrechen',
-    titleText: 'Anmeldung',
     waitTitleText: 'Verbinden',
     WaitMsgText: 'Übertrage Daten...',
     failedMsgText: 'Anmeldung fehlgeschlagen!'
@@ -94,7 +93,7 @@ if (Sonia.login.Form){
 
 if (Sonia.login.Window){
   
-  Ext.override(Sonia.login.Form, {
+  Ext.override(Sonia.login.Window, {
     titleText: 'Anmeldung'
   });
 
