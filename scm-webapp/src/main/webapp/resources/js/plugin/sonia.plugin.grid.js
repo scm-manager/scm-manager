@@ -42,7 +42,6 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
   colVersionText: 'Version',
   colActionText: 'Action',
   colUrlText: 'Url',
-  // TODO i18n
   colCategoryText: 'Category',
   emptyText: 'No plugins avaiable',
 

@@ -56,8 +56,6 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   proxyPasswordText: 'Proxy Password',
   baseUrlText: 'Base Url',
   forceBaseUrlText: 'Force Base Url',
-  
-  // TODO i18n
   disableGroupingGridText: 'Disable repository Groups',
   
 
@@ -82,8 +80,6 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   proxyPasswordHelpText: 'The password for the proxy server authentication.',
   baseUrlHelpText: 'The url of the application (with context path) i.e. http://localhost:8080/scm',
   forceBaseUrlHelpText: 'Redirects to the base url if the request comes from a other url',
-  
-  // TODO i18n
   disableGroupingGridHelpText: 'Disable repository Groups. A complete page reload is required after a change of this value.',
 
 

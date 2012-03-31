@@ -31,7 +31,6 @@
 
 Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
   
-  // TODO i18n
   titleText: 'Import Repositories',
   okText: 'Ok',
   closeText: 'Close',

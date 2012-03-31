@@ -257,6 +257,16 @@ if (Sonia.repository.ChangesetViewerGrid){
   
 }
 
+if (Sonia.repository.ImportWindow){
+  
+  Ext.override(Sonia.repository.ImportWindow, {
+    titleText: 'Repositories importieren',
+    okText: 'Ok',
+    closeText: 'Schließen'
+  });
+  
+}
+
 // sonia.config.js
 
 if (Sonia.config.ScmConfigPanel){
@@ -281,6 +291,7 @@ if (Sonia.config.ScmConfigPanel){
     proxyPasswordText: 'Proxy Passwort',
     baseUrlText: 'Basis-URL',
     forceBaseUrlText: 'Basis-URL forcieren',
+    disableGroupingGridText: 'Repository grupierung deaktivieren',
     
     submitText: 'Senden ...',
     loadingText: 'Laden ...',
@@ -308,7 +319,8 @@ if (Sonia.config.ScmConfigPanel){
     proxyUserHelpText: 'Der Benutzername für die Authentifizierung am Proxy-Server.',
     proxyPasswordHelpText: 'Das Passwort für die Authentifizierung am Proxy-Server.',
     baseUrlHelpText: 'Die vollständige URL des Server, inclusive Context-Pfad z.B.: http://localhost:8080/scm.',
-    forceBaseUrlHelpText: 'Leitet alle Zugriffe die nicht von der Basis-URL kommen auf die Basis-URL um.'
+    forceBaseUrlHelpText: 'Leitet alle Zugriffe die nicht von der Basis-URL kommen auf die Basis-URL um.',
+    disableGroupingGridHelpText: 'Repository grupierung deaktivieren. Wenn dieser Wert verändert wird muss die Seite ne geladen werden.'
   });
 
 }
@@ -467,6 +479,17 @@ if (Sonia.action.ChangePasswordWindow){
 
 }
 
+if (Sonia.action.ExceptionWindow){
+  
+  // ??
+  Ext.override(Sonia.action.ExceptionWindow, {
+    okText: 'Ok',
+    detailsText: 'Details',
+    exceptionText: 'Exception'
+  });
+  
+}
+
 // sonia.plugin.js
 
 if (Sonia.plugin.Center){
@@ -500,6 +523,7 @@ if (Sonia.plugin.Grid){
     colVersionText: 'Version',
     colActionText: 'Aktion',
     colUrlText: 'Url',
+    colCategoryText: 'Kategorie',
     emptyText: 'Es konnte kein Plugin gefunden werden.'
   });
 
@@ -518,8 +542,8 @@ if (Sonia.scm.Main){
     sectionConfigText: 'Konfiguration',
     navGeneralConfigText: 'Allgemein',
     tabGeneralConfigText: 'SCM Konfiguration',
-
     navRepositoryTypesText: 'Repository Konfiguration',
+    navImportRepositoriesText: 'Repositories importieren',
     tabRepositoryTypesText: 'Repository Konfiguration',
     navPluginsText: 'Plugins',
     tabPluginsText: 'Plugins',
@@ -540,7 +564,13 @@ if (Sonia.scm.Main){
     errorMessage: 'Es ist ein unbekannter Fehler aufgetreten.',
     
     errorSessionExpiredTitle: 'Session abgelaufen',
-    errorSessionExpiredMessage: 'Ihre Session ist abgelaufen. Bitte melden sie sich neu an.'
+    errorSessionExpiredMessage: 'Ihre Session ist abgelaufen. Bitte melden sie sich neu an.',
+    
+    errorNoPermissionsTitle: 'Keine Berechtigung',
+    errorNoPermissionsMessage: 'Sie haben nicht genügend Rechte um diese Aktion auszuführen.',
+  
+    errorNotFoundTitle: 'Nicht gefunden',
+    errorNotFoundMessage: 'Die Ressource konnte nicht gefunden werden.'
   });
 
 }

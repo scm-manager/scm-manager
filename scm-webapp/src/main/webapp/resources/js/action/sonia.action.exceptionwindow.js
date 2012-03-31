@@ -36,8 +36,7 @@ Sonia.action.ExceptionWindow = Ext.extend(Ext.Window,{
   message: null,
   stacktrace: null,
   icon: Ext.MessageBox.ERROR,
-  
-  // TODO i18n
+
   // labels
   okText: 'Ok',
   detailsText: 'Details',

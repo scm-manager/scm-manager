@@ -33,7 +33,6 @@ Ext.ns("Sonia.scm");
 Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
   tabRepositoriesText: 'Repositories',
-  // todo i18n
   navImportRepositoriesText: 'Import Repositories',
   navChangePasswordText: 'Change Password',
   sectionMainText: 'Main',
@@ -65,8 +64,6 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   
   errorSessionExpiredTitle: 'Session expired',
   errorSessionExpiredMessage: 'Your session is expired. Please relogin.',
-  
-  // TODO i18n
   
   errorNoPermissionsTitle: 'Not permitted',
   errorNoPermissionsMessage: 'You have not enough permissions to execute this action.',
