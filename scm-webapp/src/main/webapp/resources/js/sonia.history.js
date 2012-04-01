@@ -120,7 +120,10 @@ Sonia.History = {
     if (tab){
       var el = this.historyElements[tab.xtype];
       if (el){
-        var token = Sonia.util.apply(el.onActivate, tab);
+        var token = Sonia.util.apply({
+          fn: el.onActivate,
+          scope: el
+        }, tab);
         if (token){
           this.add(token);
         }
@@ -152,7 +155,10 @@ Sonia.History = {
       if (debug){
         console.debug('handle history event for ' + id + ' with "' + p + '"');
       }
-      Sonia.util.apply(el.onChange, p);
+      Sonia.util.apply({
+        fn: el.onChange,
+        scope: el
+      }, p);
     } else if (Ext.ComponentMgr.isRegistered(id)) {
       try {
         main.addTabPanel(id);
