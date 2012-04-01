@@ -48,6 +48,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   
   // for history
   parentPanel: null,
+  ready: false,
 
   initComponent: function(){
 
@@ -218,6 +219,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     if (this.searchValue){
       this.filterStore();
     }
+    this.ready = true;
   },
 
   onFallBelowMinHeight: function(height, minHeight){

@@ -292,6 +292,14 @@ Sonia.History.register('repositoryPanel', {
     return token;
   },
   
+  waitAndSelect: function(grid, repoId){
+    setTimeout(function(){
+      if ( grid.ready ){
+        grid.selectById(repoId);
+      }
+    }, 250);
+  },
+  
   onChange: function(repoId){
     var panel = Ext.getCmp('repositories');
     if ( ! panel ){
@@ -308,8 +316,13 @@ Sonia.History.register('repositoryPanel', {
       }
     } else {
       main.addTab(panel);
-      if (repoId){
-        panel.getGrid().selectById(repoId);
+      if ( repoId ){
+        var grid = panel.getGrid();
+        if ( grid.ready ){
+          grid.selectById(repoId);
+        } else {
+          this.waitAndSelect(grid, repoId);
+        }
       }
     }
   }
