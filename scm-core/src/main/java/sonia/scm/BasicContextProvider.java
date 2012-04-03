@@ -89,9 +89,16 @@ public class BasicContextProvider implements SCMContextProvider
    */
   public BasicContextProvider()
   {
-    baseDirectory = findBaseDirectory();
-    version = loadVersion();
-    stage = loadProjectStage();
+    try
+    {
+      baseDirectory = findBaseDirectory();
+      version = loadVersion();
+      stage = loadProjectStage();
+    }
+    catch (Throwable ex)
+    {
+      this.startupError = ex;
+    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -135,6 +142,18 @@ public class BasicContextProvider implements SCMContextProvider
   public Stage getStage()
   {
     return stage;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public Throwable getStartupError()
+  {
+    return startupError;
   }
 
   /**
@@ -182,7 +201,16 @@ public class BasicContextProvider implements SCMContextProvider
 
     if (!directory.exists() &&!directory.mkdirs())
     {
-      throw new IllegalStateException("could not create directory");
+      String msg = "could not create home directory at ".concat(
+                       directory.getAbsolutePath());
+
+      // do not use logger
+      // http://www.slf4j.org/codes.html#substituteLogger
+      System.err.println("===================================================");
+      System.err.append("Error: ").println(msg);
+      System.err.println("===================================================");
+
+      throw new IllegalStateException(msg);
     }
 
     return directory;
@@ -318,6 +346,9 @@ public class BasicContextProvider implements SCMContextProvider
 
   /** stage of the current SCM-Manager instance */
   private Stage stage;
+
+  /** startup exception */
+  private Throwable startupError;
 
   /** the version of the SCM-Manager */
   private String version;

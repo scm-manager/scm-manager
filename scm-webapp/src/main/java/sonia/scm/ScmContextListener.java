@@ -74,29 +74,29 @@ public class ScmContextListener extends GuiceServletContextListener
   @Override
   public void contextDestroyed(ServletContextEvent servletContextEvent)
   {
-    if (injector != null)
+    if ((globalInjector != null) && startupError)
     {
 
       // close RepositoryManager
-      IOUtil.close(injector.getInstance(RepositoryManager.class));
+      IOUtil.close(globalInjector.getInstance(RepositoryManager.class));
 
       // close Authenticator
-      IOUtil.close(injector.getInstance(AuthenticationManager.class));
+      IOUtil.close(globalInjector.getInstance(AuthenticationManager.class));
 
       // close GroupManager
-      IOUtil.close(injector.getInstance(GroupManager.class));
+      IOUtil.close(globalInjector.getInstance(GroupManager.class));
 
       // close UserManager
-      IOUtil.close(injector.getInstance(UserManager.class));
+      IOUtil.close(globalInjector.getInstance(UserManager.class));
 
       // close StoreFactory
-      IOUtil.close(injector.getInstance(StoreFactory.class));
+      IOUtil.close(globalInjector.getInstance(StoreFactory.class));
 
       // close CacheManager
-      IOUtil.close(injector.getInstance(CacheManager.class));
+      IOUtil.close(globalInjector.getInstance(CacheManager.class));
 
       // remove thread local store
-      injector.getInstance(LocalSecurityContextHolder.class).destroy();
+      globalInjector.getInstance(LocalSecurityContextHolder.class).destroy();
     }
 
     super.contextDestroyed(servletContextEvent);
@@ -111,9 +111,17 @@ public class ScmContextListener extends GuiceServletContextListener
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent)
   {
-    ScmUpgradeHandler upgradeHandler = new ScmUpgradeHandler();
+    if (SCMContext.getContext().getStartupError() == null)
+    {
+      ScmUpgradeHandler upgradeHandler = new ScmUpgradeHandler();
 
-    upgradeHandler.doUpgrade();
+      upgradeHandler.doUpgrade();
+    }
+    else
+    {
+      startupError = true;
+    }
+
     super.contextInitialized(servletContextEvent);
   }
 
@@ -128,6 +136,26 @@ public class ScmContextListener extends GuiceServletContextListener
   @Override
   protected Injector getInjector()
   {
+    if (startupError)
+    {
+      globalInjector = getErrorInjector();
+    }
+    else
+    {
+      globalInjector = getDefaultInjector();
+    }
+
+    return globalInjector;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private Injector getDefaultInjector()
+  {
     PluginLoader pluginLoader = new DefaultPluginLoader();
     BindingExtensionProcessor bindExtProcessor =
       new BindingExtensionProcessor();
@@ -140,8 +168,8 @@ public class ScmContextListener extends GuiceServletContextListener
       new ArrayList<Module>(bindExtProcessor.getModuleSet());
 
     moduleList.add(0, main);
-    injector = Guice.createInjector(moduleList);
 
+    Injector injector = Guice.createInjector(moduleList);
     SCMContextProvider context = SCMContext.getContext();
 
     // init StoreFactory
@@ -173,8 +201,22 @@ public class ScmContextListener extends GuiceServletContextListener
     return injector;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private Injector getErrorInjector()
+  {
+    return Guice.createInjector(new ScmErrorModule());
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Injector injector;
+  private Injector globalInjector;
+
+  /** Field description */
+  private boolean startupError = false;
 }
