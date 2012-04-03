@@ -98,6 +98,9 @@ public class BasicContextProvider implements SCMContextProvider
     catch (Throwable ex)
     {
       this.startupError = ex;
+
+      // print exception to system err
+      ex.printStackTrace(System.err);
     }
   }
 
