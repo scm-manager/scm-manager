@@ -36,11 +36,23 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   colDescriptionText: 'Description',
   colCreationDateText: 'Creation date',
   colUrlText: 'Url',
+  colArchiveText: 'Archive',
   emptyText: 'No repository is configured',
   formTitleText: 'Repository Form',
   unknownType: 'Unknown',
   
+  archiveIcon: 'resources/images/archive.png',
+  
+  filterRequest: null,
+  
+  /**
+   * @deprecated use filterRequest
+   */
   searchValue: null,
+  
+  /**
+   * @deprecated use filterRequest
+   */
   typeFilter: null,
   
   // TODO find better text
@@ -82,6 +94,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
           name:'permissions'
         },{
           name: 'properties'
+        },{
+          name: 'archived'
         }]
       }),
       sortInfo: {
@@ -140,6 +154,14 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         renderer: this.renderUrl, 
         width: 250
       },{
+        id: 'Archive', 
+        header: this.colArchiveText, 
+        dataIndex: 'archived', 
+        width: 40,
+        hidden: ! state.clientConfig.enableRepositoryArchive,
+        renderer: this.renderArchive,
+        scope: this
+      },{
         id: 'group', 
         dataIndex: 'group', 
         hidden: true,
@@ -157,6 +179,13 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         msg += "enabled";
       }
       console.debug( msg );
+    }
+    
+    if ( state.clientConfig.enableRepositoryArchive ){
+      if ( !this.filterRequest ){
+        this.filterRequest = {};
+      }
+      this.filterRequest.archived = false;
     }
 
     var config = {
@@ -179,6 +208,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         groupTextTpl: '{group} ({[values.rs.length]} {[values.rs.length > 1 ? "Repositories" : "Repository"]})'
       })
     };
+    
+    this.addEvents('repositorySelected');
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Grid.superclass.initComponent.apply(this, arguments);
@@ -186,6 +217,10 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     if (this.parentPanel){
       this.parentPanel.repositoryGrid = this;
     }
+  },
+  
+  renderArchive: function(v){
+    return v ? '<img src=' + this.archiveIcon + ' alt=' + v + '>' : '';
   },
   
   convertToGroup: function(v, data){
@@ -220,6 +255,9 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       this.filterStore();
     }
     this.ready = true;
+    if (this.filterRequest){
+      this.filterByRequest();
+    }
   },
 
   onFallBelowMinHeight: function(height, minHeight){
@@ -233,23 +271,63 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     this.ownerCt.doLayout();
   },
   
+  getFilterRequest: function(){
+    if ( ! this.filterRequest ){
+      this.filterRequest = {};
+    }
+    return this.filterRequest;
+  },
+  
+  /**
+   * @deprecated use filterByRequest
+   */
   search: function(value){
     this.searchValue = value;
     this.filterStore();
   },
-  
+
+  /**
+   * @deprecated use filterByRequest
+   */
   filter: function(type){
     this.typeFilter = type;
     this.filterStore();
   },
   
   clearStoreFilter: function(){
+    this.filterRequest = null;
     this.searchValue = null;
     this.typeFilter = null;
     this.getStore().clearFilter();
   },
   
+  filterByRequest: function(){
+    if (debug){
+      console.debug('filter repository store by request:');
+      console.debug(this.filterRequest);
+    }
+    var store = this.getStore();
+    if ( ! this.filterRequest ){
+      store.clearFilter();
+    } else {
+      var query = this.filterRequest.query;
+      if ( query ){
+        query = query.toLowerCase();
+      }
+      var archived = ! state.clientConfig.enableRepositoryArchive || this.filterRequest.archived;
+      store.filterBy(function(rec){
+        var desc = rec.get('description');
+        return (! query || rec.get('name').toLowerCase().indexOf(query) >= 0 ||
+               (desc && desc.toLowerCase().indexOf(query) >= 0)) && 
+               (! this.filterRequest.type || rec.get('type') == this.filterRequest.type) &&
+               (archived || ! rec.get('archived'));
+      }, this);
+    }
+  },
   
+  /**
+   * @deprecated use filterByRequest
+   */
   filterStore: function(){
     var store = this.getStore();
     if ( ! this.searchValue && ! this.typeFilter ){
@@ -268,6 +346,9 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     }
   },
 
+  /**
+   * TODO move to panel
+   */
   selectItem: function(item){
     if ( debug ){
       console.debug( item.name + ' selected' );
@@ -276,14 +357,17 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     if ( this.parentPanel ){
       this.parentPanel.updateHistory(item);
     }
+    
+    var owner = Sonia.repository.isOwner(item);
+    
+    this.fireEvent('repositorySelected', item, owner);
 
     var infoPanel = main.getInfoPanel(item.type);
     infoPanel.item = item;
     
     var panels = [infoPanel];
     
-    if ( Sonia.repository.isOwner(item) ){
-      Ext.getCmp('repoRmButton').setDisabled(false);
+    if ( owner ){
       panels.push({
         item: item,
         xtype: 'repositorySettingsForm',

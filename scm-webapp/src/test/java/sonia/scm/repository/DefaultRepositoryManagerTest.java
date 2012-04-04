@@ -41,6 +41,7 @@ import org.junit.Test;
 
 import sonia.scm.Type;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.MockUtil;
@@ -134,7 +135,9 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
 
     XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(factory);
 
-    return new DefaultRepositoryManager(contextProvider,
+    ScmConfiguration configuration = new ScmConfiguration();
+
+    return new DefaultRepositoryManager(configuration, contextProvider,
             MockUtil.getAdminSecurityContextProvider(), repositoryDAO,
             handlerSet, listenerProvider, hookProvider);
   }

@@ -346,6 +346,18 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
+   * Returns true if the repository is archived.
+   *
+   *
+   * @return true if the repository is archived
+   * @since 1.14
+   */
+  public boolean isArchived()
+  {
+    return archived;
+  }
+
+  /**
    * Returns true if the {@link Repository} is public readable.
    *
    *
@@ -376,6 +388,18 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Archive or un archive this repository.
+   *
+   *
+   * @param archived true to enable archive
+   * @since 1.14
+   */
+  public void setArchived(boolean archived)
+  {
+    this.archived = archived;
+  }
 
   /**
    * Sets the contact of the {@link Repository}. The contact address should be
@@ -515,6 +539,9 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   /** Field description */
   @XmlElement(name = "public")
   private boolean publicReadable = false;
+
+  /** Field description */
+  private boolean archived = false;
 
   /** Field description */
   private String type;

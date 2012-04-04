@@ -37,6 +37,10 @@ package sonia.scm.repository;
 
 import com.google.inject.Provider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
@@ -53,6 +57,14 @@ import java.util.List;
  */
 public class PermissionUtil
 {
+
+  /**
+   * the logger for PermissionUtil
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(PermissionUtil.class);
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -149,6 +161,40 @@ public class PermissionUtil
     }
 
     return result;
+  }
+
+  /**
+   * Returns true if the repository is writable.
+   *
+   *
+   * @param configuration SCM-Manager main configuration
+   * @param repository repository to check
+   * @param securityContext current user security context
+   *
+   * @return true if the repository is writable
+   * @since 1.14
+   */
+  public static boolean isWritable(ScmConfiguration configuration,
+                                    Repository repository,
+                                    WebSecurityContext securityContext)
+  {
+    boolean permitted = false;
+
+    if (configuration.isEnableRepositoryArchive() && repository.isArchived())
+    {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("{} is archived and is not writeable",
+                    repository.getName());
+      }
+    }
+    else
+    {
+      permitted = PermissionUtil.hasPermission(repository, securityContext,
+              PermissionType.WRITE);
+    }
+
+    return permitted;
   }
 
   /**

@@ -46,6 +46,7 @@ import sonia.scm.web.security.WebSecurityContext;
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.servlet.http.HttpServletRequest;
+import sonia.scm.config.ScmConfiguration;
 
 /**
  *
@@ -79,10 +80,11 @@ public class GitPermissionFilter extends ProviderPermissionFilter
    */
   @Inject
   public GitPermissionFilter(
+          ScmConfiguration configuration,
           Provider<WebSecurityContext> securityContextProvider,
           RepositoryProvider repositoryProvider)
   {
-    super(securityContextProvider, repositoryProvider);
+    super(configuration, securityContextProvider, repositoryProvider);
   }
 
   //~--- get methods ----------------------------------------------------------

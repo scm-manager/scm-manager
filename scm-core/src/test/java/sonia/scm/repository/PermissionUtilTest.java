@@ -35,8 +35,10 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.Before;
 import org.junit.Test;
 
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.user.User;
 import sonia.scm.web.security.WebSecurityContext;
@@ -65,17 +67,7 @@ public class PermissionUtilTest
    */
   public PermissionUtilTest()
   {
-    repository = new Repository();
     admams.getUser().setAdmin(true);
-
-    Permission[] permissions = new Permission[] {
-                                 new Permission("dent", PermissionType.READ),
-                                 new Permission("perfect",
-                                   PermissionType.WRITE),
-                                 new Permission("marvin",
-                                   PermissionType.OWNER) };
-
-    repository.setPermissions(Arrays.asList(permissions));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -106,6 +98,25 @@ public class PermissionUtilTest
     PermissionUtil.assertPermission(repository, admams, PermissionType.READ);
     PermissionUtil.assertPermission(repository, admams, PermissionType.WRITE);
     PermissionUtil.assertPermission(repository, admams, PermissionType.OWNER);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Before
+  public void before()
+  {
+    repository = new Repository();
+
+    Permission[] permissions = new Permission[] {
+                                 new Permission("dent", PermissionType.READ),
+                                 new Permission("perfect",
+                                   PermissionType.WRITE),
+                                 new Permission("marvin",
+                                   PermissionType.OWNER) };
+
+    repository.setPermissions(Arrays.asList(permissions));
   }
 
   /**
@@ -159,6 +170,31 @@ public class PermissionUtilTest
             PermissionType.WRITE));
     assertFalse(PermissionUtil.hasPermission(r, trillian,
             PermissionType.OWNER));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testIsWritable()
+  {
+    ScmConfiguration configuration = new ScmConfiguration();
+
+    configuration.setEnableRepositoryArchive(true);
+    assertTrue(PermissionUtil.isWritable(configuration, repository, perfect));
+    repository.setArchived(true);
+    assertFalse(PermissionUtil.isWritable(configuration, repository, perfect));
+    assertFalse(PermissionUtil.isWritable(configuration, repository, admams));
+    configuration.setEnableRepositoryArchive(false);
+    assertTrue(PermissionUtil.isWritable(configuration, repository, perfect));
+    assertTrue(PermissionUtil.isWritable(configuration, repository, admams));
+    assertFalse(PermissionUtil.isWritable(configuration, repository, dent));
+    configuration.setEnableRepositoryArchive(true);
+    repository.setArchived(false);
+    assertTrue(PermissionUtil.isWritable(configuration, repository, perfect));
+    assertTrue(PermissionUtil.isWritable(configuration, repository, admams));
+    assertFalse(PermissionUtil.isWritable(configuration, repository, dent));
   }
 
   //~--- get methods ----------------------------------------------------------

@@ -34,10 +34,20 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
 
   titleText: 'Repository Form',
   emptyText: 'Add or select an Repository',
+  
+  // TODO i18n
+  archiveText: 'Archive',
+  unarchiveText: 'Unarchive',
+  archiveTitleText: 'Archive Repository',
+  archiveMsgText: 'Archive Repository "{0}"?',
+  errorArchiveMsgText: 'Repository  archival failed',
+
   removeTitleText: 'Remove Repository',
   removeMsgText: 'Remove Repository "{0}"?',
   errorTitleText: 'Error',
   errorMsgText: 'Repository deletion failed',
+  
+  archiveIcon: 'resources/images/archive.png',
   
   repositoryGrid: null,
 
@@ -70,6 +80,20 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
         handler: this.showAddForm
       });
     }
+    
+    // repository archive
+    if (state.clientConfig.enableRepositoryArchive){
+      toolbar.push({
+        xtype: 'tbbutton', 
+        id: 'repoArchiveButton', 
+        disabled: true, 
+        text: this.archiveText,
+        icon: this.archiveIcon,
+        scope: this,
+        handler: this.toggleArchive        
+      });
+    }
+    
     toolbar.push({
       xtype: 'tbbutton', 
       id: 'repoRmButton', 
@@ -124,8 +148,26 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
           fn: this.search,
           scope: this
         }
-      } 
+      }
     });
+    
+    // repository archive
+    if (state.clientConfig.enableRepositoryArchive){
+      toolbar.push('  ',{
+        id: 'displayArchived',
+        xtype: 'checkbox',
+        listeners: {
+          check: {
+            fn: this.filterByArchived,
+            scope: this
+          }
+        }      
+      },{
+        xtype: 'label',
+        text: 'Archive',
+        cls: 'ytb-text'
+      })
+    }
 
     var config = {
       tbar: toolbar,
@@ -133,7 +175,13 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
         id: 'repositoryGrid',
         xtype: 'repositoryGrid',
         region: 'center',
-        parentPanel: this
+        parentPanel: this,
+        listeners: {
+          repositorySelected: {
+            fn: this.onRepositorySelection,
+            scope: this
+          }
+        }
       },{
         id: 'repositoryEditPanel',
         xtype: 'tabpanel',
@@ -170,57 +218,144 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
     Sonia.History.add(token);
   },
   
+  filterByArchived: function(checkbox, checked){
+    var grid = this.getGrid();
+    grid.getFilterRequest().archived = checked;
+    grid.filterByRequest();
+  },
+  
   filterByType: function(combo, rec){
-    this.getGrid().filter(rec.get('name'));
+    var grid = this.getGrid();
+    grid.getFilterRequest().type = rec.get('name');
+    grid.filterByRequest();
   },
   
   search: function(field){
-    this.getGrid().search(field.getValue());
+    var grid = this.getGrid();
+    grid.getFilterRequest().query = field.getValue();
+    grid.filterByRequest();
   },
-
-  removeRepository: function(){
+  
+  getSelectedRepository: function(){
+    var repository = null;
     var grid = this.getGrid();
     var selected = grid.getSelectionModel().getSelected();
     if ( selected ){
-      var item = selected.data;
-      var url = restUrl + 'repositories/' + item.id + '.json';
-      
-      Ext.MessageBox.show({
-        title: this.removeTitleText,
-        msg: String.format(this.removeMsgText, item.name),
-        buttons: Ext.MessageBox.OKCANCEL,
-        icon: Ext.MessageBox.QUESTION,
-        fn: function(result){
-          if ( result == 'ok' ){
+      repository = selected.data;
+    } else if (debug) {
+      console.debug( 'no repository selected' );
+    }
+    return repository;
+  },
+  
+  executeRemoteCall: function(title, message, method, url, data, failureCallback){
+    Ext.MessageBox.show({
+      title: title,
+      msg: message,
+      buttons: Ext.MessageBox.OKCANCEL,
+      icon: Ext.MessageBox.QUESTION,
+      fn: function(result){
+        if ( result == 'ok' ){
 
-            if ( debug ){
-              console.debug( 'remove repository ' + item.name );
-            }
+          if ( debug ){
+            console.debug('call repository repository action '+ method + ' on ' + url );
+          }
+          
+          var el = this.el;
+          var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
 
-            Ext.Ajax.request({
-              url: url,
-              method: 'DELETE',
-              scope: this,
-              success: function(){
-                this.reload();
-                this.resetPanel();
-              },
-              failure: function(result){
-                main.handleRestFailure(
-                  result, 
-                  this.errorTitleText, 
-                  this.errorMsgText
-                );
-              }
-            });
+          if (data && data.group){
+            delete data.group;
           }
 
-        },
-        scope: this
-      });
+          Ext.Ajax.request({
+            url: url,
+            method: method,
+            jsonData: data,
+            scope: this,
+            success: function(){
+              this.reload();
+              this.resetPanel();
+              clearTimeout(tid);
+              el.unmask();
+            },
+            failure: function(result){
+              clearTimeout(tid);
+              el.unmask();
+              failureCallback.call(this, result);
+            }
+          });
+        } // canceled
+      },
+      scope: this
+    });
+  },
+  
+  toggleArchive: function(){
+    var item = this.getSelectedRepository();
+    if ( item ){
+      console.debug(item);
+      
+      item.archived = ! item.archived;
+      if (debug){
+        console.debug('toggle repository ' + item.name + ' archive to ' + item.archived);
+      }
+      
+      var url = restUrl + 'repositories/' + item.id + '.json';
+      this.executeRemoteCall(this.archiveTitleText, 
+        String.format(this.archiveMsgText, item.name), 
+        'PUT', url, item, function(result){
+          main.handleFailure(
+            result.status, 
+            this.errorTitleText, 
+            this.errorArchiveMsgText
+          );
+        }
+      );
+    }
+  },
 
-    } else if ( debug ){
-      console.debug( 'no repository selected' );
+  removeRepository: function(){
+    var item = this.getSelectedRepository();
+    if ( item ){      
+      if ( debug ){
+        console.debug( 'remove repository ' + item.name );
+      }
+
+      var url = restUrl + 'repositories/' + item.id + '.json';
+      this.executeRemoteCall(this.archiveTitleText, 
+        String.format(this.archiveMsgText, item.name), 
+        'DELETE', url, null, function(result){
+          main.handleFailure(
+            result.status, 
+            this.errorTitleText, 
+            this.errorMsgText
+          );
+        }
+      );
+    }
+  },
+  
+  onRepositorySelection: function(item, owner){
+    if ( owner ){
+      if (state.clientConfig.enableRepositoryArchive){
+        var archiveBt = Ext.getCmp('repoArchiveButton');
+        if ( item.archived ){
+          archiveBt.setText(this.unarchiveText);
+          Ext.getCmp('repoRmButton').setDisabled(false);
+        } else {
+          archiveBt.setText(this.archiveText);
+          Ext.getCmp('repoRmButton').setDisabled(true);
+        }
+        archiveBt.setDisabled(false);
+      } else {
+        Ext.getCmp('repoRmButton').setDisabled(false);
+      }
+    } else {
+      Ext.getCmp('repoRmButton').setDisabled(false);
+      if (state.clientConfig.enableRepositoryArchive){
+        Ext.getCmp('repoArchiveButton').setDisabled(false);
+      }
     }
   },
 
@@ -271,6 +406,10 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
 
   reload: function(){
     this.getGrid().reload();
+    var repo = this.getSelectedRepository();
+    if ( repo ){
+      this.onRepositorySelection(repo, Sonia.repository.isOwner(repo));
+    }
   }
 
 });

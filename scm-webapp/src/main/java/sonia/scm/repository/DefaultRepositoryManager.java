@@ -46,6 +46,25 @@ import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
+
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.AbstractRepositoryManager;
+import sonia.scm.repository.BlameViewer;
+import sonia.scm.repository.ChangesetViewer;
+import sonia.scm.repository.DiffViewer;
+import sonia.scm.repository.PermissionType;
+import sonia.scm.repository.PermissionUtil;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryAllreadyExistExeption;
+import sonia.scm.repository.RepositoryBrowser;
+import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.repository.RepositoryHandlerNotFoundException;
+import sonia.scm.repository.RepositoryHook;
+import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.RepositoryListener;
+import sonia.scm.repository.RepositoryNotFoundException;
+
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
@@ -92,6 +111,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    *
    *
    *
+   *
+   * @param configuration
    * @param contextProvider
    * @param securityContextProvider
    * @param repositoryDAO
@@ -101,12 +122,13 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Inject
   public DefaultRepositoryManager(
-          SCMContextProvider contextProvider,
+          ScmConfiguration configuration, SCMContextProvider contextProvider,
           Provider<WebSecurityContext> securityContextProvider,
           RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
           Provider<Set<RepositoryListener>> repositoryListenersProvider,
           Provider<Set<RepositoryHook>> repositoryHooksProvider)
   {
+    this.configuration = configuration;
     this.securityContextProvider = securityContextProvider;
     this.repositoryDAO = repositoryDAO;
     this.repositoryListenersProvider = repositoryListenersProvider;
@@ -212,6 +234,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     }
 
     assertIsOwner(repository);
+
+    if (configuration.isEnableRepositoryArchive() &&!repository.isArchived())
+    {
+      throw new RepositoryException(
+          "Repository could not deleted, because it is not archived.");
+    }
 
     if (repositoryDAO.contains(repository))
     {
@@ -931,6 +959,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private ScmConfiguration configuration;
 
   /** Field description */
   private Map<String, RepositoryHandler> handlerMap;

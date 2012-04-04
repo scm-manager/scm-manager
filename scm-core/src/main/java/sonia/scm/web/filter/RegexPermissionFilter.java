@@ -37,6 +37,7 @@ package sonia.scm.web.filter;
 
 import com.google.inject.Provider;
 
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.security.WebSecurityContext;
@@ -65,14 +66,17 @@ public abstract class RegexPermissionFilter extends PermissionFilter
    * Constructs ...
    *
    *
+   *
+   * @param configuration
    * @param securityContextProvider
    * @param repositoryManager
    */
   public RegexPermissionFilter(
+          ScmConfiguration configuration,
           Provider<WebSecurityContext> securityContextProvider,
           RepositoryManager repositoryManager)
   {
-    super(securityContextProvider);
+    super(configuration, securityContextProvider);
     this.repositoryManager = repositoryManager;
   }
 
