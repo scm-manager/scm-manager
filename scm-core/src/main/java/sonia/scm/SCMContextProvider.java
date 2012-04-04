@@ -75,6 +75,16 @@ public interface SCMContextProvider extends Closeable
   public Stage getStage();
 
   /**
+   * Returns a exception which is occurred on context startup.
+   * The method returns null if the start was successful.
+   *
+   *
+   * @return startup exception of null
+   * @since 1.14
+   */
+  public Throwable getStartupError();
+
+  /**
    * Returns the version of the SCM-Manager.
    *
    *
