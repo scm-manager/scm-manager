@@ -35,12 +35,18 @@ package sonia.scm.installer;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.PlatformType;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.net.HttpClient;
+import sonia.scm.net.HttpRequest;
+import sonia.scm.net.HttpResponse;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
@@ -50,11 +56,8 @@ import sonia.scm.util.Util;
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.net.URL;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.GZIPInputStream;
 
 import javax.xml.bind.JAXB;
 
@@ -83,10 +86,14 @@ public class HgPackageReader
    *
    *
    * @param cacheManager
+   * @param httpClientProvider
    */
-  public HgPackageReader(CacheManager cacheManager)
+  @Inject
+  public HgPackageReader(CacheManager cacheManager,
+                         Provider<HttpClient> httpClientProvider)
   {
     cache = cacheManager.getCache(String.class, HgPackages.class, CACHENAME);
+    this.httpClientProvider = httpClientProvider;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -216,17 +223,13 @@ public class HgPackageReader
 
     try
     {
-      URL url = new URL(PACKAGEURL);
+      HttpRequest request = new HttpRequest(PACKAGEURL);
 
-      if (PACKAGEURL.endsWith(".gz"))
-      {
-        input = new GZIPInputStream(url.openStream());
-      }
-      else
-      {
-        input = url.openStream();
-      }
+      request.setDecodeGZip(true);
 
+      HttpResponse response = httpClientProvider.get().get(request);
+
+      input = response.getContent();
       packages = JAXB.unmarshal(input, HgPackages.class);
     }
     catch (IOException ex)
@@ -251,4 +254,7 @@ public class HgPackageReader
 
   /** Field description */
   private Cache<String, HgPackages> cache;
+
+  /** Field description */
+  private Provider<HttpClient> httpClientProvider;
 }
