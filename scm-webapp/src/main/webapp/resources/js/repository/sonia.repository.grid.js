@@ -254,10 +254,10 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     if (this.searchValue){
       this.filterStore();
     }
-    this.ready = true;
     if (this.filterRequest){
       this.filterByRequest();
     }
+    this.ready = true;
   },
 
   onFallBelowMinHeight: function(height, minHeight){
