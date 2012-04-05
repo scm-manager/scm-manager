@@ -62,6 +62,9 @@ public class RepositoryConverter extends AbstractConverter
   public static final String DOCUMENT_CLASS = "Repository";
 
   /** Field description */
+  public static final String FIELD_ARCHIVED = "archived";
+
+  /** Field description */
   public static final String FIELD_CONTACT = "contact";
 
   /** Field description */
@@ -108,6 +111,7 @@ public class RepositoryConverter extends AbstractConverter
     appendField(doc, FIELD_DESCRIPTION, repository.getDescription());
     appendField(doc, FIELD_PUBLIC, repository.isPublicReadable(),
                 OType.BOOLEAN);
+    appendField(doc, FIELD_ARCHIVED, repository.isArchived(), OType.BOOLEAN);
     appendField(doc, FIELD_CREATIONDATE, repository.getCreationDate(),
                 OType.LONG);
     appendPropertiesField(doc, repository);
@@ -154,6 +158,7 @@ public class RepositoryConverter extends AbstractConverter
     repository.setContact(getStringField(doc, FIELD_CONTACT));
     repository.setDescription(getStringField(doc, FIELD_DESCRIPTION));
     repository.setPublicReadable(getBooleanField(doc, FIELD_PUBLIC));
+    repository.setArchived(getBooleanField(doc, FIELD_ARCHIVED));
     repository.setLastModified(getLongField(doc, FIELD_LASTMODIFIED));
     repository.setCreationDate(getLongField(doc, FIELD_CREATIONDATE));
 
