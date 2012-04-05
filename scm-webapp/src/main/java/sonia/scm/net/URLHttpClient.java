@@ -251,7 +251,8 @@ public class URLHttpClient implements HttpClient
   {
     String url = createGetUrl(request.getUrl(), request.getParameters());
 
-    return new URLHttpResponse(openConnection(request, url));
+    return new URLHttpResponse(openConnection(request, url),
+                               request.isDecodeGZip());
   }
 
   //~--- methods --------------------------------------------------------------

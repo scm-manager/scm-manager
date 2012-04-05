@@ -71,7 +71,20 @@ public class URLHttpResponse implements HttpResponse
    */
   public URLHttpResponse(URLConnection connection)
   {
+    this(connection, false);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param connection
+   * @param decodeGZip
+   */
+  public URLHttpResponse(URLConnection connection, boolean decodeGZip)
+  {
     this.connection = connection;
+    this.decodeGZip = decodeGZip;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -114,7 +127,7 @@ public class URLHttpResponse implements HttpResponse
     String enc = connection.getContentEncoding();
     InputStream input = null;
 
-    if (Util.isNotEmpty(enc) && enc.contains(ENCODING_GZIP))
+    if (decodeGZip || (Util.isNotEmpty(enc) && enc.contains(ENCODING_GZIP)))
     {
       input = new GZIPInputStream(connection.getInputStream());
     }
@@ -215,8 +228,11 @@ public class URLHttpResponse implements HttpResponse
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private boolean clientClose = false;
+  private URLConnection connection;
 
   /** Field description */
-  private URLConnection connection;
+  private boolean decodeGZip = false;
+
+  /** Field description */
+  private boolean clientClose = false;
 }

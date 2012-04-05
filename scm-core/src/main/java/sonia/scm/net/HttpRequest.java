@@ -169,6 +169,19 @@ public class HttpRequest
     return username;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * 
+   * @since 1.14
+   */
+  public boolean isDecodeGZip()
+  {
+    return decodeGZip;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -185,6 +198,22 @@ public class HttpRequest
     this.username = username;
     this.password = password;
 
+    return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param decodeGZip
+   *
+   * @return
+   * 
+   * @since 1.14
+   */
+  public HttpRequest setDecodeGZip(boolean decodeGZip)
+  {
+    this.decodeGZip = decodeGZip;
     return this;
   }
 
@@ -246,6 +275,9 @@ public class HttpRequest
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean decodeGZip = false;
 
   /** Field description */
   private Map<String, List<String>> headers;
