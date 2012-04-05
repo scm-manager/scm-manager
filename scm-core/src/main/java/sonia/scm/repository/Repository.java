@@ -160,6 +160,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject
     repository.setDescription(description);
     repository.setPermissions(permissions);
     repository.setUrl(url);
+    repository.setPublicReadable(publicReadable);
+    repository.setArchived(archived);
   }
 
   /**
@@ -191,6 +193,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
            && Objects.equal(contact, other.contact)
            && Objects.equal(description, other.description)
            && Objects.equal(publicReadable, other.publicReadable)
+           && Objects.equal(archived, other.archived)
            && Objects.equal(permissions, other.permissions)
            && Objects.equal(type, other.type) 
            && Objects.equal(url, other.url)
@@ -210,8 +213,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   public int hashCode()
   {
     return Objects.hashCode(id, name, contact, description, publicReadable,
-                            permissions, type, url, creationDate, lastModified,
-                            properties);
+                            archived, permissions, type, url, creationDate,
+                            lastModified, properties);
   }
 
   /**
@@ -230,6 +233,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
             .add("contact", contact)
             .add("description", description)
             .add("publicReadable", publicReadable)
+            .add("archived", archived)
             .add("permissions", permissions)
             .add("type", type)
             .add("url", url)
