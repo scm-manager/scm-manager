@@ -237,7 +237,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
     if (configuration.isEnableRepositoryArchive() &&!repository.isArchived())
     {
-      throw new RepositoryException(
+      throw new RepositoryIsNotArchivedException(
           "Repository could not deleted, because it is not archived.");
     }
 

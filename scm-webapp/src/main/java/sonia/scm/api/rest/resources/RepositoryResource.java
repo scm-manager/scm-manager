@@ -62,8 +62,10 @@ import sonia.scm.repository.RepositoryBrowser;
 import sonia.scm.repository.RepositoryBrowserUtil;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
@@ -178,6 +180,10 @@ public class RepositoryResource
    * <ul>
    *  <li>201 delete success</li>
    *  <li>403 forbidden, the current user has no owner privileges</li>
+   *  <li>
+   *    412 forbidden, the repository is not archived,
+   *    this error occurs only with enabled repository archive.
+   *  </li>
    *  <li>500 internal server error</li>
    * </ul>
    *
@@ -190,7 +196,41 @@ public class RepositoryResource
   @Override
   public Response delete(@PathParam("id") String id)
   {
-    return super.delete(id);
+    Response response = null;
+    Repository repository = manager.get(id);
+
+    if (repository != null)
+    {
+      preDelete(repository);
+
+      try
+      {
+        manager.delete(repository);
+        response = Response.noContent().build();
+      }
+      catch (RepositoryIsNotArchivedException ex)
+      {
+        logger.warn("non archived repository could not be deleted", ex);
+        response = Response.status(Response.Status.PRECONDITION_FAILED).build();
+      }
+      catch (ScmSecurityException ex)
+      {
+        logger.warn("delete not allowd", ex);
+        response = Response.status(Response.Status.FORBIDDEN).build();
+      }
+      catch (Exception ex)
+      {
+        logger.error("error during create", ex);
+        response = createErrorResonse(ex);
+      }
+    }
+    else
+    {
+      logger.warn("could not find repository {}", id);
+      response = Response.status(Status.NOT_FOUND).build();
+    }
+
+    return response;
   }
 
   /**
