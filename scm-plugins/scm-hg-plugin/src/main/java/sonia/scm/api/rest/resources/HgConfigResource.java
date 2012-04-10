@@ -87,15 +87,15 @@ public class HgConfigResource
    *
    * @param client
    * @param handler
-   * @param cacheManager
+   * @param pkgReader
    */
   @Inject
   public HgConfigResource(HttpClient client, HgRepositoryHandler handler,
-                          CacheManager cacheManager)
+                          HgPackageReader pkgReader)
   {
     this.client = client;
     this.handler = handler;
-    this.pkgReader = new HgPackageReader(cacheManager);
+    this.pkgReader = pkgReader;
   }
 
   //~--- methods --------------------------------------------------------------
