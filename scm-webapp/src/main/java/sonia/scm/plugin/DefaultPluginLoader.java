@@ -149,7 +149,7 @@ public class DefaultPluginLoader implements PluginLoader
                           : "jar";
 
             logger.trace("search extensions in packages {} of {} plugin {}",
-                         new Object[] { extensions,
+                         new Object[] { packageSet,
                                         type, pluginFile });
           }
 
@@ -311,7 +311,7 @@ public class DefaultPluginLoader implements PluginLoader
 
       if (logger.isInfoEnabled())
       {
-        logger.info("load {} plugin {}", corePlugin
+        logger.info("load {}plugin {}", corePlugin
                                          ? "core "
                                          : " ", path);
       }
