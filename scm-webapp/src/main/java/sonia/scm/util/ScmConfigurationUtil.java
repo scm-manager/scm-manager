@@ -150,9 +150,9 @@ public class ScmConfigurationUtil
         throw new ConfigurationException("could not load config", ex);
       }
     }
-    else if (logger.isWarnEnabled())
+    else if (logger.isDebugEnabled())
     {
-      logger.warn("could not find ScmConfiuration file at {}", file);
+      logger.debug("could not find ScmConfiuration file at {}", file);
     }
   }
 
