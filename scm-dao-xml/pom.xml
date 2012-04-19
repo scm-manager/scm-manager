@@ -13,7 +13,7 @@
   <groupId>sonia.scm</groupId>
   <artifactId>scm-dao-xml</artifactId>
   <version>1.14-SNAPSHOT</version>
-  <name>scm-backend-xml</name>
+  <name>scm-dao-xml</name>
   
   <dependencies>
     
