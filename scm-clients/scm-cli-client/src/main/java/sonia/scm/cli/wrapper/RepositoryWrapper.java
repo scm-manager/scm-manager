@@ -168,6 +168,17 @@ public class RepositoryWrapper extends AbstractWrapper
    *
    * @return
    */
+  public boolean isArchived()
+  {
+    return repository.isArchived();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public boolean isPublicReadable()
   {
     return repository.isPublicReadable();
