@@ -69,6 +69,17 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
    *
    * @return
    */
+  public Boolean getArchvied()
+  {
+    return archvied;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getContact()
   {
     return contact;
@@ -85,7 +96,40 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
     return description;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getId()
+  {
+    return id;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Boolean getPublicReadable()
+  {
+    return publicReadable;
+  }
+
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param archvied
+   */
+  public void setArchvied(Boolean archvied)
+  {
+    this.archvied = archvied;
+  }
 
   /**
    * Method description
@@ -107,6 +151,28 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
   public void setDescription(String description)
   {
     this.description = description;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   */
+  public void setId(String id)
+  {
+    this.id = id;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param publicReadable
+   */
+  public void setPublicReadable(Boolean publicReadable)
+  {
+    this.publicReadable = publicReadable;
   }
 
   //~--- methods --------------------------------------------------------------
