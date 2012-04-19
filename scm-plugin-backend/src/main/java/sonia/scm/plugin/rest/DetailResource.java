@@ -230,7 +230,10 @@ public class DetailResource extends CachedViewableResource
       last = current;
     }
 
-    detailList.add(new PluginDetailWrapper(last));
+    if (last != null)
+    {
+      detailList.add(new PluginDetailWrapper(last));
+    }
 
     return detailList;
   }
