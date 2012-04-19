@@ -139,6 +139,11 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
         repository.setArchived(archvied);
       }
 
+      if (publicReadable != null)
+      {
+        repository.setPublicReadable(publicReadable);
+      }
+
       handler.modify(repository);
 
       Map<String, Object> env = new HashMap<String, Object>();
@@ -154,9 +159,7 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
 
   //~--- fields ---------------------------------------------------------------
 
-  /**
-   * TODO: public parameter
-   */
+  /** Field description */
   @Option(
     name = "--archived",
     usage = "optionRepositoryArchive",
@@ -188,4 +191,13 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
     required = true
   )
   private String id;
+
+  /** Field description */
+  @Option(
+    name = "--public",
+    usage = "optionRepositoryPublic",
+    aliases = { "-p" },
+    handler = BooleanModifyOptionHandler.class
+  )
+  private Boolean publicReadable;
 }
