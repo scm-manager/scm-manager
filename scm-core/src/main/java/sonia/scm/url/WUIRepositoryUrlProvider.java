@@ -48,6 +48,11 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   /** Field description */
   public static final String COMPONENT_BROWSER = "repositoryBrowser";
 
+  /**
+   * @since 1.15
+   */
+  public static final String COMPONENT_CHANGESET = "changesetPanel";
+
   /** Field description */
   public static final String COMPONENT_CHANGESETS =
     "repositoryChangesetViewerPanel";
@@ -188,7 +193,7 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   {
     revision = UrlUtil.fixRevision(revision);
 
-    return new WUIUrlBuilder(baseUrl, VIEW_CHANGESET).append(
+    return new WUIUrlBuilder(baseUrl, COMPONENT_CHANGESET).append(
         repositoryId).append(revision).toString();
   }
 
