@@ -53,7 +53,6 @@ import org.sonatype.aether.impl.ArtifactDescriptorReader;
 import org.sonatype.aether.impl.VersionRangeResolver;
 import org.sonatype.aether.impl.VersionResolver;
 import org.sonatype.aether.impl.internal.DefaultServiceLocator;
-import org.sonatype.aether.repository.Authentication;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.Proxy;
 import org.sonatype.aether.repository.RemoteRepository;
@@ -217,12 +216,12 @@ public class AetherPluginHandler
 
       if (configuration.isEnableProxy())
       {
-        Proxy proxy = createProxy();
+        Proxy proxy = DefaultProxySelector.createProxy(configuration);
 
         if (logger.isDebugEnabled())
         {
-          logger.debug("enable proxy {} for {}", repository.getUrl(),
-                       proxy.getHost());
+          logger.debug("enable proxy {} for {}", proxy.getHost(),
+                       repository.getUrl());
         }
 
         rr.setProxy(proxy);
@@ -247,6 +246,16 @@ public class AetherPluginHandler
     CollectRequest request = new CollectRequest(dependency, dependencies,
                                remoteRepositories);
     MavenRepositorySystemSession session = new MavenRepositorySystemSession();
+
+    if (configuration.isEnableProxy())
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("enable proxy selector to collect dependencies");
+      }
+
+      session.setProxySelector(new DefaultProxySelector(configuration));
+    }
 
     session.setLocalRepositoryManager(
         repositorySystem.newLocalRepositoryManager(localRepository));
@@ -313,28 +322,6 @@ public class AetherPluginHandler
     }
 
     return classpathSet;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private Proxy createProxy()
-  {
-    Authentication authentication = null;
-    String username = configuration.getProxyUser();
-    String password = configuration.getProxyPassword();
-
-    if (Util.isNotEmpty(username) || Util.isNotEmpty(password))
-    {
-      authentication = new Authentication(Util.nonNull(username),
-              Util.nonNull(password));
-    }
-
-    return new Proxy(Proxy.TYPE_HTTP, configuration.getProxyServer(),
-                     configuration.getProxyPort(), authentication);
   }
 
   /**
