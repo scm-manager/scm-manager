@@ -159,7 +159,7 @@ if ( Sonia.repository.Grid ){
 if (Sonia.repository.FormPanel){
 
   Ext.override(Sonia.repository.FormPanel, {
-    colGroupPermissionText: 'Grouppen Berechtigung',
+    colGroupPermissionText: 'Gruppen Berechtigung',
     colNameText: 'Name',
     colTypeText: 'Typ',
     formTitleText: 'Einstellungen',
