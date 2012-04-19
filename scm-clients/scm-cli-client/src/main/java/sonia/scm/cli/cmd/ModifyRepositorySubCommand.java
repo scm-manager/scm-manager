@@ -136,7 +136,6 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
 
       if (archvied != null)
       {
-        System.out.println("ARCHIVED: " + archvied);
         repository.setArchived(archvied);
       }
 
