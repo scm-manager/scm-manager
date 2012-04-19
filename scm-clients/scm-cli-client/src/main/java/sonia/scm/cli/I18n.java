@@ -58,6 +58,9 @@ public class I18n
 
   /** Field description */
   public static final String LEVEL = "level";
+  
+  
+  public static final String BOOLEAN = "boolean";
 
   /** Field description */
   public static final String OPTIONS = "options";

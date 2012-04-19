@@ -38,6 +38,7 @@ package sonia.scm.cli.cmd;
 import org.kohsuke.args4j.Argument;
 import org.kohsuke.args4j.Option;
 
+import sonia.scm.cli.BooleanModifyOptionHandler;
 import sonia.scm.cli.I18n;
 import sonia.scm.cli.wrapper.RepositoryWrapper;
 import sonia.scm.client.RepositoryClientHandler;
@@ -133,6 +134,12 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
         repository.setDescription(description);
       }
 
+      if (archvied != null)
+      {
+        System.out.println("ARCHIVED: " + archvied);
+        repository.setArchived(archvied);
+      }
+
       handler.modify(repository);
 
       Map<String, Object> env = new HashMap<String, Object>();
@@ -151,6 +158,13 @@ public class ModifyRepositorySubCommand extends TemplateSubCommand
   /**
    * TODO: public parameter
    */
+  @Option(
+    name = "--archived",
+    usage = "optionRepositoryArchive",
+    aliases = { "-a" },
+    handler = BooleanModifyOptionHandler.class
+  )
+  private Boolean archvied;
 
   /** Field description */
   @Option(
