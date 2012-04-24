@@ -74,6 +74,17 @@
       <artifactId>guava</artifactId>
       <version>11.0.2</version>
     </dependency>
+    
+    <!--
+     TODO remove commons-lang dependency if guava 12.0.0 is released,
+     because of the escaper classes.
+    -->
+    
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.6</version>
+    </dependency>
 
   </dependencies>
   
