@@ -35,10 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-import org.apache.commons.lang.StringEscapeUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +52,6 @@ import sonia.scm.util.Util;
 import java.io.IOException;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -471,79 +468,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param changeset
-   */
-  private void escape(Changeset changeset)
-  {
-    changeset.setDescription(escape(changeset.getDescription()));
 
-    Person person = changeset.getAuthor();
-
-    if (person != null)
-    {
-      person.setName(escape(person.getName()));
-      person.setMail(escape(person.getMail()));
-    }
-
-    changeset.setBranches(escapeList(changeset.getBranches()));
-    changeset.setTags(escapeList(changeset.getTags()));
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param result
-   */
-  private void escape(ChangesetPagingResult result)
-  {
-    for (Changeset c : result)
-    {
-      escape(c);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
-  private String escape(String value)
-  {
-    return StringEscapeUtils.escapeHtml(value);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param values
-   *
-   * @return
-   */
-  private List<String> escapeList(List<String> values)
-  {
-    if (Util.isNotEmpty(values))
-    {
-      List<String> newList = Lists.newArrayList();
-
-      for (String v : values)
-      {
-        newList.add(StringEscapeUtils.escapeHtml(v));
-      }
-
-      values = newList;
-    }
-
-    return values;
-  }
 
   /**
    * Method description
@@ -555,7 +480,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
   private void prepareForReturn(Repository repository,
                                 ChangesetPagingResult result)
   {
-    escape(result);
+    EscapeUtil.escape(result);
     callPreProcessors(result);
     callPreProcessorFactories(repository, result);
   }
@@ -569,7 +494,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
    */
   private void prepareForReturn(Repository repository, Changeset changeset)
   {
-    escape(changeset);
+    EscapeUtil.escape(changeset);
     callPreProcessors(changeset);
     callPreProcessorFactories(repository, changeset);
   }
