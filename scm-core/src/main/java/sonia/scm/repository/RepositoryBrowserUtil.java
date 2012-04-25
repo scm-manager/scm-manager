@@ -170,6 +170,7 @@ public class RepositoryBrowserUtil extends PartCacheClearHook
       if (result != null)
       {
         sort(result);
+        EscapeUtil.escape(result);
         callPreProcessors(result);
         callPreProcessorFactories(repository, result);
       }

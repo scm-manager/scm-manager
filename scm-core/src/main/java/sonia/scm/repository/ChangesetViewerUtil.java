@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import com.google.inject.Inject;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,8 +137,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
 
       if (changeset != null)
       {
-        callPreProcessors(changeset);
-        callPreProcessorFactories(repository, changeset);
+        prepareForReturn(repository, changeset);
         result = new ChangesetPagingResult(1, Arrays.asList(changeset));
         cache.put(key, result);
       }
@@ -301,8 +301,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
       {
         if (Util.isNotEmpty(result.getChangesets()))
         {
-          callPreProcessors(result);
-          callPreProcessorFactories(repository, result);
+          prepareForReturn(repository, result);
         }
 
         cache.put(key, result);
@@ -365,8 +364,7 @@ public class ChangesetViewerUtil extends PartCacheClearHook
       {
         if (Util.isNotEmpty(result.getChangesets()))
         {
-          callPreProcessors(result);
-          callPreProcessorFactories(repository, result);
+          prepareForReturn(repository, result);
         }
 
         cache.put(key, result);
@@ -468,6 +466,37 @@ public class ChangesetViewerUtil extends PartCacheClearHook
     {
       cpp.process(c);
     }
+  }
+
+
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param result
+   */
+  private void prepareForReturn(Repository repository,
+                                ChangesetPagingResult result)
+  {
+    EscapeUtil.escape(result);
+    callPreProcessors(result);
+    callPreProcessorFactories(repository, result);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param changeset
+   */
+  private void prepareForReturn(Repository repository, Changeset changeset)
+  {
+    EscapeUtil.escape(changeset);
+    callPreProcessors(changeset);
+    callPreProcessorFactories(repository, changeset);
   }
 
   //~--- inner classes --------------------------------------------------------
