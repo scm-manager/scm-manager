@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -38,6 +39,7 @@ import com.google.common.io.Resources;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import com.orientechnologies.orient.core.config.OGlobalConfiguration;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentPool;
 import com.orientechnologies.orient.core.db.document.ODatabaseDocumentTx;
 import com.orientechnologies.orient.server.OServer;
@@ -134,6 +136,12 @@ public class ConnectionProvider
                       directory);
         }
 
+        /**
+         * set oritentdb tuning option
+         * https://groups.google.com/forum/#!msg/orient-database/DrJ3zPY3oao/RQQayirg4mYJ
+         */
+        OGlobalConfiguration.STORAGE_KEEP_OPEN.setValue(Boolean.FALSE);
+        OGlobalConfiguration.MVRBTREE_LAZY_UPDATES.setValue(1);
         server = OServerMain.create();
 
         URL configUrl = null;
