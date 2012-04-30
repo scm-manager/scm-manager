@@ -263,6 +263,7 @@
           <pushChanges>false</pushChanges>
           <localCheckout>true</localCheckout>
           <releaseProfiles>release,APIviz</releaseProfiles>
+          <tagNameFormat>${project.version}</tagNameFormat>
         </configuration>
       </plugin>
       
