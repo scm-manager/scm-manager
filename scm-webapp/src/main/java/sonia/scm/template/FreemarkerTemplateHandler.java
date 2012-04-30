@@ -38,6 +38,11 @@ package sonia.scm.template;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.TemplateLoader;
+import freemarker.cache.WebappTemplateLoader;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -65,6 +70,9 @@ public class FreemarkerTemplateHandler implements TemplateHandler
 {
 
   /** Field description */
+  public static final String DIRECTORY_CLASS_TEMPLATES = "/templates";
+
+  /** Field description */
   public static final String DIRECTORY_TEMPLATES = "/";
 
   /** Field description */
@@ -89,9 +97,18 @@ public class FreemarkerTemplateHandler implements TemplateHandler
   public FreemarkerTemplateHandler(ServletContext servletContext)
   {
     configuration = new Configuration();
-    configuration.setServletContextForTemplateLoading(servletContext,
-            DIRECTORY_TEMPLATES);
     configuration.setEncoding(Locale.ENGLISH, ENCODING);
+    //J-
+    configuration.setTemplateLoader(
+        new MultiTemplateLoader(
+            new TemplateLoader[] {
+              new WebappTemplateLoader(servletContext, DIRECTORY_TEMPLATES),
+              new ClassTemplateLoader(FreemarkerTemplateHandler.class,
+                                      DIRECTORY_CLASS_TEMPLATES) 
+            }
+        )
+    );
+    //J+
   }
 
   //~--- methods --------------------------------------------------------------
