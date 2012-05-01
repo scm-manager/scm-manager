@@ -33,6 +33,7 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
@@ -49,6 +50,8 @@ import sonia.scm.web.security.WebSecurityContext;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.Collection;
+import java.util.List;
 
 import java.util.Map;
 
@@ -56,6 +59,9 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import sonia.scm.Type;
+import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.repository.RepositoryManager;
 
 /**
  *
@@ -87,7 +93,7 @@ public class SupportResource
                          SCMContextProvider context,
                          TemplateHandler templateHandler,
                          ScmConfiguration configuration,
-                         PluginManager pluginManager, StoreFactory storeFactory)
+                         PluginManager pluginManager, StoreFactory storeFactory, RepositoryManager repositoryManager )
   {
     this.securityContext = securityContext;
     this.context = context;
@@ -95,8 +101,11 @@ public class SupportResource
     this.configuration = configuration;
     this.pluginManager = pluginManager;
     this.storeFactoryClass = storeFactory.getClass();
+    this.repositoryManager = repositoryManager;
   }
 
+  private RepositoryManager repositoryManager;
+  
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -120,12 +129,25 @@ public class SupportResource
     env.put("pluginManager", pluginManager);
     env.put("runtime", new RuntimeInformation());
     env.put("system", new SystemInformation());
+    env.put("repositoryHandlers", getRepositoryHandlers());
 
     StringWriter writer = new StringWriter();
 
     templateHandler.render(TEMPLATE, writer, env);
 
     return writer.toString();
+  }
+
+  private List<RepositoryHandler> getRepositoryHandlers()
+  {
+    List<RepositoryHandler> handlers = Lists.newArrayList();
+    
+    for ( Type type : repositoryManager.getConfiguredTypes() )
+    {
+      handlers.add( repositoryManager.getHandler(type.getName()) );
+    }
+    
+    return handlers;
   }
 
   //~--- inner classes --------------------------------------------------------

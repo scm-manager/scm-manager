@@ -136,5 +136,13 @@
       <li>Java: ${system.java}</li>
     </ul>
     
+    <h2>Repository Handlers</h2>
+    
+    <ul>
+    <#list repositoryHandlers as handler>
+      <li>${handler.type.displayName}/${handler.type.name} (${handler.versionInformation})</li>
+    </#list>
+    </ul>
+    
   </body>
 </html>
