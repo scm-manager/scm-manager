@@ -7,7 +7,7 @@ pyVersion = str(pyVersion.major) + "." + str(pyVersion.minor) + "." + str(pyVers
 hgVersion = util.version()
 
 doc = Document()
-root = doc.createElement('verion')
+root = doc.createElement('version')
 
 pyNode = doc.createElement('python')
 pyNode.appendChild(doc.createTextNode(pyVersion))
