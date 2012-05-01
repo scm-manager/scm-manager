@@ -68,6 +68,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import java.text.MessageFormat;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
@@ -83,6 +85,10 @@ public class HgRepositoryHandler
 
   /** Field description */
   public static final String PATH_HOOK = ".hook-1.8";
+
+  /** Field description */
+  public static final String RESOURCE_VERSION =
+    "/sonia/scm/version/scm-git-plugin";
 
   /** Field description */
   public static final String TYPE_DISPLAYNAME = "Mercurial";
@@ -334,6 +340,39 @@ public class HgRepositoryHandler
   public Type getType()
   {
     return TYPE;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getVersionInformation()
+  {
+    String version = getStringFromResource(RESOURCE_VERSION,
+                       DEFAULT_VERSION_INFORMATION);
+
+    try
+    {
+      JAXBContext context = JAXBContext.newInstance(HgVersion.class);
+      HgVersion hgVersion = new HgVersionHandler(this, context,
+                              hgContextProvider.get(),
+                              baseDirectory).getVersion();
+
+      if (hgVersion != null)
+      {
+        version = MessageFormat.format(version, hgVersion.getPython(),
+                                       hgVersion.getMercurial());
+      }
+    }
+    catch (Exception ex)
+    {
+      logger.error("could not read version informations", ex);
+    }
+
+    return version;
   }
 
   //~--- methods --------------------------------------------------------------

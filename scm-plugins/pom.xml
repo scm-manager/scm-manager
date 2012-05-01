@@ -39,6 +39,7 @@
         <filtering>true</filtering>
         <includes>
           <include>META-INF/scm/plugin.xml</include>
+          <include>sonia/scm/version/*</include>
         </includes>
       </resource>
 
@@ -47,6 +48,7 @@
         <filtering>false</filtering>
         <excludes>
           <exclude>META-INF/scm/plugin.xml</exclude>
+          <exclude>sonia/scm/version/*</exclude>
         </excludes>
       </resource>
 

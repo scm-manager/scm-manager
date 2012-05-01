@@ -111,7 +111,7 @@ public class AbstractHgHandler
     LoggerFactory.getLogger(AbstractHgHandler.class);
 
   //~--- constructors ---------------------------------------------------------
-
+  
   /**
    * Constructs ...
    *

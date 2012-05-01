@@ -47,7 +47,7 @@ import java.io.File;
 public enum HgPythonScript
 {
   BLAME("blame.py"), CHANGELOG("changelog.py"), FILELOG("filelog.py"),
-  UTIL("util.py"), HOOK("scmhooks.py"), HGWEB("hgweb.py");
+  UTIL("util.py"), HOOK("scmhooks.py"), HGWEB("hgweb.py"), VERSION("version.py");
 
   /** Field description */
   private static final String BASE_DIRECTORY =

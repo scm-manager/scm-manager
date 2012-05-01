@@ -35,7 +35,9 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +54,8 @@ import sonia.scm.util.IOUtil;
 import java.io.File;
 import java.io.IOException;
 
+import java.net.URL;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -62,6 +66,9 @@ import java.io.IOException;
 public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepositoryConfig>
         extends AbstractRepositoryHandler<C>
 {
+
+  /** Field description */
+  public static final String DEFAULT_VERSION_INFORMATION = "unknown";
 
   /** Field description */
   public static final String DIRECTORY_REPOSITORY = "repositories";
@@ -267,6 +274,18 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     return directory;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getVersionInformation()
+  {
+    return DEFAULT_VERSION_INFORMATION;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -336,6 +355,36 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
           throws IOException, RepositoryException {}
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns the content of a classpath resource or the given default content.
+   *
+   *
+   * @param resource path of a classpath resource
+   * @param defaultContent default content to return
+   *
+   * @return content of a classpath resource or defaultContent
+   */
+  protected String getStringFromResource(String resource, String defaultContent)
+  {
+    String content = defaultContent;
+
+    try
+    {
+      URL url = Resources.getResource(resource);
+
+      if (url != null)
+      {
+        content = Resources.toString(url, Charsets.UTF_8);
+      }
+    }
+    catch (Exception ex)
+    {
+      logger.error("could not read resource", ex);
+    }
+
+    return content;
+  }
 
   /**
    * Returns true if the directory is a repository.

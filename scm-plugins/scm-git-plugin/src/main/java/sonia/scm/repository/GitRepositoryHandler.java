@@ -66,6 +66,10 @@ public class GitRepositoryHandler
   public static final String DIRECTORY_REFS = "refs";
 
   /** Field description */
+  public static final String RESOURCE_VERSION =
+    "/sonia/scm/version/scm-git-plugin";
+
+  /** Field description */
   public static final String TYPE_DISPLAYNAME = "Git";
 
   /** Field description */
@@ -222,6 +226,18 @@ public class GitRepositoryHandler
   public Type getType()
   {
     return TYPE;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getVersionInformation()
+  {
+    return getStringFromResource(RESOURCE_VERSION, DEFAULT_VERSION_INFORMATION);
   }
 
   //~--- methods --------------------------------------------------------------

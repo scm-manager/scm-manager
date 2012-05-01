@@ -46,7 +46,6 @@ import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
 import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
-import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
@@ -67,6 +66,10 @@ import java.io.IOException;
 public class SvnRepositoryHandler
         extends AbstractSimpleRepositoryHandler<SvnConfig>
 {
+
+  /** Field description */
+  public static final String RESOURCE_VERSION =
+    "/sonia/scm/version/scm-git-plugin";
 
   /** Field description */
   public static final String TYPE_DISPLAYNAME = "Subversion";
@@ -245,6 +248,18 @@ public class SvnRepositoryHandler
   public Type getType()
   {
     return TYPE;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getVersionInformation()
+  {
+    return getStringFromResource(RESOURCE_VERSION, DEFAULT_VERSION_INFORMATION);
   }
 
   //~--- methods --------------------------------------------------------------

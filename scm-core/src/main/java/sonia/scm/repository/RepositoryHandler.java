@@ -78,4 +78,13 @@ public interface RepositoryHandler
    * @throws NotSupportedFeatuerException
    */
   public ImportHandler getImportHandler() throws NotSupportedFeatuerException;
+
+  /**
+   * Returns informations about the version of the RepositoryHandler.
+   *
+   *
+   * @return version informations
+   * @since 1.15
+   */
+  public String getVersionInformation();
 }
