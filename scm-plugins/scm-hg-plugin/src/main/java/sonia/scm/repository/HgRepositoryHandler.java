@@ -88,7 +88,7 @@ public class HgRepositoryHandler
 
   /** Field description */
   public static final String RESOURCE_VERSION =
-    "/sonia/scm/version/scm-git-plugin";
+    "/sonia/scm/version/scm-hg-plugin";
 
   /** Field description */
   public static final String TYPE_DISPLAYNAME = "Mercurial";
