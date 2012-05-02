@@ -56,7 +56,7 @@
       <plugin>
         <groupId>sonia.maven</groupId>
         <artifactId>appassembler-maven-plugin</artifactId>
-        <version>1.2</version>
+        <version>1.2.0.1</version>
         <executions>
           <execution>
             <id>scm-app</id>
@@ -95,6 +95,10 @@
                         <property>
                           <name>configuration.directory</name>
                           <value>conf</value>
+                        </property>
+                        <property>
+                          <name>darwin.arch.enable</name>
+                          <value>false</value>
                         </property>
                       </configuration>
 
