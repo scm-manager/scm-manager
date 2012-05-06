@@ -55,10 +55,8 @@ import sonia.scm.web.security.LocalSecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 
 /**
  *
@@ -76,7 +74,7 @@ public class ScmContextListener extends GuiceServletContextListener
   @Override
   public void contextDestroyed(ServletContextEvent servletContextEvent)
   {
-    if ((globalInjector != null) && ! startupError)
+    if ((globalInjector != null) &&!startupError)
     {
 
       // close RepositoryManager
@@ -99,9 +97,10 @@ public class ScmContextListener extends GuiceServletContextListener
 
       // remove thread local store
       globalInjector.getInstance(LocalSecurityContextHolder.class).destroy();
-      
+
       // call destroy event
-      globalInjector.getInstance(ServletContextListenerHolder.class).contextDestroyed(
+      globalInjector.getInstance(
+          ServletContextListenerHolder.class).contextDestroyed(
           servletContextEvent);
     }
 
@@ -129,12 +128,13 @@ public class ScmContextListener extends GuiceServletContextListener
     }
 
     super.contextInitialized(servletContextEvent);
-    
-      // call destroy event
-    if ((globalInjector != null) && ! startupError)
+
+    // call destroy event
+    if ((globalInjector != null) &&!startupError)
     {
-      globalInjector.getInstance(ServletContextListenerHolder.class).contextInitialized(
-        servletContextEvent);
+      globalInjector.getInstance(
+          ServletContextListenerHolder.class).contextInitialized(
+          servletContextEvent);
     }
   }
 
