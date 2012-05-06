@@ -126,12 +126,20 @@ public class BootstrapListener implements ServletContextListener
           {
             classLoader = createClassLoader(pluginDirectory, classpath);
           }
+          else if (logger.isErrorEnabled())
+          {
+            logger.error("classloader is null");
+          }
         }
         catch (Exception ex)
         {
-          logger.error(ex.getMessage(), ex);
+          logger.error("could not load classpath from plugin folder", ex);
         }
       }
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("no plugin directory found");
     }
 
     if (classLoader != null)
@@ -173,6 +181,11 @@ public class BootstrapListener implements ServletContextListener
   private ClassLoader createClassLoader(File pluginDirectory,
           Classpath classpath)
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create classloader from plugin classpath");
+    }
+
     List<URL> classpathURLs = new LinkedList<URL>();
 
     for (String path : classpath)
@@ -188,17 +201,23 @@ public class BootstrapListener implements ServletContextListener
       {
         try
         {
+          URL url = file.toURI().toURL();
+
           if (logger.isDebugEnabled())
           {
-            logger.debug("append {} to classpath", file.getPath());
+            logger.debug("append {} to classpath", url.toExternalForm());
           }
 
-          classpathURLs.add(file.toURI().toURL());
+          classpathURLs.add(url);
         }
         catch (MalformedURLException ex)
         {
-          logger.error(ex.getMessage(), ex);
+          logger.error("could not append url to classpath", ex);
         }
+      }
+      else if (logger.isErrorEnabled())
+      {
+        logger.error("plugin file {} does not exists", file);
       }
     }
 
@@ -220,6 +239,11 @@ public class BootstrapListener implements ServletContextListener
 
     if (classLoader == null)
     {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("could not use context classloader, try to use default");
+      }
+
       classLoader = BootstrapListener.class.getClassLoader();
     }
 

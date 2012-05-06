@@ -119,6 +119,12 @@ public class DefaultPluginLoader implements PluginLoader
 
     for (Plugin plugin : installedPlugins)
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("search extensions from plugin {}",
+                     plugin.getInformation().getId());
+      }
+
       InputStream input = null;
 
       try
@@ -136,6 +142,17 @@ public class DefaultPluginLoader implements PluginLoader
 
         if (pluginFile.exists())
         {
+          if (logger.isTraceEnabled())
+          {
+            String type = pluginFile.isDirectory()
+                          ? "directory"
+                          : "jar";
+
+            logger.trace("search extensions in packages {} of {} plugin {}",
+                         new Object[] { packageSet,
+                                        type, pluginFile });
+          }
+
           if (pluginFile.isDirectory())
           {
             scanner.processExtensions(classLoader, extensions, pluginFile,
@@ -163,8 +180,18 @@ public class DefaultPluginLoader implements PluginLoader
       }
     }
 
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("start processing {} extensions", extensions.size());
+    }
+
     for (ExtensionObject exo : extensions)
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("process extension {}", exo.getExtensionClass());
+      }
+
       processor.processExtension(exo.getExtension(), exo.getExtensionClass());
     }
   }
@@ -205,8 +232,13 @@ public class DefaultPluginLoader implements PluginLoader
       }
       catch (IOException ex)
       {
-        logger.error(ex.getMessage(), ex);
+        logger.error("could not decode path ".concat(path), ex);
       }
+    }
+    else if (logger.isTraceEnabled())
+    {
+      logger.trace(
+          "{} seems not to be a file path or the file does not exists", path);
     }
 
     return path;
@@ -232,6 +264,15 @@ public class DefaultPluginLoader implements PluginLoader
 
         loadPlugin(url);
       }
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("loaded {} plugins", installedPlugins.size());
+      }
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("no plugin descriptor found");
     }
   }
 
@@ -244,6 +285,11 @@ public class DefaultPluginLoader implements PluginLoader
   private void loadPlugin(URL url)
   {
     String path = url.toExternalForm();
+
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("try to load plugin from {}", path);
+    }
 
     try
     {
@@ -266,8 +312,8 @@ public class DefaultPluginLoader implements PluginLoader
       if (logger.isInfoEnabled())
       {
         logger.info("load {}plugin {}", corePlugin
-                                        ? "core "
-                                        : " ", path);
+                                         ? "core "
+                                         : " ", path);
       }
 
       Plugin plugin = JAXB.unmarshal(url, Plugin.class);
@@ -287,6 +333,12 @@ public class DefaultPluginLoader implements PluginLoader
       }
 
       plugin.setPath(path);
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("add plugin {} to installed plugins", info.getId());
+      }
+
       installedPlugins.add(plugin);
     }
     catch (Exception ex)
@@ -298,7 +350,7 @@ public class DefaultPluginLoader implements PluginLoader
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * TODO create util method
    *
    *
    * @return
@@ -309,6 +361,11 @@ public class DefaultPluginLoader implements PluginLoader
 
     if (classLoader == null)
     {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("could not use context classloader, try to use default");
+      }
+
       classLoader = DefaultPluginManager.class.getClassLoader();
     }
 
