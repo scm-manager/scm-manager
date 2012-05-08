@@ -390,13 +390,11 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
   private void execute(Process process) throws IOException
   {
     InputStream processIS = null;
-    InputStream processES = null;
     ServletOutputStream servletOS = null;
 
     try
     {
-      processES = process.getErrorStream();
-      processErrorStreamAsync(processES);
+      processErrorStreamAsync(process);
       processServletInput(process);
       processIS = process.getInputStream();
       servletOS = response.getOutputStream();
@@ -409,7 +407,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     finally
     {
       IOUtil.close(processIS);
-      IOUtil.close(processES);
       IOUtil.close(servletOS);
     }
   }
@@ -506,22 +503,30 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    * Method description
    *
    *
-   * @param errorStream
+   *
+   * @param process
    */
-  private void processErrorStreamAsync(final InputStream errorStream)
+  private void processErrorStreamAsync(final Process process)
   {
     new Thread(new Runnable()
     {
       @Override
       public void run()
       {
+        InputStream errorStream = null;
+
         try
         {
+          errorStream = process.getErrorStream();
           processErrorStream(errorStream);
         }
         catch (IOException ex)
         {
           logger.error("could not read errorstream", ex);
+        }
+        finally
+        {
+          IOUtil.close(errorStream);
         }
       }
     }).start();
