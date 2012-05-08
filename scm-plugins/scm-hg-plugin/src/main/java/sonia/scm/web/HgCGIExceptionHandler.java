@@ -33,16 +33,20 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Charsets;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.cgi.CGIExceptionHandler;
+import sonia.scm.web.cgi.CGIStatusCodeHandler;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 
 import java.text.MessageFormat;
@@ -54,7 +58,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-public class HgCGIExceptionHandler implements CGIExceptionHandler
+public class HgCGIExceptionHandler
+        implements CGIExceptionHandler, CGIStatusCodeHandler
 {
 
   /** Field description */
@@ -63,6 +68,10 @@ public class HgCGIExceptionHandler implements CGIExceptionHandler
   /** TODO create a bundle for error messages */
   public static final String ERROR_NOT_CONFIGURED =
     "The mercurial installation on the scm-manager server seems to be not configured correctly. Please check the settings.";
+
+  /** Field description */
+  public static final String ERROR_STATUSCODE =
+    "Mercurial process ends with return code {0}";
 
   /** Field description */
   public static final String ERROR_UNKNOWN =
@@ -93,13 +102,65 @@ public class HgCGIExceptionHandler implements CGIExceptionHandler
       logger.error("not able to handle mercurial request", ex);
     }
 
-    try
+    sendError(response, createErrorMessage(ex));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   * @param output
+   * @param statusCode
+   *
+   * @throws IOException
+   */
+  @Override
+  public void handleStatusCode(HttpServletRequest request,
+                               HttpServletResponse response,
+                               OutputStream output, int statusCode)
+          throws IOException
+  {
+    if (statusCode != 0)
     {
-      sendError(response, createErrorMessage(ex));
+      response.setContentType(CONTENT_TYPE_ERROR);
+
+      String msg = MessageFormat.format(ERROR_STATUSCODE, statusCode);
+
+      if (logger.isWarnEnabled())
+      {
+        logger.warn(msg);
+      }
+
+      output.write(msg.getBytes(Charsets.US_ASCII));
     }
-    catch (IOException ioEx)
+    else if (logger.isDebugEnabled())
     {
-      logger.error("could not write error message to client", ioEx);
+      logger.debug("mercurial process ends successfully");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param statusCode
+   */
+  @Override
+  public void handleStatusCode(HttpServletRequest request, int statusCode)
+  {
+    if (statusCode != 0)
+    {
+      if (logger.isWarnEnabled())
+      {
+        logger.error("mercurial process ends with {}", statusCode);
+      }
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("mercurial process ends successfully");
     }
   }
 
@@ -110,10 +171,8 @@ public class HgCGIExceptionHandler implements CGIExceptionHandler
    * @param response
    * @param message
    *
-   * @throws IOException
    */
   public void sendError(HttpServletResponse response, String message)
-          throws IOException
   {
     response.setContentType(CONTENT_TYPE_ERROR);
 
@@ -123,6 +182,10 @@ public class HgCGIExceptionHandler implements CGIExceptionHandler
     {
       writer = response.getWriter();
       writer.println(message);
+    }
+    catch (IOException ex)
+    {
+      logger.error("could not write error message to client", ex);
     }
     finally
     {

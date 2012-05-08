@@ -35,6 +35,8 @@ package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.ByteStreams;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -389,6 +391,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
   {
     InputStream processIS = null;
     InputStream processES = null;
+    ServletOutputStream servletOS = null;
 
     try
     {
@@ -396,13 +399,18 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
       processErrorStreamAsync(processES);
       processServletInput(process);
       processIS = process.getInputStream();
-      processProcessInputStream(processIS);
-      waitForFinish(process);
+      servletOS = response.getOutputStream();
+      parseHeaders(processIS);
+
+      long content = ByteStreams.copy(processIS, servletOS);
+
+      waitForFinish(process, servletOS, content);
     }
     finally
     {
       IOUtil.close(processIS);
       IOUtil.close(processES);
+      IOUtil.close(servletOS);
     }
   }
 
@@ -523,31 +531,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    * Method description
    *
    *
-   * @param is
-   *
-   * @throws IOException
-   */
-  private void processProcessInputStream(InputStream is) throws IOException
-  {
-    parseHeaders(is);
-
-    ServletOutputStream servletOS = null;
-
-    try
-    {
-      servletOS = response.getOutputStream();
-      IOUtil.copy(is, servletOS, bufferSize);
-    }
-    finally
-    {
-      IOUtil.close(servletOS);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param process
    */
   private void processServletInput(Process process)
@@ -579,9 +562,15 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    *
    *
    * @param process
+   * @param output
+   * @param content
    *
+   *
+   * @throws IOException
    */
-  private void waitForFinish(Process process)
+  private void waitForFinish(Process process, ServletOutputStream output,
+                             long content)
+          throws IOException
   {
     try
     {
@@ -591,11 +580,20 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
       {
         if (logger.isTraceEnabled())
         {
-          logger.trace("handle status code {} with statusCodeHandler",
-                       exitCode);
+          logger.trace(
+              "handle status code {} with statusCodeHandler, there are {} bytes written to outputstream",
+              exitCode, content);
         }
 
-        getStatusCodeHandler().handleStatusCode(request, response, exitCode);
+        if (content == 0)
+        {
+          getStatusCodeHandler().handleStatusCode(request, response, output,
+                  exitCode);
+        }
+        else
+        {
+          getStatusCodeHandler().handleStatusCode(request, exitCode);
+        }
       }
       else if (logger.isDebugEnabled())
       {

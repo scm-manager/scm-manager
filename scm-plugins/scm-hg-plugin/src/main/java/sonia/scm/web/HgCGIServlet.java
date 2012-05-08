@@ -271,6 +271,8 @@ public class HgCGIServlet extends HttpServlet
     CGIExecutor executor = cgiExecutorFactory.createExecutor(configuration,
                              getServletContext(), request, response);
 
+    executor.setExceptionHandler(exceptionHandler);
+    executor.setStatusCodeHandler(exceptionHandler);
     executor.setContentLengthWorkaround(true);
     executor.getEnvironment().set(ENV_REPOSITORY_NAME, name);
     executor.getEnvironment().set(ENV_REPOSITORY_PATH,

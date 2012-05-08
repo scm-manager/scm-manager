@@ -33,6 +33,9 @@ package sonia.scm.web.cgi;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -48,12 +51,32 @@ public interface CGIStatusCodeHandler
 
   /**
    * Handles the return code of the process executed by {@link CGIExecutor}.
+   * &lt;b&gt;Note:&lt;/b&gt; This method is called when the process has
+   * already written to the {@link OutputStream}.
+   *
+   *
+   * @param request the http request
+   * @param statusCode process return code
+   */
+  public void handleStatusCode(HttpServletRequest request, int statusCode);
+
+  /**
+   * Handles the return code of the process executed by {@link CGIExecutor}.
+   * &lt;b&gt;Note:&lt;/b&gt; This method is only called when the process has
+   * not written to the {@link OutputStream}. Do not call
+   * {@link HttpServletResponse#getWriter()}, because there was already a call
+   * to {@link HttpServletResponse#getOutputStream()}.
    *
    *
    * @param request the http request
    * @param response the http response
+   * @param ouputStream the servlet output stream
    * @param statusCode process return code
+   *
+   * @throws IOException
    */
   public void handleStatusCode(HttpServletRequest request,
-                               HttpServletResponse response, int statusCode);
+                               HttpServletResponse response,
+                               OutputStream ouputStream, int statusCode)
+          throws IOException;
 }
