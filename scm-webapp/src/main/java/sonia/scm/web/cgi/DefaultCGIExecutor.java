@@ -217,6 +217,23 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    * @return
    */
   @Override
+  public CGIStatusCodeHandler getStatusCodeHandler()
+  {
+    if (statusCodeHandler == null)
+    {
+      statusCodeHandler = new DefaultCGIStatusCodeHandler();
+    }
+
+    return statusCodeHandler;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public boolean isContentLengthWorkaround()
   {
     return contentLengthWorkaround;
@@ -235,18 +252,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
   public void setContentLengthWorkaround(boolean contentLengthWorkaround)
   {
     this.contentLengthWorkaround = contentLengthWorkaround;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param exceptionHandler
-   */
-  @Override
-  public void setExceptionHandler(CGIExceptionHandler exceptionHandler)
-  {
-    this.exceptionHandler = exceptionHandler;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -582,9 +587,19 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     {
       int exitCode = process.waitFor();
 
-      if ((exitCode != 0) &&!ignoreExitCode)
+      if (!ignoreExitCode)
       {
-        logger.warn("process ends with exit code {}", exitCode);
+        if (logger.isTraceEnabled())
+        {
+          logger.trace("handle status code {} with statusCodeHandler",
+                       exitCode);
+        }
+
+        getStatusCodeHandler().handleStatusCode(request, response, exitCode);
+      }
+      else if (logger.isDebugEnabled())
+      {
+        logger.debug("ignore status code {}", exitCode);
       }
     }
     catch (InterruptedException ex)
@@ -628,9 +643,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
   /** Field description */
   private ServletContext context;
-
-  /** Field description */
-  private CGIExceptionHandler exceptionHandler;
 
   /** Field description */
   private HttpServletRequest request;

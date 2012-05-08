@@ -69,6 +69,19 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
   }
 
   /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   * @since 1.15
+   */
+  @Override
+  public CGIExceptionHandler getExceptionHandler()
+  {
+    return exceptionHandler;
+  }
+
+  /**
    * Method description
    *
    *
@@ -78,6 +91,19 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
   public String getInterpreter()
   {
     return interpreter;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   * @since 1.15
+   */
+  @Override
+  public CGIStatusCodeHandler getStatusCodeHandler()
+  {
+    return statusCodeHandler;
   }
 
   /**
@@ -143,6 +169,19 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
   }
 
   /**
+   * {@inheritDoc}
+   *
+   *
+   * @param exceptionHandler
+   * @since 1.15
+   */
+  @Override
+  public void setExceptionHandler(CGIExceptionHandler exceptionHandler)
+  {
+    this.exceptionHandler = exceptionHandler;
+  }
+
+  /**
    * Method description
    *
    *
@@ -179,6 +218,19 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
   }
 
   /**
+   * {@inheritDoc}
+   *
+   *
+   * @param statusCodeHandler
+   * @since 1.15
+   */
+  @Override
+  public void setStatusCodeHandler(CGIStatusCodeHandler statusCodeHandler)
+  {
+    this.statusCodeHandler = statusCodeHandler;
+  }
+
+  /**
    * Method description
    *
    *
@@ -199,6 +251,9 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
   protected EnvList environment;
 
   /** Field description */
+  protected CGIExceptionHandler exceptionHandler;
+
+  /** Field description */
   protected boolean ignoreExitCode = false;
 
   /** Field description */
@@ -206,6 +261,9 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
 
   /** Field description */
   protected boolean passShellEnvironment = false;
+
+  /** Field description */
+  protected CGIStatusCodeHandler statusCodeHandler;
 
   /** Field description */
   protected File workDirectory;

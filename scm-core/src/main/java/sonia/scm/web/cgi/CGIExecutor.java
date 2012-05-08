@@ -177,6 +177,15 @@ public interface CGIExecutor
   public String getInterpreter();
 
   /**
+   * Returns the status code handler.
+   *
+   *
+   * @return status code handler
+   * @since 1.15
+   */
+  public CGIStatusCodeHandler getStatusCodeHandler();
+
+  /**
    * Method description
    *
    *
@@ -267,6 +276,15 @@ public interface CGIExecutor
    * @param passShellEnvironment
    */
   public void setPassShellEnvironment(boolean passShellEnvironment);
+
+  /**
+   * Sets the status code handler.
+   *
+   *
+   * @param statusCodeHandler the handler to set
+   * @since 1.15
+   */
+  public void setStatusCodeHandler(CGIStatusCodeHandler statusCodeHandler);
 
   /**
    * Method description
