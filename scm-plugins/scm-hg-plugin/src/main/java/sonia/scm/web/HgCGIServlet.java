@@ -134,6 +134,7 @@ public class HgCGIServlet extends HttpServlet
     this.handler = handler;
     this.hookManager = hookManager;
     this.requestListenerUtil = requestListenerUtil;
+    this.exceptionHandler = new HgCGIExceptionHandler();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -170,9 +171,47 @@ public class HgCGIServlet extends HttpServlet
 
     if (repository == null)
     {
-      throw new ServletException("repository not found");
-    }
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("no hg repository found at {}", request.getRequestURI());
+      }
 
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    }
+    else if (!handler.isConfigured())
+    {
+      exceptionHandler.sendError(response,
+                                 HgCGIExceptionHandler.ERROR_NOT_CONFIGURED);
+    }
+    else
+    {
+      try
+      {
+        handleRequest(request, response, repository);
+      }
+      catch (Exception ex)
+      {
+        exceptionHandler.handleException(request, response, ex);
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   * @param repository
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  private void handleRequest(HttpServletRequest request,
+                             HttpServletResponse response,
+                             Repository repository)
+          throws ServletException, IOException
+  {
     if (requestListenerUtil.callListeners(request, response, repository))
     {
       process(request, response, repository);
@@ -229,7 +268,6 @@ public class HgCGIServlet extends HttpServlet
     String name = repository.getName();
     File directory = handler.getDirectory(repository);
     String pythonPath = HgUtil.getPythonPath(handler.getConfig());
-    
     CGIExecutor executor = cgiExecutorFactory.createExecutor(configuration,
                              getServletContext(), request, response);
 
@@ -292,6 +330,9 @@ public class HgCGIServlet extends HttpServlet
 
   /** Field description */
   private ScmConfiguration configuration;
+
+  /** Field description */
+  private HgCGIExceptionHandler exceptionHandler;
 
   /** Field description */
   private HgRepositoryHandler handler;
