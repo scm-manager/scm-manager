@@ -604,7 +604,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     }
     catch (InterruptedException ex)
     {
-      logger.error("process interrupted", ex);
+      getExceptionHandler().handleException(request, response, ex);
     }
   }
 
