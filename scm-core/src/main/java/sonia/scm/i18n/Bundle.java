@@ -127,7 +127,7 @@ public class Bundle
 
     if (Util.isNotEmpty(args))
     {
-      msg = MessageFormat.format(key, args);
+      msg = MessageFormat.format(msg, args);
     }
 
     return msg;
