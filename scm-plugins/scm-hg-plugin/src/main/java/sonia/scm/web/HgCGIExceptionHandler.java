@@ -38,6 +38,7 @@ import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.i18n.Bundle;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.cgi.CGIExceptionHandler;
@@ -48,8 +49,6 @@ import sonia.scm.web.cgi.CGIStatusCodeHandler;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-
-import java.text.MessageFormat;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,25 +62,36 @@ public class HgCGIExceptionHandler
 {
 
   /** Field description */
+  public static final String BUNDLE_PATH = "sonia.scm.web.cgimessages";
+
+  /** Field description */
   public static final String CONTENT_TYPE_ERROR = "application/hg-error";
 
   /** TODO create a bundle for error messages */
-  public static final String ERROR_NOT_CONFIGURED =
-    "The mercurial installation on the scm-manager server seems to be not configured correctly. Please check the settings.";
+  public static final String ERROR_NOT_CONFIGURED = "error.notConfigured";
 
   /** Field description */
-  public static final String ERROR_STATUSCODE =
-    "Mercurial process ends with return code {0}";
+  public static final String ERROR_STATUSCODE = "error.statusCode";
 
   /** Field description */
-  public static final String ERROR_UNKNOWN =
-    "There is an unknown error occurred: '{0}'";
+  public static final String ERROR_UNEXPECTED = "error.unexpected";
 
   /**
    * the logger for HgCGIExceptionHandler
    */
   private static final Logger logger =
     LoggerFactory.getLogger(HgCGIExceptionHandler.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  public HgCGIExceptionHandler()
+  {
+    this.bundle = Bundle.getBundle(BUNDLE_PATH);
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -102,7 +112,8 @@ public class HgCGIExceptionHandler
       logger.error("not able to handle mercurial request", ex);
     }
 
-    sendError(response, createErrorMessage(ex));
+    sendError(response,
+              bundle.getString(ERROR_UNEXPECTED, Util.nonNull(ex.getMessage())));
   }
 
   /**
@@ -126,7 +137,7 @@ public class HgCGIExceptionHandler
     {
       response.setContentType(CONTENT_TYPE_ERROR);
 
-      String msg = MessageFormat.format(ERROR_STATUSCODE, statusCode);
+      String msg = bundle.getLine(ERROR_STATUSCODE, statusCode);
 
       if (logger.isWarnEnabled())
       {
@@ -197,12 +208,16 @@ public class HgCGIExceptionHandler
    * Method description
    *
    *
-   * @param ex
-   *
-   * @return
+   * @param response
+   * @param key
    */
-  private String createErrorMessage(Throwable ex)
+  public void sendFormattedError(HttpServletResponse response, String key)
   {
-    return MessageFormat.format(ERROR_UNKNOWN, Util.nonNull(ex.getMessage()));
+    sendError(response, bundle.getString(key));
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Bundle bundle;
 }

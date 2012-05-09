@@ -180,8 +180,8 @@ public class HgCGIServlet extends HttpServlet
     }
     else if (!handler.isConfigured())
     {
-      exceptionHandler.sendError(response,
-                                 HgCGIExceptionHandler.ERROR_NOT_CONFIGURED);
+      exceptionHandler.sendFormattedError(response,
+              HgCGIExceptionHandler.ERROR_NOT_CONFIGURED);
     }
     else
     {
