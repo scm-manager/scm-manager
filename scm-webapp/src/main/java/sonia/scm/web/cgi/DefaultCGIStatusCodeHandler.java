@@ -38,6 +38,9 @@ import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -61,16 +64,34 @@ public class DefaultCGIStatusCodeHandler implements CGIStatusCodeHandler
    *
    *
    * @param request
-   * @param response
    * @param statusCode
    */
   @Override
-  public void handleStatusCode(HttpServletRequest request,
-                               HttpServletResponse response, int statusCode)
+  public void handleStatusCode(HttpServletRequest request, int statusCode)
   {
     if (statusCode != 0)
     {
       logger.warn("process ends with exit code {}", statusCode);
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   * @param ouputStream
+   * @param statusCode
+   *
+   * @throws IOException
+   */
+  @Override
+  public void handleStatusCode(HttpServletRequest request,
+                               HttpServletResponse response,
+                               OutputStream ouputStream, int statusCode)
+          throws IOException
+  {
+    handleStatusCode(request, statusCode);
   }
 }
