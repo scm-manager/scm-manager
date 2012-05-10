@@ -1,10 +1,10 @@
-/*
+/* *
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
@@ -13,7 +13,7 @@
  * 3. Neither the name of SCM-Manager; nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,50 +24,16 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * http://bitbucket.org/sdorra/scm-manager
- *
+ * 
  */
 
-Ext.apply(Ext.form.VTypes, {
 
-  // passord validator
+String.prototype.endsWith = function(suffix) {
+    return this.indexOf(suffix, this.length - suffix.length) !== -1;
+};
 
-  password: function(val, field) {
-    if (field.initialPassField) {
-      var pwd = Ext.getCmp(field.initialPassField);
-      return (val == pwd.getValue());
-    }
-    return true;
-  },
-  
-  passwordText: 'The passwords entered do not match!',
-  
-  // name validator
-  
-  name: function(val){
-    return /^[A-z0-9\.\-_]+$/.test(val);
-  },
-  
-  nameText: 'The name is invalid.',
-  
-  // repository name validator
-  repositoryName: function(val){
-    return /^[A-z0-9][A-z0-9\.\-_\/]*$/.test(val) 
-           && ! val.contains('..')
-           && ! val.endsWith('/.') 
-           && ! val.endsWith('/')
-           && ! val.endsWith('.');
-  },
-  
-  repositoryNameText: 'The name of the repository is invalid.',
-  
-  // username validator
-  
-  username: function(val){
-    return val.match(/^[^ ][A-z0-9\.\-_@ ]*[^ ]$/);
-  },
-  
-  usernameText: 'The username is invalid.'
-  
-});
+String.prototype.contains = function(val) {
+    return this.indexOf(val) >= 0;
+};
