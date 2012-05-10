@@ -52,10 +52,12 @@ public class ValidationUtil
   private static final String REGEX_NAME = "^[A-z0-9\\.\\-_]+$";
 
   /** Field description */
-  private static final String REGEX_REPOSITORYNAME = "^[A-z0-9\\.\\-_/]+$";
+  private static final String REGEX_REPOSITORYNAME =
+    "^[A-z0-9][A-z0-9\\.\\-_/]*$";
 
   /** Field description */
-  private static final String REGEX_USERNAME = "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$";
+  private static final String REGEX_USERNAME =
+    "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$";
 
   //~--- get methods ----------------------------------------------------------
 
@@ -139,7 +141,8 @@ public class ValidationUtil
    */
   public static boolean isRepositoryNameValid(String name)
   {
-    return Util.isNotEmpty(name) && name.matches(REGEX_REPOSITORYNAME);
+    return Util.isNotEmpty(name) && name.matches(REGEX_REPOSITORYNAME)
+           &&!name.contains("..") &&!name.endsWith("/.") &&!name.endsWith(".");
   }
 
   /**
