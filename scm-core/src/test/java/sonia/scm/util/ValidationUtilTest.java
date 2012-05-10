@@ -140,11 +140,14 @@ public class ValidationUtilTest
     assertTrue(ValidationUtil.isRepositoryNameValid("scm"));
     assertTrue(ValidationUtil.isRepositoryNameValid("scm/main"));
     assertTrue(ValidationUtil.isRepositoryNameValid("scm/plugins/git-plugin"));
+    assertTrue(ValidationUtil.isRepositoryNameValid("s"));
+    assertTrue(ValidationUtil.isRepositoryNameValid("sc"));
 
     // issue 142
     assertFalse(ValidationUtil.isRepositoryNameValid("."));
+    assertFalse(ValidationUtil.isRepositoryNameValid("/"));
     assertFalse(ValidationUtil.isRepositoryNameValid(".scm/plugins"));
-    assertTrue(ValidationUtil.isRepositoryNameValid("scm/plugins/."));
+    assertFalse(ValidationUtil.isRepositoryNameValid("scm/plugins/."));
     assertFalse(ValidationUtil.isRepositoryNameValid("scm/../plugins"));
   }
 
