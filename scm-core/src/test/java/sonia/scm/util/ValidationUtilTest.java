@@ -149,6 +149,8 @@ public class ValidationUtilTest
     assertFalse(ValidationUtil.isRepositoryNameValid(".scm/plugins"));
     assertFalse(ValidationUtil.isRepositoryNameValid("scm/plugins/."));
     assertFalse(ValidationUtil.isRepositoryNameValid("scm/../plugins"));
+    assertFalse(ValidationUtil.isRepositoryNameValid("scm/main/"));
+    assertFalse(ValidationUtil.isRepositoryNameValid("/scm/main/"));
   }
 
   /**

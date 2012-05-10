@@ -142,7 +142,8 @@ public class ValidationUtil
   public static boolean isRepositoryNameValid(String name)
   {
     return Util.isNotEmpty(name) && name.matches(REGEX_REPOSITORYNAME)
-           &&!name.contains("..") &&!name.endsWith("/.") &&!name.endsWith(".");
+           &&!name.contains("..") &&!name.endsWith("/.") &&!name.endsWith(".")
+           &&!name.endsWith("/");
   }
 
   /**
