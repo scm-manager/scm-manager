@@ -35,6 +35,8 @@ package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.ByteStreams;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -217,6 +219,23 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    * @return
    */
   @Override
+  public CGIStatusCodeHandler getStatusCodeHandler()
+  {
+    if (statusCodeHandler == null)
+    {
+      statusCodeHandler = new DefaultCGIStatusCodeHandler();
+    }
+
+    return statusCodeHandler;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public boolean isContentLengthWorkaround()
   {
     return contentLengthWorkaround;
@@ -235,18 +254,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
   public void setContentLengthWorkaround(boolean contentLengthWorkaround)
   {
     this.contentLengthWorkaround = contentLengthWorkaround;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param exceptionHandler
-   */
-  @Override
-  public void setExceptionHandler(CGIExceptionHandler exceptionHandler)
-  {
-    this.exceptionHandler = exceptionHandler;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -383,21 +390,24 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
   private void execute(Process process) throws IOException
   {
     InputStream processIS = null;
-    InputStream processES = null;
+    ServletOutputStream servletOS = null;
 
     try
     {
-      processES = process.getErrorStream();
-      processErrorStreamAsync(processES);
+      processErrorStreamAsync(process);
       processServletInput(process);
       processIS = process.getInputStream();
-      processProcessInputStream(processIS);
-      waitForFinish(process);
+      servletOS = response.getOutputStream();
+      parseHeaders(processIS);
+
+      long content = ByteStreams.copy(processIS, servletOS);
+
+      waitForFinish(process, servletOS, content);
     }
     finally
     {
       IOUtil.close(processIS);
-      IOUtil.close(processES);
+      IOUtil.close(servletOS);
     }
   }
 
@@ -493,50 +503,33 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    * Method description
    *
    *
-   * @param errorStream
+   *
+   * @param process
    */
-  private void processErrorStreamAsync(final InputStream errorStream)
+  private void processErrorStreamAsync(final Process process)
   {
     new Thread(new Runnable()
     {
       @Override
       public void run()
       {
+        InputStream errorStream = null;
+
         try
         {
+          errorStream = process.getErrorStream();
           processErrorStream(errorStream);
         }
         catch (IOException ex)
         {
           logger.error("could not read errorstream", ex);
         }
+        finally
+        {
+          IOUtil.close(errorStream);
+        }
       }
     }).start();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param is
-   *
-   * @throws IOException
-   */
-  private void processProcessInputStream(InputStream is) throws IOException
-  {
-    parseHeaders(is);
-
-    ServletOutputStream servletOS = null;
-
-    try
-    {
-      servletOS = response.getOutputStream();
-      IOUtil.copy(is, servletOS, bufferSize);
-    }
-    finally
-    {
-      IOUtil.close(servletOS);
-    }
   }
 
   /**
@@ -574,22 +567,47 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    *
    *
    * @param process
+   * @param output
+   * @param content
    *
+   *
+   * @throws IOException
    */
-  private void waitForFinish(Process process)
+  private void waitForFinish(Process process, ServletOutputStream output,
+                             long content)
+          throws IOException
   {
     try
     {
       int exitCode = process.waitFor();
 
-      if ((exitCode != 0) &&!ignoreExitCode)
+      if (!ignoreExitCode)
       {
-        logger.warn("process ends with exit code {}", exitCode);
+        if (logger.isTraceEnabled())
+        {
+          logger.trace(
+              "handle status code {} with statusCodeHandler, there are {} bytes written to outputstream",
+              exitCode, content);
+        }
+
+        if (content == 0)
+        {
+          getStatusCodeHandler().handleStatusCode(request, response, output,
+                  exitCode);
+        }
+        else
+        {
+          getStatusCodeHandler().handleStatusCode(request, exitCode);
+        }
+      }
+      else if (logger.isDebugEnabled())
+      {
+        logger.debug("ignore status code {}", exitCode);
       }
     }
     catch (InterruptedException ex)
     {
-      logger.error("process interrupted", ex);
+      getExceptionHandler().handleException(request, response, ex);
     }
   }
 
@@ -628,9 +646,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
   /** Field description */
   private ServletContext context;
-
-  /** Field description */
-  private CGIExceptionHandler exceptionHandler;
 
   /** Field description */
   private HttpServletRequest request;
