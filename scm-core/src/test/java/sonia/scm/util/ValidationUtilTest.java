@@ -135,6 +135,33 @@ public class ValidationUtilTest
    *
    */
   @Test
+  public void testIsRepositoryNameValid()
+  {
+    assertTrue(ValidationUtil.isRepositoryNameValid("scm"));
+    assertTrue(ValidationUtil.isRepositoryNameValid("scm/main"));
+    assertTrue(ValidationUtil.isRepositoryNameValid("scm/plugins/git-plugin"));
+    assertTrue(ValidationUtil.isRepositoryNameValid("s"));
+    assertTrue(ValidationUtil.isRepositoryNameValid("sc"));
+
+    // issue 142
+    assertFalse(ValidationUtil.isRepositoryNameValid("."));
+    assertFalse(ValidationUtil.isRepositoryNameValid("/"));
+    assertFalse(ValidationUtil.isRepositoryNameValid(".scm/plugins"));
+    assertFalse(ValidationUtil.isRepositoryNameValid("scm/plugins/."));
+    assertFalse(ValidationUtil.isRepositoryNameValid("scm/../plugins"));
+    assertFalse(ValidationUtil.isRepositoryNameValid("scm/main/"));
+    assertFalse(ValidationUtil.isRepositoryNameValid("/scm/main/"));
+    
+    // issue 144
+    assertFalse(ValidationUtil.isRepositoryNameValid("scm/./main"));
+    assertFalse(ValidationUtil.isRepositoryNameValid("scm//main"));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
   public void testIsUsernameValid()
   {
 
