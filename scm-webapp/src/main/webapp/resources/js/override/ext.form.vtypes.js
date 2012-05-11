@@ -57,7 +57,9 @@ Ext.apply(Ext.form.VTypes, {
            && ! val.contains('..')
            && ! val.endsWith('/.') 
            && ! val.endsWith('/')
-           && ! val.endsWith('.');
+           && ! val.endsWith('.')
+           && ! val.contains('/./')
+           && ! val.contains('//');
   },
   
   repositoryNameText: 'The name of the repository is invalid.',
