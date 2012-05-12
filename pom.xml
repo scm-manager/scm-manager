@@ -6,7 +6,7 @@
   <groupId>sonia.scm</groupId>
   <artifactId>scm</artifactId>
   <packaging>pom</packaging>
-  <version>1.15-SNAPSHOT</version>
+  <version>1.15</version>
   <description>
     The easiest way to share your Git, Mercurial
     and Subversion repositories over http.
@@ -501,7 +501,7 @@
     <project.build.javaLevel>1.6</project.build.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
-    <jdk.classifier></jdk.classifier>
+    <jdk.classifier />
   </properties>
 
 </project>
