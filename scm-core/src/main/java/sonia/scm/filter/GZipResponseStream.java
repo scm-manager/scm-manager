@@ -50,6 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.15
  */
 public class GZipResponseStream extends ServletOutputStream
 {

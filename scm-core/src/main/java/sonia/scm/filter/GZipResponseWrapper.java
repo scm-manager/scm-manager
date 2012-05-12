@@ -50,6 +50,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.15
  */
 public class GZipResponseWrapper extends HttpServletResponseWrapper
 {
