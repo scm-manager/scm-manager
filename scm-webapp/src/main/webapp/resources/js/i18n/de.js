@@ -570,7 +570,11 @@ if (Sonia.scm.Main){
     errorNoPermissionsMessage: 'Sie haben nicht genügend Rechte um diese Aktion auszuführen.',
   
     errorNotFoundTitle: 'Nicht gefunden',
-    errorNotFoundMessage: 'Die Ressource konnte nicht gefunden werden.'
+    errorNotFoundMessage: 'Die Ressource konnte nicht gefunden werden.',
+    
+    loggedInTextTemplate: 'angemeldet als <a id="scm-userinfo-tip">{state.user.name}</a> - ',
+    userInfoMailText: 'E-Mail',
+    userInfoGroupsText: 'Gruppen'
   });
 
 }
