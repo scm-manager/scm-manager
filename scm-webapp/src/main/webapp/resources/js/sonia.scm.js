@@ -70,6 +70,10 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   
   errorNotFoundTitle: 'Not found',
   errorNotFoundMessage: 'The resource could not be found.',
+  
+  loggedInTextTemplate: 'logged in as <a id="scm-userinfo-tip">{state.user.name}</a> - ',
+  userInfoMailText: 'Mail',
+  userInfoGroupsText: 'Groups',
 
   mainTabPanel: null,
   
@@ -526,6 +530,44 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   
   getMainTabPanel: function(){
     return this.mainTabPanel;
+  },
+  
+  renderUserInformations: function(state){
+    if ( state.user.name != 'anonymous' ){
+      var tpl = new Ext.XTemplate(this.loggedInTextTemplate);
+      tpl.overwrite(Ext.get('scm-userinfo'), state);
+      var text = '';
+      if (state.user.mail){
+        text += this.userInfoMailText + ': ' + state.user.mail + '<br />';
+      }
+      if (state.groups && state.groups.length > 0){
+        text += this.userInfoGroupsText + ': ' + this.getGroups(state.groups) + '<br />';
+      }
+
+      Ext.QuickTips.register({
+        target : 'scm-userinfo-tip',
+        title : state.user.displayName,
+        text : text,
+        enabled : true
+      });
+    }
+  },
+  
+  getGroups: function(groups){
+    var out = '';
+    var s = groups.length;
+    for ( var i=0; i<s; i++ ){
+      out += groups[i];
+      if ( (i+1)<s ){
+        out += ', ';
+      }
+    }
+    return out;
+  },
+  
+  removeUserInformations: function(){
+    Ext.get('scm-userinfo').dom.innerHTML = '';
+    Ext.QuickTips.unregister('scm-userinfo-tip');
   }
 
 });
@@ -597,7 +639,11 @@ Ext.onReady(function(){
   main.addListeners('login', function(){
     Ext.History.init();
   });
-
+  
+  // user informations
+  main.addListeners('login', main.renderUserInformations);
+  main.addListeners('logout', main.removeUserInformations);
+  
   main.init();
   main.checkLogin();
 });
