@@ -66,13 +66,13 @@
     <dependency>
       <groupId>com.sun.jersey</groupId>
       <artifactId>jersey-client</artifactId>
-      <version>1.7</version>
+      <version>${jersey.version}</version>
     </dependency>
     
     <dependency>
-      <groupId>org.sonatype.spice</groupId>
+      <groupId>sonia.net.ahc</groupId>
       <artifactId>jersey-ahc-client</artifactId>
-      <version>1.0.2</version>
+      <version>1.0.2.1</version>
       <exclusions>
         <exclusion>
           <artifactId>jaxb-api</artifactId>
