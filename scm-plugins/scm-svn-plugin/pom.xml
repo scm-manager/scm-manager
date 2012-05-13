@@ -27,8 +27,8 @@
 
     <dependency>
       <groupId>sonia.svnkit</groupId>
-      <artifactId>svnkit-dav</artifactId>
-      <version>${svnkit-dav.version}</version>
+      <artifactId>svnkit</artifactId>
+      <version>${svnkit.version}</version>
       <exclusions>
         <exclusion>
           <artifactId>trilead-ssh2</artifactId>
@@ -39,6 +39,12 @@
           <groupId>org.tmatesoft.sqljet</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    
+    <dependency>
+      <groupId>sonia.svnkit</groupId>
+      <artifactId>svnkit-dav</artifactId>
+      <version>${svnkit.version}</version>
     </dependency>
 
     <!-- test scope -->
@@ -53,7 +59,7 @@
   </dependencies>
 
   <properties>
-    <svnkit-dav.version>1.3.7.4</svnkit-dav.version>
+    <svnkit.version>1.7.4-1.v1-SNAPSHOT</svnkit.version>
   </properties>
   
   <repositories>
@@ -62,6 +68,12 @@
       <id>maven.scm-manager.org</id>
       <name>scm-manager release repository</name>
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
+    </repository>
+    
+    <repository>
+      <id>maven.tmatesoft.com</id>
+      <name>tmatesoft release repository</name>
+      <url>http://maven.tmatesoft.com/content/repositories/releases/</url>
     </repository>
   
   </repositories>
