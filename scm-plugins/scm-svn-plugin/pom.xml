@@ -58,10 +58,6 @@
 
   </dependencies>
 
-  <properties>
-    <svnkit.version>1.7.4-1.v1-SNAPSHOT</svnkit.version>
-  </properties>
-  
   <repositories>
     
     <repository>

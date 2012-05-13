@@ -498,6 +498,8 @@
     <freemarker.version>2.3.19</freemarker.version>
     <jetty.version>7.6.3.v20120416</jetty.version>
     <logback.version>1.0.3</logback.version>
+    <jgit.version>1.3.0.201202151440-r</jgit.version>
+    <svnkit.version>1.7.4-1.v1-SNAPSHOT</svnkit.version>
     <project.build.javaLevel>1.6</project.build.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
