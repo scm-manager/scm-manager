@@ -35,6 +35,9 @@ package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -42,6 +45,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "config")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class SvnConfig extends SimpleRepositoryConfig
 {
 
@@ -61,6 +65,17 @@ public class SvnConfig extends SimpleRepositoryConfig
     return compatibility;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isEnabledGZip()
+  {
+    return enabledGZip;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -74,7 +89,22 @@ public class SvnConfig extends SimpleRepositoryConfig
     this.compatibility = compatibility;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param enabledGZip
+   */
+  public void setEnabledGZip(boolean enabledGZip)
+  {
+    this.enabledGZip = enabledGZip;
+  }
+
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @XmlElement(name = "enable-gzip")
+  private boolean enabledGZip = false;
 
   /** Field description */
   private Compatibility compatibility = Compatibility.NONE;

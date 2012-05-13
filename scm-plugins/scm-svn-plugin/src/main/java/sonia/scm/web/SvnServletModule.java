@@ -37,13 +37,13 @@ package sonia.scm.web;
 
 import com.google.inject.servlet.ServletModule;
 
+import sonia.scm.plugin.ext.Extension;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.HashMap;
 import java.util.Map;
-import sonia.scm.plugin.ext.Extension;
 
 /**
  *
@@ -68,6 +68,7 @@ public class SvnServletModule extends ServletModule
   @Override
   protected void configureServlets()
   {
+    filter(PATTERN_SVN).through(SvnGZipFilter.class);
     filter(PATTERN_SVN).through(BasicAuthenticationFilter.class);
     filter(PATTERN_SVN).through(SvnPermissionFilter.class);
 

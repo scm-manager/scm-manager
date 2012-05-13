@@ -40,12 +40,14 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
   pre14CompatibleText: 'Pre 1.4 Compatible',
   pre15CompatibleText: 'Pre 1.5 Compatible',
   pre16CompatibleText: 'Pre 1.6 Compatible',
+  enableGZipText: 'Enable GZip Encoding',
   disabledText: 'Disabled',
 
   // helpTexts
   repositoryDirectoryHelpText: 'Location of the Suberversion repositories.',
   disabledHelpText: 'Enable or disable the Subversion plugin.\n\
                     Note you have to reload the page, after changing this value.',
+  enableGZipHelpText: 'Enable GZip encoding for svn responses.',
 
   initComponent: function(){
 
@@ -79,6 +81,12 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
           inputValue: 'PRE16',
           name: 'compatibility'
         }]
+      },{
+        xtype: 'checkbox',
+        name: 'enable-gzip',
+        fieldLabel: this.enableGZipText,
+        inputValue: 'true',
+        helpText: this.enableGZipHelpText        
       },{
         xtype: 'checkbox',
         name: 'disabled',
