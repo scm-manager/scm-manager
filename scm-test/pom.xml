@@ -52,12 +52,6 @@
       <groupId>org.eclipse.jgit</groupId>
       <artifactId>org.eclipse.jgit</artifactId>
       <version>${jgit.version}</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>jsch</artifactId>
-          <groupId>com.jcraft</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <!-- svnkit -->
@@ -66,16 +60,6 @@
       <groupId>sonia.svnkit</groupId>
       <artifactId>svnkit</artifactId>
       <version>${svnkit.version}</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>trilead-ssh2</artifactId>
-          <groupId>org.tmatesoft.svnkit</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>sqljet</artifactId>
-          <groupId>org.tmatesoft.sqljet</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
   </dependencies>
