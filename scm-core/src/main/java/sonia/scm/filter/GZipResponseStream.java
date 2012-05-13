@@ -35,6 +35,9 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -56,6 +59,14 @@ public class GZipResponseStream extends ServletOutputStream
 {
 
   /**
+   * the logger for GZipResponseStream
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(GZipResponseStream.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
    * Constructs ...
    *
    *
@@ -65,12 +76,48 @@ public class GZipResponseStream extends ServletOutputStream
    */
   public GZipResponseStream(HttpServletResponse response) throws IOException
   {
+    this(response, null);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param response
+   * @param config
+   *
+   * @throws IOException
+   * @since 1.16
+   */
+  public GZipResponseStream(HttpServletResponse response,
+                            GZipFilterConfig config)
+          throws IOException
+  {
     super();
     closed = false;
     this.response = response;
-    this.output = response.getOutputStream();
-    baos = new ByteArrayOutputStream();
-    gzipstream = new GZIPOutputStream(baos);
+    response.addHeader("Content-Encoding", "gzip");
+
+    if ((config == null) || config.isBufferRequest())
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("use buffered gzip stream");
+      }
+
+      this.output = response.getOutputStream();
+      baos = new ByteArrayOutputStream();
+      gzipstream = new GZIPOutputStream(baos);
+    }
+    else
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("use unbuffered gzip stream");
+      }
+
+      gzipstream = new GZIPOutputStream(response.getOutputStream());
+    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -90,20 +137,23 @@ public class GZipResponseStream extends ServletOutputStream
     }
 
     gzipstream.finish();
+    gzipstream.close();
 
-    byte[] bytes = baos.toByteArray();
-
-    response.addIntHeader("Content-Length", bytes.length);
-    response.addHeader("Content-Encoding", "gzip");
-
-    try
+    if (baos != null)
     {
-      output.write(bytes);
-      output.flush();
-    }
-    finally
-    {
-      IOUtil.close(output);
+      byte[] bytes = baos.toByteArray();
+
+      response.addIntHeader("Content-Length", bytes.length);
+
+      try
+      {
+        output.write(bytes);
+        output.flush();
+      }
+      finally
+      {
+        IOUtil.close(output);
+      }
     }
 
     closed = true;

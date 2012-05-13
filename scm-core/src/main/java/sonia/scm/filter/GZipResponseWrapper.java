@@ -67,6 +67,22 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
     origResponse = response;
   }
 
+  /**
+   * Constructs ...
+   *
+   *
+   * @param response
+   * @since 1.16
+   * @param config
+   */
+  public GZipResponseWrapper(HttpServletResponse response,
+                             GZipFilterConfig config)
+  {
+    super(response);
+    origResponse = response;
+    this.config = config;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -99,6 +115,17 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public GZipFilterConfig getConfig()
+  {
+    return config;
+  }
 
   /**
    * Method description
@@ -175,10 +202,13 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
    */
   private GZipResponseStream createOutputStream() throws IOException
   {
-    return new GZipResponseStream(origResponse);
+    return new GZipResponseStream(origResponse, config);
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected GZipFilterConfig config = null;
 
   /** Field description */
   protected HttpServletResponse origResponse = null;

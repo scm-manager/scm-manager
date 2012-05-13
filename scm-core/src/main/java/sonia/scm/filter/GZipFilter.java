@@ -29,11 +29,16 @@
  *
  */
 
+
+
 package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Singleton;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.WebUtil;
 import sonia.scm.web.filter.HttpFilter;
@@ -57,6 +62,27 @@ public class GZipFilter extends HttpFilter
 {
 
   /**
+   * the logger for GZipFilter
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(GZipFilter.class);
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public GZipFilterConfig getConfig()
+  {
+    return config;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
    * Method description
    *
    *
@@ -74,7 +100,13 @@ public class GZipFilter extends HttpFilter
   {
     if (WebUtil.isGzipSupported(request))
     {
-      GZipResponseWrapper wrappedResponse = new GZipResponseWrapper(response);
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("compress output with gzip");
+      }
+
+      GZipResponseWrapper wrappedResponse = new GZipResponseWrapper(response,
+                                              config);
 
       chain.doFilter(request, wrappedResponse);
       wrappedResponse.finishResponse();
@@ -84,4 +116,9 @@ public class GZipFilter extends HttpFilter
       chain.doFilter(request, response);
     }
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private GZipFilterConfig config = new GZipFilterConfig();
 }
