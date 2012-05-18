@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -42,6 +43,7 @@ import sonia.scm.plugin.PluginResources;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,8 +69,8 @@ public abstract class AbstractResourceManager implements ResourceManager
    * @param resourceHandlers
    */
   protected AbstractResourceManager(ServletContext servletContext,
-                                 PluginLoader pluginLoader,
-                                 Set<ResourceHandler> resourceHandlers)
+                                    PluginLoader pluginLoader,
+                                    Set<ResourceHandler> resourceHandlers)
   {
     this.servletContext = servletContext;
     this.pluginLoader = pluginLoader;
@@ -124,6 +126,8 @@ public abstract class AbstractResourceManager implements ResourceManager
         resources.add(e.getValue());
       }
     }
+
+    Collections.sort(resources, ResourceNameComparator.INSTANCE);
 
     return resources;
   }
