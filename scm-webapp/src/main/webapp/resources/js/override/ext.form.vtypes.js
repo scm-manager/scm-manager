@@ -51,15 +51,23 @@ Ext.apply(Ext.form.VTypes, {
   
   nameText: 'The name is invalid.',
   
+  repositoryNameRegex: /(?!^\.\.$)(?!^\.$)(?!.*[\[\]])^[A-z0-9\.][A-z0-9\.\-_/]*$/,
+  
   // repository name validator
   repositoryName: function(val){
-    return /^[A-z0-9][A-z0-9\.\-_\/]*$/.test(val) 
-           && ! val.contains('..')
-           && ! val.endsWith('/.') 
-           && ! val.endsWith('/')
-           && ! val.endsWith('.')
-           && ! val.contains('/./')
-           && ! val.contains('//');
+    var result = true;
+    if (val){
+      var p = val.split('/');
+      for (var i=0; i<p.length; i++){
+        if (!this.repositoryNameRegex.test(p[i])){
+          result = false;
+          break;
+        }
+      }
+    } else {
+      result = false;
+    }
+    return result;
   },
   
   repositoryNameText: 'The name of the repository is invalid.',

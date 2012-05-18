@@ -35,7 +35,13 @@ package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Splitter;
+
 import sonia.scm.Validateable;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.regex.Pattern;
 
 /**
  *
@@ -53,7 +59,7 @@ public class ValidationUtil
 
   /** Field description */
   private static final String REGEX_REPOSITORYNAME =
-    "^[A-z0-9][A-z0-9\\.\\-_/]*$";
+    "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])^[A-z0-9\\.][A-z0-9\\.\\-_/]*$";
 
   /** Field description */
   private static final String REGEX_USERNAME =
@@ -141,9 +147,27 @@ public class ValidationUtil
    */
   public static boolean isRepositoryNameValid(String name)
   {
-    return Util.isNotEmpty(name) && name.matches(REGEX_REPOSITORYNAME)
-           &&!name.contains("..") &&!name.endsWith("/.") &&!name.endsWith(".")
-           &&!name.endsWith("/") &&!name.contains("/./") &&!name.contains("//");
+    Pattern pattern = Pattern.compile(REGEX_REPOSITORYNAME);
+    boolean result = true;
+
+    if (Util.isNotEmpty(name))
+    {
+      for (String p : Splitter.on('/').split(name))
+      {
+        if (!pattern.matcher(p).matches())
+        {
+          result = false;
+
+          break;
+        }
+      }
+    }
+    else
+    {
+      result = false;
+    }
+
+    return result;
   }
 
   /**
