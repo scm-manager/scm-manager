@@ -41,12 +41,36 @@ package sonia.scm;
 public enum HandlerEvent
 {
 
-  /** The type of the event, if a new object is stored by a handler. */
+  /**
+   * After a new object is stored by a handler.
+   */
   CREATE,
 
-  /** The type of the event, if a object is modified by a handler. */
+  /**
+   * After a object is modified by a handler.
+   */
   MODIFY,
 
-  /** The type of the event, if a object is removed by a handler. */
-  DELETE
+  /**
+   * After a object is removed by a handler.
+   */
+  DELETE,
+
+  /**
+   * Before a new object is stored by a handler.
+   * @since 1.16
+   */
+  BEFORE_CREATE,
+
+  /**
+   * Before a object is modified by a handler.
+   * @since 1.16
+   */
+  BEFORE_MODIFY,
+
+  /**
+   * Before a object is removed by a handler.
+   * @since 1.16
+   */
+  BEFORE_DELETE
 }

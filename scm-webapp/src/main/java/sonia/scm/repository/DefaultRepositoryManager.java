@@ -46,25 +46,7 @@ import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
-
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.AbstractRepositoryManager;
-import sonia.scm.repository.BlameViewer;
-import sonia.scm.repository.ChangesetViewer;
-import sonia.scm.repository.DiffViewer;
-import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.PermissionUtil;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryAllreadyExistExeption;
-import sonia.scm.repository.RepositoryBrowser;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.RepositoryHandler;
-import sonia.scm.repository.RepositoryHandlerNotFoundException;
-import sonia.scm.repository.RepositoryHook;
-import sonia.scm.repository.RepositoryHookEvent;
-import sonia.scm.repository.RepositoryListener;
-import sonia.scm.repository.RepositoryNotFoundException;
-
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
@@ -194,6 +176,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
       getHandler(repository).create(repository);
     }
 
+    fireEvent(repository, HandlerEvent.BEFORE_CREATE);
     repositoryDAO.add(repository);
     fireEvent(repository, HandlerEvent.CREATE);
   }
@@ -243,6 +226,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
     if (repositoryDAO.contains(repository))
     {
+      fireEvent(repository, HandlerEvent.BEFORE_DELETE);
       getHandler(repository).delete(repository);
       repositoryDAO.delete(repository);
     }
@@ -369,8 +353,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     if (notModifiedRepository != null)
     {
       assertIsOwner(notModifiedRepository);
-      getHandler(repository).modify(repository);
+      fireEvent(repository, HandlerEvent.BEFORE_MODIFY);
       repository.setLastModified(System.currentTimeMillis());
+      getHandler(repository).modify(repository);
       repositoryDAO.modify(repository);
     }
     else

@@ -180,6 +180,7 @@ public class DefaultUserManager extends AbstractUserManager
 
     AssertUtil.assertIsValid(user);
     user.setCreationDate(System.currentTimeMillis());
+    fireEvent(user, HandlerEvent.BEFORE_CREATE);
     userDAO.add(user);
     fireEvent(user, HandlerEvent.CREATE);
   }
@@ -207,6 +208,7 @@ public class DefaultUserManager extends AbstractUserManager
 
     if (userDAO.contains(name))
     {
+      fireEvent(user, HandlerEvent.BEFORE_DELETE);
       userDAO.delete(user);
       fireEvent(user, HandlerEvent.DELETE);
     }
@@ -270,6 +272,7 @@ public class DefaultUserManager extends AbstractUserManager
     {
       AssertUtil.assertIsValid(user);
       user.setLastModified(System.currentTimeMillis());
+      fireEvent(user, HandlerEvent.BEFORE_MODIFY);
       userDAO.modify(user);
       fireEvent(user, HandlerEvent.MODIFY);
     }

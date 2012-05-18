@@ -144,6 +144,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
 
     group.setCreationDate(System.currentTimeMillis());
+    fireEvent(group, HandlerEvent.BEFORE_CREATE);
     groupDAO.add(group);
     fireEvent(group, HandlerEvent.CREATE);
   }
@@ -172,6 +173,7 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     if (groupDAO.contains(name))
     {
+      fireEvent(group, HandlerEvent.BEFORE_DELETE);
       groupDAO.delete(group);
       fireEvent(group, HandlerEvent.DELETE);
     }
@@ -223,6 +225,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     if (groupDAO.contains(name))
     {
       group.setLastModified(System.currentTimeMillis());
+      fireEvent(group, HandlerEvent.BEFORE_MODIFY);
       groupDAO.modify(group);
       fireEvent(group, HandlerEvent.MODIFY);
     }
