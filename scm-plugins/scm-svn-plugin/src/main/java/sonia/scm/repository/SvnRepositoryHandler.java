@@ -42,8 +42,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
 import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
+import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
 import sonia.scm.Type;
@@ -51,6 +53,7 @@ import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -66,6 +69,9 @@ import java.io.IOException;
 public class SvnRepositoryHandler
         extends AbstractSimpleRepositoryHandler<SvnConfig>
 {
+
+  /** Field description */
+  public static final String PROPERTY_UUID = "svn.uuid";
 
   /** Field description */
   public static final String RESOURCE_VERSION =
@@ -291,15 +297,41 @@ public class SvnRepositoryHandler
       logger.debug(log.toString());
     }
 
+    SVNRepository svnRepository = null;
+
     try
     {
-      SVNRepositoryFactory.createLocalRepository(directory, null, true, false,
-              comp.isPre14Compatible(), comp.isPre15Compatible(),
-              comp.isPre16Compatible());
+      SVNURL url = SVNRepositoryFactory.createLocalRepository(directory, null,
+                     true, false, comp.isPre14Compatible(),
+                     comp.isPre15Compatible(), comp.isPre16Compatible());
+
+      svnRepository = SVNRepositoryFactory.create(url);
+
+      String uuid = svnRepository.getRepositoryUUID(true);
+
+      if (Util.isNotEmpty(uuid))
+      {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("store repository uuid {} for {}", uuid,
+                       repository.getName());
+        }
+
+        repository.setProperty(PROPERTY_UUID, uuid);
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("could not read repository uuid for {}",
+                    repository.getName());
+      }
     }
     catch (SVNException ex)
     {
       throw new RepositoryException(ex);
+    }
+    finally
+    {
+      SvnUtil.closeSession(svnRepository);
     }
   }
 

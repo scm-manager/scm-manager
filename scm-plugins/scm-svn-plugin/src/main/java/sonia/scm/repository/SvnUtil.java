@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
+import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.wc.admin.SVNChangeEntry;
 
 import sonia.scm.util.Util;
@@ -44,6 +45,8 @@ import sonia.scm.util.Util;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -107,6 +110,29 @@ public class SvnUtil
         break;
     }
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   */
+  public static void closeSession(SVNRepository repository)
+  {
+    if (repository != null)
+    {
+      try {
+      repository.closeSession();
+      } catch (Exception ex){
+        logger.error("could not close svn repository session");
+      }
+    }
+  }
+  
+  /**
+   * the logger for SvnUtil
+   */
+  private static final Logger logger = LoggerFactory.getLogger(SvnUtil.class);
 
   /**
    * Method description
