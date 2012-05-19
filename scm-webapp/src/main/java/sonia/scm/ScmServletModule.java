@@ -83,6 +83,7 @@ import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.store.JAXBStoreFactory;
+import sonia.scm.store.ListenableStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.template.FreemarkerTemplateHandler;
 import sonia.scm.template.TemplateHandler;
@@ -229,6 +230,7 @@ public class ScmServletModule extends ServletModule
 
     // bind core
     bind(StoreFactory.class, JAXBStoreFactory.class);
+    bind(ListenableStoreFactory.class, JAXBStoreFactory.class);
     bind(ScmConfiguration.class).toInstance(config);
     bind(PluginLoader.class).toInstance(pluginLoader);
     bind(PluginManager.class, DefaultPluginManager.class);
