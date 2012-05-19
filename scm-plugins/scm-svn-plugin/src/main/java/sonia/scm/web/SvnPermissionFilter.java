@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -46,8 +47,6 @@ import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -61,10 +60,11 @@ public class SvnPermissionFilter extends ProviderPermissionFilter
 {
 
   /** Field description */
-  private static Set<String> WRITEMETHOD_SET =
-    new HashSet<String>(Arrays.asList("MKACTIVITY", "PROPPATCH", "PUT",
-      "CHECKOUT", "MKCOL", "MOVE", "COPY", "DELETE", "LOCK", "UNLOCK",
-      "MERGE"));
+  private static Set<String> WRITEMETHOD_SET = Sets.newHashSet("MKACTIVITY",
+                                                 "PROPPATCH", "PUT",
+                                                 "CHECKOUT", "MKCOL", "MOVE",
+                                                 "COPY", "DELETE", "LOCK",
+                                                 "UNLOCK", "MERGE");
 
   //~--- constructors ---------------------------------------------------------
 
