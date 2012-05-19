@@ -90,8 +90,21 @@ public class JAXBStore<T> extends AbstractListenableStore<T>
    *
    * @return
    */
+  public Class<T> getType()
+  {
+    return type;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
-  public T get()
+  protected T readObject()
   {
     if (logger.isDebugEnabled())
     {
@@ -119,23 +132,10 @@ public class JAXBStore<T> extends AbstractListenableStore<T>
    * Method description
    *
    *
-   * @return
-   */
-  public Class<T> getType()
-  {
-    return type;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
    * @param object
    */
   @Override
-  public void set(T object)
+  protected void writeObject(T object)
   {
     if (logger.isDebugEnabled())
     {
@@ -149,7 +149,6 @@ public class JAXBStore<T> extends AbstractListenableStore<T>
 
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
       marshaller.marshal(object, configFile);
-      
       fireEvent(object);
     }
     catch (JAXBException ex)

@@ -56,6 +56,22 @@ public abstract class AbstractListenableStore<T> implements ListenableStore<T>
    * Method description
    *
    *
+   * @return
+   */
+  protected abstract T readObject();
+
+  /**
+   * Method description
+   *
+   *
+   * @param object
+   */
+  protected abstract void writeObject(T object);
+
+  /**
+   * Method description
+   *
+   *
    * @param listener
    */
   @Override
@@ -88,6 +104,43 @@ public abstract class AbstractListenableStore<T> implements ListenableStore<T>
     listeners.remove(listener);
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public T get()
+  {
+    if (storeObject == null)
+    {
+      storeObject = readObject();
+    }
+
+    return storeObject;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param obejct
+   */
+  @Override
+  public void set(T obejct)
+  {
+    writeObject(obejct);
+    this.storeObject = obejct;
+    fireEvent(obejct);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
@@ -105,5 +158,8 @@ public abstract class AbstractListenableStore<T> implements ListenableStore<T>
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Set<ConfigChangedListener<T>> listeners = Sets.newHashSet();
+  protected Set<ConfigChangedListener<T>> listeners = Sets.newHashSet();
+
+  /** Field description */
+  protected T storeObject;
 }

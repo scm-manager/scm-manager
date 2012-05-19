@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.orientdb.OrientDBUtil;
 import sonia.scm.store.AbstractListenableStore;
-import sonia.scm.store.Store;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -110,7 +109,7 @@ public class OrientDBStore<T> extends AbstractListenableStore<T>
     this.name = name;
   }
 
-  //~--- get methods ----------------------------------------------------------
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -119,7 +118,7 @@ public class OrientDBStore<T> extends AbstractListenableStore<T>
    * @return
    */
   @Override
-  public T get()
+  protected T readObject()
   {
     T result = null;
     ODatabaseDocumentTx connection = connectionProvider.get();
@@ -152,8 +151,6 @@ public class OrientDBStore<T> extends AbstractListenableStore<T>
     return result;
   }
 
-  //~--- set methods ----------------------------------------------------------
-
   /**
    * Method description
    *
@@ -161,7 +158,7 @@ public class OrientDBStore<T> extends AbstractListenableStore<T>
    * @param t
    */
   @Override
-  public void set(T t)
+  protected void writeObject(T t)
   {
     ODatabaseDocumentTx connection = connectionProvider.get();
 
