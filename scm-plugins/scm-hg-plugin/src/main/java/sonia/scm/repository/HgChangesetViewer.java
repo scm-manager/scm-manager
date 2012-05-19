@@ -70,18 +70,15 @@ public class HgChangesetViewer extends AbstractHgHandler
    *
    *
    * @param handler
-   * @param changesetPagingResultContext
-   * @param changesetContext
+   * @param jaxbContext
    * @param context
    * @param repositoryDirectory
    */
   public HgChangesetViewer(HgRepositoryHandler handler,
-                           JAXBContext changesetPagingResultContext,
-                           JAXBContext changesetContext, HgContext context,
+                           JAXBContext jaxbContext, HgContext context,
                            File repositoryDirectory)
   {
-    super(handler, changesetPagingResultContext, context, repositoryDirectory);
-    this.changesetContext = changesetContext;
+    super(handler, jaxbContext, context, repositoryDirectory);
   }
 
   /**
@@ -90,18 +87,15 @@ public class HgChangesetViewer extends AbstractHgHandler
    *
    *
    * @param handler
-   * @param changesetContext
+   * @param jaxbContext
    * @param context
-   * @param changesetPagingResultContext
    * @param repository
    */
   public HgChangesetViewer(HgRepositoryHandler handler,
-                           JAXBContext changesetPagingResultContext,
-                           JAXBContext changesetContext, HgContext context,
+                           JAXBContext jaxbContext, HgContext context,
                            Repository repository)
   {
-    super(handler, changesetPagingResultContext, context, repository);
-    this.changesetContext = changesetContext;
+    super(handler, jaxbContext, context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -130,8 +124,7 @@ public class HgChangesetViewer extends AbstractHgHandler
     env.put(ENV_REVISION_START, Util.EMPTY_STRING);
     env.put(ENV_REVISION_END, Util.EMPTY_STRING);
 
-    return getResultFromScript(Changeset.class, HgPythonScript.CHANGELOG,
-                               changesetContext, env);
+    return getResultFromScript(Changeset.class, HgPythonScript.CHANGELOG, env);
   }
 
   /**
@@ -249,9 +242,4 @@ public class HgChangesetViewer extends AbstractHgHandler
 
     return getChangesets(null, null, null, null, startNode, endNode);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private JAXBContext changesetContext;
 }

@@ -126,11 +126,8 @@ public class HgRepositoryHandler
 
     try
     {
-      this.browserResultContext = JAXBContext.newInstance(BrowserResult.class);
-      this.blameResultContext = JAXBContext.newInstance(BlameResult.class);
-      this.changesetContext = JAXBContext.newInstance(Changeset.class);
-      this.changesetPagingResultContext =
-        JAXBContext.newInstance(ChangesetPagingResult.class);
+      this.jaxbContext = JAXBContext.newInstance(BrowserResult.class,
+              BlameResult.class, Changeset.class, ChangesetPagingResult.class);
     }
     catch (JAXBException ex)
     {
@@ -225,7 +222,7 @@ public class HgRepositoryHandler
 
     if (TYPE_NAME.equals(type))
     {
-      blameViewer = new HgBlameViewer(this, blameResultContext,
+      blameViewer = new HgBlameViewer(this, jaxbContext,
                                       hgContextProvider.get(), repository);
     }
     else
@@ -257,8 +254,7 @@ public class HgRepositoryHandler
 
     if (TYPE_NAME.equals(type))
     {
-      changesetViewer = new HgChangesetViewer(this,
-              changesetPagingResultContext, changesetContext,
+      changesetViewer = new HgChangesetViewer(this, jaxbContext,
               hgContextProvider.get(), repository);
     }
     else
@@ -326,8 +322,8 @@ public class HgRepositoryHandler
   @Override
   public RepositoryBrowser getRepositoryBrowser(Repository repository)
   {
-    return new HgRepositoryBrowser(this, browserResultContext,
-                                   hgContextProvider.get(), repository);
+    return new HgRepositoryBrowser(this, jaxbContext, hgContextProvider.get(),
+                                   repository);
   }
 
   /**
@@ -474,8 +470,7 @@ public class HgRepositoryHandler
       throw new IllegalStateException("directory not found");
     }
 
-    return new HgChangesetViewer(this, changesetPagingResultContext,
-                                 changesetContext, context,
+    return new HgChangesetViewer(this, jaxbContext, context,
                                  repositoryDirectory);
   }
 
@@ -767,17 +762,8 @@ public class HgRepositoryHandler
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private JAXBContext blameResultContext;
-
-  /** Field description */
-  private JAXBContext browserResultContext;
-
-  /** Field description */
-  private JAXBContext changesetContext;
-
-  /** Field description */
-  private JAXBContext changesetPagingResultContext;
-
-  /** Field description */
   private Provider<HgContext> hgContextProvider;
+
+  /** Field description */
+  private JAXBContext jaxbContext;
 }

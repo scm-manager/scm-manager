@@ -111,7 +111,7 @@ public class AbstractHgHandler
     LoggerFactory.getLogger(AbstractHgHandler.class);
 
   //~--- constructors ---------------------------------------------------------
-  
+
   /**
    * Constructs ...
    *
@@ -321,29 +321,6 @@ public class AbstractHgHandler
    */
   protected <T> T getResultFromScript(Class<T> resultType,
           HgPythonScript script, Map<String, String> extraEnv)
-          throws IOException, RepositoryException
-  {
-    return getResultFromScript(resultType, script, jaxbContext, extraEnv);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param resultType
-   * @param script
-   * @param jaxbContext
-   * @param extraEnv
-   * @param <T>
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  protected <T> T getResultFromScript(Class<T> resultType,
-          HgPythonScript script, JAXBContext jaxbContext,
-          Map<String, String> extraEnv)
           throws IOException, RepositoryException
   {
     Process p = createScriptProcess(script, extraEnv);
