@@ -197,6 +197,30 @@ public class AuthenticationResource
   //~--- get methods ----------------------------------------------------------
 
   /**
+   * This method is an alias of the
+   * {@link #getState(javax.servlet.http.HttpServletRequest)} method.
+   * The only difference between the methods,
+   * is that this one could not be used with basic authentication.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>401 unauthorized, user is not authenticated and public access is disabled.</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   *
+   * @param request the current http request
+   *
+   * @return
+   */
+  @GET
+  @Path("state")
+  @TypeHint(ScmState.class)
+  public Response getCurrentState(@Context HttpServletRequest request)
+  {
+    return getState(request);
+  }
+
+  /**
    * Returns the current state of the application.<br />
    * <br />
    * <ul>

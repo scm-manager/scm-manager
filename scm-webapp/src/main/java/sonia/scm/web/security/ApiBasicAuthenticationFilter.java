@@ -59,8 +59,13 @@ public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
 {
 
   /** Field description */
-  public static final String URI_AUTHENTICATION =
-    "/api/rest/authentication/login";
+  public static final String URI_LOGIN = "/api/rest/authentication/login";
+
+  /** Field description */
+  public static final String URI_LOGOUT = "/api/rest/authentication/logout";
+
+  /** Field description */
+  public static final String URI_STATE = "/api/rest/authentication/state";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -97,7 +102,9 @@ public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
   {
 
     // skip filter on authentication resource
-    if (request.getRequestURI().contains(URI_AUTHENTICATION))
+    if (request.getRequestURI().contains(URI_LOGIN)
+        || request.getRequestURI().contains(URI_STATE)
+        || request.getRequestURI().contains(URI_LOGOUT))
     {
       chain.doFilter(request, response);
     }

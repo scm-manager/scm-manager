@@ -320,7 +320,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
   checkLogin: function(){
     Ext.Ajax.request({
-      url: restUrl + 'authentication.json',
+      url: restUrl + 'authentication/state.json',
       method: 'GET',
       scope: this,
       success: function(response){
