@@ -59,7 +59,8 @@ public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
 {
 
   /** Field description */
-  public static final String URI_AUTHENTICATION = "/api/rest/authentication";
+  public static final String URI_AUTHENTICATION =
+    "/api/rest/authentication/login";
 
   //~--- constructors ---------------------------------------------------------
 
