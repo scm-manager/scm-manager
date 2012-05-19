@@ -53,7 +53,7 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class JAXBStoreFactory implements StoreFactory
+public class JAXBStoreFactory implements ListenableStoreFactory
 {
 
   /** Field description */
@@ -108,7 +108,7 @@ public class JAXBStoreFactory implements StoreFactory
    * @return
    */
   @Override
-  public <T> Store<T> getStore(Class<T> type, String name)
+  public <T> JAXBStore<T> getStore(Class<T> type, String name)
   {
     File configFile = new File(configDirectory, name.concat(FILE_EXTENSION));
 

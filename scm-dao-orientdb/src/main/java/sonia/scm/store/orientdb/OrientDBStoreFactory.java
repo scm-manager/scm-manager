@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.store.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -46,8 +47,7 @@ import com.orientechnologies.orient.core.metadata.schema.OType;
 
 import sonia.scm.SCMContextProvider;
 import sonia.scm.orientdb.OrientDBUtil;
-import sonia.scm.store.Store;
-import sonia.scm.store.StoreFactory;
+import sonia.scm.store.ListenableStoreFactory;
 import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -62,7 +62,7 @@ import javax.xml.bind.JAXBException;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class OrientDBStoreFactory implements StoreFactory
+public class OrientDBStoreFactory implements ListenableStoreFactory
 {
 
   /**
@@ -138,7 +138,7 @@ public class OrientDBStoreFactory implements StoreFactory
    * @return
    */
   @Override
-  public <T> Store<T> getStore(Class<T> type, String name)
+  public <T> OrientDBStore<T> getStore(Class<T> type, String name)
   {
     AssertUtil.assertIsNotNull(type);
     AssertUtil.assertIsNotEmpty(name);

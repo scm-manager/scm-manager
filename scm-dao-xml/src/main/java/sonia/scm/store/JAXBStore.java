@@ -52,7 +52,7 @@ import javax.xml.bind.Marshaller;
  *
  * @param <T>
  */
-public class JAXBStore<T> implements Store<T>
+public class JAXBStore<T> extends AbstractListenableStore<T>
 {
 
   /** the logger for JAXBStore */
@@ -149,6 +149,8 @@ public class JAXBStore<T> implements Store<T>
 
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
       marshaller.marshal(object, configFile);
+      
+      fireEvent(object);
     }
     catch (JAXBException ex)
     {
