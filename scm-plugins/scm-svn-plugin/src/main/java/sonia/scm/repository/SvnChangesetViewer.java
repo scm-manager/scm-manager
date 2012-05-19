@@ -122,7 +122,10 @@ public class SvnChangesetViewer implements ChangesetViewer
         logger.warn("could not convert revision", ex);
       }
     }
-    catch (SVNException ex) {}
+    catch (SVNException ex)
+    {
+      logger.error("could not open repository", ex);
+    }
     finally
     {
       SvnUtil.closeSession(repository);
