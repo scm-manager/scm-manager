@@ -130,6 +130,10 @@ public class SvnBlameViewer implements BlameViewer
     {
       logger.error("could not create blame view", ex);
     }
+    finally
+    {
+      SvnUtil.closeSession(svnRepository);
+    }
 
     return new BlameResult(blameLines.size(), blameLines);
   }

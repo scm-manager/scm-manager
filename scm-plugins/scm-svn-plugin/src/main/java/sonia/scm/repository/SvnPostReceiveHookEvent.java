@@ -148,7 +148,7 @@ public class SvnPostReceiveHookEvent extends AbstractRepositoryHookEvent
     }
     finally
     {
-      repository.closeSession();
+      SvnUtil.closeSession(repository);
     }
 
     return result;

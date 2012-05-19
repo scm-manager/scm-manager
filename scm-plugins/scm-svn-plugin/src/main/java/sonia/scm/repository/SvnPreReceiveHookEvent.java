@@ -120,11 +120,14 @@ public class SvnPreReceiveHookEvent extends AbstractRepositoryHookEvent
   private Collection<Changeset> fetchChangesets()
   {
     List<Changeset> csets = new ArrayList<Changeset>();
+    SVNClientManager cm = null;
 
     try
     {
       ISVNOptions options = SVNWCUtil.createDefaultOptions(true);
-      SVNClientManager cm = SVNClientManager.newInstance(options);
+
+      cm = SVNClientManager.newInstance(options);
+
       SVNLookClient clientManager = cm.getLookClient();
       SVNLogEntry entry = clientManager.doGetInfo(repositoryDirectory,
                             transaction);
@@ -147,6 +150,10 @@ public class SvnPreReceiveHookEvent extends AbstractRepositoryHookEvent
       logger.error(
           "could not fetch changesets for transaction ".concat(transaction),
           ex);
+    }
+    finally
+    {
+      SvnUtil.dispose(cm);
     }
 
     return csets;

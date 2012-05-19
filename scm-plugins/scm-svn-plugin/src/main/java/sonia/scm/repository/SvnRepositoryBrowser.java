@@ -118,7 +118,7 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
     }
     finally
     {
-      close(svnRepository);
+      SvnUtil.closeSession(svnRepository);
     }
   }
 
@@ -186,27 +186,13 @@ public class SvnRepositoryBrowser implements RepositoryBrowser
     }
     finally
     {
-      close(svnRepository);
+      SvnUtil.closeSession(svnRepository);
     }
 
     return result;
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param svnRepository
-   */
-  private void close(SVNRepository svnRepository)
-  {
-    if (svnRepository != null)
-    {
-      svnRepository.closeSession();
-    }
-  }
 
   /**
    * Method description

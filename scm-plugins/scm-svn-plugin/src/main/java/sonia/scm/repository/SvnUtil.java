@@ -35,9 +35,13 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.SVNLogEntryPath;
 import org.tmatesoft.svn.core.io.SVNRepository;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.admin.SVNChangeEntry;
 
 import sonia.scm.util.Util;
@@ -45,8 +49,6 @@ import sonia.scm.util.Util;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -54,6 +56,13 @@ import org.slf4j.LoggerFactory;
  */
 public class SvnUtil
 {
+
+  /**
+   * the logger for SvnUtil
+   */
+  private static final Logger logger = LoggerFactory.getLogger(SvnUtil.class);
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * TODO: type replaced
@@ -121,18 +130,16 @@ public class SvnUtil
   {
     if (repository != null)
     {
-      try {
-      repository.closeSession();
-      } catch (Exception ex){
+      try
+      {
+        repository.closeSession();
+      }
+      catch (Exception ex)
+      {
         logger.error("could not close svn repository session");
       }
     }
   }
-  
-  /**
-   * the logger for SvnUtil
-   */
-  private static final Logger logger = LoggerFactory.getLogger(SvnUtil.class);
 
   /**
    * Method description
@@ -169,5 +176,26 @@ public class SvnUtil
     }
 
     return changeset;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param clientManager
+   */
+  public static void dispose(SVNClientManager clientManager)
+  {
+    if (clientManager != null)
+    {
+      try
+      {
+        clientManager.dispose();
+      }
+      catch (Exception ex)
+      {
+        logger.error("could not dispose clientmanager", ex);
+      }
+    }
   }
 }

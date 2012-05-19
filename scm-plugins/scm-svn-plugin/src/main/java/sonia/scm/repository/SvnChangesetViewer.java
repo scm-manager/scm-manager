@@ -125,7 +125,7 @@ public class SvnChangesetViewer implements ChangesetViewer
     catch (SVNException ex) {}
     finally
     {
-      close(repository);
+      SvnUtil.closeSession(repository);
     }
 
     return changeset;
@@ -182,7 +182,7 @@ public class SvnChangesetViewer implements ChangesetViewer
     }
     finally
     {
-      close(repository);
+      SvnUtil.closeSession(repository);
     }
 
     return changesets;
@@ -268,27 +268,13 @@ public class SvnChangesetViewer implements ChangesetViewer
     }
     finally
     {
-      close(repository);
+      SvnUtil.closeSession(repository);
     }
 
     return changesets;
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   */
-  private void close(SVNRepository repository)
-  {
-    if (repository != null)
-    {
-      repository.closeSession();
-    }
-  }
 
   /**
    * Method description
