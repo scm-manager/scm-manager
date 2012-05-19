@@ -35,7 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -60,7 +60,7 @@ public class SvnPermissionFilter extends ProviderPermissionFilter
 {
 
   /** Field description */
-  private static Set<String> WRITEMETHOD_SET = Sets.newHashSet("MKACTIVITY",
+  private static Set<String> WRITEMETHOD_SET = ImmutableSet.of("MKACTIVITY",
                                                  "PROPPATCH", "PUT",
                                                  "CHECKOUT", "MKCOL", "MOVE",
                                                  "COPY", "DELETE", "LOCK",
