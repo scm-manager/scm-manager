@@ -33,7 +33,7 @@
 import sys, os
 
 # import mercurial modules
-from mercurial import hg, ui, commands
+from mercurial import hg, ui, commands, encoding
 from mercurial.node import hex
 from xml.dom.minidom import Document
 
@@ -52,7 +52,7 @@ def createChildNode(doc, parentNode, name):
   return node
 
 def appendValue(doc, node, value):
-  textNode = doc.createTextNode(value)
+  textNode = doc.createTextNode(encoding.tolocal(value))
   node.appendChild(textNode)
   
 def appendTextNode(doc, parentNode, name, value):
