@@ -294,8 +294,6 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   toggleArchive: function(){
     var item = this.getSelectedRepository();
     if ( item ){
-      console.debug(item);
-      
       item.archived = ! item.archived;
       if (debug){
         console.debug('toggle repository ' + item.name + ' archive to ' + item.archived);
