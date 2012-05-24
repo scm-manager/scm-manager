@@ -52,7 +52,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
         disableCaching: false
       }),
       idProperty: 'name',
-      fields: [ 'name', 'displayName', 'mail', 'admin', 'creationDate', 'lastModified', 'type', 'properties'],
+      fields: [ 'name', 'displayName', 'mail', 'admin', 'active', 'creationDate', 'lastModified', 'type', 'properties'],
       sortInfo: {
         field: 'name'
       }
