@@ -265,7 +265,7 @@ public class BasicSecurityContext implements WebSecurityContext
       {
         if (logger.isWarnEnabled())
         {
-          logger.warn("user '{}' is deactivated", user.getName());
+          logger.warn("user {} is deactivated", user.getName());
         }
 
         user = null;
@@ -300,7 +300,7 @@ public class BasicSecurityContext implements WebSecurityContext
     {
       if (logger.isDebugEnabled())
       {
-        logger.debug("user '{}' is marked as deactivated by local database");
+        logger.debug("user {} is marked as deactivated by local database");
       }
 
       user.setActive(false);
@@ -327,7 +327,7 @@ public class BasicSecurityContext implements WebSecurityContext
       if (logger.isDebugEnabled())
       {
         logger.debug(
-            "user '{}' of type '{}' is marked as admin by local database",
+            "user {} of type {} is marked as admin by local database",
             user.getName(), user.getType());
       }
 
@@ -356,13 +356,13 @@ public class BasicSecurityContext implements WebSecurityContext
 
       if (logger.isDebugEnabled() && user.isAdmin())
       {
-        logger.debug("user '{}' is marked as admin by configuration",
+        logger.debug("user {} is marked as admin by configuration",
                      user.getName());
       }
     }
     else if (logger.isDebugEnabled())
     {
-      logger.debug("authenticator {} marked user '{}' as admin",
+      logger.debug("authenticator {} marked user {} as admin",
                    user.getType(), user.getName());
     }
   }
