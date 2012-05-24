@@ -35,6 +35,7 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.servlet.SessionScoped;
 
@@ -46,10 +47,13 @@ import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.user.User;
+import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -129,64 +133,21 @@ public class BasicSecurityContext implements WebSecurityContext
 
       try
       {
-        Set<String> groupSet = new HashSet<String>();
-
-        // load external groups
-        Collection<String> extGroups = ar.getGroups();
-
-        if (extGroups != null)
-        {
-          groupSet.addAll(extGroups);
-        }
-
-        // load internal groups
-        loadGroups(groupSet);
+        Set<String> groupSet = createGroupSet(ar);
 
         // check for admin user
-        if (!user.isAdmin())
-        {
-          user.setAdmin(isAdmin(groupSet));
-
-          if (logger.isDebugEnabled() && user.isAdmin())
-          {
-            logger.debug("user '{}' is marked as admin by configuration",
-                         user.getName());
-          }
-        }
-        else if (logger.isDebugEnabled())
-        {
-          logger.debug("authenticator {} marked user '{}' as admin",
-                       user.getType(), user.getName());
-        }
+        checkForAuthenticatedAdmin(user, groupSet);
 
         // store user
         User dbUser = userManager.get(user.getName());
 
         if (dbUser != null)
         {
-
-          // if database user is an admin, set admin for the current user
-          if (dbUser.isAdmin())
-          {
-            if (logger.isDebugEnabled())
-            {
-              logger.debug(
-                  "user '{}' of type '{}' is marked as admin by local database",
-                  user.getName(), user.getType());
-            }
-
-            user.setAdmin(true);
-          }
-
-          // modify existing user, copy properties except password and admin
-          if (user.copyProperties(dbUser, false))
-          {
-            userManager.modify(dbUser);
-          }
+          checkForDBAdmin(user, dbUser);
         }
 
         // create new user
-        else if (dbUser == null)
+        else
         {
           userManager.create(user);
         }
@@ -295,6 +256,92 @@ public class BasicSecurityContext implements WebSecurityContext
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param groupSet
+   */
+  private void checkForAuthenticatedAdmin(User user, Set<String> groupSet)
+  {
+    if (!user.isAdmin())
+    {
+      user.setAdmin(isAdmin(groupSet));
+
+      if (logger.isDebugEnabled() && user.isAdmin())
+      {
+        logger.debug("user '{}' is marked as admin by configuration",
+                     user.getName());
+      }
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("authenticator {} marked user '{}' as admin",
+                   user.getType(), user.getName());
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param dbUser
+   *
+   * @throws IOException
+   * @throws UserException
+   */
+  private void checkForDBAdmin(User user, User dbUser)
+          throws UserException, IOException
+  {
+
+    // if database user is an admin, set admin for the current user
+    if (dbUser.isAdmin())
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug(
+            "user '{}' of type '{}' is marked as admin by local database",
+            user.getName(), user.getType());
+      }
+
+      user.setAdmin(true);
+    }
+
+    // modify existing user, copy properties except password and admin
+    if (user.copyProperties(dbUser, false))
+    {
+      userManager.modify(dbUser);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param ar
+   *
+   * @return
+   */
+  private Set<String> createGroupSet(AuthenticationResult ar)
+  {
+    Set<String> groupSet = Sets.newHashSet();
+
+    // load external groups
+    Collection<String> extGroups = ar.getGroups();
+
+    if (extGroups != null)
+    {
+      groupSet.addAll(extGroups);
+    }
+
+    // load internal groups
+    loadGroups(groupSet);
+
+    return groupSet;
+  }
 
   /**
    * Method description
