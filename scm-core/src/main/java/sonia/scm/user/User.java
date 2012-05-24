@@ -216,6 +216,7 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
            && Objects.equal(mail, other.mail)
            && Objects.equal(type, other.type)
            && Objects.equal(admin, other.admin)
+           && Objects.equal(active, other.active)
            && Objects.equal(password, other.password)
            && Objects.equal(creationDate, other.creationDate)
            && Objects.equal(lastModified, other.lastModified)
@@ -232,7 +233,7 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   public int hashCode()
   {
     return Objects.hashCode(name, displayName, mail, type, admin, password,
-                            creationDate, lastModified, properties);
+                            active, creationDate, lastModified, properties);
   }
 
   /**
@@ -256,6 +257,7 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
             .add("password", pwd)
             .add("admin", admin)
             .add("type", type)
+            .add("active", active)
             .add("creationDate", creationDate)
             .add("lastModified", lastModified)
             .add("properties", properties)
@@ -358,6 +360,18 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   }
 
   /**
+   * Returns false if the user is deactivated.
+   *
+   *
+   * @return false if the user is deactivated
+   * @since 1.16
+   */
+  public boolean isActive()
+  {
+    return active;
+  }
+
+  /**
    * Method description
    *
    *
@@ -383,6 +397,18 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   }
 
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Activate or deactive this user.
+   *
+   *
+   * @param active false to deactivate the user.
+   * @since 1.6
+   */
+  public void setActive(boolean active)
+  {
+    this.active = active;
+  }
 
   /**
    * Method description
@@ -476,7 +502,10 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private boolean admin;
+  private boolean active = true;
+
+  /** Field description */
+  private boolean admin = false;
 
   /** Field description */
   private Long creationDate;
