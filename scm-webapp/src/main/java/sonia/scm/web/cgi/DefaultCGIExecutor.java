@@ -130,6 +130,11 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     File command = new File(cmd);
     EnvList env = new EnvList(environment);
 
+    if (passShellEnvironment)
+    {
+      apendOsEnvironment(env);
+    }
+
     // workaround for mercurial 2.1
     if (isContentLengthWorkaround())
     {
@@ -295,11 +300,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
       HttpUtil.removeMatrixParameter(request.getPathTranslated());
     int len = request.getContentLength();
     EnvList env = new EnvList();
-
-    if (passShellEnvironment)
-    {
-      apendOsEnvironment(env);
-    }
 
     env.set(ENV_AUTH_TYPE, request.getAuthType());
 
