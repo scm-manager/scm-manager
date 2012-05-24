@@ -105,8 +105,7 @@ public class DefaultAuthenticationHandler implements AuthenticationHandler
     AuthenticationResult result = null;
     User user = userManager.get(username);
 
-    // return not found, if the user is not active
-    if (user != null && user.isActive())
+    if (user != null)
     {
       if (userManager.getDefaultType().equals(user.getType()))
       {
