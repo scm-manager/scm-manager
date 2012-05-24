@@ -129,58 +129,7 @@ public class BasicSecurityContext implements WebSecurityContext
 
     if ((ar != null) && (ar.getState() == AuthenticationState.SUCCESS))
     {
-      user = ar.getUser();
-
-      try
-      {
-        Set<String> groupSet = createGroupSet(ar);
-
-        // check for admin user
-        checkForAuthenticatedAdmin(user, groupSet);
-
-        // store user
-        User dbUser = userManager.get(user.getName());
-
-        if (dbUser != null)
-        {
-          checkForDBAdmin(user, dbUser);
-        }
-
-        // create new user
-        else
-        {
-          userManager.create(user);
-        }
-
-        groups = groupSet;
-
-        if (logger.isDebugEnabled())
-        {
-          logGroups();
-        }
-
-        // store encrypted credentials in session
-        String credentials = user.getName();
-
-        if (Util.isNotEmpty(password))
-        {
-          credentials = credentials.concat(":").concat(password);
-        }
-
-        credentials = CipherUtil.getInstance().encode(credentials);
-        request.getSession(true).setAttribute(SCM_CREDENTIALS, credentials);
-      }
-      catch (Exception ex)
-      {
-        user = null;
-
-        if (groups != null)
-        {
-          groups.clear();
-        }
-
-        logger.error("authentication failed", ex);
-      }
+      authenticate(request, password, ar);
     }
 
     return user;
@@ -261,25 +210,100 @@ public class BasicSecurityContext implements WebSecurityContext
    * Method description
    *
    *
-   * @param user
-   * @param groupSet
+   * @param request
+   * @param password
+   * @param ar
    */
-  private void checkForAuthenticatedAdmin(User user, Set<String> groupSet)
+  private void authenticate(HttpServletRequest request, String password,
+                            AuthenticationResult ar)
   {
-    if (!user.isAdmin())
-    {
-      user.setAdmin(isAdmin(groupSet));
+    user = ar.getUser();
 
-      if (logger.isDebugEnabled() && user.isAdmin())
+    try
+    {
+      Set<String> groupSet = createGroupSet(ar);
+
+      // check for admin user
+      checkForAuthenticatedAdmin(user, groupSet);
+
+      // store user
+      User dbUser = userManager.get(user.getName());
+
+      if (dbUser != null)
       {
-        logger.debug("user '{}' is marked as admin by configuration",
-                     user.getName());
+        checkDBForAdmin(user, dbUser);
+        checkDBForActive(user, dbUser);
+      }
+
+      // create new user
+      else
+      {
+        userManager.create(user);
+      }
+
+      if (user.isActive())
+      {
+        groups = groupSet;
+
+        if (logger.isDebugEnabled())
+        {
+          logGroups();
+        }
+
+        // store encrypted credentials in session
+        String credentials = user.getName();
+
+        if (Util.isNotEmpty(password))
+        {
+          credentials = credentials.concat(":").concat(password);
+        }
+
+        credentials = CipherUtil.getInstance().encode(credentials);
+        request.getSession(true).setAttribute(SCM_CREDENTIALS, credentials);
+      }
+      else
+      {
+        if (logger.isWarnEnabled())
+        {
+          logger.warn("user '{}' is deactivated", user.getName());
+        }
+
+        user = null;
+        groups = null;
       }
     }
-    else if (logger.isDebugEnabled())
+    catch (Exception ex)
     {
-      logger.debug("authenticator {} marked user '{}' as admin",
-                   user.getType(), user.getName());
+      user = null;
+
+      if (groups != null)
+      {
+        groups.clear();
+      }
+
+      logger.error("authentication failed", ex);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param dbUser
+   */
+  private void checkDBForActive(User user, User dbUser)
+  {
+
+    // user is deactivated by database
+    if (!dbUser.isActive())
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("user '{}' is marked as deactivated by local database");
+      }
+
+      user.setActive(false);
     }
   }
 
@@ -293,7 +317,7 @@ public class BasicSecurityContext implements WebSecurityContext
    * @throws IOException
    * @throws UserException
    */
-  private void checkForDBAdmin(User user, User dbUser)
+  private void checkDBForAdmin(User user, User dbUser)
           throws UserException, IOException
   {
 
@@ -314,6 +338,32 @@ public class BasicSecurityContext implements WebSecurityContext
     if (user.copyProperties(dbUser, false))
     {
       userManager.modify(dbUser);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param groupSet
+   */
+  private void checkForAuthenticatedAdmin(User user, Set<String> groupSet)
+  {
+    if (!user.isAdmin())
+    {
+      user.setAdmin(isAdmin(groupSet));
+
+      if (logger.isDebugEnabled() && user.isAdmin())
+      {
+        logger.debug("user '{}' is marked as admin by configuration",
+                     user.getName());
+      }
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("authenticator {} marked user '{}' as admin",
+                   user.getType(), user.getName());
     }
   }
 
