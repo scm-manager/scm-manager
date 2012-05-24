@@ -36,7 +36,6 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   mailText: 'Mail',
   passwordText: 'Password',
   adminText: 'Administrator',
-  // TODO i18n
   activeText: 'Active',
   errorTitleText: 'Error',
   updateErrorMsgText: 'User update failed',
@@ -50,7 +49,6 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   passwordHelpText: 'Plain text password of the user.',
   passwordConfirmHelpText: 'Repeat the password for validation.',
   adminHelpText: 'An administrator is able to create, modify and delete repositories, groups and users.',
-  // TODO i18n
   activeHelpText: 'Activate or deactive the user.',
 
   initComponent: function(){
