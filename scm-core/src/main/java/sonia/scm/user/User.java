@@ -155,6 +155,12 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
       user.setAdmin(admin);
     }
 
+    if (user.isActive() != active)
+    {
+      result = true;
+      user.setActive(active);
+    }
+
     if (Util.isNotEquals(user.getDisplayName(), displayName))
     {
       result = true;
