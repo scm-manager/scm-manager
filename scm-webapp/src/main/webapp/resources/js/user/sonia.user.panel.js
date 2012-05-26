@@ -54,7 +54,7 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
         '-',
         {xtype: 'label', text: this.showOnlyActiveText, cls: 'ytb-text'},
         '  ',
-        {xtype: 'checkbox', text: this.reloadText, scope: this, handler: this.toggleActive},
+        {xtype: 'checkbox', text: this.reloadText, scope: this, handler: this.toggleActive}
       ],
       items: [{
         id: 'userGrid',
