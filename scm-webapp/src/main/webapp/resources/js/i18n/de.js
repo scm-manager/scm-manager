@@ -357,6 +357,7 @@ if (Sonia.user.Grid){
     colNameText: 'Name',
     colDisplayNameText: 'Anzeigename',
     colMailText: 'E-Mail',
+    colActiveText: 'Aktiv',
     colAdminText: 'Admin',
     colCreationDateText: 'Erstellungsdatum',
     colLastModifiedText: 'Letzte Änderung',
@@ -398,6 +399,7 @@ if (Sonia.user.Panel){
     emptyText: 'Es wurde kein Benutzer selektiert',
     removeTitleText: 'Benutzer entfernen',
     removeMsgText: 'Benutzer "{0}" entfernen?',
+    showOnlyActiveText: 'Nur aktive anzeigen: ',
     errorTitleText: 'Fehler',
     errorMsgText: 'Entfernen des Benutzers fehlgeschlagen'
   });
