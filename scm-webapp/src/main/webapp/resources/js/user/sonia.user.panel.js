@@ -37,6 +37,7 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
   removeMsgText: 'Remove User "{0}"?',
   errorTitleText: 'Error',
   errorMsgText: 'User deletion failed',
+  showOnlyActiveText: 'Show only active: ',
   
   // userGrid for history
   userGrid: null,
@@ -49,7 +50,11 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
         {xtype: 'tbbutton', text: this.addText, icon: this.addIcon, scope: this, handler: this.showAddPanel},
         {xtype: 'tbbutton', text: this.removeText, icon: this.removeIcon, scope: this, handler: this.removeUser},
         '-',
-        {xtype: 'tbbutton', text: this.reloadText, icon: this.reloadIcon, scope: this, handler: this.reload}
+        {xtype: 'tbbutton', text: this.reloadText, icon: this.reloadIcon, scope: this, handler: this.reload},
+        '-',
+        {xtype: 'label', text: this.showOnlyActiveText, cls: 'ytb-text'},
+        '  ',
+        {xtype: 'checkbox', text: this.reloadText, scope: this, handler: this.toggleActive},
       ],
       items: [{
         id: 'userGrid',
@@ -75,6 +80,16 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.user.Panel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  toggleActive: function(checkbox, value){
+    if (value){
+      this.getGrid().getStore().filterBy(function(record){
+        return record.get('active');
+      });
+    } else {
+      this.getGrid().getStore().clearFilter();
+    }
   },
   
   getGrid: function(){
