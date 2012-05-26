@@ -106,7 +106,8 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       fieldLabel: this.activeText,
       name: 'active',
       xtype: 'checkbox',
-      helpText: this.activeHelpText
+      helpText: this.activeHelpText,
+      checked: true
     });
 
     Ext.apply(this, Ext.apply(this.initialConfig, {items: items}));
