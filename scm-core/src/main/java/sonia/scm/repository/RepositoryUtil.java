@@ -38,7 +38,9 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.io.DirectoryFileFilter;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -63,6 +65,32 @@ public class RepositoryUtil
     LoggerFactory.getLogger(RepositoryUtil.class);
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param configuration
+   * @param repositoryManager
+   * @param repository
+   * 
+   * @since 1.16
+   */
+  public static void appendUrl(ScmConfiguration configuration,
+                               RepositoryManager repositoryManager,
+                               Repository repository)
+  {
+    RepositoryHandler handler =
+      repositoryManager.getHandler(repository.getType());
+
+    if (handler != null)
+    {
+      String url = handler.createResourcePath(repository);
+
+      url = HttpUtil.getCompleteUrl(configuration, url);
+      repository.setUrl(url);
+    }
+  }
 
   /**
    * Method description
