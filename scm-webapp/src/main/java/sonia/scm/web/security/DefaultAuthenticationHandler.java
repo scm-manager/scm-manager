@@ -208,7 +208,7 @@ public class DefaultAuthenticationHandler implements AuthenticationHandler
     {
       if (logger.isDebugEnabled())
       {
-        logger.debug("user {} logged in successfully", username);
+        logger.debug("user {} successfully prepared for login", username);
       }
 
       user.setPassword(null);

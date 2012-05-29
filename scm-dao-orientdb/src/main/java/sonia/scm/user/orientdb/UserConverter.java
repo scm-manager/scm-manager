@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.user.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -58,6 +59,9 @@ public class UserConverter extends AbstractConverter implements Converter<User>
 
   /** Field description */
   public static final String DOCUMENT_CLASS = "User";
+
+  /** Field description */
+  public static final String FIELD_ACTIVE = "active";
 
   /** Field description */
   public static final String FIELD_ADMIN = "admin";
@@ -115,6 +119,7 @@ public class UserConverter extends AbstractConverter implements Converter<User>
     appendField(doc, FIELD_MAIL, user.getMail());
     appendField(doc, FIELD_PASSWORD, user.getPassword());
     appendField(doc, FIELD_ADMIN, user.isAdmin());
+    appendField(doc, FIELD_ACTIVE, user.isActive());
     appendField(doc, FIELD_CREATIONDATE, user.getCreationDate(), OType.LONG);
     appendPropertiesField(doc, user);
 
@@ -140,6 +145,7 @@ public class UserConverter extends AbstractConverter implements Converter<User>
     user.setPassword(getStringField(doc, FIELD_PASSWORD));
     user.setType(getStringField(doc, FIELD_TYPE));
     user.setAdmin(getBooleanField(doc, FIELD_ADMIN));
+    user.setAdmin(getBooleanField(doc, FIELD_ACTIVE));
     user.setLastModified(getLongField(doc, FIELD_LASTMODIFIED));
     user.setCreationDate(getLongField(doc, FIELD_CREATIONDATE));
 
@@ -176,6 +182,7 @@ public class UserConverter extends AbstractConverter implements Converter<User>
       oclass.createProperty(FIELD_CREATIONDATE, OType.LONG);
       oclass.createProperty(FIELD_DISPLAYNAME, OType.STRING);
       oclass.createProperty(FIELD_MAIL, OType.STRING);
+      oclass.createProperty(FIELD_ACTIVE, OType.STRING);
       oclass.createProperty(FIELD_PASSWORD, OType.STRING);
       oclass.createProperty(FIELD_PROPERTIES, OType.EMBEDDEDMAP);
 

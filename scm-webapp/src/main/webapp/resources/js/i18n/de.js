@@ -357,6 +357,7 @@ if (Sonia.user.Grid){
     colNameText: 'Name',
     colDisplayNameText: 'Anzeigename',
     colMailText: 'E-Mail',
+    colActiveText: 'Aktiv',
     colAdminText: 'Admin',
     colCreationDateText: 'Erstellungsdatum',
     colLastModifiedText: 'Letzte Änderung',
@@ -373,6 +374,7 @@ if (Sonia.user.FormPanel){
     mailText: 'E-Mail',
     passwordText: 'Passwort',
     adminText: 'Administrator',
+    activeText: 'Aktiv',
     errorTitleText: 'Fehler',
     updateErrorMsgText: 'Benutzer Aktualisierung fehlgeschlagen',
     createErrorMsgText: 'Benutzer Erstellung fehlgeschlagen',
@@ -384,7 +386,8 @@ if (Sonia.user.FormPanel){
     mailHelpText: 'E-Mail Adresse des Benutzers.',
     passwordHelpText: 'Passwort des Benutzers.',
     passwordConfirmHelpText: 'Passwortwiederholung zur Kontrolle.',
-    adminHelpText: 'Ein Administrator kann Repositories, Gruppen und Benutzer erstellen, bearbeiten und löschen.'
+    adminHelpText: 'Ein Administrator kann Repositories, Gruppen und Benutzer erstellen, bearbeiten und löschen.',
+    activeHelpText: 'User deaktivieren oder aktivieren.'
   });
 
 }
@@ -396,6 +399,7 @@ if (Sonia.user.Panel){
     emptyText: 'Es wurde kein Benutzer selektiert',
     removeTitleText: 'Benutzer entfernen',
     removeMsgText: 'Benutzer "{0}" entfernen?',
+    showOnlyActiveText: 'Nur aktive anzeigen: ',
     errorTitleText: 'Fehler',
     errorMsgText: 'Entfernen des Benutzers fehlgeschlagen'
   });
