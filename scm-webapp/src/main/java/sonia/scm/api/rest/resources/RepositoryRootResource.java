@@ -37,6 +37,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 
 import sonia.scm.config.ScmConfiguration;
@@ -52,6 +53,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.GET;
@@ -112,12 +115,18 @@ public class RepositoryRootResource
     UrlProvider uiUrlProvider =
       UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
         UrlProviderFactory.TYPE_WUI);
-    Collection<RepositoryTemplateElement> repositories =
-      Collections2.transform(
-          Collections2.filter(
-            repositoryManager.getAll(),
-            new TypePredicate(type)), new RepositoryTransformFunction(
-                uiUrlProvider));
+    //J-
+    Collection<RepositoryTemplateElement> unsortedRepositories =
+      Collections2.transform( 
+        Collections2.filter(
+            repositoryManager.getAll(), new TypePredicate(type))
+        , new RepositoryTransformFunction(uiUrlProvider)
+      );
+    
+    List<RepositoryTemplateElement> repositories = Ordering.from(
+      new RepositoryTemplateElementComparator()
+    ).sortedCopy(unsortedRepositories);
+    //J+
     Map<String, Object> environment = Maps.newHashMap();
 
     environment.put("repositories", repositories);
@@ -233,6 +242,35 @@ public class RepositoryRootResource
 
     /** Field description */
     private UrlProvider urlProvider;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 12/05/29
+   * @author         Enter your name here...    
+   */
+  private static class RepositoryTemplateElementComparator
+          implements Comparator<RepositoryTemplateElement>
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @param left
+     * @param right
+     *
+     * @return
+     */
+    @Override
+    public int compare(RepositoryTemplateElement left,
+                       RepositoryTemplateElement right)
+    {
+      return left.getName().compareTo(right.getName());
+    }
   }
 
 
