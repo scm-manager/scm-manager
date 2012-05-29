@@ -52,6 +52,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -73,7 +75,7 @@ public class RepositoryUtil
    * @param configuration
    * @param repositoryManager
    * @param repository
-   * 
+   *
    * @since 1.16
    */
   public static void appendUrl(ScmConfiguration configuration,
@@ -88,6 +90,33 @@ public class RepositoryUtil
       String url = handler.createResourcePath(repository);
 
       url = HttpUtil.getCompleteUrl(configuration, url);
+      repository.setUrl(url);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param request
+   * @param repositoryManager
+   * @param repository
+   *
+   * @since 1.16
+   */
+  public static void appendUrl(HttpServletRequest request,
+                               RepositoryManager repositoryManager,
+                               Repository repository)
+  {
+    RepositoryHandler handler =
+      repositoryManager.getHandler(repository.getType());
+
+    if (handler != null)
+    {
+      String url = handler.createResourcePath(repository);
+
+      url = HttpUtil.getCompleteUrl(request, url);
       repository.setUrl(url);
     }
   }

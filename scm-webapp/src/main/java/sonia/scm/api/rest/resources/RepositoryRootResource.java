@@ -47,6 +47,7 @@ import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.template.TemplateHandler;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
+import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -58,10 +59,13 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -82,16 +86,13 @@ public class RepositoryRootResource
    *
    *
    *
-   * @param configuration
    * @param templateHandler
    * @param repositoryManager
    */
   @Inject
-  public RepositoryRootResource(ScmConfiguration configuration,
-                                TemplateHandler templateHandler,
+  public RepositoryRootResource(TemplateHandler templateHandler,
                                 RepositoryManager repositoryManager)
   {
-    this.configuration = configuration;
     this.templateHandler = templateHandler;
     this.repositoryManager = repositoryManager;
   }
@@ -102,6 +103,8 @@ public class RepositoryRootResource
    * Method description
    *
    *
+   *
+   * @param request
    * @param type
    *
    * @return
@@ -110,18 +113,19 @@ public class RepositoryRootResource
    */
   @GET
   @Produces(MediaType.TEXT_HTML)
-  public String renderRepositoriesRoot(@PathParam("type") final String type)
+  public String renderRepositoriesRoot(@Context HttpServletRequest request,
+          @PathParam("type") final String type)
           throws IOException
   {
     UrlProvider uiUrlProvider =
-      UrlProviderFactory.createUrlProvider(configuration.getBaseUrl(),
+      UrlProviderFactory.createUrlProvider(HttpUtil.getCompleteUrl(request),
         UrlProviderFactory.TYPE_WUI);
     //J-
     Collection<RepositoryTemplateElement> unsortedRepositories =
       Collections2.transform( 
         Collections2.filter(
             repositoryManager.getAll(), new RepositoryTypePredicate(type))
-        , new RepositoryTransformFunction(configuration, repositoryManager, uiUrlProvider)
+        , new RepositoryTransformFunction(request, repositoryManager, uiUrlProvider)
       );
     
     List<RepositoryTemplateElement> repositories = Ordering.from(
@@ -185,6 +189,18 @@ public class RepositoryRootResource
      *
      * @return
      */
+    public String getDetailUrl()
+    {
+      return urlProvider.getRepositoryUrlProvider().getDetailUrl(
+          repository.getId());
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
     public String getName()
     {
       return repository.getName();
@@ -211,18 +227,6 @@ public class RepositoryRootResource
     {
       return urlProvider.getRepositoryUrlProvider().getBrowseUrl(
           repository.getId(), null, null);
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    public String getDetailUrl()
-    {
-      return urlProvider.getRepositoryUrlProvider().getDetailUrl(
-          repository.getId());
     }
 
     /**
@@ -291,15 +295,16 @@ public class RepositoryRootResource
      *
      *
      *
-     * @param configuration
+     *
+     * @param request
      * @param repositoryManager
      * @param urlProvider
      */
-    public RepositoryTransformFunction(ScmConfiguration configuration,
+    public RepositoryTransformFunction(HttpServletRequest request,
                                        RepositoryManager repositoryManager,
                                        UrlProvider urlProvider)
     {
-      this.configuration = configuration;
+      this.request = request;
       this.repositoryManager = repositoryManager;
       this.urlProvider = urlProvider;
     }
@@ -317,7 +322,7 @@ public class RepositoryRootResource
     @Override
     public RepositoryTemplateElement apply(Repository repository)
     {
-      RepositoryUtil.appendUrl(configuration, repositoryManager, repository);
+      RepositoryUtil.appendUrl(request, repositoryManager, repository);
 
       return new RepositoryTemplateElement(repository, urlProvider);
     }
@@ -325,10 +330,10 @@ public class RepositoryRootResource
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private ScmConfiguration configuration;
+    private RepositoryManager repositoryManager;
 
     /** Field description */
-    private RepositoryManager repositoryManager;
+    private HttpServletRequest request;
 
     /** Field description */
     private UrlProvider urlProvider;
@@ -336,9 +341,6 @@ public class RepositoryRootResource
 
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ScmConfiguration configuration;
 
   /** Field description */
   private RepositoryManager repositoryManager;
