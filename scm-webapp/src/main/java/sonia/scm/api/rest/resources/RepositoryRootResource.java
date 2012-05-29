@@ -45,7 +45,6 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.template.TemplateHandler;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
-import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -164,6 +163,18 @@ public class RepositoryRootResource
      *
      * @return
      */
+    public String getCommitUrl()
+    {
+      return urlProvider.getRepositoryUrlProvider().getChangesetUrl(
+          repository.getId(), null);
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
     public String getName()
     {
       return repository.getName();
@@ -178,6 +189,18 @@ public class RepositoryRootResource
     public Repository getRepository()
     {
       return repository;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public String getSourceUrl()
+    {
+      return urlProvider.getRepositoryUrlProvider().getBrowseUrl(
+          repository.getId(), null, null);
     }
 
     /**
