@@ -34,7 +34,6 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
@@ -43,6 +42,7 @@ import com.google.inject.Inject;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryTypePredicate;
 import sonia.scm.template.TemplateHandler;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
@@ -119,7 +119,7 @@ public class RepositoryRootResource
     Collection<RepositoryTemplateElement> unsortedRepositories =
       Collections2.transform( 
         Collections2.filter(
-            repositoryManager.getAll(), new TypePredicate(type))
+            repositoryManager.getAll(), new RepositoryTypePredicate(type))
         , new RepositoryTransformFunction(uiUrlProvider)
       );
     
@@ -316,50 +316,6 @@ public class RepositoryRootResource
 
     /** Field description */
     private UrlProvider urlProvider;
-  }
-
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 12/05/28
-   * @author         Enter your name here...
-   */
-  private static class TypePredicate implements Predicate<Repository>
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param type
-     */
-    public TypePredicate(String type)
-    {
-      this.type = type;
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param repository
-     *
-     * @return
-     */
-    @Override
-    public boolean apply(Repository repository)
-    {
-      return type.equalsIgnoreCase(repository.getType());
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private String type;
   }
 
 
