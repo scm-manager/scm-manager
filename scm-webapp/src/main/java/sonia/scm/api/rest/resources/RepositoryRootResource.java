@@ -147,7 +147,7 @@ public class RepositoryRootResource
    * @version        Enter version here..., 12/05/28
    * @author         Enter your name here...
    */
-  private static class RepositoryTemplateElement
+  public static class RepositoryTemplateElement
   {
 
     /**
@@ -250,7 +250,7 @@ public class RepositoryRootResource
    *
    *
    * @version        Enter version here..., 12/05/29
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   private static class RepositoryTemplateElementComparator
           implements Comparator<RepositoryTemplateElement>
