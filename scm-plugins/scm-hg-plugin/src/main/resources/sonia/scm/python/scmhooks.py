@@ -36,7 +36,7 @@
 # changegroup.scm = python:scmhooks.callback
 #
 
-import os, urllib
+import os, urllib, urllib2
 
 baseUrl = os.environ['SCM_URL']
 challenge = os.environ['SCM_CHALLENGE']
@@ -51,7 +51,7 @@ def callback(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs)
       url = baseUrl + hooktype
       ui.debug( "send scm-hook to " + url + " and " + node + "\n" )
       data = urllib.urlencode({'node': node, 'challenge': challenge, 'credentials': credentials, 'repositoryPath': repo.root})
-      conn = urllib.urlopen(url, data);
+      conn = urllib2.urlopen(url, data);
       if conn.code >= 200 and conn.code < 300:
         ui.debug( "scm-hook " + hooktype + " success with status code " + str(conn.code) + "\n" )
         failure = False
