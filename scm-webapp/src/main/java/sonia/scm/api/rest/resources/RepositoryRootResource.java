@@ -43,6 +43,7 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTypePredicate;
+import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.template.TemplateHandler;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
@@ -120,7 +121,7 @@ public class RepositoryRootResource
       Collections2.transform( 
         Collections2.filter(
             repositoryManager.getAll(), new RepositoryTypePredicate(type))
-        , new RepositoryTransformFunction(uiUrlProvider)
+        , new RepositoryTransformFunction(configuration, repositoryManager, uiUrlProvider)
       );
     
     List<RepositoryTemplateElement> repositories = Ordering.from(
@@ -155,13 +156,13 @@ public class RepositoryRootResource
      *
      *
      * @param repository
-     * @param urlProvider
+     * @param uiUrlProvider
      */
     public RepositoryTemplateElement(Repository repository,
-                                     UrlProvider urlProvider)
+                                     UrlProvider uiUrlProvider)
     {
       this.repository = repository;
-      this.urlProvider = urlProvider;
+      this.urlProvider = uiUrlProvider;
     }
 
     //~--- get methods --------------------------------------------------------
@@ -175,7 +176,7 @@ public class RepositoryRootResource
     public String getCommitUrl()
     {
       return urlProvider.getRepositoryUrlProvider().getChangesetUrl(
-          repository.getId(), null);
+          repository.getId(), 0, 20);
     }
 
     /**
@@ -218,7 +219,7 @@ public class RepositoryRootResource
      *
      * @return
      */
-    public String getUIUrl()
+    public String getDetailUrl()
     {
       return urlProvider.getRepositoryUrlProvider().getDetailUrl(
           repository.getId());
@@ -289,10 +290,17 @@ public class RepositoryRootResource
      * Constructs ...
      *
      *
+     *
+     * @param configuration
+     * @param repositoryManager
      * @param urlProvider
      */
-    public RepositoryTransformFunction(UrlProvider urlProvider)
+    public RepositoryTransformFunction(ScmConfiguration configuration,
+                                       RepositoryManager repositoryManager,
+                                       UrlProvider urlProvider)
     {
+      this.configuration = configuration;
+      this.repositoryManager = repositoryManager;
       this.urlProvider = urlProvider;
     }
 
@@ -309,10 +317,18 @@ public class RepositoryRootResource
     @Override
     public RepositoryTemplateElement apply(Repository repository)
     {
+      RepositoryUtil.appendUrl(configuration, repositoryManager, repository);
+
       return new RepositoryTemplateElement(repository, urlProvider);
     }
 
     //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private ScmConfiguration configuration;
+
+    /** Field description */
+    private RepositoryManager repositoryManager;
 
     /** Field description */
     private UrlProvider urlProvider;
