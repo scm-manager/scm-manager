@@ -65,6 +65,7 @@ import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
@@ -779,7 +780,7 @@ public class RepositoryResource
   {
     for (Repository repository : repositories)
     {
-      appendUrl(repository);
+      RepositoryUtil.appendUrl(configuration, repositoryManager, repository);
       prepareRepository(repository);
     }
 
@@ -797,7 +798,7 @@ public class RepositoryResource
   @Override
   protected Repository prepareForReturn(Repository repository)
   {
-    appendUrl(repository);
+    RepositoryUtil.appendUrl(configuration, repositoryManager, repository);
     prepareRepository(repository);
 
     return repository;
@@ -832,26 +833,6 @@ public class RepositoryResource
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   */
-  private void appendUrl(Repository repository)
-  {
-    RepositoryHandler handler =
-      repositoryManager.getHandler(repository.getType());
-
-    if (handler != null)
-    {
-      String url = handler.createResourcePath(repository);
-
-      url = HttpUtil.getCompleteUrl(configuration, url);
-      repository.setUrl(url);
-    }
-  }
 
   /**
    * Method description

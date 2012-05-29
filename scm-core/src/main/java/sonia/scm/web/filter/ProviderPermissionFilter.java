@@ -35,8 +35,14 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Throwables;
 import com.google.inject.Provider;
+import com.google.inject.ProvisionException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.web.security.WebSecurityContext;
@@ -44,7 +50,6 @@ import sonia.scm.web.security.WebSecurityContext;
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.servlet.http.HttpServletRequest;
-import sonia.scm.config.ScmConfiguration;
 
 /**
  *
@@ -55,9 +60,19 @@ public abstract class ProviderPermissionFilter extends PermissionFilter
 {
 
   /**
+   * the logger for ProviderPermissionFilter
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ProviderPermissionFilter.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
    * Constructs ...
    *
    *
+   *
+   * @param configuration
    * @param securityContextProvider
    * @param repositoryProvider
    */
@@ -83,7 +98,24 @@ public abstract class ProviderPermissionFilter extends PermissionFilter
   @Override
   protected Repository getRepository(HttpServletRequest request)
   {
-    return repositoryProvider.get();
+    Repository repository = null;
+
+    try
+    {
+      repository = repositoryProvider.get();
+    }
+    catch (ProvisionException ex)
+    {
+      Throwables.propagateIfInstanceOf(ex.getCause(),
+                                       IllegalStateException.class);
+
+      if (logger.isErrorEnabled())
+      {
+        logger.error("could not get repository from request", ex);
+      }
+    }
+
+    return repository;
   }
 
   //~--- fields ---------------------------------------------------------------

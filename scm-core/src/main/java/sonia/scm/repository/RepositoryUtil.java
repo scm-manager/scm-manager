@@ -38,7 +38,9 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.io.DirectoryFileFilter;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -49,6 +51,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -63,6 +67,59 @@ public class RepositoryUtil
     LoggerFactory.getLogger(RepositoryUtil.class);
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param configuration
+   * @param repositoryManager
+   * @param repository
+   *
+   * @since 1.16
+   */
+  public static void appendUrl(ScmConfiguration configuration,
+                               RepositoryManager repositoryManager,
+                               Repository repository)
+  {
+    RepositoryHandler handler =
+      repositoryManager.getHandler(repository.getType());
+
+    if (handler != null)
+    {
+      String url = handler.createResourcePath(repository);
+
+      url = HttpUtil.getCompleteUrl(configuration, url);
+      repository.setUrl(url);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param request
+   * @param repositoryManager
+   * @param repository
+   *
+   * @since 1.16
+   */
+  public static void appendUrl(HttpServletRequest request,
+                               RepositoryManager repositoryManager,
+                               Repository repository)
+  {
+    RepositoryHandler handler =
+      repositoryManager.getHandler(repository.getType());
+
+    if (handler != null)
+    {
+      String url = handler.createResourcePath(repository);
+
+      url = HttpUtil.getCompleteUrl(request, url);
+      repository.setUrl(url);
+    }
+  }
 
   /**
    * Method description

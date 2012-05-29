@@ -35,6 +35,7 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Splitter;
 import com.google.inject.Provider;
 
 import org.slf4j.Logger;
@@ -49,11 +50,14 @@ import sonia.scm.security.ScmSecurityException;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+
+import java.util.Iterator;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -172,6 +176,17 @@ public abstract class PermissionFilter extends HttpFilter
           response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
       }
+      catch (IllegalStateException ex)
+      {
+        if (logger.isWarnEnabled())
+        {
+          logger.warn(
+              "wrong request at ".concat(request.getRequestURI()).concat(
+                " send redirect"), ex);
+        }
+
+        response.sendRedirect(getRepositoryRootHelpUrl(request));
+      }
       catch (ScmSecurityException ex)
       {
         if (logger.isWarnEnabled())
@@ -197,6 +212,29 @@ public abstract class PermissionFilter extends HttpFilter
    * Method description
    *
    *
+   * @param request
+   *
+   * @return
+   */
+  private String extractType(HttpServletRequest request)
+  {
+    Iterator<String> it = Splitter.on(
+                              HttpUtil.SEPARATOR_PATH).omitEmptyStrings().split(
+                              request.getRequestURI()).iterator();
+    String type = it.next();
+
+    if (Util.isNotEmpty(request.getContextPath()))
+    {
+      type = it.next();
+    }
+
+    return type;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param response
    * @param user
    *
@@ -216,6 +254,25 @@ public abstract class PermissionFilter extends HttpFilter
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  private String getRepositoryRootHelpUrl(HttpServletRequest request)
+  {
+    String type = extractType(request);
+    String helpUrl = HttpUtil.getCompleteUrl(request,
+                       "/api/rest/help/repository-root/");
+
+    helpUrl = helpUrl.concat(type).concat(".html");
+
+    return helpUrl;
+  }
 
   /**
    * Method description

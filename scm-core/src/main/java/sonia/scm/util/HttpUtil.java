@@ -155,7 +155,7 @@ public class HttpUtil
    */
   public static String append(String uri, String suffix)
   {
-    if (!uri.endsWith(SEPARATOR_PATH))
+    if (!uri.endsWith(SEPARATOR_PATH) && !suffix.startsWith(SEPARATOR_PATH))
     {
       uri = uri.concat(SEPARATOR_PATH);
     }
@@ -292,6 +292,34 @@ public class HttpUtil
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns an absolute url with context path.
+   *
+   *
+   * @param request http client request
+   * @param pathSegments
+   *
+   * @return absolute url with context path
+   * @since 1.16
+   */
+  public static String getCompleteUrl(HttpServletRequest request,
+          String... pathSegments)
+  {
+    String baseUrl =
+      request.getRequestURL().toString().replace(request.getRequestURI(),
+        Util.EMPTY_STRING).concat(request.getContextPath());
+
+    if (Util.isNotEmpty(pathSegments))
+    {
+      for (String ps : pathSegments)
+      {
+        baseUrl = append(baseUrl, ps);
+      }
+    }
+
+    return baseUrl;
+  }
 
   /**
    * Return the complete url of the given path.
