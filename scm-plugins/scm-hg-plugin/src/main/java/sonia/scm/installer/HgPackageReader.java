@@ -234,7 +234,7 @@ public class HgPackageReader
     }
     catch (IOException ex)
     {
-      logger.error("could not read HgPackages from {}", PACKAGEURL);
+      logger.error("could not read HgPackages from ".concat(PACKAGEURL), ex);
     }
     finally
     {
