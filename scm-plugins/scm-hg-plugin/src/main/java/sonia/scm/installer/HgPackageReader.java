@@ -45,7 +45,6 @@ import sonia.scm.PlatformType;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.net.HttpClient;
-import sonia.scm.net.HttpRequest;
 import sonia.scm.net.HttpResponse;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SystemUtil;
@@ -73,7 +72,7 @@ public class HgPackageReader
 
   /** Field description */
   public static final String PACKAGEURL =
-    "http://download.scm-manager.org/pkg/mercurial/packages.xml.gz";
+    "http://download.scm-manager.org/pkg/mercurial/packages.xml";
 
   /** the logger for HgPackageReader */
   private static final Logger logger =
@@ -223,11 +222,7 @@ public class HgPackageReader
 
     try
     {
-      HttpRequest request = new HttpRequest(PACKAGEURL);
-
-      request.setDecodeGZip(true);
-
-      HttpResponse response = httpClientProvider.get().get(request);
+      HttpResponse response = httpClientProvider.get().get(PACKAGEURL);
 
       input = response.getContent();
       packages = JAXB.unmarshal(input, HgPackages.class);
