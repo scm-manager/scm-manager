@@ -155,7 +155,7 @@ public class HttpUtil
    */
   public static String append(String uri, String suffix)
   {
-    if (!uri.endsWith(SEPARATOR_PATH))
+    if (!uri.endsWith(SEPARATOR_PATH) && !suffix.startsWith(SEPARATOR_PATH))
     {
       uri = uri.concat(SEPARATOR_PATH);
     }
