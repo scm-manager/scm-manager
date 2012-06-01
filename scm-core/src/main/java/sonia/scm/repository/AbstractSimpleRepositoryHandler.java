@@ -181,6 +181,8 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
     if (directory.exists())
     {
       fileSystem.destroy(directory);
+      cleanupEmptyDirectories(config.getRepositoryDirectory(),
+                              directory.getParentFile());
     }
     else if (logger.isWarnEnabled())
     {
@@ -433,6 +435,47 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
       }
 
       parent = parent.getParentFile();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param baseDirectory
+   * @param directory
+   */
+  private void cleanupEmptyDirectories(File baseDirectory, File directory)
+  {
+    if (IOUtil.isChild(baseDirectory, directory))
+    {
+      if (IOUtil.isEmpty(directory))
+      {
+
+        // TODO use filesystem
+        if (directory.delete())
+        {
+          if (logger.isInfoEnabled())
+          {
+            logger.info("successfully deleted directory {}", directory);
+          }
+
+          cleanupEmptyDirectories(baseDirectory, directory.getParentFile());
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("could not delete directory {}", directory);
+        }
+      }
+      else if (logger.isDebugEnabled())
+      {
+        logger.debug("could not remove non empty directory {}", directory);
+      }
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("directory {} is not a child of {}", directory,
+                  baseDirectory);
     }
   }
 

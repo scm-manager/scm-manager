@@ -677,26 +677,50 @@ public class IOUtil
   }
 
   /**
-   * Method description
+   * Returns true if the second file parameter is a child of the first one.
    *
    *
-   * @param parent
-   * @param child
+   * @param parent parent file
+   * @param child chile file
    * @since 1.9
    *
-   * @return
+   * @return true if the second file parameter is a child of the first one
    *
    */
   public static boolean isChild(File parent, File child)
   {
+    boolean ischild = false;
+
     try
     {
-      return child.getCanonicalPath().startsWith(parent.getCanonicalPath());
+      String path = child.getCanonicalPath();
+      String parentPath = parent.getCanonicalPath();
+
+      if (!parentPath.equals(path))
+      {
+        ischild = path.startsWith(parentPath);
+      }
     }
     catch (IOException ex)
     {
       throw new RuntimeException(ex);
     }
+
+    return ischild;
+  }
+
+  /**
+   * Returns true if the given directory is empty.
+   *
+   *
+   * @param directory directory to check
+   *
+   * @return true if the directory is empty
+   * @since 1.16
+   */
+  public static boolean isEmpty(File directory)
+  {
+    return Util.isEmpty(directory.listFiles());
   }
 
   //~--- methods --------------------------------------------------------------
