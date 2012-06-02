@@ -38,10 +38,20 @@ package sonia.scm.repository;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.ConfigChangedListener;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import java.util.UUID;
 
@@ -52,8 +62,19 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgHookManager
+public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
 {
+
+  /** Field description */
+  public static final String URL_HOOKPATH = "/hook/hg/";
+
+  /**
+   * the logger for HgHookManager
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgHookManager.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -65,9 +86,22 @@ public class HgHookManager
   public HgHookManager(ScmConfiguration configuration)
   {
     this.configuration = configuration;
+    this.configuration.addListener(this);
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param config
+   */
+  @Override
+  public void configChanged(ScmConfiguration config)
+  {
+    hookUrl = null;
+  }
 
   /**
    * Method description
@@ -79,23 +113,23 @@ public class HgHookManager
    */
   public String createUrl(HttpServletRequest request)
   {
-    String url = null;
-
-    if (configuration.isForceBaseUrl())
+    if (hookUrl == null)
     {
-      url = HttpUtil.getUriWithoutEndSeperator(
-        configuration.getBaseUrl()).concat("/hook/hg/");
-    }
-    else
-    {
-      StringBuilder sb = new StringBuilder(request.getScheme());
+      synchronized (this)
+      {
+        if (hookUrl == null)
+        {
+          buildHookUrl(request);
 
-      sb.append("://localhost:").append(request.getLocalPort());
-      sb.append(request.getContextPath()).append("/hook/hg/");
-      url = sb.toString();
+          if (logger.isInfoEnabled() && Util.isNotEmpty(hookUrl))
+          {
+            logger.info("use {} for mercurial hooks", hookUrl);
+          }
+        }
+      }
     }
 
-    return url;
+    return hookUrl;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -124,6 +158,154 @@ public class HgHookManager
     return this.challenge.equals(challenge);
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   */
+  private void buildHookUrl(HttpServletRequest request)
+  {
+    if (configuration.isForceBaseUrl())
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug(
+            "create hook url from configured base url because force base url is enabled");
+      }
+
+      hookUrl = createConfiguredUrl();
+
+      if (!isUrlWorking(hookUrl))
+      {
+        disableHooks();
+      }
+    }
+    else
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("create hook url from request");
+      }
+
+      hookUrl = HttpUtil.getCompleteUrl(request, URL_HOOKPATH);
+
+      if (!isUrlWorking(hookUrl))
+      {
+        if (logger.isWarnEnabled())
+        {
+          logger.warn(
+              "hook url {} from request does not work, try now localhost");
+        }
+
+        hookUrl = createLocalUrl(request);
+
+        if (!isUrlWorking(hookUrl))
+        {
+          if (logger.isWarnEnabled())
+          {
+            logger.warn(
+                "localhost hook url {} does not work, try now from configured base url");
+          }
+
+          hookUrl = createConfiguredUrl();
+
+          if (!isUrlWorking(hookUrl))
+          {
+            disableHooks();
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private String createConfiguredUrl()
+  {
+    return HttpUtil.getUriWithoutEndSeperator(
+        configuration.getBaseUrl()).concat("/hook/hg/");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  private String createLocalUrl(HttpServletRequest request)
+  {
+    StringBuilder sb = new StringBuilder(request.getScheme());
+
+    sb.append("://localhost:").append(request.getLocalPort());
+    sb.append(request.getContextPath()).append(URL_HOOKPATH);
+
+    return sb.toString();
+  }
+
+  /**
+   * Method description
+   *
+   */
+  private void disableHooks()
+  {
+    if (logger.isErrorEnabled())
+    {
+      logger.error(
+          "disabling mercurial hooks, because hook url {} seems not to work",
+          hookUrl);
+    }
+
+    hookUrl = Util.EMPTY_STRING;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   *
+   * @return
+   */
+  private boolean isUrlWorking(String url)
+  {
+    boolean result = false;
+
+    try
+    {
+      url = url.concat("?ping=true");
+
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("check hook url {}", url);
+      }
+
+      HttpURLConnection connection =
+        (HttpURLConnection) new URL(url).openConnection();
+
+      result = connection.getResponseCode() == 204;
+    }
+    catch (IOException ex)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("url test failed for url ".concat(url), ex);
+      }
+    }
+
+    return result;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -131,4 +313,7 @@ public class HgHookManager
 
   /** Field description */
   private ScmConfiguration configuration;
+
+  /** Field description */
+  private volatile String hookUrl;
 }

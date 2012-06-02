@@ -94,6 +94,9 @@ public class HgHookCallbackServlet extends HttpServlet
   private static final String PARAM_NODE = "node";
 
   /** Field description */
+  private static final String PARAM_PING = "ping";
+
+  /** Field description */
   private static final Pattern REGEX_URL =
     Pattern.compile("^/hook/hg/([^/]+)$");
 
@@ -130,6 +133,32 @@ public class HgHookCallbackServlet extends HttpServlet
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  @Override
+  protected void doGet(HttpServletRequest request, HttpServletResponse response)
+          throws ServletException, IOException
+  {
+    String ping = request.getParameter(PARAM_PING);
+
+    if (Util.isNotEmpty(ping) && Boolean.parseBoolean(ping))
+    {
+      response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+    }
+    else
+    {
+      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+    }
+  }
 
   /**
    * Method description
