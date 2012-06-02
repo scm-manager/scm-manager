@@ -52,7 +52,7 @@
 
   <logger name="sonia.scm" level="DEBUG" />
   
-  <!-- compress massive gzip logging -->
+  <!-- suppress massive gzip logging -->
   <logger name="sonia.scm.filter.GZipFilter" level="WARN" />
   <logger name="sonia.scm.filter.GZipResponseStream" level="WARN" />
   
