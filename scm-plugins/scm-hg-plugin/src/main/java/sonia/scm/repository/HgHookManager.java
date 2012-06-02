@@ -197,7 +197,8 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
         if (logger.isWarnEnabled())
         {
           logger.warn(
-              "hook url {} from request does not work, try now localhost");
+              "hook url {} from request does not work, try now localhost",
+              hookUrl);
         }
 
         hookUrl = createLocalUrl(request);
@@ -207,7 +208,8 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
           if (logger.isWarnEnabled())
           {
             logger.warn(
-                "localhost hook url {} does not work, try now from configured base url");
+                "localhost hook url {} does not work, try now from configured base url",
+                hookUrl);
           }
 
           hookUrl = createConfiguredUrl();
