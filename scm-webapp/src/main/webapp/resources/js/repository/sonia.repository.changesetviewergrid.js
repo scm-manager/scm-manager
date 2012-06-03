@@ -168,7 +168,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
   renderChangesetMetadata: function(author, p, record){
     var authorValue = '';
     if ( author != null ){
-      authorValue = Ext.util.Format.htmlEncode(author.name);
+      authorValue = author.name;
       if ( author.mail != null ){
         authorValue += ' ' + String.format(this.mailTemplate, author.mail);
       }
