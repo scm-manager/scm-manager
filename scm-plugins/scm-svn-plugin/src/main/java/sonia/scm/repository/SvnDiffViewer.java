@@ -112,7 +112,7 @@ public class SvnDiffViewer implements DiffViewer
     AssertUtil.assertIsNotNull(output);
 
     SVNClientManager clientManager = null;
-    
+
     try
     {
       SVNURL svnurl = SVNURL.fromFile(directory);
@@ -123,6 +123,7 @@ public class SvnDiffViewer implements DiffViewer
       }
 
       clientManager = SVNClientManager.newInstance();
+
       SVNDiffClient diffClient = clientManager.getDiffClient();
       ISVNDiffGenerator diffGenerator = diffClient.getDiffGenerator();
 
@@ -144,8 +145,10 @@ public class SvnDiffViewer implements DiffViewer
     }
     catch (Exception ex)
     {
-      logger.error("could not create blame view", ex);
-    } finally {
+      logger.error("could not create diff", ex);
+    }
+    finally
+    {
       SvnUtil.dispose(clientManager);
     }
   }
