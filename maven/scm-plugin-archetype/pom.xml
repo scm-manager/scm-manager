@@ -6,12 +6,12 @@
   <parent>
     <artifactId>scm-maven-plugins</artifactId>
     <groupId>sonia.scm.maven</groupId>
-    <version>1.16-SNAPSHOT</version>
+    <version>1.16</version>
   </parent>
 
   <groupId>sonia.scm.maven</groupId>
   <artifactId>scm-plugin-archetype</artifactId>
-  <version>1.16-SNAPSHOT</version>
+  <version>1.16</version>
   <name>scm-plugin-archetype</name>
 
 </project>
