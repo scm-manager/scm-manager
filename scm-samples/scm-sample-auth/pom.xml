@@ -6,12 +6,12 @@
   <parent>
     <artifactId>scm-samples</artifactId>
     <groupId>sonia.scm.samples</groupId>
-    <version>1.16</version>
+    <version>1.17-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm.sample</groupId>
   <artifactId>scm-sample-auth</artifactId>
-  <version>1.16</version>
+  <version>1.17-SNAPSHOT</version>
   <name>scm-sample-auth</name>
   <description>Sample Authentication Plugin</description>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
@@ -28,7 +28,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>1.16</version>
+      <version>1.17-SNAPSHOT</version>
     </dependency>
 
   </dependencies>

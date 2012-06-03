@@ -6,12 +6,12 @@
   <parent>
     <artifactId>scm-plugins</artifactId>
     <groupId>sonia.scm.plugins</groupId>
-    <version>1.16</version>
+    <version>1.17-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-svn-plugin</artifactId>
-  <version>1.16</version>
+  <version>1.17-SNAPSHOT</version>
   <name>scm-svn-plugin</name>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>Plugin for the version control system Subversion</description>
@@ -48,7 +48,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>1.16</version>
+      <version>1.17-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
