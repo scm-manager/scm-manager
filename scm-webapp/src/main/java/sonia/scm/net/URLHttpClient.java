@@ -399,6 +399,11 @@ public class URLHttpClient implements HttpClient
   {
     if (request.isDisableCertificateValidation())
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("disable certificate validation");
+      }
+
       try
       {
         TrustManager[] trustAllCerts = new TrustManager[] {
@@ -416,6 +421,11 @@ public class URLHttpClient implements HttpClient
 
     if (request.isDisableHostnameValidation())
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("disable hostname validation");
+      }
+
       connection.setHostnameVerifier(new TrustAllHostnameVerifier());
     }
   }
@@ -543,6 +553,11 @@ public class URLHttpClient implements HttpClient
     }
     else
     {
+      if (request.isIgnoreProxySettings() && logger.isTraceEnabled())
+      {
+        logger.trace("ignore proxy settings");
+      }
+
       if (logger.isDebugEnabled())
       {
         logger.debug("fetch '{}'", url.toExternalForm());
