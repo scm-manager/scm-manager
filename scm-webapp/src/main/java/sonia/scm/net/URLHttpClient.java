@@ -523,7 +523,7 @@ public class URLHttpClient implements HttpClient
   {
     HttpURLConnection connection = null;
 
-    if (configuration.isEnableProxy())
+    if (!request.isIgnoreProxySettings() && configuration.isEnableProxy())
     {
       if (logger.isDebugEnabled())
       {

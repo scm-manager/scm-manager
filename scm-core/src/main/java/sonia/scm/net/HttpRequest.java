@@ -206,6 +206,18 @@ public class HttpRequest
     return disableHostnameValidation;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.17
+   */
+  public boolean isIgnoreProxySettings()
+  {
+    return ignoreProxySettings;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -286,6 +298,18 @@ public class HttpRequest
    * Method description
    *
    *
+   * @param ignoreProxySettings
+   * @since 1.17
+   */
+  public void setIgnoreProxySettings(boolean ignoreProxySettings)
+  {
+    this.ignoreProxySettings = ignoreProxySettings;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param parameters
    *
    * @return
@@ -327,6 +351,12 @@ public class HttpRequest
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private Map<String, List<String>> headers;
+
+  /** Field description */
+  private boolean ignoreProxySettings = false;
+
+  /** Field description */
   private boolean disableHostnameValidation = false;
 
   /** Field description */
@@ -334,9 +364,6 @@ public class HttpRequest
 
   /** Field description */
   private boolean decodeGZip = false;
-
-  /** Field description */
-  private Map<String, List<String>> headers;
 
   /** Field description */
   private Map<String, List<String>> parameters;
