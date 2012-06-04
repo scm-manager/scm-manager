@@ -64,6 +64,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -387,6 +391,39 @@ public class URLHttpClient implements HttpClient
    * Method description
    *
    *
+   * @param request
+   * @param connection
+   */
+  private void applySSLSettings(HttpRequest request,
+                                HttpsURLConnection connection)
+  {
+    if (request.isDisableCertificateValidation())
+    {
+      try
+      {
+        TrustManager[] trustAllCerts = new TrustManager[] {
+                                         new TrustAllTrustManager() };
+        SSLContext sc = SSLContext.getInstance("SSL");
+
+        sc.init(null, trustAllCerts, new java.security.SecureRandom());
+        connection.setSSLSocketFactory(sc.getSocketFactory());
+      }
+      catch (Exception ex)
+      {
+        logger.error("could not disable certificate validation", ex);
+      }
+    }
+
+    if (request.isDisableHostnameValidation())
+    {
+      connection.setHostnameVerifier(new TrustAllHostnameVerifier());
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param url
    * @param parameters
    *
@@ -512,6 +549,11 @@ public class URLHttpClient implements HttpClient
       }
 
       connection = (HttpURLConnection) url.openConnection();
+    }
+
+    if (connection instanceof HttpsURLConnection)
+    {
+      applySSLSettings(request, (HttpsURLConnection) connection);
     }
 
     connection.setReadTimeout(TIMEOUT_RAED);
