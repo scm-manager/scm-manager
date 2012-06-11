@@ -159,6 +159,36 @@ public class GitUtil
    * Method description
    *
    *
+   * @param repo
+   * @param branchName
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public static ObjectId getBranchId(org.eclipse.jgit.lib.Repository repo,
+                                     String branchName)
+          throws IOException
+  {
+    ObjectId branchId = null;
+    Ref ref = repo.getRef(branchName);
+
+    if (ref != null)
+    {
+      branchId = ref.getObjectId();
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("could not find branch for {}", branchName);
+    }
+
+    return branchId;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param commit
    *
    * @return
