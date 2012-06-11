@@ -63,8 +63,8 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
                                          new LogCommandRequest());
 
     assertNotNull(result);
-    assertEquals(4, result.getTotal());
-    assertEquals(4, result.getChangesets().size());
+    assertEquals(5, result.getTotal());
+    assertEquals(5, result.getChangesets().size());
   }
 
   /**
@@ -82,10 +82,11 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
       new GitLogCommand(repository, repositoryDirectory).getChangesets(request);
 
     assertNotNull(result);
-    assertEquals(2, result.getTotal());
-    assertEquals(2, result.getChangesets().size());
-    assertEquals("3f76a12f08a6ba0dc988", result.getChangesets().get(0).getId());
-    assertEquals("435df2f061add3589cb3", result.getChangesets().get(1).getId());
+    assertEquals(3, result.getTotal());
+    assertEquals(3, result.getChangesets().size());
+    assertEquals("fcd0ef1831e4002ac43e", result.getChangesets().get(0).getId());
+    assertEquals("3f76a12f08a6ba0dc988", result.getChangesets().get(1).getId());
+    assertEquals("435df2f061add3589cb3", result.getChangesets().get(2).getId());
   }
 
   /**
@@ -103,18 +104,18 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
       new GitLogCommand(repository, repositoryDirectory).getChangesets(request);
 
     assertNotNull(result);
-    assertEquals(4, result.getTotal());
+    assertEquals(5, result.getTotal());
     assertEquals(2, result.getChangesets().size());
 
     Changeset c1 = result.getChangesets().get(0);
 
     assertNotNull(c1);
-    assertEquals("86a6645eceefe8b9a247", c1.getId());
+    assertEquals("fcd0ef1831e4002ac43e", c1.getId());
 
     Changeset c2 = result.getChangesets().get(1);
 
     assertNotNull(c2);
-    assertEquals("3f76a12f08a6ba0dc988", c2.getId());
+    assertEquals("86a6645eceefe8b9a247", c2.getId());
   }
 
   /**

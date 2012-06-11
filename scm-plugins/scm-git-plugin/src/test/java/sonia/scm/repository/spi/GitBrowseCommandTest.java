@@ -90,7 +90,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
     assertFalse(a.isDirectory());
     assertEquals("a.txt", a.getName());
     assertEquals("a.txt", a.getPath());
-    assertEquals("added a and b files", a.getDescription());
+    assertEquals("added new line for blame", a.getDescription());
     assertTrue(a.getLength() > 0);
     checkDate(a.getLastModified());
     assertNotNull(c);
