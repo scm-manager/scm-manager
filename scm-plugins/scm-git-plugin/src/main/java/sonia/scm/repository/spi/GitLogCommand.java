@@ -169,46 +169,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
       if (!gr.getAllRefs().isEmpty())
       {
-        org.eclipse.jgit.api.LogCommand cmd = new Git(gr).log();
-
         converter = new GitChangesetConverter(gr, GitUtil.ID_LENGTH);
-
-        if (!Strings.isNullOrEmpty(request.getPath()))
-        {
-          cmd.addPath(request.getPath());
-        }
-
-        if (!Strings.isNullOrEmpty(request.getStartChangeset()))
-        {
-          ObjectId start = GitUtil.getRevisionId(gr,
-                             request.getStartChangeset());
-
-          if (!Strings.isNullOrEmpty(request.getEndChangeset()))
-          {
-            ObjectId end = GitUtil.getRevisionId(gr,
-                             request.getEndChangeset());
-
-            cmd.addRange(start, end);
-          }
-          else
-          {
-            cmd.add(start);
-          }
-        }
-        else
-        {
-          cmd.add(GitUtil.getRepositoryHead(gr));
-        }
-
-        if (!Strings.isNullOrEmpty(request.getBranch()))
-        {
-          ObjectId branchId = GitUtil.getBranchId(gr, request.getBranch());
-
-          if (branchId != null)
-          {
-            cmd.add(branchId);
-          }
-        }
 
         int counter = 0;
         int start = request.getPagingStart();
@@ -225,18 +186,53 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
         List<Changeset> changesetList = Lists.newArrayList();
         int limit = request.getPagingLimit();
+        boolean started = false;
+        ObjectId startId = null;
+
+        if (!Strings.isNullOrEmpty(request.getStartChangeset()))
+        {
+          startId = gr.resolve(request.getStartChangeset());
+        }
+
+        ObjectId endId = null;
+
+        if (!Strings.isNullOrEmpty(request.getStartChangeset()))
+        {
+          endId = gr.resolve(request.getEndChangeset());
+        }
+
+        org.eclipse.jgit.api.LogCommand cmd = new Git(gr).log().all();
+
+        if (!Strings.isNullOrEmpty(request.getPath()))
+        {
+          cmd = cmd.addPath(request.getPath());
+        }
 
         for (RevCommit commit : cmd.call())
         {
-          if ((counter >= start) && ((limit < 0) || (counter < start + limit)))
+          if (!started && ((startId == null) || commit.getId().equals(startId)))
           {
-            changesetList.add(converter.createChangeset(commit));
+            started = true;
           }
 
-          counter++;
+          if (started)
+          {
+            if ((counter >= start)
+                && ((limit < 0) || (counter < start + limit)))
+            {
+              changesetList.add(converter.createChangeset(commit));
+            }
+
+            counter++;
+
+            if ((endId != null) && commit.getId().equals(endId))
+            {
+              break;
+            }
+          }
         }
 
-        changesets = new ChangesetPagingResult(start, changesetList);
+        changesets = new ChangesetPagingResult(counter, changesetList);
       }
       else if (logger.isWarnEnabled())
       {
