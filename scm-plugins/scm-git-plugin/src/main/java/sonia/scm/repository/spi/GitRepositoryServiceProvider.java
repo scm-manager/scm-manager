@@ -53,7 +53,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
   /** Field description */
-  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.LOG);
+  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.CAT,
+                                                 Command.LOG);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -65,13 +66,25 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
    * @param repository
    */
   public GitRepositoryServiceProvider(GitRepositoryHandler handler,
-                               Repository repository)
+          Repository repository)
   {
     this.repository = repository;
     this.repositoryDirectory = handler.getDirectory(repository);
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public CatCommand getCatCommand()
+  {
+    return new GitCatCommand(repository, repositoryDirectory);
+  }
 
   /**
    * Method description
