@@ -131,7 +131,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand
    * @throws IOException
    * @throws RepositoryException
    */
-  public void getContent(org.eclipse.jgit.lib.Repository repo, ObjectId revId,
+  void getContent(org.eclipse.jgit.lib.Repository repo, ObjectId revId,
                          String path, OutputStream output)
           throws IOException, RepositoryException
   {

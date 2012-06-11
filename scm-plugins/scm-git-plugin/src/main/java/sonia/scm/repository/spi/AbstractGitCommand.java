@@ -84,5 +84,5 @@ public class AbstractGitCommand
   protected sonia.scm.repository.Repository repository;
 
   /** Field description */
-  private File repositoryDirectory;
+  protected File repositoryDirectory;
 }

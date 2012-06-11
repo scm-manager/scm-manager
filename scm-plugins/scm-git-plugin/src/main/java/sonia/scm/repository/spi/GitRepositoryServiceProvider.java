@@ -53,8 +53,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
   /** Field description */
-  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.CAT,
-                                                 Command.LOG);
+  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BROWSE,
+                                                 Command.CAT, Command.LOG);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -73,6 +73,18 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public BrowseCommand getBrowseCommand()
+  {
+    return new GitBrowseCommand(repository, repositoryDirectory);
+  }
 
   /**
    * Method description
