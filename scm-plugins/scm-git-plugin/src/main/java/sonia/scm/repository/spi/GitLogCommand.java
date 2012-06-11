@@ -186,7 +186,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
           if (!Strings.isNullOrEmpty(request.getEndChangeset()))
           {
             ObjectId end = GitUtil.getRevisionId(gr,
-                             request.getStartChangeset());
+                             request.getEndChangeset());
 
             cmd.addRange(start, end);
           }
