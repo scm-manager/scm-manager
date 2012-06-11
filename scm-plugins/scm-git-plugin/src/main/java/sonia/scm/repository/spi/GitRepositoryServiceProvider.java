@@ -54,7 +54,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BROWSE,
-                                                 Command.CAT, Command.LOG);
+                                                 Command.CAT, Command.DIFF,
+                                                 Command.LOG);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -96,6 +97,18 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   public CatCommand getCatCommand()
   {
     return new GitCatCommand(repository, repositoryDirectory);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public DiffCommand getDiffCommand()
+  {
+    return new GitDiffCommand(repository, repositoryDirectory);
   }
 
   /**
