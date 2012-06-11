@@ -79,6 +79,19 @@ public class AbstractGitCommandTestBase
    * Method description
    *
    *
+   * @param date
+   */
+  protected void checkDate(Long date)
+  {
+    assertNotNull(date);
+    assertTrue("Date should not be older than current date",
+               date < System.currentTimeMillis());
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   protected Repository createRepository()

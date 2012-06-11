@@ -172,17 +172,4 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertNotNull(c2);
     assertEquals("435df2f061add3589cb3", c2.getId());
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @param date
-   */
-  private void checkDate(Long date)
-  {
-    assertNotNull(date);
-    assertTrue("Date should not be older than current date",
-               date < System.currentTimeMillis());
-  }
 }
