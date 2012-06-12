@@ -33,29 +33,39 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.ImmutableSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNLogEntry;
+import org.tmatesoft.svn.core.io.SVNRepository;
+
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.SvnRepositoryHandler;
-import sonia.scm.repository.api.Command;
+import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.SvnUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
 
-import java.util.Set;
+import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
+public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
 {
 
-  /** Field description */
-  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
-                                                 Command.BROWSE, Command.CAT,
-                                                 Command.DIFF, Command.LOG);
+  /**
+   * the logger for SvnLogCommand
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(SvnLogCommand.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -63,14 +73,12 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
    * Constructs ...
    *
    *
-   * @param handler
    * @param repository
+   * @param repositoryDirectory
    */
-  SvnRepositoryServiceProvider(SvnRepositoryHandler handler,
-                               Repository repository)
+  SvnLogCommand(Repository repository, File repositoryDirectory)
   {
-    this.repository = repository;
-    this.repositoryDirectory = handler.getDirectory(repository);
+    super(repository, repositoryDirectory);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -79,79 +87,75 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
    * Method description
    *
    *
+   * @param revision
+   *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
-  public SvnBlameCommand getBlameCommand()
+  public Changeset getChangeset(String revision)
+          throws IOException, RepositoryException
   {
-    return new SvnBlameCommand(repository, repositoryDirectory);
+    Changeset changeset = null;
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch changeset {}", revision);
+    }
+
+    SVNRepository repository = null;
+
+    try
+    {
+      long revisioNumber = Long.parseLong(revision);
+
+      repository = open();
+
+      Collection<SVNLogEntry> entries = repository.log(null, null,
+                                          revisioNumber, revisioNumber, true,
+                                          true);
+
+      if (Util.isNotEmpty(entries))
+      {
+        changeset = SvnUtil.createChangeset(entries.iterator().next());
+      }
+    }
+    catch (NumberFormatException ex)
+    {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("could not convert revision", ex);
+      }
+    }
+    catch (SVNException ex)
+    {
+      logger.error("could not open repository", ex);
+    }
+    finally
+    {
+      SvnUtil.closeSession(repository);
+    }
+
+    return changeset;
   }
 
   /**
    * Method description
    *
    *
-   * @return
-   */
-  @Override
-  public SvnBrowseCommand getBrowseCommand()
-  {
-    return new SvnBrowseCommand(repository, repositoryDirectory);
-  }
-
-  /**
-   * Method description
-   *
+   * @param request
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
-  public SvnCatCommand getCatCommand()
+  public ChangesetPagingResult getChangesets(LogCommandRequest request)
+          throws IOException, RepositoryException
   {
-    return new SvnCatCommand(repository, repositoryDirectory);
+    throw new UnsupportedOperationException("Not supported yet.");
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public SvnDiffCommand getDiffCommand()
-  {
-    return new SvnDiffCommand(repository, repositoryDirectory);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public SvnLogCommand getLogCommand()
-  {
-    return new SvnLogCommand(repository, repositoryDirectory);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Set<Command> getSupportedCommands()
-  {
-    return COMMANDS;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Repository repository;
-
-  /** Field description */
-  private File repositoryDirectory;
 }
