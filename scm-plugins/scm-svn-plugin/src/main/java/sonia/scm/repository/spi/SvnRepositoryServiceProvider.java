@@ -54,7 +54,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BROWSE,
-                                                 Command.CAT);
+                                                 Command.CAT, Command.DIFF);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -96,6 +96,18 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   public SvnCatCommand getCatCommand()
   {
     return new SvnCatCommand(repository, repositoryDirectory);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public SvnDiffCommand getDiffCommand()
+  {
+    return new SvnDiffCommand(repository, repositoryDirectory);
   }
 
   /**
