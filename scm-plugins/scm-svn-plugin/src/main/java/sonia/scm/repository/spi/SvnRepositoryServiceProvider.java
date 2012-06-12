@@ -53,7 +53,8 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
   /** Field description */
-  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.CAT);
+  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BROWSE,
+                                                 Command.CAT);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -72,6 +73,18 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public SvnBrowseCommand getBrowseCommand()
+  {
+    return new SvnBrowseCommand(repository, repositoryDirectory);
+  }
 
   /**
    * Method description
