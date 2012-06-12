@@ -89,6 +89,35 @@ public class SvnUtil
   {
     appendModification(modifications, entry.getType(), entry.getPath());
   }
+  
+    /**
+   * Method description
+   *
+   *
+   * @param revision
+   *
+   * @return
+   *
+   * @throws RepositoryException
+   */
+  public static long getRevisionNumber(String revision) throws RepositoryException
+  {
+    long revisionNumber = -1;
+
+    if (Util.isNotEmpty(revision))
+    {
+      try
+      {
+        revisionNumber = Long.parseLong(revision);
+      }
+      catch (NumberFormatException ex)
+      {
+        throw new RepositoryException("given revision is not a svnrevision");
+      }
+    }
+
+    return revisionNumber;
+  }
 
   /**
    * Method description
