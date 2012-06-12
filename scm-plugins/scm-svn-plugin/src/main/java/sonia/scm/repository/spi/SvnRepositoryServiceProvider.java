@@ -53,8 +53,9 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
   /** Field description */
-  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BROWSE,
-                                                 Command.CAT, Command.DIFF);
+  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
+                                                 Command.BROWSE, Command.CAT,
+                                                 Command.DIFF);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -73,6 +74,18 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public SvnBlameCommand getBlameCommand()
+  {
+    return new SvnBlameCommand(repository, repositoryDirectory);
+  }
 
   /**
    * Method description
