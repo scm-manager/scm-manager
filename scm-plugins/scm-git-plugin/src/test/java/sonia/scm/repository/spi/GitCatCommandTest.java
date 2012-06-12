@@ -35,11 +35,14 @@ package sonia.scm.repository.spi;
 
 import org.junit.Test;
 
+import sonia.scm.repository.RepositoryException;
+
 import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * TODO add not found test
@@ -52,9 +55,12 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase
   /**
    * Method description
    *
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Test
-  public void testCat()
+  public void testCat() throws IOException, RepositoryException
   {
     CatCommandRequest request = new CatCommandRequest();
 
@@ -66,9 +72,12 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase
   /**
    * Method description
    *
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Test
-  public void testSimpleCat()
+  public void testSimpleCat() throws IOException, RepositoryException
   {
     CatCommandRequest request = new CatCommandRequest();
 
@@ -83,8 +92,12 @@ public class GitCatCommandTest extends AbstractGitCommandTestBase
    * @param request
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   private String execute(CatCommandRequest request)
+          throws IOException, RepositoryException
   {
     String content = null;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();

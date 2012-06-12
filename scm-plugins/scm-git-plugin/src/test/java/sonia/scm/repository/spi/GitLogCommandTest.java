@@ -43,6 +43,10 @@ import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -53,9 +57,11 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   /**
    * Method description
    *
+   *
+   * @throws IOException
    */
   @Test
-  public void testGetAll()
+  public void testGetAll() throws IOException
   {
     ChangesetPagingResult result = new GitLogCommand(
                                        repository,
@@ -70,9 +76,11 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   /**
    * Method description
    *
+   *
+   * @throws IOException
    */
   @Test
-  public void testGetAllByPath()
+  public void testGetAllByPath() throws IOException
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -92,9 +100,11 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   /**
    * Method description
    *
+   *
+   * @throws IOException
    */
   @Test
-  public void testGetAllWithLimit()
+  public void testGetAllWithLimit() throws IOException
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -149,9 +159,11 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   /**
    * Method description
    *
+   *
+   * @throws IOException
    */
   @Test
-  public void testGetRange()
+  public void testGetRange() throws IOException
   {
     LogCommandRequest request = new LogCommandRequest();
 

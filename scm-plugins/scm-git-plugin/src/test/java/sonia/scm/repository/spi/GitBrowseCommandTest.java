@@ -37,10 +37,13 @@ import org.junit.Test;
 
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
+import sonia.scm.repository.RepositoryException;
 
 import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 import java.util.List;
 
@@ -54,9 +57,12 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
   /**
    * Method description
    *
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Test
-  public void testBrowse()
+  public void testBrowse() throws IOException, RepositoryException
   {
     BrowserResult result = new GitBrowseCommand(
                                repository,
@@ -98,21 +104,23 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
     assertEquals("c", c.getName());
     assertEquals("c", c.getPath());
   }
-  
+
   /**
    * Method description
    *
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Test
-  public void testBrowseSubDirectory()
+  public void testBrowseSubDirectory() throws IOException, RepositoryException
   {
     BrowseCommandRequest request = new BrowseCommandRequest();
+
     request.setPath("c");
-    
-    BrowserResult result = new GitBrowseCommand(
-                               repository,
-                               repositoryDirectory).getBrowserResult(
-                                   request);
+
+    BrowserResult result = new GitBrowseCommand(repository,
+                             repositoryDirectory).getBrowserResult(request);
 
     assertNotNull(result);
 
@@ -134,7 +142,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
       else if ("e.txt".equals(f.getName()))
       {
         e = f;
-      }     
+      }
     }
 
     assertNotNull(d);
@@ -144,7 +152,6 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
     assertEquals("added file d and e in folder c", d.getDescription());
     assertTrue(d.getLength() > 0);
     checkDate(d.getLastModified());
-    
     assertNotNull(e);
     assertFalse(e.isDirectory());
     assertEquals("e.txt", e.getName());
@@ -153,5 +160,4 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
     assertTrue(e.getLength() > 0);
     checkDate(e.getLastModified());
   }
-  
 }
