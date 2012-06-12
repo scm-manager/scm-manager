@@ -40,12 +40,14 @@ import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
 
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.CatCommand;
 import sonia.scm.repository.spi.CatCommandRequest;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -89,9 +91,13 @@ public final class CatCommandBuilder
    * @param path file path
    *
    * @return {@code this}
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   public CatCommandBuilder retriveContent(OutputStream outputStream,
           String path)
+          throws IOException, RepositoryException
   {
     getCatResult(outputStream, path);
 
@@ -105,8 +111,11 @@ public final class CatCommandBuilder
    *
    * @param path file path
    * @return content of the file
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
-  public String getContent(String path)
+  public String getContent(String path) throws IOException, RepositoryException
   {
     String content = null;
     ByteArrayOutputStream baos = null;
@@ -150,8 +159,12 @@ public final class CatCommandBuilder
    *
    * @param outputStream the outputstream for the content
    * @param path path of the file
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   private void getCatResult(OutputStream outputStream, String path)
+          throws IOException, RepositoryException
   {
     Preconditions.checkNotNull(outputStream, "OutputStream is required");
     Preconditions.checkArgument(!Strings.isNullOrEmpty(path),

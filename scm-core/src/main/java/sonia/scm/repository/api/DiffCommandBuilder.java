@@ -38,12 +38,14 @@ package sonia.scm.repository.api;
 import com.google.common.base.Preconditions;
 import com.google.common.io.Closeables;
 
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.DiffCommand;
 import sonia.scm.repository.spi.DiffCommandRequest;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -80,8 +82,12 @@ public final class DiffCommandBuilder
    * @param outputStream outputstream for the difference
    *
    * @return {@code this}
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   public DiffCommandBuilder retriveContent(OutputStream outputStream)
+          throws IOException, RepositoryException
   {
     getDiffResult(outputStream);
 
@@ -94,8 +100,11 @@ public final class DiffCommandBuilder
    * Returns the content of the difference as string.
    *
    * @return content of the difference
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
-  public String getContent()
+  public String getContent() throws IOException, RepositoryException
   {
     String content = null;
     ByteArrayOutputStream baos = null;
@@ -154,8 +163,12 @@ public final class DiffCommandBuilder
    *
    * @param outputStream
    * @param path
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   private void getDiffResult(OutputStream outputStream)
+          throws IOException, RepositoryException
   {
     Preconditions.checkNotNull(outputStream, "OutputStream is required");
     Preconditions.checkArgument(request.isValid(),

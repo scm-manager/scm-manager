@@ -36,6 +36,11 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.BrowserResult;
+import sonia.scm.repository.RepositoryException;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 /**
  *
@@ -52,6 +57,10 @@ public interface BrowseCommand
    * @param request
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
-  public BrowserResult getBrowserResult(BrowseCommandRequest request);
+  public BrowserResult getBrowserResult(BrowseCommandRequest request)
+          throws IOException, RepositoryException;
 }

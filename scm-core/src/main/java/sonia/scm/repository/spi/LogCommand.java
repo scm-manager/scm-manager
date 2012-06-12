@@ -37,6 +37,11 @@ package sonia.scm.repository.spi;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.RepositoryException;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 /**
  *
@@ -53,8 +58,12 @@ public interface LogCommand
    * @param id
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
-  public Changeset getChangeset(String id);
+  public Changeset getChangeset(String id)
+          throws IOException, RepositoryException;
 
   /**
    * Method description
@@ -63,6 +72,10 @@ public interface LogCommand
    * @param request
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
-  public ChangesetPagingResult getChangesets(LogCommandRequest request);
+  public ChangesetPagingResult getChangesets(LogCommandRequest request)
+          throws IOException, RepositoryException;
 }

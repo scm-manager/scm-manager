@@ -33,8 +33,13 @@
 
 package sonia.scm.repository.spi;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.repository.RepositoryException;
+
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -51,6 +56,10 @@ public interface CatCommand
    *
    * @param request
    * @param output
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
-  public void getCatResult(CatCommandRequest request, OutputStream output);
+  public void getCatResult(CatCommandRequest request, OutputStream output)
+          throws IOException, RepositoryException;
 }

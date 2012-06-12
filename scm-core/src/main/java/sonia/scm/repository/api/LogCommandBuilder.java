@@ -43,11 +43,13 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.LogCommand;
 import sonia.scm.repository.spi.LogCommandRequest;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -160,8 +162,12 @@ public final class LogCommandBuilder
    * @param id id of the {@link Changeset}
    *
    * @return the {@link Changeset} with the given id or null
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   public Changeset getChangeset(String id)
+          throws IOException, RepositoryException
   {
     Changeset changeset = null;
 
@@ -198,8 +204,12 @@ public final class LogCommandBuilder
    *
    *
    * @return all changesets with the given parameters
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   public ChangesetPagingResult getChangesets()
+          throws IOException, RepositoryException
   {
     ChangesetPagingResult cpr = null;
 

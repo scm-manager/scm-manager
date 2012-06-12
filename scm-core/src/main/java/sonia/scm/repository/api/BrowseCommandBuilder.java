@@ -41,11 +41,13 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.BrowseCommand;
 import sonia.scm.repository.spi.BrowseCommandRequest;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -103,8 +105,12 @@ public final class BrowseCommandBuilder
    *
    *
    * @return files for the given parameters
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   public BrowserResult getBrowserResult()
+          throws IOException, RepositoryException
   {
     BrowserResult result = null;
 

@@ -43,11 +43,13 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.BlameCommand;
 import sonia.scm.repository.spi.BlameCommandRequest;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -105,8 +107,12 @@ public final class BlameCommandBuilder
    * @return changeset informations by line for the given file
    *
    * @throws IllegalArgumentException if the path is null or empty
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   public BlameResult getBlameResult(String path)
+          throws IOException, RepositoryException
   {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(path),
                                 "path is required");
