@@ -38,14 +38,19 @@ package sonia.scm.repository.api;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.cache.CacheManager;
+import sonia.scm.repository.PermissionType;
+import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
+import sonia.scm.security.ScmSecurityException;
+import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -91,15 +96,18 @@ public final class RepositoryServiceFactory
    *
    * @param cacheManager cache manager
    * @param repositoryManager manager for repositories
+   * @param securityContextProvider provider for the current security context
    * @param resolvers a set of {@link RepositoryServiceResolver}
    */
   @Inject
-  public RepositoryServiceFactory(CacheManager cacheManager,
-                                  RepositoryManager repositoryManager,
-                                  Set<RepositoryServiceResolver> resolvers)
+  public RepositoryServiceFactory(
+          CacheManager cacheManager, RepositoryManager repositoryManager,
+          Provider<WebSecurityContext> securityContextProvider,
+          Set<RepositoryServiceResolver> resolvers)
   {
     this.cacheManager = cacheManager;
     this.repositoryManager = repositoryManager;
+    this.securityContextProvider = securityContextProvider;
     this.resolvers = resolvers;
   }
 
@@ -119,6 +127,8 @@ public final class RepositoryServiceFactory
    * @throws RepositoryServiceNotFoundException if no repository service
    *         implementation for this kind of repository is available
    * @throws IllegalArgumentException if the repository id is null or empty
+   * @throws ScmSecurityException if current user has not read permissions
+   *         for that repository
    */
   public RepositoryService create(String repositoryId)
           throws RepositoryNotFoundException
@@ -152,6 +162,8 @@ public final class RepositoryServiceFactory
    * @throws RepositoryServiceNotFoundException if no repository service
    *         implementation for this kind of repository is available
    * @throws IllegalArgumentException if one of the parameters is null or empty
+   * @throws ScmSecurityException if current user has not read permissions
+   *         for that repository
    */
   public RepositoryService create(String type, String name)
           throws RepositoryNotFoundException
@@ -188,10 +200,16 @@ public final class RepositoryServiceFactory
    * @throws RepositoryServiceNotFoundException if no repository service
    *         implementation for this kind of repository is available
    * @throws NullPointerException if the repository is null
+   * @throws ScmSecurityException if current user has not read permissions
+   *         for that repository
    */
   public RepositoryService create(Repository repository)
   {
     Preconditions.checkNotNull(repository, "repository is required");
+
+    // check for read permissions of current user
+    PermissionUtil.assertPermission(repository, securityContextProvider,
+                                    PermissionType.READ);
 
     RepositoryService service = null;
 
@@ -225,4 +243,7 @@ public final class RepositoryServiceFactory
 
   /** Field description */
   private Set<RepositoryServiceResolver> resolvers;
+
+  /** Field description */
+  private Provider<WebSecurityContext> securityContextProvider;
 }
