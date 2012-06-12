@@ -57,6 +57,7 @@ import sonia.scm.util.IOUtil;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -150,9 +151,12 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    * @param request
    *
    * @return
+   *
+   * @throws IOException
    */
   @Override
   public ChangesetPagingResult getChangesets(LogCommandRequest request)
+          throws IOException
   {
     if (logger.isDebugEnabled())
     {
@@ -242,11 +246,16 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
     catch (NoHeadException ex)
     {
-      logger.error("could not read changesets", ex);
-    }
-    catch (IOException ex)
-    {
-      logger.error("could not open repository", ex);
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("repository seems to be empty", ex);
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("repository seems to be empty");
+      }
+
+      changesets = new ChangesetPagingResult(0, new ArrayList<Changeset>());
     }
     finally
     {

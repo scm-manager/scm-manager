@@ -33,6 +33,9 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -46,7 +49,7 @@ import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
-import sonia.scm.util.AssertUtil;
+import sonia.scm.repository.RepositoryException;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -92,23 +95,31 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
    * @param request
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
   public BlameResult getBlameResult(BlameCommandRequest request)
+          throws IOException, RepositoryException
   {
-    AssertUtil.assertIsNotEmpty(request.getPath());
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("try to create blame for {}", request);
+    }
+
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(request.getPath()),
+                                "path is empty or null");
 
     org.eclipse.jgit.blame.BlameResult gitBlameResult = null;
     sonia.scm.repository.BlameResult blameResult = null;
     org.eclipse.jgit.lib.Repository gr = null;
-    Git git = null;
 
     try
     {
       gr = open();
-      git = new Git(gr);
 
-      org.eclipse.jgit.api.BlameCommand blame = git.blame();
+      org.eclipse.jgit.api.BlameCommand blame = new Git(gr).blame();
 
       blame.setFilePath(request.getPath());
 
@@ -116,7 +127,13 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
 
       blame.setStartCommit(revId);
       gitBlameResult = blame.call();
-      AssertUtil.assertIsNotNull(gitBlameResult);
+
+      if (gitBlameResult == null)
+      {
+        throw new RepositoryException(
+            "could not create blame result for path ".concat(
+              request.getPath()));
+      }
 
       List<BlameLine> blameLines = new ArrayList<BlameLine>();
       int total = gitBlameResult.getResultContents().size();
@@ -153,9 +170,9 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
 
       blameResult = new sonia.scm.repository.BlameResult(i, blameLines);
     }
-    catch (IOException ex)
+    finally
     {
-      logger.error("could not open repository", ex);
+      GitUtil.close(gr);
     }
 
     return blameResult;

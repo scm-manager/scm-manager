@@ -155,6 +155,7 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
     }
     catch (Exception ex)
     {
+      // TODO throw exception
       logger.error("could not create diff", ex);
     }
     finally

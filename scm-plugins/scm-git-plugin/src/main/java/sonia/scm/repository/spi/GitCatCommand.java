@@ -92,10 +92,19 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand
    *
    * @param request
    * @param output
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
   public void getCatResult(CatCommandRequest request, OutputStream output)
+          throws IOException, RepositoryException
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("try to read content for {}", request);
+    }
+
     org.eclipse.jgit.lib.Repository repo = null;
 
     try
@@ -105,11 +114,6 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand
       ObjectId revId = GitUtil.getRevisionId(repo, request.getRevision());
 
       getContent(repo, revId, request.getPath(), output);
-    }
-    catch (Exception ex)
-    {
-      //TODO throw
-      logger.error("could not fetch content", ex);
     }
     finally
     {
@@ -132,7 +136,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand
    * @throws RepositoryException
    */
   void getContent(org.eclipse.jgit.lib.Repository repo, ObjectId revId,
-                         String path, OutputStream output)
+                  String path, OutputStream output)
           throws IOException, RepositoryException
   {
     TreeWalk treeWalk = null;

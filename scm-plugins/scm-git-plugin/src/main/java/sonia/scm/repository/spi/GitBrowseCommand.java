@@ -111,8 +111,11 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @return
    */
   @Override
-  public BrowserResult getBrowserResult(BrowseCommandRequest request)
+  public BrowserResult getBrowserResult(BrowseCommandRequest request) throws IOException, RepositoryException
   {
+    if ( logger.isDebugEnabled() ){
+      logger.debug("try to create browse result for {}", request);
+    }
     BrowserResult result = null;
     org.eclipse.jgit.lib.Repository repo = null;
 
@@ -149,10 +152,6 @@ public class GitBrowseCommand extends AbstractGitCommand
         result = new BrowserResult(Constants.HEAD, null, null,
                                    new ArrayList<FileObject>());
       }
-    }
-    catch (Exception ex)
-    {
-      logger.error("could not fetch browser result", ex);
     }
     finally
     {
