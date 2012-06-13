@@ -165,6 +165,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     ChangesetPagingResult changesets = null;
     SVNRepository repository = null;
     String startRevision = request.getStartChangeset();
+    String endRevision = request.getEndChangeset();
 
     try
     {
@@ -174,9 +175,14 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
       long endRev = 0;
       long maxRev = startRev;
 
-      if (Util.isNotEmpty(startRevision))
+      if (!Strings.isNullOrEmpty(startRevision))
       {
-        maxRev = Long.parseLong(startRevision);
+        startRev = Long.parseLong(startRevision);
+      }
+
+      if (!Strings.isNullOrEmpty(endRevision))
+      {
+        endRev = Long.parseLong(endRevision);
       }
 
       String[] pathArray = null;
