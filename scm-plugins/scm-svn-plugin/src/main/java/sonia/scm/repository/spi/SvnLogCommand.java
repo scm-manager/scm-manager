@@ -33,6 +33,9 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +56,7 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  *
@@ -124,14 +128,11 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     }
     catch (NumberFormatException ex)
     {
-      if (logger.isWarnEnabled())
-      {
-        logger.warn("could not convert revision", ex);
-      }
+      throw new RepositoryException("could not convert revision", ex);
     }
     catch (SVNException ex)
     {
-      logger.error("could not open repository", ex);
+      throw new RepositoryException("could not open repository", ex);
     }
     finally
     {
@@ -156,6 +157,79 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
   public ChangesetPagingResult getChangesets(LogCommandRequest request)
           throws IOException, RepositoryException
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("fetch changesets for {}", request);
+    }
+
+    ChangesetPagingResult changesets = null;
+    SVNRepository repository = null;
+    String startRevision = request.getStartChangeset();
+
+    try
+    {
+      repository = open();
+
+      long startRev = repository.getLatestRevision();
+      long endRev = 0;
+      long maxRev = startRev;
+
+      if (Util.isNotEmpty(startRevision))
+      {
+        maxRev = Long.parseLong(startRevision);
+      }
+
+      String[] pathArray = null;
+
+      if (!Strings.isNullOrEmpty(request.getPath()))
+      {
+        pathArray = new String[] { request.getPath() };
+      }
+
+      List<Changeset> changesetList = Lists.newArrayList();
+      Collection<SVNLogEntry> entries = repository.log(pathArray, null,
+                                          startRev, endRev, true, true);
+
+      for (SVNLogEntry entry : entries)
+      {
+        if (entry.getRevision() <= maxRev)
+        {
+          changesetList.add(SvnUtil.createChangeset(entry));
+        }
+      }
+
+      int total = changesetList.size();
+      int start = request.getPagingStart();
+      int max = request.getPagingLimit();
+      int end = total - start;
+
+      if (end > max)
+      {
+        end = max;
+      }
+
+      if (start < 0)
+      {
+        start = 0;
+      }
+
+      changesetList = changesetList.subList(start, end);
+      changesets = new ChangesetPagingResult(total, changesetList);
+    }
+    catch (NumberFormatException ex)
+    {
+      throw new RepositoryException(
+          "could not parse revision ".concat(startRevision), ex);
+    }
+    catch (SVNException ex)
+    {
+      throw new RepositoryException("could not open repository", ex);
+    }
+    finally
+    {
+      SvnUtil.closeSession(repository);
+    }
+
+    return changesets;
   }
 }
