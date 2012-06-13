@@ -31,61 +31,23 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.io.Closeables;
-import com.google.common.io.Resources;
-
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
-
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.util.IOUtil;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-
-import java.net.URL;
-
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public class AbstractGitCommandTestBase
+public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
 {
 
   /**
    * Method description
    *
-   */
-  @Before
-  public void before()
-  {
-    repositoryDirectory = createRepositoryDirectory();
-  }
-
-  /**
-   * Method description
    *
-   *
-   * @param date
+   * @return
    */
-  protected void checkDate(Long date)
+  @Override
+  protected String getType()
   {
-    assertNotNull(date);
-    assertTrue("Date should not be older than current date",
-               date < System.currentTimeMillis());
+    return "git";
   }
 
   /**
@@ -94,105 +56,9 @@ public class AbstractGitCommandTestBase
    *
    * @return
    */
-  protected Repository createRepository()
+  @Override
+  protected String getZippedRepositoryResource()
   {
-    return RepositoryTestData.createHeartOfGold();
+    return "sonia/scm/repository/spi/scm-git-spi-test.zip";
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  protected File createRepositoryDirectory()
-  {
-    File folder = null;
-
-    try
-    {
-      folder = tempFolder.newFolder();
-      folder.mkdirs();
-      extract(folder);
-    }
-    catch (IOException ex)
-    {
-      fail(ex.getMessage());
-    }
-
-    return folder;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param folder
-   *
-   * @throws IOException
-   */
-  private void extract(File folder) throws IOException
-  {
-    URL url =
-      Resources.getResource("sonia/scm/repository/spi/scm-git-spi-test.zip");
-    ZipInputStream zip = null;
-
-    try
-    {
-      zip = new ZipInputStream(url.openStream());
-
-      ZipEntry entry = zip.getNextEntry();
-
-      while (entry != null)
-      {
-        File file = new File(folder, entry.getName());
-        File parent = file.getParentFile();
-
-        if (!parent.exists())
-        {
-          parent.mkdirs();
-        }
-
-        if (entry.isDirectory())
-        {
-          file.mkdirs();
-        }
-        else
-        {
-          OutputStream output = null;
-
-          try
-          {
-            output = new FileOutputStream(file);
-            IOUtil.copy(zip, output);
-          }
-          finally
-          {
-            Closeables.closeQuietly(output);
-          }
-        }
-
-        zip.closeEntry();
-        entry = zip.getNextEntry();
-      }
-    }
-    finally
-    {
-      Closeables.closeQuietly(zip);
-    }
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
-
-  /** Field description */
-  protected Repository repository = createRepository();
-
-  /** Field description */
-  protected File repositoryDirectory;
 }
