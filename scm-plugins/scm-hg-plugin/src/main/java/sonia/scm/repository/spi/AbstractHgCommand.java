@@ -33,28 +33,22 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Closeables;
-
+import sonia.scm.repository.AbstractHgHandler;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.util.Util;
-import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgCatCommand extends AbstractHgCommand implements CatCommand
+public class AbstractHgCommand extends AbstractHgHandler
 {
 
   /**
@@ -66,42 +60,28 @@ public class HgCatCommand extends AbstractHgCommand implements CatCommand
    * @param repository
    * @param repositoryDirectory
    */
-  HgCatCommand(HgRepositoryHandler handler, HgContext context,
-               Repository repository, File repositoryDirectory)
+  protected AbstractHgCommand(HgRepositoryHandler handler, HgContext context,
+                              Repository repository, File repositoryDirectory)
   {
     super(handler, context, repository, repositoryDirectory);
   }
 
-  //~--- get methods ----------------------------------------------------------
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param request
-   * @param output
+   * @param revision
+   * @param path
    *
-   * @throws IOException
-   * @throws RepositoryException
+   * @param request
+   *
+   * @return
    */
-  @Override
-  public void getCatResult(CatCommandRequest request, OutputStream output)
-          throws IOException, RepositoryException
+  protected Map<String,
+                String> createEnvironment(FileBaseCommandRequest request)
   {
-    String revision = HgUtil.getRevision(request.getRevision());
-    Process p = createHgProcess("cat", "-r", revision,
-                                Util.nonNull(request.getPath()));
-    InputStream input = null;
-
-    try
-    {
-      handleErrorStream(p.getErrorStream());
-      input = p.getInputStream();
-      ByteStreams.copy(input, output);
-    }
-    finally
-    {
-      Closeables.closeQuietly(input);
-    }
+    return createEnvironment(request.getRevision(), request.getPath());
   }
 }

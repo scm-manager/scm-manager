@@ -33,28 +33,25 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Closeables;
-
+import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.HgContext;
+import sonia.scm.repository.HgPythonScript;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
-import sonia.scm.util.Util;
-import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgCatCommand extends AbstractHgCommand implements CatCommand
+public class HgBrowseCommand extends AbstractHgCommand implements BrowseCommand
 {
 
   /**
@@ -66,8 +63,8 @@ public class HgCatCommand extends AbstractHgCommand implements CatCommand
    * @param repository
    * @param repositoryDirectory
    */
-  HgCatCommand(HgRepositoryHandler handler, HgContext context,
-               Repository repository, File repositoryDirectory)
+  public HgBrowseCommand(HgRepositoryHandler handler, HgContext context,
+                         Repository repository, File repositoryDirectory)
   {
     super(handler, context, repository, repositoryDirectory);
   }
@@ -78,30 +75,23 @@ public class HgCatCommand extends AbstractHgCommand implements CatCommand
    * Method description
    *
    *
+   * @param revision
+   * @param path
+   *
    * @param request
-   * @param output
+   *
+   * @return
    *
    * @throws IOException
    * @throws RepositoryException
    */
   @Override
-  public void getCatResult(CatCommandRequest request, OutputStream output)
+  public BrowserResult getBrowserResult(BrowseCommandRequest request)
           throws IOException, RepositoryException
   {
-    String revision = HgUtil.getRevision(request.getRevision());
-    Process p = createHgProcess("cat", "-r", revision,
-                                Util.nonNull(request.getPath()));
-    InputStream input = null;
+    Map<String, String> env = createEnvironment(request);
 
-    try
-    {
-      handleErrorStream(p.getErrorStream());
-      input = p.getInputStream();
-      ByteStreams.copy(input, output);
-    }
-    finally
-    {
-      Closeables.closeQuietly(input);
-    }
+    return getResultFromScript(BrowserResult.class, HgPythonScript.FILELOG,
+                               env);
   }
 }
