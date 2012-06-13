@@ -29,21 +29,12 @@
 
 
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.Assume;
-import org.junit.Before;
-
-import sonia.scm.SCMContext;
-import sonia.scm.io.FileSystem;
-import sonia.scm.repository.HgContextProvider;
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.TempSCMContextProvider;
-import sonia.scm.store.MemoryStoreFactory;
-
-import static org.mockito.Mockito.*;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.Stage;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -54,7 +45,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
+public class TempSCMContextProvider implements SCMContextProvider
 {
 
   /**
@@ -63,27 +54,22 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
    *
    * @throws IOException
    */
-  @Before
-  public void initHgHandler() throws IOException
+  @Override
+  public void close() throws IOException
   {
-    File folder = tempFolder.newFolder();
-    TempSCMContextProvider context =
-      (TempSCMContextProvider) SCMContext.getContext();
 
-    context.setBaseDirectory(folder);
+    // do nothing
+  }
 
-    FileSystem fileSystem = mock(FileSystem.class);
+  /**
+   * Method description
+   *
+   */
+  @Override
+  public void init()
+  {
 
-    this.handler = new HgRepositoryHandler(new MemoryStoreFactory(),
-            fileSystem, new HgContextProvider());
-    this.handler.init(context);
-
-    // skip tests if hg not in path
-    if (!handler.isConfigured())
-    {
-      System.out.println("WARNING could not find hg, skipping test");
-      Assume.assumeTrue(false);
-    }
+    // do nothing
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -95,9 +81,9 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
    * @return
    */
   @Override
-  protected String getType()
+  public File getBaseDirectory()
   {
-    return "hg";
+    return baseDirectory;
   }
 
   /**
@@ -107,13 +93,50 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
    * @return
    */
   @Override
-  protected String getZippedRepositoryResource()
+  public Stage getStage()
   {
-    return "sonia/scm/repository/spi/scm-hg-spi-test.zip";
+    return Stage.DEVELOPMENT;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Throwable getStartupError()
+  {
+    return null;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getVersion()
+  {
+    return "UNIT-Test";
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param baseDirectory
+   */
+  public void setBaseDirectory(File baseDirectory)
+  {
+    this.baseDirectory = baseDirectory;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  protected HgRepositoryHandler handler;
+  private File baseDirectory;
 }
