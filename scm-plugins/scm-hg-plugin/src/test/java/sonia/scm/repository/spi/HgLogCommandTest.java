@@ -33,7 +33,6 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import sonia.scm.repository.Changeset;
@@ -85,7 +84,6 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
    * @throws RepositoryException
    */
   @Test
-  @Ignore
   public void testGetAllByPath() throws IOException, RepositoryException
   {
     LogCommandRequest request = new LogCommandRequest();
@@ -177,7 +175,6 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
    * @throws RepositoryException
    */
   @Test
-  @Ignore
   public void testGetRange() throws IOException, RepositoryException
   {
     LogCommandRequest request = new LogCommandRequest();
