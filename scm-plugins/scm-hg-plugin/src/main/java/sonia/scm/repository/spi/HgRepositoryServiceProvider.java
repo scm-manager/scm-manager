@@ -55,7 +55,8 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
   /** Field description */
-  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.CAT);
+  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BROWSE,
+                                                 Command.CAT);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -79,6 +80,19 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public HgBrowseCommand getBrowseCommand()
+  {
+    return new HgBrowseCommand(handler, hgContextProvider.get(), repository,
+                               repositoryDirectory);
+  }
 
   /**
    * Method description
