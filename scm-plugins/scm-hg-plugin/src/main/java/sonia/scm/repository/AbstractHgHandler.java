@@ -35,10 +35,13 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Closeables;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
+import sonia.scm.repository.spi.AbstractHgCommand;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.HgUtil;
@@ -57,7 +60,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 /**
@@ -68,47 +70,49 @@ public class AbstractHgHandler
 {
 
   /** Field description */
-  public static final String ENCODING = "UTF-8";
+  protected static final String ENV_NODE = "HG_NODE";
+
+  /** Field description */
+  protected static final String ENV_PAGE_LIMIT = "SCM_PAGE_LIMIT";
+
+  /** Field description */
+  protected static final String ENV_PAGE_START = "SCM_PAGE_START";
+
+  /** Field description */
+  protected static final String ENV_PATH = "SCM_PATH";
+
+  /** Field description */
+  protected static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
+
+  /** Field description */
+  protected static final String ENV_REVISION = "SCM_REVISION";
+
+  /** Field description */
+  protected static final String ENV_REVISION_END = "SCM_REVISION_END";
+
+  /** Field description */
+  protected static final String ENV_REVISION_START = "SCM_REVISION_START";
+
+  /** Field description */
+  private static final String ENCODING = "UTF-8";
 
   /** mercurial encoding */
-  public static final String ENV_HGENCODING = "HGENCODING";
+  private static final String ENV_HGENCODING = "HGENCODING";
 
   /** Field description */
-  public static final String ENV_NODE = "HG_NODE";
-
-  /** Field description */
-  public static final String ENV_PAGE_LIMIT = "SCM_PAGE_LIMIT";
-
-  /** Field description */
-  public static final String ENV_PAGE_START = "SCM_PAGE_START";
-
-  /** Field description */
-  public static final String ENV_PATH = "SCM_PATH";
-
-  /** Field description */
-  public static final String ENV_PENDING = "HG_PENDING";
+  private static final String ENV_PENDING = "HG_PENDING";
 
   /** python encoding */
-  public static final String ENV_PYTHONIOENCODING = "PYTHONIOENCODING";
+  private static final String ENV_PYTHONIOENCODING = "PYTHONIOENCODING";
 
   /** Field description */
-  public static final String ENV_PYTHONPATH = "PYTHONPATH";
+  private static final String ENV_PYTHONPATH = "PYTHONPATH";
 
-  /** Field description */
-  public static final String ENV_REPOSITORY_PATH = "SCM_REPOSITORY_PATH";
-
-  /** Field description */
-  public static final String ENV_REVISION = "SCM_REVISION";
-
-  /** Field description */
-  public static final String ENV_REVISION_END = "SCM_REVISION_END";
-
-  /** Field description */
-  public static final String ENV_REVISION_START = "SCM_REVISION_START";
-
-  /** the logger for AbstractHgHandler */
+  /**
+   * the logger for AbstractHgCommand
+   */
   private static final Logger logger =
-    LoggerFactory.getLogger(AbstractHgHandler.class);
+    LoggerFactory.getLogger(AbstractHgCommand.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -116,63 +120,34 @@ public class AbstractHgHandler
    * Constructs ...
    *
    *
+   *
    * @param handler
    * @param context
-   * @param directory
+   * @param repository
+   * @param repositoryDirectory
    */
-  public AbstractHgHandler(HgRepositoryHandler handler, HgContext context,
-                           File directory)
+  protected AbstractHgHandler(HgRepositoryHandler handler, HgContext context,
+                              Repository repository)
   {
-    this(handler, null, context, directory);
+    this(handler, context, repository, handler.getDirectory(repository));
   }
 
   /**
    * Constructs ...
+   *
    *
    *
    * @param handler
    * @param context
    * @param repository
+   * @param repositoryDirectory
    */
-  public AbstractHgHandler(HgRepositoryHandler handler, HgContext context,
-                           Repository repository)
-  {
-    this(handler, null, context, handler.getDirectory(repository));
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param jaxbContext
-   * @param context
-   * @param directory
-   */
-  public AbstractHgHandler(HgRepositoryHandler handler,
-                           JAXBContext jaxbContext, HgContext context,
-                           File directory)
+  protected AbstractHgHandler(HgRepositoryHandler handler, HgContext context,
+                              Repository repository, File repositoryDirectory)
   {
     this.handler = handler;
-    this.jaxbContext = jaxbContext;
-    this.context = context;
-    this.directory = directory;
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param jaxbContext
-   * @param context
-   * @param repository
-   */
-  public AbstractHgHandler(HgRepositoryHandler handler,
-                           JAXBContext jaxbContext, HgContext context,
-                           Repository repository)
-  {
-    this(handler, jaxbContext, context, handler.getDirectory(repository));
+    this.repository = repository;
+    this.repositoryDirectory = repositoryDirectory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -332,7 +307,8 @@ public class AbstractHgHandler
     {
       handleErrorStream(p.getErrorStream());
       input = p.getInputStream();
-      result = (T) jaxbContext.createUnmarshaller().unmarshal(input);
+      result =
+        (T) handler.getJaxbContext().createUnmarshaller().unmarshal(input);
       input.close();
     }
     catch (JAXBException ex)
@@ -343,8 +319,8 @@ public class AbstractHgHandler
     }
     finally
     {
-      IOUtil.close(input);
-      IOUtil.close(output);
+      Closeables.closeQuietly(input);
+      Closeables.closeQuietly(output);
     }
 
     return result;
@@ -399,7 +375,7 @@ public class AbstractHgHandler
 
     ProcessBuilder pb = new ProcessBuilder(cmdList);
 
-    pb.directory(directory);
+    pb.directory(repositoryDirectory);
 
     Map<String, String> env = pb.environment();
 
@@ -416,10 +392,11 @@ public class AbstractHgHandler
     {
       if (logger.isDebugEnabled())
       {
-        logger.debug("enable hg pending for {}", directory.getAbsolutePath());
+        logger.debug("enable hg pending for {}",
+                     repositoryDirectory.getAbsolutePath());
       }
 
-      env.put(ENV_PENDING, directory.getAbsolutePath());
+      env.put(ENV_PENDING, repositoryDirectory.getAbsolutePath());
 
       if (extraEnv.containsKey(ENV_REVISION_START))
       {
@@ -428,14 +405,15 @@ public class AbstractHgHandler
     }
 
     env.put(ENV_PYTHONPATH, HgUtil.getPythonPath(config));
-    env.put(ENV_REPOSITORY_PATH, directory.getAbsolutePath());
+    env.put(ENV_REPOSITORY_PATH, repositoryDirectory.getAbsolutePath());
     env.putAll(extraEnv);
 
     if (logger.isTraceEnabled())
     {
       StringBuilder msg = new StringBuilder("start process in directory '");
 
-      msg.append(directory.getAbsolutePath()).append("' with env: \n");
+      msg.append(repositoryDirectory.getAbsolutePath()).append(
+          "' with env: \n");
 
       for (Map.Entry<String, String> e : env.entrySet())
       {
@@ -453,14 +431,14 @@ public class AbstractHgHandler
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  protected Repository repository;
+
+  /** Field description */
+  protected File repositoryDirectory;
+
+  /** Field description */
   private HgContext context;
 
   /** Field description */
-  private File directory;
-
-  /** Field description */
   private HgRepositoryHandler handler;
-
-  /** Field description */
-  private JAXBContext jaxbContext;
 }

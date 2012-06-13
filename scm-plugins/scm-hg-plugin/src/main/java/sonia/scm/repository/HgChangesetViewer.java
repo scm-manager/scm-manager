@@ -74,11 +74,10 @@ public class HgChangesetViewer extends AbstractHgHandler
    * @param context
    * @param repositoryDirectory
    */
-  public HgChangesetViewer(HgRepositoryHandler handler,
-                           JAXBContext jaxbContext, HgContext context,
+  public HgChangesetViewer(HgRepositoryHandler handler, HgContext context,
                            File repositoryDirectory)
   {
-    super(handler, jaxbContext, context, repositoryDirectory);
+    super(handler, context, null, repositoryDirectory);
   }
 
   /**
@@ -95,7 +94,7 @@ public class HgChangesetViewer extends AbstractHgHandler
                            JAXBContext jaxbContext, HgContext context,
                            Repository repository)
   {
-    super(handler, jaxbContext, context, repository);
+    super(handler, context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------

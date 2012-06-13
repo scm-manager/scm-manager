@@ -54,10 +54,10 @@ public class HgVersionHandler extends AbstractHgHandler
    * @param context
    * @param directory
    */
-  public HgVersionHandler(HgRepositoryHandler handler, JAXBContext jaxbContext,
+  public HgVersionHandler(HgRepositoryHandler handler,
                           HgContext context, File directory)
   {
-    super(handler, jaxbContext, context, directory);
+    super(handler, context, null, directory);
   }
 
   //~--- get methods ----------------------------------------------------------

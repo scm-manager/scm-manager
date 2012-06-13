@@ -47,8 +47,6 @@ import java.io.OutputStream;
 
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -66,11 +64,10 @@ public class HgRepositoryBrowser extends AbstractHgHandler
    * @param repository
    * @param browserResultContext
    */
-  public HgRepositoryBrowser(HgRepositoryHandler handler,
-                             JAXBContext browserResultContext,
-                             HgContext context, Repository repository)
+  public HgRepositoryBrowser(HgRepositoryHandler handler, HgContext context,
+                             Repository repository)
   {
-    super(handler, browserResultContext, context, repository);
+    super(handler, context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------

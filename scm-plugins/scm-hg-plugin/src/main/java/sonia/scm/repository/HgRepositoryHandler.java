@@ -222,8 +222,8 @@ public class HgRepositoryHandler
 
     if (TYPE_NAME.equals(type))
     {
-      blameViewer = new HgBlameViewer(this, jaxbContext,
-                                      hgContextProvider.get(), repository);
+      blameViewer = new HgBlameViewer(this, hgContextProvider.get(),
+                                      repository);
     }
     else
     {
@@ -315,6 +315,17 @@ public class HgRepositoryHandler
    * Method description
    *
    *
+   * @return
+   */
+  public JAXBContext getJaxbContext()
+  {
+    return jaxbContext;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repository
    *
    * @return
@@ -322,8 +333,7 @@ public class HgRepositoryHandler
   @Override
   public RepositoryBrowser getRepositoryBrowser(Repository repository)
   {
-    return new HgRepositoryBrowser(this, jaxbContext, hgContextProvider.get(),
-                                   repository);
+    return new HgRepositoryBrowser(this, hgContextProvider.get(), repository);
   }
 
   /**
@@ -353,8 +363,7 @@ public class HgRepositoryHandler
     try
     {
       JAXBContext context = JAXBContext.newInstance(HgVersion.class);
-      HgVersion hgVersion = new HgVersionHandler(this, context,
-                              hgContextProvider.get(),
+      HgVersion hgVersion = new HgVersionHandler(this, hgContextProvider.get(),
                               baseDirectory).getVersion();
 
       if (hgVersion != null)
@@ -470,8 +479,7 @@ public class HgRepositoryHandler
       throw new IllegalStateException("directory not found");
     }
 
-    return new HgChangesetViewer(this, jaxbContext, context,
-                                 repositoryDirectory);
+    return new HgChangesetViewer(this, context, repositoryDirectory);
   }
 
   //~--- set methods ----------------------------------------------------------

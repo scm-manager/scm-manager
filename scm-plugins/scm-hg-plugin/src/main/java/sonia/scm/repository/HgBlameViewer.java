@@ -47,8 +47,6 @@ import java.io.IOException;
 
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -71,11 +69,10 @@ public class HgBlameViewer extends AbstractHgHandler implements BlameViewer
    * @param repository
    * @param blameResultContext
    */
-  public HgBlameViewer(HgRepositoryHandler handler,
-                       JAXBContext blameResultContext, HgContext context,
+  public HgBlameViewer(HgRepositoryHandler handler, HgContext context,
                        Repository repository)
   {
-    super(handler, blameResultContext, context, repository);
+    super(handler, context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
