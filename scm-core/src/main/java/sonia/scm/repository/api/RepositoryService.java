@@ -36,6 +36,7 @@ package sonia.scm.repository.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.cache.CacheManager;
+import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 
@@ -64,13 +65,16 @@ public final class RepositoryService
    * @param cacheManager cache manager
    * @param provider implementation for {@link RepositoryServiceProvider}
    * @param repository the repository
+   * @param preProcessorUtil
    */
   RepositoryService(CacheManager cacheManager,
-                    RepositoryServiceProvider provider, Repository repository)
+                    RepositoryServiceProvider provider, Repository repository,
+                    PreProcessorUtil preProcessorUtil)
   {
     this.cacheManager = cacheManager;
     this.provider = provider;
     this.repository = repository;
+    this.preProcessorUtil = preProcessorUtil;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -98,7 +102,7 @@ public final class RepositoryService
   public BrowseCommandBuilder getBrowseCommand()
   {
     return new BrowseCommandBuilder(cacheManager, provider.getBrowseCommand(),
-                                    repository);
+                                    repository, preProcessorUtil);
   }
 
   /**
@@ -136,7 +140,7 @@ public final class RepositoryService
   public LogCommandBuilder getLogCommand()
   {
     return new LogCommandBuilder(cacheManager, provider.getLogCommand(),
-                                 repository);
+                                 repository, preProcessorUtil);
   }
 
   /**
@@ -156,6 +160,9 @@ public final class RepositoryService
 
   /** cache manager */
   private CacheManager cacheManager;
+
+  /** Field description */
+  private PreProcessorUtil preProcessorUtil;
 
   /** implementation of the repository service provider */
   private RepositoryServiceProvider provider;

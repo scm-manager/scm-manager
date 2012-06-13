@@ -40,6 +40,7 @@ import com.google.common.base.Objects;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BrowserResult;
+import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.BrowseCommand;
@@ -73,14 +74,16 @@ public final class BrowseCommandBuilder
    * @param logCommand implementation of the {@link LogCommand}
    * @param browseCommand
    * @param repository repository to query
+   * @param preProcessorUtil
    */
   BrowseCommandBuilder(CacheManager cacheManager, BrowseCommand browseCommand,
-                       Repository repository)
+                       Repository repository, PreProcessorUtil preProcessorUtil)
   {
     this.cache = cacheManager.getCache(CacheKey.class, BrowserResult.class,
                                        CACHE_NAME);
     this.browseCommand = browseCommand;
     this.repository = repository;
+    this.preProcessorUtil = preProcessorUtil;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -128,6 +131,11 @@ public final class BrowseCommandBuilder
       {
         cache.put(key, result);
       }
+    }
+
+    if (result != null)
+    {
+      preProcessorUtil.prepareForReturn(repository, result);
     }
 
     return result;
@@ -267,6 +275,9 @@ public final class BrowseCommandBuilder
 
   /** disables the cache */
   private boolean disableCache;
+
+  /** Field description */
+  private PreProcessorUtil preProcessorUtil;
 
   /** the repsitory */
   private Repository repository;

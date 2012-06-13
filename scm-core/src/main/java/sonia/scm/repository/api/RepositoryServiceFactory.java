@@ -44,6 +44,7 @@ import com.google.inject.Singleton;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
+import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
@@ -98,17 +99,20 @@ public final class RepositoryServiceFactory
    * @param repositoryManager manager for repositories
    * @param securityContextProvider provider for the current security context
    * @param resolvers a set of {@link RepositoryServiceResolver}
+   * @param preProcessorUtil helper object for pre processor handling
    */
   @Inject
   public RepositoryServiceFactory(
           CacheManager cacheManager, RepositoryManager repositoryManager,
           Provider<WebSecurityContext> securityContextProvider,
-          Set<RepositoryServiceResolver> resolvers)
+          Set<RepositoryServiceResolver> resolvers,
+          PreProcessorUtil preProcessorUtil)
   {
     this.cacheManager = cacheManager;
     this.repositoryManager = repositoryManager;
     this.securityContextProvider = securityContextProvider;
     this.resolvers = resolvers;
+    this.preProcessorUtil = preProcessorUtil;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -219,7 +223,8 @@ public final class RepositoryServiceFactory
 
       if (provider != null)
       {
-        service = new RepositoryService(cacheManager, provider, repository);
+        service = new RepositoryService(cacheManager, provider, repository,
+                                        preProcessorUtil);
 
         break;
       }
@@ -237,6 +242,9 @@ public final class RepositoryServiceFactory
 
   /** Field description */
   private CacheManager cacheManager;
+
+  /** Field description */
+  private PreProcessorUtil preProcessorUtil;
 
   /** Field description */
   private RepositoryManager repositoryManager;

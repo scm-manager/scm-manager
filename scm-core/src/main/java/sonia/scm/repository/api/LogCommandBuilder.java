@@ -42,6 +42,7 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.LogCommand;
@@ -112,14 +113,16 @@ public final class LogCommandBuilder
    * @param cacheManager cache manager
    * @param logCommand implementation of the {@link LogCommand}
    * @param repository repository to query
+   * @param preProcessorUtil
    */
   LogCommandBuilder(CacheManager cacheManager, LogCommand logCommand,
-                    Repository repository)
+                    Repository repository, PreProcessorUtil preProcessorUtil)
   {
     this.cache = cacheManager.getCache(CacheKey.class,
                                        ChangesetPagingResult.class, CACHE_NAME);
     this.logCommand = logCommand;
     this.repository = repository;
+    this.preProcessorUtil = preProcessorUtil;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -196,6 +199,11 @@ public final class LogCommandBuilder
       }
     }
 
+    if (changeset != null)
+    {
+      preProcessorUtil.prepareForReturn(repository, changeset);
+    }
+
     return changeset;
   }
 
@@ -232,6 +240,11 @@ public final class LogCommandBuilder
           cache.put(key, cpr);
         }
       }
+    }
+
+    if (cpr != null)
+    {
+      preProcessorUtil.prepareForReturn(repository, cpr);
     }
 
     return cpr;
@@ -452,6 +465,9 @@ public final class LogCommandBuilder
 
   /** Implementation of the log command */
   private LogCommand logCommand;
+
+  /** Field description */
+  private PreProcessorUtil preProcessorUtil;
 
   /** repository to query */
   private Repository repository;
