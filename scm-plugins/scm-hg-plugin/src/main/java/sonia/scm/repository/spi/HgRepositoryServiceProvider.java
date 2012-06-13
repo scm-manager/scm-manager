@@ -57,7 +57,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   /** Field description */
   private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
                                                  Command.BROWSE, Command.CAT,
-                                                 Command.DIFF);
+                                                 Command.DIFF, Command.LOG);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -132,6 +132,19 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   {
     return new HgDiffCommand(handler, hgContextProvider.get(), repository,
                              repositoryDirectory);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public HgLogCommand getLogCommand()
+  {
+    return new HgLogCommand(handler, hgContextProvider.get(), repository,
+                            repositoryDirectory);
   }
 
   /**
