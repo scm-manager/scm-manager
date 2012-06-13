@@ -41,7 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
-import sonia.scm.repository.spi.AbstractHgCommand;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.HgUtil;
@@ -112,7 +111,7 @@ public class AbstractHgHandler
    * the logger for AbstractHgCommand
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(AbstractHgCommand.class);
+    LoggerFactory.getLogger(AbstractHgHandler.class);
 
   //~--- constructors ---------------------------------------------------------
 
