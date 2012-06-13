@@ -104,28 +104,4 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
 
     return handler;
   }
-
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Dummy {@link Provider} for {@link HgContext}
-   *
-   *
-   * @author Sebastian Sdorra
-   */
-  private static class HgContextProvider implements Provider<HgContext>
-  {
-
-    /**
-     * Return context for mercurial
-     *
-     *
-     * @return context for mercurial
-     */
-    @Override
-    public HgContext get()
-    {
-      return new HgContext();
-    }
-  }
 }
