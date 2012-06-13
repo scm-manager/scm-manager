@@ -33,31 +33,35 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.HgContext;
+import sonia.scm.repository.HgPythonScript;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.api.Command;
+import sonia.scm.repository.RepositoryException;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
 
-import java.util.Set;
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgRepositoryServiceProvider extends RepositoryServiceProvider
+public class HgBlameCommand extends AbstractHgCommand implements BlameCommand
 {
 
-  /** Field description */
-  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
-                                                 Command.BROWSE, Command.CAT,
-                                                 Command.DIFF);
+  /**
+   * the logger for HgBlameCommand
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgBlameCommand.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -65,19 +69,15 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
    * Constructs ...
    *
    *
-   *
-   * @param hgContextProvider
    * @param handler
+   * @param context
    * @param repository
+   * @param repositoryDirectory
    */
-  HgRepositoryServiceProvider(HgRepositoryHandler handler,
-                              Provider<HgContext> hgContextProvider,
-                              Repository repository)
+  public HgBlameCommand(HgRepositoryHandler handler, HgContext context,
+                        Repository repository, File repositoryDirectory)
   {
-    this.hgContextProvider = hgContextProvider;
-    this.handler = handler;
-    this.repository = repository;
-    this.repositoryDirectory = handler.getDirectory(repository);
+    super(handler, context, repository, repositoryDirectory);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -86,77 +86,24 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
    * Method description
    *
    *
-   * @return
-   */
-  @Override
-  public HgBlameCommand getBlameCommand()
-  {
-    return new HgBlameCommand(handler, hgContextProvider.get(), repository,
-                              repositoryDirectory);
-  }
-
-  /**
-   * Method description
-   *
+   * @param request
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
-  public HgBrowseCommand getBrowseCommand()
+  public BlameResult getBlameResult(BlameCommandRequest request)
+          throws IOException, RepositoryException
   {
-    return new HgBrowseCommand(handler, hgContextProvider.get(), repository,
-                               repositoryDirectory);
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("get blame result for {}", request);
+    }
+
+    Map<String, String> env = createEnvironment(request);
+
+    return getResultFromScript(BlameResult.class, HgPythonScript.BLAME, env);
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public HgCatCommand getCatCommand()
-  {
-    return new HgCatCommand(handler, hgContextProvider.get(), repository,
-                            repositoryDirectory);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public HgDiffCommand getDiffCommand()
-  {
-    return new HgDiffCommand(handler, hgContextProvider.get(), repository,
-                             repositoryDirectory);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Set<Command> getSupportedCommands()
-  {
-    return COMMANDS;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private HgRepositoryHandler handler;
-
-  /** Field description */
-  private Provider<HgContext> hgContextProvider;
-
-  /** Field description */
-  private Repository repository;
-
-  /** Field description */
-  private File repositoryDirectory;
 }
