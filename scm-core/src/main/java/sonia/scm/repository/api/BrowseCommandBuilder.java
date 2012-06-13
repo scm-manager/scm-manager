@@ -133,7 +133,7 @@ public final class BrowseCommandBuilder
       }
     }
 
-    if (result != null)
+    if (! disablePreProcessors && result != null)
     {
       preProcessorUtil.prepareForReturn(repository, result);
     }
@@ -156,6 +156,22 @@ public final class BrowseCommandBuilder
   public BrowseCommandBuilder setDisableCache(boolean disableCache)
   {
     this.disableCache = disableCache;
+
+    return this;
+  }
+
+  /**
+   * Disable the execution of pre processors.
+   *
+   *
+   * @param disablePreProcessors true to disable the pre processors execution
+   *
+   * @return {@code this}
+   */
+  public BrowseCommandBuilder setDisablePreProcessors(
+          boolean disablePreProcessors)
+  {
+    this.disablePreProcessors = disablePreProcessors;
 
     return this;
   }
@@ -274,7 +290,10 @@ public final class BrowseCommandBuilder
   private Cache<CacheKey, BrowserResult> cache;
 
   /** disables the cache */
-  private boolean disableCache;
+  private boolean disableCache = false;
+
+  /** disables the execution of pre processors */
+  private boolean disablePreProcessors = false;
 
   /** Field description */
   private PreProcessorUtil preProcessorUtil;

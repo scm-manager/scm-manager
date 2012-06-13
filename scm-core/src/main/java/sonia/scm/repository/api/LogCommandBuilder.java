@@ -199,7 +199,7 @@ public final class LogCommandBuilder
       }
     }
 
-    if (changeset != null)
+    if (! disablePreProcessors && changeset != null)
     {
       preProcessorUtil.prepareForReturn(repository, changeset);
     }
@@ -242,7 +242,7 @@ public final class LogCommandBuilder
       }
     }
 
-    if (cpr != null)
+    if (! disablePreProcessors && cpr != null)
     {
       preProcessorUtil.prepareForReturn(repository, cpr);
     }
@@ -280,6 +280,22 @@ public final class LogCommandBuilder
   public LogCommandBuilder setDisableCache(boolean disableCache)
   {
     this.disableCache = disableCache;
+
+    return this;
+  }
+
+  /**
+   * Disable the execution of pre processors.
+   *
+   *
+   * @param disablePreProcessors true to disable the pre processors execution
+   *
+   * @return {@code this}
+   */
+  public LogCommandBuilder setDisablePreProcessors(
+          boolean disablePreProcessors)
+  {
+    this.disablePreProcessors = disablePreProcessors;
 
     return this;
   }
@@ -461,7 +477,10 @@ public final class LogCommandBuilder
   private Cache<CacheKey, ChangesetPagingResult> cache;
 
   /** disable cache */
-  private boolean disableCache;
+  private boolean disableCache = false;
+
+  /** disable the execution of pre processors */
+  private boolean disablePreProcessors = false;
 
   /** Implementation of the log command */
   private LogCommand logCommand;
