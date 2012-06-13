@@ -145,6 +145,7 @@ public class AbstractHgHandler
                               Repository repository, File repositoryDirectory)
   {
     this.handler = handler;
+    this.context = context;
     this.repository = repository;
     this.repositoryDirectory = repositoryDirectory;
   }
