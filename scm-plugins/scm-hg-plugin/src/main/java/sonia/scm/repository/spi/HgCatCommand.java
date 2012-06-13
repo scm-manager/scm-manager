@@ -33,71 +33,76 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Closeables;
 
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.repository.AbstractHgHandler;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
+import sonia.scm.util.Util;
+import sonia.scm.web.HgUtil;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Extension
-public class HgRepositoryServiceResolver implements RepositoryServiceResolver
+public class HgCatCommand extends AbstractHgHandler implements CatCommand
 {
-
-  /** Field description */
-  private static final String TYPE = "hg";
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
    * @param handler
-   * @param hgContextProvider
+   * @param context
+   * @param repository
+   * @param repositoryDirectory
    */
-  @Inject
-  public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-                                     Provider<HgContext> hgContextProvider)
+  HgCatCommand(HgRepositoryHandler handler, HgContext context,
+               Repository repository, File repositoryDirectory)
   {
-    this.handler = handler;
-    this.hgContextProvider = hgContextProvider;
+    super(handler, context, repository, repositoryDirectory);
   }
 
-  //~--- methods --------------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param repository
+   * @param request
+   * @param output
    *
-   * @return
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
-  public HgRepositoryServiceProvider reslove(Repository repository)
+  public void getCatResult(CatCommandRequest request, OutputStream output)
+          throws IOException, RepositoryException
   {
-    HgRepositoryServiceProvider provider = null;
+    String revision = HgUtil.getRevision(request.getRevision());
+    Process p = createHgProcess("cat", "-r", revision,
+                                Util.nonNull(request.getPath()));
+    InputStream input = null;
 
-    if (TYPE.equalsIgnoreCase(repository.getType()))
+    try
     {
-      provider = new HgRepositoryServiceProvider(handler, hgContextProvider,
-              repository);
+      handleErrorStream(p.getErrorStream());
+      input = p.getInputStream();
+      ByteStreams.copy(input, output);
     }
-
-    return provider;
+    finally
+    {
+      Closeables.closeQuietly(input);
+    }
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private HgRepositoryHandler handler;
-
-  /** Field description */
-  private Provider<HgContext> hgContextProvider;
 }

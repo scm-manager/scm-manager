@@ -34,7 +34,9 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.Provider;
 
+import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
@@ -53,7 +55,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
   /** Field description */
-  private static final Set<Command> COMMANDS = ImmutableSet.of();
+  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.CAT);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -61,18 +63,35 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
    * Constructs ...
    *
    *
+   *
+   * @param hgContextProvider
    * @param handler
    * @param repository
    */
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
+                              Provider<HgContext> hgContextProvider,
                               Repository repository)
   {
+    this.hgContextProvider = hgContextProvider;
     this.handler = handler;
     this.repository = repository;
     this.repositoryDirectory = handler.getDirectory(repository);
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public HgCatCommand getCatCommand()
+  {
+    return new HgCatCommand(handler, hgContextProvider.get(), repository,
+                            repositoryDirectory);
+  }
 
   /**
    * Method description
@@ -90,6 +109,9 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private HgRepositoryHandler handler;
+
+  /** Field description */
+  private Provider<HgContext> hgContextProvider;
 
   /** Field description */
   private Repository repository;
