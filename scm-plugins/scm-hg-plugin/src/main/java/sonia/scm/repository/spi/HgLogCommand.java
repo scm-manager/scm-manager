@@ -96,12 +96,12 @@ public class HgLogCommand extends AbstractHgCommand implements LogCommand
 
     env.put(ENV_REVISION, HgUtil.getRevision(id));
     env.put(ENV_PATH, Util.EMPTY_STRING);
-    env.put(ENV_PAGE_START, Util.EMPTY_STRING);
-    env.put(ENV_PAGE_LIMIT, Util.EMPTY_STRING);
+    env.put(ENV_PAGE_START, "0");
+    env.put(ENV_PAGE_LIMIT, "1");
     env.put(ENV_REVISION_START, Util.EMPTY_STRING);
     env.put(ENV_REVISION_END, Util.EMPTY_STRING);
 
-    return getResultFromScript(Changeset.class, HgPythonScript.CHANGELOG, env);
+    return getResultFromScript(Changeset.class, HgPythonScript.LOG, env);
   }
 
   /**
@@ -127,9 +127,9 @@ public class HgLogCommand extends AbstractHgCommand implements LogCommand
     env.put(ENV_PAGE_LIMIT, String.valueOf(request.getPagingLimit()));
     env.put(ENV_REVISION_START,
             Strings.nullToEmpty(request.getStartChangeset()));
-    env.put(ENV_REVISION_END, Strings.nullToEmpty(request.getStartChangeset()));
+    env.put(ENV_REVISION_END, Strings.nullToEmpty(request.getEndChangeset()));
 
-    return getResultFromScript(ChangesetPagingResult.class,
-                               HgPythonScript.CHANGELOG, env);
+    return getResultFromScript(ChangesetPagingResult.class, HgPythonScript.LOG,
+                               env);
   }
 }
