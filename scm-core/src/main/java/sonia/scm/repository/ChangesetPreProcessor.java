@@ -42,7 +42,7 @@ import sonia.scm.plugin.ExtensionPoint;
  * @author Sebastian Sdorra
  */
 @ExtensionPoint
-public interface ChangesetPreProcessor
+public interface ChangesetPreProcessor extends PreProcessor<Changeset>
 {
 
   /**
@@ -51,5 +51,6 @@ public interface ChangesetPreProcessor
    *
    * @param changeset
    */
+  @Override
   public void process(Changeset changeset);
 }

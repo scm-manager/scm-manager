@@ -33,6 +33,8 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
@@ -41,7 +43,7 @@ import sonia.scm.plugin.ExtensionPoint;
  * @since 1.10
  */
 @ExtensionPoint
-public interface FileObjectPreProcessor
+public interface FileObjectPreProcessor extends PreProcessor<FileObject>
 {
 
   /**
@@ -50,5 +52,6 @@ public interface FileObjectPreProcessor
    *
    * @param fileObject
    */
+  @Override
   public void process(FileObject fileObject);
 }

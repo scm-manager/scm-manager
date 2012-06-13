@@ -44,6 +44,7 @@ import sonia.scm.plugin.ExtensionPoint;
  */
 @ExtensionPoint
 public interface ChangesetPreProcessorFactory
+        extends PreProcessorFactory<Changeset>
 {
 
   /**
@@ -54,5 +55,6 @@ public interface ChangesetPreProcessorFactory
    *
    * @return
    */
+  @Override
   public ChangesetPreProcessor createPreProcessor(Repository repository);
 }

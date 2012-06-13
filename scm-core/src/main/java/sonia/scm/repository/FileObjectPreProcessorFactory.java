@@ -44,6 +44,7 @@ import sonia.scm.plugin.ExtensionPoint;
  */
 @ExtensionPoint
 public interface FileObjectPreProcessorFactory
+        extends PreProcessorFactory<FileObject>
 {
 
   /**
@@ -54,5 +55,6 @@ public interface FileObjectPreProcessorFactory
    *
    * @return
    */
+  @Override
   public FileObjectPreProcessor createPreProcessor(Repository repository);
 }
