@@ -33,50 +33,42 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Provider;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Closeables;
 
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.api.Command;
+import sonia.scm.repository.RepositoryException;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-
-import java.util.Set;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgRepositoryServiceProvider extends RepositoryServiceProvider
+public class HgDiffCommand extends AbstractHgCommand implements DiffCommand
 {
-
-  /** Field description */
-  private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BROWSE,
-                                                 Command.CAT, Command.DIFF);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   *
-   * @param hgContextProvider
    * @param handler
+   * @param context
    * @param repository
+   * @param repositoryDirectory
    */
-  HgRepositoryServiceProvider(HgRepositoryHandler handler,
-                              Provider<HgContext> hgContextProvider,
-                              Repository repository)
+  public HgDiffCommand(HgRepositoryHandler handler, HgContext context,
+                       Repository repository, File repositoryDirectory)
   {
-    this.hgContextProvider = hgContextProvider;
-    this.handler = handler;
-    this.repository = repository;
-    this.repositoryDirectory = handler.getDirectory(repository);
+    super(handler, context, repository, repositoryDirectory);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -85,64 +77,29 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
    * Method description
    *
    *
-   * @return
+   * @param request
+   * @param output
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
-  public HgBrowseCommand getBrowseCommand()
+  public void getDiffResult(DiffCommandRequest request, OutputStream output)
+          throws IOException, RepositoryException
   {
-    return new HgBrowseCommand(handler, hgContextProvider.get(), repository,
-                               repositoryDirectory);
+    Process p = createHgProcess("diff", "-c", request.getRevision(),
+                                Util.nonNull(request.getPath()));
+    InputStream input = null;
+
+    try
+    {
+      handleErrorStream(p.getErrorStream());
+      input = p.getInputStream();
+      ByteStreams.copy(input, output);
+    }
+    finally
+    {
+      Closeables.closeQuietly(input);
+    }
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public HgCatCommand getCatCommand()
-  {
-    return new HgCatCommand(handler, hgContextProvider.get(), repository,
-                            repositoryDirectory);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public HgDiffCommand getDiffCommand()
-  {
-    return new HgDiffCommand(handler, hgContextProvider.get(), repository,
-                             repositoryDirectory);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Set<Command> getSupportedCommands()
-  {
-    return COMMANDS;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private HgRepositoryHandler handler;
-
-  /** Field description */
-  private Provider<HgContext> hgContextProvider;
-
-  /** Field description */
-  private Repository repository;
-
-  /** Field description */
-  private File repositoryDirectory;
 }
