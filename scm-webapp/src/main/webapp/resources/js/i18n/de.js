@@ -86,7 +86,9 @@ if (Sonia.login.Form){
     cancelText: 'Abbrechen',
     waitTitleText: 'Verbinden',
     WaitMsgText: 'Übertrage Daten...',
-    failedMsgText: 'Anmeldung fehlgeschlagen!'
+    failedMsgText: 'Anmeldung fehlgeschlagen!',
+    failedDescriptionText: 'Falscher Benutzername, Passwort oder sie haben nicht\n\
+                             genug Berechtigungen. Bitte versuchen sie es erneut.'
   });
 
 }
