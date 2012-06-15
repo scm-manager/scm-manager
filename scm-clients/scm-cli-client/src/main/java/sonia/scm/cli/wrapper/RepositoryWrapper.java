@@ -35,6 +35,7 @@ package sonia.scm.cli.wrapper;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.cli.config.ServerConfig;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.Repository;
 
@@ -54,10 +55,25 @@ public class RepositoryWrapper extends AbstractWrapper
    * Constructs ...
    *
    *
+   * @param config
    * @param repository
    */
-  public RepositoryWrapper(Repository repository)
+  public RepositoryWrapper(ServerConfig config, Repository repository)
   {
+    this(config.getServerUrl(), repository);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   *
+   * @param baseUrl
+   * @param repository
+   */
+  public RepositoryWrapper(String baseUrl, Repository repository)
+  {
+    this.baseUrl = baseUrl;
     this.repository = repository;
   }
 
@@ -159,7 +175,7 @@ public class RepositoryWrapper extends AbstractWrapper
    */
   public String getUrl()
   {
-    return repository.getUrl();
+    return repository.createUrl(baseUrl);
   }
 
   /**
@@ -185,6 +201,9 @@ public class RepositoryWrapper extends AbstractWrapper
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String baseUrl;
 
   /** Field description */
   private Repository repository;

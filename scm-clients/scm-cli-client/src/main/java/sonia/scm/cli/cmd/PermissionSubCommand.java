@@ -120,7 +120,7 @@ public abstract class PermissionSubCommand extends TemplateSubCommand
 
       Map<String, Object> env = new HashMap<String, Object>();
 
-      env.put("repository", new RepositoryWrapper(repository));
+      env.put("repository", new RepositoryWrapper(config, repository));
       renderTemplate(env, GetRepositorySubCommand.TEMPLATE);
     }
     else
