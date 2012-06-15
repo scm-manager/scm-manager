@@ -183,3 +183,22 @@ li.scm-removed {
   background-image: url(../images/delete.png);
 }
 
+
+div.noscript-container {
+  background-color: #ffffff;
+  margin: 10px;
+  color: #202020;
+  font-family: Verdana,Helvetica,Arial,sans-serif;  
+  font-size: 12px;
+  margin: 1em;
+}
+
+div.noscript-container h1 {
+  font-size: 18px;
+  font-family: Arial, "Arial CE", "Lucida Grande CE", lucida, "Helvetica CE", sans-serif;
+  font-weight: bold;
+  margin: 0.5em 0em;
+  padding: 0px;
+  color: #D20005;
+  border-bottom: 1px solid #AFAFAF;
+}
