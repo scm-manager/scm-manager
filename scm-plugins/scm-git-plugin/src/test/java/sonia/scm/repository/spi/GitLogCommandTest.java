@@ -131,6 +131,38 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   /**
    * Method description
    *
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testGetAllWithPaging() throws IOException
+  {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPagingStart(1);
+    request.setPagingLimit(2);
+
+    ChangesetPagingResult result =
+      new GitLogCommand(repository, repositoryDirectory).getChangesets(request);
+
+    assertNotNull(result);
+    assertEquals(5, result.getTotal());
+    assertEquals(2, result.getChangesets().size());
+
+    Changeset c1 = result.getChangesets().get(0);
+
+    assertNotNull(c1);
+    assertEquals("86a6645eceefe8b9a247", c1.getId());
+
+    Changeset c2 = result.getChangesets().get(1);
+
+    assertNotNull(c2);
+    assertEquals("3f76a12f08a6ba0dc988", c2.getId());
+  }
+
+  /**
+   * Method description
+   *
    */
   @Test
   public void testGetCommit()
