@@ -35,6 +35,9 @@ package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
@@ -57,6 +60,14 @@ import sonia.scm.repository.spi.RepositoryServiceProvider;
  */
 public final class RepositoryService
 {
+
+  /**
+   * the logger for RepositoryService
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(RepositoryService.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new {@link RepositoryService}. This constructor should only
@@ -88,6 +99,12 @@ public final class RepositoryService
    */
   public BlameCommandBuilder getBlameCommand()
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create blame command for repository {}",
+                   repository.getName());
+    }
+
     return new BlameCommandBuilder(cacheManager, provider.getBlameCommand(),
                                    repository);
   }
@@ -101,6 +118,12 @@ public final class RepositoryService
    */
   public BrowseCommandBuilder getBrowseCommand()
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create browse command for repository {}",
+                   repository.getName());
+    }
+
     return new BrowseCommandBuilder(cacheManager, provider.getBrowseCommand(),
                                     repository, preProcessorUtil);
   }
@@ -114,6 +137,12 @@ public final class RepositoryService
    */
   public CatCommandBuilder getCatCommand()
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create cat command for repository {}",
+                   repository.getName());
+    }
+
     return new CatCommandBuilder(provider.getCatCommand());
   }
 
@@ -127,6 +156,12 @@ public final class RepositoryService
    */
   public DiffCommandBuilder getDiffCommand()
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create diff command for repository {}",
+                   repository.getName());
+    }
+
     return new DiffCommandBuilder(provider.getDiffCommand());
   }
 
@@ -139,6 +174,12 @@ public final class RepositoryService
    */
   public LogCommandBuilder getLogCommand()
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create log command for repository {}",
+                   repository.getName());
+    }
+
     return new LogCommandBuilder(cacheManager, provider.getLogCommand(),
                                  repository, preProcessorUtil);
   }

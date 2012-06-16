@@ -41,6 +41,9 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
@@ -89,6 +92,14 @@ import java.util.Set;
 @Singleton
 public final class RepositoryServiceFactory
 {
+
+  /**
+   * the logger for RepositoryServiceFactory
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(RepositoryServiceFactory.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new {@link RepositoryServiceFactory}. This constructor
@@ -223,6 +234,13 @@ public final class RepositoryServiceFactory
 
       if (provider != null)
       {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug(
+              "create new repository service for repository {} of type {}",
+              repository.getName(), repository.getType());
+        }
+
         service = new RepositoryService(cacheManager, provider, repository,
                                         preProcessorUtil);
 
