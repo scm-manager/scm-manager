@@ -144,6 +144,19 @@ public final class RepositoryService
   }
 
   /**
+   * Returns the repository of this service.
+   *
+   *
+   * @param repository repository of this service
+   *
+   * @return repository of this service
+   */
+  public Repository getRepository()
+  {
+    return repository;
+  }
+
+  /**
    * Returns true if the command is supported by the repository service.
    *
    *
