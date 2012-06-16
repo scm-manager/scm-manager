@@ -102,6 +102,40 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     assertEquals("0:a9bacaf1b7fa", result.getChangesets().get(2).getId());
   }
 
+  
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testGetAllWithPaging() throws IOException, RepositoryException
+  {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPagingStart(1);
+    request.setPagingLimit(2);
+
+    ChangesetPagingResult result =
+      new HgLogCommand(handler, new HgContext(), repository,
+                       repositoryDirectory).getChangesets(request);
+
+    assertNotNull(result);
+    assertEquals(5, result.getTotal());
+    assertEquals(2, result.getChangesets().size());
+
+    Changeset c1 = result.getChangesets().get(0);
+
+    assertNotNull(c1);
+    assertEquals("3:542bf4893dd2", c1.getId());
+
+    Changeset c2 = result.getChangesets().get(1);
+
+    assertNotNull(c2);
+    assertEquals("2:79b6baf49711", c2.getId());
+  }
+  
   /**
    * Method description
    *
