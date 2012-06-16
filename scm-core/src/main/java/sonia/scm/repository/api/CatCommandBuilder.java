@@ -39,6 +39,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.CatCommand;
@@ -58,6 +61,14 @@ import java.io.OutputStream;
  */
 public final class CatCommandBuilder
 {
+
+  /**
+   * the logger for CatCommandBuilder
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(CatCommandBuilder.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new {@link CatCommandBuilder}, this constructor should
@@ -173,6 +184,12 @@ public final class CatCommandBuilder
     CatCommandRequest requestClone = request.clone();
 
     requestClone.setPath(path);
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create cat for {}", requestClone);
+    }
+
     catCommand.getCatResult(requestClone, outputStream);
   }
 
