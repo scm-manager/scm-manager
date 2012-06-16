@@ -38,6 +38,9 @@ package sonia.scm.repository.api;
 import com.google.common.base.Preconditions;
 import com.google.common.io.Closeables;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.DiffCommand;
 import sonia.scm.repository.spi.DiffCommandRequest;
@@ -59,6 +62,14 @@ import java.io.OutputStream;
  */
 public final class DiffCommandBuilder
 {
+
+  /**
+   * the logger for DiffCommandBuilder
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(DiffCommandBuilder.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new {@link DiffCommandBuilder}, this constructor should
@@ -173,6 +184,12 @@ public final class DiffCommandBuilder
     Preconditions.checkNotNull(outputStream, "OutputStream is required");
     Preconditions.checkArgument(request.isValid(),
                                 "path and/or revision is required");
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create diff for {}", request);
+    }
+
     diffCommand.getDiffResult(request, outputStream);
   }
 
