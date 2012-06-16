@@ -71,6 +71,7 @@ import sonia.scm.repository.RepositoryBrowserUtil;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.resources.DefaultResourceManager;
 import sonia.scm.resources.DevelopmentResourceManager;
@@ -298,6 +299,9 @@ public class ScmServletModule extends ServletModule
     bind(UrlProvider.class).annotatedWith(
         Names.named(UrlProviderFactory.TYPE_WUI)).toProvider(
         WebUIUrlProvider.class);
+
+    // bind repository service factory
+    bind(RepositoryServiceFactory.class);
 
     /*
      * filter(PATTERN_PAGE,
