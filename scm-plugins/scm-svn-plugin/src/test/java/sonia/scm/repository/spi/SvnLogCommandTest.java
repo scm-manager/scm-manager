@@ -128,6 +128,38 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("4", c2.getId());
   }
   
+    /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testGetAllWithPaging() throws IOException, RepositoryException
+  {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPagingStart(1);
+    request.setPagingLimit(2);
+
+    ChangesetPagingResult result =
+      new SvnLogCommand(repository, repositoryDirectory).getChangesets(request);
+
+    assertNotNull(result);
+    assertEquals(6, result.getTotal());
+    assertEquals(2, result.getChangesets().size());
+
+    Changeset c1 = result.getChangesets().get(0);
+
+    assertNotNull(c1);
+    assertEquals("4", c1.getId());
+
+    Changeset c2 = result.getChangesets().get(1);
+
+    assertNotNull(c2);
+    assertEquals("3", c2.getId());
+  }
+  
  /**
    * Method description
    *
