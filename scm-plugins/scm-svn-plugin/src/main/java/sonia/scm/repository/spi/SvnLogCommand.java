@@ -207,7 +207,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
       int total = changesetList.size();
       int start = request.getPagingStart();
       int max = request.getPagingLimit() + start;
-      int end = total - start;
+      int end = total;
 
       if (end > max)
       {
