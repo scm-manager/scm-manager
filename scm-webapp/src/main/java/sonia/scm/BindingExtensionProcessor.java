@@ -54,6 +54,7 @@ import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHook;
 import sonia.scm.repository.RepositoryListener;
 import sonia.scm.repository.RepositoryRequestListener;
+import sonia.scm.repository.spi.RepositoryServiceResolver;
 import sonia.scm.resources.ResourceHandler;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.UserListener;
@@ -123,6 +124,10 @@ public class BindingExtensionProcessor implements ExtensionProcessor
       Multibinder.newSetBinder(binder, FileObjectPreProcessor.class);
     Multibinder<FileObjectPreProcessorFactory> fileObjectPreProcessorFactoryBinder =
       Multibinder.newSetBinder(binder, FileObjectPreProcessorFactory.class);
+
+    // repository service resolver
+    Multibinder<RepositoryServiceResolver> repositoryServiceResolverBinder =
+      Multibinder.newSetBinder(binder, RepositoryServiceResolver.class);
 
     // listeners
     Multibinder<RepositoryListener> repositoryListenerBinder =
@@ -296,6 +301,16 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         }
 
         servletContextListenerBinder.addBinding().to(extensionClass);
+      }
+      else if (RepositoryServiceResolver.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind RepositoryServiceResolver {}",
+                      extensionClass.getName());
+        }
+
+        repositoryServiceResolverBinder.addBinding().to(extensionClass);
       }
       else
       {
