@@ -46,7 +46,8 @@ import java.io.Serializable;
  * @author Sebastian Sdorra
  * @since 1.17
  */
-public abstract class FileBaseCommandRequest implements Resetable, Serializable
+public abstract class FileBaseCommandRequest
+        implements Resetable, Serializable, Cloneable
 {
 
   /**
@@ -162,6 +163,36 @@ public abstract class FileBaseCommandRequest implements Resetable, Serializable
   String getRevision()
   {
     return revision;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws CloneNotSupportedException
+   */
+  @Override
+  protected FileBaseCommandRequest clone() throws CloneNotSupportedException
+  {
+    FileBaseCommandRequest clone = null;
+
+    try
+    {
+      clone = (FileBaseCommandRequest) super.clone();
+    }
+    catch (CloneNotSupportedException e)
+    {
+
+      // this shouldn't happen, since we are Cloneable
+      throw new InternalError(
+          "FileBaseCommandRequest seems not to be cloneable");
+    }
+
+    return clone;
   }
 
   //~--- fields ---------------------------------------------------------------
