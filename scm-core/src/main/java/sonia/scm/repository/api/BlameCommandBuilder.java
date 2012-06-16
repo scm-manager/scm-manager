@@ -66,7 +66,7 @@ public final class BlameCommandBuilder
 {
 
   /** name of the cache */
-  private static final String CACHE_NAME = "sonia.scm.cache.blame";
+  static final String CACHE_NAME = "sonia.scm.cache.blame";
 
   /**
    * the logger for BlameCommandBuilder
@@ -213,7 +213,7 @@ public final class BlameCommandBuilder
    * @version        Enter version here..., 12/06/05
    * @author         Enter your name here...
    */
-  private static class CacheKey implements Serializable
+  static class CacheKey implements Serializable
   {
 
     /**
@@ -268,6 +268,19 @@ public final class BlameCommandBuilder
     public int hashCode()
     {
       return Objects.hashCode(repositoryId, request);
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    String getRepositoryId()
+    {
+      return repositoryId;
     }
 
     //~--- fields -------------------------------------------------------------

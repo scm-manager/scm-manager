@@ -65,7 +65,7 @@ public final class BrowseCommandBuilder
 {
 
   /** Name of the cache */
-  private static final String CACHE_NAME = "sonia.scm.cache.browse";
+  static final String CACHE_NAME = "sonia.scm.cache.browse";
 
   /**
    * the logger for BrowseCommandBuilder
@@ -243,7 +243,7 @@ public final class BrowseCommandBuilder
    * @version        Enter version here..., 12/06/05
    * @author         Enter your name here...
    */
-  private static class CacheKey implements Serializable
+  static class CacheKey implements Serializable
   {
 
     /**
@@ -298,6 +298,19 @@ public final class BrowseCommandBuilder
     public int hashCode()
     {
       return Objects.hashCode(repositoryId, request);
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    String getRepositoryId()
+    {
+      return repositoryId;
     }
 
     //~--- fields -------------------------------------------------------------

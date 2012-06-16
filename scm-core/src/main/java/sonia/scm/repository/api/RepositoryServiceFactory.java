@@ -44,11 +44,18 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.Filter;
+import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.repository.BlameResult;
+import sonia.scm.repository.BrowserResult;
+import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
+import sonia.scm.repository.PostReceiveRepositoryHook;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
@@ -124,6 +131,7 @@ public final class RepositoryServiceFactory
     this.securityContextProvider = securityContextProvider;
     this.resolvers = resolvers;
     this.preProcessorUtil = preProcessorUtil;
+    repositoryManager.addHook(new CacheClearHook(cacheManager));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -255,6 +263,111 @@ public final class RepositoryServiceFactory
 
     return service;
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * TODO find a more elegant way
+   *
+   *
+   * @version        Enter version here..., 12/06/16
+   * @author         Enter your name here...
+   */
+  private static class CacheClearHook extends PostReceiveRepositoryHook
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param cacheManager
+     */
+    public CacheClearHook(CacheManager cacheManager)
+    {
+      this.blameCache =
+        cacheManager.getCache(BlameCommandBuilder.CacheKey.class,
+                              BlameResult.class,
+                              BlameCommandBuilder.CACHE_NAME);
+      this.browseCache =
+        cacheManager.getCache(BrowseCommandBuilder.CacheKey.class,
+                              BrowserResult.class,
+                              BrowseCommandBuilder.CACHE_NAME);
+      this.logCache = cacheManager.getCache(LogCommandBuilder.CacheKey.class,
+              ChangesetPagingResult.class, LogCommandBuilder.CACHE_NAME);
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param event
+     */
+    @Override
+    public void onEvent(RepositoryHookEvent event)
+    {
+      Repository repository = event.getRepository();
+
+      if (repository != null)
+      {
+        String id = repository.getId();
+
+        clearCaches(id);
+      }
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @param repositoryId
+     */
+    private void clearCaches(final String repositoryId)
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("clear caches for repository id {}", repositoryId);
+      }
+
+      blameCache.removeAll(new Filter<BlameCommandBuilder.CacheKey>()
+      {
+        @Override
+        public boolean accept(BlameCommandBuilder.CacheKey item)
+        {
+          return repositoryId.equals(item.getRepositoryId());
+        }
+      });
+      browseCache.removeAll(new Filter<BrowseCommandBuilder.CacheKey>()
+      {
+        @Override
+        public boolean accept(BrowseCommandBuilder.CacheKey item)
+        {
+          return repositoryId.equals(item.getRepositoryId());
+        }
+      });
+      logCache.removeAll(new Filter<LogCommandBuilder.CacheKey>()
+      {
+        @Override
+        public boolean accept(LogCommandBuilder.CacheKey item)
+        {
+          return repositoryId.equals(item.getRepositoryId());
+        }
+      });
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private Cache<BlameCommandBuilder.CacheKey, BlameResult> blameCache;
+
+    /** Field description */
+    private Cache<BrowseCommandBuilder.CacheKey, BrowserResult> browseCache;
+
+    /** Field description */
+    private Cache<LogCommandBuilder.CacheKey, ChangesetPagingResult> logCache;
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 

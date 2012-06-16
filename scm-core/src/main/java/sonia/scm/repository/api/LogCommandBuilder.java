@@ -105,7 +105,7 @@ public final class LogCommandBuilder
 {
 
   /** name of the cache */
-  private static final String CACHE_NAME = "sonia.scm.cache.log";
+  static final String CACHE_NAME = "sonia.scm.cache.log";
 
   /**
    * the logger for LogCommandBuilder
@@ -423,7 +423,7 @@ public final class LogCommandBuilder
    * @version        Enter version here..., 12/06/05
    * @author         Enter your name here...
    */
-  private static class CacheKey implements Serializable
+  static class CacheKey implements Serializable
   {
 
     /**
@@ -493,6 +493,19 @@ public final class LogCommandBuilder
     public int hashCode()
     {
       return Objects.hashCode(repositoryId, changesetId, request);
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    String getRepositoryId()
+    {
+      return repositoryId;
     }
 
     //~--- fields -------------------------------------------------------------
