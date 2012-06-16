@@ -531,6 +531,12 @@ public class URLHttpClient implements HttpClient
   private HttpURLConnection openConnection(HttpRequest request, URL url)
           throws IOException
   {
+    if (request == null)
+    {
+      // TODO improve
+      request = new HttpRequest(url.toExternalForm());
+    }
+
     HttpURLConnection connection = null;
 
     if (!request.isIgnoreProxySettings() && configuration.isEnableProxy())
