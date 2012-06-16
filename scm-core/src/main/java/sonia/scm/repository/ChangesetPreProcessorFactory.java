@@ -38,13 +38,13 @@ package sonia.scm.repository;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
+ * TODO for 2.0 extends {@link PreProcessorFactory} interface.
  *
  * @author Sebastian Sdorra
  * @since 1.7
  */
 @ExtensionPoint
 public interface ChangesetPreProcessorFactory
-        extends PreProcessorFactory<Changeset>
 {
 
   /**
@@ -55,6 +55,5 @@ public interface ChangesetPreProcessorFactory
    *
    * @return
    */
-  @Override
   public ChangesetPreProcessor createPreProcessor(Repository repository);
 }

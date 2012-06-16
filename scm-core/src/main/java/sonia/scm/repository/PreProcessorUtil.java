@@ -33,6 +33,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
 import com.google.inject.Inject;
 
 import org.slf4j.Logger;
@@ -42,6 +44,7 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -76,10 +79,52 @@ public class PreProcessorUtil
           Set<FileObjectPreProcessor> fileObjectPreProcessorSet,
           Set<FileObjectPreProcessorFactory> fileObjectPreProcessorFactorySet)
   {
-    this.changesetPreProcessorSet = changesetPreProcessorSet;
-    this.changesetPreProcessorFactorySet = changesetPreProcessorFactorySet;
-    this.fileObjectPreProcessorSet = fileObjectPreProcessorSet;
-    this.fileObjectPreProcessorFactorySet = fileObjectPreProcessorFactorySet;
+    this.changesetPreProcessorSet =
+      Collections2.transform(changesetPreProcessorSet,
+                             new Function<ChangesetPreProcessor,
+                               ChangesetPreProcessorWrapper>()
+    {
+      @Override
+      public ChangesetPreProcessorWrapper apply(ChangesetPreProcessor input)
+      {
+        return new ChangesetPreProcessorWrapper(input);
+      }
+    });
+    this.changesetPreProcessorFactorySet =
+      Collections2.transform(changesetPreProcessorFactorySet,
+                             new Function<ChangesetPreProcessorFactory,
+                               ChangesetPreProcessorFactoryWrapper>()
+    {
+      @Override
+      public ChangesetPreProcessorFactoryWrapper apply(
+              ChangesetPreProcessorFactory input)
+      {
+        return new ChangesetPreProcessorFactoryWrapper(input);
+      }
+    });
+    this.fileObjectPreProcessorSet =
+      Collections2.transform(fileObjectPreProcessorSet,
+                             new Function<FileObjectPreProcessor,
+                               FileObjectPreProcessorWrapper>()
+    {
+      @Override
+      public FileObjectPreProcessorWrapper apply(FileObjectPreProcessor input)
+      {
+        return new FileObjectPreProcessorWrapper(input);
+      }
+    });
+    this.fileObjectPreProcessorFactorySet =
+      Collections2.transform(fileObjectPreProcessorFactorySet,
+                             new Function<FileObjectPreProcessorFactory,
+                               FileObjectPreProcessorFactoryWrapper>()
+    {
+      @Override
+      public FileObjectPreProcessorFactoryWrapper apply(
+              FileObjectPreProcessorFactory input)
+      {
+        return new FileObjectPreProcessorFactoryWrapper(input);
+      }
+    });
   }
 
   //~--- methods --------------------------------------------------------------
@@ -100,9 +145,13 @@ public class PreProcessorUtil
     }
 
     EscapeUtil.escape(changeset);
-    callPreProcessors(changesetPreProcessorSet, changeset);
-    callPreProcessorFactories(changesetPreProcessorFactorySet, repository,
-                              changeset);
+
+    PreProcessorHandler<Changeset> handler =
+      new PreProcessorHandler<Changeset>(changesetPreProcessorFactorySet,
+                              changesetPreProcessorSet, repository);
+
+    handler.callPreProcessors(changeset);
+    handler.callPreProcessorFactories(changeset);
   }
 
   /**
@@ -122,9 +171,13 @@ public class PreProcessorUtil
     }
 
     EscapeUtil.escape(result);
-    callPreProcessors(fileObjectPreProcessorSet, result);
-    callPreProcessorFactories(fileObjectPreProcessorFactorySet, repository,
-                              result);
+
+    PreProcessorHandler<FileObject> handler =
+      new PreProcessorHandler<FileObject>(fileObjectPreProcessorFactorySet,
+                              fileObjectPreProcessorSet, repository);
+
+    handler.callPreProcessors(result);
+    handler.callPreProcessorFactories(result);
   }
 
   /**
@@ -144,127 +197,369 @@ public class PreProcessorUtil
     }
 
     EscapeUtil.escape(result);
-    callPreProcessors(changesetPreProcessorSet, result);
-    callPreProcessorFactories(changesetPreProcessorFactorySet, repository,
-                              result);
+
+    PreProcessorHandler<Changeset> handler =
+      new PreProcessorHandler<Changeset>(changesetPreProcessorFactorySet,
+                              changesetPreProcessorSet, repository);
+
+    handler.callPreProcessors(result);
+    handler.callPreProcessorFactories(result);
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   *
-   * @param preProcessorFactorySet
-   * @param repository
-   * @param changesets
-   * @param items
-   * @param <T>
-   */
-  private <T> void callPreProcessorFactories(
-          Set<? extends PreProcessorFactory<T>> preProcessorFactorySet,
-          Repository repository, Iterable<T> items)
-  {
-    if (Util.isNotEmpty(preProcessorFactorySet))
-    {
-      for (PreProcessorFactory<T> factory : preProcessorFactorySet)
-      {
-        PreProcessor<T> preProcessor = factory.createPreProcessor(repository);
+  //~--- inner classes --------------------------------------------------------
 
-        if (preProcessor != null)
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 12/06/16
+   * @author         Enter your name here...    
+   */
+  private static class ChangesetPreProcessorFactoryWrapper
+          implements PreProcessorFactory<Changeset>
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param preProcessorFactory
+     */
+    public ChangesetPreProcessorFactoryWrapper(
+            ChangesetPreProcessorFactory preProcessorFactory)
+    {
+      this.preProcessorFactory = preProcessorFactory;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param repository
+     *
+     * @return
+     */
+    @Override
+    public PreProcessor<Changeset> createPreProcessor(Repository repository)
+    {
+      PreProcessor<Changeset> preProcessor = null;
+      ChangesetPreProcessor changesetPreProcessor =
+        preProcessorFactory.createPreProcessor(repository);
+
+      if (changesetPreProcessor != null)
+      {
+        preProcessor = new ChangesetPreProcessorWrapper(changesetPreProcessor);
+      }
+
+      return preProcessor;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private ChangesetPreProcessorFactory preProcessorFactory;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 12/06/16
+   * @author         Enter your name here...    
+   */
+  private static class ChangesetPreProcessorWrapper
+          implements PreProcessor<Changeset>
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param preProcessor
+     */
+    public ChangesetPreProcessorWrapper(ChangesetPreProcessor preProcessor)
+    {
+      this.preProcessor = preProcessor;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param item
+     */
+    @Override
+    public void process(Changeset item)
+    {
+      preProcessor.process(item);
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private ChangesetPreProcessor preProcessor;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 12/06/16
+   * @author         Enter your name here...    
+   */
+  private static class FileObjectPreProcessorFactoryWrapper
+          implements PreProcessorFactory<FileObject>
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param preProcessorFactory
+     */
+    public FileObjectPreProcessorFactoryWrapper(
+            FileObjectPreProcessorFactory preProcessorFactory)
+    {
+      this.preProcessorFactory = preProcessorFactory;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param repository
+     *
+     * @return
+     */
+    @Override
+    public PreProcessor<FileObject> createPreProcessor(Repository repository)
+    {
+      PreProcessor<FileObject> preProcessor = null;
+      FileObjectPreProcessor fileObjectPreProcessor =
+        preProcessorFactory.createPreProcessor(repository);
+
+      if (fileObjectPreProcessor != null)
+      {
+        preProcessor =
+          new FileObjectPreProcessorWrapper(fileObjectPreProcessor);
+      }
+
+      return preProcessor;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private FileObjectPreProcessorFactory preProcessorFactory;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 12/06/16
+   * @author         Enter your name here...    
+   */
+  private static class FileObjectPreProcessorWrapper
+          implements PreProcessor<FileObject>
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param preProcessor
+     */
+    public FileObjectPreProcessorWrapper(FileObjectPreProcessor preProcessor)
+    {
+      this.preProcessor = preProcessor;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param item
+     */
+    @Override
+    public void process(FileObject item)
+    {
+      preProcessor.process(item);
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private FileObjectPreProcessor preProcessor;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @param <T>
+   *
+   * @version        Enter version here..., 12/06/16
+   * @author         Enter your name here...
+   */
+  private static class PreProcessorHandler<T>
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param preProcessorFactorySet
+     * @param preProcessorSet
+     * @param repository
+     */
+    public PreProcessorHandler(
+            Collection<? extends PreProcessorFactory<T>> preProcessorFactorySet,
+            Collection<? extends PreProcessor<T>> preProcessorSet,
+            Repository repository)
+    {
+      this.preProcessorFactorySet = preProcessorFactorySet;
+      this.preProcessorSet = preProcessorSet;
+      this.repository = repository;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     *
+     *
+     * @param preProcessorFactorySet
+     * @param repository
+     * @param changesets
+     * @param items
+     * @param <T>
+     */
+    public void callPreProcessorFactories(Iterable<T> items)
+    {
+      if (Util.isNotEmpty(preProcessorFactorySet))
+      {
+        for (PreProcessorFactory<T> factory : preProcessorFactorySet)
         {
-          for (T item : items)
+          PreProcessor<T> preProcessor = factory.createPreProcessor(repository);
+
+          if (preProcessor != null)
           {
-            preProcessor.process(item);
+            for (T item : items)
+            {
+              preProcessor.process(item);
+            }
           }
         }
       }
     }
-  }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param preProcessorFactorySet
-   * @param repository
-   * @param item
-   * @param <T>
-   */
-  private <T> void callPreProcessorFactories(
-          Set<? extends PreProcessorFactory<T>> preProcessorFactorySet,
-          Repository repository, T item)
-  {
-    if (Util.isNotEmpty(preProcessorFactorySet))
+    /**
+     * Method description
+     *
+     *
+     *
+     * @param preProcessorFactorySet
+     * @param repository
+     * @param item
+     * @param <T>
+     */
+    public void callPreProcessorFactories(T item)
     {
-      for (PreProcessorFactory<T> factory : preProcessorFactorySet)
+      if (Util.isNotEmpty(preProcessorFactorySet))
       {
-        PreProcessor<T> cpp = factory.createPreProcessor(repository);
-
-        if (cpp != null)
+        for (PreProcessorFactory<T> factory : preProcessorFactorySet)
         {
-          cpp.process(item);
+          PreProcessor<T> cpp = factory.createPreProcessor(repository);
+
+          if (cpp != null)
+          {
+            cpp.process(item);
+          }
         }
       }
     }
-  }
 
-  /**
-   * Method description
-   *
-   *
-   * @param changesets
-   *
-   * @param preProcessorSet
-   * @param items
-   * @param <T>
-   */
-  private <T> void callPreProcessors(
-          Set<? extends PreProcessor<T>> preProcessorSet, Iterable<T> items)
-  {
-    if (Util.isNotEmpty(preProcessorSet))
+    /**
+     * Method description
+     *
+     *
+     * @param changesets
+     *
+     * @param preProcessorSet
+     * @param items
+     * @param <T>
+     */
+    public void callPreProcessors(Iterable<T> items)
     {
-      for (T item : items)
+      if (Util.isNotEmpty(preProcessorSet))
       {
-        callPreProcessors(preProcessorSet, item);
+        for (T item : items)
+        {
+          callPreProcessors(item);
+        }
       }
     }
-  }
 
-  /**
-   * Method description
-   *
-   *
-   * @param c
-   *
-   * @param preProcessorSet
-   * @param item
-   * @param <T>
-   */
-  private <T> void callPreProcessors(
-          Set<? extends PreProcessor<T>> preProcessorSet, T item)
-  {
-    if (Util.isNotEmpty(preProcessorSet))
+    /**
+     * Method description
+     *
+     *
+     * @param c
+     *
+     * @param preProcessorSet
+     * @param item
+     * @param <T>
+     */
+    public void callPreProcessors(T item)
     {
-      for (PreProcessor<T> preProcessor : preProcessorSet)
+      if (Util.isNotEmpty(preProcessorSet))
       {
-        preProcessor.process(item);
+        for (PreProcessor<T> preProcessor : preProcessorSet)
+        {
+          preProcessor.process(item);
+        }
       }
     }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private Collection<? extends PreProcessorFactory<T>> preProcessorFactorySet;
+
+    /** Field description */
+    private Collection<? extends PreProcessor<T>> preProcessorSet;
+
+    /** Field description */
+    private Repository repository;
   }
+
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Set<ChangesetPreProcessorFactory> changesetPreProcessorFactorySet;
+  private Collection<ChangesetPreProcessorFactoryWrapper> changesetPreProcessorFactorySet;
 
   /** Field description */
-  private Set<ChangesetPreProcessor> changesetPreProcessorSet;
+  private Collection<ChangesetPreProcessorWrapper> changesetPreProcessorSet;
 
   /** Field description */
-  private Set<FileObjectPreProcessorFactory> fileObjectPreProcessorFactorySet;
+  private Collection<FileObjectPreProcessorFactoryWrapper> fileObjectPreProcessorFactorySet;
 
   /** Field description */
-  private Set<FileObjectPreProcessor> fileObjectPreProcessorSet;
+  private Collection<FileObjectPreProcessorWrapper> fileObjectPreProcessorSet;
 }
