@@ -35,6 +35,9 @@ package sonia.scm.repository;
 
 import com.google.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -48,6 +51,14 @@ import java.util.Set;
  */
 public class PreProcessorUtil
 {
+
+  /**
+   * the logger for PreProcessorUtil
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(PreProcessorUtil.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -82,6 +93,12 @@ public class PreProcessorUtil
    */
   public void prepareForReturn(Repository repository, Changeset changeset)
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("prepare changeset {} of repository {} for return",
+                   changeset.getId(), repository.getName());
+    }
+
     EscapeUtil.escape(changeset);
     callPreProcessors(changesetPreProcessorSet, changeset);
     callPreProcessorFactories(changesetPreProcessorFactorySet, repository,
@@ -98,6 +115,12 @@ public class PreProcessorUtil
    */
   public void prepareForReturn(Repository repository, BrowserResult result)
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("prepare browser result of repository {} for return",
+                   repository.getName());
+    }
+
     EscapeUtil.escape(result);
     callPreProcessors(fileObjectPreProcessorSet, result);
     callPreProcessorFactories(fileObjectPreProcessorFactorySet, repository,
@@ -114,6 +137,12 @@ public class PreProcessorUtil
   public void prepareForReturn(Repository repository,
                                ChangesetPagingResult result)
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("prepare changesets of repository {} for return",
+                   repository.getName());
+    }
+
     EscapeUtil.escape(result);
     callPreProcessors(changesetPreProcessorSet, result);
     callPreProcessorFactories(changesetPreProcessorFactorySet, repository,
