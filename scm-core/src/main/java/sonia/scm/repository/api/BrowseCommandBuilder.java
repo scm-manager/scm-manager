@@ -37,6 +37,9 @@ package sonia.scm.repository.api;
 
 import com.google.common.base.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BrowserResult;
@@ -63,6 +66,12 @@ public final class BrowseCommandBuilder
 
   /** Name of the cache */
   private static final String CACHE_NAME = "sonia.scm.cache.browse";
+
+  /**
+   * the logger for BrowseCommandBuilder
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(BrowseCommandBuilder.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -119,6 +128,12 @@ public final class BrowseCommandBuilder
 
     if (disableCache)
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("create browser result for {} with disabled cache",
+                     request);
+      }
+
       result = browseCommand.getBrowserResult(request);
     }
     else
@@ -127,13 +142,27 @@ public final class BrowseCommandBuilder
 
       result = cache.get(key);
 
-      if (result != null)
+      if (result == null)
       {
-        cache.put(key, result);
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("create browser result for {}", request);
+        }
+
+        result = browseCommand.getBrowserResult(request);
+
+        if (result != null)
+        {
+          cache.put(key, result);
+        }
+      }
+      else if (logger.isDebugEnabled())
+      {
+        logger.debug("retrive browser result from cache for {}", request);
       }
     }
 
-    if (! disablePreProcessors && result != null)
+    if (!disablePreProcessors && (result != null))
     {
       preProcessorUtil.prepareForReturn(repository, result);
     }
