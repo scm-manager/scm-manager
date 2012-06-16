@@ -38,6 +38,9 @@ package sonia.scm.repository.api;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Changeset;
@@ -103,6 +106,12 @@ public final class LogCommandBuilder
 
   /** name of the cache */
   private static final String CACHE_NAME = "sonia.scm.cache.log";
+
+  /**
+   * the logger for LogCommandBuilder
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(LogCommandBuilder.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -176,6 +185,11 @@ public final class LogCommandBuilder
 
     if (disableCache)
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("get changeset for {} with disabled cache", id);
+      }
+
       changeset = logCommand.getChangeset(id);
     }
     else
@@ -185,6 +199,11 @@ public final class LogCommandBuilder
 
       if (cpr == null)
       {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("get changeset for {}", id);
+        }
+
         changeset = logCommand.getChangeset(id);
 
         if (changeset != null)
@@ -195,11 +214,16 @@ public final class LogCommandBuilder
       }
       else
       {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("get changeset {} from cache", id);
+        }
+
         changeset = cpr.iterator().next();
       }
     }
 
-    if (! disablePreProcessors && changeset != null)
+    if (!disablePreProcessors && (changeset != null))
     {
       preProcessorUtil.prepareForReturn(repository, changeset);
     }
@@ -223,6 +247,11 @@ public final class LogCommandBuilder
 
     if (disableCache)
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("get changesets for {} with disabled cache", request);
+      }
+
       cpr = logCommand.getChangesets(request);
     }
     else
@@ -233,6 +262,11 @@ public final class LogCommandBuilder
 
       if (cpr == null)
       {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("get changesets for {}", request);
+        }
+
         cpr = logCommand.getChangesets(request);
 
         if (cpr != null)
@@ -240,9 +274,13 @@ public final class LogCommandBuilder
           cache.put(key, cpr);
         }
       }
+      else if (logger.isDebugEnabled())
+      {
+        logger.debug("get changesets from cache for {}", request);
+      }
     }
 
-    if (! disablePreProcessors && cpr != null)
+    if (!disablePreProcessors && (cpr != null))
     {
       preProcessorUtil.prepareForReturn(repository, cpr);
     }
@@ -292,8 +330,7 @@ public final class LogCommandBuilder
    *
    * @return {@code this}
    */
-  public LogCommandBuilder setDisablePreProcessors(
-          boolean disablePreProcessors)
+  public LogCommandBuilder setDisablePreProcessors(boolean disablePreProcessors)
   {
     this.disablePreProcessors = disablePreProcessors;
 
