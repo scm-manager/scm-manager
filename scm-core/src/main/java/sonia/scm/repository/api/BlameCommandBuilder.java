@@ -39,6 +39,9 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BlameResult;
@@ -64,6 +67,12 @@ public final class BlameCommandBuilder
 
   /** name of the cache */
   private static final String CACHE_NAME = "sonia.scm.cache.blame";
+
+  /**
+   * the logger for BlameCommandBuilder
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(BlameCommandBuilder.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -125,6 +134,11 @@ public final class BlameCommandBuilder
 
     if (disableCache)
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("create blame for {} with disabled cache", requestClone);
+      }
+
       result = blameCommand.getBlameResult(requestClone);
     }
     else
@@ -135,12 +149,21 @@ public final class BlameCommandBuilder
 
       if (result == null)
       {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("create blame for {}", requestClone);
+        }
+
         result = blameCommand.getBlameResult(requestClone);
 
         if (result != null)
         {
           cache.put(key, result);
         }
+      }
+      else if (logger.isDebugEnabled())
+      {
+        logger.debug("retrive blame from cache for {}", requestClone);
       }
     }
 
