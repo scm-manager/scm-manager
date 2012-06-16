@@ -106,12 +106,15 @@ def collectChangesets(repo, path, startNode, endNode):
 
   return ctxs
 
-
 def stripChangesets(ctxs, start, limit):
   if limit < 0:
-    ctxs = ctxs[start]
+    ctxs = ctxs[start:]
   else:
-    ctxs = ctxs[start:limit]
+    limit = limit + start
+    if limit > len(ctxs):
+      ctxs = ctxs[start:]
+    else:
+      ctxs = ctxs[start:limit]
   return ctxs
     
 # change log methods
