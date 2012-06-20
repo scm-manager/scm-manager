@@ -390,7 +390,7 @@
     <junit.version>4.10</junit.version>
     
     <!-- logging libraries -->
-    <slf4j.version>1.6.5</slf4j.version>
+    <slf4j.version>1.6.6</slf4j.version>
     <logback.version>1.0.4</logback.version>
     
     <servlet.version>2.5</servlet.version>
