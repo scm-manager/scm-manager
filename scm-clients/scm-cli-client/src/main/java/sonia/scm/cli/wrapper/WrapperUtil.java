@@ -35,6 +35,7 @@ package sonia.scm.cli.wrapper;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.cli.config.ServerConfig;
 import sonia.scm.group.Group;
 import sonia.scm.repository.Repository;
 import sonia.scm.user.User;
@@ -76,18 +77,22 @@ public class WrapperUtil
    * Method description
    *
    *
+   *
+   * @param baseUrl
+   *
+   * @param config
    * @param repositories
    *
    * @return
    */
-  public static List<RepositoryWrapper> wrapRepositories(
+  public static List<RepositoryWrapper> wrapRepositories(ServerConfig config,
           Collection<Repository> repositories)
   {
     List<RepositoryWrapper> wrappers = new ArrayList<RepositoryWrapper>();
 
     for (Repository r : repositories)
     {
-      wrappers.add(new RepositoryWrapper(r));
+      wrappers.add(new RepositoryWrapper(config.getServerUrl(), r));
     }
 
     return wrappers;

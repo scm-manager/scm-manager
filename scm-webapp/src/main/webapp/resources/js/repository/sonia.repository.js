@@ -78,6 +78,16 @@ Sonia.repository.setEditPanel = function(panels){
   editPanel.doLayout();
 }
 
+Sonia.repository.createUrl = function(type, name){
+  return Sonia.util.getBaseUrl() + '/' + type + '/' + name
+}
+
+Sonia.repository.createUrlFromObject = function(repository){
+  var url = Sonia.repository.createUrl(repository.type, repository.name);
+  console.debug(url);
+  return url;
+}
+
 /**
  * default panel
  */

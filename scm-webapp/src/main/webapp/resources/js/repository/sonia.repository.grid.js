@@ -87,8 +87,6 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         },{
           name: 'creationDate'
         },{
-          name:'url'
-        },{
           name: 'public'
         },{
           name:'permissions'
@@ -150,8 +148,9 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       },{
         id: 'Url', 
         header: this.colUrlText, 
-        dataIndex: 'url', 
-        renderer: this.renderUrl, 
+        dataIndex: 'name', 
+        renderer: this.renderRepositoryUrl, 
+        scope: this,
         width: 250
       },{
         id: 'Archive', 
@@ -217,6 +216,13 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     if (this.parentPanel){
       this.parentPanel.repositoryGrid = this;
     }
+  },
+  
+  renderRepositoryUrl: function(name, meta, record){
+    var type = record.get('type');
+    return this.renderUrl(
+      Sonia.repository.createUrl(type, name)
+    );
   },
   
   renderArchive: function(v){

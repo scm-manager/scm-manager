@@ -74,7 +74,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
       text: this.urlText
     },{
       xtype: 'box',
-      html: String.format(this.linkTemplate, this.item.url)
+      html: String.format(this.linkTemplate, Sonia.repository.createUrlFromObject(this.item))
     }];
     
     var config = {
@@ -105,7 +105,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   },
   
   getRepositoryUrlWithUsername: function(){
-    var uri = this.item.url;
+    var uri = Sonia.repository.createUrlFromObject(this.item);
     if ( state.user.name != 'anonymous' ){
       var index = uri.indexOf("://");
       if ( index > 0 ){

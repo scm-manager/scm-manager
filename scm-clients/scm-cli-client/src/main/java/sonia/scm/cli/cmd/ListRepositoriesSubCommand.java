@@ -74,7 +74,7 @@ public class ListRepositoriesSubCommand extends TemplateSubCommand
     List<Repository> repositories = session.getRepositoryHandler().getAll();
     Map<String, Object> env = new HashMap<String, Object>();
 
-    env.put("repositories", WrapperUtil.wrapRepositories(repositories));
+    env.put("repositories", WrapperUtil.wrapRepositories(config, repositories));
     renderTemplate(env, TEMPLATE);
   }
 }
