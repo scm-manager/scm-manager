@@ -391,7 +391,7 @@
     
     <!-- logging libraries -->
     <slf4j.version>1.6.6</slf4j.version>
-    <logback.version>1.0.4</logback.version>
+    <logback.version>1.0.6</logback.version>
     
     <servlet.version>2.5</servlet.version>
     <guice.version>3.0</guice.version>
