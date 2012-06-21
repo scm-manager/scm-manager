@@ -33,85 +33,89 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import sonia.scm.repository.RepositoryException;
-
-import static org.junit.Assert.*;
+import sonia.scm.repository.GitUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.File;
 import java.io.IOException;
 
 /**
- * TODO add not found test
  *
  * @author Sebastian Sdorra
  */
-public class GitCatCommandTest extends AbstractGitCommandTestBase
+public class GitContext implements Closeable
 {
 
   /**
+   * the logger for GitContext
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(GitContext.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param directory
+   */
+  public GitContext(File directory)
+  {
+    this.directory = directory;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
    * Method description
    *
-   *
-   * @throws IOException
-   * @throws RepositoryException
    */
-  @Test
-  public void testCat() throws IOException, RepositoryException
+  @Override
+  public void close()
   {
-    CatCommandRequest request = new CatCommandRequest();
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("close git repository {}", directory);
+    }
 
-    request.setPath("a.txt");
-    request.setRevision("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
-    assertEquals("a and b", execute(request));
+    GitUtil.close(repository);
+    repository = null;
   }
 
   /**
    * Method description
    *
-   *
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Test
-  public void testSimpleCat() throws IOException, RepositoryException
-  {
-    CatCommandRequest request = new CatCommandRequest();
-
-    request.setPath("b.txt");
-    assertEquals("b", execute(request));
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
    *
    * @return
    *
    * @throws IOException
-   * @throws RepositoryException
    */
-  private String execute(CatCommandRequest request)
-          throws IOException, RepositoryException
+  public org.eclipse.jgit.lib.Repository open() throws IOException
   {
-    String content = null;
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    if (repository == null)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("open git repository {}", directory);
+      }
 
-    try
-    {
-      new GitCatCommand(createContext(), repository).getCatResult(request,
-                        baos);
-    }
-    finally
-    {
-      content = baos.toString().trim();
+      repository = GitUtil.open(directory);
     }
 
-    return content;
+    return repository;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private File directory;
+
+  /** Field description */
+  private org.eclipse.jgit.lib.Repository repository;
 }

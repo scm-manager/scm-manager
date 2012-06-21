@@ -52,7 +52,6 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -75,13 +74,15 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param repository
    * @param repositoryDirectory
    */
-  public GitCatCommand(sonia.scm.repository.Repository repository,
-                       File repositoryDirectory)
+  public GitCatCommand(GitContext context,
+                       sonia.scm.repository.Repository repository)
   {
-    super(repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -107,18 +108,11 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand
 
     org.eclipse.jgit.lib.Repository repo = null;
 
-    try
-    {
-      repo = open();
+    repo = open();
 
-      ObjectId revId = GitUtil.getRevisionId(repo, request.getRevision());
+    ObjectId revId = GitUtil.getRevisionId(repo, request.getRevision());
 
-      getContent(repo, revId, request.getPath(), output);
-    }
-    finally
-    {
-      GitUtil.close(repo);
-    }
+    getContent(repo, revId, request.getPath(), output);
   }
 
   /**

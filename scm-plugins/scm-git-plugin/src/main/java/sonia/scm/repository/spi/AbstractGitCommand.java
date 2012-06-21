@@ -35,11 +35,8 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.lib.Repository;
 
-import sonia.scm.repository.GitUtil;
-
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -53,14 +50,16 @@ public class AbstractGitCommand
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param repository
    * @param repositoryDirectory
    */
-  protected AbstractGitCommand(sonia.scm.repository.Repository repository,
-                               File repositoryDirectory)
+  protected AbstractGitCommand(GitContext context,
+                               sonia.scm.repository.Repository repository)
   {
     this.repository = repository;
-    this.repositoryDirectory = repositoryDirectory;
+    this.context = context;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -75,14 +74,14 @@ public class AbstractGitCommand
    */
   protected Repository open() throws IOException
   {
-    return GitUtil.open(repositoryDirectory);
+    return context.open();
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  protected sonia.scm.repository.Repository repository;
+  protected GitContext context;
 
   /** Field description */
-  protected File repositoryDirectory;
+  protected sonia.scm.repository.Repository repository;
 }

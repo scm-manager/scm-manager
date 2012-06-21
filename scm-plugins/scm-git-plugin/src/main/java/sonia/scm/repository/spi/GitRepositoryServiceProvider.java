@@ -41,7 +41,7 @@ import sonia.scm.repository.api.Command;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
+import java.io.IOException;
 
 import java.util.Set;
 
@@ -70,7 +70,21 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
           Repository repository)
   {
     this.repository = repository;
-    this.repositoryDirectory = handler.getDirectory(repository);
+    context = new GitContext(handler.getDirectory(repository));
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Override
+  public void close() throws IOException
+  {
+    context.close();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -84,7 +98,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public BlameCommand getBlameCommand()
   {
-    return new GitBlameCommand(repository, repositoryDirectory);
+    return new GitBlameCommand(context, repository);
   }
 
   /**
@@ -96,7 +110,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public BrowseCommand getBrowseCommand()
   {
-    return new GitBrowseCommand(repository, repositoryDirectory);
+    return new GitBrowseCommand(context, repository);
   }
 
   /**
@@ -108,7 +122,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public CatCommand getCatCommand()
   {
-    return new GitCatCommand(repository, repositoryDirectory);
+    return new GitCatCommand(context, repository);
   }
 
   /**
@@ -120,7 +134,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public DiffCommand getDiffCommand()
   {
-    return new GitDiffCommand(repository, repositoryDirectory);
+    return new GitDiffCommand(context, repository);
   }
 
   /**
@@ -132,7 +146,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public LogCommand getLogCommand()
   {
-    return new GitLogCommand(repository, repositoryDirectory);
+    return new GitLogCommand(context, repository);
   }
 
   /**
@@ -150,8 +164,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Repository repository;
+  private GitContext context;
 
   /** Field description */
-  private File repositoryDirectory;
+  private Repository repository;
 }

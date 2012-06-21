@@ -63,10 +63,8 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   @Test
   public void testGetAll() throws IOException
   {
-    ChangesetPagingResult result = new GitLogCommand(
-                                       repository,
-                                       repositoryDirectory).getChangesets(
-                                         new LogCommandRequest());
+    ChangesetPagingResult result =
+      createCommand().getChangesets(new LogCommandRequest());
 
     assertNotNull(result);
     assertEquals(5, result.getTotal());
@@ -86,8 +84,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
 
     request.setPath("a.txt");
 
-    ChangesetPagingResult result =
-      new GitLogCommand(repository, repositoryDirectory).getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(3, result.getTotal());
@@ -110,8 +107,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
 
     request.setPagingLimit(2);
 
-    ChangesetPagingResult result =
-      new GitLogCommand(repository, repositoryDirectory).getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(5, result.getTotal());
@@ -142,8 +138,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     request.setPagingStart(1);
     request.setPagingLimit(2);
 
-    ChangesetPagingResult result =
-      new GitLogCommand(repository, repositoryDirectory).getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(5, result.getTotal());
@@ -167,7 +162,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
   @Test
   public void testGetCommit()
   {
-    GitLogCommand command = new GitLogCommand(repository, repositoryDirectory);
+    GitLogCommand command = createCommand();
     Changeset c = command.getChangeset("435df2f061add3589cb3");
 
     assertNotNull(c);
@@ -202,8 +197,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     request.setStartChangeset("592d797cd36432e59141");
     request.setEndChangeset("435df2f061add3589cb3");
 
-    ChangesetPagingResult result =
-      new GitLogCommand(repository, repositoryDirectory).getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(2, result.getTotal());
@@ -216,5 +210,16 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertEquals("592d797cd36432e59141", c1.getId());
     assertNotNull(c2);
     assertEquals("435df2f061add3589cb3", c2.getId());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private GitLogCommand createCommand()
+  {
+    return new GitLogCommand(createContext(), repository);
   }
 }

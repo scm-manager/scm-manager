@@ -61,7 +61,6 @@ import sonia.scm.util.Util;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -92,12 +91,14 @@ public class GitBrowseCommand extends AbstractGitCommand
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param repository
    * @param repositoryDirectory
    */
-  public GitBrowseCommand(Repository repository, File repositoryDirectory)
+  public GitBrowseCommand(GitContext context, Repository repository)
   {
-    super(repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -109,53 +110,49 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @param request
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Override
-  public BrowserResult getBrowserResult(BrowseCommandRequest request) throws IOException, RepositoryException
+  public BrowserResult getBrowserResult(BrowseCommandRequest request)
+          throws IOException, RepositoryException
   {
-    if ( logger.isDebugEnabled() ){
+    if (logger.isDebugEnabled())
+    {
       logger.debug("try to create browse result for {}", request);
     }
+
     BrowserResult result = null;
-    org.eclipse.jgit.lib.Repository repo = null;
+    org.eclipse.jgit.lib.Repository repo = open();
+    ObjectId revId = null;
 
-    try
+    if (Util.isEmpty(request.getRevision()))
     {
-      repo = open();
-
-      ObjectId revId = null;
-
-      if (Util.isEmpty(request.getRevision()))
-      {
-        revId = GitUtil.getRepositoryHead(repo);
-      }
-      else
-      {
-        revId = GitUtil.getRevisionId(repo, request.getRevision());
-      }
-
-      if (revId != null)
-      {
-        result = getResult(repo, revId, request.getPath());
-      }
-      else
-      {
-        if (Util.isNotEmpty(request.getRevision()))
-        {
-          logger.error("could not find revision {}", request.getRevision());
-        }
-        else if (logger.isWarnEnabled())
-        {
-          logger.warn("coul not find head of repository, empty?");
-        }
-
-        result = new BrowserResult(Constants.HEAD, null, null,
-                                   new ArrayList<FileObject>());
-      }
+      revId = GitUtil.getRepositoryHead(repo);
     }
-    finally
+    else
     {
-      GitUtil.close(repo);
+      revId = GitUtil.getRevisionId(repo, request.getRevision());
+    }
+
+    if (revId != null)
+    {
+      result = getResult(repo, revId, request.getPath());
+    }
+    else
+    {
+      if (Util.isNotEmpty(request.getRevision()))
+      {
+        logger.error("could not find revision {}", request.getRevision());
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("coul not find head of repository, empty?");
+      }
+
+      result = new BrowserResult(Constants.HEAD, null, null,
+                                 new ArrayList<FileObject>());
     }
 
     return result;
@@ -457,8 +454,8 @@ public class GitBrowseCommand extends AbstractGitCommand
 
     try
     {
-      new GitCatCommand(repository, repositoryDirectory).getContent(repo,
-                        revision, PATH_MODULES, baos);
+      new GitCatCommand(context, repository).getContent(repo, revision,
+                        PATH_MODULES, baos);
       subRepositories = GitSubModuleParser.parse(baos.toString());
     }
     catch (PathNotFoundException ex)

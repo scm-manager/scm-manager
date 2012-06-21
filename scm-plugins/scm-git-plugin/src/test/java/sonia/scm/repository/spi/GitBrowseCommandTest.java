@@ -64,10 +64,8 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
   @Test
   public void testBrowse() throws IOException, RepositoryException
   {
-    BrowserResult result = new GitBrowseCommand(
-                               repository,
-                               repositoryDirectory).getBrowserResult(
-                                   new BrowseCommandRequest());
+    BrowserResult result =
+      createCommand().getBrowserResult(new BrowseCommandRequest());
 
     assertNotNull(result);
 
@@ -119,8 +117,7 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
 
     request.setPath("c");
 
-    BrowserResult result = new GitBrowseCommand(repository,
-                             repositoryDirectory).getBrowserResult(request);
+    BrowserResult result = createCommand().getBrowserResult(request);
 
     assertNotNull(result);
 
@@ -159,5 +156,16 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
     assertEquals("added file d and e in folder c", e.getDescription());
     assertTrue(e.getLength() > 0);
     checkDate(e.getLastModified());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private GitBrowseCommand createCommand()
+  {
+    return new GitBrowseCommand(createContext(), repository);
   }
 }

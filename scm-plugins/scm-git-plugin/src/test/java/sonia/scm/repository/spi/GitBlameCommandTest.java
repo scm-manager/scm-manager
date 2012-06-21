@@ -66,8 +66,7 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
 
     request.setPath("a.txt");
 
-    BlameResult result = new GitBlameCommand(repository,
-                           repositoryDirectory).getBlameResult(request);
+    BlameResult result = createCommand().getBlameResult(request);
 
     assertNotNull(result);
     assertEquals(2, result.getTotal());
@@ -103,8 +102,7 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
     request.setPath("a.txt");
     request.setRevision("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
 
-    BlameResult result = new GitBlameCommand(repository,
-                           repositoryDirectory).getBlameResult(request);
+    BlameResult result = createCommand().getBlameResult(request);
 
     assertNotNull(result);
     assertEquals(1, result.getTotal());
@@ -130,5 +128,16 @@ public class GitBlameCommandTest extends AbstractGitCommandTestBase
     assertEquals("added a and b files", line.getDescription());
     assertEquals("Douglas Adams", line.getAuthor().getName());
     assertEquals("douglas.adams@hitchhiker.com", line.getAuthor().getMail());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private GitBlameCommand createCommand()
+  {
+    return new GitBlameCommand(createContext(), repository);
   }
 }

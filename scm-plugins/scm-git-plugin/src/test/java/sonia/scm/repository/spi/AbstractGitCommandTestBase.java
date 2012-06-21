@@ -31,12 +31,44 @@
 
 package sonia.scm.repository.spi;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.junit.After;
+
 /**
  *
  * @author Sebastian Sdorra
  */
 public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
 {
+
+  /**
+   * Method description
+   *
+   */
+  @After
+  public void close()
+  {
+    context.close();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected GitContext createContext()
+  {
+    if (context == null)
+    {
+      context = new GitContext(repositoryDirectory);
+    }
+
+    return context;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -61,4 +93,9 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
   {
     return "sonia/scm/repository/spi/scm-git-spi-test.zip";
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private GitContext context;
 }

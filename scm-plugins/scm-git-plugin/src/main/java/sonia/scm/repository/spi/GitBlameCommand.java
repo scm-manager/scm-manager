@@ -53,7 +53,6 @@ import sonia.scm.repository.RepositoryException;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -78,12 +77,14 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param repository
    * @param repositoryDirectory
    */
-  public GitBlameCommand(Repository repository, File repositoryDirectory)
+  public GitBlameCommand(GitContext context, Repository repository)
   {
-    super(repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -111,70 +112,56 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
     Preconditions.checkArgument(!Strings.isNullOrEmpty(request.getPath()),
                                 "path is empty or null");
 
-    org.eclipse.jgit.blame.BlameResult gitBlameResult = null;
-    sonia.scm.repository.BlameResult blameResult = null;
-    org.eclipse.jgit.lib.Repository gr = null;
+    org.eclipse.jgit.lib.Repository gr = open();
+    org.eclipse.jgit.api.BlameCommand blame = new Git(gr).blame();
 
-    try
+    blame.setFilePath(request.getPath());
+
+    ObjectId revId = GitUtil.getRevisionId(gr, request.getRevision());
+
+    blame.setStartCommit(revId);
+
+    org.eclipse.jgit.blame.BlameResult gitBlameResult = blame.call();
+
+    if (gitBlameResult == null)
     {
-      gr = open();
-
-      org.eclipse.jgit.api.BlameCommand blame = new Git(gr).blame();
-
-      blame.setFilePath(request.getPath());
-
-      ObjectId revId = GitUtil.getRevisionId(gr, request.getRevision());
-
-      blame.setStartCommit(revId);
-      gitBlameResult = blame.call();
-
-      if (gitBlameResult == null)
-      {
-        throw new RepositoryException(
-            "could not create blame result for path ".concat(
-              request.getPath()));
-      }
-
-      List<BlameLine> blameLines = new ArrayList<BlameLine>();
-      int total = gitBlameResult.getResultContents().size();
-      int i = 0;
-
-      for (; i < total; i++)
-      {
-        RevCommit commit = gitBlameResult.getSourceCommit(i);
-
-        if (commit != null)
-        {
-          PersonIdent author = gitBlameResult.getSourceAuthor(i);
-          BlameLine blameLine = new BlameLine();
-
-          blameLine.setLineNumber(i + 1);
-          blameLine.setAuthor(new Person(author.getName(),
-                                         author.getEmailAddress()));
-          blameLine.setDescription(commit.getShortMessage());
-
-          long when = GitUtil.getCommitTime(commit);
-
-          blameLine.setWhen(when);
-
-          String rev = commit.getId().getName();
-
-          blameLine.setRevision(rev);
-
-          String content = gitBlameResult.getResultContents().getString(i);
-
-          blameLine.setCode(content);
-          blameLines.add(blameLine);
-        }
-      }
-
-      blameResult = new sonia.scm.repository.BlameResult(i, blameLines);
-    }
-    finally
-    {
-      GitUtil.close(gr);
+      throw new RepositoryException(
+          "could not create blame result for path ".concat(request.getPath()));
     }
 
-    return blameResult;
+    List<BlameLine> blameLines = new ArrayList<BlameLine>();
+    int total = gitBlameResult.getResultContents().size();
+    int i = 0;
+
+    for (; i < total; i++)
+    {
+      RevCommit commit = gitBlameResult.getSourceCommit(i);
+
+      if (commit != null)
+      {
+        PersonIdent author = gitBlameResult.getSourceAuthor(i);
+        BlameLine blameLine = new BlameLine();
+
+        blameLine.setLineNumber(i + 1);
+        blameLine.setAuthor(new Person(author.getName(),
+                                       author.getEmailAddress()));
+        blameLine.setDescription(commit.getShortMessage());
+
+        long when = GitUtil.getCommitTime(commit);
+
+        blameLine.setWhen(when);
+
+        String rev = commit.getId().getName();
+
+        blameLine.setRevision(rev);
+
+        String content = gitBlameResult.getResultContents().getString(i);
+
+        blameLine.setCode(content);
+        blameLines.add(blameLine);
+      }
+    }
+
+    return new sonia.scm.repository.BlameResult(i, blameLines);
   }
 }

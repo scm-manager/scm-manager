@@ -54,7 +54,6 @@ import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -79,13 +78,14 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param repository
    * @param repositoryDirectory
    */
-  GitLogCommand(sonia.scm.repository.Repository repository,
-                File repositoryDirectory)
+  GitLogCommand(GitContext context, sonia.scm.repository.Repository repository)
   {
-    super(repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -164,12 +164,11 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     }
 
     ChangesetPagingResult changesets = null;
-    org.eclipse.jgit.lib.Repository gr = null;
     GitChangesetConverter converter = null;
 
     try
     {
-      gr = open();
+      org.eclipse.jgit.lib.Repository gr = open();
 
       if (!gr.getAllRefs().isEmpty())
       {
@@ -260,7 +259,6 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
     finally
     {
       IOUtil.close(converter);
-      GitUtil.close(gr);
     }
 
     return changesets;

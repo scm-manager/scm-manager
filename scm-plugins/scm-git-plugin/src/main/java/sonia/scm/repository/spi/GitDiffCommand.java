@@ -52,7 +52,6 @@ import sonia.scm.util.Util;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.OutputStream;
 
 import java.util.List;
@@ -76,12 +75,14 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param repository
    * @param repositoryDirectory
    */
-  public GitDiffCommand(Repository repository, File repositoryDirectory)
+  public GitDiffCommand(GitContext context, Repository repository)
   {
-    super(repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -96,14 +97,14 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
   @Override
   public void getDiffResult(DiffCommandRequest request, OutputStream output)
   {
-    org.eclipse.jgit.lib.Repository gr = null;
     RevWalk walk = null;
     TreeWalk treeWalk = null;
     DiffFormatter formatter = null;
 
     try
     {
-      gr = open();
+      org.eclipse.jgit.lib.Repository gr = open();
+
       walk = new RevWalk(gr);
 
       RevCommit commit = walk.parseCommit(gr.resolve(request.getRevision()));
@@ -155,6 +156,7 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
     }
     catch (Exception ex)
     {
+
       // TODO throw exception
       logger.error("could not create diff", ex);
     }
@@ -163,7 +165,6 @@ public class GitDiffCommand extends AbstractGitCommand implements DiffCommand
       GitUtil.release(walk);
       GitUtil.release(treeWalk);
       GitUtil.release(formatter);
-      GitUtil.close(gr);
     }
   }
 }
