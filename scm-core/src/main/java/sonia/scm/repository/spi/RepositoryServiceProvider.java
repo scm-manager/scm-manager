@@ -40,6 +40,9 @@ import sonia.scm.repository.api.CommandNotSupportedException;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Closeable;
+import java.io.IOException;
+
 import java.util.Set;
 
 /**
@@ -47,7 +50,7 @@ import java.util.Set;
  * @author Sebastian Sdorra
  * @since 1.17
  */
-public abstract class RepositoryServiceProvider
+public abstract class RepositoryServiceProvider implements Closeable
 {
 
   /**
@@ -57,6 +60,25 @@ public abstract class RepositoryServiceProvider
    * @return
    */
   public abstract Set<Command> getSupportedCommands();
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * The default implementation of this method does nothing. If you need to
+   * free resources, close connections or release locks than you have to
+   * override this method.
+   *
+   *
+   * @throws IOException
+   */
+  @Override
+  public void close() throws IOException
+  {
+
+    // should be implmentented from a service provider
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description

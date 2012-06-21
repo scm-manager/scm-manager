@@ -43,6 +43,11 @@ import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.Closeable;
+import java.io.IOException;
+
 /**
  * From the {@link RepositoryService} it is possible to access all commands for
  * a single {@link Repository}. The {@link RepositoryService} is only access
@@ -53,12 +58,17 @@ import sonia.scm.repository.spi.RepositoryServiceProvider;
  * the command is not supported the method will trow a
  * {@link CommandNotSupportedException}. It is possible to check if the command
  * is supported by the {@link RepositoryService} with the
- * {@link RepositoryService#isSupported(Command)} method.
+ * {@link RepositoryService#isSupported(Command)} method.<br />
+ * <br />
+ * 
+ * <b>Warning:</b> You should always close the connection to the repository 
+ * after work is finished. For closing the connection to the repository use the
+ * {@link #close()} method.
  *
  * @author Sebastian Sdorra
  * @since 1.17
  */
-public final class RepositoryService
+public final class RepositoryService implements Closeable
 {
 
   /**
@@ -86,6 +96,37 @@ public final class RepositoryService
     this.provider = provider;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Closes the connection to the repository and releases all locks
+   * and resources. This method should be called in a finally block e.g.:
+   *
+   * <pre><code>
+   * RepositoryService service = null;
+   * try {
+   *   service = factory.create("repositoryId");
+   *   // do something with the service
+   * } finally {
+   *   if ( service != null ){
+   *     service.close();
+   *   }
+   * }
+   * </code></pre>
+   */
+  @Override
+  public void close()
+  {
+    try
+    {
+      provider.close();
+    }
+    catch (IOException ex)
+    {
+      logger.error("cound not close repository service provider", ex);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
