@@ -52,7 +52,6 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.Collection;
@@ -77,12 +76,14 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param repository
    * @param repositoryDirectory
    */
-  SvnLogCommand(Repository repository, File repositoryDirectory)
+  SvnLogCommand(SvnContext context, Repository repository)
   {
-    super(repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -109,14 +110,10 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
       logger.debug("fetch changeset {}", revision);
     }
 
-    SVNRepository repository = null;
-
     try
     {
       long revisioNumber = Long.parseLong(revision);
-
-      repository = open();
-
+      SVNRepository repository = open();
       Collection<SVNLogEntry> entries = repository.log(null, null,
                                           revisioNumber, revisioNumber, true,
                                           true);
@@ -133,10 +130,6 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     catch (SVNException ex)
     {
       throw new RepositoryException("could not open repository", ex);
-    }
-    finally
-    {
-      SvnUtil.closeSession(repository);
     }
 
     return changeset;
@@ -163,14 +156,12 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     }
 
     ChangesetPagingResult changesets = null;
-    SVNRepository repository = null;
     String startRevision = request.getStartChangeset();
     String endRevision = request.getEndChangeset();
 
     try
     {
-      repository = open();
-
+      SVNRepository repository = open();
       long startRev = repository.getLatestRevision();
       long endRev = 0;
       long maxRev = startRev;
@@ -230,10 +221,6 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     catch (SVNException ex)
     {
       throw new RepositoryException("could not open repository", ex);
-    }
-    finally
-    {
-      SvnUtil.closeSession(repository);
     }
 
     return changesets;

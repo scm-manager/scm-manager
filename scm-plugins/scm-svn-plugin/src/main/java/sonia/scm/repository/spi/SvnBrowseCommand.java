@@ -53,7 +53,6 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.ArrayList;
@@ -80,12 +79,14 @@ public class SvnBrowseCommand extends AbstractSvnCommand
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param repository
    * @param repositoryDirectory
    */
-  SvnBrowseCommand(Repository repository, File repositoryDirectory)
+  SvnBrowseCommand(SvnContext context, Repository repository)
   {
-    super(repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -116,12 +117,10 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     }
 
     BrowserResult result = null;
-    SVNRepository svnRepository = null;
 
     try
     {
-      svnRepository = open();
-
+      SVNRepository svnRepository = open();
       Collection<SVNDirEntry> entries =
         svnRepository.getDir(Util.nonNull(path), revisionNumber, null,
                              (Collection) null);
@@ -151,10 +150,6 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     catch (SVNException ex)
     {
       logger.error("could not open repository", ex);
-    }
-    finally
-    {
-      SvnUtil.closeSession(svnRepository);
     }
 
     return result;

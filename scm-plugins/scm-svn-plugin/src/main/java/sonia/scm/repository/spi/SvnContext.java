@@ -33,36 +33,79 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
-import sonia.scm.repository.Repository;
+import sonia.scm.repository.SvnUtil;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class AbstractSvnCommand
+public class SvnContext implements Closeable
 {
+
+  /**
+   * the logger for SvnContext
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(SvnContext.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   *
-   * @param context
-   * @param repository
-   * @param repositoryDirectory
+   * @param directory
    */
-  protected AbstractSvnCommand(SvnContext context, Repository repository)
+  public SvnContext(File directory)
   {
-    this.context = context;
-    this.repository = repository;
+    this.directory = directory;
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Override
+  public void close() throws IOException
+  {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("close svn repository {}", directory);
+    }
+
+    SvnUtil.closeSession(repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws SVNException
+   */
+  public SVNURL createUrl() throws SVNException
+  {
+    return SVNURL.fromFile(directory);
+  }
 
   /**
    * Method description
@@ -74,14 +117,37 @@ public class AbstractSvnCommand
    */
   public SVNRepository open() throws SVNException
   {
-    return context.open();
+    if (repository == null)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("open svn repository {}", directory);
+      }
+
+      repository = SVNRepositoryFactory.create(createUrl());
+    }
+
+    return repository;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public File getDirectory()
+  {
+    return directory;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  protected SvnContext context;
+  private File directory;
 
   /** Field description */
-  protected Repository repository;
+  private SVNRepository repository;
 }

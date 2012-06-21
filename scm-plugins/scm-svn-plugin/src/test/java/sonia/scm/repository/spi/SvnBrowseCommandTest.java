@@ -26,16 +26,26 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+
+
+
 package sonia.scm.repository.spi;
 
-import java.io.IOException;
-import java.util.List;
+//~--- non-JDK imports --------------------------------------------------------
+
 import org.junit.Test;
+
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
 import sonia.scm.repository.RepositoryException;
 
 import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
+import java.util.List;
 
 /**
  *
@@ -43,6 +53,7 @@ import static org.junit.Assert.*;
  */
 public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 {
+
   /**
    * Method description
    *
@@ -53,10 +64,8 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
   @Test
   public void testBrowse() throws IOException, RepositoryException
   {
-    BrowserResult result = new SvnBrowseCommand(
-                               repository,
-                               repositoryDirectory).getBrowserResult(
-                                   new BrowseCommandRequest());
+    BrowserResult result =
+      createCommand().getBrowserResult(new BrowseCommandRequest());
 
     assertNotNull(result);
 
@@ -108,8 +117,7 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
     request.setPath("c");
 
-    BrowserResult result = new SvnBrowseCommand(repository,
-                             repositoryDirectory).getBrowserResult(request);
+    BrowserResult result = createCommand().getBrowserResult(request);
 
     assertNotNull(result);
 
@@ -148,5 +156,16 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
     assertEquals("added d and e in folder c", e.getDescription());
     assertTrue(e.getLength() > 0);
     checkDate(e.getLastModified());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private SvnBrowseCommand createCommand()
+  {
+    return new SvnBrowseCommand(createContext(), repository);
   }
 }

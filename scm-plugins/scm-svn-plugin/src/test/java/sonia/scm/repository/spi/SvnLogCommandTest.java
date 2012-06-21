@@ -35,7 +35,9 @@ package sonia.scm.repository.spi;
 
 import org.junit.Test;
 
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.Modifications;
 import sonia.scm.repository.RepositoryException;
 
 import static org.junit.Assert.*;
@@ -43,8 +45,6 @@ import static org.junit.Assert.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.Modifications;
 
 /**
  *
@@ -55,29 +55,28 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
 
   /**
    *   Method description
-   *  
-   *  
+   *
+   *
    *   @throws IOException
    * @throws RepositoryException
    */
   @Test
   public void testGetAll() throws IOException, RepositoryException
   {
-    ChangesetPagingResult result = new SvnLogCommand(
-                                       repository,
-                                       repositoryDirectory).getChangesets(
-                                         new LogCommandRequest());
+    ChangesetPagingResult result =
+      createCommand().getChangesets(new LogCommandRequest());
 
     assertNotNull(result);
     assertEquals(6, result.getTotal());
     assertEquals(6, result.getChangesets().size());
   }
-  
+
   /**
    * Method description
    *
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   @Test
   public void testGetAllByPath() throws IOException, RepositoryException
@@ -86,8 +85,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
 
     request.setPath("a.txt");
 
-    ChangesetPagingResult result =
-      new SvnLogCommand(repository, repositoryDirectory).getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(3, result.getTotal());
@@ -96,12 +94,13 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("3", result.getChangesets().get(1).getId());
     assertEquals("1", result.getChangesets().get(2).getId());
   }
-  
- /**
-   * Method description
+
+  /**
+   *  Method description
    *
    *
-   * @throws IOException
+   *  @throws IOException
+   * @throws RepositoryException
    */
   @Test
   public void testGetAllWithLimit() throws IOException, RepositoryException
@@ -110,8 +109,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
 
     request.setPagingLimit(2);
 
-    ChangesetPagingResult result =
-      new SvnLogCommand(repository, repositoryDirectory).getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(6, result.getTotal());
@@ -127,12 +125,13 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertNotNull(c2);
     assertEquals("4", c2.getId());
   }
-  
-    /**
+
+  /**
    * Method description
    *
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   @Test
   public void testGetAllWithPaging() throws IOException, RepositoryException
@@ -142,8 +141,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     request.setPagingStart(1);
     request.setPagingLimit(2);
 
-    ChangesetPagingResult result =
-      new SvnLogCommand(repository, repositoryDirectory).getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(6, result.getTotal());
@@ -159,16 +157,18 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertNotNull(c2);
     assertEquals("3", c2.getId());
   }
-  
- /**
-   * Method description
+
+  /**
+   *  Method description
    *
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   @Test
   public void testGetCommit() throws IOException, RepositoryException
   {
-    SvnLogCommand command = new SvnLogCommand(repository, repositoryDirectory);
-    Changeset c = command.getChangeset("3");
+    Changeset c = createCommand().getChangeset("3");
 
     assertNotNull(c);
     assertEquals("3", c.getId());
@@ -186,12 +186,13 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("a.txt", mods.getModified().get(0));
     assertEquals("b.txt", mods.getRemoved().get(0));
   }
-  
- /**
-   * Method description
+
+  /**
+   *  Method description
    *
    *
-   * @throws IOException
+   *  @throws IOException
+   * @throws RepositoryException
    */
   @Test
   public void testGetRange() throws IOException, RepositoryException
@@ -201,8 +202,7 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     request.setStartChangeset("2");
     request.setEndChangeset("1");
 
-    ChangesetPagingResult result =
-      new SvnLogCommand(repository, repositoryDirectory).getChangesets(request);
+    ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(2, result.getTotal());
@@ -215,5 +215,16 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
     assertEquals("2", c1.getId());
     assertNotNull(c2);
     assertEquals("1", c2.getId());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private SvnLogCommand createCommand()
+  {
+    return new SvnLogCommand(createContext(), repository);
   }
 }

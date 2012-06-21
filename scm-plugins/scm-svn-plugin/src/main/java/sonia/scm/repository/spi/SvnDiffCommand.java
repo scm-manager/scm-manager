@@ -77,12 +77,14 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param repository
    * @param repositoryDirectory
    */
-  public SvnDiffCommand(Repository repository, File repositoryDirectory)
+  public SvnDiffCommand(SvnContext context, Repository repository)
   {
-    super(repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -114,7 +116,7 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand
 
     try
     {
-      SVNURL svnurl = SVNURL.fromFile(repositoryDirectory);
+      SVNURL svnurl = context.createUrl();
 
       if (Util.isNotEmpty(path))
       {

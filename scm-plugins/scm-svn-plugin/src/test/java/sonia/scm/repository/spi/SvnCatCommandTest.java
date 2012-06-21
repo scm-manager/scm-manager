@@ -26,14 +26,23 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+
+
+
 package sonia.scm.repository.spi;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+//~--- non-JDK imports --------------------------------------------------------
+
 import org.junit.Test;
+
 import sonia.scm.repository.RepositoryException;
 
 import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  *
@@ -41,8 +50,8 @@ import static org.junit.Assert.*;
  */
 public class SvnCatCommandTest extends AbstractSvnCommandTestBase
 {
-  
-   /**
+
+  /**
    * Method description
    *
    *
@@ -94,7 +103,7 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase
 
     try
     {
-      new SvnCatCommand(repository, repositoryDirectory).getCatResult(request,
+      new SvnCatCommand(createContext(), repository).getCatResult(request,
                         baos);
     }
     finally
@@ -104,5 +113,4 @@ public class SvnCatCommandTest extends AbstractSvnCommandTestBase
 
     return content;
   }
-  
 }

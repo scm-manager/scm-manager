@@ -46,7 +46,6 @@ import sonia.scm.repository.SvnUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -69,12 +68,14 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param repository
    * @param repositoryDirectory
    */
-  SvnCatCommand(Repository repository, File repositoryDirectory)
+  SvnCatCommand(SvnContext context, Repository repository)
   {
-    super(repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -99,21 +100,17 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
     }
 
     long revisionNumber = SvnUtil.getRevisionNumber(request.getRevision());
-    SVNRepository svnRepository = null;
 
     try
     {
-      svnRepository = open();
+      SVNRepository svnRepository = open();
+
       svnRepository.getFile(request.getPath(), revisionNumber,
                             new SVNProperties(), output);
     }
     catch (SVNException ex)
     {
       logger.error("could not open repository", ex);
-    }
-    finally
-    {
-      SvnUtil.closeSession(svnRepository);
     }
   }
 }

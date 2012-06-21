@@ -66,8 +66,7 @@ public class SvnBlameCommandTest extends AbstractSvnCommandTestBase
 
     request.setPath("a.txt");
 
-    BlameResult result = new SvnBlameCommand(repository,
-                           repositoryDirectory).getBlameResult(request);
+    BlameResult result = createCommand().getBlameResult(request);
 
     assertNotNull(result);
     assertEquals(2, result.getTotal());
@@ -101,8 +100,7 @@ public class SvnBlameCommandTest extends AbstractSvnCommandTestBase
     request.setPath("a.txt");
     request.setRevision("3");
 
-    BlameResult result = new SvnBlameCommand(repository,
-                           repositoryDirectory).getBlameResult(request);
+    BlameResult result = createCommand().getBlameResult(request);
 
     assertNotNull(result);
     assertEquals(1, result.getTotal());
@@ -127,5 +125,16 @@ public class SvnBlameCommandTest extends AbstractSvnCommandTestBase
     assertEquals("remove b and modified a", line.getDescription());
     assertEquals("perfect", line.getAuthor().getName());
     assertNull(line.getAuthor().getMail());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private SvnBlameCommand createCommand()
+  {
+    return new SvnBlameCommand(createContext(), repository);
   }
 }

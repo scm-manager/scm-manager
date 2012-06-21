@@ -48,7 +48,6 @@ import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.SvnBlameHandler;
-import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -69,12 +68,14 @@ public class SvnBlameCommand extends AbstractSvnCommand implements BlameCommand
    * Constructs ...
    *
    *
+   *
+   * @param context
    * @param repository
    * @param repositoryDirectory
    */
-  public SvnBlameCommand(Repository repository, File repositoryDirectory)
+  public SvnBlameCommand(SvnContext context, Repository repository)
   {
-    super(repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -97,8 +98,6 @@ public class SvnBlameCommand extends AbstractSvnCommand implements BlameCommand
     String path = request.getPath();
     String revision = request.getRevision();
     List<BlameLine> blameLines = Lists.newArrayList();
-    SVNRepository svnRepository = null;
-    SVNURL svnurl = null;
     SVNRevision endRevision = null;
 
     if (Util.isNotEmpty(revision))
@@ -112,10 +111,9 @@ public class SvnBlameCommand extends AbstractSvnCommand implements BlameCommand
 
     try
     {
-      svnurl = SVNURL.fromFile(new File(repositoryDirectory, path));
-      svnRepository =
-        SVNRepositoryFactory.create(SVNURL.fromFile(repositoryDirectory));
-
+      SVNURL svnurl = SVNURL.fromFile(new File(context.getDirectory(), path));
+      SVNRepository svnRepository =
+        SVNRepositoryFactory.create(context.createUrl());
       ISVNAuthenticationManager svnManager =
         svnRepository.getAuthenticationManager();
       SVNLogClient svnLogClient = new SVNLogClient(svnManager, null);
@@ -128,10 +126,6 @@ public class SvnBlameCommand extends AbstractSvnCommand implements BlameCommand
     catch (SVNException ex)
     {
       throw new RepositoryException("could not create blame result", ex);
-    }
-    finally
-    {
-      SvnUtil.closeSession(svnRepository);
     }
 
     return new BlameResult(blameLines.size(), blameLines);

@@ -31,12 +31,53 @@
 
 package sonia.scm.repository.spi;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.junit.After;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
 /**
  *
  * @author Sebastian Sdorra
  */
 public class AbstractSvnCommandTestBase extends ZippedRepositoryTestBase
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @After
+  public void close() throws IOException
+  {
+    if (context != null)
+    {
+      context.close();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public SvnContext createContext()
+  {
+    if (context == null)
+    {
+      context = new SvnContext(repositoryDirectory);
+    }
+
+    return context;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -61,4 +102,9 @@ public class AbstractSvnCommandTestBase extends ZippedRepositoryTestBase
   {
     return "sonia/scm/repository/spi/scm-svn-spi-test.zip";
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private SvnContext context;
 }

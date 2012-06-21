@@ -41,8 +41,6 @@ import sonia.scm.repository.api.Command;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-
 import java.util.Set;
 
 /**
@@ -70,7 +68,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
                                Repository repository)
   {
     this.repository = repository;
-    this.repositoryDirectory = handler.getDirectory(repository);
+    this.context = new SvnContext(handler.getDirectory(repository));
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -84,7 +82,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public SvnBlameCommand getBlameCommand()
   {
-    return new SvnBlameCommand(repository, repositoryDirectory);
+    return new SvnBlameCommand(context, repository);
   }
 
   /**
@@ -96,7 +94,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public SvnBrowseCommand getBrowseCommand()
   {
-    return new SvnBrowseCommand(repository, repositoryDirectory);
+    return new SvnBrowseCommand(context, repository);
   }
 
   /**
@@ -108,7 +106,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public SvnCatCommand getCatCommand()
   {
-    return new SvnCatCommand(repository, repositoryDirectory);
+    return new SvnCatCommand(context, repository);
   }
 
   /**
@@ -120,7 +118,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public SvnDiffCommand getDiffCommand()
   {
-    return new SvnDiffCommand(repository, repositoryDirectory);
+    return new SvnDiffCommand(context, repository);
   }
 
   /**
@@ -132,7 +130,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public SvnLogCommand getLogCommand()
   {
-    return new SvnLogCommand(repository, repositoryDirectory);
+    return new SvnLogCommand(context, repository);
   }
 
   /**
@@ -150,8 +148,8 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Repository repository;
+  private SvnContext context;
 
   /** Field description */
-  private File repositoryDirectory;
+  private Repository repository;
 }
