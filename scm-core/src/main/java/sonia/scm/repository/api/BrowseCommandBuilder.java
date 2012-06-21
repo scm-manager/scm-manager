@@ -56,7 +56,21 @@ import java.io.Serializable;
 
 /**
  * BrowseCommandBuilder is able to browse the files of a {@link Repository}.
- *
+ * <br /><br />
+ * <b>Sample:</b>
+ * <br />
+ * <br />
+ * Print all paths from folder scm-core at revision 11aeec7db845:<br />
+ * <pre><code>
+ * BrowseCommandBuilder browse = repositoryService.getBrowseCommand();
+ * BrowserResult result = browse.setPath("scm-core")
+ *                              .setRevision("11aeec7db845")
+ *                              .getBrowserResult();
+ * 
+ * for ( FileObject fo : result ){
+ *   System.out.println( fo.getPath() );
+ * }
+ * </pre></code>
  *
  * @author Sebastian Sdorra
  * @since 1.17

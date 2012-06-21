@@ -54,7 +54,19 @@ import java.io.OutputStream;
 /**
  * Shows differences between revisions for a specified file or
  * the entire revision.<br />
- * <b>Note:</b> One of the parameter path or revision have to be set.
+ * <b>Note:</b> One of the parameter path or revision have to be set.<br />
+ * <br />
+ * <b>Sample:</b>
+ * <br />
+ * <br />
+ * Print the differences from revision 33b93c443867:<br />
+ * <pre><code>
+ * DiffCommandBuilder diff = repositoryService.getDiffCommand();
+ * String content = diff.setRevision("33b93c443867").getContent();
+ * System.out.println(content);
+ * </code></pre>
+ * 
+ * 
  * TODO check current behavior.
  *
  * @author Sebastian Sdorra

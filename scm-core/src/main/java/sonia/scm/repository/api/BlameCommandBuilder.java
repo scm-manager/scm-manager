@@ -57,7 +57,22 @@ import java.io.Serializable;
 
 /**
  * Shows changeset information by line for a given file.
- * Blame is also known as annotate in some SCM systems.
+ * Blame is also known as annotate in some SCM systems.<br />
+ * <br />
+ * <b>Sample:</b>
+ * <br />
+ * <br />
+ * Print each line number and code of the file scm-core/pom.xml at 
+ * revision  60c2f2783368:<br />
+ * <pre><code>
+ * BlameCommandBuilder blame = repositoryService.getBlameCommand();
+ * BlameResult result = blame.setRevision("60c2f2783368")
+ *                           .getBlameResult("scm-core/pom.xml");
+ * 
+ * for ( BlameLine line : result ){
+ *   System.out.println(line.getLineNumber() + ": " + line.getCode());
+ * }
+ * </code></pre>
  *
  * @author Sebastian Sdorra
  * @since 1.17

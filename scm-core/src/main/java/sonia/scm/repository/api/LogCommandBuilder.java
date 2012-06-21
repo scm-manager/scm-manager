@@ -63,35 +63,23 @@ import java.io.Serializable;
  * or to get a list of changesets in a {@link ChangesetPagingResult}
  * which can be used for paging.<br />
  * <br />
- * <b>Samples</b>:
+ * <b>Samples:</b>
  * <br />
  * <br />
- * <b>Get a instance of LogCommandBuilder:</b>
- * <pre><code>
- * public class Sample {
- *
- *   {@literal @}Inject
- *   public Sample(RepositoryServiceFactory factory){
- *     LogCommandBuilder log = factory.create("repository-id").getLogCommand();
- *   }
- *
- * }
- * </code></pre>
- *
- * <b>Retrieve a single {@link Changeset}:</b>
+ * Retrieve a single {@link Changeset}:<br />
  * <pre><code>
  * LogCommand log = repositoryService.getLogCommand();
  * Changeset changeset = log.getChangeset("id-of-the-commit");
  * </code></pre>
  *
- * <b>Retrieve changesets of a {@link Repository} with paging:</b>
+ * Retrieve changesets of a {@link Repository} with paging:<br />
  * <pre><code>
  * LogCommand log = repositoryService.getLogCommand();
  * ChangesetPagingResult changesetPagingResult =
  *          log.setPagingStart(25).setPagingLimit(25).getChangesets();
  * </code></pre>
  *
- * <b>Retrieve all changesets of a file in a {@link Repository}:</b>
+ * Retrieve all changesets of a file in a {@link Repository}:<br />
  * <pre><code>
  * LogCommand log = repositoryService.getLogCommand();
  * ChangesetPagingResult changesetPagingResult =

@@ -86,8 +86,17 @@ import java.util.Set;
  *   }
  *
  *   public Changeset getChangeset(String repositoryId, String commitId){
- *     RepositoryService service = factory.create(repositoryId);
- *     return service.getLogCommand().getChangeset(commitId);
+ *     Changeset changeset = null;
+ *     RepositoryService service = null;
+ *     try {
+ *       service = factory.create(repositoryId);
+ *       changeset = service.getLogCommand().getChangeset(commitId);
+ *     } finally {
+ *       if ( service != null ){
+ *         service.close();
+ *       }
+ *     }
+ *     return changeset;
  *   }
  *
  * }

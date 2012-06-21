@@ -54,7 +54,17 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Shows the content of a file in the {@link Repository}.
+ * Shows the content of a file in the {@link Repository}.<br />
+ * <br />
+ * <b>Sample:</b>
+ * <br />
+ * <br />
+ * Print the content of the file core/pom.xml from revision 46a23689ac91:<br />
+ * <pre><code>
+ * CatCommandBuilder cat = repositoryService.getCatCommand();
+ * String content = cat.setRevision("46a23689ac91").getContent("core/pom.xml");
+ * System.out.println(content);
+ * </code></pre>
  *
  * @author Sebastian Sdorra
  * @since 1.17
