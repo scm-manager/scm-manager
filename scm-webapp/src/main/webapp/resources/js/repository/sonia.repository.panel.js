@@ -73,6 +73,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
     var toolbar = [];
     if ( admin ){
       toolbar.push({
+        id: 'repositoryAddButton',
         xtype: 'tbbutton', 
         text: this.addText, 
         icon: this.addIcon, 

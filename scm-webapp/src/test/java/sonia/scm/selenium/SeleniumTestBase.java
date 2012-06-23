@@ -111,7 +111,7 @@ public class SeleniumTestBase
    * @param username
    * @param password
    */
-  protected void authenticate(String username, String password)
+  protected void login(String username, String password)
   {
     type("input[name=username]", username);
     type("input[name=password]", password);
@@ -238,7 +238,7 @@ public class SeleniumTestBase
    */
   protected WebElement waitForPresence(String query)
   {
-    WebDriverWait wait = new WebDriverWait(driver, 2);
+    WebDriverWait wait = new WebDriverWait(driver, 5);
 
     return wait.until(
         ExpectedConditions.presenceOfElementLocated(By.cssSelector(query)));
@@ -254,7 +254,7 @@ public class SeleniumTestBase
    */
   protected WebElement waitToBeClickable(String query)
   {
-    WebDriverWait wait = new WebDriverWait(driver, 2);
+    WebDriverWait wait = new WebDriverWait(driver, 5);
 
     return wait.until(
         ExpectedConditions.elementToBeClickable(By.cssSelector(query)));

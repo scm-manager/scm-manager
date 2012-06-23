@@ -33,25 +33,58 @@ package sonia.scm.selenium;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class AuthenticationITCase extends SeleniumTestBase
+public class RepositoryCRUDITCase extends SeleniumTestBase
 {
 
   /**
    * Method description
    *
+   */
+  @After
+  public void after()
+  {
+    logout();
+  }
+
+  /**
+   * Method description
    *
-   * @throws Exception
    */
   @Test
-  public void testAuthentication() throws Exception
+  public void createRepository()
+  {
+    waitAndClick("#repositoryAddButton");
+    waitForPresence("input[name=name]").sendKeys("scm");
+    select("#x-form-el-repositoryType img").click();
+    waitAndClick("div.x-combo-list-item:nth-of-type(2)");
+    type("input[name=contact]", "scmadmin@scm-manager.org");
+    type("textarea[name=description]", "SCM-Manager");
+    waitAndClick("div.x-panel-btns button:nth-of-type(1)");
+
+    String name =
+      waitForPresence(
+          "div.x-grid3-row-selected div.x-grid3-col-name").getText();
+
+    assertEquals("scm", name);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Before
+  public void login()
   {
     login("scmadmin", "scmadmin");
-    logout();
   }
 }
