@@ -36,6 +36,7 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
+import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -347,12 +348,13 @@ public class RepositoryResource
           throws RepositoryException, IOException
   {
     Response response = null;
+    RepositoryService service = null;
 
     try
     {
       AssertUtil.assertIsNotNull(path);
+      service = servicefactory.create(id);
 
-      RepositoryService service = servicefactory.create(id);
       BlameCommandBuilder builder = service.getBlameCommand();
 
       if (!Strings.isNullOrEmpty(revision))
@@ -382,6 +384,10 @@ public class RepositoryResource
     catch (CommandNotSupportedException ex)
     {
       response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
     }
 
     return response;
@@ -418,10 +424,12 @@ public class RepositoryResource
           throws RepositoryException, IOException
   {
     Response response = null;
+    RepositoryService service = null;
 
     try
     {
-      RepositoryService service = servicefactory.create(id);
+      service = servicefactory.create(id);
+
       BrowseCommandBuilder builder = service.getBrowseCommand();
 
       if (!Strings.isNullOrEmpty(revision))
@@ -452,6 +460,10 @@ public class RepositoryResource
     catch (CommandNotSupportedException ex)
     {
       response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
     }
 
     return response;
@@ -528,9 +540,12 @@ public class RepositoryResource
 
     if (Util.isNotEmpty(id) && Util.isNotEmpty(revision))
     {
+      RepositoryService service = null;
+
       try
       {
-        RepositoryService service = servicefactory.create(id);
+        service = servicefactory.create(id);
+
         Changeset changeset = service.getLogCommand().getChangeset(revision);
 
         if (changeset != null)
@@ -549,6 +564,10 @@ public class RepositoryResource
       catch (CommandNotSupportedException ex)
       {
         response = Response.status(Response.Status.BAD_REQUEST).build();
+      }
+      finally
+      {
+        Closeables.closeQuietly(service);
       }
     }
     else
@@ -599,11 +618,14 @@ public class RepositoryResource
   @QueryParam("limit") int limit) throws RepositoryException, IOException
   {
     Response response = null;
+    RepositoryService service = null;
 
     try
     {
       ChangesetPagingResult changesets = null;
-      RepositoryService service = servicefactory.create(id);
+
+      service = servicefactory.create(id);
+
       LogCommandBuilder builder = service.getLogCommand();
 
       if (!Strings.isNullOrEmpty(path))
@@ -635,6 +657,10 @@ public class RepositoryResource
     catch (CommandNotSupportedException ex)
     {
       response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
     }
 
     return response;
@@ -668,10 +694,12 @@ public class RepositoryResource
   {
     Response response = null;
     StreamingOutput output = null;
+    RepositoryService service = null;
 
     try
     {
-      RepositoryService service = servicefactory.create(id);
+      service = servicefactory.create(id);
+
       CatCommandBuilder builder = service.getCatCommand();
 
       if (!Strings.isNullOrEmpty(revision))
@@ -699,6 +727,10 @@ public class RepositoryResource
     {
       logger.error("could not retrive content", ex);
       response = createErrorResonse(ex);
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
     }
 
     return response;
@@ -737,11 +769,13 @@ public class RepositoryResource
     AssertUtil.assertIsNotEmpty(id);
     AssertUtil.assertIsNotEmpty(revision);
 
+    RepositoryService service = null;
     Response response = null;
 
     try
     {
-      RepositoryService service = servicefactory.create(id);
+      service = servicefactory.create(id);
+
       DiffCommandBuilder builder = service.getDiffCommand();
 
       if (!Strings.isNullOrEmpty(revision))
@@ -773,6 +807,10 @@ public class RepositoryResource
     {
       logger.error("could not create diff", ex);
       response = createErrorResonse(ex);
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
     }
 
     return response;
