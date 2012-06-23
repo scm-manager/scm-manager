@@ -82,6 +82,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
           scope: this,
           handler: this.cancel
         },{
+          id: 'loginButton',
           text: this.loginText,
           formBind: true,
           scope: this,
