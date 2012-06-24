@@ -307,6 +307,7 @@ public class RepositoryRootResource
     public RepositoryTransformFunction(UrlProvider urlProvider, String baseUrl)
     {
       this.urlProvider = urlProvider;
+      this.baseUrl = baseUrl;
     }
 
     //~--- methods ------------------------------------------------------------
