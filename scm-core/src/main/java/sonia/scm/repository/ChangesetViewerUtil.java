@@ -58,7 +58,10 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  * @since 1.6
+ * 
+ * @deprecated use {@link RepositoryService#getLogCommand()} instead.
  */
+@Deprecated
 public class ChangesetViewerUtil extends PartCacheClearHook
 {
 

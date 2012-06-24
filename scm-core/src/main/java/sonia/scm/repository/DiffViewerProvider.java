@@ -37,7 +37,10 @@ package sonia.scm.repository;
  *
  * @author Sebastian Sdorra
  * @since 1.8
+ * 
+ * @deprecated use {@link RepositoryService#getDiffCommand()} instead.
  */
+@Deprecated
 public interface DiffViewerProvider
 {
 

@@ -42,7 +42,10 @@ import java.io.OutputStream;
  *
  * @author Sebastian Sdorra
  * @since 1.5
+ * 
+ * @deprecated use {@link RepositoryService#getBrowseCommand()} instead.
  */
+@Deprecated
 public interface RepositoryBrowser
 {
 

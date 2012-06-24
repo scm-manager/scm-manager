@@ -49,14 +49,18 @@ import sonia.scm.util.AssertUtil;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import sonia.scm.repository.api.RepositoryService;
 
 /**
  * Class description
  *
  * @author Sebastian Sdorra
  * @since 1.8
+ * 
+ * @deprecated use {@link RepositoryService#getBlameCommand()} instead.
  */
 @Singleton
+@Deprecated
 public class BlameViewerUtil extends PartCacheClearHook
 {
 

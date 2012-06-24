@@ -36,11 +36,15 @@ package sonia.scm.repository;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import sonia.scm.repository.api.RepositoryService;
 
 /**
  *
  * @author Sebastian Sdorra
+ * 
+ * @deprecated use {@link RepositoryService#getLogCommand()} instead.
  */
+@Deprecated
 public interface ChangesetViewer
 {
 

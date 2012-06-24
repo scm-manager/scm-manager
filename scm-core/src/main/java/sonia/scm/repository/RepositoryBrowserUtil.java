@@ -59,8 +59,11 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  * @since 1.6
+ * 
+ * @deprecated use {@link RepositoryService#getBrowseCommand()) instead.
  */
 @Singleton
+@Deprecated
 public class RepositoryBrowserUtil extends PartCacheClearHook
 {
 

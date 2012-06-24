@@ -33,6 +33,10 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.repository.api.RepositoryService;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
@@ -43,7 +47,10 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  * @since 1.8
+ *
+ * @deprecated use {@link RepositoryService#getBlameCommand()) instead.
  */
+@Deprecated
 public interface BlameViewer
 {
 
