@@ -94,10 +94,10 @@ public class BlameResult implements Cloneable
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Create a clone of this {@link blameResult} object.
+   * Create a clone of this {@link BlameResult} object.
    *
    *
-   * @return clone of this {@link blameResult}
+   * @return clone of this {@link BlameResult}
    *
    * @since 1.17
    */

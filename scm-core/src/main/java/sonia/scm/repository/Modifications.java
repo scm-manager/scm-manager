@@ -58,7 +58,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "modifications")
-public class Modifications implements Serializable
+public class Modifications implements Cloneable, Serializable
 {
 
   /** Field description */
@@ -112,6 +112,31 @@ public class Modifications implements Serializable
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Create a clone of this {@link Modifications} object.
+   *
+   *
+   * @return clone of this {@link Modifications}
+   *
+   * @since 1.17
+   */
+  @Override
+  public Modifications clone()
+  {
+    Modifications modifications = null;
+
+    try
+    {
+      modifications = (Modifications) super.clone();
+    }
+    catch (CloneNotSupportedException ex)
+    {
+      throw new RuntimeException(ex);
+    }
+
+    return modifications;
+  }
 
   /**
    * {@inheritDoc}

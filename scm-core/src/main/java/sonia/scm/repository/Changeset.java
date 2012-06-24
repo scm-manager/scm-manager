@@ -109,21 +109,26 @@ public class Changeset extends BasicPropertiesAware
   //~--- methods --------------------------------------------------------------
 
   /**
-   * {@inheritDoc}
+   * Create a clone of this {@link Changeset} object.
    *
    *
-   * @return
+   * @return clone of this {@link Changeset}
+   *
+   * @since 1.17
    */
   @Override
   public Changeset clone()
   {
-    Changeset changeset = new Changeset(id, date, author, description);
+    Changeset changeset = null;
 
-    changeset.setBranches(branches);
-    changeset.setTags(tags);
-    changeset.setModifications(modifications);
-    changeset.setProperties(properties);
-    changeset.setParents(parents);
+    try
+    {
+      changeset = (Changeset) super.clone();
+    }
+    catch (CloneNotSupportedException ex)
+    {
+      throw new RuntimeException(ex);
+    }
 
     return changeset;
   }

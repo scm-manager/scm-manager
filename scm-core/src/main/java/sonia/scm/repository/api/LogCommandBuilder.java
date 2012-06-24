@@ -214,6 +214,7 @@ public final class LogCommandBuilder
 
     if (!disablePreProcessors && (changeset != null))
     {
+      changeset = changeset.clone();
       preProcessorUtil.prepareForReturn(repository, changeset);
     }
 
@@ -271,6 +272,7 @@ public final class LogCommandBuilder
 
     if (!disablePreProcessors && (cpr != null))
     {
+      cpr = cpr.clone();
       preProcessorUtil.prepareForReturn(repository, cpr);
     }
 
