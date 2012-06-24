@@ -46,6 +46,8 @@ import sonia.scm.group.GroupListener;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionProcessor;
+import sonia.scm.repository.BlameLinePreProcessor;
+import sonia.scm.repository.BlameLinePreProcessorFactory;
 import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.repository.ChangesetPreProcessorFactory;
 import sonia.scm.repository.FileObjectPreProcessor;
@@ -124,6 +126,12 @@ public class BindingExtensionProcessor implements ExtensionProcessor
       Multibinder.newSetBinder(binder, FileObjectPreProcessor.class);
     Multibinder<FileObjectPreProcessorFactory> fileObjectPreProcessorFactoryBinder =
       Multibinder.newSetBinder(binder, FileObjectPreProcessorFactory.class);
+
+    // blameline pre processor
+    Multibinder<BlameLinePreProcessor> blameLinePreProcessorBinder =
+      Multibinder.newSetBinder(binder, BlameLinePreProcessor.class);
+    Multibinder<BlameLinePreProcessorFactory> blameLinePreProcessorFactoryBinder =
+      Multibinder.newSetBinder(binder, BlameLinePreProcessorFactory.class);
 
     // repository service resolver
     Multibinder<RepositoryServiceResolver> repositoryServiceResolverBinder =
@@ -272,6 +280,27 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         }
 
         fileObjectPreProcessorFactoryBinder.addBinding().to(extensionClass);
+      }
+      else if (BlameLinePreProcessor.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind BlameLinePreProcessor {}",
+                      extensionClass.getName());
+        }
+
+        blameLinePreProcessorBinder.addBinding().to(extensionClass);
+      }
+      else if (BlameLinePreProcessorFactory.class.isAssignableFrom(
+              extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind BlameLinePreProcessorFactory {}",
+                      extensionClass.getName());
+        }
+
+        blameLinePreProcessorFactoryBinder.addBinding().to(extensionClass);
       }
       else if (RepositoryHook.class.isAssignableFrom(extensionClass))
       {
