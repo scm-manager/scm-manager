@@ -42,7 +42,6 @@ import com.google.inject.Inject;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTypePredicate;
-import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.template.TemplateHandler;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
@@ -116,15 +115,15 @@ public class RepositoryRootResource
           @PathParam("type") final String type)
           throws IOException
   {
-    UrlProvider uiUrlProvider =
-      UrlProviderFactory.createUrlProvider(HttpUtil.getCompleteUrl(request),
-        UrlProviderFactory.TYPE_WUI);
+    String baseUrl = HttpUtil.getCompleteUrl(request);
+    UrlProvider uiUrlProvider = UrlProviderFactory.createUrlProvider(baseUrl,
+                                  UrlProviderFactory.TYPE_WUI);
     //J-
     Collection<RepositoryTemplateElement> unsortedRepositories =
       Collections2.transform( 
         Collections2.filter(
             repositoryManager.getAll(), new RepositoryTypePredicate(type))
-        , new RepositoryTransformFunction(request, repositoryManager, uiUrlProvider)
+        , new RepositoryTransformFunction(uiUrlProvider, baseUrl)
       );
     
     List<RepositoryTemplateElement> repositories = Ordering.from(
@@ -160,12 +159,14 @@ public class RepositoryRootResource
      *
      * @param repository
      * @param uiUrlProvider
+     * @param baseUrl
      */
     public RepositoryTemplateElement(Repository repository,
-                                     UrlProvider uiUrlProvider)
+                                     UrlProvider uiUrlProvider, String baseUrl)
     {
       this.repository = repository;
       this.urlProvider = uiUrlProvider;
+      this.baseUrl = baseUrl;
     }
 
     //~--- get methods --------------------------------------------------------
@@ -236,10 +237,13 @@ public class RepositoryRootResource
      */
     public String getUrl()
     {
-      return repository.getUrl();
+      return repository.createUrl(baseUrl);
     }
 
     //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private String baseUrl;
 
     /** Field description */
     private Repository repository;
@@ -298,13 +302,10 @@ public class RepositoryRootResource
      * @param request
      * @param repositoryManager
      * @param urlProvider
+     * @param baseUrl
      */
-    public RepositoryTransformFunction(HttpServletRequest request,
-                                       RepositoryManager repositoryManager,
-                                       UrlProvider urlProvider)
+    public RepositoryTransformFunction(UrlProvider urlProvider, String baseUrl)
     {
-      this.request = request;
-      this.repositoryManager = repositoryManager;
       this.urlProvider = urlProvider;
     }
 
@@ -321,18 +322,13 @@ public class RepositoryRootResource
     @Override
     public RepositoryTemplateElement apply(Repository repository)
     {
-      RepositoryUtil.appendUrl(request, repositoryManager, repository);
-
-      return new RepositoryTemplateElement(repository, urlProvider);
+      return new RepositoryTemplateElement(repository, urlProvider, baseUrl);
     }
 
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private RepositoryManager repositoryManager;
-
-    /** Field description */
-    private HttpServletRequest request;
+    private String baseUrl;
 
     /** Field description */
     private UrlProvider urlProvider;
