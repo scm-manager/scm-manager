@@ -44,7 +44,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.Filter;
+import sonia.scm.HandlerEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BlameResult;
@@ -55,9 +55,9 @@ import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.PostReceiveRepositoryHook;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryCacheKey;
 import sonia.scm.repository.RepositoryCacheKeyFilter;
 import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.RepositoryListener;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
@@ -142,7 +142,11 @@ public final class RepositoryServiceFactory
     this.securityContextProvider = securityContextProvider;
     this.resolvers = resolvers;
     this.preProcessorUtil = preProcessorUtil;
-    repositoryManager.addHook(new CacheClearHook(cacheManager));
+
+    CacheClearHook cch = new CacheClearHook(cacheManager);
+
+    repositoryManager.addHook(cch);
+    repositoryManager.addListener(cch);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -285,6 +289,7 @@ public final class RepositoryServiceFactory
    * @author         Enter your name here...
    */
   private static class CacheClearHook extends PostReceiveRepositoryHook
+          implements RepositoryListener
   {
 
     /**
@@ -325,6 +330,22 @@ public final class RepositoryServiceFactory
         String id = repository.getId();
 
         clearCaches(id);
+      }
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @param repository
+     * @param event
+     */
+    @Override
+    public void onEvent(Repository repository, HandlerEvent event)
+    {
+      if ((event == HandlerEvent.MODIFY) || (event == HandlerEvent.DELETE))
+      {
+        clearCaches(repository.getId());
       }
     }
 
