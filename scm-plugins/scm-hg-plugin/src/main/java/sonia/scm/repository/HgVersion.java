@@ -31,6 +31,10 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -45,6 +49,64 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class HgVersion
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final HgVersion other = (HgVersion) obj;
+
+    return Objects.equal(mercurial, other.mercurial)
+           && Objects.equal(python, other.python);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(mercurial, python);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("mercurial", mercurial)
+                  .add("python", python)
+                  .toString();
+    //J+
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description

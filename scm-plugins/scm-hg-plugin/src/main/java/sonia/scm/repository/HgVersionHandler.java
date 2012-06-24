@@ -36,8 +36,6 @@ package sonia.scm.repository;
 import java.io.File;
 import java.io.IOException;
 
-import javax.xml.bind.JAXBContext;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -54,8 +52,8 @@ public class HgVersionHandler extends AbstractHgHandler
    * @param context
    * @param directory
    */
-  public HgVersionHandler(HgRepositoryHandler handler,
-                          HgContext context, File directory)
+  public HgVersionHandler(HgRepositoryHandler handler, HgContext context,
+                          File directory)
   {
     super(handler, context, null, directory);
   }

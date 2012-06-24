@@ -127,7 +127,8 @@ public class HgRepositoryHandler
     try
     {
       this.jaxbContext = JAXBContext.newInstance(BrowserResult.class,
-              BlameResult.class, Changeset.class, ChangesetPagingResult.class);
+              BlameResult.class, Changeset.class, ChangesetPagingResult.class,
+              HgVersion.class);
     }
     catch (JAXBException ex)
     {
@@ -362,14 +363,22 @@ public class HgRepositoryHandler
 
     try
     {
-      JAXBContext context = JAXBContext.newInstance(HgVersion.class);
       HgVersion hgVersion = new HgVersionHandler(this, hgContextProvider.get(),
                               baseDirectory).getVersion();
 
       if (hgVersion != null)
       {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("mercurial/python informations: {}", hgVersion);
+        }
+
         version = MessageFormat.format(version, hgVersion.getPython(),
                                        hgVersion.getMercurial());
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("could not retrieve version informations");
       }
     }
     catch (Exception ex)
