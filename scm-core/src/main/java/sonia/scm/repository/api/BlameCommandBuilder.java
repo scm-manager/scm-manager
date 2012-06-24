@@ -188,6 +188,8 @@ public final class BlameCommandBuilder
 
     if (!disablePreProcessors && (result != null))
     {
+      // clone result to fix pre processor behavior
+      result = result.clone();
       preProcessorUtil.prepareForReturn(repository, result);
     }
 

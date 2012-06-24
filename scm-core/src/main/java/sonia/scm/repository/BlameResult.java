@@ -49,7 +49,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Changeset information by line for a given file.
- * 
+ *
  * TODO for 2.0 implement {@link Iterable}
  *
  * @author Sebastian Sdorra
@@ -57,7 +57,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "blame-result")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BlameResult
+public class BlameResult implements Cloneable
 {
 
   /**
@@ -92,6 +92,31 @@ public class BlameResult
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Create a clone of this {@link blameResult} object.
+   *
+   *
+   * @return clone of this {@link blameResult}
+   *
+   * @since 1.17
+   */
+  @Override
+  public BlameResult clone()
+  {
+    BlameResult blameResult = null;
+
+    try
+    {
+      blameResult = (BlameResult) super.clone();
+    }
+    catch (CloneNotSupportedException ex)
+    {
+      throw new RuntimeException(ex);
+    }
+
+    return blameResult;
+  }
 
   /**
    * {@inheritDoc}

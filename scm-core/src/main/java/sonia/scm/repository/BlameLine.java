@@ -43,7 +43,7 @@ import com.google.common.base.Objects;
  * @author Sebastian Sdorra
  * @since 1.8
  */
-public class BlameLine
+public class BlameLine implements Cloneable
 {
 
   /**
@@ -76,6 +76,31 @@ public class BlameLine
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Create a clone of this {@link BlameLine} object.
+   *
+   *
+   * @return clone of this {@link BlameLine}
+   *
+   * @since 1.17
+   */
+  @Override
+  public BlameLine clone()
+  {
+    BlameLine blameLine = null;
+
+    try
+    {
+      blameLine = (BlameLine) super.clone();
+    }
+    catch (CloneNotSupportedException ex)
+    {
+      throw new RuntimeException(ex);
+    }
+
+    return blameLine;
+  }
 
   /**
    * {@inheritDoc}
