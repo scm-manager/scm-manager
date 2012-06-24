@@ -55,7 +55,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "browser-result")
-public class BrowserResult implements Iterable<FileObject>
+public class BrowserResult implements Iterable<FileObject>, Cloneable
 {
 
   /**
@@ -83,6 +83,31 @@ public class BrowserResult implements Iterable<FileObject>
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Create a clone of this {@link BrowserResult} object.
+   *
+   *
+   * @return clone of this {@link BrowserResult}
+   *
+   * @since 1.17
+   */
+  @Override
+  public BrowserResult clone()
+  {
+    BrowserResult browserResult = null;
+
+    try
+    {
+      browserResult = (BrowserResult) super.clone();
+    }
+    catch (CloneNotSupportedException ex)
+    {
+      throw new RuntimeException(ex);
+    }
+
+    return browserResult;
+  }
 
   /**
    * {@inheritDoc}

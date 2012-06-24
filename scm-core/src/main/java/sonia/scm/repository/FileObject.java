@@ -57,6 +57,31 @@ public class FileObject implements LastModifiedAware
 {
 
   /**
+   * Create a clone of this {@link FileObject} object.
+   *
+   *
+   * @return clone of this {@link FileObject}
+   *
+   * @since 1.17
+   */
+  @Override
+  public FileObject clone()
+  {
+    FileObject fileObject = null;
+
+    try
+    {
+      fileObject = (FileObject) super.clone();
+    }
+    catch (CloneNotSupportedException ex)
+    {
+      throw new RuntimeException(ex);
+    }
+
+    return fileObject;
+  }
+
+  /**
    * {@inheritDoc}
    *
    *

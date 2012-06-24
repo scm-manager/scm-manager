@@ -184,6 +184,7 @@ public final class BrowseCommandBuilder
 
     if (!disablePreProcessors && (result != null))
     {
+      result = result.clone();
       preProcessorUtil.prepareForReturn(repository, result);
 
       List<FileObject> fileObjects = result.getFiles();
