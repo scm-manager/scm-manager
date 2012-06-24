@@ -45,6 +45,7 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryCacheKey;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.BrowseCommand;
 import sonia.scm.repository.spi.BrowseCommandRequest;
@@ -66,7 +67,7 @@ import java.io.Serializable;
  * BrowserResult result = browse.setPath("scm-core")
  *                              .setRevision("11aeec7db845")
  *                              .getBrowserResult();
- * 
+ *
  * for ( FileObject fo : result ){
  *   System.out.println( fo.getPath() );
  * }
@@ -257,7 +258,7 @@ public final class BrowseCommandBuilder
    * @version        Enter version here..., 12/06/05
    * @author         Enter your name here...
    */
-  static class CacheKey implements Serializable
+  static class CacheKey implements RepositoryCacheKey, Serializable
   {
 
     /**
@@ -322,7 +323,8 @@ public final class BrowseCommandBuilder
      *
      * @return
      */
-    String getRepositoryId()
+    @Override
+    public String getRepositoryId()
     {
       return repositoryId;
     }

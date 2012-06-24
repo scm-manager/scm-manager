@@ -55,6 +55,8 @@ import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.PostReceiveRepositoryHook;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryCacheKey;
+import sonia.scm.repository.RepositoryCacheKeyFilter;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
@@ -332,6 +334,7 @@ public final class RepositoryServiceFactory
      *
      * @param repositoryId
      */
+    @SuppressWarnings("unchecked")
     private void clearCaches(final String repositoryId)
     {
       if (logger.isDebugEnabled())
@@ -339,30 +342,12 @@ public final class RepositoryServiceFactory
         logger.debug("clear caches for repository id {}", repositoryId);
       }
 
-      blameCache.removeAll(new Filter<BlameCommandBuilder.CacheKey>()
-      {
-        @Override
-        public boolean accept(BlameCommandBuilder.CacheKey item)
-        {
-          return repositoryId.equals(item.getRepositoryId());
-        }
-      });
-      browseCache.removeAll(new Filter<BrowseCommandBuilder.CacheKey>()
-      {
-        @Override
-        public boolean accept(BrowseCommandBuilder.CacheKey item)
-        {
-          return repositoryId.equals(item.getRepositoryId());
-        }
-      });
-      logCache.removeAll(new Filter<LogCommandBuilder.CacheKey>()
-      {
-        @Override
-        public boolean accept(LogCommandBuilder.CacheKey item)
-        {
-          return repositoryId.equals(item.getRepositoryId());
-        }
-      });
+      RepositoryCacheKeyFilter filter =
+        new RepositoryCacheKeyFilter(repositoryId);
+
+      blameCache.removeAll(filter);
+      browseCache.removeAll(filter);
+      logCache.removeAll(filter);
     }
 
     //~--- fields -------------------------------------------------------------

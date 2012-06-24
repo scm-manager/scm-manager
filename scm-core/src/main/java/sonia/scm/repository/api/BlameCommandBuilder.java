@@ -46,6 +46,7 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryCacheKey;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.BlameCommand;
 import sonia.scm.repository.spi.BlameCommandRequest;
@@ -62,13 +63,13 @@ import java.io.Serializable;
  * <b>Sample:</b>
  * <br />
  * <br />
- * Print each line number and code of the file scm-core/pom.xml at 
+ * Print each line number and code of the file scm-core/pom.xml at
  * revision  60c2f2783368:<br />
  * <pre><code>
  * BlameCommandBuilder blame = repositoryService.getBlameCommand();
  * BlameResult result = blame.setRevision("60c2f2783368")
  *                           .getBlameResult("scm-core/pom.xml");
- * 
+ *
  * for ( BlameLine line : result ){
  *   System.out.println(line.getLineNumber() + ": " + line.getCode());
  * }
@@ -228,7 +229,7 @@ public final class BlameCommandBuilder
    * @version        Enter version here..., 12/06/05
    * @author         Enter your name here...
    */
-  static class CacheKey implements Serializable
+  static class CacheKey implements RepositoryCacheKey, Serializable
   {
 
     /**
@@ -293,7 +294,8 @@ public final class BlameCommandBuilder
      *
      * @return
      */
-    String getRepositoryId()
+    @Override
+    public String getRepositoryId()
     {
       return repositoryId;
     }

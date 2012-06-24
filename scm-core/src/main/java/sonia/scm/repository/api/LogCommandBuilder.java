@@ -55,6 +55,7 @@ import sonia.scm.repository.spi.LogCommandRequest;
 
 import java.io.IOException;
 import java.io.Serializable;
+import sonia.scm.repository.RepositoryCacheKey;
 
 /**
  * LogCommandBuilder is able to show the history of a file in a
@@ -396,7 +397,7 @@ public final class LogCommandBuilder
    * @version        Enter version here..., 12/06/05
    * @author         Enter your name here...
    */
-  static class CacheKey implements Serializable
+  static class CacheKey implements RepositoryCacheKey, Serializable
   {
 
     /**
@@ -476,7 +477,8 @@ public final class LogCommandBuilder
      *
      * @return
      */
-    String getRepositoryId()
+    @Override
+    public String getRepositoryId()
     {
       return repositoryId;
     }
