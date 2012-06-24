@@ -76,9 +76,7 @@ public final class LogCommandRequest implements Serializable, Resetable
            && Objects.equal(endChangeset, other.endChangeset)
            && Objects.equal(pagingStart, other.pagingStart)
            && Objects.equal(pagingLimit, other.pagingLimit)
-           && Objects.equal(branch, other.branch)
-           && Objects.equal(path, other.path)
-           && Objects.equal(pending, other.pending);
+           && Objects.equal(path, other.path);
   }
 
   /**
@@ -91,7 +89,7 @@ public final class LogCommandRequest implements Serializable, Resetable
   public int hashCode()
   {
     return Objects.hashCode(startChangeset, endChangeset, pagingStart,
-                            pagingLimit, branch, path, pending);
+                            pagingLimit, path);
   }
 
   /**
@@ -106,8 +104,6 @@ public final class LogCommandRequest implements Serializable, Resetable
     pagingStart = 0;
     pagingLimit = 20;
     path = null;
-    branch = null;
-    pending = false;
   }
 
   /**
@@ -125,25 +121,12 @@ public final class LogCommandRequest implements Serializable, Resetable
                   .add("endChangeset", endChangeset)
                   .add("pagingStart", pagingStart)
                   .add("pagingLimit", pagingLimit)
-                  .add("branch", branch)
                   .add("path", path)
-                  .add("pending", pending)
                   .toString();
     //J+
   }
 
   //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param branch
-   */
-  public void setBranch(String branch)
-  {
-    this.branch = branch;
-  }
 
   /**
    * Method description
@@ -193,17 +176,6 @@ public final class LogCommandRequest implements Serializable, Resetable
    * Method description
    *
    *
-   * @param pending
-   */
-  public void setPending(boolean pending)
-  {
-    this.pending = pending;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param startChangeset
    */
   public void setStartChangeset(String startChangeset)
@@ -212,17 +184,6 @@ public final class LogCommandRequest implements Serializable, Resetable
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  String getBranch()
-  {
-    return branch;
-  }
 
   /**
    * Method description
@@ -290,21 +251,7 @@ public final class LogCommandRequest implements Serializable, Resetable
     return pagingLimit < 0;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  boolean isPending()
-  {
-    return pending;
-  }
-
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String branch;
 
   /** Field description */
   private String endChangeset;
@@ -317,9 +264,6 @@ public final class LogCommandRequest implements Serializable, Resetable
 
   /** Field description */
   private String path;
-
-  /** Field description */
-  private boolean pending = false;
 
   /** Field description */
   private String startChangeset;

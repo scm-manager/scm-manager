@@ -279,21 +279,6 @@ public final class LogCommandBuilder
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Retrieve only changesets of the given branch.
-   *
-   *
-   * @param branch branch name to query
-   *
-   * @return {@code this}
-   */
-  public LogCommandBuilder setBranch(String branch)
-  {
-    request.setBranch(branch);
-
-    return this;
-  }
-
-  /**
    * Disables the cache for changesets. This means that every {@link Changeset}
    * is directly retrieved from the {@link Repository}. <b>Note: </b> Disabling
    * the cache cost a lot of performance and could be much more slower.
