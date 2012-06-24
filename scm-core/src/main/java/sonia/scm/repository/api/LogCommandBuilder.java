@@ -94,7 +94,7 @@ public final class LogCommandBuilder
 {
 
   /** name of the cache */
-  static final String CACHE_NAME = "sonia.scm.cache.log";
+  static final String CACHE_NAME = "sonia.cache.cmd.log";
 
   /**
    * the logger for LogCommandBuilder

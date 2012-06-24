@@ -83,7 +83,7 @@ public final class BlameCommandBuilder
 {
 
   /** name of the cache */
-  static final String CACHE_NAME = "sonia.scm.cache.blame";
+  static final String CACHE_NAME = "sonia.cache.cmd.blame";
 
   /**
    * the logger for BlameCommandBuilder

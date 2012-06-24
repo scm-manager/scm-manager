@@ -85,7 +85,7 @@ public final class BrowseCommandBuilder
 {
 
   /** Name of the cache */
-  static final String CACHE_NAME = "sonia.scm.cache.browse";
+  static final String CACHE_NAME = "sonia.cache.cmd.browse";
 
   /**
    * the logger for BrowseCommandBuilder
