@@ -60,8 +60,8 @@ import java.io.IOException;
  * is supported by the {@link RepositoryService} with the
  * {@link RepositoryService#isSupported(Command)} method.<br />
  * <br />
- * 
- * <b>Warning:</b> You should always close the connection to the repository 
+ *
+ * <b>Warning:</b> You should always close the connection to the repository
  * after work is finished. For closing the connection to the repository use the
  * {@link #close()} method.
  *
@@ -147,7 +147,7 @@ public final class RepositoryService implements Closeable
     }
 
     return new BlameCommandBuilder(cacheManager, provider.getBlameCommand(),
-                                   repository);
+                                   repository, preProcessorUtil);
   }
 
   /**

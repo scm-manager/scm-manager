@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BlameResult;
+import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
 import sonia.scm.repository.RepositoryException;
@@ -99,14 +100,16 @@ public final class BlameCommandBuilder
    * @param cacheManager cache manager
    * @param blameCommand implementation of the {@link BlameCommand}
    * @param repository repository to query
+   * @param preProcessorUtil
    */
   BlameCommandBuilder(CacheManager cacheManager, BlameCommand blameCommand,
-                      Repository repository)
+                      Repository repository, PreProcessorUtil preProcessorUtil)
   {
     this.cache = cacheManager.getCache(CacheKey.class, BlameResult.class,
                                        CACHE_NAME);
     this.blameCommand = blameCommand;
     this.repository = repository;
+    this.preProcessorUtil = preProcessorUtil;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -183,6 +186,11 @@ public final class BlameCommandBuilder
       }
     }
 
+    if (!disablePreProcessors && (result != null))
+    {
+      preProcessorUtil.prepareForReturn(repository, result);
+    }
+
     return result;
   }
 
@@ -201,6 +209,22 @@ public final class BlameCommandBuilder
   public BlameCommandBuilder setDisableCache(boolean disableCache)
   {
     this.disableCache = disableCache;
+
+    return this;
+  }
+
+  /**
+   * Disable the execution of pre processors.
+   *
+   *
+   * @param disablePreProcessors true to disable the pre processors execution
+   *
+   * @return {@code this}
+   */
+  public BlameCommandBuilder setDisablePreProcessors(
+          boolean disablePreProcessors)
+  {
+    this.disablePreProcessors = disablePreProcessors;
 
     return this;
   }
@@ -320,6 +344,12 @@ public final class BlameCommandBuilder
 
   /** disable change */
   private boolean disableCache;
+
+  /** disable the execution of pre processors */
+  private boolean disablePreProcessors = false;
+
+  /** Field description */
+  private PreProcessorUtil preProcessorUtil;
 
   /** the repository */
   private Repository repository;
