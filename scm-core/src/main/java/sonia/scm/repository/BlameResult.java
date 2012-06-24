@@ -48,8 +48,9 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Class description
- *
+ * Changeset information by line for a given file.
+ * 
+ * TODO for 2.0 implement {@link Iterable}
  *
  * @author Sebastian Sdorra
  * @since 1.8

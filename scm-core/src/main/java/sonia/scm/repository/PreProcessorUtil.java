@@ -71,13 +71,17 @@ public class PreProcessorUtil
    * @param changesetPreProcessorFactorySet
    * @param fileObjectPreProcessorSet
    * @param fileObjectPreProcessorFactorySet
+   * @param blameLinePreProcessorSet
+   * @param blameLinePreProcessorFactorySet
    */
   @Inject
   public PreProcessorUtil(
           Set<ChangesetPreProcessor> changesetPreProcessorSet,
           Set<ChangesetPreProcessorFactory> changesetPreProcessorFactorySet,
           Set<FileObjectPreProcessor> fileObjectPreProcessorSet,
-          Set<FileObjectPreProcessorFactory> fileObjectPreProcessorFactorySet)
+          Set<FileObjectPreProcessorFactory> fileObjectPreProcessorFactorySet,
+          Set<BlameLinePreProcessor> blameLinePreProcessorSet,
+          Set<BlameLinePreProcessorFactory> blameLinePreProcessorFactorySet)
   {
     this.changesetPreProcessorSet =
       Collections2.transform(changesetPreProcessorSet,
@@ -125,9 +129,61 @@ public class PreProcessorUtil
         return new FileObjectPreProcessorFactoryWrapper(input);
       }
     });
+    this.blameLinePreProcessorSet = blameLinePreProcessorSet;
+    this.blameLinePreProcessorFactorySet = blameLinePreProcessorFactorySet;
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param blameLine
+   */
+  public void prepareForReturn(Repository repository, BlameLine blameLine)
+  {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("prepare blame line {} of repository {} for return",
+                   blameLine.getLineNumber(), repository.getName());
+    }
+
+    EscapeUtil.escape(blameLine);
+
+    PreProcessorHandler<BlameLine> handler =
+      new PreProcessorHandler<BlameLine>(blameLinePreProcessorFactorySet,
+                              blameLinePreProcessorSet, repository);
+
+    handler.callPreProcessors(blameLine);
+    handler.callPreProcessorFactories(blameLine);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param blameResult
+   */
+  public void prepareForReturn(Repository repository, BlameResult blameResult)
+  {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("prepare blame result of repository {} for return",
+                   repository.getName());
+    }
+
+    EscapeUtil.escape(blameResult);
+
+    PreProcessorHandler<BlameLine> handler =
+      new PreProcessorHandler<BlameLine>(blameLinePreProcessorFactorySet,
+                              blameLinePreProcessorSet, repository);
+
+    handler.callPreProcessors(blameResult.getBlameLines());
+    handler.callPreProcessorFactories(blameResult.getBlameLines());
+  }
 
   /**
    * Method description
@@ -213,7 +269,7 @@ public class PreProcessorUtil
    *
    *
    * @version        Enter version here..., 12/06/16
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   private static class ChangesetPreProcessorFactoryWrapper
           implements PreProcessorFactory<Changeset>
@@ -268,7 +324,7 @@ public class PreProcessorUtil
    *
    *
    * @version        Enter version here..., 12/06/16
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   private static class ChangesetPreProcessorWrapper
           implements PreProcessor<Changeset>
@@ -311,7 +367,7 @@ public class PreProcessorUtil
    *
    *
    * @version        Enter version here..., 12/06/16
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   private static class FileObjectPreProcessorFactoryWrapper
           implements PreProcessorFactory<FileObject>
@@ -367,7 +423,7 @@ public class PreProcessorUtil
    *
    *
    * @version        Enter version here..., 12/06/16
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   private static class FileObjectPreProcessorWrapper
           implements PreProcessor<FileObject>
@@ -550,6 +606,12 @@ public class PreProcessorUtil
 
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Collection<BlameLinePreProcessorFactory> blameLinePreProcessorFactorySet;
+
+  /** Field description */
+  private Collection<BlameLinePreProcessor> blameLinePreProcessorSet;
 
   /** Field description */
   private Collection<ChangesetPreProcessorFactoryWrapper> changesetPreProcessorFactorySet;

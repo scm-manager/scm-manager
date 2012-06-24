@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -73,6 +74,34 @@ public class EscapeUtil
    * Method description
    *
    *
+   * @param result
+   * @since 1.17
+   */
+  public static void escape(BlameResult result)
+  {
+    for (BlameLine line : result.getBlameLines())
+    {
+      escape(line);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param line
+   * @since 1.17
+   */
+  public static void escape(BlameLine line)
+  {
+    line.setDescription(escape(line.getDescription()));
+    escape(line.getAuthor());
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param fo
    */
   public static void escape(FileObject fo)
@@ -91,17 +120,25 @@ public class EscapeUtil
   public static void escape(Changeset changeset)
   {
     changeset.setDescription(escape(changeset.getDescription()));
+    escape(changeset.getAuthor());
+    changeset.setBranches(escapeList(changeset.getBranches()));
+    changeset.setTags(escapeList(changeset.getTags()));
+  }
 
-    Person person = changeset.getAuthor();
-
+  /**
+   * Method description
+   *
+   *
+   * @param person
+   * @since 1.17
+   */
+  public static void escape(Person person)
+  {
     if (person != null)
     {
       person.setName(escape(person.getName()));
       person.setMail(escape(person.getMail()));
     }
-
-    changeset.setBranches(escapeList(changeset.getBranches()));
-    changeset.setTags(escapeList(changeset.getTags()));
   }
 
   /**
