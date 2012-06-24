@@ -41,4 +41,15 @@ import sonia.scm.plugin.ExtensionPoint;
  * @since 1.17
  */
 @ExtensionPoint
-public interface BlameLinePreProcessor extends PreProcessor<BlameLine> {}
+public interface BlameLinePreProcessor extends PreProcessor<BlameLine>
+{
+
+  /**
+   * Method description
+   *
+   *
+   * @param blameLine
+   */
+  @Override
+  public void process(BlameLine blameLine);
+}

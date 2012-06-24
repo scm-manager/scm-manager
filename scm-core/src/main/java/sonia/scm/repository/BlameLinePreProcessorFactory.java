@@ -42,4 +42,17 @@ import sonia.scm.plugin.ExtensionPoint;
  */
 @ExtensionPoint
 public interface BlameLinePreProcessorFactory
-        extends PreProcessorFactory<BlameLine> {}
+        extends PreProcessorFactory<BlameLine>
+{
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  public BlameLinePreProcessor createPreProcessor(Repository repository);
+}
