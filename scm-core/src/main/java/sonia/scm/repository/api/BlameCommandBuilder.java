@@ -122,6 +122,8 @@ public final class BlameCommandBuilder
   public BlameCommandBuilder reset()
   {
     request.reset();
+    this.disableCache = false;
+    this.disablePreProcessors = false;
 
     return this;
   }
@@ -343,7 +345,7 @@ public final class BlameCommandBuilder
   private Cache<CacheKey, BlameResult> cache;
 
   /** disable change */
-  private boolean disableCache;
+  private boolean disableCache = false;
 
   /** disable the execution of pre processors */
   private boolean disablePreProcessors = false;

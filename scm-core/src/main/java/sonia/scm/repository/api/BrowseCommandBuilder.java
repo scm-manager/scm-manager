@@ -126,6 +126,8 @@ public final class BrowseCommandBuilder
   public BrowseCommandBuilder reset()
   {
     request.reset();
+    this.disableCache = false;
+    this.disablePreProcessors = false;
 
     return this;
   }

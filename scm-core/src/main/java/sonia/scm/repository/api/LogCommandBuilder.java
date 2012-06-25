@@ -47,6 +47,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryCacheKey;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.LogCommand;
 import sonia.scm.repository.spi.LogCommandRequest;
@@ -55,7 +56,6 @@ import sonia.scm.repository.spi.LogCommandRequest;
 
 import java.io.IOException;
 import java.io.Serializable;
-import sonia.scm.repository.RepositoryCacheKey;
 
 /**
  * LogCommandBuilder is able to show the history of a file in a
@@ -149,6 +149,8 @@ public final class LogCommandBuilder
   public LogCommandBuilder reset()
   {
     request.reset();
+    this.disableCache = false;
+    this.disablePreProcessors = false;
 
     return this;
   }
