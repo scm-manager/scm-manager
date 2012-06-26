@@ -39,6 +39,8 @@ import com.google.common.base.Objects;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -57,8 +59,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "blame-result")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BlameResult
+public class BlameResult implements Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -8606237881465520606L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...

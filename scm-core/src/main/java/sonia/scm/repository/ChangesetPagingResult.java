@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -50,8 +52,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "changeset-paging")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ChangesetPagingResult implements Iterable<Changeset>
+public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -8678755403658841733L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...

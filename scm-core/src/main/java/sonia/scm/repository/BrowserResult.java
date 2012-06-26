@@ -39,6 +39,8 @@ import com.google.common.base.Objects;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -55,8 +57,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "browser-result")
-public class BrowserResult implements Iterable<FileObject>
+public class BrowserResult implements Iterable<FileObject>, Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = 2818662048045182761L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...

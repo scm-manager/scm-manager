@@ -41,6 +41,8 @@ import sonia.scm.LastModifiedAware;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -53,8 +55,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "file")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class FileObject implements LastModifiedAware
+public class FileObject implements LastModifiedAware, Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -5562537629609891499L;
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * {@inheritDoc}

@@ -39,6 +39,8 @@ import com.google.common.base.Objects;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -50,8 +52,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "subrepository")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SubRepository
+public class SubRepository implements Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = 6960065820378492531L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -99,7 +106,7 @@ public class SubRepository
   }
 
   //~--- methods --------------------------------------------------------------
-  
+
   /**
    * {@inheritDoc}
    *

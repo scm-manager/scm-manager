@@ -37,14 +37,23 @@ package sonia.scm.repository;
 
 import com.google.common.base.Objects;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.Serializable;
+
 /**
  * Single line of a file, in a {@link  BlameResult}.
  *
  * @author Sebastian Sdorra
  * @since 1.8
  */
-public class BlameLine
+public class BlameLine implements Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = 2816601606921153670L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
