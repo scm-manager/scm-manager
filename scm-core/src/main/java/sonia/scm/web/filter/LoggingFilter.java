@@ -35,6 +35,7 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Closeables;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -239,7 +240,7 @@ public class LoggingFilter extends HttpFilter
       }
       finally
       {
-        out.close();
+        Closeables.closeQuietly(out);
       }
 
       logger.trace("Content: ".concat(new String(content)));
