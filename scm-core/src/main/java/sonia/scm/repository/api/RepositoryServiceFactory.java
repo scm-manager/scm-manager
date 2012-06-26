@@ -343,7 +343,7 @@ public final class RepositoryServiceFactory
     @Override
     public void onEvent(Repository repository, HandlerEvent event)
     {
-      if ((event == HandlerEvent.MODIFY) || (event == HandlerEvent.DELETE))
+      if (event == HandlerEvent.DELETE)
       {
         clearCaches(repository.getId());
       }
