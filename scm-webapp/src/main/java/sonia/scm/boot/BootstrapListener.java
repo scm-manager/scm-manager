@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
+import sonia.scm.SCMContextProvider;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -102,14 +103,16 @@ public class BootstrapListener implements ServletContextListener
   @Override
   public void contextInitialized(ServletContextEvent sce)
   {
+    SCMContextProvider context = SCMContext.getContext();
+
     if (logger.isInfoEnabled())
     {
-      logger.info("start scm-manager in stage: {}",
-                  SCMContext.getContext().getStage());
+      logger.info("start scm-manager {} in stage: {}", context.getVersion(),
+                  context.getStage());
     }
 
     ClassLoader classLoader = null;
-    File pluginDirectory = new File(SCMContext.getContext().getBaseDirectory(),
+    File pluginDirectory = new File(context.getBaseDirectory(),
                                     PLUGIN_DIRECTORY);
 
     if (pluginDirectory.exists())
