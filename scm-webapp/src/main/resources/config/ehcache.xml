@@ -161,6 +161,8 @@
         diskPersistent="false"
   />
   
+  <!-- new repository api -->
+  
   <cache
         name="sonia.cache.cmd.log"
         maxElementsInMemory="20000"
@@ -168,6 +170,7 @@
         overflowToDisk="false"
         timeToLiveSeconds="86400"
         diskPersistent="false"
+        copyOnRead="true"
   />
   
   <cache
@@ -177,6 +180,7 @@
         overflowToDisk="false"
         timeToLiveSeconds="86400"
         diskPersistent="false"
+        copyOnRead="true"
   />
   
   <cache
@@ -186,6 +190,7 @@
         overflowToDisk="false"
         timeToLiveSeconds="86400"
         diskPersistent="false"
+        copyOnRead="true"
   />
   
 </ehcache>
