@@ -211,7 +211,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
         start = 0;
       }
 
-      changesetList = changesetList.subList(start, end);
+      changesetList = Lists.newArrayList(changesetList.subList(start, end));
       changesets = new ChangesetPagingResult(total, changesetList);
     }
     catch (NumberFormatException ex)
