@@ -71,6 +71,7 @@ public final class CommandNotSupportedException extends RuntimeException
   public CommandNotSupportedException(Command command, String message)
   {
     super(message);
+    this.command = command;
   }
 
   //~--- get methods ----------------------------------------------------------
