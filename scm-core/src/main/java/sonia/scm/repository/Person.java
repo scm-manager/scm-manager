@@ -56,7 +56,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "person")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Person implements Validateable, Serializable, Cloneable
+public class Person implements Validateable, Serializable
 {
 
   /** Field description */
@@ -125,31 +125,6 @@ public class Person implements Validateable, Serializable, Cloneable
       }
 
       person = new Person(name, mail);
-    }
-
-    return person;
-  }
-
-  /**
-   * Create a clone of this {@link Person} object.
-   *
-   *
-   * @return clone of this {@link Person}
-   *
-   * @since 1.17
-   */
-  @Override
-  public Person clone()
-  {
-    Person person = null;
-
-    try
-    {
-      person = (Person) super.clone();
-    }
-    catch (CloneNotSupportedException ex)
-    {
-      throw new RuntimeException(ex);
     }
 
     return person;

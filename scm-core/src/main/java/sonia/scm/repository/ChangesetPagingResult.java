@@ -50,7 +50,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "changeset-paging")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ChangesetPagingResult implements Iterable<Changeset>, Cloneable
+public class ChangesetPagingResult implements Iterable<Changeset>
 {
 
   /**
@@ -73,31 +73,6 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Cloneable
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Create a clone of this {@link ChangesetPagingResult} object.
-   *
-   *
-   * @return clone of this {@link ChangesetPagingResult}
-   *
-   * @since 1.17
-   */
-  @Override
-  public ChangesetPagingResult clone()
-  {
-    ChangesetPagingResult changesetPagingResult = null;
-
-    try
-    {
-      changesetPagingResult = (ChangesetPagingResult) super.clone();
-    }
-    catch (CloneNotSupportedException ex)
-    {
-      throw new RuntimeException(ex);
-    }
-
-    return changesetPagingResult;
-  }
 
   /**
    * Method description

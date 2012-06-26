@@ -62,7 +62,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "changeset")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Changeset extends BasicPropertiesAware
-        implements Validateable, Cloneable, Serializable
+        implements Validateable, Serializable
 {
 
   /** Field description */
@@ -107,31 +107,6 @@ public class Changeset extends BasicPropertiesAware
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Create a clone of this {@link Changeset} object.
-   *
-   *
-   * @return clone of this {@link Changeset}
-   *
-   * @since 1.17
-   */
-  @Override
-  public Changeset clone()
-  {
-    Changeset changeset = null;
-
-    try
-    {
-      changeset = (Changeset) super.clone();
-    }
-    catch (CloneNotSupportedException ex)
-    {
-      throw new RuntimeException(ex);
-    }
-
-    return changeset;
-  }
 
   /**
    * {@inheritDoc}

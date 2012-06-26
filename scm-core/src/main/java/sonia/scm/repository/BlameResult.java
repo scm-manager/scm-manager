@@ -57,7 +57,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "blame-result")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BlameResult implements Cloneable
+public class BlameResult
 {
 
   /**
@@ -92,31 +92,6 @@ public class BlameResult implements Cloneable
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Create a clone of this {@link BlameResult} object.
-   *
-   *
-   * @return clone of this {@link BlameResult}
-   *
-   * @since 1.17
-   */
-  @Override
-  public BlameResult clone()
-  {
-    BlameResult blameResult = null;
-
-    try
-    {
-      blameResult = (BlameResult) super.clone();
-    }
-    catch (CloneNotSupportedException ex)
-    {
-      throw new RuntimeException(ex);
-    }
-
-    return blameResult;
-  }
 
   /**
    * {@inheritDoc}

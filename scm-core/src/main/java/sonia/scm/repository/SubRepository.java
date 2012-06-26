@@ -50,7 +50,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "subrepository")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SubRepository implements Cloneable
+public class SubRepository
 {
 
   /**
@@ -99,32 +99,7 @@ public class SubRepository implements Cloneable
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Create a clone of this {@link SubRepository} object.
-   *
-   *
-   * @return clone of this {@link SubRepository}
-   *
-   * @since 1.17
-   */
-  @Override
-  public SubRepository clone()
-  {
-    SubRepository subRepository = null;
-
-    try
-    {
-      subRepository = (SubRepository) super.clone();
-    }
-    catch (CloneNotSupportedException ex)
-    {
-      throw new RuntimeException(ex);
-    }
-
-    return subRepository;
-  }
-
+  
   /**
    * {@inheritDoc}
    *
