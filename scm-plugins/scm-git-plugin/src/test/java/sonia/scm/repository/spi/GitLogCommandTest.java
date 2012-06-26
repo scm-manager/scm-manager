@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,6 +40,7 @@ import org.junit.Test;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Modifications;
+import sonia.scm.repository.RepositoryException;
 
 import static org.hamcrest.Matchers.*;
 
@@ -60,9 +62,10 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
    *
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   @Test
-  public void testGetAll() throws IOException
+  public void testGetAll() throws IOException, RepositoryException
   {
     ChangesetPagingResult result =
       createCommand().getChangesets(new LogCommandRequest());
@@ -77,9 +80,10 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
    *
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   @Test
-  public void testGetAllByPath() throws IOException
+  public void testGetAllByPath() throws IOException, RepositoryException
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -100,9 +104,10 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
    *
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   @Test
-  public void testGetAllWithLimit() throws IOException
+  public void testGetAllWithLimit() throws IOException, RepositoryException
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -130,9 +135,10 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
    *
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   @Test
-  public void testGetAllWithPaging() throws IOException
+  public void testGetAllWithPaging() throws IOException, RepositoryException
   {
     LogCommandRequest request = new LogCommandRequest();
 
@@ -189,9 +195,10 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
    *
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   @Test
-  public void testGetRange() throws IOException
+  public void testGetRange() throws IOException, RepositoryException
   {
     LogCommandRequest request = new LogCommandRequest();
 

@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -38,6 +39,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
@@ -51,6 +53,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -154,10 +157,11 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    * @return
    *
    * @throws IOException
+   * @throws RepositoryException
    */
   @Override
   public ChangesetPagingResult getChangesets(LogCommandRequest request)
-          throws IOException
+          throws IOException, RepositoryException
   {
     if (logger.isDebugEnabled())
     {
@@ -256,6 +260,10 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
       }
 
       changesets = new ChangesetPagingResult(0, new ArrayList<Changeset>());
+    }
+    catch (GitAPIException ex)
+    {
+      throw new RepositoryException("could not create change log", ex);
     }
     finally
     {

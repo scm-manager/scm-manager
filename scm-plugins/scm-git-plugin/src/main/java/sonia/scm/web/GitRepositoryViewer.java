@@ -38,11 +38,15 @@ package sonia.scm.web;
 import org.apache.commons.lang.StringEscapeUtils;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.io.RegexResourceProcessor;
 import sonia.scm.io.ResourceProcessor;
@@ -74,6 +78,12 @@ public class GitRepositoryViewer
 
   /** Field description */
   public static final String RESOURCE_GITINDEX = "/sonia/scm/git.index.html";
+
+  /**
+   * the logger for GitRepositoryViewer
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(GitRepositoryViewer.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -107,15 +117,22 @@ public class GitRepositoryViewer
       int c = 0;
       ObjectId head = GitUtil.getRepositoryHead(repository);
 
-      for (RevCommit commit : git.log().add(head).call())
+      try
       {
-        appendCommit(sb, commit);
-        c++;
-
-        if (c > logSize)
+        for (RevCommit commit : git.log().add(head).call())
         {
-          break;
+          appendCommit(sb, commit);
+          c++;
+
+          if (c > logSize)
+          {
+            break;
+          }
         }
+      }
+      catch (GitAPIException ex)
+      {
+        logger.error("could not read changesets", ex);
       }
     }
 
