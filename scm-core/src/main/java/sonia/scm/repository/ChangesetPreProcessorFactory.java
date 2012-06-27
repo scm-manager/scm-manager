@@ -38,6 +38,9 @@ package sonia.scm.repository;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
+ * The ChangesetPreProcessorFactory create {@link ChangesetPreProcessor}
+ * objects for a specific repository.
+ * 
  * TODO for 2.0 extends {@link PreProcessorFactory} interface.
  *
  * @author Sebastian Sdorra
