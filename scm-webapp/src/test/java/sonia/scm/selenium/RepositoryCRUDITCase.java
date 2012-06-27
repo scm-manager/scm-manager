@@ -62,7 +62,7 @@ public class RepositoryCRUDITCase extends SeleniumTestBase
    *
    */
   @Test
-  public void createRepository()
+  public void createRepository() throws InterruptedException
   {
     waitAndClick("#repositoryAddButton");
     waitForPresence("input[name=name]").sendKeys("scm");
@@ -77,6 +77,9 @@ public class RepositoryCRUDITCase extends SeleniumTestBase
           "div.x-grid3-row-selected div.x-grid3-col-name").getText();
 
     assertEquals("scm", name);
+    
+    waitAndClick("#repoRmButton button");
+    waitAndClick("div.x-window button:nth-of-type(1)");
   }
 
   /**
