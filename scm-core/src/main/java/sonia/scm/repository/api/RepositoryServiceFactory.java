@@ -107,6 +107,7 @@ import java.util.Set;
  * @author Sebastian Sdorra
  * @since 1.17
  * 
+ * @apiviz.landmark
  * @apiviz.uses sonia.scm.repository.api.RepositoryService
  */
 @Singleton
