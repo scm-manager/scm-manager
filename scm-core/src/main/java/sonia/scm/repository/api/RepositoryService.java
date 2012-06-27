@@ -68,7 +68,6 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  * @since 1.17
  *
- * @apiviz.landmark
  * @apiviz.uses sonia.scm.repository.api.Command
  * @apiviz.uses sonia.scm.repository.api.BlameCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.BrowseCommandBuilder
