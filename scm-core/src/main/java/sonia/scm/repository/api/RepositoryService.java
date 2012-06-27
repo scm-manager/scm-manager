@@ -67,7 +67,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  * @since 1.17
- * 
+ *
  * @apiviz.uses sonia.scm.repository.api.Command
  * @apiviz.uses sonia.scm.repository.api.BlameCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.BrowseCommandBuilder
@@ -234,9 +234,6 @@ public final class RepositoryService implements Closeable
 
   /**
    * Returns the repository of this service.
-   *
-   *
-   * @param repository repository of this service
    *
    * @return repository of this service
    */

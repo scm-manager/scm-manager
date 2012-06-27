@@ -37,13 +37,13 @@ package sonia.scm.repository;
 
 import com.google.inject.Inject;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
@@ -58,7 +58,7 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  * @since 1.6
- * 
+ *
  * @deprecated use {@link RepositoryService#getLogCommand()} instead.
  */
 @Deprecated
@@ -470,8 +470,6 @@ public class ChangesetViewerUtil extends PartCacheClearHook
       cpp.process(c);
     }
   }
-
-
 
   /**
    * Method description

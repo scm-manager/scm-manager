@@ -33,11 +33,15 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.repository.api.RepositoryService;
+
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.8
- * 
+ *
  * @deprecated use {@link RepositoryService#getLogCommand()} instead.
  */
 @Deprecated

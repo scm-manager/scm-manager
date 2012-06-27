@@ -48,7 +48,7 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  * @since 1.8
  *
- * @deprecated use {@link RepositoryService#getBlameCommand()) instead.
+ * @deprecated use {@link RepositoryService#getBlameCommand()} instead.
  */
 @Deprecated
 public interface BlameViewer

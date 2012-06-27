@@ -33,14 +33,16 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
 import sonia.scm.repository.api.RepositoryService;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.5
- * 
- * @deprecated use {@link RepositoryService#getBrowseCommand()) instead.
+ *
+ * @deprecated use {@link RepositoryService#getBrowseCommand()} instead.
  */
 @Deprecated
 public interface RepositoryBrowserProvider

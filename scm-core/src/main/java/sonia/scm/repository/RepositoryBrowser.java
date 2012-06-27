@@ -33,6 +33,10 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.repository.api.RepositoryService;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
@@ -42,7 +46,7 @@ import java.io.OutputStream;
  *
  * @author Sebastian Sdorra
  * @since 1.5
- * 
+ *
  * @deprecated use {@link RepositoryService#getBrowseCommand()} instead.
  */
 @Deprecated

@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
@@ -59,8 +60,8 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  * @since 1.6
- * 
- * @deprecated use {@link RepositoryService#getBrowseCommand()) instead.
+ *
+ * @deprecated use {@link RepositoryService#getBrowseCommand()} instead.
  */
 @Singleton
 @Deprecated

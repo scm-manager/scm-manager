@@ -44,19 +44,19 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import sonia.scm.repository.api.RepositoryService;
 
 /**
  * Class description
  *
  * @author Sebastian Sdorra
  * @since 1.8
- * 
+ *
  * @deprecated use {@link RepositoryService#getBlameCommand()} instead.
  */
 @Singleton
@@ -79,7 +79,6 @@ public class BlameViewerUtil extends PartCacheClearHook
    *
    * @param repositoryManager
    * @param cacheManager
-   * @return
    */
   @Inject
   public BlameViewerUtil(RepositoryManager repositoryManager,
