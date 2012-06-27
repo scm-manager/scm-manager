@@ -65,8 +65,8 @@ import java.io.OutputStream;
  * String content = diff.setRevision("33b93c443867").getContent();
  * System.out.println(content);
  * </code></pre>
- * 
- * 
+ *
+ *
  * TODO check current behavior.
  *
  * @author Sebastian Sdorra

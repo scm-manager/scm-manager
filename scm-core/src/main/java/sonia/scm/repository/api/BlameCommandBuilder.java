@@ -258,6 +258,11 @@ public final class BlameCommandBuilder
   static class CacheKey implements RepositoryCacheKey, Serializable
   {
 
+    /** Field description */
+    private static final long serialVersionUID = 8373766042131887789L;
+
+    //~--- constructors -------------------------------------------------------
+
     /**
      * Constructs ...
      *

@@ -276,6 +276,11 @@ public final class BrowseCommandBuilder
   static class CacheKey implements RepositoryCacheKey, Serializable
   {
 
+    /** Field description */
+    private static final long serialVersionUID = 8078650026812373524L;
+
+    //~--- constructors -------------------------------------------------------
+
     /**
      * Constructs ...
      *

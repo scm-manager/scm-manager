@@ -402,6 +402,11 @@ public final class LogCommandBuilder
   static class CacheKey implements RepositoryCacheKey, Serializable
   {
 
+    /** Field description */
+    private static final long serialVersionUID = 5701675009949268863L;
+
+    //~--- constructors -------------------------------------------------------
+
     /**
      * Constructs ...
      *
