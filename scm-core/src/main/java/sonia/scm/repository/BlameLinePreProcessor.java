@@ -37,6 +37,8 @@ package sonia.scm.repository;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
+ * A pre processor for {@link BlameLine} objects. A pre processor is able to 
+ * modify the object before it is delivered to the user interface.
  *
  * @author Sebastian Sdorra
  * @since 1.17
@@ -46,10 +48,10 @@ public interface BlameLinePreProcessor extends PreProcessor<BlameLine>
 {
 
   /**
-   * Method description
+   * Process the given blame line.
    *
    *
-   * @param blameLine
+   * @param blameLine blame line to process.
    */
   @Override
   public void process(BlameLine blameLine);

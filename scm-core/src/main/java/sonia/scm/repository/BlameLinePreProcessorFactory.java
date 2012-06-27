@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,6 +38,8 @@ package sonia.scm.repository;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
+ * The BlameLinePreProcessorFactory create {@link BlameLinePreProcessor}
+ * objects for a specific repository.
  *
  * @author Sebastian Sdorra
  * @since 1.17
@@ -47,12 +50,12 @@ public interface BlameLinePreProcessorFactory
 {
 
   /**
-   * Method description
+   * Create a new {@link BlameLinePreProcessor} for the given repository.
    *
    *
-   * @param repository
+   * @param repository repository
    *
-   * @return
+   * @return {@link BlameLinePreProcessor} for the given repository
    */
   @Override
   public BlameLinePreProcessor createPreProcessor(Repository repository);
