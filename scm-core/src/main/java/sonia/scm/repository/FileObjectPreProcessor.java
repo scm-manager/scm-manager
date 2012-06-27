@@ -38,6 +38,9 @@ package sonia.scm.repository;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
+ * A pre processor for {@link FileObject} objects. A pre processor is able to 
+ * modify the object before it is delivered to the user interface.
+ * 
  * TODO for 2.0 extends {@link PreProcessor} interface.
  * 
  * @author Sebastian Sdorra
@@ -48,10 +51,10 @@ public interface FileObjectPreProcessor
 {
 
   /**
-   * Method description
+   * Process the given file object.
    *
    *
-   * @param fileObject
+   * @param fileObject file object to process
    */
   public void process(FileObject fileObject);
 }

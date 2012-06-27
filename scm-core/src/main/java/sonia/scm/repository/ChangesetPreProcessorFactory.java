@@ -51,12 +51,12 @@ public interface ChangesetPreProcessorFactory
 {
 
   /**
-   * Method description
+   * Create a new {@link ChangesetPreProcessor} for the given repository.
    *
    *
-   * @param repository
+   * @param repository repository
    *
-   * @return
+   * @return {@link ChangesetPreProcessor} for the given repository
    */
   public ChangesetPreProcessor createPreProcessor(Repository repository);
 }

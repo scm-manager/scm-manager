@@ -30,25 +30,28 @@
  */
 
 
+
 package sonia.scm.repository;
 
 /**
+ * A pre processor factory creates a specific {@link PreProcessor} for
+ * the given repository.
  *
  * @author Sebastian Sdorra
  *
- * @param <T>
+ * @param <T> object type for the {@link PreProcessor}
  * @since 1.17
  */
 public interface PreProcessorFactory<T>
 {
 
   /**
-   * Method description
+   * Create a new {@link PreProcessor} for the given repository.
    *
    *
-   * @param repository
+   * @param repository repository
    *
-   * @return
+   * @return {@link PreProcessor} for the given repository
    */
   public PreProcessor<T> createPreProcessor(Repository repository);
 }

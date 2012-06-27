@@ -50,10 +50,10 @@ public interface ChangesetPreProcessor
 {
 
   /**
-   * Method description
+   * Process the given changeset.
    *
    *
-   * @param changeset
+   * @param changeset changeset to process
    */
   public void process(Changeset changeset);
 }
