@@ -102,6 +102,7 @@ import sonia.scm.util.DebugServlet;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
+import sonia.scm.web.filter.LoggingFilter;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.ApiBasicAuthenticationFilter;
 import sonia.scm.web.security.AuthenticationManager;
@@ -172,6 +173,9 @@ public class ScmServletModule extends ServletModule
 
   /** Field description */
   public static final String REST_PACKAGE = "sonia.scm.api.rest";
+
+  /** Field description */
+  public static final String SYSTEM_PROPERTY_DEBUG_HTTP = "scm.debug.http";
 
   /** Field description */
   public static final String[] PATTERN_STATIC_RESOURCES = new String[] {
@@ -302,6 +306,12 @@ public class ScmServletModule extends ServletModule
 
     // bind repository service factory
     bind(RepositoryServiceFactory.class);
+
+    // bind debug logging filter
+    if ("true".equalsIgnoreCase(System.getProperty(SYSTEM_PROPERTY_DEBUG_HTTP)))
+    {
+      filter(PATTERN_ALL).through(LoggingFilter.class);
+    }
 
     /*
      * filter(PATTERN_PAGE,

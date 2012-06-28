@@ -47,6 +47,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -396,6 +397,23 @@ public class Util
   public static Date parseDate(String dateString) throws ParseException
   {
     return parseDate(dateString, null);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param value
+   * @param start
+   *
+   * @return
+   * 
+   * @since 1.17
+   */
+  public static boolean startWithIgnoreCase(String value, String start)
+  {
+    return (value != null) && (start != null)
+           && value.toUpperCase(Locale.ENGLISH).startsWith(start);
   }
 
   /**

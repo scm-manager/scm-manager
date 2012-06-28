@@ -120,18 +120,44 @@ public class BasicAuthenticationFilter extends HttpFilter
     User user = null;
     String authentication = request.getHeader(HEADER_AUTHORIZATION);
 
-    if (Util.isNotEmpty(authentication)
-        && authentication.toUpperCase().startsWith(AUTHORIZATION_BASIC_PREFIX))
+    if (Util.startWithIgnoreCase(authentication, AUTHORIZATION_BASIC_PREFIX))
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("found basic authorization header, start authentication");
+      }
+
       user = authenticate(request, response, securityContext, authentication);
+
+      if (logger.isTraceEnabled())
+      {
+        if (user != null)
+        {
+          logger.trace("user {} successfully authenticated", user.getName());
+        }
+        else
+        {
+          logger.trace("authentcation failed, user object is null");
+        }
+      }
     }
     else if (securityContext.isAuthenticated())
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("user is allready authenticated");
+      }
+
       user = securityContext.getUser();
     }
 
     if (user == null)
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("could not find user send unauthorized");
+      }
+
       HttpUtil.sendUnauthorized(response);
     }
     else
@@ -192,6 +218,11 @@ public class BasicAuthenticationFilter extends HttpFilter
 
       if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
       {
+        if (logger.isTraceEnabled())
+        {
+          logger.trace("try to authenticate user {}", username);
+        }
+
         user = securityContext.authenticate(request, response, username,
                 password);
       }
