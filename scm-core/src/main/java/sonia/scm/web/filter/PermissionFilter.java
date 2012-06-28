@@ -150,6 +150,15 @@ public abstract class PermissionFilter extends HttpFilter
 
           if (hasPermission(repository, securityContext, writeRequest))
           {
+            if (logger.isTraceEnabled())
+            {
+              logger.trace("{} access to repository {} for user {} granted",
+                           new Object[] { writeRequest
+                                          ? "write"
+                                          : "read", repository.getName(),
+                                          user.getName() });
+            }
+
             chain.doFilter(request, response);
           }
           else
