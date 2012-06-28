@@ -35,6 +35,7 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -89,7 +90,7 @@ public class LoggingFilter extends HttpFilter
   {
     if (logger.isDebugEnabled())
     {
-      boolean logBody = logger.isTraceEnabled();
+      boolean logBody = logger.isTraceEnabled() && isTextRequest(request);
       BufferedHttpServletRequest bufferedRequest =
         new BufferedHttpServletRequest(request, logBody);
       BufferedHttpServletResponse bufferedResponse =
@@ -189,7 +190,12 @@ public class LoggingFilter extends HttpFilter
 
     if (logger.isTraceEnabled())
     {
-      logger.trace("Content: ".concat(new String(request.getContentBuffer())));
+      byte[] contentBuffer = request.getContentBuffer();
+
+      if ((contentBuffer != null) && (contentBuffer.length > 0))
+      {
+        logger.trace("Content: ".concat(new String(contentBuffer)));
+      }
     }
   }
 
@@ -227,22 +233,68 @@ public class LoggingFilter extends HttpFilter
       logger.debug("Header: {} = {}", header.getKey(), header.getValue());
     }
 
-    if (logger.isTraceEnabled())
+    if (logger.isTraceEnabled() && isTextRequest(orgResponse))
     {
       byte[] content = response.getContentBuffer();
-      ServletOutputStream out = null;
 
-      try
+      if ((content != null) && (content.length > 0))
       {
-        out = orgResponse.getOutputStream();
-        out.write(content);
-      }
-      finally
-      {
-        out.close();
-      }
+        ServletOutputStream out = null;
 
-      logger.trace("Content: ".concat(new String(content)));
+        try
+        {
+          out = orgResponse.getOutputStream();
+          out.write(content);
+        }
+        finally
+        {
+          out.close();
+        }
+
+        logger.trace("Content: ".concat(new String(content)));
+      }
     }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  private boolean isTextRequest(HttpServletRequest request)
+  {
+    return isTextRequest(request.getContentType());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   *
+   * @return
+   */
+  private boolean isTextRequest(HttpServletResponse response)
+  {
+    return isTextRequest(response.getContentType());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param contentType
+   *
+   * @return
+   */
+  private boolean isTextRequest(String contentType)
+  {
+    return !Strings.isNullOrEmpty(contentType)
+           && contentType.toLowerCase().startsWith("text");
   }
 }
