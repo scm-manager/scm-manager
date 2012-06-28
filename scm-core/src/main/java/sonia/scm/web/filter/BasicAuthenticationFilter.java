@@ -120,8 +120,7 @@ public class BasicAuthenticationFilter extends HttpFilter
     User user = null;
     String authentication = request.getHeader(HEADER_AUTHORIZATION);
 
-    if (Util.isNotEmpty(authentication)
-        && authentication.toUpperCase().startsWith(AUTHORIZATION_BASIC_PREFIX))
+    if (Util.startWithIgnoreCase(authentication, AUTHORIZATION_BASIC_PREFIX))
     {
       if (logger.isTraceEnabled())
       {
