@@ -117,7 +117,7 @@ Sonia.repository.ChangesetPanel = Ext.extend(Ext.Panel, {
   },
   
   showCommit: function(){
-    if ( console ){
+    if ( debug ){
       console.debug('open commit for ' + this.revision);
     }
     this.openPanel(this.createCommitPanel());
@@ -126,7 +126,7 @@ Sonia.repository.ChangesetPanel = Ext.extend(Ext.Panel, {
   },
   
   showDiff: function(){
-    if ( console ){
+    if ( debug ){
       console.debug('open diff for ' + this.revision);
     }
     this.openPanel(this.createDiffPanel());
@@ -135,7 +135,7 @@ Sonia.repository.ChangesetPanel = Ext.extend(Ext.Panel, {
   },
   
   downloadRawDiff: function(){
-    if ( console ){
+    if ( debug ){
       console.debug('open raw diff for ' + this.revision);
     }
     window.open(this.createDiffUrl());

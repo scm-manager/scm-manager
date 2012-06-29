@@ -29,7 +29,7 @@
  *
  */
 // enable debug mode, if console is available
-var debug = typeof console != 'undefined';
+var debug = typeof console != 'undefined' && typeof console.debug != 'undefined';
 
 var state = null;
 var admin = false;
