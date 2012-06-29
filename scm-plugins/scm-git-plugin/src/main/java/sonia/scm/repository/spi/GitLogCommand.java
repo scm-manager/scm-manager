@@ -204,7 +204,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
         ObjectId endId = null;
 
-        if (!Strings.isNullOrEmpty(request.getStartChangeset()))
+        if (!Strings.isNullOrEmpty(request.getEndChangeset()))
         {
           endId = gr.resolve(request.getEndChangeset());
         }
@@ -217,7 +217,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         }
 
         for (RevCommit commit : cmd.call())
-        {
+        { 
           if (!started && ((startId == null) || commit.getId().equals(startId)))
           {
             started = true;
