@@ -83,9 +83,7 @@ Sonia.repository.createUrl = function(type, name){
 }
 
 Sonia.repository.createUrlFromObject = function(repository){
-  var url = Sonia.repository.createUrl(repository.type, repository.name);
-  console.debug(url);
-  return url;
+  return Sonia.repository.createUrl(repository.type, repository.name);
 }
 
 /**

@@ -523,7 +523,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       css.rel = 'stylesheet';
       css.type = 'text/css';
       css.href = url;
-      document.head.appendChild(css);
+      document.getElementsByTagName('head')[0].appendChild(css);
       this.stylesheets.push(url);
     }
   },
