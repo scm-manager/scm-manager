@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,8 +40,11 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.PluginManager;
+import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.template.TemplateHandler;
 import sonia.scm.util.SecurityUtil;
@@ -51,18 +55,17 @@ import sonia.scm.web.security.WebSecurityContext;
 
 import java.io.IOException;
 import java.io.StringWriter;
+
 import java.util.Collection;
 import java.util.List;
-
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import sonia.scm.Type;
-import sonia.scm.repository.RepositoryHandler;
-import sonia.scm.repository.RepositoryManager;
 
 /**
  *
@@ -88,13 +91,16 @@ public class SupportResource
    * @param configuration
    * @param pluginManager
    * @param storeFactory
+   * @param repositoryManager
    */
   @Inject
   public SupportResource(WebSecurityContext securityContext,
                          SCMContextProvider context,
                          TemplateHandler templateHandler,
                          ScmConfiguration configuration,
-                         PluginManager pluginManager, StoreFactory storeFactory, RepositoryManager repositoryManager )
+                         PluginManager pluginManager,
+                         StoreFactory storeFactory,
+                         RepositoryManager repositoryManager)
   {
     this.securityContext = securityContext;
     this.context = context;
@@ -105,8 +111,6 @@ public class SupportResource
     this.repositoryManager = repositoryManager;
   }
 
-  private RepositoryManager repositoryManager;
-  
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -139,15 +143,21 @@ public class SupportResource
     return writer.toString();
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   private List<RepositoryHandler> getRepositoryHandlers()
   {
     List<RepositoryHandler> handlers = Lists.newArrayList();
-    
-    for ( Type type : repositoryManager.getConfiguredTypes() )
+
+    for (Type type : repositoryManager.getConfiguredTypes())
     {
-      handlers.add( repositoryManager.getHandler(type.getName()) );
+      handlers.add(repositoryManager.getHandler(type.getName()));
     }
-    
+
     return handlers;
   }
 
@@ -260,6 +270,8 @@ public class SupportResource
       container = SystemUtil.getServletContainer().name();
       java = System.getProperty("java.vendor").concat("/").concat(
         System.getProperty("java.version"));
+      locale = Locale.getDefault().toString();
+      timeZone = TimeZone.getDefault().getID();
     }
 
     //~--- get methods --------------------------------------------------------
@@ -303,9 +315,31 @@ public class SupportResource
      *
      * @return
      */
+    public String getLocale()
+    {
+      return locale;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
     public String getOs()
     {
       return os;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public String getTimeZone()
+    {
+      return timeZone;
     }
 
     //~--- fields -------------------------------------------------------------
@@ -320,7 +354,13 @@ public class SupportResource
     private String java;
 
     /** Field description */
+    private String locale;
+
+    /** Field description */
     private String os;
+
+    /** Field description */
+    private String timeZone;
   }
 
 
@@ -407,6 +447,9 @@ public class SupportResource
 
   /** Field description */
   private PluginManager pluginManager;
+
+  /** Field description */
+  private RepositoryManager repositoryManager;
 
   /** Field description */
   private WebSecurityContext securityContext;
