@@ -30,46 +30,38 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.ByteStreams;
-import com.google.common.io.Closeables;
+import com.google.common.base.Strings;
 
-import sonia.scm.repository.HgContext;
-import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgDiffCommand extends AbstractHgCommand implements DiffCommand
+public class HgDiffCommand extends AbstractCommand implements DiffCommand
 {
 
   /**
    * Constructs ...
    *
    *
-   * @param handler
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
-  public HgDiffCommand(HgRepositoryHandler handler, HgContext context,
-                       Repository repository, File repositoryDirectory)
+  HgDiffCommand(HgCommandContext context, Repository repository)
   {
-    super(handler, context, repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -88,19 +80,25 @@ public class HgDiffCommand extends AbstractHgCommand implements DiffCommand
   public void getDiffResult(DiffCommandRequest request, OutputStream output)
           throws IOException, RepositoryException
   {
-    Process p = createHgProcess("diff", "-c", request.getRevision(),
-                                Util.nonNull(request.getPath()));
-    InputStream input = null;
+    com.aragost.javahg.commands.DiffCommand cmd =
+      com.aragost.javahg.commands.DiffCommand.on(open());
 
-    try
+    if (!Strings.isNullOrEmpty(request.getRevision()))
     {
-      handleErrorStream(p.getErrorStream());
-      input = p.getInputStream();
-      ByteStreams.copy(input, output);
+      cmd.change(request.getRevision());
     }
-    finally
+
+    String diff = null;
+
+    if (!Strings.isNullOrEmpty(request.getPath()))
     {
-      Closeables.closeQuietly(input);
+      diff = cmd.execute(request.getPath());
     }
+    else
+    {
+      diff = cmd.execute();
+    }
+
+    output.write(diff.getBytes());
   }
 }

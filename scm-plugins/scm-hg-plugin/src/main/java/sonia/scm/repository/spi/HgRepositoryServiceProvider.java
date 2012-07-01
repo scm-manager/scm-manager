@@ -147,8 +147,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public HgDiffCommand getDiffCommand()
   {
-    return new HgDiffCommand(handler, hgContextProvider.get(), repository,
-                             repositoryDirectory);
+    return new HgDiffCommand(context, repository);
   }
 
   /**
