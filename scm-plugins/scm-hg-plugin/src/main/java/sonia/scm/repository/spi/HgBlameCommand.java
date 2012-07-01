@@ -79,7 +79,7 @@ public class HgBlameCommand extends AbstractCommand implements BlameCommand
    * @param context
    * @param repository
    */
-  public HgBlameCommand(HgCommandContext context, Repository repository)
+  HgBlameCommand(HgCommandContext context, Repository repository)
   {
     super(context, repository);
   }

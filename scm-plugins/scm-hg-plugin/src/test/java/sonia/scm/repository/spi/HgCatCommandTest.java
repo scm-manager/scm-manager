@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -105,8 +106,8 @@ public class HgCatCommandTest extends AbstractHgCommandTestBase
 
     try
     {
-      new HgCatCommand(handler, new HgContext(), repository,
-                       repositoryDirectory).getCatResult(request, baos);
+      new HgCatCommand(new HgCommandContext(handler.getConfig(),
+              repositoryDirectory), repository).getCatResult(request, baos);
     }
     finally
     {

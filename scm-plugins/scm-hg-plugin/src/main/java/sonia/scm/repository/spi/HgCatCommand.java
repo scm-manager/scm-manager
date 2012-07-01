@@ -30,23 +30,20 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
 
-import sonia.scm.repository.HgContext;
-import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
-import sonia.scm.util.Util;
-import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -55,22 +52,19 @@ import java.io.OutputStream;
  *
  * @author Sebastian Sdorra
  */
-public class HgCatCommand extends AbstractHgCommand implements CatCommand
+public class HgCatCommand extends AbstractCommand implements CatCommand
 {
 
   /**
    * Constructs ...
    *
    *
-   * @param handler
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
-  HgCatCommand(HgRepositoryHandler handler, HgContext context,
-               Repository repository, File repositoryDirectory)
+  HgCatCommand(HgCommandContext context, Repository repository)
   {
-    super(handler, context, repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -89,15 +83,19 @@ public class HgCatCommand extends AbstractHgCommand implements CatCommand
   public void getCatResult(CatCommandRequest request, OutputStream output)
           throws IOException, RepositoryException
   {
-    String revision = HgUtil.getRevision(request.getRevision());
-    Process p = createHgProcess("cat", "-r", revision,
-                                Util.nonNull(request.getPath()));
+    com.aragost.javahg.commands.CatCommand cmd =
+      com.aragost.javahg.commands.CatCommand.on(open());
+
+    if (!Strings.isNullOrEmpty(request.getRevision()))
+    {
+      cmd.rev(request.getRevision());
+    }
+
     InputStream input = null;
 
     try
     {
-      handleErrorStream(p.getErrorStream());
-      input = p.getInputStream();
+      input = cmd.execute(request.getPath());
       ByteStreams.copy(input, output);
     }
     finally

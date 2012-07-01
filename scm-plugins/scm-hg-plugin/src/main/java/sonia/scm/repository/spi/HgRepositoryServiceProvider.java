@@ -135,8 +135,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public HgCatCommand getCatCommand()
   {
-    return new HgCatCommand(handler, hgContextProvider.get(), repository,
-                            repositoryDirectory);
+    return new HgCatCommand(context, repository);
   }
 
   /**
