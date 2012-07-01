@@ -206,6 +206,7 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
       changeset.setBranches(Lists.newArrayList(branch));
     }
 
+    // TODO improve performance
     List<String> tags = c.tags();
 
     if (tags != null)
