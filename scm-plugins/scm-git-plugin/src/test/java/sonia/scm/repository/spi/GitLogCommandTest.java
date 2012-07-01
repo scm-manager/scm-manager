@@ -71,8 +71,8 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
       createCommand().getChangesets(new LogCommandRequest());
 
     assertNotNull(result);
-    assertEquals(5, result.getTotal());
-    assertEquals(5, result.getChangesets().size());
+    assertEquals(4, result.getTotal());
+    assertEquals(4, result.getChangesets().size());
   }
 
   /**
@@ -92,11 +92,10 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
-    assertEquals(3, result.getTotal());
-    assertEquals(3, result.getChangesets().size());
+    assertEquals(2, result.getTotal());
+    assertEquals(2, result.getChangesets().size());
     assertEquals("fcd0ef1831e4002ac43e", result.getChangesets().get(0).getId());
-    assertEquals("3f76a12f08a6ba0dc988", result.getChangesets().get(1).getId());
-    assertEquals("435df2f061add3589cb3", result.getChangesets().get(2).getId());
+    assertEquals("435df2f061add3589cb3", result.getChangesets().get(1).getId());
   }
 
   /**
@@ -116,7 +115,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
-    assertEquals(5, result.getTotal());
+    assertEquals(4, result.getTotal());
     assertEquals(2, result.getChangesets().size());
 
     Changeset c1 = result.getChangesets().get(0);
@@ -148,7 +147,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     ChangesetPagingResult result = createCommand().getChangesets(request);
 
     assertNotNull(result);
-    assertEquals(5, result.getTotal());
+    assertEquals(4, result.getTotal());
     assertEquals(2, result.getChangesets().size());
 
     Changeset c1 = result.getChangesets().get(0);
@@ -159,7 +158,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     Changeset c2 = result.getChangesets().get(1);
 
     assertNotNull(c2);
-    assertEquals("3f76a12f08a6ba0dc988", c2.getId());
+    assertEquals("592d797cd36432e59141", c2.getId());
   }
 
   /**

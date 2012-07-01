@@ -41,10 +41,18 @@ import com.google.common.collect.Lists;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
+import org.eclipse.jgit.errors.StopWalkException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.revwalk.filter.RevFilter;
+import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
+import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
+import org.eclipse.jgit.treewalk.filter.TreeFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +69,7 @@ import sonia.scm.util.IOUtil;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -177,8 +186,6 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
       if (!gr.getAllRefs().isEmpty())
       {
-        converter = new GitChangesetConverter(gr, GitUtil.ID_LENGTH);
-
         int counter = 0;
         int start = request.getPagingStart();
 
@@ -194,7 +201,6 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
         List<Changeset> changesetList = Lists.newArrayList();
         int limit = request.getPagingLimit();
-        boolean started = false;
         ObjectId startId = null;
 
         if (!Strings.isNullOrEmpty(request.getStartChangeset()))
@@ -209,22 +215,36 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
           endId = gr.resolve(request.getEndChangeset());
         }
 
-        org.eclipse.jgit.api.LogCommand cmd = new Git(gr).log().all();
+        RevWalk revWalk = new RevWalk(gr);
+
+        converter = new GitChangesetConverter(gr, revWalk, GitUtil.ID_LENGTH);
 
         if (!Strings.isNullOrEmpty(request.getPath()))
         {
-          cmd = cmd.addPath(request.getPath());
+          revWalk.setTreeFilter(
+              AndTreeFilter.create(
+                PathFilter.create(request.getPath()), TreeFilter.ANY_DIFF));
         }
 
-        for (RevCommit commit : cmd.call())
-        { 
-          if (!started && ((startId == null) || commit.getId().equals(startId)))
+        ObjectId head = GitUtil.getRepositoryHead(gr);
+
+        if (head != null)
+        {
+          if (startId != null)
           {
-            started = true;
+            revWalk.markStart(revWalk.lookupCommit(startId));
+          }
+          else
+          {
+            revWalk.markStart(revWalk.lookupCommit(head));
           }
 
-          if (started)
+          Iterator<RevCommit> iterator = revWalk.iterator();
+
+          while (iterator.hasNext())
           {
+            RevCommit commit = iterator.next();
+
             if ((counter >= start)
                 && ((limit < 0) || (counter < start + limit)))
             {
@@ -248,20 +268,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
                     repository.getName());
       }
     }
-    catch (NoHeadException ex)
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("repository seems to be empty", ex);
-      }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("repository seems to be empty");
-      }
-
-      changesets = new ChangesetPagingResult(0, new ArrayList<Changeset>());
-    }
-    catch (GitAPIException ex)
+    catch (Exception ex)
     {
       throw new RepositoryException("could not create change log", ex);
     }
