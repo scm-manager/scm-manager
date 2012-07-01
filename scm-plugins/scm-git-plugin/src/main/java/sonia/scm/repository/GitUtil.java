@@ -239,9 +239,9 @@ public class GitUtil
       }
     }
 
-    if (logger.isInfoEnabled())
+    if (logger.isDebugEnabled())
     {
-      logger.info("use {}:{} as repository head", head, id);
+      logger.debug("use {}:{} as repository head", head, id);
     }
 
     return id;
