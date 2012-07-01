@@ -30,11 +30,14 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Function;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import sonia.scm.repository.Changeset;
@@ -42,6 +45,8 @@ import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgPythonScript;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.Modifications;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.util.Util;
@@ -52,28 +57,26 @@ import sonia.scm.web.HgUtil;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgLogCommand extends AbstractHgCommand implements LogCommand
+public class HgLogCommand extends AbstractCommand implements LogCommand
 {
 
   /**
    * Constructs ...
    *
    *
-   * @param handler
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
-  public HgLogCommand(HgRepositoryHandler handler, HgContext context,
-                      Repository repository, File repositoryDirectory)
+  HgLogCommand(HgCommandContext context, Repository repository)
   {
-    super(handler, context, repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -93,16 +96,15 @@ public class HgLogCommand extends AbstractHgCommand implements LogCommand
   public Changeset getChangeset(String id)
           throws IOException, RepositoryException
   {
-    Map<String, String> env = Maps.newHashMap();
+    Changeset changeset = null;
+    com.aragost.javahg.Changeset c = open().changeset(id);
 
-    env.put(ENV_REVISION, HgUtil.getRevision(id));
-    env.put(ENV_PATH, Util.EMPTY_STRING);
-    env.put(ENV_PAGE_START, "0");
-    env.put(ENV_PAGE_LIMIT, "1");
-    env.put(ENV_REVISION_START, Util.EMPTY_STRING);
-    env.put(ENV_REVISION_END, Util.EMPTY_STRING);
+    if (c != null)
+    {
+      changeset = convert(c);
+    }
 
-    return getResultFromScript(Changeset.class, HgPythonScript.LOG, env);
+    return changeset;
   }
 
   /**
@@ -120,17 +122,155 @@ public class HgLogCommand extends AbstractHgCommand implements LogCommand
   public ChangesetPagingResult getChangesets(LogCommandRequest request)
           throws IOException, RepositoryException
   {
-    Map<String, String> env = Maps.newHashMap();
+    com.aragost.javahg.Repository repository = open();
+    com.aragost.javahg.commands.LogCommand cmd =
+      com.aragost.javahg.commands.LogCommand.on(repository);
 
-    env.put(ENV_REVISION, Util.EMPTY_STRING);
-    env.put(ENV_PATH, Strings.nullToEmpty(request.getPath()));
-    env.put(ENV_PAGE_START, String.valueOf(request.getPagingStart()));
-    env.put(ENV_PAGE_LIMIT, String.valueOf(request.getPagingLimit()));
-    env.put(ENV_REVISION_START,
-            Strings.nullToEmpty(request.getStartChangeset()));
-    env.put(ENV_REVISION_END, Strings.nullToEmpty(request.getEndChangeset()));
+    cmd.fileStatus();
 
-    return getResultFromScript(ChangesetPagingResult.class, HgPythonScript.LOG,
-                               env);
+    String startChangeset = request.getStartChangeset();
+    String endChangeset = request.getEndChangeset();
+
+    if (!Strings.isNullOrEmpty(startChangeset)
+        &&!Strings.isNullOrEmpty(endChangeset))
+    {
+      cmd.rev(startChangeset.concat(":").concat(endChangeset));
+    }
+    else if (!Strings.isNullOrEmpty(endChangeset))
+    {
+      cmd.rev("tip:".concat(endChangeset));
+    }
+    else if (!Strings.isNullOrEmpty(startChangeset))
+    {
+      cmd.rev(startChangeset.concat(":0"));
+    }
+
+    List<com.aragost.javahg.Changeset> changesetList = null;
+
+    if (!Strings.isNullOrEmpty(request.getPath()))
+    {
+      changesetList = cmd.execute(request.getPath());
+    }
+    else
+    {
+      changesetList = cmd.execute();
+    }
+
+    int start = request.getPagingStart();
+    int limit = request.getPagingLimit();
+    List<Changeset> changesets = null;
+
+    if ((start == 0) && (limit < 0))
+    {
+      changesets = Lists.transform(changesetList, new ChangesetTransformer());
+    }
+    else
+    {
+      limit = limit + start;
+      if ((limit > changesetList.size()) || (limit < 0))
+      {
+        limit = changesetList.size();
+      }
+
+      List<com.aragost.javahg.Changeset> sublist = changesetList.subList(start,
+                                                     limit);
+
+      changesets = Lists.transform(sublist, new ChangesetTransformer());
+    }
+
+    return new ChangesetPagingResult(changesetList.size(), changesets);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param c
+   *
+   * @return
+   */
+  private Changeset convert(com.aragost.javahg.Changeset c)
+  {
+    Changeset changeset = new Changeset();
+
+    changeset.setId(c.getNode());
+    changeset.setDate(c.getTimestamp().getDate().getTime());
+    changeset.setDescription(c.getMessage());
+
+    String user = c.getUser();
+
+    if (!Strings.isNullOrEmpty(user))
+    {
+      changeset.setAuthor(Person.toPerson(user));
+    }
+
+    String branch = c.getBranch();
+
+    if (!Strings.isNullOrEmpty(branch) &&!branch.equals("default"))
+    {
+      changeset.setBranches(Lists.newArrayList(branch));
+    }
+
+    List<String> tags = c.tags();
+
+    if (tags != null)
+    {
+      changeset.setTags(tags);
+    }
+
+    List<String> parents = Lists.newArrayList();
+    com.aragost.javahg.Changeset p1 = c.getParent1();
+
+    if (p1 != null)
+    {
+      parents.add(p1.getNode());
+    }
+
+    com.aragost.javahg.Changeset p2 = c.getParent1();
+
+    if (p2 != null)
+    {
+      parents.add(p2.getNode());
+    }
+
+    changeset.setParents(parents);
+
+    Modifications mods = changeset.getModifications();
+
+    mods.getAdded().addAll(c.getAddedFiles());
+    mods.getModified().addAll(c.getModifiedFiles());
+    mods.getRemoved().addAll(c.getDeletedFiles());
+
+    return changeset;
+  }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 12/07/01
+   * @author         Enter your name here...
+   */
+  private class ChangesetTransformer
+          implements Function<com.aragost.javahg.Changeset, Changeset>
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @param c
+     *
+     * @return
+     */
+    @Override
+    public Changeset apply(com.aragost.javahg.Changeset c)
+    {
+      return convert(c);
+    }
   }
 }

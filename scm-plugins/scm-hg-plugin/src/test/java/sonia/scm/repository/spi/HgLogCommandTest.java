@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -67,10 +68,8 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
   @Test
   public void testGetAll() throws IOException, RepositoryException
   {
-    ChangesetPagingResult result = new HgLogCommand(
-                                       handler, new HgContext(), repository,
-                                       repositoryDirectory).getChangesets(
-                                         new LogCommandRequest());
+    ChangesetPagingResult result =
+      createComamnd().getChangesets(new LogCommandRequest());
 
     assertNotNull(result);
     assertEquals(5, result.getTotal());
@@ -91,52 +90,19 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
 
     request.setPath("a.txt");
 
-    ChangesetPagingResult result =
-      new HgLogCommand(handler, new HgContext(), repository,
-                       repositoryDirectory).getChangesets(request);
+    ChangesetPagingResult result = createComamnd().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(3, result.getTotal());
     assertEquals(3, result.getChangesets().size());
-    assertEquals("4:2baab8e80280", result.getChangesets().get(0).getId());
-    assertEquals("2:79b6baf49711", result.getChangesets().get(1).getId());
-    assertEquals("0:a9bacaf1b7fa", result.getChangesets().get(2).getId());
+    assertEquals("2baab8e80280ef05a9aa76c49c76feca2872afb7",
+                 result.getChangesets().get(0).getId());
+    assertEquals("79b6baf49711ae675568e0698d730b97ef13e84a",
+                 result.getChangesets().get(1).getId());
+    assertEquals("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427",
+                 result.getChangesets().get(2).getId());
   }
 
-  
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Test
-  public void testGetAllWithPaging() throws IOException, RepositoryException
-  {
-    LogCommandRequest request = new LogCommandRequest();
-
-    request.setPagingStart(1);
-    request.setPagingLimit(2);
-
-    ChangesetPagingResult result =
-      new HgLogCommand(handler, new HgContext(), repository,
-                       repositoryDirectory).getChangesets(request);
-
-    assertNotNull(result);
-    assertEquals(5, result.getTotal());
-    assertEquals(2, result.getChangesets().size());
-
-    Changeset c1 = result.getChangesets().get(0);
-
-    assertNotNull(c1);
-    assertEquals("3:542bf4893dd2", c1.getId());
-
-    Changeset c2 = result.getChangesets().get(1);
-
-    assertNotNull(c2);
-    assertEquals("2:79b6baf49711", c2.getId());
-  }
-  
   /**
    * Method description
    *
@@ -151,9 +117,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
 
     request.setPagingLimit(2);
 
-    ChangesetPagingResult result =
-      new HgLogCommand(handler, new HgContext(), repository,
-                       repositoryDirectory).getChangesets(request);
+    ChangesetPagingResult result = createComamnd().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(5, result.getTotal());
@@ -162,12 +126,44 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     Changeset c1 = result.getChangesets().get(0);
 
     assertNotNull(c1);
-    assertEquals("4:2baab8e80280", c1.getId());
+    assertEquals("2baab8e80280ef05a9aa76c49c76feca2872afb7", c1.getId());
 
     Changeset c2 = result.getChangesets().get(1);
 
     assertNotNull(c2);
-    assertEquals("3:542bf4893dd2", c2.getId());
+    assertEquals("542bf4893dd2ff58a0eb719551d75ddeb919608b", c2.getId());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testGetAllWithPaging() throws IOException, RepositoryException
+  {
+    LogCommandRequest request = new LogCommandRequest();
+
+    request.setPagingStart(1);
+    request.setPagingLimit(2);
+
+    ChangesetPagingResult result = createComamnd().getChangesets(request);
+
+    assertNotNull(result);
+    assertEquals(5, result.getTotal());
+    assertEquals(2, result.getChangesets().size());
+
+    Changeset c1 = result.getChangesets().get(0);
+
+    assertNotNull(c1);
+    assertEquals("542bf4893dd2ff58a0eb719551d75ddeb919608b", c1.getId());
+
+    Changeset c2 = result.getChangesets().get(1);
+
+    assertNotNull(c2);
+    assertEquals("79b6baf49711ae675568e0698d730b97ef13e84a", c2.getId());
   }
 
   /**
@@ -180,12 +176,12 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
   @Test
   public void testGetCommit() throws IOException, RepositoryException
   {
-    HgLogCommand command = new HgLogCommand(handler, new HgContext(),
-                             repository, repositoryDirectory);
-    Changeset c = command.getChangeset("a9bacaf1b7fa");
+    HgLogCommand command = createComamnd();
+    Changeset c =
+      command.getChangeset("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427");
 
     assertNotNull(c);
-    assertEquals("0:a9bacaf1b7fa", c.getId());
+    assertEquals("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427", c.getId());
     assertEquals("added a and b files", c.getDescription());
     checkDate(c.getDate());
     assertEquals("Douglas Adams", c.getAuthor().getName());
@@ -217,9 +213,7 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     request.setStartChangeset("3049df33fdbb");
     request.setEndChangeset("a9bacaf1b7fa");
 
-    ChangesetPagingResult result =
-      new HgLogCommand(handler, new HgContext(), repository,
-                       repositoryDirectory).getChangesets(request);
+    ChangesetPagingResult result = createComamnd().getChangesets(request);
 
     assertNotNull(result);
     assertEquals(2, result.getTotal());
@@ -229,8 +223,20 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     Changeset c2 = result.getChangesets().get(1);
 
     assertNotNull(c1);
-    assertEquals("1:3049df33fdbb", c1.getId());
+    assertEquals("3049df33fdbbded08b707bac3eccd0f7b453c58b", c1.getId());
     assertNotNull(c2);
-    assertEquals("0:a9bacaf1b7fa", c2.getId());
+    assertEquals("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427", c2.getId());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private HgLogCommand createComamnd()
+  {
+    return new HgLogCommand(new HgCommandContext(handler.getConfig(),
+            repositoryDirectory), repository);
   }
 }

@@ -82,7 +82,8 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
     this.handler = handler;
     this.repository = repository;
     this.repositoryDirectory = handler.getDirectory(repository);
-    this.context = new HgCommandContext(handler.getConfig(), repositoryDirectory);
+    this.context = new HgCommandContext(handler.getConfig(),
+            repositoryDirectory);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -159,8 +160,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public HgLogCommand getLogCommand()
   {
-    return new HgLogCommand(handler, hgContextProvider.get(), repository,
-                            repositoryDirectory);
+    return new HgLogCommand(context, repository);
   }
 
   /**
