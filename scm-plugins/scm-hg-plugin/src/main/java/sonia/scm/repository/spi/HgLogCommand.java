@@ -38,27 +38,19 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.HgContext;
-import sonia.scm.repository.HgPythonScript;
-import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
-import sonia.scm.util.Util;
-import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -167,6 +159,7 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
     else
     {
       limit = limit + start;
+
       if ((limit > changesetList.size()) || (limit < 0))
       {
         limit = changesetList.size();

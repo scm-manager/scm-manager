@@ -39,7 +39,6 @@ import org.junit.Test;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.HgContext;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.RepositoryException;
 
