@@ -30,32 +30,38 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.aragost.javahg.Changeset;
+import com.aragost.javahg.commands.AnnotateCommand;
+import com.aragost.javahg.commands.AnnotateLine;
+
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
-import sonia.scm.repository.HgContext;
-import sonia.scm.repository.HgPythonScript;
-import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgBlameCommand extends AbstractHgCommand implements BlameCommand
+public class HgBlameCommand extends AbstractCommand implements BlameCommand
 {
 
   /**
@@ -70,15 +76,12 @@ public class HgBlameCommand extends AbstractHgCommand implements BlameCommand
    * Constructs ...
    *
    *
-   * @param handler
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
-  public HgBlameCommand(HgRepositoryHandler handler, HgContext context,
-                        Repository repository, File repositoryDirectory)
+  public HgBlameCommand(HgCommandContext context, Repository repository)
   {
-    super(handler, context, repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -103,8 +106,56 @@ public class HgBlameCommand extends AbstractHgCommand implements BlameCommand
       logger.debug("get blame result for {}", request);
     }
 
-    Map<String, String> env = createEnvironment(request);
+    AnnotateCommand cmd = AnnotateCommand.on(open());
 
-    return getResultFromScript(BlameResult.class, HgPythonScript.BLAME, env);
+    if (!Strings.isNullOrEmpty(request.getRevision()))
+    {
+      cmd.rev(request.getRevision());
+    }
+
+    List<BlameLine> blameLines = Lists.newArrayList();
+    List<AnnotateLine> lines = cmd.execute(request.getPath());
+    int counter = 0;
+
+    for (AnnotateLine line : lines)
+    {
+      blameLines.add(convert(line, ++counter));
+    }
+
+    return new BlameResult(blameLines);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param line
+   * @param counter
+   *
+   * @return
+   */
+  private BlameLine convert(AnnotateLine line, int counter)
+  {
+    BlameLine blameLine = new BlameLine();
+
+    blameLine.setLineNumber(counter);
+    blameLine.setCode(line.getLine());
+
+    Changeset c = line.getChangeset();
+
+    blameLine.setDescription(c.getMessage());
+    blameLine.setWhen(c.getTimestamp().getDate().getTime());
+    blameLine.setRevision(c.getNode());
+
+    String user = c.getUser();
+
+    if (!Strings.isNullOrEmpty(user))
+    {
+      blameLine.setAuthor(Person.toPerson(user));
+    }
+
+    return blameLine;
   }
 }

@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -68,9 +69,7 @@ public class HgBlameCommandTest extends AbstractHgCommandTestBase
 
     request.setPath("a.txt");
 
-    BlameResult result = new HgBlameCommand(handler, new HgContext(),
-                           repository,
-                           repositoryDirectory).getBlameResult(request);
+    BlameResult result = createCommand().getBlameResult(request);
 
     assertNotNull(result);
     assertEquals(2, result.getTotal());
@@ -80,7 +79,7 @@ public class HgBlameCommandTest extends AbstractHgCommandTestBase
     checkFirstLine(line);
     line = result.getLine(1);
     assertEquals(2, line.getLineNumber());
-    assertEquals("4:2baab8e80280", line.getRevision());
+    assertEquals("2baab8e80280ef05a9aa76c49c76feca2872afb7", line.getRevision());
     checkDate(line.getWhen());
     assertEquals("line for blame", line.getCode());
     assertEquals("added new line for blame", line.getDescription());
@@ -103,11 +102,9 @@ public class HgBlameCommandTest extends AbstractHgCommandTestBase
     BlameCommandRequest request = new BlameCommandRequest();
 
     request.setPath("a.txt");
-    request.setRevision("a9bacaf1b7fa");
+    request.setRevision("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427");
 
-    BlameResult result = new HgBlameCommand(handler, new HgContext(),
-                           repository,
-                           repositoryDirectory).getBlameResult(request);
+    BlameResult result = createCommand().getBlameResult(request);
 
     assertNotNull(result);
     assertEquals(1, result.getTotal());
@@ -126,11 +123,23 @@ public class HgBlameCommandTest extends AbstractHgCommandTestBase
   private void checkFirstLine(BlameLine line)
   {
     assertEquals(1, line.getLineNumber());
-    assertEquals("0:a9bacaf1b7fa", line.getRevision());
+    assertEquals("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427", line.getRevision());
     checkDate(line.getWhen());
     assertEquals("a", line.getCode());
     assertEquals("added a and b files", line.getDescription());
     assertEquals("Douglas Adams", line.getAuthor().getName());
     assertEquals("douglas.adams@hitchhiker.com", line.getAuthor().getMail());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private BlameCommand createCommand()
+  {
+    return new HgBlameCommand(new HgCommandContext(handler.getConfig(),
+            repositoryDirectory), repository);
   }
 }

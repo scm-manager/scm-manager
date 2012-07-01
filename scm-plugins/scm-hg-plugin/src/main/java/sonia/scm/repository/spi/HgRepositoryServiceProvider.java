@@ -30,11 +30,13 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.io.Closeables;
 import com.google.inject.Provider;
 
 import sonia.scm.repository.HgContext;
@@ -45,6 +47,7 @@ import sonia.scm.repository.api.Command;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
 
 import java.util.Set;
 
@@ -79,6 +82,21 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
     this.handler = handler;
     this.repository = repository;
     this.repositoryDirectory = handler.getDirectory(repository);
+    this.context = new HgCommandContext(handler.getConfig(), repositoryDirectory);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Override
+  public void close() throws IOException
+  {
+    Closeables.closeQuietly(context);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -92,8 +110,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public HgBlameCommand getBlameCommand()
   {
-    return new HgBlameCommand(handler, hgContextProvider.get(), repository,
-                              repositoryDirectory);
+    return new HgBlameCommand(context, repository);
   }
 
   /**
@@ -161,6 +178,9 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private HgCommandContext context;
 
   /** Field description */
   private HgRepositoryHandler handler;
