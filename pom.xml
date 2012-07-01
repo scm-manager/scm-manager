@@ -6,7 +6,7 @@
   <groupId>sonia.scm</groupId>
   <artifactId>scm</artifactId>
   <packaging>pom</packaging>
-  <version>1.17</version>
+  <version>1.18-SNAPSHOT</version>
   <description>
     The easiest way to share your Git, Mercurial
     and Subversion repositories over http.
@@ -36,7 +36,7 @@
     <connection>scm:hg:http://bitbucket.org/sdorra/scm-manager</connection>
     <developerConnection>scm:hg:https://bitbucket.org/sdorra/scm-manager</developerConnection>
     <url>http://bitbucket.org/sdorra/scm-manager</url>
-    <tag>1.17</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <issueManagement>

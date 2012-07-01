@@ -6,12 +6,12 @@
   <parent>
     <artifactId>scm</artifactId>
     <groupId>sonia.scm</groupId>
-    <version>1.17</version>
+    <version>1.18-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-core</artifactId>
-  <version>1.17</version>
+  <version>1.18-SNAPSHOT</version>
   <name>scm-core</name>
 
   <dependencies>
