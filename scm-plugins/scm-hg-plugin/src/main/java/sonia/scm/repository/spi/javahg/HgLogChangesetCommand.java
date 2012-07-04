@@ -35,7 +35,6 @@ package sonia.scm.repository.spi.javahg;
 
 import com.aragost.javahg.DateTime;
 import com.aragost.javahg.Repository;
-import com.aragost.javahg.commands.flags.LogCommandFlags;
 import com.aragost.javahg.internals.AbstractCommand;
 import com.aragost.javahg.internals.HgInputStream;
 import com.aragost.javahg.internals.RuntimeIOException;
