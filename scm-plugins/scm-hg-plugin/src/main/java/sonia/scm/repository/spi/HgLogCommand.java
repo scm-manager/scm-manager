@@ -36,7 +36,6 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -110,53 +109,10 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
     ChangesetPagingResult result = null;
 
     com.aragost.javahg.Repository repository = open();
-    HgLogChangesetCommand cmd = HgLogChangesetCommand.on(repository);
 
     if (!Strings.isNullOrEmpty(request.getPath()))
     {
-
-      String startChangeset = request.getStartChangeset();
-      String endChangeset = request.getEndChangeset();
-
-      if (!Strings.isNullOrEmpty(startChangeset)
-        &&!Strings.isNullOrEmpty(endChangeset))
-      {
-        cmd.rev(startChangeset.concat(":").concat(endChangeset));
-      }
-      else if (!Strings.isNullOrEmpty(endChangeset))
-      {
-        cmd.rev("tip:".concat(endChangeset));
-      }
-      else if (!Strings.isNullOrEmpty(startChangeset))
-      {
-        cmd.rev(startChangeset.concat(":0"));
-      }
-
-      List<Changeset> changesetList = cmd.execute(request.getPath());
-
-      int start = request.getPagingStart();
-      int limit = request.getPagingLimit();
-      List<Changeset> changesets = null;
-
-      if ((start == 0) && (limit < 0))
-      {
-        changesets = changesetList;
-      }
-      else
-      {
-        limit = limit + start;
-
-        if ((limit > changesetList.size()) || (limit < 0))
-        {
-          limit = changesetList.size();
-        }
-
-        List<Changeset> sublist = changesetList.subList(start, limit);
-
-        changesets = Lists.newArrayList(sublist);
-      }
-
-      result = new ChangesetPagingResult(changesetList.size(), changesets);
+      result = collectHistory(repository, request);
     }
     else
     {
@@ -195,16 +151,89 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
       {
         end = start - request.getPagingLimit() + 1;
       }
-      
-      if ( end < 0 ){
+
+      if (end < 0)
+      {
         end = 0;
       }
 
-      List<Changeset> changesets = cmd.rev(start + ":" + end).execute();
+      List<Changeset> changesets =
+        HgLogChangesetCommand.on(repository).rev(start + ":" + end).execute();
 
       result = new ChangesetPagingResult(total, changesets);
     }
 
     return result;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param request
+   *
+   * @return
+   */
+  private ChangesetPagingResult collectHistory(
+    com.aragost.javahg.Repository repository, LogCommandRequest request)
+  {
+    HgLogChangesetCommand cmd = HgLogChangesetCommand.on(repository);
+    String startChangeset = request.getStartChangeset();
+    String endChangeset = request.getEndChangeset();
+
+    if (!Strings.isNullOrEmpty(startChangeset)
+      &&!Strings.isNullOrEmpty(endChangeset))
+    {
+      cmd.rev(startChangeset.concat(":").concat(endChangeset));
+    }
+    else if (!Strings.isNullOrEmpty(endChangeset))
+    {
+      cmd.rev("tip:".concat(endChangeset));
+    }
+    else if (!Strings.isNullOrEmpty(startChangeset))
+    {
+      cmd.rev(startChangeset.concat(":0"));
+    }
+
+    int start = request.getPagingStart();
+    int limit = request.getPagingLimit();
+
+    List<Changeset> changesets = null;
+    int total = 0;
+
+    if ((start == 0) && (limit < 0))
+    {
+      changesets = cmd.execute(request.getPath());
+      total = changesets.size();
+    }
+    else
+    {
+      limit = limit + start;
+
+      List<Integer> revisionList = cmd.loadRevisions(request.getPath());
+
+      if ((limit > revisionList.size()) || (limit < 0))
+      {
+        limit = revisionList.size();
+      }
+
+      total = revisionList.size();
+
+      List<Integer> sublist = revisionList.subList(start, limit);
+
+      String[] revs = new String[sublist.size()];
+
+      for (int i = 0; i < sublist.size(); i++)
+      {
+        revs[i] = sublist.get(i).toString();
+      }
+
+      changesets = HgLogChangesetCommand.on(repository).rev(revs).execute();
+    }
+
+    return new ChangesetPagingResult(total, changesets);
   }
 }
