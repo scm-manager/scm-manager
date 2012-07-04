@@ -109,7 +109,8 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
       path: this.path,
       inline: true,
       // TODO find a better way
-      pageSize: 9999
+      pageSize: 9999,
+      startLimit: -1
     }
   },
   

@@ -35,6 +35,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
   start: 0,
   pageSize: 20,
   changesetStore: null,
+  startLimit: null,
   
   // parameters for file history view
   inline: false,
@@ -48,9 +49,13 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
       this.url = restUrl + 'repositories/' + this.repository.id  + '/changesets.json';
     }
     
+    if ( ! this.startLimit ){
+      this.startLimit = this.pageSize;
+    }
+    
     var params = {
       start: this.start,
-      limit: this.pageSize
+      limit: this.startLimit
     }
     
     var baseParams = {};
