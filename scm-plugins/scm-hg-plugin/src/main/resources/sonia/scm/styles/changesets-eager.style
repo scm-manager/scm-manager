@@ -1,5 +1,5 @@
 header = "%{pattern}"
-changeset = "{node}{rev}\n{author}\n{date|hgdate}\n{branch}\n{parents}{tags}{file_adds}{file_mods}{file_dels}\n{desc}\0"
+changeset = "{node}{author}\n{date|hgdate}\n{branch}\n{parents}{tags}{file_adds}{file_mods}{file_dels}\n{desc}\0"
 tag = "t {tag}\n"
 file_add = "a {file_add}\n"
 file_mod = "m {file_mod}\n"

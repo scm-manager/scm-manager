@@ -72,6 +72,11 @@ public class HgLogChangesetCommand extends AbstractCommand
   private static final byte[] CHANGESET_PATTERN = Utils.randomBytes();
 
   /** Field description */
+  private static final String CHANGESET_LAZY_STYLE_PATH =
+    Utils.resourceAsFile("/sonia/scm/styles/changesets-lazy.style",
+      ImmutableMap.of("pattern", CHANGESET_PATTERN)).getPath();
+
+  /** Field description */
   private static final String CHANGESET_EAGER_STYLE_PATH =
     Utils.resourceAsFile("/sonia/scm/styles/changesets-eager.style",
       ImmutableMap.of("pattern", CHANGESET_PATTERN)).getPath();
@@ -145,6 +150,23 @@ public class HgLogChangesetCommand extends AbstractCommand
    * Method description
    *
    *
+   * @param files
+   *
+   * @return
+   */
+  public List<Integer> loadRevisions(String... files)
+  {
+    cmdAppend("--style", CHANGESET_LAZY_STYLE_PATH);
+
+    HgInputStream stream = launchStream(files);
+
+    return loadRevisionsFromStream(stream);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param rev
    *
    * @return
@@ -202,9 +224,6 @@ public class HgLogChangesetCommand extends AbstractCommand
     String nodeString = new String(node);
 
     changeset.setId(nodeString);
-
-    // revision
-    in.revisionUpTo('\n');
 
     String user = in.textUpTo('\n');
 
@@ -273,6 +292,39 @@ public class HgLogChangesetCommand extends AbstractCommand
     changeset.setDescription(message);
 
     return changeset;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param stream
+   *
+   * @return
+   */
+  private List<Integer> loadRevisionsFromStream(HgInputStream stream)
+  {
+    List<Integer> revisions = Lists.newArrayList();
+
+    try
+    {
+      while (stream.peek() != -1)
+      {
+        int rev = stream.revisionUpTo(' ');
+
+        if (rev >= 0)
+        {
+          revisions.add(rev);
+        }
+      }
+
+    }
+    catch (IOException ex)
+    {
+      throw new RuntimeIOException(ex);
+    }
+
+    return revisions;
   }
 
   /**
