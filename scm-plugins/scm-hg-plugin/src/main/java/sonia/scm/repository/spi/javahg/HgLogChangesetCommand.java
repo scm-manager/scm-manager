@@ -40,7 +40,6 @@ import com.aragost.javahg.internals.HgInputStream;
 import com.aragost.javahg.internals.RuntimeIOException;
 import com.aragost.javahg.internals.Utils;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
@@ -61,6 +60,9 @@ import java.util.List;
 public class HgLogChangesetCommand extends AbstractCommand
 {
 
+  /** Field description */
+  private static final String BRANCH_DEFAULT = "default";
+
   /**
    * Character sequence that indicate the begin and end of the
    * changeset in the command output.
@@ -71,8 +73,12 @@ public class HgLogChangesetCommand extends AbstractCommand
 
   /** Field description */
   private static final String CHANGESET_EAGER_STYLE_PATH =
-    Utils.resourceAsFile("/styles/changesets-eager.style",
+    Utils.resourceAsFile("/sonia/scm/styles/changesets-eager.style",
       ImmutableMap.of("pattern", CHANGESET_PATTERN)).getPath();
+
+  /** Field description */
+  private static final String NULL_ID =
+    "0000000000000000000000000000000000000000";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -210,13 +216,16 @@ public class HgLogChangesetCommand extends AbstractCommand
 
     String branch = in.textUpTo('\n');
 
-    changeset.getBranches().add(branch);
+    if (!BRANCH_DEFAULT.equals(branch))
+    {
+      changeset.getBranches().add(branch);
+    }
 
-    // in.upTo(':');
+    in.upTo(':');
 
     String p1 = in.nextAsText(40);
 
-    if (!Strings.isNullOrEmpty(p1))
+    if (!NULL_ID.equals(p1))
     {
       changeset.getParents().add(p1);
     }
@@ -225,7 +234,7 @@ public class HgLogChangesetCommand extends AbstractCommand
 
     String p2 = in.nextAsText(40);
 
-    if (!Strings.isNullOrEmpty(p2))
+    if (!NULL_ID.equals(p2))
     {
       changeset.getParents().add(p2);
     }
@@ -238,6 +247,7 @@ public class HgLogChangesetCommand extends AbstractCommand
 
     while (line.length() > 0)
     {
+
       if (line.startsWith("a "))
       {
         modifications.getAdded().add(line.substring(2));
