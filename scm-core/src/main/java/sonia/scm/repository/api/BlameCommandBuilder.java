@@ -164,7 +164,7 @@ public final class BlameCommandBuilder
     }
     else
     {
-      CacheKey key = new CacheKey(repository, request);
+      CacheKey key = new CacheKey(repository, requestClone);
 
       result = cache.get(key);
 
