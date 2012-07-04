@@ -95,6 +95,19 @@ public class HgLogChangesetCommand extends AbstractCommand
    * Method description
    *
    *
+   * @param repository
+   *
+   * @return
+   */
+  public static HgLogChangesetCommand on(Repository repository)
+  {
+    return new HgLogChangesetCommand(repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param files
    *
    * @return
