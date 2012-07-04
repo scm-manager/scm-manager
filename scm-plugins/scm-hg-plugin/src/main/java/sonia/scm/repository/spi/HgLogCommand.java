@@ -107,59 +107,104 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
   public ChangesetPagingResult getChangesets(LogCommandRequest request)
     throws IOException, RepositoryException
   {
+    ChangesetPagingResult result = null;
+
     com.aragost.javahg.Repository repository = open();
     HgLogChangesetCommand cmd = HgLogChangesetCommand.on(repository);
 
-    String startChangeset = request.getStartChangeset();
-    String endChangeset = request.getEndChangeset();
-
-    if (!Strings.isNullOrEmpty(startChangeset)
-      &&!Strings.isNullOrEmpty(endChangeset))
-    {
-      cmd.rev(startChangeset.concat(":").concat(endChangeset));
-    }
-    else if (!Strings.isNullOrEmpty(endChangeset))
-    {
-      cmd.rev("tip:".concat(endChangeset));
-    }
-    else if (!Strings.isNullOrEmpty(startChangeset))
-    {
-      cmd.rev(startChangeset.concat(":0"));
-    }
-
-    List<Changeset> changesetList = null;
-
     if (!Strings.isNullOrEmpty(request.getPath()))
     {
-      changesetList = cmd.execute(request.getPath());
-    }
-    else
-    {
-      changesetList = cmd.execute();
-    }
 
-    int start = request.getPagingStart();
-    int limit = request.getPagingLimit();
-    List<Changeset> changesets = null;
+      String startChangeset = request.getStartChangeset();
+      String endChangeset = request.getEndChangeset();
 
-    if ((start == 0) && (limit < 0))
-    {
-      changesets = changesetList;
-    }
-    else
-    {
-      limit = limit + start;
-
-      if ((limit > changesetList.size()) || (limit < 0))
+      if (!Strings.isNullOrEmpty(startChangeset)
+        &&!Strings.isNullOrEmpty(endChangeset))
       {
-        limit = changesetList.size();
+        cmd.rev(startChangeset.concat(":").concat(endChangeset));
+      }
+      else if (!Strings.isNullOrEmpty(endChangeset))
+      {
+        cmd.rev("tip:".concat(endChangeset));
+      }
+      else if (!Strings.isNullOrEmpty(startChangeset))
+      {
+        cmd.rev(startChangeset.concat(":0"));
       }
 
-      List<Changeset> sublist = changesetList.subList(start, limit);
+      List<Changeset> changesetList = cmd.execute(request.getPath());
 
-      changesets = Lists.newArrayList(sublist);
+      int start = request.getPagingStart();
+      int limit = request.getPagingLimit();
+      List<Changeset> changesets = null;
+
+      if ((start == 0) && (limit < 0))
+      {
+        changesets = changesetList;
+      }
+      else
+      {
+        limit = limit + start;
+
+        if ((limit > changesetList.size()) || (limit < 0))
+        {
+          limit = changesetList.size();
+        }
+
+        List<Changeset> sublist = changesetList.subList(start, limit);
+
+        changesets = Lists.newArrayList(sublist);
+      }
+
+      result = new ChangesetPagingResult(changesetList.size(), changesets);
+    }
+    else
+    {
+
+      int start = -1;
+      int end = 0;
+
+      String startChangeset = request.getStartChangeset();
+      String endChangeset = request.getEndChangeset();
+
+      if (!Strings.isNullOrEmpty(startChangeset))
+      {
+        start = HgLogChangesetCommand.on(repository).rev(
+          startChangeset).singleRevision();
+      }
+      else if (!Strings.isNullOrEmpty(endChangeset))
+      {
+        end = HgLogChangesetCommand.on(repository).rev(
+          endChangeset).singleRevision();
+      }
+
+      if (start < 0)
+      {
+        start =
+          HgLogChangesetCommand.on(repository).rev("tip").singleRevision();
+      }
+
+      int total = start - end + 1;
+
+      if (request.getPagingStart() > 0)
+      {
+        start -= request.getPagingStart();
+      }
+
+      if (request.getPagingLimit() > 0)
+      {
+        end = start - request.getPagingLimit() + 1;
+      }
+      
+      if ( end < 0 ){
+        end = 0;
+      }
+
+      List<Changeset> changesets = cmd.rev(start + ":" + end).execute();
+
+      result = new ChangesetPagingResult(total, changesets);
     }
 
-    return new ChangesetPagingResult(changesetList.size(), changesets);
+    return result;
   }
 }

@@ -191,6 +191,19 @@ public class HgLogChangesetCommand extends AbstractCommand
     return Utils.single(execute(files));
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param files
+   *
+   * @return
+   */
+  public int singleRevision(String... files)
+  {
+    return Utils.single(loadRevisions(files));
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
