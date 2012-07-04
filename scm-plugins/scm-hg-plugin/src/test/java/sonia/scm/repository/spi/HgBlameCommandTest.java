@@ -39,7 +39,6 @@ import org.junit.Test;
 
 import sonia.scm.repository.BlameLine;
 import sonia.scm.repository.BlameResult;
-import sonia.scm.repository.HgContext;
 import sonia.scm.repository.RepositoryException;
 
 import static org.junit.Assert.*;
@@ -139,7 +138,6 @@ public class HgBlameCommandTest extends AbstractHgCommandTestBase
    */
   private BlameCommand createCommand()
   {
-    return new HgBlameCommand(new HgCommandContext(handler.getConfig(),
-            repositoryDirectory), repository);
+    return new HgBlameCommand(cmdContext, repository);
   }
 }

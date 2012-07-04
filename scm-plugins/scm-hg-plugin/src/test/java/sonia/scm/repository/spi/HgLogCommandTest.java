@@ -95,11 +95,11 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
     assertEquals(3, result.getTotal());
     assertEquals(3, result.getChangesets().size());
     assertEquals("2baab8e80280ef05a9aa76c49c76feca2872afb7",
-                 result.getChangesets().get(0).getId());
+      result.getChangesets().get(0).getId());
     assertEquals("79b6baf49711ae675568e0698d730b97ef13e84a",
-                 result.getChangesets().get(1).getId());
+      result.getChangesets().get(1).getId());
     assertEquals("a9bacaf1b7fa0cebfca71fed4e59ed69a6319427",
-                 result.getChangesets().get(2).getId());
+      result.getChangesets().get(2).getId());
   }
 
   /**
@@ -235,7 +235,6 @@ public class HgLogCommandTest extends AbstractHgCommandTestBase
    */
   private HgLogCommand createComamnd()
   {
-    return new HgLogCommand(new HgCommandContext(handler.getConfig(),
-            repositoryDirectory), repository);
+    return new HgLogCommand(cmdContext, repository);
   }
 }

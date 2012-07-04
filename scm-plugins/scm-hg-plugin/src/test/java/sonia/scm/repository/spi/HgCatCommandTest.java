@@ -99,15 +99,14 @@ public class HgCatCommandTest extends AbstractHgCommandTestBase
    * @throws RepositoryException
    */
   private String execute(CatCommandRequest request)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     String content = null;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
     try
     {
-      new HgCatCommand(new HgCommandContext(handler.getConfig(),
-              repositoryDirectory), repository).getCatResult(request, baos);
+      new HgCatCommand(cmdContext, repository).getCatResult(request, baos);
     }
     finally
     {

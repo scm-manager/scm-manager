@@ -30,10 +30,12 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 
@@ -64,6 +66,21 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
    *
    * @throws IOException
    */
+  @After
+  public void close() throws IOException
+  {
+    if (cmdContext != null)
+    {
+      cmdContext.close();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
   @Before
   public void initHgHandler() throws IOException
   {
@@ -76,7 +93,7 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
     FileSystem fileSystem = mock(FileSystem.class);
 
     this.handler = new HgRepositoryHandler(new MemoryStoreFactory(),
-            fileSystem, new HgContextProvider());
+      fileSystem, new HgContextProvider());
     this.handler.init(context);
 
     // skip tests if hg not in path
@@ -85,6 +102,8 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
       System.out.println("WARNING could not find hg, skipping test");
       Assume.assumeTrue(false);
     }
+
+    cmdContext = new HgCommandContext(handler.getConfig(), repositoryDirectory);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -114,6 +133,9 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected HgCommandContext cmdContext;
 
   /** Field description */
   protected HgRepositoryHandler handler;
