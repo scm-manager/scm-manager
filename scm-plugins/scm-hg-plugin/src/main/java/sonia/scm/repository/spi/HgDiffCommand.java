@@ -39,6 +39,7 @@ import com.google.common.base.Strings;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
+import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -78,15 +79,12 @@ public class HgDiffCommand extends AbstractCommand implements DiffCommand
    */
   @Override
   public void getDiffResult(DiffCommandRequest request, OutputStream output)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     com.aragost.javahg.commands.DiffCommand cmd =
       com.aragost.javahg.commands.DiffCommand.on(open());
 
-    if (!Strings.isNullOrEmpty(request.getRevision()))
-    {
-      cmd.change(request.getRevision());
-    }
+    cmd.change(HgUtil.getRevision(request.getRevision()));
 
     String diff = null;
 

@@ -41,6 +41,7 @@ import com.google.common.io.Closeables;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
+import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -81,15 +82,12 @@ public class HgCatCommand extends AbstractCommand implements CatCommand
    */
   @Override
   public void getCatResult(CatCommandRequest request, OutputStream output)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     com.aragost.javahg.commands.CatCommand cmd =
       com.aragost.javahg.commands.CatCommand.on(open());
 
-    if (!Strings.isNullOrEmpty(request.getRevision()))
-    {
-      cmd.rev(request.getRevision());
-    }
+    cmd.rev(HgUtil.getRevision(request.getRevision()));
 
     InputStream input = null;
 

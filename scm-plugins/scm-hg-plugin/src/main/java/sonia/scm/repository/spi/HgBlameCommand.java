@@ -50,6 +50,7 @@ import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
+import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -99,7 +100,7 @@ public class HgBlameCommand extends AbstractCommand implements BlameCommand
    */
   @Override
   public BlameResult getBlameResult(BlameCommandRequest request)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     if (logger.isDebugEnabled())
     {
@@ -108,10 +109,7 @@ public class HgBlameCommand extends AbstractCommand implements BlameCommand
 
     AnnotateCommand cmd = AnnotateCommand.on(open());
 
-    if (!Strings.isNullOrEmpty(request.getRevision()))
-    {
-      cmd.rev(request.getRevision());
-    }
+    cmd.rev(HgUtil.getRevision(request.getRevision()));
 
     List<BlameLine> blameLines = Lists.newArrayList();
     List<AnnotateLine> lines = cmd.execute(request.getPath());
