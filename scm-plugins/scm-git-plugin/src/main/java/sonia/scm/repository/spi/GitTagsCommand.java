@@ -99,6 +99,8 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
         {
           String name = GitUtil.getTagName(input);
 
+          // TODO show commit id, not the ref id
+          
           return new Tag(name, input.getObjectId().name());
         }
 
