@@ -38,7 +38,7 @@ import com.google.common.collect.Lists;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.revwalk.RevTag;
+import org.eclipse.jgit.lib.Ref;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,6 @@ import sonia.scm.repository.Tag;
 import java.io.IOException;
 
 import java.util.List;
-import org.eclipse.jgit.lib.Ref;
 
 /**
  *
@@ -60,6 +59,9 @@ import org.eclipse.jgit.lib.Ref;
  */
 public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
 {
+
+  /** Field description */
+  private static final String PREFIX_TAG = "refs/tags/";
 
   /**
    * the logger for GitTagsCommand
@@ -83,8 +85,6 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
 
   //~--- get methods ----------------------------------------------------------
 
-  private static final String PREFIX_TAG = "refs/tags/";
-  
   /**
    * Method description
    *
@@ -111,9 +111,12 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
         public Tag apply(Ref input)
         {
           String name = input.getName();
-          if ( name.startsWith(PREFIX_TAG) ){
+
+          if (name.startsWith(PREFIX_TAG))
+          {
             name = name.substring(PREFIX_TAG.length());
           }
+
           return new Tag(name, input.getObjectId().name());
         }
 

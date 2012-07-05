@@ -38,20 +38,12 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
-import org.eclipse.jgit.errors.StopWalkException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.revwalk.filter.RevFilter;
 import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilter;
-import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
 
 import org.slf4j.Logger;
@@ -68,7 +60,6 @@ import sonia.scm.util.IOUtil;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -170,7 +161,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    */
   @Override
   public ChangesetPagingResult getChangesets(LogCommandRequest request)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     if (logger.isDebugEnabled())
     {
@@ -222,8 +213,8 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
         if (!Strings.isNullOrEmpty(request.getPath()))
         {
           revWalk.setTreeFilter(
-              AndTreeFilter.create(
-                PathFilter.create(request.getPath()), TreeFilter.ANY_DIFF));
+            AndTreeFilter.create(
+              PathFilter.create(request.getPath()), TreeFilter.ANY_DIFF));
         }
 
         ObjectId head = GitUtil.getRepositoryHead(gr);
@@ -246,7 +237,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
             RevCommit commit = iterator.next();
 
             if ((counter >= start)
-                && ((limit < 0) || (counter < start + limit)))
+              && ((limit < 0) || (counter < start + limit)))
             {
               changesetList.add(converter.createChangeset(commit));
             }
@@ -265,7 +256,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
       else if (logger.isWarnEnabled())
       {
         logger.warn("the repository {} seems to be empty",
-                    repository.getName());
+          repository.getName());
       }
     }
     catch (Exception ex)
