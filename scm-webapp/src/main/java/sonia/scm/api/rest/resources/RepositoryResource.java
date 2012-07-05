@@ -61,6 +61,7 @@ import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryUtil;
+import sonia.scm.repository.Tags;
 import sonia.scm.repository.api.BlameCommandBuilder;
 import sonia.scm.repository.api.BrowseCommandBuilder;
 import sonia.scm.repository.api.CatCommandBuilder;
@@ -108,7 +109,7 @@ import javax.ws.rs.core.UriInfo;
 @Path("repositories")
 @ExternallyManagedLifecycle
 public class RepositoryResource
-        extends AbstractManagerResource<Repository, RepositoryException>
+  extends AbstractManagerResource<Repository, RepositoryException>
 {
 
   /** Field description */
@@ -133,10 +134,10 @@ public class RepositoryResource
    * @param blameViewerUtil
    */
   @Inject
-  public RepositoryResource(
-          ScmConfiguration configuration, RepositoryManager repositoryManager,
-          Provider<WebSecurityContext> securityContextProvider,
-          RepositoryServiceFactory servicefactory)
+  public RepositoryResource(ScmConfiguration configuration,
+    RepositoryManager repositoryManager,
+    Provider<WebSecurityContext> securityContextProvider,
+    RepositoryServiceFactory servicefactory)
   {
     super(repositoryManager);
     this.configuration = configuration;
@@ -255,7 +256,7 @@ public class RepositoryResource
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
   public Response update(@Context UriInfo uriInfo, @PathParam("id") String id,
-                         Repository repository)
+    Repository repository)
   {
     return super.update(uriInfo, id, repository);
   }
@@ -311,7 +312,7 @@ public class RepositoryResource
   public Response getAll(@Context Request request, @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("-1")
   @QueryParam("limit") int limit, @QueryParam("sortby") String sortby,
-                                  @DefaultValue("false")
+    @DefaultValue("false")
   @QueryParam("desc") boolean desc)
   {
     return super.getAll(request, start, limit, sortby, desc);
@@ -343,9 +344,8 @@ public class RepositoryResource
   @TypeHint(BlameResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getBlame(@PathParam("id") String id,
-                           @QueryParam("revision") String revision,
-                           @QueryParam("path") String path)
-          throws RepositoryException, IOException
+    @QueryParam("revision") String revision, @QueryParam("path") String path)
+    throws RepositoryException, IOException
   {
     Response response = null;
     RepositoryService service = null;
@@ -419,9 +419,8 @@ public class RepositoryResource
   @TypeHint(BrowserResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getBrowserResult(@PathParam("id") String id,
-                                   @QueryParam("revision") String revision,
-                                   @QueryParam("path") String path)
-          throws RepositoryException, IOException
+    @QueryParam("revision") String revision, @QueryParam("path") String path)
+    throws RepositoryException, IOException
   {
     Response response = null;
     RepositoryService service = null;
@@ -490,7 +489,7 @@ public class RepositoryResource
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @TypeHint(Repository.class)
   public Response getByTypeAndName(@PathParam("type") String type,
-                                   @PathParam("name") String name)
+    @PathParam("name") String name)
   {
     Response response = null;
     Repository repository = repositoryManager.get(type, name);
@@ -533,8 +532,8 @@ public class RepositoryResource
   @GET
   @Path("{id}/changeset/{revision}")
   public Response getChangeset(@PathParam("id") String id,
-                               @PathParam("revision") String revision)
-          throws IOException, RepositoryException
+    @PathParam("revision") String revision)
+    throws IOException, RepositoryException
   {
     Response response = null;
 
@@ -611,9 +610,8 @@ public class RepositoryResource
   @TypeHint(ChangesetPagingResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getChangesets(@PathParam("id") String id,
-                                @QueryParam("path") String path,
-                                @QueryParam("revision") String revision,
-                                @DefaultValue("0")
+    @QueryParam("path") String path, @QueryParam("revision") String revision,
+    @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("20")
   @QueryParam("limit") int limit) throws RepositoryException, IOException
   {
@@ -689,8 +687,7 @@ public class RepositoryResource
   @TypeHint(StreamingOutput.class)
   @Produces({ MediaType.APPLICATION_OCTET_STREAM })
   public Response getContent(@PathParam("id") String id,
-                             @QueryParam("revision") String revision,
-                             @QueryParam("path") String path)
+    @QueryParam("revision") String revision, @QueryParam("path") String path)
   {
     Response response = null;
     StreamingOutput output = null;
@@ -712,7 +709,7 @@ public class RepositoryResource
       String contentDispositionName = getContentDispositionNameFromPath(path);
 
       response = Response.ok(output).header("Content-Disposition",
-                             contentDispositionName).build();
+        contentDispositionName).build();
     }
     catch (RepositoryNotFoundException ex)
     {
@@ -762,9 +759,8 @@ public class RepositoryResource
   @TypeHint(DiffStreamingOutput.class)
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   public Response getDiff(@PathParam("id") String id,
-                          @QueryParam("revision") String revision,
-                          @QueryParam("path") String path)
-          throws RepositoryException, IOException
+    @QueryParam("revision") String revision, @QueryParam("path") String path)
+    throws RepositoryException, IOException
   {
     AssertUtil.assertIsNotEmpty(id);
     AssertUtil.assertIsNotEmpty(revision);
@@ -789,7 +785,7 @@ public class RepositoryResource
       }
 
       String name = service.getRepository().getName().concat("-").concat(
-                        revision).concat(".diff");
+                      revision).concat(".diff");
       String contentDispositionName = getContentDispositionName(name);
 
       response = Response.ok(new DiffStreamingOutput(builder)).header(
@@ -816,6 +812,66 @@ public class RepositoryResource
     return response;
   }
 
+  /**
+   * Returns all {@link Tags} of a repository.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>400 bad request, the content feature is not
+   *       supported by this type of repositories.</li>
+   *   <li>404 not found, if the repository or the path could not be found</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   *
+   * @param id the id of the repository
+   *
+   * @return all {@link Tags} of a repository
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   * 
+   * @since 1.18
+   */
+  @GET
+  @Path("{id}/tags")
+  public Response getTags(@PathParam("id") String id)
+    throws RepositoryException, IOException
+  {
+    Response response = null;
+    RepositoryService service = null;
+
+    try
+    {
+      service = servicefactory.create(id);
+
+      Tags tags = service.getTagsCommand().getTags();
+
+      if (tags != null)
+      {
+        response = Response.ok(tags).build();
+      }
+      else
+      {
+        response = Response.status(Status.NOT_FOUND).build();
+      }
+    }
+    catch (RepositoryNotFoundException ex)
+    {
+      response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+    catch (CommandNotSupportedException ex)
+    {
+      response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
+    }
+
+    return response;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -828,7 +884,7 @@ public class RepositoryResource
    */
   @Override
   protected GenericEntity<Collection<Repository>> createGenericEntity(
-          Collection<Repository> items)
+    Collection<Repository> items)
   {
     return new GenericEntity<Collection<Repository>>(items) {}
     ;
@@ -844,7 +900,7 @@ public class RepositoryResource
    */
   @Override
   protected Collection<Repository> prepareForReturn(
-          Collection<Repository> repositories)
+    Collection<Repository> repositories)
   {
     for (Repository repository : repositories)
     {
@@ -972,7 +1028,7 @@ public class RepositoryResource
   private boolean isOwner(Repository repository)
   {
     return PermissionUtil.hasPermission(repository, securityContextProvider,
-            PermissionType.OWNER);
+      PermissionType.OWNER);
   }
 
   //~--- fields ---------------------------------------------------------------
