@@ -37,12 +37,15 @@ package sonia.scm.client;
 
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.Tags;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
+import com.sun.jersey.api.client.WebResource;
 
 import java.util.Collection;
 import java.util.List;
@@ -52,8 +55,7 @@ import java.util.List;
  * @author Sebastian Sdorra
  */
 public class JerseyRepositoryClientHandler
-        extends AbstractClientHandler<Repository>
-        implements RepositoryClientHandler
+  extends AbstractClientHandler<Repository> implements RepositoryClientHandler
 {
 
   /**
@@ -99,7 +101,7 @@ public class JerseyRepositoryClientHandler
    */
   @Override
   public ClientChangesetHandler getChangesetHandler(Repository repository)
-          throws NotSupportedFeatuerException
+    throws NotSupportedFeatuerException
   {
     return new JerseyClientChangesetHandler(session, repository);
   }
@@ -115,7 +117,7 @@ public class JerseyRepositoryClientHandler
    */
   @Override
   public JerseyClientRepositoryBrowser getRepositoryBrowser(
-          Repository repository)
+    Repository repository)
   {
     return new JerseyClientRepositoryBrowser(session, repository);
   }
@@ -130,6 +132,41 @@ public class JerseyRepositoryClientHandler
   public Collection<Type> getRepositoryTypes()
   {
     return session.getState().getRepositoryTypes();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  public Tags getTags(Repository repository)
+  {
+    Tags tags = null;
+    String url = session.getUrlProvider().getRepositoryUrlProvider().getTagsUrl(
+                   repository.getId());
+    WebResource resource = session.getClient().resource(url);
+    ClientResponse response = null;
+
+    try
+    {
+      response = resource.get(ClientResponse.class);
+
+      if (response.getStatus() != ScmClientException.SC_NOTFOUND)
+      {
+        ClientUtil.checkResponse(response, 200);
+        tags = response.getEntity(Tags.class);
+      }
+    }
+    finally
+    {
+      ClientUtil.close(response);
+    }
+
+    return tags;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -157,7 +194,7 @@ public class JerseyRepositoryClientHandler
    */
   @Override
   protected void postCreate(ClientResponse response, Repository repository,
-                            Repository newRepository)
+    Repository newRepository)
   {
     newRepository.copyProperties(repository);
 

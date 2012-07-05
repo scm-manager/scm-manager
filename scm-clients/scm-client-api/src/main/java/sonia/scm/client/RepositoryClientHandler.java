@@ -38,6 +38,7 @@ package sonia.scm.client;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.Tags;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -74,7 +75,7 @@ public interface RepositoryClientHandler extends ClientHandler<Repository>
    * @throws NotSupportedFeatuerException
    */
   public ClientChangesetHandler getChangesetHandler(Repository repository)
-          throws NotSupportedFeatuerException;
+    throws NotSupportedFeatuerException;
 
   /**
    * Method description
@@ -88,7 +89,7 @@ public interface RepositoryClientHandler extends ClientHandler<Repository>
    * @throws NotSupportedFeatuerException
    */
   public ClientRepositoryBrowser getRepositoryBrowser(Repository repository)
-          throws NotSupportedFeatuerException;
+    throws NotSupportedFeatuerException;
 
   /**
    * Method description
@@ -97,4 +98,15 @@ public interface RepositoryClientHandler extends ClientHandler<Repository>
    * @return
    */
   public Collection<Type> getRepositoryTypes();
+
+  /**
+   * Returns all tags of the given repository.
+   *
+   *
+   * @param repository repository
+   *
+   * @return all tags of the given repository
+   * @since 1.18
+   */
+  public Tags getTags(Repository repository);
 }
