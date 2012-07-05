@@ -39,11 +39,14 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKey;
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.Tags;
 import sonia.scm.repository.spi.TagsCommand;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 import java.util.List;
 
@@ -74,6 +77,7 @@ public final class TagsCommandBuilder
    *
    * @param cacheManager cache manager
    * @param logCommand implementation of the {@link TagsCommand}
+   * @param command
    * @param repository repository
    */
   TagsCommandBuilder(CacheManager cacheManager, TagsCommand command,
@@ -84,15 +88,18 @@ public final class TagsCommandBuilder
     this.repository = repository;
   }
 
-  //~--- methods --------------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns all tags from the repository.
    *
    *
    * @return tags from the repository
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
-  public Tags getTags()
+  public Tags getTags() throws RepositoryException, IOException
   {
     Tags tags = null;
 
@@ -146,8 +153,11 @@ public final class TagsCommandBuilder
    *
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
-  private Tags getTagsFromCommand()
+  private Tags getTagsFromCommand() throws RepositoryException, IOException
   {
     List<Tag> tagList = command.getTags();
 
