@@ -36,6 +36,8 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Closeables;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
@@ -44,6 +46,7 @@ import sonia.scm.web.HgUtil;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -81,22 +84,32 @@ public class HgDiffCommand extends AbstractCommand implements DiffCommand
   public void getDiffResult(DiffCommandRequest request, OutputStream output)
     throws IOException, RepositoryException
   {
+    com.aragost.javahg.Repository hgRepo = open();
     com.aragost.javahg.commands.DiffCommand cmd =
-      com.aragost.javahg.commands.DiffCommand.on(open());
+      com.aragost.javahg.commands.DiffCommand.on(hgRepo);
 
     cmd.change(HgUtil.getRevision(request.getRevision()));
 
-    String diff = null;
+    InputStream inputStream = null;
 
-    if (!Strings.isNullOrEmpty(request.getPath()))
+    try
     {
-      diff = cmd.execute(request.getPath());
-    }
-    else
-    {
-      diff = cmd.execute();
-    }
 
-    output.write(diff.getBytes());
+      if (!Strings.isNullOrEmpty(request.getPath()))
+      {
+        inputStream = cmd.stream(hgRepo.file(request.getPath()));
+      }
+      else
+      {
+        inputStream = cmd.stream();
+      }
+
+      ByteStreams.copy(inputStream, output);
+
+    }
+    finally
+    {
+      Closeables.closeQuietly(inputStream);
+    }
   }
 }
