@@ -61,7 +61,8 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   /** Field description */
   private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
                                                  Command.BROWSE, Command.CAT,
-                                                 Command.DIFF, Command.LOG);
+                                                 Command.DIFF, Command.LOG,
+                                                 Command.TAGS);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -75,15 +76,14 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
    * @param repository
    */
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
-                              Provider<HgContext> hgContextProvider,
-                              Repository repository)
+    Provider<HgContext> hgContextProvider, Repository repository)
   {
     this.hgContextProvider = hgContextProvider;
     this.handler = handler;
     this.repository = repository;
     this.repositoryDirectory = handler.getDirectory(repository);
     this.context = new HgCommandContext(handler.getConfig(),
-            repositoryDirectory);
+      repositoryDirectory);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -124,7 +124,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public HgBrowseCommand getBrowseCommand()
   {
     return new HgBrowseCommand(handler, hgContextProvider.get(), repository,
-                               repositoryDirectory);
+      repositoryDirectory);
   }
 
   /**
@@ -173,6 +173,18 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public Set<Command> getSupportedCommands()
   {
     return COMMANDS;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public TagsCommand getTagsCommand()
+  {
+    return new HgTagsCommand(context, repository);
   }
 
   //~--- fields ---------------------------------------------------------------
