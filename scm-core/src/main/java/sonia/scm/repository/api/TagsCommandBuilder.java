@@ -35,6 +35,9 @@ package sonia.scm.repository.api;
 
 import com.google.common.base.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.Repository;
@@ -68,6 +71,12 @@ public final class TagsCommandBuilder
 
   /** name of the cache */
   static final String CACHE_NAME = "sonia.cache.cmd.tags";
+
+  /**
+   * the logger for TagsCommandBuilder
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(TagsCommandBuilder.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -105,6 +114,12 @@ public final class TagsCommandBuilder
 
     if (disableCache)
     {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("get tags for repository {} with disabled cache",
+          repository.getName());
+      }
+
       tags = getTagsFromCommand();
     }
     else
@@ -115,12 +130,22 @@ public final class TagsCommandBuilder
 
       if (tags == null)
       {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug("get tags for repository {}", repository.getName());
+        }
+
         tags = getTagsFromCommand();
 
         if (tags != null)
         {
           cache.put(key, tags);
         }
+      }
+      else if (logger.isDebugEnabled())
+      {
+        logger.debug("get tags for repository {} from cache",
+          repository.getName());
       }
     }
 
