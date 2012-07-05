@@ -77,7 +77,7 @@ public interface RepositoryUrlProvider extends ModelUrlProvider
    * @return
    */
   public String getChangesetUrl(String repositoryId, String path,
-                                String revision, int start, int limit);
+    String revision, int start, int limit);
 
   /**
    * Method description
@@ -87,7 +87,7 @@ public interface RepositoryUrlProvider extends ModelUrlProvider
    * @param revision
    *
    * @return
-   * 
+   *
    * @since 1.12
    */
   public String getChangesetUrl(String repositoryId, String revision);
@@ -115,7 +115,7 @@ public interface RepositoryUrlProvider extends ModelUrlProvider
    * @return
    */
   public String getContentUrl(String repositoryId, String path,
-                              String revision);
+    String revision);
 
   /**
    * Method description
@@ -139,4 +139,15 @@ public interface RepositoryUrlProvider extends ModelUrlProvider
    * @return
    */
   public String getDiffUrl(String repositoryId, String revision);
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryId
+   *
+   * @return
+   * @since 1.18
+   */
+  public String getTagsUrl(String repositoryId);
 }

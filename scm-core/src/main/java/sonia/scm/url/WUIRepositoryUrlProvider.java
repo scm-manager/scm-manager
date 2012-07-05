@@ -42,7 +42,7 @@ import sonia.scm.util.HttpUtil;
  * @author Sebastian Sdorra
  */
 public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
-        implements RepositoryUrlProvider
+  implements RepositoryUrlProvider
 {
 
   /** Field description */
@@ -113,8 +113,7 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
     revision = UrlUtil.fixRevision(revision);
 
     return new WUIUrlBuilder(baseUrl, COMPONENT_CONTENT).append(
-        repositoryId).append(revision).append(path).append(
-        VIEW_BLAME).toString();
+      repositoryId).append(revision).append(path).append(VIEW_BLAME).toString();
   }
 
   /**
@@ -133,7 +132,7 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
     revision = UrlUtil.fixRevision(revision);
 
     return new WUIUrlBuilder(baseUrl, COMPONENT_BROWSER).append(
-        repositoryId).append(revision).append(path).toString();
+      repositoryId).append(revision).append(path).toString();
   }
 
   /**
@@ -150,14 +149,14 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
    */
   @Override
   public String getChangesetUrl(String repositoryId, String path,
-                                String revision, int start, int limit)
+    String revision, int start, int limit)
   {
     revision = UrlUtil.fixRevision(revision);
 
     // TODO handle start and limit
     return new WUIUrlBuilder(baseUrl, COMPONENT_CONTENT).append(
-        repositoryId).append(revision).append(path).append(
-        VIEW_HISTORY).toString();
+      repositoryId).append(revision).append(path).append(
+      VIEW_HISTORY).toString();
   }
 
   /**
@@ -174,7 +173,7 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   public String getChangesetUrl(String repositoryId, int start, int limit)
   {
     return new WUIUrlBuilder(baseUrl, COMPONENT_CHANGESETS).append(
-        repositoryId).append(start).append(limit).toString();
+      repositoryId).append(start).append(limit).toString();
   }
 
   /**
@@ -193,8 +192,8 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   {
     revision = UrlUtil.fixRevision(revision);
 
-    return new WUIUrlBuilder(baseUrl, COMPONENT_CHANGESET).append(
-        repositoryId).append(revision).toString();
+    return new WUIUrlBuilder(baseUrl,
+      COMPONENT_CHANGESET).append(repositoryId).append(revision).toString();
   }
 
   /**
@@ -213,8 +212,8 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
     revision = UrlUtil.fixRevision(revision);
 
     return new WUIUrlBuilder(baseUrl, COMPONENT_CONTENT).append(
-        repositoryId).append(revision).append(path).append(
-        VIEW_HISTORY).toString();
+      repositoryId).append(revision).append(path).append(
+      VIEW_HISTORY).toString();
   }
 
   /**
@@ -249,8 +248,23 @@ public class WUIRepositoryUrlProvider extends WUIModelUrlProvider
   {
     revision = UrlUtil.fixRevision(revision);
 
-    return new WUIUrlBuilder(baseUrl, COMPONENT_DIFF).append(
-        repositoryId).append(revision).toString();
+    return new WUIUrlBuilder(baseUrl,
+      COMPONENT_DIFF).append(repositoryId).append(revision).toString();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryId
+   *
+   * @return
+   * @since 1.18
+   */
+  @Override
+  public String getTagsUrl(String repositoryId)
+  {
+    return getBrowseUrl(repositoryId, null, null);
   }
 
   //~--- fields ---------------------------------------------------------------

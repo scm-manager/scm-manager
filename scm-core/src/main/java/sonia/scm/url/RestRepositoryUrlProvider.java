@@ -42,7 +42,7 @@ import sonia.scm.util.UrlBuilder;
  * @author Sebastian Sdorra
  */
 public class RestRepositoryUrlProvider extends RestModelUrlProvider
-        implements RepositoryUrlProvider
+  implements RepositoryUrlProvider
 {
 
   /** Field description */
@@ -77,6 +77,9 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
   /** Field description */
   public static final String PART_DIFF = "diff";
 
+  /** Field description */
+  public static final String PART_TAGS = "tags";
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -88,7 +91,7 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
    * @param extension
    */
   public RestRepositoryUrlProvider(String baseUrl, String modelSuffix,
-                                   String extension)
+    String extension)
   {
     super(baseUrl, modelSuffix, extension);
   }
@@ -111,9 +114,9 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
     revision = UrlUtil.fixRevision(revision);
 
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
-        PART_BLAME).append(extension).appendParameter(
-        PARAMETER_PATH, path).appendParameter(
-        PARAMETER_REVISION, revision).toString();
+      PART_BLAME).append(extension).appendParameter(
+      PARAMETER_PATH, path).appendParameter(
+      PARAMETER_REVISION, revision).toString();
   }
 
   /**
@@ -132,9 +135,9 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
     revision = UrlUtil.fixRevision(revision);
 
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
-        PART_BROWSE).append(extension).appendParameter(
-        PARAMETER_PATH, path).appendParameter(
-        PARAMETER_REVISION, revision).toString();
+      PART_BROWSE).append(extension).appendParameter(
+      PARAMETER_PATH, path).appendParameter(
+      PARAMETER_REVISION, revision).toString();
   }
 
   /**
@@ -151,16 +154,16 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
    */
   @Override
   public String getChangesetUrl(String repositoryId, String path,
-                                String revision, int start, int limit)
+    String revision, int start, int limit)
   {
     revision = UrlUtil.fixRevision(revision);
 
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
-        PART_CHANGESETS).append(extension).appendParameter(
-        PARAMETER_PATH, path).appendParameter(
-        PARAMETER_REVISION, revision).appendParameter(
-        PARAMETER_START, start).appendParameter(
-        PARAMETER_LIMIT, limit).toString();
+      PART_CHANGESETS).append(extension).appendParameter(
+      PARAMETER_PATH, path).appendParameter(
+      PARAMETER_REVISION, revision).appendParameter(
+      PARAMETER_START, start).appendParameter(
+      PARAMETER_LIMIT, limit).toString();
   }
 
   /**
@@ -177,9 +180,9 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
   public String getChangesetUrl(String repositoryId, int start, int limit)
   {
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
-        PART_CHANGESETS).append(extension).appendParameter(
-        PARAMETER_START, start).appendParameter(
-        PARAMETER_LIMIT, limit).toString();
+      PART_CHANGESETS).append(extension).appendParameter(
+      PARAMETER_START, start).appendParameter(
+      PARAMETER_LIMIT, limit).toString();
   }
 
   /**
@@ -199,7 +202,7 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
     revision = UrlUtil.fixRevision(revision);
 
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
-        PART_CHANGESET).appendUrlPart(revision).append(extension).toString();
+      PART_CHANGESET).appendUrlPart(revision).append(extension).toString();
   }
 
   /**
@@ -218,8 +221,8 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
     revision = UrlUtil.fixRevision(revision);
 
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
-        PART_CONTENT).appendParameter(PARAMETER_PATH, path).appendParameter(
-        PARAMETER_REVISION, revision).toString();
+      PART_CONTENT).appendParameter(PARAMETER_PATH, path).appendParameter(
+      PARAMETER_REVISION, revision).toString();
   }
 
   /**
@@ -236,7 +239,7 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
   public String getDetailUrl(String type, String name)
   {
     return new UrlBuilder(base).appendUrlPart(type).appendUrlPart(name).append(
-        extension).toString();
+      extension).toString();
   }
 
   /**
@@ -254,6 +257,22 @@ public class RestRepositoryUrlProvider extends RestModelUrlProvider
     revision = UrlUtil.fixRevision(revision);
 
     return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
-        PART_DIFF).appendParameter(PARAMETER_REVISION, revision).toString();
+      PART_DIFF).appendParameter(PARAMETER_REVISION, revision).toString();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repositoryId
+   *
+   * @return
+   * @since 1.18
+   */
+  @Override
+  public String getTagsUrl(String repositoryId)
+  {
+    return new UrlBuilder(base).appendUrlPart(repositoryId).appendUrlPart(
+      PART_TAGS).append(extension).toString();
   }
 }
