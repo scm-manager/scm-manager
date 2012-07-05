@@ -69,20 +69,20 @@ import java.io.Serializable;
  * <br />
  * Retrieve a single {@link Changeset}:<br />
  * <pre><code>
- * LogCommand log = repositoryService.getLogCommand();
+ * LogCommandBuilder log = repositoryService.getLogCommand();
  * Changeset changeset = log.getChangeset("id-of-the-commit");
  * </code></pre>
  *
  * Retrieve changesets of a {@link Repository} with paging:<br />
  * <pre><code>
- * LogCommand log = repositoryService.getLogCommand();
+ * LogCommandBuilder log = repositoryService.getLogCommand();
  * ChangesetPagingResult changesetPagingResult =
  *          log.setPagingStart(25).setPagingLimit(25).getChangesets();
  * </code></pre>
  *
  * Retrieve all changesets of a file in a {@link Repository}:<br />
  * <pre><code>
- * LogCommand log = repositoryService.getLogCommand();
+ * LogCommandBuilder log = repositoryService.getLogCommand();
  * ChangesetPagingResult changesetPagingResult =
  *          log.setPath("pom.xml").disablePagingLimit().getChangesets();
  * </code></pre>
