@@ -41,5 +41,10 @@ package sonia.scm.repository.api;
  */
 public enum Command
 {
-  LOG, BROWSE, CAT, DIFF, BLAME
+  LOG, BROWSE, CAT, DIFF, BLAME,
+
+  /**
+   * @since 1.18
+   */
+  TAGS
 }

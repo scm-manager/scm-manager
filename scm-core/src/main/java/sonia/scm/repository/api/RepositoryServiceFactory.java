@@ -60,6 +60,7 @@ import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryListener;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.repository.Tags;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
 import sonia.scm.security.ScmSecurityException;
@@ -106,7 +107,7 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  * @since 1.17
- * 
+ *
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.repository.api.RepositoryService
  */
@@ -134,11 +135,10 @@ public final class RepositoryServiceFactory
    * @param preProcessorUtil helper object for pre processor handling
    */
   @Inject
-  public RepositoryServiceFactory(
-          CacheManager cacheManager, RepositoryManager repositoryManager,
-          Provider<WebSecurityContext> securityContextProvider,
-          Set<RepositoryServiceResolver> resolvers,
-          PreProcessorUtil preProcessorUtil)
+  public RepositoryServiceFactory(CacheManager cacheManager,
+    RepositoryManager repositoryManager,
+    Provider<WebSecurityContext> securityContextProvider,
+    Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil)
   {
     this.cacheManager = cacheManager;
     this.repositoryManager = repositoryManager;
@@ -172,17 +172,17 @@ public final class RepositoryServiceFactory
    *         for that repository
    */
   public RepositoryService create(String repositoryId)
-          throws RepositoryNotFoundException
+    throws RepositoryNotFoundException
   {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(repositoryId),
-                                "a non empty repositoryId is required");
+      "a non empty repositoryId is required");
 
     Repository repository = repositoryManager.get(repositoryId);
 
     if (repository == null)
     {
       throw new RepositoryNotFoundException(
-          "could not find a repository with id ".concat(repositoryId));
+        "could not find a repository with id ".concat(repositoryId));
     }
 
     return create(repository);
@@ -207,12 +207,12 @@ public final class RepositoryServiceFactory
    *         for that repository
    */
   public RepositoryService create(String type, String name)
-          throws RepositoryNotFoundException
+    throws RepositoryNotFoundException
   {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(type),
-                                "a non empty type is required");
+      "a non empty type is required");
     Preconditions.checkArgument(!Strings.isNullOrEmpty(name),
-                                "a non empty name is required");
+      "a non empty name is required");
 
     Repository repository = repositoryManager.get(type, name);
 
@@ -250,7 +250,7 @@ public final class RepositoryServiceFactory
 
     // check for read permissions of current user
     PermissionUtil.assertPermission(repository, securityContextProvider,
-                                    PermissionType.READ);
+      PermissionType.READ);
 
     RepositoryService service = null;
 
@@ -263,12 +263,12 @@ public final class RepositoryServiceFactory
         if (logger.isDebugEnabled())
         {
           logger.debug(
-              "create new repository service for repository {} of type {}",
-              repository.getName(), repository.getType());
+            "create new repository service for repository {} of type {}",
+            repository.getName(), repository.getType());
         }
 
         service = new RepositoryService(cacheManager, provider, repository,
-                                        preProcessorUtil);
+          preProcessorUtil);
 
         break;
       }
@@ -292,7 +292,7 @@ public final class RepositoryServiceFactory
    * @author         Enter your name here...
    */
   private static class CacheClearHook extends PostReceiveRepositoryHook
-          implements RepositoryListener
+    implements RepositoryListener
   {
 
     /**
@@ -305,14 +305,14 @@ public final class RepositoryServiceFactory
     {
       this.blameCache =
         cacheManager.getCache(BlameCommandBuilder.CacheKey.class,
-                              BlameResult.class,
-                              BlameCommandBuilder.CACHE_NAME);
+          BlameResult.class, BlameCommandBuilder.CACHE_NAME);
       this.browseCache =
         cacheManager.getCache(BrowseCommandBuilder.CacheKey.class,
-                              BrowserResult.class,
-                              BrowseCommandBuilder.CACHE_NAME);
+          BrowserResult.class, BrowseCommandBuilder.CACHE_NAME);
       this.logCache = cacheManager.getCache(LogCommandBuilder.CacheKey.class,
-              ChangesetPagingResult.class, LogCommandBuilder.CACHE_NAME);
+        ChangesetPagingResult.class, LogCommandBuilder.CACHE_NAME);
+      this.tagsCache = cacheManager.getCache(TagsCommandBuilder.CacheKey.class,
+        Tags.class, TagsCommandBuilder.CACHE_NAME);
     }
 
     //~--- methods ------------------------------------------------------------
@@ -372,6 +372,7 @@ public final class RepositoryServiceFactory
       blameCache.removeAll(filter);
       browseCache.removeAll(filter);
       logCache.removeAll(filter);
+      tagsCache.removeAll(filter);
     }
 
     //~--- fields -------------------------------------------------------------
@@ -384,6 +385,9 @@ public final class RepositoryServiceFactory
 
     /** Field description */
     private Cache<LogCommandBuilder.CacheKey, ChangesetPagingResult> logCache;
+
+    /** Field description */
+    private Cache<TagsCommandBuilder.CacheKey, Tags> tagsCache;
   }
 
 

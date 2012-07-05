@@ -96,8 +96,8 @@ public final class RepositoryService implements Closeable
    * @param preProcessorUtil
    */
   RepositoryService(CacheManager cacheManager,
-                    RepositoryServiceProvider provider, Repository repository,
-                    PreProcessorUtil preProcessorUtil)
+    RepositoryServiceProvider provider, Repository repository,
+    PreProcessorUtil preProcessorUtil)
   {
     this.cacheManager = cacheManager;
     this.provider = provider;
@@ -150,11 +150,11 @@ public final class RepositoryService implements Closeable
     if (logger.isDebugEnabled())
     {
       logger.debug("create blame command for repository {}",
-                   repository.getName());
+        repository.getName());
     }
 
     return new BlameCommandBuilder(cacheManager, provider.getBlameCommand(),
-                                   repository, preProcessorUtil);
+      repository, preProcessorUtil);
   }
 
   /**
@@ -169,11 +169,11 @@ public final class RepositoryService implements Closeable
     if (logger.isDebugEnabled())
     {
       logger.debug("create browse command for repository {}",
-                   repository.getName());
+        repository.getName());
     }
 
     return new BrowseCommandBuilder(cacheManager, provider.getBrowseCommand(),
-                                    repository, preProcessorUtil);
+      repository, preProcessorUtil);
   }
 
   /**
@@ -188,7 +188,7 @@ public final class RepositoryService implements Closeable
     if (logger.isDebugEnabled())
     {
       logger.debug("create cat command for repository {}",
-                   repository.getName());
+        repository.getName());
     }
 
     return new CatCommandBuilder(provider.getCatCommand());
@@ -207,7 +207,7 @@ public final class RepositoryService implements Closeable
     if (logger.isDebugEnabled())
     {
       logger.debug("create diff command for repository {}",
-                   repository.getName());
+        repository.getName());
     }
 
     return new DiffCommandBuilder(provider.getDiffCommand());
@@ -225,11 +225,11 @@ public final class RepositoryService implements Closeable
     if (logger.isDebugEnabled())
     {
       logger.debug("create log command for repository {}",
-                   repository.getName());
+        repository.getName());
     }
 
     return new LogCommandBuilder(cacheManager, provider.getLogCommand(),
-                                 repository, preProcessorUtil);
+      repository, preProcessorUtil);
   }
 
   /**
@@ -240,6 +240,25 @@ public final class RepositoryService implements Closeable
   public Repository getRepository()
   {
     return repository;
+  }
+
+  /**
+   * The tags command list all repository tag.
+   *
+   * @return instance of {@link TagsCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *         by the implementation of the repository service provider.
+   */
+  public TagsCommandBuilder getTagsCommand()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create tags command for repository {}",
+        repository.getName());
+    }
+
+    return new TagsCommandBuilder(cacheManager, provider.getTagsCommand(),
+      repository);
   }
 
   /**
