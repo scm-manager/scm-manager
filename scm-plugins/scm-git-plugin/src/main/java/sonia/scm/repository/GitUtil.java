@@ -75,6 +75,9 @@ public class GitUtil
   /** Field description */
   public static final String REF_MASTER = "master";
 
+  /** Field description */
+  private static final String PREFIX_TAG = "refs/tags/";
+
   /** the logger for GitUtil */
   private static final Logger logger = LoggerFactory.getLogger(GitUtil.class);
 
@@ -105,10 +108,10 @@ public class GitUtil
    * @throws IOException
    */
   public static org.eclipse.jgit.lib.Repository open(File directory)
-          throws IOException
+    throws IOException
   {
     return RepositoryCache.open(RepositoryCache.FileKey.lenient(directory,
-            FS.DETECTED), true);
+      FS.DETECTED), true);
   }
 
   /**
@@ -167,8 +170,8 @@ public class GitUtil
    * @throws IOException
    */
   public static ObjectId getBranchId(org.eclipse.jgit.lib.Repository repo,
-                                     String branchName)
-          throws IOException
+    String branchName)
+    throws IOException
   {
     ObjectId branchId = null;
     Ref ref = repo.getRef(branchName);
@@ -259,8 +262,8 @@ public class GitUtil
    * @throws IOException
    */
   public static ObjectId getRevisionId(org.eclipse.jgit.lib.Repository repo,
-          String revision)
-          throws IOException
+    String revision)
+    throws IOException
   {
     ObjectId revId = null;
 
@@ -274,5 +277,26 @@ public class GitUtil
     }
 
     return revId;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param ref
+   *
+   * @return
+   */
+  public static String getTagName(Ref ref)
+  {
+    String name = ref.getName();
+
+    if (name.startsWith(PREFIX_TAG))
+    {
+      name = name.substring(PREFIX_TAG.length());
+    }
+
+    return name;
+
   }
 }

@@ -40,9 +40,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.Tag;
@@ -59,17 +57,6 @@ import java.util.List;
  */
 public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
 {
-
-  /** Field description */
-  private static final String PREFIX_TAG = "refs/tags/";
-
-  /**
-   * the logger for GitTagsCommand
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitTagsCommand.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -110,12 +97,7 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
         @Override
         public Tag apply(Ref input)
         {
-          String name = input.getName();
-
-          if (name.startsWith(PREFIX_TAG))
-          {
-            name = name.substring(PREFIX_TAG.length());
-          }
+          String name = GitUtil.getTagName(input);
 
           return new Tag(name, input.getObjectId().name());
         }

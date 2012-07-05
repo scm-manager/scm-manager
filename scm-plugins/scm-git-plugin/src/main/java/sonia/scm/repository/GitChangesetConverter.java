@@ -35,6 +35,9 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -56,7 +59,7 @@ import java.io.Closeable;
 import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -83,7 +86,7 @@ public class GitChangesetConverter implements Closeable
    * @param idLength
    */
   public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
-                               int idLength)
+    int idLength)
   {
     this(repository, null, idLength);
   }
@@ -97,7 +100,7 @@ public class GitChangesetConverter implements Closeable
    * @param idLength
    */
   public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
-                               RevWalk revWalk, int idLength)
+    RevWalk revWalk, int idLength)
   {
     this.idLength = idLength;
     this.revWalk = revWalk;
@@ -147,7 +150,7 @@ public class GitChangesetConverter implements Closeable
     long date = GitUtil.getCommitTime(commit);
     PersonIdent authorIndent = commit.getAuthorIdent();
     Person author = new Person(authorIndent.getName(),
-                               authorIndent.getEmailAddress());
+                      authorIndent.getEmailAddress());
     String message = commit.getShortMessage();
     Changeset changeset = new Changeset(id, date, author, message);
 
@@ -163,11 +166,11 @@ public class GitChangesetConverter implements Closeable
       changeset.setModifications(modifications);
     }
 
-    String tag = tags.get(commit.getId());
+    Collection<String> tagCollection = tags.get(commit.getId());
 
-    if (tag != null)
+    if (tagCollection != null)
     {
-      changeset.getTags().add(tag);
+      changeset.getTags().addAll(tagCollection);
     }
 
     return changeset;
@@ -213,7 +216,7 @@ public class GitChangesetConverter implements Closeable
    * @throws IOException
    */
   private Modifications createModifications(TreeWalk treeWalk, RevCommit commit)
-          throws IOException
+    throws IOException
   {
     Modifications modifications = null;
 
@@ -276,7 +279,7 @@ public class GitChangesetConverter implements Closeable
   }
 
   /**
-   * Method description
+   * TODO cache
    *
    *
    * @param repository
@@ -284,7 +287,7 @@ public class GitChangesetConverter implements Closeable
    */
   private void createTagMap(org.eclipse.jgit.lib.Repository repository)
   {
-    tags = new HashMap<ObjectId, String>();
+    tags = ArrayListMultimap.create();
 
     Map<String, Ref> tagMap = repository.getTags();
 
@@ -292,9 +295,66 @@ public class GitChangesetConverter implements Closeable
     {
       for (Map.Entry<String, Ref> e : tagMap.entrySet())
       {
-        tags.put(e.getValue().getObjectId(), e.getKey());
+        try
+        {
+
+          RevCommit c = getCommit(repository, e.getValue());
+
+          if (c != null)
+          {
+            tags.put(c.getId(), e.getKey());
+          }
+          else if (logger.isWarnEnabled())
+          {
+            logger.warn("could not find commit for tag {}", e.getKey());
+          }
+
+        }
+        catch (IOException ex)
+        {
+          logger.error("could not read commit for ref", ex);
+        }
+
       }
     }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param ref
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private RevCommit getCommit(org.eclipse.jgit.lib.Repository repository,
+    Ref ref)
+    throws IOException
+  {
+    RevCommit commit = null;
+    ObjectId id = ref.getPeeledObjectId();
+
+    if (id == null)
+    {
+      id = ref.getObjectId();
+    }
+
+    if (id != null)
+    {
+      if (revWalk == null)
+      {
+        revWalk = new RevWalk(repository);
+      }
+
+      commit = revWalk.parseCommit(id);
+    }
+
+    return commit;
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -306,7 +366,7 @@ public class GitChangesetConverter implements Closeable
   private RevWalk revWalk;
 
   /** Field description */
-  private Map<ObjectId, String> tags;
+  private Multimap<ObjectId, String> tags;
 
   /** Field description */
   private TreeWalk treeWalk;
