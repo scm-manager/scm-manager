@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -56,7 +57,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   /** Field description */
   private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
                                                  Command.BROWSE, Command.CAT,
-                                                 Command.DIFF, Command.LOG);
+                                                 Command.DIFF, Command.LOG,
+                                                 Command.TAGS);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -68,7 +70,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
    * @param repository
    */
   public GitRepositoryServiceProvider(GitRepositoryHandler handler,
-          Repository repository)
+    Repository repository)
   {
     this.repository = repository;
     context = new GitContext(handler.getDirectory(repository));
@@ -160,6 +162,18 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   public Set<Command> getSupportedCommands()
   {
     return COMMANDS;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public TagsCommand getTagsCommand()
+  {
+    return new GitTagsCommand(context, repository);
   }
 
   //~--- fields ---------------------------------------------------------------
