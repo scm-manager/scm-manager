@@ -39,6 +39,11 @@ import com.google.common.collect.Lists;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
@@ -86,31 +91,106 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
   {
     List<Tag> tags = null;
 
+    RevWalk revWalk = null;
+
     try
     {
-      Git git = new Git(open());
+      final Git git = new Git(open());
+
+      revWalk = new RevWalk(git.getRepository());
+
       List<Ref> tagList = git.tagList().call();
 
-      tags = Lists.transform(tagList, new Function<Ref, Tag>()
-      {
-
-        @Override
-        public Tag apply(Ref input)
-        {
-          String name = GitUtil.getTagName(input);
-
-          // TODO show commit id, not the ref id
-          
-          return new Tag(name, input.getObjectId().name());
-        }
-
-      });
+      tags = Lists.transform(tagList,
+        new TransformFuntion(git.getRepository(), revWalk));
     }
     catch (GitAPIException ex)
     {
       throw new RepositoryException("could not read tags from repository", ex);
     }
+    finally
+    {
+      GitUtil.release(revWalk);
+    }
 
     return tags;
+  }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 12/07/06
+   * @author         Enter your name here...
+   */
+  private static class TransformFuntion implements Function<Ref, Tag>
+  {
+
+    /**
+     * the logger for TransformFuntion
+     */
+    private static final Logger logger =
+      LoggerFactory.getLogger(TransformFuntion.class);
+
+    //~--- constructors -------------------------------------------------------
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param repository
+     * @param revWalk
+     */
+    public TransformFuntion(org.eclipse.jgit.lib.Repository repository,
+      RevWalk revWalk)
+    {
+      this.repository = repository;
+      this.revWalk = revWalk;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param ref
+     *
+     * @return
+     */
+    @Override
+    public Tag apply(Ref ref)
+    {
+      Tag tag = null;
+
+      try
+      {
+        RevCommit commit = GitUtil.getCommit(repository, revWalk, ref);
+
+        if (commit != null)
+        {
+          String name = GitUtil.getTagName(ref);
+
+          tag = new Tag(commit.getId().name(), name);
+        }
+
+      }
+      catch (IOException ex)
+      {
+        logger.error("could not get commit for tag", ex);
+      }
+
+      return tag;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private org.eclipse.jgit.lib.Repository repository;
+
+    /** Field description */
+    private RevWalk revWalk;
   }
 }

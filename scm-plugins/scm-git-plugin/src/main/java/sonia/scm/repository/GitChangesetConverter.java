@@ -103,8 +103,13 @@ public class GitChangesetConverter implements Closeable
     RevWalk revWalk, int idLength)
   {
     this.idLength = idLength;
-    this.revWalk = revWalk;
-    createTagMap(repository);
+
+    if (revWalk == null)
+    {
+      revWalk = new RevWalk(repository);
+    }
+
+    this.tags = GitUtil.createTagMap(repository, revWalk);
     treeWalk = new TreeWalk(repository);
   }
 
@@ -276,85 +281,6 @@ public class GitChangesetConverter implements Closeable
     }
 
     return modifications;
-  }
-
-  /**
-   * TODO cache
-   *
-   *
-   * @param repository
-   *
-   */
-  private void createTagMap(org.eclipse.jgit.lib.Repository repository)
-  {
-    tags = ArrayListMultimap.create();
-
-    Map<String, Ref> tagMap = repository.getTags();
-
-    if (tagMap != null)
-    {
-      for (Map.Entry<String, Ref> e : tagMap.entrySet())
-      {
-        try
-        {
-
-          RevCommit c = getCommit(repository, e.getValue());
-
-          if (c != null)
-          {
-            tags.put(c.getId(), e.getKey());
-          }
-          else if (logger.isWarnEnabled())
-          {
-            logger.warn("could not find commit for tag {}", e.getKey());
-          }
-
-        }
-        catch (IOException ex)
-        {
-          logger.error("could not read commit for ref", ex);
-        }
-
-      }
-    }
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param ref
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private RevCommit getCommit(org.eclipse.jgit.lib.Repository repository,
-    Ref ref)
-    throws IOException
-  {
-    RevCommit commit = null;
-    ObjectId id = ref.getPeeledObjectId();
-
-    if (id == null)
-    {
-      id = ref.getObjectId();
-    }
-
-    if (id != null)
-    {
-      if (revWalk == null)
-      {
-        revWalk = new RevWalk(repository);
-      }
-
-      commit = revWalk.parseCommit(id);
-    }
-
-    return commit;
   }
 
   //~--- fields ---------------------------------------------------------------

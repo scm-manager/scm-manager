@@ -35,6 +35,9 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
@@ -95,6 +98,54 @@ public class GitUtil
     {
       repo.close();
     }
+  }
+
+  /**
+   * TODO cache
+   *
+   *
+   * @param repository
+   * @param revWalk
+   *
+   *
+   * @return
+   */
+  public static Multimap<ObjectId,
+    String> createTagMap(org.eclipse.jgit.lib.Repository repository,
+      RevWalk revWalk)
+  {
+    Multimap<ObjectId, String> tags = ArrayListMultimap.create();
+
+    Map<String, Ref> tagMap = repository.getTags();
+
+    if (tagMap != null)
+    {
+      for (Map.Entry<String, Ref> e : tagMap.entrySet())
+      {
+        try
+        {
+
+          RevCommit c = getCommit(repository, revWalk, e.getValue());
+
+          if (c != null)
+          {
+            tags.put(c.getId(), e.getKey());
+          }
+          else if (logger.isWarnEnabled())
+          {
+            logger.warn("could not find commit for tag {}", e.getKey());
+          }
+
+        }
+        catch (IOException ex)
+        {
+          logger.error("could not read commit for ref", ex);
+        }
+
+      }
+    }
+
+    return tags;
   }
 
   /**
@@ -298,5 +349,42 @@ public class GitUtil
 
     return name;
 
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param revWalk
+   * @param ref
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public static RevCommit getCommit(
+    org.eclipse.jgit.lib.Repository repository, RevWalk revWalk, Ref ref)
+    throws IOException
+  {
+    RevCommit commit = null;
+    ObjectId id = ref.getPeeledObjectId();
+
+    if (id == null)
+    {
+      id = ref.getObjectId();
+    }
+
+    if (id != null)
+    {
+      if (revWalk == null)
+      {
+        revWalk = new RevWalk(repository);
+      }
+
+      commit = revWalk.parseCommit(id);
+    }
+
+    return commit;
   }
 }
