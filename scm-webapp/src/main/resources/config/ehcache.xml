@@ -202,4 +202,13 @@
         diskPersistent="false"
   />
   
+  <cache
+        name="sonia.cache.cmd.branches"
+        maxElementsInMemory="1000"
+        eternal="false"
+        overflowToDisk="false"
+        timeToLiveSeconds="86400"
+        diskPersistent="false"
+  />
+  
 </ehcache>
