@@ -158,6 +158,25 @@ public final class RepositoryService implements Closeable
   }
 
   /**
+   * The branches command list all repository branches.
+   *
+   * @return instance of {@link BranchesCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *         by the implementation of the repository service provider.
+   */
+  public BranchesCommandBuilder getBranchesCommand()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create branches command for repository {}",
+        repository.getName());
+    }
+
+    return new BranchesCommandBuilder(cacheManager,
+      provider.getBranchesCommand(), repository);
+  }
+
+  /**
    * The browse command allows browsing of a repository.
    *
    * @return instance of {@link BrowseCommandBuilder}
