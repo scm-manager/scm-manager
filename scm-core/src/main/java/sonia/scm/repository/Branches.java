@@ -46,6 +46,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Represents all branches of a repository.
  *
  * @author Sebastian Sdorra
  * @since 1.18
@@ -56,16 +57,17 @@ public final class Branches implements Iterable<Branch>
 {
 
   /**
-   * Constructs ...
+   * Constructs a new instance of branches.
+   * This constructor should only be called from JAXB.
    *
    */
   public Branches() {}
 
   /**
-   * Constructs ...
+   * Constructs a new instance of branches.
    *
    *
-   * @param branches
+   * @param branches list of branches.
    */
   public Branches(Branch... branches)
   {
@@ -73,10 +75,10 @@ public final class Branches implements Iterable<Branch>
   }
 
   /**
-   * Constructs ...
+   * Constructs a new instance of branches.
    *
    *
-   * @param branches
+   * @param branches list of branches.
    */
   public Branches(List<Branch> branches)
   {
@@ -86,7 +88,7 @@ public final class Branches implements Iterable<Branch>
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param obj
@@ -112,7 +114,7 @@ public final class Branches implements Iterable<Branch>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -136,7 +138,7 @@ public final class Branches implements Iterable<Branch>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -154,10 +156,10 @@ public final class Branches implements Iterable<Branch>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns all branches of a repository.
    *
    *
-   * @return
+   * @return all branches
    */
   public List<Branch> getBranches()
   {
@@ -172,10 +174,10 @@ public final class Branches implements Iterable<Branch>
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Sets all branches.
    *
    *
-   * @param branches
+   * @param branches branches
    */
   public void setBranches(List<Branch> branches)
   {
@@ -184,7 +186,7 @@ public final class Branches implements Iterable<Branch>
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** branches */
   @XmlElement(name="branch")
   private List<Branch> branches;
 }

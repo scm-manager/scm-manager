@@ -43,6 +43,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Represents a tag in a repository.
  *
  * @author Sebastian Sdorra
  * @since 1.18
@@ -53,16 +54,17 @@ public final class Branch implements Serializable
 {
 
   /**
-   * Constructs ...
+   * Constructs a new instance of branch.
+   * This constructor should only be called from JAXB.
    *
    */
   public Branch() {}
 
   /**
-   * Constructs ...
+   * Constructs a new branch.
    *
    *
-   * @param name
+   * @param name name of the branch
    */
   public Branch(String name)
   {
@@ -72,7 +74,7 @@ public final class Branch implements Serializable
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param obj
@@ -98,7 +100,7 @@ public final class Branch implements Serializable
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -110,7 +112,7 @@ public final class Branch implements Serializable
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -128,10 +130,10 @@ public final class Branch implements Serializable
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the name of the branch
    *
    *
-   * @return
+   * @return name of the branch
    */
   public String getName()
   {
@@ -140,6 +142,6 @@ public final class Branch implements Serializable
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** name of the branch */
   private String name;
 }

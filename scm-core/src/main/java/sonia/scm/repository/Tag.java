@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Represents a tag in repository.
+ * Represents a tag in a repository.
  *
  * @author Sebastian Sdorra
  * @since 1.18
@@ -53,7 +53,8 @@ public final class Tag
 {
 
   /**
-   * Constructs ...
+   * Constructs a new instance of tag.
+   * This constructor should only be called from JAXB.
    *
    */
   public Tag() {}
