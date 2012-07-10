@@ -53,8 +53,18 @@ import sonia.scm.repository.spi.BranchesCommand;
 import java.io.IOException;
 
 /**
- *
+ * The branches command list all repository branches.<br />
+ * <br />
+ * <b>Samples:</b>
+ * <br />
+ * <br />
+ * Return all branches of a repository:<br />
+ * <pre><code>
+ * BranchesCommandBuilder branchesCommand = repositoryService.getBranchesCommand();
+ * Branches branches = tagsCommand.getBranches();
+ * </code></pre>
  * @author Sebastian Sdorra
+ * @since 1.18
  */
 public final class BranchesCommandBuilder
 {
@@ -92,10 +102,10 @@ public final class BranchesCommandBuilder
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns all branches from the repository.
    *
    *
-   * @return
+   * @return branches from the repository
    *
    * @throws IOException
    * @throws RepositoryException
@@ -266,15 +276,15 @@ public final class BranchesCommandBuilder
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** branches command implementation */
   private BranchesCommand branchesCommand;
 
-  /** Field description */
+  /** cache for branches */
   private Cache<CacheKey, Branches> cache;
 
-  /** Field description */
+  /** disable cache */
   private boolean disableCache = false;
 
-  /** Field description */
+  /** repository */
   private Repository repository;
 }

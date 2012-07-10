@@ -54,17 +54,18 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * The tags command list all repository tag.<br />
+ * The tags command list all repository tags.<br />
  * <br />
  * <b>Samples:</b>
  * <br />
  * <br />
  * Return all tags of a repository:<br />
  * <pre><code>
- * TagsCommandBuilder tagsCommand = repositoryService.getLogCommand();
+ * TagsCommandBuilder tagsCommand = repositoryService.getTagsCommand();
  * Tags tags = tagsCommand.getTags();
  * </code></pre>
  * @author Sebastian Sdorra
+ * @since 1.18
  */
 public final class TagsCommandBuilder
 {
