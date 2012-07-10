@@ -48,6 +48,7 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.repository.BlameResult;
+import sonia.scm.repository.Branches;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.PermissionType;
@@ -313,6 +314,9 @@ public final class RepositoryServiceFactory
         ChangesetPagingResult.class, LogCommandBuilder.CACHE_NAME);
       this.tagsCache = cacheManager.getCache(TagsCommandBuilder.CacheKey.class,
         Tags.class, TagsCommandBuilder.CACHE_NAME);
+      this.branchesCache =
+        cacheManager.getCache(BranchesCommandBuilder.CacheKey.class,
+          Branches.class, BranchesCommandBuilder.CACHE_NAME);
     }
 
     //~--- methods ------------------------------------------------------------
@@ -373,12 +377,16 @@ public final class RepositoryServiceFactory
       browseCache.removeAll(filter);
       logCache.removeAll(filter);
       tagsCache.removeAll(filter);
+      branchesCache.removeAll(filter);
     }
 
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
     private Cache<BlameCommandBuilder.CacheKey, BlameResult> blameCache;
+
+    /** Field description */
+    private Cache<BranchesCommandBuilder.CacheKey, Branches> branchesCache;
 
     /** Field description */
     private Cache<BrowseCommandBuilder.CacheKey, BrowserResult> browseCache;

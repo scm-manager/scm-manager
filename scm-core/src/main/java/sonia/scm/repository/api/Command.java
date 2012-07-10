@@ -46,5 +46,10 @@ public enum Command
   /**
    * @since 1.18
    */
-  TAGS
+  TAGS,
+
+  /**
+   * @since 1.18
+   */
+  BRANCHES;
 }
