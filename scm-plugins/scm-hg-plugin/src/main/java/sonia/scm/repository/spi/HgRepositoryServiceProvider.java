@@ -62,7 +62,8 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
                                                  Command.BROWSE, Command.CAT,
                                                  Command.DIFF, Command.LOG,
-                                                 Command.TAGS);
+                                                 Command.TAGS,
+                                                 Command.BRANCHES);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -112,6 +113,18 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public HgBlameCommand getBlameCommand()
   {
     return new HgBlameCommand(context, repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public BranchesCommand getBranchesCommand()
+  {
+    return new HgBranchesCommand(context, repository);
   }
 
   /**
