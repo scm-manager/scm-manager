@@ -79,6 +79,9 @@ public class GitUtil
   public static final String REF_MASTER = "master";
 
   /** Field description */
+  private static final String PREFIX_HEADS = "refs/heads/";
+
+  /** Field description */
   private static final String PREFIX_TAG = "refs/tags/";
 
   /** the logger for GitUtil */
@@ -213,6 +216,28 @@ public class GitUtil
    * Method description
    *
    *
+   * @param ref
+   *
+   * @return
+   */
+  public static String getBranch(Ref ref)
+  {
+    String branch = null;
+
+    String name = ref.getName();
+
+    if (name.startsWith(PREFIX_HEADS))
+    {
+      branch = name.substring(PREFIX_HEADS.length());
+    }
+
+    return branch;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repo
    * @param branchName
    *
@@ -237,6 +262,43 @@ public class GitUtil
     }
 
     return branchId;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param revWalk
+   * @param ref
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public static RevCommit getCommit(org.eclipse.jgit.lib.Repository repository,
+    RevWalk revWalk, Ref ref)
+    throws IOException
+  {
+    RevCommit commit = null;
+    ObjectId id = ref.getPeeledObjectId();
+
+    if (id == null)
+    {
+      id = ref.getObjectId();
+    }
+
+    if (id != null)
+    {
+      if (revWalk == null)
+      {
+        revWalk = new RevWalk(repository);
+      }
+
+      commit = revWalk.parseCommit(id);
+    }
+
+    return commit;
   }
 
   /**
@@ -349,42 +411,5 @@ public class GitUtil
 
     return name;
 
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param revWalk
-   * @param ref
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public static RevCommit getCommit(
-    org.eclipse.jgit.lib.Repository repository, RevWalk revWalk, Ref ref)
-    throws IOException
-  {
-    RevCommit commit = null;
-    ObjectId id = ref.getPeeledObjectId();
-
-    if (id == null)
-    {
-      id = ref.getObjectId();
-    }
-
-    if (id != null)
-    {
-      if (revWalk == null)
-      {
-        revWalk = new RevWalk(repository);
-      }
-
-      commit = revWalk.parseCommit(id);
-    }
-
-    return commit;
   }
 }

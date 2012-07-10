@@ -40,6 +40,7 @@ import com.google.common.collect.Multimap;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -59,6 +60,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -99,6 +101,7 @@ public class GitChangesetConverter implements Closeable
   public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
     RevWalk revWalk, int idLength)
   {
+    this.repository = repository;
     this.idLength = idLength;
 
     if (revWalk == null)
@@ -173,6 +176,23 @@ public class GitChangesetConverter implements Closeable
     if (tagCollection != null)
     {
       changeset.getTags().addAll(tagCollection);
+    }
+
+    Set<Ref> refs = repository.getAllRefsByPeeledObjectId().get(commit.getId());
+
+    if (Util.isNotEmpty(refs))
+    {
+
+      for (Ref ref : refs)
+      {
+        String branch = GitUtil.getBranch(ref);
+
+        if (branch != null)
+        {
+          changeset.getBranches().add(branch);
+        }
+      }
+
     }
 
     return changeset;
@@ -284,6 +304,9 @@ public class GitChangesetConverter implements Closeable
 
   /** Field description */
   private int idLength;
+
+  /** Field description */
+  private org.eclipse.jgit.lib.Repository repository;
 
   /** Field description */
   private RevWalk revWalk;
