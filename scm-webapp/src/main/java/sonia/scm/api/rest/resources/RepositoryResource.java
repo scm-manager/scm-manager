@@ -49,6 +49,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.BlameResult;
+import sonia.scm.repository.Branches;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -376,6 +377,66 @@ public class RepositoryResource
     catch (IllegalStateException ex)
     {
       response = Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    }
+    catch (RepositoryNotFoundException ex)
+    {
+      response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+    catch (CommandNotSupportedException ex)
+    {
+      response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
+    }
+
+    return response;
+  }
+
+  /**
+   * Returns all {@link Branches} of a repository.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>400 bad request, the content feature is not
+   *       supported by this type of repositories.</li>
+   *   <li>404 not found, if the repository or the path could not be found</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   *
+   * @param id the id of the repository
+   *
+   * @return all {@link Branches} of a repository
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   *
+   * @since 1.18
+   */
+  @GET
+  @Path("{id}/branches")
+  public Response getBranches(@PathParam("id") String id)
+    throws RepositoryException, IOException
+  {
+    Response response = null;
+    RepositoryService service = null;
+
+    try
+    {
+      service = servicefactory.create(id);
+
+      Branches branches = service.getBranchesCommand().getBranches();
+
+      if (branches != null)
+      {
+        response = Response.ok(branches).build();
+      }
+      else
+      {
+        response = Response.status(Status.NOT_FOUND).build();
+      }
     }
     catch (RepositoryNotFoundException ex)
     {
@@ -830,7 +891,7 @@ public class RepositoryResource
    *
    * @throws IOException
    * @throws RepositoryException
-   * 
+   *
    * @since 1.18
    */
   @GET
