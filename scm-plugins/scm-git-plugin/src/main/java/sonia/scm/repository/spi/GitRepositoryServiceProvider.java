@@ -111,6 +111,18 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
    * @return
    */
   @Override
+  public BranchesCommand getBranchesCommand()
+  {
+    return new GitBranchesCommand(context, repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public BrowseCommand getBrowseCommand()
   {
     return new GitBrowseCommand(context, repository);

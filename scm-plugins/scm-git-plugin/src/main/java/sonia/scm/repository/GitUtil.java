@@ -233,7 +233,7 @@ public class GitUtil
 
     return branch;
   }
-
+  
   /**
    * Method description
    *
