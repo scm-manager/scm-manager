@@ -58,7 +58,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   private static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
                                                  Command.BROWSE, Command.CAT,
                                                  Command.DIFF, Command.LOG,
-                                                 Command.TAGS);
+                                                 Command.TAGS,
+                                                 Command.BRANCHES);
 
   //~--- constructors ---------------------------------------------------------
 
