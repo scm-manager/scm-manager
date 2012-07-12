@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -38,6 +39,7 @@ import com.aragost.javahg.Repository;
 import com.aragost.javahg.RepositoryConfiguration;
 
 import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.spi.javahg.HgFileviewExtension;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -94,6 +96,8 @@ public class HgCommandContext implements Closeable
     {
       RepositoryConfiguration repoConfiguration =
         RepositoryConfiguration.DEFAULT;
+
+      repoConfiguration.addExtension(HgFileviewExtension.class);
 
       repoConfiguration.setHgBin(config.getHgBinary());
       repository = Repository.open(repoConfiguration, directory);
