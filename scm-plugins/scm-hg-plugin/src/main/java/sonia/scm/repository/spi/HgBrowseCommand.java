@@ -41,7 +41,6 @@ import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.javahg.HgFileviewCommand;
-import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -87,7 +86,7 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
 
     if (!Strings.isNullOrEmpty(request.getRevision()))
     {
-      cmd.rev(HgUtil.getRevision(request.getRevision()));
+      cmd.rev(request.getRevision());
     }
 
     if (!Strings.isNullOrEmpty(request.getPath()))

@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -147,7 +148,7 @@ public class HgFileviewCommand extends AbstractCommand
    */
   public HgFileviewCommand rev(String revision)
   {
-    cmdAppend("-r", rev);
+    cmdAppend("-r", revision);
 
     return this;
   }
