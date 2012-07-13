@@ -29,8 +29,7 @@
 #
 #
 
-Prints date, size and last message of files.
-"""
+
 from mercurial import util
 
 class SubRepository:
