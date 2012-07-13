@@ -30,44 +30,40 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
+
 import sonia.scm.repository.BrowserResult;
-import sonia.scm.repository.HgContext;
-import sonia.scm.repository.HgPythonScript;
-import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.spi.javahg.HgFileviewCommand;
+import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
-
-import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgBrowseCommand extends AbstractHgCommand implements BrowseCommand
+public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
 {
 
   /**
    * Constructs ...
    *
    *
-   * @param handler
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
-  public HgBrowseCommand(HgRepositoryHandler handler, HgContext context,
-                         Repository repository, File repositoryDirectory)
+  public HgBrowseCommand(HgCommandContext context, Repository repository)
   {
-    super(handler, context, repository, repositoryDirectory);
+    super(context, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -75,9 +71,6 @@ public class HgBrowseCommand extends AbstractHgCommand implements BrowseCommand
   /**
    * Method description
    *
-   *
-   * @param revision
-   * @param path
    *
    * @param request
    *
@@ -88,11 +81,24 @@ public class HgBrowseCommand extends AbstractHgCommand implements BrowseCommand
    */
   @Override
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
-    Map<String, String> env = createEnvironment(request);
+    HgFileviewCommand cmd = HgFileviewCommand.on(open());
 
-    return getResultFromScript(BrowserResult.class, HgPythonScript.FILELOG,
-                               env);
+    if (!Strings.isNullOrEmpty(request.getRevision()))
+    {
+      cmd.rev(HgUtil.getRevision(request.getRevision()));
+    }
+
+    if (!Strings.isNullOrEmpty(request.getPath()))
+    {
+      cmd.path(request.getPath());
+    }
+
+    BrowserResult result = new BrowserResult();
+
+    result.setFiles(cmd.execute());
+
+    return result;
   }
 }

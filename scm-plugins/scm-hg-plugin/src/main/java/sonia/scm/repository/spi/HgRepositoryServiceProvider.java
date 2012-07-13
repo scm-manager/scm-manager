@@ -136,8 +136,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public HgBrowseCommand getBrowseCommand()
   {
-    return new HgBrowseCommand(handler, hgContextProvider.get(), repository,
-      repositoryDirectory);
+    return new HgBrowseCommand(context, repository);
   }
 
   /**

@@ -44,7 +44,7 @@ public class HgFileviewExtension extends MercurialExtension
 {
 
   /** Field description */
-  private static final String NAME = "fileview";
+  static final String NAME = "fileview";
 
   /** Field description */
   private static final String PATH =

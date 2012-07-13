@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -38,7 +39,6 @@ import org.junit.Test;
 
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
-import sonia.scm.repository.HgContext;
 import sonia.scm.repository.RepositoryException;
 
 import static org.junit.Assert.*;
@@ -66,10 +66,9 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
   @Test
   public void testBrowse() throws IOException, RepositoryException
   {
-    BrowserResult result = new HgBrowseCommand(
-                               handler, new HgContext(), repository,
-                               repositoryDirectory).getBrowserResult(
-                                   new BrowseCommandRequest());
+    BrowserResult result =
+      new HgBrowseCommand(cmdContext,
+        repository).getBrowserResult(new BrowseCommandRequest());
 
     assertNotNull(result);
 
@@ -121,9 +120,8 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
 
     request.setPath("c");
 
-    BrowserResult result = new HgBrowseCommand(handler, new HgContext(),
-                             repository,
-                             repositoryDirectory).getBrowserResult(request);
+    BrowserResult result = new HgBrowseCommand(cmdContext,
+                             repository).getBrowserResult(request);
 
     assertNotNull(result);
 

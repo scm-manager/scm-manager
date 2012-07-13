@@ -102,7 +102,7 @@ def createSubRepositoryMap(revCtx):
 def printSubRepository(ui, path, subrepository, transport):
   format = '%s %s %s\n'
   if transport:
-    format = 'd%s\n%s %s\0'
+    format = 's%s\n%s %s\0'
   ui.write( format % (appendTrailingSlash(path), subrepository.revision, subrepository.url))
   
 def printDirectory(ui, path, transport):
