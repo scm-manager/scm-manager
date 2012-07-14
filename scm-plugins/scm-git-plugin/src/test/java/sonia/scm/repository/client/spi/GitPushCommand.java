@@ -36,86 +36,67 @@ package sonia.scm.repository.client.spi;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.CredentialsProvider;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import sonia.scm.repository.client.api.RepositoryClientException;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GitRepositoryClientFactoryProvider
-  implements RepositoryClientFactoryProvider
+public class GitPushCommand implements PushCommand
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param main
-   * @param workingCopy
-   *
-   * @return
-   *
-   * @throws IOException
+   * @param git
+   * @param credentialsProvider
    */
-  @Override
-  public RepositoryClientProvider create(File main, File workingCopy)
-    throws IOException
+  public GitPushCommand(Git git, CredentialsProvider credentialsProvider)
   {
-    Git git = null;
-
-    try
-    {
-      git = Git.cloneRepository().setURI(main.toURI().toString()).setDirectory(
-        workingCopy).call();
-    }
-    catch (GitAPIException ex)
-    {
-      throw new RepositoryClientException("could not clone repository", ex);
-    }
-
-    return new GitRepositoryClientProvider(git);
+    this.git = git;
+    this.credentialsProvider = credentialsProvider;
   }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param url
-   * @param username
-   * @param password
-   * @param workingCopy
-   *
-   * @return
-   *
    * @throws IOException
    */
   @Override
-  public RepositoryClientProvider create(String url, String username,
-    String password, File workingCopy)
-    throws IOException
+  public void push() throws IOException
   {
-    Git git = null;
-
-    CredentialsProvider credentialsProvider =
-      new UsernamePasswordCredentialsProvider(username, password);
-
     try
     {
-      git = Git.cloneRepository().setURI(url).setDirectory(
-        workingCopy).setCredentialsProvider(credentialsProvider).call();
+      org.eclipse.jgit.api.PushCommand cmd = git.push().setPushAll();
+
+      if (credentialsProvider != null)
+      {
+        cmd.setCredentialsProvider(credentialsProvider);
+      }
+
+      cmd.call();
     }
     catch (GitAPIException ex)
     {
-      throw new RepositoryClientException("could not clone repository", ex);
+      throw new RepositoryClientException(
+        "could not push to remote repository", ex);
     }
-
-    return new GitRepositoryClientProvider(git, credentialsProvider);
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private CredentialsProvider credentialsProvider;
+
+  /** Field description */
+  private Git git;
 }

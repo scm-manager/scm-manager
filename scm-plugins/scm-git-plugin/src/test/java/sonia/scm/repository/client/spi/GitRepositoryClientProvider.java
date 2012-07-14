@@ -36,6 +36,7 @@ package sonia.scm.repository.client.spi;
 import com.google.common.collect.ImmutableSet;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.transport.CredentialsProvider;
 
 import sonia.scm.repository.client.api.ClientCommand;
 
@@ -53,7 +54,8 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
   /** Field description */
   private static final Set<ClientCommand> SUPPORTED_COMMANDS =
     ImmutableSet.of(ClientCommand.ADD, ClientCommand.REMOVE,
-      ClientCommand.COMMIT, ClientCommand.TAG, ClientCommand.BANCH);
+      ClientCommand.COMMIT, ClientCommand.TAG, ClientCommand.BANCH,
+      ClientCommand.PUSH);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -62,10 +64,24 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
    *
    *
    * @param git
+   * @param credentialsProvider
    */
   GitRepositoryClientProvider(Git git)
   {
+    this(git, null);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param git
+   * @param credentialsProvider
+   */
+  GitRepositoryClientProvider(Git git, CredentialsProvider credentialsProvider)
+  {
     this.git = git;
+    this.credentialsProvider = credentialsProvider;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -113,6 +129,18 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
    * @return
    */
   @Override
+  public PushCommand getPushCommand()
+  {
+    return new GitPushCommand(git, credentialsProvider);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public RemoveCommand getRemoveCommand()
   {
     return new GitRemoveCommand(git);
@@ -143,6 +171,9 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private CredentialsProvider credentialsProvider;
 
   /** Field description */
   private Git git;
