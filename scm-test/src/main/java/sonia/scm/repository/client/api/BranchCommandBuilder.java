@@ -33,111 +33,62 @@ package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.client.spi.RepositoryClientProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.repository.client.spi.BranchCommand;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public final class RepositoryClient
+public final class BranchCommandBuilder
 {
+
+  /**
+   * the logger for BranchCommandBuilder
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(BranchCommandBuilder.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param directory
-   * @param clientProvider
-   */
-  RepositoryClient(RepositoryClientProvider clientProvider)
-  {
-    this.clientProvider = clientProvider;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public AddCommandBuilder getAddCommand()
-  {
-    return new AddCommandBuilder(clientProvider.getAddCommand());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public BranchCommandBuilder getBranchCommand()
-  {
-    return new BranchCommandBuilder(clientProvider.getBranchCommand());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public CommitCommandBuilder getCommitCommand()
-  {
-    return new CommitCommandBuilder(clientProvider.getCommitCommand());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public PushCommandBuilder getPushCommand()
-  {
-    return new PushCommandBuilder(clientProvider.getPushCommand());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public RemoveCommandBuilder getRemoveCommand()
-  {
-    return new RemoveCommandBuilder(clientProvider.getRemoveCommand());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public TagCommandBuilder getTagCommand()
-  {
-    return new TagCommandBuilder(clientProvider.getTagCommand());
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param command
+   */
+  public BranchCommandBuilder(BranchCommand command)
+  {
+    this.command = command;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
    *
    * @return
    */
-  public boolean isCommandSupported(ClientCommand command)
+  public BranchCommandBuilder branch(String name)
   {
-    return clientProvider.getSupportedClientCommands().contains(command);
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("branch {}", name);
+    }
+
+    command.branch(name);
+
+    return this;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryClientProvider clientProvider;
+  private BranchCommand command;
 }

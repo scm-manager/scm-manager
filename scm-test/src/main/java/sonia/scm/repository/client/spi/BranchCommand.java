@@ -26,14 +26,16 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-package sonia.scm.repository.client.api;
+package sonia.scm.repository.client.spi;
+
+import sonia.scm.repository.Branch;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public enum ClientCommand
+public interface BranchCommand
 {
-  ADD, REMOVE, COMMIT, PUSH, TAG, BANCH
+  public Branch branch(String name);
 }

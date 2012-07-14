@@ -73,6 +73,17 @@ public abstract class RepositoryClientProvider
    *
    * @return
    */
+  public BranchCommand getBranchCommand()
+  {
+    throw new ClientCommandNotSupportedException(ClientCommand.BANCH);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public CommitCommand getCommitCommand()
   {
     throw new ClientCommandNotSupportedException(ClientCommand.COMMIT);
