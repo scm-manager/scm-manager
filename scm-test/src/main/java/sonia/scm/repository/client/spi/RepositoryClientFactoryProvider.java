@@ -29,12 +29,7 @@
 
 
 
-package sonia.scm.repository.client.api;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.repository.client.spi.RepositoryClientFactoryProvider;
-import sonia.scm.repository.client.spi.RepositoryClientProvider;
+package sonia.scm.repository.client.spi;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -45,21 +40,8 @@ import java.io.File;
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public final class RepositoryClientFactory
+public interface RepositoryClientFactoryProvider
 {
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param provider
-   */
-  public RepositoryClientFactory(RepositoryClientFactoryProvider provider)
-  {
-    this.provider = provider;
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -70,16 +52,5 @@ public final class RepositoryClientFactory
    *
    * @return
    */
-  public RepositoryClient create(File main, File workingCopy)
-  {
-    RepositoryClientProvider clientProvider = provider.create(main,
-                                                workingCopy);
-
-    return new RepositoryClient(clientProvider);
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private RepositoryClientFactoryProvider provider;
+  public RepositoryClientProvider create(File main, File workingCopy);
 }
