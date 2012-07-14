@@ -33,6 +33,9 @@ package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.repository.client.spi.RepositoryClientProvider;
 
 /**
@@ -42,6 +45,14 @@ import sonia.scm.repository.client.spi.RepositoryClientProvider;
  */
 public final class RepositoryClient
 {
+
+  /**
+   * the logger for RepositoryClient
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(RepositoryClient.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -65,6 +76,11 @@ public final class RepositoryClient
    */
   public AddCommandBuilder getAddCommand()
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("create add command");
+    }
+
     return new AddCommandBuilder(clientProvider.getAddCommand());
   }
 
@@ -76,6 +92,11 @@ public final class RepositoryClient
    */
   public BranchCommandBuilder getBranchCommand()
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("create branch command");
+    }
+
     return new BranchCommandBuilder(clientProvider.getBranchCommand());
   }
 
@@ -87,6 +108,11 @@ public final class RepositoryClient
    */
   public CommitCommandBuilder getCommitCommand()
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("create commit command");
+    }
+
     return new CommitCommandBuilder(clientProvider.getCommitCommand());
   }
 
@@ -98,6 +124,11 @@ public final class RepositoryClient
    */
   public PushCommandBuilder getPushCommand()
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("create push command");
+    }
+
     return new PushCommandBuilder(clientProvider.getPushCommand());
   }
 
@@ -109,6 +140,11 @@ public final class RepositoryClient
    */
   public RemoveCommandBuilder getRemoveCommand()
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("create remove command");
+    }
+
     return new RemoveCommandBuilder(clientProvider.getRemoveCommand());
   }
 
@@ -120,6 +156,11 @@ public final class RepositoryClient
    */
   public TagCommandBuilder getTagCommand()
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("create tag command");
+    }
+
     return new TagCommandBuilder(clientProvider.getTagCommand());
   }
 
