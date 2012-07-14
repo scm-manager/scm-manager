@@ -34,7 +34,6 @@ package sonia.scm.repository.client.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.client.spi.RepositoryClientFactoryProvider;
-import sonia.scm.repository.client.spi.RepositoryClientProvider;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -72,10 +71,26 @@ public final class RepositoryClientFactory
    */
   public RepositoryClient create(File main, File workingCopy)
   {
-    RepositoryClientProvider clientProvider = provider.create(main,
-                                                workingCopy);
 
-    return new RepositoryClient(clientProvider);
+    return new RepositoryClient(provider.create(main, workingCopy));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   * @param username
+   * @param password
+   * @param workingCopy
+   *
+   * @return
+   */
+  public RepositoryClient create(String url, String username, String password,
+    File workingCopy)
+  {
+    return new RepositoryClient(provider.create(url, username, password,
+      workingCopy));
   }
 
   //~--- fields ---------------------------------------------------------------

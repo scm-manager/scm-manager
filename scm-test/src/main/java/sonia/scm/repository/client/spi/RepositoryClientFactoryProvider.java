@@ -53,4 +53,18 @@ public interface RepositoryClientFactoryProvider
    * @return
    */
   public RepositoryClientProvider create(File main, File workingCopy);
+
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   * @param username
+   * @param password
+   * @param workingCopy
+   *
+   * @return
+   */
+  public RepositoryClientProvider create(String url, String username,
+    String password, File workingCopy);
 }
