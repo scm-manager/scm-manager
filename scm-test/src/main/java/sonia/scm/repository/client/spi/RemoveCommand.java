@@ -31,6 +31,8 @@
 
 package sonia.scm.repository.client.spi;
 
+import java.io.IOException;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -47,5 +49,5 @@ public interface RemoveCommand
    *
    * @param path
    */
-  public void remove(String path);
+  public void remove(String path) throws IOException;
 }

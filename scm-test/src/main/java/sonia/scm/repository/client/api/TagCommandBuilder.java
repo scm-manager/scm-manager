@@ -33,6 +33,7 @@ package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +78,7 @@ public final class TagCommandBuilder
    *
    * @return
    */
-  public Tag tag(String name)
+  public Tag tag(String name) throws IOException
   {
     request.setName(name);
 

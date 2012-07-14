@@ -29,28 +29,57 @@
 
 
 
-package sonia.scm.repository.client.spi;
+package sonia.scm.repository.client.api;
 
-//~--- non-JDK imports --------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import sonia.scm.repository.Tag;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public interface TagCommand
+public final class RepositoryClientException extends IOException
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
-   *
-   * @param request
-   *
-   * @return
    */
-  public Tag tag(TagRequest request) throws IOException;
+  public RepositoryClientException() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   */
+  public RepositoryClientException(String message)
+  {
+    super(message);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param cause
+   */
+  public RepositoryClientException(Throwable cause)
+  {
+    super(cause);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   * @param cause
+   */
+  public RepositoryClientException(String message, Throwable cause)
+  {
+    super(message, cause);
+  }
 }

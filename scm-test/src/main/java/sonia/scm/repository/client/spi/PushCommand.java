@@ -31,6 +31,8 @@
 
 package sonia.scm.repository.client.spi;
 
+import java.io.IOException;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -43,5 +45,5 @@ public interface PushCommand
    * Method description
    *
    */
-  public void push();
+  public void push() throws IOException;
 }

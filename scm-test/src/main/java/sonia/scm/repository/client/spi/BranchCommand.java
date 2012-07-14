@@ -28,6 +28,7 @@
  */
 package sonia.scm.repository.client.spi;
 
+import java.io.IOException;
 import sonia.scm.repository.Branch;
 
 /**
@@ -37,5 +38,5 @@ import sonia.scm.repository.Branch;
  */
 public interface BranchCommand
 {
-  public Branch branch(String name);
+  public Branch branch(String name) throws IOException;
 }

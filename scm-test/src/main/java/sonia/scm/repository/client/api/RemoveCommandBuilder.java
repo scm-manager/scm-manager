@@ -33,6 +33,7 @@ package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +79,7 @@ public final class RemoveCommandBuilder
    *
    * @return
    */
-  public RemoveCommandBuilder remove(String path, String... pathes)
+  public RemoveCommandBuilder remove(String path, String... pathes)  throws IOException
   {
     remove(path);
 
@@ -99,7 +100,7 @@ public final class RemoveCommandBuilder
    *
    * @param path
    */
-  private void remove(String path)
+  private void remove(String path) throws IOException
   {
     if (Util.isNotEmpty(path))
     {

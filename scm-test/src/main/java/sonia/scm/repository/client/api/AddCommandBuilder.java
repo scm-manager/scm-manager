@@ -33,6 +33,7 @@ package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +79,7 @@ public final class AddCommandBuilder
    *
    * @return
    */
-  public AddCommandBuilder add(String path, String... pathes)
+  public AddCommandBuilder add(String path, String... pathes) throws IOException
   {
     add(path);
 
@@ -99,7 +100,7 @@ public final class AddCommandBuilder
    *
    * @param path
    */
-  private void add(String path)
+  private void add(String path) throws IOException
   {
     if (Util.isNotEmpty(path))
     {

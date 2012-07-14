@@ -33,6 +33,7 @@ package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +76,7 @@ public final class BranchCommandBuilder
    *
    * @return
    */
-  public BranchCommandBuilder branch(String name)
+  public BranchCommandBuilder branch(String name) throws IOException
   {
     if (logger.isDebugEnabled())
     {

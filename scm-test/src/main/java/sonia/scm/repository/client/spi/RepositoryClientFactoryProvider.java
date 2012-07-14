@@ -34,6 +34,7 @@ package sonia.scm.repository.client.spi;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -52,7 +53,7 @@ public interface RepositoryClientFactoryProvider
    *
    * @return
    */
-  public RepositoryClientProvider create(File main, File workingCopy);
+  public RepositoryClientProvider create(File main, File workingCopy) throws IOException;
 
   /**
    * Method description
@@ -66,5 +67,5 @@ public interface RepositoryClientFactoryProvider
    * @return
    */
   public RepositoryClientProvider create(String url, String username,
-    String password, File workingCopy);
+    String password, File workingCopy) throws IOException;
 }
