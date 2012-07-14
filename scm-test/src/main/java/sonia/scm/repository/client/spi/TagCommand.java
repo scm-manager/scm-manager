@@ -26,14 +26,30 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-package sonia.scm.repository.client.api;
+
+
+
+package sonia.scm.repository.client.spi;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.repository.Tag;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public enum ClientCommand
+public interface TagCommand
 {
-  ADD, REMOVE, COMMIT, PUSH, TAG
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  public Tag tag(TagRequest request);
 }

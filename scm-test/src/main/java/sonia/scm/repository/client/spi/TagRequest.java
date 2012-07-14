@@ -33,38 +33,41 @@ package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.client.api.ClientCommand;
-import sonia.scm.repository.client.api.ClientCommandNotSupportedException;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
+import com.google.common.base.Objects;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public abstract class RepositoryClientProvider
+public final class TagRequest
 {
 
   /**
    * Method description
    *
    *
-   * @return
-   */
-  public abstract Set<ClientCommand> getSupportedClientCommands();
-
-  /**
-   * Method description
-   *
+   * @param obj
    *
    * @return
    */
-  public AddCommand getAddCommand()
+  @Override
+  public boolean equals(Object obj)
   {
-    throw new ClientCommandNotSupportedException(ClientCommand.ADD);
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final TagRequest other = (TagRequest) obj;
+
+    return Objects.equal(revision, other.revision)
+      && Objects.equal(name, other.name);
   }
 
   /**
@@ -73,9 +76,10 @@ public abstract class RepositoryClientProvider
    *
    * @return
    */
-  public CommitCommand getCommitCommand()
+  @Override
+  public int hashCode()
   {
-    throw new ClientCommandNotSupportedException(ClientCommand.COMMIT);
+    return Objects.hashCode(revision, name);
   }
 
   /**
@@ -84,9 +88,33 @@ public abstract class RepositoryClientProvider
    *
    * @return
    */
-  public PushCommand getPushCommand()
+  @Override
+  public String toString()
   {
-    throw new ClientCommandNotSupportedException(ClientCommand.PUSH);
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("revision", revision)
+                  .add("name", name)
+                  .toString();
+    //J+
+  }
+
+  public void reset(){
+    this.name = null;
+    this.revision = null;
+  }
+  
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  String getName()
+  {
+    return name;
   }
 
   /**
@@ -95,19 +123,40 @@ public abstract class RepositoryClientProvider
    *
    * @return
    */
-  public RemoveCommand getRemoveCommand()
+  String getRevision()
   {
-    throw new ClientCommandNotSupportedException(ClientCommand.REMOVE);
+    return revision;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   */
+  public void setName(String name)
+  {
+    this.name = name;
   }
 
   /**
    * Method description
    *
    *
-   * @return
+   * @param revision
    */
-  public TagCommand getTagCommand()
+  public void setRevision(String revision)
   {
-    throw new ClientCommandNotSupportedException(ClientCommand.TAG);
+    this.revision = revision;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String name;
+
+  /** Field description */
+  private String revision;
 }

@@ -26,14 +26,95 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+
+
+
 package sonia.scm.repository.client.api;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.repository.Tag;
+import sonia.scm.repository.client.spi.TagCommand;
+import sonia.scm.repository.client.spi.TagRequest;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public enum ClientCommand
+public final class TagCommandBuilder
 {
-  ADD, REMOVE, COMMIT, PUSH, TAG
+
+  /**
+   * the logger for TagCommandBuilder
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(TagCommandBuilder.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param command
+   */
+  TagCommandBuilder(TagCommand command)
+  {
+    this.command = command;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   */
+  public Tag tag(String name)
+  {
+    request.setName(name);
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("tag {}", request);
+    }
+
+    Tag tag = command.tag(request);
+
+    request.reset();
+
+    return tag;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param revision
+   *
+   * @return
+   */
+  public TagCommandBuilder setRevision(String revision)
+  {
+    request.setRevision(revision);
+
+    return this;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private TagCommand command;
+
+  /** Field description */
+  private TagRequest request = new TagRequest();
 }

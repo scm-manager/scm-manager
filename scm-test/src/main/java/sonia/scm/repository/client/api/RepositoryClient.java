@@ -105,6 +105,17 @@ public final class RepositoryClient
    * Method description
    *
    *
+   * @return
+   */
+  public TagCommandBuilder getTagCommand()
+  {
+    return new TagCommandBuilder(clientProvider.getTagCommand());
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param command
    *
    * @return
