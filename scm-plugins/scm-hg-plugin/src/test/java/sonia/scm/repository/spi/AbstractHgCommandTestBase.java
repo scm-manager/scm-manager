@@ -43,6 +43,7 @@ import sonia.scm.SCMContext;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.HgContextProvider;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.TempSCMContextProvider;
 import sonia.scm.store.MemoryStoreFactory;
 
@@ -96,12 +97,7 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
       fileSystem, new HgContextProvider());
     this.handler.init(context);
 
-    // skip tests if hg not in path
-    if (!handler.isConfigured())
-    {
-      System.out.println("WARNING could not find hg, skipping test");
-      Assume.assumeTrue(false);
-    }
+    HgTestUtil.checkForSkip(handler);
 
     cmdContext = new HgCommandContext(handler.getConfig(), repositoryDirectory);
   }

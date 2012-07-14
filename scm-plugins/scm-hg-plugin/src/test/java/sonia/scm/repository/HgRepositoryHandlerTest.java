@@ -95,12 +95,7 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
     handler.init(contextProvider);
     handler.getConfig().setRepositoryDirectory(directory);
 
-    // skip tests if hg not in path
-    if (!handler.isConfigured())
-    {
-      System.out.println("WARNING could not find hg, skipping test");
-      assumeTrue(false);
-    }
+    HgTestUtil.checkForSkip(handler);
 
     return handler;
   }
