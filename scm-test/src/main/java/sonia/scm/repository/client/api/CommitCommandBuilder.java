@@ -33,8 +33,6 @@ package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Lists;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,22 +74,6 @@ public final class CommitCommandBuilder
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   * @param pathes
-   *
-   * @return
-   */
-  public CommitCommandBuilder add(String path, String... pathes)
-  {
-    request.setPaths(Lists.asList(path, pathes));
-
-    return this;
-  }
 
   /**
    * Method description

@@ -37,10 +37,6 @@ import com.google.common.base.Objects;
 
 import sonia.scm.repository.Person;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -73,8 +69,7 @@ public final class CommitRequest
     final CommitRequest other = (CommitRequest) obj;
 
     return Objects.equal(author, other.author)
-      && Objects.equal(message, other.message)
-      && Objects.equal(paths, other.paths);
+      && Objects.equal(message, other.message);
   }
 
   /**
@@ -86,7 +81,7 @@ public final class CommitRequest
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(author, message, paths);
+    return Objects.hashCode(author, message);
   }
 
   /**
@@ -97,8 +92,6 @@ public final class CommitRequest
   {
     this.author = null;
     this.message = null;
-
-    this.paths = null;
   }
 
   /**
@@ -114,7 +107,6 @@ public final class CommitRequest
     return Objects.toStringHelper(this)
                   .add("author", author)
                   .add("message", message)
-                  .add("paths", paths)
                   .toString();
     //J+
   }
@@ -143,19 +135,6 @@ public final class CommitRequest
     this.message = message;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param files
-   *
-   * @param paths
-   */
-  public void setPaths(List<String> paths)
-  {
-    this.paths = paths;
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -180,17 +159,6 @@ public final class CommitRequest
     return message;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  List<String> getPaths()
-  {
-    return paths;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -198,7 +166,4 @@ public final class CommitRequest
 
   /** Field description */
   private String message;
-
-  /** Field description */
-  private List<String> paths;
 }
