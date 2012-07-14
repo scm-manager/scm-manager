@@ -31,6 +31,8 @@
 
 package sonia.scm.repository.client.spi;
 
+//~--- JDK imports ------------------------------------------------------------
+
 import java.io.IOException;
 
 /**
@@ -48,6 +50,8 @@ public interface RemoveCommand
    * @param file
    *
    * @param path
+   *
+   * @throws IOException
    */
   public void remove(String path) throws IOException;
 }

@@ -34,14 +34,18 @@ package sonia.scm.repository.client.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
-import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.client.spi.CommitCommand;
 import sonia.scm.repository.client.spi.CommitRequest;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 /**
  *
@@ -97,8 +101,10 @@ public final class CommitCommandBuilder
    * @param message
    *
    * @return
+   *
+   * @throws IOException
    */
-  public Changeset commit(String author, String message) throws IOException
+  public Changeset commit(Person author, String message) throws IOException
   {
     request.setAuthor(author);
     request.setMessage(message);

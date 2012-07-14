@@ -69,6 +69,8 @@ public final class RepositoryClientFactory
    * @param workingCopy
    *
    * @return
+   *
+   * @throws IOException
    */
   public RepositoryClient create(File main, File workingCopy) throws IOException
   {
@@ -86,9 +88,12 @@ public final class RepositoryClientFactory
    * @param workingCopy
    *
    * @return
+   *
+   * @throws IOException
    */
   public RepositoryClient create(String url, String username, String password,
-    File workingCopy) throws IOException
+    File workingCopy)
+    throws IOException
   {
     return new RepositoryClient(provider.create(url, username, password,
       workingCopy));

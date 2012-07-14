@@ -85,6 +85,16 @@ public final class TagRequest
   /**
    * Method description
    *
+   */
+  public void reset()
+  {
+    this.name = null;
+    this.revision = null;
+  }
+
+  /**
+   * Method description
+   *
    *
    * @return
    */
@@ -97,35 +107,6 @@ public final class TagRequest
                   .add("name", name)
                   .toString();
     //J+
-  }
-
-  public void reset(){
-    this.name = null;
-    this.revision = null;
-  }
-  
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  String getName()
-  {
-    return name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  String getRevision()
-  {
-    return revision;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -150,6 +131,30 @@ public final class TagRequest
   public void setRevision(String revision)
   {
     this.revision = revision;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  String getName()
+  {
+    return name;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  String getRevision()
+  {
+    return revision;
   }
 
   //~--- fields ---------------------------------------------------------------

@@ -52,8 +52,11 @@ public interface RepositoryClientFactoryProvider
    * @param workingCopy
    *
    * @return
+   *
+   * @throws IOException
    */
-  public RepositoryClientProvider create(File main, File workingCopy) throws IOException;
+  public RepositoryClientProvider create(File main, File workingCopy)
+    throws IOException;
 
   /**
    * Method description
@@ -65,7 +68,10 @@ public interface RepositoryClientFactoryProvider
    * @param workingCopy
    *
    * @return
+   *
+   * @throws IOException
    */
   public RepositoryClientProvider create(String url, String username,
-    String password, File workingCopy) throws IOException;
+    String password, File workingCopy)
+    throws IOException;
 }

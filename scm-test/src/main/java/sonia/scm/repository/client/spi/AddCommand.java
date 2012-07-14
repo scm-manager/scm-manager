@@ -31,6 +31,8 @@
 
 package sonia.scm.repository.client.spi;
 
+//~--- JDK imports ------------------------------------------------------------
+
 import java.io.IOException;
 
 /**
@@ -48,6 +50,8 @@ public interface AddCommand
    * @param path
    *
    * @param file
+   *
+   * @throws IOException
    */
   public void add(String path) throws IOException;
 }

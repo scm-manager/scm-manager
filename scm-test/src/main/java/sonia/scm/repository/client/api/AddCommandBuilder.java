@@ -33,12 +33,15 @@ package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.client.spi.AddCommand;
 import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 /**
  *
@@ -78,6 +81,8 @@ public final class AddCommandBuilder
    * @param pathes
    *
    * @return
+   *
+   * @throws IOException
    */
   public AddCommandBuilder add(String path, String... pathes) throws IOException
   {
@@ -99,6 +104,8 @@ public final class AddCommandBuilder
    *
    *
    * @param path
+   *
+   * @throws IOException
    */
   private void add(String path) throws IOException
   {

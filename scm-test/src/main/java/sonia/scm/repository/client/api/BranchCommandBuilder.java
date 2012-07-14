@@ -33,11 +33,14 @@ package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.client.spi.BranchCommand;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 /**
  *
@@ -75,6 +78,8 @@ public final class BranchCommandBuilder
    * @param name
    *
    * @return
+   *
+   * @throws IOException
    */
   public BranchCommandBuilder branch(String name) throws IOException
   {

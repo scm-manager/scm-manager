@@ -33,8 +33,11 @@ package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.io.IOException;
 import sonia.scm.repository.Changeset;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 /**
  *
@@ -51,6 +54,8 @@ public interface CommitCommand
    * @param request
    *
    * @return
+   *
+   * @throws IOException
    */
   public Changeset commit(CommitRequest request) throws IOException;
 }

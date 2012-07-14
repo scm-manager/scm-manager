@@ -33,8 +33,11 @@ package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.io.IOException;
 import sonia.scm.repository.Tag;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 /**
  *
@@ -51,6 +54,8 @@ public interface TagCommand
    * @param request
    *
    * @return
+   *
+   * @throws IOException
    */
   public Tag tag(TagRequest request) throws IOException;
 }

@@ -35,6 +35,8 @@ package sonia.scm.repository.client.spi;
 
 import com.google.common.base.Objects;
 
+import sonia.scm.repository.Person;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
@@ -125,7 +127,7 @@ public final class CommitRequest
    *
    * @param author
    */
-  public void setAuthor(String author)
+  public void setAuthor(Person author)
   {
     this.author = author;
   }
@@ -162,7 +164,7 @@ public final class CommitRequest
    *
    * @return
    */
-  String getAuthor()
+  Person getAuthor()
   {
     return author;
   }
@@ -192,7 +194,7 @@ public final class CommitRequest
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String author;
+  private Person author;
 
   /** Field description */
   private String message;

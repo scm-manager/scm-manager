@@ -26,10 +26,18 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+
+
+
 package sonia.scm.repository.client.spi;
 
-import java.io.IOException;
+//~--- non-JDK imports --------------------------------------------------------
+
 import sonia.scm.repository.Branch;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 /**
  *
@@ -38,5 +46,16 @@ import sonia.scm.repository.Branch;
  */
 public interface BranchCommand
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   *
+   * @throws IOException
+   */
   public Branch branch(String name) throws IOException;
 }
