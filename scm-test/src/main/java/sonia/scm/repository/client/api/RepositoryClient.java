@@ -33,17 +33,24 @@ package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Closeables;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.client.spi.RepositoryClientProvider;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.Closeable;
+import java.io.IOException;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public final class RepositoryClient
+public final class RepositoryClient implements Closeable
 {
 
   /**
@@ -64,6 +71,23 @@ public final class RepositoryClient
   RepositoryClient(RepositoryClientProvider clientProvider)
   {
     this.clientProvider = clientProvider;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Override
+  public void close()
+  {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("close client provider");
+    }
+
+    Closeables.closeQuietly(clientProvider);
   }
 
   //~--- get methods ----------------------------------------------------------

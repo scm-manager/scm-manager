@@ -38,6 +38,9 @@ import sonia.scm.repository.client.api.ClientCommandNotSupportedException;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Closeable;
+import java.io.IOException;
+
 import java.util.Set;
 
 /**
@@ -45,7 +48,7 @@ import java.util.Set;
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public abstract class RepositoryClientProvider
+public abstract class RepositoryClientProvider implements Closeable
 {
 
   /**
@@ -55,6 +58,19 @@ public abstract class RepositoryClientProvider
    * @return
    */
   public abstract Set<ClientCommand> getSupportedClientCommands();
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Override
+  public void close() throws IOException {}
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
