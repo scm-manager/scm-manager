@@ -38,9 +38,12 @@ import com.google.common.collect.ImmutableSet;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.transport.CredentialsProvider;
 
+import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.client.api.ClientCommand;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 import java.util.Set;
 
@@ -82,6 +85,20 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
   {
     this.git = git;
     this.credentialsProvider = credentialsProvider;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Override
+  public void close() throws IOException
+  {
+    GitUtil.close(git.getRepository());
   }
 
   //~--- get methods ----------------------------------------------------------
