@@ -53,10 +53,13 @@ public final class RepositoryClientFactory
    *
    *
    * @param provider
+   *
+   * @param providers
    */
-  public RepositoryClientFactory(RepositoryClientFactoryProvider provider)
+  public RepositoryClientFactory(
+    Iterable<RepositoryClientFactoryProvider> providers)
   {
-    this.provider = provider;
+    this.providers = providers;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -65,6 +68,8 @@ public final class RepositoryClientFactory
    * Method description
    *
    *
+   *
+   * @param type
    * @param main
    * @param workingCopy
    *
@@ -72,16 +77,19 @@ public final class RepositoryClientFactory
    *
    * @throws IOException
    */
-  public RepositoryClient create(File main, File workingCopy) throws IOException
+  public RepositoryClient create(String type, File main, File workingCopy)
+    throws IOException
   {
 
-    return new RepositoryClient(provider.create(main, workingCopy));
+    return new RepositoryClient(getProvider(type).create(main, workingCopy));
   }
 
   /**
    * Method description
    *
    *
+   *
+   * @param type
    * @param url
    * @param username
    * @param password
@@ -91,16 +99,49 @@ public final class RepositoryClientFactory
    *
    * @throws IOException
    */
-  public RepositoryClient create(String url, String username, String password,
-    File workingCopy)
+  public RepositoryClient create(String type, String url, String username,
+    String password, File workingCopy)
     throws IOException
   {
-    return new RepositoryClient(provider.create(url, username, password,
-      workingCopy));
+    return new RepositoryClient(getProvider(type).create(url, username,
+      password, workingCopy));
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   *
+   * @return
+   */
+  private RepositoryClientFactoryProvider getProvider(String type)
+  {
+    RepositoryClientFactoryProvider provider = null;
+
+    for (RepositoryClientFactoryProvider p : providers)
+    {
+      if (p.getType().equalsIgnoreCase(type))
+      {
+        provider = p;
+
+        break;
+      }
+    }
+
+    if (provider == null)
+    {
+      throw new RuntimeException(
+        "could not find provider for type ".concat(type));
+    }
+
+    return provider;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryClientFactoryProvider provider;
+  private Iterable<RepositoryClientFactoryProvider> providers;
 }

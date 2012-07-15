@@ -74,4 +74,14 @@ public interface RepositoryClientFactoryProvider
   public RepositoryClientProvider create(String url, String username,
     String password, File workingCopy)
     throws IOException;
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getType();
 }

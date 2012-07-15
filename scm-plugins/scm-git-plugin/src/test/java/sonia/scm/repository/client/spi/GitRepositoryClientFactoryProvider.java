@@ -38,6 +38,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.client.api.RepositoryClientException;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -117,5 +118,19 @@ public class GitRepositoryClientFactoryProvider
     }
 
     return new GitRepositoryClientProvider(git, credentialsProvider);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getType()
+  {
+    return GitRepositoryHandler.TYPE_NAME;
   }
 }
