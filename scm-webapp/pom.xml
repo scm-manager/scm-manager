@@ -248,6 +248,14 @@
     </dependency>
     
     <dependency>
+      <groupId>sonia.scm.plugins</groupId>
+      <artifactId>scm-svn-plugin</artifactId>
+      <version>1.18-SNAPSHOT</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
       <version>2.24.1</version>
