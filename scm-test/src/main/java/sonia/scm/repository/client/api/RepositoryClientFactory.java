@@ -33,12 +33,17 @@ package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
+
 import sonia.scm.repository.client.spi.RepositoryClientFactoryProvider;
+import sonia.scm.util.ServiceUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
+
+import java.util.List;
 
 /**
  *
@@ -47,6 +52,16 @@ import java.io.IOException;
  */
 public final class RepositoryClientFactory
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  public RepositoryClientFactory()
+  {
+    this.providers =
+      ServiceUtil.getServices(RepositoryClientFactoryProvider.class);
+  }
 
   /**
    * Constructs ...
@@ -108,6 +123,24 @@ public final class RepositoryClientFactory
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Iterable<String> getAvailableTypes()
+  {
+    List<String> types = Lists.newArrayList();
+
+    for (RepositoryClientFactoryProvider provider : providers)
+    {
+      types.add(provider.getType());
+    }
+
+    return types;
+  }
 
   /**
    * Method description
