@@ -47,9 +47,11 @@ import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
 import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
+import org.tmatesoft.svn.util.SVNDebugLog;
 
 import sonia.scm.Type;
 import sonia.scm.io.FileSystem;
+import sonia.scm.logging.SVNKitLogger;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.AssertUtil;
@@ -67,7 +69,7 @@ import java.io.IOException;
 @Singleton
 @Extension
 public class SvnRepositoryHandler
-        extends AbstractSimpleRepositoryHandler<SvnConfig>
+  extends AbstractSimpleRepositoryHandler<SvnConfig>
 {
 
   /** Field description */
@@ -102,9 +104,12 @@ public class SvnRepositoryHandler
    */
   @Inject
   public SvnRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem,
-                              RepositoryManager repositoryManager)
+    RepositoryManager repositoryManager)
   {
     super(storeFactory, fileSystem);
+
+    // register logger
+    SVNDebugLog.setDefaultLog(new SVNKitLogger());
 
     // setup FSRepositoryFactory for SvnRepositoryBrowser
     FSRepositoryFactory.setup();
@@ -117,7 +122,7 @@ public class SvnRepositoryHandler
     else if (logger.isWarnEnabled())
     {
       logger.warn(
-          "unable to register hook, beacause of missing repositorymanager");
+        "unable to register hook, beacause of missing repositorymanager");
     }
   }
 
@@ -282,7 +287,7 @@ public class SvnRepositoryHandler
    */
   @Override
   protected void create(Repository repository, File directory)
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     Compatibility comp = config.getCompatibility();
 
@@ -317,7 +322,7 @@ public class SvnRepositoryHandler
         if (logger.isDebugEnabled())
         {
           logger.debug("store repository uuid {} for {}", uuid,
-                       repository.getName());
+            repository.getName());
         }
 
         repository.setProperty(PROPERTY_UUID, uuid);
@@ -325,7 +330,7 @@ public class SvnRepositoryHandler
       else if (logger.isWarnEnabled())
       {
         logger.warn("could not read repository uuid for {}",
-                    repository.getName());
+          repository.getName());
       }
     }
     catch (SVNException ex)
