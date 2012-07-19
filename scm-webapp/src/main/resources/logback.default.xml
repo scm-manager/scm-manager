@@ -59,9 +59,11 @@
   <logger name="sonia.scm.util.ServiceUtil" level="WARN" />
   
   <!-- svnkit -->
+  <!--
   <logger name="svnkit" level="WARN" />
   <logger name="svnkit.network" level="DEBUG" />
   <logger name="svnkit.fsfs" level="WARN" />
+  -->
 
   <root level="WARN">
     <appender-ref ref="STDOUT" />
