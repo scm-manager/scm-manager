@@ -171,6 +171,7 @@
         timeToLiveSeconds="86400"
         diskPersistent="false"
         copyOnRead="true"
+        copyOnWrite="true"
   />
   
   <cache
@@ -181,6 +182,7 @@
         timeToLiveSeconds="86400"
         diskPersistent="false"
         copyOnRead="true"
+        copyOnWrite="true"
   />
   
   <cache
@@ -191,6 +193,7 @@
         timeToLiveSeconds="86400"
         diskPersistent="false"
         copyOnRead="true"
+        copyOnWrite="true"
   />
   
 </ehcache>
