@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -42,6 +43,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.ConfigurationException;
 import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
@@ -661,8 +663,15 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   @Override
   public Repository getFromTypeAndUri(String type, String uri)
   {
-    AssertUtil.assertIsNotEmpty(type);
-    AssertUtil.assertIsNotEmpty(uri);
+    if (Strings.isNullOrEmpty(type))
+    {
+      throw new ArgumentIsInvalidException("argument type is required");
+    }
+
+    if (Strings.isNullOrEmpty(uri))
+    {
+      throw new ArgumentIsInvalidException("argument uri is required");
+    }
 
     // remove ;jsessionid, jetty bug?
     uri = HttpUtil.removeMatrixParameter(uri);

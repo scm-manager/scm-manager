@@ -397,8 +397,8 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
       processErrorStreamAsync(process);
       processServletInput(process);
       processIS = process.getInputStream();
-      servletOS = response.getOutputStream();
       parseHeaders(processIS);
+      servletOS = response.getOutputStream();
 
       long content = ByteStreams.copy(processIS, servletOS);
 

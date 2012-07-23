@@ -41,6 +41,7 @@ import com.google.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.PermissionType;
@@ -185,13 +186,18 @@ public abstract class PermissionFilter extends HttpFilter
           response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
       }
-      catch (IllegalStateException ex)
+      catch (ArgumentIsInvalidException ex)
       {
-        if (logger.isWarnEnabled())
+        if (logger.isTraceEnabled())
         {
-          logger.warn(
+          logger.trace(
               "wrong request at ".concat(request.getRequestURI()).concat(
                 " send redirect"), ex);
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("wrong request at {} send redirect",
+                      request.getRequestURI());
         }
 
         response.sendRedirect(getRepositoryRootHelpUrl(request));
