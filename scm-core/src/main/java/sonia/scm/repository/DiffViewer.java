@@ -37,12 +37,16 @@ package sonia.scm.repository;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import sonia.scm.repository.api.RepositoryService;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.8
+ * 
+ * @deprecated use {@link RepositoryService#getDiffCommand()} instead.
  */
+@Deprecated
 public interface DiffViewer
 {
 

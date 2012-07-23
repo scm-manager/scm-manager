@@ -44,6 +44,11 @@ def getName(path):
     length =- 1
   return parts[length - 1]
 
+def removeTrailingSlash(path):
+  if path.endswith('/'):
+    path = path[0:-1]
+  return path
+
 def appendSubRepositoryNode(doc, parentNode, path, subRepositories):
   if path in subRepositories:
     subRepository = subRepositories[path]
@@ -55,7 +60,7 @@ def appendSubRepositoryNode(doc, parentNode, path, subRepositories):
 def createBasicFileNode(doc, parentNode, path, directory):
   fileNode = createChildNode(doc, parentNode, 'file')
   appendTextNode(doc, fileNode, 'name', getName(path))
-  appendTextNode(doc, fileNode, 'path', path)
+  appendTextNode(doc, fileNode, 'path', removeTrailingSlash(path))
   appendTextNode(doc, fileNode, 'directory', directory)
   return fileNode
 

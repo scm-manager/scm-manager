@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -198,6 +199,10 @@ public class GitChangesetViewer implements ChangesetViewer
     {
       logger.error("could not read changesets", ex);
     }
+    catch (GitAPIException ex)
+    {
+      logger.error("could not read changesets", ex);
+    }
     catch (IOException ex)
     {
       logger.error("could not open repository", ex);
@@ -276,6 +281,10 @@ public class GitChangesetViewer implements ChangesetViewer
       changesets = new ChangesetPagingResult(counter, changesetList);
     }
     catch (NoHeadException ex)
+    {
+      logger.error("could not read changesets", ex);
+    }
+    catch (GitAPIException ex)
     {
       logger.error("could not read changesets", ex);
     }

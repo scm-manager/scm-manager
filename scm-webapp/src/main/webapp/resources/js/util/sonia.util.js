@@ -59,6 +59,21 @@ Sonia.util.getContextPath = function(){
   return path;
 }
 
+Sonia.util.getBaseUrl = function(){
+  var url = location.href;
+  var i = url.indexOf('#');
+  if ( i > 0 ){
+    url = url.substring(0, i);
+  }
+  
+  if ( url.endsWith('/index.html') ){
+    url = url.substring(0, url.length - '/index.html'.length);
+  } else if ( url.endsWith('/') ){
+    url = url.substring(0, url.length -1);
+  }
+  return url;
+}
+
 Sonia.util.getName = function(path){
   var name = path;
   var index = path.lastIndexOf('/');

@@ -174,12 +174,48 @@ public class HttpRequest
    *
    *
    * @return
-   * 
+   *
    * @since 1.14
    */
   public boolean isDecodeGZip()
   {
     return decodeGZip;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.17
+   */
+  public boolean isDisableCertificateValidation()
+  {
+    return disableCertificateValidation;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.17
+   */
+  public boolean isDisableHostnameValidation()
+  {
+    return disableHostnameValidation;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.17
+   */
+  public boolean isIgnoreProxySettings()
+  {
+    return ignoreProxySettings;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -208,13 +244,39 @@ public class HttpRequest
    * @param decodeGZip
    *
    * @return
-   * 
+   *
    * @since 1.14
    */
   public HttpRequest setDecodeGZip(boolean decodeGZip)
   {
     this.decodeGZip = decodeGZip;
+
     return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param disableCertificateValidation
+   * @since 1.17
+   */
+  public void setDisableCertificateValidation(
+          boolean disableCertificateValidation)
+  {
+    this.disableCertificateValidation = disableCertificateValidation;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param disableHostnameValidation
+   * @since 1.17
+   */
+  public void setDisableHostnameValidation(boolean disableHostnameValidation)
+  {
+    this.disableHostnameValidation = disableHostnameValidation;
   }
 
   /**
@@ -230,6 +292,18 @@ public class HttpRequest
     this.headers = headers;
 
     return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param ignoreProxySettings
+   * @since 1.17
+   */
+  public void setIgnoreProxySettings(boolean ignoreProxySettings)
+  {
+    this.ignoreProxySettings = ignoreProxySettings;
   }
 
   /**
@@ -277,10 +351,19 @@ public class HttpRequest
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private boolean decodeGZip = false;
+  private Map<String, List<String>> headers;
 
   /** Field description */
-  private Map<String, List<String>> headers;
+  private boolean ignoreProxySettings = false;
+
+  /** Field description */
+  private boolean disableHostnameValidation = false;
+
+  /** Field description */
+  private boolean disableCertificateValidation = false;
+
+  /** Field description */
+  private boolean decodeGZip = false;
 
   /** Field description */
   private Map<String, List<String>> parameters;

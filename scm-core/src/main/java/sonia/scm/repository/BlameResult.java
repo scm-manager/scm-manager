@@ -36,9 +36,13 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -48,16 +52,22 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Class description
+ * Changeset information by line for a given file.
  *
+ * TODO for 2.0 implement {@link Iterable}
  *
  * @author Sebastian Sdorra
  * @since 1.8
  */
 @XmlRootElement(name = "blame-result")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BlameResult
+public class BlameResult implements Serializable, Iterable<BlameLine>
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -8606237881465520606L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -132,6 +142,20 @@ public class BlameResult
   }
 
   /**
+   * Method description
+   *
+   *
+   * @return
+   * 
+   * @since 1.17
+   */
+  @Override
+  public Iterator<BlameLine> iterator()
+  {
+    return getBlameLines().iterator();
+  }
+
+  /**
    * {@inheritDoc}
    *
    *
@@ -158,6 +182,9 @@ public class BlameResult
    */
   public List<BlameLine> getBlameLines()
   {
+    if ( blameLines == null ){
+      blameLines = Lists.newArrayList();
+    }
     return blameLines;
   }
 

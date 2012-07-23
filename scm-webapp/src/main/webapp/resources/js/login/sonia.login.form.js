@@ -38,6 +38,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
   waitTitleText: 'Connecting',
   WaitMsgText: 'Sending data...',
   failedMsgText: 'Login failed!',
+  failedDescriptionText: 'Incorrect username, password or not enough permission. Please Try again.',
 
   initComponent: function(){
 
@@ -81,6 +82,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
           scope: this,
           handler: this.cancel
         },{
+          id: 'loginButton',
           text: this.loginText,
           formBind: true,
           scope: this,
@@ -88,7 +90,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
       }]
     };
 
-    this.addEvents('cancel');
+    this.addEvents('cancel', 'failure');
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.login.Form.superclass.initComponent.apply(this, arguments);
@@ -118,7 +120,13 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
         if ( debug ){
           console.debug( 'login failed' );
         }
-        Ext.Msg.alert(this.failedMsgText);
+        this.fireEvent('failure');
+        Ext.Msg.show({
+          title: this.failedMsgText,
+          msg: this.failedDescriptionText,
+          buttons: Ext.Msg.OK,
+          icon: Ext.MessageBox.WARNING
+        });
         form.reset();
       }
     });

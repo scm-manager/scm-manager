@@ -130,6 +130,12 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
 
     if (ar == null)
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("no authentication result for user {} found in cache",
+                     username);
+      }
+
       ar = doAuthentication(request, response, username, password);
 
       if ((ar != null) && ar.isCacheable())
@@ -157,6 +163,11 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
   {
     for (AuthenticationHandler authenticator : authenticationHandlerSet)
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("close authenticator {}", authenticator.getClass());
+      }
+
       IOUtil.close(authenticator);
     }
   }
@@ -172,6 +183,11 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
   {
     for (AuthenticationHandler authenticator : authenticationHandlerSet)
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("initialize authenticator {}", authenticator.getClass());
+      }
+
       authenticator.init(context);
     }
 
@@ -200,8 +216,19 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
   {
     AuthenticationResult ar = null;
 
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("start authentication chain for user {}", username);
+    }
+
     for (AuthenticationHandler authenticator : authenticationHandlerSet)
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("check authenticator {} for user {}",
+                     authenticator.getClass(), username);
+      }
+
       try
       {
         AuthenticationResult result = authenticator.authenticate(request,

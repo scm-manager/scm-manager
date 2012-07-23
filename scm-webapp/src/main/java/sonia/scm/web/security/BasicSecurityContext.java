@@ -124,9 +124,16 @@ public class BasicSecurityContext implements WebSecurityContext
                            HttpServletResponse response, String username,
                            String password)
   {
+    if ( logger.isTraceEnabled() ){
+      logger.trace("start authentication for user {}", username);
+    }
     AuthenticationResult ar = authenticator.authenticate(request, response,
                                 username, password);
 
+    if ( logger.isTraceEnabled() ){
+      logger.trace("authentication ends with {}", ar);
+    }
+    
     if ((ar != null) && (ar.getState() == AuthenticationState.SUCCESS))
     {
       authenticate(request, password, ar);

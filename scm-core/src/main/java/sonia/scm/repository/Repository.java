@@ -39,6 +39,7 @@ import com.google.common.base.Objects;
 
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
@@ -162,6 +163,22 @@ public class Repository extends BasicPropertiesAware implements ModelObject
     repository.setUrl(url);
     repository.setPublicReadable(publicReadable);
     repository.setArchived(archived);
+  }
+
+  /**
+   * Creates the url of the repository.
+   *
+   *
+   * @param baseUrl base url of the server including the context path
+   *
+   * @return url of the repository
+   * @since 1.17
+   */
+  public String createUrl(String baseUrl)
+  {
+    String url = HttpUtil.append(baseUrl, type);
+
+    return HttpUtil.append(url, name);
   }
 
   /**
@@ -343,7 +360,9 @@ public class Repository extends BasicPropertiesAware implements ModelObject
    *
    *
    * @return base url
+   * @deprecated use {@link #createUrl(String)}
    */
+  @Deprecated
   public String getUrl()
   {
     return url;
@@ -511,7 +530,9 @@ public class Repository extends BasicPropertiesAware implements ModelObject
    *
    *
    * @param url base url
+   * @deprecated
    */
+  @Deprecated
   public void setUrl(String url)
   {
     this.url = url;
@@ -550,6 +571,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   /** Field description */
   private String type;
 
-  /** Field description */
+  /**
+   * @deprecated use {@link #createUrl(java.lang.String)} instead
+   */
   private String url;
 }

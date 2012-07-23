@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -123,20 +124,19 @@ public class GitBlameViewer implements BlameViewer
       List<BlameLine> blameLines = new ArrayList<BlameLine>();
       int total = gitBlameResult.getResultContents().size();
       int i = 0;
-	  
+
       for (; i < total; i++)
       {
-	    RevCommit commit = gitBlameResult.getSourceCommit(i);
-		
-		if ( commit != null )
-		{
+        RevCommit commit = gitBlameResult.getSourceCommit(i);
+
+        if (commit != null)
+        {
           PersonIdent author = gitBlameResult.getSourceAuthor(i);
           BlameLine blameLine = new BlameLine();
 
           blameLine.setLineNumber(i + 1);
           blameLine.setAuthor(new Person(author.getName(),
                                          author.getEmailAddress()));
-
           blameLine.setDescription(commit.getShortMessage());
 
           long when = GitUtil.getCommitTime(commit);
@@ -151,7 +151,7 @@ public class GitBlameViewer implements BlameViewer
 
           blameLine.setCode(content);
           blameLines.add(blameLine);
-		}  
+        }
       }
 
       blameResult = new sonia.scm.repository.BlameResult(i, blameLines);
@@ -159,6 +159,10 @@ public class GitBlameViewer implements BlameViewer
     catch (IOException ex)
     {
       logger.error("could not open repository", ex);
+    }
+    catch (GitAPIException ex)
+    {
+      logger.error("could not create blame view", ex);
     }
 
     return blameResult;

@@ -40,6 +40,8 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,8 +57,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "plugin-information")
-public class PluginInformation implements Validateable, Cloneable
+public class PluginInformation implements Validateable, Cloneable, Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = 461382048865977206L;
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

@@ -1,32 +1,33 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
+ * Copyright (c) 2010, Sebastian Sdorra
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer. 2. Redistributions in
- * binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other
- * materials provided with the distribution. 3. Neither the name of SCM-Manager;
- * nor the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of SCM-Manager; nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
 
 
 package sonia.scm.api.rest.resources;
@@ -42,7 +43,6 @@ import com.google.inject.Inject;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTypePredicate;
-import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.template.TemplateHandler;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
@@ -116,15 +116,15 @@ public class RepositoryRootResource
           @PathParam("type") final String type)
           throws IOException
   {
-    UrlProvider uiUrlProvider =
-      UrlProviderFactory.createUrlProvider(HttpUtil.getCompleteUrl(request),
-        UrlProviderFactory.TYPE_WUI);
+    String baseUrl = HttpUtil.getCompleteUrl(request);
+    UrlProvider uiUrlProvider = UrlProviderFactory.createUrlProvider(baseUrl,
+                                  UrlProviderFactory.TYPE_WUI);
     //J-
     Collection<RepositoryTemplateElement> unsortedRepositories =
       Collections2.transform( 
         Collections2.filter(
             repositoryManager.getAll(), new RepositoryTypePredicate(type))
-        , new RepositoryTransformFunction(request, repositoryManager, uiUrlProvider)
+        , new RepositoryTransformFunction(uiUrlProvider, baseUrl)
       );
     
     List<RepositoryTemplateElement> repositories = Ordering.from(
@@ -160,12 +160,14 @@ public class RepositoryRootResource
      *
      * @param repository
      * @param uiUrlProvider
+     * @param baseUrl
      */
     public RepositoryTemplateElement(Repository repository,
-                                     UrlProvider uiUrlProvider)
+                                     UrlProvider uiUrlProvider, String baseUrl)
     {
       this.repository = repository;
       this.urlProvider = uiUrlProvider;
+      this.baseUrl = baseUrl;
     }
 
     //~--- get methods --------------------------------------------------------
@@ -236,10 +238,13 @@ public class RepositoryRootResource
      */
     public String getUrl()
     {
-      return repository.getUrl();
+      return repository.createUrl(baseUrl);
     }
 
     //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private String baseUrl;
 
     /** Field description */
     private Repository repository;
@@ -298,14 +303,12 @@ public class RepositoryRootResource
      * @param request
      * @param repositoryManager
      * @param urlProvider
+     * @param baseUrl
      */
-    public RepositoryTransformFunction(HttpServletRequest request,
-                                       RepositoryManager repositoryManager,
-                                       UrlProvider urlProvider)
+    public RepositoryTransformFunction(UrlProvider urlProvider, String baseUrl)
     {
-      this.request = request;
-      this.repositoryManager = repositoryManager;
       this.urlProvider = urlProvider;
+      this.baseUrl = baseUrl;
     }
 
     //~--- methods ------------------------------------------------------------
@@ -321,18 +324,13 @@ public class RepositoryRootResource
     @Override
     public RepositoryTemplateElement apply(Repository repository)
     {
-      RepositoryUtil.appendUrl(request, repositoryManager, repository);
-
-      return new RepositoryTemplateElement(repository, urlProvider);
+      return new RepositoryTemplateElement(repository, urlProvider, baseUrl);
     }
 
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private RepositoryManager repositoryManager;
-
-    /** Field description */
-    private HttpServletRequest request;
+    private String baseUrl;
 
     /** Field description */
     private UrlProvider urlProvider;

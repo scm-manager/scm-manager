@@ -215,7 +215,7 @@ public class ServletContainerDetector
    */
   public boolean isScmServer()
   {
-    return "scm-server".equals(System.getProperty("app-name"));
+    return "scm-server".equals(System.getProperty("app.name"));
   }
 
   /**

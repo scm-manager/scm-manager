@@ -46,6 +46,8 @@ import sonia.scm.group.GroupListener;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionProcessor;
+import sonia.scm.repository.BlameLinePreProcessor;
+import sonia.scm.repository.BlameLinePreProcessorFactory;
 import sonia.scm.repository.ChangesetPreProcessor;
 import sonia.scm.repository.ChangesetPreProcessorFactory;
 import sonia.scm.repository.FileObjectPreProcessor;
@@ -54,6 +56,7 @@ import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryHook;
 import sonia.scm.repository.RepositoryListener;
 import sonia.scm.repository.RepositoryRequestListener;
+import sonia.scm.repository.spi.RepositoryServiceResolver;
 import sonia.scm.resources.ResourceHandler;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.UserListener;
@@ -123,6 +126,16 @@ public class BindingExtensionProcessor implements ExtensionProcessor
       Multibinder.newSetBinder(binder, FileObjectPreProcessor.class);
     Multibinder<FileObjectPreProcessorFactory> fileObjectPreProcessorFactoryBinder =
       Multibinder.newSetBinder(binder, FileObjectPreProcessorFactory.class);
+
+    // blameline pre processor
+    Multibinder<BlameLinePreProcessor> blameLinePreProcessorBinder =
+      Multibinder.newSetBinder(binder, BlameLinePreProcessor.class);
+    Multibinder<BlameLinePreProcessorFactory> blameLinePreProcessorFactoryBinder =
+      Multibinder.newSetBinder(binder, BlameLinePreProcessorFactory.class);
+
+    // repository service resolver
+    Multibinder<RepositoryServiceResolver> repositoryServiceResolverBinder =
+      Multibinder.newSetBinder(binder, RepositoryServiceResolver.class);
 
     // listeners
     Multibinder<RepositoryListener> repositoryListenerBinder =
@@ -268,6 +281,27 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
         fileObjectPreProcessorFactoryBinder.addBinding().to(extensionClass);
       }
+      else if (BlameLinePreProcessor.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind BlameLinePreProcessor {}",
+                      extensionClass.getName());
+        }
+
+        blameLinePreProcessorBinder.addBinding().to(extensionClass);
+      }
+      else if (BlameLinePreProcessorFactory.class.isAssignableFrom(
+              extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind BlameLinePreProcessorFactory {}",
+                      extensionClass.getName());
+        }
+
+        blameLinePreProcessorFactoryBinder.addBinding().to(extensionClass);
+      }
       else if (RepositoryHook.class.isAssignableFrom(extensionClass))
       {
         if (logger.isInfoEnabled())
@@ -296,6 +330,16 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         }
 
         servletContextListenerBinder.addBinding().to(extensionClass);
+      }
+      else if (RepositoryServiceResolver.class.isAssignableFrom(extensionClass))
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("bind RepositoryServiceResolver {}",
+                      extensionClass.getName());
+        }
+
+        repositoryServiceResolverBinder.addBinding().to(extensionClass);
       }
       else
       {

@@ -39,9 +39,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.PathNotFoundException;
-import sonia.scm.repository.RepositoryBrowser;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RevisionNotFoundException;
+import sonia.scm.repository.api.CatCommandBuilder;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -71,13 +71,13 @@ public class BrowserStreamingOutput implements StreamingOutput
    *
    * @param browser
    * @param revision
+   *
+   * @param builder
    * @param path
    */
-  public BrowserStreamingOutput(RepositoryBrowser browser, String revision,
-                                String path)
+  public BrowserStreamingOutput(CatCommandBuilder builder, String path)
   {
-    this.browser = browser;
-    this.revision = revision;
+    this.builder = builder;
     this.path = path;
   }
 
@@ -98,7 +98,7 @@ public class BrowserStreamingOutput implements StreamingOutput
   {
     try
     {
-      browser.getContent(revision, path, output);
+      builder.retriveContent(output, path);
     }
     catch (PathNotFoundException ex)
     {
@@ -130,11 +130,8 @@ public class BrowserStreamingOutput implements StreamingOutput
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryBrowser browser;
+  private CatCommandBuilder builder;
 
   /** Field description */
   private String path;
-
-  /** Field description */
-  private String revision;
 }

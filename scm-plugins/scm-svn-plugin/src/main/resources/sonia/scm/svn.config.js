@@ -40,6 +40,8 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
   pre14CompatibleText: 'Pre 1.4 Compatible',
   pre15CompatibleText: 'Pre 1.5 Compatible',
   pre16CompatibleText: 'Pre 1.6 Compatible',
+  pre17CompatibleText: 'Pre 1.7 Compatible',
+  with17CompatibleText: 'With 1.7 Compatible',
   enableGZipText: 'Enable GZip Encoding',
   disabledText: 'Disabled',
 
@@ -80,6 +82,14 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
           boxLabel: this.pre16CompatibleText, 
           inputValue: 'PRE16',
           name: 'compatibility'
+        },{
+          boxLabel: this.pre17CompatibleText, 
+          inputValue: 'PRE17',
+          name: 'compatibility'
+        },{
+          boxLabel: this.with17CompatibleText, 
+          inputValue: 'WITH17',
+          name: 'compatibility'
         }]
       },{
         xtype: 'checkbox',
@@ -117,6 +127,8 @@ if ( i18n != null && i18n.country == 'de' ){
     pre14CompatibleText: 'Mit Versionen vor 1.4 kompatibel',
     pre15CompatibleText: 'Mit Versionen vor 1.5 kompatibel',
     pre16CompatibleText: 'Mit Versionen vor 1.6 kompatibel',
+    pre17CompatibleText: 'Mit Versionen vor 1.7 kompatibel',
+    with17CompatibleText: 'Mit Version 1.7 kompatibel',
     disabledText: 'Deaktivieren',
 
     // helpTexts

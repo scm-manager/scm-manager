@@ -71,6 +71,7 @@ import sonia.scm.repository.RepositoryBrowserUtil;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.resources.DefaultResourceManager;
 import sonia.scm.resources.DevelopmentResourceManager;
@@ -101,6 +102,7 @@ import sonia.scm.util.DebugServlet;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
+import sonia.scm.web.filter.LoggingFilter;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.ApiBasicAuthenticationFilter;
 import sonia.scm.web.security.AuthenticationManager;
@@ -171,6 +173,9 @@ public class ScmServletModule extends ServletModule
 
   /** Field description */
   public static final String REST_PACKAGE = "sonia.scm.api.rest";
+
+  /** Field description */
+  public static final String SYSTEM_PROPERTY_DEBUG_HTTP = "scm.debug.http";
 
   /** Field description */
   public static final String[] PATTERN_STATIC_RESOURCES = new String[] {
@@ -298,6 +303,15 @@ public class ScmServletModule extends ServletModule
     bind(UrlProvider.class).annotatedWith(
         Names.named(UrlProviderFactory.TYPE_WUI)).toProvider(
         WebUIUrlProvider.class);
+
+    // bind repository service factory
+    bind(RepositoryServiceFactory.class);
+
+    // bind debug logging filter
+    if ("true".equalsIgnoreCase(System.getProperty(SYSTEM_PROPERTY_DEBUG_HTTP)))
+    {
+      filter(PATTERN_ALL).through(LoggingFilter.class);
+    }
 
     /*
      * filter(PATTERN_PAGE,

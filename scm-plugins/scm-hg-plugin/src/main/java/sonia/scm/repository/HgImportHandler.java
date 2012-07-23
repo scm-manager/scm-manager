@@ -30,14 +30,19 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
+import sonia.scm.util.ValidationUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -53,6 +58,12 @@ public class HgImportHandler extends AbstactImportHandler
 
   /** Field description */
   public static final String HG_DIR = ".hg";
+
+  /**
+   * the logger for HgImportHandler
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgImportHandler.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -103,10 +114,21 @@ public class HgImportHandler extends AbstactImportHandler
       else
       {
         repository.setDescription(web.getParameter("description"));
-        repository.setContact(web.getParameter("contact"));
+
+        String contact = web.getParameter("contact");
+
+        if (ValidationUtil.isMailAddressValid(contact))
+        {
+          repository.setContact(contact);
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("contact {} is not a valid mail address", contact);
+        }
+
         handler.setWebParameter(web);
       }
-      
+
       // issue-97
       handler.registerMissingHook(c, repositoryName);
 

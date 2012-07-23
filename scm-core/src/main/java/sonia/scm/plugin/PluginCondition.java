@@ -42,6 +42,8 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,8 +59,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "conditions")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class PluginCondition implements Cloneable
+public class PluginCondition implements Cloneable, Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = 2406156062634968672L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...

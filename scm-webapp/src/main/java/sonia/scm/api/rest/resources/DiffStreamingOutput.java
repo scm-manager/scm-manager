@@ -38,10 +38,10 @@ package sonia.scm.api.rest.resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.repository.DiffViewer;
 import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RevisionNotFoundException;
+import sonia.scm.repository.api.DiffCommandBuilder;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -66,19 +66,14 @@ public class DiffStreamingOutput implements StreamingOutput
   //~--- constructors ---------------------------------------------------------
 
   /**
-   *   Constructs ...
+   * Constructs ...
    *
    *
-   *   @param diffViewer
-   *   @param revision
-   *   @param path
+   * @param builder
    */
-  public DiffStreamingOutput(DiffViewer diffViewer, String revision,
-                             String path)
+  public DiffStreamingOutput(DiffCommandBuilder builder)
   {
-    this.diffViewer = diffViewer;
-    this.revision = revision;
-    this.path = path;
+    this.builder = builder;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -98,7 +93,7 @@ public class DiffStreamingOutput implements StreamingOutput
   {
     try
     {
-      diffViewer.getDiff(revision, path, output);
+      builder.retriveContent(output);
     }
     catch (PathNotFoundException ex)
     {
@@ -130,11 +125,5 @@ public class DiffStreamingOutput implements StreamingOutput
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private DiffViewer diffViewer;
-
-  /** Field description */
-  private String path;
-
-  /** Field description */
-  private String revision;
+  private DiffCommandBuilder builder;
 }

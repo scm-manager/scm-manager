@@ -33,12 +33,21 @@
 
 package sonia.scm.plugin;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.Serializable;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public class PluginRepository
+public class PluginRepository implements Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -9504354306304731L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...

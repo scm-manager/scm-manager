@@ -35,6 +35,8 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
+import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -45,30 +47,30 @@ import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.BlameResult;
-import sonia.scm.repository.BlameViewerUtil;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.ChangesetViewerUtil;
-import sonia.scm.repository.DiffViewer;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryBrowser;
-import sonia.scm.repository.RepositoryBrowserUtil;
 import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryUtil;
+import sonia.scm.repository.api.BlameCommandBuilder;
+import sonia.scm.repository.api.BrowseCommandBuilder;
+import sonia.scm.repository.api.CatCommandBuilder;
+import sonia.scm.repository.api.CommandNotSupportedException;
+import sonia.scm.repository.api.DiffCommandBuilder;
+import sonia.scm.repository.api.LogCommandBuilder;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -125,6 +127,7 @@ public class RepositoryResource
    * @param configuration
    * @param repositoryManager
    * @param securityContextProvider
+   * @param servicefactory
    * @param changesetViewerUtil
    * @param repositoryBrowserUtil
    * @param blameViewerUtil
@@ -133,17 +136,13 @@ public class RepositoryResource
   public RepositoryResource(
           ScmConfiguration configuration, RepositoryManager repositoryManager,
           Provider<WebSecurityContext> securityContextProvider,
-          ChangesetViewerUtil changesetViewerUtil,
-          RepositoryBrowserUtil repositoryBrowserUtil,
-          BlameViewerUtil blameViewerUtil)
+          RepositoryServiceFactory servicefactory)
   {
     super(repositoryManager);
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
+    this.servicefactory = servicefactory;
     this.securityContextProvider = securityContextProvider;
-    this.changesetViewerUtil = changesetViewerUtil;
-    this.repositoryBrowserUtil = repositoryBrowserUtil;
-    this.blameViewerUtil = blameViewerUtil;
     setDisableCache(false);
   }
 
@@ -349,13 +348,21 @@ public class RepositoryResource
           throws RepositoryException, IOException
   {
     Response response = null;
+    RepositoryService service = null;
 
     try
     {
       AssertUtil.assertIsNotNull(path);
+      service = servicefactory.create(id);
 
-      BlameResult blamePagingResult = blameViewerUtil.getBlame(id, revision,
-                                        path);
+      BlameCommandBuilder builder = service.getBlameCommand();
+
+      if (!Strings.isNullOrEmpty(revision))
+      {
+        builder.setRevision(revision);
+      }
+
+      BlameResult blamePagingResult = builder.getBlameResult(path);
 
       if (blamePagingResult != null)
       {
@@ -374,9 +381,13 @@ public class RepositoryResource
     {
       response = Response.status(Response.Status.NOT_FOUND).build();
     }
-    catch (NotSupportedFeatuerException ex)
+    catch (CommandNotSupportedException ex)
     {
       response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
     }
 
     return response;
@@ -413,11 +424,25 @@ public class RepositoryResource
           throws RepositoryException, IOException
   {
     Response response = null;
+    RepositoryService service = null;
 
     try
     {
-      BrowserResult result = repositoryBrowserUtil.getResult(id, revision,
-                               path);
+      service = servicefactory.create(id);
+
+      BrowseCommandBuilder builder = service.getBrowseCommand();
+
+      if (!Strings.isNullOrEmpty(revision))
+      {
+        builder.setRevision(revision);
+      }
+
+      if (!Strings.isNullOrEmpty(path))
+      {
+        builder.setPath(path);
+      }
+
+      BrowserResult result = builder.getBrowserResult();
 
       if (result != null)
       {
@@ -432,9 +457,13 @@ public class RepositoryResource
     {
       response = Response.status(Response.Status.NOT_FOUND).build();
     }
-    catch (NotSupportedFeatuerException ex)
+    catch (CommandNotSupportedException ex)
     {
       response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
     }
 
     return response;
@@ -511,9 +540,13 @@ public class RepositoryResource
 
     if (Util.isNotEmpty(id) && Util.isNotEmpty(revision))
     {
+      RepositoryService service = null;
+
       try
       {
-        Changeset changeset = changesetViewerUtil.getChangeset(id, revision);
+        service = servicefactory.create(id);
+
+        Changeset changeset = service.getLogCommand().getChangeset(revision);
 
         if (changeset != null)
         {
@@ -528,9 +561,13 @@ public class RepositoryResource
       {
         response = Response.status(Response.Status.NOT_FOUND).build();
       }
-      catch (NotSupportedFeatuerException ex)
+      catch (CommandNotSupportedException ex)
       {
         response = Response.status(Response.Status.BAD_REQUEST).build();
+      }
+      finally
+      {
+        Closeables.closeQuietly(service);
       }
     }
     else
@@ -581,20 +618,28 @@ public class RepositoryResource
   @QueryParam("limit") int limit) throws RepositoryException, IOException
   {
     Response response = null;
+    RepositoryService service = null;
 
     try
     {
       ChangesetPagingResult changesets = null;
 
-      if (Util.isEmpty(path))
+      service = servicefactory.create(id);
+
+      LogCommandBuilder builder = service.getLogCommand();
+
+      if (!Strings.isNullOrEmpty(path))
       {
-        changesets = changesetViewerUtil.getChangesets(id, start, limit);
+        builder.setPath(path);
       }
-      else
+
+      if (!Strings.isNullOrEmpty(revision))
       {
-        changesets = changesetViewerUtil.getChangesets(id, path, revision,
-                start, limit);
+        builder.setStartChangeset(revision);
       }
+
+      changesets =
+        builder.setPagingStart(start).setPagingLimit(limit).getChangesets();
 
       if (changesets != null)
       {
@@ -609,9 +654,13 @@ public class RepositoryResource
     {
       response = Response.status(Response.Status.NOT_FOUND).build();
     }
-    catch (NotSupportedFeatuerException ex)
+    catch (CommandNotSupportedException ex)
     {
       response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
     }
 
     return response;
@@ -645,37 +694,43 @@ public class RepositoryResource
   {
     Response response = null;
     StreamingOutput output = null;
-    Repository repository = repositoryManager.get(id);
+    RepositoryService service = null;
 
-    if (repository != null)
+    try
     {
-      try
+      service = servicefactory.create(id);
+
+      CatCommandBuilder builder = service.getCatCommand();
+
+      if (!Strings.isNullOrEmpty(revision))
       {
-        RepositoryBrowser browser =
-          repositoryManager.getRepositoryBrowser(repository);
-
-        if (browser != null)
-        {
-          output = new BrowserStreamingOutput(browser, revision, path);
-
-          String contentDispositionName =
-            getContentDispositionNameFromPath(path);
-
-          response = Response.ok(output).header("Content-Disposition",
-                                 contentDispositionName).build();
-        }
-        else if (logger.isWarnEnabled())
-        {
-          logger.warn("could not find repository browser for respository {}",
-                      repository.getId());
-          response = Response.status(Response.Status.NOT_FOUND).build();
-        }
+        builder.setRevision(revision);
       }
-      catch (Exception ex)
-      {
-        logger.error("could not retrive content", ex);
-        response = createErrorResonse(ex);
-      }
+
+      output = new BrowserStreamingOutput(builder, path);
+
+      String contentDispositionName = getContentDispositionNameFromPath(path);
+
+      response = Response.ok(output).header("Content-Disposition",
+                             contentDispositionName).build();
+    }
+    catch (RepositoryNotFoundException ex)
+    {
+      logger.warn("could not find repository browser for respository {}", id);
+      response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+    catch (CommandNotSupportedException ex)
+    {
+      response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    catch (Exception ex)
+    {
+      logger.error("could not retrive content", ex);
+      response = createErrorResonse(ex);
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
     }
 
     return response;
@@ -714,35 +769,48 @@ public class RepositoryResource
     AssertUtil.assertIsNotEmpty(id);
     AssertUtil.assertIsNotEmpty(revision);
 
+    RepositoryService service = null;
     Response response = null;
 
     try
     {
-      Repository repository = repositoryManager.get(id);
+      service = servicefactory.create(id);
 
-      if (repository != null)
+      DiffCommandBuilder builder = service.getDiffCommand();
+
+      if (!Strings.isNullOrEmpty(revision))
       {
-        DiffViewer diffViewer = repositoryManager.getDiffViewer(repository);
-
-        if (diffViewer != null)
-        {
-          String name =
-            repository.getName().concat("-").concat(revision).concat(".diff");
-          String contentDispositionName = getContentDispositionName(name);
-
-          response = Response.ok(new DiffStreamingOutput(diffViewer, revision,
-                  path)).header("Content-Disposition",
-                                contentDispositionName).build();
-        }
-        else
-        {
-          response = Response.status(Response.Status.NOT_FOUND).build();
-        }
+        builder.setRevision(revision);
       }
+
+      if (!Strings.isNullOrEmpty(path))
+      {
+        builder.setPath(path);
+      }
+
+      String name = service.getRepository().getName().concat("-").concat(
+                        revision).concat(".diff");
+      String contentDispositionName = getContentDispositionName(name);
+
+      response = Response.ok(new DiffStreamingOutput(builder)).header(
+        "Content-Disposition", contentDispositionName).build();
     }
     catch (RepositoryNotFoundException ex)
     {
       response = Response.status(Response.Status.NOT_FOUND).build();
+    }
+    catch (CommandNotSupportedException ex)
+    {
+      response = Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    catch (Exception ex)
+    {
+      logger.error("could not create diff", ex);
+      response = createErrorResonse(ex);
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
     }
 
     return response;
@@ -910,20 +978,14 @@ public class RepositoryResource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private BlameViewerUtil blameViewerUtil;
-
-  /** Field description */
-  private ChangesetViewerUtil changesetViewerUtil;
-
-  /** Field description */
   private ScmConfiguration configuration;
-
-  /** Field description */
-  private RepositoryBrowserUtil repositoryBrowserUtil;
 
   /** Field description */
   private RepositoryManager repositoryManager;
 
   /** Field description */
   private Provider<WebSecurityContext> securityContextProvider;
+
+  /** Field description */
+  private RepositoryServiceFactory servicefactory;
 }

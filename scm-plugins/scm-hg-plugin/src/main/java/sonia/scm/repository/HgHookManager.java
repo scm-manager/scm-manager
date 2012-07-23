@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -43,6 +44,9 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigChangedListener;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.net.HttpClient;
+import sonia.scm.net.HttpRequest;
+import sonia.scm.net.HttpResponse;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -81,12 +85,15 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
    *
    *
    * @param configuration
+   * @param httpClientProvider
    */
   @Inject
-  public HgHookManager(ScmConfiguration configuration)
+  public HgHookManager(ScmConfiguration configuration,
+                       Provider<HttpClient> httpClientProvider)
   {
     this.configuration = configuration;
     this.configuration.addListener(this);
+    this.httpClientProvider = httpClientProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -292,10 +299,15 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
         logger.trace("check hook url {}", url);
       }
 
-      HttpURLConnection connection =
-        (HttpURLConnection) new URL(url).openConnection();
+      HttpRequest request = new HttpRequest(url);
 
-      result = connection.getResponseCode() == 204;
+      request.setDisableCertificateValidation(true);
+      request.setDisableHostnameValidation(true);
+      request.setIgnoreProxySettings(true);
+
+      HttpResponse response = httpClientProvider.get().get(request);
+
+      result = response.getStatusCode() == 204;
     }
     catch (IOException ex)
     {
@@ -318,4 +330,7 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
 
   /** Field description */
   private volatile String hookUrl;
+
+  /** Field description */
+  private Provider<HttpClient> httpClientProvider;
 }

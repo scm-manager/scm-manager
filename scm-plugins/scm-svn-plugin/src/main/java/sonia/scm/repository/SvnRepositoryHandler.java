@@ -293,7 +293,9 @@ public class SvnRepositoryHandler
       log.append(directory.getName()).append("\": pre14Compatible=");
       log.append(comp.isPre14Compatible()).append(", pre15Compatible=");
       log.append(comp.isPre15Compatible()).append(", pre16Compatible=");
-      log.append(comp.isPre16Compatible());
+      log.append(comp.isPre16Compatible()).append(", pre17Compatible=");
+      log.append(comp.isPre17Compatible()).append(", with17Compatible=");
+      log.append(comp.isWith17Compatible());
       logger.debug(log.toString());
     }
 
@@ -303,7 +305,8 @@ public class SvnRepositoryHandler
     {
       SVNURL url = SVNRepositoryFactory.createLocalRepository(directory, null,
                      true, false, comp.isPre14Compatible(),
-                     comp.isPre15Compatible(), comp.isPre16Compatible());
+                     comp.isPre15Compatible(), comp.isPre16Compatible(),
+                     comp.isPre17Compatible(), comp.isWith17Compatible());
 
       svnRepository = SVNRepositoryFactory.create(url);
 
