@@ -197,6 +197,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }
     });
     
+    this.reRenderBottomBar(this.path);
     this.updateHistory();
   },
   
@@ -334,7 +335,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     this.path = path;
     this.updateHistory();
     
-    this.renderClickPath(path);
+    this.reRenderBottomBar(path);
   },
   
   updateHistory: function(){
@@ -357,6 +358,10 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   },
   
   renderClickPath: function(path){
+    this.reRenderBottomBar(path);
+  },
+  
+  reRenderBottomBar: function(path){
     var bbar = this.getBottomToolbar();
     bbar.removeAll();
     
