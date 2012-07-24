@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -174,7 +175,7 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
         {
           String name = GitUtil.getTagName(ref);
 
-          tag = new Tag(commit.getId().name(), name);
+          tag = new Tag(name, commit.getId().name());
         }
 
       }
