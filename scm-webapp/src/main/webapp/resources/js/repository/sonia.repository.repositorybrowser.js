@@ -153,10 +153,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }),
       root: 'tag',
       idProperty: 'name',
-      fields: [ 'name', 'revision' ],
-      sortInfo: {
-        field: 'name'
-      }
+      fields: [ 'name', 'revision' ]
     });
 
     var tbar = {
