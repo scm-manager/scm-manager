@@ -59,6 +59,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *
@@ -411,7 +412,7 @@ public class IOUtil
   public static void extract(File archive, File outputDirectory)
           throws IOException
   {
-    String name = archive.getName().toLowerCase();
+    String name = archive.getName().toLowerCase(Locale.ENGLISH);
 
     extract(archive, outputDirectory, name);
   }

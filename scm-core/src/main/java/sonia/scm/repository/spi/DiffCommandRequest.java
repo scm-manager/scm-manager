@@ -45,8 +45,13 @@ import sonia.scm.Validateable;
  * @since 1.17
  */
 public final class DiffCommandRequest extends FileBaseCommandRequest
-        implements Cloneable, Validateable
+  implements Validateable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = 4026911212676859626L;
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -85,6 +90,6 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
   public boolean isValid()
   {
     return !Strings.isNullOrEmpty(getPath())
-           ||!Strings.isNullOrEmpty(getRevision());
+      ||!Strings.isNullOrEmpty(getRevision());
   }
 }

@@ -43,6 +43,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -205,7 +206,7 @@ public class BasicContextProvider implements SCMContextProvider
     if (!directory.exists() &&!directory.mkdirs())
     {
       String msg = "could not create home directory at ".concat(
-                       directory.getAbsolutePath());
+                     directory.getAbsolutePath());
 
       // do not use logger
       // http://www.slf4j.org/codes.html#substituteLogger
@@ -234,7 +235,7 @@ public class BasicContextProvider implements SCMContextProvider
     {
       try
       {
-        s = Stage.valueOf(stageProperty.toUpperCase());
+        s = Stage.valueOf(stageProperty.toUpperCase(Locale.ENGLISH));
       }
       catch (IllegalArgumentException ex)
       {
@@ -318,8 +319,8 @@ public class BasicContextProvider implements SCMContextProvider
     catch (IOException ex)
     {
       throw new ConfigurationException(
-          "could not load properties form resource ".concat(
-            DIRECTORY_RESOURCE), ex);
+        "could not load properties form resource ".concat(DIRECTORY_RESOURCE),
+        ex);
     }
     finally
     {

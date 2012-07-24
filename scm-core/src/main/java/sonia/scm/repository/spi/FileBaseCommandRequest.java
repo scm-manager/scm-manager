@@ -47,8 +47,13 @@ import java.io.Serializable;
  * @since 1.17
  */
 public abstract class FileBaseCommandRequest
-        implements Resetable, Serializable, Cloneable
+  implements Resetable, Serializable, Cloneable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -3442101119408346165L;
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -74,7 +79,7 @@ public abstract class FileBaseCommandRequest
     final FileBaseCommandRequest other = (FileBaseCommandRequest) obj;
 
     return Objects.equal(path, other.path)
-           && Objects.equal(revision, other.revision);
+      && Objects.equal(revision, other.revision);
   }
 
   /**
@@ -189,7 +194,7 @@ public abstract class FileBaseCommandRequest
 
       // this shouldn't happen, since we are Cloneable
       throw new InternalError(
-          "FileBaseCommandRequest seems not to be cloneable");
+        "FileBaseCommandRequest seems not to be cloneable");
     }
 
     return clone;

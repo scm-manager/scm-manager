@@ -39,6 +39,8 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import java.util.Comparator;
 
 /**
@@ -47,12 +49,15 @@ import java.util.Comparator;
  * @since 1.6
  */
 public class PluginInformationComparator
-        implements Comparator<PluginInformation>
+  implements Comparator<PluginInformation>, Serializable
 {
 
   /** Field description */
   public static final PluginInformationComparator INSTANCE =
     new PluginInformationComparator();
+
+  /** Field description */
+  private static final long serialVersionUID = -8339752498853225668L;
 
   //~--- methods --------------------------------------------------------------
 

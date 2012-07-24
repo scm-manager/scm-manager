@@ -39,8 +39,12 @@ package sonia.scm.repository.spi;
  * @since 1.17
  */
 public final class CatCommandRequest extends FileBaseCommandRequest
-        implements Cloneable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -6404958421249874551L;
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

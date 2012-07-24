@@ -74,6 +74,9 @@ public class ProxyServet extends HttpServlet
   private static final Logger logger =
     LoggerFactory.getLogger(ProxyServet.class);
 
+  /** Field description */
+  private static final long serialVersionUID = -8069773175342430809L;
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -144,14 +147,14 @@ public class ProxyServet extends HttpServlet
       response.setStatus(con.getResponseCode());
 
       for (Iterator i = con.getHeaderFields().entrySet().iterator();
-              i.hasNext(); )
+        i.hasNext(); )
       {
         Map.Entry mapEntry = (Map.Entry) i.next();
 
         if (mapEntry.getKey() != null)
         {
           response.setHeader(mapEntry.getKey().toString(),
-                             ((List) mapEntry.getValue()).get(0).toString());
+            ((List) mapEntry.getValue()).get(0).toString());
         }
       }
 

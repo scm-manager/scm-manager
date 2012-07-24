@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,6 +40,7 @@ import com.google.common.base.Objects;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -49,10 +51,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  * @since 1.18
  */
-@XmlRootElement(name="branch")
+@XmlRootElement(name = "branch")
 @XmlAccessorType(XmlAccessType.FIELD)
 public final class Branch implements Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -4602244691711222413L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new instance of branch.

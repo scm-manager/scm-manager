@@ -46,6 +46,7 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -250,7 +251,7 @@ public class PluginCondition implements Cloneable, Serializable
    */
   private boolean isOs(String osType, PlatformType type)
   {
-    osType = osType.toLowerCase();
+    osType = osType.toLowerCase(Locale.ENGLISH);
 
     return ((osType.indexOf("win") >= 0) && (PlatformType.WINDOWS == type))
            || ((osType.indexOf("unix") >= 0) && type.isUnix())

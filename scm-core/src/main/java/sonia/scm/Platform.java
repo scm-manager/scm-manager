@@ -37,6 +37,10 @@ package sonia.scm;
 
 import sonia.scm.util.Util;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Locale;
+
 /**
  * Represents the platform on which the SCM manager running.
  *
@@ -66,9 +70,9 @@ public class Platform
       arch = osArch;
     }
 
-    arch = arch.toLowerCase();
+    arch = arch.toLowerCase(Locale.ENGLISH);
     x64 = "64".equals(arch) || "x86_64".equals(arch) || "ppc64".equals(arch)
-          || "sparcv9".equals(arch) || "amd64".equals(arch);
+      || "sparcv9".equals(arch) || "amd64".equals(arch);
     type = PlatformType.createPlatformType(osName);
   }
 

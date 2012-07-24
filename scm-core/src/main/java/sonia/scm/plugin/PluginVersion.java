@@ -35,6 +35,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -462,7 +463,7 @@ public class PluginVersion implements Comparable<PluginVersion>
    */
   private void parseQualifierPart(String qualifierPart)
   {
-    String qualifier = qualifierPart.trim().toLowerCase();
+    String qualifier = qualifierPart.trim().toLowerCase(Locale.ENGLISH);
 
     if (qualifier.contains("snapshot"))
     {

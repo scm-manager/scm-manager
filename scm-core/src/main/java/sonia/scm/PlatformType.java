@@ -33,6 +33,8 @@
 
 package sonia.scm;
 
+import java.util.Locale;
+
 /**
  * Type of the SCM-Manager host platform.
  *
@@ -69,7 +71,7 @@ public enum PlatformType
    */
   public static PlatformType createPlatformType(String osName)
   {
-    osName = osName.toLowerCase();
+    osName = osName.toLowerCase(Locale.ENGLISH);
 
     PlatformType type = PlatformType.UNSPECIFIED;
 

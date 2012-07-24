@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,6 +38,8 @@ package sonia.scm.resources;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.Serializable;
 
 import java.util.Comparator;
 
@@ -46,12 +49,16 @@ import java.util.Comparator;
  * @author Sebastian Sdorra
  * @since 1.16
  */
-public class ResourceNameComparator implements Comparator<Resource>
+public class ResourceNameComparator
+  implements Comparator<Resource>, Serializable
 {
 
   /** Field description */
   public static final ResourceNameComparator INSTANCE =
     new ResourceNameComparator();
+
+  /** Field description */
+  private static final long serialVersionUID = 3474356901608301437L;
 
   //~--- methods --------------------------------------------------------------
 

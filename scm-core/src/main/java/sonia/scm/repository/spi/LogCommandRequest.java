@@ -49,6 +49,11 @@ import java.io.Serializable;
 public final class LogCommandRequest implements Serializable, Resetable
 {
 
+  /** Field description */
+  private static final long serialVersionUID = 8759598040394428649L;
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
@@ -73,10 +78,10 @@ public final class LogCommandRequest implements Serializable, Resetable
     final LogCommandRequest other = (LogCommandRequest) obj;
 
     return Objects.equal(startChangeset, other.startChangeset)
-           && Objects.equal(endChangeset, other.endChangeset)
-           && Objects.equal(pagingStart, other.pagingStart)
-           && Objects.equal(pagingLimit, other.pagingLimit)
-           && Objects.equal(path, other.path);
+      && Objects.equal(endChangeset, other.endChangeset)
+      && Objects.equal(pagingStart, other.pagingStart)
+      && Objects.equal(pagingLimit, other.pagingLimit)
+      && Objects.equal(path, other.path);
   }
 
   /**
@@ -89,7 +94,7 @@ public final class LogCommandRequest implements Serializable, Resetable
   public int hashCode()
   {
     return Objects.hashCode(startChangeset, endChangeset, pagingStart,
-                            pagingLimit, path);
+      pagingLimit, path);
   }
 
   /**

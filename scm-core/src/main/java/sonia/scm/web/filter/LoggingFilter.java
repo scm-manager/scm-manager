@@ -49,6 +49,7 @@ import sonia.scm.util.Util;
 import java.io.IOException;
 
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Map.Entry;
 
 import javax.servlet.FilterChain;
@@ -296,6 +297,6 @@ public class LoggingFilter extends HttpFilter
   private boolean isTextRequest(String contentType)
   {
     return !Strings.isNullOrEmpty(contentType)
-           && contentType.toLowerCase().startsWith("text");
+           && contentType.toLowerCase(Locale.ENGLISH).startsWith("text");
   }
 }

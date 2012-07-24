@@ -33,11 +33,16 @@
 
 package sonia.scm.io;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.io.Closeables;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
@@ -71,7 +76,17 @@ public abstract class AbstractWriter<T>
    */
   public void write(T object, File file) throws IOException
   {
-    write(object, new FileOutputStream(file));
+    OutputStream output = null;
+
+    try
+    {
+      output = new FileOutputStream(file);
+      write(object, output);
+    }
+    finally
+    {
+      Closeables.closeQuietly(output);
+    }
   }
 
   /**

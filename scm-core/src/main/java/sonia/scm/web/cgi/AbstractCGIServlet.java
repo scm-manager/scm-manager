@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Enumeration;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -89,7 +90,7 @@ public abstract class AbstractCGIServlet extends HttpServlet
    * @throws ServletException
    */
   protected abstract File getCommand(HttpServletRequest req)
-          throws ServletException, IOException;
+    throws ServletException, IOException;
 
   //~--- methods --------------------------------------------------------------
 
@@ -133,7 +134,8 @@ public abstract class AbstractCGIServlet extends HttpServlet
     {
       String os = System.getProperty("os.name");
 
-      if ((os != null) && (os.toLowerCase().indexOf("windows") != -1))
+      if ((os != null)
+        && (os.toLowerCase(Locale.ENGLISH).indexOf("windows") != -1))
       {
         env.set("SystemRoot", "C:\\WINDOWS");
       }
@@ -155,8 +157,8 @@ public abstract class AbstractCGIServlet extends HttpServlet
    * @throws ServletException
    */
   protected EnvList createRequestEnvironment(HttpServletRequest request,
-          EnvList baseEnvironment)
-          throws ServletException
+    EnvList baseEnvironment)
+    throws ServletException
   {
     return new EnvList(baseEnvironment);
   }
@@ -173,11 +175,11 @@ public abstract class AbstractCGIServlet extends HttpServlet
    */
   @Override
   protected void service(HttpServletRequest req, HttpServletResponse resp)
-          throws ServletException, IOException
+    throws ServletException, IOException
   {
     cgiRunner.exec(createRequestEnvironment(req, baseEnvironment),
-                   getCmdPrefix(), getCommand(req), req.getPathInfo(), req,
-                   resp, HttpUtil.getServerPort(configuration, req));
+      getCmdPrefix(), getCommand(req), req.getPathInfo(), req, resp,
+      HttpUtil.getServerPort(configuration, req));
   }
 
   //~--- get methods ----------------------------------------------------------

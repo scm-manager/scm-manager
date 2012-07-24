@@ -33,14 +33,14 @@
 
 package sonia.scm.repository.spi;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Serializable;
-
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.17
  */
 public final class BrowseCommandRequest extends FileBaseCommandRequest
-        implements Resetable, Serializable {}
+{
+
+  /** Field description */
+  private static final long serialVersionUID = 7956624623516803183L;
+}

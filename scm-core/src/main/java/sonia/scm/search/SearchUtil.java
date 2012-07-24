@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 /**
  *
@@ -185,7 +186,7 @@ public class SearchUtil
 
     if (request.isIgnoreCase())
     {
-      query = query.toLowerCase();
+      query = query.toLowerCase(Locale.ENGLISH);
     }
 
     query = query.replace("*", ".*").replace("?", ".");

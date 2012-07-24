@@ -39,18 +39,24 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import java.util.Comparator;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class FileObjectNameComparator implements Comparator<FileObject>
+public class FileObjectNameComparator
+  implements Comparator<FileObject>, Serializable
 {
 
   /** Field description */
   public static final FileObjectNameComparator instance =
     new FileObjectNameComparator();
+
+  /** Field description */
+  private static final long serialVersionUID = -2133224334287527874L;
 
   //~--- methods --------------------------------------------------------------
 

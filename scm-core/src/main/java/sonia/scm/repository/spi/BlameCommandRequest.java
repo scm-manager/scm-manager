@@ -41,6 +41,11 @@ package sonia.scm.repository.spi;
 public final class BlameCommandRequest extends FileBaseCommandRequest
 {
 
+  /** Field description */
+  private static final long serialVersionUID = 6421975024231127315L;
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
