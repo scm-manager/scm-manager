@@ -121,6 +121,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     this.appendRepositoryProperties(bar);
     
     var config = {
+      tbar: this.createTopToolbar(),
       bbar: bar,
       autoExpandColumn: 'description',
       title: String.format(this.repositoryBrowserTitleText, this.repository.name),
@@ -141,6 +142,62 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.RepositoryBrowser.superclass.initComponent.apply(this, arguments);
+  },
+  
+  createTopToolbar: function(){
+    var tagStore = new Sonia.rest.JsonStore({
+      proxy: new Ext.data.HttpProxy({
+        url: restUrl + 'repositories/' + this.repository.id + '/tags.json',
+        method: 'GET',
+        disableCaching: false
+      }),
+      root: 'tag',
+      idProperty: 'name',
+      fields: [ 'name', 'revision' ],
+      sortInfo: {
+        field: 'name'
+      }
+    });
+
+    var tbar = {
+      xtype: 'toolbar',
+      items: [
+        this.repository.name,
+        '->',
+        'Tags:', ' ',{
+        xtype: 'combo',
+        valueField: 'revision',
+        displayField: 'name',
+        typeAhead: false,
+        editable: false,
+        triggerAction: 'all',
+        store: tagStore,
+        listeners: {
+          select: {
+            fn: this.selectTag,
+            scope: this
+          }
+        }
+      }]
+    }
+    
+    return tbar;
+  },
+  
+  selectTag: function(combo, rec){
+    var tag = rec.get('name');
+    if (debug){
+      console.debug('select tag ' + tag);
+    }
+    this.revision = rec.get('revision');
+    this.getStore().load({
+      params: {
+        revision: this.revision,
+        path: this.path
+      }
+    });
+    
+    this.updateHistory();
   },
   
   loadStore: function(store, records, extra){
@@ -262,10 +319,16 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       console.debug( 'change directory: ' + path );
     }
     
+    var params = {
+      path: path
+    }
+    
+    if (this.revision){
+      params.revision = this.revision;
+    }
+    
     this.getStore().load({
-      params: {
-        path: path
-      }
+      params: params
     });
     
     this.path = path;
