@@ -116,8 +116,12 @@ def collectFiles(repo, revCtx, files, directories):
       paths.append(f)
   else:
     length = len(path.split('/')) + 1
+    directory = path
+    if not directory.endswith('/'):
+       directory += '/'
+
     for f in mf:
-      if f.startswith(path):
+      if f.startswith(directory):
         paths.append(f)
   
   for p in paths:
