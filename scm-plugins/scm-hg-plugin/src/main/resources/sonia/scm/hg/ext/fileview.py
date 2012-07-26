@@ -1,19 +1,17 @@
-#
-# Copyright (c) 2010, Sebastian Sdorra
 # All rights reserved.
-#
+# 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-#
+# 
 # 1. Redistributions of source code must retain the above copyright notice,
 #    this list of conditions and the following disclaimer.
 # 2. Redistributions in binary form must reproduce the above copyright notice,
 #    this list of conditions and the following disclaimer in the documentation
 #    and/or other materials provided with the distribution.
-# 3. Neither the name of SCM-Manager; nor the names of its
+# 3. Neither the name of hg-fileview; nor the names of its
 #    contributors may be used to endorse or promote products derived from this
 #    software without specific prior written permission.
-#
+# 
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,12 +22,14 @@
 # ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-# http://bitbucket.org/sdorra/scm-manager
-#
-#
+#  
+# https://bitbucket.org/sdorra/hg-fileview
+# 
+# 
+"""fileview
 
-
+Prints date, size and last message of files.
+"""
 from mercurial import util
 
 class SubRepository:
@@ -56,8 +56,12 @@ def collectFiles(revCtx, path, files, directories):
       paths.append(f)
   else:
     length = len(path.split('/')) + 1
+    directory = path
+    if not directory.endswith('/'):
+       directory += '/'
+       
     for f in mf:
-      if f.startswith(path):
+      if f.startswith(directory):
         paths.append(f)
   
   for p in paths:
@@ -127,6 +131,8 @@ def fileview(ui, repo, **opts):
     revision = 'tip'
   revCtx = repo[revision]
   path = opts['path']
+  if path.endswith('/'):
+    path = path[0:-1]
   transport = opts['transport']
   collectFiles(revCtx, path, files, directories)
   subRepositories = createSubRepositoryMap(revCtx)
