@@ -658,6 +658,7 @@ public class RepositoryResource
    * @param id the id of the repository
    * @param path path of a file
    * @param revision the revision of the file specified by the path parameter
+   * @param branch
    * @param start the start value for paging
    * @param limit the limit value for paging
    *
@@ -670,11 +671,16 @@ public class RepositoryResource
   @Path("{id}/changesets")
   @TypeHint(ChangesetPagingResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response getChangesets(@PathParam("id") String id,
-    @QueryParam("path") String path, @QueryParam("revision") String revision,
-    @DefaultValue("0")
-  @QueryParam("start") int start, @DefaultValue("20")
-  @QueryParam("limit") int limit) throws RepositoryException, IOException
+  //J-
+  public Response getChangesets(
+    @PathParam("id") String id,
+    @QueryParam("path") String path, 
+    @QueryParam("revision") String revision,
+    @QueryParam("branch") String branch,
+    @DefaultValue("0") @QueryParam("start") int start, 
+    @DefaultValue("20") @QueryParam("limit") int limit
+  ) throws RepositoryException, IOException
+  //J+
   {
     Response response = null;
     RepositoryService service = null;
@@ -695,6 +701,11 @@ public class RepositoryResource
       if (!Strings.isNullOrEmpty(revision))
       {
         builder.setStartChangeset(revision);
+      }
+
+      if (!Strings.isNullOrEmpty(branch))
+      {
+        builder.setBranch(branch);
       }
 
       changesets =
