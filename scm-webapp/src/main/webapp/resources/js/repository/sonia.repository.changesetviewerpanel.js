@@ -132,7 +132,9 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
     
     return {
       xtype: 'toolbar',
-      items: ['->',
+      items: [
+        this.repository.name,
+        '->',
         'Branches:', ' ',{
         xtype: 'combo',
         valueField: 'name',
