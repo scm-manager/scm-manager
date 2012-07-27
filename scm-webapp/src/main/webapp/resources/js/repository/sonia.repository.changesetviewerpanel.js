@@ -101,6 +101,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
     
     if ( ! this.inline ){
       config.title = String.format(this.changesetViewerTitleText, this.repository.name)
+      config.tbar = this.createTopToolbar();
       config.bbar = {
         xtype: 'paging',
         store: this.changesetStore,
@@ -112,6 +113,56 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ChangesetViewerPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  createTopToolbar: function(){
+    var branchStore = new Sonia.rest.JsonStore({
+      proxy: new Ext.data.HttpProxy({
+        url: restUrl + 'repositories/' + this.repository.id + '/branches.json',
+        method: 'GET',
+        disableCaching: false
+      }),
+      root: 'branch',
+      idProperty: 'name',
+      fields: [ 'name' ],
+      sortInfo: {
+        field: 'name'
+      }
+    });
+    
+    return {
+      xtype: 'toolbar',
+      items: ['->',
+        'Branches:', ' ',{
+        xtype: 'combo',
+        valueField: 'name',
+        displayField: 'name',
+        typeAhead: false,
+        editable: false,
+        triggerAction: 'all',
+        store: branchStore,
+        listeners: {
+          select: {
+            fn: this.selectBranch,
+            scope: this
+          }
+        }
+      }]
+    }
+  },
+  
+  selectBranch: function(combo, rec){
+    var branch = rec.get('name');
+    if (debug){
+      console.debug('select branch ' + branch);
+    }
+    this.changesetStore.load({
+      params: {
+        start: this.start,
+        limit: this.startLimit,
+        branch: branch
+      }
+    });
   },
   
   updateHistory: function(store, records, options){
