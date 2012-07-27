@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -113,6 +114,21 @@ public class HgLogChangesetCommand extends AbstractCommand
   public static HgLogChangesetCommand on(Repository repository)
   {
     return new HgLogChangesetCommand(repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param branch
+   *
+   * @return
+   */
+  public HgLogChangesetCommand branch(String branch)
+  {
+    cmdAppend("-b", branch);
+
+    return this;
   }
 
   /**

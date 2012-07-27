@@ -110,9 +110,10 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
 
     com.aragost.javahg.Repository repository = open();
 
-    if (!Strings.isNullOrEmpty(request.getPath()))
+    if (!Strings.isNullOrEmpty(request.getPath())
+      ||!Strings.isNullOrEmpty(request.getBranch()))
     {
-      result = collectHistory(repository, request);
+      result = collectSafely(repository, request);
     }
     else
     {
@@ -177,7 +178,7 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
    *
    * @return
    */
-  private ChangesetPagingResult collectHistory(
+  private ChangesetPagingResult collectSafely(
     com.aragost.javahg.Repository repository, LogCommandRequest request)
   {
     HgLogChangesetCommand cmd = HgLogChangesetCommand.on(repository);
@@ -198,6 +199,11 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
       cmd.rev(startChangeset.concat(":0"));
     }
 
+    if (!Strings.isNullOrEmpty(request.getBranch()))
+    {
+      cmd.branch(request.getBranch());
+    }
+
     int start = request.getPagingStart();
     int limit = request.getPagingLimit();
 
@@ -206,14 +212,31 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
 
     if ((start == 0) && (limit < 0))
     {
-      changesets = cmd.execute(request.getPath());
+      if (!Strings.isNullOrEmpty(request.getPath()))
+      {
+        changesets = cmd.execute(request.getPath());
+      }
+      else
+      {
+        changesets = cmd.execute();
+      }
+
       total = changesets.size();
     }
     else
     {
       limit = limit + start;
 
-      List<Integer> revisionList = cmd.loadRevisions(request.getPath());
+      List<Integer> revisionList = null;
+
+      if (!Strings.isNullOrEmpty(request.getPath()))
+      {
+        revisionList = cmd.loadRevisions(request.getPath());
+      }
+      else
+      {
+        revisionList = cmd.loadRevisions();
+      }
 
       if ((limit > revisionList.size()) || (limit < 0))
       {
