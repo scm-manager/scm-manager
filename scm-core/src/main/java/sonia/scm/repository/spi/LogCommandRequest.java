@@ -81,7 +81,7 @@ public final class LogCommandRequest implements Serializable, Resetable
       && Objects.equal(endChangeset, other.endChangeset)
       && Objects.equal(pagingStart, other.pagingStart)
       && Objects.equal(pagingLimit, other.pagingLimit)
-      && Objects.equal(path, other.path);
+      && Objects.equal(path, other.path) && Objects.equal(branch, other.branch);
   }
 
   /**
@@ -94,7 +94,7 @@ public final class LogCommandRequest implements Serializable, Resetable
   public int hashCode()
   {
     return Objects.hashCode(startChangeset, endChangeset, pagingStart,
-      pagingLimit, path);
+      pagingLimit, path, branch);
   }
 
   /**
@@ -109,6 +109,7 @@ public final class LogCommandRequest implements Serializable, Resetable
     pagingStart = 0;
     pagingLimit = 20;
     path = null;
+    branch = null;
   }
 
   /**
@@ -127,11 +128,23 @@ public final class LogCommandRequest implements Serializable, Resetable
                   .add("pagingStart", pagingStart)
                   .add("pagingLimit", pagingLimit)
                   .add("path", path)
+                  .add("branch", branch)
                   .toString();
     //J+
   }
 
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param branch
+   */
+  public void setBranch(String branch)
+  {
+    this.branch = branch;
+  }
 
   /**
    * Method description
@@ -189,6 +202,17 @@ public final class LogCommandRequest implements Serializable, Resetable
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  String getBranch()
+  {
+    return branch;
+  }
 
   /**
    * Method description
@@ -257,6 +281,9 @@ public final class LogCommandRequest implements Serializable, Resetable
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String branch;
 
   /** Field description */
   private String endChangeset;

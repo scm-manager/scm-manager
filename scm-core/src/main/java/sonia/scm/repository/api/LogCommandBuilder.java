@@ -114,10 +114,10 @@ public final class LogCommandBuilder
    * @param preProcessorUtil
    */
   LogCommandBuilder(CacheManager cacheManager, LogCommand logCommand,
-                    Repository repository, PreProcessorUtil preProcessorUtil)
+    Repository repository, PreProcessorUtil preProcessorUtil)
   {
     this.cache = cacheManager.getCache(CacheKey.class,
-                                       ChangesetPagingResult.class, CACHE_NAME);
+      ChangesetPagingResult.class, CACHE_NAME);
     this.logCommand = logCommand;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
@@ -170,7 +170,7 @@ public final class LogCommandBuilder
    * @throws RepositoryException
    */
   public Changeset getChangeset(String id)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     Changeset changeset = null;
 
@@ -232,7 +232,7 @@ public final class LogCommandBuilder
    * @throws RepositoryException
    */
   public ChangesetPagingResult getChangesets()
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     ChangesetPagingResult cpr = null;
 
@@ -280,6 +280,23 @@ public final class LogCommandBuilder
   }
 
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Retrieves only changesets of the given branch.<br />
+   * <b>Note:</b> This option is ignored if the underlying
+   * {@link RepositoryService} does not support the {@link Command#BRANCHES}.
+   *
+   *
+   * @param branch brnach to retrieve changesets from
+   *
+   * @return retrieves only changesets of the given branch
+   */
+  public LogCommandBuilder setBranch(String branch)
+  {
+    request.setBranch(branch);
+
+    return this;
+  }
 
   /**
    * Disables the cache for changesets. This means that every {@link Changeset}
@@ -460,8 +477,8 @@ public final class LogCommandBuilder
       final CacheKey other = (CacheKey) obj;
 
       return Objects.equal(repositoryId, other.repositoryId)
-             && Objects.equal(changesetId, other.changesetId)
-             && Objects.equal(request, other.request);
+        && Objects.equal(changesetId, other.changesetId)
+        && Objects.equal(request, other.request);
     }
 
     /**
