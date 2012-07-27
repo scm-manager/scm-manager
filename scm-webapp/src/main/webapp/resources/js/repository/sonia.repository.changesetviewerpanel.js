@@ -158,11 +158,11 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
     if (debug){
       console.debug('select branch ' + branch);
     }
+    this.changesetStore.baseParams.branch = branch;
     this.changesetStore.load({
       params: {
         start: this.start,
-        limit: this.startLimit,
-        branch: branch
+        limit: this.startLimit
       }
     });
   },
