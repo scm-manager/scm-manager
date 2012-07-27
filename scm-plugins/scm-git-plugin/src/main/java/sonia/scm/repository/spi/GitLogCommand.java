@@ -217,7 +217,16 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
               PathFilter.create(request.getPath()), TreeFilter.ANY_DIFF));
         }
 
-        ObjectId head = GitUtil.getRepositoryHead(gr);
+        ObjectId head = null;
+
+        if (!Strings.isNullOrEmpty(request.getBranch()))
+        {
+          head = GitUtil.getBranchId(gr, request.getBranch());
+        }
+        else
+        {
+          head = GitUtil.getRepositoryHead(gr);
+        }
 
         if (head != null)
         {

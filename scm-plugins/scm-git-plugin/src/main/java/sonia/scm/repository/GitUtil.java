@@ -250,6 +250,10 @@ public class GitUtil
     throws IOException
   {
     ObjectId branchId = null;
+    if ( ! branchName.startsWith(REF_HEAD) ){
+      branchName = PREFIX_HEADS.concat(branchName);
+    }
+    
     Ref ref = repo.getRef(branchName);
 
     if (ref != null)
