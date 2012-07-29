@@ -35,11 +35,14 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.util.Locale;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.AssertUtil;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Locale;
 
 /**
  *
@@ -216,8 +219,8 @@ public class PluginVersion implements Comparable<PluginVersion>
     }
 
     if ((this.parsedVersion == null)
-        ? (other.parsedVersion != null)
-        : !this.parsedVersion.equals(other.parsedVersion))
+      ? (other.parsedVersion != null)
+      : !this.parsedVersion.equals(other.parsedVersion))
     {
       return false;
     }
@@ -255,14 +258,14 @@ public class PluginVersion implements Comparable<PluginVersion>
     hash = 61 * hash + this.major;
     hash = 61 * hash + this.minor;
     hash = 61 * hash + ((this.parsedVersion != null)
-                        ? this.parsedVersion.hashCode()
-                        : 0);
+      ? this.parsedVersion.hashCode()
+      : 0);
     hash = 61 * hash + (this.snapshot
-                        ? 1
-                        : 0);
+      ? 1
+      : 0);
     hash = 61 * hash + ((this.type != null)
-                        ? this.type.hashCode()
-                        : 0);
+      ? this.type.hashCode()
+      : 0);
     hash = 61 * hash + this.typeVersion;
 
     return hash;
@@ -477,7 +480,7 @@ public class PluginVersion implements Comparable<PluginVersion>
       {
         for (String name : versionType.getNames())
         {
-          name = name.toLowerCase();
+          name = name.toLowerCase(Locale.ENGLISH);
 
           int index = qualifier.indexOf(name);
 
