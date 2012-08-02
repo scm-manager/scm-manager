@@ -75,6 +75,7 @@
     <module>scm-server</module>
     <module>scm-plugin-backend</module>
     <module>scm-clients</module>
+    <module>support</module>
   </modules>
 
   <repositories>
