@@ -44,6 +44,7 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import sonia.scm.Type;
 import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
+import sonia.scm.repository.spi.GitRepositoryServiceProvider;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.AssertUtil;
 
@@ -59,7 +60,7 @@ import java.io.IOException;
 @Singleton
 @Extension
 public class GitRepositoryHandler
-        extends AbstractSimpleRepositoryHandler<GitConfig>
+  extends AbstractSimpleRepositoryHandler<GitConfig>
 {
 
   /** Field description */
@@ -76,7 +77,9 @@ public class GitRepositoryHandler
   public static final String TYPE_NAME = "git";
 
   /** Field description */
-  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+  public static final Type TYPE = new RepositoryType(TYPE_NAME,
+                                    TYPE_DISPLAYNAME,
+                                    GitRepositoryServiceProvider.COMMANDS);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -254,7 +257,7 @@ public class GitRepositoryHandler
    */
   @Override
   protected void create(Repository repository, File directory)
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     FileRepository fr = null;
 

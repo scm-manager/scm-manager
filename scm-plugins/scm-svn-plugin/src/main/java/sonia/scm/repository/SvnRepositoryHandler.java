@@ -53,6 +53,7 @@ import sonia.scm.Type;
 import sonia.scm.io.FileSystem;
 import sonia.scm.logging.SVNKitLogger;
 import sonia.scm.plugin.ext.Extension;
+import sonia.scm.repository.spi.SvnRepositoryServiceProvider;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
@@ -86,7 +87,9 @@ public class SvnRepositoryHandler
   public static final String TYPE_NAME = "svn";
 
   /** Field description */
-  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+  public static final Type TYPE = new RepositoryType(TYPE_NAME,
+                                    TYPE_DISPLAYNAME,
+                                    SvnRepositoryServiceProvider.COMMANDS);
 
   /** the logger for SvnRepositoryHandler */
   private static final Logger logger =

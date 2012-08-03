@@ -55,6 +55,7 @@ import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.plugin.ext.Extension;
+import sonia.scm.repository.spi.HgRepositoryServiceProvider;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
@@ -80,7 +81,7 @@ import javax.xml.bind.JAXBException;
 @Singleton
 @Extension
 public class HgRepositoryHandler
-        extends AbstractSimpleRepositoryHandler<HgConfig>
+  extends AbstractSimpleRepositoryHandler<HgConfig>
 {
 
   /** Field description */
@@ -97,7 +98,9 @@ public class HgRepositoryHandler
   public static final String TYPE_NAME = "hg";
 
   /** Field description */
-  public static final Type TYPE = new Type(TYPE_NAME, TYPE_DISPLAYNAME);
+  public static final Type TYPE = new RepositoryType(TYPE_NAME,
+                                    TYPE_DISPLAYNAME,
+                                    HgRepositoryServiceProvider.COMMANDS);
 
   /** the logger for HgRepositoryHandler */
   private static final Logger logger =
@@ -119,7 +122,7 @@ public class HgRepositoryHandler
    */
   @Inject
   public HgRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem,
-                             Provider<HgContext> hgContextProvider)
+    Provider<HgContext> hgContextProvider)
   {
     super(storeFactory, fileSystem);
     this.hgContextProvider = hgContextProvider;
@@ -127,8 +130,8 @@ public class HgRepositoryHandler
     try
     {
       this.jaxbContext = JAXBContext.newInstance(BrowserResult.class,
-              BlameResult.class, Changeset.class, ChangesetPagingResult.class,
-              HgVersion.class);
+        BlameResult.class, Changeset.class, ChangesetPagingResult.class,
+        HgVersion.class);
     }
     catch (JAXBException ex)
     {
@@ -153,7 +156,7 @@ public class HgRepositoryHandler
       if (logger.isDebugEnabled())
       {
         logger.debug("installing mercurial with {}",
-                     installer.getClass().getName());
+          installer.getClass().getName());
       }
 
       installer.install(baseDirectory, autoConfig);
@@ -164,9 +167,8 @@ public class HgRepositoryHandler
     {
       if (logger.isErrorEnabled())
       {
-        logger.error(
-            "Could not write Hg CGI for inital config.  "
-            + "HgWeb may not function until a new Hg config is set", ioe);
+        logger.error("Could not write Hg CGI for inital config.  "
+          + "HgWeb may not function until a new Hg config is set", ioe);
       }
     }
   }
@@ -224,7 +226,7 @@ public class HgRepositoryHandler
     if (TYPE_NAME.equals(type))
     {
       blameViewer = new HgBlameViewer(this, hgContextProvider.get(),
-                                      repository);
+        repository);
     }
     else
     {
@@ -256,7 +258,7 @@ public class HgRepositoryHandler
     if (TYPE_NAME.equals(type))
     {
       changesetViewer = new HgChangesetViewer(this, jaxbContext,
-              hgContextProvider.get(), repository);
+        hgContextProvider.get(), repository);
     }
     else
     {
@@ -278,7 +280,7 @@ public class HgRepositoryHandler
    */
   @Override
   public DiffViewer getDiffViewer(Repository repository)
-          throws RepositoryException
+    throws RepositoryException
   {
     DiffViewer diffViewer = null;
 
@@ -374,7 +376,7 @@ public class HgRepositoryHandler
         }
 
         version = MessageFormat.format(version, hgVersion.getPython(),
-                                       hgVersion.getMercurial());
+          hgVersion.getMercurial());
       }
       else if (logger.isWarnEnabled())
       {
@@ -478,7 +480,7 @@ public class HgRepositoryHandler
    * @return
    */
   HgChangesetViewer getChangesetViewer(File repositoryDirectory,
-          HgContext context)
+    HgContext context)
   {
     AssertUtil.assertIsNotNull(repositoryDirectory);
     AssertUtil.assertIsNotNull(context);
@@ -503,7 +505,7 @@ public class HgRepositoryHandler
   {
     hooksSection.setParameter("changegroup.scm", "python:scmhooks.callback");
     hooksSection.setParameter("pretxnchangegroup.scm",
-                              "python:scmhooks.callback");
+      "python:scmhooks.callback");
   }
 
   /**
@@ -532,7 +534,7 @@ public class HgRepositoryHandler
    */
   @Override
   protected ExtendedCommand buildCreateCommand(Repository repository,
-          File directory)
+    File directory)
   {
     ExtendedCommand cmd = new ExtendedCommand(config.getHgBinary(), "init",
                             directory.getAbsolutePath());
@@ -555,7 +557,7 @@ public class HgRepositoryHandler
    */
   @Override
   protected void postCreate(Repository repository, File directory)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     File hgrcFile = new File(directory, PATH_HGRC);
     INIConfiguration hgrc = new INIConfiguration();
@@ -597,7 +599,7 @@ public class HgRepositoryHandler
    * @return
    */
   private boolean appendHook(String repositoryName, INISection hooks,
-                             String hookName)
+    String hookName)
   {
     boolean write = false;
     String hook = hooks.getParameter(hookName);
@@ -607,7 +609,7 @@ public class HgRepositoryHandler
       if (logger.isInfoEnabled())
       {
         logger.info("register missing {} hook for respository {}", hookName,
-                    repositoryName);
+          repositoryName);
       }
 
       hooks.setParameter(hookName, "python:scmhooks.callback");
@@ -728,7 +730,7 @@ public class HgRepositoryHandler
       else if (logger.isDebugEnabled())
       {
         logger.debug(
-            "repository directory does not exists, could not register missing hooks");
+          "repository directory does not exists, could not register missing hooks");
       }
     }
     else if (logger.isDebugEnabled())
