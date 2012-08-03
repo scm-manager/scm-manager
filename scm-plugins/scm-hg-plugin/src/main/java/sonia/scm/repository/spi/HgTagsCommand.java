@@ -30,15 +30,18 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -79,16 +82,55 @@ public class HgTagsCommand extends AbstractCommand implements TagsCommand
 
     List<com.aragost.javahg.commands.Tag> tagList = cmd.includeTip().execute();
 
-    return Lists.transform(tagList,
-      new Function<com.aragost.javahg.commands.Tag, Tag>()
-    {
+    List<Tag> tags = null;
 
-      @Override
-      public Tag apply(com.aragost.javahg.commands.Tag f)
+    // check for empty repository
+    if (Util.isNotEmpty(tagList) && tagList.get(0).getChangeset() != null)
+    {
+      tags = Lists.transform(tagList, new TagTransformer());
+    }
+
+    if (tags == null)
+    {
+      tags = Lists.newArrayList();
+    }
+
+    return tags;
+  }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 12/08/03
+   * @author         Enter your name here...
+   */
+  private static class TagTransformer
+    implements Function<com.aragost.javahg.commands.Tag, Tag>
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @param f
+     *
+     * @return
+     */
+    @Override
+    public Tag apply(com.aragost.javahg.commands.Tag f)
+    {
+      Tag t = null;
+
+      if ((f != null) &&!Strings.isNullOrEmpty(f.getName())
+        && (f.getChangeset() != null))
       {
-        return new Tag(f.getName(), f.getChangeset().getNode());
+        t = new Tag(f.getName(), f.getChangeset().getNode());
       }
 
-    });
+      return t;
+    }
   }
 }
