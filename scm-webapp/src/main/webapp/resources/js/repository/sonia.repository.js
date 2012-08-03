@@ -30,7 +30,7 @@
  */
 var repositoryTypeStore = new Ext.data.JsonStore({
   id: 1,
-  fields: [ 'displayName', 'name' ]
+  fields: [ 'displayName', 'name', 'supportedCommands' ]
 });
 
 function loadRepositoryTypes(state){
@@ -84,6 +84,16 @@ Sonia.repository.createUrl = function(type, name){
 
 Sonia.repository.createUrlFromObject = function(repository){
   return Sonia.repository.createUrl(repository.type, repository.name);
+}
+
+Sonia.repository.getTypeByName = function(name){
+  var type = null;
+  repositoryTypeStore.queryBy(function(rec){
+    if ( rec.get('name') == name ){
+      type = rec.data;
+    }
+  });
+  return type;
 }
 
 /**

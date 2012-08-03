@@ -101,7 +101,11 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
     
     if ( ! this.inline ){
       config.title = String.format(this.changesetViewerTitleText, this.repository.name)
-      config.tbar = this.createTopToolbar();
+      
+      var type = Sonia.repository.getTypeByName( this.repository.type );
+      if ( type && type.supportedCommands && type.supportedCommands.indexOf('BRANCHES') >= 0){
+        config.tbar = this.createTopToolbar();
+      }
       config.bbar = {
         xtype: 'paging',
         store: this.changesetStore,

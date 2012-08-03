@@ -121,7 +121,6 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     this.appendRepositoryProperties(bar);
     
     var config = {
-      tbar: this.createTopToolbar(),
       bbar: bar,
       autoExpandColumn: 'description',
       title: String.format(this.repositoryBrowserTitleText, this.repository.name),
@@ -139,6 +138,11 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         }
       }
     };
+    
+    var type = Sonia.repository.getTypeByName( this.repository.type );
+    if ( type && type.supportedCommands && type.supportedCommands.indexOf('BRANCHES') >= 0){
+      config.tbar = this.createTopToolbar();
+    }
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.RepositoryBrowser.superclass.initComponent.apply(this, arguments);
