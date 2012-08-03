@@ -36,6 +36,7 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -47,6 +48,7 @@ import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -141,27 +143,37 @@ public class HgLogCommand extends AbstractCommand implements LogCommand
           HgLogChangesetCommand.on(repository).rev("tip").singleRevision();
       }
 
-      int total = start - end + 1;
-
-      if (request.getPagingStart() > 0)
+      if (start >= 0)
       {
-        start -= request.getPagingStart();
-      }
 
-      if (request.getPagingLimit() > 0)
+        int total = start - end + 1;
+
+        if (request.getPagingStart() > 0)
+        {
+          start -= request.getPagingStart();
+        }
+
+        if (request.getPagingLimit() > 0)
+        {
+          end = start - request.getPagingLimit() + 1;
+        }
+
+        if (end < 0)
+        {
+          end = 0;
+        }
+
+        List<Changeset> changesets =
+          HgLogChangesetCommand.on(repository).rev(start + ":" + end).execute();
+
+        result = new ChangesetPagingResult(total, changesets);
+      }
+      else
       {
-        end = start - request.getPagingLimit() + 1;
+
+        // empty repository
+        result = new ChangesetPagingResult(0, new ArrayList<Changeset>());
       }
-
-      if (end < 0)
-      {
-        end = 0;
-      }
-
-      List<Changeset> changesets =
-        HgLogChangesetCommand.on(repository).rev(start + ":" + end).execute();
-
-      result = new ChangesetPagingResult(total, changesets);
     }
 
     return result;

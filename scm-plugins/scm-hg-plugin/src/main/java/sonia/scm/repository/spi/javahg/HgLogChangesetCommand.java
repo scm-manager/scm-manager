@@ -218,7 +218,11 @@ public class HgLogChangesetCommand extends AbstractCommand
    */
   public int singleRevision(String... files)
   {
-    return Utils.single(loadRevisions(files));
+    Integer rev = Utils.single(loadRevisions(files));
+    if ( rev == null ){
+      rev = -1;
+    }
+    return rev;
   }
 
   //~--- get methods ----------------------------------------------------------
