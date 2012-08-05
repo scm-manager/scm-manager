@@ -71,6 +71,7 @@
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
     
+    <!--
     <repository>
       <releases>
         <enabled>false</enabled>
@@ -83,6 +84,7 @@
       <layout>default</layout>
       <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     </repository>
+    -->
   
   </repositories>
  
