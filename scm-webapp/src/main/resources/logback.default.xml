@@ -64,6 +64,11 @@
   <logger name="svnkit.network" level="DEBUG" />
   <logger name="svnkit.fsfs" level="WARN" />
   -->
+  
+  <!-- javahg -->
+  <!--
+  <logger name="com.aragost.javahg" level="DEBUG" />
+  -->
 
   <root level="WARN">
     <appender-ref ref="STDOUT" />
