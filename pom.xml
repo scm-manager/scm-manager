@@ -399,7 +399,7 @@
     <jersey.version>1.13</jersey.version>
     <ehcache.version>2.5.2</ehcache.version>
     <freemarker.version>2.3.19</freemarker.version>
-    <jetty.version>7.6.4.v20120524</jetty.version>
+    <jetty.version>7.6.5.v20120716</jetty.version>
     
     <!-- repostitory libraries -->
     <jgit.version>2.0.0.201206130900-r</jgit.version>
