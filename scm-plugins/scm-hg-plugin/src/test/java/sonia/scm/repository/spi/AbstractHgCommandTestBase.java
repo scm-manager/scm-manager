@@ -44,6 +44,8 @@ import sonia.scm.io.FileSystem;
 import sonia.scm.repository.HgContextProvider;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgTestUtil;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.TempSCMContextProvider;
 import sonia.scm.store.MemoryStoreFactory;
 
@@ -99,7 +101,8 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
 
     HgTestUtil.checkForSkip(handler);
 
-    cmdContext = new HgCommandContext(handler.getConfig(), repositoryDirectory);
+    cmdContext = new HgCommandContext(handler.getConfig(),
+      RepositoryTestData.createHeartOfGold(), repositoryDirectory);
   }
 
   //~--- get methods ----------------------------------------------------------

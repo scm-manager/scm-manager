@@ -38,7 +38,7 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.RepositoryConfiguration;
 
-import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +61,9 @@ import java.nio.charset.Charset;
 public class HgCommandContext implements Closeable
 {
 
+  /** Field description */
+  private static final String PROPERTY_ENCODING = "hg.encoding";
+
   /**
    * the logger for HgCommandContext
    */
@@ -74,12 +77,20 @@ public class HgCommandContext implements Closeable
    *
    *
    * @param config
+   * @param repository
    * @param directory
    */
-  public HgCommandContext(HgConfig config, File directory)
+  HgCommandContext(HgConfig config, sonia.scm.repository.Repository repository,
+    File directory)
   {
     this.config = config;
     this.directory = directory;
+    encoding = repository.getProperty(PROPERTY_ENCODING);
+
+    if (Strings.isNullOrEmpty(encoding))
+    {
+      encoding = config.getEncoding();
+    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -144,6 +155,9 @@ public class HgCommandContext implements Closeable
 
   /** Field description */
   private File directory;
+
+  /** Field description */
+  private String encoding;
 
   /** Field description */
   private Repository repository;
