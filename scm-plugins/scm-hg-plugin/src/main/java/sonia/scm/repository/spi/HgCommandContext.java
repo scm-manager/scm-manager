@@ -127,11 +127,11 @@ public class HgCommandContext implements Closeable
 
       try
       {
-        Charset charset = Charset.forName(config.getEncoding());
+        Charset charset = Charset.forName(encoding);
 
         if (logger.isTraceEnabled())
         {
-          logger.trace("set encoding {} for mercurial", config.getEncoding());
+          logger.trace("set encoding {} for mercurial", encoding);
         }
 
         repoConfiguration.setEncoding(charset);
