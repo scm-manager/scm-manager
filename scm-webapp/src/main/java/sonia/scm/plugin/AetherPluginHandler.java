@@ -56,6 +56,7 @@ import org.sonatype.aether.impl.internal.DefaultServiceLocator;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.Proxy;
 import org.sonatype.aether.repository.RemoteRepository;
+import org.sonatype.aether.repository.RepositoryPolicy;
 import org.sonatype.aether.resolution.DependencyRequest;
 import org.sonatype.aether.spi.connector.RepositoryConnectorFactory;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
@@ -112,13 +113,12 @@ public class AetherPluginHandler
    * @param configuration
    */
   public AetherPluginHandler(PluginManager pluginManager,
-                             SCMContextProvider context,
-                             ScmConfiguration configuration)
+    SCMContextProvider context, ScmConfiguration configuration)
   {
     this.pluginManager = pluginManager;
     this.configuration = configuration;
     localRepositoryDirectory = new File(context.getBaseDirectory(),
-            BootstrapListener.PLUGIN_DIRECTORY);
+      BootstrapListener.PLUGIN_DIRECTORY);
 
     try
     {
@@ -130,7 +130,7 @@ public class AetherPluginHandler
     }
 
     classpathFile = new File(localRepositoryDirectory,
-                             BootstrapListener.PLUGIN_CLASSPATHFILE);
+      BootstrapListener.PLUGIN_CLASSPATHFILE);
 
     if (classpathFile.exists())
     {
@@ -221,7 +221,7 @@ public class AetherPluginHandler
         if (logger.isDebugEnabled())
         {
           logger.debug("enable proxy {} for {}", proxy.getHost(),
-                       repository.getUrl());
+            repository.getUrl());
         }
 
         rr.setProxy(proxy);
@@ -241,11 +241,13 @@ public class AetherPluginHandler
    * @param dependencies
    */
   private void collectDependencies(Dependency dependency,
-                                   List<Dependency> dependencies)
+    List<Dependency> dependencies)
   {
     CollectRequest request = new CollectRequest(dependency, dependencies,
                                remoteRepositories);
     MavenRepositorySystemSession session = new MavenRepositorySystemSession();
+
+    session.setChecksumPolicy(RepositoryPolicy.CHECKSUM_POLICY_WARN);
 
     if (configuration.isEnableProxy())
     {
@@ -258,7 +260,7 @@ public class AetherPluginHandler
     }
 
     session.setLocalRepositoryManager(
-        repositorySystem.newLocalRepositoryManager(localRepository));
+      repositorySystem.newLocalRepositoryManager(localRepository));
 
     try
     {
@@ -336,11 +338,11 @@ public class AetherPluginHandler
 
     locator.addService(VersionResolver.class, DefaultVersionResolver.class);
     locator.addService(VersionRangeResolver.class,
-                       DefaultVersionRangeResolver.class);
+      DefaultVersionRangeResolver.class);
     locator.addService(ArtifactDescriptorReader.class,
-                       DefaultArtifactDescriptorReader.class);
+      DefaultArtifactDescriptorReader.class);
     locator.addService(RepositoryConnectorFactory.class,
-                       AsyncRepositoryConnectorFactory.class);
+      AsyncRepositoryConnectorFactory.class);
 
     return locator.getService(RepositorySystem.class);
   }
@@ -384,7 +386,7 @@ public class AetherPluginHandler
         if (Util.isNotEmpty(id) && ((skipId == null) ||!id.equals(skipId)))
         {
           dependencies.add(new Dependency(new DefaultArtifact(id),
-                                          PLUGIN_SCOPE));
+            PLUGIN_SCOPE));
         }
       }
     }
