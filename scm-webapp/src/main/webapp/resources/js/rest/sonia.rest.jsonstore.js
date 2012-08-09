@@ -35,32 +35,37 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
   errorMsgText: 'Could not load items. Server returned status: {0}',
 
   constructor: function(config) {
-    var baseConfig = {
-      autoLoad: true,
-      listeners: {
-        // fix jersey empty array problem
-        exception: {
-          fn: function(proxy, type, action, options, response, arg){
-            var status = response.status;
-            if ( status == 200 && action == 'read' && response.responseText == 'null' ){
-              if ( debug ){
-                console.debug( 'empty array, clear whole store' );
-              }
-              this.removeAll();
-            } else {
-              if (debug){
-                console.debug( 'error during store load, status: ' + status );
-              }
-              main.handleRestFailure(
-                response, 
-                this.errorTitleText, 
-                this.errorMsgText
-              );
-            }
-          },
-          scope: this
+    if ( ! config.listeners ){
+      config.listeners = {};
+    }
+    // fix jersey empty array problem
+    config.listeners.exception = {
+      fn: function(proxy, type, action, options, response, arg){
+        var status = response.status;
+        if (debug){
+          console.debug('store returned statuscode ' + status);
         }
-      }
+        if ( status == 200 && action == 'read' && response.responseText == 'null' ){
+          if ( debug ){
+            console.debug( 'empty array, clear whole store' );
+          }
+          this.removeAll();
+        } else {
+          if (debug){
+            console.debug( 'error during store load, status: ' + status );
+          }
+          main.handleRestFailure(
+            response, 
+            this.errorTitleText, 
+            this.errorMsgText
+          );
+        }
+      },
+      scope: this
+    }
+    
+    var baseConfig = {
+      autoLoad: true
     };
     Sonia.rest.JsonStore.superclass.constructor.call(this, Ext.apply(baseConfig, config));
   }
