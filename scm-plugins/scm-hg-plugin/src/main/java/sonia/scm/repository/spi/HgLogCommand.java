@@ -36,7 +36,6 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
