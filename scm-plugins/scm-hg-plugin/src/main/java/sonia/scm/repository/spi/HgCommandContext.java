@@ -38,6 +38,11 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.RepositoryConfiguration;
 
+import com.google.common.base.Charsets;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.spi.javahg.HgFileviewExtension;
 
@@ -47,12 +52,22 @@ import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 
+import java.nio.charset.Charset;
+
 /**
  *
  * @author Sebastian Sdorra
  */
 public class HgCommandContext implements Closeable
 {
+
+  /**
+   * the logger for HgCommandContext
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgCommandContext.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -98,6 +113,22 @@ public class HgCommandContext implements Closeable
         RepositoryConfiguration.DEFAULT;
 
       repoConfiguration.addExtension(HgFileviewExtension.class);
+
+      try
+      {
+        Charset charset = Charset.forName(config.getEncoding());
+
+        if (logger.isTraceEnabled())
+        {
+          logger.trace("set encoding {} for mercurial", config.getEncoding());
+        }
+
+        repoConfiguration.setEncoding(charset);
+      }
+      catch (IllegalArgumentException ex)
+      {
+        logger.error("could not set encoding for mercurial", ex);
+      }
 
       repoConfiguration.setHgBin(config.getHgBinary());
       repository = Repository.open(repoConfiguration, directory);

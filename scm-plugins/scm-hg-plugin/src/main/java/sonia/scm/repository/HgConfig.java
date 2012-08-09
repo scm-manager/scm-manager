@@ -63,6 +63,17 @@ public class HgConfig extends SimpleRepositoryConfig
    *
    * @return
    */
+  public String getEncoding()
+  {
+    return encoding;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getHgBinary()
   {
     return hgBinary;
@@ -111,10 +122,21 @@ public class HgConfig extends SimpleRepositoryConfig
   public boolean isValid()
   {
     return super.isValid() && Util.isNotEmpty(hgBinary)
-           && Util.isNotEmpty(pythonBinary);
+      && Util.isNotEmpty(pythonBinary);
   }
 
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param encoding
+   */
+  public void setEncoding(String encoding)
+  {
+    this.encoding = encoding;
+  }
 
   /**
    * Method description
@@ -161,6 +183,9 @@ public class HgConfig extends SimpleRepositoryConfig
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String encoding = "UTF-8";
 
   /** Field description */
   private String hgBinary;

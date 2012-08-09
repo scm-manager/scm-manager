@@ -43,6 +43,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   useOptimizedBytecodeText: 'Optimized Bytecode (.pyo)',
   configWizardText: 'Start Configuration Wizard',
   configWizardLabelText: 'Start Configuration Wizard',
+  encodingText: 'Encoding',
   disabledText: 'Disabled',
 
   // helpText
@@ -51,6 +52,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   pythonPathHelpText: 'Python Module Search Path (PYTHONPATH).',
   repositoryDirectoryHelpText: 'Location of the Mercurial repositories.',
   useOptimizedBytecodeHelpText: 'Use the Python "-O" switch.',
+  encodingHelpText: 'Repository Encoding.',
   disabledHelpText: 'Enable or disable the Mercurial plugin. \n\
                     Note you have to reload the page, after changing this value.',
 
@@ -80,6 +82,12 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         name: 'repositoryDirectory',
         fieldLabel: this.repositoryDirectoryText,
         helpText: this.repositoryDirectoryHelpText,
+        allowBlank : false
+      },{
+        xtype: 'textfield',
+        name: 'encoding',
+        fieldLabel: this.encodingText,
+        helpText: this.encodingHelpText,
         allowBlank : false
       },{
         xtype: 'checkbox',
