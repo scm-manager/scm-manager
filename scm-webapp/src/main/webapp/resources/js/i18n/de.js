@@ -192,6 +192,13 @@ if (Sonia.repository.Panel){
 
   Ext.override(Sonia.repository.Panel, {
     titleText: 'Repository',
+    
+    archiveText: 'Archivieren',
+    unarchiveText: 'Wiederherstellen',
+    archiveTitleText: 'Repository archivieren',
+    archiveMsgText: 'Repository "{0}" archivieren?',
+    errorArchiveMsgText: 'Das Archivieren des Repositories is fehlgeschlagen.',
+    
     emptyText: 'Es wurde kein Repository selektiert',
     removeTitleText: 'Repository entfernen',
     removeMsgText: 'Repository entfernen "{0}"?',
