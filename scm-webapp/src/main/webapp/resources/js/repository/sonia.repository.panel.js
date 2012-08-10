@@ -35,12 +35,12 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   titleText: 'Repository Form',
   emptyText: 'Add or select an Repository',
   
-  // TODO i18n
   archiveText: 'Archive',
   unarchiveText: 'Unarchive',
   archiveTitleText: 'Archive Repository',
   archiveMsgText: 'Archive Repository "{0}"?',
-  errorArchiveMsgText: 'Repository  archival failed',
+  errorArchiveMsgText: 'Repository archival failed',
+  displayArchivedRepositoriesText: 'Archive',
 
   removeTitleText: 'Remove Repository',
   removeMsgText: 'Remove Repository "{0}"?',
@@ -165,7 +165,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
         }      
       },{
         xtype: 'label',
-        text: 'Archive',
+        text: this.displayArchivedRepositoriesText,
         cls: 'ytb-text'
       })
     }

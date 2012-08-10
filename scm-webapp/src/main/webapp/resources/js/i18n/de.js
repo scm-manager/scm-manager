@@ -151,6 +151,7 @@ if ( Sonia.repository.Grid ){
     colDescriptionText: 'Beschreibung',
     colCreationDateText: 'Erstellungsdatum',
     colUrlText: 'Url',
+    colArchiveText: 'Archiv',
     emptyText: 'Es wurde kein Repository konfiguriert',
     formTitleText: 'Repository',
     unknownType: 'Unbekannt'
@@ -198,6 +199,7 @@ if (Sonia.repository.Panel){
     archiveTitleText: 'Repository archivieren',
     archiveMsgText: 'Repository "{0}" archivieren?',
     errorArchiveMsgText: 'Das Archivieren des Repositories is fehlgeschlagen.',
+    displayArchivedRepositoriesText: 'Archiv',
     
     emptyText: 'Es wurde kein Repository selektiert',
     removeTitleText: 'Repository entfernen',
