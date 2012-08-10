@@ -197,8 +197,11 @@ if (Sonia.repository.Panel){
     archiveText: 'Archivieren',
     unarchiveText: 'Wiederherstellen',
     archiveTitleText: 'Repository archivieren',
+    unarchiveTitleText: 'Repository wiederherstellen',
     archiveMsgText: 'Repository "{0}" archivieren?',
-    errorArchiveMsgText: 'Das Archivieren des Repositories is fehlgeschlagen.',
+    unarchiveMsgText: 'Repository "{0}" wiederherstellen?',
+    errorArchiveMsgText: 'Das Archivieren des Repositories ist fehlgeschlagen.',
+    errorUnarchiveMsgText: 'Das Wiederherstellen des Repositories ist fehlgeschlagen.',
     displayArchivedRepositoriesText: 'Archiv',
     
     emptyText: 'Es wurde kein Repository selektiert',

@@ -38,8 +38,11 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   archiveText: 'Archive',
   unarchiveText: 'Unarchive',
   archiveTitleText: 'Archive Repository',
+  unarchiveTitleText: 'Unarchive Repository',
   archiveMsgText: 'Archive Repository "{0}"?',
+  unarchiveMsgText: 'Unarchive Repository "{0}"?',
   errorArchiveMsgText: 'Repository archival failed',
+  errorUnarchiveMsgText: 'Repository unarchival failed',
   displayArchivedRepositoriesText: 'Archive',
 
   removeTitleText: 'Remove Repository',
@@ -295,14 +298,17 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   toggleArchive: function(){
     var item = this.getSelectedRepository();
     if ( item ){
+      
+      var title = item.archived ? this.unarchiveTitleText : this.archiveTitleText;
+      var msg = item.archived ? this.unarchiveMsgText : this.archiveMsgText;
+      
       item.archived = ! item.archived;
       if (debug){
         console.debug('toggle repository ' + item.name + ' archive to ' + item.archived);
       }
       
       var url = restUrl + 'repositories/' + item.id + '.json';
-      this.executeRemoteCall(this.archiveTitleText, 
-        String.format(this.archiveMsgText, item.name), 
+      this.executeRemoteCall(title, String.format(msg, item.name), 
         'PUT', url, item, function(result){
           main.handleFailure(
             result.status, 
