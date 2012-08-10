@@ -305,7 +305,7 @@ if (Sonia.config.ScmConfigPanel){
     proxyPasswordText: 'Proxy Passwort',
     baseUrlText: 'Basis-URL',
     forceBaseUrlText: 'Basis-URL forcieren',
-    disableGroupingGridText: 'Repository grupierung deaktivieren',
+    disableGroupingGridText: 'Repository-Gruppierung deaktivieren',
     enableRepositoryArchiveText: 'Repository-Archiv aktivieren',
     
     submitText: 'Senden ...',
