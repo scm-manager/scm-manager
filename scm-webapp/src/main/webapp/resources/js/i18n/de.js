@@ -294,6 +294,7 @@ if (Sonia.config.ScmConfigPanel){
     baseUrlText: 'Basis-URL',
     forceBaseUrlText: 'Basis-URL forcieren',
     disableGroupingGridText: 'Repository grupierung deaktivieren',
+    enableRepositoryArchiveText: 'Repository-Archiv aktivieren',
     
     submitText: 'Senden ...',
     loadingText: 'Laden ...',
@@ -322,7 +323,8 @@ if (Sonia.config.ScmConfigPanel){
     proxyPasswordHelpText: 'Das Passwort für die Authentifizierung am Proxy-Server.',
     baseUrlHelpText: 'Die vollständige URL des Server, inclusive Context-Pfad z.B.: http://localhost:8080/scm.',
     forceBaseUrlHelpText: 'Leitet alle Zugriffe die nicht von der Basis-URL kommen auf die Basis-URL um.',
-    disableGroupingGridHelpText: 'Repository grupierung deaktivieren. Wenn dieser Wert verändert wird muss die Seite ne geladen werden.'
+    disableGroupingGridHelpText: 'Repository grupierung deaktivieren. Wenn dieser Wert verändert wird muss die Seite neu geladen werden.',
+    enableRepositoryArchiveHelpText: 'Repository-Archiv aktivieren. Wenn dieser Wert verändert wird muss die Seite neu geladen werden.'
   });
 
 }
