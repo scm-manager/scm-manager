@@ -54,7 +54,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class HgBatFix
+public class HgPyFix
 {
 
   /** Field description */
@@ -62,6 +62,9 @@ public class HgBatFix
 
   /** Field description */
   private static final String HG_BAT = "hg.bat";
+
+  /** Field description */
+  private static final String HG_PY = "hg.py";
 
   /**
    * the logger for HgUtil
@@ -77,7 +80,7 @@ public class HgBatFix
    * @param context
    * @param config
    */
-  public static void fixHgBat(SCMContextProvider context, HgConfig config)
+  public static void fixHgPy(SCMContextProvider context, HgConfig config)
   {
     String basePath = context.getBaseDirectory().getAbsolutePath();
 
@@ -85,8 +88,10 @@ public class HgBatFix
 
     if (hg.startsWith(basePath) && hg.endsWith(HG_BAT))
     {
+      File file = new File(hg);
 
-      fixHgBat(hg);
+      file = new File(file.getParentFile(), HG_PY);
+      fixHgPy(file);
     }
   }
 
@@ -95,10 +100,11 @@ public class HgBatFix
    *
    *
    * @param hg
+   *
+   * @param hgBat
    */
-  static void fixHgBat(String hg)
+  static void fixHgPy(File hgBat)
   {
-    File hgBat = new File(hg);
 
     if (hgBat.exists())
     {
@@ -110,7 +116,7 @@ public class HgBatFix
       {
         if (logger.isDebugEnabled())
         {
-          logger.debug("check hg.bat for setbinary at {}", hg);
+          logger.debug("check hg.bat for setbinary at {}", hgBat);
         }
 
         if (!isSetBinaryAvailable(hgBat))
@@ -130,7 +136,7 @@ public class HgBatFix
     }
     else if (logger.isWarnEnabled())
     {
-      logger.warn("could not find hg.bat at {}", hg);
+      logger.warn("could not find hg.bat at {}", hgBat);
     }
   }
 

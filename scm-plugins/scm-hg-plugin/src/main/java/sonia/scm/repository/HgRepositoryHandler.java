@@ -190,7 +190,7 @@ public class HgRepositoryHandler
     // fix wrong hg.bat from package installation
     if (SystemUtil.isWindows())
     {
-      HgBatFix.fixHgBat(context, getConfig());
+      HgPyFix.fixHgPy(context, getConfig());
     }
   }
 

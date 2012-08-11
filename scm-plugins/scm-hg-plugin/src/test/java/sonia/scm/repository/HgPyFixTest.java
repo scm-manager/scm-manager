@@ -54,7 +54,7 @@ import java.net.URL;
  *
  * @author Sebastian Sdorra
  */
-public class HgBatFixTest
+public class HgPyFixTest
 {
 
   /**
@@ -136,10 +136,10 @@ public class HgBatFixTest
    */
   private File testModify(File file)
   {
-    HgBatFix.fixHgBat(file.getAbsolutePath());
-    assertTrue(HgBatFix.isSetBinaryAvailable(file));
+    HgPyFix.fixHgPy(file);
+    assertTrue(HgPyFix.isSetBinaryAvailable(file));
 
-    File mod = new File(file.getParentFile(), HgBatFix.MODIFY_MARK);
+    File mod = new File(file.getParentFile(), HgPyFix.MODIFY_MARK);
 
     assertTrue(mod.exists());
 

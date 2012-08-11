@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.io.ZipUnArchiver;
 import sonia.scm.net.HttpClient;
-import sonia.scm.repository.HgBatFix;
+import sonia.scm.repository.HgPyFix;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.util.IOUtil;
@@ -231,7 +231,7 @@ public class HgPackageInstaller implements Runnable
     config.setUseOptimizedBytecode(template.isUseOptimizedBytecode());
 
     // fix wrong hg.bat
-    HgBatFix.fixHgBat(SCMContext.getContext(), config);
+    HgPyFix.fixHgPy(SCMContext.getContext(), config);
 
     handler.storeConfig();
   }
