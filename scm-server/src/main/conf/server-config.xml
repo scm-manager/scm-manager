@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+﻿<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
 <!--
 
     Copyright (c) 2010, Sebastian Sdorra
