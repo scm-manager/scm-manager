@@ -35,11 +35,14 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import java.io.File;
 import sonia.scm.SCMContext;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgPythonScript;
 import sonia.scm.util.Util;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
 
 /**
  *
@@ -64,8 +67,8 @@ public class HgUtil
   public static String getPythonPath(HgConfig config)
   {
     String pythonPath = Util.EMPTY_STRING;
-    
-    if ( config != null )
+
+    if (config != null)
     {
       pythonPath = Util.nonNull(config.getPythonPath());
     }
@@ -82,10 +85,10 @@ public class HgUtil
       ).getAbsolutePath()
     );
     //J+
-    
+
     return pythonPath;
   }
-  
+
   /**
    * Method description
    *
@@ -97,7 +100,7 @@ public class HgUtil
   public static String getRevision(String revision)
   {
     return Util.isEmpty(revision)
-           ? REVISION_TIP
-           : revision;
+      ? REVISION_TIP
+      : revision;
   }
 }

@@ -38,8 +38,10 @@ package sonia.scm.installer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContext;
 import sonia.scm.io.ZipUnArchiver;
 import sonia.scm.net.HttpClient;
+import sonia.scm.repository.HgBatFix;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.util.IOUtil;
@@ -79,7 +81,7 @@ public class HgPackageInstaller implements Runnable
    * @param pkg
    */
   public HgPackageInstaller(HttpClient client, HgRepositoryHandler handler,
-                            File baseDirectory, HgPackage pkg)
+    File baseDirectory, HgPackage pkg)
   {
     this.client = client;
     this.handler = handler;
@@ -181,7 +183,7 @@ public class HgPackageInstaller implements Runnable
   private File extractPackage(File file)
   {
     File directory = new File(baseDirectory,
-                              "pkg".concat(File.separator).concat(pkg.getId()));
+                       "pkg".concat(File.separator).concat(pkg.getId()));
 
     IOUtil.mkdirs(directory);
 
@@ -227,6 +229,10 @@ public class HgPackageInstaller implements Runnable
     config.setPythonBinary(getTemplateValue(template.getPythonBinary(), path));
     config.setPythonPath(getTemplateValue(template.getPythonPath(), path));
     config.setUseOptimizedBytecode(template.isUseOptimizedBytecode());
+
+    // fix wrong hg.bat
+    HgBatFix.fixHgBat(SCMContext.getContext(), config);
+
     handler.storeConfig();
   }
 
