@@ -141,7 +141,7 @@ public final class TemplateEngineFactory
 
     if (index > 0)
     {
-      path = path.substring(index);
+      path = path.substring(index + 1);
     }
 
     for (TemplateEngine e : engineMap.values())
