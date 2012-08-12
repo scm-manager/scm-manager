@@ -45,6 +45,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+import java.util.concurrent.Executors;
+
 import javax.servlet.ServletContext;
 
 /**
@@ -77,6 +79,7 @@ public class MustacheTemplateEngine implements TemplateEngine
   public MustacheTemplateEngine(ServletContext context)
   {
     factory = new ServletMustacheFactory(context);
+    factory.setExecutorService(Executors.newCachedThreadPool());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -134,5 +137,5 @@ public class MustacheTemplateEngine implements TemplateEngine
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private MustacheFactory factory;
+  private ServletMustacheFactory factory;
 }
