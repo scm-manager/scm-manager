@@ -164,6 +164,12 @@
       <artifactId>freemarker</artifactId>
       <version>${freemarker.version}</version>
     </dependency>
+    
+    <dependency>
+      <groupId>com.github.spullara.mustache.java</groupId>
+      <artifactId>compiler</artifactId>
+      <version>${mustache.version}</version>
+    </dependency>
 
     <!-- aether -->
 
@@ -398,6 +404,7 @@
     <aether.version>1.13.1</aether.version>
     <wagon.version>1.0</wagon.version>
     <maven.version>3.0.4</maven.version>
+    <mustache.version>0.8.4</mustache.version>
     <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
   </properties>
 
