@@ -178,7 +178,7 @@ public class ErrorServlet extends HttpServlet
     }
     finally
     {
-      IOUtil.close(context);
+      IOUtil.close(writer);
     }
   }
 
