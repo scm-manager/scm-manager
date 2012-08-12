@@ -77,7 +77,7 @@ public class RepositoryRootResource
 {
 
   /** Field description */
-  public static final String TEMPLATE = "/templates/repository-root.ftl";
+  public static final String TEMPLATE = "/templates/repository-root.mustache";
 
   //~--- constructors ---------------------------------------------------------
 

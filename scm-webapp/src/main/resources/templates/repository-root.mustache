@@ -91,11 +91,11 @@
     <h1>SCM-Manager Repositories</h1>
     
     <ul>
-    <#list repositories as repository>
+    {{#repositories}}
       <li>
-        <a href="${repository.url}">${repository.name}</a> (<a href="${repository.detailUrl}">Details</a>, <a href="${repository.commitUrl}">Commits</a>, <a href="${repository.sourceUrl}">Source</a>)
+        <a href="{{url}}">{{name}}</a> (<a href="{{detailUrl}}">Details</a>, <a href="{{commitUrl}}">Commits</a>, <a href="{{sourceUrl}}">Source</a>)
       </li>
-    </#list>
+    {{/repositories}}
     </ul>
     
   </body>
