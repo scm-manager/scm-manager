@@ -35,6 +35,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
@@ -86,7 +87,11 @@ import sonia.scm.security.SecurityContext;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.ListenableStoreFactory;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.template.DefaultEngine;
 import sonia.scm.template.FreemarkerTemplateHandler;
+import sonia.scm.template.MustacheTemplateEngine;
+import sonia.scm.template.TemplateEngine;
+import sonia.scm.template.TemplateEngineFactory;
 import sonia.scm.template.TemplateHandler;
 import sonia.scm.template.TemplateServlet;
 import sonia.scm.url.RestJsonUrlProvider;
@@ -138,7 +143,7 @@ public class ScmServletModule extends ServletModule
   /** Field description */
   public static final String[] PATTERN_ADMIN = new String[] {
                                                  "/api/rest/groups*",
-          "/api/rest/users*", "/api/rest/plguins*" };
+    "/api/rest/users*", "/api/rest/plguins*" };
 
   /** Field description */
   public static final String PATTERN_ALL = "/*";
@@ -180,12 +185,12 @@ public class ScmServletModule extends ServletModule
   /** Field description */
   public static final String[] PATTERN_STATIC_RESOURCES = new String[] {
                                                             PATTERN_SCRIPT,
-          PATTERN_STYLESHEET, "*.jpg", "*.gif", "*.png" };
+    PATTERN_STYLESHEET, "*.jpg", "*.gif", "*.png" };
 
   /** Field description */
   public static final String[] PATTERN_COMPRESSABLE = new String[] {
                                                         PATTERN_SCRIPT,
-          PATTERN_STYLESHEET, "*.json", "*.xml", "*.txt" };
+    PATTERN_STYLESHEET, "*.json", "*.xml", "*.txt" };
 
   /** Field description */
   private static Logger logger =
@@ -202,8 +207,7 @@ public class ScmServletModule extends ServletModule
    * @param overrides
    */
   ScmServletModule(PluginLoader pluginLoader,
-                   BindingExtensionProcessor bindExtProcessor,
-                   ClassOverrides overrides)
+    BindingExtensionProcessor bindExtProcessor, ClassOverrides overrides)
   {
     this.pluginLoader = pluginLoader;
     this.bindExtProcessor = bindExtProcessor;
@@ -230,8 +234,8 @@ public class ScmServletModule extends ServletModule
 
     // bind repository provider
     ThrowingProviderBinder.create(binder()).bind(
-        RepositoryProvider.class, Repository.class).to(
-        DefaultRepositoryProvider.class).in(RequestScoped.class);
+      RepositoryProvider.class, Repository.class).to(
+      DefaultRepositoryProvider.class).in(RequestScoped.class);
 
     // bind core
     bind(StoreFactory.class, JAXBStoreFactory.class);
@@ -258,7 +262,7 @@ public class ScmServletModule extends ServletModule
     bind(AuthenticationManager.class, ChainAuthenticatonManager.class);
     bind(LocalSecurityContextHolder.class);
     bind(WebSecurityContext.class).annotatedWith(Names.named("userSession")).to(
-        BasicSecurityContext.class);
+      BasicSecurityContext.class);
     bind(SecurityContext.class).toProvider(SecurityContextProvider.class);
     bind(WebSecurityContext.class).toProvider(SecurityContextProvider.class);
     bind(AdministrationContext.class, DefaultAdministrationContext.class);
@@ -295,14 +299,14 @@ public class ScmServletModule extends ServletModule
 
     // bind url provider staff
     bind(UrlProvider.class).annotatedWith(
-        Names.named(UrlProviderFactory.TYPE_RESTAPI_JSON)).toProvider(
-        RestJsonUrlProvider.class);
+      Names.named(UrlProviderFactory.TYPE_RESTAPI_JSON)).toProvider(
+      RestJsonUrlProvider.class);
     bind(UrlProvider.class).annotatedWith(
-        Names.named(UrlProviderFactory.TYPE_RESTAPI_XML)).toProvider(
-        RestXmlUrlProvider.class);
+      Names.named(UrlProviderFactory.TYPE_RESTAPI_XML)).toProvider(
+      RestXmlUrlProvider.class);
     bind(UrlProvider.class).annotatedWith(
-        Names.named(UrlProviderFactory.TYPE_WUI)).toProvider(
-        WebUIUrlProvider.class);
+      Names.named(UrlProviderFactory.TYPE_WUI)).toProvider(
+      WebUIUrlProvider.class);
 
     // bind repository service factory
     bind(RepositoryServiceFactory.class);
@@ -320,7 +324,7 @@ public class ScmServletModule extends ServletModule
     filter(PATTERN_ALL).through(BaseUrlFilter.class);
     filterRegex(RESOURCE_REGEX).through(GZipFilter.class);
     filter(PATTERN_RESTAPI,
-           PATTERN_DEBUG).through(ApiBasicAuthenticationFilter.class);
+      PATTERN_DEBUG).through(ApiBasicAuthenticationFilter.class);
     filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(SecurityFilter.class);
     filter(PATTERN_CONFIG, PATTERN_ADMIN).through(AdminSecurityFilter.class);
 
@@ -333,6 +337,11 @@ public class ScmServletModule extends ServletModule
     // template
     bind(TemplateHandler.class).to(FreemarkerTemplateHandler.class);
     serve(PATTERN_INDEX, "/").with(TemplateServlet.class);
+    Multibinder.newSetBinder(binder(),
+      TemplateEngine.class).addBinding().to(MustacheTemplateEngine.class);
+    bind(TemplateEngine.class).annotatedWith(DefaultEngine.class).to(
+      MustacheTemplateEngine.class);
+    bind(TemplateEngineFactory.class);
 
     // jersey
     Map<String, String> params = new HashMap<String, String>();
@@ -348,7 +357,7 @@ public class ScmServletModule extends ServletModule
     params.put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE.toString());
     params.put(ResourceConfig.FEATURE_REDIRECT, Boolean.TRUE.toString());
     params.put(ServletContainer.RESOURCE_CONFIG_CLASS,
-               UriExtensionsConfig.class.getName());
+      UriExtensionsConfig.class.getName());
 
     String restPath = getRestPackages();
 
@@ -417,7 +426,7 @@ public class ScmServletModule extends ServletModule
    * @param <T>
    */
   private <T> void bind(Class<T> clazz,
-                        Class<? extends T> defaultImplementation)
+    Class<? extends T> defaultImplementation)
   {
     Class<? extends T> implementation = overrides.getOverride(clazz);
 
@@ -432,7 +441,7 @@ public class ScmServletModule extends ServletModule
       if (logger.isDebugEnabled())
       {
         logger.debug("bind {} to default implementation {}", clazz,
-                     implementation);
+          implementation);
       }
     }
 
