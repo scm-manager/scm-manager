@@ -46,7 +46,6 @@ import sonia.scm.plugin.PluginManager;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.StoreFactory;
-import sonia.scm.template.TemplateHandler;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.web.security.WebSecurityContext;
@@ -56,9 +55,6 @@ import sonia.scm.web.security.WebSecurityContext;
 import com.sun.jersey.api.view.Viewable;
 
 import java.io.IOException;
-import java.io.StringWriter;
-
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -78,7 +74,7 @@ public class SupportResource
 {
 
   /** Field description */
-  public static final String TEMPLATE = "/templates/support.ftl";
+  public static final String TEMPLATE = "/templates/support.mustache";
 
   //~--- constructors ---------------------------------------------------------
 

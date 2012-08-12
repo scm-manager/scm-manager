@@ -95,55 +95,55 @@
     <h2>Version</h2>
     
     <ul>
-      <li>Version: ${version.version}</li>
-      <li>Stage: ${version.stage}</li>
-      <li>StoreFactory: ${version.storeFactory}</li>
+      <li>Version: {{version.version}}</li>
+      <li>Stage: {{version.stage}}</li>
+      <li>StoreFactory: {{version.storeFactory}}</li>
     </ul>
     
     <h2>Configuration</h2>
     
     <ul>
-      <li>Anonymous Access Enabled: ${configuration.anonymousAccessEnabled?string}</li>
-      <li>Enable Proxy: ${configuration.enableProxy?string}</li>
-      <li>Force Base Url: ${configuration.forceBaseUrl?string}</li>
-      <li>Disable Grouping Grid: ${configuration.disableGroupingGrid?string}</li>
-      <li>Enable Repository Archive: ${configuration.enableRepositoryArchive?string}</li>
+      <li>Anonymous Access Enabled: {{configuration.anonymousAccessEnabled}}</li>
+      <li>Enable Proxy: {{configuration.enableProxy}}</li>
+      <li>Force Base Url: {{configuration.forceBaseUrl}}</li>
+      <li>Disable Grouping Grid: {{configuration.disableGroupingGrid}}</li>
+      <li>Enable Repository Archive: {{configuration.enableRepositoryArchive}}</li>
     </ul>
     
     <h2>Installed Plugins</h2>
     
     <ul>
-      <#list pluginManager.installed as plugin>
-      <li>${plugin.id}</li>
-      </#list>
+      {{#pluginManager.installed}}
+      <li>{{id}}</li>
+      {{/pluginManager.installed}}
     </ul>
     
     <h2>Runtime</h2>
     
     <ul>
-      <li>Free Memory: ${runtime.freeMemory}</li>
-      <li>Total Memory: ${runtime.totalMemory}</li>
-      <li>Max Memory: ${runtime.maxMemory}</li>
-      <li>Available Processors: ${runtime.availableProcessors}</li>
+      <li>Free Memory: {{runtime.freeMemory}}</li>
+      <li>Total Memory: {{runtime.totalMemory}}</li>
+      <li>Max Memory: {{runtime.maxMemory}}</li>
+      <li>Available Processors: {{runtime.availableProcessors}}</li>
     </ul>
     
     <h2>System</h2>
     
     <ul>
-      <li>OS: ${system.os}</li>
-      <li>Architecture: ${system.arch}</li>
-      <li>ServletContainer: ${system.container}</li>
-      <li>Java: ${system.java}</li>
-      <li>Local: ${system.locale}</li>
-      <li>TimeZone: ${system.timeZone}</li>
+      <li>OS: {{system.os}}</li>
+      <li>Architecture: {{system.arch}}</li>
+      <li>ServletContainer: {{system.container}}</li>
+      <li>Java: {{system.java}}</li>
+      <li>Local: {{system.locale}}</li>
+      <li>TimeZone: {{system.timeZone}}</li>
     </ul>
     
     <h2>Repository Handlers</h2>
     
     <ul>
-    <#list repositoryHandlers as handler>
-      <li>${handler.type.displayName}/${handler.type.name} (${handler.versionInformation})</li>
-    </#list>
+    {{#repositoryHandlers}}
+      <li>{{type.displayName}}/{{type.name}} ({{versionInformation}})</li>
+    {{/repositoryHandlers}}
     </ul>
     
   </body>
