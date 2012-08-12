@@ -58,6 +58,6 @@ public interface TemplateHandler
    * @throws IOException
    */
   public void render(String templateName, Writer writer,
-                     Map<String, ? extends Object> params)
-          throws IOException;
+    Map<String, ? extends Object> params)
+    throws IOException;
 }
