@@ -457,8 +457,8 @@
               </execution>
             </executions>
             <configuration>
-              <source>src/main/webapp/index.html</source>
-              <target>${project.build.directory}/web-compressor/index.html</target>
+              <source>src/main/webapp/index.mustache</source>
+              <target>${project.build.directory}/web-compressor/index.mustache</target>
             </configuration>
           </plugin>
 
