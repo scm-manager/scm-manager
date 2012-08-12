@@ -28,7 +28,7 @@
     <dependency>
       <groupId>com.aragost.javahg</groupId>
       <artifactId>javahg</artifactId>
-      <version>0.4-SNAPSHOT</version>
+      <version>0.3.1-scm</version>
     </dependency>
 
     <!-- test scope -->
