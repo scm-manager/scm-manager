@@ -40,8 +40,6 @@ import freemarker.template.TemplateException;
 import java.io.IOException;
 import java.io.Writer;
 
-import java.util.Map;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -68,16 +66,16 @@ public class FreemarkerTemplate implements Template
    *
    * @param writer
    * @param environment
+   * @param model
    *
    * @throws IOException
    */
   @Override
-  public void execute(Writer writer, Map<String, ? extends Object> environment)
-    throws IOException
+  public void execute(Writer writer, Object model) throws IOException
   {
     try
     {
-      template.process(environment, writer);
+      template.process(model, writer);
     }
     catch (TemplateException ex)
     {

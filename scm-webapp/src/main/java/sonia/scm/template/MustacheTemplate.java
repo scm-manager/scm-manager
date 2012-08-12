@@ -42,8 +42,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Writer;
 
-import java.util.Map;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -81,16 +79,17 @@ public class MustacheTemplate implements Template
    *
    * @param writer
    * @param environment
+   * @param model
    */
   @Override
-  public void execute(Writer writer, Map<String, ? extends Object> environment)
+  public void execute(Writer writer, Object model)
   {
     if (logger.isDebugEnabled())
     {
       logger.debug("render mustache template at {}", templatePath);
     }
 
-    mustache.execute(writer, environment);
+    mustache.execute(writer, model);
   }
 
   //~--- fields ---------------------------------------------------------------

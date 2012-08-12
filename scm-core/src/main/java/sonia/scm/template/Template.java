@@ -36,8 +36,6 @@ package sonia.scm.template;
 import java.io.IOException;
 import java.io.Writer;
 
-import java.util.Map;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -52,9 +50,9 @@ public interface Template
    *
    * @param writer
    * @param environment
+   * @param model
    *
    * @throws IOException
    */
-  public void execute(Writer writer, Map<String, ? extends Object> environment)
-    throws IOException;
+  public void execute(Writer writer, Object model) throws IOException;
 }
