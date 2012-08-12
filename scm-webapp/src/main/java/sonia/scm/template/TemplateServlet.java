@@ -35,10 +35,17 @@ package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.SCMContextProvider;
+import sonia.scm.resources.Resource;
 import sonia.scm.resources.ResourceManager;
 import sonia.scm.resources.ResourceType;
 import sonia.scm.util.IOUtil;
@@ -49,8 +56,10 @@ import java.io.IOException;
 import java.io.Writer;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -74,6 +83,16 @@ public class TemplateServlet extends HttpServlet
   /** Field description */
   private static final long serialVersionUID = 3578555653924091546L;
 
+  /**
+   * the logger for TemplateServlet
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(TemplateServlet.class);
+
+  /** Field description */
+  private static final Set<Locale> DEFAULT_LOCALE =
+    ImmutableSet.of(Locale.ENGLISH, Locale.UK, Locale.US);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -83,14 +102,15 @@ public class TemplateServlet extends HttpServlet
    *
    * @param context
    * @param templateHandler
+   * @param templateEngineFactory
    * @param resourceManager
    */
   @Inject
   public TemplateServlet(SCMContextProvider context,
-                         TemplateHandler templateHandler,
-                         ResourceManager resourceManager)
+    TemplateEngineFactory templateEngineFactory,
+    ResourceManager resourceManager)
   {
-    this.templateHandler = templateHandler;
+    this.templateEngineFactory = templateEngineFactory;
     this.resourceManager = resourceManager;
     this.version = context.getVersion();
   }
@@ -109,20 +129,43 @@ public class TemplateServlet extends HttpServlet
    */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException
+    throws ServletException, IOException
   {
     Map<String, Object> params = new HashMap<String, Object>();
     String contextPath = request.getContextPath();
 
     params.put("contextPath", contextPath);
     params.put("version", version);
-    params.put("scripts", resourceManager.getResources(ResourceType.SCRIPT));
+
+    List<String> scrips =
+      Lists.transform(resourceManager.getResources(ResourceType.SCRIPT),
+        new Function<Resource, String>()
+    {
+
+      @Override
+      public String apply(Resource f)
+      {
+        return f.getName();
+      }
+
+    });
+
+    params.put("scripts", scrips);
 
     Locale l = request.getLocale();
 
     if (l == null)
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("could not find locale in request, use englich");
+      }
+
       l = Locale.ENGLISH;
+    }
+    else if (logger.isTraceEnabled())
+    {
+      logger.trace("found locale {} in request", l);
     }
 
     String locale = l.toString();
@@ -139,6 +182,11 @@ public class TemplateServlet extends HttpServlet
 
     params.put("country", country);
 
+    if (!DEFAULT_LOCALE.contains(l))
+    {
+      params.put("nonDefaultLocale", Boolean.TRUE);
+    }
+
     String templateName = getTemplateName(contextPath, request.getRequestURI());
     Writer writer = null;
 
@@ -147,7 +195,23 @@ public class TemplateServlet extends HttpServlet
       response.setCharacterEncoding(ENCODING);
       response.setContentType(CONTENT_TYPE);
       writer = response.getWriter();
-      templateHandler.render(templateName, writer, params);
+
+      TemplateEngine engine = templateEngineFactory.getDefaultEngine();
+      Template template = engine.getTemplate(templateName);
+
+      if (template != null)
+      {
+        template.execute(writer, params);
+      }
+      else
+      {
+        if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find template {}", templateName);
+        }
+
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      }
     }
     finally
     {
@@ -172,7 +236,7 @@ public class TemplateServlet extends HttpServlet
 
     if (path.endsWith("/"))
     {
-      path = path.concat("index.html");
+      path = path.concat("index.mustache");
     }
 
     return path;
@@ -184,7 +248,7 @@ public class TemplateServlet extends HttpServlet
   private ResourceManager resourceManager;
 
   /** Field description */
-  private TemplateHandler templateHandler;
+  private TemplateEngineFactory templateEngineFactory;
 
   /** Field description */
   private String version;

@@ -45,8 +45,8 @@
 
     <script type="text/javascript">
       var i18n = {
-        locale: '${locale}',
-        country: '${country}'
+        locale: '{{locale}}',
+        country: '{{country}}'
       };
     </script>
 
@@ -158,14 +158,14 @@
     <!--/compress-->
     
     <!-- plugins -->
-    <#list scripts as script>
-    <script type="text/javascript" src="plugins/resources/js/${script.name}"></script>
-    </#list>
+    {{#scripts}}
+    <script type="text/javascript" src="plugins/resources/js/{{.}}"></script>
+    {{/scripts}}
     
-    <#if country != 'en'>
-    <script type="text/javascript" src="resources/extjs/i18n/ext-lang-${country}.js"></script>
-    <script type="text/javascript" src="resources/js/i18n/${country}.js"></script>
-    </#if>
+    {{#nonDefaultLocale}}
+    <script type="text/javascript" src="resources/extjs/i18n/ext-lang-{{country}}.js"></script>
+    <script type="text/javascript" src="resources/js/i18n/{{country}}.js"></script>
+    {{/nonDefaultLocale}}
 
     <title>SCM Manager</title>
   </head>
@@ -200,7 +200,7 @@
           &copy; <a target="_blank" href="http://bitbucket.org/sdorra/scm-manager">SCM Manager</a>
         </div>
         <div class="right-side">
-          <span id="scm-userinfo"></span> ${version}
+          <span id="scm-userinfo"></span> {{version}}
         </div>
       </div>
 
