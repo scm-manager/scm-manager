@@ -60,6 +60,8 @@ import sonia.scm.util.IOUtil;
 
 import java.io.IOException;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -266,6 +268,8 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
       {
         logger.warn("the repository {} seems to be empty",
           repository.getName());
+
+        changesets = new ChangesetPagingResult(0, Collections.EMPTY_LIST);
       }
     }
     catch (Exception ex)
