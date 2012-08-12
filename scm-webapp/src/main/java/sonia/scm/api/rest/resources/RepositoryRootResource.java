@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -43,15 +44,15 @@ import com.google.inject.Inject;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTypePredicate;
-import sonia.scm.template.TemplateHandler;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
 import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.view.Viewable;
+
 import java.io.IOException;
-import java.io.StringWriter;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -76,7 +77,7 @@ public class RepositoryRootResource
 {
 
   /** Field description */
-  public static final String TEMPLATE = "/repository-root";
+  public static final String TEMPLATE = "/templates/repository-root.ftl";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -89,10 +90,8 @@ public class RepositoryRootResource
    * @param repositoryManager
    */
   @Inject
-  public RepositoryRootResource(TemplateHandler templateHandler,
-                                RepositoryManager repositoryManager)
+  public RepositoryRootResource(RepositoryManager repositoryManager)
   {
-    this.templateHandler = templateHandler;
     this.repositoryManager = repositoryManager;
   }
 
@@ -112,9 +111,9 @@ public class RepositoryRootResource
    */
   @GET
   @Produces(MediaType.TEXT_HTML)
-  public String renderRepositoriesRoot(@Context HttpServletRequest request,
-          @PathParam("type") final String type)
-          throws IOException
+  public Viewable renderRepositoriesRoot(@Context HttpServletRequest request,
+    @PathParam("type") final String type)
+    throws IOException
   {
     String baseUrl = HttpUtil.getCompleteUrl(request);
     UrlProvider uiUrlProvider = UrlProviderFactory.createUrlProvider(baseUrl,
@@ -135,11 +134,7 @@ public class RepositoryRootResource
 
     environment.put("repositories", repositories);
 
-    StringWriter writer = new StringWriter();
-
-    templateHandler.render(TEMPLATE, writer, environment);
-
-    return writer.toString();
+    return new Viewable(TEMPLATE, environment);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -163,7 +158,7 @@ public class RepositoryRootResource
      * @param baseUrl
      */
     public RepositoryTemplateElement(Repository repository,
-                                     UrlProvider uiUrlProvider, String baseUrl)
+      UrlProvider uiUrlProvider, String baseUrl)
     {
       this.repository = repository;
       this.urlProvider = uiUrlProvider;
@@ -181,7 +176,7 @@ public class RepositoryRootResource
     public String getCommitUrl()
     {
       return urlProvider.getRepositoryUrlProvider().getChangesetUrl(
-          repository.getId(), 0, 20);
+        repository.getId(), 0, 20);
     }
 
     /**
@@ -193,7 +188,7 @@ public class RepositoryRootResource
     public String getDetailUrl()
     {
       return urlProvider.getRepositoryUrlProvider().getDetailUrl(
-          repository.getId());
+        repository.getId());
     }
 
     /**
@@ -227,7 +222,7 @@ public class RepositoryRootResource
     public String getSourceUrl()
     {
       return urlProvider.getRepositoryUrlProvider().getBrowseUrl(
-          repository.getId(), null, null);
+        repository.getId(), null, null);
     }
 
     /**
@@ -262,7 +257,7 @@ public class RepositoryRootResource
    * @author         Enter your name here...
    */
   private static class RepositoryTemplateElementComparator
-          implements Comparator<RepositoryTemplateElement>
+    implements Comparator<RepositoryTemplateElement>
   {
 
     /**
@@ -276,7 +271,7 @@ public class RepositoryRootResource
      */
     @Override
     public int compare(RepositoryTemplateElement left,
-                       RepositoryTemplateElement right)
+      RepositoryTemplateElement right)
     {
       return left.getName().compareTo(right.getName());
     }
@@ -291,7 +286,7 @@ public class RepositoryRootResource
    * @author         Enter your name here...
    */
   private static class RepositoryTransformFunction
-          implements Function<Repository, RepositoryTemplateElement>
+    implements Function<Repository, RepositoryTemplateElement>
   {
 
     /**
@@ -341,7 +336,4 @@ public class RepositoryRootResource
 
   /** Field description */
   private RepositoryManager repositoryManager;
-
-  /** Field description */
-  private TemplateHandler templateHandler;
 }
