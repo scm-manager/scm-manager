@@ -68,7 +68,7 @@ public class ErrorServlet extends HttpServlet
 {
 
   /** Field description */
-  private static final String TEMPALTE = "/error.html";
+  private static final String TEMPALTE = "/error.mustache";
 
   /** Field description */
   private static final long serialVersionUID = -3289076078469757874L;
