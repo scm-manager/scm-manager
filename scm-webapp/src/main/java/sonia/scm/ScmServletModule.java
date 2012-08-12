@@ -88,6 +88,7 @@ import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.ListenableStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.template.DefaultEngine;
+import sonia.scm.template.FreemarkerTemplateEngine;
 import sonia.scm.template.FreemarkerTemplateHandler;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
@@ -337,8 +338,12 @@ public class ScmServletModule extends ServletModule
     // template
     bind(TemplateHandler.class).to(FreemarkerTemplateHandler.class);
     serve(PATTERN_INDEX, "/").with(TemplateServlet.class);
-    Multibinder.newSetBinder(binder(),
-      TemplateEngine.class).addBinding().to(MustacheTemplateEngine.class);
+
+    Multibinder<TemplateEngine> engineBinder =
+      Multibinder.newSetBinder(binder(), TemplateEngine.class);
+
+    engineBinder.addBinding().to(MustacheTemplateEngine.class);
+    engineBinder.addBinding().to(FreemarkerTemplateEngine.class);
     bind(TemplateEngine.class).annotatedWith(DefaultEngine.class).to(
       MustacheTemplateEngine.class);
     bind(TemplateEngineFactory.class);
