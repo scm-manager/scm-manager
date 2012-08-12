@@ -238,6 +238,15 @@ public class TemplateServlet extends HttpServlet
     {
       path = path.concat("index.mustache");
     }
+    else
+    {
+      int index = path.lastIndexOf('.');
+
+      if (index > 0)
+      {
+        path = path.substring(0, index).concat(".mustache");
+      }
+    }
 
     return path;
   }
