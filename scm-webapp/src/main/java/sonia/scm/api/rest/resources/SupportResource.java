@@ -53,6 +53,8 @@ import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.view.Viewable;
+
 import java.io.IOException;
 import java.io.StringWriter;
 
@@ -76,7 +78,7 @@ public class SupportResource
 {
 
   /** Field description */
-  public static final String TEMPLATE = "/support";
+  public static final String TEMPLATE = "/templates/support.ftl";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -95,16 +97,12 @@ public class SupportResource
    */
   @Inject
   public SupportResource(WebSecurityContext securityContext,
-                         SCMContextProvider context,
-                         TemplateHandler templateHandler,
-                         ScmConfiguration configuration,
-                         PluginManager pluginManager,
-                         StoreFactory storeFactory,
-                         RepositoryManager repositoryManager)
+    SCMContextProvider context, ScmConfiguration configuration,
+    PluginManager pluginManager, StoreFactory storeFactory,
+    RepositoryManager repositoryManager)
   {
     this.securityContext = securityContext;
     this.context = context;
-    this.templateHandler = templateHandler;
     this.configuration = configuration;
     this.pluginManager = pluginManager;
     this.storeFactoryClass = storeFactory.getClass();
@@ -123,7 +121,7 @@ public class SupportResource
    */
   @GET
   @Produces(MediaType.TEXT_HTML)
-  public String getSupport() throws IOException
+  public Viewable getSupport() throws IOException
   {
     SecurityUtil.assertIsAdmin(securityContext);
 
@@ -136,11 +134,7 @@ public class SupportResource
     env.put("system", new SystemInformation());
     env.put("repositoryHandlers", getRepositoryHandlers());
 
-    StringWriter writer = new StringWriter();
-
-    templateHandler.render(TEMPLATE, writer, env);
-
-    return writer.toString();
+    return new Viewable(TEMPLATE, env);
   }
 
   /**
@@ -382,7 +376,7 @@ public class SupportResource
      * @param storeFactoryClass
      */
     public VersionInformation(SCMContextProvider context,
-                              Class<?> storeFactoryClass)
+      Class<?> storeFactoryClass)
     {
       version = context.getVersion();
       stage = context.getStage().name();
@@ -456,7 +450,4 @@ public class SupportResource
 
   /** Field description */
   private Class<?> storeFactoryClass;
-
-  /** Field description */
-  private TemplateHandler templateHandler;
 }
