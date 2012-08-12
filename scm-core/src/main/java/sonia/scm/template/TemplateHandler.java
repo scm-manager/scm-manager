@@ -43,7 +43,9 @@ import java.util.Map;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated use {@link TemplateEngineFactory}
  */
+@Deprecated
 public interface TemplateHandler
 {
 

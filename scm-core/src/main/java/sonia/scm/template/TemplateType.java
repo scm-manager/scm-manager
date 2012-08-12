@@ -46,6 +46,7 @@ import java.util.Collection;
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.19
  */
 public class TemplateType extends Type implements Serializable
 {
