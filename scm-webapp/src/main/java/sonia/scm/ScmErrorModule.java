@@ -30,15 +30,20 @@
  */
 
 
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.servlet.ServletModule;
 
+import sonia.scm.template.DefaultEngine;
 import sonia.scm.template.ErrorServlet;
-import sonia.scm.template.FreemarkerTemplateHandler;
-import sonia.scm.template.TemplateHandler;
+import sonia.scm.template.FreemarkerTemplateEngine;
+import sonia.scm.template.MustacheTemplateEngine;
+import sonia.scm.template.TemplateEngine;
+import sonia.scm.template.TemplateEngineFactory;
 
 /**
  *
@@ -57,7 +62,16 @@ public class ScmErrorModule extends ServletModule
     SCMContextProvider context = SCMContext.getContext();
 
     bind(SCMContextProvider.class).toInstance(context);
-    bind(TemplateHandler.class).to(FreemarkerTemplateHandler.class);
+
+    Multibinder<TemplateEngine> engineBinder =
+      Multibinder.newSetBinder(binder(), TemplateEngine.class);
+
+    engineBinder.addBinding().to(MustacheTemplateEngine.class);
+    engineBinder.addBinding().to(FreemarkerTemplateEngine.class);
+    bind(TemplateEngine.class).annotatedWith(DefaultEngine.class).to(
+      MustacheTemplateEngine.class);
+    bind(TemplateEngineFactory.class);
+
     serve(ScmServletModule.PATTERN_ALL).with(ErrorServlet.class);
   }
 }
