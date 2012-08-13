@@ -57,6 +57,7 @@ import java.util.Set;
  * @since 1.19
  *
  * @apiviz.landmark
+ * @apiviz.uses sonia.scm.template.TemplateEngine
  */
 @Singleton
 public final class TemplateEngineFactory

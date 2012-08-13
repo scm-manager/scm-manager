@@ -42,6 +42,8 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  * @since 1.19
+ * 
+ * @apiviz.uses sonia.scm.template.Template
  */
 public interface TemplateEngine
 {
