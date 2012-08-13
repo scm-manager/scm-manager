@@ -403,7 +403,7 @@
     
     <!-- repostitory libraries -->
     <jgit.version>2.0.0.201206130900-r</jgit.version>
-    <svnkit.version>1.7.5-2</svnkit.version>
+    <svnkit.version>1.7.5-3-SNAPSHOT</svnkit.version>
     
     <!-- build properties -->
     <project.build.javaLevel>1.6</project.build.javaLevel>
