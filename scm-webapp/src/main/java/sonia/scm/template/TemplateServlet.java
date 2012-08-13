@@ -35,9 +35,7 @@ package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -45,7 +43,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
-import sonia.scm.resources.Resource;
 import sonia.scm.resources.ResourceManager;
 import sonia.scm.resources.ResourceType;
 import sonia.scm.util.IOUtil;
@@ -56,7 +53,6 @@ import java.io.IOException;
 import java.io.Writer;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -137,20 +133,7 @@ public class TemplateServlet extends HttpServlet
     params.put("contextPath", contextPath);
     params.put("version", version);
 
-    List<String> scrips =
-      Lists.transform(resourceManager.getResources(ResourceType.SCRIPT),
-        new Function<Resource, String>()
-    {
-
-      @Override
-      public String apply(Resource f)
-      {
-        return f.getName();
-      }
-
-    });
-
-    params.put("scripts", scrips);
+    params.put("scripts", resourceManager.getResources(ResourceType.SCRIPT));
 
     Locale l = request.getLocale();
 
