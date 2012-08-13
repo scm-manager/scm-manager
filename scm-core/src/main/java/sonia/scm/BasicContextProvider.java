@@ -216,6 +216,19 @@ public class BasicContextProvider implements SCMContextProvider
 
       throw new IllegalStateException(msg);
     }
+    else if (directory.exists() && !directory.canWrite())
+    {
+      String msg = "could not modify home directory at ".concat(
+                     directory.getAbsolutePath());
+
+      // do not use logger
+      // http://www.slf4j.org/codes.html#substituteLogger
+      System.err.println("===================================================");
+      System.err.append("Error: ").println(msg);
+      System.err.println("===================================================");
+
+      throw new IllegalStateException(msg);
+    }
 
     return directory;
   }
