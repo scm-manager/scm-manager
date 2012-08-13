@@ -30,41 +30,8 @@
  */
 
 
-package sonia.scm.template;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 /**
- * The {@link TemplateEngine} searches for {@link Template}s and prepares the 
- * template for the rendering process.
- *
- * @author Sebastian Sdorra
- * @since 1.19
+ * API for template rendering.
  */
-public interface TemplateEngine
-{
-
-  /**
-   * Returns the template associated with the given path. The template engine 
-   * will search the template in the folder of the web application and in 
-   * the classpath. This method will return null, 
-   * if no template could be found for the given path.
-   *
-   *
-   * @param templatePath path of the template
-   *
-   * @return template associated withe the given path or null
-   *
-   * @throws IOException
-   */
-  public Template getTemplate(String templatePath) throws IOException;
-
-  /**
-   * Returns the type of this template engine.
-   *
-   * @return type of template engine
-   */
-  public TemplateType getType();
-}
+package sonia.scm.template;

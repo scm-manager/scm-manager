@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -45,20 +46,21 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
+ * Represents the type of a {@link TemplateType}.
  *
  * @author Sebastian Sdorra
  * @since 1.19
  */
-public class TemplateType extends Type implements Serializable
+public final class TemplateType extends Type implements Serializable
 {
 
-  /** Field description */
+  /** serial version uid */
   private static final long serialVersionUID = 7947596921895752539L;
 
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs new template type.
    *
    *
    * @param name
@@ -73,7 +75,7 @@ public class TemplateType extends Type implements Serializable
   }
 
   /**
-   * Constructs ...
+   * Constructs new template type.
    *
    *
    * @param name
@@ -90,10 +92,10 @@ public class TemplateType extends Type implements Serializable
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns all extensions associated with this template engine.
    *
    *
-   * @return
+   * @return all extensions
    */
   public Collection<String> getExtensions()
   {
@@ -102,6 +104,6 @@ public class TemplateType extends Type implements Serializable
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** extensions */
   private Collection<String> extensions;
 }

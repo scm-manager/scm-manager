@@ -37,6 +37,8 @@ package sonia.scm.template;
 import java.io.IOException;
 
 /**
+ * This exception is thrown, if an error during the template rendering 
+ * phase occurs.
  *
  * @author Sebastian Sdorra
  * @since 1.19

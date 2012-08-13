@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -38,6 +39,8 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
+ * The template represents a single template file and is able to render this
+ * template.
  *
  * @author Sebastian Sdorra
  * @since 1.19
@@ -46,12 +49,13 @@ public interface Template
 {
 
   /**
-   * Method description
+   * Renders the template and writes the output to the given writer.
+   * The template will use the given model to replace the placeholder in the
+   * template file.
    *
    *
-   * @param writer
-   * @param environment
-   * @param model
+   * @param writer writer for the rendered template
+   * @param model model for the template
    *
    * @throws IOException
    */

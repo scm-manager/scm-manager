@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -48,9 +49,14 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * The {@link TemplateEngineFactory} is the entrypoint of the template api.
+ * The factory return available template engines. The
+ * {@link TemplateEngineFactory} is available via injection.
  *
  * @author Sebastian Sdorra
  * @since 1.19
+ *
+ * @apiviz.landmark
  */
 @Singleton
 public final class TemplateEngineFactory
@@ -65,11 +71,12 @@ public final class TemplateEngineFactory
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs new template engine factory. This constructor should only be
+   * called from the injection framework.
    *
    *
-   * @param engines
-   * @param defaultEngine
+   * @param engines Set of available template engines
+   * @param defaultEngine default template engine
    */
   @Inject
   public TemplateEngineFactory(Set<TemplateEngine> engines,
@@ -104,10 +111,12 @@ public final class TemplateEngineFactory
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the default template engine. In the normal case the should be a
+   * implementation of the
+   * <a href="http://mustache.github.com/" target="_blank">mustache template
+   * system</a>.
    *
-   *
-   * @return
+   * @return default template engine
    */
   public TemplateEngine getDefaultEngine()
   {
@@ -115,12 +124,13 @@ public final class TemplateEngineFactory
   }
 
   /**
-   * Method description
+   * Returns template engine by its name. The name of a template engine can be
+   * inquired by calling {@link TemplateType#getName()}. If no engine with the
+   * given name registered this method will return null.
    *
+   * @param engineName name of the engine
    *
-   * @param engineName
-   *
-   * @return
+   * @return engine with the given name or null
    */
   public TemplateEngine getEngine(String engineName)
   {
@@ -128,12 +138,15 @@ public final class TemplateEngineFactory
   }
 
   /**
-   * Method description
+   * Returns template engine by its extension. This method will use the
+   * extension of the given path and search a template engine for this
+   * extension. If no extension could be found in the the path, the method will
+   * handle the whole path as a extension. If no engine could be found for the
+   * given extension, this method will return null.
    *
+   * @param path template path with extension
    *
-   * @param path
-   *
-   * @return
+   * @return template engine for the given path or null
    */
   public TemplateEngine getEngineByExtension(String path)
   {
@@ -159,10 +172,10 @@ public final class TemplateEngineFactory
   }
 
   /**
-   * Method description
+   * Returns all registered template engines.
    *
    *
-   * @return
+   * @return all registered template engines
    */
   public Collection<TemplateEngine> getEngines()
   {
@@ -171,9 +184,9 @@ public final class TemplateEngineFactory
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** default template engine */
   private TemplateEngine defaultEngine;
 
-  /** Field description */
+  /** map of registered template engines */
   private Map<String, TemplateEngine> engineMap;
 }

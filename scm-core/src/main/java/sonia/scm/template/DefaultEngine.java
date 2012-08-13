@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -44,6 +45,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Identifies the default {@link TemplateEngine}.
  *
  * @author Sebastian Sdorra
  * @since 1.19
