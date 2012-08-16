@@ -83,16 +83,24 @@ public class HgPyFix
    */
   public static void fixHgPy(SCMContextProvider context, HgConfig config)
   {
-    String basePath = context.getBaseDirectory().getAbsolutePath();
-
-    String hg = config.getHgBinary();
-
-    if (hg.startsWith(basePath) && hg.endsWith(HG_BAT))
+    if ((config != null) && config.isValid())
     {
-      File file = new File(hg);
+      String basePath = context.getBaseDirectory().getAbsolutePath();
 
-      file = new File(file.getParentFile(), HG_PY);
-      fixHgPy(file);
+      String hg = config.getHgBinary();
+
+      if (hg.startsWith(basePath) && hg.endsWith(HG_BAT))
+      {
+        File file = new File(hg);
+
+        file = new File(file.getParentFile(), HG_PY);
+        fixHgPy(file);
+      }
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug(
+        "could not fix hg.py, because the configuration is not valid");
     }
   }
 
