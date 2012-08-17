@@ -65,6 +65,12 @@ public class HttpUtil
   /** Field description */
   public static final String ENCODING = "UTF-8";
 
+  /**
+   * header for identifying the scm-manager client
+   * @since 1.19
+   */
+  public static final String HEADER_SCM_CLIENT = "X-SCM-Client";
+
   /** authentication header */
   public static final String HEADER_WWW_AUTHENTICATE = "WWW-Authenticate";
 
@@ -91,6 +97,14 @@ public class HttpUtil
    * @since 1.5
    */
   public static final String SCHEME_HTTPS = "https";
+
+  /**
+   * Possible value of the X-SCM-Client http header. Identifies the
+   * scm-manager web interface.
+   *
+   * @since 1.19
+   */
+  public static final String SCM_CLIENT_WUI = "WUI";
 
   /**
    * Url hash separator
@@ -155,7 +169,7 @@ public class HttpUtil
    */
   public static String append(String uri, String suffix)
   {
-    if (!uri.endsWith(SEPARATOR_PATH) && !suffix.startsWith(SEPARATOR_PATH))
+    if (!uri.endsWith(SEPARATOR_PATH) &&!suffix.startsWith(SEPARATOR_PATH))
     {
       uri = uri.concat(SEPARATOR_PATH);
     }
@@ -203,7 +217,7 @@ public class HttpUtil
     }
 
     return new StringBuilder(uri).append(s).append(name).append(
-        SEPARATOR_PARAMETER_VALUE).append(value).toString();
+      SEPARATOR_PARAMETER_VALUE).append(value).toString();
   }
 
   /**
@@ -282,13 +296,41 @@ public class HttpUtil
    * @throws IOException
    */
   public static void sendUnauthorized(HttpServletResponse response)
-          throws IOException
+    throws IOException
   {
-    response.setHeader(
-        HEADER_WWW_AUTHENTICATE,
+
+    sendUnauthorized(null, response);
+  }
+
+  /**
+   * Send an unauthorized header back to the client
+   *
+   *
+   * @param request http request
+   * @param response http response
+   *
+   * @throws IOException
+   *
+   * @since 1.19
+   */
+  public static void sendUnauthorized(HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException
+  {
+    if ((request == null) ||!isWUIRequest(request))
+    {
+      response.setHeader(HEADER_WWW_AUTHENTICATE,
         "Basic realm=\"".concat(AUTHENTICATION_REALM).concat("\""));
+
+    }
+    else if (logger.isTraceEnabled())
+    {
+      logger.trace(
+        "do not send WWW-Authenticate header, because the client is the web interface");
+    }
+
     response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-                       STATUS_UNAUTHORIZED_MESSAGE);
+      STATUS_UNAUTHORIZED_MESSAGE);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -304,7 +346,7 @@ public class HttpUtil
    * @since 1.16
    */
   public static String getCompleteUrl(HttpServletRequest request,
-          String... pathSegments)
+    String... pathSegments)
   {
     String baseUrl =
       request.getRequestURL().toString().replace(request.getRequestURI(),
@@ -333,7 +375,7 @@ public class HttpUtil
    * @return the complete url of the given path
    */
   public static String getCompleteUrl(ScmConfiguration configuration,
-          String path)
+    String path)
   {
     String url = configuration.getBaseUrl();
 
@@ -406,7 +448,7 @@ public class HttpUtil
    * @return the server port
    */
   public static int getServerPort(ScmConfiguration configuration,
-                                  HttpServletRequest request)
+    HttpServletRequest request)
   {
     int port = PORT_HTTP;
     String baseUrl = configuration.getBaseUrl();
@@ -486,5 +528,20 @@ public class HttpUtil
     }
 
     return uri;
+  }
+
+  /**
+   * Returns true if the http request is send by the scm-manager web interface.
+   *
+   *
+   * @param request http request
+   *
+   * @return true if the request comes from the web interface.
+   * @since 1.19
+   */
+  public static boolean isWUIRequest(HttpServletRequest request)
+  {
+    return SCM_CLIENT_WUI.equalsIgnoreCase(
+      request.getHeader(HEADER_SCM_CLIENT));
   }
 }

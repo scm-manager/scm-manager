@@ -158,7 +158,7 @@ public class BasicAuthenticationFilter extends HttpFilter
         logger.trace("could not find user send unauthorized");
       }
 
-      HttpUtil.sendUnauthorized(response);
+      HttpUtil.sendUnauthorized(request, response);
     }
     else
     {
@@ -185,7 +185,7 @@ public class BasicAuthenticationFilter extends HttpFilter
                                     FilterChain chain)
           throws IOException, ServletException
   {
-    HttpUtil.sendUnauthorized(response);
+    HttpUtil.sendUnauthorized(request, response);
   }
 
   /**
