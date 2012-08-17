@@ -28,8 +28,14 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+
 // enable debug mode, if console is available
 var debug = typeof console != 'undefined' && typeof console.debug != 'undefined';
+
+// send X-SCM-Client on every ajax request
+Ext.Ajax.defaultHeaders = {
+  'X-SCM-Client': 'WUI'
+};
 
 var state = null;
 var admin = false;
