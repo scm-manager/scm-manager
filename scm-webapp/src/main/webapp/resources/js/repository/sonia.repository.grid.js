@@ -109,7 +109,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         load: {
           fn: this.storeLoad,
           scope: this
-        }
+        },
+        exception: Sonia.rest.ExceptionHandler
       }
     });
 
