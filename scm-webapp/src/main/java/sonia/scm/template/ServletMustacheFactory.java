@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -127,6 +128,12 @@ public class ServletMustacheFactory extends DefaultMustacheFactory
     else if (logger.isWarnEnabled())
     {
       logger.warn("could not find resource {}", resourceName);
+    }
+
+    if (reader == null)
+    {
+      throw new MustacheTemplateNotFoundException(
+        "could not find template for resource ".concat(resourceName));
     }
 
     return reader;

@@ -37,6 +37,7 @@ package sonia.scm.template;
 
 import com.github.mustachejava.Mustache;
 
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.inject.Inject;
 
 import org.slf4j.Logger;
@@ -104,20 +105,47 @@ public class MustacheTemplateEngine implements TemplateEngine
     }
 
     Template template = null;
-    Mustache mustache = factory.compile(templatePath);
 
-    if (mustache != null)
+    try
     {
-      if (logger.isTraceEnabled())
+
+      Mustache mustache = factory.compile(templatePath);
+
+      if (mustache != null)
       {
-        logger.trace("return mustache template for {}", templatePath);
+        if (logger.isTraceEnabled())
+        {
+          logger.trace("return mustache template for {}", templatePath);
+        }
+
+        template = new MustacheTemplate(templatePath, mustache);
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("could not find mustache template at {}", templatePath);
       }
 
-      template = new MustacheTemplate(templatePath, mustache);
     }
-    else if (logger.isWarnEnabled())
+    catch (MustacheTemplateNotFoundException ex)
     {
-      logger.warn("could not find mustache template at {}", templatePath);
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("could not find mustache template at {}", templatePath);
+      }
+    }
+    catch (UncheckedExecutionException ex)
+    {
+      if (ex.getCause() instanceof MustacheTemplateNotFoundException)
+      {
+        if (logger.isWarnEnabled())
+        {
+          logger.warn("could not find mustache template at {}", templatePath);
+        }
+        else
+        {
+          throw ex;
+        }
+      }
     }
 
     return template;
