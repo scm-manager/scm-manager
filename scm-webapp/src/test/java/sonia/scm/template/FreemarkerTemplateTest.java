@@ -57,11 +57,39 @@ public class FreemarkerTemplateTest extends TemplateTestBase
    * @throws IOException
    */
   @Override
-  public Template getTemplate() throws IOException
+  public Template getFailureTemplate() throws IOException
+  {
+    return getTemplate("sonia/scm/template/002.ftl");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  @Override
+  public Template getHelloTemplate() throws IOException
+  {
+    return getTemplate("sonia/scm/template/004.ftl");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param path
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private Template getTemplate(String path) throws IOException
   {
     ServletContext context = mock(ServletContext.class);
 
-    return new FreemarkerTemplateEngine(context).getTemplate(
-      "sonia/scm/template/002.ftl");
+    return new FreemarkerTemplateEngine(context).getTemplate(path);
   }
 }

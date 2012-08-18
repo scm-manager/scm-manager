@@ -59,7 +59,17 @@ public abstract class TemplateTestBase
    *
    * @return
    */
-  public abstract Template getTemplate() throws IOException;
+  public abstract Template getFailureTemplate() throws IOException;
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public abstract Template getHelloTemplate() throws IOException;
 
   //~--- methods --------------------------------------------------------------
 
@@ -72,8 +82,37 @@ public abstract class TemplateTestBase
   @Test
   public void testRender() throws IOException
   {
-    Template template = getTemplate();
+    Template template = getHelloTemplate();
 
+    assertEquals("Hello marvin!", execute(template));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Test(expected = IOException.class)
+  public void testRenderFailure() throws IOException
+  {
+    Template template = getFailureTemplate();
+
+    execute(template);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param template
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private String execute(Template template) throws IOException
+  {
     Map<String, String> env = Maps.newHashMap();
 
     env.put("name", "marvin");
@@ -82,6 +121,6 @@ public abstract class TemplateTestBase
 
     template.execute(writer, env);
 
-    assertEquals("Hello marvin!", writer.toString());
+    return writer.toString();
   }
 }

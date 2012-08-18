@@ -36,6 +36,10 @@ package sonia.scm.template;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -48,13 +52,40 @@ public class MustacheTemplateTest extends TemplateTestBase
    *
    *
    * @return
+   *
+   * @throws IOException
    */
   @Override
-  public Template getTemplate()
+  public Template getFailureTemplate() throws IOException
+  {
+    return getTemplate("sonia/scm/template/003.mustache");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Template getHelloTemplate()
+  {
+    return getTemplate("sonia/scm/template/001.mustache");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param path
+   *
+   * @return
+   */
+  private Template getTemplate(String path)
   {
     DefaultMustacheFactory factory = new DefaultMustacheFactory();
-    Mustache mustache = factory.compile("sonia/scm/template/001.mustache");
+    Mustache mustache = factory.compile(path);
 
-    return new MustacheTemplate("sonia/scm/template/001.mustache", mustache);
+    return new MustacheTemplate(path, mustache);
   }
 }
