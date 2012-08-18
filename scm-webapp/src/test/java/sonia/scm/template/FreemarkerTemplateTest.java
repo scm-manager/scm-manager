@@ -59,7 +59,7 @@ public class FreemarkerTemplateTest extends TemplateTestBase
   @Override
   public Template getFailureTemplate() throws IOException
   {
-    return getTemplate("sonia/scm/template/002.ftl");
+    return getTemplate("sonia/scm/template/004.ftl");
   }
 
   /**
@@ -73,7 +73,7 @@ public class FreemarkerTemplateTest extends TemplateTestBase
   @Override
   public Template getHelloTemplate() throws IOException
   {
-    return getTemplate("sonia/scm/template/004.ftl");
+    return getTemplate("sonia/scm/template/002.ftl");
   }
 
   /**

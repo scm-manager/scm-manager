@@ -1,1 +1,1 @@
-Hello <#list a>!
+Hello ${notAvailable}!
