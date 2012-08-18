@@ -120,6 +120,11 @@ public class FreemarkerTemplateEngine implements TemplateEngine
   @Override
   public FreemarkerTemplate getTemplate(String templatePath) throws IOException
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("try to find freemarker template at {}", templatePath);
+    }
+
     FreemarkerTemplate template = null;
     freemarker.template.Template t = null;
 
