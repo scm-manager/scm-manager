@@ -39,6 +39,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
+import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
+
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
@@ -55,6 +57,7 @@ import sonia.scm.web.security.WebSecurityContext;
 import com.sun.jersey.api.view.Viewable;
 
 import java.io.IOException;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -70,6 +73,7 @@ import javax.ws.rs.core.MediaType;
  * @author Sebastian Sdorra
  */
 @Path("support")
+@ExternallyManagedLifecycle
 public class SupportResource
 {
 

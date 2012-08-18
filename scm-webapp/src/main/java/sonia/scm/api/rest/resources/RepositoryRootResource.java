@@ -41,6 +41,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
 import com.google.inject.Inject;
 
+import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
+
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTypePredicate;
@@ -72,6 +74,7 @@ import javax.ws.rs.core.MediaType;
  *
  * @author Sebastian Sdorra
  */
+@ExternallyManagedLifecycle
 @Path("help/repository-root/{type}.html")
 public class RepositoryRootResource
 {
