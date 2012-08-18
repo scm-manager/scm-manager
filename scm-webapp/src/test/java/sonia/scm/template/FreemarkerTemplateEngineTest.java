@@ -39,7 +39,7 @@ import javax.servlet.ServletContext;
  *
  * @author Sebastian Sdorra
  */
-public class MustacheTemplateEngineTest extends TemplateEngineTestBase
+public class FreemarkerTemplateEngineTest extends TemplateEngineTestBase
 {
 
   /**
@@ -53,7 +53,7 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
   @Override
   public TemplateEngine createEngine(ServletContext context)
   {
-    return new MustacheTemplateEngine(context);
+    return new FreemarkerTemplateEngine(context);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -67,6 +67,6 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
   @Override
   public String getTemplateResource()
   {
-    return "sonia/scm/template/001.mustache";
+    return "sonia/scm/template/002.ftl";
   }
 }
