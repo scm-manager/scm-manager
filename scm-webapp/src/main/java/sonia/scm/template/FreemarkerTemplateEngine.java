@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -43,8 +44,12 @@ import freemarker.cache.WebappTemplateLoader;
 
 import freemarker.template.Configuration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.util.Locale;
@@ -67,6 +72,12 @@ public class FreemarkerTemplateEngine implements TemplateEngine
   /** Field description */
   public static final TemplateType TYPE = new TemplateType("freemarker",
                                             "Freemarker", "ftl", "freemarker");
+
+  /**
+   * the logger for FreemarkerTemplateEngine
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(FreemarkerTemplateEngine.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -110,12 +121,27 @@ public class FreemarkerTemplateEngine implements TemplateEngine
   public FreemarkerTemplate getTemplate(String templatePath) throws IOException
   {
     FreemarkerTemplate template = null;
-    freemarker.template.Template t = configuration.getTemplate(templatePath,
-                                       ENCODING);
+    freemarker.template.Template t = null;
+
+    try
+    {
+      t = configuration.getTemplate(templatePath, ENCODING);
+    }
+    catch (FileNotFoundException ex)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("could not find template ".concat(templatePath), ex);
+      }
+    }
 
     if (t != null)
     {
       template = new FreemarkerTemplate(t);
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("could not find freemarker template at {}", templatePath);
     }
 
     return template;
