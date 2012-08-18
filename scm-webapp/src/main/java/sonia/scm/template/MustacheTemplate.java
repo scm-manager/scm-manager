@@ -30,17 +30,21 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.mustachejava.Mustache;
 
+import com.google.common.base.Throwables;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
 import java.io.Writer;
 
 /**
@@ -81,16 +85,30 @@ public class MustacheTemplate implements Template
    * @param writer
    * @param environment
    * @param model
+   *
+   * @throws IOException
    */
   @Override
-  public void execute(Writer writer, Object model)
+  public void execute(Writer writer, Object model) throws IOException
   {
     if (logger.isDebugEnabled())
     {
       logger.debug("render mustache template at {}", templatePath);
     }
 
-    mustache.execute(writer, model);
+    try
+    {
+
+      mustache.execute(writer, model);
+
+    }
+    catch (Exception ex)
+    {
+      Throwables.propagateIfInstanceOf(ex, IOException.class);
+
+      throw new TemplateRenderException(
+        "could not render template ".concat(templatePath), ex);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------

@@ -58,6 +58,8 @@ public abstract class TemplateTestBase
    *
    *
    * @return
+   *
+   * @throws IOException
    */
   public abstract Template getFailureTemplate() throws IOException;
 
@@ -105,6 +107,14 @@ public abstract class TemplateTestBase
    * Method description
    *
    *
+   * @param env
+   */
+  protected void prepareEnv(Map<String, Object> env) {}
+
+  /**
+   * Method description
+   *
+   *
    * @param template
    *
    * @return
@@ -113,9 +123,11 @@ public abstract class TemplateTestBase
    */
   private String execute(Template template) throws IOException
   {
-    Map<String, String> env = Maps.newHashMap();
+    Map<String, Object> env = Maps.newHashMap();
 
     env.put("name", "marvin");
+
+    prepareEnv(env);
 
     StringWriter writer = new StringWriter();
 

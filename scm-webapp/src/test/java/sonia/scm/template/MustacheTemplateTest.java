@@ -36,9 +36,13 @@ package sonia.scm.template;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 
+import com.google.common.base.Function;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+
+import java.util.Map;
 
 /**
  *
@@ -72,6 +76,31 @@ public class MustacheTemplateTest extends TemplateTestBase
   {
     return getTemplate("sonia/scm/template/001.mustache");
   }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param env
+   */
+  @Override
+  protected void prepareEnv(Map<String, Object> env)
+  {
+    env.put("test", new Function<String, String>()
+    {
+
+      @Override
+      public String apply(String input)
+      {
+        throw new UnsupportedOperationException("Not supported yet.");
+      }
+
+    });
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
