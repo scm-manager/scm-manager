@@ -65,6 +65,18 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
    * @return
    */
   @Override
+  public String getDefectTemplateResource()
+  {
+    return "sonia/scm/template/005.mustache";
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public String getTemplateResource()
   {
     return "sonia/scm/template/001.mustache";

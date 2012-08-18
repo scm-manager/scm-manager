@@ -75,9 +75,32 @@ public abstract class TemplateEngineTestBase
    *
    * @return
    */
+  public abstract String getDefectTemplateResource();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public abstract String getTemplateResource();
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Test(expected = IOException.class)
+  public void testGetDefectTemplate() throws IOException
+  {
+    ServletContext context = mock(ServletContext.class);
+    TemplateEngine engine = createEngine(context);
+
+    engine.getTemplate(getDefectTemplateResource());
+  }
 
   /**
    * Method description

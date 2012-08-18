@@ -33,52 +33,60 @@ package sonia.scm.template;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import javax.servlet.ServletContext;
+import java.io.IOException;
 
 /**
+ * This exception is thrown, if an error during the template parse
+ * phase occurs.
  *
  * @author Sebastian Sdorra
+ * @since 1.19
  */
-public class FreemarkerTemplateEngineTest extends TemplateEngineTestBase
+public class TemplateParseException extends IOException
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   *
-   * @return
-   */
-  @Override
-  public TemplateEngine createEngine(ServletContext context)
-  {
-    return new FreemarkerTemplateEngine(context);
-  }
+  /** Field description */
+  private static final long serialVersionUID = 3583405534141707032L;
 
-  //~--- get methods ----------------------------------------------------------
+  //~--- constructors ---------------------------------------------------------
 
   /**
-   * Method description
+   * Constructs ...
    *
-   *
-   * @return
    */
-  @Override
-  public String getDefectTemplateResource()
+  public TemplateParseException() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   */
+  public TemplateParseException(String message)
   {
-    return "sonia/scm/template/006.ftl";
+    super(message);
   }
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @return
+   * @param cause
    */
-  @Override
-  public String getTemplateResource()
+  public TemplateParseException(Throwable cause)
   {
-    return "sonia/scm/template/002.ftl";
+    super(cause);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   * @param cause
+   */
+  public TemplateParseException(String message, Throwable cause)
+  {
+    super(message, cause);
   }
 }

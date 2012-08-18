@@ -37,6 +37,7 @@ package sonia.scm.template;
 
 import com.github.mustachejava.Mustache;
 
+import com.google.common.base.Throwables;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.inject.Inject;
 
@@ -135,17 +136,29 @@ public class MustacheTemplateEngine implements TemplateEngine
     }
     catch (UncheckedExecutionException ex)
     {
-      if (ex.getCause() instanceof MustacheTemplateNotFoundException)
+      Throwable cause = ex.getCause();
+
+      if (cause instanceof MustacheTemplateNotFoundException)
       {
         if (logger.isWarnEnabled())
         {
           logger.warn("could not find mustache template at {}", templatePath);
         }
-        else
-        {
-          throw ex;
-        }
       }
+      else
+      {
+        Throwables.propagateIfInstanceOf(cause, IOException.class);
+
+        throw new TemplateParseException(
+          "could not parse template for resource ".concat(templatePath), cause);
+      }
+    }
+    catch (Exception ex)
+    {
+      Throwables.propagateIfInstanceOf(ex, IOException.class);
+
+      throw new TemplateParseException(
+        "could not parse template for resource ".concat(templatePath), ex);
     }
 
     return template;
