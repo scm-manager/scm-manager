@@ -45,6 +45,8 @@
   <api-classes>
     <include pattern="sonia.scm.api.rest.resources.*" />
     <exclude pattern="sonia.scm.api.rest.resources.ConfigurationResource" /> 
+    <exclude pattern="sonia.scm.api.rest.resources.SupportResource" />
+    <exclude pattern="sonia.scm.api.rest.resources.RepositoryRootResource" />
   </api-classes>
 
   <services>
