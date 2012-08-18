@@ -33,14 +33,19 @@ package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
+import static org.mockito.Mockito.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
+import javax.servlet.ServletContext;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class MustacheTemplateTest extends TemplateTestBase
+public class FreemarkerTemplateTest extends TemplateTestBase
 {
 
   /**
@@ -48,13 +53,15 @@ public class MustacheTemplateTest extends TemplateTestBase
    *
    *
    * @return
+   *
+   * @throws IOException
    */
   @Override
-  public Template getTemplate()
+  public Template getTemplate() throws IOException
   {
-    DefaultMustacheFactory factory = new DefaultMustacheFactory();
-    Mustache mustache = factory.compile("sonia/scm/template/001.mustache");
+    ServletContext context = mock(ServletContext.class);
 
-    return new MustacheTemplate("sonia/scm/template/001.mustache", mustache);
+    return new FreemarkerTemplateEngine(context).getTemplate(
+      "sonia/scm/template/002.ftl");
   }
 }

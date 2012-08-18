@@ -33,14 +33,24 @@ package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
+import com.google.common.collect.Maps;
+
+import org.junit.Test;
+
+import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+import java.io.StringWriter;
+
+import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class MustacheTemplateTest extends TemplateTestBase
+public abstract class TemplateTestBase
 {
 
   /**
@@ -49,12 +59,29 @@ public class MustacheTemplateTest extends TemplateTestBase
    *
    * @return
    */
-  @Override
-  public Template getTemplate()
-  {
-    DefaultMustacheFactory factory = new DefaultMustacheFactory();
-    Mustache mustache = factory.compile("sonia/scm/template/001.mustache");
+  public abstract Template getTemplate() throws IOException;
 
-    return new MustacheTemplate("sonia/scm/template/001.mustache", mustache);
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testRender() throws IOException
+  {
+    Template template = getTemplate();
+
+    Map<String, String> env = Maps.newHashMap();
+
+    env.put("name", "marvin");
+
+    StringWriter writer = new StringWriter();
+
+    template.execute(writer, env);
+
+    assertEquals("Hello marvin!", writer.toString());
   }
 }
