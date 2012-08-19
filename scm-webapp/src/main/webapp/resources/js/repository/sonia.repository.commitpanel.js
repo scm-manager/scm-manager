@@ -39,15 +39,20 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
   
   // templates
   templateCommit: '<div class="scm-commit">\n\
-                     <h1>Commit {id}</h1>\n\
                      <div class="left-side">\n\
-                       <p>{description}</p>\n\
-                       <p>\n\
-                         <tpl for="author">\n\
-                           {name}<tpl if="mail"> &lt;<a href="mailto:{mail}">{mail}</a>&gt;</tpl>\n\
-                         </tpl>\n\
-                       </p>\n\
-                       <p>{date:formatTimestamp}</p>\n\
+                       <div class="left-placeholder left-side">\n\\n\
+                         {leftPlaceholder}\n\
+                       </div>\n\
+                       <div class="left-content left-side">\n\
+                        <h1>Commit {id}</h1>\n\
+                        <p>{description}</p>\n\
+                        <p>\n\
+                          <tpl for="author">\n\
+                            {name}<tpl if="mail"> &lt;<a href="mailto:{mail}">{mail}</a>&gt;</tpl>\n\
+                          </tpl>\n\
+                        </p>\n\
+                        <p>{date:formatTimestamp}</p>\n\
+                       </div>\n\
                      </div>\n\
                      <div class="right-side">\n\
                        <div class="changeset-tags">\n\
