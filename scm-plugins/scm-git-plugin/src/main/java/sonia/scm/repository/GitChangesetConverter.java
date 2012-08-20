@@ -264,7 +264,7 @@ public class GitChangesetConverter implements Closeable
       {
         if (logger.isTraceEnabled())
         {
-          logger.trace("no parent at position 0 for commit {}", commit);
+          logger.trace("no parent tree at position 0 for commit {}", commit);
         }
 
         treeWalk.addTree(new EmptyTreeIterator());
