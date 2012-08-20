@@ -83,6 +83,7 @@
                   
                   <jvmSettings>
                     <systemProperties>
+                      <arg>java.awt.headless=true</arg>
                       <arg>logback.configurationFile=logging.xml</arg>
                     </systemProperties>
                   </jvmSettings>
