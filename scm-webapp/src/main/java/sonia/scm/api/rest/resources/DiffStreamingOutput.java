@@ -35,6 +35,8 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Closeables;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +44,7 @@ import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.DiffCommandBuilder;
+import sonia.scm.repository.api.RepositoryService;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -69,10 +72,14 @@ public class DiffStreamingOutput implements StreamingOutput
    * Constructs ...
    *
    *
+   *
+   * @param repositoryService
    * @param builder
    */
-  public DiffStreamingOutput(DiffCommandBuilder builder)
+  public DiffStreamingOutput(RepositoryService repositoryService,
+    DiffCommandBuilder builder)
   {
+    this.repositoryService = repositoryService;
     this.builder = builder;
   }
 
@@ -89,7 +96,7 @@ public class DiffStreamingOutput implements StreamingOutput
    */
   @Override
   public void write(OutputStream output)
-          throws IOException, WebApplicationException
+    throws IOException, WebApplicationException
   {
     try
     {
@@ -118,7 +125,11 @@ public class DiffStreamingOutput implements StreamingOutput
       logger.error("could not write content to page", ex);
 
       throw new WebApplicationException(ex,
-                                        Response.Status.INTERNAL_SERVER_ERROR);
+        Response.Status.INTERNAL_SERVER_ERROR);
+    }
+    finally
+    {
+      Closeables.closeQuietly(repositoryService);
     }
   }
 
@@ -126,4 +137,7 @@ public class DiffStreamingOutput implements StreamingOutput
 
   /** Field description */
   private DiffCommandBuilder builder;
+
+  /** Field description */
+  private RepositoryService repositoryService;
 }

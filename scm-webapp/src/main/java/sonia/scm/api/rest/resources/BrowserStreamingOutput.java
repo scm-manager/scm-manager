@@ -35,6 +35,8 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Closeables;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +44,7 @@ import sonia.scm.repository.PathNotFoundException;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RevisionNotFoundException;
 import sonia.scm.repository.api.CatCommandBuilder;
+import sonia.scm.repository.api.RepositoryService;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -72,11 +75,15 @@ public class BrowserStreamingOutput implements StreamingOutput
    * @param browser
    * @param revision
    *
+   * @param repositoryService
+   *
    * @param builder
    * @param path
    */
-  public BrowserStreamingOutput(CatCommandBuilder builder, String path)
+  public BrowserStreamingOutput(RepositoryService repositoryService,
+    CatCommandBuilder builder, String path)
   {
+    this.repositoryService = repositoryService;
     this.builder = builder;
     this.path = path;
   }
@@ -94,7 +101,7 @@ public class BrowserStreamingOutput implements StreamingOutput
    */
   @Override
   public void write(OutputStream output)
-          throws IOException, WebApplicationException
+    throws IOException, WebApplicationException
   {
     try
     {
@@ -123,7 +130,11 @@ public class BrowserStreamingOutput implements StreamingOutput
       logger.error("could not write content to page", ex);
 
       throw new WebApplicationException(ex,
-                                        Response.Status.INTERNAL_SERVER_ERROR);
+        Response.Status.INTERNAL_SERVER_ERROR);
+    }
+    finally
+    {
+      Closeables.closeQuietly(repositoryService);
     }
   }
 
@@ -134,4 +145,7 @@ public class BrowserStreamingOutput implements StreamingOutput
 
   /** Field description */
   private String path;
+
+  /** Field description */
+  private RepositoryService repositoryService;
 }

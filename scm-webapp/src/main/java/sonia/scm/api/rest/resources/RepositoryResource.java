@@ -776,7 +776,7 @@ public class RepositoryResource
         builder.setRevision(revision);
       }
 
-      output = new BrowserStreamingOutput(builder, path);
+      output = new BrowserStreamingOutput(service, builder, path);
 
       String contentDispositionName = getContentDispositionNameFromPath(path);
 
@@ -796,10 +796,6 @@ public class RepositoryResource
     {
       logger.error("could not retrive content", ex);
       response = createErrorResonse(ex);
-    }
-    finally
-    {
-      Closeables.closeQuietly(service);
     }
 
     return response;
@@ -860,8 +856,8 @@ public class RepositoryResource
                       revision).concat(".diff");
       String contentDispositionName = getContentDispositionName(name);
 
-      response = Response.ok(new DiffStreamingOutput(builder)).header(
-        "Content-Disposition", contentDispositionName).build();
+      response = Response.ok(new DiffStreamingOutput(service,
+        builder)).header("Content-Disposition", contentDispositionName).build();
     }
     catch (RepositoryNotFoundException ex)
     {
@@ -875,10 +871,6 @@ public class RepositoryResource
     {
       logger.error("could not create diff", ex);
       response = createErrorResonse(ex);
-    }
-    finally
-    {
-      Closeables.closeQuietly(service);
     }
 
     return response;
