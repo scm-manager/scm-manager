@@ -102,13 +102,18 @@ public class GitChangesetConverter implements Closeable
     RevWalk revWalk, int idLength)
   {
     this.repository = repository;
-    this.idLength = idLength;
 
-    if (revWalk == null)
+    if (revWalk != null)
     {
-      revWalk = new RevWalk(repository);
+      this.revWalk = revWalk;
+
+    }
+    else
+    {
+      this.revWalk = new RevWalk(repository);
     }
 
+    this.idLength = idLength;
     this.tags = GitUtil.createTagMap(repository, revWalk);
     treeWalk = new TreeWalk(repository);
   }
