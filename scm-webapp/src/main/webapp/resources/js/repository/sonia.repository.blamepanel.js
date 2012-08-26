@@ -123,7 +123,8 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
   },
   
   renderRevision: function(value, metadata, record){
-    var title = 'Revision: ' + value;
+    var shortId = Ext.util.Format.id(value);
+    var title = 'Revision: ' + shortId;
     var tip = 'Author: ' + record.get('author').name;
     var when = record.get('when');
     if ( when ){
@@ -136,7 +137,7 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
     metadata.attr = 'ext:qtitle="' + title + '"' + ' ext:qtip="' + tip + '"';
     return String.format(
       this.linkTemplate,
-      Ext.util.Format.ellipsis(value, 10),
+      shortId,
       value
     );
   },
