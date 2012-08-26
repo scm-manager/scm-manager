@@ -136,6 +136,7 @@ public class ScmRealm extends AuthorizingRealm
   {
     this.configuration = configuration;
     this.userManager = userManager;
+    this.groupManager = groupManager;
     this.repositoryDAO = repositoryDAO;
     this.authenticator = authenticator;
     this.cache = cacheManager.getCache(String.class, AuthorizationInfo.class,
