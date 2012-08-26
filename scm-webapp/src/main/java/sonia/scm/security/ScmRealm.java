@@ -35,6 +35,7 @@ package sonia.scm.security;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.inject.Inject;
 
 import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationException;
@@ -127,6 +128,7 @@ public class ScmRealm extends AuthorizingRealm
    * @param repositoryDAO
    * @param authenticator
    */
+  @Inject
   public ScmRealm(ScmConfiguration configuration, CacheManager cacheManager,
     UserManager userManager, GroupManager groupManager,
     RepositoryManager repositoryManager, RepositoryDAO repositoryDAO,
