@@ -40,6 +40,7 @@ import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.pam.UnsupportedTokenException;
@@ -55,23 +56,33 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.group.Group;
+import sonia.scm.group.GroupManager;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryListener;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
+import sonia.scm.user.UserException;
 import sonia.scm.user.UserListener;
 import sonia.scm.user.UserManager;
+import sonia.scm.util.Util;
 import sonia.scm.web.security.AuthenticationManager;
 import sonia.scm.web.security.AuthenticationResult;
 import sonia.scm.web.security.AuthenticationState;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -93,6 +104,9 @@ public class ScmRealm extends AuthorizingRealm
   /** Field description */
   private static final String ROLE_USER = "user";
 
+  /** Field description */
+  private static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
+
   /**
    * the logger for ScmRealm
    */
@@ -104,16 +118,22 @@ public class ScmRealm extends AuthorizingRealm
    * Constructs ...
    *
    *
+   *
+   * @param configuration
    * @param cacheManager
    * @param userManager
+   * @param groupManager
    * @param repositoryManager
    * @param repositoryDAO
    * @param authenticator
    */
-  public ScmRealm(CacheManager cacheManager, UserManager userManager,
+  public ScmRealm(ScmConfiguration configuration, CacheManager cacheManager,
+    UserManager userManager, GroupManager groupManager,
     RepositoryManager repositoryManager, RepositoryDAO repositoryDAO,
     AuthenticationManager authenticator)
   {
+    this.configuration = configuration;
+    this.userManager = userManager;
     this.repositoryDAO = repositoryDAO;
     this.authenticator = authenticator;
     this.cache = cacheManager.getCache(String.class, AuthorizationInfo.class,
@@ -264,6 +284,169 @@ public class ScmRealm extends AuthorizingRealm
    * Method description
    *
    *
+   * @param request
+   * @param password
+   * @param ar
+   *
+   * @return
+   */
+  private Set<String> authenticate(HttpServletRequest request, String password,
+    AuthenticationResult ar)
+  {
+    Set<String> groupSet = null;
+    User user = ar.getUser();
+
+    try
+    {
+      groupSet = createGroupSet(ar);
+
+      // check for admin user
+      checkForAuthenticatedAdmin(user, groupSet);
+
+      // store user
+      User dbUser = userManager.get(user.getName());
+
+      if (dbUser != null)
+      {
+        checkDBForAdmin(user, dbUser);
+        checkDBForActive(user, dbUser);
+      }
+
+      // create new user
+      else
+      {
+        userManager.create(user);
+      }
+
+      if (user.isActive())
+      {
+
+        if (logger.isDebugEnabled())
+        {
+          logGroups(user, groupSet);
+        }
+
+        // store encrypted credentials in session
+        String credentials = user.getName();
+
+        if (Util.isNotEmpty(password))
+        {
+          credentials = credentials.concat(":").concat(password);
+        }
+
+        credentials = CipherUtil.getInstance().encode(credentials);
+        request.getSession(true).setAttribute(SCM_CREDENTIALS, credentials);
+      }
+      else
+      {
+
+        String msg = "user ".concat(user.getName()).concat(" is deactivated");
+
+        if (logger.isWarnEnabled())
+        {
+          logger.warn(msg);
+        }
+
+        throw new DisabledAccountException(msg);
+
+      }
+    }
+    catch (Exception ex)
+    {
+      logger.error("authentication failed", ex);
+
+      throw new AuthenticationException("authentication failed", ex);
+    }
+
+    return groupSet;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param dbUser
+   */
+  private void checkDBForActive(User user, User dbUser)
+  {
+
+    // user is deactivated by database
+    if (!dbUser.isActive())
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("user {} is marked as deactivated by local database",
+          user.getName());
+      }
+
+      user.setActive(false);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param dbUser
+   *
+   * @throws IOException
+   * @throws UserException
+   */
+  private void checkDBForAdmin(User user, User dbUser)
+    throws UserException, IOException
+  {
+
+    // if database user is an admin, set admin for the current user
+    if (dbUser.isAdmin())
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("user {} of type {} is marked as admin by local database",
+          user.getName(), user.getType());
+      }
+
+      user.setAdmin(true);
+    }
+
+    // modify existing user, copy properties except password and admin
+    if (user.copyProperties(dbUser, false))
+    {
+      userManager.modify(dbUser);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param groupSet
+   */
+  private void checkForAuthenticatedAdmin(User user, Set<String> groupSet)
+  {
+    if (!user.isAdmin())
+    {
+      user.setAdmin(isAdmin(user, groupSet));
+
+      if (logger.isDebugEnabled() && user.isAdmin())
+      {
+        logger.debug("user {} is marked as admin by configuration",
+          user.getName());
+      }
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("authenticator {} marked user {} as admin", user.getType(),
+        user.getName());
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param user
    * @param groups
    *
@@ -315,7 +498,8 @@ public class ScmRealm extends AuthorizingRealm
     ScmAuthenticationToken token, AuthenticationResult result)
   {
     User user = result.getUser();
-    Collection<String> groups = result.getGroups();
+    Collection<String> groups = authenticate(token.getRequest(),
+                                  token.getPassword(), result);
 
     SimplePrincipalCollection collection = new SimplePrincipalCollection();
 
@@ -357,8 +541,126 @@ public class ScmRealm extends AuthorizingRealm
 
     return info;
   }
-  
-  
+
+  /**
+   * Method description
+   *
+   *
+   * @param ar
+   *
+   * @return
+   */
+  private Set<String> createGroupSet(AuthenticationResult ar)
+  {
+    Set<String> groupSet = Sets.newHashSet();
+
+    // load external groups
+    Collection<String> extGroups = ar.getGroups();
+
+    if (extGroups != null)
+    {
+      groupSet.addAll(extGroups);
+    }
+
+    // load internal groups
+    loadGroups(ar.getUser(), groupSet);
+
+    return groupSet;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param user
+   * @param groupSet
+   */
+  private void loadGroups(User user, Set<String> groupSet)
+  {
+    Collection<Group> groupCollection =
+      groupManager.getGroupsForMember(user.getName());
+
+    if (groupCollection != null)
+    {
+      for (Group group : groupCollection)
+      {
+        groupSet.add(group.getName());
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param groups
+   */
+  private void logGroups(User user, Set<String> groups)
+  {
+    StringBuilder msg = new StringBuilder("user ");
+
+    msg.append(user.getName());
+
+    if (Util.isNotEmpty(groups))
+    {
+      msg.append(" is member of ");
+
+      Iterator<String> groupIt = groups.iterator();
+
+      while (groupIt.hasNext())
+      {
+        msg.append(groupIt.next());
+
+        if (groupIt.hasNext())
+        {
+          msg.append(", ");
+        }
+      }
+    }
+    else
+    {
+      msg.append(" is not a member of a group");
+    }
+
+    logger.debug(msg.toString());
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   *
+   *
+   * @param user
+   * @param groups
+   * @return
+   */
+  private boolean isAdmin(User user, Collection<String> groups)
+  {
+    boolean result = false;
+    Set<String> adminUsers = configuration.getAdminUsers();
+
+    if (adminUsers != null)
+    {
+      result = adminUsers.contains(user.getName());
+    }
+
+    if (!result)
+    {
+      Set<String> adminGroups = configuration.getAdminGroups();
+
+      if (adminGroups != null)
+      {
+        result = Util.containsOne(adminGroups, groups);
+      }
+    }
+
+    return result;
+  }
 
   //~--- fields ---------------------------------------------------------------
 
@@ -369,5 +671,14 @@ public class ScmRealm extends AuthorizingRealm
   private Cache<String, AuthorizationInfo> cache;
 
   /** Field description */
+  private ScmConfiguration configuration;
+
+  /** Field description */
+  private GroupManager groupManager;
+
+  /** Field description */
   private RepositoryDAO repositoryDAO;
+
+  /** Field description */
+  private UserManager userManager;
 }
