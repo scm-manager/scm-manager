@@ -33,6 +33,14 @@
       <version>${slf4j.version}</version>
     </dependency>
     
+    <!-- security -->
+    
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-core</artifactId>
+      <version>${shiro.version}</version>
+    </dependency>
+    
     <!-- injection -->
 
     <dependency>
