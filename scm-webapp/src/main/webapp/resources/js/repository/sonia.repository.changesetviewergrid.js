@@ -47,10 +47,10 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
                             <img src="resources/images/delete.png" alt="Deleted"><span class="cs-mod-txt">{2}</span>\
                           </div>',
   
-  idsTemplate: new Ext.XTemplate('<div class="cs-commit">Commit: <a class="scm-link cs-diff-link" rel="{id}">{id:substr(0,12)}</a></div>\
-                <div class="cs-tree">Source: <a class="scm-link cs-tree-link" rel="{id}">{id:substr(0,12)}</a></div>\
-                <tpl if="parent"><div class="cs-parent">Parent: <a class="scm-link cs-diff-link" rel="{parent}">{parent:substr(0,12)}</a></div></tpl>\
-                <tpl if="parent2"><div class="cs-parent">Parent: <a class="scm-link cs-diff-link" rel="{parent2}">{parent2:substr(0,12)}</a></div></tpl>'),
+  idsTemplate: new Ext.XTemplate('<div class="cs-commit">Commit: <a class="scm-link cs-diff-link" rel="{id}">{id:id}</a></div>\
+                <div class="cs-tree">Source: <a class="scm-link cs-tree-link" rel="{id}">{id:id}</a></div>\
+                <tpl if="parent"><div class="cs-parent">Parent: <a class="scm-link cs-diff-link" rel="{parent}">{parent:id}</a></div></tpl>\
+                <tpl if="parent2"><div class="cs-parent">Parent: <a class="scm-link cs-diff-link" rel="{parent2}">{parent2:id}</a></div></tpl>'),
   
   tagsAndBranchesTemplate: new Ext.XTemplate('<div class="changeset-tags"><tpl if="tags"><tpl for="tags"><span class="cs-tag"><a title="Tag {.}">{.}</a></span></tpl></tpl></div>\
                             <div class="changeset-branches"><tpl if="branches"><tpl for="branches"><span class="cs-branch"><a title="Branch {.}">{.}</a></span></tpl></tpl></div>'),

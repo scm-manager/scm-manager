@@ -130,6 +130,10 @@ Ext.apply(Ext.util.Format, {
     }
     
     return date;
+  },
+  
+  id: function(value){
+    return this.substr(value, 0, 12);
   }
   
 });
