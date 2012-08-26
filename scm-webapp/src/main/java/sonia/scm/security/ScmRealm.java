@@ -217,7 +217,7 @@ public class ScmRealm extends AuthorizingRealm
     AuthenticationToken authToken)
     throws AuthenticationException
   {
-    if ((authToken instanceof ScmAuthenticationToken))
+    if (!(authToken instanceof ScmAuthenticationToken))
     {
       throw new UnsupportedTokenException("ScmAuthenticationToken is required");
     }
