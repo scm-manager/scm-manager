@@ -158,13 +158,17 @@ public class ScmRealm extends AuthorizingRealm
   @Override
   public void onEvent(Repository repository, HandlerEvent event)
   {
-    if (logger.isDebugEnabled())
+    if (event.isPost())
     {
-      logger.debug("clear cache, because repository {} has changed",
-        repository.getName());
-    }
 
-    cache.clear();
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("clear cache, because repository {} has changed",
+          repository.getName());
+      }
+
+      cache.clear();
+    }
   }
 
   /**
@@ -177,14 +181,17 @@ public class ScmRealm extends AuthorizingRealm
   @Override
   public void onEvent(User user, HandlerEvent event)
   {
-    if (logger.isDebugEnabled())
+    if (event.isPost())
     {
-      logger.debug(
-        "clear cache of user {}, because user properties have changed",
-        user.getName());
-    }
+      if (logger.isDebugEnabled())
+      {
+        logger.debug(
+          "clear cache of user {}, because user properties have changed",
+          user.getName());
+      }
 
-    cache.remove(user.getId());
+      cache.remove(user.getId());
+    }
   }
 
   /**
