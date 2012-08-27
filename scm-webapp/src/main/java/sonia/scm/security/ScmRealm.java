@@ -507,7 +507,7 @@ public class ScmRealm extends AuthorizingRealm
     SimplePrincipalCollection collection = new SimplePrincipalCollection();
 
     collection.add(user, NAME);
-    collection.add(groups, NAME);
+    collection.add(new Groups(groups), NAME);
 
     return new SimpleAuthenticationInfo(collection, token.getPassword());
   }
