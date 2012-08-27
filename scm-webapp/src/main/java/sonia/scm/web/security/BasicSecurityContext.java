@@ -35,30 +35,25 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-import com.google.inject.servlet.SessionScoped;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.group.Group;
-import sonia.scm.group.GroupManager;
-import sonia.scm.security.CipherUtil;
+import sonia.scm.security.Groups;
+import sonia.scm.security.ScmAuthenticationToken;
 import sonia.scm.user.User;
-import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -68,7 +63,6 @@ import javax.servlet.http.HttpSession;
  *
  * @author Sebastian Sdorra
  */
-@SessionScoped
 public class BasicSecurityContext implements WebSecurityContext
 {
 
@@ -88,21 +82,14 @@ public class BasicSecurityContext implements WebSecurityContext
    * Constructs ...
    *
    *
-   *
    * @param configuration
-   * @param authenticator
-   * @param groupManager
    * @param userManager
    */
   @Inject
   public BasicSecurityContext(ScmConfiguration configuration,
-                              AuthenticationManager authenticator,
-                              GroupManager groupManager,
-                              UserManager userManager)
+    UserManager userManager)
   {
     this.configuration = configuration;
-    this.authenticator = authenticator;
-    this.groupManager = groupManager;
     this.userManager = userManager;
   }
 
@@ -121,25 +108,14 @@ public class BasicSecurityContext implements WebSecurityContext
    */
   @Override
   public User authenticate(HttpServletRequest request,
-                           HttpServletResponse response, String username,
-                           String password)
+    HttpServletResponse response, String username, String password)
   {
-    if ( logger.isTraceEnabled() ){
-      logger.trace("start authentication for user {}", username);
-    }
-    AuthenticationResult ar = authenticator.authenticate(request, response,
-                                username, password);
+    Subject subject = SecurityUtils.getSubject();
 
-    if ( logger.isTraceEnabled() ){
-      logger.trace("authentication ends with {}", ar);
-    }
-    
-    if ((ar != null) && (ar.getState() == AuthenticationState.SUCCESS))
-    {
-      authenticate(request, password, ar);
-    }
+    subject.login(new ScmAuthenticationToken(request, response, username,
+      password));
 
-    return user;
+    return subject.getPrincipals().oneByType(User.class);
   }
 
   /**
@@ -152,8 +128,7 @@ public class BasicSecurityContext implements WebSecurityContext
   @Override
   public void logout(HttpServletRequest request, HttpServletResponse response)
   {
-    user = null;
-    groups = new HashSet<String>();
+    SecurityUtils.getSubject().logout();
 
     HttpSession session = request.getSession(false);
 
@@ -174,12 +149,21 @@ public class BasicSecurityContext implements WebSecurityContext
   @Override
   public Collection<String> getGroups()
   {
-    if (groups == null)
+    Subject subject = SecurityUtils.getSubject();
+    Groups groups = getPrincipal(Groups.class);
+
+    Collection<String> groupCollection = null;
+
+    if (groups != null)
     {
-      groups = new HashSet<String>();
+      groupCollection = groups.getGroups();
+    }
+    else
+    {
+      groupCollection = Collections.EMPTY_LIST;
     }
 
-    return groups;
+    return groupCollection;
   }
 
   /**
@@ -191,6 +175,8 @@ public class BasicSecurityContext implements WebSecurityContext
   @Override
   public User getUser()
   {
+    User user = getPrincipal(User.class);
+
     if ((user == null) && configuration.isAnonymousAccessEnabled())
     {
       user = userManager.get(USER_ANONYMOUS);
@@ -211,276 +197,27 @@ public class BasicSecurityContext implements WebSecurityContext
     return getUser() != null;
   }
 
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Method description
    *
    *
-   * @param request
-   * @param password
-   * @param ar
-   */
-  private void authenticate(HttpServletRequest request, String password,
-                            AuthenticationResult ar)
-  {
-    user = ar.getUser();
-
-    try
-    {
-      Set<String> groupSet = createGroupSet(ar);
-
-      // check for admin user
-      checkForAuthenticatedAdmin(user, groupSet);
-
-      // store user
-      User dbUser = userManager.get(user.getName());
-
-      if (dbUser != null)
-      {
-        checkDBForAdmin(user, dbUser);
-        checkDBForActive(user, dbUser);
-      }
-
-      // create new user
-      else
-      {
-        userManager.create(user);
-      }
-
-      if (user.isActive())
-      {
-        groups = groupSet;
-
-        if (logger.isDebugEnabled())
-        {
-          logGroups();
-        }
-
-        // store encrypted credentials in session
-        String credentials = user.getName();
-
-        if (Util.isNotEmpty(password))
-        {
-          credentials = credentials.concat(":").concat(password);
-        }
-
-        credentials = CipherUtil.getInstance().encode(credentials);
-        request.getSession(true).setAttribute(SCM_CREDENTIALS, credentials);
-      }
-      else
-      {
-        if (logger.isWarnEnabled())
-        {
-          logger.warn("user {} is deactivated", user.getName());
-        }
-
-        user = null;
-        groups = null;
-      }
-    }
-    catch (Exception ex)
-    {
-      user = null;
-
-      if (groups != null)
-      {
-        groups.clear();
-      }
-
-      logger.error("authentication failed", ex);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   * @param dbUser
-   */
-  private void checkDBForActive(User user, User dbUser)
-  {
-
-    // user is deactivated by database
-    if (!dbUser.isActive())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("user {} is marked as deactivated by local database",
-                     user.getName());
-      }
-
-      user.setActive(false);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   * @param dbUser
-   *
-   * @throws IOException
-   * @throws UserException
-   */
-  private void checkDBForAdmin(User user, User dbUser)
-          throws UserException, IOException
-  {
-
-    // if database user is an admin, set admin for the current user
-    if (dbUser.isAdmin())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("user {} of type {} is marked as admin by local database",
-                     user.getName(), user.getType());
-      }
-
-      user.setAdmin(true);
-    }
-
-    // modify existing user, copy properties except password and admin
-    if (user.copyProperties(dbUser, false))
-    {
-      userManager.modify(dbUser);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   * @param groupSet
-   */
-  private void checkForAuthenticatedAdmin(User user, Set<String> groupSet)
-  {
-    if (!user.isAdmin())
-    {
-      user.setAdmin(isAdmin(groupSet));
-
-      if (logger.isDebugEnabled() && user.isAdmin())
-      {
-        logger.debug("user {} is marked as admin by configuration",
-                     user.getName());
-      }
-    }
-    else if (logger.isDebugEnabled())
-    {
-      logger.debug("authenticator {} marked user {} as admin", user.getType(),
-                   user.getName());
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param ar
+   * @param clazz
+   * @param <T>
    *
    * @return
    */
-  private Set<String> createGroupSet(AuthenticationResult ar)
+  private <T> T getPrincipal(Class<T> clazz)
   {
-    Set<String> groupSet = Sets.newHashSet();
+    T result = null;
+    Subject subject = SecurityUtils.getSubject();
 
-    // load external groups
-    Collection<String> extGroups = ar.getGroups();
-
-    if (extGroups != null)
+    if (subject.isAuthenticated())
     {
-      groupSet.addAll(extGroups);
-    }
+      PrincipalCollection pc = subject.getPrincipals();
 
-    // load internal groups
-    loadGroups(groupSet);
-
-    return groupSet;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param groupSet
-   */
-  private void loadGroups(Set<String> groupSet)
-  {
-    Collection<Group> groupCollection =
-      groupManager.getGroupsForMember(user.getName());
-
-    if (groupCollection != null)
-    {
-      for (Group group : groupCollection)
+      if (pc != null)
       {
-        groupSet.add(group.getName());
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   */
-  private void logGroups()
-  {
-    StringBuilder msg = new StringBuilder("user ");
-
-    msg.append(user.getName());
-
-    if (Util.isNotEmpty(groups))
-    {
-      msg.append(" is member of ");
-
-      Iterator<String> groupIt = groups.iterator();
-
-      while (groupIt.hasNext())
-      {
-        msg.append(groupIt.next());
-
-        if (groupIt.hasNext())
-        {
-          msg.append(", ");
-        }
-      }
-    }
-    else
-    {
-      msg.append(" is not a member of a group");
-    }
-
-    logger.debug(msg.toString());
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param groups
-   * @return
-   */
-  private boolean isAdmin(Collection<String> groups)
-  {
-    boolean result = false;
-    Set<String> adminUsers = configuration.getAdminUsers();
-
-    if (adminUsers != null)
-    {
-      result = adminUsers.contains(user.getName());
-    }
-
-    if (!result)
-    {
-      Set<String> adminGroups = configuration.getAdminGroups();
-
-      if (adminGroups != null)
-      {
-        result = Util.containsOne(adminGroups, groups);
+        result = pc.oneByType(clazz);
       }
     }
 
@@ -490,19 +227,7 @@ public class BasicSecurityContext implements WebSecurityContext
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private AuthenticationManager authenticator;
-
-  /** Field description */
   private ScmConfiguration configuration;
-
-  /** Field description */
-  private GroupManager groupManager;
-
-  /** Field description */
-  private Set<String> groups = new HashSet<String>();
-
-  /** Field description */
-  private User user;
 
   /** Field description */
   private UserManager userManager;
