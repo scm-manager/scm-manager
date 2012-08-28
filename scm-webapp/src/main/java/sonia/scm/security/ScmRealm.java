@@ -237,11 +237,12 @@ public class ScmRealm extends AuthorizingRealm
       authenticator.authenticate(token.getRequest(), token.getResponse(),
         token.getUsername(), token.getPassword());
 
-    if (result.getState() == AuthenticationState.SUCCESS)
+    if ((result != null) && (AuthenticationState.SUCCESS == result.getState()))
     {
       info = createAuthenticationInfo(token, result);
     }
-    else if (result.getState() == AuthenticationState.NOT_FOUND)
+    else if ((result != null)
+      && (AuthenticationState.NOT_FOUND == result.getState()))
     {
       throw new UnknownAccountException(
         "unknown account ".concat(token.getUsername()));
