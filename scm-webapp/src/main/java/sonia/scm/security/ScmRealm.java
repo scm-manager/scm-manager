@@ -470,7 +470,35 @@ public class ScmRealm extends AuthorizingRealm
 
     for (Repository repository : repositoryDAO.getAll())
     {
-      List<Permission> repositoryPermissions = repository.getPermissions();
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("collect permissions for repository {} and user {}",
+          repository.getName(), user.getName());
+      }
+
+      collectRepositoryPermissions(permissions, repository, user, groups);
+    }
+
+    return permissions;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param permissions
+   * @param repository
+   * @param user
+   * @param groups
+   */
+  private void collectRepositoryPermissions(
+    List<org.apache.shiro.authz.Permission> permissions, Repository repository,
+    User user, Collection<String> groups)
+  {
+    List<Permission> repositoryPermissions = repository.getPermissions();
+
+    if (Util.isNotEmpty(repositoryPermissions))
+    {
 
       for (Permission permission : repositoryPermissions)
       {
@@ -492,8 +520,11 @@ public class ScmRealm extends AuthorizingRealm
         }
       }
     }
-
-    return permissions;
+    else if (logger.isTraceEnabled())
+    {
+      logger.trace("repository {} has not permission entries",
+        repository.getName());
+    }
   }
 
   /**
