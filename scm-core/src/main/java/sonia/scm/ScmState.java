@@ -73,10 +73,10 @@ public class ScmState
    * @param repositoryTypes - available repository types
    * @param clientConfig - client configuration
    */
+  @Deprecated
   public ScmState(SCMContextProvider provider,
-                  WebSecurityContext securityContext,
-                  Collection<Type> repositoryTypes,
-                  ScmClientConfig clientConfig)
+    WebSecurityContext securityContext, Collection<Type> repositoryTypes,
+    ScmClientConfig clientConfig)
   {
     this(provider, securityContext, repositoryTypes, null, clientConfig);
   }
@@ -93,14 +93,39 @@ public class ScmState
    *
    * @since 1.14
    */
+  @Deprecated
   public ScmState(SCMContextProvider provider,
-                  WebSecurityContext securityContext,
-                  Collection<Type> repositoryTypes, String defaultUserType,
-                  ScmClientConfig clientConfig)
+    WebSecurityContext securityContext, Collection<Type> repositoryTypes,
+    String defaultUserType, ScmClientConfig clientConfig)
   {
     this.version = provider.getVersion();
     this.user = securityContext.getUser();
     this.groups = securityContext.getGroups();
+    this.repositoryTypes = repositoryTypes;
+    this.clientConfig = clientConfig;
+    this.defaultUserType = defaultUserType;
+  }
+
+  /**
+   * Constructs {@link ScmState} object.
+   *
+   *
+   * @param provider context provider
+   * @param user current user
+   * @param groups groups of the current user
+   * @param repositoryTypes available repository types
+   * @param defaultUserType default user type
+   * @param clientConfig client configuration
+   *
+   * @since 1.21
+   */
+  public ScmState(SCMContextProvider provider, User user,
+    Collection<String> groups, Collection<Type> repositoryTypes,
+    String defaultUserType, ScmClientConfig clientConfig)
+  {
+    this.version = provider.getVersion();
+    this.user = user;
+    this.groups = groups;
     this.repositoryTypes = repositoryTypes;
     this.clientConfig = clientConfig;
     this.defaultUserType = defaultUserType;

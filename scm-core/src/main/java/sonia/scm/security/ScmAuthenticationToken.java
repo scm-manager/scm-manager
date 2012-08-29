@@ -45,6 +45,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.21
  */
 public class ScmAuthenticationToken implements AuthenticationToken
 {
