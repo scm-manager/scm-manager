@@ -540,6 +540,10 @@ public class ScmRealm extends AuthorizingRealm
 
     SimplePrincipalCollection collection = new SimplePrincipalCollection();
 
+    /*
+     * the first (primary) principal should be a unique identifier
+     */
+    collection.add(user.getId(), NAME);
     collection.add(user, NAME);
     collection.add(new Groups(groups), NAME);
 
