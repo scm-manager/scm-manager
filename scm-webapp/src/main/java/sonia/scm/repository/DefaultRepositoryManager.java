@@ -36,9 +36,13 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,20 +53,18 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.RepositoryPermission;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -94,10 +96,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   /**
    * Constructs ...
    *
-   *
-   *
-   *
-   *
    * @param configuration
    * @param contextProvider
    * @param securityContextProvider
@@ -108,14 +106,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Inject
   public DefaultRepositoryManager(ScmConfiguration configuration,
-    SCMContextProvider contextProvider,
-    Provider<WebSecurityContext> securityContextProvider,
-    RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
+    SCMContextProvider contextProvider, RepositoryDAO repositoryDAO,
+    Set<RepositoryHandler> handlerSet,
     Provider<Set<RepositoryListener>> repositoryListenersProvider,
     Provider<Set<RepositoryHook>> repositoryHooksProvider)
   {
     this.configuration = configuration;
-    this.securityContextProvider = securityContextProvider;
     this.repositoryDAO = repositoryDAO;
     this.repositoryListenersProvider = repositoryListenersProvider;
     this.repositoryHooksProvider = repositoryHooksProvider;
@@ -167,7 +163,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
         repository.getType());
     }
 
-    SecurityUtil.assertIsAdmin(securityContextProvider);
+    assertIsAdmin();
     AssertUtil.assertIsValid(repository);
 
     if (repositoryDAO.contains(repository))
@@ -473,7 +469,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   @Override
   public Collection<Repository> getAll(Comparator<Repository> comparator)
   {
-    List<Repository> repositories = new ArrayList<Repository>();
+    List<Repository> repositories = Lists.newArrayList();
 
     for (Repository repository : repositoryDAO.getAll())
     {
@@ -601,7 +597,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   @Override
   public Collection<Type> getConfiguredTypes()
   {
-    List<Type> validTypes = new ArrayList<Type>();
+    List<Type> validTypes = Lists.newArrayList();
 
     for (RepositoryHandler handler : handlerMap.values())
     {
@@ -865,25 +861,44 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   /**
    * Method description
    *
+   */
+  private void assertIsAdmin()
+  {
+    if (!SecurityUtils.getSubject().hasRole("admin"))
+    {
+      throw new SecurityException("admin role is required");
+    }
+  }
+
+  /**
+   * TODO use {@link Subject#checkPermission(org.apache.shiro.authz.Permission)}
+   * in version 2.x.
+   *
    *
    * @param repository
    */
   private void assertIsOwner(Repository repository)
   {
-    PermissionUtil.assertPermission(repository, securityContextProvider,
-      PermissionType.OWNER);
+    if (!isPermitted(repository, PermissionType.OWNER))
+    {
+      throw new ScmSecurityException(
+        "owner permission is required, access denied");
+    }
   }
 
   /**
-   * Method description
-   *
+   * TODO use {@link Subject#checkPermission(org.apache.shiro.authz.Permission)}
+   * in version 2.x.
    *
    * @param repository
    */
   private void assertIsReader(Repository repository)
   {
-    PermissionUtil.assertPermission(repository, securityContextProvider,
-      PermissionType.READ);
+    if (!isReader(repository))
+    {
+      throw new ScmSecurityException(
+        "reader permission is required, access denied");
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -947,13 +962,27 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    *
    *
    * @param repository
+   * @param type
+   *
+   * @return
+   */
+  private boolean isPermitted(Repository repository, PermissionType type)
+  {
+    return SecurityUtils.getSubject().isPermitted(
+      new RepositoryPermission(repository, PermissionType.READ));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
    *
    * @return
    */
   private boolean isReader(Repository repository)
   {
-    return PermissionUtil.hasPermission(repository, securityContextProvider,
-      PermissionType.READ);
+    return isPermitted(repository, PermissionType.READ);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -975,9 +1004,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private Provider<Set<RepositoryListener>> repositoryListenersProvider;
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 
   /** Field description */
   private Set<Type> types;
