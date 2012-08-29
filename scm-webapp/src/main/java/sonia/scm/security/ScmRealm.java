@@ -61,6 +61,7 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.repository.Permission;
+import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryListener;
@@ -563,6 +564,7 @@ public class ScmRealm extends AuthorizingRealm
   private AuthorizationInfo createAuthorizationInfo(User user, Groups groups)
   {
     Set<String> roles = Sets.newHashSet();
+    List<org.apache.shiro.authz.Permission> permissions = null;
 
     roles.add(ROLE_USER);
 
@@ -574,12 +576,17 @@ public class ScmRealm extends AuthorizingRealm
       }
 
       roles.add(ROLE_ADMIN);
+      permissions = Lists.newArrayList();
+      permissions.add(new RepositoryPermission("*", PermissionType.OWNER));
+    }
+    else
+    {
+      permissions = collectRepositoryPermissions(user, roles);
     }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
 
-    info.addObjectPermissions(collectRepositoryPermissions(user,
-      groups.getGroups()));
+    info.addObjectPermissions(permissions);
 
     return info;
   }
