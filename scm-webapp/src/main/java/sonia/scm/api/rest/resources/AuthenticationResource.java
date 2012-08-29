@@ -150,6 +150,15 @@ public class AuthenticationResource
     }
     catch (AuthenticationException ex)
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("authentication failed for user ".concat(username), ex);
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("authentication failed for user {}", username);
+      }
+
       throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     }
 

@@ -240,7 +240,15 @@ public class BasicAuthenticationFilter extends HttpFilter
         }
         catch (AuthenticationException ex)
         {
-          logger.warn("authentication failed", ex);
+          if (logger.isTraceEnabled())
+          {
+            logger.trace("authentication failed for user ".concat(username),
+              ex);
+          }
+          else if (logger.isWarnEnabled())
+          {
+            logger.warn("authentication failed for user {}", username);
+          }
         }
       }
       else if (logger.isWarnEnabled())
