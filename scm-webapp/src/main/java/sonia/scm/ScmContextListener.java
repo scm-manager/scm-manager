@@ -41,6 +41,8 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import org.apache.shiro.guice.web.ShiroWebModule;
+
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.DefaultPluginLoader;
@@ -58,7 +60,6 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import org.apache.shiro.guice.web.ShiroWebModule;
 
 /**
  *
@@ -186,43 +187,14 @@ public class ScmContextListener extends GuiceServletContextListener
                               bindExtProcessor, overrides);
     List<Module> moduleList = Lists.newArrayList();
 
+    moduleList.add(new ScmInitializerModule());
     moduleList.add(ShiroWebModule.guiceFilterModule());
     moduleList.add(main);
     moduleList.add(new ScmSecurityModule(servletContext));
     moduleList.addAll(bindExtProcessor.getModuleSet());
     moduleList.addAll(overrides.getModules());
-    
 
-    Injector injector = Guice.createInjector(moduleList);
-    SCMContextProvider context = SCMContext.getContext();
-
-    // init StoreFactory
-    injector.getInstance(StoreFactory.class).init(context);
-
-    // init RepositoryManager
-    RepositoryManager repositoryManager =
-      injector.getInstance(RepositoryManager.class);
-
-    repositoryManager.addHooks(bindExtProcessor.getHooks());
-    repositoryManager.init(context);
-
-    // init UserManager
-    UserManager userManager = injector.getInstance(UserManager.class);
-
-    userManager.init(context);
-
-    // init GroupManager
-    GroupManager groupManager = injector.getInstance(GroupManager.class);
-
-    groupManager.init(context);
-
-    // init Authenticator
-    AuthenticationManager authenticationManager =
-      injector.getInstance(AuthenticationManager.class);
-
-    authenticationManager.init(context);
-
-    return injector;
+    return Guice.createInjector(moduleList);
   }
 
   /**

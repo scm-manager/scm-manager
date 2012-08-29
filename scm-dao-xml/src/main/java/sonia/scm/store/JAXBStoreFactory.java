@@ -91,7 +91,7 @@ public class JAXBStoreFactory implements ListenableStoreFactory
   public void init(SCMContextProvider context)
   {
     configDirectory = new File(context.getBaseDirectory(),
-                               CONFIGDIRECTORY_NAME);
+      CONFIGDIRECTORY_NAME);
     IOUtil.mkdirs(configDirectory);
   }
 
@@ -110,12 +110,17 @@ public class JAXBStoreFactory implements ListenableStoreFactory
   @Override
   public <T> JAXBStore<T> getStore(Class<T> type, String name)
   {
+    if (configDirectory == null)
+    {
+      throw new IllegalStateException("store factory is not initialized");
+    }
+
     File configFile = new File(configDirectory, name.concat(FILE_EXTENSION));
 
     if (logger.isDebugEnabled())
     {
       logger.debug("create store for {} at {}", type.getName(),
-                   configFile.getPath());
+        configFile.getPath());
     }
 
     return new JAXBStore<T>(type, configFile);
