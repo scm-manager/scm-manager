@@ -38,6 +38,7 @@ package sonia.scm.web.security;
 import com.google.inject.Inject;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
@@ -110,12 +111,28 @@ public class BasicSecurityContext implements WebSecurityContext
   public User authenticate(HttpServletRequest request,
     HttpServletResponse response, String username, String password)
   {
-    Subject subject = SecurityUtils.getSubject();
+    User user = null;
 
-    subject.login(new ScmAuthenticationToken(request, response, username,
-      password));
+    try
+    {
 
-    return subject.getPrincipals().oneByType(User.class);
+      Subject subject = SecurityUtils.getSubject();
+
+      subject.login(new ScmAuthenticationToken(request, response, username,
+        password));
+
+      user = subject.getPrincipals().oneByType(User.class);
+
+    }
+    catch (AuthenticationException ex)
+    {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("authentication failed", ex);
+      }
+    }
+
+    return user;
   }
 
   /**
