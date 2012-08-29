@@ -38,6 +38,7 @@ import com.google.common.base.Objects;
 import org.apache.shiro.authz.Permission;
 
 import sonia.scm.repository.PermissionType;
+import sonia.scm.repository.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -54,6 +55,19 @@ public class RepositoryPermission implements Permission, Serializable
   private static final long serialVersionUID = 3832804235417228043L;
 
   //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param repository
+   * @param permissionType
+   */
+  public RepositoryPermission(Repository repository,
+    PermissionType permissionType)
+  {
+    this(repository.getId(), permissionType);
+  }
 
   /**
    * Constructs ...

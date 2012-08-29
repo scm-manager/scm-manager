@@ -479,8 +479,8 @@ public class ScmRealm extends AuthorizingRealm
             permission.getName())) || ((!permission.isGroupPermission())
               && user.getName().equals(permission.getName())))
         {
-          RepositoryPermission rp =
-            new RepositoryPermission(repository.getId(), permission.getType());
+          RepositoryPermission rp = new RepositoryPermission(repository,
+                                      permission.getType());
 
           if (logger.isTraceEnabled())
           {
