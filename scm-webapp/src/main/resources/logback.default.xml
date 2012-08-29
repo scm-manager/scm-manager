@@ -50,7 +50,7 @@
     </encoder>
   </appender>
   
-  <logger name="sonia.scm" level="DEBUG" />
+  <logger name="sonia.scm" level="TRACE" />
   
   <!-- suppress massive gzip logging -->
   <logger name="sonia.scm.filter.GZipFilter" level="WARN" />
