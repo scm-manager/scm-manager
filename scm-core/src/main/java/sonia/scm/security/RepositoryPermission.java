@@ -45,8 +45,10 @@ import sonia.scm.repository.Repository;
 import java.io.Serializable;
 
 /**
+ * This class represents the permission to a repository of a user.
  *
  * @author Sebastian Sdorra
+ * @since 1.21
  */
 public class RepositoryPermission implements Permission, Serializable
 {
