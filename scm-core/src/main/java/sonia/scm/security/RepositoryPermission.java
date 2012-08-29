@@ -54,6 +54,9 @@ public class RepositoryPermission implements Permission, Serializable
 {
 
   /** Field description */
+  public static final String WILDCARD = "*";
+
+  /** Field description */
   private static final long serialVersionUID = 3832804235417228043L;
 
   //~--- constructors ---------------------------------------------------------
@@ -144,7 +147,7 @@ public class RepositoryPermission implements Permission, Serializable
       RepositoryPermission rp = (RepositoryPermission) p;
 
       //J-
-      result = (repositoryId.equals("*") || repositoryId.equals(rp.repositoryId)) 
+      result = (repositoryId.equals(WILDCARD) || repositoryId.equals(rp.repositoryId)) 
                 && (permissionType.getValue() >= rp.permissionType.getValue());
       //J+
     }

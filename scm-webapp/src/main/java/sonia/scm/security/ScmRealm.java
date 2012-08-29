@@ -101,12 +101,6 @@ public class ScmRealm extends AuthorizingRealm
   private static final String NAME = "scm";
 
   /** Field description */
-  private static final String ROLE_ADMIN = "admin";
-
-  /** Field description */
-  private static final String ROLE_USER = "user";
-
-  /** Field description */
   private static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
 
   /**
@@ -566,7 +560,7 @@ public class ScmRealm extends AuthorizingRealm
     Set<String> roles = Sets.newHashSet();
     List<org.apache.shiro.authz.Permission> permissions = null;
 
-    roles.add(ROLE_USER);
+    roles.add(Role.USER);
 
     if (user.isAdmin())
     {
@@ -575,9 +569,10 @@ public class ScmRealm extends AuthorizingRealm
         logger.debug("grant admin role for user {}", user.getName());
       }
 
-      roles.add(ROLE_ADMIN);
+      roles.add(Role.ADMIN);
       permissions = Lists.newArrayList();
-      permissions.add(new RepositoryPermission("*", PermissionType.OWNER));
+      permissions.add(new RepositoryPermission(RepositoryPermission.WILDCARD,
+        PermissionType.OWNER));
     }
     else
     {
