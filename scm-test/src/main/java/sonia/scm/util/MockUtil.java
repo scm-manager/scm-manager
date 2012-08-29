@@ -37,6 +37,12 @@ package sonia.scm.util;
 
 import com.google.inject.Provider;
 
+import org.apache.shiro.authz.Permission;
+import org.apache.shiro.subject.Subject;
+
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 import sonia.scm.SCMContextProvider;
 import sonia.scm.user.User;
 import sonia.scm.web.security.DummyWebSecurityContext;
@@ -48,6 +54,9 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -57,6 +66,45 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class MockUtil
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static Subject createAdminSubject()
+  {
+    Subject subject = mock(Subject.class);
+
+    when(subject.isAuthenticated()).thenReturn(Boolean.TRUE);
+    when(subject.isPermitted(anyListOf(Permission.class))).then(
+      new Answer<Boolean[]>()
+    {
+
+      @Override
+      public Boolean[] answer(InvocationOnMock invocation) throws Throwable
+      {
+        List<Permission> permissions =
+          (List<Permission>) invocation.getArguments()[0];
+        Boolean[] returnArray = new Boolean[permissions.size()];
+
+        Arrays.fill(returnArray, Boolean.TRUE);
+
+        return returnArray;
+      }
+    });
+    when(subject.isPermitted(any(Permission.class))).thenReturn(Boolean.TRUE);
+    when(subject.isPermitted(any(String.class))).thenReturn(Boolean.TRUE);
+    when(subject.isPermittedAll(anyCollectionOf(Permission.class))).thenReturn(
+      Boolean.TRUE);
+    when(subject.isPermittedAll()).thenReturn(Boolean.TRUE);
+    when(subject.hasRole("admin")).thenReturn(Boolean.TRUE);
+
+    return subject;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
