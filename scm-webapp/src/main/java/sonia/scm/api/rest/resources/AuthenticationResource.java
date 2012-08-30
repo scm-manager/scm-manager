@@ -53,8 +53,8 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.ScmClientConfig;
 import sonia.scm.ScmState;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.group.GroupNames;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.security.Groups;
 import sonia.scm.security.ScmAuthenticationToken;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -290,9 +290,9 @@ public class AuthenticationResource
   {
     PrincipalCollection collection = subject.getPrincipals();
     User user = collection.oneByType(User.class);
-    Groups groups = collection.oneByType(Groups.class);
+    GroupNames groups = collection.oneByType(GroupNames.class);
 
-    return new ScmState(contextProvider, user, groups.getGroups(),
+    return new ScmState(contextProvider, user, groups.getCollection(),
       repositoryManger.getConfiguredTypes(), userManager.getDefaultType(),
       new ScmClientConfig(configuration));
   }

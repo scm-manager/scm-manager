@@ -29,7 +29,11 @@
 
 
 
-package sonia.scm.security;
+package sonia.scm.group;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.collect.Lists;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -40,14 +44,16 @@ import java.util.Collections;
 import java.util.Iterator;
 
 /**
+ * This class represents all associated groups for a user.
  *
  * @author Sebastian Sdorra
+ * @since 1.21
  */
-public class Groups implements Serializable, Iterable<String>
+public class GroupNames implements Serializable, Iterable<String>
 {
 
   /** Field description */
-  private static final long serialVersionUID = -4152799570939669716L;
+  private static final long serialVersionUID = 8615685985213897947L;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -55,14 +61,39 @@ public class Groups implements Serializable, Iterable<String>
    * Constructs ...
    *
    *
-   * @param groups
+   * @param collection
    */
-  public Groups(Collection<String> groups)
+  public GroupNames(Collection<String> collection)
   {
-    this.groups = groups;
+    this.collection = Collections.unmodifiableCollection(collection);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param groupName
+   * @param groupNames
+   */
+  public GroupNames(String groupName, String... groupNames)
+  {
+    this.collection = Lists.asList(groupName, groupNames);
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param groupName
+   *
+   * @return
+   */
+  public boolean contains(String groupName)
+  {
+    return collection.contains(groupName);
+  }
 
   /**
    * Method description
@@ -73,7 +104,7 @@ public class Groups implements Serializable, Iterable<String>
   @Override
   public Iterator<String> iterator()
   {
-    return getGroups().iterator();
+    return collection.iterator();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -84,18 +115,13 @@ public class Groups implements Serializable, Iterable<String>
    *
    * @return
    */
-  public Collection<String> getGroups()
+  public Collection<String> getCollection()
   {
-    if (groups == null)
-    {
-      groups = Collections.EMPTY_LIST;
-    }
-
-    return groups;
+    return collection;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Collection<String> groups;
+  private Collection<String> collection;
 }

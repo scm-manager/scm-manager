@@ -60,6 +60,7 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
+import sonia.scm.group.GroupNames;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
@@ -273,7 +274,7 @@ public class ScmRealm extends AuthorizingRealm
         logger.trace("coullect AuthorizationInfo for user {}", user.getName());
       }
 
-      Groups groups = principals.oneByType(Groups.class);
+      GroupNames groups = principals.oneByType(GroupNames.class);
 
       info = createAuthorizationInfo(user, groups);
     }
@@ -545,7 +546,7 @@ public class ScmRealm extends AuthorizingRealm
      */
     collection.add(user.getId(), NAME);
     collection.add(user, NAME);
-    collection.add(new Groups(groups), NAME);
+    collection.add(new GroupNames(groups), NAME);
 
     return new SimpleAuthenticationInfo(collection, token.getPassword());
   }
@@ -559,7 +560,8 @@ public class ScmRealm extends AuthorizingRealm
    *
    * @return
    */
-  private AuthorizationInfo createAuthorizationInfo(User user, Groups groups)
+  private AuthorizationInfo createAuthorizationInfo(User user,
+    GroupNames groups)
   {
     Set<String> roles = Sets.newHashSet();
     List<org.apache.shiro.authz.Permission> permissions = null;

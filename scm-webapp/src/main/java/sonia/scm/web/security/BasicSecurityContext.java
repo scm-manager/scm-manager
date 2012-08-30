@@ -46,7 +46,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.security.Groups;
 import sonia.scm.security.ScmAuthenticationToken;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -59,6 +58,7 @@ import java.util.Collections;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import sonia.scm.group.GroupNames;
 
 /**
  *
@@ -167,13 +167,13 @@ public class BasicSecurityContext implements WebSecurityContext
   public Collection<String> getGroups()
   {
     Subject subject = SecurityUtils.getSubject();
-    Groups groups = getPrincipal(Groups.class);
+    GroupNames groups = getPrincipal(GroupNames.class);
 
     Collection<String> groupCollection = null;
 
     if (groups != null)
     {
-      groupCollection = groups.getGroups();
+      groupCollection = groups.getCollection();
     }
     else
     {
