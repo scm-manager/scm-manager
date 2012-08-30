@@ -94,6 +94,10 @@ public class SecurityFilter extends HttpFilter
         chain.doFilter(new SecurityHttpServletRequestWrapper(request,
           subject.getPrincipals().oneByType(User.class)), response);
       }
+      else if (subject.isAuthenticated())
+      {
+        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      }
       else
       {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
