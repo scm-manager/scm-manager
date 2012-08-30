@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.group.GroupNames;
 import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
@@ -51,7 +52,6 @@ import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -171,13 +171,11 @@ public class PermissionUtil
 
         if (permissions != null)
         {
+          GroupNames groupNames =
+            subject.getPrincipals().oneByType(GroupNames.class);
 
-          // TODO
+          result = hasPermission(permissions, username, groupNames, pt);
 
-          /*
-           * result = hasPermission(permissions, username,
-           *                      securityContext.getGroups(), pt);
-           */
         }
       }
     }
@@ -249,7 +247,7 @@ public class PermissionUtil
    * @return
    */
   private static boolean hasPermission(List<Permission> permissions,
-    String username, Collection<String> groups, PermissionType pt)
+    String username, GroupNames groups, PermissionType pt)
   {
     boolean result = false;
 
