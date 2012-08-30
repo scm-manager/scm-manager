@@ -35,10 +35,10 @@ package sample.hello;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
-import sonia.scm.security.SecurityContext;
+import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -61,11 +61,18 @@ public class HelloResource
    *
    * @param securityContextProvider
    */
-  @Inject
-  public HelloResource(Provider<SecurityContext> securityContextProvider)
+  public HelloResource()
   {
-    message = "Hello "
-              + securityContextProvider.get().getUser().getDisplayName();
+    Subject subject = SecurityUtils.getSubject();
+    String displayName = "Unknown";
+
+    if (subject.isAuthenticated())
+    {
+      displayName =
+        subject.getPrincipals().oneByType(User.class).getDisplayName();
+    }
+
+    message = "Hello " + displayName;
   }
 
   //~--- get methods ----------------------------------------------------------

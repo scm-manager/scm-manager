@@ -37,13 +37,11 @@ package sonia.scm.web;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.web.filter.ProviderPermissionFilter;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -79,12 +77,10 @@ public class SvnPermissionFilter extends ProviderPermissionFilter
    * @param repository
    */
   @Inject
-  public SvnPermissionFilter(
-          ScmConfiguration configuration,
-          Provider<WebSecurityContext> securityContextProvider,
-          RepositoryProvider repository)
+  public SvnPermissionFilter(ScmConfiguration configuration,
+    RepositoryProvider repository)
   {
-    super(configuration, securityContextProvider, repository);
+    super(configuration, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
