@@ -49,6 +49,7 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
@@ -71,7 +72,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -100,6 +100,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    *
    * @param configuration
    * @param contextProvider
+   * @param keyGenerator
    * @param securityContextProvider
    * @param repositoryDAO
    * @param handlerSet
@@ -108,7 +109,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Inject
   public DefaultRepositoryManager(ScmConfiguration configuration,
-    SCMContextProvider contextProvider,
+    SCMContextProvider contextProvider, KeyGenerator keyGenerator,
     Provider<WebSecurityContext> securityContextProvider,
     RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
     Provider<Set<RepositoryListener>> repositoryListenersProvider,
@@ -116,6 +117,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   {
     this.configuration = configuration;
     this.securityContextProvider = securityContextProvider;
+    this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
     this.repositoryListenersProvider = repositoryListenersProvider;
     this.repositoryHooksProvider = repositoryHooksProvider;
@@ -175,7 +177,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
       throw new RepositoryAllreadyExistExeption();
     }
 
-    repository.setId(UUID.randomUUID().toString());
+    repository.setId(keyGenerator.createKey());
     repository.setCreationDate(System.currentTimeMillis());
 
     if (createRepository)
@@ -966,6 +968,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private Map<String, RepositoryHandler> handlerMap;
+
+  /** Field description */
+  private KeyGenerator keyGenerator;
 
   /** Field description */
   private RepositoryDAO repositoryDAO;

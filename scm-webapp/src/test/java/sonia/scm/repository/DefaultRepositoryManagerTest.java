@@ -40,8 +40,9 @@ import com.google.inject.Provider;
 import org.junit.Test;
 
 import sonia.scm.Type;
-import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.xml.XmlRepositoryDAO;
+import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.MockUtil;
@@ -73,7 +74,7 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
    */
   @Test
   public void getRepositoryFromRequestUriTest()
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     RepositoryManager m = createManager();
 
@@ -86,9 +87,9 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
     assertEquals("scm-test", m.getFromUri("hg/scm-test").getName());
     assertEquals("scm-test", m.getFromUri("/hg/scm-test").getName());
     assertEquals("project1/test-1",
-                 m.getFromUri("/git/project1/test-1").getName());
+      m.getFromUri("/git/project1/test-1").getName());
     assertEquals("project1/test-1",
-                 m.getFromUri("/git/project1/test-1/ka/some/path").getName());
+      m.getFromUri("/git/project1/test-1/ka/some/path").getName());
     assertNull(m.getFromUri("/git/project1/test-3/ka/some/path"));
   }
 
@@ -138,8 +139,8 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
     ScmConfiguration configuration = new ScmConfiguration();
 
     return new DefaultRepositoryManager(configuration, contextProvider,
-            MockUtil.getAdminSecurityContextProvider(), repositoryDAO,
-            handlerSet, listenerProvider, hookProvider);
+      new DefaultKeyGenerator(), MockUtil.getAdminSecurityContextProvider(),
+      repositoryDAO, handlerSet, listenerProvider, hookProvider);
   }
 
   /**
@@ -153,7 +154,7 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
    * @throws RepositoryException
    */
   private void createRepository(RepositoryManager m, Repository repository)
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     m.create(repository);
   }

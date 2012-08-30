@@ -80,6 +80,7 @@ import sonia.scm.resources.ResourceManager;
 import sonia.scm.resources.ScriptResourceServlet;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.security.CipherUtil;
+import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.MessageDigestEncryptionHandler;
@@ -244,7 +245,9 @@ public class ScmServletModule extends ServletModule
     bind(ScmConfiguration.class).toInstance(config);
     bind(PluginLoader.class).toInstance(pluginLoader);
     bind(PluginManager.class, DefaultPluginManager.class);
-    bind(KeyGenerator.class).toInstance(cu.getKeyGenerator());
+
+    // note CipherUtil uses an other generator
+    bind(KeyGenerator.class).to(DefaultKeyGenerator.class);
     bind(CipherHandler.class).toInstance(cu.getCipherHandler());
     bind(EncryptionHandler.class, MessageDigestEncryptionHandler.class);
     bindExtProcessor.bindExtensions(binder());
