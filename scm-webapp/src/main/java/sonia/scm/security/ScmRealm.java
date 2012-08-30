@@ -96,10 +96,10 @@ public class ScmRealm extends AuthorizingRealm
 {
 
   /** Field description */
-  private static final String CACHE_NAME = "sonia.cache.authorizing";
+  public static final String NAME = "scm";
 
   /** Field description */
-  private static final String NAME = "scm";
+  private static final String CACHE_NAME = "sonia.cache.authorizing";
 
   /** Field description */
   private static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
@@ -460,7 +460,7 @@ public class ScmRealm extends AuthorizingRealm
    * @return
    */
   private List<org.apache.shiro.authz.Permission> collectRepositoryPermissions(
-    User user, Collection<String> groups)
+    User user, GroupNames groups)
   {
     List<org.apache.shiro.authz.Permission> permissions = Lists.newArrayList();
 
@@ -489,7 +489,7 @@ public class ScmRealm extends AuthorizingRealm
    */
   private void collectRepositoryPermissions(
     List<org.apache.shiro.authz.Permission> permissions, Repository repository,
-    User user, Collection<String> groups)
+    User user, GroupNames groups)
   {
     List<Permission> repositoryPermissions = repository.getPermissions();
 
@@ -582,7 +582,7 @@ public class ScmRealm extends AuthorizingRealm
     }
     else
     {
-      permissions = collectRepositoryPermissions(user, roles);
+      permissions = collectRepositoryPermissions(user, groups);
     }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
