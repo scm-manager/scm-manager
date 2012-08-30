@@ -50,7 +50,7 @@ import java.io.Serializable;
  * @author Sebastian Sdorra
  * @since 1.21
  */
-public class RepositoryPermission implements Permission, Serializable
+public final class RepositoryPermission implements Permission, Serializable
 {
 
   /** Field description */

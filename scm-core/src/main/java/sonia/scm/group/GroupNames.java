@@ -49,7 +49,7 @@ import java.util.Iterator;
  * @author Sebastian Sdorra
  * @since 1.21
  */
-public class GroupNames implements Serializable, Iterable<String>
+public final class GroupNames implements Serializable, Iterable<String>
 {
 
   /** Field description */
