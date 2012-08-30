@@ -76,14 +76,13 @@ public class PermissionUtil
    * @param repository
    * @param securityContext
    * @param pt
+   * @deprecated
    */
+  @Deprecated
   public static void assertPermission(Repository repository,
     WebSecurityContext securityContext, PermissionType pt)
   {
-    if (!hasPermission(repository, securityContext, pt))
-    {
-      throw new ScmSecurityException("action denied");
-    }
+    assertPermission(repository, pt);
   }
 
   /**
@@ -94,10 +93,30 @@ public class PermissionUtil
    * @param securityContextProvider
    * @param pt
    */
+  @Deprecated
   public static void assertPermission(Repository repository,
     Provider<WebSecurityContext> securityContextProvider, PermissionType pt)
   {
     assertPermission(repository, securityContextProvider.get(), pt);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param securityContextProvider
+   * @param pt
+   *
+   * @since 1.21
+   */
+  @Deprecated
+  public static void assertPermission(Repository repository, PermissionType pt)
+  {
+    if (!hasPermission(repository, pt))
+    {
+      throw new ScmSecurityException("action denied");
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -111,7 +130,9 @@ public class PermissionUtil
    * @param pt
    *
    * @return
+   * @deprecated
    */
+  @Deprecated
   public static boolean hasPermission(Repository repository,
     Provider<WebSecurityContext> securityContextProvider, PermissionType pt)
   {
@@ -146,7 +167,10 @@ public class PermissionUtil
    *
    * @return
    * @since 1.21
+   *
+   * @deprecated
    */
+  @Deprecated
   public static boolean hasPermission(Repository repository, PermissionType pt)
   {
     boolean result = false;
