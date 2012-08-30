@@ -100,10 +100,7 @@ public class BasicAuthenticationFilter extends HttpFilter
    */
   @Deprecated
   public BasicAuthenticationFilter(
-    Provider<WebSecurityContext> securityContextProvider)
-  {
-    this.securityContextProvider = securityContextProvider;
-  }
+    Provider<WebSecurityContext> securityContextProvider) {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -261,9 +258,4 @@ public class BasicAuthenticationFilter extends HttpFilter
 
     return user;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 }
