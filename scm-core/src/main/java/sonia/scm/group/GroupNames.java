@@ -60,6 +60,15 @@ public final class GroupNames implements Serializable, Iterable<String>
   /**
    * Constructs ...
    *
+   */
+  public GroupNames()
+  {
+    this.collection = Collections.EMPTY_LIST;
+  }
+
+  /**
+   * Constructs ...
+   *
    *
    * @param collection
    */

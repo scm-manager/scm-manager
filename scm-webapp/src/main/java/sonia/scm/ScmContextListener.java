@@ -52,7 +52,6 @@ import sonia.scm.store.StoreFactory;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.IOUtil;
 import sonia.scm.web.security.AuthenticationManager;
-import sonia.scm.web.security.LocalSecurityContextHolder;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -97,9 +96,6 @@ public class ScmContextListener extends GuiceServletContextListener
 
       // close CacheManager
       IOUtil.close(globalInjector.getInstance(CacheManager.class));
-
-      // remove thread local store
-      globalInjector.getInstance(LocalSecurityContextHolder.class).destroy();
 
       // call destroy event
       globalInjector.getInstance(

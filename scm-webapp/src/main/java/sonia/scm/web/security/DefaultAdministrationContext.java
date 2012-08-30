@@ -30,19 +30,26 @@
  */
 
 
+
 package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContext;
+import sonia.scm.group.GroupNames;
+import sonia.scm.security.ScmRealm;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 
@@ -79,13 +86,9 @@ public class DefaultAdministrationContext implements AdministrationContext
    * @param contextHolder
    */
   @Inject
-  public DefaultAdministrationContext(Injector injector,
-          @Named("userSession") Provider<WebSecurityContext> userSessionProvider,
-          LocalSecurityContextHolder contextHolder)
+  public DefaultAdministrationContext(Injector injector)
   {
     this.injector = injector;
-    this.userSessionProvider = userSessionProvider;
-    this.contextHolder = contextHolder;
 
     URL url = DefaultAdministrationContext.class.getResource(SYSTEM_ACCOUNT);
 
@@ -94,9 +97,9 @@ public class DefaultAdministrationContext implements AdministrationContext
       throw new RuntimeException("could not find resource for system account");
     }
 
-    User user = JAXB.unmarshal(url, User.class);
+    User adminUser = JAXB.unmarshal(url, User.class);
 
-    adminContext = new AdministrationSecurityContext(user);
+    principalCollection = createAdminCollection(adminUser);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -112,15 +115,26 @@ public class DefaultAdministrationContext implements AdministrationContext
   {
     AssertUtil.assertIsNotNull(action);
 
-    if (logger.isWarnEnabled())
-    {
-      String user = SecurityUtil.getUsername(userSessionProvider);
+    Subject subject = SecurityUtils.getSubject();
 
-      logger.warn("user {} executes {} as admin", user,
-                  action.getClass().getName());
+    if (logger.isInfoEnabled())
+    {
+      String username = null;
+
+      if (subject.isAuthenticated())
+      {
+        username = subject.getPrincipal().toString();
+      }
+      else
+      {
+        username = SCMContext.USER_ANONYMOUS;
+      }
+
+      logger.info("user {} executes {} as admin", username,
+        action.getClass().getName());
     }
 
-    contextHolder.set(adminContext);
+    subject.runAs(principalCollection);
 
     try
     {
@@ -128,7 +142,14 @@ public class DefaultAdministrationContext implements AdministrationContext
     }
     finally
     {
-      contextHolder.remove();
+
+      PrincipalCollection collection = subject.releaseRunAs();
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("release runas for user {}",
+          collection.getPrimaryPrincipal());
+      }
     }
   }
 
@@ -146,17 +167,30 @@ public class DefaultAdministrationContext implements AdministrationContext
     runAsAdmin(action);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param adminUser
+   *
+   * @return
+   */
+  private PrincipalCollection createAdminCollection(User adminUser)
+  {
+    SimplePrincipalCollection collection = new SimplePrincipalCollection();
+
+    collection.add(adminUser.getId(), ScmRealm.NAME);
+    collection.add(adminUser, ScmRealm.NAME);
+    collection.add(new GroupNames(), ScmRealm.NAME);
+
+    return collection;
+  }
+
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private AdministrationSecurityContext adminContext;
-
-  /** Field description */
-  private LocalSecurityContextHolder contextHolder;
 
   /** Field description */
   private Injector injector;
 
   /** Field description */
-  private Provider<WebSecurityContext> userSessionProvider;
+  private PrincipalCollection principalCollection;
 }
