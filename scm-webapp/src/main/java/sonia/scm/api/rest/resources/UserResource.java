@@ -36,20 +36,20 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import org.apache.shiro.SecurityUtils;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import sonia.scm.security.EncryptionHandler;
+import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -100,12 +100,10 @@ public class UserResource extends AbstractManagerResource<User, UserException>
    */
   @Inject
   public UserResource(UserManager userManager,
-                      EncryptionHandler encryptionHandler,
-                      Provider<WebSecurityContext> securityContextProvider)
+    EncryptionHandler encryptionHandler)
   {
     super(userManager);
     this.encryptionHandler = encryptionHandler;
-    this.securityContextProvider = securityContextProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -179,7 +177,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
   public Response update(@Context UriInfo uriInfo,
-                         @PathParam("id") String name, User user)
+    @PathParam("id") String name, User user)
   {
     return super.update(uriInfo, name, user);
   }
@@ -212,7 +210,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   {
     Response response = null;
 
-    if (SecurityUtil.isAdmin(securityContextProvider))
+    if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
     {
       response = super.get(request, id);
     }
@@ -250,7 +248,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
   public Response getAll(@Context Request request, @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("-1")
   @QueryParam("limit") int limit, @QueryParam("sortby") String sortby,
-                                  @DefaultValue("false")
+    @DefaultValue("false")
   @QueryParam("desc") boolean desc)
   {
     return super.getAll(request, start, limit, sortby, desc);
@@ -268,7 +266,7 @@ public class UserResource extends AbstractManagerResource<User, UserException>
    */
   @Override
   protected GenericEntity<Collection<User>> createGenericEntity(
-          Collection<User> items)
+    Collection<User> items)
   {
     return new GenericEntity<Collection<User>>(items) {}
     ;
@@ -396,7 +394,4 @@ public class UserResource extends AbstractManagerResource<User, UserException>
 
   /** Field description */
   private EncryptionHandler encryptionHandler;
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 }

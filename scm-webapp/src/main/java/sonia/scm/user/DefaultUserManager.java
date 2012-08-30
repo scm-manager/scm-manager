@@ -39,6 +39,9 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,13 +50,13 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
+import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -104,11 +107,9 @@ public class DefaultUserManager extends AbstractUserManager
    * @param userListenerProvider
    */
   @Inject
-  public DefaultUserManager(
-          Provider<WebSecurityContext> scurityContextProvider, UserDAO userDAO,
-          Provider<Set<UserListener>> userListenerProvider)
+  public DefaultUserManager(UserDAO userDAO,
+    Provider<Set<UserListener>> userListenerProvider)
   {
-    this.scurityContextProvider = scurityContextProvider;
     this.userDAO = userDAO;
     this.userListenerProvider = userListenerProvider;
   }
@@ -166,9 +167,16 @@ public class DefaultUserManager extends AbstractUserManager
       logger.info("create user {} of type {}", user.getName(), user.getType());
     }
 
-    User currentUser = SecurityUtil.getCurrentUser(scurityContextProvider);
+    Subject subject = SecurityUtils.getSubject();
 
-    if (!user.equals(currentUser) &&!currentUser.isAdmin())
+    if (!subject.isAuthenticated())
+    {
+      throw new ScmSecurityException("user is not authenticated");
+    }
+
+    User currentUser = subject.getPrincipals().oneByType(User.class);
+
+    if (!user.equals(currentUser) &&!subject.hasRole(Role.ADMIN))
     {
       throw new ScmSecurityException("admin account is required");
     }
@@ -202,7 +210,7 @@ public class DefaultUserManager extends AbstractUserManager
       logger.info("delete user {} of type {}", user.getName(), user.getType());
     }
 
-    SecurityUtil.assertIsAdmin(scurityContextProvider);
+    SecurityUtil.assertIsAdmin();
 
     String name = user.getName();
 
@@ -259,9 +267,17 @@ public class DefaultUserManager extends AbstractUserManager
       logger.info("modify user {} of type {}", user.getName(), user.getType());
     }
 
-    User currentUser = SecurityUtil.getCurrentUser(scurityContextProvider);
+    Subject subject = SecurityUtils.getSubject();
 
-    if (!user.getName().equals(currentUser.getName()) &&!currentUser.isAdmin())
+    if (!subject.isAuthenticated())
+    {
+      throw new ScmSecurityException("user is not authenticated");
+    }
+
+    User currentUser = subject.getPrincipals().oneByType(User.class);
+
+    if (!user.getName().equals(currentUser.getName())
+      &&!subject.hasRole(Role.ADMIN))
     {
       throw new ScmSecurityException("admin account is required");
     }
@@ -299,7 +315,7 @@ public class DefaultUserManager extends AbstractUserManager
       logger.info("refresh user {} of type {}", user.getName(), user.getType());
     }
 
-    SecurityUtil.assertIsAdmin(scurityContextProvider);
+    SecurityUtil.assertIsAdmin();
 
     User fresh = userDAO.get(user.getName());
 
@@ -328,7 +344,7 @@ public class DefaultUserManager extends AbstractUserManager
     }
 
     return SearchUtil.search(searchRequest, userDAO.getAll(),
-                             new TransformFilter<User>()
+      new TransformFilter<User>()
     {
       @Override
       public User accept(User user)
@@ -336,7 +352,7 @@ public class DefaultUserManager extends AbstractUserManager
         User result = null;
 
         if (SearchUtil.matchesOne(searchRequest, user.getName(),
-                                  user.getDisplayName(), user.getMail()))
+          user.getDisplayName(), user.getMail()))
         {
           result = user.clone();
         }
@@ -394,7 +410,7 @@ public class DefaultUserManager extends AbstractUserManager
   @Override
   public Collection<User> getAll(Comparator<User> comparator)
   {
-    SecurityUtil.assertIsAdmin(scurityContextProvider);
+    SecurityUtil.assertIsAdmin();
 
     List<User> users = new ArrayList<User>();
 
@@ -424,12 +440,12 @@ public class DefaultUserManager extends AbstractUserManager
    */
   @Override
   public Collection<User> getAll(Comparator<User> comaparator, int start,
-                                 int limit)
+    int limit)
   {
-    SecurityUtil.assertIsAdmin(scurityContextProvider);
+    SecurityUtil.assertIsAdmin();
 
     return Util.createSubCollection(userDAO.getAll(), comaparator,
-                                    new CollectionAppender<User>()
+      new CollectionAppender<User>()
     {
       @Override
       public void append(Collection<User> collection, User item)
@@ -530,9 +546,6 @@ public class DefaultUserManager extends AbstractUserManager
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Provider<WebSecurityContext> scurityContextProvider;
 
   /** Field description */
   private UserDAO userDAO;

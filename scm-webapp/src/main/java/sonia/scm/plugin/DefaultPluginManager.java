@@ -50,7 +50,6 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.HttpClient;
-import sonia.scm.security.SecurityContext;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SecurityUtil;
@@ -82,7 +81,7 @@ import javax.xml.bind.Unmarshaller;
  */
 @Singleton
 public class DefaultPluginManager
-        implements PluginManager, ConfigChangedListener<ScmConfiguration>
+  implements PluginManager, ConfigChangedListener<ScmConfiguration>
 {
 
   /** Field description */
@@ -116,17 +115,14 @@ public class DefaultPluginManager
    * @param clientProvider
    */
   @Inject
-  public DefaultPluginManager(
-          SCMContextProvider context,
-          Provider<SecurityContext> securityContextProvicer,
-          ScmConfiguration configuration, PluginLoader pluginLoader,
-          CacheManager cacheManager, Provider<HttpClient> clientProvider)
+  public DefaultPluginManager(SCMContextProvider context,
+    ScmConfiguration configuration, PluginLoader pluginLoader,
+    CacheManager cacheManager, Provider<HttpClient> clientProvider)
   {
     this.context = context;
-    this.securityContextProvicer = securityContextProvicer;
     this.configuration = configuration;
     this.cache = cacheManager.getCache(String.class, PluginCenter.class,
-                                       CACHE_NAME);
+      CACHE_NAME);
     this.clientProvider = clientProvider;
     installedPlugins = new HashMap<String, Plugin>();
 
@@ -191,7 +187,7 @@ public class DefaultPluginManager
   @Override
   public void install(String id)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     PluginCenter center = getPluginCenter();
 
@@ -223,7 +219,7 @@ public class DefaultPluginManager
   @Override
   public void uninstall(String id)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     Plugin plugin = installedPlugins.get(id);
 
@@ -267,7 +263,7 @@ public class DefaultPluginManager
   @Override
   public void update(String id)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     String[] idParts = id.split(":");
     String groupId = idParts[0];
@@ -277,7 +273,7 @@ public class DefaultPluginManager
     for (PluginInformation info : getInstalled())
     {
       if (groupId.equals(info.getGroupId())
-          && artefactId.equals(info.getArtifactId()))
+        && artefactId.equals(info.getArtifactId()))
       {
         installed = info;
 
@@ -311,7 +307,7 @@ public class DefaultPluginManager
   @Override
   public PluginInformation get(String id)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     PluginInformation result = null;
 
@@ -340,7 +336,7 @@ public class DefaultPluginManager
   public Set<PluginInformation> get(PluginFilter filter)
   {
     AssertUtil.assertIsNotNull(filter);
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     Set<PluginInformation> infoSet = new HashSet<PluginInformation>();
 
@@ -359,7 +355,7 @@ public class DefaultPluginManager
   @Override
   public Collection<PluginInformation> getAll()
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     Set<PluginInformation> infoSet = getInstalled();
 
@@ -377,7 +373,7 @@ public class DefaultPluginManager
   @Override
   public Collection<PluginInformation> getAvailable()
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     Set<PluginInformation> availablePlugins = new HashSet<PluginInformation>();
     Set<PluginInformation> centerPlugins = getPluginCenter().getPlugins();
@@ -402,7 +398,7 @@ public class DefaultPluginManager
   @Override
   public Set<PluginInformation> getAvailableUpdates()
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     return get(FILTER_UPDATES);
   }
@@ -416,7 +412,7 @@ public class DefaultPluginManager
   @Override
   public Set<PluginInformation> getInstalled()
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     Set<PluginInformation> infoSet = new LinkedHashSet<PluginInformation>();
 
@@ -453,7 +449,7 @@ public class DefaultPluginManager
     }
 
     return url.replace("{version}", context.getVersion()).replace("{os}",
-                       os).replace("{arch}", arch);
+      os).replace("{arch}", arch);
   }
 
   /**
@@ -465,7 +461,7 @@ public class DefaultPluginManager
    * @param filter
    */
   private void filter(Set<PluginInformation> target,
-                      Collection<PluginInformation> source, PluginFilter filter)
+    Collection<PluginInformation> source, PluginFilter filter)
   {
     for (PluginInformation info : source)
     {
@@ -588,7 +584,7 @@ public class DefaultPluginManager
             if (pluginHandler == null)
             {
               pluginHandler = new AetherPluginHandler(this,
-                      SCMContext.getContext(), configuration);
+                SCMContext.getContext(), configuration);
             }
 
             pluginHandler.setPluginRepositories(center.getRepositories());
@@ -643,7 +639,7 @@ public class DefaultPluginManager
       PluginInformation installed = installedPlugin.getInformation();
 
       if (isSamePlugin(available, installed)
-          && (installed.getState() == PluginState.CORE))
+        && (installed.getState() == PluginState.CORE))
       {
         core = true;
 
@@ -664,7 +660,7 @@ public class DefaultPluginManager
    * @return
    */
   private boolean isNewer(PluginInformation available,
-                          PluginInformation installed)
+    PluginInformation installed)
   {
     boolean result = false;
     PluginVersion version = PluginVersion.createVersion(available.getVersion());
@@ -689,7 +685,7 @@ public class DefaultPluginManager
   private boolean isSamePlugin(PluginInformation p1, PluginInformation p2)
   {
     return p1.getGroupId().equals(p2.getGroupId())
-           && p1.getArtifactId().equals(p2.getArtifactId());
+      && p1.getArtifactId().equals(p2.getArtifactId());
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -711,9 +707,6 @@ public class DefaultPluginManager
 
   /** Field description */
   private AetherPluginHandler pluginHandler;
-
-  /** Field description */
-  private Provider<SecurityContext> securityContextProvicer;
 
   /** Field description */
   private Unmarshaller unmarshaller;

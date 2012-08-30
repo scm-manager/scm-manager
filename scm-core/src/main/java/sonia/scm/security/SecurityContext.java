@@ -40,7 +40,9 @@ import sonia.scm.user.User;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated use {@link SecurityUtils#getSecurityManager()} instead.
  */
+@Deprecated
 public interface SecurityContext
 {
 

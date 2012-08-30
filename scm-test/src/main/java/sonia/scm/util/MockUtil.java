@@ -38,6 +38,7 @@ package sonia.scm.util;
 import com.google.inject.Provider;
 
 import org.apache.shiro.authz.Permission;
+import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
 import org.mockito.invocation.InvocationOnMock;
@@ -66,6 +67,12 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class MockUtil
 {
+
+  /** Field description */
+  private static final User ADMIN = new User("scmadmin", "SCM Admin",
+                                      "scmadmin@scm.org");
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -100,6 +107,14 @@ public class MockUtil
       Boolean.TRUE);
     when(subject.isPermittedAll()).thenReturn(Boolean.TRUE);
     when(subject.hasRole("admin")).thenReturn(Boolean.TRUE);
+
+    PrincipalCollection collection = mock(PrincipalCollection.class);
+
+    when(collection.getPrimaryPrincipal()).thenReturn(ADMIN.getId());
+    when(collection.oneByType(User.class)).thenReturn(ADMIN);
+
+    when(subject.getPrincipal()).thenReturn(ADMIN.getId());
+    when(subject.getPrincipals()).thenReturn(collection);
 
     return subject;
   }

@@ -35,12 +35,11 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-import sonia.scm.util.SecurityUtil;
-import sonia.scm.web.security.WebSecurityContext;
+import org.apache.shiro.subject.Subject;
+
+import sonia.scm.security.Role;
 
 /**
  *
@@ -51,31 +50,18 @@ public class AdminSecurityFilter extends SecurityFilter
 {
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param securityContextProvider
-   */
-  @Inject
-  public AdminSecurityFilter(
-          Provider<WebSecurityContext> securityContextProvider)
-  {
-    super(securityContextProvider);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
    * Method description
    *
    *
    * @param securityContext
    *
+   * @param subject
+   *
    * @return
    */
   @Override
-  protected boolean hasPermission(WebSecurityContext securityContext)
+  protected boolean hasPermission(Subject subject)
   {
-    return SecurityUtil.isAdmin(securityContext);
+    return subject.hasRole(Role.ADMIN);
   }
 }

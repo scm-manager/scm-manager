@@ -38,8 +38,9 @@ package sonia.scm.api.rest.resources;
 import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import org.apache.shiro.SecurityUtils;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
@@ -55,7 +56,6 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
@@ -71,10 +71,10 @@ import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.security.RepositoryPermission;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -137,14 +137,12 @@ public class RepositoryResource
   @Inject
   public RepositoryResource(ScmConfiguration configuration,
     RepositoryManager repositoryManager,
-    Provider<WebSecurityContext> securityContextProvider,
     RepositoryServiceFactory servicefactory)
   {
     super(repositoryManager);
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.servicefactory = servicefactory;
-    this.securityContextProvider = securityContextProvider;
     setDisableCache(false);
   }
 
@@ -1091,8 +1089,9 @@ public class RepositoryResource
    */
   private boolean isOwner(Repository repository)
   {
-    return PermissionUtil.hasPermission(repository, securityContextProvider,
-      PermissionType.OWNER);
+
+    return SecurityUtils.getSubject().isPermitted(
+      new RepositoryPermission(repository, PermissionType.OWNER));
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -1102,9 +1101,6 @@ public class RepositoryResource
 
   /** Field description */
   private RepositoryManager repositoryManager;
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 
   /** Field description */
   private RepositoryServiceFactory servicefactory;

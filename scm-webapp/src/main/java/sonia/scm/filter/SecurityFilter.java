@@ -35,13 +35,14 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
+import sonia.scm.user.User;
 import sonia.scm.web.filter.HttpFilter;
 import sonia.scm.web.filter.SecurityHttpServletRequestWrapper;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -63,20 +64,6 @@ public class SecurityFilter extends HttpFilter
   /** Field description */
   public static final String URL_AUTHENTICATION = "/api/rest/authentication";
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param securityContextProvider
-   */
-  @Inject
-  public SecurityFilter(Provider<WebSecurityContext> securityContextProvider)
-  {
-    this.securityContextProvider = securityContextProvider;
-  }
-
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -92,40 +79,29 @@ public class SecurityFilter extends HttpFilter
    */
   @Override
   protected void doFilter(HttpServletRequest request,
-                          HttpServletResponse response, FilterChain chain)
-          throws IOException, ServletException
+    HttpServletResponse response, FilterChain chain)
+    throws IOException, ServletException
   {
-    WebSecurityContext securityContext = securityContextProvider.get();
+    Subject subject = SecurityUtils.getSubject();
 
-    if (securityContext != null)
+    String uri =
+      request.getRequestURI().substring(request.getContextPath().length());
+
+    if (!uri.startsWith(URL_AUTHENTICATION))
     {
-      String uri =
-        request.getRequestURI().substring(request.getContextPath().length());
-
-      if (!uri.startsWith(URL_AUTHENTICATION))
+      if (hasPermission(subject))
       {
-        if (hasPermission(securityContext))
-        {
-          chain.doFilter(new SecurityHttpServletRequestWrapper(request,
-                  securityContext.getUser()), response);
-        }
-        else if (securityContext.isAuthenticated())
-        {
-          response.sendError(HttpServletResponse.SC_FORBIDDEN);
-        }
-        else
-        {
-          response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-        }
+        chain.doFilter(new SecurityHttpServletRequestWrapper(request,
+          subject.getPrincipals().oneByType(User.class)), response);
       }
       else
       {
-        chain.doFilter(request, response);
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
       }
     }
     else
     {
-      response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+      chain.doFilter(request, response);
     }
   }
 
@@ -135,17 +111,12 @@ public class SecurityFilter extends HttpFilter
    * Method description
    *
    *
-   * @param securityContext
+   * @param subject
    *
    * @return
    */
-  protected boolean hasPermission(WebSecurityContext securityContext)
+  protected boolean hasPermission(Subject subject)
   {
-    return securityContext.isAuthenticated();
+    return subject.isAuthenticated();
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 }

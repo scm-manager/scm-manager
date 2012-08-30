@@ -35,8 +35,6 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import sonia.scm.web.filter.BasicAuthenticationFilter;
@@ -67,21 +65,6 @@ public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
   /** Field description */
   public static final String URI_STATE = "/api/rest/authentication/state";
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param securityContextProvider
-   */
-  @Inject
-  public ApiBasicAuthenticationFilter(
-          Provider<WebSecurityContext> securityContextProvider)
-  {
-    super(securityContextProvider);
-  }
-
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -97,14 +80,14 @@ public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
    */
   @Override
   protected void doFilter(HttpServletRequest request,
-                          HttpServletResponse response, FilterChain chain)
-          throws IOException, ServletException
+    HttpServletResponse response, FilterChain chain)
+    throws IOException, ServletException
   {
 
     // skip filter on authentication resource
     if (request.getRequestURI().contains(URI_LOGIN)
-        || request.getRequestURI().contains(URI_STATE)
-        || request.getRequestURI().contains(URI_LOGOUT))
+      || request.getRequestURI().contains(URI_STATE)
+      || request.getRequestURI().contains(URI_LOGOUT))
     {
       chain.doFilter(request, response);
     }
@@ -127,9 +110,8 @@ public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
    */
   @Override
   protected void handleUnauthorized(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain chain)
-          throws IOException, ServletException
+    HttpServletResponse response, FilterChain chain)
+    throws IOException, ServletException
   {
     chain.doFilter(request, response);
   }

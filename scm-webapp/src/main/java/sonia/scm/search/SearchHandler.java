@@ -37,15 +37,16 @@ package sonia.scm.search;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
-import com.google.inject.Provider;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.cache.Cache;
-import sonia.scm.util.SecurityUtil;
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -77,11 +78,10 @@ public class SearchHandler<T>
    * @param cache
    * @param searchable
    */
-  public SearchHandler(Provider<WebSecurityContext> securityContextProvider,
-                       Cache<String, SearchResults> cache,
-                       Searchable<T> searchable)
+  public SearchHandler(Cache<String, SearchResults> cache,
+    Searchable<T> searchable)
   {
-    this.securityContextProvider = securityContextProvider;
+
     this.cache = cache;
     this.searchable = searchable;
   }
@@ -107,9 +107,14 @@ public class SearchHandler<T>
    * @return
    */
   public SearchResults search(String queryString,
-                              Function<T, SearchResult> function)
+    Function<T, SearchResult> function)
   {
-    SecurityUtil.assertIsNotAnonymous(securityContextProvider);
+    Subject subject = SecurityUtils.getSubject();
+
+    if (!subject.isAuthenticated())
+    {
+      throw new ScmSecurityException("Authentication is required");
+    }
 
     if (Util.isEmpty(queryString))
     {
@@ -201,9 +206,6 @@ public class SearchHandler<T>
 
   /** Field description */
   protected Searchable<T> searchable;
-
-  /** Field description */
-  protected Provider<WebSecurityContext> securityContextProvider;
 
   /** Field description */
   private int maxResults = 5;

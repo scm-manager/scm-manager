@@ -39,14 +39,15 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.apache.shiro.SecurityUtils;
+
 import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
-import sonia.scm.util.SecurityUtil;
-import sonia.scm.web.security.WebSecurityContext;
+import sonia.scm.security.Role;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -77,7 +78,7 @@ import javax.ws.rs.core.UriInfo;
 @Singleton
 @ExternallyManagedLifecycle
 public class GroupResource
-        extends AbstractManagerResource<Group, GroupException>
+  extends AbstractManagerResource<Group, GroupException>
 {
 
   /** Field description */
@@ -94,11 +95,9 @@ public class GroupResource
    * @param groupManager
    */
   @Inject
-  public GroupResource(Provider<WebSecurityContext> securityContextProvider,
-                       GroupManager groupManager)
+  public GroupResource(GroupManager groupManager)
   {
     super(groupManager);
-    this.securityContextProvider = securityContextProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -172,7 +171,7 @@ public class GroupResource
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   @Override
   public Response update(@Context UriInfo uriInfo,
-                         @PathParam("id") String name, Group group)
+    @PathParam("id") String name, Group group)
   {
     return super.update(uriInfo, name, group);
   }
@@ -205,7 +204,7 @@ public class GroupResource
   {
     Response response = null;
 
-    if (SecurityUtil.isAdmin(securityContextProvider))
+    if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
     {
       response = super.get(request, id);
     }
@@ -243,7 +242,7 @@ public class GroupResource
   public Response getAll(@Context Request request, @DefaultValue("0")
   @QueryParam("start") int start, @DefaultValue("-1")
   @QueryParam("limit") int limit, @QueryParam("sortby") String sortby,
-                                  @DefaultValue("false")
+    @DefaultValue("false")
   @QueryParam("desc") boolean desc)
   {
     return super.getAll(request, start, limit, sortby, desc);
@@ -261,7 +260,7 @@ public class GroupResource
    */
   @Override
   protected GenericEntity<Collection<Group>> createGenericEntity(
-          Collection<Group> items)
+    Collection<Group> items)
   {
     return new GenericEntity<Collection<Group>>(items) {}
     ;
@@ -294,9 +293,4 @@ public class GroupResource
   {
     return PATH_PART;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 }
