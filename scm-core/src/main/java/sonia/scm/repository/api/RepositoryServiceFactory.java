@@ -38,8 +38,10 @@ package sonia.scm.repository.api;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +54,6 @@ import sonia.scm.repository.Branches;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.PostReceiveRepositoryHook;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
@@ -64,8 +65,8 @@ import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.Tags;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
+import sonia.scm.security.RepositoryPermission;
 import sonia.scm.security.ScmSecurityException;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -138,12 +139,10 @@ public final class RepositoryServiceFactory
   @Inject
   public RepositoryServiceFactory(CacheManager cacheManager,
     RepositoryManager repositoryManager,
-    Provider<WebSecurityContext> securityContextProvider,
     Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil)
   {
     this.cacheManager = cacheManager;
     this.repositoryManager = repositoryManager;
-    this.securityContextProvider = securityContextProvider;
     this.resolvers = resolvers;
     this.preProcessorUtil = preProcessorUtil;
 
@@ -250,8 +249,13 @@ public final class RepositoryServiceFactory
     Preconditions.checkNotNull(repository, "repository is required");
 
     // check for read permissions of current user
-    PermissionUtil.assertPermission(repository, securityContextProvider,
-      PermissionType.READ);
+    Subject subject = SecurityUtils.getSubject();
+
+    if (!subject.isPermitted(new RepositoryPermission(repository,
+      PermissionType.READ)))
+    {
+      throw new ScmSecurityException("read permission are required");
+    }
 
     RepositoryService service = null;
 
@@ -412,7 +416,4 @@ public final class RepositoryServiceFactory
 
   /** Field description */
   private Set<RepositoryServiceResolver> resolvers;
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 }
