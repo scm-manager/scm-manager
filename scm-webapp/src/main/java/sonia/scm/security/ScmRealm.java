@@ -271,7 +271,7 @@ public class ScmRealm extends AuthorizingRealm
     {
       if (logger.isTraceEnabled())
       {
-        logger.trace("coullect AuthorizationInfo for user {}", user.getName());
+        logger.trace("collect AuthorizationInfo for user {}", user.getName());
       }
 
       GroupNames groups = principals.oneByType(GroupNames.class);
