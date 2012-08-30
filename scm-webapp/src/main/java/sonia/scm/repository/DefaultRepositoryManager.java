@@ -42,6 +42,7 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.concurrent.SubjectAwareExecutorService;
 import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
@@ -115,7 +116,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     this.repositoryDAO = repositoryDAO;
     this.repositoryListenersProvider = repositoryListenersProvider;
     this.repositoryHooksProvider = repositoryHooksProvider;
-    this.executorService = Executors.newCachedThreadPool();
+
+    this.executorService =
+      new SubjectAwareExecutorService(Executors.newCachedThreadPool());
     handlerMap = new HashMap<String, RepositoryHandler>();
     types = new HashSet<Type>();
 
