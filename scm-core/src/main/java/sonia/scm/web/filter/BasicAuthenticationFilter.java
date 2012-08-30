@@ -35,7 +35,6 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
@@ -48,7 +47,6 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.security.ScmAuthenticationToken;
 import sonia.scm.user.User;
-import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
