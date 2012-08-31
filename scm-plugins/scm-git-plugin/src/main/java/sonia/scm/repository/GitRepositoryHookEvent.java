@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevSort;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -44,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.IOUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -72,14 +74,16 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
    *
    *
    * @param directory
+   * @param ref
    * @param newId
    * @param oldId
    * @param type
    */
-  public GitRepositoryHookEvent(File directory, ObjectId newId, ObjectId oldId,
-                                RepositoryHookType type)
+  public GitRepositoryHookEvent(File directory, Ref ref, ObjectId newId,
+    ObjectId oldId, RepositoryHookType type)
   {
     this.directory = directory;
+    this.defaultBranch = GitUtil.getBranch(ref);
     this.newId = newId;
     this.oldId = oldId;
     this.type = type;
@@ -152,7 +156,21 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
 
         while (commit != null)
         {
-          result.add(converter.createChangeset(commit));
+          Changeset changeset = converter.createChangeset(commit);
+
+          if (changeset.getBranches().isEmpty()
+            && Util.isNotEmpty(defaultBranch))
+          {
+            if (logger.isTraceEnabled())
+            {
+              logger.trace("set branch to current default branch {}",
+                defaultBranch);
+            }
+
+            changeset.getBranches().add(defaultBranch);
+          }
+
+          result.add(changeset);
           commit = walk.next();
         }
       }
@@ -175,6 +193,9 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
 
   /** Field description */
   private List<Changeset> changesets;
+
+  /** Field description */
+  private String defaultBranch;
 
   /** Field description */
   private File directory;
