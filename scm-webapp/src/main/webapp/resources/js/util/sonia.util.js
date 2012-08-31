@@ -169,18 +169,13 @@ Sonia.util.apply = function(obj, p){
 if (!Array.prototype.filter) {
   
   Array.prototype.filter = function(fn, scope){
-    var results = [],
-    i = 0,
-    ln = array.length;
-
-    for (; i < ln; i++) {
-      if (fn.call(scope, array[i], i, array)) {
-        results.push(array[i]);
+    var results = [];
+    for (var i=0; i < this.length; i++) {
+      if (fn.call(scope, this[i], i, this)) {
+        results.push(this[i]);
       }
     }
-
     return results;
-
   }
   
 }
