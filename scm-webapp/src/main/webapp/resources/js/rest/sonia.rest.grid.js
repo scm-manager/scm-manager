@@ -90,10 +90,18 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
     if ( debug ){
       console.debug('reload store');
     }
-    this.store.load({
-      callback: callback,
-      scope: scope
-    });
+    
+    if ( Ext.isFunction(callback) ){
+      this.store.load({
+        callback: callback,
+        scope: scope
+      });
+    } else {
+      if (debug){
+        console.debug( 'callback is not a function' );
+      }
+      this.store.load();
+    }
   },
 
   selectionChanged: function(sm){

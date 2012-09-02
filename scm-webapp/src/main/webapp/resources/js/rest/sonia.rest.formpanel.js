@@ -94,8 +94,10 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
   execCallback: function(obj, item){
     if ( Ext.isFunction( obj ) ){
       obj(item);
-    } else if ( Ext.isObject( obj )){
+    } else if ( Ext.isObject( obj ) && Ext.isFunction(obj.fn) ){
       obj.fn.call( obj.scope, item );
+    } else if (debug){
+      console.debug('obj ' + obj + ' is not valid callback object');
     }
   },
 
