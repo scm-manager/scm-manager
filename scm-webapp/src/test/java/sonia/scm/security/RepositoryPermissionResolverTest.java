@@ -67,7 +67,7 @@ public class RepositoryPermissionResolverTest
 
     p = resolver.resolvePermission("repository:*:OWNER");
     assertNotNull(p);
-    assertEquals("P", p.getRepositoryId());
+    assertEquals("*", p.getRepositoryId());
     assertEquals(PermissionType.OWNER, p.getPermissionType());
   }
 
