@@ -35,7 +35,6 @@ package sonia.scm.security;
 
 import com.google.common.base.Splitter;
 
-import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.permission.PermissionResolver;
 
 import org.slf4j.Logger;
@@ -46,6 +45,7 @@ import sonia.scm.repository.PermissionType;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Iterator;
+import java.util.Locale;
 
 /**
  *
@@ -74,7 +74,7 @@ public class RepositoryPermissionResolver implements PermissionResolver
    * @return
    */
   @Override
-  public Permission resolvePermission(String permissionString)
+  public RepositoryPermission resolvePermission(String permissionString)
   {
     RepositoryPermission permission = null;
     Iterator<String> permissionIt =
@@ -120,7 +120,11 @@ public class RepositoryPermissionResolver implements PermissionResolver
       {
         try
         {
-          PermissionType type = PermissionType.valueOf(permissionIt.next());
+          String typeString = permissionIt.next();
+
+          typeString = typeString.trim().toUpperCase(Locale.ENGLISH);
+
+          PermissionType type = PermissionType.valueOf(typeString);
 
           permission = new RepositoryPermission(repositoryId, type);
         }
