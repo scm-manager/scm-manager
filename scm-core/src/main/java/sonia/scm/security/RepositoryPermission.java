@@ -172,6 +172,30 @@ public final class RepositoryPermission implements Permission, Serializable
     //J+
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public PermissionType getPermissionType()
+  {
+    return permissionType;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getRepositoryId()
+  {
+    return repositoryId;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
