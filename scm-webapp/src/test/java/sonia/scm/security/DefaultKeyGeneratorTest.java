@@ -60,6 +60,24 @@ public class DefaultKeyGeneratorTest
   /**
    * Method description
    *
+   */
+  @Test
+  public void testCreateRandom()
+  {
+    DefaultKeyGenerator gen = new DefaultKeyGenerator();
+
+    for (int i = 0; i < 10000; i++)
+    {
+      int r = gen.createRandom();
+
+      assertTrue(r >= 100);
+      assertTrue(r <= 999);
+    }
+  }
+
+  /**
+   * Method description
+   *
    *
    * @throws ExecutionException
    * @throws InterruptedException

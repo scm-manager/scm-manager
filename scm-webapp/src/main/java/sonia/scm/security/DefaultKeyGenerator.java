@@ -51,6 +51,12 @@ import java.util.concurrent.atomic.AtomicLong;
 public class DefaultKeyGenerator implements KeyGenerator
 {
 
+  /** Field description */
+  private static final int RANDOM_MAX = 999;
+
+  /** Field description */
+  private static final int RANDOM_MIN = 100;
+
   /**
    * the logger for DefaultKeyGenerator
    */
@@ -72,7 +78,7 @@ public class DefaultKeyGenerator implements KeyGenerator
 
     buffer.append(Long.toHexString(System.currentTimeMillis()));
     buffer.append(Long.toHexString(sessionKey.incrementAndGet()));
-    buffer.append(Integer.toHexString(random.nextInt(999)));
+    buffer.append(Integer.toHexString(createRandom()));
 
     String key = buffer.toString();
 
@@ -82,6 +88,17 @@ public class DefaultKeyGenerator implements KeyGenerator
     }
 
     return key;
+  }
+
+  /**
+   * Create a random int between {@link #RANDOM_MIN} and {@link #RANDOM_MAX}.
+   * This method is package visible for testing.
+   *
+   * @return a random int between the min and max value
+   */
+  int createRandom()
+  {
+    return random.nextInt(RANDOM_MAX - RANDOM_MIN + 1) + RANDOM_MIN;
   }
 
   //~--- fields ---------------------------------------------------------------
