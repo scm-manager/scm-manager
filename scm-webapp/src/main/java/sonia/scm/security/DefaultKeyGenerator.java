@@ -38,6 +38,8 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.util.Base62;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Random;
@@ -76,9 +78,9 @@ public class DefaultKeyGenerator implements KeyGenerator
   {
     StringBuilder buffer = new StringBuilder();
 
-    buffer.append(Long.toHexString(System.currentTimeMillis()));
-    buffer.append(Long.toHexString(sessionKey.incrementAndGet()));
-    buffer.append(Integer.toHexString(createRandom()));
+    buffer.append(Base62.encode(createRandom()));
+    buffer.append(Base62.encode(System.currentTimeMillis()));
+    buffer.append(Base62.encode(sessionKey.incrementAndGet()));
 
     String key = buffer.toString();
 
