@@ -148,6 +148,11 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     File repositoryDirectory, File hook, ObjectId oldId, ObjectId newId,
     String refName)
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("execute file hook '{}' in directoy '{}'");
+    }
+
     final Command cmd = new SimpleCommand(hook.getAbsolutePath(), getId(oldId),
                           getId(newId), Util.nonNull(refName));
 
@@ -247,29 +252,43 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   private void onReceive(ReceivePack rpack,
     Collection<ReceiveCommand> receiveCommands, RepositoryHookType type)
   {
+    if ( logger.isTraceEnabled() )
+    {
+      logger.trace("received git hook, type={}", type);
+    }
     for (ReceiveCommand rc : receiveCommands)
     {
-      if (logger.isTraceEnabled())
-      {
-        //J-
-        logger.trace("receive command, type={}, ref={}, result={}",
-          new Object[] { 
-            rc.getType(),
-            rc.getRefName(), 
-            rc.getResult() 
-          }
-        );
-        //J+
-      }
-
       if (isReceiveable(rc, type))
       {
+        if (logger.isTraceEnabled())
+        {
+          //J-
+          logger.trace("handle receive command, type={}, ref={}, result={}",
+            new Object[] { 
+              rc.getType(),
+              rc.getRefName(), 
+              rc.getResult() 
+            }
+          );
+          //J+
+        }
+
         ObjectId newId = rc.getNewId();
         ObjectId oldId = null;
 
         if (isUpdateCommand(rc))
         {
           oldId = rc.getOldId();
+
+          if (logger.isTraceEnabled())
+          {
+            logger.trace("handle update receive command from commit '{}' to '{}'",
+              oldId.getName(), newId.getName());
+          }
+        }
+        else if (logger.isTraceEnabled())
+        {
+          logger.trace("handle receive command for commit '{}'", newId.getName());
         }
 
         File directory = rpack.getRepository().getDirectory();
@@ -296,6 +315,18 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
         }
 
         fireHookEvent(rpack, rc, directory, oldId, newId, type);
+      }
+      else if (logger.isTraceEnabled())
+      {
+        //J-
+        logger.trace("skip receive command, type={}, ref={}, result={}",
+          new Object[] { 
+            rc.getType(),
+            rc.getRefName(), 
+            rc.getResult() 
+          }
+        );
+        //J+
       }
     }
   }
