@@ -35,10 +35,12 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.apache.shiro.subject.Subject;
 
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.Role;
 
 /**
@@ -48,6 +50,20 @@ import sonia.scm.security.Role;
 @Singleton
 public class AdminSecurityFilter extends SecurityFilter
 {
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param configuration
+   */
+  @Inject
+  public AdminSecurityFilter(ScmConfiguration configuration)
+  {
+    super(configuration);
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description

@@ -40,20 +40,19 @@ import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.HandlerEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.PermissionType;
+import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.PostReceiveRepositoryHook;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
@@ -65,7 +64,6 @@ import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.Tags;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
-import sonia.scm.security.RepositoryPermission;
 import sonia.scm.security.ScmSecurityException;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -135,12 +133,38 @@ public final class RepositoryServiceFactory
    * @param securityContextProvider provider for the current security context
    * @param resolvers a set of {@link RepositoryServiceResolver}
    * @param preProcessorUtil helper object for pre processor handling
+   *
+   * @deprecated
    */
-  @Inject
+  @Deprecated
   public RepositoryServiceFactory(CacheManager cacheManager,
     RepositoryManager repositoryManager,
     Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil)
   {
+    this(null, cacheManager, repositoryManager, resolvers, preProcessorUtil);
+  }
+
+  /**
+   * Constructs a new {@link RepositoryServiceFactory}. This constructor
+   * should not be called manually, it should only be used by the injection
+   * container.
+   *
+   *
+   * @param configuration configuration
+   * @param cacheManager cache manager
+   * @param repositoryManager manager for repositories
+   * @param securityContextProvider provider for the current security context
+   * @param resolvers a set of {@link RepositoryServiceResolver}
+   * @param preProcessorUtil helper object for pre processor handling
+   * 
+   * @since 1.21
+   */
+  @Inject
+  public RepositoryServiceFactory(ScmConfiguration configuration,
+    CacheManager cacheManager, RepositoryManager repositoryManager,
+    Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil)
+  {
+    this.configuration = configuration;
     this.cacheManager = cacheManager;
     this.repositoryManager = repositoryManager;
     this.resolvers = resolvers;
@@ -249,10 +273,8 @@ public final class RepositoryServiceFactory
     Preconditions.checkNotNull(repository, "repository is required");
 
     // check for read permissions of current user
-    Subject subject = SecurityUtils.getSubject();
-
-    if (!subject.isPermitted(new RepositoryPermission(repository,
-      PermissionType.READ)))
+    if (!PermissionUtil.hasPermission(configuration, repository,
+      PermissionType.READ))
     {
       throw new ScmSecurityException("read permission are required");
     }
@@ -407,6 +429,9 @@ public final class RepositoryServiceFactory
 
   /** Field description */
   private CacheManager cacheManager;
+
+  /** scm-manager configuration */
+  private ScmConfiguration configuration;
 
   /** Field description */
   private PreProcessorUtil preProcessorUtil;

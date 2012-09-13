@@ -35,6 +35,7 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
@@ -45,6 +46,8 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContext;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.ScmAuthenticationToken;
 import sonia.scm.user.User;
 import sonia.scm.util.HttpUtil;
@@ -87,12 +90,6 @@ public class BasicAuthenticationFilter extends HttpFilter
 
   /**
    * Constructs ...
-   * @since 1.21
-   */
-  public BasicAuthenticationFilter() {}
-
-  /**
-   * Constructs ...
    *
    *
    * @param securityContextProvider
@@ -101,6 +98,19 @@ public class BasicAuthenticationFilter extends HttpFilter
   @Deprecated
   public BasicAuthenticationFilter(
     Provider<WebSecurityContext> securityContextProvider) {}
+
+  /**
+   * Constructs a new basic authenticaton filter
+   *
+   * @param configuration scm-manager global configuration
+   *
+   * @since 1.21
+   */
+  @Inject
+  public BasicAuthenticationFilter(ScmConfiguration configuration)
+  {
+    this.configuration = configuration;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -154,6 +164,13 @@ public class BasicAuthenticationFilter extends HttpFilter
       }
 
       user = subject.getPrincipals().oneByType(User.class);
+    }
+    else if ((configuration != null)
+      && configuration.isAnonymousAccessEnabled())
+    {
+      user = new User(SCMContext.USER_ANONYMOUS, "SCM Anonymous",
+        "scm-anonymous@scm-manager.com");
+
     }
 
     if (user == null)
@@ -258,4 +275,9 @@ public class BasicAuthenticationFilter extends HttpFilter
 
     return user;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private ScmConfiguration configuration;
 }

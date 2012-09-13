@@ -54,7 +54,6 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.security.RepositoryPermission;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
@@ -869,7 +868,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   {
     if (!SecurityUtils.getSubject().hasRole("admin"))
     {
-      throw new SecurityException("admin role is required");
+      throw new ScmSecurityException("admin role is required");
     }
   }
 
@@ -971,8 +970,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   private boolean isPermitted(Repository repository, PermissionType type)
   {
-    return SecurityUtils.getSubject().isPermitted(
-      new RepositoryPermission(repository, PermissionType.READ));
+    return PermissionUtil.hasPermission(configuration, repository, type);
   }
 
   /**

@@ -35,11 +35,14 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import sonia.scm.SCMContext;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.user.User;
 import sonia.scm.web.filter.HttpFilter;
 import sonia.scm.web.filter.SecurityHttpServletRequestWrapper;
@@ -63,6 +66,20 @@ public class SecurityFilter extends HttpFilter
 
   /** Field description */
   public static final String URL_AUTHENTICATION = "/api/rest/authentication";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param configuration
+   */
+  @Inject
+  public SecurityFilter(ScmConfiguration configuration)
+  {
+    this.configuration = configuration;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -92,7 +109,7 @@ public class SecurityFilter extends HttpFilter
       if (hasPermission(subject))
       {
         chain.doFilter(new SecurityHttpServletRequestWrapper(request,
-          subject.getPrincipals().oneByType(User.class)), response);
+          getUser(subject)), response);
       }
       else if (subject.isAuthenticated())
       {
@@ -121,6 +138,37 @@ public class SecurityFilter extends HttpFilter
    */
   protected boolean hasPermission(Subject subject)
   {
-    return subject.isAuthenticated();
+    return ((configuration != null)
+      && configuration.isAnonymousAccessEnabled()) || subject.isAuthenticated();
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param subject
+   *
+   * @return
+   */
+  private User getUser(Subject subject)
+  {
+    User user = null;
+
+    if (subject.isAuthenticated())
+    {
+      user = subject.getPrincipals().oneByType(User.class);
+    }
+    else
+    {
+      user = new User(SCMContext.USER_ANONYMOUS, "SCM Anonymous",
+        "scm-anonymous@scm-manager.com");
+    }
+
+    return user;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private ScmConfiguration configuration;
 }

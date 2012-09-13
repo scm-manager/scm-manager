@@ -113,7 +113,7 @@ public class PermissionUtil
   @Deprecated
   public static void assertPermission(Repository repository, PermissionType pt)
   {
-    if (!hasPermission(repository, pt))
+    if (!hasPermission(null, repository, pt))
     {
       throw new ScmSecurityException("action denied");
     }
@@ -136,7 +136,7 @@ public class PermissionUtil
   public static boolean hasPermission(Repository repository,
     Provider<WebSecurityContext> securityContextProvider, PermissionType pt)
   {
-    return hasPermission(repository, securityContextProvider.get(), pt);
+    return hasPermission(null, repository, pt);
   }
 
   /**
@@ -154,24 +154,23 @@ public class PermissionUtil
   public static boolean hasPermission(Repository repository,
     WebSecurityContext securityContext, PermissionType pt)
   {
-    return hasPermission(repository, pt);
+    return hasPermission(null, repository, pt);
   }
 
   /**
    * Method description
    *
    *
+   * @param configuration
    * @param repository
-   * @param securityContext
    * @param pt
    *
    * @return
-   * @since 1.21
    *
-   * @deprecated
+   * @since 1.21
    */
-  @Deprecated
-  public static boolean hasPermission(Repository repository, PermissionType pt)
+  public static boolean hasPermission(ScmConfiguration configuration,
+    Repository repository, PermissionType pt)
   {
     boolean result = false;
 
@@ -179,7 +178,6 @@ public class PermissionUtil
 
     if (subject.isAuthenticated())
     {
-
       String username = subject.getPrincipal().toString();
 
       AssertUtil.assertIsNotEmpty(username);
@@ -202,6 +200,14 @@ public class PermissionUtil
 
         }
       }
+    }
+    else
+    {
+
+      // check anonymous access
+      result = (configuration != null)
+        && configuration.isAnonymousAccessEnabled()
+        && repository.isPublicReadable() && (pt == PermissionType.READ);
     }
 
     return result;
@@ -252,7 +258,7 @@ public class PermissionUtil
     }
     else
     {
-      permitted = PermissionUtil.hasPermission(repository,
+      permitted = PermissionUtil.hasPermission(configuration, repository,
         PermissionType.WRITE);
     }
 

@@ -35,8 +35,10 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -64,6 +66,20 @@ public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
 
   /** Field description */
   public static final String URI_STATE = "/api/rest/authentication/state";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param configuration
+   */
+  @Inject
+  public ApiBasicAuthenticationFilter(ScmConfiguration configuration)
+  {
+    super(configuration);
+  }
 
   //~--- methods --------------------------------------------------------------
 

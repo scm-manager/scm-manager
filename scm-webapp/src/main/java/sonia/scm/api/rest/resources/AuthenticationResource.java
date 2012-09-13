@@ -49,6 +49,7 @@ import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.ScmClientConfig;
 import sonia.scm.ScmState;
@@ -60,6 +61,9 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -253,7 +257,6 @@ public class AuthenticationResource
   public Response getState(@Context HttpServletRequest request)
   {
     Response response = null;
-    ScmState state = null;
     Subject subject = SecurityUtils.getSubject();
 
     if (subject.isAuthenticated())
@@ -263,7 +266,16 @@ public class AuthenticationResource
         logger.debug("return state for user {}", subject.getPrincipal());
       }
 
-      state = createState(subject);
+      ScmState state = createState(subject);
+
+      response = Response.ok(state).build();
+    }
+    else if (configuration.isAnonymousAccessEnabled())
+    {
+      User user = new User(SCMContext.USER_ANONYMOUS, "SCM Anonymous",
+                    "scm-anonymous@scm-manager.com");
+      ScmState state = createState(user, Collections.EMPTY_LIST);
+
       response = Response.ok(state).build();
     }
     else
@@ -292,7 +304,21 @@ public class AuthenticationResource
     User user = collection.oneByType(User.class);
     GroupNames groups = collection.oneByType(GroupNames.class);
 
-    return new ScmState(contextProvider, user, groups.getCollection(),
+    return createState(user, groups.getCollection());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param groups
+   *
+   * @return
+   */
+  private ScmState createState(User user, Collection<String> groups)
+  {
+    return new ScmState(contextProvider, user, groups,
       repositoryManger.getConfiguredTypes(), userManager.getDefaultType(),
       new ScmClientConfig(configuration));
   }
