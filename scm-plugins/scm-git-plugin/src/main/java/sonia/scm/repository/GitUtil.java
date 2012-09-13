@@ -226,14 +226,27 @@ public class GitUtil
 
     if (ref != null)
     {
+      branch = getBranch(ref.getName());
+    }
 
-      String name = ref.getName();
+    return branch;
+  }
 
-      if (name.startsWith(PREFIX_HEADS))
-      {
-        branch = name.substring(PREFIX_HEADS.length());
-      }
+  /**
+   * Method description
+   *
+   *
+   * @param name
+   *
+   * @return
+   */
+  public static String getBranch(String name)
+  {
+    String branch = null;
 
+    if (Util.isNotEmpty(name) && name.startsWith(PREFIX_HEADS))
+    {
+      branch = name.substring(PREFIX_HEADS.length());
     }
 
     return branch;
@@ -327,6 +340,26 @@ public class GitUtil
     date = date * 1000;
 
     return date;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param objectId
+   *
+   * @return
+   */
+  public static String getId(ObjectId objectId)
+  {
+    String id = Util.EMPTY_STRING;
+
+    if (objectId != null)
+    {
+      id = objectId.name();
+    }
+
+    return id;
   }
 
   /**

@@ -36,7 +36,6 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevSort;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -75,18 +74,34 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
    *
    * @param directory
    * @param ref
+   * @param refName
    * @param newId
    * @param oldId
    * @param type
    */
-  public GitRepositoryHookEvent(File directory, Ref ref, ObjectId newId,
+  public GitRepositoryHookEvent(File directory, String refName, ObjectId newId,
     ObjectId oldId, RepositoryHookType type)
   {
     this.directory = directory;
-    this.defaultBranch = GitUtil.getBranch(ref);
+    this.branch = GitUtil.getBranch(refName);
     this.newId = newId;
     this.oldId = oldId;
     this.type = type;
+
+    if (logger.isTraceEnabled())
+    {
+      //J-
+      logger.trace(
+        "create hook event for branch={}, new-id={}, old-id={} and type={}",
+        new Object[] { 
+          refName,
+          GitUtil.getId(newId),
+          GitUtil.getId(oldId), 
+          type 
+        }
+      );
+      //J+
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -158,16 +173,14 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
         {
           Changeset changeset = converter.createChangeset(commit);
 
-          if (changeset.getBranches().isEmpty()
-            && Util.isNotEmpty(defaultBranch))
+          if (changeset.getBranches().isEmpty() && Util.isNotEmpty(branch))
           {
             if (logger.isTraceEnabled())
             {
-              logger.trace("set branch to current default branch {}",
-                defaultBranch);
+              logger.trace("set branch to current default branch {}", branch);
             }
 
-            changeset.getBranches().add(defaultBranch);
+            changeset.getBranches().add(branch);
           }
 
           result.add(changeset);
@@ -192,10 +205,10 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private List<Changeset> changesets;
+  private String branch;
 
   /** Field description */
-  private String defaultBranch;
+  private List<Changeset> changesets;
 
   /** Field description */
   private File directory;

@@ -49,6 +49,7 @@ import sonia.scm.io.CommandResult;
 import sonia.scm.io.SimpleCommand;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitRepositoryHookEvent;
+import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
@@ -153,8 +154,9 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
       logger.debug("execute file hook '{}' in directoy '{}'");
     }
 
-    final Command cmd = new SimpleCommand(hook.getAbsolutePath(), getId(oldId),
-                          getId(newId), Util.nonNull(refName));
+    final Command cmd = new SimpleCommand(hook.getAbsolutePath(),
+                          GitUtil.getId(oldId), GitUtil.getId(newId),
+                          Util.nonNull(refName));
 
     // issue-99
     cmd.setWorkDirectory(repositoryDirectory);
@@ -221,7 +223,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
       String repositoryName = RepositoryUtil.getRepositoryName(handler,
                                 directory);
       GitRepositoryHookEvent e = new GitRepositoryHookEvent(directory,
-                                   rc.getRef(), newId, oldId, type);
+                                   rc.getRefName(), newId, oldId, type);
 
       repositoryManager.fireHookEvent(GitRepositoryHandler.TYPE_NAME,
         repositoryName, e);
@@ -252,10 +254,11 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   private void onReceive(ReceivePack rpack,
     Collection<ReceiveCommand> receiveCommands, RepositoryHookType type)
   {
-    if ( logger.isTraceEnabled() )
+    if (logger.isTraceEnabled())
     {
       logger.trace("received git hook, type={}", type);
     }
+
     for (ReceiveCommand rc : receiveCommands)
     {
       if (isReceiveable(rc, type))
@@ -282,13 +285,15 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
 
           if (logger.isTraceEnabled())
           {
-            logger.trace("handle update receive command from commit '{}' to '{}'",
+            logger.trace(
+              "handle update receive command from commit '{}' to '{}'",
               oldId.getName(), newId.getName());
           }
         }
         else if (logger.isTraceEnabled())
         {
-          logger.trace("handle receive command for commit '{}'", newId.getName());
+          logger.trace("handle receive command for commit '{}'",
+            newId.getName());
         }
 
         File directory = rpack.getRepository().getDirectory();
@@ -363,26 +368,6 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
                       FILE_HOOKDIRECTORY.concat(File.separator).concat(name));
 
     return IOUtil.getScript(baseFile);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param objectId
-   *
-   * @return
-   */
-  private String getId(ObjectId objectId)
-  {
-    String id = Util.EMPTY_STRING;
-
-    if (objectId != null)
-    {
-      id = objectId.name();
-    }
-
-    return id;
   }
 
   /**
