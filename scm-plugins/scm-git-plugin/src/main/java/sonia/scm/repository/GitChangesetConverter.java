@@ -269,7 +269,8 @@ public class GitChangesetConverter implements Closeable
       {
         if (logger.isTraceEnabled())
         {
-          logger.trace("no parent tree at position 0 for commit {}", commit);
+          logger.trace("no parent tree at position 0 for commit {}",
+            commit.getName());
         }
 
         treeWalk.addTree(new EmptyTreeIterator());
@@ -279,7 +280,7 @@ public class GitChangesetConverter implements Closeable
     {
       if (logger.isTraceEnabled())
       {
-        logger.trace("no parent available for commit {}", commit);
+        logger.trace("no parent available for commit {}", commit.getName());
       }
 
       treeWalk.addTree(new EmptyTreeIterator());
