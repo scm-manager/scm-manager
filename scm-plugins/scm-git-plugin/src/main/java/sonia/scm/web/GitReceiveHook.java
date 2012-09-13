@@ -249,11 +249,20 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   {
     for (ReceiveCommand rc : receiveCommands)
     {
-      if (((RepositoryHookType.PRE_RECEIVE == type)
-        && (rc.getResult()
-          == ReceiveCommand.Result.NOT_ATTEMPTED)) || ((RepositoryHookType
-            .POST_RECEIVE == type) && (rc.getResult()
-              == ReceiveCommand.Result.OK)))
+      if (logger.isTraceEnabled())
+      {
+        //J-
+        logger.trace("receive command, type={}, ref={}, result={}",
+          new Object[] { 
+            rc.getType(),
+            rc.getRefName(), 
+            rc.getResult() 
+          }
+        );
+        //J+
+      }
+
+      if (isReceiveable(rc, type))
       {
         ObjectId newId = rc.getNewId();
         ObjectId oldId = null;
@@ -343,6 +352,25 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     }
 
     return id;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param rc
+   * @param type
+   *
+   * @return
+   */
+  private boolean isReceiveable(ReceiveCommand rc, RepositoryHookType type)
+  {
+    //J-
+    return ((RepositoryHookType.PRE_RECEIVE == type) && 
+            (rc.getResult() == ReceiveCommand.Result.NOT_ATTEMPTED)) || 
+           ((RepositoryHookType.POST_RECEIVE == type) && 
+            (rc.getResult() == ReceiveCommand.Result.OK));
+    //J+
   }
 
   /**
