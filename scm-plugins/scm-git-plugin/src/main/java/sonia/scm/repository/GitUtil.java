@@ -224,16 +224,21 @@ public class GitUtil
   {
     String branch = null;
 
-    String name = ref.getName();
-
-    if (name.startsWith(PREFIX_HEADS))
+    if (ref != null)
     {
-      branch = name.substring(PREFIX_HEADS.length());
+
+      String name = ref.getName();
+
+      if (name.startsWith(PREFIX_HEADS))
+      {
+        branch = name.substring(PREFIX_HEADS.length());
+      }
+
     }
 
     return branch;
   }
-  
+
   /**
    * Method description
    *
@@ -250,10 +255,12 @@ public class GitUtil
     throws IOException
   {
     ObjectId branchId = null;
-    if ( ! branchName.startsWith(REF_HEAD) ){
+
+    if (!branchName.startsWith(REF_HEAD))
+    {
       branchName = PREFIX_HEADS.concat(branchName);
     }
-    
+
     Ref ref = repo.getRef(branchName);
 
     if (ref != null)
