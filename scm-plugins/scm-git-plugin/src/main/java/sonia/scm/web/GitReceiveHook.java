@@ -277,49 +277,16 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
         }
 
         ObjectId newId = rc.getNewId();
-        ObjectId oldId = null;
 
-        if (isUpdateCommand(rc))
+        if (newId != null)
         {
-          oldId = rc.getOldId();
-
-          if (logger.isTraceEnabled())
-          {
-            logger.trace(
-              "handle update receive command from commit '{}' to '{}'",
-              oldId.getName(), newId.getName());
-          }
+          onReceive(rpack, rc, newId, type);
         }
-        else if (logger.isTraceEnabled())
+        else if (logger.isWarnEnabled())
         {
-          logger.trace("handle receive command for commit '{}'",
-            newId.getName());
+          logger.warn("received hook event without new id");
         }
 
-        File directory = rpack.getRepository().getDirectory();
-        String scriptName = null;
-
-        if (type == RepositoryHookType.POST_RECEIVE)
-        {
-          scriptName = FILE_HOOK_POST_RECEIVE;
-        }
-        else if (type == RepositoryHookType.PRE_RECEIVE)
-        {
-          scriptName = FILE_HOOK_PRE_RECEIVE;
-        }
-
-        if (scriptName != null)
-        {
-          File hookScript = getHookScript(directory, scriptName);
-
-          if (hookScript != null)
-          {
-            executeFileHook(rpack, rc, directory, hookScript, oldId, newId,
-              rc.getRefName());
-          }
-        }
-
-        fireHookEvent(rpack, rc, directory, oldId, newId, type);
       }
       else if (logger.isTraceEnabled())
       {
@@ -334,6 +301,61 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
         //J+
       }
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param rpack
+   * @param rc
+   * @param newId
+   * @param type
+   */
+  private void onReceive(ReceivePack rpack, ReceiveCommand rc, ObjectId newId,
+    RepositoryHookType type)
+  {
+    ObjectId oldId = null;
+
+    if (isUpdateCommand(rc))
+    {
+      oldId = rc.getOldId();
+
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("handle update receive command from commit '{}' to '{}'",
+          oldId.getName(), newId.getName());
+      }
+    }
+    else if (logger.isTraceEnabled())
+    {
+      logger.trace("handle receive command for commit '{}'", newId.getName());
+    }
+
+    File directory = rpack.getRepository().getDirectory();
+    String scriptName = null;
+
+    if (type == RepositoryHookType.POST_RECEIVE)
+    {
+      scriptName = FILE_HOOK_POST_RECEIVE;
+    }
+    else if (type == RepositoryHookType.PRE_RECEIVE)
+    {
+      scriptName = FILE_HOOK_PRE_RECEIVE;
+    }
+
+    if (scriptName != null)
+    {
+      File hookScript = getHookScript(directory, scriptName);
+
+      if (hookScript != null)
+      {
+        executeFileHook(rpack, rc, directory, hookScript, oldId, newId,
+          rc.getRefName());
+      }
+    }
+
+    fireHookEvent(rpack, rc, directory, oldId, newId, type);
   }
 
   /**

@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
+
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevSort;
@@ -145,58 +147,55 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
    */
   private List<Changeset> fetchChangesets()
   {
-    List<Changeset> result = new ArrayList<Changeset>();
+    List<Changeset> result = Lists.newArrayList();
+    GitChangesetConverter converter = null;
+    RevWalk walk = null;
+    org.eclipse.jgit.lib.Repository repository = null;
 
-    if (newId != null)
+    try
     {
-      GitChangesetConverter converter = null;
-      RevWalk walk = null;
-      org.eclipse.jgit.lib.Repository repository = null;
+      repository = GitUtil.open(directory);
+      converter = new GitChangesetConverter(repository, GitUtil.ID_LENGTH);
+      walk = new RevWalk(repository);
+      walk.reset();
+      walk.sort(RevSort.NONE);
+      walk.markStart(walk.parseCommit(newId));
 
-      try
+      if (oldId != null)
       {
-        repository = GitUtil.open(directory);
-        converter = new GitChangesetConverter(repository, GitUtil.ID_LENGTH);
-        walk = new RevWalk(repository);
-        walk.reset();
-        walk.sort(RevSort.NONE);
-        walk.markStart(walk.parseCommit(newId));
+        walk.markUninteresting(walk.parseCommit(oldId));
+      }
 
-        if (oldId != null)
+      RevCommit commit = walk.next();
+
+      while (commit != null)
+      {
+        Changeset changeset = converter.createChangeset(commit);
+
+        if (changeset.getBranches().isEmpty() && Util.isNotEmpty(branch))
         {
-          walk.markUninteresting(walk.parseCommit(oldId));
-        }
-
-        RevCommit commit = walk.next();
-
-        while (commit != null)
-        {
-          Changeset changeset = converter.createChangeset(commit);
-
-          if (changeset.getBranches().isEmpty() && Util.isNotEmpty(branch))
+          if (logger.isTraceEnabled())
           {
-            if (logger.isTraceEnabled())
-            {
-              logger.trace("set branch to current default branch {}", branch);
-            }
-
-            changeset.getBranches().add(branch);
+            logger.trace("set branch to current default branch {}", branch);
           }
 
-          result.add(changeset);
-          commit = walk.next();
+          changeset.getBranches().add(branch);
         }
+
+        result.add(changeset);
+        commit = walk.next();
       }
-      catch (IOException ex)
-      {
-        logger.error("could not fetch changesets", ex);
-      }
-      finally
-      {
-        IOUtil.close(converter);
-        GitUtil.release(walk);
-        GitUtil.close(repository);
-      }
+    }
+    catch (IOException ex)
+    {
+      logger.error("could not fetch changesets", ex);
+    }
+    finally
+    {
+      IOUtil.close(converter);
+      GitUtil.release(walk);
+      GitUtil.close(repository);
+
     }
 
     return result;
