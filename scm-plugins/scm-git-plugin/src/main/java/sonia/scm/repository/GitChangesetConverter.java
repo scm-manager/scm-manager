@@ -84,10 +84,9 @@ public class GitChangesetConverter implements Closeable
    * @param repository
    * @param idLength
    */
-  public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
-    int idLength)
+  public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository)
   {
-    this(repository, null, idLength);
+    this(repository, null);
   }
 
   /**
@@ -99,7 +98,7 @@ public class GitChangesetConverter implements Closeable
    * @param idLength
    */
   public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
-    RevWalk revWalk, int idLength)
+    RevWalk revWalk)
   {
     this.repository = repository;
 
@@ -113,7 +112,6 @@ public class GitChangesetConverter implements Closeable
       this.revWalk = new RevWalk(repository);
     }
 
-    this.idLength = idLength;
     this.tags = GitUtil.createTagMap(repository, revWalk);
     treeWalk = new TreeWalk(repository);
   }
@@ -143,7 +141,7 @@ public class GitChangesetConverter implements Closeable
    */
   public Changeset createChangeset(RevCommit commit) throws IOException
   {
-    String id = commit.getId().abbreviate(idLength).name();
+    String id = commit.getId().name();
     List<String> parentList = null;
     RevCommit[] parents = commit.getParents();
 
@@ -153,7 +151,7 @@ public class GitChangesetConverter implements Closeable
 
       for (RevCommit parent : parents)
       {
-        parentList.add(parent.getId().abbreviate(idLength).name());
+        parentList.add(parent.getId().name());
       }
     }
 
@@ -306,9 +304,6 @@ public class GitChangesetConverter implements Closeable
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private int idLength;
 
   /** Field description */
   private org.eclipse.jgit.lib.Repository repository;

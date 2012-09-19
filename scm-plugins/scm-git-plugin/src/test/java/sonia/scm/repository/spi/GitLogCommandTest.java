@@ -94,8 +94,8 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     assertNotNull(result);
     assertEquals(2, result.getTotal());
     assertEquals(2, result.getChangesets().size());
-    assertEquals("fcd0ef1831e4002ac43e", result.getChangesets().get(0).getId());
-    assertEquals("435df2f061add3589cb3", result.getChangesets().get(1).getId());
+    assertEquals("fcd0ef1831e4002ac43ea539f4094334c79ea9ec", result.getChangesets().get(0).getId());
+    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", result.getChangesets().get(1).getId());
   }
 
   /**
@@ -121,12 +121,12 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     Changeset c1 = result.getChangesets().get(0);
 
     assertNotNull(c1);
-    assertEquals("fcd0ef1831e4002ac43e", c1.getId());
+    assertEquals("fcd0ef1831e4002ac43ea539f4094334c79ea9ec", c1.getId());
 
     Changeset c2 = result.getChangesets().get(1);
 
     assertNotNull(c2);
-    assertEquals("86a6645eceefe8b9a247", c2.getId());
+    assertEquals("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1", c2.getId());
   }
 
   /**
@@ -153,12 +153,12 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     Changeset c1 = result.getChangesets().get(0);
 
     assertNotNull(c1);
-    assertEquals("86a6645eceefe8b9a247", c1.getId());
+    assertEquals("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1", c1.getId());
 
     Changeset c2 = result.getChangesets().get(1);
 
     assertNotNull(c2);
-    assertEquals("592d797cd36432e59141", c2.getId());
+    assertEquals("592d797cd36432e591416e8b2b98154f4f163411", c2.getId());
   }
 
   /**
@@ -172,7 +172,7 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     Changeset c = command.getChangeset("435df2f061add3589cb3");
 
     assertNotNull(c);
-    assertEquals("435df2f061add3589cb3", c.getId());
+    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", c.getId());
     assertEquals("added a and b files", c.getDescription());
     checkDate(c.getDate());
     assertEquals("Douglas Adams", c.getAuthor().getName());
@@ -214,9 +214,9 @@ public class GitLogCommandTest extends AbstractGitCommandTestBase
     Changeset c2 = result.getChangesets().get(1);
 
     assertNotNull(c1);
-    assertEquals("592d797cd36432e59141", c1.getId());
+    assertEquals("592d797cd36432e591416e8b2b98154f4f163411", c1.getId());
     assertNotNull(c2);
-    assertEquals("435df2f061add3589cb3", c2.getId());
+    assertEquals("435df2f061add3589cb326cc64be9b9c3897ceca", c2.getId());
   }
 
   /**

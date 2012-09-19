@@ -141,7 +141,7 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
       try
       {
         repository = GitUtil.open(directory);
-        converter = new GitChangesetConverter(repository, GitUtil.ID_LENGTH);
+        converter = new GitChangesetConverter(repository);
         walk = new RevWalk(repository);
         walk.reset();
         walk.sort(RevSort.NONE);

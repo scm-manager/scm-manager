@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -42,7 +43,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverter;
-import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.client.api.RepositoryClientException;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -92,8 +92,7 @@ public class GitCommitCommand implements CommitCommand
                            request.getAuthor().getMail()).setMessage(
                              request.getMessage()).call();
 
-      converter = new GitChangesetConverter(git.getRepository(),
-        GitUtil.ID_LENGTH);
+      converter = new GitChangesetConverter(git.getRepository());
 
       changeset = converter.createChangeset(commit);
     }

@@ -67,9 +67,6 @@ public class GitUtil
 {
 
   /** Field description */
-  public static final int ID_LENGTH = 20;
-
-  /** Field description */
   public static final String REF_HEAD = "HEAD";
 
   /** Field description */

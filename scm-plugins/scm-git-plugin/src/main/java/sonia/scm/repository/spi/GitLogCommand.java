@@ -60,7 +60,6 @@ import sonia.scm.util.IOUtil;
 
 import java.io.IOException;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -128,7 +127,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
         if (commit != null)
         {
-          converter = new GitChangesetConverter(gr, revWalk, GitUtil.ID_LENGTH);
+          converter = new GitChangesetConverter(gr, revWalk);
           changeset = converter.createChangeset(commit);
         }
         else if (logger.isWarnEnabled())
@@ -210,7 +209,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
         RevWalk revWalk = new RevWalk(gr);
 
-        converter = new GitChangesetConverter(gr, revWalk, GitUtil.ID_LENGTH);
+        converter = new GitChangesetConverter(gr, revWalk);
 
         if (!Strings.isNullOrEmpty(request.getPath()))
         {
