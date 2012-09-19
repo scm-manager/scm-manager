@@ -35,7 +35,10 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
+
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.PostReceiveHook;
 import org.eclipse.jgit.transport.PreReceiveHook;
 import org.eclipse.jgit.transport.ReceiveCommand;
@@ -52,7 +55,6 @@ import sonia.scm.repository.GitRepositoryHookEvent;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
@@ -63,6 +65,8 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -206,104 +210,6 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   }
 
   /**
-   * Method description, occurred
-   *
-   * @param rpack
-   * @param rc
-   * @param directory
-   * @param oldId
-   * @param newId
-   * @param type
-   */
-  private void fireHookEvent(ReceivePack rpack, ReceiveCommand rc,
-    File directory, ObjectId oldId, ObjectId newId, RepositoryHookType type)
-  {
-    try
-    {
-      String repositoryName = RepositoryUtil.getRepositoryName(handler,
-                                directory);
-      GitRepositoryHookEvent e = new GitRepositoryHookEvent(directory,
-                                   rc.getRefName(), newId, oldId, type);
-
-      repositoryManager.fireHookEvent(GitRepositoryHandler.TYPE_NAME,
-        repositoryName, e);
-    }
-    catch (RepositoryNotFoundException ex)
-    {
-      logger.error("repository could not be found", ex);
-    }
-    catch (Exception ex)
-    {
-      if (logger.isWarnEnabled())
-      {
-        logger.warn("execption occurred during hook execution", ex);
-      }
-
-      sendError(rpack, rc, ex.getMessage());
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param rpack
-   * @param receiveCommands
-   * @param type
-   */
-  private void onReceive(ReceivePack rpack,
-    Collection<ReceiveCommand> receiveCommands, RepositoryHookType type)
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("received git hook, type={}", type);
-    }
-
-    for (ReceiveCommand rc : receiveCommands)
-    {
-      if (isReceiveable(rc, type))
-      {
-        if (logger.isTraceEnabled())
-        {
-          //J-
-          logger.trace("handle receive command, type={}, ref={}, result={}",
-            new Object[] { 
-              rc.getType(),
-              rc.getRefName(), 
-              rc.getResult() 
-            }
-          );
-          //J+
-        }
-
-        ObjectId newId = rc.getNewId();
-
-        if (newId != null)
-        {
-          onReceive(rpack, rc, newId, type);
-        }
-        else if (logger.isWarnEnabled())
-        {
-          logger.warn("received hook event without new id");
-        }
-
-      }
-      else if (logger.isTraceEnabled())
-      {
-        //J-
-        logger.trace("skip receive command, type={}, ref={}, result={}",
-          new Object[] { 
-            rc.getType(),
-            rc.getRefName(), 
-            rc.getResult() 
-          }
-        );
-        //J+
-      }
-    }
-  }
-
-  /**
    * Method description
    *
    *
@@ -312,9 +218,10 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    * @param newId
    * @param type
    */
-  private void onReceive(ReceivePack rpack, ReceiveCommand rc, ObjectId newId,
+  private void handleFileHooks(ReceivePack rpack, ReceiveCommand rc,
     RepositoryHookType type)
   {
+    ObjectId newId = rc.getNewId();
     ObjectId oldId = null;
 
     if (isUpdateCommand(rc))
@@ -354,8 +261,82 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
           rc.getRefName());
       }
     }
+  }
 
-    fireHookEvent(rpack, rc, directory, oldId, newId, type);
+  /**
+   * Method description
+   *
+   *
+   * @param rpack
+   * @param receiveCommands
+   * @param type
+   */
+  private void handleReceiveCommands(ReceivePack rpack,
+    List<ReceiveCommand> receiveCommands, RepositoryHookType type)
+  {
+    try
+    {
+      Repository repository = rpack.getRepository();
+      String repositoryName = RepositoryUtil.getRepositoryName(handler,
+                                repository.getDirectory());
+
+      repositoryManager.fireHookEvent(GitRepositoryHandler.TYPE_NAME,
+        repositoryName,
+        new GitRepositoryHookEvent(rpack, receiveCommands, type));
+    }
+    catch (Exception ex)
+    {
+      logger.error("could not handle receive commands", ex);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param rpack
+   * @param receiveCommands
+   * @param type
+   */
+  private void onReceive(ReceivePack rpack,
+    Collection<ReceiveCommand> receiveCommands, RepositoryHookType type)
+  {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("received git hook, type={}", type);
+    }
+
+    List<ReceiveCommand> commands = Lists.newArrayList();
+
+    for (ReceiveCommand rc : receiveCommands)
+    {
+      if (isReceiveable(rc, type))
+      {
+        commands.add(rc);
+        handleFileHooks(rpack, rc, type);
+      }
+      else if (logger.isTraceEnabled())
+      {
+        //J-
+        logger.trace("skip receive command, type={}, ref={}, result={}",
+          new Object[] { 
+            rc.getType(),
+            rc.getRefName(), 
+            rc.getResult() 
+          }
+        );
+        //J+
+      }
+    }
+
+    if (!commands.isEmpty())
+    {
+      handleReceiveCommands(rpack, commands, type);
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("no receive command found to process");
+    }
   }
 
   /**
