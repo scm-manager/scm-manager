@@ -98,13 +98,14 @@ public class GitHookChangesetCollector
 
     org.eclipse.jgit.lib.Repository repository = rpack.getRepository();
 
-    GitChangesetConverter converter = null;
     RevWalk walk = null;
+    
+    GitChangesetConverter converter = null;
 
     try
     {
-      converter = new GitChangesetConverter(repository, GitUtil.ID_LENGTH);
       walk = rpack.getRevWalk();
+      converter = new GitChangesetConverter(repository, walk, GitUtil.ID_LENGTH);
 
       for (ReceiveCommand rc : receiveCommands)
       {
