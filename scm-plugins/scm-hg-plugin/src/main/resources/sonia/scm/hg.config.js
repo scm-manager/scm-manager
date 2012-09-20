@@ -45,6 +45,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   configWizardLabelText: 'Start Configuration Wizard',
   encodingText: 'Encoding',
   disabledText: 'Disabled',
+  showRevisionInIdText: 'Show Revision',
 
   // helpText
   hgBinaryHelpText: 'Location of Mercurial binary.',
@@ -55,6 +56,8 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   encodingHelpText: 'Repository Encoding.',
   disabledHelpText: 'Enable or disable the Mercurial plugin. \n\
                     Note you have to reload the page, after changing this value.',
+  showRevisionInIdHelpText: 'Show revision as part of the node id. Note: \n\
+          You have to restart the ApplicationServer to affect cached changesets.',
 
   initComponent: function(){
 
@@ -95,6 +98,12 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         fieldLabel: this.useOptimizedBytecodeText,
         inputValue: 'true',
         helpText: this.useOptimizedBytecodeHelpText
+      },{
+        xtype: 'checkbox',
+        name: 'showRevisionInId',
+        fieldLabel: this.showRevisionInIdText,
+        inputValue: 'true',
+        helpText: this.showRevisionInIdHelpText
       },{
         xtype: 'checkbox',
         name: 'disabled',
@@ -200,6 +209,7 @@ if ( i18n != null && i18n.country == 'de' ){
     configWizardText: 'Konfigurations-Assistenten starten',
     configWizardLabelText: 'Konfigurations-Assistent',
     disabledText: 'Deaktivieren',
+    showRevisionInIdText: 'Zeige Revision an',
 
     // helpText
     hgBinaryHelpText: 'Pfad zum "hg" Befehl.',
@@ -208,7 +218,10 @@ if ( i18n != null && i18n.country == 'de' ){
     repositoryDirectoryHelpText: 'Verzeichnis der Mercurial-Repositories.',
     useOptimizedBytecodeHelpText: 'Optimierten Bytecode verwenden (python -O).',
     disabledHelpText: 'Aktivieren oder deaktivieren des Mercurial Plugins.\n\
-      Die Seite muss neu geladen werden wenn dieser Wert geändert wird.'
+      Die Seite muss neu geladen werden wenn dieser Wert geändert wird.',
+    showRevisionInIdHelpText: 'Zeige die Revision als teil der NodeId an. \n\
+          Der ApplicationServer muss neugestartet werden um zwischengespeicherte\n\
+           Changesets zuändern.'
   });
 
 }

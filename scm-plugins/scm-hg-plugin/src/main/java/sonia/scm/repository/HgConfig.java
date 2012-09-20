@@ -107,6 +107,17 @@ public class HgConfig extends SimpleRepositoryConfig
    *
    * @return
    */
+  public boolean isShowRevisionInId()
+  {
+    return showRevisionInId;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public boolean isUseOptimizedBytecode()
   {
     return useOptimizedBytecode;
@@ -175,6 +186,17 @@ public class HgConfig extends SimpleRepositoryConfig
    * Method description
    *
    *
+   * @param showRevisionInId
+   */
+  public void setShowRevisionInId(boolean showRevisionInId)
+  {
+    this.showRevisionInId = showRevisionInId;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param useOptimizedBytecode
    */
   public void setUseOptimizedBytecode(boolean useOptimizedBytecode)
@@ -198,4 +220,7 @@ public class HgConfig extends SimpleRepositoryConfig
 
   /** Field description */
   private boolean useOptimizedBytecode = false;
+
+  /** Field description */
+  private boolean showRevisionInId = false;
 }

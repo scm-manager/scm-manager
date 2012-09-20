@@ -46,6 +46,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 
 import sonia.scm.repository.Changeset;
+import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.Modifications;
 import sonia.scm.repository.Person;
 
@@ -94,10 +95,12 @@ public class HgLogChangesetCommand extends AbstractCommand
    *
    *
    * @param repository
+   * @param config
    */
-  public HgLogChangesetCommand(Repository repository)
+  public HgLogChangesetCommand(Repository repository, HgConfig config)
   {
     super(repository);
+    this.config = config;
     withDebugFlag();
   }
 
@@ -108,12 +111,13 @@ public class HgLogChangesetCommand extends AbstractCommand
    *
    *
    * @param repository
+   * @param config
    *
    * @return
    */
-  public static HgLogChangesetCommand on(Repository repository)
+  public static HgLogChangesetCommand on(Repository repository, HgConfig config)
   {
-    return new HgLogChangesetCommand(repository);
+    return new HgLogChangesetCommand(repository, config);
   }
 
   /**
@@ -219,9 +223,12 @@ public class HgLogChangesetCommand extends AbstractCommand
   public int singleRevision(String... files)
   {
     Integer rev = Utils.single(loadRevisions(files));
-    if ( rev == null ){
+
+    if (rev == null)
+    {
       rev = -1;
     }
+
     return rev;
   }
 
@@ -254,10 +261,8 @@ public class HgLogChangesetCommand extends AbstractCommand
   private Changeset createFromInputStream(HgInputStream in) throws IOException
   {
     Changeset changeset = new Changeset();
-    byte[] node = in.next(40);
-    String nodeString = new String(node);
 
-    changeset.setId(nodeString);
+    changeset.setId(readId(in));
 
     String user = in.textUpTo('\n');
 
@@ -274,20 +279,16 @@ public class HgLogChangesetCommand extends AbstractCommand
       changeset.getBranches().add(branch);
     }
 
-    in.upTo(':');
+    String p1 = readId(in);
 
-    String p1 = in.nextAsText(40);
-
-    if (!NULL_ID.equals(p1))
+    if (!isNullId(p1))
     {
       changeset.getParents().add(p1);
     }
 
-    in.upTo(':');
+    String p2 = readId(in);
 
-    String p2 = in.nextAsText(40);
-
-    if (!NULL_ID.equals(p2))
+    if (!isNullId(p2))
     {
       changeset.getParents().add(p2);
     }
@@ -368,6 +369,45 @@ public class HgLogChangesetCommand extends AbstractCommand
    * @param in
    *
    * @return
+   *
+   * @throws IOException
+   */
+  private String readId(HgInputStream in) throws IOException
+  {
+    String nodeString = null;
+
+    if (config.isShowRevisionInId())
+    {
+      Integer rev = in.readDecimal();
+
+      if (rev != null)
+      {
+        nodeString = String.valueOf(rev);
+      }
+      else
+      {
+        nodeString = "-1";
+      }
+
+      in.upTo(':');
+      nodeString = nodeString.concat(":").concat(in.nextAsText(40));
+    }
+    else
+    {
+      in.upTo(':');
+      nodeString = in.nextAsText(40);
+    }
+
+    return nodeString;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param in
+   *
+   * @return
    */
   private List<Changeset> readListFromStream(HgInputStream in)
   {
@@ -402,4 +442,25 @@ public class HgLogChangesetCommand extends AbstractCommand
 
     return changesets;
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   *
+   * @return
+   */
+  private boolean isNullId(String id)
+  {
+    return ((id != null) && id.equals("-1:".concat(NULL_ID)))
+      || id.equals(NULL_ID);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private HgConfig config;
 }
