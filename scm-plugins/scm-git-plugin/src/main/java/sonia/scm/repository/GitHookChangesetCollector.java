@@ -99,13 +99,14 @@ public class GitHookChangesetCollector
     org.eclipse.jgit.lib.Repository repository = rpack.getRepository();
 
     RevWalk walk = null;
-    
+
     GitChangesetConverter converter = null;
 
     try
     {
       walk = rpack.getRevWalk();
-      converter = new GitChangesetConverter(repository, walk, GitUtil.ID_LENGTH);
+      converter = new GitChangesetConverter(repository, walk,
+        GitUtil.ID_LENGTH);
 
       for (ReceiveCommand rc : receiveCommands)
       {
@@ -159,28 +160,19 @@ public class GitHookChangesetCollector
 
         RevCommit commit = walk.next();
 
+        List<String> branches = Lists.newArrayList(branch);
+
         while (commit != null)
         {
+
           // parse commit body to avoid npe
           walk.parseBody(commit);
-          Changeset changeset = converter.createChangeset(commit);
 
-          List<String> branches = changeset.getBranches();
+          Changeset changeset = converter.createChangeset(commit, branches);
 
-          if (branches.isEmpty())
+          if (logger.isTraceEnabled())
           {
-            if (logger.isTraceEnabled())
-            {
-              //J-
-                logger.trace(
-                  "missing branch informations for {}, set default branch {}",
-                  changeset.getId(),
-                  branch
-                );
-                //J+
-            }
-
-            branches.add(branch);
+            logger.trace("retrive commit {} for hook", changeset.getId());
           }
 
           changesets.add(changeset);

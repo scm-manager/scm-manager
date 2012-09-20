@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 import org.eclipse.jgit.diff.DiffEntry;
@@ -134,7 +135,6 @@ public class GitChangesetConverter implements Closeable
    * Method description
    *
    *
-   *
    * @param commit
    *
    * @return
@@ -142,6 +142,42 @@ public class GitChangesetConverter implements Closeable
    * @throws IOException
    */
   public Changeset createChangeset(RevCommit commit) throws IOException
+  {
+    List<String> branches = Lists.newArrayList();
+    Set<Ref> refs = repository.getAllRefsByPeeledObjectId().get(commit.getId());
+
+    if (Util.isNotEmpty(refs))
+    {
+
+      for (Ref ref : refs)
+      {
+        String branch = GitUtil.getBranch(ref);
+
+        if (branch != null)
+        {
+          branches.add(branch);
+        }
+      }
+
+    }
+
+    return createChangeset(commit, branches);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param commit
+   * @param branches
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public Changeset createChangeset(RevCommit commit, List<String> branches)
+    throws IOException
   {
     String id = commit.getId().abbreviate(idLength).name();
     List<String> parentList = null;
@@ -183,22 +219,7 @@ public class GitChangesetConverter implements Closeable
       changeset.getTags().addAll(tagCollection);
     }
 
-    Set<Ref> refs = repository.getAllRefsByPeeledObjectId().get(commit.getId());
-
-    if (Util.isNotEmpty(refs))
-    {
-
-      for (Ref ref : refs)
-      {
-        String branch = GitUtil.getBranch(ref);
-
-        if (branch != null)
-        {
-          changeset.getBranches().add(branch);
-        }
-      }
-
-    }
+    changeset.setBranches(branches);
 
     return changeset;
   }
