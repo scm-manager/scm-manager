@@ -161,6 +161,8 @@ public class GitHookChangesetCollector
 
         while (commit != null)
         {
+          // parse commit body to avoid npe
+          walk.parseBody(commit);
           Changeset changeset = converter.createChangeset(commit);
 
           List<String> branches = changeset.getBranches();
