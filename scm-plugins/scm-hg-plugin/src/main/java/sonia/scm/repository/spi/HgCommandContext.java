@@ -148,6 +148,19 @@ public class HgCommandContext implements Closeable
     return repository;
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public HgConfig getConfig()
+  {
+    return config;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
