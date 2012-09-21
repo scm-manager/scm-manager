@@ -35,7 +35,10 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
+
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.PostReceiveHook;
 import org.eclipse.jgit.transport.PreReceiveHook;
 import org.eclipse.jgit.transport.ReceiveCommand;
@@ -49,9 +52,9 @@ import sonia.scm.io.CommandResult;
 import sonia.scm.io.SimpleCommand;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitRepositoryHookEvent;
+import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
@@ -62,6 +65,8 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -148,8 +153,14 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     File repositoryDirectory, File hook, ObjectId oldId, ObjectId newId,
     String refName)
   {
-    final Command cmd = new SimpleCommand(hook.getAbsolutePath(), getId(oldId),
-                          getId(newId), Util.nonNull(refName));
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("execute file hook '{}' in directoy '{}'");
+    }
+
+    final Command cmd = new SimpleCommand(hook.getAbsolutePath(),
+                          GitUtil.getId(oldId), GitUtil.getId(newId),
+                          Util.nonNull(refName));
 
     // issue-99
     cmd.setWorkDirectory(repositoryDirectory);
@@ -199,40 +210,83 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   }
 
   /**
-   * Method description, occurred
+   * Method description
+   *
    *
    * @param rpack
    * @param rc
-   * @param directory
-   * @param oldId
    * @param newId
    * @param type
    */
-  private void fireHookEvent(ReceivePack rpack, ReceiveCommand rc,
-    File directory, ObjectId oldId, ObjectId newId, RepositoryHookType type)
+  private void handleFileHooks(ReceivePack rpack, ReceiveCommand rc,
+    RepositoryHookType type)
+  {
+    ObjectId newId = rc.getNewId();
+    ObjectId oldId = null;
+
+    if (isUpdateCommand(rc))
+    {
+      oldId = rc.getOldId();
+
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("handle update receive command from commit '{}' to '{}'",
+          oldId.getName(), newId.getName());
+      }
+    }
+    else if (logger.isTraceEnabled())
+    {
+      logger.trace("handle receive command for commit '{}'", newId.getName());
+    }
+
+    File directory = rpack.getRepository().getDirectory();
+    String scriptName = null;
+
+    if (type == RepositoryHookType.POST_RECEIVE)
+    {
+      scriptName = FILE_HOOK_POST_RECEIVE;
+    }
+    else if (type == RepositoryHookType.PRE_RECEIVE)
+    {
+      scriptName = FILE_HOOK_PRE_RECEIVE;
+    }
+
+    if (scriptName != null)
+    {
+      File hookScript = getHookScript(directory, scriptName);
+
+      if (hookScript != null)
+      {
+        executeFileHook(rpack, rc, directory, hookScript, oldId, newId,
+          rc.getRefName());
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param rpack
+   * @param receiveCommands
+   * @param type
+   */
+  private void handleReceiveCommands(ReceivePack rpack,
+    List<ReceiveCommand> receiveCommands, RepositoryHookType type)
   {
     try
     {
+      Repository repository = rpack.getRepository();
       String repositoryName = RepositoryUtil.getRepositoryName(handler,
-                                directory);
-      GitRepositoryHookEvent e = new GitRepositoryHookEvent(directory,
-                                   rc.getRef(), newId, oldId, type);
+                                repository.getDirectory());
 
       repositoryManager.fireHookEvent(GitRepositoryHandler.TYPE_NAME,
-        repositoryName, e);
-    }
-    catch (RepositoryNotFoundException ex)
-    {
-      logger.error("repository could not be found", ex);
+        repositoryName,
+        new GitRepositoryHookEvent(rpack, receiveCommands, type));
     }
     catch (Exception ex)
     {
-      if (logger.isWarnEnabled())
-      {
-        logger.warn("execption occurred during hook execution", ex);
-      }
-
-      sendError(rpack, rc, ex.getMessage());
+      logger.error("could not handle receive commands", ex);
     }
   }
 
@@ -247,47 +301,41 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   private void onReceive(ReceivePack rpack,
     Collection<ReceiveCommand> receiveCommands, RepositoryHookType type)
   {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("received git hook, type={}", type);
+    }
+
+    List<ReceiveCommand> commands = Lists.newArrayList();
+
     for (ReceiveCommand rc : receiveCommands)
     {
-      if (((RepositoryHookType.PRE_RECEIVE == type)
-        && (rc.getResult()
-          == ReceiveCommand.Result.NOT_ATTEMPTED)) || ((RepositoryHookType
-            .POST_RECEIVE == type) && (rc.getResult()
-              == ReceiveCommand.Result.OK)))
+      if (isReceiveable(rc, type))
       {
-        ObjectId newId = rc.getNewId();
-        ObjectId oldId = null;
-
-        if (isUpdateCommand(rc))
-        {
-          oldId = rc.getOldId();
-        }
-
-        File directory = rpack.getRepository().getDirectory();
-        String scriptName = null;
-
-        if (type == RepositoryHookType.POST_RECEIVE)
-        {
-          scriptName = FILE_HOOK_POST_RECEIVE;
-        }
-        else if (type == RepositoryHookType.PRE_RECEIVE)
-        {
-          scriptName = FILE_HOOK_PRE_RECEIVE;
-        }
-
-        if (scriptName != null)
-        {
-          File hookScript = getHookScript(directory, scriptName);
-
-          if (hookScript != null)
-          {
-            executeFileHook(rpack, rc, directory, hookScript, oldId, newId,
-              rc.getRefName());
-          }
-        }
-
-        fireHookEvent(rpack, rc, directory, oldId, newId, type);
+        commands.add(rc);
+        handleFileHooks(rpack, rc, type);
       }
+      else if (logger.isTraceEnabled())
+      {
+        //J-
+        logger.trace("skip receive command, type={}, ref={}, result={}",
+          new Object[] { 
+            rc.getType(),
+            rc.getRefName(), 
+            rc.getResult() 
+          }
+        );
+        //J+
+      }
+    }
+
+    if (!commands.isEmpty())
+    {
+      handleReceiveCommands(rpack, commands, type);
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug("no receive command found to process");
     }
   }
 
@@ -329,20 +377,19 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    * Method description
    *
    *
-   * @param objectId
+   * @param rc
+   * @param type
    *
    * @return
    */
-  private String getId(ObjectId objectId)
+  private boolean isReceiveable(ReceiveCommand rc, RepositoryHookType type)
   {
-    String id = Util.EMPTY_STRING;
-
-    if (objectId != null)
-    {
-      id = objectId.name();
-    }
-
-    return id;
+    //J-
+    return ((RepositoryHookType.PRE_RECEIVE == type) && 
+            (rc.getResult() == ReceiveCommand.Result.NOT_ATTEMPTED)) || 
+           ((RepositoryHookType.POST_RECEIVE == type) && 
+            (rc.getResult() == ReceiveCommand.Result.OK));
+    //J+
   }
 
   /**

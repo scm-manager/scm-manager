@@ -35,25 +35,11 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevSort;
-import org.eclipse.jgit.revwalk.RevWalk;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
+import org.eclipse.jgit.transport.ReceiveCommand;
+import org.eclipse.jgit.transport.ReceivePack;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
-
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -63,29 +49,19 @@ import java.util.List;
 public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
 {
 
-  /** the logger for GitRepositoryHookEvent */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitRepositoryHookEvent.class);
-
-  //~--- constructors ---------------------------------------------------------
-
   /**
    * Constructs ...
    *
    *
-   * @param directory
-   * @param ref
-   * @param newId
-   * @param oldId
+   * @param rpack
+   * @param receiveCommands
    * @param type
    */
-  public GitRepositoryHookEvent(File directory, Ref ref, ObjectId newId,
-    ObjectId oldId, RepositoryHookType type)
+  public GitRepositoryHookEvent(ReceivePack rpack,
+    List<ReceiveCommand> receiveCommands, RepositoryHookType type)
   {
-    this.directory = directory;
-    this.defaultBranch = GitUtil.getBranch(ref);
-    this.newId = newId;
-    this.oldId = oldId;
+    this.rpack = rpack;
+    this.receiveCommands = receiveCommands;
     this.type = type;
   }
 
@@ -98,11 +74,14 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
    * @return
    */
   @Override
-  public Collection<Changeset> getChangesets()
+  public List<Changeset> getChangesets()
   {
     if (changesets == null)
     {
-      changesets = fetchChangesets();
+      GitHookChangesetCollector collector =
+        new GitHookChangesetCollector(rpack, receiveCommands);
+
+      changesets = collector.collectChangesets();
     }
 
     return changesets;
@@ -120,91 +99,16 @@ public class GitRepositoryHookEvent extends AbstractRepositoryHookEvent
     return type;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private List<Changeset> fetchChangesets()
-  {
-    List<Changeset> result = new ArrayList<Changeset>();
-
-    if (newId != null)
-    {
-      GitChangesetConverter converter = null;
-      RevWalk walk = null;
-      org.eclipse.jgit.lib.Repository repository = null;
-
-      try
-      {
-        repository = GitUtil.open(directory);
-        converter = new GitChangesetConverter(repository);
-        walk = new RevWalk(repository);
-        walk.reset();
-        walk.sort(RevSort.NONE);
-        walk.markStart(walk.parseCommit(newId));
-
-        if (oldId != null)
-        {
-          walk.markUninteresting(walk.parseCommit(oldId));
-        }
-
-        RevCommit commit = walk.next();
-
-        while (commit != null)
-        {
-          Changeset changeset = converter.createChangeset(commit);
-
-          if (changeset.getBranches().isEmpty()
-            && Util.isNotEmpty(defaultBranch))
-          {
-            if (logger.isTraceEnabled())
-            {
-              logger.trace("set branch to current default branch {}",
-                defaultBranch);
-            }
-
-            changeset.getBranches().add(defaultBranch);
-          }
-
-          result.add(changeset);
-          commit = walk.next();
-        }
-      }
-      catch (IOException ex)
-      {
-        logger.error("could not fetch changesets", ex);
-      }
-      finally
-      {
-        IOUtil.close(converter);
-        GitUtil.release(walk);
-        GitUtil.close(repository);
-      }
-    }
-
-    return result;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private List<Changeset> changesets;
 
   /** Field description */
-  private String defaultBranch;
+  private List<ReceiveCommand> receiveCommands;
 
   /** Field description */
-  private File directory;
-
-  /** Field description */
-  private ObjectId newId;
-
-  /** Field description */
-  private ObjectId oldId;
+  private ReceivePack rpack;
 
   /** Field description */
   private RepositoryHookType type;
