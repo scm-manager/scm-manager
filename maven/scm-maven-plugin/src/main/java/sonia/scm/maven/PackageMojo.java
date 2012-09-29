@@ -35,6 +35,11 @@ package sonia.scm.maven;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.deployer.ArtifactDeployer;
+import org.apache.maven.artifact.deployer.ArtifactDeploymentException;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -72,12 +77,23 @@ public class PackageMojo extends AbstractBaseScmMojo
     File warFile = getWebApplicationArchive();
     List<String> excludeList = createExcludeList(warFile);
 
-    installArtifacts(excludeList, packageDirectory);
+    deployToDirectory(excludeList);
     copyDescriptor();
     createPackage();
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public ArtifactDeployer getDeployer()
+  {
+    return deployer;
+  }
 
   /**
    * Method description
@@ -113,6 +129,17 @@ public class PackageMojo extends AbstractBaseScmMojo
   }
 
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param deployer
+   */
+  public void setDeployer(ArtifactDeployer deployer)
+  {
+    this.deployer = deployer;
+  }
 
   /**
    * Method description
@@ -243,7 +270,106 @@ public class PackageMojo extends AbstractBaseScmMojo
 
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param excludeList
+   *
+   * @throws MojoExecutionException
+   */
+  private void deployToDirectory(List<String> excludeList)
+    throws MojoExecutionException
+  {
+
+    Artifact pluginArtifact = getPluginArtifact();
+
+    try
+    {
+      ArtifactRepository deploymentRepository = getDeploymentRepository();
+
+      deployToDirectory(excludeList, deploymentRepository, pluginArtifact);
+
+      for (Artifact artifact : artifacts)
+      {
+        deployToDirectory(excludeList, deploymentRepository, artifact);
+      }
+
+    }
+    catch (IOException ex)
+    {
+      throw new MojoExecutionException("could not create deloy repository", ex);
+    }
+    catch (ArtifactDeploymentException ex)
+    {
+      throw new MojoExecutionException("could not create deloy artifcat", ex);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param excludeList
+   * @param deploymentRepository
+   * @param artifact
+   *
+   * @throws ArtifactDeploymentException
+   */
+  private void deployToDirectory(List<String> excludeList,
+    ArtifactRepository deploymentRepository, Artifact artifact)
+    throws ArtifactDeploymentException
+  {
+    String id = getId(artifact);
+
+    if (!excludeList.contains(id))
+    {
+
+      artifact.isSnapshot();
+
+      File file = artifact.getFile();
+
+      deployer.deploy(file, artifact, deploymentRepository, localRepository);
+    }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws MojoExecutionException
+   */
+  private ArtifactRepository getDeploymentRepository()
+    throws IOException, MojoExecutionException
+  {
+
+    ArtifactRepositoryLayout artifactRepositoryLayout =
+      availableRepositoryLayouts.get(repositoryLayout);
+
+    if (artifactRepositoryLayout == null)
+    {
+      throw new MojoExecutionException(
+        "could not find repository layout ".concat(repositoryLayout));
+    }
+
+    return artifactRepositoryFactory.createDeploymentArtifactRepository(
+      "package.repository",
+      "file://".concat(packageDirectory.getAbsolutePath()),
+      artifactRepositoryLayout, true);
+  }
+
   //~--- fields ---------------------------------------------------------------
+
+  /**
+   * @component
+   */
+  private ArtifactDeployer deployer;
 
   /**
    * @parameter default-value="${project.build.directory}/classes/META-INF/scm/plugin.xml"

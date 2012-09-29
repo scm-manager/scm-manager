@@ -273,7 +273,7 @@ public class RunMojo extends AbstractBaseScmMojo
    *
    * @throws MojoFailureException
    */
-  private void runServletContainer(File warFile) throws MojoFailureException
+  private void runServletContainer(File warFile) throws MojoExecutionException
   {
     getLog().info("start servletcontainer at port " + port);
 
@@ -316,7 +316,7 @@ public class RunMojo extends AbstractBaseScmMojo
     }
     catch (Exception ex)
     {
-      throw new MojoFailureException("could not start servletcontainer", ex);
+      throw new MojoExecutionException("could not start servletcontainer", ex);
     }
   }
 

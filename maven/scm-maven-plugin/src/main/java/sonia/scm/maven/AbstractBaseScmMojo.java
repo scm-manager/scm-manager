@@ -357,8 +357,8 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     ArtifactRepository pluginRepository, Artifact artifact)
     throws MojoExecutionException
   {
-    String id =
-      artifact.getGroupId().concat(":").concat(artifact.getArtifactId());
+    String id = getId(artifact);
+      
 
     if (!excludeList.contains(id))
     {
@@ -383,6 +383,10 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
           "could not find file for ".concat(artifact.getId()));
       }
     }
+  }
+  
+  protected String getId(Artifact artifact){
+    return artifact.getGroupId().concat(":").concat(artifact.getArtifactId());
   }
 
   /**
