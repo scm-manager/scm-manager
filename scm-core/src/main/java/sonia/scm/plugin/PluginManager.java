@@ -35,6 +35,9 @@ package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import java.util.Collection;
 
 /**
@@ -57,6 +60,17 @@ public interface PluginManager
    * @param id
    */
   public void install(String id);
+
+  /**
+   * Installs a plugin package from a inputstream.
+   *
+   *
+   * @param packageStream package input stream
+   *
+   * @throws IOException
+   * @since 1.21
+   */
+  public void installPackage(InputStream packageStream) throws IOException;
 
   /**
    * Method description

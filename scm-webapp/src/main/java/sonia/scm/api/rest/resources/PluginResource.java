@@ -47,12 +47,18 @@ import sonia.scm.plugin.PluginInformationComparator;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.multipart.FormDataParam;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -84,6 +90,33 @@ public class PluginResource
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Installs a plugin from a package.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   *
+   *
+   *
+   * @param uploadedInputStream
+   * @return
+   *
+   * @throws IOException
+   */
+  @POST
+  @Path("install-package")
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  public Response install(
+    @FormDataParam("package") InputStream uploadedInputStream)
+    throws IOException
+  {
+    pluginManager.installPackage(uploadedInputStream);
+
+    return Response.ok().build();
+  }
 
   /**
    * Installs a plugin.<br />

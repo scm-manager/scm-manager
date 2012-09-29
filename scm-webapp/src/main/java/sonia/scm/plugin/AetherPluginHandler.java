@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.collection.CollectRequest;
 import org.sonatype.aether.connector.async.AsyncRepositoryConnectorFactory;
+import org.sonatype.aether.connector.file.FileRepositoryConnectorFactory;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.graph.DependencyNode;
@@ -343,6 +344,8 @@ public class AetherPluginHandler
       DefaultArtifactDescriptorReader.class);
     locator.addService(RepositoryConnectorFactory.class,
       AsyncRepositoryConnectorFactory.class);
+    locator.addService(RepositoryConnectorFactory.class,
+      FileRepositoryConnectorFactory.class);
 
     return locator.getService(RepositorySystem.class);
   }
