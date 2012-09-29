@@ -38,10 +38,12 @@ import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.deployer.ArtifactDeployer;
 import org.apache.maven.artifact.deployer.ArtifactDeploymentException;
+import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.artifact.ProjectArtifactMetadata;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -287,12 +289,17 @@ public class PackageMojo extends AbstractBaseScmMojo
     try
     {
       ArtifactRepository deploymentRepository = getDeploymentRepository();
+      ArtifactMetadata metadata = new ProjectArtifactMetadata(pluginArtifact,
+                                    pomFile);
 
-      deployToDirectory(excludeList, deploymentRepository, pluginArtifact);
+      pluginArtifact.addMetadata(metadata);
+
+      deployToDirectory(excludeList, deploymentRepository, pluginArtifact,
+        false);
 
       for (Artifact artifact : artifacts)
       {
-        deployToDirectory(excludeList, deploymentRepository, artifact);
+        deployToDirectory(excludeList, deploymentRepository, artifact, true);
       }
 
     }
@@ -314,19 +321,45 @@ public class PackageMojo extends AbstractBaseScmMojo
    * @param excludeList
    * @param deploymentRepository
    * @param artifact
+   * @param resolveMetadata
    *
    * @throws ArtifactDeploymentException
    */
   private void deployToDirectory(List<String> excludeList,
-    ArtifactRepository deploymentRepository, Artifact artifact)
+    ArtifactRepository deploymentRepository, Artifact artifact,
+    boolean resolveMetadata)
     throws ArtifactDeploymentException
   {
     String id = getId(artifact);
 
     if (!excludeList.contains(id))
     {
-
       artifact.isSnapshot();
+
+      if (resolveMetadata)
+      {
+        String path = localRepository.pathOf(artifact);
+        int lastIndex = path.lastIndexOf(".");
+
+        if (lastIndex > 0)
+        {
+          path = path.substring(0, lastIndex).concat(".pom");
+
+          File pom = new File(localRepository.getBasedir(), path);
+
+          if (pom.exists())
+          {
+            ArtifactMetadata metadata = new ProjectArtifactMetadata(artifact,
+                                          pom);
+
+            artifact.addMetadata(metadata);
+          }
+          else
+          {
+            getLog().warn("could not find pom at ".concat(path));
+          }
+        }
+      }
 
       File file = artifact.getFile();
 
@@ -385,4 +418,11 @@ public class PackageMojo extends AbstractBaseScmMojo
    * @parameter expression="${packageFile}" default-value="${project.build.directory}/${project.artifactId}-${project.version}.scmp"
    */
   private File packageFile;
+
+  /**
+   * @parameter default-value="${project.file}"
+   * @required
+   * @readonly
+   */
+  private File pomFile;
 }
