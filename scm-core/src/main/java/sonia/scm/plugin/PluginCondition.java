@@ -155,7 +155,7 @@ public class PluginCondition implements Cloneable, Serializable
   public boolean isSupported()
   {
     return isSupported(SCMContext.getContext().getVersion(),
-                       SystemUtil.getOS(), SystemUtil.getArch());
+      SystemUtil.getOS(), SystemUtil.getArch());
   }
 
   /**
@@ -175,7 +175,7 @@ public class PluginCondition implements Cloneable, Serializable
     if (Util.isNotEmpty(minVersion) && Util.isNotEmpty(version))
     {
       supported = (minVersion.equalsIgnoreCase(version)
-                   || new PluginVersion(version).isNewer(minVersion));
+        || new PluginVersion(version).isNewer(minVersion));
     }
 
     if (supported && Util.isNotEmpty(this.os) && Util.isNotEmpty(os))
@@ -253,17 +253,16 @@ public class PluginCondition implements Cloneable, Serializable
   {
     osType = osType.toLowerCase(Locale.ENGLISH);
 
+    //J-
     return ((osType.indexOf("win") >= 0) && (PlatformType.WINDOWS == type))
-           || ((osType.indexOf("unix") >= 0) && type.isUnix())
-           || ((osType.indexOf("posix") >= 0) && type.isPosix())
-           || ((osType.indexOf("mac") >= 0) && (PlatformType.MAC == type))
-           || ((osType.indexOf("linux") >= 0) && (PlatformType.LINUX == type))
-           || ((osType.indexOf("solaris") >= 0)
-               && (PlatformType.SOLARIS
-                   == type)) || ((osType.indexOf("openbsd") >= 0)
-                                 && (PlatformType.OPENBSD
-                                     == type)) || ((osType.indexOf("freebsd")
-                                       >= 0) && (PlatformType.FREEBSD == type));
+      || ((osType.indexOf("unix") >= 0) && type.isUnix())
+      || ((osType.indexOf("posix") >= 0) && type.isPosix())
+      || ((osType.indexOf("mac") >= 0) && (PlatformType.MAC == type))
+      || ((osType.indexOf("linux") >= 0) && (PlatformType.LINUX == type))
+      || ((osType.indexOf("solaris") >= 0) && (PlatformType.SOLARIS == type)) 
+      || ((osType.indexOf("openbsd") >= 0) && (PlatformType.OPENBSD == type)) 
+      || ((osType.indexOf("freebsd") >= 0) && (PlatformType.FREEBSD == type));
+    //J+
   }
 
   //~--- fields ---------------------------------------------------------------
