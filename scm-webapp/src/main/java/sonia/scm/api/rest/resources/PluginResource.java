@@ -40,8 +40,12 @@ import com.google.inject.Singleton;
 
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.OverviewPluginFilter;
+import sonia.scm.plugin.PluginConditionFailedException;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginInformationComparator;
 
@@ -66,6 +70,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 /**
  *
@@ -76,6 +81,14 @@ import javax.ws.rs.core.Response;
 @ExternallyManagedLifecycle
 public class PluginResource
 {
+
+  /**
+   * the logger for PluginResource
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(PluginResource.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -96,6 +109,7 @@ public class PluginResource
    * <br />
    * <ul>
    *   <li>200 success</li>
+   *   <li>412 conflict</li>
    *   <li>500 internal server error</li>
    * </ul>
    *
@@ -113,9 +127,21 @@ public class PluginResource
     @FormDataParam("package") InputStream uploadedInputStream)
     throws IOException
   {
-    pluginManager.installPackage(uploadedInputStream);
+    Response response = null;
 
-    return Response.ok().build();
+    try
+    {
+      pluginManager.installPackage(uploadedInputStream);
+      response = Response.ok().build();
+    }
+    catch (PluginConditionFailedException ex)
+    {
+      logger.warn(
+        "could not install plugin package, because the condition failed", ex);
+      response = Response.status(Status.CONFLICT).build();
+    }
+
+    return response;
   }
 
   /**

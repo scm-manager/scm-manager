@@ -240,9 +240,13 @@ public class DefaultPluginManager
 
       Plugin plugin = JAXB.unmarshal(new File(tempDirectory, "plugin.xml"),
                         Plugin.class);
-      
-      // TODO check conditions
-      
+
+      PluginCondition condition = plugin.getCondition();
+
+      if ((condition != null) &&!condition.isSupported())
+      {
+        throw new PluginConditionFailedException(condition);
+      }
 
       AetherPluginHandler aph = new AetherPluginHandler(this, context,
                                   configuration);
