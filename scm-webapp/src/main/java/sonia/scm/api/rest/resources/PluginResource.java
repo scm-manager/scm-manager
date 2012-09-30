@@ -110,7 +110,7 @@ public class PluginResource
    * <br />
    * <ul>
    *   <li>200 success</li>
-   *   <li>412 conflict</li>
+   *   <li>412 precondition failed</li>
    *   <li>500 internal server error</li>
    * </ul>
    *
@@ -138,7 +138,7 @@ public class PluginResource
     {
       logger.warn(
         "could not install plugin package, because the condition failed", ex);
-      response = Response.status(Status.CONFLICT).entity(
+      response = Response.status(Status.PRECONDITION_FAILED).entity(
         new RestActionResult(false)).build();
     }
     catch (Exception ex)
@@ -178,7 +178,7 @@ public class PluginResource
    * <br />
    * <ul>
    *   <li>200 success</li>
-   *   <li>412 conflict</li>
+   *   <li>412 precondition failed</li>
    *   <li>500 internal server error</li>
    * </ul>
    *
