@@ -195,15 +195,10 @@ public class AuthenticationResource
 
     Response resp = null;
 
-    // TODO handle anonymous access
-
-    User user = null;
-
-    if (user != null)
+    if (configuration.isAnonymousAccessEnabled())
     {
-      ScmState state = createState(subject);
 
-      resp = Response.ok(state).build();
+      resp = Response.ok(createAnonymousState()).build();
     }
     else
     {
@@ -272,11 +267,8 @@ public class AuthenticationResource
     }
     else if (configuration.isAnonymousAccessEnabled())
     {
-      User user = new User(SCMContext.USER_ANONYMOUS, "SCM Anonymous",
-                    "scm-anonymous@scm-manager.com");
-      ScmState state = createState(user, Collections.EMPTY_LIST);
 
-      response = Response.ok(state).build();
+      response = Response.ok(createAnonymousState()).build();
     }
     else
     {
@@ -287,6 +279,20 @@ public class AuthenticationResource
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private ScmState createAnonymousState()
+  {
+    User user = new User(SCMContext.USER_ANONYMOUS, "SCM Anonymous",
+                  "scm-anonymous@scm-manager.com");
+
+    return createState(user, Collections.EMPTY_LIST);
+  }
 
   /**
    * Method description
