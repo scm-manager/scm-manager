@@ -36,6 +36,7 @@ Sonia.plugin.CenterInstance = new Sonia.plugin.Center();
 // plugin grid
 Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
 
+  // columns
   colNameText: 'Name',
   colAuthorText: 'Author',
   colDescriptionText: 'Description',
@@ -43,7 +44,12 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
   colActionText: 'Action',
   colUrlText: 'Url',
   colCategoryText: 'Category',
+  
+  // grid
   emptyText: 'No plugins avaiable',
+  
+  // buttons
+  btnReload: 'Reload',
 
   actionLinkTemplate: '<a style="cursor: pointer;" onclick="Sonia.plugin.CenterInstance.{1}(\'{2}\')">{0}</a>',
 
@@ -99,7 +105,15 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
         forceFit: true,
         enableGroupingMenu: false,
         groupTextTpl: '{group} ({[values.rs.length]} {[values.rs.length > 1 ? "Plugins" : "Plugin"]})'
-      })
+      }),
+      tbar: [{
+        text: this.btnReload,
+        icon: 'resources/images/reload.png',
+        handler: function(){
+          this.getStore().reload();
+        },
+        scope: this
+      }]
     };
 
     Sonia.plugin.CenterInstance.addListener('changed', function(){
