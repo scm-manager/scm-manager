@@ -44,6 +44,7 @@ import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.api.rest.RestActionResult;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.OverviewPluginFilter;
 import sonia.scm.plugin.PluginConditionFailedException;
@@ -113,8 +114,6 @@ public class PluginResource
    *   <li>500 internal server error</li>
    * </ul>
    *
-   *
-   *
    * @param uploadedInputStream
    * @return
    *
@@ -123,6 +122,7 @@ public class PluginResource
   @POST
   @Path("install-package")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response install(
     @FormDataParam("package") InputStream uploadedInputStream)
     throws IOException
@@ -132,13 +132,20 @@ public class PluginResource
     try
     {
       pluginManager.installPackage(uploadedInputStream);
-      response = Response.ok().build();
+      response = Response.ok(new RestActionResult(true)).build();
     }
     catch (PluginConditionFailedException ex)
     {
       logger.warn(
         "could not install plugin package, because the condition failed", ex);
-      response = Response.status(Status.CONFLICT).build();
+      response = Response.status(Status.CONFLICT).entity(
+        new RestActionResult(false)).build();
+    }
+    catch (Exception ex)
+    {
+      logger.warn("plugin installation failed", ex);
+      response =
+        Response.serverError().entity(new RestActionResult(false)).build();
     }
 
     return response;
@@ -163,6 +170,32 @@ public class PluginResource
     pluginManager.install(id);
 
     return Response.ok().build();
+  }
+
+  /**
+   * Installs a plugin from a package. This method is a workaround for ExtJS 
+   * file upload, which requires text/html as content-type.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>412 conflict</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   *
+   * @param uploadedInputStream
+   * @return
+   *
+   * @throws IOException
+   */
+  @POST
+  @Path("install-package.html")
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Produces(MediaType.TEXT_HTML)
+  public Response installFromUI(
+    @FormDataParam("package") InputStream uploadedInputStream)
+    throws IOException
+  {
+    return install(uploadedInputStream);
   }
 
   /**

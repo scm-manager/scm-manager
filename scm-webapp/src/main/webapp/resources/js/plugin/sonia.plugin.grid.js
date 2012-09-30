@@ -48,8 +48,15 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
   // grid
   emptyText: 'No plugins avaiable',
   
+  // TODO i18n
+  
   // buttons
   btnReload: 'Reload',
+  btnIconReload: 'resources/images/reload.png',
+  btnInstallPackage: 'Install Package',
+  btnIconInstallPackage: 'resources/images/add.png',
+  
+  uploadWindowTitle: 'Upload Plugin-Package',
 
   actionLinkTemplate: '<a style="cursor: pointer;" onclick="Sonia.plugin.CenterInstance.{1}(\'{2}\')">{0}</a>',
 
@@ -107,8 +114,43 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
         groupTextTpl: '{group} ({[values.rs.length]} {[values.rs.length > 1 ? "Plugins" : "Plugin"]})'
       }),
       tbar: [{
+        text: this.btnInstallPackage,
+        icon: this.btnIconInstallPackage,
+        handler: function(){
+          var window = new Ext.Window({
+            title: this.uploadWindowTitle
+          });
+          window.add({
+            xtype: 'pluginPackageUploadForm',
+            listeners: {
+              success: {
+                fn: function(){
+                  this.close();
+                  Ext.MessageBox.alert(
+                    Sonia.plugin.CenterInstance.installSuccessText,
+                    Sonia.plugin.CenterInstance.restartText
+                  );
+                },
+                scope: window
+              },
+              failure: {
+                fn: function(){
+                  this.close();
+                  Ext.MessageBox.alert(
+                    Sonia.plugin.CenterInstance.errorTitleText,
+                    Sonia.plugin.CenterInstance.installFailedText
+                  );
+                },
+                scope: window
+              }
+            }
+          });
+          window.show();
+        },
+        scope: this
+      },'|',{
         text: this.btnReload,
-        icon: 'resources/images/reload.png',
+        icon: this.btnIconReload,
         handler: function(){
           this.getStore().reload();
         },
