@@ -128,56 +128,56 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
     final PluginInformation other = (PluginInformation) obj;
 
     if ((this.artifactId == null)
-        ? (other.artifactId != null)
-        : !this.artifactId.equals(other.artifactId))
+      ? (other.artifactId != null)
+      : !this.artifactId.equals(other.artifactId))
     {
       return false;
     }
 
     if ((this.author == null)
-        ? (other.author != null)
-        : !this.author.equals(other.author))
+      ? (other.author != null)
+      : !this.author.equals(other.author))
     {
       return false;
     }
 
     if ((this.category == null)
-        ? (other.category != null)
-        : !this.category.equals(other.category))
+      ? (other.category != null)
+      : !this.category.equals(other.category))
     {
       return false;
     }
 
     if ((this.condition != other.condition)
-        && ((this.condition == null) ||!this.condition.equals(other.condition)))
+      && ((this.condition == null) ||!this.condition.equals(other.condition)))
     {
       return false;
     }
 
     if ((this.description == null)
-        ? (other.description != null)
-        : !this.description.equals(other.description))
+      ? (other.description != null)
+      : !this.description.equals(other.description))
     {
       return false;
     }
 
     if ((this.groupId == null)
-        ? (other.groupId != null)
-        : !this.groupId.equals(other.groupId))
+      ? (other.groupId != null)
+      : !this.groupId.equals(other.groupId))
     {
       return false;
     }
 
     if ((this.name == null)
-        ? (other.name != null)
-        : !this.name.equals(other.name))
+      ? (other.name != null)
+      : !this.name.equals(other.name))
     {
       return false;
     }
 
     if ((this.screenshots != other.screenshots)
-        && ((this.screenshots == null)
-            ||!this.screenshots.equals(other.screenshots)))
+      && ((this.screenshots == null)
+        ||!this.screenshots.equals(other.screenshots)))
     {
       return false;
     }
@@ -188,22 +188,22 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
     }
 
     if ((this.url == null)
-        ? (other.url != null)
-        : !this.url.equals(other.url))
+      ? (other.url != null)
+      : !this.url.equals(other.url))
     {
       return false;
     }
 
     if ((this.version == null)
-        ? (other.version != null)
-        : !this.version.equals(other.version))
+      ? (other.version != null)
+      : !this.version.equals(other.version))
     {
       return false;
     }
 
     if ((this.wiki == null)
-        ? (other.wiki != null)
-        : !this.wiki.equals(other.wiki))
+      ? (other.wiki != null)
+      : !this.wiki.equals(other.wiki))
     {
       return false;
     }
@@ -223,41 +223,41 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
     int hash = 5;
 
     hash = 79 * hash + ((this.artifactId != null)
-                        ? this.artifactId.hashCode()
-                        : 0);
+      ? this.artifactId.hashCode()
+      : 0);
     hash = 79 * hash + ((this.author != null)
-                        ? this.author.hashCode()
-                        : 0);
+      ? this.author.hashCode()
+      : 0);
     hash = 79 * hash + ((this.category != null)
-                        ? this.category.hashCode()
-                        : 0);
+      ? this.category.hashCode()
+      : 0);
     hash = 79 * hash + ((this.condition != null)
-                        ? this.condition.hashCode()
-                        : 0);
+      ? this.condition.hashCode()
+      : 0);
     hash = 79 * hash + ((this.description != null)
-                        ? this.description.hashCode()
-                        : 0);
+      ? this.description.hashCode()
+      : 0);
     hash = 79 * hash + ((this.groupId != null)
-                        ? this.groupId.hashCode()
-                        : 0);
+      ? this.groupId.hashCode()
+      : 0);
     hash = 79 * hash + ((this.name != null)
-                        ? this.name.hashCode()
-                        : 0);
+      ? this.name.hashCode()
+      : 0);
     hash = 79 * hash + ((this.screenshots != null)
-                        ? this.screenshots.hashCode()
-                        : 0);
+      ? this.screenshots.hashCode()
+      : 0);
     hash = 79 * hash + ((this.state != null)
-                        ? this.state.hashCode()
-                        : 0);
+      ? this.state.hashCode()
+      : 0);
     hash = 79 * hash + ((this.url != null)
-                        ? this.url.hashCode()
-                        : 0);
+      ? this.url.hashCode()
+      : 0);
     hash = 79 * hash + ((this.version != null)
-                        ? this.version.hashCode()
-                        : 0);
+      ? this.version.hashCode()
+      : 0);
     hash = 79 * hash + ((this.wiki != null)
-                        ? this.wiki.hashCode()
-                        : 0);
+      ? this.wiki.hashCode()
+      : 0);
 
     return hash;
   }
@@ -338,11 +338,30 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
    */
   public String getId()
   {
+    return getId(true);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param withVersion
+   *
+   * @return
+   * @since 1.21
+   */
+  public String getId(boolean withVersion)
+  {
     StringBuilder id = new StringBuilder(groupId);
 
-    id.append(":").append(artifactId).append(":");
+    id.append(":").append(artifactId);
 
-    return id.append(version).toString();
+    if (withVersion)
+    {
+      id.append(":").append(version);
+    }
+
+    return id.toString();
   }
 
   /**
@@ -421,7 +440,7 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
   public boolean isValid()
   {
     return Util.isNotEmpty(groupId) && Util.isNotEmpty(artifactId)
-           && Util.isNotEmpty(name) && Util.isNotEmpty(version);
+      && Util.isNotEmpty(name) && Util.isNotEmpty(version);
   }
 
   //~--- set methods ----------------------------------------------------------

@@ -35,6 +35,7 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -56,7 +57,6 @@ import com.sun.jersey.multipart.FormDataParam;
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -295,9 +295,11 @@ public class PluginResource
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Collection<PluginInformation> getOverview()
   {
-    List<PluginInformation> plugins = new ArrayList<PluginInformation>(
-                                        pluginManager.get(
-                                          OverviewPluginFilter.INSTANCE));
+    //J-
+    List<PluginInformation> plugins = Lists.newArrayList(
+      pluginManager.get(OverviewPluginFilter.INSTANCE)
+    );
+    //J+
 
     Collections.sort(plugins, PluginInformationComparator.INSTANCE);
 
@@ -307,7 +309,7 @@ public class PluginResource
     while (it.hasNext())
     {
       PluginInformation pi = it.next();
-      String id = pi.getGroupId().concat(":").concat(pi.getArtifactId());
+      String id = pi.getId(false);
 
       if ((last != null) && id.equals(last))
       {
