@@ -30,10 +30,12 @@
  */
 
 
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -660,17 +662,7 @@ public class ScmRealm extends AuthorizingRealm
     {
       msg.append(" is member of ");
 
-      Iterator<String> groupIt = groups.iterator();
-
-      while (groupIt.hasNext())
-      {
-        msg.append(groupIt.next());
-
-        if (groupIt.hasNext())
-        {
-          msg.append(", ");
-        }
-      }
+      Joiner.on(", ").appendTo(msg, groups);
     }
     else
     {
