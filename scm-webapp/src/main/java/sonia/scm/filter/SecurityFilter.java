@@ -115,6 +115,10 @@ public class SecurityFilter extends HttpFilter
       {
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
       }
+      else if (configuration.isAnonymousAccessEnabled())
+      {
+        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      }
       else
       {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);

@@ -180,7 +180,7 @@ public class BasicAuthenticationFilter extends HttpFilter
         logger.trace("could not find user send unauthorized");
       }
 
-      HttpUtil.sendUnauthorized(request, response);
+      handleUnauthorized(request, response, chain);
     }
     else
     {
