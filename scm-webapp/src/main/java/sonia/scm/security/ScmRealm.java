@@ -37,6 +37,7 @@ package sonia.scm.security;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationException;
@@ -92,6 +93,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Sebastian Sdorra
  */
+@Singleton
 public class ScmRealm extends AuthorizingRealm
   implements RepositoryListener, UserListener
 {
