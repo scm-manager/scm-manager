@@ -270,7 +270,7 @@ public class ScmRealm extends AuthorizingRealm
   {
     User user = principals.oneByType(User.class);
 
-    AuthorizationInfo info = cache.get(user.getName());
+    AuthorizationInfo info = cache.get(user.getId());
 
     if (info == null)
     {
@@ -282,10 +282,11 @@ public class ScmRealm extends AuthorizingRealm
       GroupNames groups = principals.oneByType(GroupNames.class);
 
       info = createAuthorizationInfo(user, groups);
+      cache.put(user.getId(), info);
     }
-    else if (logger.isDebugEnabled())
+    else if (logger.isTraceEnabled())
     {
-      logger.debug("retrieve AuthorizationInfo for user {} from cache",
+      logger.trace("retrieve AuthorizationInfo for user {} from cache",
         user.getName());
     }
 
