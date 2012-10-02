@@ -168,8 +168,7 @@ public class BasicAuthenticationFilter extends HttpFilter
     else if ((configuration != null)
       && configuration.isAnonymousAccessEnabled())
     {
-      user = new User(SCMContext.USER_ANONYMOUS, "SCM Anonymous",
-        "scm-anonymous@scm-manager.com");
+      user = SCMContext.ANONYMOUS;
 
     }
 

@@ -164,8 +164,7 @@ public class SecurityFilter extends HttpFilter
     }
     else
     {
-      user = new User(SCMContext.USER_ANONYMOUS, "SCM Anonymous",
-        "scm-anonymous@scm-manager.com");
+      user = SCMContext.ANONYMOUS;
     }
 
     return user;

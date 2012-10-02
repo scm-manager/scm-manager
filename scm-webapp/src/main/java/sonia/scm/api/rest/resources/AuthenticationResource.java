@@ -288,10 +288,7 @@ public class AuthenticationResource
    */
   private ScmState createAnonymousState()
   {
-    User user = new User(SCMContext.USER_ANONYMOUS, "SCM Anonymous",
-                  "scm-anonymous@scm-manager.com");
-
-    return createState(user, Collections.EMPTY_LIST);
+    return createState(SCMContext.ANONYMOUS, Collections.EMPTY_LIST);
   }
 
   /**
