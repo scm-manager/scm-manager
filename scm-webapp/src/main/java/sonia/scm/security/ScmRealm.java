@@ -139,9 +139,23 @@ public class ScmRealm extends AuthorizingRealm
     this.groupManager = groupManager;
     this.repositoryDAO = repositoryDAO;
     this.authenticator = authenticator;
+
+    // init cache
     this.cache = cacheManager.getCache(String.class, AuthorizationInfo.class,
       CACHE_NAME);
+
+    // set token class
+    setAuthenticationTokenClass(ScmAuthenticationToken.class);
+
+    // use own custom caching
+    setCachingEnabled(false);
+    setAuthenticationCachingEnabled(false);
+    setAuthorizationCachingEnabled(false);
+
+    // set components
     setPermissionResolver(new RepositoryPermissionResolver());
+
+    // add listeners for caching
     userManager.addListener(this);
     repositoryManager.addListener(this);
   }
@@ -192,20 +206,6 @@ public class ScmRealm extends AuthorizingRealm
 
       cache.remove(user.getId());
     }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param token
-   *
-   * @return
-   */
-  @Override
-  public boolean supports(AuthenticationToken token)
-  {
-    return token instanceof ScmAuthenticationToken;
   }
 
   /**
