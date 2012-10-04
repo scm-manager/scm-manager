@@ -72,6 +72,7 @@ import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryListener;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
+import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserListener;
 import sonia.scm.user.UserManager;
@@ -126,18 +127,20 @@ public class ScmRealm extends AuthorizingRealm
    * @param groupManager
    * @param repositoryManager
    * @param repositoryDAO
+   * @param userDAO
    * @param authenticator
    */
   @Inject
   public ScmRealm(ScmConfiguration configuration, CacheManager cacheManager,
     UserManager userManager, GroupManager groupManager,
     RepositoryManager repositoryManager, RepositoryDAO repositoryDAO,
-    AuthenticationManager authenticator)
+    UserDAO userDAO, AuthenticationManager authenticator)
   {
     this.configuration = configuration;
     this.userManager = userManager;
     this.groupManager = groupManager;
     this.repositoryDAO = repositoryDAO;
+    this.userDAO = userDAO;
     this.authenticator = authenticator;
 
     // init cache
@@ -316,7 +319,7 @@ public class ScmRealm extends AuthorizingRealm
       checkForAuthenticatedAdmin(user, groupSet);
 
       // store user
-      User dbUser = userManager.get(user.getName());
+      User dbUser = userDAO.get(user.getName());
 
       if (dbUser != null)
       {
@@ -327,7 +330,10 @@ public class ScmRealm extends AuthorizingRealm
       // create new user
       else
       {
-        userManager.create(user);
+
+        // TODO fire event ??
+        user.setCreationDate(System.currentTimeMillis());
+        userDAO.add(user);
       }
 
       if (user.isActive())
@@ -723,6 +729,9 @@ public class ScmRealm extends AuthorizingRealm
 
   /** Field description */
   private RepositoryDAO repositoryDAO;
+
+  /** Field description */
+  private UserDAO userDAO;
 
   /** Field description */
   private UserManager userManager;
