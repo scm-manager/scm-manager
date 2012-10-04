@@ -66,7 +66,7 @@ public class UserEventHack
   {
     if (userManager instanceof AbstractUserManager)
     {
-      ((DefaultUserManager) userManager).fireEvent(user, event);
+      ((AbstractUserManager) userManager).fireEvent(user, event);
     }
     else if (logger.isWarnEnabled())
     {
