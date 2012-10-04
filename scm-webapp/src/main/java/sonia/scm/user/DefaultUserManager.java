@@ -541,7 +541,7 @@ public class DefaultUserManager extends AbstractUserManager
     }
     catch (JAXBException ex)
     {
-      logger.error(ex.getMessage(), ex);
+      logger.error("could not create default accounts", ex);
     }
   }
 
