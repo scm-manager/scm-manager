@@ -329,13 +329,19 @@ public class ScmRealm extends AuthorizingRealm
       }
 
       // create new user
-      else
+      else if (user.isValid())
       {
         user.setCreationDate(System.currentTimeMillis());
+
         // TODO find a better way
         UserEventHack.fireEvent(userManager, user, HandlerEvent.BEFORE_CREATE);
         userDAO.add(user);
         UserEventHack.fireEvent(userManager, user, HandlerEvent.CREATE);
+      }
+      else if (logger.isErrorEnabled())
+      {
+        logger.error("could not create user {}, beacause it is not valid",
+          user.getName());
       }
 
       if (user.isActive())
