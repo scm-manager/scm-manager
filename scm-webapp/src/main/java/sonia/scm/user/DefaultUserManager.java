@@ -174,9 +174,7 @@ public class DefaultUserManager extends AbstractUserManager
       throw new ScmSecurityException("user is not authenticated");
     }
 
-    User currentUser = subject.getPrincipals().oneByType(User.class);
-
-    if (!user.equals(currentUser) &&!subject.hasRole(Role.ADMIN))
+    if (!subject.hasRole(Role.ADMIN))
     {
       throw new ScmSecurityException("admin account is required");
     }
