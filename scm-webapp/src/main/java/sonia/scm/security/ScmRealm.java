@@ -509,10 +509,7 @@ public class ScmRealm extends AuthorizingRealm
 
       for (Permission permission : repositoryPermissions)
       {
-        if ((permission.isGroupPermission()
-          && groups.contains(
-            permission.getName())) || ((!permission.isGroupPermission())
-              && user.getName().equals(permission.getName())))
+        if (isUserPermission(user, groups, permission))
         {
           RepositoryPermission rp = new RepositoryPermission(repository,
                                       permission.getType());
@@ -711,6 +708,25 @@ public class ScmRealm extends AuthorizingRealm
     }
 
     return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param groups
+   * @param perm
+   *
+   * @return
+   */
+  private boolean isUserPermission(User user, GroupNames groups,
+    Permission perm)
+  {
+    //J-
+    return (perm.isGroupPermission() && groups.contains(perm.getName())) 
+      || ((!perm.isGroupPermission()) && user.getName().equals(perm.getName()));
+    //J+
   }
 
   //~--- fields ---------------------------------------------------------------
