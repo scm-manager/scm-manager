@@ -73,6 +73,7 @@ import sonia.scm.repository.RepositoryListener;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
+import sonia.scm.user.UserEventHack;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserListener;
 import sonia.scm.user.UserManager;
@@ -330,10 +331,11 @@ public class ScmRealm extends AuthorizingRealm
       // create new user
       else
       {
-
-        // TODO fire event ??
         user.setCreationDate(System.currentTimeMillis());
+        // TODO find a better way
+        UserEventHack.fireEvent(userManager, user, HandlerEvent.BEFORE_CREATE);
         userDAO.add(user);
+        UserEventHack.fireEvent(userManager, user, HandlerEvent.CREATE);
       }
 
       if (user.isActive())
