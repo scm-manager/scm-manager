@@ -43,6 +43,9 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.support.SubjectThreadState;
+import org.apache.shiro.util.ThreadContext;
+import org.apache.shiro.util.ThreadState;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,11 +87,14 @@ public class DefaultAdministrationContext implements AdministrationContext
    * @param injector
    * @param userSessionProvider
    * @param contextHolder
+   * @param securityManager
    */
   @Inject
-  public DefaultAdministrationContext(Injector injector)
+  public DefaultAdministrationContext(Injector injector,
+    org.apache.shiro.mgt.SecurityManager securityManager)
   {
     this.injector = injector;
+    this.securityManager = securityManager;
 
     URL url = DefaultAdministrationContext.class.getResource(SYSTEM_ACCOUNT);
 
@@ -115,6 +121,106 @@ public class DefaultAdministrationContext implements AdministrationContext
   {
     AssertUtil.assertIsNotNull(action);
 
+    if (ThreadContext.getSecurityManager() != null)
+    {
+      doRunAsInWebSessionContext(action);
+    }
+    else
+    {
+      doRunAsInNonWebSessionContext(action);
+    }
+
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param actionClass
+   */
+  @Override
+  public void runAsAdmin(Class<? extends PrivilegedAction> actionClass)
+  {
+    PrivilegedAction action = injector.getInstance(actionClass);
+
+    runAsAdmin(action);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param adminUser
+   *
+   * @return
+   */
+  private PrincipalCollection createAdminCollection(User adminUser)
+  {
+    SimplePrincipalCollection collection = new SimplePrincipalCollection();
+
+    collection.add(adminUser.getId(), ScmRealm.NAME);
+    collection.add(adminUser, ScmRealm.NAME);
+    collection.add(new GroupNames(), ScmRealm.NAME);
+
+    return collection;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param action
+   */
+  private void doRunAsInNonWebSessionContext(PrivilegedAction action)
+  {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("bind shiro security manager to current thread");
+    }
+
+    try
+    {
+      SecurityUtils.setSecurityManager(securityManager);
+
+      //J-
+      Subject subject = new Subject.Builder(securityManager)
+        .authenticated(true)
+        .principals(principalCollection)
+        .buildSubject(); 
+      //J+
+      ThreadState state = new SubjectThreadState(subject);
+
+      state.bind();
+
+      try
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("execute action {} in administration context",
+            action.getClass().getName());
+        }
+
+        action.run();
+      }
+      finally
+      {
+        state.clear();
+      }
+    }
+    finally
+    {
+      SecurityUtils.setSecurityManager(null);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param action
+   */
+  private void doRunAsInWebSessionContext(PrivilegedAction action)
+  {
     Subject subject = SecurityUtils.getSubject();
 
     String principal = (String) subject.getPrincipal();
@@ -162,39 +268,6 @@ public class DefaultAdministrationContext implements AdministrationContext
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param actionClass
-   */
-  @Override
-  public void runAsAdmin(Class<? extends PrivilegedAction> actionClass)
-  {
-    PrivilegedAction action = injector.getInstance(actionClass);
-
-    runAsAdmin(action);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param adminUser
-   *
-   * @return
-   */
-  private PrincipalCollection createAdminCollection(User adminUser)
-  {
-    SimplePrincipalCollection collection = new SimplePrincipalCollection();
-
-    collection.add(adminUser.getId(), ScmRealm.NAME);
-    collection.add(adminUser, ScmRealm.NAME);
-    collection.add(new GroupNames(), ScmRealm.NAME);
-
-    return collection;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -202,4 +275,7 @@ public class DefaultAdministrationContext implements AdministrationContext
 
   /** Field description */
   private PrincipalCollection principalCollection;
+
+  /** Field description */
+  private org.apache.shiro.mgt.SecurityManager securityManager;
 }
