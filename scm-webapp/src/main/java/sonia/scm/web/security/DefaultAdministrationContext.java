@@ -117,13 +117,15 @@ public class DefaultAdministrationContext implements AdministrationContext
 
     Subject subject = SecurityUtils.getSubject();
 
+    String principal = (String) subject.getPrincipal();
+
     if (logger.isInfoEnabled())
     {
       String username = null;
 
       if (subject.isAuthenticated())
       {
-        username = subject.getPrincipal().toString();
+        username = principal;
       }
       else
       {
@@ -149,6 +151,13 @@ public class DefaultAdministrationContext implements AdministrationContext
       {
         logger.debug("release runas for user {}",
           collection.getPrimaryPrincipal());
+      }
+
+      if (!subject.getPrincipal().equals(principal))
+      {
+        logger.error("release runas failed, {} is not equal with {}, logout.",
+          subject.getPrincipal(), principal);
+        subject.logout();
       }
     }
   }
