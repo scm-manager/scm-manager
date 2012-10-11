@@ -35,12 +35,14 @@ package sonia.scm.security;
 
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Create tokens for security reasons.
  *
  * @author Sebastian Sdorra
  * @since 1.21
@@ -49,12 +51,13 @@ public final class Tokens
 {
 
   /**
-   * Method description
+   * Build an {@link AuthenticationToken} for use with
+   * {@link Subject#login(org.apache.shiro.authc.AuthenticationToken)}.
    *
    *
-   * @param request
-   * @param username
-   * @param password
+   * @param request servlet request
+   * @param username username of the user to authenticate
+   * @param password password of the user to authenticate
    *
    * @return
    */
