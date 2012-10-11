@@ -563,7 +563,6 @@ public class ScmRealm extends AuthorizingRealm
     collection.add(user.getId(), NAME);
     collection.add(user, NAME);
     collection.add(new GroupNames(groups), NAME);
-    collection.add(token, NAME);
 
     return new SimpleAuthenticationInfo(collection, token.getPassword());
   }
