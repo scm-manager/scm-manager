@@ -41,6 +41,7 @@ import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
@@ -48,7 +49,6 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.security.ScmAuthenticationToken;
 import sonia.scm.user.User;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
@@ -245,8 +245,8 @@ public class BasicAuthenticationFilter extends HttpFilter
         try
         {
 
-          subject.login(new ScmAuthenticationToken(request, response, username,
-            password));
+          subject.login(new UsernamePasswordToken(username, password,
+            request.getRemoteAddr()));
           user = subject.getPrincipals().oneByType(User.class);
         }
         catch (AuthenticationException ex)

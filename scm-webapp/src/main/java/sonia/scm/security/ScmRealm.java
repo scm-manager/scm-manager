@@ -39,6 +39,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.apache.shiro.authc.AccountException;
@@ -48,6 +49,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.pam.UnsupportedTokenException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -91,6 +93,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -130,12 +133,16 @@ public class ScmRealm extends AuthorizingRealm
    * @param repositoryDAO
    * @param userDAO
    * @param authenticator
+   * @param requestProvider
+   * @param responseProvider
    */
   @Inject
   public ScmRealm(ScmConfiguration configuration, CacheManager cacheManager,
     UserManager userManager, GroupManager groupManager,
     RepositoryManager repositoryManager, RepositoryDAO repositoryDAO,
-    UserDAO userDAO, AuthenticationManager authenticator)
+    UserDAO userDAO, AuthenticationManager authenticator,
+    Provider<HttpServletRequest> requestProvider,
+    Provider<HttpServletResponse> responseProvider)
   {
     this.configuration = configuration;
     this.userManager = userManager;
@@ -143,13 +150,15 @@ public class ScmRealm extends AuthorizingRealm
     this.repositoryDAO = repositoryDAO;
     this.userDAO = userDAO;
     this.authenticator = authenticator;
+    this.requestProvider = requestProvider;
+    this.responseProvider = responseProvider;
 
     // init cache
     this.cache = cacheManager.getCache(String.class, AuthorizationInfo.class,
       CACHE_NAME);
 
     // set token class
-    setAuthenticationTokenClass(ScmAuthenticationToken.class);
+    setAuthenticationTokenClass(UsernamePasswordToken.class);
 
     // use own custom caching
     setCachingEnabled(false);
@@ -229,17 +238,17 @@ public class ScmRealm extends AuthorizingRealm
     AuthenticationToken authToken)
     throws AuthenticationException
   {
-    if (!(authToken instanceof ScmAuthenticationToken))
+    if (!(authToken instanceof UsernamePasswordToken))
     {
       throw new UnsupportedTokenException("ScmAuthenticationToken is required");
     }
 
-    ScmAuthenticationToken token = (ScmAuthenticationToken) authToken;
+    UsernamePasswordToken token = (UsernamePasswordToken) authToken;
 
     AuthenticationInfo info = null;
     AuthenticationResult result =
-      authenticator.authenticate(token.getRequest(), token.getResponse(),
-        token.getUsername(), token.getPassword());
+      authenticator.authenticate(requestProvider.get(), responseProvider.get(),
+        token.getUsername(), new String(token.getPassword()));
 
     if ((result != null) && (AuthenticationState.SUCCESS == result.getState()))
     {
@@ -549,11 +558,11 @@ public class ScmRealm extends AuthorizingRealm
    * @return
    */
   private AuthenticationInfo createAuthenticationInfo(
-    ScmAuthenticationToken token, AuthenticationResult result)
+    UsernamePasswordToken token, AuthenticationResult result)
   {
     User user = result.getUser();
-    Collection<String> groups = authenticate(token.getRequest(),
-                                  token.getPassword(), result);
+    Collection<String> groups = authenticate(requestProvider.get(),
+                                  new String(token.getPassword()), result);
 
     SimplePrincipalCollection collection = new SimplePrincipalCollection();
 
@@ -753,6 +762,12 @@ public class ScmRealm extends AuthorizingRealm
 
   /** Field description */
   private RepositoryDAO repositoryDAO;
+
+  /** Field description */
+  private Provider<HttpServletRequest> requestProvider;
+
+  /** Field description */
+  private Provider<HttpServletResponse> responseProvider;
 
   /** Field description */
   private UserDAO userDAO;

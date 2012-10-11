@@ -56,7 +56,7 @@ import sonia.scm.ScmState;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupNames;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.security.ScmAuthenticationToken;
+import sonia.scm.security.Tokens;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 
@@ -138,7 +138,6 @@ public class AuthenticationResource
   @Path("login")
   @TypeHint(ScmState.class)
   public ScmState authenticate(@Context HttpServletRequest request,
-    @Context HttpServletResponse response,
     @FormParam("username") String username,
     @FormParam("password") String password)
   {
@@ -148,7 +147,7 @@ public class AuthenticationResource
 
     try
     {
-      subject.login(new ScmAuthenticationToken(request, response, username,
+      subject.login(Tokens.createAuthenticationToken(request, username,
         password));
       state = createState(subject);
     }

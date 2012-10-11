@@ -54,7 +54,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.security.CipherUtil;
-import sonia.scm.security.ScmAuthenticationToken;
+import sonia.scm.security.Tokens;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
@@ -195,7 +195,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
           if (Util.isNotEmpty(credentials))
           {
-            authenticate(request, response, credentials);
+            authenticate(request, credentials);
           }
 
           hookCallback(response, repositoryId, type, challenge, node);
@@ -229,8 +229,7 @@ public class HgHookCallbackServlet extends HttpServlet
    * @param response
    * @param credentials
    */
-  private void authenticate(HttpServletRequest request,
-    HttpServletResponse response, String credentials)
+  private void authenticate(HttpServletRequest request, String credentials)
   {
     try
     {
@@ -244,7 +243,7 @@ public class HgHookCallbackServlet extends HttpServlet
         {
           Subject subject = SecurityUtils.getSubject();
 
-          subject.login(new ScmAuthenticationToken(request, response,
+          subject.login(Tokens.createAuthenticationToken(request,
             credentialsArray[0], credentialsArray[1]));
         }
       }
