@@ -185,7 +185,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
         pathArray = new String[] { request.getPath() };
       }
 
-      List<Changeset> changesetList = Lists.newArrayList();
+      List<SVNLogEntry> changesetList = Lists.newArrayList();
       Collection<SVNLogEntry> entries = repository.log(pathArray, null,
                                           startRev, endRev, true, true);
 
@@ -193,7 +193,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
       {
         if (entry.getRevision() <= maxRev)
         {
-          changesetList.add(SvnUtil.createChangeset(entry));
+          changesetList.add(entry);
         }
       }
 
@@ -219,8 +219,9 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
           start, end, total);
       }
 
-      changesetList = Lists.newArrayList(changesetList.subList(start, end));
-      changesets = new ChangesetPagingResult(total, changesetList);
+      changesetList = changesetList.subList(start, end);
+      changesets = new ChangesetPagingResult(total,
+        SvnUtil.createChangesets(changesetList));
     }
     catch (NumberFormatException ex)
     {

@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +50,7 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -72,7 +75,7 @@ public class SvnUtil
    * @param entry
    */
   public static void appendModification(Modifications modifications,
-          SVNLogEntryPath entry)
+    SVNLogEntryPath entry)
   {
     appendModification(modifications, entry.getType(), entry.getPath());
   }
@@ -85,7 +88,7 @@ public class SvnUtil
    * @param entry
    */
   public static void appendModification(Modifications modifications,
-          SVNChangeEntry entry)
+    SVNChangeEntry entry)
   {
     appendModification(modifications, entry.getType(), entry.getPath());
   }
@@ -99,7 +102,7 @@ public class SvnUtil
    * @param path
    */
   public static void appendModification(Modifications modifications, char type,
-          String path)
+    String path)
   {
     if (path.startsWith("/"))
     {
@@ -187,6 +190,26 @@ public class SvnUtil
    * Method description
    *
    *
+   * @param entries
+   *
+   * @return
+   */
+  public static List<Changeset> createChangesets(List<SVNLogEntry> entries)
+  {
+    List<Changeset> changesets = Lists.newArrayList();
+
+    for (SVNLogEntry entry : entries)
+    {
+      changesets.add(createChangeset(entry));
+    }
+
+    return changesets;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param clientManager
    */
   public static void dispose(SVNClientManager clientManager)
@@ -217,7 +240,7 @@ public class SvnUtil
    * @throws RepositoryException
    */
   public static long getRevisionNumber(String revision)
-          throws RepositoryException
+    throws RepositoryException
   {
     long revisionNumber = -1;
 
