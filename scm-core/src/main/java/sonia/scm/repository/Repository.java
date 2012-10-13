@@ -46,7 +46,6 @@ import sonia.scm.util.ValidationUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -107,7 +106,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
    * @param permissions permissions for specific users and groups.
    */
   public Repository(String id, String type, String name, String contact,
-                    String description, Permission... permissions)
+    String description, Permission... permissions)
   {
     this.id = id;
     this.type = type;
@@ -231,8 +230,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   public int hashCode()
   {
     return Objects.hashCode(id, name, contact, description, publicReadable,
-                            archived, permissions, type, url, creationDate,
-                            lastModified, properties);
+      archived, permissions, type, url, creationDate, lastModified, properties);
   }
 
   /**
@@ -341,10 +339,11 @@ public class Repository extends BasicPropertiesAware implements ModelObject
    */
   public List<Permission> getPermissions()
   {
-    if ( permissions == null )
+    if (permissions == null)
     {
       permissions = Lists.newArrayList();
     }
+
     return permissions;
   }
 
@@ -411,8 +410,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   public boolean isValid()
   {
     return ValidationUtil.isRepositoryNameValid(name) && Util.isNotEmpty(type)
-           && ((Util.isEmpty(contact))
-               || ValidationUtil.isMailAddressValid(contact));
+      && ((Util.isEmpty(contact))
+        || ValidationUtil.isMailAddressValid(contact));
   }
 
   //~--- set methods ----------------------------------------------------------
