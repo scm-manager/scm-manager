@@ -614,7 +614,7 @@
               </systemProperties>
               <connectors>
                 <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                  <port>8081</port>
+                  <port>8082</port>
                   <maxIdleTime>60000</maxIdleTime>
                   <requestHeaderSize>16384</requestHeaderSize>
                 </connector>
