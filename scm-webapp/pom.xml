@@ -387,6 +387,10 @@
               <name>scm.stage</name>
               <value>${scm.stage}</value>
             </systemProperty>
+            <systemProperty>
+              <name>java.awt.headless</name>
+              <value>true</value>
+            </systemProperty>
           </systemProperties>
           <connectors>
             <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
