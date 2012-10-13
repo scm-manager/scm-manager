@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Represents a tag in a repository.
+ * Represents a branch in a repository.
  *
  * @author Sebastian Sdorra
  * @since 1.18
