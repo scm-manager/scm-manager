@@ -34,6 +34,7 @@
 package sonia.scm.repository;
 
 /**
+ * Type of repository hook.
  *
  * @author Sebastian Sdorra
  * @since 1.6
@@ -42,11 +43,18 @@ public enum RepositoryHookType
 {
 
   /**
+   * A pre receive hook is invoked when new changesets are pushed to the
+   * repository, but they are not yet stored in the repository. A pre receive 
+   * hook can be used to reject the new incoming changesets.
+   * 
    * @since 1.8
    */
   PRE_RECEIVE,
 
   /**
+   * A post receive hook is invoked when new changesets are stored in the
+   * repository.
+   *
    * @since 1.6
    */
   POST_RECEIVE

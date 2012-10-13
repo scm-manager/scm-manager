@@ -38,6 +38,7 @@ package sonia.scm.repository;
 import java.util.Collection;
 
 /**
+ * Repository hook event represents an change event of a repository.
  *
  * @author Sebastian Sdorra
  * @since 1.6
@@ -46,36 +47,38 @@ public interface RepositoryHookEvent
 {
 
   /**
-   * Method description
+   * Returns a collection of changesets which are added with this repository
+   * event.
    *
    *
-   * @return
+   * @return a collection of added changesets
    */
   public Collection<Changeset> getChangesets();
 
   /**
-   * Method description
+   * Returns the repository which was modified.
    *
    *
-   * @return
+   * @return modified repository
    */
   public Repository getRepository();
 
   /**
-   * Method description
+   * Returns the type of hook event.
    *
    *
-   * @return
+   * @return type of hook event
    */
   public RepositoryHookType getType();
 
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Sets the modified repository. This method is only for internal use and
+   * should never be called on a hook.
    *
    *
-   * @param repository
+   * @param repository modified repository
    */
   void setRepository(Repository repository);
 }

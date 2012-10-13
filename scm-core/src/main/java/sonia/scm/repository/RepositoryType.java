@@ -42,6 +42,7 @@ import sonia.scm.repository.api.Command;
 import java.util.Set;
 
 /**
+ * The type (mercurial, subversion, git) of a {@link Repository}.
  *
  * @author Sebastian Sdorra
  * @since 1.18
@@ -57,12 +58,12 @@ public class RepositoryType extends Type
   public RepositoryType() {}
 
   /**
-   * Constructs ...
+   * Constructs a new {@link RepositoryType} object.
    *
    *
-   * @param name
-   * @param displayName
-   * @param supportedCommands
+   * @param name name of the type
+   * @param displayName display name of the type
+   * @param supportedCommands supported commands of the type
    */
   public RepositoryType(String name, String displayName,
     Set<Command> supportedCommands)
@@ -74,10 +75,10 @@ public class RepositoryType extends Type
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a set of commands, which are supported of the repository type.
    *
    *
-   * @return
+   * @return set of supported commands
    */
   public Set<Command> getSupportedCommands()
   {
@@ -86,6 +87,6 @@ public class RepositoryType extends Type
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** set of supported commands */
   private Set<Command> supportedCommands;
 }

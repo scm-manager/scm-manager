@@ -47,6 +47,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * The changeset paging result is used to do a paging over the 
+ * {@link Changeset}s of a {@link Repository}.
  *
  * @author Sebastian Sdorra
  */
@@ -61,17 +63,17 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new changeset paging result.
    *
    */
   public ChangesetPagingResult() {}
 
   /**
-   * Constructs ...
+   * Constructs a new changeset paging result.
    *
    *
-   * @param total
-   * @param changesets
+   * @param total total number of changesets
+   * @param changesets current list of fetched changesets
    */
   public ChangesetPagingResult(int total, List<Changeset> changesets)
   {
@@ -82,10 +84,10 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Returns an iterator which can iterate over the current list of changesets.
    *
    *
-   * @return
+   * @return iterator for current list of changesets
    * @since 1.8
    */
   @Override
@@ -104,10 +106,10 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the current list of changesets.
    *
    *
-   * @return
+   * @return current list of changesets
    */
   public List<Changeset> getChangesets()
   {
@@ -115,10 +117,10 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   }
 
   /**
-   * Method description
+   * Returns the total number of changesets.
    *
    *
-   * @return
+   * @return total number of changesets
    */
   public int getTotal()
   {
@@ -128,10 +130,10 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Sets the current list of changesets.
    *
    *
-   * @param changesets
+   * @param changesets current list of changesets
    */
   public void setChangesets(List<Changeset> changesets)
   {
@@ -139,10 +141,10 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   }
 
   /**
-   * Method description
+   * Sets the total number of changesets
    *
    *
-   * @param total
+   * @param total total number of changesets
    */
   public void setTotal(int total)
   {
@@ -151,11 +153,11 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** current list of changesets */
   @XmlElement(name = "changeset")
   @XmlElementWrapper(name = "changesets")
   private List<Changeset> changesets;
 
-  /** Field description */
+  /** total number of changesets */
   private int total;
 }
