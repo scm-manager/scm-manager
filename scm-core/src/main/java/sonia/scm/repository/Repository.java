@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
@@ -113,7 +114,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
     this.name = name;
     this.contact = contact;
     this.description = description;
-    this.permissions = new ArrayList<Permission>();
+    this.permissions = Lists.newArrayList();
 
     if (Util.isNotEmpty(permissions))
     {
@@ -340,6 +341,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
    */
   public List<Permission> getPermissions()
   {
+    if ( permissions == null )
+    {
+      permissions = Lists.newArrayList();
+    }
     return permissions;
   }
 
