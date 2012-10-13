@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -102,7 +103,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
    */
   @Override
   public Changeset getChangeset(String revision)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     Changeset changeset = null;
 
@@ -149,7 +150,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
    */
   @Override
   public ChangesetPagingResult getChangesets(LogCommandRequest request)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     if (logger.isDebugEnabled())
     {
@@ -211,13 +212,20 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
         start = 0;
       }
 
+      if (logger.isTraceEnabled())
+      {
+        logger.trace(
+          "create sublist from {} to {} of total {} collected changesets",
+          start, end, total);
+      }
+
       changesetList = Lists.newArrayList(changesetList.subList(start, end));
       changesets = new ChangesetPagingResult(total, changesetList);
     }
     catch (NumberFormatException ex)
     {
       throw new RepositoryException(
-          "could not parse revision ".concat(startRevision), ex);
+        "could not parse revision ".concat(startRevision), ex);
     }
     catch (SVNException ex)
     {
