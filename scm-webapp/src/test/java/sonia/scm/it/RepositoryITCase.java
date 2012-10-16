@@ -62,6 +62,7 @@ import com.sun.jersey.api.client.WebResource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import org.junit.Ignore;
 
 /**
  *
@@ -123,12 +124,12 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
     Collection<String[]> params = new ArrayList<String[]>();
 
     params.add(new String[] { "git" });
-    params.add(new String[] { "svn" });
+    /*params.add(new String[] { "svn" });
 
     if (IOUtil.search("hg") != null)
     {
       params.add(new String[] { "hg" });
-    }
+    }*/
 
     return params;
   }
@@ -137,7 +138,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    * Method description
    *
    */
-  @Test
+  @Test @Ignore
   public void create()
   {
     Repository repository =
@@ -150,7 +151,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    * Method description
    *
    */
-  @Test
+  @Test @Ignore
   public void delete()
   {
     Repository repository =
@@ -179,7 +180,7 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    * Method description
    *
    */
-  @Test
+  @Test @Ignore
   public void modify()
   {
     Repository repository =
@@ -236,6 +237,8 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
 
     for (Repository other : repositories)
     {
+      // fix equals check
+      other.getPermissions();
       if (repository.equals(other))
       {
         hvpt = other;
