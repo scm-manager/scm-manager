@@ -966,8 +966,7 @@ public class RepositoryResource
   {
     for (Repository repository : repositories)
     {
-      RepositoryUtil.appendUrl(configuration, repositoryManager, repository);
-      prepareRepository(repository);
+      prepareForReturn(repository);
     }
 
     return repositories;
@@ -1037,6 +1036,12 @@ public class RepositoryResource
     }
     else
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("remove properties and permissions from repository, "
+          + "because the user is not privileged");
+      }
+
       repository.setProperties(null);
       repository.setPermissions(null);
     }
