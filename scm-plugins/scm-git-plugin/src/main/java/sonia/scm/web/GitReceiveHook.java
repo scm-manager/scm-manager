@@ -65,7 +65,6 @@ import java.io.File;
 import java.io.IOException;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -287,6 +286,11 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     catch (Exception ex)
     {
       logger.error("could not handle receive commands", ex);
+
+      if (type == RepositoryHookType.PRE_RECEIVE)
+      {
+        sendError(rpack, receiveCommands, ex.getMessage());
+      }
     }
   }
 
@@ -343,6 +347,30 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    * Method description
    *
    *
+   * @param rpack
+   * @param commands
+   * @param message
+   */
+  private void sendError(ReceivePack rpack, Iterable<ReceiveCommand> commands,
+    String message)
+  {
+    if (logger.isWarnEnabled())
+    {
+      logger.warn("abort git push request with msg: {}", message);
+    }
+
+    for (ReceiveCommand rc : commands)
+    {
+      rc.setResult(ReceiveCommand.Result.REJECTED_OTHER_REASON);
+    }
+
+    rpack.sendError(PREFIX_MSG.concat(Util.nonNull(message)));
+  }
+
+  /**
+   * Method description
+   *
+   *
    *
    * @param rpack
    * @param rc
@@ -350,8 +378,8 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    */
   private void sendError(ReceivePack rpack, ReceiveCommand rc, String message)
   {
-    rpack.sendError(PREFIX_MSG.concat(Util.nonNull(message)));
     rc.setResult(ReceiveCommand.Result.REJECTED_OTHER_REASON);
+    rpack.sendError(PREFIX_MSG.concat(Util.nonNull(message)));
   }
 
   //~--- get methods ----------------------------------------------------------
