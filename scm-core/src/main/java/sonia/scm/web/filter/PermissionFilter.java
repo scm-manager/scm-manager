@@ -38,18 +38,18 @@ package sonia.scm.web.filter;
 import com.google.common.base.Splitter;
 import com.google.inject.Provider;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ArgumentIsInvalidException;
-import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.security.ScmSecurityException;
-import sonia.scm.user.User;
-import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
@@ -79,18 +79,31 @@ public abstract class PermissionFilter extends HttpFilter
   //~--- constructors ---------------------------------------------------------
 
   /**
+   * Constructs a new permission filter
+   * 
+   * @param configuration global scm-manager configuration
+   * 
+   * @since 1.21
+   */
+  public PermissionFilter(ScmConfiguration configuration)
+  {
+    this.configuration = configuration;
+  }
+
+  /**
    * Constructs ...
    *
    *
    *
    * @param configuration
    * @param securityContextProvider
+   * @deprecated
    */
+  @Deprecated
   public PermissionFilter(ScmConfiguration configuration,
-                          Provider<WebSecurityContext> securityContextProvider)
+    Provider<WebSecurityContext> securityContextProvider)
   {
     this.configuration = configuration;
-    this.securityContextProvider = securityContextProvider;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -130,97 +143,81 @@ public abstract class PermissionFilter extends HttpFilter
    */
   @Override
   protected void doFilter(HttpServletRequest request,
-                          HttpServletResponse response, FilterChain chain)
-          throws IOException, ServletException
+    HttpServletResponse response, FilterChain chain)
+    throws IOException, ServletException
   {
-    WebSecurityContext securityContext = securityContextProvider.get();
+    Subject subject = SecurityUtils.getSubject();
 
-    AssertUtil.assertIsNotNull(securityContext);
-
-    User user = securityContext.getUser();
-
-    if (user != null)
+    try
     {
-      try
+      Repository repository = getRepository(request);
+
+      if (repository != null)
       {
-        Repository repository = getRepository(request);
+        boolean writeRequest = isWriteRequest(request);
 
-        if (repository != null)
+        if (hasPermission(repository, writeRequest))
         {
-          boolean writeRequest = isWriteRequest(request);
-
-          if (hasPermission(repository, securityContext, writeRequest))
+          if (logger.isTraceEnabled())
           {
-            if (logger.isTraceEnabled())
-            {
-              logger.trace("{} access to repository {} for user {} granted",
-                           new Object[] { writeRequest
-                                          ? "write"
-                                          : "read", repository.getName(),
-                                          user.getName() });
-            }
-
-            chain.doFilter(request, response);
+            logger.trace("{} access to repository {} for user {} granted",
+              new Object[] { writeRequest
+              ? "write"
+              : "read", repository.getName(), subject.getPrincipal() });
           }
-          else
-          {
-            if (logger.isInfoEnabled())
-            {
-              logger.info("{} access to repository {} for user {} denied",
-                          new Object[] { writeRequest
-                                         ? "write"
-                                         : "read", repository.getName(),
-                                         user.getName() });
-            }
 
-            sendAccessDenied(response, user);
-          }
+          chain.doFilter(request, response);
         }
         else
         {
-          if (logger.isDebugEnabled())
+          if (logger.isInfoEnabled())
           {
-            logger.debug("repository not found");
+            logger.info("{} access to repository {} for user {} denied",
+              new Object[] { writeRequest
+              ? "write"
+              : "read", repository.getName(), subject.getPrincipal() });
           }
 
-          response.sendError(HttpServletResponse.SC_NOT_FOUND);
+          sendAccessDenied(response, subject);
         }
       }
-      catch (ArgumentIsInvalidException ex)
+      else
       {
-        if (logger.isTraceEnabled())
+        if (logger.isDebugEnabled())
         {
-          logger.trace(
-              "wrong request at ".concat(request.getRequestURI()).concat(
-                " send redirect"), ex);
-        }
-        else if (logger.isWarnEnabled())
-        {
-          logger.warn("wrong request at {} send redirect",
-                      request.getRequestURI());
+          logger.debug("repository not found");
         }
 
-        response.sendRedirect(getRepositoryRootHelpUrl(request));
-      }
-      catch (ScmSecurityException ex)
-      {
-        if (logger.isWarnEnabled())
-        {
-          logger.warn("user {} has not enough permissions", user.getName());
-        }
-
-        sendAccessDenied(response, user);
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
       }
     }
-    else
+    catch (ArgumentIsInvalidException ex)
     {
-      if (logger.isDebugEnabled())
+      if (logger.isTraceEnabled())
       {
-        logger.debug("user in not authenticated");
+        logger.trace(
+          "wrong request at ".concat(request.getRequestURI()).concat(
+            " send redirect"), ex);
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("wrong request at {} send redirect",
+          request.getRequestURI());
       }
 
-      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      response.sendRedirect(getRepositoryRootHelpUrl(request));
     }
+    catch (ScmSecurityException ex)
+    {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("user {} has not enough permissions",
+          subject.getPrincipal());
+      }
+
+      sendAccessDenied(response, subject);
+    }
+
   }
 
   /**
@@ -234,8 +231,8 @@ public abstract class PermissionFilter extends HttpFilter
   private String extractType(HttpServletRequest request)
   {
     Iterator<String> it = Splitter.on(
-                              HttpUtil.SEPARATOR_PATH).omitEmptyStrings().split(
-                              request.getRequestURI()).iterator();
+                            HttpUtil.SEPARATOR_PATH).omitEmptyStrings().split(
+                            request.getRequestURI()).iterator();
     String type = it.next();
 
     if (Util.isNotEmpty(request.getContextPath()))
@@ -252,19 +249,20 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @param response
    * @param user
+   * @param subject
    *
    * @throws IOException
    */
-  private void sendAccessDenied(HttpServletResponse response, User user)
-          throws IOException
+  private void sendAccessDenied(HttpServletResponse response, Subject subject)
+    throws IOException
   {
-    if (SCMContext.USER_ANONYMOUS.equals(user.getName()))
+    if (subject.isAuthenticated())
     {
-      HttpUtil.sendUnauthorized(response);
+      response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }
     else
     {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      HttpUtil.sendUnauthorized(response);
     }
   }
 
@@ -299,30 +297,24 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @return
    */
-  private boolean hasPermission(Repository repository,
-                                WebSecurityContext securityContext,
-                                boolean writeRequest)
+  private boolean hasPermission(Repository repository, boolean writeRequest)
   {
     boolean permitted = false;
 
     if (writeRequest)
     {
-      permitted = PermissionUtil.isWritable(configuration, repository,
-              securityContext);
+      permitted = PermissionUtil.isWritable(configuration, repository);
     }
     else
     {
-      permitted = PermissionUtil.hasPermission(repository, securityContext,
-              PermissionType.READ);
+      permitted = PermissionUtil.hasPermission(configuration, repository,
+        PermissionType.READ);
     }
 
     return permitted;
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected Provider<WebSecurityContext> securityContextProvider;
 
   /** Field description */
   private ScmConfiguration configuration;

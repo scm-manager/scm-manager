@@ -30,55 +30,64 @@
  */
 
 
-
-package sonia.scm.web.security;
+package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
+import com.google.common.collect.Lists;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
+import java.io.Serializable;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 
 /**
+ * This class represents all associated groups for a user.
  *
  * @author Sebastian Sdorra
+ * @since 1.21
  */
-@Singleton
-public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
+public final class GroupNames implements Serializable, Iterable<String>
 {
 
   /** Field description */
-  public static final String URI_LOGIN = "/api/rest/authentication/login";
-
-  /** Field description */
-  public static final String URI_LOGOUT = "/api/rest/authentication/logout";
-
-  /** Field description */
-  public static final String URI_STATE = "/api/rest/authentication/state";
+  private static final long serialVersionUID = 8615685985213897947L;
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
-   *
-   * @param configuration
    */
-  @Inject
-  public ApiBasicAuthenticationFilter(ScmConfiguration configuration)
+  public GroupNames()
   {
-    super(configuration);
+    this.collection = Collections.EMPTY_LIST;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param collection
+   */
+  public GroupNames(Collection<String> collection)
+  {
+    this.collection = Collections.unmodifiableCollection(collection);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param groupName
+   * @param groupNames
+   */
+  public GroupNames(String groupName, String... groupNames)
+  {
+    this.collection = Lists.asList(groupName, groupNames);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -87,48 +96,42 @@ public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
    * Method description
    *
    *
-   * @param request
-   * @param response
-   * @param chain
+   * @param groupName
    *
-   * @throws IOException
-   * @throws ServletException
+   * @return
    */
-  @Override
-  protected void doFilter(HttpServletRequest request,
-    HttpServletResponse response, FilterChain chain)
-    throws IOException, ServletException
+  public boolean contains(String groupName)
   {
-
-    // skip filter on authentication resource
-    if (request.getRequestURI().contains(URI_LOGIN)
-      || request.getRequestURI().contains(URI_STATE)
-      || request.getRequestURI().contains(URI_LOGOUT))
-    {
-      chain.doFilter(request, response);
-    }
-    else
-    {
-      super.doFilter(request, response, chain);
-    }
+    return collection.contains(groupName);
   }
 
   /**
    * Method description
    *
    *
-   * @param request
-   * @param response
-   * @param chain
-   *
-   * @throws IOException
-   * @throws ServletException
+   * @return
    */
   @Override
-  protected void handleUnauthorized(HttpServletRequest request,
-    HttpServletResponse response, FilterChain chain)
-    throws IOException, ServletException
+  public Iterator<String> iterator()
   {
-    chain.doFilter(request, response);
+    return collection.iterator();
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Collection<String> getCollection()
+  {
+    return collection;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Collection<String> collection;
 }

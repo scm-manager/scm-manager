@@ -37,7 +37,6 @@ package sonia.scm.api.rest.resources;
 
 import com.google.common.base.Function;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
@@ -54,7 +53,6 @@ import sonia.scm.search.SearchResults;
 import sonia.scm.user.User;
 import sonia.scm.user.UserListener;
 import sonia.scm.user.UserManager;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -92,9 +90,8 @@ public class SearchResource implements UserListener, GroupListener
    * @param cacheManager
    */
   @Inject
-  public SearchResource(Provider<WebSecurityContext> securityContextProvider,
-                        UserManager userManager, GroupManager groupManager,
-                        CacheManager cacheManager)
+  public SearchResource(UserManager userManager, GroupManager groupManager,
+    CacheManager cacheManager)
   {
 
     // create user searchhandler
@@ -103,8 +100,7 @@ public class SearchResource implements UserListener, GroupListener
     Cache<String, SearchResults> userCache =
       cacheManager.getCache(String.class, SearchResults.class, CACHE_USER);
 
-    this.userSearchHandler = new SearchHandler<User>(securityContextProvider,
-            userCache, userManager);
+    this.userSearchHandler = new SearchHandler<User>(userCache, userManager);
 
     // create group searchhandler
     groupManager.addListener(this);
@@ -112,8 +108,8 @@ public class SearchResource implements UserListener, GroupListener
     Cache<String, SearchResults> groupCache =
       cacheManager.getCache(String.class, SearchResults.class, CACHE_GROUP);
 
-    this.groupSearchHandler = new SearchHandler<Group>(securityContextProvider,
-            groupCache, groupManager);
+    this.groupSearchHandler = new SearchHandler<Group>(groupCache,
+      groupManager);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -162,7 +158,7 @@ public class SearchResource implements UserListener, GroupListener
   public SearchResults searchGroups(@QueryParam("query") String queryString)
   {
     return groupSearchHandler.search(queryString,
-                                     new Function<Group, SearchResult>()
+      new Function<Group, SearchResult>()
     {
       @Override
       public SearchResult apply(Group group)
@@ -198,7 +194,7 @@ public class SearchResource implements UserListener, GroupListener
   public SearchResults searchUsers(@QueryParam("query") String queryString)
   {
     return userSearchHandler.search(queryString,
-                                    new Function<User, SearchResult>()
+      new Function<User, SearchResult>()
     {
       @Override
       public SearchResult apply(User user)

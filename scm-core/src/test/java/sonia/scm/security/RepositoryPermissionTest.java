@@ -30,72 +30,58 @@
  */
 
 
-
-package sonia.scm.web;
+package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import org.junit.Test;
 
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.RepositoryProvider;
-import sonia.scm.web.filter.ProviderPermissionFilter;
+import sonia.scm.repository.PermissionType;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class SvnPermissionFilter extends ProviderPermissionFilter
+public class RepositoryPermissionTest
 {
-
-  /** Field description */
-  private static Set<String> WRITEMETHOD_SET = ImmutableSet.of("MKACTIVITY",
-                                                 "PROPPATCH", "PUT",
-                                                 "CHECKOUT", "MKCOL", "MOVE",
-                                                 "COPY", "DELETE", "LOCK",
-                                                 "UNLOCK", "MERGE");
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   *
-   * @param configuration
-   * @param securityContextProvider
-   * @param repository
-   */
-  @Inject
-  public SvnPermissionFilter(ScmConfiguration configuration,
-    RepositoryProvider repository)
-  {
-    super(configuration, repository);
-  }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
-   *
-   * @param request
-   *
-   * @return
    */
-  @Override
-  protected boolean isWriteRequest(HttpServletRequest request)
+  @Test
+  public void testImplies()
   {
-    return WRITEMETHOD_SET.contains(request.getMethod().toUpperCase());
+    RepositoryPermission p = new RepositoryPermission("asd",
+                               PermissionType.READ);
+
+    assertTrue(p.implies(new RepositoryPermission("asd", PermissionType.READ)));
+    assertFalse(p.implies(new RepositoryPermission("asd",
+      PermissionType.OWNER)));
+    assertFalse(p.implies(new RepositoryPermission("asd",
+      PermissionType.WRITE)));
+    p = new RepositoryPermission("asd", PermissionType.OWNER);
+    assertTrue(p.implies(new RepositoryPermission("asd", PermissionType.READ)));
+    assertFalse(p.implies(new RepositoryPermission("bdb",
+      PermissionType.READ)));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testImpliesWithWildcard()
+  {
+    RepositoryPermission p = new RepositoryPermission("*",
+                               PermissionType.OWNER);
+
+    assertTrue(p.implies(new RepositoryPermission("asd", PermissionType.READ)));
+    assertTrue(p.implies(new RepositoryPermission("bdb",
+      PermissionType.OWNER)));
+    assertTrue(p.implies(new RepositoryPermission("cgd",
+      PermissionType.WRITE)));
   }
 }

@@ -44,33 +44,75 @@ public enum HandlerEvent
   /**
    * After a new object is stored by a handler.
    */
-  CREATE,
+  CREATE(true),
 
   /**
    * After a object is modified by a handler.
    */
-  MODIFY,
+  MODIFY(true),
 
   /**
    * After a object is removed by a handler.
    */
-  DELETE,
+  DELETE(true),
 
   /**
    * Before a new object is stored by a handler.
    * @since 1.16
    */
-  BEFORE_CREATE,
+  BEFORE_CREATE(false),
 
   /**
    * Before a object is modified by a handler.
    * @since 1.16
    */
-  BEFORE_MODIFY,
+  BEFORE_MODIFY(false),
 
   /**
    * Before a object is removed by a handler.
    * @since 1.16
    */
-  BEFORE_DELETE
+  BEFORE_DELETE(false);
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param post
+   */
+  private HandlerEvent(boolean post)
+  {
+    this.post = post;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns true if the event is fired after the action is occurred.
+   *
+   *
+   * @return true if the event is fired after the action is occurred
+   * @since 1.21
+   */
+  public boolean isPost()
+  {
+    return post;
+  }
+
+  /**
+   * Returns true if the event is fired before the action is occurred.
+   *
+   *
+   * @return true if the event is fired before the action is occurred
+   * @since 1.21
+   */
+  public boolean isPre()
+  {
+    return !post;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean post;
 }

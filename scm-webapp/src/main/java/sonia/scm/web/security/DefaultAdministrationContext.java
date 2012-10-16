@@ -30,19 +30,29 @@
  */
 
 
+
 package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.support.SubjectThreadState;
+import org.apache.shiro.util.ThreadContext;
+import org.apache.shiro.util.ThreadState;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.SCMContext;
+import sonia.scm.group.GroupNames;
+import sonia.scm.security.ScmRealm;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 
@@ -77,15 +87,14 @@ public class DefaultAdministrationContext implements AdministrationContext
    * @param injector
    * @param userSessionProvider
    * @param contextHolder
+   * @param securityManager
    */
   @Inject
   public DefaultAdministrationContext(Injector injector,
-          @Named("userSession") Provider<WebSecurityContext> userSessionProvider,
-          LocalSecurityContextHolder contextHolder)
+    org.apache.shiro.mgt.SecurityManager securityManager)
   {
     this.injector = injector;
-    this.userSessionProvider = userSessionProvider;
-    this.contextHolder = contextHolder;
+    this.securityManager = securityManager;
 
     URL url = DefaultAdministrationContext.class.getResource(SYSTEM_ACCOUNT);
 
@@ -94,9 +103,9 @@ public class DefaultAdministrationContext implements AdministrationContext
       throw new RuntimeException("could not find resource for system account");
     }
 
-    User user = JAXB.unmarshal(url, User.class);
+    User adminUser = JAXB.unmarshal(url, User.class);
 
-    adminContext = new AdministrationSecurityContext(user);
+    principalCollection = createAdminCollection(adminUser);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -112,24 +121,15 @@ public class DefaultAdministrationContext implements AdministrationContext
   {
     AssertUtil.assertIsNotNull(action);
 
-    if (logger.isWarnEnabled())
+    if (ThreadContext.getSecurityManager() != null)
     {
-      String user = SecurityUtil.getUsername(userSessionProvider);
-
-      logger.warn("user {} executes {} as admin", user,
-                  action.getClass().getName());
+      doRunAsInWebSessionContext(action);
+    }
+    else
+    {
+      doRunAsInNonWebSessionContext(action);
     }
 
-    contextHolder.set(adminContext);
-
-    try
-    {
-      action.run();
-    }
-    finally
-    {
-      contextHolder.remove();
-    }
   }
 
   /**
@@ -146,17 +146,136 @@ public class DefaultAdministrationContext implements AdministrationContext
     runAsAdmin(action);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param adminUser
+   *
+   * @return
+   */
+  private PrincipalCollection createAdminCollection(User adminUser)
+  {
+    SimplePrincipalCollection collection = new SimplePrincipalCollection();
+
+    collection.add(adminUser.getId(), ScmRealm.NAME);
+    collection.add(adminUser, ScmRealm.NAME);
+    collection.add(new GroupNames(), ScmRealm.NAME);
+
+    return collection;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param action
+   */
+  private void doRunAsInNonWebSessionContext(PrivilegedAction action)
+  {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("bind shiro security manager to current thread");
+    }
+
+    try
+    {
+      SecurityUtils.setSecurityManager(securityManager);
+
+      //J-
+      Subject subject = new Subject.Builder(securityManager)
+        .authenticated(true)
+        .principals(principalCollection)
+        .buildSubject(); 
+      //J+
+      ThreadState state = new SubjectThreadState(subject);
+
+      state.bind();
+
+      try
+      {
+        if (logger.isInfoEnabled())
+        {
+          logger.info("execute action {} in administration context",
+            action.getClass().getName());
+        }
+
+        action.run();
+      }
+      finally
+      {
+        state.clear();
+      }
+    }
+    finally
+    {
+      SecurityUtils.setSecurityManager(null);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param action
+   */
+  private void doRunAsInWebSessionContext(PrivilegedAction action)
+  {
+    Subject subject = SecurityUtils.getSubject();
+
+    String principal = (String) subject.getPrincipal();
+
+    if (logger.isInfoEnabled())
+    {
+      String username = null;
+
+      if (subject.isAuthenticated())
+      {
+        username = principal;
+      }
+      else
+      {
+        username = SCMContext.USER_ANONYMOUS;
+      }
+
+      logger.info("user {} executes {} as admin", username,
+        action.getClass().getName());
+    }
+
+    subject.runAs(principalCollection);
+
+    try
+    {
+      action.run();
+    }
+    finally
+    {
+
+      PrincipalCollection collection = subject.releaseRunAs();
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("release runas for user {}",
+          collection.getPrimaryPrincipal());
+      }
+
+      if (!subject.getPrincipal().equals(principal))
+      {
+        logger.error("release runas failed, {} is not equal with {}, logout.",
+          subject.getPrincipal(), principal);
+        subject.logout();
+      }
+    }
+  }
+
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private AdministrationSecurityContext adminContext;
-
-  /** Field description */
-  private LocalSecurityContextHolder contextHolder;
 
   /** Field description */
   private Injector injector;
 
   /** Field description */
-  private Provider<WebSecurityContext> userSessionProvider;
+  private PrincipalCollection principalCollection;
+
+  /** Field description */
+  private org.apache.shiro.mgt.SecurityManager securityManager;
 }

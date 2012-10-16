@@ -41,7 +41,6 @@ import com.google.inject.Singleton;
 
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.web.filter.ProviderPermissionFilter;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -81,10 +80,9 @@ public class GitPermissionFilter extends ProviderPermissionFilter
   @Inject
   public GitPermissionFilter(
           ScmConfiguration configuration,
-          Provider<WebSecurityContext> securityContextProvider,
           RepositoryProvider repositoryProvider)
   {
-    super(configuration, securityContextProvider, repositoryProvider);
+    super(configuration, repositoryProvider);
   }
 
   //~--- get methods ----------------------------------------------------------

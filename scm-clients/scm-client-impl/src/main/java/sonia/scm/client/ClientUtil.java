@@ -66,7 +66,7 @@ public class ClientUtil
    * @param response
    */
   public static void appendContent(ScmClientException exception,
-                                   ClientResponse response)
+    ClientResponse response)
   {
     try
     {
@@ -86,12 +86,18 @@ public class ClientUtil
    * @param expectedStatusCode
    */
   public static void checkResponse(ClientResponse response,
-                                   int expectedStatusCode)
+    int expectedStatusCode)
   {
     int sc = response.getStatus();
 
     if (sc != expectedStatusCode)
     {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("response code {} expected, but {} returned",
+          expectedStatusCode, sc);
+      }
+
       sendException(response, sc);
     }
   }
@@ -109,6 +115,11 @@ public class ClientUtil
 
     if (sc >= 300)
     {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("request failed, response code {} returned", sc);
+      }
+      
       sendException(response, sc);
     }
   }
@@ -152,7 +163,7 @@ public class ClientUtil
    * @return
    */
   public static WebResource createResource(Client client, String url,
-          boolean enableLogging)
+    boolean enableLogging)
   {
     WebResource resource = client.resource(url);
 

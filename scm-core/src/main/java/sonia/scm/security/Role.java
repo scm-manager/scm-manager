@@ -30,72 +30,19 @@
  */
 
 
-
-package sonia.scm.web;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.RepositoryProvider;
-import sonia.scm.web.filter.ProviderPermissionFilter;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
+package sonia.scm.security;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.21
  */
-@Singleton
-public class SvnPermissionFilter extends ProviderPermissionFilter
+public final class Role
 {
 
   /** Field description */
-  private static Set<String> WRITEMETHOD_SET = ImmutableSet.of("MKACTIVITY",
-                                                 "PROPPATCH", "PUT",
-                                                 "CHECKOUT", "MKCOL", "MOVE",
-                                                 "COPY", "DELETE", "LOCK",
-                                                 "UNLOCK", "MERGE");
+  public static final String ADMIN = "admin";
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   *
-   * @param configuration
-   * @param securityContextProvider
-   * @param repository
-   */
-  @Inject
-  public SvnPermissionFilter(ScmConfiguration configuration,
-    RepositoryProvider repository)
-  {
-    super(configuration, repository);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  @Override
-  protected boolean isWriteRequest(HttpServletRequest request)
-  {
-    return WRITEMETHOD_SET.contains(request.getMethod().toUpperCase());
-  }
+  /** Field description */
+  public static final String USER = "user";
 }

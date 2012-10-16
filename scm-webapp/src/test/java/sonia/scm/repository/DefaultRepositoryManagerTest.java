@@ -37,6 +37,9 @@ package sonia.scm.repository;
 
 import com.google.inject.Provider;
 
+import org.apache.shiro.subject.Subject;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import sonia.scm.Type;
@@ -93,6 +96,20 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
     assertNull(m.getFromUri("/git/project1/test-3/ka/some/path"));
   }
 
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Before
+  public void setAdminSubject()
+  {
+    Subject admin = MockUtil.createAdminSubject();
+
+    setSubject(admin);
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -139,8 +156,8 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
     ScmConfiguration configuration = new ScmConfiguration();
 
     return new DefaultRepositoryManager(configuration, contextProvider,
-      new DefaultKeyGenerator(), MockUtil.getAdminSecurityContextProvider(),
-      repositoryDAO, handlerSet, listenerProvider, hookProvider);
+      new DefaultKeyGenerator(), repositoryDAO, handlerSet, listenerProvider,
+      hookProvider);
   }
 
   /**

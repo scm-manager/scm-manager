@@ -53,7 +53,6 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.io.ZipUnArchiver;
 import sonia.scm.net.HttpClient;
-import sonia.scm.security.SecurityContext;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SecurityUtil;
@@ -123,12 +122,10 @@ public class DefaultPluginManager
    */
   @Inject
   public DefaultPluginManager(SCMContextProvider context,
-    Provider<SecurityContext> securityContextProvicer,
     ScmConfiguration configuration, PluginLoader pluginLoader,
     CacheManager cacheManager, Provider<HttpClient> clientProvider)
   {
     this.context = context;
-    this.securityContextProvicer = securityContextProvicer;
     this.configuration = configuration;
     this.cache = cacheManager.getCache(String.class, PluginCenter.class,
       CACHE_NAME);
@@ -196,7 +193,7 @@ public class DefaultPluginManager
   @Override
   public void install(String id)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     PluginCenter center = getPluginCenter();
 
@@ -230,7 +227,7 @@ public class DefaultPluginManager
   @Override
   public void installPackage(InputStream packageStream) throws IOException
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     File tempDirectory = Files.createTempDir();
 
@@ -276,7 +273,7 @@ public class DefaultPluginManager
   @Override
   public void uninstall(String id)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     Plugin plugin = installedPlugins.get(id);
 
@@ -320,7 +317,7 @@ public class DefaultPluginManager
   @Override
   public void update(String id)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     String[] idParts = id.split(":");
     String groupId = idParts[0];
@@ -364,7 +361,7 @@ public class DefaultPluginManager
   @Override
   public PluginInformation get(String id)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     PluginInformation result = null;
 
@@ -393,7 +390,7 @@ public class DefaultPluginManager
   public Set<PluginInformation> get(PluginFilter filter)
   {
     AssertUtil.assertIsNotNull(filter);
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     Set<PluginInformation> infoSet = new HashSet<PluginInformation>();
 
@@ -412,7 +409,7 @@ public class DefaultPluginManager
   @Override
   public Collection<PluginInformation> getAll()
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     Set<PluginInformation> infoSet = getInstalled();
 
@@ -430,7 +427,7 @@ public class DefaultPluginManager
   @Override
   public Collection<PluginInformation> getAvailable()
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     Set<PluginInformation> availablePlugins = new HashSet<PluginInformation>();
     Set<PluginInformation> centerPlugins = getPluginCenter().getPlugins();
@@ -455,7 +452,7 @@ public class DefaultPluginManager
   @Override
   public Set<PluginInformation> getAvailableUpdates()
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     return get(FILTER_UPDATES);
   }
@@ -469,7 +466,7 @@ public class DefaultPluginManager
   @Override
   public Set<PluginInformation> getInstalled()
   {
-    SecurityUtil.assertIsAdmin(securityContextProvicer);
+    SecurityUtil.assertIsAdmin();
 
     Set<PluginInformation> infoSet = new LinkedHashSet<PluginInformation>();
 
@@ -764,9 +761,6 @@ public class DefaultPluginManager
 
   /** Field description */
   private AetherPluginHandler pluginHandler;
-
-  /** Field description */
-  private Provider<SecurityContext> securityContextProvicer;
 
   /** Field description */
   private Unmarshaller unmarshaller;

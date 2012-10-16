@@ -33,26 +33,6 @@
     </dependency>
     
     <dependency>
-      <artifactId>scm-core</artifactId>
-      <groupId>sonia.scm</groupId>
-      <version>1.21-SNAPSHOT</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>guice</artifactId>
-          <groupId>com.google.inject</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>guice-servlet</artifactId>
-          <groupId>com.google.inject.extensions</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>guice-multibindings</artifactId>
-          <groupId>com.google.inject.extensions</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    
-    <dependency>
       <groupId>sonia.scm.clients</groupId>
       <artifactId>scm-client-impl</artifactId>
       <version>1.21-SNAPSHOT</version>

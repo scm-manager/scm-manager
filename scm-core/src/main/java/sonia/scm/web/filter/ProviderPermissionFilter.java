@@ -71,18 +71,33 @@ public abstract class ProviderPermissionFilter extends PermissionFilter
    * Constructs ...
    *
    *
+   * @param configuration
+   * @param repositoryProvider
+   * @since 1.21
+   */
+  public ProviderPermissionFilter(ScmConfiguration configuration,
+    RepositoryProvider repositoryProvider)
+  {
+    super(configuration);
+    this.repositoryProvider = repositoryProvider;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
    *
    * @param configuration
    * @param securityContextProvider
    * @param repositoryProvider
+   * @deprecated
    */
-  public ProviderPermissionFilter(
-          ScmConfiguration configuration,
-          Provider<WebSecurityContext> securityContextProvider,
-          RepositoryProvider repositoryProvider)
+  @Deprecated
+  public ProviderPermissionFilter(ScmConfiguration configuration,
+    Provider<WebSecurityContext> securityContextProvider,
+    RepositoryProvider repositoryProvider)
   {
-    super(configuration, securityContextProvider);
-    this.repositoryProvider = repositoryProvider;
+    this(configuration, repositoryProvider);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -107,7 +122,7 @@ public abstract class ProviderPermissionFilter extends PermissionFilter
     catch (ProvisionException ex)
     {
       Throwables.propagateIfInstanceOf(ex.getCause(),
-                                       IllegalStateException.class);
+        IllegalStateException.class);
 
       if (logger.isErrorEnabled())
       {

@@ -116,8 +116,6 @@ import sonia.scm.web.security.AuthenticationManager;
 import sonia.scm.web.security.BasicSecurityContext;
 import sonia.scm.web.security.ChainAuthenticatonManager;
 import sonia.scm.web.security.DefaultAdministrationContext;
-import sonia.scm.web.security.LocalSecurityContextHolder;
-import sonia.scm.web.security.SecurityContextProvider;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -264,11 +262,8 @@ public class ScmServletModule extends ServletModule
 
     // bind security stuff
     bind(AuthenticationManager.class, ChainAuthenticatonManager.class);
-    bind(LocalSecurityContextHolder.class);
-    bind(WebSecurityContext.class).annotatedWith(Names.named("userSession")).to(
-      BasicSecurityContext.class);
-    bind(SecurityContext.class).toProvider(SecurityContextProvider.class);
-    bind(WebSecurityContext.class).toProvider(SecurityContextProvider.class);
+    bind(SecurityContext.class).to(BasicSecurityContext.class);
+    bind(WebSecurityContext.class).to(BasicSecurityContext.class);
     bind(AdministrationContext.class, DefaultAdministrationContext.class);
 
     // bind security cache

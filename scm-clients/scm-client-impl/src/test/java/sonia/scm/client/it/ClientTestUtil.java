@@ -38,7 +38,6 @@ package sonia.scm.client.it;
 import sonia.scm.client.ClientUtil;
 import sonia.scm.client.JerseyClientProvider;
 import sonia.scm.client.JerseyClientSession;
-import sonia.scm.client.ScmUrlProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.url.UrlProvider;
 
@@ -106,7 +105,7 @@ public class ClientTestUtil
    *
    */
   public static JerseyClientSession createSession(String username,
-          String password)
+    String password)
   {
     JerseyClientProvider provider = new JerseyClientProvider(REQUEST_LOGGING);
 

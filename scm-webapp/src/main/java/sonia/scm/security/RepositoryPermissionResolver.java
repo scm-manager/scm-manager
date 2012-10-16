@@ -30,41 +30,39 @@
  */
 
 
-
-package sonia.scm.store;
+package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Singleton;
+import com.google.common.base.Splitter;
+
+import org.apache.shiro.authz.permission.PermissionResolver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.SCMContextProvider;
-import sonia.scm.util.IOUtil;
+import sonia.scm.repository.PermissionType;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
+import java.util.Iterator;
+import java.util.Locale;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class JAXBStoreFactory implements ListenableStoreFactory
+public class RepositoryPermissionResolver implements PermissionResolver
 {
 
   /** Field description */
-  public static final String CONFIGDIRECTORY_NAME = "config";
+  private static final String TYPE_REPOSITORY = "repository";
 
-  /** Field description */
-  public static final String FILE_EXTENSION = ".xml";
-
-  /** the logger for JAXBStoreFactory */
+  /**
+   * the logger for RepositoryPermissionResolver
+   */
   private static final Logger logger =
-    LoggerFactory.getLogger(JAXBStoreFactory.class);
+    LoggerFactory.getLogger(RepositoryPermissionResolver.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -72,62 +70,80 @@ public class JAXBStoreFactory implements ListenableStoreFactory
    * Method description
    *
    *
-   * @throws IOException
-   */
-  @Override
-  public void close() throws IOException
-  {
-
-    // do nothing
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   */
-  @Override
-  public void init(SCMContextProvider context)
-  {
-    configDirectory = new File(context.getBaseDirectory(),
-      CONFIGDIRECTORY_NAME);
-    IOUtil.mkdirs(configDirectory);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param name
-   * @param <T>
+   * @param permissionString
    *
    * @return
    */
   @Override
-  public <T> JAXBStore<T> getStore(Class<T> type, String name)
+  public RepositoryPermission resolvePermission(String permissionString)
   {
-    if (configDirectory == null)
+    RepositoryPermission permission = null;
+    Iterator<String> permissionIt =
+      Splitter.on(':').omitEmptyStrings().trimResults().split(
+        permissionString).iterator();
+
+    if (permissionIt.hasNext())
     {
-      throw new IllegalStateException("store factory is not initialized");
+      String type = permissionIt.next();
+
+      if (type.equals(TYPE_REPOSITORY))
+      {
+        permission = createRepositoryPermission(permissionIt);
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("permission '{}' is not a repository permission",
+          permissionString);
+      }
     }
 
-    File configFile = new File(configDirectory, name.concat(FILE_EXTENSION));
-
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("create store for {} at {}", type.getName(),
-        configFile.getPath());
-    }
-
-    return new JAXBStore<T>(type, configFile);
+    return permission;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  /**
+   * Method description
+   *
+   *
+   * @param permissionIt
+   *
+   * @return
+   */
+  private RepositoryPermission createRepositoryPermission(
+    Iterator<String> permissionIt)
+  {
+    RepositoryPermission permission = null;
 
-  /** Field description */
-  private File configDirectory;
+    if (permissionIt.hasNext())
+    {
+      String repositoryId = permissionIt.next();
+
+      if (permissionIt.hasNext())
+      {
+        try
+        {
+          String typeString = permissionIt.next();
+
+          typeString = typeString.trim().toUpperCase(Locale.ENGLISH);
+
+          PermissionType type = PermissionType.valueOf(typeString);
+
+          permission = new RepositoryPermission(repositoryId, type);
+        }
+        catch (IllegalArgumentException ex)
+        {
+          logger.warn("type is not a valid permission type", ex);
+        }
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("permission type is missing");
+      }
+    }
+    else if (logger.isWarnEnabled())
+    {
+      logger.warn("repository id and permission type is missing");
+    }
+
+    return permission;
+  }
 }

@@ -71,13 +71,29 @@ public abstract class RegexPermissionFilter extends PermissionFilter
    * @param securityContextProvider
    * @param repositoryManager
    */
-  public RegexPermissionFilter(
-          ScmConfiguration configuration,
-          Provider<WebSecurityContext> securityContextProvider,
-          RepositoryManager repositoryManager)
+  public RegexPermissionFilter(ScmConfiguration configuration,
+    RepositoryManager repositoryManager)
   {
-    super(configuration, securityContextProvider);
+    super(configuration);
     this.repositoryManager = repositoryManager;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   *
+   * @param configuration
+   * @param securityContextProvider
+   * @param repositoryManager
+   * @deprecated
+   */
+  @Deprecated
+  public RegexPermissionFilter(ScmConfiguration configuration,
+    Provider<WebSecurityContext> securityContextProvider,
+    RepositoryManager repositoryManager)
+  {
+    this(configuration, repositoryManager);
   }
 
   //~--- get methods ----------------------------------------------------------

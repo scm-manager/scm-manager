@@ -36,8 +36,12 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
@@ -50,12 +54,16 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.ScmClientConfig;
 import sonia.scm.ScmState;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.group.GroupNames;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.security.Tokens;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -98,16 +106,14 @@ public class AuthenticationResource
    * @param securityContextProvider
    */
   @Inject
-  public AuthenticationResource(
-          SCMContextProvider contextProvider, ScmConfiguration configuration,
-          RepositoryManager repositoryManger, UserManager userManager,
-          Provider<WebSecurityContext> securityContextProvider)
+  public AuthenticationResource(SCMContextProvider contextProvider,
+    ScmConfiguration configuration, RepositoryManager repositoryManger,
+    UserManager userManager)
   {
     this.contextProvider = contextProvider;
     this.configuration = configuration;
     this.repositoryManger = repositoryManger;
     this.userManager = userManager;
-    this.securityContextProvider = securityContextProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -132,21 +138,30 @@ public class AuthenticationResource
   @Path("login")
   @TypeHint(ScmState.class)
   public ScmState authenticate(@Context HttpServletRequest request,
-                               @Context HttpServletResponse response,
-                               @FormParam("username") String username,
-                               @FormParam("password") String password)
+    @FormParam("username") String username,
+    @FormParam("password") String password)
   {
     ScmState state = null;
-    WebSecurityContext securityContext = securityContextProvider.get();
-    User user = securityContext.authenticate(request, response, username,
-                  password);
 
-    if ((user != null) &&!SCMContext.USER_ANONYMOUS.equals(user.getName()))
+    Subject subject = SecurityUtils.getSubject();
+
+    try
     {
-      state = createState(securityContext);
+      subject.login(Tokens.createAuthenticationToken(request, username,
+        password));
+      state = createState(subject);
     }
-    else
+    catch (AuthenticationException ex)
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("authentication failed for user ".concat(username), ex);
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("authentication failed for user {}", username);
+      }
+
       throw new WebApplicationException(Response.Status.UNAUTHORIZED);
     }
 
@@ -171,20 +186,18 @@ public class AuthenticationResource
   @Path("logout")
   @TypeHint(ScmState.class)
   public Response logout(@Context HttpServletRequest request,
-                         @Context HttpServletResponse response)
+    @Context HttpServletResponse response)
   {
-    WebSecurityContext securityContext = securityContextProvider.get();
+    Subject subject = SecurityUtils.getSubject();
 
-    securityContext.logout(request, response);
+    subject.logout();
 
     Response resp = null;
-    User user = securityContext.getUser();
 
-    if (user != null)
+    if (configuration.isAnonymousAccessEnabled())
     {
-      ScmState state = createState(securityContext);
 
-      resp = Response.ok(state).build();
+      resp = Response.ok(createAnonymousState()).build();
     }
     else
     {
@@ -238,19 +251,23 @@ public class AuthenticationResource
   public Response getState(@Context HttpServletRequest request)
   {
     Response response = null;
-    ScmState state = null;
-    WebSecurityContext securityContext = securityContextProvider.get();
-    User user = securityContext.getUser();
+    Subject subject = SecurityUtils.getSubject();
 
-    if (user != null)
+    if (subject.isAuthenticated())
     {
       if (logger.isDebugEnabled())
       {
-        logger.debug("return state for user {}", user.getName());
+        logger.debug("return state for user {}", subject.getPrincipal());
       }
 
-      state = createState(securityContext);
+      ScmState state = createState(subject);
+
       response = Response.ok(state).build();
+    }
+    else if (configuration.isAnonymousAccessEnabled())
+    {
+
+      response = Response.ok(createAnonymousState()).build();
     }
     else
     {
@@ -266,16 +283,46 @@ public class AuthenticationResource
    * Method description
    *
    *
+   * @return
+   */
+  private ScmState createAnonymousState()
+  {
+    return createState(SCMContext.ANONYMOUS, Collections.EMPTY_LIST);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param securityContext
+   *
+   * @param subject
    *
    * @return
    */
-  private ScmState createState(WebSecurityContext securityContext)
+  private ScmState createState(Subject subject)
   {
-    return new ScmState(contextProvider, securityContext,
-                        repositoryManger.getConfiguredTypes(),
-                        userManager.getDefaultType(),
-                        new ScmClientConfig(configuration));
+    PrincipalCollection collection = subject.getPrincipals();
+    User user = collection.oneByType(User.class);
+    GroupNames groups = collection.oneByType(GroupNames.class);
+
+    return createState(user, groups.getCollection());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param groups
+   *
+   * @return
+   */
+  private ScmState createState(User user, Collection<String> groups)
+  {
+    return new ScmState(contextProvider, user, groups,
+      repositoryManger.getConfiguredTypes(), userManager.getDefaultType(),
+      new ScmClientConfig(configuration));
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -288,9 +335,6 @@ public class AuthenticationResource
 
   /** Field description */
   private RepositoryManager repositoryManger;
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 
   /** Field description */
   private UserManager userManager;

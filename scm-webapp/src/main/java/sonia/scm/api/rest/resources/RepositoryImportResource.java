@@ -30,12 +30,12 @@
  */
 
 
+
 package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
@@ -50,7 +50,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.SecurityUtil;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -93,12 +92,9 @@ public class RepositoryImportResource
    * @param securityContextProvider
    */
   @Inject
-  public RepositoryImportResource(
-          RepositoryManager manager,
-          Provider<WebSecurityContext> securityContextProvider)
+  public RepositoryImportResource(RepositoryManager manager)
   {
     this.manager = manager;
-    this.securityContextProvider = securityContextProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -116,9 +112,9 @@ public class RepositoryImportResource
   @TypeHint(Repository[].class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public GenericEntity<List<Repository>> importRepositories(
-          @PathParam("type") String type)
+    @PathParam("type") String type)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvider);
+    SecurityUtil.assertIsAdmin();
 
     List<Repository> repositories = new ArrayList<Repository>();
     RepositoryHandler handler = manager.getHandler(type);
@@ -143,7 +139,7 @@ public class RepositoryImportResource
             else if (logger.isWarnEnabled())
             {
               logger.warn("could not find imported repository {}",
-                          repositoryName);
+                repositoryName);
             }
           }
         }
@@ -175,7 +171,7 @@ public class RepositoryImportResource
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public GenericEntity<List<Type>> getImportableTypes()
   {
-    SecurityUtil.assertIsAdmin(securityContextProvider);
+    SecurityUtil.assertIsAdmin();
 
     List<Type> types = new ArrayList<Type>();
     Collection<Type> handlerTypes = manager.getTypes();
@@ -202,7 +198,7 @@ public class RepositoryImportResource
           else if (logger.isInfoEnabled())
           {
             logger.info("{} handler does not support import of repositories",
-                        t.getName());
+              t.getName());
           }
         }
       }
@@ -220,7 +216,4 @@ public class RepositoryImportResource
 
   /** Field description */
   private RepositoryManager manager;
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 }

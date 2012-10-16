@@ -42,7 +42,9 @@ import sonia.scm.SCMContext;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated 
  */
+@Deprecated
 public class SecurityUtil
 {
 

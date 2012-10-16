@@ -30,67 +30,74 @@
  */
 
 
+package sonia.scm.security;
 
-package sonia.scm.web.security;
+//~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Singleton;
+import org.junit.Test;
+
+import sonia.scm.repository.PermissionType;
+
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class LocalSecurityContextHolder
+public class RepositoryPermissionResolverTest
 {
 
   /**
    * Method description
    *
    */
-  public void destroy()
+  @Test
+  public void testResolvePermission()
   {
-    store.remove();
-    store = null;
+    RepositoryPermissionResolver resolver = new RepositoryPermissionResolver();
+    RepositoryPermission p = resolver.resolvePermission("repository:scm:read");
+
+    assertNotNull(p);
+    assertEquals("scm", p.getRepositoryId());
+    assertEquals(PermissionType.READ, p.getPermissionType());
+
+    p = resolver.resolvePermission("repository:asd:wRitE");
+    assertNotNull(p);
+    assertEquals("asd", p.getRepositoryId());
+    assertEquals(PermissionType.WRITE, p.getPermissionType());
+
+    p = resolver.resolvePermission("repository:*:OWNER");
+    assertNotNull(p);
+    assertEquals("*", p.getRepositoryId());
+    assertEquals(PermissionType.OWNER, p.getPermissionType());
   }
 
   /**
    * Method description
    *
    */
-  public void remove()
+  @Test
+  public void testResolveUnknownPermission()
   {
-    store.remove();
-  }
+    RepositoryPermissionResolver resolver = new RepositoryPermissionResolver();
+    RepositoryPermission p = resolver.resolvePermission("user:scm:read");
 
-  //~--- get methods ----------------------------------------------------------
+    assertNull(p);
+
+    p = resolver.resolvePermission("group:asd:wRitE");
+    assertNull(p);
+  }
 
   /**
    * Method description
    *
-   *
-   * @return
    */
-  public WebSecurityContext get()
+  @Test
+  public void testResolveUnknownTypePermission()
   {
-    return store.get();
+    RepositoryPermissionResolver resolver = new RepositoryPermissionResolver();
+    RepositoryPermission p = resolver.resolvePermission("repository:scm:asd");
+
+    assertNull(p);
   }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   */
-  public void set(WebSecurityContext value)
-  {
-    store.set(value);
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ThreadLocal<WebSecurityContext> store =
-    new ThreadLocal<WebSecurityContext>();
 }

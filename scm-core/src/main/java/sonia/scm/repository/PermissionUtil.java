@@ -37,18 +37,21 @@ package sonia.scm.repository;
 
 import com.google.inject.Provider;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.group.GroupNames;
+import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
-import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -73,14 +76,13 @@ public class PermissionUtil
    * @param repository
    * @param securityContext
    * @param pt
+   * @deprecated
    */
+  @Deprecated
   public static void assertPermission(Repository repository,
-          WebSecurityContext securityContext, PermissionType pt)
+    WebSecurityContext securityContext, PermissionType pt)
   {
-    if (!hasPermission(repository, securityContext, pt))
-    {
-      throw new ScmSecurityException("action denied");
-    }
+    assertPermission(repository, pt);
   }
 
   /**
@@ -91,11 +93,30 @@ public class PermissionUtil
    * @param securityContextProvider
    * @param pt
    */
+  @Deprecated
   public static void assertPermission(Repository repository,
-          Provider<WebSecurityContext> securityContextProvider,
-          PermissionType pt)
+    Provider<WebSecurityContext> securityContextProvider, PermissionType pt)
   {
     assertPermission(repository, securityContextProvider.get(), pt);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param securityContextProvider
+   * @param pt
+   *
+   * @since 1.21
+   */
+  @Deprecated
+  public static void assertPermission(Repository repository, PermissionType pt)
+  {
+    if (!hasPermission(null, repository, pt))
+    {
+      throw new ScmSecurityException("action denied");
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -109,12 +130,13 @@ public class PermissionUtil
    * @param pt
    *
    * @return
+   * @deprecated
    */
+  @Deprecated
   public static boolean hasPermission(Repository repository,
-          Provider<WebSecurityContext> securityContextProvider,
-          PermissionType pt)
+    Provider<WebSecurityContext> securityContextProvider, PermissionType pt)
   {
-    return hasPermission(repository, securityContextProvider.get(), pt);
+    return hasPermission(null, repository, pt);
   }
 
   /**
@@ -126,38 +148,66 @@ public class PermissionUtil
    * @param pt
    *
    * @return
+   * @deprecated use {@link #hasPermission(Repository,PermissionType)} instead
    */
+  @Deprecated
   public static boolean hasPermission(Repository repository,
-          WebSecurityContext securityContext, PermissionType pt)
+    WebSecurityContext securityContext, PermissionType pt)
+  {
+    return hasPermission(null, repository, pt);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param configuration
+   * @param repository
+   * @param pt
+   *
+   * @return
+   *
+   * @since 1.21
+   */
+  public static boolean hasPermission(ScmConfiguration configuration,
+    Repository repository, PermissionType pt)
   {
     boolean result = false;
 
-    if (securityContext != null)
+    Subject subject = SecurityUtils.getSubject();
+
+    if (subject.isAuthenticated())
     {
-      User user = securityContext.getUser();
+      String username = subject.getPrincipal().toString();
 
-      if (user != null)
+      AssertUtil.assertIsNotEmpty(username);
+
+      if (subject.hasRole(Role.ADMIN)
+        || ((pt == PermissionType.READ) && repository.isPublicReadable()))
       {
-        String username = user.getName();
+        result = true;
+      }
+      else
+      {
+        List<Permission> permissions = repository.getPermissions();
 
-        AssertUtil.assertIsNotEmpty(username);
-
-        if (user.isAdmin()
-            || ((pt == PermissionType.READ) && repository.isPublicReadable()))
+        if (permissions != null)
         {
-          result = true;
-        }
-        else
-        {
-          List<Permission> permissions = repository.getPermissions();
+          GroupNames groupNames =
+            subject.getPrincipals().oneByType(GroupNames.class);
 
-          if (permissions != null)
-          {
-            result = hasPermission(permissions, username,
-                                   securityContext.getGroups(), pt);
-          }
+          result = hasPermission(permissions, username, groupNames, pt);
+
         }
       }
+    }
+    else
+    {
+
+      // check anonymous access
+      result = (configuration != null)
+        && configuration.isAnonymousAccessEnabled()
+        && repository.isPublicReadable() && (pt == PermissionType.READ);
     }
 
     return result;
@@ -173,10 +223,28 @@ public class PermissionUtil
    *
    * @return true if the repository is writable
    * @since 1.14
+   * @deprecated use {@link #isWritable(ScmConfiguration, Repository)} instead
+   */
+  @Deprecated
+  public static boolean isWritable(ScmConfiguration configuration,
+    Repository repository, WebSecurityContext securityContext)
+  {
+    return isWritable(configuration, repository);
+  }
+
+  /**
+   * Returns true if the repository is writable.
+   *
+   *
+   * @param configuration SCM-Manager main configuration
+   * @param repository repository to check
+   * @param securityContext current user security context
+   *
+   * @return true if the repository is writable
+   * @since 1.21
    */
   public static boolean isWritable(ScmConfiguration configuration,
-                                    Repository repository,
-                                    WebSecurityContext securityContext)
+    Repository repository)
   {
     boolean permitted = false;
 
@@ -185,13 +253,13 @@ public class PermissionUtil
       if (logger.isWarnEnabled())
       {
         logger.warn("{} is archived and is not writeable",
-                    repository.getName());
+          repository.getName());
       }
     }
     else
     {
-      permitted = PermissionUtil.hasPermission(repository, securityContext,
-              PermissionType.WRITE);
+      permitted = PermissionUtil.hasPermission(configuration, repository,
+        PermissionType.WRITE);
     }
 
     return permitted;
@@ -209,7 +277,7 @@ public class PermissionUtil
    * @return
    */
   private static boolean hasPermission(List<Permission> permissions,
-          String username, Collection<String> groups, PermissionType pt)
+    String username, GroupNames groups, PermissionType pt)
   {
     boolean result = false;
 
@@ -218,8 +286,8 @@ public class PermissionUtil
       String name = p.getName();
 
       if (((name != null) && (p.getType().getValue() >= pt.getValue()))
-          && (name.equals(username)
-              || (p.isGroupPermission() && groups.contains(p.getName()))))
+        && (name.equals(username)
+          || (p.isGroupPermission() && groups.contains(p.getName()))))
       {
         result = true;
 

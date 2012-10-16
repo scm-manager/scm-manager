@@ -30,72 +30,86 @@
  */
 
 
-
-package sonia.scm.web.security;
+package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.user.User;
+import com.google.inject.AbstractModule;
+import com.google.inject.TypeLiteral;
+import com.google.inject.matcher.AbstractMatcher;
+import com.google.inject.matcher.Matcher;
+import com.google.inject.spi.InjectionListener;
+import com.google.inject.spi.TypeEncounter;
+import com.google.inject.spi.TypeListener;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class AdministrationSecurityContext implements WebSecurityContext
+public class ScmInitializerModule extends AbstractModule
 {
 
   /**
-   * Constructs ...
-   *
-   *
-   * @param user
+   * the logger for ScmInitializerModule
    */
-  public AdministrationSecurityContext(User user)
-  {
-    this.user = user;
-  }
+  private static final Logger logger =
+    LoggerFactory.getLogger(ScmInitializerModule.class);
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
-   *
-   * @param request
-   * @param response
-   * @param username
-   * @param password
-   *
-   * @return
    */
   @Override
-  public User authenticate(HttpServletRequest request,
-                           HttpServletResponse response, String username,
-                           String password)
+  protected void configure()
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+    bindListener(isSubtypeOf(Initable.class), new TypeListener()
+    {
+
+      @Override
+      public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter)
+      {
+        encounter.register(new InjectionListener<I>()
+        {
+          @Override
+          public void afterInjection(Object i)
+          {
+            if (logger.isTraceEnabled())
+            {
+              logger.trace("initialize initable {}", i.getClass());
+            }
+
+            Initable initable = (Initable) i;
+
+            initable.init(SCMContext.getContext());
+          }
+        });
+      }
+    });
   }
 
   /**
    * Method description
    *
    *
-   * @param request
-   * @param response
+   * @param subtype
+   * @param supertype
+   *
+   * @return
    */
-  @Override
-  public void logout(HttpServletRequest request, HttpServletResponse response)
+  private boolean typeIsSubtypeOf(TypeLiteral<?> subtype,
+    TypeLiteral<?> supertype)
   {
-    throw new UnsupportedOperationException("Not supported yet.");
+
+    // First check that raw types are compatible
+    // Then check that generic types are compatible! HOW????
+    return (subtype.equals(supertype)
+      || (supertype.getRawType().isAssignableFrom(subtype.getRawType())
+        && supertype.equals(subtype.getSupertype(supertype.getRawType()))));
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -104,43 +118,32 @@ public class AdministrationSecurityContext implements WebSecurityContext
    * Method description
    *
    *
+   * @param supertype
+   *
    * @return
    */
-  @Override
-  public Collection<String> getGroups()
+  private Matcher<TypeLiteral<?>> isSubtypeOf(final Class<?> supertype)
   {
-    return groups;
+    return isSubtypeOf(TypeLiteral.get(supertype));
   }
 
   /**
    * Method description
    *
    *
-   * @return
-   */
-  @Override
-  public User getUser()
-  {
-    return user;
-  }
-
-  /**
-   * Method description
-   *
+   * @param supertype
    *
    * @return
    */
-  @Override
-  public boolean isAuthenticated()
+  private Matcher<TypeLiteral<?>> isSubtypeOf(final TypeLiteral<?> supertype)
   {
-    return true;
+    return new AbstractMatcher<TypeLiteral<?>>()
+    {
+      @Override
+      public boolean matches(TypeLiteral<?> type)
+      {
+        return typeIsSubtypeOf(type, supertype);
+      }
+    };
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private List<String> groups = new ArrayList<String>();
-
-  /** Field description */
-  private User user;
 }

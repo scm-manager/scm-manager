@@ -30,79 +30,45 @@
  */
 
 
-
-package sonia.scm.web.security;
+package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.name.Named;
+import org.apache.shiro.guice.web.ShiroWebModule;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import sonia.scm.security.ScmRealm;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import javax.servlet.ServletContext;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SecurityContextProvider implements Provider<WebSecurityContext>
+public class ScmSecurityModule extends ShiroWebModule
 {
-
-  /** the logger for SecurityContextProvider */
-  private static final Logger logger =
-    LoggerFactory.getLogger(SecurityContextProvider.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param sessionContext
-   * @param localContext
+   * @param servletContext
    */
-  @Inject
-  public SecurityContextProvider(
-          @Named("userSession") Provider<WebSecurityContext> sessionContext,
-          LocalSecurityContextHolder localContext)
+  ScmSecurityModule(ServletContext servletContext)
   {
-    this.sessionContext = sessionContext;
-    this.localContext = localContext;
+    super(servletContext);
   }
 
-  //~--- get methods ----------------------------------------------------------
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
-   *
-   * @return
    */
   @Override
-  public WebSecurityContext get()
+  protected void configureShiroWeb()
   {
-    WebSecurityContext context = localContext.get();
-
-    if (context == null)
-    {
-      context = sessionContext.get();
-    }
-    else if (logger.isDebugEnabled())
-    {
-      String user = SecurityUtil.getUsername(sessionContext);
-
-      logger.debug("return system session for user {}", user);
-    }
-
-    return context;
+    bindRealm().to(ScmRealm.class);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private LocalSecurityContextHolder localContext;
-
-  /** Field description */
-  private Provider<WebSecurityContext> sessionContext;
 }
