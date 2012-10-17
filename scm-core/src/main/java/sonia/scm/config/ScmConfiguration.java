@@ -256,7 +256,7 @@ public class ScmConfiguration
    * <li><b>os</b> = Operation System</li>
    * <li><b>arch</b> = Architecture</li>
    * </ul>
-   * For example {@link http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false"}
+   * For example http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false
    *
    * @return the complete plugin url.
    */

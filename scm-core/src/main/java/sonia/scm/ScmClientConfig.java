@@ -95,10 +95,9 @@ public class ScmClientConfig
 
   /**
    * Returns the date format for the user interface. This format is a
-   * JavaScript date format, see
-   * {@link http://jacwright.com/projects/javascript/date_format}.
-   *
-   *
+   * JavaScript date format.
+   * 
+   * @see <a target="_blank" href="http://jacwright.com/projects/javascript/date_format">Date Format</a>
    * @return JavaScript date format
    */
   public String getDateFormat()

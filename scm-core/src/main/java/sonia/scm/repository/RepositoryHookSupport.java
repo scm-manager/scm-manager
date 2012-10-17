@@ -87,7 +87,7 @@ public interface RepositoryHookSupport
 
   /**
    * Fires a hook event. This methods calls the
-   * {@link RepositoryHook#onEvent(RepositoryHookEvent} of each registered
+   * {@link RepositoryHook#onEvent(RepositoryHookEvent)} of each registered
    * {@link RepositoryHook}.
    *
    *

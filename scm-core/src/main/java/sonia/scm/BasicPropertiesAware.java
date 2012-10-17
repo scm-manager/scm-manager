@@ -56,12 +56,8 @@ public class BasicPropertiesAware implements PropertiesAware
 {
 
   /**
-   * Returns true if this object is the same as the obj argument.
+   * {@inheritDoc}
    *
-   *
-   * @param obj - the reference object with which to compare
-   *
-   * @return true if this object is the same as the obj argument
    */
   @Override
   public boolean equals(Object obj)
@@ -79,8 +75,8 @@ public class BasicPropertiesAware implements PropertiesAware
     final BasicPropertiesAware other = (BasicPropertiesAware) obj;
 
     if ((this.properties != other.properties)
-        && ((this.properties == null)
-            ||!this.properties.equals(other.properties)))
+      && ((this.properties == null)
+        ||!this.properties.equals(other.properties)))
     {
       return false;
     }
@@ -89,10 +85,8 @@ public class BasicPropertiesAware implements PropertiesAware
   }
 
   /**
-   * Returns a hash code value for this object.
+   * {@inheritDoc}
    *
-   *
-   * @return a hash code value for this object
    */
   @Override
   public int hashCode()
@@ -100,17 +94,15 @@ public class BasicPropertiesAware implements PropertiesAware
     int hash = 7;
 
     hash = 41 * hash + ((this.properties != null)
-                        ? this.properties.hashCode()
-                        : 0);
+      ? this.properties.hashCode()
+      : 0);
 
     return hash;
   }
 
   /**
-   * @see {@link PropertiesAware#removeProperty(String)}
+   * {@inheritDoc}
    *
-   *
-   * @param key
    */
   @Override
   public void removeProperty(String key)
@@ -121,10 +113,8 @@ public class BasicPropertiesAware implements PropertiesAware
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * @see {@link PropertiesAware#getProperties()}
+   * {@inheritDoc}
    *
-   *
-   * @return
    */
   @Override
   public Map<String, String> getProperties()
@@ -133,12 +123,8 @@ public class BasicPropertiesAware implements PropertiesAware
   }
 
   /**
-   * @see {@link PropertiesAware#getProperty(String)}
+   * {@inheritDoc}
    *
-   *
-   * @param key
-   *
-   * @return
    */
   @Override
   public String getProperty(String key)
@@ -149,10 +135,8 @@ public class BasicPropertiesAware implements PropertiesAware
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * @see {@link PropertiesAware#setProperties(java.util.Map)}
+   * {@inheritDoc}
    *
-   *
-   * @param properties
    */
   @Override
   public void setProperties(Map<String, String> properties)
@@ -161,11 +145,8 @@ public class BasicPropertiesAware implements PropertiesAware
   }
 
   /**
-   * @see {@link PropertiesAware#setProperty(String,String) }
+   * {@inheritDoc}
    *
-   *
-   * @param key
-   * @param value
    */
   @Override
   public void setProperty(String key, String value)
