@@ -75,7 +75,10 @@ def appendWrappedListNodes(doc, parentNode, wrapperName, name, values):
     appendListNodes(doc, wrapperNode, name, values)
     
 def getId(ctx):
-  return str(ctx.rev()) + ':' + hex(ctx.node()[:6])
+  id = ''
+  if os.environ['SCM_ID_REVISION'] == 'true':
+    id = str(ctx.rev()) + ':'
+  return id + hex(ctx.node())
   
 def appendAuthorNodes(doc, parentNode, ctx):
   authorName = ctx.user()
