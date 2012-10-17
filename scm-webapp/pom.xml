@@ -343,6 +343,7 @@
             <exclude>.hg/**</exclude>
             <exclude>**/extjs/**</exclude>
             <exclude>**/syntaxhighlighter/**</exclude>
+            <exclude>**/*.mustache</exclude>
           </excludes>
           <strictCheck>true</strictCheck>
         </configuration>
