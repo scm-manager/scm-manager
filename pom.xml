@@ -215,6 +215,7 @@
             <link>http://jersey.java.net/nonav/apidocs/${jersey.version}/jersey/</link>
             <link>http://google-guice.googlecode.com/svn/tags/3.0/javadoc/</link>
             <link>http://www.slf4j.org/api/</link>
+            <link>http://shiro.apache.org/static/current/apidocs/</link>
           </links>
         </configuration>
       </plugin>
