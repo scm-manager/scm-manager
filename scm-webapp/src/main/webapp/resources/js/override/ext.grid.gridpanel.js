@@ -76,8 +76,6 @@ Ext.override(Ext.grid.GridPanel,{
     if (view && view.getState){
       state.groups = view.getState();
     }
-    console.debug('get state');
-    console.debug(state);
     return state;
   }
   
