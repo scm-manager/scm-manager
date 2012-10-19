@@ -1,10 +1,10 @@
-/*
+/* *
  * Copyright (c) 2010, Sebastian Sdorra
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
@@ -13,7 +13,7 @@
  * 3. Neither the name of SCM-Manager; nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,61 +24,36 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * http://bitbucket.org/sdorra/scm-manager
- *
+ * 
  */
 
-Ext.grid.GridPanel.prototype.applyStateExt = Ext.grid.GridPanel.prototype.applyState;
-Ext.grid.GridPanel.prototype.getStateExt = Ext.grid.GridPanel.prototype.getState;
+Ext.grid.GroupingView.prototype.initTemplatesExt = Ext.grid.GroupingView.prototype.initTemplates;
+Ext.grid.GroupingView.prototype.toggleGroupExt = Ext.grid.GroupingView.prototype.toggleGroup;
 
-Ext.override(Ext.grid.GridPanel,{
-
-  stateEvents : ['columnmove', 'columnresize', 'sortchange', 'groupchange', 'toggleGroup'],
-
-  addColumn: function(field, column, colIndex){
-    if(!column){
-      if(field.dataIndex){
-        column = field;
-        field = field.dataIndex;
-      } else{
-        column = field.name || field;
-      }
-    }
-    this.store.addField(field);
-    return this.colModel.addColumn(column, colIndex);
-  },
+Ext.override(Ext.grid.GroupingView,{
   
-  removeColumn: function(name, colIndex){
-    this.store.removeField(name);
-    if(typeof colIndex != 'number'){
-      colIndex = this.colModel.findColumnIndex(name);
-    }
-    if(colIndex >= 0){
-      this.colModel.removeColumn(colIndex);
+  storedState: null,
+  
+  initTemplates : function(){
+    this.initTemplatesExt();
+    if (this.storedState){
+      this.state = this.storedState;
     }
   },
   
-  applyState: function(state){
-    var view = this.getView();
-    if (view && view.applyState){
-      var groups = state.groups;
-      if (groups){
-        view.applyState(groups);
-      }
-    }
-    this.applyStateExt(state);
+  toggleGroup : function(group, expanded){
+    this.toggleGroupExt(group, expanded);
+    this.grid.fireEvent('toggleGroup', group, expanded);
   },
   
   getState: function(){
-    var state = this.getStateExt();
-    var view = this.getView();
-    if (view && view.getState){
-      state.groups = view.getState();
-    }
-    console.debug('get state');
-    console.debug(state);
-    return state;
+    return this.state;
+  },
+  
+  applyState: function(state){
+    this.storedState = state;
   }
   
 });
