@@ -35,6 +35,7 @@ Ext.grid.GroupingView.prototype.toggleGroupExt = Ext.grid.GroupingView.prototype
 Ext.override(Ext.grid.GroupingView,{
   
   storedState: null,
+  idPrefix: '{grid.el.id}',
   
   initTemplates : function(){
     this.initTemplatesExt();
@@ -54,6 +55,19 @@ Ext.override(Ext.grid.GroupingView,{
   
   applyState: function(state){
     this.storedState = state;
+  },
+  
+  getPrefix: function(field){
+    var prefix;
+    if ( this.idPrefix == '{grid.id}' ){
+      prefix = this.grid.getId();
+    } else if (this.idPrefix == '{grid.el.id}') {
+      prefix = this.grid.getGridEl().id;
+    } else {
+      prefix = this.idPrefix;
+    }
+    prefix += '-gp-' + field + '-';
+    return prefix;
   }
   
 });
