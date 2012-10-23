@@ -200,6 +200,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         }
       },
       view: new Ext.grid.GroupingView({
+        idPrefix: '{grid.id}',
         enableGrouping: ! state.clientConfig.disableGroupingGrid,
         enableNoGroups: false,
         forceFit: true,
