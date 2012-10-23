@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.api.rest;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -51,11 +52,14 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 /**
+ * Force json output for uploads, because of a bug we have to use a html
+ * mimetype for uploads.
  *
+ * TODO find a better way
  * @author Sebastian Sdorra
  */
 @Provider
-public class RestActionResultMessageWriter
+public class RestActionUploadResultMessageWriter
   implements MessageBodyWriter<RestActionResult>
 {
 
@@ -122,6 +126,7 @@ public class RestActionResultMessageWriter
   public boolean isWriteable(Class<?> type, Type genericType,
     Annotation[] annotations, MediaType mediaType)
   {
-    return RestActionResult.class.isAssignableFrom(type);
+    return RestActionUploadResult.class.isAssignableFrom(type)
+      && mediaType.equals(MediaType.TEXT_HTML_TYPE);
   }
 }

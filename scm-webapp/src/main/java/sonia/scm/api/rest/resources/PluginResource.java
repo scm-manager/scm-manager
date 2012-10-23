@@ -45,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.api.rest.RestActionResult;
+import sonia.scm.api.rest.RestActionUploadResult;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.OverviewPluginFilter;
 import sonia.scm.plugin.PluginConditionFailedException;
@@ -132,7 +133,7 @@ public class PluginResource
     try
     {
       pluginManager.installPackage(uploadedInputStream);
-      response = Response.ok(new RestActionResult(true)).build();
+      response = Response.ok(new RestActionUploadResult(true)).build();
     }
     catch (PluginConditionFailedException ex)
     {
@@ -173,7 +174,7 @@ public class PluginResource
   }
 
   /**
-   * Installs a plugin from a package. This method is a workaround for ExtJS 
+   * Installs a plugin from a package. This method is a workaround for ExtJS
    * file upload, which requires text/html as content-type.<br />
    * <br />
    * <ul>
