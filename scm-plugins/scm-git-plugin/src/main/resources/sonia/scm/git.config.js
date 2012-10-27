@@ -100,10 +100,12 @@ initCallbacks.push(function(main){
   });
 });
 
-
-
 // register panel
 
 registerConfigPanel({
   xtype : 'gitConfigPanel'
 });
+
+// register type icon
+
+Sonia.repository.typeIcons['git'] = 'resources/images/icons/16x16/git.png';

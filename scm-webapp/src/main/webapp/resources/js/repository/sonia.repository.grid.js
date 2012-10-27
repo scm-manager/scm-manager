@@ -30,6 +30,9 @@
  */
 Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 
+  // templates
+  typeIconTemplate: '<img src="{0}" alt="{1}" title="{2}">',
+
   colNameText: 'Name',
   colTypeText: 'Type',
   colContactText: 'Contact',
@@ -121,6 +124,11 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         width: 125
       },
       columns: [{
+        id: 'iconType',
+        dataIndex: 'type',
+        renderer: this.renderTypeIcon,
+        width: 20
+      },{
         id: 'name', 
         header: this.colNameText, 
         dataIndex: 'name', 
@@ -131,7 +139,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         header: this.colTypeText, 
         dataIndex: 'type', 
         renderer: this.renderRepositoryType, 
-        width: 80
+        width: 80,
+        hidden: true
       },{
         id: 'contact', 
         header: this.colContactText, 
@@ -218,6 +227,20 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     if (this.parentPanel){
       this.parentPanel.repositoryGrid = this;
     }
+  },
+  
+  renderTypeIcon: function(type){
+    var result = '';
+    var icon = Sonia.repository.getTypeIcon(type);
+    if ( icon ){
+      var displayName = type;
+      var t = Sonia.repository.getTypeByName(type);
+      if (t){
+        displayName = t.displayName;
+      }
+      result = String.format(this.typeIconTemplate, icon, type, displayName);
+    }
+    return result;
   },
   
   renderRepositoryUrl: function(name, meta, record){

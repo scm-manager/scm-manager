@@ -241,3 +241,7 @@ registerConfigPanel({
   id: 'hgConfigForm',
   xtype : 'hgConfigPanel'
 });
+
+// register type icon
+
+Sonia.repository.typeIcons['hg'] = 'resources/images/icons/16x16/mercurial.png';

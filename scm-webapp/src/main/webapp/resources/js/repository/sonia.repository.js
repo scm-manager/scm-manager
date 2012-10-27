@@ -45,7 +45,13 @@ Ext.ns('Sonia.repository');
 
 Sonia.repository.openListeners = [];
 
+Sonia.repository.typeIcons = [];
+
 // functions
+
+Sonia.repository.getTypeIcon = function(type){
+  return Sonia.repository.typeIcons[type];
+}
 
 Sonia.repository.createContentUrl = function(repository, path, revision){
   var contentUrl = restUrl + 'repositories/' + repository.id  + '/';

@@ -153,3 +153,7 @@ initCallbacks.push(function(main){
 registerConfigPanel({
   xtype : 'svnConfigPanel'
 });
+
+// register type icon
+
+Sonia.repository.typeIcons['svn'] = 'resources/images/icons/16x16/subversion.png';
