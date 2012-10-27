@@ -4,6 +4,23 @@
             </div>
             <div class="primary" id="sidebar">
               <ul class="xoxo">
+                <li id="linkcat-3" class="widget-container widget_links">
+                  <h3 class="widget-title">Links</h3>
+                  <ul class="xoxo blogroll">
+                    <li>
+                      <a href="https://bitbucket.org/sdorra/scm-manager/wiki/download" target="_blank">Download</a>
+                    </li>
+                    <li>
+                      <a href="https://bitbucket.org/sdorra/scm-manager/issues?status=new&amp;status=open" target="_blank">Issue Tracker</a>
+                    </li>
+                    <li>
+                      <a href="http://groups.google.com/group/scmmanager" target="_blank">Mailing List</a>
+                    </li>
+                    <li>
+                      <a href="https://bitbucket.org/sdorra/scm-manager/wiki" target="_blank">Wiki</a>
+                    </li>
+                  </ul>
+                </li>
                 <li class="widget-container widget_recent_entries">
                   <h3 class="widget-title">Latest News</h3>
                   <div id="news"></div>
@@ -11,7 +28,7 @@
                   $(document).ready(function(){
                     $('#news').feeds('${contextPath}/news', {
                       loadingImage: '${contextPath}/template/css/images/load.gif',
-                      maxItems: 5
+                      maxItems: 3
                     });
                   });
                 </script>
