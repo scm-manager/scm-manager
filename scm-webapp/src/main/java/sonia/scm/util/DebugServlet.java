@@ -29,10 +29,13 @@
  *
  */
 
+
+
 package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Closeables;
 import com.google.inject.Singleton;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -74,7 +77,7 @@ public class DebugServlet extends HttpServlet
    */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException
+    throws ServletException, IOException
   {
     processRequest(request, response);
   }
@@ -91,8 +94,8 @@ public class DebugServlet extends HttpServlet
    */
   @Override
   protected void doPost(HttpServletRequest request,
-                        HttpServletResponse response)
-          throws ServletException, IOException
+    HttpServletResponse response)
+    throws ServletException, IOException
   {
     processRequest(request, response);
   }
@@ -160,7 +163,7 @@ public class DebugServlet extends HttpServlet
    * @param session
    */
   private void appendSessionAttributes(PrintWriter writer,
-          final HttpSession session)
+    final HttpSession session)
   {
     writer.append("<h2>Session Attributes</h2>");
     appendAttributes(writer, new AttributeContext()
@@ -213,8 +216,8 @@ public class DebugServlet extends HttpServlet
    * @throws ServletException
    */
   private void processRequest(HttpServletRequest request,
-                              HttpServletResponse response)
-          throws ServletException, IOException
+    HttpServletResponse response)
+    throws ServletException, IOException
   {
     PrintWriter writer = null;
 
@@ -232,7 +235,7 @@ public class DebugServlet extends HttpServlet
     }
     finally
     {
-      writer.close();
+      Closeables.closeQuietly(writer);
     }
   }
 
