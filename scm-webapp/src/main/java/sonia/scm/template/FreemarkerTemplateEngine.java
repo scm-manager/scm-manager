@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Reader;
 
 import java.util.Locale;
 
@@ -150,6 +151,34 @@ public class FreemarkerTemplateEngine implements TemplateEngine
     }
 
     return template;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param templateIdentifier
+   * @param reader
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  @Override
+  public Template getTemplate(String templateIdentifier, Reader reader)
+    throws IOException
+  {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("try to create freemarker template from reader with id {}",
+        templateIdentifier);
+    }
+
+    freemarker.template.Template t =
+      new freemarker.template.Template(templateIdentifier, reader,
+        configuration, ENCODING);
+
+    return new FreemarkerTemplate(t);
   }
 
   /**

@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -43,6 +44,7 @@ import static org.junit.Assert.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.Reader;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -170,6 +172,24 @@ public class TemplateEngineFactoryTest
      * Method description
      *
      *
+     * @param templateIdentifier
+     * @param reader
+     *
+     * @return
+     *
+     * @throws IOException
+     */
+    @Override
+    public Template getTemplate(String templateIdentifier, Reader reader)
+      throws IOException
+    {
+      throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    /**
+     * Method description
+     *
+     *
      * @return
      */
     @Override
@@ -189,6 +209,24 @@ public class TemplateEngineFactoryTest
    */
   private static class FakeTemplateEngine2 implements TemplateEngine
   {
+
+    /**
+     * Method description
+     *
+     *
+     * @param templateIdentifier
+     * @param reader
+     *
+     * @return
+     *
+     * @throws IOException
+     */
+    @Override
+    public Template getTemplate(String templateIdentifier, Reader reader)
+      throws IOException
+    {
+      throw new UnsupportedOperationException("Not supported yet.");
+    }
 
     /**
      * Method description

@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.Reader;
 
 import java.util.concurrent.Executors;
 
@@ -86,6 +87,32 @@ public class MustacheTemplateEngine implements TemplateEngine
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param templateIdentifier
+   * @param reader
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  @Override
+  public Template getTemplate(String templateIdentifier, Reader reader)
+    throws IOException
+  {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("try to create mustache template from reader with id {}",
+        templateIdentifier);
+    }
+
+    Mustache mustache = factory.compile(reader, templateIdentifier);
+
+    return new MustacheTemplate(templateIdentifier, mustache);
+  }
 
   /**
    * Method description

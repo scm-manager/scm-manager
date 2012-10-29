@@ -30,10 +30,12 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Maps;
 import com.google.common.io.Closeables;
 
 import org.junit.Test;
@@ -46,8 +48,12 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 
 import java.net.URL;
+
+import java.util.Map;
 
 import javax.servlet.ServletContext;
 
@@ -85,6 +91,16 @@ public abstract class TemplateEngineTestBase
    * @return
    */
   public abstract String getTemplateResource();
+
+  /**
+   * Method description
+   *
+   *
+   * @param resource
+   *
+   * @return
+   */
+  protected abstract InputStream getResource(String resource);
 
   //~--- methods --------------------------------------------------------------
 
@@ -133,6 +149,45 @@ public abstract class TemplateEngineTestBase
     TemplateEngine engine = createEngine(context);
 
     assertNotNull(engine.getTemplate(getTemplateResource()));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testGetTemplateFromReader() throws IOException
+  {
+    ServletContext context = mock(ServletContext.class);
+    TemplateEngine engine = createEngine(context);
+
+    InputStream input = null;
+
+    try
+    {
+      input = getResource("007");
+
+      Template template = engine.getTemplate("007",
+                            new InputStreamReader(input));
+
+      assertNotNull(template);
+
+      Map<String, Object> env = Maps.newHashMap();
+
+      env.put("time", "Lunchtime");
+
+      StringWriter writer = new StringWriter();
+
+      template.execute(writer, env);
+      assertEquals("Time is an illusion. Lunchtime doubly so.",
+        writer.toString());
+    }
+    finally
+    {
+      Closeables.closeQuietly(input);
+    }
   }
 
   /**

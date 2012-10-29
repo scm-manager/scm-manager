@@ -30,9 +30,12 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.InputStream;
 
 import javax.servlet.ServletContext;
 
@@ -81,5 +84,20 @@ public class FreemarkerTemplateEngineTest extends TemplateEngineTestBase
   public String getTemplateResource()
   {
     return "sonia/scm/template/002.ftl";
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param resource
+   *
+   * @return
+   */
+  @Override
+  protected InputStream getResource(String resource)
+  {
+    return FreemarkerTemplateEngineTest.class.getResourceAsStream(
+      "/sonia/scm/template/".concat(resource).concat(".ftl"));
   }
 }

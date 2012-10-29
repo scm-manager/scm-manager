@@ -30,28 +30,30 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.Reader;
 
 /**
- * The {@link TemplateEngine} searches for {@link Template}s and prepares the 
+ * The {@link TemplateEngine} searches for {@link Template}s and prepares the
  * template for the rendering process.
  *
  * @author Sebastian Sdorra
  * @since 1.19
- * 
+ *
  * @apiviz.uses sonia.scm.template.Template
  */
 public interface TemplateEngine
 {
 
   /**
-   * Returns the template associated with the given path. The template engine 
-   * will search the template in the folder of the web application and in 
-   * the classpath. This method will return null, 
+   * Returns the template associated with the given path. The template engine
+   * will search the template in the folder of the web application and in
+   * the classpath. This method will return null,
    * if no template could be found for the given path.
    *
    *
@@ -62,6 +64,23 @@ public interface TemplateEngine
    * @throws IOException
    */
   public Template getTemplate(String templatePath) throws IOException;
+
+  /**
+   * Creates a template of the given reader. Note some template implementations 
+   * will cache the template by its id.
+   *
+   *
+   * @param templateIdentifier id of the template
+   * @param reader template reader
+   *
+   * @return template created from the reader
+   *
+   * @throws IOException
+   * 
+   * @since 1.22
+   */
+  public Template getTemplate(String templateIdentifier, Reader reader)
+    throws IOException;
 
   /**
    * Returns the type of this template engine.
