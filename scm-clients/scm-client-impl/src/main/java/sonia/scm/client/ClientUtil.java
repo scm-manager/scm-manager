@@ -119,7 +119,7 @@ public class ClientUtil
       {
         logger.warn("request failed, response code {} returned", sc);
       }
-      
+
       sendException(response, sc);
     }
   }
@@ -132,7 +132,7 @@ public class ClientUtil
    */
   public static void close(ClientResponse response)
   {
-    if (response == null)
+    if (response != null)
     {
       response.close();
     }
