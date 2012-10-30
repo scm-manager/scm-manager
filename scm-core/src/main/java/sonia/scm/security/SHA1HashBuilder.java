@@ -30,12 +30,18 @@
  */
 
 
+
 package sonia.scm.security;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.apache.shiro.crypto.hash.Sha1Hash;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.13
+ * @deprecated use {@link Sha1Hash} instead.
  */
 public class SHA1HashBuilder extends MessageDigestHashBuilder
 {
@@ -100,7 +106,7 @@ public class SHA1HashBuilder extends MessageDigestHashBuilder
    * @param appendSalt
    */
   public SHA1HashBuilder(String value, byte[] salt, int iterations,
-                         boolean appendSalt)
+    boolean appendSalt)
   {
     super(DIGEST, value, salt, iterations, appendSalt, false);
   }
@@ -114,9 +120,10 @@ public class SHA1HashBuilder extends MessageDigestHashBuilder
    * @param iterations
    * @param appendSalt
    * @param enableLable
+   * @param enableLabel
    */
   public SHA1HashBuilder(String value, byte[] salt, int iterations,
-                         boolean appendSalt, boolean enableLabel)
+    boolean appendSalt, boolean enableLabel)
   {
     super(DIGEST, value, salt, iterations, appendSalt, enableLabel);
   }

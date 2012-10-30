@@ -30,12 +30,18 @@
  */
 
 
+
 package sonia.scm.security;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.apache.shiro.crypto.hash.SimpleHash;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.13
+ * @deprecated use {@link SimpleHash} instead.
  */
 public interface HashBuilder
 {

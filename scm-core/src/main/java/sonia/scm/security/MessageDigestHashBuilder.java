@@ -46,11 +46,13 @@ import java.security.SecureRandom;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.shiro.crypto.hash.SimpleHash;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.13
+ * @deprecated use {@link SimpleHash} instead.
  */
 public class MessageDigestHashBuilder implements HashBuilder
 {
