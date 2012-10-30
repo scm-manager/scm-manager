@@ -297,9 +297,4 @@ public class HgFileviewCommand extends AbstractCommand
 
     return path;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String rev;
 }
