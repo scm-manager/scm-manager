@@ -99,9 +99,12 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     List<String> excludeList = new ArrayList<String>();
     InputStream input = null;
 
+    JarFile file = null;
+
     try
     {
-      JarFile file = new JarFile(warFile);
+      file = new JarFile(warFile);
+
       JarEntry entry = file.getJarEntry(RESOURCE_DEPENDENCY_LIST);
 
       if (entry == null)
@@ -124,19 +127,17 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
       }
       finally
       {
-        if (scanner != null)
-        {
-          scanner.close();
-        }
+        IOUtils.closeQuietly(scanner);
       }
     }
     catch (IOException ex)
     {
-      throw new MojoExecutionException("could not read dependency file");
+      throw new MojoExecutionException("could not read dependency file", ex);
     }
     finally
     {
       IOUtils.closeQuietly(input);
+      IOUtils.closeQuietly(file);
     }
 
     return excludeList;
@@ -218,6 +219,19 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param artifact
+   *
+   * @return
+   */
+  protected String getId(Artifact artifact)
+  {
+    return artifact.getGroupId().concat(":").concat(artifact.getArtifactId());
+  }
 
   /**
    * Method description
@@ -358,7 +372,6 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     throws MojoExecutionException
   {
     String id = getId(artifact);
-      
 
     if (!excludeList.contains(id))
     {
@@ -383,10 +396,6 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
           "could not find file for ".concat(artifact.getId()));
       }
     }
-  }
-  
-  protected String getId(Artifact artifact){
-    return artifact.getGroupId().concat(":").concat(artifact.getArtifactId());
   }
 
   /**
