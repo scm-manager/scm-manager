@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -92,7 +93,7 @@ public abstract class AbstactImportHandler implements ImportHandler
    */
   @Override
   public List<String> importRepositories(RepositoryManager manager)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     List<String> imported = new ArrayList<String>();
 
@@ -116,10 +117,8 @@ public abstract class AbstactImportHandler implements ImportHandler
 
       if (repository == null)
       {
-        if (importRepository(manager, repositoryName))
-        {
-          imported.add(repositoryName);
-        }
+        importRepository(manager, repositoryName);
+        imported.add(repositoryName);
       }
       else if (logger.isDebugEnabled())
       {
@@ -143,8 +142,8 @@ public abstract class AbstactImportHandler implements ImportHandler
    * @throws RepositoryException
    */
   protected Repository createRepository(File repositoryDirectory,
-          String repositoryName)
-          throws IOException, RepositoryException
+    String repositoryName)
+    throws IOException, RepositoryException
   {
     Repository repository = new Repository();
 
@@ -167,31 +166,20 @@ public abstract class AbstactImportHandler implements ImportHandler
    * @throws IOException
    * @throws RepositoryException
    */
-  private boolean importRepository(RepositoryManager manager,
-                                   String repositoryName)
-          throws IOException, RepositoryException
+  private void importRepository(RepositoryManager manager,
+    String repositoryName)
+    throws IOException, RepositoryException
   {
-    boolean result = false;
     Repository repository =
       createRepository(getRepositoryDirectory(repositoryName), repositoryName);
 
-    if (repository != null)
+    if (logger.isInfoEnabled())
     {
-      if (logger.isInfoEnabled())
-      {
-        logger.info("import repository {} of type {}", repositoryName,
-                    getTypeName());
-      }
-
-      manager.importRepository(repository);
-      result = true;
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("could not create repository object for {}", repositoryName);
+      logger.info("import repository {} of type {}", repositoryName,
+        getTypeName());
     }
 
-    return result;
+    manager.importRepository(repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -207,8 +195,8 @@ public abstract class AbstactImportHandler implements ImportHandler
   private File getRepositoryDirectory(String repositoryName)
   {
     return new File(
-        getRepositoryHandler().getConfig().getRepositoryDirectory(),
-        repositoryName);
+      getRepositoryHandler().getConfig().getRepositoryDirectory(),
+      repositoryName);
   }
 
   /**
