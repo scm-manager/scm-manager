@@ -40,9 +40,11 @@ import com.aragost.javahg.Repository;
 import com.aragost.javahg.internals.AbstractCommand;
 import com.aragost.javahg.internals.HgInputStream;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 import sonia.scm.repository.FileObject;
+import sonia.scm.repository.SubRepository;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -112,7 +114,10 @@ public class HgFileviewCommand extends AbstractCommand
       {
         file = readFile(stream);
       }
-      else if (type == 's') {}
+      else if (type == 's')
+      {
+        file = readSubRepository(stream);
+      }
 
       if (file != null)
       {
@@ -217,6 +222,40 @@ public class HgFileviewCommand extends AbstractCommand
     file.setDescription(stream.textUpTo('\0'));
 
     return file;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param stream
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private FileObject readSubRepository(HgInputStream stream) throws IOException
+  {
+    FileObject directory = new FileObject();
+    String path = removeTrailingSlash(stream.textUpTo('\n'));
+
+    directory.setName(getNameFromPath(path));
+    directory.setDirectory(true);
+    directory.setPath(path);
+
+    String revision = stream.textUpTo(' ');
+    String url = stream.textUpTo('\0');
+
+    SubRepository subRepository = new SubRepository(url);
+
+    if (!Strings.isNullOrEmpty(revision))
+    {
+      subRepository.setRevision(revision);
+    }
+
+    directory.setSubRepository(subRepository);
+
+    return directory;
   }
 
   /**
