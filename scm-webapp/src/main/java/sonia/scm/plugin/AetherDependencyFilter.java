@@ -35,8 +35,6 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.Closeables;
-
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.graph.DependencyNode;
@@ -120,7 +118,10 @@ public class AetherDependencyFilter implements DependencyFilter
     }
     finally
     {
-      Closeables.closeQuietly(scanner);
+      if (scanner != null)
+      {
+        scanner.close();
+      }
     }
   }
 
