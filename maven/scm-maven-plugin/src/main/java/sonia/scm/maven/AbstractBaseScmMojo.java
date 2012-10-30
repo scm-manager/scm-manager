@@ -127,10 +127,7 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
       }
       finally
       {
-        if (scanner != null)
-        {
-          scanner.close();
-        }
+        Util.close(scanner);
       }
     }
     catch (IOException ex)
@@ -140,7 +137,7 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     finally
     {
       IOUtils.closeQuietly(input);
-      IOUtils.closeQuietly(file);
+      Util.close(getLog(), file);
     }
 
     return excludeList;

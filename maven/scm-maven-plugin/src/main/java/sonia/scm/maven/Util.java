@@ -33,12 +33,61 @@
 
 package sonia.scm.maven;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.apache.maven.plugin.logging.Log;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
+
+import java.util.Scanner;
+import java.util.zip.ZipFile;
+
 /**
  *
  * @author Sebastian Sdorra
  */
 public class Util
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param log
+   * @param file
+   */
+  public static void close(Log log, ZipFile file)
+  {
+    if (file != null)
+    {
+      try
+      {
+        file.close();
+      }
+      catch (IOException ex)
+      {
+        log.warn("could not close zipfile", ex);
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param scanner
+   */
+  public static void close(Scanner scanner)
+  {
+    if (scanner != null)
+    {
+      scanner.close();
+    }
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
