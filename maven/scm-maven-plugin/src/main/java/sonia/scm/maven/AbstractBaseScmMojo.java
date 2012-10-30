@@ -127,7 +127,10 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
       }
       finally
       {
-        IOUtils.closeQuietly(scanner);
+        if (scanner != null)
+        {
+          scanner.close();
+        }
       }
     }
     catch (IOException ex)
