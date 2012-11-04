@@ -80,12 +80,28 @@ public class HgCommandContext implements Closeable
    * @param repository
    * @param directory
    */
-  HgCommandContext(HgConfig config, sonia.scm.repository.Repository repository,
-    File directory)
+  public HgCommandContext(HgConfig config,
+    sonia.scm.repository.Repository repository, File directory)
+  {
+    this(config, repository, directory, false);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param config
+   * @param repository
+   * @param directory
+   * @param pending
+   */
+  public HgCommandContext(HgConfig config,
+    sonia.scm.repository.Repository repository, File directory, boolean pending)
   {
     this.config = config;
     this.directory = directory;
-    encoding = repository.getProperty(PROPERTY_ENCODING);
+    this.encoding = repository.getProperty(PROPERTY_ENCODING);
+    this.pending = pending;
 
     if (Strings.isNullOrEmpty(encoding))
     {
@@ -124,6 +140,7 @@ public class HgCommandContext implements Closeable
         RepositoryConfiguration.DEFAULT;
 
       repoConfiguration.addExtension(HgFileviewExtension.class);
+      repoConfiguration.setEnablePendingChangesets(pending);
 
       try
       {
@@ -171,6 +188,9 @@ public class HgCommandContext implements Closeable
 
   /** Field description */
   private String encoding;
+
+  /** Field description */
+  private boolean pending;
 
   /** Field description */
   private Repository repository;
