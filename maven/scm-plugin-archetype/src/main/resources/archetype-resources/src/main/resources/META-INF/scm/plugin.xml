@@ -46,6 +46,10 @@
     -->
   </information>
 
+  <conditions>
+    <min-version>${dollar}{project.parent.version}</min-version>
+  </conditions>
+
   <packages>
     <package>${package}</package>
   </packages>
