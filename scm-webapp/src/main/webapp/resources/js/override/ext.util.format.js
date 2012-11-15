@@ -32,104 +32,24 @@
 Ext.apply(Ext.util.Format, {
 
   formatTimestamp: function(value){
-    var date = null;
     var result = '';
     if ( value != null && (value > 0 || value.length > 0)){
       var df = state.clientConfig.dateFormat;
       if ( df == null || df.length == 0 || ! Ext.isDefined(value) ){
         df = "Y-m-d H:i:s";
       }
-      date = new Date(value);
-      result = Ext.util.Format.date(date, df);
+      result = moment(value).format(df);
     }
 
-    if (date != null && result.indexOf("{0}") >= 0){
-      result = String.format( result, Ext.util.Format.timeAgo(date) );
+    if (result.indexOf("{0}") >= 0){
+      result = String.format(result, Ext.util.Format.timeAgo(value));
     }
 
     return result;
   },
 
-  timeAgoJustNow: 'just now',
-  timeAgoOneMinuteAgo: '1 minute ago',
-  timeAgoOneMinuteFromNow: '1 minute from now',
-  timeAgoMinutes: 'minutes',
-  timeAgoOneHourAgo: '1 hour ago',
-  timeAgoOneHourFromNow: '1 hour from now',
-  timeAgoHours: 'hours',
-  timeAgoYesterday: 'yesterday',
-  timeAgoTomorrow: 'tomorrow',
-  timeAgoDays: 'days',
-  timeAgoLastWeek: 'last week',
-  timeAgoNextWeek: 'next week',
-  timeAgoWeeks: 'weeks',
-  timeAgoLastMonth: 'last month',
-  timeAgoNextMonth: 'next month',
-  timeAgoMonths: 'months',
-  timeAgoLastYear: 'last year',
-  timeAgoNextYear: 'next year',
-  timeAgoYears: 'years',
-  timeAgoLastCentury: 'last century',
-  timeAgoNextCentury: 'next century',
-  timeAgoCenturies: 'centuries',
-
   timeAgo : function(value){
-
-    var time_formats = [
-      [60, this.timeAgoJustNow, 1], // 60
-      [120, this.timeAgoOneMinuteAgo, this.timeAgoOneMinuteFromNow ], // 60*2
-      [3600, this.timeAgoMinutes, 60], // 60*60, 60
-      [7200, this.timeAgoOneHourAgo, this.timeAgoOneHourFromNow ], // 60*60*2
-      [86400, this.timeAgoHours, 3600], // 60*60*24, 60*60
-      [172800, this.timeAgoYesterday, this.timeAgoTomorrow ], // 60*60*24*2
-      [604800, this.timeAgoDays, 86400], // 60*60*24*7, 60*60*24
-      [1209600, this.timeAgoLastWeek, this.timeAgoNextWeek], // 60*60*24*7*4*2
-      [2419200, this.timeAgoWeeks, 604800], // 60*60*24*7*4, 60*60*24*7
-      [4838400, this.timeAgoLastMonth, this.timeAgoNextMonth], // 60*60*24*7*4*2
-      [29030400, this.timeAgoMonths, 2419200], // 60*60*24*7*4*12, 60*60*24*7*4
-      [58060800, this.timeAgoLastYear, this.timeAgoNextYear], // 60*60*24*7*4*12*2
-      [2903040000, this.timeAgoYears, 29030400], // 60*60*24*7*4*12*100, 60*60*24*7*4*12
-      [5806080000, this.timeAgoLastCentury, this.timeAgoNextCentury], // 60*60*24*7*4*12*100*2
-      [58060800000, this.timeAgoCenturies, 2903040000] // 60*60*24*7*4*12*100*20, 60*60*24*7*4*12*100
-    ];
-
-    var date = value;
-
-    if (!Ext.isDate(date)){
-      date = parseInt(date);
-      if ( date == 'NaN' ){
-        date = Ext.parseDate(value)
-      } else {
-        date = new Date(date);
-      }
-    }
-
-    var seconds = (new Date - date) / 1000;
-    var token = 'ago';
-    var list_choice = 1;
-    if (seconds < 0){
-      seconds = Math.abs(seconds);
-      token = 'from now';
-      list_choice = 2;
-    }
-    
-    var i = 0;
-    var format = null;
-    while (format = time_formats[i++]){
-      if (seconds < format[0]) {
-        if (typeof format[2] == 'string'){
-          return format[list_choice];
-        } else {
-          return Math.floor(seconds / format[2]) + ' ' + format[1] + ' ' + token;
-        }
-      }
-    }
-
-    if ( date == "Invalid Date" ){
-      date = value;
-    }
-    
-    return date;
+    return moment(value).fromNow();
   },
   
   id: function(value){
