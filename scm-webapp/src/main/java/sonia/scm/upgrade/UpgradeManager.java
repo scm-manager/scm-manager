@@ -136,6 +136,7 @@ public class UpgradeManager
     List<UpgradeHandler> upgradeHandlers = Lists.newArrayList();
 
     upgradeHandlers.add(new TimestampUpgradeHandler());
+    upgradeHandlers.add(new ClientDateFormatUpgradeHandler());
 
     // TODO find upgrade handlers on classpath
     return upgradeHandlers;
