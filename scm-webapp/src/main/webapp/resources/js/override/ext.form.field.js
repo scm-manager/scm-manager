@@ -51,13 +51,19 @@ Ext.override(Ext.form.Field, {
       src: 'resources/images/help.png',
       cls: cls
     });
-
-    Ext.QuickTips.register({
+    
+    var quickTip = {
       target : helpButton,
       title : '',
       text : text,
       enabled : true
-    });
+    };
+    
+    if (this.helpDisableAutoHide){
+      quickTip.autoHide = !this.helpDisableAutoHide;
+    }
+
+    Ext.QuickTips.register(quickTip);
   },
 
   getHelpButtonClass: function(){
