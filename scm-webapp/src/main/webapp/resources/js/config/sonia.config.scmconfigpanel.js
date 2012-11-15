@@ -62,8 +62,11 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
 
   // help
   servernameHelpText: 'The name of this server. This name will be part of the repository url.',
-  // TODO
-  dateFormatHelpText: 'JavaScript date format.',
+  // TODO i18n
+  dateFormatHelpText: 'Moments date format. Please have a look at \n\
+                      <a href="http://momentjs.com/docs/#/displaying/format/" target="_blank">http://momentjs.com/docs/#/displaying/format/</a>.<br />\n\
+                      <b>Note:</b><br />\n\
+                      {0} - is replaced by a "time ago" string (e.g. 2 hours ago).',
   pluginRepositoryHelpText: 'The url of the plugin repository.<br />Explanation of the {placeholders}:\n\
   <br /><b>version</b> = SCM-Manager Version<br /><b>os</b> = Operation System<br /><b>arch</b> = Architecture',
   enableForwardingHelpText: 'Enbale mod_proxy port forwarding.',
@@ -120,6 +123,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           fieldLabel: this.dateFormatText,
           name: 'dateFormat',
           helpText: this.dateFormatHelpText,
+          helpDisableAutoHide: true,
           allowBlank: false
         },{
           xtype: 'textfield',
