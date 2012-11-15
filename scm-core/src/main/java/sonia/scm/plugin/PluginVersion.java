@@ -45,7 +45,8 @@ import sonia.scm.util.AssertUtil;
 import java.util.Locale;
 
 /**
- *
+ * TODO for 2.0: rename to version and move to another package.
+ * 
  * @author Sebastian Sdorra
  */
 public class PluginVersion implements Comparable<PluginVersion>
