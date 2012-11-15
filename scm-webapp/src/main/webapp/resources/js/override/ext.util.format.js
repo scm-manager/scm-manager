@@ -36,7 +36,7 @@ Ext.apply(Ext.util.Format, {
     if ( value != null && (value > 0 || value.length > 0)){
       var df = state.clientConfig.dateFormat;
       if ( df == null || df.length == 0 || ! Ext.isDefined(value) ){
-        df = "Y-m-d H:i:s";
+        df = "YYYY-MM-DD HH:mm:ss";
       }
       result = moment(value).format(df);
     }
