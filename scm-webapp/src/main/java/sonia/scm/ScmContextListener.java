@@ -49,6 +49,7 @@ import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.upgrade.UpgradeManager;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.IOUtil;
 import sonia.scm.web.security.AuthenticationManager;
@@ -119,7 +120,7 @@ public class ScmContextListener extends GuiceServletContextListener
 
     if (SCMContext.getContext().getStartupError() == null)
     {
-      ScmUpgradeHandler upgradeHandler = new ScmUpgradeHandler();
+      UpgradeManager upgradeHandler = new UpgradeManager();
 
       upgradeHandler.doUpgrade();
     }
