@@ -35,6 +35,9 @@ package sonia.scm.store;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.collect.Maps;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +47,8 @@ import sonia.scm.security.KeyGenerator;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -169,26 +174,62 @@ public class JAXBDataStore<T> extends AbstractDataStore<T>
   {
     logger.trace("try to retrieve item with id {}", id);
 
-    T item = null;
     File file = getFile(id);
+
+    return read(file);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Map<String, T> getAll()
+  {
+    logger.trace("get all items from data store");
+
+    Builder<String, T> builder = ImmutableMap.builder();
+
+    for (File file : directory.listFiles())
+    {
+      builder.put(getId(file), read(file));
+    }
+
+    return builder.build();
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param file
+   *
+   * @return
+   */
+  private T read(File file)
+  {
+    T item = null;
 
     if (file.exists())
     {
+      logger.trace("try to read {}", file);
       try
       {
         item = (T) context.createUnmarshaller().unmarshal(file);
       }
       catch (JAXBException ex)
       {
-        throw new StoreException("could not read object with id ".concat(id),
-          ex);
+        throw new StoreException(
+          "could not read object ".concat(file.getPath()), ex);
       }
     }
 
     return item;
   }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -223,6 +264,21 @@ public class JAXBDataStore<T> extends AbstractDataStore<T>
       "id argument is required");
 
     return new File(directory, id.concat(SUFFIX));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param file
+   *
+   * @return
+   */
+  private String getId(File file)
+  {
+    String name = file.getName();
+
+    return name.substring(0, name.length() - SUFFIX.length());
   }
 
   //~--- fields ---------------------------------------------------------------

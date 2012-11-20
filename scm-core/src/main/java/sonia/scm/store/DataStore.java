@@ -31,6 +31,10 @@
 
 package sonia.scm.store;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Map;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -85,4 +89,12 @@ public interface DataStore<T>
    * @return
    */
   public T get(String id);
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Map<String, T> getAll();
 }
