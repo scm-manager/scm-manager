@@ -35,6 +35,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Sets;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.multibindings.Multibinder;
@@ -91,8 +92,8 @@ public class BindingExtensionProcessor implements ExtensionProcessor
    */
   public BindingExtensionProcessor()
   {
-    this.moduleSet = new HashSet<Module>();
-    this.extensions = new HashSet<Class<?>>();
+    this.moduleSet = Sets.newHashSet();
+    this.extensions = Sets.newHashSet();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -174,7 +175,7 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         if (logger.isInfoEnabled())
         {
           logger.info("bind AuthenticationHandler {}",
-                      extensionClass.getName());
+            extensionClass.getName());
         }
 
         binder.bind(extensionClass);
@@ -215,7 +216,7 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         if (logger.isInfoEnabled())
         {
           logger.info("bind AuthenticaitonListener {}",
-                      extensionClass.getName());
+            extensionClass.getName());
         }
 
         binder.bind(extensionClass);
@@ -244,18 +245,18 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         if (logger.isInfoEnabled())
         {
           logger.info("bind ChangesetPreProcessor {}",
-                      extensionClass.getName());
+            extensionClass.getName());
         }
 
         changesetPreProcessorBinder.addBinding().to(extensionClass);
       }
-      else if (ChangesetPreProcessorFactory.class.isAssignableFrom(
-              extensionClass))
+      else if (
+        ChangesetPreProcessorFactory.class.isAssignableFrom(extensionClass))
       {
         if (logger.isInfoEnabled())
         {
           logger.info("bind ChangesetPreProcessorFactory {}",
-                      extensionClass.getName());
+            extensionClass.getName());
         }
 
         changesetPreProcessorFactoryBinder.addBinding().to(extensionClass);
@@ -265,18 +266,18 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         if (logger.isInfoEnabled())
         {
           logger.info("bind FileObjectPreProcessor {}",
-                      extensionClass.getName());
+            extensionClass.getName());
         }
 
         fileObjectPreProcessorBinder.addBinding().to(extensionClass);
       }
-      else if (FileObjectPreProcessorFactory.class.isAssignableFrom(
-              extensionClass))
+      else if (
+        FileObjectPreProcessorFactory.class.isAssignableFrom(extensionClass))
       {
         if (logger.isInfoEnabled())
         {
           logger.info("bind FileObjectPreProcessorFactory {}",
-                      extensionClass.getName());
+            extensionClass.getName());
         }
 
         fileObjectPreProcessorFactoryBinder.addBinding().to(extensionClass);
@@ -286,18 +287,18 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         if (logger.isInfoEnabled())
         {
           logger.info("bind BlameLinePreProcessor {}",
-                      extensionClass.getName());
+            extensionClass.getName());
         }
 
         blameLinePreProcessorBinder.addBinding().to(extensionClass);
       }
-      else if (BlameLinePreProcessorFactory.class.isAssignableFrom(
-              extensionClass))
+      else if (
+        BlameLinePreProcessorFactory.class.isAssignableFrom(extensionClass))
       {
         if (logger.isInfoEnabled())
         {
           logger.info("bind BlameLinePreProcessorFactory {}",
-                      extensionClass.getName());
+            extensionClass.getName());
         }
 
         blameLinePreProcessorFactoryBinder.addBinding().to(extensionClass);
@@ -316,7 +317,7 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         if (logger.isInfoEnabled())
         {
           logger.info("bind RepositoryRequestListener {}",
-                      extensionClass.getName());
+            extensionClass.getName());
         }
 
         repositoryRequestListenerBinder.addBinding().to(extensionClass);
@@ -326,7 +327,7 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         if (logger.isInfoEnabled())
         {
           logger.info("bind ServletContextListener {}",
-                      extensionClass.getName());
+            extensionClass.getName());
         }
 
         servletContextListenerBinder.addBinding().to(extensionClass);
@@ -336,7 +337,7 @@ public class BindingExtensionProcessor implements ExtensionProcessor
         if (logger.isInfoEnabled())
         {
           logger.info("bind RepositoryServiceResolver {}",
-                      extensionClass.getName());
+            extensionClass.getName());
         }
 
         repositoryServiceResolverBinder.addBinding().to(extensionClass);
@@ -447,7 +448,7 @@ public class BindingExtensionProcessor implements ExtensionProcessor
    *
    */
   private <T> void bind(Binder binder, Class<T> type,
-                        Class<? extends T> bindingType)
+    Class<? extends T> bindingType)
   {
     if (logger.isDebugEnabled())
     {
