@@ -47,7 +47,9 @@ import java.util.Collection;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated use {@link RepositoryManagerDecorator} instead.
  */
+@Deprecated
 public abstract class AbstractRepositoryManagerDecorator
         implements RepositoryManager
 {
