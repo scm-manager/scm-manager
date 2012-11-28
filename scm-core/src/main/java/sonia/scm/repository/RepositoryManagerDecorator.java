@@ -72,7 +72,7 @@ public class RepositoryManagerDecorator
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param hook
@@ -84,7 +84,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param hooks
@@ -96,7 +96,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param listener
@@ -108,7 +108,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param listeners
@@ -120,7 +120,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param repository
@@ -133,7 +133,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param type
@@ -150,7 +150,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param id
@@ -166,7 +166,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param repository
@@ -182,7 +182,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param hook
@@ -194,7 +194,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param listener
@@ -208,7 +208,7 @@ public class RepositoryManagerDecorator
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param type
@@ -223,7 +223,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param repository
@@ -240,7 +240,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param repository
@@ -257,7 +257,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -269,7 +269,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param repository
@@ -286,7 +286,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param request
@@ -300,7 +300,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param type
@@ -315,7 +315,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param uri
@@ -329,7 +329,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param type
@@ -343,7 +343,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param repository
@@ -360,7 +360,7 @@ public class RepositoryManagerDecorator
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return

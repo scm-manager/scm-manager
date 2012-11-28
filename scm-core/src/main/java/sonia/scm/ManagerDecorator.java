@@ -65,7 +65,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @throws IOException
@@ -77,7 +77,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param object
@@ -92,7 +92,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param object
@@ -107,7 +107,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param context
@@ -119,7 +119,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param object
@@ -134,7 +134,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param object
@@ -151,7 +151,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param id
@@ -165,7 +165,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -177,7 +177,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param comparator
@@ -191,7 +191,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param start
@@ -206,7 +206,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param comparator
@@ -222,7 +222,7 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
