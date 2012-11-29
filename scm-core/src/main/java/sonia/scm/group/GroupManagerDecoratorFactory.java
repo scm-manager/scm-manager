@@ -29,12 +29,19 @@
 
 
 
-package sonia.scm;
+package sonia.scm.group;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.DecoratorFactory;
+import sonia.scm.plugin.ExtensionPoint;
 
 /**
- * Marker interface for all decorator classes.
+ * Factory for group manager decorators.
  *
  * @author Sebastian Sdorra
  * @since 1.23
  */
-public interface Decorator {}
+@ExtensionPoint
+public interface GroupManagerDecoratorFactory
+  extends DecoratorFactory<GroupManager> {}

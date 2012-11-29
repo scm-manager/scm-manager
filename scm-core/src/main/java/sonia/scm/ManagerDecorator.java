@@ -48,7 +48,7 @@ import java.util.Comparator;
  * @param <E>
  */
 public class ManagerDecorator<T extends ModelObject, E extends Exception>
-  implements Manager<T, E>, Decorator
+  implements Manager<T, E>
 {
 
   /**
