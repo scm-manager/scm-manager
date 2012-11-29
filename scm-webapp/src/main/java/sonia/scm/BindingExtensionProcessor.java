@@ -94,9 +94,26 @@ public class BindingExtensionProcessor implements ExtensionProcessor
   {
     this.moduleSet = Sets.newHashSet();
     this.extensions = Sets.newHashSet();
+    this.decoratorFactories = Sets.newHashSet();
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param binder
+   */
+  public void bindDecorators(Binder binder)
+  {
+    DecoratorBinder decoratorBinder = new DecoratorBinder(binder);
+
+    for (Class<? extends DecoratorFactory<?>> c : decoratorFactories)
+    {
+      decoratorBinder.bindFactory(c);
+    }
+  }
 
   /**
    * Method description
@@ -373,6 +390,10 @@ public class BindingExtensionProcessor implements ExtensionProcessor
 
       addModuleClass(extensionClass);
     }
+    else if (DecoratorFactory.class.isAssignableFrom(extensionClass))
+    {
+      decoratorFactories.add(extensionClass);
+    }
     else
     {
       extensions.add(extensionClass);
@@ -459,6 +480,9 @@ public class BindingExtensionProcessor implements ExtensionProcessor
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Set<Class<? extends DecoratorFactory<?>>> decoratorFactories;
 
   /** Field description */
   private Set<Class<?>> extensions;

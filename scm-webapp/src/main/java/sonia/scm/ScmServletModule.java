@@ -35,6 +35,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Provider;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.RequestScoped;
@@ -55,6 +56,7 @@ import sonia.scm.filter.SecurityFilter;
 import sonia.scm.group.DefaultGroupManager;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.group.GroupManager;
+import sonia.scm.group.GroupManagerProvider;
 import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
@@ -71,6 +73,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryBrowserUtil;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryManagerProvider;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
@@ -106,6 +109,7 @@ import sonia.scm.url.WebUIUrlProvider;
 import sonia.scm.user.DefaultUserManager;
 import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserManager;
+import sonia.scm.user.UserManagerProvider;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.util.DebugServlet;
 import sonia.scm.util.ScmConfigurationUtil;
@@ -231,6 +235,9 @@ public class ScmServletModule extends ServletModule
 
     bind(SCMContextProvider.class).toInstance(context);
 
+    // bind decorators
+    bindExtProcessor.bindDecorators(binder());
+
     ScmConfiguration config = getScmConfiguration(context);
     CipherUtil cu = CipherUtil.getInstance();
 
@@ -277,11 +284,12 @@ public class ScmServletModule extends ServletModule
     bind(UserDAO.class, XmlUserDAO.class);
     bind(RepositoryDAO.class, XmlRepositoryDAO.class);
 
-    // bind(RepositoryManager.class).annotatedWith(Undecorated.class).to(
-    // BasicRepositoryManager.class);
-    bind(RepositoryManager.class, DefaultRepositoryManager.class);
-    bind(UserManager.class, DefaultUserManager.class);
-    bind(GroupManager.class, DefaultGroupManager.class);
+    bindDecorated(RepositoryManager.class, DefaultRepositoryManager.class,
+      RepositoryManagerProvider.class);
+    bindDecorated(UserManager.class, DefaultUserManager.class,
+      UserManagerProvider.class);
+    bindDecorated(GroupManager.class, DefaultGroupManager.class,
+      GroupManagerProvider.class);
     bind(CGIExecutorFactory.class, DefaultCGIExecutorFactory.class);
     bind(ChangesetViewerUtil.class);
     bind(RepositoryBrowserUtil.class);
@@ -434,24 +442,78 @@ public class ScmServletModule extends ServletModule
   private <T> void bind(Class<T> clazz,
     Class<? extends T> defaultImplementation)
   {
+    Class<? extends T> implementation = find(clazz, defaultImplementation);
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("bind {} to {}", clazz, implementation);
+    }
+
+    bind(clazz).to(implementation);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param clazz
+   * @param defaultImplementation
+   * @param providerClass
+   * @param <T>
+   */
+  private <T> void bindDecorated(Class<T> clazz,
+    Class<? extends T> defaultImplementation,
+    Class<? extends Provider<T>> providerClass)
+  {
+    Class<? extends T> implementation = find(clazz, defaultImplementation);
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("bind undecorated {} to {}", clazz, implementation);
+    }
+
+    bind(clazz).annotatedWith(Undecorated.class).to(implementation);
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("bind {} to provider {}", clazz, providerClass);
+    }
+
+    bind(clazz).toProvider(providerClass);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param clazz
+   * @param defaultImplementation
+   * @param <T>
+   *
+   * @return
+   */
+  private <T> Class<? extends T> find(Class<T> clazz,
+    Class<? extends T> defaultImplementation)
+  {
     Class<? extends T> implementation = overrides.getOverride(clazz);
 
     if (implementation != null)
     {
-      logger.info("bind {} to override {}", clazz, implementation);
+      logger.info("found override {} for {}", implementation, clazz);
     }
     else
     {
       implementation = defaultImplementation;
 
-      if (logger.isDebugEnabled())
+      if (logger.isTraceEnabled())
       {
-        logger.debug("bind {} to default implementation {}", clazz,
-          implementation);
+        logger.trace(
+          "no override available for {}, using default implementation {}",
+          clazz, implementation);
       }
     }
 
-    bind(clazz).to(implementation);
+    return implementation;
   }
 
   //~--- get methods ----------------------------------------------------------
