@@ -35,7 +35,6 @@ package sonia.scm.repository;
 
 import sonia.scm.ManagerDecorator;
 import sonia.scm.Type;
-import sonia.scm.plugin.ExtensionPoint;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -51,7 +50,6 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  * @since 1.23
  */
-@ExtensionPoint
 public class RepositoryManagerDecorator
   extends ManagerDecorator<Repository, RepositoryException>
   implements RepositoryManager
