@@ -203,21 +203,21 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
     }
     return result;
   },
+  
+  getChangesetId: function(id, record){
+    return id;
+  },
+  
+  getParentIds: function(id, record){
+    return record.get('parents');
+  },
 
   renderIds: function(value, p, record){
-    var parent = null;
-    var parent2 = null;
-    var parents = record.get('parents');
-    if ( parents ){
-      parent = parents[0];
-      if ( parents.length >= 1 ){
-        parent2 = parents[1];
-      }
-    }
+    var parents = this.getParentIds(value, record);
     return this.idsTemplate.apply({
-      id: value,
-      parent: parent,
-      parent2: parent2
+      id: this.getChangesetId(value, record),
+      parent: parents[0],
+      parent2: parents[1]
     });
   },
 
