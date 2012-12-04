@@ -179,3 +179,17 @@ if (!Array.prototype.filter) {
   }
   
 }
+
+Sonia.util.getProperty = function(properties, key){
+  var value = null;
+  if ( properties != null ){
+    for (var i=0; i<properties.length; i++){
+      var property = properties[i];
+      if ( property.key == key ){
+        value = property.value;
+        break;
+      }
+    }
+  }
+  return value;
+}
