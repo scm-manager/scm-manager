@@ -214,10 +214,18 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
   renderIds: function(value, p, record){
     var parents = this.getParentIds(value, record);
+    var parent1 = null;
+    var parent2 = null;
+    if ( parents ){
+      parent1 = parents[0];
+      if (parents.length > 1){
+        parent2 = parents[1];
+      }
+    }
     return this.idsTemplate.apply({
       id: this.getChangesetId(value, record),
-      parent: parents[0],
-      parent2: parents[1]
+      parent: parent1,
+      parent2: parent2
     });
   },
 
