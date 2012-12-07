@@ -111,20 +111,17 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
 
     File file = getFile(id);
 
-    if (file.exists())
+    try
     {
-      try
-      {
-        Marshaller marshaller = context.createMarshaller();
+      Marshaller marshaller = context.createMarshaller();
 
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        marshaller.marshal(item, file);
-      }
-      catch (JAXBException ex)
-      {
-        throw new StoreException("could not write object with id ".concat(id),
-          ex);
-      }
+      marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+      marshaller.marshal(item, file);
+    }
+    catch (JAXBException ex)
+    {
+      throw new StoreException("could not write object with id ".concat(id),
+        ex);
     }
   }
 
