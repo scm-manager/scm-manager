@@ -256,7 +256,10 @@ Ext.override(Sonia.repository.ChangesetViewerGrid, {
   
   getChangesetId: function(id, record){
     if ( this.isMercurialRepository() ){
-      // TODO implement
+      var rev = Sonia.util.getProperty(record.get('properties'), 'hg.rev');
+      if ( rev ){
+        id = rev + ':' + id;
+      }
     }
     return id;
   },
@@ -264,7 +267,19 @@ Ext.override(Sonia.repository.ChangesetViewerGrid, {
   getParentIds: function(id, record){
     var parents = record.get('parents');
     if ( this.isMercurialRepository() ){
-      // TODO implement
+      if ( parents && parents.length > 0 ){
+        var properties = record.get('properties');
+        var rev = Sonia.util.getProperty(properties, 'hg.p1.rev');
+        if (rev){
+          parents[0] = rev + ':' + parents[0];
+        }
+        if ( parents.length > 1 ){
+          rev = Sonia.util.getProperty(properties, 'hg.p2.rev');          
+          if (rev){
+            parents[1] = rev + ':' + parents[1];
+          }
+        }
+      }
     }
     return parents;
   }
