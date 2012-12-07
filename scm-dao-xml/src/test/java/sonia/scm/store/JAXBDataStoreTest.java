@@ -33,23 +33,13 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.Test;
-
-import sonia.scm.AbstractTestBase;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import sonia.scm.security.UUIDKeyGenerator;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public abstract class StoreTestBase extends AbstractTestBase
+public class JAXBDataStoreTest extends DataStoreTestBase
 {
 
   /**
@@ -58,44 +48,9 @@ public abstract class StoreTestBase extends AbstractTestBase
    *
    * @return
    */
-  protected abstract StoreFactory createStoreFactory();
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testGet()
+  @Override
+  protected DataStoreFactory createDataStoreFactory()
   {
-    Store<StoreObject> store = createStoreFactory().getStore(StoreObject.class,
-                                 "test");
-
-    assertNotNull(store);
-
-    StoreObject object = store.get();
-
-    assertNull(object);
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testSet()
-  {
-    Store<StoreObject> store = createStoreFactory().getStore(StoreObject.class,
-                                 "test");
-
-    assertNotNull(store);
-
-    StoreObject obj = new StoreObject("asd");
-
-    store.set(obj);
-
-    StoreObject other = store.get();
-
-    assertNotNull(other);
-    assertEquals(obj, other);
+    return new JAXBDataStoreFactory(contextProvider, new UUIDKeyGenerator());
   }
 }

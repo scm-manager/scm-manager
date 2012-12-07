@@ -31,14 +31,6 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.junit.Test;
-
-import sonia.scm.AbstractTestBase;
-
-import static org.junit.Assert.*;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -49,8 +41,62 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Sebastian Sdorra
  */
-public abstract class StoreTestBase extends AbstractTestBase
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class StoreObject
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  public StoreObject() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param value
+   */
+  public StoreObject(String value)
+  {
+    this.value = value;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final StoreObject other = (StoreObject) obj;
+
+    if ((this.value == null)
+      ? (other.value != null)
+      : !this.value.equals(other.value))
+    {
+      return false;
+    }
+
+    return true;
+  }
 
   /**
    * Method description
@@ -58,44 +104,33 @@ public abstract class StoreTestBase extends AbstractTestBase
    *
    * @return
    */
-  protected abstract StoreFactory createStoreFactory();
+  @Override
+  public int hashCode()
+  {
+    int hash = 3;
+
+    hash = 23 * hash + ((this.value != null)
+      ? this.value.hashCode()
+      : 0);
+
+    return hash;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
-   */
-  @Test
-  public void testGet()
-  {
-    Store<StoreObject> store = createStoreFactory().getStore(StoreObject.class,
-                                 "test");
-
-    assertNotNull(store);
-
-    StoreObject object = store.get();
-
-    assertNull(object);
-  }
-
-  /**
-   * Method description
    *
+   * @return
    */
-  @Test
-  public void testSet()
+  public String getValue()
   {
-    Store<StoreObject> store = createStoreFactory().getStore(StoreObject.class,
-                                 "test");
-
-    assertNotNull(store);
-
-    StoreObject obj = new StoreObject("asd");
-
-    store.set(obj);
-
-    StoreObject other = store.get();
-
-    assertNotNull(other);
-    assertEquals(obj, other);
+    return value;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String value;
 }
