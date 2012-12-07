@@ -31,50 +31,34 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.SCMContextProvider;
-import sonia.scm.security.KeyGenerator;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class JAXBDataStoreFactory extends FileBasedStoreFactory
-  implements DataStoreFactory
+public class FileBlob implements Blob
 {
-
-  /** Field description */
-  private static final String DIRECTORY_NAME = "data";
-
-  /**
-   * the logger for JAXBDataStoreFactory
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(JAXBDataStoreFactory.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param context
-   * @param keyGenerator
+   * @param id
+   * @param file
    */
-  @Inject
-  public JAXBDataStoreFactory(SCMContextProvider context,
-    KeyGenerator keyGenerator)
+  public FileBlob(String id, File file)
   {
-    super(context, DIRECTORY_NAME);
-    this.keyGenerator = keyGenerator;
+    this.id = id;
+    this.file = file;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -83,22 +67,47 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
    * Method description
    *
    *
-   * @param type
-   * @param name
-   * @param <T>
-   *
    * @return
    */
   @Override
-  public <T> DataStore<T> getStore(Class<T> type, String name)
+  public String getId()
   {
-    logger.debug("create new store for type {} with name {}", type, name);
+    return id;
+  }
 
-    return new JAXBDataStore<T>(keyGenerator, type, getDirectory(name));
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws FileNotFoundException
+   */
+  @Override
+  public InputStream getInputStream() throws FileNotFoundException
+  {
+    return new FileInputStream(file);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  @Override
+  public OutputStream getOutputStream() throws IOException
+  {
+    return new FileOutputStream(file);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private KeyGenerator keyGenerator;
+  private File file;
+
+  /** Field description */
+  private String id;
 }

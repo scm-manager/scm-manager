@@ -33,23 +33,15 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.security.KeyGenerator;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-
-import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 /**
  *
@@ -57,17 +49,14 @@ import javax.xml.bind.Marshaller;
  *
  * @param <T>
  */
-public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
+public abstract class FileBasedStore<T> implements StoreBase<T>
 {
 
-  /** Field description */
-  private static final String SUFFIX = ".xml";
-
   /**
-   * the logger for JAXBDataStore
+   * the logger for FileBasedStore
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(JAXBDataStore.class);
+    LoggerFactory.getLogger(FileBasedStore.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -75,98 +64,13 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
    * Constructs ...
    *
    *
-   * @param type
-   * @param keyGenerator
    * @param directory
+   * @param suffix
    */
-  public JAXBDataStore(KeyGenerator keyGenerator, Class<T> type, File directory)
+  public FileBasedStore(File directory, String suffix)
   {
-    super(directory, SUFFIX);
-    this.keyGenerator = keyGenerator;
-
-    try
-    {
-      context = JAXBContext.newInstance(type);
-      this.directory = directory;
-    }
-    catch (JAXBException ex)
-    {
-      throw new StoreException(ex);
-    }
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   * @param item
-   */
-  @Override
-  public void put(String id, T item)
-  {
-    logger.info("put item {} to store", id);
-
-    File file = getFile(id);
-
-    if (file.exists())
-    {
-      try
-      {
-        Marshaller marshaller = context.createMarshaller();
-
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        marshaller.marshal(item, file);
-      }
-      catch (JAXBException ex)
-      {
-        throw new StoreException("could not write object with id ".concat(id),
-          ex);
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param item
-   *
-   * @return
-   */
-  @Override
-  public String put(T item)
-  {
-    String key = keyGenerator.createKey();
-
-    put(key, item);
-
-    return key;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Map<String, T> getAll()
-  {
-    logger.trace("get all items from data store");
-
-    Builder<String, T> builder = ImmutableMap.builder();
-
-    for (File file : directory.listFiles())
-    {
-      builder.put(getId(file), read(file));
-    }
-
-    return builder.build();
+    this.directory = directory;
+    this.suffix = suffix;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -179,34 +83,114 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
    *
    * @return
    */
+  protected abstract T read(File file);
+
+  /**
+   * Method description
+   *
+   */
   @Override
-  protected T read(File file)
+  public void clear()
   {
-    T item = null;
+    logger.debug("clear store");
 
-    if (file.exists())
+    for (File file : directory.listFiles())
     {
-      logger.trace("try to read {}", file);
-
-      try
-      {
-        item = (T) context.createUnmarshaller().unmarshal(file);
-      }
-      catch (JAXBException ex)
-      {
-        throw new StoreException(
-          "could not read object ".concat(file.getPath()), ex);
-      }
+      remove(file);
     }
+  }
 
-    return item;
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   */
+  @Override
+  public void remove(String id)
+  {
+    File file = getFile(id);
+
+    remove(file);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   *
+   * @return
+   */
+  @Override
+  public T get(String id)
+  {
+    logger.trace("try to retrieve item with id {}", id);
+
+    File file = getFile(id);
+
+    return read(file);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param file
+   */
+  protected void remove(File file)
+  {
+    if (file.exists() &&!file.delete())
+    {
+      logger.debug("delete store entry {}", file);
+
+      throw new StoreException(
+        "could not delete store entry ".concat(file.getPath()));
+    }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   *
+   * @return
+   */
+  protected File getFile(String id)
+  {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(id),
+      "id argument is required");
+
+    return new File(directory, id.concat(suffix));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param file
+   *
+   * @return
+   */
+  protected String getId(File file)
+  {
+    String name = file.getName();
+
+    return name.substring(0, name.length() - suffix.length());
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private JAXBContext context;
+  protected File directory;
 
   /** Field description */
-  private KeyGenerator keyGenerator;
+  private String suffix;
 }

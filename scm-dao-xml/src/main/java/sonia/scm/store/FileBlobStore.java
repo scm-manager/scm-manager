@@ -33,8 +33,8 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,29 +45,23 @@ import sonia.scm.security.KeyGenerator;
 
 import java.io.File;
 
-import java.util.Map;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
- *
- * @param <T>
  */
-public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
+public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore
 {
 
   /** Field description */
-  private static final String SUFFIX = ".xml";
+  private static final String SUFFIX = ".blob";
 
   /**
-   * the logger for JAXBDataStore
+   * the logger for FileBlobStore
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(JAXBDataStore.class);
+    LoggerFactory.getLogger(FileBlobStore.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -75,24 +69,12 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
    * Constructs ...
    *
    *
-   * @param type
    * @param keyGenerator
    * @param directory
    */
-  public JAXBDataStore(KeyGenerator keyGenerator, Class<T> type, File directory)
+  public FileBlobStore(KeyGenerator keyGenerator, File directory)
   {
     super(directory, SUFFIX);
-    this.keyGenerator = keyGenerator;
-
-    try
-    {
-      context = JAXBContext.newInstance(type);
-      this.directory = directory;
-    }
-    catch (JAXBException ex)
-    {
-      throw new StoreException(ex);
-    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -101,49 +83,38 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
    * Method description
    *
    *
-   * @param id
-   * @param item
+   * @return
    */
   @Override
-  public void put(String id, T item)
+  public Blob create()
   {
-    logger.info("put item {} to store", id);
-
-    File file = getFile(id);
-
-    if (file.exists())
-    {
-      try
-      {
-        Marshaller marshaller = context.createMarshaller();
-
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        marshaller.marshal(item, file);
-      }
-      catch (JAXBException ex)
-      {
-        throw new StoreException("could not write object with id ".concat(id),
-          ex);
-      }
-    }
+    return create(keyGenerator.createKey());
   }
 
   /**
    * Method description
    *
    *
-   * @param item
+   * @param id
    *
    * @return
    */
   @Override
-  public String put(T item)
+  public Blob create(String id)
   {
-    String key = keyGenerator.createKey();
+    return new FileBlob(id, getFile(id));
+  }
 
-    put(key, item);
-
-    return key;
+  /**
+   * Method description
+   *
+   *
+   * @param blob
+   */
+  @Override
+  public void remove(Blob blob)
+  {
+    remove(blob.getId());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -155,15 +126,15 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
    * @return
    */
   @Override
-  public Map<String, T> getAll()
+  public List<Blob> getAll()
   {
     logger.trace("get all items from data store");
 
-    Builder<String, T> builder = ImmutableMap.builder();
+    Builder<Blob> builder = ImmutableList.builder();
 
     for (File file : directory.listFiles())
     {
-      builder.put(getId(file), read(file));
+      builder.add(read(file));
     }
 
     return builder.build();
@@ -180,32 +151,14 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
    * @return
    */
   @Override
-  protected T read(File file)
+  protected FileBlob read(File file)
   {
-    T item = null;
+    String id = getId(file);
 
-    if (file.exists())
-    {
-      logger.trace("try to read {}", file);
-
-      try
-      {
-        item = (T) context.createUnmarshaller().unmarshal(file);
-      }
-      catch (JAXBException ex)
-      {
-        throw new StoreException(
-          "could not read object ".concat(file.getPath()), ex);
-      }
-    }
-
-    return item;
+    return new FileBlob(id, file);
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private JAXBContext context;
 
   /** Field description */
   private KeyGenerator keyGenerator;

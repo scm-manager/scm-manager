@@ -33,32 +33,31 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
-import sonia.scm.security.KeyGenerator;
+import sonia.scm.util.IOUtil;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class JAXBDataStoreFactory extends FileBasedStoreFactory
-  implements DataStoreFactory
+public class FileBasedStoreFactory
 {
 
   /** Field description */
-  private static final String DIRECTORY_NAME = "data";
+  private static final String BASE_DIRECTORY = "var";
 
   /**
-   * the logger for JAXBDataStoreFactory
+   * the logger for FileBasedStoreFactory
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(JAXBDataStoreFactory.class);
+    LoggerFactory.getLogger(FileBasedStoreFactory.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -67,14 +66,13 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
    *
    *
    * @param context
-   * @param keyGenerator
+   * @param dataDirectoryName
    */
-  @Inject
-  public JAXBDataStoreFactory(SCMContextProvider context,
-    KeyGenerator keyGenerator)
+  public FileBasedStoreFactory(SCMContextProvider context,
+    String dataDirectoryName)
   {
-    super(context, DIRECTORY_NAME);
-    this.keyGenerator = keyGenerator;
+    this.context = context;
+    this.dataDirectoryName = dataDirectoryName;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -83,22 +81,34 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
    * Method description
    *
    *
-   * @param type
    * @param name
-   * @param <T>
    *
    * @return
    */
-  @Override
-  public <T> DataStore<T> getStore(Class<T> type, String name)
+  protected File getDirectory(String name)
   {
-    logger.debug("create new store for type {} with name {}", type, name);
+    if (dataDirectory == null)
+    {
+      dataDirectory = new File(context.getBaseDirectory(),
+        BASE_DIRECTORY.concat(File.separator).concat(dataDirectoryName));
+      logger.debug("create data directory {}", dataDirectory);
+    }
 
-    return new JAXBDataStore<T>(keyGenerator, type, getDirectory(name));
+    File storeDirectory = new File(dataDirectory, name);
+
+    IOUtil.mkdirs(storeDirectory);
+
+    return storeDirectory;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private KeyGenerator keyGenerator;
+  private SCMContextProvider context;
+
+  /** Field description */
+  private File dataDirectory;
+
+  /** Field description */
+  private String dataDirectoryName;
 }

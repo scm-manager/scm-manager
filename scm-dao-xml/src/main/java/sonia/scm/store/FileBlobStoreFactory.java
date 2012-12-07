@@ -47,18 +47,18 @@ import sonia.scm.security.KeyGenerator;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class JAXBDataStoreFactory extends FileBasedStoreFactory
-  implements DataStoreFactory
+public class FileBlobStoreFactory extends FileBasedStoreFactory
+  implements BlobStoreFactory
 {
 
   /** Field description */
-  private static final String DIRECTORY_NAME = "data";
+  private static final String DIRECTORY_NAME = "blob";
 
   /**
-   * the logger for JAXBDataStoreFactory
+   * the logger for FileBlobStoreFactory
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(JAXBDataStoreFactory.class);
+    LoggerFactory.getLogger(FileBlobStoreFactory.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -70,7 +70,7 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
    * @param keyGenerator
    */
   @Inject
-  public JAXBDataStoreFactory(SCMContextProvider context,
+  public FileBlobStoreFactory(SCMContextProvider context,
     KeyGenerator keyGenerator)
   {
     super(context, DIRECTORY_NAME);
@@ -83,18 +83,16 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
    * Method description
    *
    *
-   * @param type
    * @param name
-   * @param <T>
    *
    * @return
    */
   @Override
-  public <T> DataStore<T> getStore(Class<T> type, String name)
+  public BlobStore getBlobStore(String name)
   {
-    logger.debug("create new store for type {} with name {}", type, name);
+    logger.debug("create new blob with name {}", name);
 
-    return new JAXBDataStore<T>(keyGenerator, type, getDirectory(name));
+    return new FileBlobStore(keyGenerator, getDirectory(name));
   }
 
   //~--- fields ---------------------------------------------------------------
