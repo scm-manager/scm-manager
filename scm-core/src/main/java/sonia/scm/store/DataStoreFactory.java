@@ -37,7 +37,9 @@ package sonia.scm.store;
  *
  * @author Sebastian Sdorra
  * @since 1.23
+ * 
  * @apiviz.landmark
+ * @apiviz.uses sonia.scm.store.DataStore
  */
 public interface DataStoreFactory
 {

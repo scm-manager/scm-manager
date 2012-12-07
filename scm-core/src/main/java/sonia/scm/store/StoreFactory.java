@@ -46,7 +46,9 @@ import java.io.Closeable;
  * {@link Store}s.
  *
  * @author Sebastian Sdorra
+ * 
  * @apiviz.landmark
+ * @apiviz.uses sonia.scm.store.Store
  */
 public interface StoreFactory extends Initable, Closeable
 {

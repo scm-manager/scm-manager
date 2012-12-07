@@ -38,7 +38,9 @@ package sonia.scm.store;
  * 
  * @author Sebastian Sdorra
  * @since 1.16
+ * 
  * @apiviz.landmark
+ * @apiviz.uses sonia.scm.store.ListenableStore
  */
 public interface ListenableStoreFactory extends StoreFactory
 {

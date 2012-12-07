@@ -40,6 +40,8 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  * @since 1.23
+ * 
+ * @apiviz.uses sonia.scm.store.Blob
  */
 public interface BlobStore extends StoreBase<Blob>
 {
