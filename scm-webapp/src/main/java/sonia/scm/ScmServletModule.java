@@ -35,6 +35,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Provider;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
@@ -49,6 +50,7 @@ import sonia.scm.api.rest.UriExtensionsConfig;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.EhCacheManager;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.filter.AdminSecurityFilter;
 import sonia.scm.filter.BaseUrlFilter;
 import sonia.scm.filter.GZipFilter;
@@ -247,6 +249,10 @@ public class ScmServletModule extends ServletModule
     ThrowingProviderBinder.create(binder()).bind(
       RepositoryProvider.class, Repository.class).to(
       DefaultRepositoryProvider.class).in(RequestScoped.class);
+
+    // bind event api
+    bind(ScmEventBus.class).toInstance(ScmEventBus.getInstance());
+    bind(EventBus.class).toInstance(ScmEventBus.getInstance());
 
     // bind core
     bind(StoreFactory.class, JAXBStoreFactory.class);
