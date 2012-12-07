@@ -245,3 +245,43 @@ registerConfigPanel({
 // register type icon
 
 Sonia.repository.typeIcons['hg'] = 'resources/images/icons/16x16/mercurial.png';
+
+// override ChangesetViewerGrid to render changeset id's with revisions
+
+Ext.override(Sonia.repository.ChangesetViewerGrid, {
+  
+  isMercurialRepository: function(){
+    return this.repository.type == 'hg';
+  },
+  
+  getChangesetId: function(id, record){
+    if ( this.isMercurialRepository() ){
+      var rev = Sonia.util.getProperty(record.get('properties'), 'hg.rev');
+      if ( rev ){
+        id = rev + ':' + id;
+      }
+    }
+    return id;
+  },
+  
+  getParentIds: function(id, record){
+    var parents = record.get('parents');
+    if ( this.isMercurialRepository() ){
+      if ( parents && parents.length > 0 ){
+        var properties = record.get('properties');
+        var rev = Sonia.util.getProperty(properties, 'hg.p1.rev');
+        if (rev){
+          parents[0] = rev + ':' + parents[0];
+        }
+        if ( parents.length > 1 ){
+          rev = Sonia.util.getProperty(properties, 'hg.p2.rev');          
+          if (rev){
+            parents[1] = rev + ':' + parents[1];
+          }
+        }
+      }
+    }
+    return parents;
+  }
+  
+});

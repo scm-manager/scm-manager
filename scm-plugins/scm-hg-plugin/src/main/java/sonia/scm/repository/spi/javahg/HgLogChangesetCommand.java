@@ -88,6 +88,15 @@ public class HgLogChangesetCommand extends AbstractCommand
   private static final String NULL_ID =
     "0000000000000000000000000000000000000000";
 
+  /** changeset property for parent1 revision */
+  private static final String PROPERTY_PARENT1_REVISION = "hg.p1.rev";
+
+  /** changeset property for parent2 revision */
+  private static final String PROPERTY_PARENT2_REVISION = "hg.p2.rev";
+
+  /** changeset property for node revision */
+  private static final String PROPERTY_REVISION = "hg.rev";
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -262,7 +271,7 @@ public class HgLogChangesetCommand extends AbstractCommand
   {
     Changeset changeset = new Changeset();
 
-    changeset.setId(readId(in));
+    changeset.setId(readId(in, changeset, PROPERTY_REVISION));
 
     String user = in.textUpTo('\n');
 
@@ -279,14 +288,16 @@ public class HgLogChangesetCommand extends AbstractCommand
       changeset.getBranches().add(branch);
     }
 
-    String p1 = readId(in);
+    String p1 = readId(in, changeset, PROPERTY_PARENT1_REVISION);
 
     if (!isNullId(p1))
     {
       changeset.getParents().add(p1);
     }
+    
+    in.mustMatch(' ');
 
-    String p2 = readId(in);
+    String p2 = readId(in, changeset, PROPERTY_PARENT2_REVISION);
 
     if (!isNullId(p2))
     {
@@ -367,38 +378,30 @@ public class HgLogChangesetCommand extends AbstractCommand
    *
    *
    * @param in
+   * @param changeset
+   * @param propertyKey
    *
    * @return
    *
    * @throws IOException
    */
-  private String readId(HgInputStream in) throws IOException
+  private String readId(HgInputStream in, Changeset changeset,
+    String propertyKey)
+    throws IOException
   {
-    String nodeString = null;
-
     if (config.isShowRevisionInId())
     {
       Integer rev = in.readDecimal();
 
-      if (rev != null)
+      if (rev != null && rev >= 0)
       {
-        nodeString = String.valueOf(rev);
+        changeset.setProperty(propertyKey, String.valueOf(rev));
       }
-      else
-      {
-        nodeString = "-1";
-      }
-
-      in.upTo(':');
-      nodeString = nodeString.concat(":").concat(in.nextAsText(40));
-    }
-    else
-    {
-      in.upTo(':');
-      nodeString = in.nextAsText(40);
     }
 
-    return nodeString;
+    in.upTo(':');
+
+    return in.nextAsText(40);
   }
 
   /**

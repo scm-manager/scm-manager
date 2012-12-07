@@ -39,6 +39,8 @@ import sonia.scm.xml.XmlMapStringAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,8 +54,13 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * @author Sebastian Sdorra
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-public class BasicPropertiesAware implements PropertiesAware
+public class BasicPropertiesAware implements PropertiesAware, Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -536608122577385802L;
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * {@inheritDoc}
