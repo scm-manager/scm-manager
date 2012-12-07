@@ -89,13 +89,13 @@ public class HgLogChangesetCommand extends AbstractCommand
     "0000000000000000000000000000000000000000";
 
   /** changeset property for parent1 revision */
-  private static final String PROPERTY_PARENT1_REVISION = "hg.parent1.revision";
+  private static final String PROPERTY_PARENT1_REVISION = "hg.p1.rev";
 
   /** changeset property for parent2 revision */
-  private static final String PROPERTY_PARENT2_REVISION = "hg.parent2.revision";
+  private static final String PROPERTY_PARENT2_REVISION = "hg.p2.rev";
 
   /** changeset property for node revision */
-  private static final String PROPERTY_REVISION = "hg.revision";
+  private static final String PROPERTY_REVISION = "hg.rev";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -294,6 +294,8 @@ public class HgLogChangesetCommand extends AbstractCommand
     {
       changeset.getParents().add(p1);
     }
+    
+    in.mustMatch(' ');
 
     String p2 = readId(in, changeset, PROPERTY_PARENT2_REVISION);
 
@@ -391,7 +393,7 @@ public class HgLogChangesetCommand extends AbstractCommand
     {
       Integer rev = in.readDecimal();
 
-      if (rev != null)
+      if (rev != null && rev >= 0)
       {
         changeset.setProperty(propertyKey, String.valueOf(rev));
       }
