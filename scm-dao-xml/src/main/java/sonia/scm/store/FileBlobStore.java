@@ -114,7 +114,11 @@ public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore
 
     try
     {
-      if (!file.exists() &&!file.createNewFile())
+      if (file.exists())
+      {
+        throw new StoreException("blob allready exists");
+      } 
+      else if ( !file.createNewFile() )
       {
         throw new StoreException("could not create blob for id ".concat(id));
       }
