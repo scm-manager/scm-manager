@@ -61,6 +61,21 @@ public class FileBlob implements Blob
     this.file = file;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Override
+  public void commit() throws IOException
+  {
+
+    // nothing todo
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**

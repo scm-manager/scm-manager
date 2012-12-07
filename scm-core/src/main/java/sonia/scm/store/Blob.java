@@ -49,6 +49,16 @@ public interface Blob
    * Method description
    *
    *
+   * @throws IOException
+   */
+  public void commit() throws IOException;
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   public String getId();
