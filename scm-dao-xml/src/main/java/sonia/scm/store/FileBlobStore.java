@@ -44,6 +44,7 @@ import sonia.scm.security.KeyGenerator;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.IOException;
 
 import java.util.List;
 
@@ -75,6 +76,7 @@ public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore
   public FileBlobStore(KeyGenerator keyGenerator, File directory)
   {
     super(directory, SUFFIX);
+    this.keyGenerator = keyGenerator;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -102,7 +104,21 @@ public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore
   @Override
   public Blob create(String id)
   {
-    return new FileBlob(id, getFile(id));
+    File file = getFile(id);
+
+    try
+    {
+      if (!file.exists() &&!file.createNewFile())
+      {
+        throw new StoreException("could not create blob for id ".concat(id));
+      }
+    }
+    catch (IOException ex)
+    {
+      throw new StoreException("could not create blob for id ".concat(id), ex);
+    }
+
+    return new FileBlob(id, file);
   }
 
   /**
@@ -153,9 +169,16 @@ public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore
   @Override
   protected FileBlob read(File file)
   {
-    String id = getId(file);
+    FileBlob blob = null;
 
-    return new FileBlob(id, file);
+    if (file.exists())
+    {
+      String id = getId(file);
+
+      blob = new FileBlob(id, file);
+    }
+
+    return blob;
   }
 
   //~--- fields ---------------------------------------------------------------
