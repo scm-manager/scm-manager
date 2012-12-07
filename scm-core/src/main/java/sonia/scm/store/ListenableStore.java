@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -38,11 +39,12 @@ import sonia.scm.ConfigChangedListener;
 import sonia.scm.ListenerSupport;
 
 /**
+ * Store for configuration objects with listener support.
  *
  * @author Sebastian Sdorra
  * @since 1.16
  *
- * @param <T>
+ * @param <T> type of store objects
  */
 public interface ListenableStore<T>
-        extends Store<T>, ListenerSupport<ConfigChangedListener<T>> {}
+  extends Store<T>, ListenerSupport<ConfigChangedListener<T>> {}

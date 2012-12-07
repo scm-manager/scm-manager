@@ -42,6 +42,8 @@ import sonia.scm.Initable;
 import java.io.Closeable;
 
 /**
+ * The StoreFactory can be used to create new or get existing
+ * {@link Store}s.
  *
  * @author Sebastian Sdorra
  */
@@ -49,14 +51,14 @@ public interface StoreFactory extends Initable, Closeable
 {
 
   /**
-   * Method description
+   * Get an existing {@link Store} or create a new one.
    *
    *
-   * @param type
-   * @param name
-   * @param <T>
+   * @param type type of the store objects
+   * @param name name of the store
+   * @param <T> type of the store objects
    *
-   * @return
+   * @return {@link Store} of the given type and name
    */
   public <T> Store<T> getStore(Class<T> type, String name);
 }
