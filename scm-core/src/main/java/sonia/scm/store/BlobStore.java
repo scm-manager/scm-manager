@@ -31,53 +31,51 @@
 
 package sonia.scm.store;
 
-//~--- non-JDK imports --------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
 
-import sonia.scm.security.KeyGenerator;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.23
- *
- * @param <T>
  */
-public abstract class AbstractDataStore<T> implements DataStore<T>
+public interface BlobStore extends StoreBase<Blob>
 {
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param keyGenerator
-   */
-  public AbstractDataStore(KeyGenerator keyGenerator)
-  {
-    this.keyGenerator = keyGenerator;
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @param item
+   * @return
+   */
+  public Blob create();
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
    *
    * @return
    */
-  @Override
-  public String put(T item)
-  {
-    String id = keyGenerator.createKey();
+  public Blob create(String id);
 
-    put(id, item);
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   */
+  public void remove(Blob id);
 
-    return id;
-  }
+  //~--- get methods ----------------------------------------------------------
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private KeyGenerator keyGenerator;
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<Blob> getAll();
 }

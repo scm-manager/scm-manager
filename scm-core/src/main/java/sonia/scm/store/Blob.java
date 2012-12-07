@@ -33,44 +33,45 @@ package sonia.scm.store;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Map;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.23
- *
- * @param <T>
  */
-public interface DataStore<T> extends StoreBase<T>
+public interface Blob
 {
 
   /**
    * Method description
    *
    *
-   * @param item
-   *
    * @return
    */
-  public String put(T item);
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   * @param item
-   */
-  public void put(String id, T item);
-
-  //~--- get methods ----------------------------------------------------------
+  public String getId();
 
   /**
    * Method description
    *
    *
    * @return
+   *
+   * @throws IOException
    */
-  public Map<String, T> getAll();
+  public InputStream getInputStream() throws IOException;
+
+  /**
+   * Method description
+   *
+   *
+   * @param content
+   *
+   *
+   * @return
+   * @throws IOException
+   */
+  public OutputStream getOutputStream() throws IOException;
 }

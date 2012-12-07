@@ -31,10 +31,6 @@
 
 package sonia.scm.store;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Map;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -42,27 +38,22 @@ import java.util.Map;
  *
  * @param <T>
  */
-public interface DataStore<T> extends StoreBase<T>
+public interface StoreBase<T>
 {
 
   /**
    * Method description
    *
-   *
-   * @param item
-   *
-   * @return
    */
-  public String put(T item);
+  public void clear();
 
   /**
    * Method description
    *
    *
    * @param id
-   * @param item
    */
-  public void put(String id, T item);
+  public void remove(String id);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -70,7 +61,9 @@ public interface DataStore<T> extends StoreBase<T>
    * Method description
    *
    *
+   * @param id
+   *
    * @return
    */
-  public Map<String, T> getAll();
+  public T get(String id);
 }

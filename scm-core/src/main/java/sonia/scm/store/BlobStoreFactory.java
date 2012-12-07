@@ -31,46 +31,21 @@
 
 package sonia.scm.store;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Map;
-
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.23
- *
- * @param <T>
  */
-public interface DataStore<T> extends StoreBase<T>
+public interface BlobStoreFactory
 {
 
   /**
    * Method description
    *
    *
-   * @param item
+   * @param name
    *
    * @return
    */
-  public String put(T item);
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   * @param item
-   */
-  public void put(String id, T item);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Map<String, T> getAll();
+  public BlobStore getBlobStore(String name);
 }
