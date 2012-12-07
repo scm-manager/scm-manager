@@ -39,6 +39,9 @@ import com.google.common.eventbus.ThrowingEventBus;
 
 import org.apache.shiro.concurrent.SubjectAwareExecutorService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.concurrent.Executors;
@@ -50,6 +53,12 @@ import java.util.concurrent.Executors;
  */
 public class ScmEventBus extends EventBus
 {
+
+  /**
+   * the logger for ScmEventBus
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ScmEventBus.class);
 
   /** Field description */
   private static ScmEventBus instance = new ScmEventBus();
@@ -91,6 +100,7 @@ public class ScmEventBus extends EventBus
   @Override
   public void post(Object event)
   {
+    logger.trace("post {} to event bus", event);
     asyncEventBus.post(event);
     eventBus.post(event);
   }
@@ -116,6 +126,8 @@ public class ScmEventBus extends EventBus
    */
   public void register(Object object, boolean async)
   {
+    logger.debug("register {} to event bus, async = {}", object, async);
+
     if (async)
     {
       asyncEventBus.register(object);
@@ -135,8 +147,28 @@ public class ScmEventBus extends EventBus
   @Override
   public void unregister(Object object)
   {
-    asyncEventBus.unregister(object);
-    eventBus.unregister(object);
+    logger.debug("unregister {} from event bus", object);
+    unregister(asyncEventBus, object);
+    unregister(eventBus, object);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param bus
+   * @param object
+   */
+  private void unregister(EventBus bus, Object object)
+  {
+    try
+    {
+      bus.unregister(object);
+    }
+    catch (IllegalArgumentException ex)
+    {
+      logger.debug("object {} was not registered at {}", object, bus);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
