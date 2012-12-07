@@ -32,6 +32,8 @@
 package sonia.scm.store;
 
 /**
+ * The DataStoreFactory can be used to create new or get existing
+ * {@link DataStore}s.
  *
  * @author Sebastian Sdorra
  * @since 1.23
@@ -40,14 +42,14 @@ public interface DataStoreFactory
 {
 
   /**
-   * Method description
+   * Get an existing {@link DataStore} or create a new one.
    *
    *
-   * @param type
-   * @param name
-   * @param <T>
+   * @param type type of the store objects
+   * @param name name of the store
+   * @param <T> type of the store objects
    *
-   * @return
+   * @return {@link DataStore} with given name and type
    */
   public <T> DataStore<T> getStore(Class<T> type, String name);
 }
