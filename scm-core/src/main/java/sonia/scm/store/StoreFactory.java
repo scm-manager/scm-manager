@@ -46,6 +46,7 @@ import java.io.Closeable;
  * {@link Store}s.
  *
  * @author Sebastian Sdorra
+ * @apiviz.landmark
  */
 public interface StoreFactory extends Initable, Closeable
 {

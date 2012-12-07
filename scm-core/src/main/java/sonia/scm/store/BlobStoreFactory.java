@@ -37,6 +37,7 @@ package sonia.scm.store;
  *
  * @author Sebastian Sdorra
  * @since 1.23
+ * @apiviz.landmark
  */
 public interface BlobStoreFactory
 {
