@@ -32,38 +32,39 @@
 package sonia.scm.store;
 
 /**
+ * Base class for {@link BlobStore} and {@link DataStore}.
  *
  * @author Sebastian Sdorra
  * @since 1.23
  *
- * @param <T>
+ * @param <T> Type of the stored objects
  */
 public interface StoreBase<T>
 {
 
   /**
-   * Method description
+   * Remove all items from the store.
    *
    */
   public void clear();
 
   /**
-   * Method description
+   * Remove the item with the given id.
    *
    *
-   * @param id
+   * @param id id of the item to remove
    */
   public void remove(String id);
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the item with the given id from the store.
    *
    *
-   * @param id
+   * @param id id of the item to return
    *
-   * @return
+   * @return item with the given id
    */
   public T get(String id);
 }

@@ -32,6 +32,8 @@
 package sonia.scm.store;
 
 /**
+ * The BlobStoreFactory can be used to create new or get existing
+ * {@link BlobStore}s.
  *
  * @author Sebastian Sdorra
  * @since 1.23
@@ -40,12 +42,13 @@ public interface BlobStoreFactory
 {
 
   /**
-   * Method description
+   * Returns a {@link BlobStore} with the given name, if the {@link BlobStore}
+   * with the given name does not exists the factory will create a new one.
    *
    *
-   * @param name
+   * @param name name of the {@link BlobStore}
    *
-   * @return
+   * @return {@link BlobStore} with the given name
    */
   public BlobStore getBlobStore(String name);
 }

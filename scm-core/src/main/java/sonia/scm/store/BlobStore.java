@@ -36,6 +36,7 @@ package sonia.scm.store;
 import java.util.List;
 
 /**
+ * The blob store can be used store unstructured data in form of a {@link Blob}.
  *
  * @author Sebastian Sdorra
  * @since 1.23
@@ -44,38 +45,38 @@ public interface BlobStore extends StoreBase<Blob>
 {
 
   /**
-   * Method description
+   * Create a new blob object with automatically generated id.
    *
    *
-   * @return
+   * @return new blob
    */
   public Blob create();
 
   /**
-   * Method description
+   * Create a new blob object with the given id.
    *
    *
-   * @param id
+   * @param id id of the new blob
    *
-   * @return
+   * @return new blob
    */
   public Blob create(String id);
 
   /**
-   * Method description
+   * Remove the given blob object-
    *
    *
-   * @param id
+   * @param blob blob object to remove
    */
-  public void remove(Blob id);
+  public void remove(Blob blob);
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Return all blob object which are stored in this BlobStore.
    *
    *
-   * @return
+   * @return a list of all blob object
    */
   public List<Blob> getAll();
 }

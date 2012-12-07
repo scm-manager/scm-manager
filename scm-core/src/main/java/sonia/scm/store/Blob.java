@@ -38,6 +38,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
+ * A blob is binary object. A blob can be used to store unstructured any data.
  *
  * @author Sebastian Sdorra
  * @since 1.23
@@ -46,7 +47,8 @@ public interface Blob
 {
 
   /**
-   * Method description
+   * This method should be called after all data is written to the
+   * {@link OutputStream} from the {@link #getOutputStream()} method.
    *
    *
    * @throws IOException
@@ -56,31 +58,29 @@ public interface Blob
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the id of blob object.
    *
    *
-   * @return
+   * @return id of the blob
    */
   public String getId();
 
   /**
-   * Method description
+   * Returns the content of the blob as {@link InputStream}.
    *
    *
-   * @return
+   * @return content of the blob
    *
    * @throws IOException
    */
   public InputStream getInputStream() throws IOException;
 
   /**
-   * Method description
+   * Returns a {@link OutputStream} to write content to the blob object.
+   * <strong>Note:</strong> after all data is written to the
+   * {@link OutputStream} the {@link #commit()} method have to be called.
    *
-   *
-   * @param content
-   *
-   *
-   * @return
+   * @return outputstream for blob write operations
    * @throws IOException
    */
   public OutputStream getOutputStream() throws IOException;
