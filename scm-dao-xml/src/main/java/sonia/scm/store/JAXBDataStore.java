@@ -107,7 +107,7 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
   @Override
   public void put(String id, T item)
   {
-    logger.info("put item {} to store", id);
+    logger.debug("put item {} to store", id);
 
     File file = getFile(id);
 

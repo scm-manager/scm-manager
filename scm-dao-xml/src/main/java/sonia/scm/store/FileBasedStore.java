@@ -109,6 +109,10 @@ public abstract class FileBasedStore<T> implements StoreBase<T>
   @Override
   public void remove(String id)
   {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(id),
+      "id argument is required");
+    logger.debug("try to delete store entry with id {}", id);
+
     File file = getFile(id);
 
     remove(file);
@@ -127,6 +131,8 @@ public abstract class FileBasedStore<T> implements StoreBase<T>
   @Override
   public T get(String id)
   {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(id),
+      "id argument is required");
     logger.trace("try to retrieve item with id {}", id);
 
     File file = getFile(id);
@@ -144,10 +150,10 @@ public abstract class FileBasedStore<T> implements StoreBase<T>
    */
   protected void remove(File file)
   {
+    logger.trace("delete store entry {}", file);
+
     if (file.exists() &&!file.delete())
     {
-      logger.debug("delete store entry {}", file);
-
       throw new StoreException(
         "could not delete store entry ".concat(file.getPath()));
     }

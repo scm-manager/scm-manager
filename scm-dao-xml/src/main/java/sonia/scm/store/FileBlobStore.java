@@ -33,6 +33,8 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
@@ -104,6 +106,10 @@ public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore
   @Override
   public Blob create(String id)
   {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(id),
+      "id argument is required");
+    logger.debug("create new blob with id {}", id);
+
     File file = getFile(id);
 
     try
@@ -130,6 +136,7 @@ public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore
   @Override
   public void remove(Blob blob)
   {
+    Preconditions.checkNotNull("blob argument is required");
     remove(blob.getId());
   }
 
