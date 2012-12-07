@@ -35,6 +35,8 @@ package sonia.scm;
 
 /**
  * Handler event type.
+ * 
+ * TODO for 2.0 rename to HandlerEventType
  *
  * @author Sebastian Sdorra
  */
