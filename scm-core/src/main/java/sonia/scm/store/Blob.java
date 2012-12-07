@@ -38,7 +38,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * A blob is binary object. A blob can be used to store unstructured any data.
+ * A blob is binary object. A blob can be used to store any unstructured data.
  *
  * @author Sebastian Sdorra
  * @since 1.23
