@@ -126,6 +126,17 @@ public abstract class BlobStoreTestBase extends AbstractTestBase
    * Method description
    *
    */
+  @Test(expected = EntryAlreadyExistsStoreException.class)
+  public void testCreateAlreadyExistingEntry()
+  {
+    assertNotNull(store.create("1"));
+    store.create("1");
+  }
+
+  /**
+   * Method description
+   *
+   */
   @Test
   public void testCreateWithId()
   {

@@ -31,57 +31,29 @@
 
 package sonia.scm.store;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
-
 /**
- * The blob store can be used store unstructured data in form of a {@link Blob}.
+ * This exception is thrown on a create method if an entry with the given id
+ * already exists.
  *
  * @author Sebastian Sdorra
  * @since 1.23
- *
- * @apiviz.uses sonia.scm.store.Blob
  */
-public interface BlobStore extends StoreBase<Blob>
+public class EntryAlreadyExistsStoreException extends StoreException
 {
 
-  /**
-   * Create a new blob object with automatically generated id.
-   *
-   *
-   * @return new blob
-   */
-  public Blob create();
+  /** Field description */
+  private static final long serialVersionUID = 7016781091599951287L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
-   * Create a new blob object with the given id.
+   * Constructs new EntryAllreadyExistsStoreException.
    *
    *
-   * @param id id of the new blob
-   *
-   * @return new blob
-   *
-   * @throws EntryAllreadyExistsStoreException if a blob with given id already
-   *   exists
+   * @param message message for the exception
    */
-  public Blob create(String id);
-
-  /**
-   * Remove the given blob object-
-   *
-   *
-   * @param blob blob object to remove
-   */
-  public void remove(Blob blob);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Return all blob object which are stored in this BlobStore.
-   *
-   *
-   * @return a list of all blob object
-   */
-  public List<Blob> getAll();
+  public EntryAlreadyExistsStoreException(String message)
+  {
+    super(message);
+  }
 }
