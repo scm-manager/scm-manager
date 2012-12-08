@@ -161,11 +161,13 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Method description
+   * Sends a {@link RepositoryHookEvent} to each registered
+   * {@link RepositoryHook} and sends the {@link RepositoryHookEvent} to
+   * the {@link ScmEventBus}.
    *
    *
-   * @param repository
-   * @param event
+   * @param repository changed repository
+   * @param event event to be fired
    */
   @Override
   public void fireHookEvent(Repository repository, RepositoryHookEvent event)
@@ -174,6 +176,9 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
     AssertUtil.assertIsNotNull(event);
     AssertUtil.assertIsNotNull(event.getType());
     event.setRepository(repository);
+
+    // post to event system
+    ScmEventBus.getInstance().post(event);
 
     List<RepositoryHook> hooks = hookMap.get(event.getType());
 
