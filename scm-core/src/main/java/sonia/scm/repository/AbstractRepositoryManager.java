@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.HandlerEvent;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
@@ -53,6 +54,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Abstract base class for {@link RepositoryManager} implementations. This class
+ * implements the listener and hook methods of the {@link RepositoryManager} 
+ * interface.
  *
  * @author Sebastian Sdorra
  */
@@ -73,7 +77,7 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
    * @param event
    */
   protected abstract void fireHookEvent(RepositoryHook hook,
-          RepositoryHookEvent event);
+    RepositoryHookEvent event);
 
   /**
    * Method description
@@ -131,10 +135,10 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Method description
+   * Register a {@link RepositoryListener}.
    *
    *
-   * @param listener
+   * @param listener {@link RepositoryListener} to register
    */
   @Override
   public void addListener(RepositoryListener listener)
@@ -143,10 +147,10 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Method description
+   * Register a {@link java.util.Collection} of {@link RepositoryListener}s.
    *
    *
-   * @param listeners
+   * @param listeners listeners to register
    */
   @Override
   public void addListeners(Collection<RepositoryListener> listeners)
@@ -206,10 +210,10 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Method description
+   * Remove specified {@link RepositoryListener}.
    *
    *
-   * @param listener
+   * @param listener to remove
    */
   @Override
   public void removeListener(RepositoryListener listener)
@@ -218,11 +222,12 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Method description
+   * Calls the {@link RepositoryListener#onEvent(Repository,sonia.scm.HandlerEvent)}
+   * method of all registered listeners and send a {@link RepositoryEvent} to
+   * the {@link ScmEventBus}.
    *
-   *
-   * @param repository
-   * @param event
+   * @param repository repository that has changed
+   * @param event type of change event
    */
   protected void fireEvent(Repository repository, HandlerEvent event)
   {
@@ -230,6 +235,8 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
     {
       listener.onEvent(repository, event);
     }
+
+    ScmEventBus.getInstance().post(new RepositoryEvent(repository, event));
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -237,7 +244,7 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   /** Field description */
   private Map<RepositoryHookType, List<RepositoryHook>> hookMap =
     new EnumMap<RepositoryHookType,
-                List<RepositoryHook>>(RepositoryHookType.class);
+      List<RepositoryHook>>(RepositoryHookType.class);
 
   /** Field description */
   private Set<RepositoryListener> listenerSet =
