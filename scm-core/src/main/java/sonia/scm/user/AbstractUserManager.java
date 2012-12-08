@@ -36,6 +36,7 @@ package sonia.scm.user;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.HandlerEvent;
+import sonia.scm.event.ScmEventBus;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -99,6 +100,8 @@ public abstract class AbstractUserManager implements UserManager
     {
       listener.onEvent(user, event);
     }
+
+    ScmEventBus.getInstance().post(new UserEvent(user, event));
   }
 
   //~--- fields ---------------------------------------------------------------
