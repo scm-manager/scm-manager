@@ -35,6 +35,9 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,15 +50,13 @@ import sonia.scm.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * Abstract base class for {@link RepositoryManager} implementations. This class
- * implements the listener and hook methods of the {@link RepositoryManager} 
+ * implements the listener and hook methods of the {@link RepositoryManager}
  * interface.
  *
  * @author Sebastian Sdorra
@@ -70,20 +71,21 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Sends a {@link RepositoryHookEvent} to the specified
+   * {@link RepositoryHook}.
    *
    *
-   * @param hook
-   * @param event
+   * @param hook receiving repository hook
+   * @param event hook event
    */
   protected abstract void fireHookEvent(RepositoryHook hook,
     RepositoryHookEvent event);
 
   /**
-   * Method description
+   * Registers a {@link RepositoryHook}
    *
    *
-   * @param hook
+   * @param hook hook to register
    */
   @Override
   public void addHook(RepositoryHook hook)
@@ -120,10 +122,10 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Method description
+   * Register a {@link Collection} of {@link RepositoryHook}s
    *
    *
-   * @param hooks
+   * @param hooks hooks to register
    */
   @Override
   public void addHooks(Collection<RepositoryHook> hooks)
@@ -241,12 +243,10 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** repository hooks map */
   private Map<RepositoryHookType, List<RepositoryHook>> hookMap =
-    new EnumMap<RepositoryHookType,
-      List<RepositoryHook>>(RepositoryHookType.class);
+    Maps.newEnumMap(RepositoryHookType.class);
 
-  /** Field description */
-  private Set<RepositoryListener> listenerSet =
-    new HashSet<RepositoryListener>();
+  /** repository listeners */
+  private Set<RepositoryListener> listenerSet = Sets.newHashSet();
 }
