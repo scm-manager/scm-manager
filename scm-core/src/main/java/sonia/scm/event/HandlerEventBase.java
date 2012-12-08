@@ -36,6 +36,7 @@ package sonia.scm.event;
 import sonia.scm.HandlerEvent;
 
 /**
+ * Base class for hadler events.
  *
  * TODO for 2.0 rename to HandlerEvent
  *
@@ -48,18 +49,18 @@ public interface HandlerEventBase<T>
 {
 
   /**
-   * Method description
+   * Returns the type of the event,
    *
    *
-   * @return
+   * @return event type
    */
   public HandlerEvent getEventType();
 
   /**
-   * Method description
+   * Returns the item which has changed.
    *
    *
-   * @return
+   * @return changed item
    */
   public T getItem();
 }

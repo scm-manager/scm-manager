@@ -27,45 +27,7 @@
  *
  */
 
-
-
-package com.google.common.eventbus;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.event.EventBusException;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.lang.reflect.InvocationTargetException;
-
 /**
- * {@link EventBus} which is able to throw {@link EventBusException}.
- *
- * @author Sebastian Sdorra
- * @since 1.23
+ * Event system of SCM-Manager
  */
-public class ThrowingEventBus extends EventBus
-{
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param event
-   * @param wrapper
-   */
-  @Override
-  void dispatch(Object event, EventHandler wrapper)
-  {
-    try
-    {
-      wrapper.handleEvent(event);
-    }
-    catch (InvocationTargetException ex)
-    {
-      throw new EventBusException(
-        "could not handle event ".concat(event.toString()), ex);
-    }
-  }
-}
+package sonia.scm.event;

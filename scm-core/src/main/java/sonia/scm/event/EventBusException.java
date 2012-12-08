@@ -31,7 +31,11 @@
 
 package sonia.scm.event;
 
+import com.google.common.eventbus.ThrowingEventBus;
+
 /**
+ * Exception is thrown if from the {@link ThrowingEventBus} an error occurs 
+ * during a synchronous event post operation.
  *
  * @author Sebastian Sdorra
  * @since 1.23

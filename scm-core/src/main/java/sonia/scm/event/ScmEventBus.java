@@ -47,9 +47,14 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.Executors;
 
 /**
+ * Dispatches events to listeners, and provides ways for listeners to register
+ * themselves.
  *
+ * @see {@link EventBus}
  * @author Sebastian Sdorra
  * @since 1.23
+ * 
+ * @apiviz.landmark
  */
 public class ScmEventBus extends EventBus
 {
@@ -66,7 +71,7 @@ public class ScmEventBus extends EventBus
   //~--- constructors ---------------------------------------------------------
 
   /**
-   *  Constructs ...
+   *  Constructs a new ScmEventBus
    *
    */
   private ScmEventBus()
@@ -79,10 +84,10 @@ public class ScmEventBus extends EventBus
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the singleton instance of the ScmEventBus
    *
    *
-   * @return
+   * @return singleton instance
    */
   public static ScmEventBus getInstance()
   {
@@ -92,7 +97,7 @@ public class ScmEventBus extends EventBus
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param event
@@ -106,7 +111,7 @@ public class ScmEventBus extends EventBus
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param object
@@ -118,11 +123,12 @@ public class ScmEventBus extends EventBus
   }
 
   /**
-   * Method description
+   * Registers a object to the eventbus.
    *
+   * @param object object to register
+   * @param async handle event asynchronously
    *
-   * @param object
-   * @param async
+   * @see {@link #register(java.lang.Object)}
    */
   public void register(Object object, boolean async)
   {
@@ -139,7 +145,7 @@ public class ScmEventBus extends EventBus
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param object
@@ -153,11 +159,11 @@ public class ScmEventBus extends EventBus
   }
 
   /**
-   * Method description
+   * Unregisters the object from eventbus.
    *
    *
-   * @param bus
-   * @param object
+   * @param bus event bus
+   * @param object object to unregister
    */
   private void unregister(EventBus bus, Object object)
   {
@@ -173,9 +179,9 @@ public class ScmEventBus extends EventBus
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** asynchronous event bus */
   private AsyncEventBus asyncEventBus;
 
-  /** Field description */
+  /** synchronous event bus */
   private EventBus eventBus;
 }
