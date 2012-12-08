@@ -33,6 +33,8 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+
 import sonia.scm.HandlerEvent;
 import sonia.scm.event.HandlerEventBase;
 
@@ -46,11 +48,11 @@ public final class GroupEvent implements HandlerEventBase<Group>
 {
 
   /**
-   * Constructs ...
+   * Constructs new group event
    *
    *
-   * @param group
-   * @param eventType
+   * @param group changed group
+   * @param eventType type of the event
    */
   public GroupEvent(Group group, HandlerEvent eventType)
   {
@@ -58,10 +60,29 @@ public final class GroupEvent implements HandlerEventBase<Group>
     this.eventType = eventType;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("eventType", eventType)
+                  .add("group", group)
+                  .toString();
+    //J+
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -73,7 +94,7 @@ public final class GroupEvent implements HandlerEventBase<Group>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -86,9 +107,9 @@ public final class GroupEvent implements HandlerEventBase<Group>
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** event type */
   private HandlerEvent eventType;
 
-  /** Field description */
+  /** changed group */
   private Group group;
 }

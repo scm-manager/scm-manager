@@ -48,11 +48,11 @@ public final class UserEvent implements HandlerEventBase<User>
 {
 
   /**
-   * Constructs ...
+   * Constructs new UserEvent.
    *
    *
-   * @param user
-   * @param eventType
+   * @param user changed user
+   * @param eventType type of the event
    */
   public UserEvent(User user, HandlerEvent eventType)
   {
@@ -63,7 +63,7 @@ public final class UserEvent implements HandlerEventBase<User>
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -82,7 +82,7 @@ public final class UserEvent implements HandlerEventBase<User>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -94,7 +94,7 @@ public final class UserEvent implements HandlerEventBase<User>
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -107,9 +107,9 @@ public final class UserEvent implements HandlerEventBase<User>
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** type of the event */
   private HandlerEvent eventType;
 
-  /** Field description */
+  /** changed user */
   private User user;
 }
