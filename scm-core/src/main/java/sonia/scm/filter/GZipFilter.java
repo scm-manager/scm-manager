@@ -53,6 +53,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Filter for gzip encoding.
  *
  * @author Sebastian Sdorra
  * @since 1.15
@@ -70,10 +71,10 @@ public class GZipFilter extends HttpFilter
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Return the configuration for the gzip filter.
    *
    *
-   * @return
+   * @return gzip filter configuration
    */
   public GZipFilterConfig getConfig()
   {
@@ -83,12 +84,12 @@ public class GZipFilter extends HttpFilter
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Encodes the response, if the request has support for gzip encoding.
    *
    *
-   * @param request
-   * @param response
-   * @param chain
+   * @param request http request
+   * @param response http response
+   * @param chain filter chain
    *
    * @throws IOException
    * @throws ServletException
@@ -119,6 +120,6 @@ public class GZipFilter extends HttpFilter
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** gzip filter configuration */
   private GZipFilterConfig config = new GZipFilterConfig();
 }

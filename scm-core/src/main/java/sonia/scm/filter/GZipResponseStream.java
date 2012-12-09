@@ -51,6 +51,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Response stream for gzip encoding.
  *
  * @author Sebastian Sdorra
  * @since 1.15
@@ -90,15 +91,15 @@ public class GZipResponseStream extends ServletOutputStream
    * @since 1.16
    */
   public GZipResponseStream(HttpServletResponse response,
-                            GZipFilterConfig config)
-          throws IOException
+    GZipFilterConfig config)
+    throws IOException
   {
     super();
     closed = false;
     this.response = response;
     response.addHeader("Content-Encoding", "gzip");
 
-    if ((config == null) || config.isBufferRequest())
+    if ((config == null) || config.isBufferResponse())
     {
       if (logger.isTraceEnabled())
       {
@@ -243,10 +244,10 @@ public class GZipResponseStream extends ServletOutputStream
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns true if the stream is closed.
    *
    *
-   * @return
+   * @return true if the stream is closed
    */
   public boolean isClosed()
   {

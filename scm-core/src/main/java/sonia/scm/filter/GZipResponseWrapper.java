@@ -48,6 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 /**
+ * Response wrapper for gzip encoding.
  *
  * @author Sebastian Sdorra
  * @since 1.15
@@ -56,10 +57,10 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
 {
 
   /**
-   * Constructs ...
+   * Constructs a new GZipResponseWrapper
    *
    *
-   * @param response
+   * @param response http response to wrap
    */
   public GZipResponseWrapper(HttpServletResponse response)
   {
@@ -207,15 +208,15 @@ public class GZipResponseWrapper extends HttpServletResponseWrapper
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** gzip filter config */
   protected GZipFilterConfig config = null;
 
-  /** Field description */
+  /** original http response */
   protected HttpServletResponse origResponse = null;
 
-  /** Field description */
+  /** gzip stream */
   protected GZipResponseStream stream = null;
 
-  /** Field description */
+  /** response writer */
   protected PrintWriter writer = null;
 }
