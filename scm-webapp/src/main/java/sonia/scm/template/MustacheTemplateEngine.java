@@ -92,7 +92,8 @@ public class MustacheTemplateEngine implements TemplateEngine
     ThreadFactory threadFactory =
       new ThreadFactoryBuilder().setNameFormat(THREAD_NAME).build();
 
-    factory.setExecutorService(Executors.newCachedThreadPool(threadFactory));
+    factory.setExecutorService(Executors.
+      newCachedThreadPool(threadFactory));
   }
 
   //~--- get methods ----------------------------------------------------------
