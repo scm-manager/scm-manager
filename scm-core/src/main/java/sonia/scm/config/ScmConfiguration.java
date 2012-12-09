@@ -35,6 +35,7 @@ package sonia.scm.config;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Sets;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -69,7 +70,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement(name = "scm-config")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ScmConfiguration
-        implements ListenerSupport<ConfigChangedListener<ScmConfiguration>>
+  implements ListenerSupport<ConfigChangedListener<ScmConfiguration>>
 {
 
   /** Default JavaScript date format */
@@ -115,7 +116,7 @@ public class ScmConfiguration
    */
   @Override
   public void addListeners(
-          Collection<ConfigChangedListener<ScmConfiguration>> listeners)
+    Collection<ConfigChangedListener<ScmConfiguration>> listeners)
   {
     listeners.addAll(listeners);
   }
@@ -263,6 +264,24 @@ public class ScmConfiguration
   public String getPluginUrl()
   {
     return pluginUrl;
+  }
+
+  /**
+   * Returns a set of glob patterns for urls which should excluded from
+   * proxy settings.
+   *
+   *
+   * @return set of glob patterns
+   * @since 1.23
+   */
+  public Set<String> getProxyExcludes()
+  {
+    if (proxyExcludes == null)
+    {
+      proxyExcludes = Sets.newHashSet();
+    }
+
+    return proxyExcludes;
   }
 
   /**
@@ -574,6 +593,19 @@ public class ScmConfiguration
   }
 
   /**
+   * Set glob patterns for urls which are should be excluded from proxy
+   * settings.
+   *
+   *
+   * @param proxyExcludes glob patterns
+   * @since 1.23
+   */
+  public void setProxyExcludes(Set<String> proxyExcludes)
+  {
+    this.proxyExcludes = proxyExcludes;
+  }
+
+  /**
    * Method description
    *
    *
@@ -674,6 +706,11 @@ public class ScmConfiguration
   /** Field description */
   @XmlElement(name = "plugin-url")
   private String pluginUrl = DEFAULT_PLUGINURL;
+
+  /** glob patterns for urls which are excluded from proxy */
+  @XmlElement(name = "admin-groups")
+  @XmlJavaTypeAdapter(XmlSetStringAdapter.class)
+  private Set<String> proxyExcludes;
 
   /** Field description */
   private String proxyPassword;
