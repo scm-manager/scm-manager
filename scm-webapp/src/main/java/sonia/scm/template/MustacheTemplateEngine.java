@@ -38,6 +38,7 @@ package sonia.scm.template;
 import com.github.mustachejava.Mustache;
 
 import com.google.common.base.Throwables;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.inject.Inject;
 
@@ -50,6 +51,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import javax.servlet.ServletContext;
 
@@ -64,6 +66,9 @@ public class MustacheTemplateEngine implements TemplateEngine
   /** Field description */
   public static final TemplateType TYPE = new TemplateType("mustache",
                                             "Mustache", "mustache");
+
+  /** Field description */
+  private static final String THREAD_NAME = "Mustache-%s";
 
   /**
    * the logger for MustacheTemplateEngine
@@ -83,7 +88,11 @@ public class MustacheTemplateEngine implements TemplateEngine
   public MustacheTemplateEngine(ServletContext context)
   {
     factory = new ServletMustacheFactory(context);
-    factory.setExecutorService(Executors.newCachedThreadPool());
+
+    ThreadFactory threadFactory =
+      new ThreadFactoryBuilder().setNameFormat(THREAD_NAME).build();
+
+    factory.setExecutorService(Executors.newCachedThreadPool(threadFactory));
   }
 
   //~--- get methods ----------------------------------------------------------

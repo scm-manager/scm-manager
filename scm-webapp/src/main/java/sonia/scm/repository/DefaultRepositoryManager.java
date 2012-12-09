@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -76,6 +77,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -93,6 +95,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
   //~--- constructors ---------------------------------------------------------
 
+  private static final String THREAD_NAME = "Hook-%s";
+  
   /**
    * Constructs ...
    *
@@ -118,8 +122,14 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     this.repositoryListenersProvider = repositoryListenersProvider;
     this.repositoryHooksProvider = repositoryHooksProvider;
 
-    this.executorService =
-      new SubjectAwareExecutorService(Executors.newCachedThreadPool());
+    //J-
+    ThreadFactory factory = new ThreadFactoryBuilder()
+      .setNameFormat(THREAD_NAME).build();
+    this.executorService = new SubjectAwareExecutorService(
+      Executors.newCachedThreadPool(factory)
+    );
+    //J+
+    
     handlerMap = new HashMap<String, RepositoryHandler>();
     types = new HashSet<Type>();
 

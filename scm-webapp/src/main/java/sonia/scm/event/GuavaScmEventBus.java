@@ -26,15 +26,27 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+
+
+
 package sonia.scm.event;
+
+//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.ThrowingEventBus;
-import java.util.concurrent.Executors;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
 import org.apache.shiro.concurrent.SubjectAwareExecutorService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 /**
  *
@@ -42,14 +54,18 @@ import org.slf4j.LoggerFactory;
  */
 public class GuavaScmEventBus extends ScmEventBus
 {
-  
+
+  /** Field description */
+  private static final String THREAD_NAME = "EventBus-%s";
+
   /**
    * the logger for GuavaScmEventBus
    */
-  private static final Logger logger = LoggerFactory.getLogger(
-    GuavaScmEventBus.class);
-  
-  
+  private static final Logger logger =
+    LoggerFactory.getLogger(GuavaScmEventBus.class);
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    *  Constructs a new ScmEventBus
    *
@@ -57,11 +73,18 @@ public class GuavaScmEventBus extends ScmEventBus
   public GuavaScmEventBus()
   {
     eventBus = new ThrowingEventBus();
+
+    //J-
+    ThreadFactory factory = new ThreadFactoryBuilder()
+      .setNameFormat(THREAD_NAME).build();
     asyncEventBus = new AsyncEventBus(
-      new SubjectAwareExecutorService(Executors.newCachedThreadPool()));
+      new SubjectAwareExecutorService(Executors.newCachedThreadPool(factory))
+    );
+    //J+
   }
 
-  
+  //~--- methods --------------------------------------------------------------
+
   /**
    * {@inheritDoc}
    *
