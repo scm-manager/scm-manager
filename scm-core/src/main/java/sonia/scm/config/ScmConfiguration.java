@@ -163,6 +163,7 @@ public class ScmConfiguration
     this.proxyServer = other.proxyServer;
     this.proxyUser = other.proxyUser;
     this.proxyPassword = other.proxyPassword;
+    this.proxyExcludes = other.proxyExcludes;
     this.forceBaseUrl = other.forceBaseUrl;
     this.baseUrl = other.baseUrl;
     this.disableGroupingGrid = other.disableGroupingGrid;
