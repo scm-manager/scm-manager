@@ -106,7 +106,7 @@ public class ScmEventBus extends EventBus
   @Override
   public void post(Object event)
   {
-    logger.trace("post {} to event bus", event);
+    logger.debug("post {} to event bus", event);
     asyncEventBus.post(event);
     eventBus.post(event);
   }
@@ -174,7 +174,7 @@ public class ScmEventBus extends EventBus
     }
     catch (IllegalArgumentException ex)
     {
-      logger.debug("object {} was not registered at {}", object, bus);
+      logger.trace("object {} was not registered at {}", object, bus);
     }
   }
 
