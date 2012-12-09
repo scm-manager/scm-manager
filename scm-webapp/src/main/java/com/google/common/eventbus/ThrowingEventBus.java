@@ -44,7 +44,6 @@ import java.lang.reflect.InvocationTargetException;
  * {@link EventBus} which is able to throw {@link EventBusException}.
  *
  * @author Sebastian Sdorra
- * @since 1.23
  */
 public class ThrowingEventBus extends EventBus
 {

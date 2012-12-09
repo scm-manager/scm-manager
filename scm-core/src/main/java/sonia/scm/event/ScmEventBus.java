@@ -30,57 +30,44 @@
  */
 
 
+
 package sonia.scm.event;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.ThrowingEventBus;
-
-import org.apache.shiro.concurrent.SubjectAwareExecutorService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.util.ServiceUtil;
+
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.concurrent.Executors;
+import java.util.ServiceLoader;
 
 /**
  * Dispatches events to listeners, and provides ways for listeners to register
- * themselves.
+ * themselves. The ScmEventBus searches its implementation with the
+ * {@link ServiceLoader}.
  *
  * @see {@link EventBus}
  * @author Sebastian Sdorra
  * @since 1.23
- * 
+ *
  * @apiviz.landmark
  */
-public class ScmEventBus extends EventBus
+public abstract class ScmEventBus
 {
+
+  /** Field description */
+  private volatile static ScmEventBus instance;
 
   /**
    * the logger for ScmEventBus
    */
   private static final Logger logger =
     LoggerFactory.getLogger(ScmEventBus.class);
-
-  /** Field description */
-  private static ScmEventBus instance = new ScmEventBus();
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   *  Constructs a new ScmEventBus
-   *
-   */
-  private ScmEventBus()
-  {
-    eventBus = new ThrowingEventBus();
-    asyncEventBus = new AsyncEventBus(
-      new SubjectAwareExecutorService(Executors.newCachedThreadPool()));
-  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -92,97 +79,65 @@ public class ScmEventBus extends EventBus
    */
   public static ScmEventBus getInstance()
   {
+    if (instance == null)
+    {
+      synchronized (ScmEventBus.class)
+      {
+        if (instance == null)
+        {
+          instance = ServiceUtil.getService(ScmEventBus.class);
+
+          if (instance == null)
+          {
+            throw new IllegalStateException(
+              "could not find a event bus implementation");
+          }
+          else
+          {
+            logger.info("use {} as event bus implementation",
+              instance.getClass().getName());
+          }
+        }
+      }
+    }
+
     return instance;
   }
 
   //~--- methods --------------------------------------------------------------
 
   /**
-   * {@inheritDoc}
+   * Post a event through the event bus. All registered subscribers will be
+   * notified by the event bus.
    *
-   *
-   * @param event
+   * @param event event to send through the event bus
    */
-  @Override
-  public void post(Object event)
-  {
-    logger.debug("post {} to event bus", event);
-    asyncEventBus.post(event);
-    eventBus.post(event);
-  }
+  public abstract void post(Object event);
 
   /**
-   * {@inheritDoc}
+   * Register all handler methods with the {@link Subscribe} annotation as
+   * subscriber for the event bus.
    *
-   *
-   * @param object
+   * @param subscriber subscriber object
+   * @param async should the subscriber receive the event in async manner
    */
-  @Override
-  public void register(Object object)
-  {
-    register(object, true);
-  }
+  public abstract void register(Object subscriber, boolean async);
 
   /**
-   * Registers a object to the eventbus.
+   * Unregister the given subscriber object from the event bus.
    *
-   * @param object object to register
-   * @param async handle event asynchronously
-   *
-   * @see {@link #register(java.lang.Object)}
+   * @param subscriber subscriber object to unregister
    */
-  public void register(Object object, boolean async)
-  {
-    logger.debug("register {} to event bus, async = {}", object, async);
-
-    if (async)
-    {
-      asyncEventBus.register(object);
-    }
-    else
-    {
-      eventBus.register(object);
-    }
-  }
+  public abstract void unregister(Object subscriber);
 
   /**
-   * {@inheritDoc}
+   * This method is the same as {@code register(subscriber, true)}.
    *
    *
-   * @param object
+   * @param subscriber subscriber object
    */
-  @Override
-  public void unregister(Object object)
+  public void register(Object subscriber)
   {
-    logger.debug("unregister {} from event bus", object);
-    unregister(asyncEventBus, object);
-    unregister(eventBus, object);
+    register(subscriber, true);
   }
-
-  /**
-   * Unregisters the object from eventbus.
-   *
-   *
-   * @param bus event bus
-   * @param object object to unregister
-   */
-  private void unregister(EventBus bus, Object object)
-  {
-    try
-    {
-      bus.unregister(object);
-    }
-    catch (IllegalArgumentException ex)
-    {
-      logger.trace("object {} was not registered at {}", object, bus);
-    }
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** asynchronous event bus */
-  private AsyncEventBus asyncEventBus;
-
-  /** synchronous event bus */
-  private EventBus eventBus;
 }

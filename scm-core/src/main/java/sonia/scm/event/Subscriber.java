@@ -34,7 +34,6 @@ package sonia.scm.event;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -47,7 +46,7 @@ import sonia.scm.EagerSingleton;
  * The subscriber annotation could be use to register listener classes to the 
  * {@link ScmEventBus}. A registered listener object can use the 
  * {@link Subscribe} annotation for methods to receive events, 
- * for more informations have a look at {@link EventBus}. The annotated object 
+ * for more informations have a look at {@link ScmEventBus}. The annotated object 
  * is only bind to the {@link ScmEventBus}, if the the object is loaded from the
  * injection system of SCM-Manager. If your object is not loaded by the 
  * injection system you have to register your object by yourself with the 

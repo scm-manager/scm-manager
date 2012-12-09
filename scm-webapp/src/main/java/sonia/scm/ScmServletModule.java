@@ -252,7 +252,6 @@ public class ScmServletModule extends ServletModule
 
     // bind event api
     bind(ScmEventBus.class).toInstance(ScmEventBus.getInstance());
-    bind(EventBus.class).toInstance(ScmEventBus.getInstance());
 
     // bind core
     bind(StoreFactory.class, JAXBStoreFactory.class);
