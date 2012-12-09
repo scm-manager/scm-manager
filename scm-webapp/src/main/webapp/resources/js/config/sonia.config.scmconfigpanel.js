@@ -54,6 +54,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   proxyPortText: 'Proxy Port',
   proxyUserText: 'Proxy User',
   proxyPasswordText: 'Proxy Password',
+  proxyExcludesText: 'Proxy Excludes',
   baseUrlText: 'Base Url',
   forceBaseUrlText: 'Force Base Url',
   disableGroupingGridText: 'Disable repository Groups',
@@ -82,6 +83,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   proxyPortHelpText: 'The proxy port',
   proxyUserHelpText: 'The username for the proxy server authentication.',
   proxyPasswordHelpText: 'The password for the proxy server authentication.',
+  proxyExcludesHelpText: 'A comma separated list of glob patterns for hostnames which should be excluded from proxy settings.',
   baseUrlHelpText: 'The url of the application (with context path) i.e. http://localhost:8080/scm',
   forceBaseUrlHelpText: 'Redirects to the base url if the request comes from a other url',
   disableGroupingGridHelpText: 'Disable repository Groups. A complete page reload is required after a change of this value.',
@@ -150,6 +152,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
               Ext.getCmp('proxyPort').setDisabled( ! this.checked );
               Ext.getCmp('proxyUser').setDisabled( ! this.checked );
               Ext.getCmp('proxyPassword').setDisabled( ! this.checked );
+              Ext.getCmp('proxyExcludes').setDisabled( ! this.checked );
             }
           }
         },{
@@ -184,6 +187,14 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'proxyPassword',
           disabled: true,
           helpText: this.proxyPasswordHelpText,
+          allowBlank: true
+        },{
+          id: 'proxyExcludes',
+          xtype: 'textfield',
+          fieldLabel: this.proxyExcludesText,
+          name: 'proxy-excludes',
+          disabled: true,
+          helpText: this.proxyExcludesHelpText,
           allowBlank: true
         },{
           xtype : 'textfield',
@@ -234,6 +245,9 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
               if ( obj.enableProxy ){
                 Ext.getCmp('proxyServer').setDisabled(false);
                 Ext.getCmp('proxyPort').setDisabled(false);
+                Ext.getCmp('proxyUser').setDisabled(false);
+                Ext.getCmp('proxyPassword').setDisabled(false);
+                Ext.getCmp('proxyExcludes').setDisabled(false);
               }
               clearTimeout(tid);
               el.unmask();
