@@ -708,7 +708,7 @@ public class ScmConfiguration
   private String pluginUrl = DEFAULT_PLUGINURL;
 
   /** glob patterns for urls which are excluded from proxy */
-  @XmlElement(name = "admin-groups")
+  @XmlElement(name = "proxy-excludes")
   @XmlJavaTypeAdapter(XmlSetStringAdapter.class)
   private Set<String> proxyExcludes;
 
