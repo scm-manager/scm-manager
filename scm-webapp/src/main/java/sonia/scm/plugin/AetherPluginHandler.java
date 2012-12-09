@@ -84,6 +84,7 @@ import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+import sonia.scm.net.Proxies;
 
 /**
  *
@@ -215,7 +216,7 @@ public class AetherPluginHandler
       RemoteRepository rr = new RemoteRepository(repository.getId(), "default",
                               repository.getUrl());
 
-      if (configuration.isEnableProxy())
+      if (Proxies.isEnabled(configuration, rr.getHost()))
       {
         Proxy proxy = DefaultProxySelector.createProxy(configuration);
 

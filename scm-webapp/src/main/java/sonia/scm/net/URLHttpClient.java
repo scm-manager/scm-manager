@@ -127,7 +127,7 @@ public class URLHttpClient implements HttpClient
    */
   @Inject
   public URLHttpClient(SCMContextProvider context,
-                       ScmConfiguration configuration)
+    ScmConfiguration configuration)
   {
     this.context = context;
     this.configuration = configuration;
@@ -169,7 +169,7 @@ public class URLHttpClient implements HttpClient
    */
   @Override
   public HttpResponse post(String url, Map<String, List<String>> parameters)
-          throws IOException
+    throws IOException
   {
     HttpURLConnection connection = (HttpURLConnection) openConnection(null,
                                      url);
@@ -233,7 +233,7 @@ public class URLHttpClient implements HttpClient
    */
   @Override
   public HttpResponse get(String url, Map<String, List<String>> parameters)
-          throws IOException
+    throws IOException
   {
     url = createGetUrl(url, parameters);
 
@@ -256,7 +256,7 @@ public class URLHttpClient implements HttpClient
     String url = createGetUrl(request.getUrl(), request.getParameters());
 
     return new URLHttpResponse(openConnection(request, url),
-                               request.isDecodeGZip());
+      request.isDecodeGZip());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -271,8 +271,7 @@ public class URLHttpClient implements HttpClient
    * @param password
    */
   private void appendBasicAuthHeader(HttpURLConnection connection,
-                                     String header, String username,
-                                     String password)
+    String header, String username, String password)
   {
     if (Util.isNotEmpty(username) || Util.isNotEmpty(password))
     {
@@ -288,7 +287,7 @@ public class URLHttpClient implements HttpClient
 
       auth = new String(Base64.encode(auth.getBytes()));
       connection.addRequestProperty(header,
-                                    PREFIX_BASIC_AUTHENTICATION.concat(auth));
+        PREFIX_BASIC_AUTHENTICATION.concat(auth));
     }
   }
 
@@ -300,7 +299,7 @@ public class URLHttpClient implements HttpClient
    * @param connection
    */
   private void appendHeaders(Map<String, List<String>> headers,
-                             URLConnection connection)
+    URLConnection connection)
   {
     if (Util.isNotEmpty(headers))
     {
@@ -343,8 +342,8 @@ public class URLHttpClient implements HttpClient
    * @throws IOException
    */
   private void appendPostParameter(HttpURLConnection connection,
-                                   Map<String, List<String>> parameters)
-          throws IOException
+    Map<String, List<String>> parameters)
+    throws IOException
   {
     if (Util.isNotEmpty(parameters))
     {
@@ -395,7 +394,7 @@ public class URLHttpClient implements HttpClient
    * @param connection
    */
   private void applySSLSettings(HttpRequest request,
-                                HttpsURLConnection connection)
+    HttpsURLConnection connection)
   {
     if (request.isDisableCertificateValidation())
     {
@@ -511,7 +510,7 @@ public class URLHttpClient implements HttpClient
    * @throws IOException
    */
   private HttpURLConnection openConnection(HttpRequest request, String spec)
-          throws IOException
+    throws IOException
   {
     return openConnection(request, new URL(spec));
   }
@@ -529,29 +528,30 @@ public class URLHttpClient implements HttpClient
    * @throws IOException
    */
   private HttpURLConnection openConnection(HttpRequest request, URL url)
-          throws IOException
+    throws IOException
   {
     if (request == null)
     {
+
       // TODO improve
       request = new HttpRequest(url.toExternalForm());
     }
 
     HttpURLConnection connection = null;
 
-    if (!request.isIgnoreProxySettings() && configuration.isEnableProxy())
+    if (!request.isIgnoreProxySettings()
+      && Proxies.isEnabled(configuration, url))
     {
       if (logger.isDebugEnabled())
       {
         logger.debug("fetch '{}' using proxy {}:{}",
-                     new Object[] { url.toExternalForm(),
-                                    configuration.getProxyServer(),
-                                    configuration.getProxyPort() });
+          new Object[] { url.toExternalForm(),
+          configuration.getProxyServer(), configuration.getProxyPort() });
       }
 
       SocketAddress address =
         new InetSocketAddress(configuration.getProxyServer(),
-                              configuration.getProxyPort());
+          configuration.getProxyPort());
 
       connection =
         (HttpURLConnection) url.openConnection(new Proxy(Proxy.Type.HTTP,
@@ -590,19 +590,19 @@ public class URLHttpClient implements HttpClient
       String password = request.getPassword();
 
       appendBasicAuthHeader(connection, HEADER_AUTHORIZATION, username,
-                            password);
+        password);
     }
 
     connection.setRequestProperty(HEADER_ACCEPT_ENCODING,
-                                  HEADER_ACCEPT_ENCODING_VALUE);
-    connection.setRequestProperty(
-        HEADER_USERAGENT, HEADER_USERAGENT_VALUE.concat(context.getVersion()));
+      HEADER_ACCEPT_ENCODING_VALUE);
+    connection.setRequestProperty(HEADER_USERAGENT,
+      HEADER_USERAGENT_VALUE.concat(context.getVersion()));
 
     String username = configuration.getProxyUser();
     String password = configuration.getProxyPassword();
 
     appendBasicAuthHeader(connection, HEADER_PROXY_AUTHORIZATION, username,
-                          password);
+      password);
 
     return connection;
   }
