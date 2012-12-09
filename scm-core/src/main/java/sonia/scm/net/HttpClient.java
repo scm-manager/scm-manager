@@ -41,31 +41,37 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Simple client for http operations.
  *
  * @author Sebastian Sdorra
+ * 
+ * @apiviz.landmark
+ * @apiviz.uses sonia.scm.net.HttpRequest
+ * @apiviz.uses sonia.scm.net.HttpResponse
  */
 public interface HttpClient
 {
 
   /**
-   * Method description
+   * Send a post request to the given url.
    *
    *
-   * @param url
+   * @param url url for post request
    *
-   * @return
+   * @return the response of the http request
    *
    * @throws IOException
    */
   public HttpResponse post(String url) throws IOException;
 
   /**
-   * Method description
+   * Sends a post request with the parameter specified in the 
+   * {@link HttpRequest} object.
    *
    *
-   * @param request
+   * @param request request object
    *
-   * @return
+   * @return the response of the http request
    * @since 1.9
    *
    * @throws IOException
@@ -73,13 +79,13 @@ public interface HttpClient
   public HttpResponse post(HttpRequest request) throws IOException;
 
   /**
-   * Method description
+   * Send a post request to the given url with the specified post parameters.
    *
    *
-   * @param url
-   * @param parameters
+   * @param url url for post request
+   * @param parameters parameters for the post request
    *
-   * @return
+   * @return the response of the http request
    *
    * @throws IOException
    */
@@ -89,24 +95,25 @@ public interface HttpClient
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Send a get request to the given url.
    *
    *
-   * @param url
+   * @param url url for get request
    *
-   * @return
+   * @return the response of the http request
    *
    * @throws IOException
    */
   public HttpResponse get(String url) throws IOException;
 
   /**
-   * Method description
+   * Sends a get request with the parameter specified in the 
+   * {@link HttpRequest} object.
    *
    *
-   * @param request
+   * @param request request object
    *
-   * @return
+   * @return the response of the http request
    * @since 1.9
    *
    * @throws IOException
@@ -114,13 +121,13 @@ public interface HttpClient
   public HttpResponse get(HttpRequest request) throws IOException;
 
   /**
-   * Method description
+   * Send a get request to the given url with the specified post parameters.
    *
    *
-   * @param url
-   * @param parameters
+   * @param url url for get request
+   * @param parameters parameters for the get request
    *
-   * @return
+   * @return the response of the http request
    *
    * @throws IOException
    */
