@@ -43,7 +43,7 @@
     <system>bitbucket</system>
     <url>http://bitbucket.org/sdorra/scm-manager/issues</url>
   </issueManagement>
-  
+
   <mailingLists>
     <mailingList>
       <name>SCM-Manager</name>
@@ -53,7 +53,7 @@
       <archive>http://groups.google.com/group/scmmanager</archive>
     </mailingList>
   </mailingLists>
-  
+
   <ciManagement>
     <system>Jenkins</system>
     <url>https://scm-manager.ci.cloudbees.com/</url>
@@ -85,13 +85,13 @@
       <name>Repository hosting the javaee artifacts</name>
       <url>http://download.java.net/maven/2</url>
     </repository>
-    
+
     <repository>
       <id>maven.scm-manager.org</id>
       <name>scm-manager release repository</name>
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
-    
+
   </repositories>
 
   <pluginRepositories>
@@ -144,7 +144,7 @@
 
   <build>
     <plugins>
-      
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>animal-sniffer-maven-plugin</artifactId>
@@ -195,7 +195,7 @@
           <strictCheck>true</strictCheck>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
@@ -219,19 +219,19 @@
           </links>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
         <version>2.1.2</version>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
         <version>2.7</version>
       </plugin>
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
@@ -243,20 +243,20 @@
           <tagNameFormat>${project.version}</tagNameFormat>
         </configuration>
       </plugin>
-      
+
       <!--
-         fix maven troubleshooting part on 
+         fix maven troubleshooting part on
          https://bitbucket.org/sdorra/scm-manager/wiki/configure-eclipse
       -->
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-eclipse-plugin</artifactId>
         <version>2.6</version>
       </plugin>
-      
+
       <!-- reporting -->
-      
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-site-plugin</artifactId>
@@ -302,19 +302,19 @@
           </reportPlugins>
         </configuration>
       </plugin>
-      
+
     </plugins>
 
   </build>
 
   <profiles>
-    
+
     <profile>
       <id>jrebel</id>
-      
+
       <build>
         <plugins>
-          
+
           <plugin>
             <groupId>org.zeroturnaround</groupId>
             <artifactId>jrebel-maven-plugin</artifactId>
@@ -329,12 +329,12 @@
               </execution>
             </executions>
           </plugin>
-          
+
         </plugins>
       </build>
-      
+
     </profile>
-    
+
     <profile>
       <id>JDK7</id>
       <activation>
@@ -344,7 +344,7 @@
         <jdk.classifier>-jdk7</jdk.classifier>
       </properties>
     </profile>
-  
+
     <profile>
       <id>APIviz</id>
       <activation>
@@ -356,7 +356,7 @@
 
       <build>
         <plugins>
-        
+
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
@@ -374,14 +374,14 @@
               </additionalparam>
             </configuration>
           </plugin>
-        
+
         </plugins>
       </build>
 
     </profile>
 
   </profiles>
-  
+
   <distributionManagement>
 
     <repository>
@@ -403,25 +403,25 @@
     <mokito.version>1.9.5</mokito.version>
     <hamcrest.version>1.3</hamcrest.version>
     <junit.version>4.10</junit.version>
-    
+
     <!-- logging libraries -->
     <slf4j.version>1.7.2</slf4j.version>
     <logback.version>1.0.7</logback.version>
-    
+
     <servlet.version>2.5</servlet.version>
     <guice.version>3.0</guice.version>
     <jersey.version>1.14</jersey.version>
     <ehcache.version>2.6.0</ehcache.version>
     <freemarker.version>2.3.19</freemarker.version>
     <jetty.version>7.6.7.v20120910</jetty.version>
-    
+
     <!-- security libraries -->
     <shiro.version>1.2.1</shiro.version>
-    
+
     <!-- repostitory libraries -->
     <jgit.version>2.1.0.201209190230-r</jgit.version>
-    <svnkit.version>1.7.6-scm2</svnkit.version>
-    
+    <svnkit.version>1.7.6-scm3-SNAPSHOT</svnkit.version>
+
     <!-- build properties -->
     <project.build.javaLevel>1.6</project.build.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
