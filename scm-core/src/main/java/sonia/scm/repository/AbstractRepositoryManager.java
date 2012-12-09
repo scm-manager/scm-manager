@@ -177,8 +177,8 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
     AssertUtil.assertIsNotNull(event.getType());
     event.setRepository(repository);
 
-    // post to event system
-    ScmEventBus.getInstance().post(event);
+    // post wrapped hook to event system
+    ScmEventBus.getInstance().post(WrappedRepositoryHookEvent.wrap(event));
 
     List<RepositoryHook> hooks = hookMap.get(event.getType());
 
