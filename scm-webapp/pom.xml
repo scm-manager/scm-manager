@@ -341,8 +341,9 @@
           <excludes>
             <exclude>target/**</exclude>
             <exclude>.hg/**</exclude>
-            <exclude>**/extjs/**</exclude>
-            <exclude>**/syntaxhighlighter/**</exclude>
+            <exclude>src/main/webapp/resources/extjs/**</exclude>
+            <exclude>src/main/webapp/resources/syntaxhighlighter/**</exclude>
+            <exclude>src/main/webapp/resources/moment/**</exclude>
             <exclude>**/*.mustache</exclude>
           </excludes>
           <strictCheck>true</strictCheck>
