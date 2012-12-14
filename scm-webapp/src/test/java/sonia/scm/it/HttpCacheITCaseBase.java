@@ -123,7 +123,7 @@ public abstract class HttpCacheITCaseBase<T>
 
     long otherLastModified = getLastModified(response);
 
-    assertEquals(lastModified, otherLastModified);
+    assertNotEquals(lastModified, otherLastModified);
   }
 
   /**
