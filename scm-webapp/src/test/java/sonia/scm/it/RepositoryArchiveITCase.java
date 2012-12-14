@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -98,9 +99,10 @@ public class RepositoryArchiveITCase extends RepositoryTypeITCaseBase
   @After
   public void deleteTestRepository()
   {
+    setArchiveMode(false);
+
     if (repository != null)
     {
-      setArchiveMode(false);
       deleteRepository(client, repository.getId());
     }
 
