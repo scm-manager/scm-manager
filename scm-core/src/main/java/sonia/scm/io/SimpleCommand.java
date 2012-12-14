@@ -105,6 +105,21 @@ public class SimpleCommand implements Command
     return getResult(process);
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * 
+   * @since 1.23
+   */
+  public boolean isUseSystemEnvironment()
+  {
+    return useSystemEnvironment;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -117,6 +132,19 @@ public class SimpleCommand implements Command
   public void setEnvironment(Map<String, String> environment)
   {
     this.environment = environment;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param useSystemEnvironment
+   * 
+   * @since 1.23
+   */
+  public void setUseSystemEnvironment(boolean useSystemEnvironment)
+  {
+    this.useSystemEnvironment = useSystemEnvironment;
   }
 
   /**
@@ -162,9 +190,15 @@ public class SimpleCommand implements Command
       processBuilder = processBuilder.directory(workDirectory);
     }
 
+    Map<String,String> env = processBuilder.environment();
+    if ( useSystemEnvironment )
+    {
+      env.putAll(System.getenv());
+    }
+    
     if (environment != null)
     {
-      processBuilder.environment().putAll(environment);
+      env.putAll(environment);
     }
 
     return processBuilder.redirectErrorStream(true).start();
@@ -243,6 +277,9 @@ public class SimpleCommand implements Command
 
   /** Field description */
   private Map<String, String> environment;
+
+  /** Field description */
+  private boolean useSystemEnvironment = false;
 
   /** Field description */
   private File workDirectory;

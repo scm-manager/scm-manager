@@ -546,6 +546,9 @@ public class HgRepositoryHandler
     ExtendedCommand cmd = new ExtendedCommand(config.getHgBinary(), "init",
                             directory.getAbsolutePath());
 
+    // copy system environment, because of the PATH variable
+    cmd.setUseSystemEnvironment(true);
+
     // issue-97
     cmd.setWorkDirectory(baseDirectory);
 
