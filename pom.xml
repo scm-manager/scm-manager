@@ -240,7 +240,7 @@
           <pushChanges>false</pushChanges>
           <localCheckout>true</localCheckout>
           <releaseProfiles>release,APIviz</releaseProfiles>
-          <tagNameFormat>${project.version}</tagNameFormat>
+          <tagNameFormat>@{project.version}</tagNameFormat>
         </configuration>
       </plugin>
 
@@ -413,14 +413,14 @@
     <ehcache.version>2.6.2</ehcache.version>
     <freemarker.version>2.3.19</freemarker.version>
     <jetty.version>7.6.8.v20121106</jetty.version>
-    
+
     <!-- security libraries -->
     <shiro.version>1.2.1</shiro.version>
 
     <!-- repostitory libraries -->
     <jgit.version>2.1.0.201209190230-r</jgit.version>
     <svnkit.version>1.7.6-scm3</svnkit.version>
-    
+
     <!-- build properties -->
     <project.build.javaLevel>1.6</project.build.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
