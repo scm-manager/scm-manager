@@ -45,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ArgumentIsInvalidException;
+import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
@@ -66,6 +67,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Abstract http filter to check repository permissions.
  *
  * @author Sebastian Sdorra
  */
@@ -80,9 +82,9 @@ public abstract class PermissionFilter extends HttpFilter
 
   /**
    * Constructs a new permission filter
-   * 
+   *
    * @param configuration global scm-manager configuration
-   * 
+   *
    * @since 1.21
    */
   public PermissionFilter(ScmConfiguration configuration)
@@ -91,13 +93,12 @@ public abstract class PermissionFilter extends HttpFilter
   }
 
   /**
-   * Constructs ...
+   * Constructs a new permission filter
    *
-   *
-   *
-   * @param configuration
-   * @param securityContextProvider
-   * @deprecated
+   * @param configuration global scm-manager configuration
+   * @param securityContextProvider security context provider
+   * 
+   * @deprecated {@link #PermissionFilter(ScmConfiguration)} instead
    */
   @Deprecated
   public PermissionFilter(ScmConfiguration configuration,
@@ -109,34 +110,35 @@ public abstract class PermissionFilter extends HttpFilter
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the requested repository.
    *
    *
-   * @param request
+   * @param request current http request
    *
-   * @return
+   * @return requested repository
    */
   protected abstract Repository getRepository(HttpServletRequest request);
 
   /**
-   * Method description
+   * Returns true if the current request is a write request.
    *
    *
    * @param request
    *
-   * @return
+   * @return returns true if the current request is a write request
    */
   protected abstract boolean isWriteRequest(HttpServletRequest request);
 
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Checks the permission for the requested repository. If the user has enough 
+   * permission, then the filter chain is called.
    *
    *
-   * @param request
-   * @param response
-   * @param chain
+   * @param request http request 
+   * @param response http response
+   * @param chain filter chain
    *
    * @throws IOException
    * @throws ServletException
@@ -161,9 +163,8 @@ public abstract class PermissionFilter extends HttpFilter
           if (logger.isTraceEnabled())
           {
             logger.trace("{} access to repository {} for user {} granted",
-              new Object[] { writeRequest
-              ? "write"
-              : "read", repository.getName(), subject.getPrincipal() });
+              getActionAsString(writeRequest), repository.getName(),
+              getUserName(subject));
           }
 
           chain.doFilter(request, response);
@@ -173,9 +174,8 @@ public abstract class PermissionFilter extends HttpFilter
           if (logger.isInfoEnabled())
           {
             logger.info("{} access to repository {} for user {} denied",
-              new Object[] { writeRequest
-              ? "write"
-              : "read", repository.getName(), subject.getPrincipal() });
+              getActionAsString(writeRequest), repository.getName(),
+              getUserName(subject));
           }
 
           sendAccessDenied(response, subject);
@@ -221,12 +221,12 @@ public abstract class PermissionFilter extends HttpFilter
   }
 
   /**
-   * Method description
+   * Extracts the type of the repositroy from url.
    *
    *
-   * @param request
+   * @param request http request
    *
-   * @return
+   * @return type of repository
    */
   private String extractType(HttpServletRequest request)
   {
@@ -244,12 +244,11 @@ public abstract class PermissionFilter extends HttpFilter
   }
 
   /**
-   * Method description
+   * Send access denied to the servlet response.
    *
    *
-   * @param response
-   * @param user
-   * @param subject
+   * @param response current http response object
+   * @param subject user subject
    *
    * @throws IOException
    */
@@ -269,12 +268,27 @@ public abstract class PermissionFilter extends HttpFilter
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns action as string.
    *
    *
-   * @param request
+   * @param writeRequest true if the action is a write action
    *
-   * @return
+   * @return action as string
+   */
+  private String getActionAsString(boolean writeRequest)
+  {
+    return writeRequest
+      ? "write"
+      : "read";
+  }
+
+  /**
+   * Returns the repository root help url.
+   *
+   *
+   * @param request current http request
+   *
+   * @return repository root help url
    */
   private String getRepositoryRootHelpUrl(HttpServletRequest request)
   {
@@ -288,18 +302,37 @@ public abstract class PermissionFilter extends HttpFilter
   }
 
   /**
-   * Method description
+   * Returns the username from the given subject or anonymous.
    *
    *
-   * @param repository
-   * @param securityContext
-   * @param writeRequest
+   * @param subject user subject
    *
-   * @return
+   * @return username username from subject or anonymous
+   */
+  private Object getUserName(Subject subject)
+  {
+    Object principal = subject.getPrincipal();
+
+    if (principal == null)
+    {
+      principal = SCMContext.USER_ANONYMOUS;
+    }
+
+    return principal;
+  }
+
+  /**
+   * Returns true if the current user has the required permissions.
+   *
+   *
+   * @param repository repository for the permissions check
+   * @param writeRequest true if request is a write request
+   *
+   * @return true if the current user has the required permissions
    */
   private boolean hasPermission(Repository repository, boolean writeRequest)
   {
-    boolean permitted = false;
+    boolean permitted;
 
     if (writeRequest)
     {
@@ -316,6 +349,6 @@ public abstract class PermissionFilter extends HttpFilter
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** scm-manager global configuration */
   private ScmConfiguration configuration;
 }
