@@ -79,14 +79,13 @@ public class UpgradeManager
   {
     File baseDirectory = SCMContext.getContext().getBaseDirectory();
     File configDirectory = new File(baseDirectory, "config");
+    File versionFile = new File(configDirectory, "version.txt");
 
     if (configDirectory.exists())
     {
       boolean writeVersionFile = false;
 
       String newVersion = SCMContext.getContext().getVersion();
-
-      File versionFile = new File(configDirectory, "version.txt");
 
       if (versionFile.exists())
       {
@@ -121,6 +120,7 @@ public class UpgradeManager
 
       // fresh installation
       IOUtil.mkdirs(configDirectory);
+      writeVersionFile(versionFile);
     }
   }
 
