@@ -39,6 +39,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
 import com.google.inject.Provider;
 
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -49,6 +50,7 @@ import sonia.scm.repository.api.Command;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 /**
@@ -59,11 +61,14 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
   /** Field description */
-  public static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
-                                                 Command.BROWSE, Command.CAT,
-                                                 Command.DIFF, Command.LOG,
-                                                 Command.TAGS,
-                                                 Command.BRANCHES);
+  public static final Set<Command> COMMANDS = EnumSet.of(Command.BLAME,
+                                                Command.BROWSE, Command.CAT,
+                                                Command.DIFF, Command.LOG,
+                                                Command.TAGS, Command.BRANCHES);
+
+  /** Field description */
+  public static final Set<Feature> FEATURES =
+    EnumSet.of(Feature.COMBINED_DEFAULT_BRANCH);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -185,6 +190,18 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public Set<Command> getSupportedCommands()
   {
     return COMMANDS;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Set<Feature> getSupportedFeatures()
+  {
+    return FEATURES;
   }
 
   /**

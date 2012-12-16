@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.cache.CacheManager;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
@@ -293,6 +294,19 @@ public final class RepositoryService implements Closeable
   public boolean isSupported(Command command)
   {
     return provider.getSupportedCommands().contains(command);
+  }
+
+  /**
+   * Returns true if the feature is supported by the repository service.
+   *
+   *
+   * @param feature feature
+   *
+   * @return true if the feature is supported
+   */
+  public boolean isSupported(Feature feature)
+  {
+    return provider.getSupportedFeatures().contains(feature);
   }
 
   //~--- fields ---------------------------------------------------------------
