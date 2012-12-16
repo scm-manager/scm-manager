@@ -72,6 +72,9 @@ import java.io.OutputStream;
 
 import java.text.MessageFormat;
 
+import java.util.EnumSet;
+import java.util.Set;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
@@ -99,9 +102,14 @@ public class HgRepositoryHandler
   public static final String TYPE_NAME = "hg";
 
   /** Field description */
+  private static final Set<Feature> SUPPORTED_FEATURES =
+    EnumSet.of(Feature.COMBINED_DEFAULT_BRANCH);
+
+  /** Field description */
   public static final Type TYPE = new RepositoryType(TYPE_NAME,
                                     TYPE_DISPLAYNAME,
-                                    HgRepositoryServiceProvider.COMMANDS);
+                                    HgRepositoryServiceProvider.COMMANDS,
+                                    SUPPORTED_FEATURES);
 
   /** the logger for HgRepositoryHandler */
   private static final Logger logger =
