@@ -74,7 +74,7 @@ public class ScmConfiguration
 {
 
   /** Default JavaScript date format */
-  public static final String DEFAULT_DATEFORMAT = "Y-m-d H:i:s";
+  public static final String DEFAULT_DATEFORMAT = "YYYY-MM-DD HH:mm:ss";
 
   /** Default plugin url */
   public static final String DEFAULT_PLUGINURL =
