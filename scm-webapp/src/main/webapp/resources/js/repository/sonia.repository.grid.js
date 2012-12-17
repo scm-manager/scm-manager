@@ -425,18 +425,18 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         }
       });
       
-      // call open listeners
-      Ext.each(Sonia.repository.openListeners, function(listener){
-        if (Ext.isFunction(listener)){
-          listener(item, panels);
-        } else {
-          listener.call(listener.scope, item, panels);
-        }
-      });
-      
     } else {
       Ext.getCmp('repoRmButton').setDisabled(true);
     }
+    
+    // call open listeners
+    Ext.each(Sonia.repository.openListeners, function(listener){
+      if (Ext.isFunction(listener)){
+        listener(item, panels);
+      } else {
+        listener.call(listener.scope, item, panels);
+      }
+    });
 
     Sonia.repository.setEditPanel(panels);
   },
