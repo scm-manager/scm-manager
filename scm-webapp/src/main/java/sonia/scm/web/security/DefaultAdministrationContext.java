@@ -52,6 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
 import sonia.scm.group.GroupNames;
+import sonia.scm.security.Role;
 import sonia.scm.security.ScmRealm;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
@@ -123,7 +124,17 @@ public class DefaultAdministrationContext implements AdministrationContext
 
     if (ThreadContext.getSecurityManager() != null)
     {
-      doRunAsInWebSessionContext(action);
+      Subject subject = SecurityUtils.getSubject();
+
+      if (subject.hasRole(Role.ADMIN))
+      {
+        logger.debug(
+          "user is already an admin, we need no system account session");
+      }
+      else
+      {
+        doRunAsInWebSessionContext(action);
+      }
     }
     else
     {
