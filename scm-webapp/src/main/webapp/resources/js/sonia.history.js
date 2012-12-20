@@ -142,7 +142,7 @@ Sonia.History = {
         var parts = token.split(';');
         var id = parts[0];
         this.recentlyChanged.push(token);
-        Sonia.History.handleChange(id, parts.splice(1));
+        Sonia.History.handleChange(id, parts.splice(1, parts.length - 1));
       }
     } else if (debug) {
       console.debug('history token is empty');
