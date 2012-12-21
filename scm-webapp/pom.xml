@@ -439,7 +439,7 @@
     <aether.version>1.13.1</aether.version>
     <wagon.version>1.0</wagon.version>
     <maven.version>3.0.4</maven.version>
-    <mustache.version>0.8.8</mustache.version>
+    <mustache.version>0.8.9</mustache.version>
     <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
   </properties>
 
