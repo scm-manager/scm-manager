@@ -418,7 +418,7 @@
     <shiro.version>1.2.1</shiro.version>
 
     <!-- repostitory libraries -->
-    <jgit.version>2.1.0.201209190230-r</jgit.version>
+    <jgit.version>2.2.0.201212191850-r</jgit.version>
     <svnkit.version>1.7.6-scm3</svnkit.version>
 
     <!-- build properties -->
