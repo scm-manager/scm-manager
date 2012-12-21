@@ -52,8 +52,6 @@ import sonia.scm.plugin.scanner.PluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerScheduler;
 import sonia.scm.plugin.scanner.TimerPluginScannerScheduler;
 import sonia.scm.util.Util;
-import sonia.scm.web.proxy.ProxyServet;
-import sonia.scm.web.proxy.ProxyURLProvider;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -66,6 +64,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.bind.JAXB;
+import sonia.scm.web.proxy.ProxyConfigurationProvider;
+import sonia.scm.web.proxy.ProxyServlet;
 
 /**
  *
@@ -147,8 +147,8 @@ public class ScmBackendModule extends ServletModule
     bind(UrlBuilderFactory.class);
 
     // news proxy
-    bind(ProxyURLProvider.class).to(NewsProxyURLProvider.class);
-    serve("/news*").with(ProxyServet.class);
+    bind(ProxyConfigurationProvider.class).to(NewsProxyURLProvider.class);
+    serve("/news*").with(ProxyServlet.class);
 
     Map<String, String> params = new HashMap<String, String>();
 

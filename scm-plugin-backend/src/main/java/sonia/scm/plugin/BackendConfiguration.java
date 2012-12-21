@@ -35,13 +35,13 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.web.proxy.ProxyConfiguration;
 import sonia.scm.xml.XmlIntervalAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 
-import java.net.URL;
 
 import java.util.Set;
 
@@ -89,9 +89,9 @@ public class BackendConfiguration
    *
    * @return
    */
-  public URL getNewsUrl()
+  public ProxyConfiguration getNewsConfiguration()
   {
-    return newsUrl;
+    return newsConfiguration;
   }
 
   /**
@@ -138,85 +138,6 @@ public class BackendConfiguration
     return multithreaded;
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param directories
-   */
-  public void setDirectories(Set<File> directories)
-  {
-    this.directories = directories;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param excludes
-   */
-  public void setExcludes(Set<String> excludes)
-  {
-    this.excludes = excludes;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param multithreaded
-   */
-  public void setMultithreaded(boolean multithreaded)
-  {
-    this.multithreaded = multithreaded;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param newsUrl
-   */
-  public void setNewsUrl(URL newsUrl)
-  {
-    this.newsUrl = newsUrl;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repositories
-   */
-  public void setRepositories(Set<PluginRepository> repositories)
-  {
-    this.repositories = repositories;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param scannInterval
-   */
-  public void setScannInterval(long scannInterval)
-  {
-    this.scannInterval = scannInterval;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param trackingCode
-   */
-  public void setTrackingCode(String trackingCode)
-  {
-    this.trackingCode = trackingCode;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -233,8 +154,8 @@ public class BackendConfiguration
   private boolean multithreaded = true;
 
   /** Field description */
-  @XmlElement(name = "news-url")
-  private URL newsUrl;
+  @XmlElement(name = "news-settings")
+  private ProxyConfiguration newsConfiguration;
 
   /** Field description */
   @XmlElement(name = "repository")

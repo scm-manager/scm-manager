@@ -40,7 +40,7 @@
         Purpose of the document follows.
 -->
 
-<configuration>
+<configuration scan="true" scanPeriod="30 seconds">
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
     <!-- encoders are  by default assigned the type

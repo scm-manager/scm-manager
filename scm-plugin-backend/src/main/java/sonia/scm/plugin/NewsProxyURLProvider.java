@@ -37,17 +37,18 @@ package sonia.scm.plugin;
 
 import com.google.inject.Inject;
 
-import sonia.scm.web.proxy.ProxyURLProvider;
+import sonia.scm.web.proxy.ProxyConfiguration;
+import sonia.scm.web.proxy.ProxyConfigurationProvider;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.net.URL;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class NewsProxyURLProvider implements ProxyURLProvider
+public class NewsProxyURLProvider implements ProxyConfigurationProvider
 {
 
   /**
@@ -68,12 +69,14 @@ public class NewsProxyURLProvider implements ProxyURLProvider
    * Method description
    *
    *
+   * @param request
+   *
    * @return
    */
   @Override
-  public URL getProxyURL()
+  public ProxyConfiguration getConfiguration(HttpServletRequest request)
   {
-    return configuration.getNewsUrl();
+    return configuration.getNewsConfiguration();
   }
 
   //~--- fields ---------------------------------------------------------------
