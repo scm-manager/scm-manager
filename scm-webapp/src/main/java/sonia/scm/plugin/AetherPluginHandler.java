@@ -54,6 +54,7 @@ import org.sonatype.aether.impl.ArtifactDescriptorReader;
 import org.sonatype.aether.impl.VersionRangeResolver;
 import org.sonatype.aether.impl.VersionResolver;
 import org.sonatype.aether.impl.internal.DefaultServiceLocator;
+import org.sonatype.aether.impl.internal.Slf4jLogger;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.Proxy;
 import org.sonatype.aether.repository.RemoteRepository;
@@ -68,6 +69,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.boot.BootstrapListener;
 import sonia.scm.boot.Classpath;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.net.Proxies;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -84,7 +86,6 @@ import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import sonia.scm.net.Proxies;
 
 /**
  *
@@ -336,19 +337,7 @@ public class AetherPluginHandler
    */
   private RepositorySystem createRepositorySystem()
   {
-    DefaultServiceLocator locator = new DefaultServiceLocator();
-
-    locator.addService(VersionResolver.class, DefaultVersionResolver.class);
-    locator.addService(VersionRangeResolver.class,
-      DefaultVersionRangeResolver.class);
-    locator.addService(ArtifactDescriptorReader.class,
-      DefaultArtifactDescriptorReader.class);
-    locator.addService(RepositoryConnectorFactory.class,
-      AsyncRepositoryConnectorFactory.class);
-    locator.addService(RepositoryConnectorFactory.class,
-      FileRepositoryConnectorFactory.class);
-
-    return locator.getService(RepositorySystem.class);
+    return new AetherServiceLocator().getService(RepositorySystem.class);
   }
 
   /**

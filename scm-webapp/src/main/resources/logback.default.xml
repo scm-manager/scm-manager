@@ -58,6 +58,12 @@
   
   <logger name="sonia.scm.util.ServiceUtil" level="WARN" />
   
+  <!-- aether -->
+  <!--
+  <logger name="org.sonatype.aether" level="TRACE" />
+  <logger name="com.ning.http.client" level="DEBUG" />
+  -->
+  
   <!-- svnkit -->
   <!--
   <logger name="svnkit" level="WARN" />
