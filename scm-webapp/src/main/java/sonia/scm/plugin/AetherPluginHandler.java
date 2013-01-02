@@ -54,7 +54,9 @@ import org.sonatype.aether.impl.ArtifactDescriptorReader;
 import org.sonatype.aether.impl.VersionRangeResolver;
 import org.sonatype.aether.impl.VersionResolver;
 import org.sonatype.aether.impl.internal.DefaultServiceLocator;
+import org.sonatype.aether.repository.LocalArtifactRegistration;
 import org.sonatype.aether.repository.LocalRepository;
+import org.sonatype.aether.repository.LocalRepositoryManager;
 import org.sonatype.aether.repository.Proxy;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.repository.RepositoryPolicy;
@@ -68,6 +70,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.boot.BootstrapListener;
 import sonia.scm.boot.Classpath;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.net.Proxies;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -84,7 +87,6 @@ import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import sonia.scm.net.Proxies;
 
 /**
  *
@@ -261,8 +263,17 @@ public class AetherPluginHandler
       session.setProxySelector(new DefaultProxySelector(configuration));
     }
 
-    session.setLocalRepositoryManager(
-      repositorySystem.newLocalRepositoryManager(localRepository));
+    // register installed to local repository manager
+    LocalRepositoryManager localRepositoryManager =
+      repositorySystem.newLocalRepositoryManager(localRepository);
+
+    for (Dependency dep : dependencies)
+    {
+      localRepositoryManager.add(session,
+        new LocalArtifactRegistration(dep.getArtifact()));
+    }
+
+    session.setLocalRepositoryManager(localRepositoryManager);
 
     try
     {
