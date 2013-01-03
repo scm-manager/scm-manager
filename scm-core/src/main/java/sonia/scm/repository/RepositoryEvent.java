@@ -40,7 +40,7 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.event.HandlerEventBase;
 
 /**
- * The RepositoryEvent is fired if a group object changes.
+ * The RepositoryEvent is fired if a {@link Repository} object changes.
  *
  * @author Sebastian Sdorra
  * @since 1.23
