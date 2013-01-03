@@ -36,7 +36,6 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.After;
-import org.junit.Assume;
 import org.junit.Before;
 
 import sonia.scm.SCMContext;
@@ -44,7 +43,6 @@ import sonia.scm.io.FileSystem;
 import sonia.scm.repository.HgContextProvider;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgTestUtil;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.TempSCMContextProvider;
 import sonia.scm.store.MemoryStoreFactory;
