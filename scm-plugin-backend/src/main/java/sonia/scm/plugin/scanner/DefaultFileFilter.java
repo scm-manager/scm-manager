@@ -72,7 +72,7 @@ public class DefaultFileFilter implements FileFilter
   {
     if (excludes == null)
     {
-      excludes = Collections.emptySet();
+      this.excludes = Collections.emptySet();
     }
     else
     {
