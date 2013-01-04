@@ -33,6 +33,10 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Set;
@@ -48,6 +52,64 @@ import javax.xml.bind.annotation.XmlElement;
 @XmlAccessorType(XmlAccessType.NONE)
 public class PluginResources
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final PluginResources other = (PluginResources) obj;
+
+    return Objects.equal(scriptResources, other.scriptResources)
+      && Objects.equal(stylesheetResources, other.stylesheetResources);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(scriptResources, stylesheetResources);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("scriptResources", scriptResources)
+                  .add("stylesheetResources", stylesheetResources)
+                  .toString();
+    //J+
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
