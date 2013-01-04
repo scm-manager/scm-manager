@@ -23,10 +23,10 @@
       <version>${servlet.version}</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- fix javadoc -->
-    
-    <dependency>    
+
+    <dependency>
       <groupId>javax.transaction</groupId>
       <artifactId>jta</artifactId>
       <version>1.1</version>
@@ -50,29 +50,29 @@
       <artifactId>jersey-guice</artifactId>
       <version>${jersey.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>${logback.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>rome</groupId>
       <artifactId>rome</artifactId>
       <version>1.0</version>
     </dependency>
-    
+
     <dependency>
       <groupId>net.sf.ehcache</groupId>
       <artifactId>ehcache-core</artifactId>
       <version>${ehcache.version}</version>
     </dependency>
-    
+
     <dependency>
-      <groupId>com.thebuzzmedia</groupId>
+      <groupId>org.imgscalr</groupId>
       <artifactId>imgscalr-lib</artifactId>
-      <version>3.2</version>
+      <version>4.2</version>
     </dependency>
 
   </dependencies>
@@ -80,7 +80,7 @@
   <build>
 
     <plugins>
-    
+
       <plugin>
         <groupId>com.mycila.maven-license-plugin</groupId>
         <artifactId>maven-license-plugin</artifactId>
@@ -123,13 +123,5 @@
 
     <finalName>scm-plugin-backend</finalName>
   </build>
-
-
-  <repositories>
-    <repository>
-      <id>The Buzz Media Maven Repository</id>
-      <url>http://maven.thebuzzmedia.com</url>
-    </repository>
-  </repositories>
 
 </project>

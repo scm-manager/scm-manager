@@ -37,7 +37,7 @@ package sonia.scm.plugin.rest;
 
 import com.google.inject.Inject;
 
-import com.thebuzzmedia.imgscalr.Scalr;
+import org.imgscalr.Scalr;
 
 import sonia.scm.plugin.PluginBackend;
 import sonia.scm.plugin.PluginInformation;
@@ -49,7 +49,6 @@ import sonia.scm.util.Util;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
 
 import java.io.File;
 import java.io.IOException;
