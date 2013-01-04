@@ -124,11 +124,12 @@ public class ScreenshotResource
    */
   @GET
   @Produces("image/jpeg")
-  public Response getScreenshot(@PathParam("groupId") String groupId,
-                                @PathParam("artifactId") String artifactId,
-                                @PathParam("number") int number,
-                                @PathParam("size") String size)
-          throws IOException
+  public Response getScreenshot(
+    @PathParam("groupId") String groupId,
+    @PathParam("artifactId") String artifactId,
+    @PathParam("number") int number, 
+    @PathParam("size") String size)
+    throws IOException
   {
     PluginInformation plugin = PluginUtil.getLatestPluginVersion(backend,
                                  groupId, artifactId);
@@ -153,15 +154,9 @@ public class ScreenshotResource
     }
 
     String checksum = ChecksumUtil.createChecksum(screenshot);
-    StringBuilder path = new StringBuilder(PATH_IMAGE);
 
-    path.append(File.separator).append(groupId);
-    path.append(File.separator).append(artifactId).append(File.separator);
-    path.append(String.valueOf(number)).append(File.separator);
-    path.append(size).append(File.separator).append(checksum);
-    path.append(EXTENSION_IMAGE);
-
-    File file = new File(backend.getBaseDirectory(), path.toString());
+    File file = createThumbnailFile(groupId, artifactId, number, size,
+                  checksum);
 
     if (!file.exists())
     {
@@ -184,7 +179,7 @@ public class ScreenshotResource
    * @throws IOException
    */
   private void createThumbnail(File file, String screenshot, char size)
-          throws IOException
+    throws IOException
   {
     IOUtil.mkdirs(file.getParentFile());
 
@@ -205,6 +200,32 @@ public class ScreenshotResource
 
     image = Scalr.resize(image, Scalr.Method.QUALITY, width);
     ImageIO.write(image, FORMAT, file);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param groupId
+   * @param artifactId
+   * @param number
+   * @param size
+   * @param checksum
+   *
+   * @return
+   */
+  private File createThumbnailFile(String groupId, String artifactId,
+    int number, String size, String checksum)
+  {
+    StringBuilder path = new StringBuilder(PATH_IMAGE);
+
+    path.append(File.separator).append(groupId);
+    path.append(File.separator).append(artifactId).append(File.separator);
+    path.append(String.valueOf(number)).append(File.separator);
+    path.append(size).append(File.separator).append(checksum);
+    path.append(EXTENSION_IMAGE);
+
+    return new File(backend.getBaseDirectory(), path.toString());
   }
 
   //~--- fields ---------------------------------------------------------------
