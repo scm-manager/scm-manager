@@ -35,6 +35,8 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+
 import sonia.scm.PlatformType;
 import sonia.scm.SCMContext;
 import sonia.scm.util.SystemUtil;
@@ -109,6 +111,64 @@ public class PluginCondition implements Cloneable, Serializable
     }
 
     return clone;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final PluginCondition other = (PluginCondition) obj;
+
+    return Objects.equal(arch, other.arch)
+      && Objects.equal(minVersion, other.minVersion)
+      && Objects.equal(os, other.os);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(arch, minVersion, os);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("arch", arch)
+                  .add("minVersion", minVersion)
+                  .add("os", os)
+                  .toString();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------
