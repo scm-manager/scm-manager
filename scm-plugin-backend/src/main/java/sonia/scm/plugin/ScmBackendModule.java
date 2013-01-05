@@ -79,15 +79,6 @@ public class ScmBackendModule extends ServletModule
   public static final String CACHE_CONFIG = "/config/ehcache.xml";
 
   /** Field description */
-  public static final String DIRECTORY_DEFAULT = ".scm-backend";
-
-  /** Field description */
-  public static final String DIRECTORY_ENVIRONMENT = "SCMBACKEND_HOME";
-
-  /** Field description */
-  public static final String DIRECTORY_PROPERTY = "scm-backend.home";
-
-  /** Field description */
   public static final String FILE_CONFIG = "config.xml";
 
   /** Field description */
@@ -100,8 +91,7 @@ public class ScmBackendModule extends ServletModule
   public static final String PATTERN_REST_API = "/*";
 
   /** Field description */
-  public static final String PATTERN_REST_EXCLUDE =
-    "/(template/|news).*";
+  public static final String PATTERN_REST_EXCLUDE = "/(template/|news).*";
 
   //~--- methods --------------------------------------------------------------
 
@@ -112,14 +102,7 @@ public class ScmBackendModule extends ServletModule
   @Override
   protected void configureServlets()
   {
-    File baseDirectory = findBaseDirectory();
-
-    if (baseDirectory == null)
-    {
-      throw new ConfigurationException("could not find base directory");
-    }
-
-    File configurationFile = getConfigurationFile(baseDirectory);
+    File configurationFile = BaseDirectory.getFile(FILE_CONFIG);
 
     if (!configurationFile.exists())
     {
@@ -130,8 +113,6 @@ public class ScmBackendModule extends ServletModule
     BackendConfiguration configuration = JAXB.unmarshal(configurationFile,
                                            BackendConfiguration.class);
 
-    bind(File.class).annotatedWith(Names.named(DIRECTORY_PROPERTY)).toInstance(
-      baseDirectory);
     bind(BackendConfiguration.class).toInstance(configuration);
     bind(PluginBackend.class).to(DefaultPluginBackend.class);
     bind(PluginScannerFactory.class).to(DefaultPluginScannerFactory.class);
@@ -167,51 +148,5 @@ public class ScmBackendModule extends ServletModule
     params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX,
       PATTERN_REST_EXCLUDE);
     filter(PATTERN_REST_API).through(GuiceContainer.class, params);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private File findBaseDirectory()
-  {
-    String path = System.getProperty(DIRECTORY_PROPERTY);
-
-    if (Util.isEmpty(path))
-    {
-      path = System.getenv(DIRECTORY_ENVIRONMENT);
-
-      if (Util.isEmpty(path))
-      {
-        path = System.getProperty("user.home").concat(File.separator).concat(
-          DIRECTORY_DEFAULT);
-      }
-    }
-
-    File directory = new File(path);
-
-    if (!directory.exists() &&!directory.mkdirs())
-    {
-      throw new IllegalStateException("could not create directory");
-    }
-
-    return directory;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseDirectory
-   *
-   * @return
-   */
-  private File getConfigurationFile(File baseDirectory)
-  {
-    return new File(baseDirectory, FILE_CONFIG);
   }
 }

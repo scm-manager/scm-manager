@@ -66,6 +66,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import sonia.scm.plugin.BaseDirectory;
 
 /**
  *
@@ -225,7 +226,7 @@ public class ScreenshotResource
     path.append(size).append(File.separator).append(checksum);
     path.append(EXTENSION_IMAGE);
 
-    return new File(backend.getBaseDirectory(), path.toString());
+    return BaseDirectory.getFile(path.toString());
   }
 
   //~--- fields ---------------------------------------------------------------
