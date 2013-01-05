@@ -66,7 +66,7 @@ public class FreemarkerTemplateProvider implements ViewProcessor<String>
 {
 
   /** Field description */
-  public static final String DIRECTORY_TEMPLATES = "/";
+  public static final String DIRECTORY_TEMPLATES = "/WEB-INF/ftl";
 
   /** Field description */
   private static final String EXTENSION = ".html";
