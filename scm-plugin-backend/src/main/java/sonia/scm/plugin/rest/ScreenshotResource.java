@@ -71,7 +71,7 @@ import javax.ws.rs.core.Response.Status;
  *
  * @author Sebastian Sdorra
  */
-@Path("/screenshot/{groupId}/{artifactId}/{number}/{size}.jpg")
+@Path("/page/screenshot/{groupId}/{artifactId}/{number}/{size}.jpg")
 public class ScreenshotResource
 {
 

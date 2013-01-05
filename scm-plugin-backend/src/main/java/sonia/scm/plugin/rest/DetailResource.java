@@ -77,7 +77,7 @@ import javax.ws.rs.core.Response.Status;
  * @author Sebastian Sdorra
  */
 @Singleton
-@Path("/detail/{groupId}/{artifactId}.html")
+@Path("/page/detail/{groupId}/{artifactId}.html")
 public class DetailResource extends CachedViewableResource
 {
 

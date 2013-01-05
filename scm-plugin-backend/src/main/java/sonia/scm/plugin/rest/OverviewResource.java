@@ -37,13 +37,12 @@ package sonia.scm.plugin.rest;
 
 import com.google.inject.Inject;
 
-import sonia.scm.plugin.*;
 import sonia.scm.plugin.BackendConfiguration;
 import sonia.scm.plugin.Category;
 import sonia.scm.plugin.CategoryNameComaparator;
 import sonia.scm.plugin.PluginBackend;
 import sonia.scm.plugin.PluginInformation;
-import sonia.scm.util.LinkTextParser;
+import sonia.scm.plugin.PluginUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -65,7 +64,7 @@ import javax.ws.rs.Path;
  *
  * @author Sebastian Sdorra
  */
-@Path("/index.html")
+@Path("/page/index.html")
 public class OverviewResource extends ViewableResource
 {
 
@@ -85,7 +84,7 @@ public class OverviewResource extends ViewableResource
    */
   @Inject
   public OverviewResource(ServletContext context, PluginBackend backend,
-                          BackendConfiguration configuration)
+    BackendConfiguration configuration)
   {
     super(context, configuration);
     this.backend = backend;
@@ -118,7 +117,7 @@ public class OverviewResource extends ViewableResource
    * @param plugin
    */
   private void append(Map<String, Category> categories,
-                      PluginInformation plugin)
+    PluginInformation plugin)
   {
     String name = plugin.getCategory();
 
