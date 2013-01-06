@@ -46,7 +46,7 @@ import java.util.Comparator;
  * @author Sebastian Sdorra
  */
 public class PluginInformationNameComparator
-        implements Comparator<PluginInformation>
+  implements Comparator<PluginInformation>
 {
 
   /** Field description */

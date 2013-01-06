@@ -29,13 +29,14 @@
 
 
 
-package sonia.scm.plugin.rest;
+package sonia.scm.plugin.rest.admin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 
 import sonia.scm.plugin.BackendConfiguration;
+import sonia.scm.plugin.rest.ViewableResource;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -54,12 +55,12 @@ import javax.ws.rs.core.MediaType;
  *
  * @author Sebastian Sdorra
  */
-@Path("error")
-public class ErrorResource extends ViewableResource
+@Path("admin")
+public class AdminResource extends ViewableResource
 {
 
   /** Field description */
-  private static final String PAGE_UNAUTHORIZED = "/error/Unauthorized.html";
+  private static final String PAGE_OVERVIEW = "/admin/index";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -71,7 +72,7 @@ public class ErrorResource extends ViewableResource
    * @param configuration
    */
   @Inject
-  public ErrorResource(ServletContext context,
+  public AdminResource(ServletContext context,
     BackendConfiguration configuration)
   {
     super(context, configuration);
@@ -86,12 +87,12 @@ public class ErrorResource extends ViewableResource
    * @return
    */
   @GET
-  @Path("unauthorized.html")
+  @Path("index.html")
   @Produces(MediaType.TEXT_HTML)
-  public Viewable unauthorized()
+  public Viewable overview()
   {
-    Map<String, Object> env = createVarMap("Unauthorized");
+    Map<String, Object> env = createVarMap("Administrator");
 
-    return new Viewable(PAGE_UNAUTHORIZED, env);
+    return new Viewable(PAGE_OVERVIEW, env);
   }
 }

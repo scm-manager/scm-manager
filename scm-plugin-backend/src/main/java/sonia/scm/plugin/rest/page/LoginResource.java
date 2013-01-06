@@ -29,13 +29,14 @@
 
 
 
-package sonia.scm.plugin.rest;
+package sonia.scm.plugin.rest.page;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
 
 import sonia.scm.plugin.BackendConfiguration;
+import sonia.scm.plugin.rest.ViewableResource;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -60,7 +61,7 @@ public class LoginResource extends ViewableResource
 {
 
   /** Field description */
-  private static final String PAGE_LOGIN = "/login";
+  private static final String PAGE_LOGIN = "/page/login";
 
   //~--- constructors ---------------------------------------------------------
 

@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.plugin.rest;
+package sonia.scm.plugin.rest.page;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -48,8 +48,9 @@ import sonia.scm.plugin.PluginBackend;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginInformationVersionComparator;
 import sonia.scm.plugin.PluginUtil;
-import sonia.scm.plugin.rest.url.UrlBuilder;
-import sonia.scm.plugin.rest.url.UrlBuilderFactory;
+import sonia.scm.plugin.rest.CachedViewableResource;
+import sonia.scm.plugin.url.UrlBuilder;
+import sonia.scm.plugin.url.UrlBuilderFactory;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -103,8 +104,8 @@ public class DetailResource extends CachedViewableResource
    */
   @Inject
   public DetailResource(ServletContext context, PluginBackend backend,
-                        BackendConfiguration configuration,
-                        UrlBuilderFactory urlFactory, CacheManager cacheManager)
+    BackendConfiguration configuration, UrlBuilderFactory urlFactory,
+    CacheManager cacheManager)
   {
     super(context, backend, configuration, cacheManager, CACHE);
     this.backend = backend;
@@ -125,8 +126,7 @@ public class DetailResource extends CachedViewableResource
    */
   @GET
   public Viewable getPluginDetails(@PathParam("groupId") String groupId,
-                                   @PathParam("artifactId") String artifactId,
-                                   @DefaultValue("false")
+    @PathParam("artifactId") String artifactId, @DefaultValue("false")
   @QueryParam("snapshot") boolean snapshot)
   {
     String cacheKey = createCacheKey(groupId, artifactId, snapshot);
@@ -160,7 +160,7 @@ public class DetailResource extends CachedViewableResource
 
       vars.put("latest", PluginUtil.prepareForView(latest));
       vars.put("versions", detailList);
-      viewable = new Viewable("/detail", vars);
+      viewable = new Viewable("/page/detail", vars);
       putToCache(cacheKey, viewable);
     }
     else if (logger.isDebugEnabled())
@@ -184,10 +184,10 @@ public class DetailResource extends CachedViewableResource
    * @return
    */
   private String createCacheKey(String groupId, String artifactId,
-                                boolean snapshot)
+    boolean snapshot)
   {
     return new StringBuilder(Util.nonNull(groupId)).append(
-        Util.nonNull(artifactId)).append(Boolean.toString(snapshot)).toString();
+      Util.nonNull(artifactId)).append(Boolean.toString(snapshot)).toString();
   }
 
   /**
@@ -200,12 +200,12 @@ public class DetailResource extends CachedViewableResource
    * @return
    */
   private List<PluginDetailWrapper> createDetailList(PluginInformation latest,
-          List<PluginInformation> pluginVersions)
+    List<PluginInformation> pluginVersions)
   {
     List<PluginDetailWrapper> detailList = new ArrayList<PluginDetailWrapper>();
 
     Collections.sort(pluginVersions,
-                     PluginInformationVersionComparator.INSTANCE);
+      PluginInformationVersionComparator.INSTANCE);
 
     Iterator<PluginInformation> pluginIterator = pluginVersions.iterator();
     UrlBuilder urlBuilder = urlFactory.createCompareUrlBuilder(latest);

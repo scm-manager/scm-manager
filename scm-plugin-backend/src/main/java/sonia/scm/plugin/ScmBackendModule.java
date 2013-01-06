@@ -41,15 +41,15 @@ import com.google.inject.servlet.ServletModule;
 import net.sf.ehcache.CacheManager;
 
 import sonia.scm.ConfigurationException;
-import sonia.scm.plugin.rest.PluginResource;
-import sonia.scm.plugin.rest.url.BitbucketUrlBuilder;
-import sonia.scm.plugin.rest.url.GithubUrlBuilder;
-import sonia.scm.plugin.rest.url.UrlBuilder;
-import sonia.scm.plugin.rest.url.UrlBuilderFactory;
+import sonia.scm.plugin.rest.api.PluginResource;
 import sonia.scm.plugin.scanner.DefaultPluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerScheduler;
 import sonia.scm.plugin.scanner.TimerPluginScannerScheduler;
+import sonia.scm.plugin.url.BitbucketUrlBuilder;
+import sonia.scm.plugin.url.GithubUrlBuilder;
+import sonia.scm.plugin.url.UrlBuilder;
+import sonia.scm.plugin.url.UrlBuilderFactory;
 import sonia.scm.web.proxy.ProxyConfigurationProvider;
 import sonia.scm.web.proxy.ProxyServlet;
 

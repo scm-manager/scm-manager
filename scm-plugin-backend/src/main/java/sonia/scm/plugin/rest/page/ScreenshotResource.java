@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.plugin.rest;
+package sonia.scm.plugin.rest.page;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -39,6 +39,7 @@ import com.google.inject.Inject;
 
 import org.imgscalr.Scalr;
 
+import sonia.scm.plugin.BaseDirectory;
 import sonia.scm.plugin.PluginBackend;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginUtil;
@@ -66,7 +67,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import sonia.scm.plugin.BaseDirectory;
 
 /**
  *
@@ -125,11 +125,9 @@ public class ScreenshotResource
    */
   @GET
   @Produces("image/jpeg")
-  public Response getScreenshot(
-    @PathParam("groupId") String groupId,
+  public Response getScreenshot(@PathParam("groupId") String groupId,
     @PathParam("artifactId") String artifactId,
-    @PathParam("number") int number, 
-    @PathParam("size") String size)
+    @PathParam("number") int number, @PathParam("size") String size)
     throws IOException
   {
     PluginInformation plugin = PluginUtil.getLatestPluginVersion(backend,

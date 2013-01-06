@@ -31,85 +31,45 @@
 
 
 
-package sonia.scm.plugin.rest.url;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
-import sonia.scm.plugin.PluginInformation;
-import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
+package sonia.scm.plugin.url;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class UrlBuilderFactory
+public class BitbucketUrlBuilder extends AbstractUrlBuilder
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param urlBuilderSet
-   */
-  @Inject
-  public UrlBuilderFactory(Set<UrlBuilder> urlBuilderSet)
-  {
-    this.urlBuilderSet = urlBuilderSet;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param pluginUrl
-   *
-   * @return
-   */
-  public UrlBuilder createCompareUrlBuilder(String pluginUrl)
-  {
-    UrlBuilder builder = null;
-
-    if (Util.isNotEmpty(pluginUrl) && Util.isNotEmpty(urlBuilderSet))
-    {
-      for (UrlBuilder cup : urlBuilderSet)
-      {
-        if (cup.isCompareable(pluginUrl))
-        {
-          builder = cup;
-
-          break;
-        }
-      }
-    }
-
-    return builder;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param plugin
-   *
-   * @return
-   */
-  public UrlBuilder createCompareUrlBuilder(PluginInformation plugin)
-  {
-    return createCompareUrlBuilder(plugin.getUrl());
-  }
-
-  //~--- fields ---------------------------------------------------------------
+  /** Field description */
+  public static final String SERVERNAME = "bitbucket.org";
 
   /** Field description */
-  private Set<UrlBuilder> urlBuilderSet;
+  public static final String URL_PATTERN =
+    "https://bitbucket.org/{0}/{1}/compare/{2}..{3}";
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected String getServername()
+  {
+    return SERVERNAME;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  protected String getUrlPattern()
+  {
+    return URL_PATTERN;
+  }
 }

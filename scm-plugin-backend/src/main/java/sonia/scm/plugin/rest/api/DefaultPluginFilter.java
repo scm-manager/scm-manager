@@ -31,45 +31,76 @@
 
 
 
-package sonia.scm.plugin.rest.url;
+package sonia.scm.plugin.rest.api;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.plugin.PluginCondition;
+import sonia.scm.plugin.PluginFilter;
+import sonia.scm.plugin.PluginInformation;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GithubUrlBuilder extends AbstractUrlBuilder
+public class DefaultPluginFilter implements PluginFilter
 {
 
   /** Field description */
-  public static final String SERVERNAME = "github.com";
+  public static final String VERSION_SNAPSHOT = "SNAPSHOT";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param version
+   * @param os
+   * @param arch
+   * @param snapshot
+   */
+  public DefaultPluginFilter(String version, String os, String arch,
+    boolean snapshot)
+  {
+    this.version = version;
+    this.os = os;
+    this.arch = arch;
+    this.snapshot = snapshot;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param plugin
+   *
+   * @return
+   */
+  @Override
+  public boolean accept(PluginInformation plugin)
+  {
+    PluginCondition condition = plugin.getCondition();
+
+    return (snapshot
+      ||!plugin.getVersion().toUpperCase().contains(
+        VERSION_SNAPSHOT)) && ((condition != null)
+          && condition.isSupported(version, os, arch) || (condition == null));
+  }
+
+  //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  public static final String URL_PATTERN =
-    "https://github.com/{0}/{1}/compare/{3}...{2}";
+  private String arch;
 
-  //~--- get methods ----------------------------------------------------------
+  /** Field description */
+  private String os;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected String getServername()
-  {
-    return SERVERNAME;
-  }
+  /** Field description */
+  private boolean snapshot;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  protected String getUrlPattern()
-  {
-    return URL_PATTERN;
-  }
+  /** Field description */
+  private String version;
 }

@@ -31,54 +31,18 @@
 
 
 
-package sonia.scm.plugin.rest.url;
+package sonia.scm.plugin.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.plugin.PluginInformation;
-import sonia.scm.util.HttpUtil;
-import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import java.text.MessageFormat;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public abstract class AbstractUrlBuilder implements UrlBuilder
+public interface UrlBuilder
 {
-
-  /** the logger for AbstractUrlBuilder */
-  private static final Logger logger =
-    LoggerFactory.getLogger(AbstractUrlBuilder.class);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected abstract String getServername();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected abstract String getUrlPattern();
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -90,55 +54,8 @@ public abstract class AbstractUrlBuilder implements UrlBuilder
    *
    * @return
    */
-  @Override
   public String createCompareUrl(PluginInformation latest,
-                                 PluginInformation plugin,
-                                 PluginInformation other)
-  {
-    return createCompareUrl(latest.getUrl(), plugin.getVersion(),
-                            other.getVersion());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param urlString
-   * @param version
-   * @param otherVersion
-   *
-   * @return
-   */
-  public String createCompareUrl(String urlString, String version,
-                                 String otherVersion)
-  {
-    String result = null;
-
-    try
-    {
-      URL url = new URL(urlString);
-      String path = url.getPath();
-
-      if (Util.isNotEmpty(path))
-      {
-        path = HttpUtil.getUriWithoutStartSeperator(path);
-
-        String[] parts = path.split(HttpUtil.SEPARATOR_PATH);
-
-        if (parts.length >= 2)
-        {
-          result = MessageFormat.format(getUrlPattern(), parts[0], parts[1],
-                                        version, otherVersion);
-        }
-      }
-    }
-    catch (MalformedURLException ex)
-    {
-      logger.error("could not parse url", ex);
-    }
-
-    return result;
-  }
+    PluginInformation plugin, PluginInformation other);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -150,9 +67,5 @@ public abstract class AbstractUrlBuilder implements UrlBuilder
    *
    * @return
    */
-  @Override
-  public boolean isCompareable(String url)
-  {
-    return url.contains(getServername());
-  }
+  public boolean isCompareable(String url);
 }

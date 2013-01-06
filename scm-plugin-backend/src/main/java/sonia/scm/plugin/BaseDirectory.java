@@ -48,13 +48,13 @@ public class BaseDirectory
 {
 
   /** Field description */
+  static final String DIRECTORY_PROPERTY = "scm-backend.home";
+
+  /** Field description */
   private static final String DIRECTORY_DEFAULT = ".scm-backend";
 
   /** Field description */
   private static final String DIRECTORY_ENVIRONMENT = "SCMBACKEND_HOME";
-
-  /** Field description */
-  static final String DIRECTORY_PROPERTY = "scm-backend.home";
 
   /** Field description */
   private static BaseDirectory instance;

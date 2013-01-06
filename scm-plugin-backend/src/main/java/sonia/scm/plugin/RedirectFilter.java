@@ -34,6 +34,7 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Singleton;
+
 import sonia.scm.web.filter.HttpFilter;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -52,8 +53,11 @@ import javax.servlet.http.HttpServletResponse;
 @Singleton
 public class RedirectFilter extends HttpFilter
 {
-  
+
+  /** Field description */
   private static final String STARTPAGE = "/page/index.html";
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

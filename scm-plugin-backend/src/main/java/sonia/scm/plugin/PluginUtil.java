@@ -60,7 +60,7 @@ public class PluginUtil
    * @return
    */
   public static List<PluginInformation> filterSameVersions(
-          List<PluginInformation> plugins)
+    List<PluginInformation> plugins)
   {
     List<PluginInformation> filteredPlugins =
       new ArrayList<PluginInformation>();
@@ -87,7 +87,7 @@ public class PluginUtil
    * @return
    */
   public static List<PluginInformation> filterSnapshots(
-          List<PluginInformation> allVersions)
+    List<PluginInformation> allVersions)
   {
     List<PluginInformation> filtered = new ArrayList<PluginInformation>();
 
@@ -137,7 +137,7 @@ public class PluginUtil
    * @return
    */
   public static List<PluginInformation> getFilteredPluginVersions(
-          PluginBackend backend, String groupId, String artifactId)
+    PluginBackend backend, String groupId, String artifactId)
   {
     List<PluginInformation> pluginVersions =
       PluginUtil.getPluginVersions(backend, groupId, artifactId);
@@ -145,7 +145,7 @@ public class PluginUtil
     if (Util.isNotEmpty(pluginVersions))
     {
       Collections.sort(pluginVersions,
-                       PluginInformationNameComparator.INSTANCE);
+        PluginInformationNameComparator.INSTANCE);
       pluginVersions = PluginUtil.filterSameVersions(pluginVersions);
     }
 
@@ -163,7 +163,7 @@ public class PluginUtil
    * @return
    */
   public static PluginInformation getLatestPluginVersion(PluginBackend backend,
-          String groupId, String artifactId)
+    String groupId, String artifactId)
   {
     return getFilteredPluginVersions(backend, groupId, artifactId).get(0);
   }
@@ -180,7 +180,7 @@ public class PluginUtil
    * @return
    */
   public static List<PluginInformation> getPluginVersions(
-          PluginBackend backend, final String groupId, final String artifactId)
+    PluginBackend backend, final String groupId, final String artifactId)
   {
     List<PluginInformation> pluginVersions =
       backend.getPlugins(new PluginFilter()
@@ -189,7 +189,7 @@ public class PluginUtil
       public boolean accept(PluginInformation plugin)
       {
         return groupId.equals(plugin.getGroupId())
-               && artifactId.equals(plugin.getArtifactId());
+          && artifactId.equals(plugin.getArtifactId());
       }
     });
 

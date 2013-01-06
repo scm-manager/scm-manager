@@ -59,7 +59,7 @@ public class ViewableResource
    * @param configuration
    */
   public ViewableResource(ServletContext context,
-                          BackendConfiguration configuration)
+    BackendConfiguration configuration)
   {
     this.contextPath = context.getContextPath();
     this.configuration = configuration;

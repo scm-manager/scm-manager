@@ -31,21 +31,43 @@
 
 
 
-package sonia.scm.plugin.rest.url;
+package sonia.scm.plugin.rest.page;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.plugin.PluginInformation;
+import sonia.scm.plugin.PluginUtil;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class BitbucketUrlBuilder extends AbstractUrlBuilder
+public class PluginDetailWrapper
 {
 
-  /** Field description */
-  public static final String SERVERNAME = "bitbucket.org";
+  /**
+   * Constructs ...
+   *
+   *
+   * @param plugin
+   */
+  public PluginDetailWrapper(PluginInformation plugin)
+  {
+    this(plugin, null);
+  }
 
-  /** Field description */
-  public static final String URL_PATTERN =
-    "https://bitbucket.org/{0}/{1}/compare/{2}..{3}";
+  /**
+   * Constructs ...
+   *
+   *
+   * @param plugin
+   * @param compareUrl
+   */
+  public PluginDetailWrapper(PluginInformation plugin, String compareUrl)
+  {
+    this.plugin = PluginUtil.prepareForView(plugin);
+    this.compareUrl = compareUrl;
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -55,10 +77,9 @@ public class BitbucketUrlBuilder extends AbstractUrlBuilder
    *
    * @return
    */
-  @Override
-  protected String getServername()
+  public String getCompareUrl()
   {
-    return SERVERNAME;
+    return compareUrl;
   }
 
   /**
@@ -67,9 +88,40 @@ public class BitbucketUrlBuilder extends AbstractUrlBuilder
    *
    * @return
    */
-  @Override
-  protected String getUrlPattern()
+  public PluginInformation getPlugin()
   {
-    return URL_PATTERN;
+    return plugin;
   }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param compareUrl
+   */
+  public void setCompareUrl(String compareUrl)
+  {
+    this.compareUrl = compareUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param plugin
+   */
+  public void setPlugin(PluginInformation plugin)
+  {
+    this.plugin = plugin;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String compareUrl;
+
+  /** Field description */
+  private PluginInformation plugin;
 }

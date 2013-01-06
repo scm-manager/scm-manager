@@ -46,7 +46,7 @@ import java.util.Comparator;
  * @author Sebastian Sdorra
  */
 public class PluginInformationVersionComparator
-        implements Comparator<PluginInformation>
+  implements Comparator<PluginInformation>
 {
 
   /** Field description */
@@ -74,7 +74,7 @@ public class PluginInformationVersionComparator
     if (Util.isNotEmpty(v1) && Util.isNotEmpty(v2))
     {
       if (PluginVersion.createVersion(v1).isNewer(
-              PluginVersion.createVersion(v2)))
+        PluginVersion.createVersion(v2)))
       {
         result = -1;
       }

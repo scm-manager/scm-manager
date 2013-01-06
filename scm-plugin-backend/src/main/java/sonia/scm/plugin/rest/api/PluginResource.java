@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.plugin.rest;
+package sonia.scm.plugin.rest.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -51,6 +51,7 @@ import sonia.scm.plugin.PluginBackendListener;
 import sonia.scm.plugin.PluginCenter;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginVersion;
+import sonia.scm.plugin.rest.PluginInformationComparator;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -97,8 +98,7 @@ public class PluginResource implements PluginBackendListener
    */
   @Inject
   public PluginResource(PluginBackend backend,
-                        BackendConfiguration configuration,
-                        CacheManager cacheManager)
+    BackendConfiguration configuration, CacheManager cacheManager)
   {
     this.backend = backend;
     this.configuration = configuration;
@@ -143,15 +143,14 @@ public class PluginResource implements PluginBackendListener
   @GET
   @Produces(MediaType.APPLICATION_XML)
   public Response getPlugins(@PathParam("version") String version,
-                             @QueryParam("os") String os,
-                             @QueryParam("arch") String arch,
-                             @DefaultValue("false")
+    @QueryParam("os") String os, @QueryParam("arch") String arch,
+    @DefaultValue("false")
   @QueryParam("snapshot") boolean snapshot)
   {
     if (logger.isDebugEnabled())
     {
       logger.debug("load plugins for version {}, include snapshots: {}",
-                   version, Boolean.toString(snapshot));
+        version, Boolean.toString(snapshot));
     }
 
     PluginCenter pc = null;
@@ -201,7 +200,7 @@ public class PluginResource implements PluginBackendListener
    * @return
    */
   private String createCacheKey(String version, String os, String arch,
-                                boolean snapshot)
+    boolean snapshot)
   {
     StringBuilder key = new StringBuilder(version);
 
@@ -222,7 +221,7 @@ public class PluginResource implements PluginBackendListener
    * @return
    */
   private Set<PluginInformation> getNewestPlugins(
-          List<PluginInformation> plugins)
+    List<PluginInformation> plugins)
   {
     Collections.sort(plugins, PluginInformationComparator.INSTANCE);
 
@@ -278,10 +277,10 @@ public class PluginResource implements PluginBackendListener
    * @return
    */
   private boolean isSamePlugin(PluginInformation plugin,
-                               PluginInformation otherPlugin)
+    PluginInformation otherPlugin)
   {
     return plugin.getGroupId().equals(otherPlugin.getGroupId())
-           && plugin.getArtifactId().equals(otherPlugin.getArtifactId());
+      && plugin.getArtifactId().equals(otherPlugin.getArtifactId());
   }
 
   //~--- fields ---------------------------------------------------------------

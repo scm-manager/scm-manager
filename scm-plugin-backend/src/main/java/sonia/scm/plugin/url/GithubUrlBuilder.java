@@ -31,43 +31,21 @@
 
 
 
-package sonia.scm.plugin.rest;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.plugin.PluginInformation;
-import sonia.scm.plugin.PluginUtil;
+package sonia.scm.plugin.url;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class PluginDetailWrapper
+public class GithubUrlBuilder extends AbstractUrlBuilder
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param plugin
-   */
-  public PluginDetailWrapper(PluginInformation plugin)
-  {
-    this(plugin, null);
-  }
+  /** Field description */
+  public static final String SERVERNAME = "github.com";
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param plugin
-   * @param compareUrl
-   */
-  public PluginDetailWrapper(PluginInformation plugin, String compareUrl)
-  {
-    this.plugin = PluginUtil.prepareForView(plugin);
-    this.compareUrl = compareUrl;
-  }
+  /** Field description */
+  public static final String URL_PATTERN =
+    "https://github.com/{0}/{1}/compare/{3}...{2}";
 
   //~--- get methods ----------------------------------------------------------
 
@@ -77,9 +55,10 @@ public class PluginDetailWrapper
    *
    * @return
    */
-  public String getCompareUrl()
+  @Override
+  protected String getServername()
   {
-    return compareUrl;
+    return SERVERNAME;
   }
 
   /**
@@ -88,40 +67,9 @@ public class PluginDetailWrapper
    *
    * @return
    */
-  public PluginInformation getPlugin()
+  @Override
+  protected String getUrlPattern()
   {
-    return plugin;
+    return URL_PATTERN;
   }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param compareUrl
-   */
-  public void setCompareUrl(String compareUrl)
-  {
-    this.compareUrl = compareUrl;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param plugin
-   */
-  public void setPlugin(PluginInformation plugin)
-  {
-    this.plugin = plugin;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String compareUrl;
-
-  /** Field description */
-  private PluginInformation plugin;
 }

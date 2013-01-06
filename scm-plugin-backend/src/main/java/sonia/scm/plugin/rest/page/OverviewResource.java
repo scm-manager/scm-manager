@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.plugin.rest;
+package sonia.scm.plugin.rest.page;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -43,6 +43,8 @@ import sonia.scm.plugin.CategoryNameComaparator;
 import sonia.scm.plugin.PluginBackend;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginUtil;
+import sonia.scm.plugin.rest.PluginInformationComparator;
+import sonia.scm.plugin.rest.ViewableResource;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -106,7 +108,7 @@ public class OverviewResource extends ViewableResource
 
     vars.put("categories", categories);
 
-    return new Viewable("/index", vars);
+    return new Viewable("/page/index", vars);
   }
 
   /**

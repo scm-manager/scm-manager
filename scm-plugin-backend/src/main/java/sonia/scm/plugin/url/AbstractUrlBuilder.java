@@ -31,94 +31,127 @@
 
 
 
-package sonia.scm.plugin.scanner;
+package sonia.scm.plugin.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.plugin.BackendConfiguration;
-import sonia.scm.plugin.PluginBackend;
+import sonia.scm.plugin.PluginInformation;
+import sonia.scm.util.HttpUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import java.util.TimerTask;
+import java.text.MessageFormat;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class PluginScannerTimerTask extends TimerTask
+public abstract class AbstractUrlBuilder implements UrlBuilder
 {
 
-  /** the logger for PluginScannerTimerTask */
+  /** the logger for AbstractUrlBuilder */
   private static final Logger logger =
-    LoggerFactory.getLogger(PluginScannerTimerTask.class);
+    LoggerFactory.getLogger(AbstractUrlBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Method description
    *
    *
-   * @param backend
-   * @param configuration
-   * @param scannerFactory
+   * @return
    */
-  public PluginScannerTimerTask(PluginBackend backend,
-    BackendConfiguration configuration, PluginScannerFactory scannerFactory)
-  {
-    this.backend = backend;
-    this.configuration = configuration;
-    this.scannerFactory = scannerFactory;
-  }
+  protected abstract String getServername();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected abstract String getUrlPattern();
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @param latest
+   * @param plugin
+   * @param other
+   *
+   * @return
    */
   @Override
-  public void run()
+  public String createCompareUrl(PluginInformation latest,
+    PluginInformation plugin, PluginInformation other)
   {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("start scann");
-    }
-
-    for (File directory : configuration.getDirectories())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.info("scann directory {}", directory.getPath());
-      }
-
-      PluginScanner scanner = scannerFactory.createScanner();
-
-      if (configuration.isMultithreaded())
-      {
-        new Thread(new PluginScannerRunnable(backend, scanner,
-          directory)).start();
-      }
-      else
-      {
-        scanner.scannDirectory(backend, directory);
-      }
-    }
+    return createCompareUrl(latest.getUrl(), plugin.getVersion(),
+      other.getVersion());
   }
 
-  //~--- fields ---------------------------------------------------------------
+  /**
+   * Method description
+   *
+   *
+   * @param urlString
+   * @param version
+   * @param otherVersion
+   *
+   * @return
+   */
+  public String createCompareUrl(String urlString, String version,
+    String otherVersion)
+  {
+    String result = null;
 
-  /** Field description */
-  private PluginBackend backend;
+    try
+    {
+      URL url = new URL(urlString);
+      String path = url.getPath();
 
-  /** Field description */
-  private BackendConfiguration configuration;
+      if (Util.isNotEmpty(path))
+      {
+        path = HttpUtil.getUriWithoutStartSeperator(path);
 
-  /** Field description */
-  private PluginScannerFactory scannerFactory;
+        String[] parts = path.split(HttpUtil.SEPARATOR_PATH);
+
+        if (parts.length >= 2)
+        {
+          result = MessageFormat.format(getUrlPattern(), parts[0], parts[1],
+            version, otherVersion);
+        }
+      }
+    }
+    catch (MalformedURLException ex)
+    {
+      logger.error("could not parse url", ex);
+    }
+
+    return result;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   *
+   * @return
+   */
+  @Override
+  public boolean isCompareable(String url)
+  {
+    return url.contains(getServername());
+  }
 }

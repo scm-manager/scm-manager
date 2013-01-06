@@ -26,6 +26,9 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+
+
+
 package sonia.scm.plugin;
 
 /**
@@ -34,5 +37,7 @@ package sonia.scm.plugin;
  */
 public class Roles
 {
+
+  /** Field description */
   public static final String ADMIN = "admin";
 }
