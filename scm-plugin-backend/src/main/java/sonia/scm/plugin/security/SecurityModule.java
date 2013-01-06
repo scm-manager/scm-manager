@@ -38,6 +38,7 @@ import com.google.inject.name.Names;
 
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.crypto.RandomNumberGenerator;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
@@ -157,6 +158,9 @@ public class SecurityModule extends ShiroWebModule
   {
     bindConstants();
     bindCredentialsMatcher();
+
+    // bind cache manager
+    bind(CacheManager.class).toProvider(CacheManagerProvider.class);
 
     // bind realm
     bindRealm().to(DefaultAdminRealm.class);

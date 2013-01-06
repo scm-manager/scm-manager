@@ -45,6 +45,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 
@@ -79,12 +80,13 @@ public class DefaultAdminRealm extends AuthorizingRealm
    *
    * @param configuration
    * @param credentialsMatcher
+   * @param cacheManager
    */
   @Inject
   public DefaultAdminRealm(BackendConfiguration configuration,
-    CredentialsMatcher credentialsMatcher)
+    CredentialsMatcher credentialsMatcher, CacheManager cacheManager)
   {
-    super(credentialsMatcher);
+    super(cacheManager, credentialsMatcher);
     this.configuration = configuration;
     setAuthenticationTokenClass(UsernamePasswordToken.class);
   }
