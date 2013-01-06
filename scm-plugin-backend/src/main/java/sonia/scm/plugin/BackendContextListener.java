@@ -39,10 +39,14 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import org.apache.shiro.guice.web.ShiroWebModule;
+
 import sonia.scm.plugin.scanner.PluginScannerScheduler;
+import sonia.scm.plugin.security.SecurityModule;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 /**
@@ -74,6 +78,7 @@ public class BackendContextListener extends GuiceServletContextListener
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent)
   {
+    this.servletContext = servletContextEvent.getServletContext();
     super.contextInitialized(servletContextEvent);
     scheduler = injector.getInstance(PluginScannerScheduler.class);
     scheduler.start();
@@ -90,7 +95,8 @@ public class BackendContextListener extends GuiceServletContextListener
   @Override
   protected Injector getInjector()
   {
-    injector = Guice.createInjector(new ScmBackendModule());
+    injector = Guice.createInjector(ShiroWebModule.guiceFilterModule(),
+      new SecurityModule(servletContext), new ScmBackendModule());
 
     return injector;
   }
@@ -102,4 +108,7 @@ public class BackendContextListener extends GuiceServletContextListener
 
   /** Field description */
   private PluginScannerScheduler scheduler;
+
+  /** Field description */
+  private ServletContext servletContext;
 }

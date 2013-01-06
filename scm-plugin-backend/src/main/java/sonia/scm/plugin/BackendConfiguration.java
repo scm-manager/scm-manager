@@ -42,7 +42,6 @@ import sonia.scm.xml.XmlIntervalAdapter;
 
 import java.io.File;
 
-
 import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -60,6 +59,17 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement(name = "configuration")
 public class BackendConfiguration
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public AdminAccountConfiguration getAdminAccount()
+  {
+    return adminAccount;
+  }
 
   /**
    * Method description
@@ -139,6 +149,10 @@ public class BackendConfiguration
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @XmlElement(name = "admin-account")
+  private AdminAccountConfiguration adminAccount;
 
   /** Field description */
   @XmlElement(name = "directory")

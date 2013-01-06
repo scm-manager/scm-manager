@@ -113,6 +113,9 @@
                 <header class="entry-header">
                   <h1 class="entry-title">${title}</h1>
                 </header>
+                <#if error??>
+                  <div style="color: red">${error}</div>
+                </#if>
                 <div class="entry-content">
                   <!-- content begin -->
                   

@@ -36,7 +36,6 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.multibindings.Multibinder;
-import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 
 import net.sf.ehcache.CacheManager;
@@ -51,7 +50,6 @@ import sonia.scm.plugin.scanner.DefaultPluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerScheduler;
 import sonia.scm.plugin.scanner.TimerPluginScannerScheduler;
-import sonia.scm.util.Util;
 import sonia.scm.web.proxy.ProxyConfigurationProvider;
 import sonia.scm.web.proxy.ProxyServlet;
 
