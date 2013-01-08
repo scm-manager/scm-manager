@@ -35,9 +35,6 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.apache.maven.repository.internal.DefaultArtifactDescriptorReader;
-import org.apache.maven.repository.internal.DefaultVersionRangeResolver;
-import org.apache.maven.repository.internal.DefaultVersionResolver;
 import org.apache.maven.repository.internal.MavenRepositorySystemSession;
 
 import org.slf4j.Logger;
@@ -45,15 +42,9 @@ import org.slf4j.LoggerFactory;
 
 import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.collection.CollectRequest;
-import org.sonatype.aether.connector.async.AsyncRepositoryConnectorFactory;
-import org.sonatype.aether.connector.file.FileRepositoryConnectorFactory;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.graph.DependencyNode;
-import org.sonatype.aether.impl.ArtifactDescriptorReader;
-import org.sonatype.aether.impl.VersionRangeResolver;
-import org.sonatype.aether.impl.VersionResolver;
-import org.sonatype.aether.impl.internal.DefaultServiceLocator;
 import org.sonatype.aether.repository.LocalArtifactRegistration;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.LocalRepositoryManager;
@@ -61,7 +52,6 @@ import org.sonatype.aether.repository.Proxy;
 import org.sonatype.aether.repository.RemoteRepository;
 import org.sonatype.aether.repository.RepositoryPolicy;
 import org.sonatype.aether.resolution.DependencyRequest;
-import org.sonatype.aether.spi.connector.RepositoryConnectorFactory;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
 
@@ -347,19 +337,7 @@ public class AetherPluginHandler
    */
   private RepositorySystem createRepositorySystem()
   {
-    DefaultServiceLocator locator = new DefaultServiceLocator();
-
-    locator.addService(VersionResolver.class, DefaultVersionResolver.class);
-    locator.addService(VersionRangeResolver.class,
-      DefaultVersionRangeResolver.class);
-    locator.addService(ArtifactDescriptorReader.class,
-      DefaultArtifactDescriptorReader.class);
-    locator.addService(RepositoryConnectorFactory.class,
-      AsyncRepositoryConnectorFactory.class);
-    locator.addService(RepositoryConnectorFactory.class,
-      FileRepositoryConnectorFactory.class);
-
-    return locator.getService(RepositorySystem.class);
+    return new AetherServiceLocator().getService(RepositorySystem.class);
   }
 
   /**
