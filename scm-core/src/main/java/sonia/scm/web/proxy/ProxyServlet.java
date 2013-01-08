@@ -120,7 +120,16 @@ public class ProxyServlet extends HttpServlet
 
       con = createConnection(configuration, request);
 
-      copyRequestHeaders(configuration, request, con);
+      if (configuration.isCopyRequestHeaders())
+      {
+        logger.trace("copy request headers");
+        copyRequestHeaders(configuration, request, con);
+      }
+      else
+      {
+        logger.trace("skip copy of request headers");
+      }
+
       con.connect();
 
       int responseCode = con.getResponseCode();
@@ -128,7 +137,15 @@ public class ProxyServlet extends HttpServlet
       logger.trace("resonse returned status code {}", responseCode);
       response.setStatus(responseCode);
 
-      copyResponseHeaders(configuration, con, response);
+      if (configuration.isCopyResponseHeaders())
+      {
+        logger.trace("copy response headers");
+        copyResponseHeaders(configuration, con, response);
+      }
+      else
+      {
+        logger.trace("skip copy of response headers");
+      }
 
       copyContent(con, response);
 

@@ -69,15 +69,20 @@ public class ProxyConfiguration
    *
    *
    * @param url
+   * @param copyRequestHeaders
    * @param requestHeaderExcludes
+   * @param copyResponseHeaders
    * @param responseHeaderExcludes
    * @param cacheEnabled
    */
-  public ProxyConfiguration(URL url, Set<String> requestHeaderExcludes,
+  public ProxyConfiguration(URL url, boolean copyRequestHeaders,
+    Set<String> requestHeaderExcludes, boolean copyResponseHeaders,
     Set<String> responseHeaderExcludes, boolean cacheEnabled)
   {
     this.url = url;
+    this.copyResponseHeaders = copyResponseHeaders;
     this.requestHeaderExcludes = requestHeaderExcludes;
+    this.copyResponseHeaders = copyResponseHeaders;
     this.responseHeaderExcludes = responseHeaderExcludes;
     this.cacheEnabled = cacheEnabled;
   }
@@ -108,7 +113,9 @@ public class ProxyConfiguration
     final ProxyConfiguration other = (ProxyConfiguration) obj;
 
     return Objects.equal(url, other.url)
+      && Objects.equal(copyRequestHeaders, other.copyRequestHeaders)
       && Objects.equal(requestHeaderExcludes, other.requestHeaderExcludes)
+      && Objects.equal(copyResponseHeaders, other.copyResponseHeaders)
       && Objects.equal(responseHeaderExcludes, other.responseHeaderExcludes)
       && Objects.equal(cacheEnabled, other.cacheEnabled);
   }
@@ -122,8 +129,8 @@ public class ProxyConfiguration
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(url, requestHeaderExcludes, responseHeaderExcludes,
-      cacheEnabled);
+    return Objects.hashCode(url, copyRequestHeaders, requestHeaderExcludes,
+      copyResponseHeaders, responseHeaderExcludes, cacheEnabled);
   }
 
   /**
@@ -138,7 +145,9 @@ public class ProxyConfiguration
     //J-
     return Objects.toStringHelper(this)
                   .add("url", url)
+                  .add("copyRequestHeaders", copyRequestHeaders)
                   .add("requestHeaderExcludes", requestHeaderExcludes)
+                  .add("copyResponseHeaders", copyResponseHeaders)
                   .add("responseHeaderExcludes", responseHeaderExcludes)
                   .add("cacheEnabled", cacheEnabled)
                   .toString();
@@ -201,11 +210,41 @@ public class ProxyConfiguration
     return cacheEnabled;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isCopyRequestHeaders()
+  {
+    return copyRequestHeaders;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isCopyResponseHeaders()
+  {
+    return copyResponseHeaders;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   @XmlElement(name = "cache-enabled")
   private boolean cacheEnabled = true;
+
+  /** Field description */
+  @XmlElement(name = "copy-request-headers")
+  private boolean copyRequestHeaders = true;
+
+  /** Field description */
+  @XmlElement(name = "copy-response-headers")
+  private boolean copyResponseHeaders = true;
 
   /** Field description */
   @XmlElement(name = "exclude")
