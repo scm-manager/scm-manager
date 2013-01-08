@@ -29,72 +29,32 @@
 
 
 
-package sonia.scm.plugin.rest.admin;
+package sonia.scm.plugin.scanner;
 
 //~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.plugin.BackendConfiguration;
 import sonia.scm.plugin.PluginBackend;
-import sonia.scm.plugin.rest.ViewableResource;
-import sonia.scm.plugin.scanner.PluginScannerFactory;
-import sonia.scm.plugin.scanner.PluginScanners;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.api.view.Viewable;
-
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import java.io.File;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Path("admin")
-public class AdminResource extends ViewableResource
+public class PluginScanners
 {
 
-  /** Field description */
-  private static final String PAGE_OVERVIEW = "/admin/index";
-
   /**
-   * the logger for AdminResource
+   * the logger for PluginScanners
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(AdminResource.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param context
-   * @param configuration
-   * @param backend
-   * @param scannerFactory
-   */
-  @Inject
-  public AdminResource(ServletContext context,
-    BackendConfiguration configuration, PluginBackend backend,
-    PluginScannerFactory scannerFactory)
-  {
-    super(context, configuration);
-    this.backend = backend;
-    this.scannerFactory = scannerFactory;
-  }
+    LoggerFactory.getLogger(PluginScanners.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -102,45 +62,37 @@ public class AdminResource extends ViewableResource
    * Method description
    *
    *
-   * @return
+   * @param configuration
+   * @param backend
+   * @param scannerFactory
    */
-  @GET
-  @Path("index.html")
-  @Produces(MediaType.TEXT_HTML)
-  public Viewable overview()
+  public synchronized static void scannDirectory(
+    BackendConfiguration configuration, PluginBackend backend,
+    PluginScannerFactory scannerFactory)
   {
-    Map<String, Object> env = createVarMap("Administration");
-
-    return new Viewable(PAGE_OVERVIEW, env);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @POST
-  @Path("action/scann")
-  public void scann()
-  {
-    new Thread(new Runnable()
+    if (logger.isInfoEnabled())
     {
+      logger.info("start scann");
+    }
 
-      @Override
-      public void run()
+    for (File directory : configuration.getDirectories())
+    {
+      if (logger.isDebugEnabled())
       {
-        logger.trace("strat scanner manually");
-        PluginScanners.scannDirectory(configuration, backend, scannerFactory);
+        logger.info("scann directory {}", directory.getPath());
       }
-    }).start();
+
+      PluginScanner scanner = scannerFactory.createScanner();
+
+      if (configuration.isMultithreaded())
+      {
+        new Thread(new PluginScannerRunnable(backend, scanner,
+          directory)).start();
+      }
+      else
+      {
+        scanner.scannDirectory(backend, directory);
+      }
+    }
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private PluginBackend backend;
-
-  /** Field description */
-  private PluginScannerFactory scannerFactory;
 }

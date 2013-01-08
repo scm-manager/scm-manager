@@ -43,8 +43,6 @@ import sonia.scm.plugin.PluginBackend;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-
 import java.util.TimerTask;
 
 /**
@@ -85,30 +83,8 @@ public class PluginScannerTimerTask extends TimerTask
   @Override
   public void run()
   {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("start scann");
-    }
-
-    for (File directory : configuration.getDirectories())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.info("scann directory {}", directory.getPath());
-      }
-
-      PluginScanner scanner = scannerFactory.createScanner();
-
-      if (configuration.isMultithreaded())
-      {
-        new Thread(new PluginScannerRunnable(backend, scanner,
-          directory)).start();
-      }
-      else
-      {
-        scanner.scannDirectory(backend, directory);
-      }
-    }
+    logger.trace("timer task started scann");
+    PluginScanners.scannDirectory(configuration, backend, scannerFactory);
   }
 
   //~--- fields ---------------------------------------------------------------

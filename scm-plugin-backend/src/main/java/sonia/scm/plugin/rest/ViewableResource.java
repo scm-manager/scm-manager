@@ -92,7 +92,7 @@ public class ViewableResource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private BackendConfiguration configuration;
+  protected BackendConfiguration configuration;
 
   /** Field description */
   private String contextPath;

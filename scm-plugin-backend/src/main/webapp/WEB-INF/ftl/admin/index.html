@@ -2,4 +2,22 @@
 
 <h2>Admin (${subject.name})</h2>
 
+<h3>Actions</h3>
+<ul id="actions">
+  <li>
+    <a rel="${contextPath}/admin/action/scann">Scann Directories</a>
+  </li>
+</ul>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#actions a').click(function(){
+      var action = $(this).attr('rel');
+      $.post(action, function(text){
+        
+      });
+    });
+  });
+</script>
+
 <#include "../template/footer.html">
