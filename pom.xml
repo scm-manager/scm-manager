@@ -419,7 +419,7 @@
 
     <!-- repostitory libraries -->
     <jgit.version>2.2.0.201212191850-r</jgit.version>
-    <svnkit.version>1.7.6-scm4</svnkit.version>
+    <svnkit.version>1.7.8-scm1</svnkit.version>
 
     <!-- build properties -->
     <project.build.javaLevel>1.6</project.build.javaLevel>
