@@ -35,6 +35,8 @@ package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +49,9 @@ import java.io.UnsupportedEncodingException;
 
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -154,6 +159,10 @@ public class HttpUtil
 
   /** the logger for HttpUtil */
   private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
+
+  /** Field description */
+  private static final Pattern PATTERN_URLNORMALIZE =
+    Pattern.compile("(?:(http://[^:]+):80(/.+)?|(https://[^:]+):443(/.+)?)");
 
   //~--- methods --------------------------------------------------------------
 
@@ -264,6 +273,51 @@ public class HttpUtil
     }
 
     return value;
+  }
+
+  /**
+   * Returns the normalized url.
+   *
+   *
+   * @param url to normalize
+   *
+   * @return normalized url
+   *
+   * @since 1.26
+   */
+  public static String normalizeUrl(String url)
+  {
+    if (!Strings.isNullOrEmpty(url))
+    {
+      Matcher m = PATTERN_URLNORMALIZE.matcher(url);
+
+      if (m.matches())
+      {
+        String prefix = m.group(1);
+        String suffix;
+
+        if (prefix == null)
+        {
+          prefix = m.group(3);
+          suffix = m.group(4);
+        }
+        else
+        {
+          suffix = m.group(2);
+        }
+
+        if (suffix != null)
+        {
+          url = prefix.concat(suffix);
+        }
+        else
+        {
+          url = prefix;
+        }
+      }
+    }
+
+    return url;
   }
 
   /**

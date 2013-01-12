@@ -59,15 +59,42 @@ public class HttpUtilTest
    *
    */
   @Test
+  public void normalizeUrlTest()
+  {
+    assertEquals("http://www.scm-manager/scm",
+      HttpUtil.normalizeUrl("http://www.scm-manager/scm"));
+    assertEquals("http://www.scm-manager/scm",
+      HttpUtil.normalizeUrl("http://www.scm-manager:80/scm"));
+    assertEquals("https://www.scm-manager/scm",
+      HttpUtil.normalizeUrl("https://www.scm-manager:443/scm"));
+    assertEquals("https://www.scm-manager:8181/scm",
+      HttpUtil.normalizeUrl("https://www.scm-manager:8181/scm"));
+    assertEquals("http://www.scm-manager:8080/scm",
+      HttpUtil.normalizeUrl("http://www.scm-manager:8080/scm"));
+    assertEquals("http://www.scm-manager",
+      HttpUtil.normalizeUrl("http://www.scm-manager:80"));
+    assertEquals("https://www.scm-manager",
+      HttpUtil.normalizeUrl("https://www.scm-manager:443"));
+    assertEquals("http://www.scm-manager:8080",
+      HttpUtil.normalizeUrl("http://www.scm-manager:8080"));
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Test
   public void getCompleteUrlTest()
   {
     ScmConfiguration config = new ScmConfiguration();
 
     config.setBaseUrl("http://www.scm-manager.org/scm");
     assertEquals("http://www.scm-manager.org/scm/test/path",
-                 HttpUtil.getCompleteUrl(config, "test/path"));
+      HttpUtil.getCompleteUrl(config, "test/path"));
     assertEquals("http://www.scm-manager.org/scm/test/path",
-                 HttpUtil.getCompleteUrl(config, "/test/path"));
+      HttpUtil.getCompleteUrl(config, "/test/path"));
   }
 
   /**
@@ -80,10 +107,10 @@ public class HttpUtilTest
     assertTrue(HttpUtil.getPortFromUrl("http://www.scm-manager.org") == 80);
     assertTrue(HttpUtil.getPortFromUrl("https://www.scm-manager.org") == 443);
     assertTrue(HttpUtil.getPortFromUrl("http://www.scm-manager.org:8080")
-               == 8080);
+      == 8080);
     assertTrue(
-        HttpUtil.getPortFromUrl("http://www.scm-manager.org:8181/test/folder")
-        == 8181);
+      HttpUtil.getPortFromUrl("http://www.scm-manager.org:8181/test/folder")
+      == 8181);
   }
 
   /**
@@ -116,7 +143,7 @@ public class HttpUtilTest
     when(request.getRequestURI()).thenReturn("/scm/test/path");
     when(request.getContextPath()).thenReturn("/scm");
     assertEquals("/test/path",
-                 HttpUtil.getStrippedURI(request, "/scm/test/path"));
+      HttpUtil.getStrippedURI(request, "/scm/test/path"));
     assertEquals("/test/path", HttpUtil.getStrippedURI(request));
   }
 
@@ -130,7 +157,7 @@ public class HttpUtilTest
     assertEquals("/test", HttpUtil.getUriWithoutEndSeperator("/test/"));
     assertEquals("/test/two", HttpUtil.getUriWithoutEndSeperator("/test/two/"));
     assertEquals("/test/two/three",
-                 HttpUtil.getUriWithoutEndSeperator("/test/two/three"));
+      HttpUtil.getUriWithoutEndSeperator("/test/two/three"));
   }
 
   /**
@@ -142,8 +169,8 @@ public class HttpUtilTest
   {
     assertEquals("test/", HttpUtil.getUriWithoutStartSeperator("/test/"));
     assertEquals("test/two/",
-                 HttpUtil.getUriWithoutStartSeperator("/test/two/"));
+      HttpUtil.getUriWithoutStartSeperator("/test/two/"));
     assertEquals("test/two/three",
-                 HttpUtil.getUriWithoutStartSeperator("test/two/three"));
+      HttpUtil.getUriWithoutStartSeperator("test/two/three"));
   }
 }
