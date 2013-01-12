@@ -574,7 +574,20 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
 Ext.onReady(function(){
 
-  Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+  var stateProvider;
+  if (localStorage){
+    if (debug){
+      console.debug('use localStore to save application state');
+    }
+    stateProvider = new Sonia.uistate.WebStorageProvider();
+  } else {
+    if (debug){
+      console.debug('use cookies to save application state, because localStore is not available');
+    }
+    stateProvider = new Ext.state.CookieProvider();
+  }
+
+  Ext.state.Manager.setProvider(stateProvider);
 
   var mainTabPanel = new Ext.TabPanel({
     id: 'mainTabPanel',
