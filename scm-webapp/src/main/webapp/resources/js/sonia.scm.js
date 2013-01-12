@@ -193,6 +193,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
     if ( state.user.type == state.defaultUserType && state.user.name != 'anonymous' ){
       securitySection = {
+        id: 'securityConfig',
         title: this.sectionSecurityText,
         links: [{
           label: this.navChangePasswordText,
@@ -225,6 +226,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
       if ( securitySection == null ){
         securitySection = {
+          id: 'securityConfig',
           title: this.sectionSecurityText,
           links: []
         }
