@@ -129,7 +129,9 @@ public class DefaultAdministrationContext implements AdministrationContext
       if (subject.hasRole(Role.ADMIN))
       {
         logger.debug(
-          "user is already an admin, we need no system account session");
+          "user is already an admin, we need no system account session, execute action {}",
+          action.getClass().getName());
+        action.run();
       }
       else
       {
