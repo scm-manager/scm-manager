@@ -33,6 +33,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Stopwatch;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,7 +120,7 @@ public class SynchronizedRepositoryHookEvent implements RepositoryHookEvent
       {
         if (changesets == null)
         {
-          changesets = wrappedEvent.getChangesets();
+          fetchChangesets();
 
           if (changesets != null)
           {
@@ -170,6 +172,26 @@ public class SynchronizedRepositoryHookEvent implements RepositoryHookEvent
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  private void fetchChangesets()
+  {
+    if (logger.isDebugEnabled())
+    {
+      Stopwatch sw = new Stopwatch().start();
+
+      changesets = wrappedEvent.getChangesets();
+      sw.stop();
+      logger.debug("getChangesets() took {}", sw);
+    }
+    else
+    {
+      changesets = wrappedEvent.getChangesets();
+    }
+  }
 
   /**
    * Method description
