@@ -58,6 +58,7 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -157,7 +158,27 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
 
     return new DefaultRepositoryManager(configuration, contextProvider,
       new DefaultKeyGenerator(), repositoryDAO, handlerSet, listenerProvider,
-      hookProvider);
+      hookProvider, createEmptyPreProcessorUtil());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private PreProcessorUtil createEmptyPreProcessorUtil()
+  {
+    //J-
+    return new PreProcessorUtil(
+      new HashSet<ChangesetPreProcessor>(),
+      new HashSet<ChangesetPreProcessorFactory>(),
+      new HashSet<FileObjectPreProcessor>(),
+      new HashSet<FileObjectPreProcessorFactory>(),
+      new HashSet<BlameLinePreProcessor>(),
+      new HashSet<BlameLinePreProcessorFactory>()
+    );
+    //J+
   }
 
   /**

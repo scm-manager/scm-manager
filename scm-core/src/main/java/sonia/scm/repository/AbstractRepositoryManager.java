@@ -177,6 +177,9 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
     AssertUtil.assertIsNotNull(event.getType());
     event.setRepository(repository);
 
+    // prepare the event
+    event = prepareHookEvent(event);
+
     // post wrapped hook to event system
     ScmEventBus.getInstance().post(WrappedRepositoryHookEvent.wrap(event));
 
@@ -244,6 +247,20 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
     }
 
     ScmEventBus.getInstance().post(new RepositoryEvent(repository, event));
+  }
+
+  /**
+   * Prepare a hook event before it is fired to the event system of SCM-Manager.
+   *
+   *
+   * @param event hook event
+   * @since 1.26
+   *
+   * @return
+   */
+  protected RepositoryHookEvent prepareHookEvent(RepositoryHookEvent event)
+  {
+    return event;
   }
 
   //~--- fields ---------------------------------------------------------------

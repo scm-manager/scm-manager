@@ -90,13 +90,14 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 {
 
   /** Field description */
+  private static final String THREAD_NAME = "Hook-%s";
+
+  /** Field description */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultRepositoryManager.class);
 
   //~--- constructors ---------------------------------------------------------
 
-  private static final String THREAD_NAME = "Hook-%s";
-  
   /**
    * Constructs ...
    *
@@ -108,19 +109,22 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * @param handlerSet
    * @param repositoryListenersProvider
    * @param repositoryHooksProvider
+   * @param preProcessorUtil
    */
   @Inject
   public DefaultRepositoryManager(ScmConfiguration configuration,
     SCMContextProvider contextProvider, KeyGenerator keyGenerator,
     RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
     Provider<Set<RepositoryListener>> repositoryListenersProvider,
-    Provider<Set<RepositoryHook>> repositoryHooksProvider)
+    Provider<Set<RepositoryHook>> repositoryHooksProvider,
+    PreProcessorUtil preProcessorUtil)
   {
     this.configuration = configuration;
     this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
     this.repositoryListenersProvider = repositoryListenersProvider;
     this.repositoryHooksProvider = repositoryHooksProvider;
+    this.preProcessorUtil = preProcessorUtil;
 
     //J-
     ThreadFactory factory = new ThreadFactoryBuilder()
@@ -129,7 +133,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
       Executors.newCachedThreadPool(factory)
     );
     //J+
-    
+
     handlerMap = new HashMap<String, RepositoryHandler>();
     types = new HashSet<Type>();
 
@@ -842,6 +846,20 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * Method description
    *
    *
+   * @param event
+   *
+   * @return
+   */
+  @Override
+  protected RepositoryHookEvent prepareHookEvent(RepositoryHookEvent event)
+  {
+    return SynchronizedRepositoryHookEvent.wrap(event, preProcessorUtil);
+  }
+
+  /**
+   * Method description
+   *
+   *
    *
    * @param contextProvider
    * @param handler
@@ -1011,6 +1029,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private KeyGenerator keyGenerator;
+
+  /** Field description */
+  private PreProcessorUtil preProcessorUtil;
 
   /** Field description */
   private RepositoryDAO repositoryDAO;
