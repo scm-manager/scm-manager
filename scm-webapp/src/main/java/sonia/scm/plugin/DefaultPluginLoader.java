@@ -39,8 +39,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
-import sonia.scm.plugin.ext.DefaultExtensionScanner;
-import sonia.scm.plugin.ext.ExtensionObject;
+import sonia.scm.plugin.ext.AnnotatedClass;
+import sonia.scm.plugin.ext.AnnotationCollector;
+import sonia.scm.plugin.ext.AnnotationProcessor;
+import sonia.scm.plugin.ext.AnnotationScanner;
+import sonia.scm.plugin.ext.AnnotationScannerFactory;
+import sonia.scm.plugin.ext.DefaultAnnotationScannerFactory;
+import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionProcessor;
 import sonia.scm.util.IOUtil;
 
@@ -50,6 +55,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+
+import java.lang.annotation.Annotation;
 
 import java.net.URL;
 import java.net.URLDecoder;
@@ -90,6 +97,8 @@ public class DefaultPluginLoader implements PluginLoader
    */
   public DefaultPluginLoader()
   {
+    this.annotationScannerFactory = new DefaultAnnotationScannerFactory();
+
     ClassLoader classLoader = getClassLoader();
 
     try
@@ -108,21 +117,46 @@ public class DefaultPluginLoader implements PluginLoader
    * Method description
    *
    *
+   * @param classLoader
+   * @param packages
+   * @param annotation
+   * @param processor
+   * @param <T>
+   *
+   * @return
+   */
+  public <T extends Annotation> AnnotationScanner createAnnotationScanner(
+    ClassLoader classLoader, Collection<String> packages, Class<T> annotation,
+    AnnotationProcessor<T> processor)
+  {
+    AnnotationScanner scanner = annotationScannerFactory.create(classLoader,
+                                  packages);
+
+    scanner.addProcessor(annotation, processor);
+
+    return scanner;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param processor
    */
   @Override
   public void processExtensions(ExtensionProcessor processor)
   {
-    Set<ExtensionObject> extensions = new HashSet<ExtensionObject>();
     ClassLoader classLoader = getClassLoader();
-    DefaultExtensionScanner scanner = new DefaultExtensionScanner();
+
+    AnnotationCollector<Extension> annotationCollector =
+      new AnnotationCollector<Extension>();
 
     for (Plugin plugin : installedPlugins)
     {
       if (logger.isDebugEnabled())
       {
         logger.debug("search extensions from plugin {}",
-                     plugin.getInformation().getId());
+          plugin.getInformation().getId());
       }
 
       InputStream input = null;
@@ -145,24 +179,24 @@ public class DefaultPluginLoader implements PluginLoader
           if (logger.isTraceEnabled())
           {
             String type = pluginFile.isDirectory()
-                          ? "directory"
-                          : "jar";
+              ? "directory"
+              : "jar";
 
             logger.trace("search extensions in packages {} of {} plugin {}",
-                         new Object[] { packageSet,
-                                        type, pluginFile });
+              new Object[] { packageSet,
+              type, pluginFile });
           }
 
           if (pluginFile.isDirectory())
           {
-            scanner.processExtensions(classLoader, extensions, pluginFile,
-                                      packageSet);
+            createAnnotationScanner(classLoader, packageSet, Extension.class,
+              annotationCollector).scanDirectory(pluginFile);
           }
           else
           {
             input = new FileInputStream(plugin.getPath());
-            scanner.processExtensions(classLoader, extensions, input,
-                                      packageSet);
+            createAnnotationScanner(classLoader, packageSet, Extension.class,
+              annotationCollector).scanArchive(input);
           }
         }
         else
@@ -180,19 +214,22 @@ public class DefaultPluginLoader implements PluginLoader
       }
     }
 
+    Set<AnnotatedClass<Extension>> extensions =
+      annotationCollector.getAnnotatedClasses();
+
     if (logger.isTraceEnabled())
     {
       logger.trace("start processing {} extensions", extensions.size());
     }
 
-    for (ExtensionObject exo : extensions)
+    for (AnnotatedClass<Extension> ac : extensions)
     {
       if (logger.isTraceEnabled())
       {
-        logger.trace("process extension {}", exo.getExtensionClass());
+        logger.trace("process extension {}", ac.getAnnotatedClass());
       }
 
-      processor.processExtension(exo.getExtension(), exo.getExtensionClass());
+      processor.processExtension(ac.getAnnotation(), ac.getAnnotatedClass());
     }
   }
 
@@ -234,11 +271,6 @@ public class DefaultPluginLoader implements PluginLoader
       {
         logger.error("could not decode path ".concat(path), ex);
       }
-    }
-    else if (logger.isTraceEnabled())
-    {
-      logger.trace(
-          "{} seems not to be a file path or the file does not exists", path);
     }
 
     return path;
@@ -296,8 +328,7 @@ public class DefaultPluginLoader implements PluginLoader
       if (path.startsWith("file:"))
       {
         path = path.substring("file:".length(),
-                              path.length()
-                              - "/META-INF/scm/plugin.xml".length());
+          path.length() - "/META-INF/scm/plugin.xml".length());
       }
       else
       {
@@ -312,8 +343,8 @@ public class DefaultPluginLoader implements PluginLoader
       if (logger.isInfoEnabled())
       {
         logger.info("load {}plugin {}", corePlugin
-                                         ? "core "
-                                         : " ", path);
+          ? "core "
+          : " ", path);
       }
 
       Plugin plugin = JAXB.unmarshal(url, Plugin.class);
@@ -328,8 +359,8 @@ public class DefaultPluginLoader implements PluginLoader
       if (info != null)
       {
         info.setState(corePlugin
-                      ? PluginState.CORE
-                      : PluginState.INSTALLED);
+          ? PluginState.CORE
+          : PluginState.INSTALLED);
       }
 
       plugin.setPath(path);
@@ -373,6 +404,9 @@ public class DefaultPluginLoader implements PluginLoader
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private AnnotationScannerFactory annotationScannerFactory;
 
   /** Field description */
   private Set<Plugin> installedPlugins = new HashSet<Plugin>();

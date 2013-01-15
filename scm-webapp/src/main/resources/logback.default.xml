@@ -57,6 +57,7 @@
   <logger name="sonia.scm.filter.GZipResponseStream" level="WARN" />
   
   <logger name="sonia.scm.util.ServiceUtil" level="WARN" />
+  <logger name="sonia.scm.plugin.ext.DefaultAnnotationScanner" level="INFO" />
   
   <!-- aether -->
   <!--
