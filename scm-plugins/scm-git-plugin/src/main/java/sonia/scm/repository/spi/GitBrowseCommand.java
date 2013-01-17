@@ -30,9 +30,12 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.collect.Maps;
 
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
@@ -65,6 +68,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -74,7 +78,7 @@ import java.util.Map.Entry;
  * @author Sebastian Sdorra
  */
 public class GitBrowseCommand extends AbstractGitCommand
-        implements BrowseCommand
+  implements BrowseCommand
 {
 
   /** Field description */
@@ -117,7 +121,7 @@ public class GitBrowseCommand extends AbstractGitCommand
    */
   @Override
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     if (logger.isDebugEnabled())
     {
@@ -153,7 +157,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       }
 
       result = new BrowserResult(Constants.HEAD, null, null,
-                                 new ArrayList<FileObject>());
+        new ArrayList<FileObject>());
     }
 
     return result;
@@ -174,14 +178,18 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @throws RepositoryException
    */
   private void appendSubModules(List<FileObject> files,
-                                org.eclipse.jgit.lib.Repository repo,
-                                ObjectId revId, String path)
-          throws IOException, RepositoryException
+    org.eclipse.jgit.lib.Repository repo, ObjectId revId, String path)
+    throws IOException, RepositoryException
   {
     path = Util.nonNull(path);
 
-    Map<String, SubRepository> subRepositories = getSubRepositories(repo,
-                                                   revId);
+    Map<String, SubRepository> subRepositories = subrepositoryCache.get(revId);
+
+    if (subRepositories == null)
+    {
+      subRepositories = getSubRepositories(repo, revId);
+      subrepositoryCache.put(revId, subRepositories);
+    }
 
     if (subRepositories != null)
     {
@@ -233,8 +241,8 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @throws IOException
    */
   private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
-          ObjectId revId, TreeWalk treeWalk)
-          throws IOException
+    ObjectId revId, TreeWalk treeWalk)
+    throws IOException
   {
     FileObject file = null;
 
@@ -296,7 +304,7 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @return
    */
   private RevCommit getLatestCommit(org.eclipse.jgit.lib.Repository repo,
-                                    ObjectId revId, String path)
+    ObjectId revId, String path)
   {
     RevCommit result = null;
     RevWalk walk = null;
@@ -305,7 +313,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     {
       walk = new RevWalk(repo);
       walk.setTreeFilter(AndTreeFilter.create(PathFilter.create(path),
-              TreeFilter.ANY_DIFF));
+        TreeFilter.ANY_DIFF));
 
       RevCommit commit = walk.parseCommit(revId);
 
@@ -338,8 +346,8 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @throws RepositoryException
    */
   private BrowserResult getResult(org.eclipse.jgit.lib.Repository repo,
-                                  ObjectId revId, String path)
-          throws IOException, RepositoryException
+    ObjectId revId, String path)
+    throws IOException, RepositoryException
   {
     BrowserResult result = null;
     RevWalk revWalk = null;
@@ -440,14 +448,15 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @throws IOException
    * @throws RepositoryException
    */
-  private Map<String, SubRepository> getSubRepositories(
-          org.eclipse.jgit.lib.Repository repo, ObjectId revision)
-          throws IOException, RepositoryException
+  private Map<String,
+    SubRepository> getSubRepositories(org.eclipse.jgit.lib.Repository repo,
+      ObjectId revision)
+    throws IOException, RepositoryException
   {
     if (logger.isDebugEnabled())
     {
       logger.debug("read submodules of {} at {}", repository.getName(),
-                   revision);
+        revision);
     }
 
     Map<String, SubRepository> subRepositories = null;
@@ -456,14 +465,21 @@ public class GitBrowseCommand extends AbstractGitCommand
     try
     {
       new GitCatCommand(context, repository).getContent(repo, revision,
-                        PATH_MODULES, baos);
+        PATH_MODULES, baos);
       subRepositories = GitSubModuleParser.parse(baos.toString());
     }
     catch (PathNotFoundException ex)
     {
       logger.trace("could not find .gitmodules", ex);
+      subRepositories = Collections.EMPTY_MAP;
     }
 
     return subRepositories;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Map<ObjectId, Map<String, SubRepository>> subrepositoryCache =
+    Maps.newHashMap();
 }
