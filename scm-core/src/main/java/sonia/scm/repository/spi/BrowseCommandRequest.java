@@ -139,6 +139,8 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
    *
    *
    * @param disableLastCommit true to disable the last commit
+   * 
+   * @since 1.26
    */
   public void setDisableLastCommit(boolean disableLastCommit)
   {
@@ -152,6 +154,8 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
    *
    *
    * @return true if the last commit is disabled
+   * 
+   * @since 1.26
    */
   boolean isDisableLastCommit()
   {

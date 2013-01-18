@@ -229,6 +229,8 @@ public final class BrowseCommandBuilder
    * @param disableLastCommit true to disable the last commit message
    *
    * @return {@code this}
+   * 
+   * @since 1.26
    */
   public BrowseCommandBuilder setDisableLastCommit(boolean disableLastCommit)
   {
