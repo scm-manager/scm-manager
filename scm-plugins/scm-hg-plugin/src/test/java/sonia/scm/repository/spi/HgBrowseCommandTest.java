@@ -66,41 +66,16 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
   @Test
   public void testBrowse() throws IOException, RepositoryException
   {
-    BrowserResult result =
-      new HgBrowseCommand(cmdContext,
-        repository).getBrowserResult(new BrowseCommandRequest());
+    List<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
+    FileObject a = getFileObject(foList, "a.txt");
+    FileObject c = getFileObject(foList, "c");
 
-    assertNotNull(result);
-
-    List<FileObject> foList = result.getFiles();
-
-    assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(4, foList.size());
-
-    FileObject a = null;
-    FileObject c = null;
-
-    for (FileObject f : foList)
-    {
-      if ("a.txt".equals(f.getName()))
-      {
-        a = f;
-      }
-      else if ("c".equals(f.getName()))
-      {
-        c = f;
-      }
-    }
-
-    assertNotNull(a);
     assertFalse(a.isDirectory());
     assertEquals("a.txt", a.getName());
     assertEquals("a.txt", a.getPath());
     assertEquals("added new line for blame", a.getDescription());
     assertTrue(a.getLength() > 0);
     checkDate(a.getLastModified());
-    assertNotNull(c);
     assertTrue(c.isDirectory());
     assertEquals("c", c.getName());
     assertEquals("c", c.getPath());
@@ -160,5 +135,85 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
     assertEquals("added file d and e in folder c", e.getDescription());
     assertTrue(e.getLength() > 0);
     checkDate(e.getLastModified());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testDisableLastCommit() throws IOException, RepositoryException
+  {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setDisableLastCommit(true);
+
+    List<FileObject> foList = getRootFromTip(request);
+
+    FileObject a = getFileObject(foList, "a.txt");
+
+    assertNull(a.getDescription());
+    assertNull(a.getLastModified());
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param foList
+   * @param name
+   *
+   * @return
+   */
+  private FileObject getFileObject(List<FileObject> foList, String name)
+  {
+    FileObject a = null;
+
+    for (FileObject f : foList)
+    {
+      if (name.equals(f.getName()))
+      {
+        a = f;
+
+        break;
+      }
+    }
+
+    assertNotNull(a);
+
+    return a;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  private List<FileObject> getRootFromTip(BrowseCommandRequest request)
+    throws IOException, RepositoryException
+  {
+    BrowserResult result = new HgBrowseCommand(cmdContext,
+                             repository).getBrowserResult(request);
+
+    assertNotNull(result);
+
+    List<FileObject> foList = result.getFiles();
+
+    assertNotNull(foList);
+    assertFalse(foList.isEmpty());
+    assertEquals(4, foList.size());
+
+    return foList;
   }
 }

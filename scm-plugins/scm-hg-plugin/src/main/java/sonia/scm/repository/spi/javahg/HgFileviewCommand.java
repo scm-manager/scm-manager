@@ -90,6 +90,20 @@ public class HgFileviewCommand extends AbstractCommand
    *
    *
    * @return
+   */
+  public HgFileviewCommand disableLastCommit()
+  {
+    disableLastCommit = true;
+    cmdAppend("-d");
+
+    return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
    *
    * @throws IOException
    */
@@ -217,9 +231,13 @@ public class HgFileviewCommand extends AbstractCommand
     file.setLength(stream.decimalIntUpTo(' '));
 
     DateTime timestamp = stream.dateTimeUpTo(' ');
+    String description = stream.textUpTo('\0');
 
-    file.setLastModified(timestamp.getDate().getTime());
-    file.setDescription(stream.textUpTo('\0'));
+    if (!disableLastCommit)
+    {
+      file.setLastModified(timestamp.getDate().getTime());
+      file.setDescription(description);
+    }
 
     return file;
   }
@@ -297,4 +315,9 @@ public class HgFileviewCommand extends AbstractCommand
 
     return path;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean disableLastCommit = false;
 }

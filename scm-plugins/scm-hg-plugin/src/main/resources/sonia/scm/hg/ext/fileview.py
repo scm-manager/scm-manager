@@ -117,13 +117,17 @@ def printDirectory(ui, path, transport):
     format = 'd%s\0'
   ui.write( format % path)
   
-def printFile(ui, repo, file, transport):
-  linkrev = repo[file.linkrev()]
-  date = "%d %d" % util.parsedate(linkrev.date())
+def printFile(ui, repo, file, disableLastCommit, transport):
+  date = '0 0'
+  description = 'n/a'
+  if not disableLastCommit:
+    linkrev = repo[file.linkrev()]
+    date = '%d %d' % util.parsedate(linkrev.date())
+    description = linkrev.description()
   format = '%s %i %s %s\n'
   if transport:
     format = 'f%s\n%i %s %s\0'
-  ui.write( format % (file.path(), file.size(), date, linkrev.description()))
+  ui.write( format % (file.path(), file.size(), date, description) )
 
 def fileview(ui, repo, **opts):
   files = []
@@ -144,13 +148,14 @@ def fileview(ui, repo, **opts):
   for d in directories:
     printDirectory(ui, d, transport)
   for f in files:
-    printFile(ui, repo, f, transport)
+    printFile(ui, repo, f, opts['disableLastCommit'], transport)
   
 cmdtable = {
   # cmd name        function call
   'fileview': (fileview,[
     ('r', 'revision', 'tip', 'revision to print'),
     ('p', 'path', '', 'path to print'),
+    ('d', 'disableLastCommit', False, 'disables last commit description and date'),
     ('t', 'transport', False, 'format the output for command server'),
   ])
 }
