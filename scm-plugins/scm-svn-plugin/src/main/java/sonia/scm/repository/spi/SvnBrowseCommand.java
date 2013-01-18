@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -65,7 +66,7 @@ import java.util.List;
  * @author Sebastian Sdorra
  */
 public class SvnBrowseCommand extends AbstractSvnCommand
-        implements BrowseCommand
+  implements BrowseCommand
 {
 
   /**
@@ -105,7 +106,7 @@ public class SvnBrowseCommand extends AbstractSvnCommand
    */
   @Override
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     String path = request.getPath();
     long revisionNumber = SvnUtil.getRevisionNumber(request.getRevision());
@@ -113,8 +114,8 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     if (logger.isDebugEnabled())
     {
       logger.debug("browser repository {} in path {} at revision {}",
-                   new Object[] { repository.getName(),
-                                  path, revisionNumber });
+        new Object[] { repository.getName(),
+        path, revisionNumber });
     }
 
     BrowserResult result = null;
@@ -124,7 +125,7 @@ public class SvnBrowseCommand extends AbstractSvnCommand
       SVNRepository svnRepository = open();
       Collection<SVNDirEntry> entries =
         svnRepository.getDir(Util.nonNull(path), revisionNumber, null,
-                             (Collection) null);
+          (Collection) null);
       List<FileObject> children = new ArrayList<FileObject>();
       String basePath = Util.EMPTY_STRING;
 
@@ -140,8 +141,8 @@ public class SvnBrowseCommand extends AbstractSvnCommand
 
       for (SVNDirEntry entry : entries)
       {
-        children.add(createFileObject(svnRepository, revisionNumber, entry,
-                                      basePath));
+        children.add(createFileObject(request, svnRepository, revisionNumber,
+          entry, basePath));
       }
 
       result = new BrowserResult();
@@ -163,6 +164,8 @@ public class SvnBrowseCommand extends AbstractSvnCommand
    *
    *
    *
+   *
+   * @param request
    * @param repository
    * @param revision
    * @param entry
@@ -170,8 +173,8 @@ public class SvnBrowseCommand extends AbstractSvnCommand
    *
    * @return
    */
-  private FileObject createFileObject(SVNRepository repository, long revision,
-          SVNDirEntry entry, String path)
+  private FileObject createFileObject(BrowseCommandRequest request,
+    SVNRepository repository, long revision, SVNDirEntry entry, String path)
   {
     FileObject fileObject = new FileObject();
 
@@ -179,13 +182,17 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     fileObject.setPath(path.concat(entry.getRelativePath()));
     fileObject.setDirectory(entry.getKind() == SVNNodeKind.DIR);
 
-    if (entry.getDate() != null)
+    if (!request.isDisableLastCommit())
     {
-      fileObject.setLastModified(entry.getDate().getTime());
+      if (entry.getDate() != null)
+      {
+        fileObject.setLastModified(entry.getDate().getTime());
+      }
+
+      fileObject.setDescription(entry.getCommitMessage());
     }
 
     fileObject.setLength(entry.getSize());
-    fileObject.setDescription(entry.getCommitMessage());
 
     if (fileObject.isDirectory() && entry.hasProperties())
     {
@@ -205,7 +212,7 @@ public class SvnBrowseCommand extends AbstractSvnCommand
    * @param fileObject
    */
   private void fetchExternalsProperty(SVNRepository repository, long revision,
-          SVNDirEntry entry, FileObject fileObject)
+    SVNDirEntry entry, FileObject fileObject)
   {
     try
     {
