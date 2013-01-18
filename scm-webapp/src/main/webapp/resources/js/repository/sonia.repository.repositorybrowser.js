@@ -139,33 +139,30 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }
     };
     
-    var type = Sonia.repository.getTypeByName( this.repository.type );
-    if ( type && type.supportedCommands && type.supportedCommands.indexOf('BRANCHES') >= 0){
-      config.tbar = this.createTopToolbar();
-    }
+    config.tbar = this.createTopToolbar();
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.RepositoryBrowser.superclass.initComponent.apply(this, arguments);
   },
   
   createTopToolbar: function(){
-    var tagStore = new Sonia.rest.JsonStore({
-      proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'repositories/' + this.repository.id + '/tags.json',
-        method: 'GET',
-        disableCaching: false
-      }),
-      root: 'tag',
-      idProperty: 'name',
-      fields: [ 'name', 'revision' ]
-    });
+    var items = [this.repository.name];
+    
+    var type = Sonia.repository.getTypeByName( this.repository.type );
+    if ( type && type.supportedCommands && type.supportedCommands.indexOf('TAGS') >= 0){
+    
+      var tagStore = new Sonia.rest.JsonStore({
+        proxy: new Ext.data.HttpProxy({
+          url: restUrl + 'repositories/' + this.repository.id + '/tags.json',
+          method: 'GET',
+          disableCaching: false
+        }),
+        root: 'tag',
+        idProperty: 'name',
+        fields: [ 'name', 'revision' ]
+      });
 
-    var tbar = {
-      xtype: 'toolbar',
-      items: [
-        this.repository.name,
-        '->',
-        'Tags:', ' ',{
+      items.push('->','Tags:', ' ',{
         xtype: 'combo',
         valueField: 'revision',
         displayField: 'name',
@@ -179,7 +176,13 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
             scope: this
           }
         }
-      }]
+      });
+    
+    }
+    
+    var tbar = {
+      xtype: 'toolbar',
+      items: [items]
     }
     
     return tbar;
