@@ -30,7 +30,12 @@
  */
 
 
+
 package sonia.scm.plugin.ext;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -58,6 +63,64 @@ public class AnnotatedClass<T extends Annotation>
   {
     this.annotation = annotation;
     this.annotatedClass = annotatedClass;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final AnnotatedClass<T> other = (AnnotatedClass<T>) obj;
+
+    return Objects.equal(annotation, other.annotation)
+      && Objects.equal(annotatedClass, other.annotatedClass);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(annotation, annotatedClass);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("annotation", annotation)
+                  .add("annotatedClass", annotatedClass)
+                  .toString();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------

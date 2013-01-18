@@ -35,7 +35,6 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.eventbus.EventBus;
 import com.google.inject.Provider;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
@@ -64,6 +63,7 @@ import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.net.HttpClient;
 import sonia.scm.net.URLHttpClient;
+import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginLoader;
@@ -216,11 +216,9 @@ public class ScmServletModule extends ServletModule
    * @param bindExtProcessor
    * @param overrides
    */
-  ScmServletModule(PluginLoader pluginLoader,
-    BindingExtensionProcessor bindExtProcessor, ClassOverrides overrides)
+  ScmServletModule(DefaultPluginLoader pluginLoader, ClassOverrides overrides)
   {
     this.pluginLoader = pluginLoader;
-    this.bindExtProcessor = bindExtProcessor;
     this.overrides = overrides;
   }
 
@@ -238,9 +236,6 @@ public class ScmServletModule extends ServletModule
     SCMContextProvider context = SCMContext.getContext();
 
     bind(SCMContextProvider.class).toInstance(context);
-
-    // bind decorators
-    bindExtProcessor.bindDecorators(binder());
 
     ScmConfiguration config = getScmConfiguration(context);
     CipherUtil cu = CipherUtil.getInstance();
@@ -266,17 +261,10 @@ public class ScmServletModule extends ServletModule
     bind(KeyGenerator.class).to(DefaultKeyGenerator.class);
     bind(CipherHandler.class).toInstance(cu.getCipherHandler());
     bind(EncryptionHandler.class, MessageDigestEncryptionHandler.class);
-    bindExtProcessor.bindExtensions(binder());
+    bind(FileSystem.class, DefaultFileSystem.class);
 
-    Class<? extends FileSystem> fileSystem =
-      bindExtProcessor.getFileSystemClass();
-
-    if (fileSystem == null)
-    {
-      fileSystem = DefaultFileSystem.class;
-    }
-
-    bind(FileSystem.class).to(fileSystem);
+    // bind extensions
+    pluginLoader.processExtensions(binder());
 
     // bind security stuff
     bind(AuthenticationManager.class, ChainAuthenticatonManager.class);
@@ -584,11 +572,8 @@ public class ScmServletModule extends ServletModule
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private BindingExtensionProcessor bindExtProcessor;
-
-  /** Field description */
   private ClassOverrides overrides;
 
   /** Field description */
-  private PluginLoader pluginLoader;
+  private DefaultPluginLoader pluginLoader;
 }

@@ -47,5 +47,8 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Target({ ElementType.TYPE })
-@Retention(RetentionPolicy.CLASS)
-public @interface ExtensionPoint {}
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ExtensionPoint
+{
+  boolean multi() default true;
+}

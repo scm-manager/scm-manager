@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.plugin.ext;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -146,7 +147,7 @@ public class DefaultAnnotationScanner implements AnnotationScanner
   @Override
   public void scanDirectory(File directory)
   {
-    Preconditions.checkArgument(!directory.isDirectory(),
+    Preconditions.checkArgument(directory.isDirectory(),
       "file must be a directory");
 
     String basePath = directory.getAbsolutePath();
@@ -202,8 +203,8 @@ public class DefaultAnnotationScanner implements AnnotationScanner
       {
         if (logger.isDebugEnabled())
         {
-          logger.debug("call processor {} with {} and {}",
-            ap.getClass(), annotation, managedClass);
+          logger.debug("call processor {} with {} and {}", ap.getClass(),
+            annotation, managedClass);
         }
 
         ap.processAnnotation(annotation, managedClass);
