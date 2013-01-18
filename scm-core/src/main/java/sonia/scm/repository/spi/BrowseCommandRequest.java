@@ -33,6 +33,10 @@
 
 package sonia.scm.repository.spi;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -43,4 +47,119 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
   /** Field description */
   private static final long serialVersionUID = 7956624623516803183L;
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public BrowseCommandRequest clone()
+  {
+    BrowseCommandRequest clone = null;
+
+    try
+    {
+      clone = (BrowseCommandRequest) super.clone();
+    }
+    catch (CloneNotSupportedException e)
+    {
+
+      // this shouldn't happen, since we are Cloneable
+      throw new InternalError("CatCommandRequest seems not to be cloneable");
+    }
+
+    return clone;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final BrowseCommandRequest other = (BrowseCommandRequest) obj;
+
+    return super.equals(obj)
+      && Objects.equal(disableLastCommit, other.disableLastCommit);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(super.hashCode(), disableLastCommit);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("path", getPath())
+                  .add("revision", getRevision())
+                  .add("disableLastCommit", disableLastCommit)
+                  .toString();
+    //J+
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * True to disable the last commit.
+   *
+   *
+   * @param disableLastCommit true to disable the last commit
+   */
+  public void setDisableLastCommit(boolean disableLastCommit)
+  {
+    this.disableLastCommit = disableLastCommit;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns true if the last commit is disabled.
+   *
+   *
+   * @return true if the last commit is disabled
+   */
+  boolean isDisableLastCommit()
+  {
+    return disableLastCommit;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** disable last commit */
+  private boolean disableLastCommit = false;
 }

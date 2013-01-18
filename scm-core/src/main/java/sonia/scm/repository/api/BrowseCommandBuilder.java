@@ -106,10 +106,10 @@ public final class BrowseCommandBuilder
    * @param preProcessorUtil
    */
   BrowseCommandBuilder(CacheManager cacheManager, BrowseCommand browseCommand,
-                       Repository repository, PreProcessorUtil preProcessorUtil)
+    Repository repository, PreProcessorUtil preProcessorUtil)
   {
     this.cache = cacheManager.getCache(CacheKey.class, BrowserResult.class,
-                                       CACHE_NAME);
+      CACHE_NAME);
     this.browseCommand = browseCommand;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
@@ -144,7 +144,7 @@ public final class BrowseCommandBuilder
    * @throws RepositoryException
    */
   public BrowserResult getBrowserResult()
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     BrowserResult result = null;
 
@@ -153,7 +153,7 @@ public final class BrowseCommandBuilder
       if (logger.isDebugEnabled())
       {
         logger.debug("create browser result for {} with disabled cache",
-                     request);
+          request);
       }
 
       result = browseCommand.getBrowserResult(request);
@@ -220,6 +220,24 @@ public final class BrowseCommandBuilder
   }
 
   /**
+   * Disabling the last commit means that every call to
+   * {@link FileObject#getDescription()} and 
+   * {@link FileObject#getLastModified()) will return {@code null}, but this 
+   * will also reduce the execution time.
+   *
+   *
+   * @param disableLastCommit true to disable the last commit message
+   *
+   * @return {@code this}
+   */
+  public BrowseCommandBuilder setDisableLastCommit(boolean disableLastCommit)
+  {
+    this.request.setDisableLastCommit(disableLastCommit);
+
+    return this;
+  }
+
+  /**
    * Disable the execution of pre processors.
    *
    *
@@ -228,7 +246,7 @@ public final class BrowseCommandBuilder
    * @return {@code this}
    */
   public BrowseCommandBuilder setDisablePreProcessors(
-          boolean disablePreProcessors)
+    boolean disablePreProcessors)
   {
     this.disablePreProcessors = disablePreProcessors;
 
@@ -320,7 +338,7 @@ public final class BrowseCommandBuilder
       final CacheKey other = (CacheKey) obj;
 
       return Objects.equal(repositoryId, other.repositoryId)
-             && Objects.equal(request, other.request);
+        && Objects.equal(request, other.request);
     }
 
     /**
