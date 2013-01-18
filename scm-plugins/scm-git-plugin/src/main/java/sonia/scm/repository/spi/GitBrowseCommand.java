@@ -143,7 +143,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
     if (revId != null)
     {
-      result = getResult(repo, revId, request.getPath());
+      result = getResult(repo, request, revId, request.getPath());
     }
     else
     {
@@ -240,7 +240,7 @@ public class GitBrowseCommand extends AbstractGitCommand
    *
    * @throws IOException
    */
-  private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
+  private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request,
     ObjectId revId, TreeWalk treeWalk)
     throws IOException
   {
@@ -261,8 +261,9 @@ public class GitBrowseCommand extends AbstractGitCommand
       file.setLength(loader.getSize());
 
       // don't show message and date for directories to improve performance
-      if (!file.isDirectory())
+      if (!file.isDirectory() && ! request.isDisableLastCommit())
       {
+        logger.trace("fetch last commit for {} at {}", path, revId.getName());
         RevCommit commit = getLatestCommit(repo, revId, path);
 
         if (commit != null)
@@ -345,8 +346,8 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @throws IOException
    * @throws RepositoryException
    */
-  private BrowserResult getResult(org.eclipse.jgit.lib.Repository repo,
-    ObjectId revId, String path)
+  private BrowserResult getResult(org.eclipse.jgit.lib.Repository repo, 
+    BrowseCommandRequest request, ObjectId revId, String path)
     throws IOException, RepositoryException
   {
     BrowserResult result = null;
@@ -384,7 +385,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       {
         while (treeWalk.next())
         {
-          FileObject fo = createFileObject(repo, revId, treeWalk);
+          FileObject fo = createFileObject(repo, request, revId, treeWalk);
 
           if (fo != null)
           {
@@ -408,7 +409,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
             if (p.split("/").length > limit)
             {
-              FileObject fo = createFileObject(repo, revId, treeWalk);
+              FileObject fo = createFileObject(repo, request, revId, treeWalk);
 
               if (fo != null)
               {
