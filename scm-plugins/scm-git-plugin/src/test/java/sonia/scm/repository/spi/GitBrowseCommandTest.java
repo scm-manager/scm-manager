@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -157,6 +158,31 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase
     assertEquals("added file d and e in folder c", e.getDescription());
     assertTrue(e.getLength() > 0);
     checkDate(e.getLastModified());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testRecusive() throws IOException, RepositoryException
+  {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setRecursive(true);
+
+    BrowserResult result = createCommand().getBrowserResult(request);
+
+    assertNotNull(result);
+
+    List<FileObject> foList = result.getFiles();
+
+    assertNotNull(foList);
+    assertFalse(foList.isEmpty());
+    assertEquals(5, foList.size());
   }
 
   /**

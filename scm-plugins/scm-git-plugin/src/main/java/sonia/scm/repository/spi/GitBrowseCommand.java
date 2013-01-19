@@ -35,6 +35,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import org.eclipse.jgit.errors.MissingObjectException;
@@ -67,7 +68,6 @@ import sonia.scm.util.Util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -143,7 +143,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
     if (revId != null)
     {
-      result = getResult(repo, request, revId, request.getPath());
+      result = getResult(repo, request, revId);
     }
     else
     {
@@ -157,7 +157,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       }
 
       result = new BrowserResult(Constants.HEAD, null, null,
-        new ArrayList<FileObject>());
+        Collections.EMPTY_LIST);
     }
 
     return result;
@@ -233,6 +233,7 @@ public class GitBrowseCommand extends AbstractGitCommand
    *
    *
    * @param repo
+   * @param request
    * @param revId
    * @param treeWalk
    *
@@ -240,8 +241,8 @@ public class GitBrowseCommand extends AbstractGitCommand
    *
    * @throws IOException
    */
-  private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo, BrowseCommandRequest request,
-    ObjectId revId, TreeWalk treeWalk)
+  private FileObject createFileObject(org.eclipse.jgit.lib.Repository repo,
+    BrowseCommandRequest request, ObjectId revId, TreeWalk treeWalk)
     throws IOException
   {
     FileObject file = null;
@@ -261,9 +262,10 @@ public class GitBrowseCommand extends AbstractGitCommand
       file.setLength(loader.getSize());
 
       // don't show message and date for directories to improve performance
-      if (!file.isDirectory() && ! request.isDisableLastCommit())
+      if (!file.isDirectory() &&!request.isDisableLastCommit())
       {
         logger.trace("fetch last commit for {} at {}", path, revId.getName());
+
         RevCommit commit = getLatestCommit(repo, revId, path);
 
         if (commit != null)
@@ -338,6 +340,7 @@ public class GitBrowseCommand extends AbstractGitCommand
    *
    *
    * @param repo
+   * @param request
    * @param revId
    * @param path
    *
@@ -346,8 +349,8 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @throws IOException
    * @throws RepositoryException
    */
-  private BrowserResult getResult(org.eclipse.jgit.lib.Repository repo, 
-    BrowseCommandRequest request, ObjectId revId, String path)
+  private BrowserResult getResult(org.eclipse.jgit.lib.Repository repo,
+    BrowseCommandRequest request, ObjectId revId)
     throws IOException, RepositoryException
   {
     BrowserResult result = null;
@@ -362,6 +365,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       }
 
       treeWalk = new TreeWalk(repo);
+      treeWalk.setRecursive(request.isRecursive());
       revWalk = new RevWalk(repo);
 
       RevTree tree = revWalk.parseTree(revId);
@@ -377,7 +381,9 @@ public class GitBrowseCommand extends AbstractGitCommand
 
       result = new BrowserResult();
 
-      List<FileObject> files = new ArrayList<FileObject>();
+      List<FileObject> files = Lists.newArrayList();
+
+      String path = request.getPath();
 
       appendSubModules(files, repo, revId, path);
 
@@ -420,7 +426,11 @@ public class GitBrowseCommand extends AbstractGitCommand
           else if (name.equalsIgnoreCase(parts[current]))
           {
             current++;
-            treeWalk.enterSubtree();
+
+            if (!request.isRecursive())
+            {
+              treeWalk.enterSubtree();
+            }
           }
         }
       }
