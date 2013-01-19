@@ -35,6 +35,8 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +59,6 @@ import sonia.scm.util.Util;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -126,23 +127,22 @@ public class SvnBrowseCommand extends AbstractSvnCommand
       Collection<SVNDirEntry> entries =
         svnRepository.getDir(Util.nonNull(path), revisionNumber, null,
           (Collection) null);
-      List<FileObject> children = new ArrayList<FileObject>();
-      String basePath = Util.EMPTY_STRING;
+      List<FileObject> children = Lists.newArrayList();
+      String basePath = createBasePath(path);
 
-      if (Util.isNotEmpty(path))
+      if (request.isRecursive())
       {
-        basePath = path;
-
-        if (!basePath.endsWith("/"))
-        {
-          basePath = basePath.concat("/");
-        }
+        browseRecursive(svnRepository, revisionNumber, request, children,
+          entries, basePath);
       }
-
-      for (SVNDirEntry entry : entries)
+      else
       {
-        children.add(createFileObject(request, svnRepository, revisionNumber,
-          entry, basePath));
+        for (SVNDirEntry entry : entries)
+        {
+          children.add(createFileObject(request, svnRepository, revisionNumber,
+            entry, basePath));
+
+        }
       }
 
       result = new BrowserResult();
@@ -158,6 +158,68 @@ public class SvnBrowseCommand extends AbstractSvnCommand
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param svnRepository
+   * @param revisionNumber
+   * @param request
+   * @param children
+   * @param entries
+   * @param basePath
+   *
+   * @throws SVNException
+   */
+  private void browseRecursive(SVNRepository svnRepository,
+    long revisionNumber, BrowseCommandRequest request,
+    List<FileObject> children, Collection<SVNDirEntry> entries, String basePath)
+    throws SVNException
+  {
+    for (SVNDirEntry entry : entries)
+    {
+      FileObject fo = createFileObject(request, svnRepository, revisionNumber,
+                        entry, basePath);
+
+      children.add(fo);
+
+      if (fo.isDirectory())
+      {
+        Collection<SVNDirEntry> subEntries =
+          svnRepository.getDir(Util.nonNull(fo.getPath()), revisionNumber,
+            null, (Collection) null);
+
+        browseRecursive(svnRepository, revisionNumber, request, children,
+          subEntries, createBasePath(fo.getPath()));
+      }
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param path
+   *
+   * @return
+   */
+  private String createBasePath(String path)
+  {
+    String basePath = Util.EMPTY_STRING;
+
+    if (Util.isNotEmpty(path))
+    {
+      basePath = path;
+
+      if (!basePath.endsWith("/"))
+      {
+        basePath = basePath.concat("/");
+      }
+    }
+
+    return basePath;
+  }
 
   /**
    * Method description

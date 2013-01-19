@@ -158,6 +158,26 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
     assertNull(a.getDescription());
     assertNull(a.getLastModified());
   }
+  
+  @Test
+  public void testRecursive() throws IOException, RepositoryException
+  {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setRecursive(true);
+    BrowserResult result = createCommand().getBrowserResult(request);
+
+    assertNotNull(result);
+
+    List<FileObject> foList = result.getFiles();
+
+    assertNotNull(foList);
+    assertFalse(foList.isEmpty());
+    assertEquals(4, foList.size());
+    
+    for ( FileObject fo : foList ){
+      System.out.println(fo);
+    }
+  }
 
   /**
    * Method description
