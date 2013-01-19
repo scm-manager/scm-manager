@@ -161,6 +161,19 @@ public class HgFileviewCommand extends AbstractCommand
    * Method description
    *
    *
+   * @return
+   */
+  public HgFileviewCommand recursive()
+  {
+    cmdAppend("-c");
+
+    return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param revision
    *
    * @return

@@ -48,7 +48,7 @@ def appendTrailingSlash(path):
     path += '/'
   return path
 
-def collectFiles(revCtx, path, files, directories):
+def collectFiles(revCtx, path, files, directories, recursive):
   length = 0
   paths = []
   mf = revCtx.manifest()
@@ -66,18 +66,22 @@ def collectFiles(revCtx, path, files, directories):
       if f.startswith(directory):
         paths.append(f)
   
-  for p in paths:
-    parts = p.split('/')
-    depth = len(parts)
-    if depth is length:
-      file = revCtx[p]
-      files.append(file)
-    elif depth > length:
-      dirpath = ''
-      for i in range(0, length):
-        dirpath += parts[i] + '/'
-      if not dirpath in directories:
-        directories.append(dirpath)
+  if not recursive:
+    for p in paths:
+      parts = p.split('/')
+      depth = len(parts)
+      if depth is length:
+        file = revCtx[p]
+        files.append(file)
+      elif depth > length:
+        dirpath = ''
+        for i in range(0, length):
+          dirpath += parts[i] + '/'
+        if not dirpath in directories:
+          directories.append(dirpath)
+  else:
+    for p in paths:
+      files.append(revCtx[p])
         
 def createSubRepositoryMap(revCtx):
   subrepos = {}
@@ -140,7 +144,7 @@ def fileview(ui, repo, **opts):
   if path.endswith('/'):
     path = path[0:-1]
   transport = opts['transport']
-  collectFiles(revCtx, path, files, directories)
+  collectFiles(revCtx, path, files, directories, opts['recursive'])
   subRepositories = createSubRepositoryMap(revCtx)
   for k, v in subRepositories.iteritems():
     if k.startswith(path):
@@ -155,6 +159,7 @@ cmdtable = {
   'fileview': (fileview,[
     ('r', 'revision', 'tip', 'revision to print'),
     ('p', 'path', '', 'path to print'),
+    ('c', 'recursive', False, 'browse repository recursive'),
     ('d', 'disableLastCommit', False, 'disables last commit description and date'),
     ('t', 'transport', False, 'format the output for command server'),
   ])

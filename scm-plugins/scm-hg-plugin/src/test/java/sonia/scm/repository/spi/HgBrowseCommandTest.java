@@ -159,6 +159,32 @@ public class HgBrowseCommandTest extends AbstractHgCommandTestBase
     assertNull(a.getLastModified());
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testRecursive() throws IOException, RepositoryException
+  {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setRecursive(true);
+
+    BrowserResult result = new HgBrowseCommand(cmdContext,
+                             repository).getBrowserResult(request);
+
+    assertNotNull(result);
+
+    List<FileObject> foList = result.getFiles();
+
+    assertNotNull(foList);
+    assertFalse(foList.isEmpty());
+    assertEquals(5, foList.size());
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**

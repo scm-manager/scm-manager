@@ -99,6 +99,11 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
       cmd.disableLastCommit();
     }
 
+    if (request.isRecursive())
+    {
+      cmd.recursive();
+    }
+
     BrowserResult result = new BrowserResult();
 
     result.setFiles(cmd.execute());
