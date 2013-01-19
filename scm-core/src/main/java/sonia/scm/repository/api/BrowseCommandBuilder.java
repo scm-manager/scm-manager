@@ -221,15 +221,15 @@ public final class BrowseCommandBuilder
 
   /**
    * Disabling the last commit means that every call to
-   * {@link FileObject#getDescription()} and 
-   * {@link FileObject#getLastModified()) will return {@code null}, but this 
+   * {@link FileObject#getDescription()} and
+   * {@link FileObject#getLastModified()) will return {@code null}, but this
    * will also reduce the execution time.
    *
    *
    * @param disableLastCommit true to disable the last commit message
    *
    * @return {@code this}
-   * 
+   *
    * @since 1.26
    */
   public BrowseCommandBuilder setDisableLastCommit(boolean disableLastCommit)
@@ -266,6 +266,22 @@ public final class BrowseCommandBuilder
   public BrowseCommandBuilder setPath(String path)
   {
     request.setPath(path);
+
+    return this;
+  }
+
+  /**
+   * Enable or disable recursive file object browsing. Default is disabled.
+   *
+   * @param recursive true to enable recursive browsing
+   *
+   * @return {@code this}
+   *
+   * @since 1.26
+   */
+  public BrowseCommandBuilder setRecursive(boolean recursive)
+  {
+    this.request.setRecursive(recursive);
 
     return this;
   }

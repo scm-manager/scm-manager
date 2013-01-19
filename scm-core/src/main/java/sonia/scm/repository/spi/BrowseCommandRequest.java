@@ -98,7 +98,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
     final BrowseCommandRequest other = (BrowseCommandRequest) obj;
 
-    return super.equals(obj)
+    return super.equals(obj) && Objects.equal(recursive, other.recursive)
       && Objects.equal(disableLastCommit, other.disableLastCommit);
   }
 
@@ -111,7 +111,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(super.hashCode(), disableLastCommit);
+    return Objects.hashCode(super.hashCode(), recursive, disableLastCommit);
   }
 
   /**
@@ -127,6 +127,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
     return Objects.toStringHelper(this)
                   .add("path", getPath())
                   .add("revision", getRevision())
+                  .add("recursive", recursive)
                   .add("disableLastCommit", disableLastCommit)
                   .toString();
     //J+
@@ -139,12 +140,25 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
    *
    *
    * @param disableLastCommit true to disable the last commit
-   * 
+   *
    * @since 1.26
    */
   public void setDisableLastCommit(boolean disableLastCommit)
   {
     this.disableLastCommit = disableLastCommit;
+  }
+
+  /**
+   * True to enable recursive file object browsing.
+   *
+   *
+   * @param recursive true to enable recursive browsing
+   *
+   * @since 1.26
+   */
+  public void setRecursive(boolean recursive)
+  {
+    this.recursive = recursive;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -154,7 +168,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
    *
    *
    * @return true if the last commit is disabled
-   * 
+   *
    * @since 1.26
    */
   boolean isDisableLastCommit()
@@ -162,8 +176,24 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
     return disableLastCommit;
   }
 
+  /**
+   * Returns true if recursive file object browsing is enabled.
+   *
+   *
+   * @return true recursive is enabled
+   *
+   * @since 1.26
+   */
+  boolean isRecursive()
+  {
+    return recursive;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** disable last commit */
   private boolean disableLastCommit = false;
+
+  /** browse file objects recursive */
+  private boolean recursive = false;
 }
