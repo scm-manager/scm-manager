@@ -256,6 +256,25 @@ public final class BrowseCommandBuilder
   }
 
   /**
+   * Enable or disable the detection of sub repositories.
+   *
+   *
+   * @param disableSubRepositoryDetection true to disable sub repository detection.
+   *
+   * @return {@code this}
+   *
+   * @since 1.26
+   */
+  public BrowseCommandBuilder setDisableSubRepositoryDetection(
+    boolean disableSubRepositoryDetection)
+  {
+    this.request.setDisableSubRepositoryDetection(
+      disableSubRepositoryDetection);
+
+    return this;
+  }
+
+  /**
    * Retrieve only files which are children of the given path.
    * This path have to be a directory.
    *

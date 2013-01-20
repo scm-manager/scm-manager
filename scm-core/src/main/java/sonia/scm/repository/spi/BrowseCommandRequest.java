@@ -99,7 +99,9 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
     final BrowseCommandRequest other = (BrowseCommandRequest) obj;
 
     return super.equals(obj) && Objects.equal(recursive, other.recursive)
-      && Objects.equal(disableLastCommit, other.disableLastCommit);
+      && Objects.equal(disableLastCommit, other.disableLastCommit)
+      && Objects.equal(disableSubRepositoryDetection,
+        other.disableSubRepositoryDetection);
   }
 
   /**
@@ -111,7 +113,8 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(super.hashCode(), recursive, disableLastCommit);
+    return Objects.hashCode(super.hashCode(), recursive, disableLastCommit,
+      disableSubRepositoryDetection);
   }
 
   /**
@@ -129,6 +132,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
                   .add("revision", getRevision())
                   .add("recursive", recursive)
                   .add("disableLastCommit", disableLastCommit)
+                  .add("disableSubRepositoryDetection", disableSubRepositoryDetection)
                   .toString();
     //J+
   }
@@ -146,6 +150,20 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   public void setDisableLastCommit(boolean disableLastCommit)
   {
     this.disableLastCommit = disableLastCommit;
+  }
+
+  /**
+   * Enable or Disable sub repository detection. Default is enabled.
+   *
+   *
+   * @param disableSubRepositoryDetection true to disable sub repository detection
+   *
+   * @since 1.26
+   */
+  public void setDisableSubRepositoryDetection(
+    boolean disableSubRepositoryDetection)
+  {
+    this.disableSubRepositoryDetection = disableSubRepositoryDetection;
   }
 
   /**
@@ -177,6 +195,19 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
   }
 
   /**
+   * Returns true if the detection of sub repositories is disabled.
+   *
+   *
+   * @return true if sub repository detection is disabled.
+   *
+   * @since 1.26
+   */
+  boolean isDisableSubRepositoryDetection()
+  {
+    return disableSubRepositoryDetection;
+  }
+
+  /**
    * Returns true if recursive file object browsing is enabled.
    *
    *
@@ -193,6 +224,9 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
   /** disable last commit */
   private boolean disableLastCommit = false;
+
+  /** disable detection of sub repositories */
+  private boolean disableSubRepositoryDetection = false;
 
   /** browse file objects recursive */
   private boolean recursive = false;
