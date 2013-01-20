@@ -385,7 +385,10 @@ public class GitBrowseCommand extends AbstractGitCommand
 
       String path = request.getPath();
 
-      appendSubModules(files, repo, revId, path);
+      if (!request.isDisableSubRepositoryDetection())
+      {
+        appendSubModules(files, repo, revId, path);
+      }
 
       if (Util.isEmpty(path))
       {

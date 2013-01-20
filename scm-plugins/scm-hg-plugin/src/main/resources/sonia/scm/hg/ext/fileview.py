@@ -145,10 +145,11 @@ def fileview(ui, repo, **opts):
     path = path[0:-1]
   transport = opts['transport']
   collectFiles(revCtx, path, files, directories, opts['recursive'])
-  subRepositories = createSubRepositoryMap(revCtx)
-  for k, v in subRepositories.iteritems():
-    if k.startswith(path):
-      printSubRepository(ui, k, v, transport)
+  if not opts['disableSubRepositoryDetection']:
+    subRepositories = createSubRepositoryMap(revCtx)
+    for k, v in subRepositories.iteritems():
+      if k.startswith(path):
+        printSubRepository(ui, k, v, transport)
   for d in directories:
     printDirectory(ui, d, transport)
   for f in files:
@@ -161,6 +162,7 @@ cmdtable = {
     ('p', 'path', '', 'path to print'),
     ('c', 'recursive', False, 'browse repository recursive'),
     ('d', 'disableLastCommit', False, 'disables last commit description and date'),
+    ('s', 'disableSubRepositoryDetection', False, 'disables detection of sub repositories'),
     ('t', 'transport', False, 'format the output for command server'),
   ])
 }

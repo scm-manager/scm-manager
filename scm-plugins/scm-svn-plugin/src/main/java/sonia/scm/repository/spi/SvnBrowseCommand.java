@@ -256,7 +256,8 @@ public class SvnBrowseCommand extends AbstractSvnCommand
 
     fileObject.setLength(entry.getSize());
 
-    if (fileObject.isDirectory() && entry.hasProperties())
+    if (!request.isDisableSubRepositoryDetection() && fileObject.isDirectory()
+      && entry.hasProperties())
     {
       fetchExternalsProperty(repository, revision, entry, fileObject);
     }

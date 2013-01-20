@@ -104,6 +104,19 @@ public class HgFileviewCommand extends AbstractCommand
    *
    *
    * @return
+   */
+  public HgFileviewCommand disableSubRepositoryDetection()
+  {
+    cmdAppend("-s");
+
+    return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
    *
    * @throws IOException
    */

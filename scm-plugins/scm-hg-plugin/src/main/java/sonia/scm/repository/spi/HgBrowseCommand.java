@@ -104,6 +104,11 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
       cmd.recursive();
     }
 
+    if (request.isDisableSubRepositoryDetection())
+    {
+      cmd.disableSubRepositoryDetection();
+    }
+
     BrowserResult result = new BrowserResult();
 
     result.setFiles(cmd.execute());
