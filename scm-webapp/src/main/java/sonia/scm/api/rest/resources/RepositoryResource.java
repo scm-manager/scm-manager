@@ -467,6 +467,9 @@ public class RepositoryResource
    * @param id the id of the repository
    * @param revision the revision of the file
    * @param path the path of the folder
+   * @param disableLastCommit true disables fetch of last commit message
+   * @param disableSubRepositoryDetection true disables sub repository detection
+   * @param recursive true to enable recursive browsing
    *
    * @return a list of folders and files for the given folder
    *
@@ -477,9 +480,16 @@ public class RepositoryResource
   @Path("{id}/browse")
   @TypeHint(BrowserResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response getBrowserResult(@PathParam("id") String id,
-    @QueryParam("revision") String revision, @QueryParam("path") String path)
+  //J-
+  public Response getBrowserResult(
+    @PathParam("id") String id,
+    @QueryParam("revision") String revision, 
+    @QueryParam("path") String path,
+    @QueryParam("disableLastCommit") @DefaultValue("false") boolean disableLastCommit,
+    @QueryParam("disableSubRepositoryDetection") @DefaultValue("false") boolean disableSubRepositoryDetection,
+    @QueryParam("recursive") @DefaultValue("false") boolean recursive)
     throws RepositoryException, IOException
+  //J+
   {
     Response response = null;
     RepositoryService service = null;
@@ -499,6 +509,11 @@ public class RepositoryResource
       {
         builder.setPath(path);
       }
+      //J-
+      builder.setDisableLastCommit(disableLastCommit)
+             .setDisableSubRepositoryDetection(disableSubRepositoryDetection)
+             .setRecursive(recursive);
+      //J+
 
       BrowserResult result = builder.getBrowserResult();
 
