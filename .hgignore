@@ -1,6 +1,5 @@
 # netbeans temp & private files
 /?target/
-release.properties
 nbactions.*\.xml
 nb-configuration\.xml
 # MacOS X Files
