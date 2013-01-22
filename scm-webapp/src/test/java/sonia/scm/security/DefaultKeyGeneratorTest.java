@@ -129,7 +129,7 @@ public class DefaultKeyGeneratorTest
 
     for (Future<Set<String>> future : futureSet)
     {
-      Set<String> futureKeys = future.get(5, TimeUnit.SECONDS);
+      Set<String> futureKeys = future.get(20, TimeUnit.SECONDS);
 
       assertNotNull(futureKeys);
       assertEquals(1000, futureKeys.size());
