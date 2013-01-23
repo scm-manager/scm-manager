@@ -51,7 +51,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 public abstract class AbstractAuthenticationManager
-        implements AuthenticationManager
+  implements AuthenticationManager
 {
 
   /**
@@ -63,7 +63,7 @@ public abstract class AbstractAuthenticationManager
   @Override
   public void addListener(AuthenticationListener listener)
   {
-    listeners.add(listener);
+    this.listeners.add(listener);
   }
 
   /**
@@ -75,7 +75,7 @@ public abstract class AbstractAuthenticationManager
   @Override
   public void addListeners(Collection<AuthenticationListener> listeners)
   {
-    listeners.addAll(listeners);
+    this.listeners.addAll(listeners);
   }
 
   /**
@@ -87,7 +87,7 @@ public abstract class AbstractAuthenticationManager
   @Override
   public void removeListener(AuthenticationListener listener)
   {
-    listeners.remove(listener);
+    this.listeners.remove(listener);
   }
 
   /**
@@ -99,7 +99,7 @@ public abstract class AbstractAuthenticationManager
    * @param user
    */
   protected void fireAuthenticationEvent(HttpServletRequest request,
-          HttpServletResponse response, User user)
+    HttpServletResponse response, User user)
   {
     for (AuthenticationListener listener : listeners)
     {
