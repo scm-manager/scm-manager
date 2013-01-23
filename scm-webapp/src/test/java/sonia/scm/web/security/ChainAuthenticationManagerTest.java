@@ -56,6 +56,7 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -109,7 +110,7 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
     assertUserEquals(trillian, result.getUser());
     assertEquals("trilliansType", result.getUser().getType());
     result = manager.authenticate(request, response, perfect.getName(),
-                                  "perfect123");
+      "perfect123");
     assertNotNull(perfect);
     assertUserEquals(perfect, result.getUser());
     assertEquals("perfectsType", result.getUser().getType());
@@ -133,16 +134,10 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
     trillian = UserTestData.createTrillian();
     trillian.setPassword("trillian123");
     handlerSet.add(new SingleUserAuthenticaionHandler("trilliansType",
-            trillian));
-
-    Provider<Set<AuthenticationListener>> listenerProvider =
-      mock(Provider.class);
-
-    when(listenerProvider.get()).thenReturn(
-        new HashSet<AuthenticationListener>());
+      trillian));
     manager = new ChainAuthenticatonManager(handlerSet,
-            new MessageDigestEncryptionHandler(), cacheManager,
-            listenerProvider);
+      new MessageDigestEncryptionHandler(), cacheManager,
+      Collections.EMPTY_SET);
     manager.init(contextProvider);
     request = MockUtil.getHttpServletRequest();
     response = MockUtil.getHttpServletResponse();
@@ -184,7 +179,7 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
    * @author         Sebastian Sdorra
    */
   private static class SingleUserAuthenticaionHandler
-          implements AuthenticationHandler
+    implements AuthenticationHandler
   {
 
     /**
@@ -215,7 +210,7 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
      */
     @Override
     public AuthenticationResult authenticate(HttpServletRequest request,
-            HttpServletResponse response, String username, String password)
+      HttpServletResponse response, String username, String password)
     {
       AuthenticationResult result = null;
 
