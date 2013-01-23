@@ -45,6 +45,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.event.ScmEventBus;
 
 /**
  *
@@ -105,6 +106,8 @@ public abstract class AbstractAuthenticationManager
     {
       listener.onAuthentication(request, response, user);
     }
+    
+    ScmEventBus.getInstance().post(new AuthenticationEvent(user));
   }
 
   //~--- fields ---------------------------------------------------------------
