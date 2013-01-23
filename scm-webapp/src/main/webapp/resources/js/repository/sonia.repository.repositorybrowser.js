@@ -416,7 +416,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     return link;
   },
   
-  renderName: function(name, p, record){
+  renderLink: function(text, record){
     var subRepository = record.get('subrepository');
     var folder = record.get('directory');
     var path = null;
@@ -444,7 +444,11 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       template = this.templateInternalLink;
     }
     
-    return String.format(template, name, path);
+    return String.format(template, text, path);    
+  },
+  
+  renderName: function(name, p, record){
+    return this.renderLink(name, record);
   },
   
   renderIcon: function(directory, p, record){
@@ -459,7 +463,8 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     } else {
       icon = this.iconDocument;
     }
-    return String.format(this.templateIcon, icon, name, name);
+    var img = String.format(this.templateIcon, icon, name, name);
+    return this.renderLink(img, record)
   },
   
   renderLength: function(length, p, record){
