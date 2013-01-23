@@ -30,10 +30,12 @@
  */
 
 
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
 import com.google.inject.Binding;
 import com.google.inject.Inject;
@@ -48,9 +50,14 @@ import com.google.inject.spi.BindingScopingVisitor;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.lang.annotation.Annotation;
+
+import java.util.Set;
 
 /**
  *
@@ -63,7 +70,28 @@ public class EagerSingletonScopeModule extends AbstractModule
   private static EagerSingletonScope EAGERSINGLETON_SCOPE =
     new EagerSingletonScope();
 
+  /**
+   * the logger for EagerSingletonScopeModule
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(EagerSingletonScopeModule.class);
+
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  void bind()
+  {
+    for (Binding<?> b : listener.eagerSingletons)
+    {
+      logger.info("initialize eager singleton {}", b.getKey());
+      b.getProvider().get();
+    }
+
+    listener = null;
+  }
 
   /**
    * Method description
@@ -72,9 +100,10 @@ public class EagerSingletonScopeModule extends AbstractModule
   @Override
   protected void configure()
   {
+    bind(EagerSingletonScopeModule.class).toInstance(this);
     bindScope(EagerSingleton.class, EAGERSINGLETON_SCOPE);
 
-    TypeListener listener = new EagerCreatingListener();
+    listener = new EagerCreatingListener();
 
     requestInjection(listener);
     bindListener(Matchers.any(), listener);
@@ -105,7 +134,7 @@ public class EagerSingletonScopeModule extends AbstractModule
     {
       if (injector != null)
       {
-        createIfEager(injector.getBinding(Key.get(type)));
+        appendIfEager(injector.getBinding(Key.get(type)));
       }
     }
 
@@ -122,7 +151,7 @@ public class EagerSingletonScopeModule extends AbstractModule
 
       for (Binding<?> b : injector.getBindings().values())
       {
-        createIfEager(b);
+        appendIfEager(b);
       }
     }
 
@@ -132,7 +161,7 @@ public class EagerSingletonScopeModule extends AbstractModule
      *
      * @param b
      */
-    private void createIfEager(final Binding<?> b)
+    private void appendIfEager(final Binding<?> b)
     {
       b.acceptScopingVisitor(new BindingScopingVisitor<Void>()
       {
@@ -153,7 +182,7 @@ public class EagerSingletonScopeModule extends AbstractModule
         {
           if (scope == EAGERSINGLETON_SCOPE)
           {
-            b.getProvider().get();
+            eagerSingletons.add(b);
           }
 
           return null;
@@ -169,6 +198,9 @@ public class EagerSingletonScopeModule extends AbstractModule
     }
 
     //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private Set<Binding<?>> eagerSingletons = Sets.newHashSet();
 
     /** Field description */
     private Injector injector;
@@ -201,4 +233,10 @@ public class EagerSingletonScopeModule extends AbstractModule
       return Scopes.SINGLETON.scope(key, unscoped);
     }
   }
+
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private EagerCreatingListener listener;
 }

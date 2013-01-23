@@ -46,7 +46,6 @@ import org.apache.shiro.guice.web.ShiroWebModule;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.DefaultPluginLoader;
-import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.upgrade.UpgradeManager;
@@ -134,6 +133,9 @@ public class ScmContextListener extends GuiceServletContextListener
     // call destroy event
     if ((globalInjector != null) &&!startupError)
     {
+
+      // bind eager singletons
+      globalInjector.getInstance(EagerSingletonScopeModule.class).bind();
       globalInjector.getInstance(
         ServletContextListenerHolder.class).contextInitialized(
         servletContextEvent);
@@ -174,10 +176,6 @@ public class ScmContextListener extends GuiceServletContextListener
   private Injector getDefaultInjector(ServletContext servletContext)
   {
     DefaultPluginLoader pluginLoader = new DefaultPluginLoader(servletContext);
-    //BindingExtensionProcessor bindExtProcessor =
-    //  new BindingExtensionProcessor();
-
-    // pluginLoader.processExtensions(bindExtProcessor);
 
     ClassOverrides overrides = ClassOverrides.findOverrides();
     ScmServletModule main = new ScmServletModule(pluginLoader, overrides);
