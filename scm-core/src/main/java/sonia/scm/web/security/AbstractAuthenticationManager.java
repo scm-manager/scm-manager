@@ -35,19 +35,23 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Sets;
+
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.event.ScmEventBus;
 
 /**
+ * Abstract base class for {@link AuthenticationManager} implementations. This
+ * class implements the listener methods of the {@link AuthenticationManager}
+ * interface.
  *
  * @author Sebastian Sdorra
  */
@@ -56,10 +60,10 @@ public abstract class AbstractAuthenticationManager
 {
 
   /**
-   * Method description
+   * Register a {@link AuthenticationListener}.
    *
    *
-   * @param listener
+   * @param listener {@link AuthenticationListener} to register
    */
   @Override
   public void addListener(AuthenticationListener listener)
@@ -68,10 +72,10 @@ public abstract class AbstractAuthenticationManager
   }
 
   /**
-   * Method description
+   * Register a {@link java.util.Collection} of {@link AuthenticationListener}s.
    *
    *
-   * @param listeners
+   * @param listeners listeners to register
    */
   @Override
   public void addListeners(Collection<AuthenticationListener> listeners)
@@ -80,10 +84,10 @@ public abstract class AbstractAuthenticationManager
   }
 
   /**
-   * Method description
+   * Remove specified {@link AuthenticationListener}.
    *
    *
-   * @param listener
+   * @param listener to remove
    */
   @Override
   public void removeListener(AuthenticationListener listener)
@@ -92,12 +96,14 @@ public abstract class AbstractAuthenticationManager
   }
 
   /**
-   * Method description
    *
+   * Calls the {@link AuthenticationListener#onAuthentication(HttpServletRequest,HttpServletResponse,User)}
+   * method of all registered listeners and send a {@link AuthenticationEvent}
+   * to the {@link ScmEventBus}.
    *
-   * @param request
-   * @param response
-   * @param user
+   * @param request current http request
+   * @param response current http response
+   * @param user successful authenticated user
    */
   protected void fireAuthenticationEvent(HttpServletRequest request,
     HttpServletResponse response, User user)
@@ -106,13 +112,12 @@ public abstract class AbstractAuthenticationManager
     {
       listener.onAuthentication(request, response, user);
     }
-    
+
     ScmEventBus.getInstance().post(new AuthenticationEvent(user));
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private Set<AuthenticationListener> listeners =
-    new HashSet<AuthenticationListener>();
+  /** authentication listeners */
+  private Set<AuthenticationListener> listeners = Sets.newHashSet();
 }
