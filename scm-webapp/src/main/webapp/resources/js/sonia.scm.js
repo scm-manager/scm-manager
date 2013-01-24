@@ -577,7 +577,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 Ext.onReady(function(){
 
   var stateProvider;
-  if (localStorage){
+  if ( typeof(Storage) !== "undefined" ){
     if (debug){
       console.debug('use localStore to save application state');
     }
