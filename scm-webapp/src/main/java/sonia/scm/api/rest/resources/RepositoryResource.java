@@ -74,6 +74,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.security.RepositoryPermission;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -509,6 +510,7 @@ public class RepositoryResource
       {
         builder.setPath(path);
       }
+
       //J-
       builder.setDisableLastCommit(disableLastCommit)
              .setDisableSubRepositoryDetection(disableSubRepositoryDetection)
@@ -845,6 +847,12 @@ public class RepositoryResource
   {
     AssertUtil.assertIsNotEmpty(id);
     AssertUtil.assertIsNotEmpty(revision);
+
+    /**
+     * HttpUtil.checkForCRLFInjection(revision);
+     * see https://bitbucket.org/sdorra/scm-manager/issue/320/crlf-injection-vulnerability-in-diff-api
+     */
+    HttpUtil.checkForCRLFInjection(revision);
 
     RepositoryService service = null;
     Response response = null;

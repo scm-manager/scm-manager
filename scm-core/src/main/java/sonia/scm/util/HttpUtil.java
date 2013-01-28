@@ -35,6 +35,7 @@ package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
 
 import org.slf4j.Logger;
@@ -164,6 +165,10 @@ public class HttpUtil
   private static final Pattern PATTERN_URLNORMALIZE =
     Pattern.compile("(?:(http://[^:]+):80(/.+)?|(https://[^:]+):443(/.+)?)");
 
+  /** Field description */
+  private static final CharMatcher CRLF_CHARMATCHER =
+    CharMatcher.anyOf("\n\r%");
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -227,6 +232,31 @@ public class HttpUtil
 
     return new StringBuilder(uri).append(s).append(name).append(
       SEPARATOR_PARAMETER_VALUE).append(value).toString();
+  }
+
+  /**
+   * Throws an {@link IllegalArgumentException} if the parameter contains
+   * illegal characters which could imply a CRLF injection attack.
+   * <stronng>Note:</strong> the current implementation throws the
+   * {@link IllegalArgumentException} also if the parameter contains a "%". So
+   * you have to decode your parameters before the check,
+   *
+   * @param parameter value
+   *
+   * @return true if the request comes from the web interface.
+   * @since 1.28
+   */
+  public static void checkForCRLFInjection(String parameter)
+  {
+    if (CRLF_CHARMATCHER.matchesAnyOf(parameter))
+    {
+      logger.error(
+        "parameter \"{}\" contains a character which could be an indicator for a crlf injection",
+        parameter);
+
+      throw new IllegalArgumentException(
+        "parameter contains an illegal character");
+    }
   }
 
   /**
