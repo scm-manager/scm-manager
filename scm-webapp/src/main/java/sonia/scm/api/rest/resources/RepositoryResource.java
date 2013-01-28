@@ -793,6 +793,12 @@ public class RepositoryResource
 
       output = new BrowserStreamingOutput(service, builder, path);
 
+     /**
+      * protection for crlf injection
+      * see https://bitbucket.org/sdorra/scm-manager/issue/320/crlf-injection-vulnerability-in-diff-api
+      */
+      path = HttpUtil.removeCRLFInjectionChars(path);
+      
       String contentDispositionName = getContentDispositionNameFromPath(path);
 
       response = Response.ok(output).header("Content-Disposition",
@@ -849,7 +855,7 @@ public class RepositoryResource
     AssertUtil.assertIsNotEmpty(revision);
 
     /**
-     * HttpUtil.checkForCRLFInjection(revision);
+     * check for a crlf injection attack
      * see https://bitbucket.org/sdorra/scm-manager/issue/320/crlf-injection-vulnerability-in-diff-api
      */
     HttpUtil.checkForCRLFInjection(revision);

@@ -243,7 +243,6 @@ public class HttpUtil
    *
    * @param parameter value
    *
-   * @return true if the request comes from the web interface.
    * @since 1.28
    */
   public static void checkForCRLFInjection(String parameter)
@@ -348,6 +347,22 @@ public class HttpUtil
     }
 
     return url;
+  }
+
+  /**
+   * Remove all chars from the given parameter, which could be used for
+   * CRLF injection attack. <stronng>Note:</strong> the current implementation
+   * the "%" char is also removed from the source parameter.
+   *
+   * @param parameter value
+   *
+   * @return the parameter value without crlf chars
+   *
+   * @since 1.28
+   */
+  public static String removeCRLFInjectionChars(String parameter)
+  {
+    return CRLF_CHARMATCHER.removeFrom(parameter);
   }
 
   /**

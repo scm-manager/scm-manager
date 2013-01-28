@@ -141,6 +141,22 @@ public class HttpUtilTest
     HttpUtil.checkForCRLFInjection("abcka");
   }
 
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testRemoveCRLFInjectionChars()
+  {
+    assertEquals("any0D0A", HttpUtil.removeCRLFInjectionChars("any%0D%0A"));
+    assertEquals("123abc", HttpUtil.removeCRLFInjectionChars("123\nabc"));
+    assertEquals("123abc", HttpUtil.removeCRLFInjectionChars("123\r\nabc"));
+    assertEquals("123abc", HttpUtil.removeCRLFInjectionChars("123%abc"));
+    assertEquals("123abc", HttpUtil.removeCRLFInjectionChars("123abc"));
+    assertEquals("123", HttpUtil.removeCRLFInjectionChars("123"));
+
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
