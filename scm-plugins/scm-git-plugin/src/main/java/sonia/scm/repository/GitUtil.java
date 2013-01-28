@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
@@ -271,15 +272,25 @@ public class GitUtil
       branchName = PREFIX_HEADS.concat(branchName);
     }
 
-    Ref ref = repo.getRef(branchName);
+    checkBranchName(repo, branchName);
 
-    if (ref != null)
+    try
     {
-      branchId = ref.getObjectId();
+      Ref ref = repo.getRef(branchName);
+
+      if (ref != null)
+      {
+        branchId = ref.getObjectId();
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("could not find branch for {}", branchName);
+      }
+
     }
-    else if (logger.isWarnEnabled())
+    catch (Exception ex)
     {
-      logger.warn("could not find branch for {}", branchName);
+      logger.warn("error occured during resolve of branch id", ex);
     }
 
     return branchId;
@@ -452,5 +463,39 @@ public class GitUtil
 
     return name;
 
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repo
+   * @param branchName
+   *
+   * @throws IOException
+   */
+  @VisibleForTesting
+  static void checkBranchName(org.eclipse.jgit.lib.Repository repo,
+    String branchName)
+    throws IOException
+  {
+    if (branchName.contains(".."))
+    {
+      File repoDirectory = repo.getDirectory();
+      File branchFile = new File(repoDirectory, branchName);
+
+      if (!branchFile.getCanonicalPath().startsWith(
+        repoDirectory.getCanonicalPath()))
+      {
+        logger.error(
+          "branch \"{}\" is outside of the repository. It looks like path traversal attack",
+          branchName);
+
+        throw new IllegalArgumentException(
+          branchName.concat(" is an invalid branch name"));
+      }
+    }
   }
 }
