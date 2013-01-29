@@ -47,6 +47,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  *
@@ -294,6 +295,30 @@ public abstract class RepositoryManagerTestBase
    * Method description
    *
    *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testRepositoryHook() throws RepositoryException, IOException
+  {
+    CountingReceiveHook hook = new CountingReceiveHook();
+    RepositoryManager repoManager = createRepositoryManager(false);
+
+    repoManager.addHook(hook);
+    assertEquals(0, hook.eventsReceived);
+
+    Repository repository = createTestRepository();
+
+    repoManager.fireHookEvent(repository, new TestRepositoryHookEvent());
+    assertEquals(1, hook.eventsReceived);
+    repoManager.fireHookEvent(repository, new TestRepositoryHookEvent());
+    assertEquals(2, hook.eventsReceived);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repo
    * @param other
    */
@@ -393,5 +418,102 @@ public abstract class RepositoryManagerTestBase
 
     manager.delete(repository);
     assertNull(manager.get(id));
+  }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/01/29
+   * @author         Enter your name here...    
+   */
+  private static class CountingReceiveHook extends PreReceiveRepositoryHook
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @param event
+     */
+    @Override
+    public void onEvent(RepositoryHookEvent event)
+    {
+      eventsReceived++;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private int eventsReceived = 0;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/01/29
+   * @author         Enter your name here...    
+   */
+  private static class TestRepositoryHookEvent implements RepositoryHookEvent
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public Collection<Changeset> getChangesets()
+    {
+      return Collections.EMPTY_LIST;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public Repository getRepository()
+    {
+      return repository;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public RepositoryHookType getType()
+    {
+      return RepositoryHookType.PRE_RECEIVE;
+    }
+
+    //~--- set methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param repository
+     */
+    @Override
+    public void setRepository(Repository repository)
+    {
+      this.repository = repository;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private Repository repository;
   }
 }
