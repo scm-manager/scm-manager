@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import org.junit.Test;
 
+import sonia.scm.HandlerEvent;
 import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
 
@@ -224,6 +225,44 @@ public abstract class RepositoryManagerTestBase
     heartReference.setDescription("prototype ship");
     assertFalse(
       heartOfGold.getDescription().equals(heartReference.getDescription()));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testListener() throws RepositoryException, IOException
+  {
+    RepositoryManager repoManager = createRepositoryManager(false);
+    TestListener listener = new TestListener();
+
+    repoManager.addListener(listener);
+
+    Repository repository = RepositoryTestData.create42Puzzle();
+
+    repoManager.create(repository);
+    assertRepositoriesEquals(repository, listener.preRepository);
+    assertSame(HandlerEvent.BEFORE_CREATE, listener.preEvent);
+    assertRepositoriesEquals(repository, listener.postRepository);
+    assertSame(HandlerEvent.CREATE, listener.postEvent);
+
+    repository.setDescription("changed description");
+    repoManager.modify(repository);
+    assertRepositoriesEquals(repository, listener.preRepository);
+    assertSame(HandlerEvent.BEFORE_MODIFY, listener.preEvent);
+    assertRepositoriesEquals(repository, listener.postRepository);
+    assertSame(HandlerEvent.MODIFY, listener.postEvent);
+
+    repoManager.delete(repository);
+
+    assertRepositoriesEquals(repository, listener.preRepository);
+    assertSame(HandlerEvent.BEFORE_DELETE, listener.preEvent);
+    assertRepositoriesEquals(repository, listener.postRepository);
+    assertSame(HandlerEvent.DELETE, listener.postEvent);
   }
 
   /**
@@ -427,7 +466,7 @@ public abstract class RepositoryManagerTestBase
    *
    *
    * @version        Enter version here..., 13/01/29
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   private static class CountingReceiveHook extends PreReceiveRepositoryHook
   {
@@ -456,7 +495,55 @@ public abstract class RepositoryManagerTestBase
    *
    *
    * @version        Enter version here..., 13/01/29
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
+   */
+  private static class TestListener implements RepositoryListener
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @param repository
+     * @param event
+     */
+    @Override
+    public void onEvent(Repository repository, HandlerEvent event)
+    {
+      if (event.isPost())
+      {
+        this.postRepository = repository;
+        this.postEvent = event;
+      }
+      else if (event.isPre())
+      {
+        this.preRepository = repository;
+        this.preEvent = event;
+      }
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private HandlerEvent postEvent;
+
+    /** Field description */
+    private Repository postRepository;
+
+    /** Field description */
+    private HandlerEvent preEvent;
+
+    /** Field description */
+    private Repository preRepository;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/01/29
+   * @author         Enter your name here...
    */
   private static class TestRepositoryHookEvent implements RepositoryHookEvent
   {
