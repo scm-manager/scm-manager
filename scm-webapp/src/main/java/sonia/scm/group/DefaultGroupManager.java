@@ -176,7 +176,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
     else
     {
-      throw new GroupException("user does not exists");
+      throw new GroupNotFoundException("user does not exists");
     }
   }
 
@@ -228,7 +228,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
     else
     {
-      throw new GroupException("group does not exists");
+      throw new GroupNotFoundException("group does not exists");
     }
   }
 
@@ -256,7 +256,7 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     if (fresh == null)
     {
-      throw new GroupException("group does not exists");
+      throw new GroupNotFoundException("group does not exists");
     }
 
     fresh.copyProperties(group);

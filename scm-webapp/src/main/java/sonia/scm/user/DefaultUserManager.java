@@ -220,7 +220,7 @@ public class DefaultUserManager extends AbstractUserManager
     }
     else
     {
-      throw new UserException("user does not exists");
+      throw new UserNotFoundException("user does not exists");
     }
   }
 
@@ -292,7 +292,7 @@ public class DefaultUserManager extends AbstractUserManager
     }
     else
     {
-      throw new UserException("user does not exists");
+      throw new UserNotFoundException("user does not exists");
     }
   }
 
@@ -319,7 +319,7 @@ public class DefaultUserManager extends AbstractUserManager
 
     if (fresh == null)
     {
-      throw new UserException("user does not exists");
+      throw new UserNotFoundException("user does not exists");
     }
 
     fresh.copyProperties(user);

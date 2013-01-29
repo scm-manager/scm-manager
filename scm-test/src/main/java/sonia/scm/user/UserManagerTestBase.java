@@ -132,6 +132,19 @@ public abstract class UserManagerTestBase
    * @throws IOException
    * @throws UserException
    */
+  @Test(expected = UserNotFoundException.class)
+  public void testDeleteNotFound() throws UserException, IOException
+  {
+    manager.delete(UserTestData.createDent());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws UserException
+   */
   @Test
   public void testGet() throws UserException, IOException
   {
@@ -253,9 +266,7 @@ public abstract class UserManagerTestBase
   @Test(expected = UserException.class)
   public void testModifyNotExisting() throws UserException, IOException
   {
-    User zaphod = UserTestData.createZaphod();
-
-    manager.modify(zaphod);
+    manager.modify(UserTestData.createZaphod());
   }
 
   /**
@@ -322,6 +333,19 @@ public abstract class UserManagerTestBase
     zaphod.setDisplayName("Tricia McMillan");
     manager.refresh(zaphod);
     assertEquals(zaphod.getDisplayName(), "Zaphod Beeblebrox");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws UserException
+   */
+  @Test(expected = UserNotFoundException.class)
+  public void testRefreshNotFound() throws UserException, IOException
+  {
+    manager.refresh(UserTestData.createDent());
   }
 
   /**

@@ -58,7 +58,6 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
