@@ -104,7 +104,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * @param configuration
    * @param contextProvider
    * @param keyGenerator
-   * @param securityContextProvider
    * @param repositoryDAO
    * @param handlerSet
    * @param repositoryListenersProvider
@@ -253,7 +252,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     }
     else
     {
-      throw new RepositoryException(
+      throw new RepositoryNotFoundException(
         "repository ".concat(repository.getName()).concat(" not found"));
     }
 
@@ -381,7 +380,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     }
     else
     {
-      throw new RepositoryException(
+      throw new RepositoryNotFoundException(
         "repository ".concat(repository.getName()).concat(" not found"));
     }
 
@@ -413,7 +412,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     }
     else
     {
-      throw new RepositoryException(
+      throw new RepositoryNotFoundException(
         "repository ".concat(repository.getName()).concat(" not found"));
     }
   }

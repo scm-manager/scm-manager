@@ -52,7 +52,7 @@ import java.util.Collection;
  * @author Sebastian Sdorra
  */
 public abstract class RepositoryManagerTestBase
-        extends ManagerTestBase<Repository, RepositoryException>
+  extends ManagerTestBase<Repository, RepositoryException>
 {
 
   /**
@@ -101,6 +101,19 @@ public abstract class RepositoryManagerTestBase
 
     manager.delete(heartOfGold);
     assertNull(manager.get(id));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test(expected = RepositoryNotFoundException.class)
+  public void testDeleteNotFound() throws RepositoryException, IOException
+  {
+    manager.delete(createRepositoryWithId());
   }
 
   /**
@@ -156,8 +169,8 @@ public abstract class RepositoryManagerTestBase
         foundHeart = true;
         heartReference = repository;
       }
-      else if (repository.getId().equals(
-              happyVerticalPeopleTransporter.getId()))
+      else if (
+        repository.getId().equals(happyVerticalPeopleTransporter.getId()))
       {
         assertRepositoriesEquals(happyVerticalPeopleTransporter, repository);
         foundTransporter = true;
@@ -171,7 +184,7 @@ public abstract class RepositoryManagerTestBase
     assertNotSame(heartOfGold, heartReference);
     heartReference.setDescription("prototype ship");
     assertFalse(
-        heartOfGold.getDescription().equals(heartReference.getDescription()));
+      heartOfGold.getDescription().equals(heartReference.getDescription()));
   }
 
   /**
@@ -202,10 +215,10 @@ public abstract class RepositoryManagerTestBase
    * @throws IOException
    * @throws RepositoryException
    */
-  @Test(expected = RepositoryException.class)
-  public void testModifyNotExisting() throws RepositoryException, IOException
+  @Test(expected = RepositoryNotFoundException.class)
+  public void testModifyNotFound() throws RepositoryException, IOException
   {
-    manager.modify(RepositoryTestData.createHeartOfGold());
+    manager.modify(createRepositoryWithId());
   }
 
   /**
@@ -224,6 +237,19 @@ public abstract class RepositoryManagerTestBase
     heartOfGold.setDescription("prototype ship");
     manager.refresh(heartOfGold);
     assertEquals(description, heartOfGold.getDescription());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test(expected = RepositoryNotFoundException.class)
+  public void testRefreshNotFound() throws RepositoryException, IOException
+  {
+    manager.refresh(createRepositoryWithId());
   }
 
   /**
@@ -255,7 +281,7 @@ public abstract class RepositoryManagerTestBase
    * @throws RepositoryException
    */
   private Repository createRepository(Repository repository)
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     manager.create(repository);
     assertNotNull(repository.getId());
@@ -270,15 +296,30 @@ public abstract class RepositoryManagerTestBase
    *
    *
    * @return
+   */
+  private Repository createRepositoryWithId()
+  {
+    Repository repository = RepositoryTestData.createHeartOfGold();
+
+    repository.setId("abc");
+
+    return repository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
    *
    * @throws IOException
    * @throws RepositoryException
    */
   private Repository createSecondTestRepository()
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     return createRepository(
-        RepositoryTestData.createHappyVerticalPeopleTransporter());
+      RepositoryTestData.createHappyVerticalPeopleTransporter());
   }
 
   /**
@@ -291,7 +332,7 @@ public abstract class RepositoryManagerTestBase
    * @throws RepositoryException
    */
   private Repository createTestRepository()
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     return createRepository(RepositoryTestData.createHeartOfGold());
   }
