@@ -37,6 +37,7 @@ package sonia.scm.repository;
 
 import org.junit.Test;
 
+import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
 
 import static org.junit.Assert.*;
@@ -54,6 +55,17 @@ import java.util.Collection;
 public abstract class RepositoryManagerTestBase
   extends ManagerTestBase<Repository, RepositoryException>
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param archiveEnabled
+   *
+   * @return
+   */
+  protected abstract RepositoryManager createRepositoryManager(
+    boolean archiveEnabled);
 
   /**
    * Method description
@@ -96,11 +108,20 @@ public abstract class RepositoryManagerTestBase
   @Test
   public void testDelete() throws RepositoryException, IOException
   {
-    Repository heartOfGold = createTestRepository();
-    String id = heartOfGold.getId();
+    delete(manager, createTestRepository());
+  }
 
-    manager.delete(heartOfGold);
-    assertNull(manager.get(id));
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test(expected = RepositoryIsNotArchivedException.class)
+  public void testDeleteNonArchived() throws RepositoryException, IOException
+  {
+    delete(createRepositoryManager(true), createTestRepository());
   }
 
   /**
@@ -114,6 +135,23 @@ public abstract class RepositoryManagerTestBase
   public void testDeleteNotFound() throws RepositoryException, IOException
   {
     manager.delete(createRepositoryWithId());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testDeleteWithEnabledArchive()
+    throws RepositoryException, IOException
+  {
+    Repository repository = createTestRepository();
+
+    repository.setArchived(true);
+    delete(createRepositoryManager(true), repository);
   }
 
   /**
@@ -335,5 +373,25 @@ public abstract class RepositoryManagerTestBase
     throws RepositoryException, IOException
   {
     return createRepository(RepositoryTestData.createHeartOfGold());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param manager
+   * @param repository
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  private void delete(Manager<Repository, RepositoryException> manager,
+    Repository repository)
+    throws RepositoryException, IOException
+  {
+    String id = repository.getId();
+
+    manager.delete(repository);
+    assertNull(manager.get(id));
   }
 }

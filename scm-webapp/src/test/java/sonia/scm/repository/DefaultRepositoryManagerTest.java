@@ -121,6 +121,21 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
   @Override
   protected DefaultRepositoryManager createManager()
   {
+    return createRepositoryManager(false);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param archiveEnabled
+   *
+   * @return
+   */
+  @Override
+  protected DefaultRepositoryManager createRepositoryManager(
+    boolean archiveEnabled)
+  {
     Set<RepositoryHandler> handlerSet = new HashSet<RepositoryHandler>();
     StoreFactory factory = new JAXBStoreFactory();
 
@@ -154,6 +169,8 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
     XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(factory);
 
     ScmConfiguration configuration = new ScmConfiguration();
+
+    configuration.setEnableRepositoryArchive(archiveEnabled);
 
     return new DefaultRepositoryManager(configuration, contextProvider,
       new DefaultKeyGenerator(), repositoryDAO, handlerSet, listenerProvider,
