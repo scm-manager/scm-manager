@@ -37,9 +37,6 @@ package sonia.scm.repository;
 
 import com.google.inject.Provider;
 
-import org.apache.shiro.subject.Subject;
-
-import org.junit.Before;
 import org.junit.Test;
 
 import sonia.scm.Type;
@@ -48,7 +45,6 @@ import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
-import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
 
@@ -94,20 +90,6 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
     assertEquals("project1/test-1",
       m.getFromUri("/git/project1/test-1/ka/some/path").getName());
     assertNull(m.getFromUri("/git/project1/test-3/ka/some/path"));
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Before
-  public void setAdminSubject()
-  {
-    Subject admin = MockUtil.createAdminSubject();
-
-    setSubject(admin);
   }
 
   //~--- methods --------------------------------------------------------------

@@ -35,11 +35,15 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.apache.shiro.subject.Subject;
+
+import org.junit.Before;
 import org.junit.Test;
 
 import sonia.scm.HandlerEvent;
 import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
+import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
 
@@ -353,6 +357,22 @@ public abstract class RepositoryManagerTestBase
     repoManager.fireHookEvent(repository, new TestRepositoryHookEvent());
     assertEquals(2, hook.eventsReceived);
   }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Before
+  public void setAdminSubject()
+  {
+    Subject admin = MockUtil.createAdminSubject();
+
+    setSubject(admin);
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

@@ -179,7 +179,8 @@ public class AbstractTestBase
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Clears Shiro's thread state, ensuring the thread remains clean for future test execution.
+   * Clears Shiro's thread state, ensuring the thread remains clean for 
+   * future test execution.
    */
   protected void clearSubject()
   {
@@ -241,8 +242,6 @@ public class AbstractTestBase
     subjectThreadState = createThreadState(subject);
     subjectThreadState.bind();
   }
-
-  ;
 
   //~--- fields ---------------------------------------------------------------
 

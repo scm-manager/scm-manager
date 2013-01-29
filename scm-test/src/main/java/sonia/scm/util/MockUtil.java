@@ -39,6 +39,7 @@ import com.google.inject.Provider;
 
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
 import org.mockito.invocation.InvocationOnMock;
@@ -46,6 +47,7 @@ import org.mockito.stubbing.Answer;
 
 import sonia.scm.SCMContextProvider;
 import sonia.scm.user.User;
+import sonia.scm.user.UserTestData;
 import sonia.scm.web.security.DummyWebSecurityContext;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -117,6 +119,24 @@ public class MockUtil
     when(subject.getPrincipals()).thenReturn(collection);
 
     return subject;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static Subject createUserSubject()
+  {
+    SimplePrincipalCollection collection = new SimplePrincipalCollection();
+    User user = UserTestData.createTrillian();
+
+    collection.add(user.getName(), "junit");
+    collection.add(user, "junit");
+
+    return new Subject.Builder().principals(collection).authenticated(
+      true).buildSubject();
   }
 
   //~--- get methods ----------------------------------------------------------
