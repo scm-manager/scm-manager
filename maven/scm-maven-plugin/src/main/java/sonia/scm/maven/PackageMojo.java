@@ -340,7 +340,7 @@ public class PackageMojo extends AbstractBaseScmMojo
       if (resolveMetadata)
       {
         String path = localRepository.pathOf(artifact);
-        int lastIndex = path.lastIndexOf(".");
+        int lastIndex = path.lastIndexOf('.');
 
         if (lastIndex > 0)
         {

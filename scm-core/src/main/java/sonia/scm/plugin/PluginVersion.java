@@ -68,7 +68,7 @@ public class PluginVersion implements Comparable<PluginVersion>
   {
     this.unparsedVersion = versionString;
 
-    int index = versionString.indexOf("-");
+    int index = versionString.indexOf('-');
     String versionPart = null;
     String qualifierPart = null;
 

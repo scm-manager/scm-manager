@@ -158,7 +158,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
     String execCmd = path;
 
-    if ((execCmd.charAt(0) != '"') && (execCmd.indexOf(" ") >= 0))
+    if ((execCmd.charAt(0) != '"') && (execCmd.indexOf(' ') >= 0))
     {
       execCmd = "\"".concat(execCmd).concat("\"");
     }

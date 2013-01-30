@@ -332,7 +332,7 @@ public class HgFileviewCommand extends AbstractCommand
    */
   private String getNameFromPath(String path)
   {
-    int index = path.lastIndexOf("/");
+    int index = path.lastIndexOf('/');
 
     if (index > 0)
     {

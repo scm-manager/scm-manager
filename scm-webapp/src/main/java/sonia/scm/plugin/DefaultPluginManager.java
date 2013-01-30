@@ -673,7 +673,7 @@ public class DefaultPluginManager
    */
   private String getPluginIdPrefix(String pluginId)
   {
-    return pluginId.substring(0, pluginId.lastIndexOf(":"));
+    return pluginId.substring(0, pluginId.lastIndexOf(':'));
   }
 
   /**

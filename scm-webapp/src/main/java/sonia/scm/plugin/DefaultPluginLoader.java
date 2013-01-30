@@ -299,7 +299,7 @@ public class DefaultPluginLoader implements PluginLoader
     {
 
       // jar:file:/some/path/file.jar!/META-INF/scm/plugin.xml
-      path = path.substring("jar:file:".length(), path.lastIndexOf("!"));
+      path = path.substring("jar:file:".length(), path.lastIndexOf('!'));
       path = decodePath(path);
     }
 

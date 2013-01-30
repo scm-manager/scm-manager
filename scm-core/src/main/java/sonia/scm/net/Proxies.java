@@ -84,7 +84,7 @@ public class Proxies
         url = url.substring(index + 3);
       }
 
-      index = url.indexOf("/");
+      index = url.indexOf('/');
 
       if (index > 0)
       {

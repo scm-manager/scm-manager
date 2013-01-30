@@ -50,7 +50,7 @@ import static org.junit.Assert.*;
  */
 public class EhCacheTest
 {
-
+  
   /**
    * Method description
    *

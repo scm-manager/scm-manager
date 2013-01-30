@@ -59,7 +59,7 @@ public class UrlUtil
 
     if (Util.isNotEmpty(revision))
     {
-      int index = revision.indexOf(":");
+      int index = revision.indexOf(':');
 
       if (index > 0)
       {

@@ -115,8 +115,8 @@ public class Person implements Validateable, Serializable
     {
       String name = value;
       String mail = null;
-      int s = value.indexOf("<");
-      int e = value.indexOf(">");
+      int s = value.indexOf('<');
+      int e = value.indexOf('>');
 
       if ((s > 0) && (e > 0))
       {

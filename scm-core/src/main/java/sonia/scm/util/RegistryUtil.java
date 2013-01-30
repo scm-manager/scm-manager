@@ -133,7 +133,7 @@ public class RegistryUtil
             if (value.startsWith("\""))
             {
               value = value.substring(1);
-              value = value.substring(0, value.indexOf("\""));
+              value = value.substring(0, value.indexOf('"'));
             }
 
             if (logger.isDebugEnabled())

@@ -101,7 +101,7 @@ public class INIConfigurationReader extends AbstractReader<INIConfiguration>
         else if ((section != null) &&!line.startsWith(";")
                  &&!line.startsWith("#"))
         {
-          int index = line.indexOf("=");
+          int index = line.indexOf('=');
 
           if (index > 0)
           {

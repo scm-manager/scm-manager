@@ -331,7 +331,7 @@ public class HttpUtil
    */
   public static String removeMatrixParameter(String uri)
   {
-    int index = uri.indexOf(";");
+    int index = uri.indexOf(';');
 
     if (index > 0)
     {

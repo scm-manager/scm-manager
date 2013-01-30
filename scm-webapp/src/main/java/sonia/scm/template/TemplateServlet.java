@@ -156,7 +156,7 @@ public class TemplateServlet extends HttpServlet
     params.put("locale", locale);
 
     String country = locale;
-    int i = country.indexOf("_");
+    int i = country.indexOf('_');
 
     if (i > 0)
     {
