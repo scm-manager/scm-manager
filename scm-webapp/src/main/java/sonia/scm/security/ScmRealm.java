@@ -38,6 +38,7 @@ package sonia.scm.security;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -64,6 +65,7 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.Subscriber;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupNames;
@@ -71,13 +73,13 @@ import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.repository.RepositoryListener;
+import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
+import sonia.scm.user.UserEvent;
 import sonia.scm.user.UserEventHack;
 import sonia.scm.user.UserException;
-import sonia.scm.user.UserListener;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.AuthenticationManager;
@@ -100,8 +102,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 @Singleton
+@Subscriber
 public class ScmRealm extends AuthorizingRealm
-  implements RepositoryListener, UserListener
 {
 
   /** Field description */
@@ -167,10 +169,6 @@ public class ScmRealm extends AuthorizingRealm
 
     // set components
     setPermissionResolver(new RepositoryPermissionResolver());
-
-    // add listeners for caching
-    userManager.addListener(this);
-    repositoryManager.addListener(this);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -179,19 +177,17 @@ public class ScmRealm extends AuthorizingRealm
    * Method description
    *
    *
-   * @param repository
    * @param event
    */
-  @Override
-  public void onEvent(Repository repository, HandlerEvent event)
+  @Subscribe
+  public void onEvent(RepositoryEvent event)
   {
-    if (event.isPost())
+    if (event.getEventType().isPost())
     {
-
       if (logger.isDebugEnabled())
       {
         logger.debug("clear cache, because repository {} has changed",
-          repository.getName());
+          event.getItem().getName());
       }
 
       cache.clear();
@@ -202,14 +198,15 @@ public class ScmRealm extends AuthorizingRealm
    * Method description
    *
    *
-   * @param user
    * @param event
    */
-  @Override
-  public void onEvent(User user, HandlerEvent event)
+  @Subscribe
+  public void onEvent(UserEvent event)
   {
-    if (event.isPost())
+    if (event.getEventType().isPost())
     {
+      User user = event.getItem();
+
       if (logger.isDebugEnabled())
       {
         logger.debug(
@@ -225,7 +222,6 @@ public class ScmRealm extends AuthorizingRealm
    * Method description
    *
    *
-   * @param token
    *
    * @param authToken
    *

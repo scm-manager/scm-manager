@@ -43,11 +43,13 @@ package sonia.scm.util;
 public final class GlobUtil
 {
 
-  private GlobUtil()
-  {
-  }
-  
-  
+  /**
+   * Constructs ...
+   *
+   */
+  private GlobUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Converts the given glob string to a regular expression string.
