@@ -61,7 +61,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-public class HttpUtil
+public final class HttpUtil
 {
 
   /** authentication realm for basic authentication */
@@ -160,9 +160,20 @@ public class HttpUtil
   /** the logger for HttpUtil */
   private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
-  /** Field description */
+  /**
+   * Pattern for url normalization
+   * @sincee 1.26
+   */
   private static final Pattern PATTERN_URLNORMALIZE =
     Pattern.compile("(?:(http://[^:]+):80(/.+)?|(https://[^:]+):443(/.+)?)");
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private HttpUtil() {}
 
   //~--- methods --------------------------------------------------------------
 

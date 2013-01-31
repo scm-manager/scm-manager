@@ -67,12 +67,20 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-public class MockUtil
+public final class MockUtil
 {
 
   /** Field description */
   private static final User ADMIN = new User("scmadmin", "SCM Admin",
                                       "scmadmin@scm.org");
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private MockUtil() {}
 
   //~--- methods --------------------------------------------------------------
 

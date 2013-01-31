@@ -51,8 +51,16 @@ import com.sun.jersey.api.client.WebResource;
  *
  * @author Sebastian Sdorra
  */
-public class RepositoryITUtil
+public final class RepositoryITUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private RepositoryITUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -62,7 +70,7 @@ public class RepositoryITUtil
    * @param other
    */
   public static void assertRepositoriesEquals(Repository repository,
-          Repository other)
+    Repository other)
   {
     assertEquals(repository.getName(), other.getName());
     assertEquals(repository.getDescription(), other.getDescription());
@@ -82,7 +90,7 @@ public class RepositoryITUtil
    * @return
    */
   public static Repository createRepository(Client client,
-          Repository repository)
+    Repository repository)
   {
     WebResource wr = createResource(client, "repositories");
     ClientResponse response = wr.post(ClientResponse.class, repository);

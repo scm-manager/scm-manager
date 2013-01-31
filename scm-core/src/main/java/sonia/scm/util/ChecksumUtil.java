@@ -48,11 +48,19 @@ import java.security.NoSuchAlgorithmException;
  *
  * @author Sebastian Sdorra
  */
-public class ChecksumUtil
+public final class ChecksumUtil
 {
 
   /** Field description */
   private static final String DIGEST_TYPE = "SHA-1";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private ChecksumUtil() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -143,7 +151,7 @@ public class ChecksumUtil
    * @return
    *
    * @throws IOException
-   * 
+   *
    * @since 1.12
    */
   public static String createChecksum(byte[] content) throws IOException

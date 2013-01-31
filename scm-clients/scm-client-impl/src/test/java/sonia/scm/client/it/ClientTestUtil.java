@@ -50,7 +50,7 @@ import com.sun.jersey.api.client.WebResource;
  *
  * @author Sebastian Sdorra
  */
-public class ClientTestUtil
+public final class ClientTestUtil
 {
 
   /** Field description */
@@ -68,6 +68,13 @@ public class ClientTestUtil
   /** Field description */
   public static final boolean REQUEST_LOGGING = false;
 
+  private ClientTestUtil()
+  {
+  }
+
+  
+  
+  
   //~--- methods --------------------------------------------------------------
 
   /**

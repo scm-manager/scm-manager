@@ -50,8 +50,16 @@ import sonia.scm.user.User;
  *
  * @author Sebastian Sdorra
  */
-public class SecurityUtil
+public final class SecurityUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private SecurityUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

@@ -49,12 +49,20 @@ import com.sun.jersey.api.client.filter.LoggingFilter;
  *
  * @author Sebastian Sdorra
  */
-public class ClientUtil
+public final class ClientUtil
 {
 
   /** the logger for ClientUtil */
   private static final Logger logger =
     LoggerFactory.getLogger(ClientUtil.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private ClientUtil() {}
 
   //~--- methods --------------------------------------------------------------
 

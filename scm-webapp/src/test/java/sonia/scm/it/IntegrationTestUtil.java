@@ -68,7 +68,7 @@ import javax.ws.rs.core.MultivaluedMap;
  *
  * @author Sebastian Sdorra
  */
-public class IntegrationTestUtil
+public final class IntegrationTestUtil
 {
 
   /** Field description */
@@ -83,6 +83,14 @@ public class IntegrationTestUtil
   /** Field description */
   public static final String EXTENSION = ".xml";
 
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private IntegrationTestUtil() {}
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -96,7 +104,7 @@ public class IntegrationTestUtil
    * @return
    */
   public static ClientResponse authenticate(Client client, String username,
-          String password)
+    String password)
   {
     WebResource wr = createResource(client, "authentication/login");
     MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
@@ -105,7 +113,7 @@ public class IntegrationTestUtil
     formData.add("password", password);
 
     return wr.type("application/x-www-form-urlencoded").post(
-        ClientResponse.class, formData);
+      ClientResponse.class, formData);
   }
 
   /**
@@ -165,7 +173,7 @@ public class IntegrationTestUtil
     DefaultApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
 
     config.getProperties().put(ApacheHttpClientConfig.PROPERTY_HANDLE_COOKIES,
-                               true);
+      true);
 
     return ApacheHttpClient.create(config);
   }
@@ -181,7 +189,7 @@ public class IntegrationTestUtil
    * @throws RepositoryClientException
    */
   public static void createRandomFile(RepositoryClient client)
-          throws IOException, RepositoryClientException
+    throws IOException, RepositoryClientException
   {
     String uuid = UUID.randomUUID().toString();
     String name = "file-" + uuid + ".uuid";
@@ -257,7 +265,7 @@ public class IntegrationTestUtil
   public static File createTempDirectory()
   {
     File directory = new File(System.getProperty("java.io.tmpdir"),
-                              UUID.randomUUID().toString());
+                       UUID.randomUUID().toString());
 
     IOUtil.mkdirs(directory);
 

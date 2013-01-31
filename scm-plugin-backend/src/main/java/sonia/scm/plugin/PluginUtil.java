@@ -48,8 +48,16 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class PluginUtil
+public final class PluginUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private PluginUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

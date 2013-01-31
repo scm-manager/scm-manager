@@ -46,7 +46,7 @@ import javax.servlet.ServletContext;
  *
  * @author Sebastian Sdorra
  */
-public class BootstrapUtil
+public final class BootstrapUtil
 {
 
   /** Field description */
@@ -55,6 +55,14 @@ public class BootstrapUtil
   /** the logger for BootstrapUtil */
   private static final Logger logger =
     LoggerFactory.getLogger(BootstrapUtil.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private BootstrapUtil() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -96,7 +104,7 @@ public class BootstrapUtil
    * @return
    */
   public static <T> T loadClass(ClassLoader classLoader, Class<T> clazz,
-                                String className)
+    String className)
   {
     T instance = null;
 
@@ -164,7 +172,7 @@ public class BootstrapUtil
    * @param classLoader
    */
   public static void setClassLoader(ServletContext context,
-                                    ClassLoader classLoader)
+    ClassLoader classLoader)
   {
     context.setAttribute(CLASSLOADER, classLoader);
   }

@@ -55,7 +55,7 @@ import java.util.TimeZone;
  *
  * @author Sebastian Sdorra
  */
-public class Util
+public final class Util
 {
 
   /** Field description */
@@ -63,6 +63,14 @@ public class Util
 
   /** Field description */
   public static final String EMPTY_STRING = "";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private Util() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -107,7 +115,7 @@ public class Util
    * @return
    */
   public static <T> boolean containsOne(Collection<T> collection,
-          Collection<T> other)
+    Collection<T> other)
   {
     boolean result = false;
 
@@ -198,7 +206,7 @@ public class Util
    * @since 1.4
    */
   public static <T> Collection<T> createSubCollection(Collection<T> values,
-          Comparator<T> comparator, int start, int limit)
+    Comparator<T> comparator, int start, int limit)
   {
     return createSubCollection(values, comparator, null, start, limit);
   }
@@ -216,7 +224,7 @@ public class Util
    * @since 1.4
    */
   public static <T> Collection<T> createSubCollection(Collection<T> values,
-          int start, int limit)
+    int start, int limit)
   {
     return createSubCollection(values, null, null, start, limit);
   }
@@ -235,7 +243,7 @@ public class Util
    * @since 1.4
    */
   public static <T> Collection<T> createSubCollection(Collection<T> values,
-          CollectionAppender<T> appender, int start, int limit)
+    CollectionAppender<T> appender, int start, int limit)
   {
     return createSubCollection(values, null, appender, start, limit);
   }
@@ -256,8 +264,8 @@ public class Util
    * @since 1.4
    */
   public static <T> Collection<T> createSubCollection(Collection<T> values,
-          Comparator<T> comparator, CollectionAppender<T> appender, int start,
-          int limit)
+    Comparator<T> comparator, CollectionAppender<T> appender, int start,
+    int limit)
   {
     List<T> result = new ArrayList<T>();
     List<T> valueList = new ArrayList(values);
@@ -356,8 +364,8 @@ public class Util
   public static String nonNull(Object value)
   {
     return (value != null)
-           ? value.toString()
-           : "";
+      ? value.toString()
+      : "";
   }
 
   /**
@@ -372,7 +380,7 @@ public class Util
    * @throws ParseException
    */
   public static Date parseDate(String dateString, TimeZone tz)
-          throws ParseException
+    throws ParseException
   {
     SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
 
@@ -407,13 +415,13 @@ public class Util
    * @param start
    *
    * @return
-   * 
+   *
    * @since 1.17
    */
   public static boolean startWithIgnoreCase(String value, String start)
   {
     return (value != null) && (start != null)
-           && value.toUpperCase(Locale.ENGLISH).startsWith(start);
+      && value.toUpperCase(Locale.ENGLISH).startsWith(start);
   }
 
   /**
@@ -584,8 +592,8 @@ public class Util
   public static boolean isEquals(Object object, Object other)
   {
     return (object == null)
-           ? other == null
-           : object.equals(other);
+      ? other == null
+      : object.equals(other);
   }
 
   /**

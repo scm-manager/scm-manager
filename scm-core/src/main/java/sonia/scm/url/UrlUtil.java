@@ -42,8 +42,16 @@ import sonia.scm.util.Util;
  * @author Sebastian Sdorra
  * @since 1.11
  */
-public class UrlUtil
+public final class UrlUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private UrlUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

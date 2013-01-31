@@ -57,13 +57,21 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-public class SvnUtil
+public final class SvnUtil
 {
 
   /**
    * the logger for SvnUtil
    */
   private static final Logger logger = LoggerFactory.getLogger(SvnUtil.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private SvnUtil() {}
 
   //~--- methods --------------------------------------------------------------
 

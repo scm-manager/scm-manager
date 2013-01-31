@@ -43,7 +43,7 @@ import sonia.scm.util.ServiceUtil;
  * @author Sebastian Sdorra
  * @since 1.7
  */
-public class CipherUtil
+public final class CipherUtil
 {
 
   /** Field description */
@@ -51,8 +51,6 @@ public class CipherUtil
 
   //~--- constructors ---------------------------------------------------------
 
-  private KeyGenerator keyGenerator;
-  
   /**
    * Constructs ...
    *
@@ -71,16 +69,9 @@ public class CipherUtil
     if (cipherHandler == null)
     {
       cipherHandler = new DefaultCipherHandler(SCMContext.getContext(),
-              keyGenerator);
+        keyGenerator);
     }
   }
-
-  public KeyGenerator getKeyGenerator()
-  {
-    return keyGenerator;
-  }
-  
-  
 
   //~--- get methods ----------------------------------------------------------
 
@@ -147,8 +138,22 @@ public class CipherUtil
     return cipherHandler;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public KeyGenerator getKeyGenerator()
+  {
+    return keyGenerator;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private CipherHandler cipherHandler;
+
+  /** Field description */
+  private KeyGenerator keyGenerator;
 }

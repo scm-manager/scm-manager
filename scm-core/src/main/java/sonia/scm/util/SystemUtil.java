@@ -43,7 +43,7 @@ import sonia.scm.ServletContainerDetector;
  *
  * @author Sebastian Sdorra
  */
-public class SystemUtil
+public final class SystemUtil
 {
 
   /** Field description */
@@ -58,12 +58,19 @@ public class SystemUtil
   /** Field description */
   private static Platform platform =
     new Platform(System.getProperty(PROPERTY_OSNAME),
-                 System.getProperty(PROPERTY_ARCH),
-                 System.getProperty(PROPERTY_OSARCH));
+      System.getProperty(PROPERTY_ARCH), System.getProperty(PROPERTY_OSARCH));
 
   /** Field description */
   private static ServletContainer servletContainer =
     ServletContainerDetector.detect();
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private SystemUtil() {}
 
   //~--- methods --------------------------------------------------------------
 

@@ -63,7 +63,7 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
-public class GitUtil
+public final class GitUtil
 {
 
   /** Field description */
@@ -83,6 +83,14 @@ public class GitUtil
 
   /** the logger for GitUtil */
   private static final Logger logger = LoggerFactory.getLogger(GitUtil.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private GitUtil() {}
 
   //~--- methods --------------------------------------------------------------
 

@@ -48,8 +48,16 @@ import java.util.zip.ZipFile;
  *
  * @author Sebastian Sdorra
  */
-public class Util
+public final class Util
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private Util() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

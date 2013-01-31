@@ -40,8 +40,14 @@ package sonia.scm.util;
  * @author Sebastian Sdorra
  * @since 1.8
  */
-public class GlobUtil
+public final class GlobUtil
 {
+
+  private GlobUtil()
+  {
+  }
+  
+  
 
   /**
    * Converts the given glob string to a regular expression string.

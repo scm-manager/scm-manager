@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
  *
  * @author Sebastian Sdorra
  */
-public class ValidationUtil
+public final class ValidationUtil
 {
 
   /** Field description */
@@ -64,6 +64,14 @@ public class ValidationUtil
   /** Field description */
   private static final String REGEX_USERNAME =
     "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private ValidationUtil() {}
 
   //~--- get methods ----------------------------------------------------------
 
@@ -116,7 +124,7 @@ public class ValidationUtil
    * @return
    */
   public static boolean isNotContaining(String value,
-          String... notAllowedStrings)
+    String... notAllowedStrings)
   {
     boolean result = Util.isNotEmpty(value);
 

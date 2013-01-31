@@ -51,12 +51,20 @@ import java.util.Scanner;
  *
  * @author Sebastian Sdorra
  */
-public class RegistryUtil
+public final class RegistryUtil
 {
 
   /** the logger for RegistryUtil */
   private static final Logger logger =
     LoggerFactory.getLogger(RegistryUtil.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private RegistryUtil() {}
 
   //~--- get methods ----------------------------------------------------------
 
@@ -98,7 +106,7 @@ public class RegistryUtil
    * @return
    */
   public static String getRegistryValue(String key, String subKey,
-          String defaultValue)
+    String defaultValue)
   {
     String value = defaultValue;
     SimpleCommand command = null;

@@ -50,8 +50,16 @@ import java.util.List;
  * @author Sebastian Sdorra
  * @since 1.15
  */
-public class EscapeUtil
+public final class EscapeUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private EscapeUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

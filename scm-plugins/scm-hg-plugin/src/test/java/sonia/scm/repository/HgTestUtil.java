@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -40,8 +41,16 @@ import org.junit.Assume;
  *
  * @author Sebastian Sdorra
  */
-public class HgTestUtil
+public final class HgTestUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private HgTestUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -51,6 +60,7 @@ public class HgTestUtil
    */
   public static void checkForSkip(HgRepositoryHandler handler)
   {
+
     // skip tests if hg not in path
     if (!handler.isConfigured())
     {

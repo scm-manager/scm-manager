@@ -50,8 +50,16 @@ import java.util.Locale;
  *
  * @author Sebastian Sdorra
  */
-public class SearchUtil
+public final class SearchUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private SearchUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -64,7 +72,7 @@ public class SearchUtil
    * @return
    */
   public static boolean matchesAll(SearchRequest request, String value,
-                                   String... other)
+    String... other)
   {
     boolean result = false;
     String query = createStringQuery(request);
@@ -101,7 +109,7 @@ public class SearchUtil
    * @return
    */
   public static boolean matchesOne(SearchRequest request, String value,
-                                   String... other)
+    String... other)
   {
     boolean result = false;
     String query = createStringQuery(request);
@@ -141,7 +149,7 @@ public class SearchUtil
    * @return
    */
   public static <T> Collection<T> search(SearchRequest searchRequest,
-          Collection<T> collection, TransformFilter<T> filter)
+    Collection<T> collection, TransformFilter<T> filter)
   {
     List<T> items = new ArrayList<T>();
     int index = 0;

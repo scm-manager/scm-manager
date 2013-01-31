@@ -35,7 +35,6 @@ package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.Validateable;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -46,8 +45,16 @@ import java.util.Collection;
  *
  * @author Sebastian Sdorra
  */
-public class AssertUtil
+public final class AssertUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private AssertUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

@@ -58,7 +58,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class PermissionUtil
+public final class PermissionUtil
 {
 
   /**
@@ -66,6 +66,14 @@ public class PermissionUtil
    */
   private static final Logger logger =
     LoggerFactory.getLogger(PermissionUtil.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private PermissionUtil() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -105,7 +113,6 @@ public class PermissionUtil
    *
    *
    * @param repository
-   * @param securityContextProvider
    * @param pt
    *
    * @since 1.21
@@ -238,7 +245,6 @@ public class PermissionUtil
    *
    * @param configuration SCM-Manager main configuration
    * @param repository repository to check
-   * @param securityContext current user security context
    *
    * @return true if the repository is writable
    * @since 1.21

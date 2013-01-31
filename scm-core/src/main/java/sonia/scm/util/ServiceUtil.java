@@ -44,8 +44,16 @@ import java.util.ServiceLoader;
  *
  * @author Sebastian Sdorra
  */
-public class ServiceUtil
+public final class ServiceUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private ServiceUtil() {}
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
