@@ -42,16 +42,19 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.PrincipalCollection;
 
 import org.junit.Test;
 
 import sonia.scm.cache.MapCacheManager;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupNames;
+import sonia.scm.repository.PermissionType;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserManager;
@@ -99,6 +102,30 @@ public class ScmRealmTest
    *
    */
   @Test
+  public void testAuthorizationAdminPermissions()
+  {
+    User trillian = createSampleUser();
+
+    trillian.setAdmin(true);
+
+    AuthorizationInfo ai = authorizationInfo(trillian);
+    Collection<Permission> permissions = ai.getObjectPermissions();
+
+    assertNotNull(permissions);
+    assertFalse(permissions.isEmpty());
+    assertEquals(1, permissions.size());
+    //J-
+    assertTrue(
+      permissions.contains(new RepositoryPermission("*", PermissionType.OWNER))
+    );
+    //J+
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
   public void testAuthorizationAdminRoles()
   {
     User trillian = createSampleUser();
@@ -112,6 +139,22 @@ public class ScmRealmTest
     assertEquals(2, roles.size());
     assertTrue(roles.contains(Role.ADMIN));
     assertTrue(roles.contains(Role.USER));
+  }
+
+  /**
+   *  Method description
+   *
+   */
+  @Test
+  public void testAuthorizationDefaultUserPermissions()
+  {
+    User trillian = createSampleUser();
+
+    AuthorizationInfo ai = authorizationInfo(trillian);
+    Collection<Permission> permissions = ai.getObjectPermissions();
+
+    assertNotNull(permissions);
+    assertTrue(permissions.isEmpty());
   }
 
   /**
@@ -151,7 +194,14 @@ public class ScmRealmTest
   {
     User trillian = createSampleUser();
 
-    ScmRealm realm = createRealm(trillian, ImmutableSet.of("g1", "g2"));
+    //J-
+    ScmRealm realm = createRealm(
+      trillian, 
+      ImmutableSet.of("g1", "g2"), 
+      ImmutableSet.of(new Group("xml", "g3"), new Group("xml", "g4")),
+      null
+    );
+    //J+
     AuthenticationInfo ai = realm.getAuthenticationInfo(token(trillian));
 
     assertNotNull(ai);
@@ -168,7 +218,8 @@ public class ScmRealmTest
 
     assertNotNull(groups);
     assertFalse(groups.getCollection().isEmpty());
-    assertThat(groups, containsInAnyOrder("g1", "g2"));
+    assertEquals(4, groups.getCollection().size());
+    assertThat(groups, containsInAnyOrder("g1", "g2", "g3", "g4"));
   }
 
   /**
@@ -200,7 +251,7 @@ public class ScmRealmTest
    */
   private ScmRealm createRealm(User user)
   {
-    return createRealm(user, null);
+    return createRealm(user, null, null, null);
   }
 
   /**
@@ -209,15 +260,30 @@ public class ScmRealmTest
    *
    *
    * @param user
-   * @param groups
+   * @param authenticationGroups
+   * @param dbGroups
+   * @param repositories
    * @return
    */
-  private ScmRealm createRealm(User user, Collection<String> groups)
+  private ScmRealm createRealm(User user,
+    Collection<String> authenticationGroups, Collection<Group> dbGroups,
+    Collection<Repository> repositories)
   {
     UserManager userManager = mock(UserManager.class);
     GroupManager groupManager = mock(GroupManager.class);
-    RepositoryManager repositoryManager = mock(RepositoryManager.class);
+
+    if (dbGroups != null)
+    {
+      when(groupManager.getGroupsForMember(user.getId())).thenReturn(dbGroups);
+    }
+
     RepositoryDAO repositoryDAO = mock(RepositoryDAO.class);
+
+    if (repositories != null)
+    {
+      when(repositoryDAO.getAll()).thenReturn(repositories);
+    }
+
     UserDAO userDAO = mock(UserDAO.class);
 
     when(userDAO.get(user.getId())).thenReturn(user);
@@ -262,7 +328,7 @@ public class ScmRealmTest
         eq(user.getPassword())
       ) 
     ).thenReturn( 
-      new AuthenticationResult(user, groups, AuthenticationState.SUCCESS) 
+      new AuthenticationResult(user, authenticationGroups, AuthenticationState.SUCCESS) 
     );
     
     when( 
@@ -297,7 +363,6 @@ public class ScmRealmTest
       new MapCacheManager(),
       userManager,
       groupManager,
-      repositoryManager,
       repositoryDAO,
       userDAO,
       authManager,

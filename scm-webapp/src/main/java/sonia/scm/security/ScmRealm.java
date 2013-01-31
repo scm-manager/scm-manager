@@ -131,7 +131,6 @@ public class ScmRealm extends AuthorizingRealm
    * @param cacheManager
    * @param userManager
    * @param groupManager
-   * @param repositoryManager
    * @param repositoryDAO
    * @param userDAO
    * @param authenticator
@@ -141,8 +140,8 @@ public class ScmRealm extends AuthorizingRealm
   @Inject
   public ScmRealm(ScmConfiguration configuration, CacheManager cacheManager,
     UserManager userManager, GroupManager groupManager,
-    RepositoryManager repositoryManager, RepositoryDAO repositoryDAO,
-    UserDAO userDAO, AuthenticationManager authenticator,
+    RepositoryDAO repositoryDAO, UserDAO userDAO,
+    AuthenticationManager authenticator,
     Provider<HttpServletRequest> requestProvider,
     Provider<HttpServletResponse> responseProvider)
   {
