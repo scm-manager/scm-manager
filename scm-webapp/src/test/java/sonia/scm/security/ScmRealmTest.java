@@ -36,12 +36,12 @@ package sonia.scm.security;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provider;
 
-import org.apache.http.annotation.Immutable;
 import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
 
 import org.junit.Test;
@@ -98,6 +98,41 @@ public class ScmRealmTest
    * Method description
    *
    */
+  @Test
+  public void testAuthorizationAdminRoles()
+  {
+    User trillian = createSampleUser();
+
+    trillian.setAdmin(true);
+
+    AuthorizationInfo aci = authorizationInfo(trillian);
+    Collection<String> roles = aci.getRoles();
+
+    assertNotNull(roles);
+    assertEquals(2, roles.size());
+    assertTrue(roles.contains(Role.ADMIN));
+    assertTrue(roles.contains(Role.USER));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testAuthorizationUserRoles()
+  {
+    AuthorizationInfo aci = authorizationInfo(createSampleUser());
+    Collection<String> roles = aci.getRoles();
+
+    assertNotNull(roles);
+    assertEquals(1, roles.size());
+    assertEquals(Role.USER, roles.iterator().next());
+  }
+
+  /**
+   * Method description
+   *
+   */
   @Test(expected = AccountException.class)
   public void testFailedAuthentication()
   {
@@ -134,6 +169,25 @@ public class ScmRealmTest
     assertNotNull(groups);
     assertFalse(groups.getCollection().isEmpty());
     assertThat(groups, containsInAnyOrder("g1", "g2"));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   *
+   * @return
+   */
+  private AuthorizationInfo authorizationInfo(User user)
+  {
+    ScmRealm realm = createRealm(user);
+    AuthenticationInfo aui = realm.getAuthenticationInfo(token(user));
+    AuthorizationInfo aci = realm.doGetAuthorizationInfo(aui.getPrincipals());
+
+    assertNotNull(aci);
+
+    return aci;
   }
 
   /**
