@@ -33,6 +33,7 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provider;
 
@@ -55,6 +56,7 @@ import sonia.scm.group.GroupNames;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserManager;
@@ -72,6 +74,9 @@ import static org.mockito.Mockito.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -162,6 +167,87 @@ public class ScmRealmTest
    *
    */
   @Test
+  public void testAuthorizationGroupPermissions()
+  {
+    User trillian = createSampleUser();
+
+    String g1 = "g1";
+    String g2 = "g2";
+    Group g3 = new Group("xml", "g3");
+    Group g4 = new Group("xml", "g4");
+
+    Repository r1 = RepositoryTestData.create42Puzzle();
+
+    prepareRepo(r1, g1, PermissionType.READ, true);
+
+    Repository r2 = RepositoryTestData.createHappyVerticalPeopleTransporter();
+
+    prepareRepo(r2, g2, PermissionType.WRITE, true);
+
+    Repository r3 = RepositoryTestData.createHeartOfGold();
+
+    prepareRepo(r3, g3, PermissionType.OWNER);
+
+    Repository r4 = RepositoryTestData.createRestaurantAtTheEndOfTheUniverse();
+
+    Set<Repository> repositories = ImmutableSet.of(r1, r2, r3, r4);
+    ScmRealm realm = createRealm(trillian, ImmutableSet.of(g1, g2),
+                       ImmutableSet.of(g3, g4), repositories);
+    AuthenticationInfo aui = realm.getAuthenticationInfo(token(trillian));
+    AuthorizationInfo aci = realm.doGetAuthorizationInfo(aui.getPrincipals());
+
+    Collection<Permission> permissions = aci.getObjectPermissions();
+
+    assertNotNull(permissions);
+    assertFalse(permissions.isEmpty());
+    assertEquals(3, permissions.size());
+    containPermission(permissions, r1, PermissionType.READ);
+    containPermission(permissions, r2, PermissionType.WRITE);
+    containPermission(permissions, r3, PermissionType.OWNER);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testAuthorizationUserPermissions()
+  {
+    User trillian = createSampleUser();
+    Repository r1 = RepositoryTestData.create42Puzzle();
+
+    prepareRepo(r1, trillian, PermissionType.READ);
+
+    Repository r2 = RepositoryTestData.createHappyVerticalPeopleTransporter();
+
+    prepareRepo(r2, trillian, PermissionType.WRITE);
+
+    Repository r3 = RepositoryTestData.createHeartOfGold();
+
+    prepareRepo(r3, trillian, PermissionType.OWNER);
+
+    Repository r4 = RepositoryTestData.createRestaurantAtTheEndOfTheUniverse();
+
+    Set<Repository> repositories = ImmutableSet.of(r1, r2, r3, r4);
+
+    ScmRealm realm = createRealm(trillian, null, null, repositories);
+    AuthenticationInfo aui = realm.getAuthenticationInfo(token(trillian));
+    AuthorizationInfo aci = realm.doGetAuthorizationInfo(aui.getPrincipals());
+    Collection<Permission> permissions = aci.getObjectPermissions();
+
+    assertNotNull(permissions);
+    assertFalse(permissions.isEmpty());
+    assertEquals(3, permissions.size());
+    containPermission(permissions, r1, PermissionType.READ);
+    containPermission(permissions, r2, PermissionType.WRITE);
+    containPermission(permissions, r3, PermissionType.OWNER);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
   public void testAuthorizationUserRoles()
   {
     AuthorizationInfo aci = authorizationInfo(createSampleUser());
@@ -239,6 +325,21 @@ public class ScmRealmTest
     assertNotNull(aci);
 
     return aci;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param permissions
+   * @param repository
+   * @param type
+   */
+  private void containPermission(Collection<Permission> permissions,
+    Repository repository, PermissionType type)
+  {
+    assertTrue(
+      permissions.contains(new RepositoryPermission(repository.getId(), type)));
   }
 
   /**
@@ -391,6 +492,66 @@ public class ScmRealmTest
    * Method description
    *
    *
+   * @return
+   */
+  private String id()
+  {
+    return String.valueOf(counter.incrementAndGet());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param user
+   * @param type
+   */
+  private void prepareRepo(Repository repository, User user,
+    PermissionType type)
+  {
+    prepareRepo(repository, user.getId(), type, false);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param group
+   * @param type
+   */
+  private void prepareRepo(Repository repository, Group group,
+    PermissionType type)
+  {
+    prepareRepo(repository, group.getId(), type, true);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param name
+   * @param type
+   * @param groupPermission
+   */
+  private void prepareRepo(Repository repository, String name,
+    PermissionType type, boolean groupPermission)
+  {
+    repository.setId(id());
+
+    List<sonia.scm.repository.Permission> permissions =
+      ImmutableList.of(new sonia.scm.repository.Permission(name, type,
+        groupPermission));
+
+    repository.setPermissions(permissions);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param user
    *
    * @return
@@ -413,4 +574,9 @@ public class ScmRealmTest
   {
     return new UsernamePasswordToken(username, password);
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private AtomicLong counter = new AtomicLong();
 }
