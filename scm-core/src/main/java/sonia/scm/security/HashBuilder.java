@@ -43,6 +43,7 @@ import org.apache.shiro.crypto.hash.SimpleHash;
  * @since 1.13
  * @deprecated use {@link SimpleHash} instead.
  */
+@Deprecated
 public interface HashBuilder
 {
 

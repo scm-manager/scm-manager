@@ -43,6 +43,7 @@ import org.apache.shiro.crypto.hash.Sha1Hash;
  * @since 1.13
  * @deprecated use {@link Sha1Hash} instead.
  */
+@Deprecated
 public class SHA1HashBuilder extends MessageDigestHashBuilder
 {
 

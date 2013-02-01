@@ -30,9 +30,12 @@
  */
 
 
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
+
+import org.apache.shiro.crypto.hash.SimpleHash;
 
 import sonia.scm.util.Util;
 
@@ -46,7 +49,6 @@ import java.security.SecureRandom;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.shiro.crypto.hash.SimpleHash;
 
 /**
  *
@@ -54,6 +56,7 @@ import org.apache.shiro.crypto.hash.SimpleHash;
  * @since 1.13
  * @deprecated use {@link SimpleHash} instead.
  */
+@Deprecated
 public class MessageDigestHashBuilder implements HashBuilder
 {
 
@@ -83,8 +86,7 @@ public class MessageDigestHashBuilder implements HashBuilder
    * @param enableLabel
    */
   public MessageDigestHashBuilder(String digest, String value, byte[] salt,
-                                  int iterations, boolean appendSalt,
-                                  boolean enableLabel)
+    int iterations, boolean appendSalt, boolean enableLabel)
   {
     this.digest = digest;
     this.value = value;
@@ -404,7 +406,7 @@ public class MessageDigestHashBuilder implements HashBuilder
           }
 
           hashBuilder = new MessageDigestHashBuilder(digest, null, salt, 0,
-                  salt != null, true);
+            salt != null, true);
         }
       }
 

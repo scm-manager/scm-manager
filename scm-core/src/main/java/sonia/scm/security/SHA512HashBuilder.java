@@ -43,6 +43,7 @@ import org.apache.shiro.crypto.hash.Sha512Hash;
  * @since 1.13
  * @deprecated use {@link Sha512Hash} instead.
  */
+@Deprecated
 public class SHA512HashBuilder extends MessageDigestHashBuilder
 {
 

@@ -43,6 +43,7 @@ import org.apache.shiro.crypto.hash.Md5Hash;
  * @since 1.13
  * @deprecated use {@link Md5Hash} instead.
  */
+@Deprecated
 public class MD5HashBuilder extends MessageDigestHashBuilder
 {
 
