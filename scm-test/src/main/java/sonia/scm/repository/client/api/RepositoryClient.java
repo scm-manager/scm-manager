@@ -44,7 +44,6 @@ import sonia.scm.repository.client.spi.RepositoryClientProvider;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
-import java.io.IOException;
 
 /**
  *

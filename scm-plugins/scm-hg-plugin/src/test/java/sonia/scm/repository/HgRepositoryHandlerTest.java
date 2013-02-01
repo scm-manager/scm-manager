@@ -35,13 +35,11 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
 
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.store.StoreFactory;
 
 import static org.junit.Assert.*;
-import static org.junit.Assume.*;
 
 //~--- JDK imports ------------------------------------------------------------
 

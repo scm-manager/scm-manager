@@ -39,7 +39,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import sonia.scm.SCMContext;
-import sonia.scm.cache.CacheManager;
 import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.installer.HgPackage;
 import sonia.scm.installer.HgPackageReader;

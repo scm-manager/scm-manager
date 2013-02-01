@@ -35,7 +35,6 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
 
 import org.junit.Test;
 
@@ -50,7 +49,6 @@ import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
 
-import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
