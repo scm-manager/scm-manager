@@ -79,6 +79,84 @@ public class HttpUtilTest
       HttpUtil.normalizeUrl("http://www.scm-manager:8080"));
   }
 
+  /**
+   * Method description
+   *
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testCheckForCRLFInjectionFailure1()
+  {
+    HttpUtil.checkForCRLFInjection("any%0D%0A");
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testCheckForCRLFInjectionFailure2()
+  {
+    HttpUtil.checkForCRLFInjection("123\nabc");
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testCheckForCRLFInjectionFailure3()
+  {
+    HttpUtil.checkForCRLFInjection("123\rabc");
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testCheckForCRLFInjectionFailure4()
+  {
+    HttpUtil.checkForCRLFInjection("123\r\nabc");
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test(expected = IllegalArgumentException.class)
+  public void testCheckForCRLFInjectionFailure5()
+  {
+    HttpUtil.checkForCRLFInjection("123%abc");
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testCheckForCRLFInjectionSuccess()
+  {
+    HttpUtil.checkForCRLFInjection("123");
+    HttpUtil.checkForCRLFInjection("abc");
+    HttpUtil.checkForCRLFInjection("abcka");
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testRemoveCRLFInjectionChars()
+  {
+    assertEquals("any0D0A", HttpUtil.removeCRLFInjectionChars("any%0D%0A"));
+    assertEquals("123abc", HttpUtil.removeCRLFInjectionChars("123\nabc"));
+    assertEquals("123abc", HttpUtil.removeCRLFInjectionChars("123\r\nabc"));
+    assertEquals("123abc", HttpUtil.removeCRLFInjectionChars("123%abc"));
+    assertEquals("123abc", HttpUtil.removeCRLFInjectionChars("123abc"));
+    assertEquals("123", HttpUtil.removeCRLFInjectionChars("123"));
+
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**

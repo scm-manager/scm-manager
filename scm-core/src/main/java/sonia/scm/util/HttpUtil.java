@@ -35,6 +35,7 @@ package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
 
 import org.slf4j.Logger;
@@ -162,10 +163,17 @@ public final class HttpUtil
 
   /**
    * Pattern for url normalization
-   * @sincee 1.26
+   * @since 1.26
    */
   private static final Pattern PATTERN_URLNORMALIZE =
     Pattern.compile("(?:(http://[^:]+):80(/.+)?|(https://[^:]+):443(/.+)?)");
+  
+  /**
+   * CharMatcher to select cr/lf and '%' characters
+   * @since 1.28
+   */
+  private static final CharMatcher CRLF_CHARMATCHER =
+    CharMatcher.anyOf("\n\r%");
 
   //~--- constructors ---------------------------------------------------------
 
@@ -238,6 +246,30 @@ public final class HttpUtil
 
     return new StringBuilder(uri).append(s).append(name).append(
       SEPARATOR_PARAMETER_VALUE).append(value).toString();
+  }
+
+  /**
+   * Throws an {@link IllegalArgumentException} if the parameter contains
+   * illegal characters which could imply a CRLF injection attack.
+   * <stronng>Note:</strong> the current implementation throws the
+   * {@link IllegalArgumentException} also if the parameter contains a "%". So
+   * you have to decode your parameters before the check,
+   *
+   * @param parameter value
+   *
+   * @since 1.28
+   */
+  public static void checkForCRLFInjection(String parameter)
+  {
+    if (CRLF_CHARMATCHER.matchesAnyOf(parameter))
+    {
+      logger.error(
+        "parameter \"{}\" contains a character which could be an indicator for a crlf injection",
+        parameter);
+
+      throw new IllegalArgumentException(
+        "parameter contains an illegal character");
+    }
   }
 
   /**
@@ -329,6 +361,22 @@ public final class HttpUtil
     }
 
     return url;
+  }
+
+  /**
+   * Remove all chars from the given parameter, which could be used for
+   * CRLF injection attack. <stronng>Note:</strong> the current implementation
+   * the "%" char is also removed from the source parameter.
+   *
+   * @param parameter value
+   *
+   * @return the parameter value without crlf chars
+   *
+   * @since 1.28
+   */
+  public static String removeCRLFInjectionChars(String parameter)
+  {
+    return CRLF_CHARMATCHER.removeFrom(parameter);
   }
 
   /**
