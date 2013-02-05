@@ -95,7 +95,7 @@ public class SvnGZipFilter extends GZipFilter
   public void init(FilterConfig filterConfig) throws ServletException
   {
     super.init(filterConfig);
-    getConfig().setBufferRequest(false);
+    getConfig().setBufferResponse(false);
   }
 
   /**
