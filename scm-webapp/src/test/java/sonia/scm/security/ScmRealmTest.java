@@ -467,6 +467,7 @@ public class ScmRealmTest
       repositoryDAO,
       userDAO,
       authManager,
+      null,
       requestProvider,
       responseProvider
     );

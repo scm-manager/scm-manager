@@ -95,6 +95,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.repository.RepositoryManager;
 
 /**
  *
@@ -141,6 +142,7 @@ public class ScmRealm extends AuthorizingRealm
     UserManager userManager, GroupManager groupManager,
     RepositoryDAO repositoryDAO, UserDAO userDAO,
     AuthenticationManager authenticator,
+    RepositoryManager manager,
     Provider<HttpServletRequest> requestProvider,
     Provider<HttpServletResponse> responseProvider)
   {
