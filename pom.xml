@@ -427,7 +427,7 @@
     <jetty.version>7.6.8.v20121106</jetty.version>
 
     <!-- security libraries -->
-    <shiro.version>1.2.1</shiro.version>
+    <shiro.version>1.2.1-scm1</shiro.version>
 
     <!-- repostitory libraries -->
     <jgit.version>2.2.0.201212191850-r</jgit.version>
