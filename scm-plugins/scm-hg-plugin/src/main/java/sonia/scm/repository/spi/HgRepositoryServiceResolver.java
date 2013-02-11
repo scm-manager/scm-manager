@@ -30,15 +30,14 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import sonia.scm.plugin.ext.Extension;
-import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 
@@ -60,14 +59,11 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
    *
    *
    * @param handler
-   * @param hgContextProvider
    */
   @Inject
-  public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-                                     Provider<HgContext> hgContextProvider)
+  public HgRepositoryServiceResolver(HgRepositoryHandler handler)
   {
     this.handler = handler;
-    this.hgContextProvider = hgContextProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -87,8 +83,7 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
 
     if (TYPE.equalsIgnoreCase(repository.getType()))
     {
-      provider = new HgRepositoryServiceProvider(handler, hgContextProvider,
-              repository);
+      provider = new HgRepositoryServiceProvider(handler, repository);
     }
 
     return provider;
@@ -98,7 +93,4 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
 
   /** Field description */
   private HgRepositoryHandler handler;
-
-  /** Field description */
-  private Provider<HgContext> hgContextProvider;
 }
