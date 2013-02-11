@@ -41,8 +41,16 @@ import sonia.scm.util.SystemUtil;
  *
  * @author Sebastian Sdorra
  */
-public class HgInstallerFactory
+public final class HgInstallerFactory
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private HgInstallerFactory() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

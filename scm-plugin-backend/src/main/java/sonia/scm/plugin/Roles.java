@@ -30,15 +30,24 @@
  */
 
 
+
 package sonia.scm.plugin;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class Roles
+public final class Roles
 {
 
   /** Field description */
   public static final String ADMIN = "admin";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private Roles() {}
 }

@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.upgrade;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -46,7 +47,7 @@ import java.util.regex.Pattern;
  *
  * @author Sebastian Sdorra
  */
-public class ClientDateFormatConverter
+public final class ClientDateFormatConverter
 {
 
   /** Field description */
@@ -58,12 +59,20 @@ public class ClientDateFormatConverter
   private static final Logger logger =
     LoggerFactory.getLogger(ClientDateFormatConverter.class);
 
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private ClientDateFormatConverter() {}
+
   //~--- methods --------------------------------------------------------------
 
   /**
    * Documentations:
    * - Extjs: http://trac.geoext.org/browser/ext/3.4.0/docs/source/Date.html
-   * - Moments: http://momentjs.com/docs/#/displaying/format/
+   * - Moments: http://momentjs.com/docs/#/displaying/format
    *
    *
    * @param value
@@ -104,8 +113,8 @@ public class ClientDateFormatConverter
     result = replaceDateFormatChars(result, "T", "z");
 
     logger.debug(
-      "converted extjs date format \"{}\" to moments date format \"{}\"", value,
-      result);
+      "converted extjs date format \"{}\" to moments date format \"{}\"",
+      value, result);
 
     return result;
   }

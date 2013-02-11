@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository;
 
 /**
@@ -37,7 +38,7 @@ package sonia.scm.repository;
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public class PersonTestData
+public final class PersonTestData
 {
 
   /** Field description */
@@ -67,4 +68,12 @@ public class PersonTestData
   /** Field description */
   public static final Person ZAPHOD =
     Person.toPerson("Zaphod Beeblebrox <zaphod.beeblebrox@hitchhiker.com>");
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private PersonTestData() {}
 }

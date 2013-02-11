@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.plugin.ext;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -44,8 +45,16 @@ import java.lang.annotation.Annotation;
  *
  * @author Sebastian Sdorra
  */
-public class Extensions
+public final class Extensions
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private Extensions() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -52,13 +53,21 @@ import java.io.Writer;
  * @author Sebastian Sdorra
  * @since 1.22
  */
-public class Templates
+public final class Templates
 {
 
   /**
    * the logger for Templates
    */
   private static final Logger logger = LoggerFactory.getLogger(Templates.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private Templates() {}
 
   //~--- methods --------------------------------------------------------------
 

@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -55,7 +56,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class HgPyFix
+public final class HgPyFix
 {
 
   /** Field description */
@@ -71,6 +72,14 @@ public class HgPyFix
    * the logger for HgUtil
    */
   private static final Logger logger = LoggerFactory.getLogger(HgUtil.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private HgPyFix() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -108,7 +117,6 @@ public class HgPyFix
    * Visible for testing
    *
    *
-   * @param hg
    *
    * @param hgBat
    */

@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.plugin.scanner;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -48,7 +49,7 @@ import java.io.File;
  *
  * @author Sebastian Sdorra
  */
-public class PluginScanners
+public final class PluginScanners
 {
 
   /**
@@ -56,6 +57,14 @@ public class PluginScanners
    */
   private static final Logger logger =
     LoggerFactory.getLogger(PluginScanners.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private PluginScanners() {}
 
   //~--- methods --------------------------------------------------------------
 

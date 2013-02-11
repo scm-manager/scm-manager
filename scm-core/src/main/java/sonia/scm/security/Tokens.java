@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -50,6 +51,14 @@ import javax.servlet.http.HttpServletRequest;
  */
 public final class Tokens
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private Tokens() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Build an {@link AuthenticationToken} for use with

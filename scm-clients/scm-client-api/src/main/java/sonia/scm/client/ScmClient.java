@@ -44,7 +44,7 @@ import sonia.scm.util.ServiceUtil;
  *
  * @author Sebastian Sdorra
  */
-public class ScmClient
+public final class ScmClient
 {
 
   /** Field description */
@@ -52,6 +52,14 @@ public class ScmClient
 
   /** the logger for ScmClient */
   private static final Logger logger = LoggerFactory.getLogger(ScmClient.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private ScmClient() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -68,8 +76,8 @@ public class ScmClient
    * @throws ScmClientException
    */
   public static ScmClientSession createSession(String url, String username,
-          String password)
-          throws ScmClientException
+    String password)
+    throws ScmClientException
   {
     return getProvider().createSession(url, username, password);
   }
@@ -85,7 +93,7 @@ public class ScmClient
    * @throws ScmClientException
    */
   public static ScmClientSession createSession(String url)
-          throws ScmClientException
+    throws ScmClientException
   {
     return getProvider().createSession(url, null, null);
   }
@@ -119,7 +127,7 @@ public class ScmClient
     else if (logger.isInfoEnabled())
     {
       logger.info("create ScmClient with provider {}",
-                  provider.getClass().getName());
+        provider.getClass().getName());
     }
 
     return provider;

@@ -37,7 +37,7 @@ package sonia.scm.url;
  * @since 1.9
  * @author Sebastian Sdorra
  */
-public class UrlProviderFactory
+public final class UrlProviderFactory
 {
 
   /** Field description */
@@ -54,6 +54,14 @@ public class UrlProviderFactory
 
   /** Field description */
   private static final String EXTENSION_XML = ".xml";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private UrlProviderFactory() {}
 
   //~--- methods --------------------------------------------------------------
 

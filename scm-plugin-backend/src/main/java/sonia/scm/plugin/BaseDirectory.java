@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -45,7 +46,7 @@ import java.io.File;
  *
  * @author Sebastian Sdorra
  */
-public class BaseDirectory
+public final class BaseDirectory
 {
 
   /** Field description */
@@ -66,7 +67,7 @@ public class BaseDirectory
    * Constructs ...
    *
    */
-  public BaseDirectory()
+  private BaseDirectory()
   {
     baseDirectory = findBaseDirectory();
   }

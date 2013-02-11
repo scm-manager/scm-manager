@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.security;
 
 /**
@@ -45,4 +46,12 @@ public final class Role
 
   /** Field description */
   public static final String USER = "user";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private Role() {}
 }

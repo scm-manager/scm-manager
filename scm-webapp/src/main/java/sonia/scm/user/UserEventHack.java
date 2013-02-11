@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -43,7 +44,7 @@ import sonia.scm.HandlerEvent;
  *
  * @author Sebastian Sdorra
  */
-public class UserEventHack
+public final class UserEventHack
 {
 
   /**
@@ -51,6 +52,14 @@ public class UserEventHack
    */
   private static final Logger logger =
     LoggerFactory.getLogger(UserEventHack.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private UserEventHack() {}
 
   //~--- methods --------------------------------------------------------------
 

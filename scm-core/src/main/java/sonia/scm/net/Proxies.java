@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.net;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -50,13 +51,21 @@ import java.net.URL;
  * @author Sebastian Sdorra
  * @since 1.23
  */
-public class Proxies
+public final class Proxies
 {
 
   /**
    * the logger for Proxies
    */
   private static final Logger logger = LoggerFactory.getLogger(Proxies.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private Proxies() {}
 
   //~--- get methods ----------------------------------------------------------
 

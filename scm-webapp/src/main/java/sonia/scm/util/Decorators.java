@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -43,7 +44,7 @@ import sonia.scm.DecoratorFactory;
  *
  * @author Sebastian Sdorra
  */
-public class Decorators
+public final class Decorators
 {
 
   /**
@@ -51,6 +52,14 @@ public class Decorators
    */
   private static final Logger logger =
     LoggerFactory.getLogger(Decorators.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private Decorators() {}
 
   //~--- methods --------------------------------------------------------------
 
