@@ -506,7 +506,7 @@
           <plugin>
             <groupId>sonia.maven</groupId>
             <artifactId>web-compressor</artifactId>
-            <version>1.3</version>
+            <version>1.4</version>
             <executions>
               <execution>
                 <phase>prepare-package</phase>
