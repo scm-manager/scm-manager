@@ -268,8 +268,8 @@ public class DefaultAdministrationContext implements AdministrationContext
 
       if (logger.isDebugEnabled())
       {
-        logger.debug("release runas for user {}",
-          collection.getPrimaryPrincipal());
+        logger.debug("release runas for user {}/{}",
+          principal, collection.getPrimaryPrincipal());
       }
 
       if (!subject.getPrincipal().equals(principal))
