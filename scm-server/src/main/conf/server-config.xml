@@ -64,6 +64,11 @@
   <New id="scm-webapp" class="org.eclipse.jetty.webapp.WebAppContext">
     <Set name="contextPath">/scm</Set>
     <Set name="war"><SystemProperty name="basedir" default="."/>/var/webapp/scm-webapp.war</Set>
+    <!-- disable directory listings -->
+    <Call name="setInitParameter">
+      <Arg>org.eclipse.jetty.servlet.Default.dirAllowed</Arg>
+      <Arg>false</Arg>
+    </Call>
   </New>
 
   <New id="docroot" class="org.eclipse.jetty.webapp.WebAppContext">
