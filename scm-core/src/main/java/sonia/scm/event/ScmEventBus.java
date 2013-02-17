@@ -131,13 +131,22 @@ public abstract class ScmEventBus
   public abstract void unregister(Object subscriber);
 
   /**
-   * This method is the same as {@code register(subscriber, true)}.
-   *
+   * Calls the {@link #register(Object, boolean)} method, after reading the
+   * value of {@link Subscriber#async()}. If the {@link Subscriber} annotation
+   * is not present than the object is registered as async.
    *
    * @param subscriber subscriber object
    */
   public void register(Object subscriber)
   {
-    register(subscriber, true);
+    boolean async = true;
+    Subscriber a = subscriber.getClass().getAnnotation(Subscriber.class);
+
+    if (a != null)
+    {
+      async = a.async();
+    }
+
+    register(subscriber, async);
   }
 }
