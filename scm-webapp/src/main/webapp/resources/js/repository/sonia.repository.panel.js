@@ -170,7 +170,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
         xtype: 'label',
         text: this.displayArchivedRepositoriesText,
         cls: 'ytb-text'
-      })
+      });
     }
 
     var config = {
@@ -194,6 +194,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
         split: true,
         border: true,
         region: 'south',
+        enableTabScroll: true,
         items: [{
           bodyCssClass: 'x-panel-mc',
           title: this.titleText,
@@ -201,7 +202,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
           html: this.emptyText
         }]
       }]
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.Panel.superclass.initComponent.apply(this, arguments);
@@ -259,7 +260,7 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
       buttons: Ext.MessageBox.OKCANCEL,
       icon: Ext.MessageBox.QUESTION,
       fn: function(result){
-        if ( result == 'ok' ){
+        if ( result === 'ok' ){
 
           if ( debug ){
             console.debug('call repository repository action '+ method + ' on ' + url );
