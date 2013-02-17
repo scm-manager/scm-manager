@@ -30,11 +30,8 @@
  */
 
 
+
 package sonia.scm;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.ScopeAnnotation;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -51,5 +48,4 @@ import java.lang.annotation.Target;
  */
 @Target({ ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-@ScopeAnnotation
 public @interface EagerSingleton {}

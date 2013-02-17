@@ -97,10 +97,11 @@ public class ScmContextListener extends GuiceServletContextListener
       // close CacheManager
       IOUtil.close(globalInjector.getInstance(CacheManager.class));
 
-      // call destroy event
-      globalInjector.getInstance(
-        ServletContextListenerHolder.class).contextDestroyed(
-        servletContextEvent);
+      //J-
+      // call destroy of servlet context listeners
+      globalInjector.getInstance(ServletContextListenerHolder.class)
+                    .contextDestroyed(servletContextEvent);
+      //J+
     }
 
     super.contextDestroyed(servletContextEvent);
@@ -133,12 +134,14 @@ public class ScmContextListener extends GuiceServletContextListener
     // call destroy event
     if ((globalInjector != null) &&!startupError)
     {
-
+      //J-
       // bind eager singletons
-      globalInjector.getInstance(EagerSingletonScopeModule.class).bind();
-      globalInjector.getInstance(
-        ServletContextListenerHolder.class).contextInitialized(
-        servletContextEvent);
+      globalInjector.getInstance(EagerSingletonModule.class)
+                    .initialize(globalInjector);
+      // init servlet context listeners
+      globalInjector.getInstance(ServletContextListenerHolder.class)
+                    .contextInitialized(servletContextEvent);
+      //J+
     }
   }
 
@@ -183,7 +186,7 @@ public class ScmContextListener extends GuiceServletContextListener
 
     moduleList.add(new ScmInitializerModule());
     moduleList.add(new ScmSubscriberModule());
-    moduleList.add(new EagerSingletonScopeModule());
+    moduleList.add(new EagerSingletonModule());
     moduleList.add(ShiroWebModule.guiceFilterModule());
     moduleList.add(main);
     moduleList.add(new ScmSecurityModule(servletContext));
