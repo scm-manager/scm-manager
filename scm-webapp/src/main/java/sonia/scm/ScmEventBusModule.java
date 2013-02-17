@@ -30,14 +30,14 @@
  */
 
 
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
-import com.google.inject.matcher.AbstractMatcher;
-import com.google.inject.matcher.Matcher;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
@@ -46,24 +46,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.event.Subscriber;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.lang.annotation.Annotation;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ScmSubscriberModule extends AbstractModule
+public class ScmEventBusModule extends AbstractModule
 {
 
   /**
    * the logger for ScmSubscriberModule
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(ScmSubscriberModule.class);
+    LoggerFactory.getLogger(ScmEventBusModule.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -74,12 +69,11 @@ public class ScmSubscriberModule extends AbstractModule
   @Override
   protected void configure()
   {
-    bindListener(annotatedWith(Subscriber.class), new TypeListener()
+    bindListener(Matchers.any(), new TypeListener()
     {
 
       @Override
-      public <I> void hear(TypeLiteral<I> type,
-        final TypeEncounter<I> encounter)
+      public <I> void hear(TypeLiteral<I> type, TypeEncounter<I> encounter)
       {
         encounter.register(new InjectionListener<I>()
         {
@@ -91,83 +85,11 @@ public class ScmSubscriberModule extends AbstractModule
               logger.trace("register subscriber {}", object.getClass());
             }
 
-            Subscriber subscriber =
-              object.getClass().getAnnotation(Subscriber.class);
-            
-
-            ScmEventBus.getInstance().register(object, subscriber.async());
+            ScmEventBus.getInstance().register(object);
           }
         });
       }
 
     });
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param aClass
-   *
-   * @return
-   */
-  private Matcher<TypeLiteral<?>> annotatedWith(
-    Class<? extends Annotation> aClass)
-  {
-    return new AnnotatedWith(aClass);
-  }
-
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 12/12/07
-   * @author         Enter your name here...
-   */
-  private static class AnnotatedWith extends AbstractMatcher<TypeLiteral<?>>
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param baseClass
-     */
-    private AnnotatedWith(Class<? extends Annotation> baseClass)
-    {
-      this.baseClass = baseClass;
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param t
-     *
-     * @return
-     */
-    @Override
-    public boolean matches(TypeLiteral<?> t)
-    {
-      try
-      {
-        return t.getRawType().isAnnotationPresent(baseClass);
-      }
-      catch (Exception e)
-      {
-
-        // LOG e
-        return false;
-      }
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final Class<? extends Annotation> baseClass;
   }
 }
