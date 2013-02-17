@@ -30,13 +30,18 @@
  */
 
 
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.name.Names;
+
 import org.apache.shiro.guice.web.ShiroWebModule;
 
 import sonia.scm.security.ScmRealm;
+
+import static org.apache.shiro.guice.web.ShiroWebModule.ROLES;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -69,6 +74,15 @@ public class ScmSecurityModule extends ShiroWebModule
   @Override
   protected void configureShiroWeb()
   {
+
+    // bind realm
     bindRealm().to(ScmRealm.class);
+
+    // bind constant
+    bindConstant().annotatedWith(Names.named("shiro.loginUrl")).to(
+      "/index.html");
+
+    // disable access to mustache resources
+    addFilterChain("/**.mustache", config(ROLES, "nobody"));
   }
 }
