@@ -342,7 +342,7 @@ public class HttpRequest
 
     if (valueList == null)
     {
-      valueList = Lists.newArrayList(values);
+      valueList = Lists.newArrayList();
       map.put(name, valueList);
     }
 
