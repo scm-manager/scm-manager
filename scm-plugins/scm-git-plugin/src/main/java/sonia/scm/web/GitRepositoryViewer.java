@@ -35,35 +35,37 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.apache.commons.lang.StringEscapeUtils;
-
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.io.Closeables;
+import com.google.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.io.RegexResourceProcessor;
-import sonia.scm.io.ResourceProcessor;
-import sonia.scm.repository.GitUtil;
-import sonia.scm.util.IOUtil;
+import sonia.scm.repository.Branch;
+import sonia.scm.repository.Branches;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.Person;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.template.Template;
+import sonia.scm.template.TemplateEngine;
+import sonia.scm.template.TemplateEngineFactory;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.Writer;
 
 import java.util.Date;
+import java.util.Iterator;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -77,13 +79,34 @@ public class GitRepositoryViewer
   public static final String MIMETYPE_HTML = "text/html";
 
   /** Field description */
-  public static final String RESOURCE_GITINDEX = "/sonia/scm/git.index.html";
+  public static final String RESOURCE_GITINDEX =
+    "/sonia/scm/git.index.mustache";
+
+  /** Field description */
+  private static final int CHANGESET_PER_BRANCH = 10;
 
   /**
    * the logger for GitRepositoryViewer
    */
   private static final Logger logger =
     LoggerFactory.getLogger(GitRepositoryViewer.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param templateEngineFactory
+   * @param repositoryServiceFactory
+   */
+  @Inject
+  public GitRepositoryViewer(TemplateEngineFactory templateEngineFactory,
+    RepositoryServiceFactory repositoryServiceFactory)
+  {
+    this.templateEngineFactory = templateEngineFactory;
+    this.repositoryServiceFactory = repositoryServiceFactory;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -93,133 +116,321 @@ public class GitRepositoryViewer
    *
    * @param response
    * @param repository
-   * @param repositoryName
    *
    * @throws IOException
-   * @throws NoHeadException
-   * @throws ServletException
+   * @throws RepositoryException
    */
-  public void handleRequest(HttpServletResponse response,
-                            Repository repository, String repositoryName)
-          throws IOException, ServletException, NoHeadException
+  public void handleRequest(HttpServletResponse response, Repository repository)
+    throws RepositoryException, IOException
   {
     response.setContentType(MIMETYPE_HTML);
 
-    ResourceProcessor processor = new RegexResourceProcessor();
+    TemplateEngine engine = templateEngineFactory.getDefaultEngine();
+    Template template = engine.getTemplate(RESOURCE_GITINDEX);
+    //J-
+    ImmutableMap<String,Object> env = ImmutableMap.of(
+      "repository", repository, 
+      "branches", createBranchesModel(repository)
+    );
+    //J+
 
-    processor.addVariable("name", repositoryName);
-
-    StringBuilder sb = new StringBuilder();
-
-    if (!repository.getAllRefs().isEmpty())
-    {
-      Git git = new Git(repository);
-      int c = 0;
-      ObjectId head = GitUtil.getRepositoryHead(repository);
-
-      try
-      {
-        for (RevCommit commit : git.log().add(head).call())
-        {
-          appendCommit(sb, commit);
-          c++;
-
-          if (c > logSize)
-          {
-            break;
-          }
-        }
-      }
-      catch (GitAPIException ex)
-      {
-        logger.error("could not read changesets", ex);
-      }
-    }
-
-    processor.addVariable("commits", sb.toString());
-
-    BufferedReader reader = null;
-    PrintWriter writer = null;
+    Writer writer = null;
 
     try
     {
-      reader = new BufferedReader(
-          new InputStreamReader(
-              GitRepositoryViewer.class.getResourceAsStream(
-                RESOURCE_GITINDEX)));
       writer = response.getWriter();
-      processor.process(reader, writer);
+      template.execute(writer, env);
     }
     finally
     {
-      IOUtil.close(reader);
-      IOUtil.close(writer);
+      Closeables.closeQuietly(writer);
     }
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
+   *
+   * @param repository
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
-  public int getLogSize()
+  private BranchesModel createBranchesModel(Repository repository)
+    throws RepositoryException, IOException
   {
-    return logSize;
-  }
+    BranchesModel model = null;
+    RepositoryService service = null;
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param logSize
-   */
-  public void setLogSize(int logSize)
-  {
-    this.logSize = logSize;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param sb
-   * @param commit
-   */
-  private void appendCommit(StringBuilder sb, RevCommit commit)
-  {
-    sb.append("<tr><td class=\"small\">");
-
-    long time = commit.getCommitTime();
-
-    sb.append(Util.formatDate(new Date(time * 1000)));
-    sb.append("</td><td class=\"small\">");
-
-    PersonIdent person = commit.getCommitterIdent();
-
-    if (person != null)
+    try
     {
-      String name = person.getName();
+      service = repositoryServiceFactory.create(repository);
 
-      if (Util.isNotEmpty(name))
-      {
-        sb.append(StringEscapeUtils.escapeHtml(name));
-      }
+      Branches branches = service.getBranchesCommand().getBranches();
+      Iterable<BranchModel> branchModels =
+        Iterables.transform(branches, new BranchModelTransformer(service));
+
+      model = new BranchesModel(branchModels);
+    }
+    finally
+    {
+      Closeables.closeQuietly(service);
     }
 
-    sb.append("</td><td>");
-    sb.append(StringEscapeUtils.escapeHtml(commit.getFullMessage()));
-    sb.append("</td></tr>");
+    return model;
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/02/27
+   * @author         Enter your name here...
+   */
+  private static class BranchModel
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param name
+     * @param changesets
+     */
+    public BranchModel(String name, Iterable<ChangesetModel> changesets)
+    {
+      this.name = name;
+      this.changesets = changesets;
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public Iterable<ChangesetModel> getChangesets()
+    {
+      return changesets;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public String getName()
+    {
+      return name;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private Iterable<ChangesetModel> changesets;
+
+    /** Field description */
+    private String name;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/02/27
+   * @author         Enter your name here...
+   */
+  private static class BranchModelTransformer
+    implements Function<Branch, BranchModel>
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param service
+     */
+    public BranchModelTransformer(RepositoryService service)
+    {
+      this.service = service;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param branch
+     *
+     * @return
+     */
+    @Override
+    public BranchModel apply(Branch branch)
+    {
+      BranchModel model = null;
+      String name = branch.getName();
+
+      try
+      {
+        ChangesetPagingResult cpr = service.getLogCommand().setBranch(
+                                      name).setPagingLimit(
+                                      CHANGESET_PER_BRANCH).getChangesets();
+        Iterable<ChangesetModel> changesets = Iterables.transform(cpr,
+                                                new Function<Changeset,
+                                                  ChangesetModel>()
+        {
+
+          @Override
+          public ChangesetModel apply(Changeset changeset)
+          {
+            return new ChangesetModel(changeset);
+          }
+        });
+
+        model = new BranchModel(name, changesets);
+      }
+      catch (Exception ex)
+      {
+        logger.error("could not create model for branch: ".concat(name), ex);
+      }
+
+      return model;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private RepositoryService service;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/02/27
+   * @author         Enter your name here...
+   */
+  private static class BranchesModel implements Iterable<BranchModel>
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param branches
+     */
+    public BranchesModel(Iterable<BranchModel> branches)
+    {
+      this.branches = branches;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public Iterator<BranchModel> iterator()
+    {
+      return branches.iterator();
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private Iterable<BranchModel> branches;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/02/27
+   * @author         Enter your name here...
+   */
+  private static class ChangesetModel
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param changeset
+     */
+    public ChangesetModel(Changeset changeset)
+    {
+      this.changeset = changeset;
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public Person getAuthor()
+    {
+      return changeset.getAuthor();
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public String getDate()
+    {
+      String date = Util.EMPTY_STRING;
+      Long time = changeset.getDate();
+
+      if (time != null)
+      {
+        date = Util.formatDate(new Date(time));
+      }
+
+      return date;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public String getDescription()
+    {
+      return changeset.getDescription();
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private Changeset changeset;
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private int logSize = 25;
+  private RepositoryServiceFactory repositoryServiceFactory;
+
+  /** Field description */
+  private TemplateEngineFactory templateEngineFactory;
 }

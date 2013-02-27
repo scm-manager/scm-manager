@@ -33,7 +33,7 @@
 
 <html>
   <head>
-    <title>SCM :: Manager - Git Repository - ${name}</title>
+    <title>SCM :: Manager - Git Repository - {{repository.name}}</title>
     <style type="text/css">
       body {
         background-color: #ffffff;
@@ -48,14 +48,19 @@
         margin: 0px;
         padding: 0px;
         color: #D20005;
+        margin-bottom: 1em;
+      }
+      h1, h2 {
+        border-bottom: 1px solid #AFAFAF;
       }
       h1 {
         font-size: 18px;
-        border-bottom: 1px solid #AFAFAF;
       }
       h2 {
         font-size:  14px;
-        border-bottom: 1px solid #AFAFAF;
+      }
+      h3 {
+        font-size:  12px;
       }
       a:link, a:visited {
         color: #045491;
@@ -88,20 +93,31 @@
   </head>
   <body>
 
-    <h1>SCM :: Manager - Git Repository - ${name}</h1>
+    <h1>SCM :: Manager - Git Repository - {{repository.name}}</h1>
 
-    <table>
-      <thead>
-        <tr>
-          <th class="small">Time</th>
-          <th class="small">Author</th>
-          <th>Message</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${commits}
-      </tbody>
-    </table>
+    <h2>Branch Informations</h2>
+    {{#branches}}
+      <h3>{{name}}</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th class="small">Date</th>
+            <th class="small">Author</th>
+            <th>Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#changesets}}
+          <tr>
+            <td class="small">{{date}}</td>
+            <td class="small">{{author}}</td>
+            <td>{{description}}</td>
+          </tr>
+          {{/changesets}}
+        </tbody>
+      </table>
+    {{/branches}}
 
     <h2>Git Informations</h2>
     <ul>

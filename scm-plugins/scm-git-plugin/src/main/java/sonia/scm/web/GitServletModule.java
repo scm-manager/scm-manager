@@ -60,6 +60,7 @@ public class GitServletModule extends ServletModule
   @Override
   protected void configureServlets()
   {
+    bind(GitRepositoryViewer.class);
     bind(GitRepositoryResolver.class);
     bind(GitReceivePackFactory.class);
 
