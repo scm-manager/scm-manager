@@ -463,7 +463,7 @@
     <aether.version>1.13.1</aether.version>
     <wagon.version>1.0</wagon.version>
     <maven.version>3.0.4</maven.version>
-    <mustache.version>0.8.9</mustache.version>
+    <mustache.version>0.8.10</mustache.version>
     <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
   </properties>
 
