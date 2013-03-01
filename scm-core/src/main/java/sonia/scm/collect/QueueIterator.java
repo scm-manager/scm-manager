@@ -33,15 +33,18 @@
 
 package sonia.scm.collect;
 
-//~--- JDK imports ------------------------------------------------------------
+//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.UnmodifiableIterator;
+
+//~--- JDK imports ------------------------------------------------------------
+
 import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Iterator for the {@link IterableQueue}. The {@link QueueIterator} should 
- * only be created from the {@link IterableQueue} by calling the 
+ * Iterator for the {@link IterableQueue}. The {@link QueueIterator} should
+ * only be created from the {@link IterableQueue} by calling the
  * {@link IterableQueue#iterator()}.
  *
  * @author Sebastian Sdorra
@@ -67,28 +70,30 @@ public final class QueueIterator<T> extends UnmodifiableIterator<T>
 
   /**
    * Returns the next item in the queue. This method will block until the next
-   * item is pushed to the queue, if the queue is empty and the end is not 
+   * item is pushed to the queue, if the queue is empty and the end is not
    * reached.
    *
    * @throws NoSuchElementException if the iteration has no more elements
-   * 
+   *
    * @return the next item in the queue
    */
   @Override
   public T next()
   {
-    if ( ! hasNext() ){
+    if (!hasNext())
+    {
       throw new NoSuchElementException("no more items in the queue");
     }
+
     return queue.get(index++);
   }
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns {@code true} {@code true} if the queue has more items. 
-   * This method will block until the next item is pushed to the queue, if the 
-   * queue is empty and the end is not 
+   * Returns {@code true} {@code true} if the queue has more items.
+   * This method will block until the next item is pushed to the queue, if the
+   * queue is empty and the end is not
    * reached.
    *
    *
@@ -121,7 +126,6 @@ public final class QueueIterator<T> extends UnmodifiableIterator<T>
 
     return result;
   }
-
 
   //~--- fields ---------------------------------------------------------------
 

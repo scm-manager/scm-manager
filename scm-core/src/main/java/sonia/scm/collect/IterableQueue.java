@@ -47,11 +47,12 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * A iterable queue. The queue can have multiple consumer {@link Iterator}, 
- * which can iterate over all items of the queue until the end of the queue is 
- * reached. The end of the queue if reached, if a producer call the method 
- * {@link #endReached()} and the iterator has consumed all items of the backend 
- * list.
+ * A iterable queue. The queue can have multiple parallel consumer 
+ * {@link Iterator}s, which can iterate over all items of the queue until the 
+ * end of the queue is reached. The end of the queue if reached, if a producer 
+ * call the method {@link #endReached()} and the iterator has consumed all items
+ * of the backend list. <strong>Warning: </strong> The queue iterator blocks 
+ * forever if the producer never call {@link #endReached()}.
  *
  * @author Sebastian Sdorra
  *
