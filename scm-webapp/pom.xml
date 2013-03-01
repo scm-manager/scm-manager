@@ -462,7 +462,7 @@
     <enunciate.version>1.26.2</enunciate.version>
     <aether.version>1.13.1</aether.version>
     <wagon.version>1.0</wagon.version>
-    <maven.version>3.0.4</maven.version>
+    <maven.version>3.0.5</maven.version>
     <mustache.version>0.8.10</mustache.version>
     <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
   </properties>
