@@ -37,6 +37,7 @@ package sonia.scm.search;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -139,7 +140,8 @@ public class SearchHandler<T>
           Collections2.transform(users, function);
 
         result.setSuccess(true);
-        result.setResults(resultCollection);
+        // create a copy of the result collection to reduce memory
+        result.setResults(ImmutableList.copyOf(resultCollection));
         cache.put(queryString, result);
       }
     }
