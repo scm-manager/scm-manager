@@ -140,7 +140,7 @@
 
   <!-- 
     Search cache for users
-    average: ???
+    average: 0.5K
   -->
   <cache
         name="sonia.cache.search.users"
@@ -153,7 +153,7 @@
 
   <!-- 
     Search cache for groups
-    average: ???
+    average: 0.5K
   -->
   <cache
         name="sonia.cache.search.groups"
