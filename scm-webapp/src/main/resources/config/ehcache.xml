@@ -111,7 +111,20 @@
         timeToLiveSeconds="60"
         diskPersistent="false"
   />
-
+  
+  <!--
+    Authorization cache
+    average: 3K
+  -->
+  <cache
+        name="sonia.cache.authorizing"
+        maxEntriesLocalHeap="1000"
+        eternal="false"
+        overflowToDisk="false"
+        timeToIdleSeconds="1200"
+        timeToLiveSeconds="2400"
+        diskPersistent="false"
+  />
   <!--
     PluginCenter cache
     average: 30K
