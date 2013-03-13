@@ -145,7 +145,7 @@ public final class BootstrapUtil
     }
     catch (Exception ex)
     {
-      logger.error(ex.getMessage(), ex);
+      logger.error("could not load class ".concat(clazz.getName()), ex);
     }
 
     return instance;
@@ -173,7 +173,7 @@ public final class BootstrapUtil
     }
     catch (Exception ex)
     {
-      logger.error(ex.getMessage(), ex);
+      logger.error("could not load class ".concat(className), ex);
     }
 
     return instance;
@@ -200,7 +200,7 @@ public final class BootstrapUtil
     }
     catch (Exception ex)
     {
-      logger.error(ex.getMessage(), ex);
+      logger.error("could not load class ".concat(className), ex);
     }
 
     return instance;
