@@ -89,7 +89,7 @@
 
   <defaultCache
         maxEntriesLocalHeap="100"
-        maxEntriesLocalDisk="1000"
+        maxEntriesLocalDisk="10000"
         eternal="false"
         overflowToDisk="true"
         timeToIdleSeconds="1200"
@@ -125,6 +125,7 @@
         timeToLiveSeconds="2400"
         diskPersistent="false"
   />
+  
   <!--
     PluginCenter cache
     average: 30K
