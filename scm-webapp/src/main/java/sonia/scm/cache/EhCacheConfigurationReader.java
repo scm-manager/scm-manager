@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -72,6 +73,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Attr;
 
 /**
  *
@@ -291,7 +293,13 @@ public class EhCacheConfigurationReader
     Element rootEl = merged.createElementNS("http://ehcache.org/ehcache.xsd",
                        "ehcache");
 
-    for (Node node : map.values())
+    for (Attr attribute : attributeMap.values())
+    {
+      Attr mergedAttr = (Attr) merged.adoptNode(attribute);
+      rootEl.setAttributeNode(mergedAttr);
+    }
+
+    for (Node node : nodeMap.values())
     {
       Node mergedNode = merged.adoptNode(node);
 
@@ -351,6 +359,23 @@ public class EhCacheConfigurationReader
    */
   private void readConfiguration(Element rootEl)
   {
+    NamedNodeMap attributes = rootEl.getAttributes();
+
+    for (int i = 0; i < attributes.getLength(); i++)
+    {
+      Node node = attributes.item(i);
+
+      if (Node.ATTRIBUTE_NODE == node.getNodeType())
+      {
+        String name = node.getNodeName();
+
+        if (!name.startsWith("xmlns") && (node instanceof Attr))
+        {
+          attributeMap.put(node.getNodeName(), (Attr) node);
+        }
+      }
+    }
+
     NodeList list = rootEl.getChildNodes();
 
     for (int i = 0; i < list.getLength(); i++)
@@ -368,7 +393,7 @@ public class EhCacheConfigurationReader
           name = nameNode.getNodeValue();
         }
 
-        map.put(new Id(element, name), node);
+        nodeMap.put(new Id(element, name), node);
       }
     }
   }
@@ -473,5 +498,8 @@ public class EhCacheConfigurationReader
   private DocumentBuilder builder;
 
   /** Field description */
-  private Map<Id, Node> map = Maps.newLinkedHashMap();
+  private Map<Id, Node> nodeMap = Maps.newLinkedHashMap();
+
+  /** Field description */
+  private Map<String, Attr> attributeMap = Maps.newLinkedHashMap();
 }

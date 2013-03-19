@@ -89,6 +89,21 @@ public class EhConfigurationReaderTest
    *
    */
   @Test
+  public void testGlobalAttributes()
+  {
+    EhConfigurationTestReader reader =
+      new EhConfigurationTestReader("cache.006.xml");
+    Configuration c = createConfiguration(reader);
+
+    assertFalse(c.getUpdateCheck());
+    assertEquals("512M", c.getMaxBytesLocalDiskAsString());
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
   public void testMergeAndOverride()
   {
     //J-
@@ -173,6 +188,21 @@ public class EhConfigurationReaderTest
     Configuration c = createConfiguration(reader);
 
     checkDefaultConfiguration(c, 170l, 18900l);
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testOverrideGlobalAttributes()
+  {
+    EhConfigurationTestReader reader =
+      new EhConfigurationTestReader("cache.006.xml", null, "cache.007.xml");
+    Configuration c = createConfiguration(reader);
+
+    assertTrue(c.getUpdateCheck());
+    assertEquals("1G", c.getMaxBytesLocalDiskAsString());
   }
 
   /**
