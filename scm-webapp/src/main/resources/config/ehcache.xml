@@ -40,7 +40,9 @@
         Purpose of the document follows.
 -->
 
-<ehcache xmlns="http://ehcache.org/ehcache.xsd">
+<ehcache xmlns="http://ehcache.org/ehcache.xsd"
+         updateCheck="false"
+         maxBytesLocalDisk="512M">
 
 
   <!--
