@@ -31,79 +31,78 @@
 
 package sonia.scm.cache;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.collect.Iterators;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import java.net.URL;
+
+import java.util.Enumeration;
+import java.util.Iterator;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "caches")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class CacheManagerConfiguration
+public class CacheConfigurations
 {
 
   /**
-   * Constructs ...
-   *
+   * the logger for CacheConfigurations
    */
-  public CacheManagerConfiguration() {}
+  private static final Logger logger =
+    LoggerFactory.getLogger(CacheConfigurations.class);
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param defaultCache
-   * @param caches
-   */
-  public CacheManagerConfiguration(CacheConfiguration defaultCache,
-    List<NamedCacheConfiguration> caches)
-  {
-    this.defaultCache = defaultCache;
-    this.caches = caches;
-  }
-
-  //~--- get methods ----------------------------------------------------------
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
+   * @param loadingClass
+   * @param resource
+   *
    * @return
    */
-  public List<NamedCacheConfiguration> getCaches()
+  public static Iterator<URL> findModuleResources(Class<?> loadingClass,
+    String resource)
   {
-    if ( caches == null ){
-      caches = Collections.EMPTY_LIST;
+    Iterator<URL> it = null;
+
+    try
+    {
+      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+      if (classLoader == null)
+      {
+        classLoader = loadingClass.getClassLoader();
+      }
+
+      Enumeration<URL> enm = classLoader.getResources(resource);
+
+      if (enm != null)
+      {
+        it = Iterators.forEnumeration(enm);
+      }
+
     }
-    return caches;
+    catch (IOException ex)
+    {
+      logger.error("could not read module resources", ex);
+    }
+
+    if (it == null)
+    {
+      it = Iterators.emptyIterator();
+    }
+
+    return it;
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public CacheConfiguration getDefaultCache()
-  {
-    return defaultCache;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @XmlElement(name = "cache")
-  private List<NamedCacheConfiguration> caches;
-
-  /** Field description */
-  @XmlElement(name = "defaultCache")
-  private CacheConfiguration defaultCache;
 }

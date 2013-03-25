@@ -35,13 +35,13 @@ package sonia.scm.cache;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.Maps;
 import com.google.common.io.Closeables;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -55,13 +55,11 @@ import sonia.scm.SCMContext;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -73,7 +71,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Attr;
 
 /**
  *
@@ -90,10 +87,10 @@ public class EhCacheConfigurationReader
 
   /** Field description */
   private static final String MANUAL_RESOURCE =
-    "ext".concat(File.separator).concat("cache.xml");
+    "ext".concat(File.separator).concat("ehcache.xml");
 
   /** Field description */
-  private static final String MODULE_RESOURCES = "/META-INF/scm/cache.xml";
+  private static final String MODULE_RESOURCES = "/META-INF/scm/ehcache.xml";
 
   /**
    * the logger for EhCacheConfigurationReader
@@ -209,36 +206,8 @@ public class EhCacheConfigurationReader
   @VisibleForTesting
   protected Iterator<URL> getModuleResources()
   {
-    Iterator<URL> it = null;
-
-    try
-    {
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-      if (classLoader == null)
-      {
-        classLoader = EhCacheConfigurationReader.class.getClassLoader();
-      }
-
-      Enumeration<URL> enm = classLoader.getResources(MODULE_RESOURCES);
-
-      if (enm != null)
-      {
-        it = Iterators.forEnumeration(enm);
-      }
-
-    }
-    catch (IOException ex)
-    {
-      logger.error("could not read cache module resources", ex);
-    }
-
-    if (it == null)
-    {
-      it = Iterators.emptyIterator();
-    }
-
-    return it;
+    return CacheConfigurations.findModuleResources(
+      EhCacheConfigurationReader.class, MODULE_RESOURCES);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -296,6 +265,7 @@ public class EhCacheConfigurationReader
     for (Attr attribute : attributeMap.values())
     {
       Attr mergedAttr = (Attr) merged.adoptNode(attribute);
+
       rootEl.setAttributeNode(mergedAttr);
     }
 
