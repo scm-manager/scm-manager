@@ -124,8 +124,8 @@ public class GuavaCacheManager implements CacheManager
    * @return
    */
   @Override
-  public <K, V> GuavaCache<K, V> getCache(Class<K> key, Class<V> value,
-    String name)
+  public synchronized <K, V> GuavaCache<K, V> getCache(Class<K> key,
+    Class<V> value, String name)
   {
     logger.trace("try to retrieve cache {}", name);
 
@@ -146,7 +146,7 @@ public class GuavaCacheManager implements CacheManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Map<String, GuavaCache> cacheMap = Maps.newConcurrentMap();
+  private volatile Map<String, GuavaCache> cacheMap = Maps.newHashMap();
 
   /** Field description */
   private GuavaCacheConfiguration defaultConfiguration;

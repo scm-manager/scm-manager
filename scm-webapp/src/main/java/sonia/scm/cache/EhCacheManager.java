@@ -125,7 +125,8 @@ public class EhCacheManager implements CacheManager
    * @return
    */
   @Override
-  public <K, V> Cache<K, V> getCache(Class<K> key, Class<V> value, String name)
+  public synchronized <K, V> Cache<K, V> getCache(Class<K> key, Class<V> value,
+    String name)
   {
     net.sf.ehcache.Cache c = cacheManager.getCache(name);
 
