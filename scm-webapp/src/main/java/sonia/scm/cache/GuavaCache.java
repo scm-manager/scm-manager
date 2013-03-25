@@ -69,7 +69,7 @@ public class GuavaCache<K, V> implements Cache<K, V>
    *
    * @param configuration
    */
-  public GuavaCache(NamedCacheConfiguration configuration)
+  public GuavaCache(GuavaNamedCacheConfiguration configuration)
   {
     this(configuration, configuration.getName());
   }
@@ -81,7 +81,7 @@ public class GuavaCache<K, V> implements Cache<K, V>
    * @param configuration
    * @param name
    */
-  public GuavaCache(CacheConfiguration configuration, String name)
+  public GuavaCache(GuavaCacheConfiguration configuration, String name)
   {
     this(GuavaCaches.create(configuration, name),
       configuration.getCopyStrategy(), name);

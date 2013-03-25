@@ -44,7 +44,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "cache")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class NamedCacheConfiguration extends CacheConfiguration
+public class GuavaNamedCacheConfiguration extends GuavaCacheConfiguration
 {
 
   /** Field description */

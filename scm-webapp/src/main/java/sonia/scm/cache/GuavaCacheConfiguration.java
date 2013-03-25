@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "cache")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CacheConfiguration implements Serializable
+public class GuavaCacheConfiguration implements Serializable
 {
 
   /** Field description */

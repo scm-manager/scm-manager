@@ -75,7 +75,7 @@ public final class GuavaCaches
    * @return
    */
   public static com.google.common.cache.Cache create(
-    CacheConfiguration configuration, String name)
+    GuavaCacheConfiguration configuration, String name)
   {
     CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
 

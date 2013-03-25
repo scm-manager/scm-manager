@@ -60,7 +60,7 @@ import javax.xml.bind.JAXBException;
  *
  * @author Sebastian Sdorra
  */
-public class CacheConfigurationReader
+public class GuavaCacheConfigurationReader
 {
 
   /** Field description */
@@ -77,7 +77,7 @@ public class CacheConfigurationReader
    * the logger for CacheConfigurationReader
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(CacheConfigurationReader.class);
+    LoggerFactory.getLogger(GuavaCacheConfigurationReader.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -85,11 +85,12 @@ public class CacheConfigurationReader
    * Constructs ...
    *
    */
-  public CacheConfigurationReader()
+  public GuavaCacheConfigurationReader()
   {
     try
     {
-      this.context = JAXBContext.newInstance(CacheManagerConfiguration.class);
+      this.context =
+        JAXBContext.newInstance(GuavaCacheManagerConfiguration.class);
     }
     catch (JAXBException ex)
     {
@@ -106,7 +107,7 @@ public class CacheConfigurationReader
    *
    * @return
    */
-  public CacheManagerConfiguration read()
+  public GuavaCacheManagerConfiguration read()
   {
     URL defaultConfigUrl = getDefaultResource();
 
@@ -116,15 +117,15 @@ public class CacheConfigurationReader
         "could not find default cache configuration");
     }
 
-    CacheManagerConfiguration config = readConfiguration(defaultConfigUrl,
-                                         true);
+    GuavaCacheManagerConfiguration config = readConfiguration(defaultConfigUrl,
+                                              true);
 
     Iterator<URL> it = getModuleResources();
 
     while (it.hasNext())
     {
-      CacheManagerConfiguration moduleConfig = readConfiguration(it.next(),
-                                                 false);
+      GuavaCacheManagerConfiguration moduleConfig =
+        readConfiguration(it.next(), false);
 
       if (moduleConfig != null)
       {
@@ -138,7 +139,7 @@ public class CacheConfigurationReader
     {
       try
       {
-        CacheManagerConfiguration manualConfig =
+        GuavaCacheManagerConfiguration manualConfig =
           readConfiguration(manualFile.toURI().toURL(), false);
 
         config = merge(config, manualConfig);
@@ -167,7 +168,7 @@ public class CacheConfigurationReader
   @VisibleForTesting
   protected URL getDefaultResource()
   {
-    return CacheConfigurationReader.class.getResource(DEFAULT);
+    return GuavaCacheConfigurationReader.class.getResource(DEFAULT);
   }
 
   /**
@@ -208,12 +209,12 @@ public class CacheConfigurationReader
    *
    * @return
    */
-  private Map<String, NamedCacheConfiguration> createNamedCacheMap(
-    List<NamedCacheConfiguration> caches)
+  private Map<String, GuavaNamedCacheConfiguration> createNamedCacheMap(
+    List<GuavaNamedCacheConfiguration> caches)
   {
-    Map<String, NamedCacheConfiguration> map = Maps.newLinkedHashMap();
+    Map<String, GuavaNamedCacheConfiguration> map = Maps.newLinkedHashMap();
 
-    for (NamedCacheConfiguration ncc : caches)
+    for (GuavaNamedCacheConfiguration ncc : caches)
     {
       map.put(ncc.getName(), ncc);
     }
@@ -230,11 +231,11 @@ public class CacheConfigurationReader
    *
    * @return
    */
-  private CacheManagerConfiguration merge(CacheManagerConfiguration config,
-    CacheManagerConfiguration other)
+  private GuavaCacheManagerConfiguration merge(
+    GuavaCacheManagerConfiguration config, GuavaCacheManagerConfiguration other)
   {
-    CacheConfiguration defaultCache = config.getDefaultCache();
-    Map<String, NamedCacheConfiguration> namedCaches =
+    GuavaCacheConfiguration defaultCache = config.getDefaultCache();
+    Map<String, GuavaNamedCacheConfiguration> namedCaches =
       createNamedCacheMap(config.getCaches());
 
     if (other.getDefaultCache() != null)
@@ -242,14 +243,14 @@ public class CacheConfigurationReader
       defaultCache = other.getDefaultCache();
     }
 
-    List<NamedCacheConfiguration> otherNamedCaches = other.getCaches();
+    List<GuavaNamedCacheConfiguration> otherNamedCaches = other.getCaches();
 
-    for (NamedCacheConfiguration ncc : otherNamedCaches)
+    for (GuavaNamedCacheConfiguration ncc : otherNamedCaches)
     {
       namedCaches.put(ncc.getName(), ncc);
     }
 
-    return new CacheManagerConfiguration(defaultCache,
+    return new GuavaCacheManagerConfiguration(defaultCache,
       ImmutableList.copyOf(namedCaches.values()));
   }
 
@@ -262,14 +263,16 @@ public class CacheConfigurationReader
    *
    * @return
    */
-  private CacheManagerConfiguration readConfiguration(URL url, boolean fail)
+  private GuavaCacheManagerConfiguration readConfiguration(URL url,
+    boolean fail)
   {
-    CacheManagerConfiguration config = null;
+    GuavaCacheManagerConfiguration config = null;
 
     try
     {
       config =
-        (CacheManagerConfiguration) context.createUnmarshaller().unmarshal(url);
+        (GuavaCacheManagerConfiguration) context.createUnmarshaller().unmarshal(
+          url);
     }
     catch (JAXBException ex)
     {

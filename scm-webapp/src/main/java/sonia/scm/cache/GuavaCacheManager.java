@@ -67,12 +67,12 @@ public class GuavaCacheManager implements CacheManager
    */
   public GuavaCacheManager()
   {
-    CacheConfigurationReader reader = new CacheConfigurationReader();
-    CacheManagerConfiguration config = reader.read();
+    GuavaCacheConfigurationReader reader = new GuavaCacheConfigurationReader();
+    GuavaCacheManagerConfiguration config = reader.read();
 
     defaultConfiguration = config.getDefaultCache();
 
-    for (NamedCacheConfiguration ncc : config.getCaches())
+    for (GuavaNamedCacheConfiguration ncc : config.getCaches())
     {
       cacheMap.put(ncc.getName(), new GuavaCache(ncc));
     }
@@ -139,5 +139,5 @@ public class GuavaCacheManager implements CacheManager
   private Map<String, GuavaCache> cacheMap = Maps.newConcurrentMap();
 
   /** Field description */
-  private CacheConfiguration defaultConfiguration;
+  private GuavaCacheConfiguration defaultConfiguration;
 }

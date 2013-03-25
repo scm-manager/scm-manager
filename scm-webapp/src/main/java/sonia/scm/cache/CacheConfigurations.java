@@ -60,13 +60,16 @@ public final class CacheConfigurations
   private static final Logger logger =
     LoggerFactory.getLogger(CacheConfigurations.class);
 
-  //~--- methods --------------------------------------------------------------
-  private CacheConfigurations()
-  {
-  }
+  //~--- constructors ---------------------------------------------------------
 
-  
-  
+  /**
+   * Constructs ...
+   *
+   */
+  private CacheConfigurations() {}
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *

@@ -47,14 +47,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "caches")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CacheManagerConfiguration
+public class GuavaCacheManagerConfiguration
 {
 
   /**
    * Constructs ...
    *
    */
-  public CacheManagerConfiguration() {}
+  public GuavaCacheManagerConfiguration() {}
 
   /**
    * Constructs ...
@@ -63,8 +63,8 @@ public class CacheManagerConfiguration
    * @param defaultCache
    * @param caches
    */
-  public CacheManagerConfiguration(CacheConfiguration defaultCache,
-    List<NamedCacheConfiguration> caches)
+  public GuavaCacheManagerConfiguration(GuavaCacheConfiguration defaultCache,
+    List<GuavaNamedCacheConfiguration> caches)
   {
     this.defaultCache = defaultCache;
     this.caches = caches;
@@ -78,11 +78,13 @@ public class CacheManagerConfiguration
    *
    * @return
    */
-  public List<NamedCacheConfiguration> getCaches()
+  public List<GuavaNamedCacheConfiguration> getCaches()
   {
-    if ( caches == null ){
+    if (caches == null)
+    {
       caches = Collections.EMPTY_LIST;
     }
+
     return caches;
   }
 
@@ -92,7 +94,7 @@ public class CacheManagerConfiguration
    *
    * @return
    */
-  public CacheConfiguration getDefaultCache()
+  public GuavaCacheConfiguration getDefaultCache()
   {
     return defaultCache;
   }
@@ -101,9 +103,9 @@ public class CacheManagerConfiguration
 
   /** Field description */
   @XmlElement(name = "cache")
-  private List<NamedCacheConfiguration> caches;
+  private List<GuavaNamedCacheConfiguration> caches;
 
   /** Field description */
   @XmlElement(name = "defaultCache")
-  private CacheConfiguration defaultCache;
+  private GuavaCacheConfiguration defaultCache;
 }
