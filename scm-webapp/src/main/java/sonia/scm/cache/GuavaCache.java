@@ -33,7 +33,7 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.cache.CacheBuilder;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Sets;
 
 import org.slf4j.Logger;
@@ -44,7 +44,6 @@ import sonia.scm.Filter;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -84,72 +83,28 @@ public class GuavaCache<K, V> implements Cache<K, V>
    */
   public GuavaCache(CacheConfiguration configuration, String name)
   {
+    this(GuavaCaches.create(configuration, name),
+      configuration.getCopyStrategy(), name);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param cache
+   * @param copyStrategy
+   * @param name
+   */
+  @VisibleForTesting
+  protected GuavaCache(com.google.common.cache.Cache<K, V> cache,
+    CopyStrategy copyStrategy, String name)
+  {
+    this.cache = cache;
     this.name = name;
 
-    if (configuration.getCopyStrategy() != null)
+    if (copyStrategy != null)
     {
-      copyStrategy = configuration.getCopyStrategy();
-    }
-
-    CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
-
-    if (configuration.getConcurrencyLevel() != null)
-    {
-      builder.concurrencyLevel(configuration.getConcurrencyLevel());
-    }
-
-    if (configuration.getExpireAfterAccess() != null)
-    {
-      builder.expireAfterAccess(configuration.getExpireAfterAccess(),
-        TimeUnit.MILLISECONDS);
-    }
-
-    if (configuration.getExpireAfterWrite() != null)
-    {
-      builder.expireAfterWrite(configuration.getExpireAfterWrite(),
-        TimeUnit.MILLISECONDS);
-    }
-
-    if (configuration.getInitialCapacity() != null)
-    {
-      builder.initialCapacity(configuration.getInitialCapacity());
-    }
-
-    if (configuration.getMaximumSize() != null)
-    {
-      builder.maximumSize(configuration.getMaximumSize());
-    }
-
-    if (configuration.getMaximumWeight() != null)
-    {
-      builder.maximumWeight(configuration.getMaximumWeight());
-    }
-
-    if (isEnabled(configuration.getRecordStats()))
-    {
-      builder.recordStats();
-    }
-
-    if (isEnabled(configuration.getSoftValues()))
-    {
-      builder.softValues();
-    }
-
-    if (isEnabled(configuration.getWeakKeys()))
-    {
-      builder.weakKeys();
-    }
-
-    if (isEnabled(configuration.getWeakValues()))
-    {
-      builder.weakKeys();
-    }
-
-    cache = builder.build();
-
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("create new guava cache from builder: {}", builder);
+      this.copyStrategy = copyStrategy;
     }
   }
 
@@ -266,19 +221,6 @@ public class GuavaCache<K, V> implements Cache<K, V>
     }
 
     return value;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param v
-   *
-   * @return
-   */
-  private boolean isEnabled(Boolean v)
-  {
-    return (v != null) && v;
   }
 
   //~--- fields ---------------------------------------------------------------

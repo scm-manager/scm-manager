@@ -33,31 +33,27 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Maps;
-import com.google.inject.Singleton;
+import com.google.common.cache.CacheBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
-public class GuavaCacheManager implements CacheManager
+public final class GuavaCaches
 {
 
   /**
-   * the logger for GuavaCacheManager
+   * the logger for GuavaCaches
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(GuavaCacheManager.class);
+    LoggerFactory.getLogger(GuavaCaches.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -65,18 +61,7 @@ public class GuavaCacheManager implements CacheManager
    * Constructs ...
    *
    */
-  public GuavaCacheManager()
-  {
-    CacheConfigurationReader reader = new CacheConfigurationReader();
-    CacheManagerConfiguration config = reader.read();
-
-    defaultConfiguration = config.getDefaultCache();
-
-    for (NamedCacheConfiguration ncc : config.getCaches())
-    {
-      cacheMap.put(ncc.getName(), new GuavaCache(ncc));
-    }
-  }
+  private GuavaCaches() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -84,19 +69,74 @@ public class GuavaCacheManager implements CacheManager
    * Method description
    *
    *
-   * @throws IOException
+   * @param configuration
+   * @param name
+   *
+   * @return
    */
-  @Override
-  public void close() throws IOException
+  public static com.google.common.cache.Cache create(
+    CacheConfiguration configuration, String name)
   {
-    logger.info("close guava cache manager");
+    CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
 
-    for (Cache c : cacheMap.values())
+    if (configuration.getConcurrencyLevel() != null)
     {
-      c.clear();
+      builder.concurrencyLevel(configuration.getConcurrencyLevel());
     }
 
-    cacheMap.clear();
+    if (configuration.getExpireAfterAccess() != null)
+    {
+      builder.expireAfterAccess(configuration.getExpireAfterAccess(),
+        TimeUnit.SECONDS);
+    }
+
+    if (configuration.getExpireAfterWrite() != null)
+    {
+      builder.expireAfterWrite(configuration.getExpireAfterWrite(),
+        TimeUnit.SECONDS);
+    }
+
+    if (configuration.getInitialCapacity() != null)
+    {
+      builder.initialCapacity(configuration.getInitialCapacity());
+    }
+
+    if (configuration.getMaximumSize() != null)
+    {
+      builder.maximumSize(configuration.getMaximumSize());
+    }
+
+    if (configuration.getMaximumWeight() != null)
+    {
+      builder.maximumWeight(configuration.getMaximumWeight());
+    }
+
+    if (isEnabled(configuration.getRecordStats()))
+    {
+      builder.recordStats();
+    }
+
+    if (isEnabled(configuration.getSoftValues()))
+    {
+      builder.softValues();
+    }
+
+    if (isEnabled(configuration.getWeakKeys()))
+    {
+      builder.weakKeys();
+    }
+
+    if (isEnabled(configuration.getWeakValues()))
+    {
+      builder.weakKeys();
+    }
+
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("create new cache {} from builder: {}", name, builder);
+    }
+
+    return builder.build();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -105,39 +145,12 @@ public class GuavaCacheManager implements CacheManager
    * Method description
    *
    *
-   * @param key
-   * @param value
-   * @param name
-   * @param <K>
-   * @param <V>
+   * @param v
    *
    * @return
    */
-  @Override
-  public <K, V> GuavaCache<K, V> getCache(Class<K> key, Class<V> value,
-    String name)
+  private static boolean isEnabled(Boolean v)
   {
-    logger.trace("try to retrieve cache {}", name);
-
-    GuavaCache<K, V> cache = cacheMap.get(name);
-
-    if (cache == null)
-    {
-      logger.debug(
-        "cache {} does not exists, creating a new instance from default configuration: {}",
-        name, defaultConfiguration);
-      cache = new GuavaCache<K, V>(defaultConfiguration, name);
-      cacheMap.put(name, cache);
-    }
-
-    return cache;
+    return (v != null) && v;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Map<String, GuavaCache> cacheMap = Maps.newConcurrentMap();
-
-  /** Field description */
-  private CacheConfiguration defaultConfiguration;
 }

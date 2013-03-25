@@ -64,14 +64,14 @@ public class CacheConfigurationReader
 {
 
   /** Field description */
-  private static final String DEFAULT = "/config/cache.xml";
+  private static final String DEFAULT = "/config/gcache.xml";
 
   /** Field description */
   private static final String MANUAL_RESOURCE =
-    "ext".concat(File.separator).concat("cache.xml");
+    "ext".concat(File.separator).concat("gcache.xml");
 
   /** Field description */
-  private static final String MODULE_RESOURCES = "/META-INF/scm/cache.xml";
+  private static final String MODULE_RESOURCES = "/META-INF/scm/gcache.xml";
 
   /**
    * the logger for CacheConfigurationReader

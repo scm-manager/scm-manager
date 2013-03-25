@@ -51,7 +51,7 @@ import java.util.Iterator;
  *
  * @author Sebastian Sdorra
  */
-public class CacheConfigurations
+public final class CacheConfigurations
 {
 
   /**
@@ -61,7 +61,12 @@ public class CacheConfigurations
     LoggerFactory.getLogger(CacheConfigurations.class);
 
   //~--- methods --------------------------------------------------------------
+  private CacheConfigurations()
+  {
+  }
 
+  
+  
   /**
    * Method description
    *
