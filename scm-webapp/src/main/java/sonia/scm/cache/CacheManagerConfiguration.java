@@ -55,7 +55,7 @@ public class CacheManagerConfiguration
    *
    * @return
    */
-  public List<CacheConfiguration> getCaches()
+  public List<NamedCacheConfiguration> getCaches()
   {
     return caches;
   }
@@ -75,7 +75,7 @@ public class CacheManagerConfiguration
 
   /** Field description */
   @XmlElement(name = "cache")
-  private List<CacheConfiguration> caches;
+  private List<NamedCacheConfiguration> caches;
 
   /** Field description */
   @XmlElement(name = "cache")

@@ -33,6 +33,8 @@ package sonia.scm.cache;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Serializable;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -44,8 +46,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "cache")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class CacheConfiguration
+public class CacheConfiguration implements Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = -8734373158089010603L;
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -130,17 +137,6 @@ public class CacheConfiguration
    *
    * @return
    */
-  public String getName()
-  {
-    return name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public Boolean getRecordStats()
   {
     return recordStats;
@@ -208,10 +204,6 @@ public class CacheConfiguration
   /** Field description */
   @XmlAttribute
   private Long maximumWeight;
-
-  /** Field description */
-  @XmlAttribute
-  private String name;
 
   /** Field description */
   @XmlAttribute

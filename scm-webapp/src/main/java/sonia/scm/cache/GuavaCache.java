@@ -64,18 +64,28 @@ public class GuavaCache<K, V> implements Cache<K, V>
 
   //~--- constructors ---------------------------------------------------------
 
-  private String name;
-  
   /**
    * Constructs ...
    *
    *
    * @param configuration
    */
-  public GuavaCache(CacheConfiguration configuration)
+  public GuavaCache(NamedCacheConfiguration configuration)
   {
-    this.name = configuration.getName();
-    
+    this(configuration, configuration.getName());
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param configuration
+   * @param name
+   */
+  public GuavaCache(CacheConfiguration configuration, String name)
+  {
+    this.name = name;
+
     if (configuration.getCopyStrategy() != null)
     {
       copyStrategy = configuration.getCopyStrategy();
@@ -152,10 +162,11 @@ public class GuavaCache<K, V> implements Cache<K, V>
   @Override
   public void clear()
   {
-        if (logger.isDebugEnabled())
+    if (logger.isDebugEnabled())
     {
       logger.debug("clear cache {}", name);
     }
+
     cache.invalidateAll();
   }
 
@@ -277,4 +288,7 @@ public class GuavaCache<K, V> implements Cache<K, V>
 
   /** Field description */
   private CopyStrategy copyStrategy = CopyStrategy.NONE;
+
+  /** Field description */
+  private String name;
 }

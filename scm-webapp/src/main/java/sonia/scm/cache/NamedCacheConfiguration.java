@@ -31,52 +31,24 @@
 
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.collect.Maps;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.util.Map;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GuavaCacheManager implements CacheManager
+@XmlRootElement(name = "cache")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class NamedCacheConfiguration extends CacheConfiguration
 {
 
-  /**
-   * the logger for GuavaCacheManager
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GuavaCacheManager.class);
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Override
-  public void close() throws IOException
-  {
-    logger.info("close guava cache manager");
-
-    for (Cache c : cacheMap.values())
-    {
-      c.clear();
-    }
-
-    cacheMap.clear();
-  }
+  /** Field description */
+  private static final long serialVersionUID = -624795324874828475L;
 
   //~--- get methods ----------------------------------------------------------
 
@@ -84,39 +56,16 @@ public class GuavaCacheManager implements CacheManager
    * Method description
    *
    *
-   * @param key
-   * @param value
-   * @param name
-   * @param <K>
-   * @param <V>
-   *
    * @return
    */
-  @Override
-  public <K, V> GuavaCache<K, V> getCache(Class<K> key, Class<V> value,
-    String name)
+  public String getName()
   {
-    logger.trace("try to retrieve cache {}", name);
-
-    GuavaCache<K, V> cache = cacheMap.get(name);
-
-    if (cache == null)
-    {
-      logger.debug(
-        "cache {} does not exists, creating a new instance from default configuration: {}",
-        name, defaultConfiguration);
-      cache = new GuavaCache<K, V>(defaultConfiguration);
-      cacheMap.put(name, cache);
-    }
-
-    return cache;
+    return name;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Map<String, GuavaCache> cacheMap = Maps.newConcurrentMap();
-
-  /** Field description */
-  private NamedCacheConfiguration defaultConfiguration;
+  @XmlAttribute
+  private String name;
 }
