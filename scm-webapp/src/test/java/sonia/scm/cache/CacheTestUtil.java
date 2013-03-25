@@ -33,12 +33,22 @@ package sonia.scm.cache;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collections;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GuavaCacheTest extends CacheTestBase
+public final class CacheTestUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private CacheTestUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -46,9 +56,22 @@ public class GuavaCacheTest extends CacheTestBase
    *
    * @return
    */
-  @Override
-  protected CacheManager createCacheManager()
+  public static EhCacheManager createDefaultEhCacheManager()
   {
-    return CacheTestUtil.createDefaultGuavaCacheManager();
+    return new EhCacheManager(net.sf.ehcache.CacheManager.create());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static GuavaCacheManager createDefaultGuavaCacheManager()
+  {
+    GuavaCacheConfiguration config = new GuavaCacheConfiguration();
+
+    return new GuavaCacheManager(new GuavaCacheManagerConfiguration(config,
+      Collections.EMPTY_LIST));
   }
 }

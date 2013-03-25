@@ -49,6 +49,6 @@ public class EhCacheTest extends CacheTestBase
   @Override
   protected CacheManager createCacheManager()
   {
-    return new EhCacheManager(net.sf.ehcache.CacheManager.create());
+    return CacheTestUtil.createDefaultEhCacheManager();
   }
 }
