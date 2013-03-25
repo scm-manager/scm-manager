@@ -33,6 +33,7 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
 
@@ -67,9 +68,18 @@ public class GuavaCacheManager implements CacheManager
    */
   public GuavaCacheManager()
   {
-    GuavaCacheConfigurationReader reader = new GuavaCacheConfigurationReader();
-    GuavaCacheManagerConfiguration config = reader.read();
+    this(GuavaCacheConfigurationReader.read());
+  }
 
+  /**
+   * Constructs ...
+   *
+   *
+   * @param config
+   */
+  @VisibleForTesting
+  protected GuavaCacheManager(GuavaCacheManagerConfiguration config)
+  {
     defaultConfiguration = config.getDefaultCache();
 
     for (GuavaNamedCacheConfiguration ncc : config.getCaches())

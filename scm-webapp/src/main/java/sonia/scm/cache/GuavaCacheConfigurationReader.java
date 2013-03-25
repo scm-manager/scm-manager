@@ -85,7 +85,7 @@ public class GuavaCacheConfigurationReader
    * Constructs ...
    *
    */
-  public GuavaCacheConfigurationReader()
+  private GuavaCacheConfigurationReader()
   {
     try
     {
@@ -107,54 +107,9 @@ public class GuavaCacheConfigurationReader
    *
    * @return
    */
-  public GuavaCacheManagerConfiguration read()
+  public static GuavaCacheManagerConfiguration read()
   {
-    URL defaultConfigUrl = getDefaultResource();
-
-    if (defaultConfigUrl == null)
-    {
-      throw new IllegalStateException(
-        "could not find default cache configuration");
-    }
-
-    GuavaCacheManagerConfiguration config = readConfiguration(defaultConfigUrl,
-                                              true);
-
-    Iterator<URL> it = getModuleResources();
-
-    while (it.hasNext())
-    {
-      GuavaCacheManagerConfiguration moduleConfig =
-        readConfiguration(it.next(), false);
-
-      if (moduleConfig != null)
-      {
-        config = merge(config, moduleConfig);
-      }
-    }
-
-    File manualFile = getManualFileResource();
-
-    if (manualFile.exists())
-    {
-      try
-      {
-        GuavaCacheManagerConfiguration manualConfig =
-          readConfiguration(manualFile.toURI().toURL(), false);
-
-        config = merge(config, manualConfig);
-      }
-      catch (MalformedURLException ex)
-      {
-        logger.error("malformed url", ex);
-      }
-    }
-    else
-    {
-      logger.warn("could not find manual configuration at {}", manualFile);
-    }
-
-    return config;
+    return new GuavaCacheConfigurationReader().doRead();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -220,6 +175,62 @@ public class GuavaCacheConfigurationReader
     }
 
     return map;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private GuavaCacheManagerConfiguration doRead()
+  {
+    URL defaultConfigUrl = getDefaultResource();
+
+    if (defaultConfigUrl == null)
+    {
+      throw new IllegalStateException(
+        "could not find default cache configuration");
+    }
+
+    GuavaCacheManagerConfiguration config = readConfiguration(defaultConfigUrl,
+                                              true);
+
+    Iterator<URL> it = getModuleResources();
+
+    while (it.hasNext())
+    {
+      GuavaCacheManagerConfiguration moduleConfig =
+        readConfiguration(it.next(), false);
+
+      if (moduleConfig != null)
+      {
+        config = merge(config, moduleConfig);
+      }
+    }
+
+    File manualFile = getManualFileResource();
+
+    if (manualFile.exists())
+    {
+      try
+      {
+        GuavaCacheManagerConfiguration manualConfig =
+          readConfiguration(manualFile.toURI().toURL(), false);
+
+        config = merge(config, manualConfig);
+      }
+      catch (MalformedURLException ex)
+      {
+        logger.error("malformed url", ex);
+      }
+    }
+    else
+    {
+      logger.warn("could not find manual configuration at {}", manualFile);
+    }
+
+    return config;
   }
 
   /**
