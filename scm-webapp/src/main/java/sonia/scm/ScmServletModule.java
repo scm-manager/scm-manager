@@ -142,6 +142,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import sonia.scm.cache.GuavaCacheManager;
 
 /**
  *
@@ -272,8 +273,8 @@ public class ScmServletModule extends ServletModule
     bind(WebSecurityContext.class).to(BasicSecurityContext.class);
     bind(AdministrationContext.class, DefaultAdministrationContext.class);
 
-    // bind security cache
-    bind(CacheManager.class, EhCacheManager.class);
+    // bind cache
+    bind(CacheManager.class, GuavaCacheManager.class);
 
     // bind dao
     bind(GroupDAO.class, XmlGroupDAO.class);
