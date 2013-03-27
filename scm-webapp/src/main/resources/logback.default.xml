@@ -76,6 +76,11 @@
   <!--
   <logger name="com.aragost.javahg" level="DEBUG" />
   -->
+  
+  <!-- ehcache -->
+  <!--
+  <logger name="net.sf.ehcache" level="DEBUG" />
+  -->
 
   <root level="WARN">
     <appender-ref ref="STDOUT" />

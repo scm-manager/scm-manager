@@ -33,6 +33,10 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;
@@ -47,7 +51,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * The changeset paging result is used to do a paging over the 
+ * The changeset paging result is used to do a paging over the
  * {@link Changeset}s of a {@link Repository}.
  *
  * @author Sebastian Sdorra
@@ -84,6 +88,45 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   //~--- methods --------------------------------------------------------------
 
   /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final ChangesetPagingResult other = (ChangesetPagingResult) obj;
+
+    return Objects.equal(changesets, other.changesets)
+      && Objects.equal(total, other.total);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(changesets, total);
+  }
+
+  /**
    * Returns an iterator which can iterate over the current list of changesets.
    *
    *
@@ -101,6 +144,23 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
     }
 
     return it;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("changesets", changesets)
+                  .add("total", total)
+                  .toString();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------

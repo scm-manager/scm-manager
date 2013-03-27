@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--*
+Copyright (c) 2010, Sebastian Sdorra
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+3. Neither the name of SCM-Manager; nor the names of its
+   contributors may be used to endorse or promote products derived from this
+   software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+http://bitbucket.org/sdorra/scm-manager
+
+-->
+
+
+<caches>
+    
+  <defaultCache 
+    maximumSize="200" 
+    expireAfterAccess="1200" 
+    expireAfterWrite="2400"
+  />
+  
+  <!--
+    Authentication cache
+    average: 1K
+  -->
+    
+  <cache
+    name="sonia.cache.auth"
+    maximumSize="1000"
+    expireAfterAccess="30" 
+    expireAfterWrite="60"
+  />
+  
+  <!--
+    Authorization cache
+    average: 3K
+  -->
+  <cache
+    name="sonia.cache.authorizing"
+    maximumSize="1000"
+    expireAfterAccess="1200" 
+    expireAfterWrite="2400"
+  />
+  
+  <!--
+    PluginCenter cache
+    average: 30K
+  -->
+  <cache
+    name="sonia.cache.plugins"
+    maximumSize="5"
+    expireAfterWrite="3600"
+  />
+
+  <!-- 
+    Search cache for users
+    average: 0.5K
+  -->
+  <cache
+    name="sonia.cache.search.users"
+    maximumSize="10000"
+    expireAfterWrite="5400"
+  />
+
+  <!-- 
+    Search cache for groups
+    average: 0.5K
+  -->
+  <cache
+    name="sonia.cache.search.groups"
+    maximumSize="1000"
+    expireAfterWrite="5400"
+  />
+  
+  <!-- new repository api -->
+  
+  <!--
+    Changeset cache
+    average: 25K
+  -->
+  <cache
+    name="sonia.cache.cmd.log"
+    maximumSize="500"
+    copyStrategy="read-write"
+  />
+  
+  <!--
+    FileObject cache
+    average: 1.5K
+  -->
+  <cache
+    name="sonia.cache.cmd.browse"
+    maximumSize="3000"
+    copyStrategy="read-write"
+  />
+
+  <!--
+    BlameResult cache
+    average: 15K
+  -->
+  <cache
+    name="sonia.cache.cmd.blame"
+    maximumSize="1000"
+    copyStrategy="read-write"
+  />
+  
+  <!--
+    Tag cache
+    average: 5K
+  -->
+  <cache
+    name="sonia.cache.cmd.tags"
+    maximumSize="500"
+  />
+  
+  <!--
+    Branch cache
+    average: 2.5K
+  -->
+  <cache
+    name="sonia.cache.cmd.branches"
+    maximumSize="500"
+  />
+
+</caches>

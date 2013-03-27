@@ -212,9 +212,10 @@ public class GitChangesetConverter implements Closeable
 
     Collection<String> tagCollection = tags.get(commit.getId());
 
-    if (tagCollection != null)
+    if (Util.isNotEmpty(tagCollection))
     {
-      changeset.getTags().addAll(tagCollection);
+      // create a copy of the tag collection to reduce memory on caching
+      changeset.getTags().addAll(Lists.newArrayList(tagCollection));
     }
 
     changeset.setBranches(branches);

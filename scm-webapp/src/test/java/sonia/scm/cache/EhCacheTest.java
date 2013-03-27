@@ -33,127 +33,22 @@
 
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import sonia.scm.Filter;
-import sonia.scm.util.IOUtil;
-
-import static org.junit.Assert.*;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public class EhCacheTest
+public class EhCacheTest extends CacheTestBase
 {
-  
-  /**
-   * Method description
-   *
-   */
-  @After
-  public void after()
-  {
-    IOUtil.close(cm);
-  }
 
   /**
    * Method description
    *
-   */
-  @Before
-  public void before()
-  {
-    cm = new EhCacheManager(net.sf.ehcache.CacheManager.create());
-    cache = cm.getCache(String.class, String.class, "test");
-  }
-
-  /**
-   * Method description
    *
+   * @return
    */
-  @Test
-  public void testClear()
+  @Override
+  protected CacheManager createCacheManager()
   {
-    cache.put("test", "test123");
-    cache.put("test-1", "test123");
-    cache.clear();
-    assertNull(cache.get("test"));
-    assertNull(cache.get("test-1"));
+    return CacheTestUtil.createDefaultEhCacheManager();
   }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testContains()
-  {
-    cache.put("test", "test123");
-    cache.put("test-1", "test123");
-    assertTrue(cache.contains("test"));
-    assertTrue(cache.contains("test-1"));
-    assertFalse(cache.contains("test-2"));
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testPutAndGet()
-  {
-    cache.put("test", "test123");
-    assertEquals("test123", cache.get("test"));
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testRemove()
-  {
-    cache.put("test", "test123");
-    assertEquals("test123", cache.get("test"));
-    cache.remove("test");
-    assertNull(cache.get("test"));
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testRemoveAll()
-  {
-    cache.put("test-1", "test123");
-    cache.put("test-2", "test123");
-    cache.put("a-1", "test123");
-    cache.put("a-2", "test123");
-    cache.removeAll(new Filter<String>()
-    {
-      @Override
-      public boolean accept(String item)
-      {
-        return item.startsWith("test");
-      }
-    });
-    assertNull(cache.get("test-1"));
-    assertNull(cache.get("test-2"));
-    assertNotNull(cache.get("a-1"));
-    assertNotNull(cache.get("a-2"));
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Cache<String, String> cache;
-
-  /** Field description */
-  private CacheManager cm;
 }
