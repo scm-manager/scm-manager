@@ -121,7 +121,7 @@ public class SvnPostReceiveHookEvent extends AbstractRepositoryHookEvent
    */
   private List<Changeset> fetchChangesets()
   {
-    List<Changeset> result = new ArrayList<Changeset>();
+    List<Changeset> result = new ArrayList<Changeset>(1);
     SVNRepository repository = null;
 
     try
