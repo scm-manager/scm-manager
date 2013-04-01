@@ -673,7 +673,7 @@ public class RepositoryResource
    * @param id the id of the repository
    * @param path path of a file
    * @param revision the revision of the file specified by the path parameter
-   * @param branch
+   * @param branch name of the branch
    * @param start the start value for paging
    * @param limit the limit value for paging
    *
