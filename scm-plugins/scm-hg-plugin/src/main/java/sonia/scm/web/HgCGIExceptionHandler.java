@@ -30,11 +30,13 @@
  */
 
 
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +61,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 public class HgCGIExceptionHandler
-        implements CGIExceptionHandler, CGIStatusCodeHandler
+  implements CGIExceptionHandler, CGIStatusCodeHandler
 {
 
   /** Field description */
@@ -67,6 +69,9 @@ public class HgCGIExceptionHandler
 
   /** Field description */
   public static final String CONTENT_TYPE_ERROR = "application/hg-error";
+
+  /** Field description */
+  public static final String CONTENT_TYPE_HTML = "text/html";
 
   /** TODO create a bundle for error messages */
   public static final String ERROR_NOT_CONFIGURED = "error.notConfigured";
@@ -76,6 +81,9 @@ public class HgCGIExceptionHandler
 
   /** Field description */
   public static final String ERROR_UNEXPECTED = "error.unexpected";
+
+  /** Field description */
+  private static final String HEADER_ACCEPT = "Accept";
 
   /**
    * the logger for HgCGIExceptionHandler
@@ -106,15 +114,20 @@ public class HgCGIExceptionHandler
    */
   @Override
   public void handleException(HttpServletRequest request,
-                              HttpServletResponse response, Throwable ex)
+    HttpServletResponse response, Throwable ex)
   {
     if (logger.isErrorEnabled())
     {
       logger.error("not able to handle mercurial request", ex);
     }
 
-    sendError(response,
-              bundle.getString(ERROR_UNEXPECTED, Util.nonNull(ex.getMessage())));
+    //J-
+    sendError(
+      request,
+      response, 
+      bundle.getString(ERROR_UNEXPECTED, Util.nonNull(ex.getMessage()))
+    );
+    //J+
   }
 
   /**
@@ -130,13 +143,12 @@ public class HgCGIExceptionHandler
    */
   @Override
   public void handleStatusCode(HttpServletRequest request,
-                               HttpServletResponse response,
-                               OutputStream output, int statusCode)
-          throws IOException
+    HttpServletResponse response, OutputStream output, int statusCode)
+    throws IOException
   {
     if (statusCode != 0)
     {
-      response.setContentType(CONTENT_TYPE_ERROR);
+      setContentType(request, response);
 
       String msg = bundle.getLine(ERROR_STATUSCODE, statusCode);
 
@@ -180,13 +192,16 @@ public class HgCGIExceptionHandler
    * Method description
    *
    *
+   *
+   * @param request
    * @param response
    * @param message
    *
    */
-  public void sendError(HttpServletResponse response, String message)
+  public void sendError(HttpServletRequest request,
+    HttpServletResponse response, String message)
   {
-    response.setContentType(CONTENT_TYPE_ERROR);
+    setContentType(request, response);
 
     PrintWriter writer = null;
 
@@ -209,12 +224,39 @@ public class HgCGIExceptionHandler
    * Method description
    *
    *
+   *
+   * @param request
    * @param response
    * @param key
    */
-  public void sendFormattedError(HttpServletResponse response, String key)
+  public void sendFormattedError(HttpServletRequest request,
+    HttpServletResponse response, String key)
   {
-    sendError(response, bundle.getString(key));
+    sendError(request, response, bundle.getString(key));
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   */
+  private void setContentType(HttpServletRequest request,
+    HttpServletResponse response)
+  {
+    String accept = Strings.nullToEmpty(request.getHeader(HEADER_ACCEPT));
+
+    if (accept.contains(CONTENT_TYPE_HTML))
+    {
+      response.setContentType(CONTENT_TYPE_HTML);
+    }
+    else
+    {
+      response.setContentType(CONTENT_TYPE_ERROR);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
