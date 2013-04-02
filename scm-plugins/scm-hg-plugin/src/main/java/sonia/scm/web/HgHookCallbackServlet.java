@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -61,6 +62,7 @@ import sonia.scm.util.Util;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -294,6 +296,10 @@ public class HgHookCallbackServlet extends HttpServlet
 
       response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
+    catch (Exception ex)
+    {
+      sendError(response, ex);
+    }
   }
 
   /**
@@ -347,6 +353,39 @@ public class HgHookCallbackServlet extends HttpServlet
       }
 
       response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   * @param ex
+   *
+   * @throws IOException
+   */
+  private void sendError(HttpServletResponse response, Exception ex)
+    throws IOException
+  {
+    logger.warn("hook ended with exception", ex);
+    response.setStatus(HttpServletResponse.SC_CONFLICT);
+
+    String msg = ex.getMessage();
+
+    if (msg != null)
+    {
+      PrintWriter writer = null;
+
+      try
+      {
+        writer = response.getWriter();
+        writer.println(msg);
+      }
+      finally
+      {
+        Closeables.closeQuietly(writer);
+      }
     }
   }
 

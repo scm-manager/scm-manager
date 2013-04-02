@@ -54,6 +54,12 @@ def callHookUrl(ui, repo, hooktype, node):
       abort = False
     else:
       ui.warn( "ERROR: scm-hook failed with error code " + str(conn.code) + "\n" )
+  except urllib2.URLError, e:
+    msg = e.read();
+    if len(msg) > 0:
+      ui.warn( "ERROR: " + msg)
+    else:
+      ui.warn( "ERROR: scm-hook failed with error code " + str(e.getcode()) + "\n" )
   except ValueError:
     ui.warn( "scm-hook failed with an exception\n" )
   return abort
