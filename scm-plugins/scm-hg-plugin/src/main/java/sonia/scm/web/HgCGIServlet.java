@@ -123,10 +123,9 @@ public class HgCGIServlet extends HttpServlet
    */
   @Inject
   public HgCGIServlet(CGIExecutorFactory cgiExecutorFactory,
-                      ScmConfiguration configuration,
-                      RepositoryProvider repositoryProvider,
-                      HgRepositoryHandler handler, HgHookManager hookManager,
-                      RepositoryRequestListenerUtil requestListenerUtil)
+    ScmConfiguration configuration, RepositoryProvider repositoryProvider,
+    HgRepositoryHandler handler, HgHookManager hookManager,
+    RepositoryRequestListenerUtil requestListenerUtil)
   {
     this.cgiExecutorFactory = cgiExecutorFactory;
     this.configuration = configuration;
@@ -164,8 +163,8 @@ public class HgCGIServlet extends HttpServlet
    */
   @Override
   protected void service(HttpServletRequest request,
-                         HttpServletResponse response)
-          throws ServletException, IOException
+    HttpServletResponse response)
+    throws ServletException, IOException
   {
     Repository repository = repositoryProvider.get();
 
@@ -180,8 +179,8 @@ public class HgCGIServlet extends HttpServlet
     }
     else if (!handler.isConfigured())
     {
-      exceptionHandler.sendFormattedError(response,
-              HgCGIExceptionHandler.ERROR_NOT_CONFIGURED);
+      exceptionHandler.sendFormattedError(request, response,
+        HgCGIExceptionHandler.ERROR_NOT_CONFIGURED);
     }
     else
     {
@@ -208,9 +207,8 @@ public class HgCGIServlet extends HttpServlet
    * @throws ServletException
    */
   private void handleRequest(HttpServletRequest request,
-                             HttpServletResponse response,
-                             Repository repository)
-          throws ServletException, IOException
+    HttpServletResponse response, Repository repository)
+    throws ServletException, IOException
   {
     if (requestListenerUtil.callListeners(request, response, repository))
     {
@@ -262,8 +260,8 @@ public class HgCGIServlet extends HttpServlet
    * @throws ServletException
    */
   private void process(HttpServletRequest request,
-                       HttpServletResponse response, Repository repository)
-          throws IOException, ServletException
+    HttpServletResponse response, Repository repository)
+    throws IOException, ServletException
   {
     String name = repository.getName();
     File directory = handler.getDirectory(repository);
@@ -278,7 +276,7 @@ public class HgCGIServlet extends HttpServlet
     executor.setContentLengthWorkaround(true);
     executor.getEnvironment().set(ENV_REPOSITORY_NAME, name);
     executor.getEnvironment().set(ENV_REPOSITORY_PATH,
-                                  directory.getAbsolutePath());
+      directory.getAbsolutePath());
     executor.getEnvironment().set(ENV_URL, hookManager.createUrl(request));
     executor.getEnvironment().set(ENV_CHALLENGE, hookManager.getChallenge());
     executor.getEnvironment().set(ENV_PYTHON_PATH, pythonPath);
