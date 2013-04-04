@@ -35,6 +35,9 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -46,6 +49,7 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
@@ -55,6 +59,7 @@ import sonia.scm.util.Util;
 import java.io.IOException;
 import java.io.Serializable;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -81,6 +86,8 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    * Constructs ...
    *
    *
+   *
+   * @param userManager
    * @param authenticationHandlerSet
    * @param encryptionHandler
    * @param cacheManager
@@ -88,14 +95,14 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    * @param authenticationListeners
    */
   @Inject
-  public ChainAuthenticatonManager(
+  public ChainAuthenticatonManager(UserManager userManager,
     Set<AuthenticationHandler> authenticationHandlerSet,
     EncryptionHandler encryptionHandler, CacheManager cacheManager,
     Set<AuthenticationListener> authenticationListeners)
   {
     AssertUtil.assertIsNotEmpty(authenticationHandlerSet);
     AssertUtil.assertIsNotNull(cacheManager);
-    this.authenticationHandlerSet = authenticationHandlerSet;
+    this.authenticationHandlers = sort(userManager, authenticationHandlerSet);
     this.encryptionHandler = encryptionHandler;
     this.cache = cacheManager.getCache(String.class,
       AuthenticationCacheValue.class, CACHE_NAME);
@@ -162,7 +169,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
   @Override
   public void close() throws IOException
   {
-    for (AuthenticationHandler authenticator : authenticationHandlerSet)
+    for (AuthenticationHandler authenticator : authenticationHandlers)
     {
       if (logger.isTraceEnabled())
       {
@@ -182,7 +189,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
   @Override
   public void init(SCMContextProvider context)
   {
-    for (AuthenticationHandler authenticator : authenticationHandlerSet)
+    for (AuthenticationHandler authenticator : authenticationHandlers)
     {
       if (logger.isTraceEnabled())
       {
@@ -214,7 +221,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
       logger.trace("start authentication chain for user {}", username);
     }
 
-    for (AuthenticationHandler authenticator : authenticationHandlerSet)
+    for (AuthenticationHandler authenticator : authenticationHandlers)
     {
       if (logger.isTraceEnabled())
       {
@@ -260,6 +267,39 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
     }
 
     return ar;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param userManager
+   * @param authenticationHandlerSet
+   *
+   * @return
+   */
+  @VisibleForTesting
+  private List<AuthenticationHandler> sort(UserManager userManager,
+    Set<AuthenticationHandler> authenticationHandlerSet)
+  {
+    List<AuthenticationHandler> handlers =
+      Lists.newArrayListWithCapacity(authenticationHandlerSet.size());
+
+    String first = Strings.nullToEmpty(userManager.getDefaultType());
+
+    for (AuthenticationHandler handler : authenticationHandlerSet)
+    {
+      if (first.equals(handler.getType()))
+      {
+        handlers.add(0, handler);
+      }
+      else
+      {
+        handlers.add(handler);
+      }
+    }
+
+    return handlers;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -338,7 +378,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Set<AuthenticationHandler> authenticationHandlerSet;
+  private List<AuthenticationHandler> authenticationHandlers;
 
   /** Field description */
   private Cache<String, AuthenticationCacheValue> cache;
