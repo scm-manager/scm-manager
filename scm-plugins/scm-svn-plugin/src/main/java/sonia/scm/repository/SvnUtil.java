@@ -61,6 +61,12 @@ public final class SvnUtil
 {
 
   /**
+   * svn path updated
+   * same as modified ({@link SVNLogEntryPath#TYPE_MODIFIED})?
+   */
+  private static final char TYPE_UPDATED = 'U';
+
+  /**
    * the logger for SvnUtil
    */
   private static final Logger logger = LoggerFactory.getLogger(SvnUtil.class);
@@ -129,10 +135,14 @@ public final class SvnUtil
 
         break;
 
+      case TYPE_UPDATED :
       case SVNLogEntryPath.TYPE_MODIFIED :
         modifications.getModified().add(path);
 
         break;
+
+      default :
+        logger.debug("unknown modification type {}", type);
     }
   }
 
@@ -152,7 +162,7 @@ public final class SvnUtil
       }
       catch (Exception ex)
       {
-        logger.error("could not close svn repository session");
+        logger.error("could not close svn repository session", ex);
       }
     }
   }
