@@ -76,7 +76,7 @@ public class EhConfigurationReaderTest
   public void testDefaultConfiguration()
   {
     EhConfigurationTestReader reader =
-      new EhConfigurationTestReader("cache.001.xml");
+      new EhConfigurationTestReader("ehcache.001.xml");
     Configuration c = createConfiguration(reader);
 
     checkDefaultConfiguration(c);
@@ -92,7 +92,7 @@ public class EhConfigurationReaderTest
   public void testGlobalAttributes()
   {
     EhConfigurationTestReader reader =
-      new EhConfigurationTestReader("cache.006.xml");
+      new EhConfigurationTestReader("ehcache.006.xml");
     Configuration c = createConfiguration(reader);
 
     assertFalse(c.getUpdateCheck());
@@ -108,9 +108,9 @@ public class EhConfigurationReaderTest
   {
     //J-
     EhConfigurationTestReader reader = new EhConfigurationTestReader(
-      "cache.001.xml",
-      Iterators.forArray("cache.002.xml", "cache.003.xml"),
-      "cache.004.xml"
+      "ehcache.001.xml",
+      Iterators.forArray("ehcache.002.xml", "ehcache.003.xml"),
+      "ehcache.004.xml"
     );
     //J+
 
@@ -130,7 +130,7 @@ public class EhConfigurationReaderTest
   public void testMergeWithManualConfiguration()
   {
     EhConfigurationTestReader reader =
-      new EhConfigurationTestReader("cache.001.xml", null, "cache.002.xml");
+      new EhConfigurationTestReader("ehcache.001.xml", null, "ehcache.002.xml");
 
     Configuration c = createConfiguration(reader);
 
@@ -148,8 +148,8 @@ public class EhConfigurationReaderTest
   public void testMergeWithModuleConfigurations()
   {
     EhConfigurationTestReader reader =
-      new EhConfigurationTestReader("cache.001.xml",
-        Iterators.forArray("cache.002.xml", "cache.003.xml"));
+      new EhConfigurationTestReader("ehcache.001.xml",
+        Iterators.forArray("ehcache.002.xml", "ehcache.003.xml"));
 
     Configuration c = createConfiguration(reader);
 
@@ -181,8 +181,8 @@ public class EhConfigurationReaderTest
   {
     //J-
     EhConfigurationTestReader reader = new EhConfigurationTestReader(
-      "cache.001.xml",
-      Iterators.forArray("cache.005.xml")
+      "ehcache.001.xml",
+      Iterators.forArray("ehcache.005.xml")
     );
     //J+
     Configuration c = createConfiguration(reader);
@@ -198,7 +198,7 @@ public class EhConfigurationReaderTest
   public void testOverrideGlobalAttributes()
   {
     EhConfigurationTestReader reader =
-      new EhConfigurationTestReader("cache.006.xml", null, "cache.007.xml");
+      new EhConfigurationTestReader("ehcache.006.xml", null, "ehcache.007.xml");
     Configuration c = createConfiguration(reader);
 
     assertTrue(c.getUpdateCheck());
