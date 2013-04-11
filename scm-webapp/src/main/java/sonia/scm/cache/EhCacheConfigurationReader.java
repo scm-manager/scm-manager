@@ -48,7 +48,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import sonia.scm.SCMContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -103,9 +102,14 @@ public class EhCacheConfigurationReader
   /**
    * Constructs ...
    *
+   *
+   * @param loader
    */
-  public EhCacheConfigurationReader()
+  @VisibleForTesting
+  EhCacheConfigurationReader(CacheConfigurationLoader loader)
   {
+    this.loader = loader;
+
     try
     {
       builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -118,15 +122,21 @@ public class EhCacheConfigurationReader
 
   //~--- methods --------------------------------------------------------------
 
+  public static InputStream read(){
+    return new EhCacheConfigurationReader(new DefaultCacheConfigurationLoader(
+      DEFAULT, MANUAL_RESOURCE, MODULE_RESOURCES)).doRead();
+  }
+  
   /**
    * Method description
    *
    *
    * @return
    */
-  public InputStream read()
+  @VisibleForTesting
+  InputStream doRead()
   {
-    URL defaultConfig = getDefaultResource();
+    URL defaultConfig = loader.getDefaultResource();
 
     if (defaultConfig == null)
     {
@@ -136,14 +146,14 @@ public class EhCacheConfigurationReader
 
     readConfiguration(defaultConfig, true);
 
-    Iterator<URL> it = getModuleResources();
+    Iterator<URL> it = loader.getModuleResources();
 
     while (it.hasNext())
     {
       readConfiguration(it.next(), false);
     }
 
-    File manualFile = getManualFileResource();
+    File manualFile = loader.getManualFileResource();
 
     if (manualFile.exists())
     {
@@ -165,52 +175,6 @@ public class EhCacheConfigurationReader
 
     return createInputStream(doc);
   }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
-  @VisibleForTesting
-  protected URL getDefaultResource()
-  {
-    return EhCacheConfigurationReader.class.getResource(DEFAULT);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @VisibleForTesting
-  protected File getManualFileResource()
-  {
-    return new File(SCMContext.getContext().getBaseDirectory(),
-      MANUAL_RESOURCE);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
-  @VisibleForTesting
-  protected Iterator<URL> getModuleResources()
-  {
-    return CacheConfigurations.findModuleResources(
-      EhCacheConfigurationReader.class, MODULE_RESOURCES);
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -466,6 +430,9 @@ public class EhCacheConfigurationReader
 
   /** Field description */
   private DocumentBuilder builder;
+
+  /** Field description */
+  private CacheConfigurationLoader loader;
 
   /** Field description */
   private Map<Id, Node> nodeMap = Maps.newLinkedHashMap();

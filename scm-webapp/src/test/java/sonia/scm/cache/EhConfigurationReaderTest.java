@@ -33,11 +33,8 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
 import com.google.common.io.Closeables;
-import com.google.common.io.Files;
-import com.google.common.io.Resources;
 
 import net.sf.ehcache.config.CacheConfiguration;
 import net.sf.ehcache.config.Configuration;
@@ -49,15 +46,9 @@ import org.junit.rules.TemporaryFolder;
 
 import static org.junit.Assert.*;
 
-import static org.mockito.Mockito.*;
-
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-
-import java.net.URL;
 
 import java.util.Iterator;
 
@@ -75,13 +66,11 @@ public class EhConfigurationReaderTest
   @Test
   public void testDefaultConfiguration()
   {
-    EhConfigurationTestReader reader =
-      new EhConfigurationTestReader("ehcache.001.xml");
+    EhCacheConfigurationReader reader = createReader("ehcache.001.xml");
     Configuration c = createConfiguration(reader);
 
     checkDefaultConfiguration(c);
     checkCacheConfiguration(c, "sonia.test.cache.001", 1000l, 30l, 60l);
-
   }
 
   /**
@@ -91,8 +80,7 @@ public class EhConfigurationReaderTest
   @Test
   public void testGlobalAttributes()
   {
-    EhConfigurationTestReader reader =
-      new EhConfigurationTestReader("ehcache.006.xml");
+    EhCacheConfigurationReader reader = createReader("ehcache.006.xml");
     Configuration c = createConfiguration(reader);
 
     assertFalse(c.getUpdateCheck());
@@ -107,7 +95,7 @@ public class EhConfigurationReaderTest
   public void testMergeAndOverride()
   {
     //J-
-    EhConfigurationTestReader reader = new EhConfigurationTestReader(
+    EhCacheConfigurationReader reader = createReader(
       "ehcache.001.xml",
       Iterators.forArray("ehcache.002.xml", "ehcache.003.xml"),
       "ehcache.004.xml"
@@ -129,8 +117,8 @@ public class EhConfigurationReaderTest
   @Test
   public void testMergeWithManualConfiguration()
   {
-    EhConfigurationTestReader reader =
-      new EhConfigurationTestReader("ehcache.001.xml", null, "ehcache.002.xml");
+    EhCacheConfigurationReader reader = createReader("ehcache.001.xml", null,
+                                          "ehcache.002.xml");
 
     Configuration c = createConfiguration(reader);
 
@@ -147,9 +135,9 @@ public class EhConfigurationReaderTest
   @Test
   public void testMergeWithModuleConfigurations()
   {
-    EhConfigurationTestReader reader =
-      new EhConfigurationTestReader("ehcache.001.xml",
-        Iterators.forArray("ehcache.002.xml", "ehcache.003.xml"));
+    EhCacheConfigurationReader reader = createReader("ehcache.001.xml",
+                                          Iterators.forArray("ehcache.002.xml",
+                                            "ehcache.003.xml"));
 
     Configuration c = createConfiguration(reader);
 
@@ -167,9 +155,9 @@ public class EhConfigurationReaderTest
   @Test(expected = IllegalStateException.class)
   public void testMissingDefaultConfiguration()
   {
-    EhConfigurationTestReader reader = new EhConfigurationTestReader();
+    EhCacheConfigurationReader reader = createReader();
 
-    reader.read();
+    reader.doRead();
   }
 
   /**
@@ -180,7 +168,7 @@ public class EhConfigurationReaderTest
   public void testOverrideDefaultConfiguration()
   {
     //J-
-    EhConfigurationTestReader reader = new EhConfigurationTestReader(
+    EhCacheConfigurationReader reader = createReader(
       "ehcache.001.xml",
       Iterators.forArray("ehcache.005.xml")
     );
@@ -197,8 +185,8 @@ public class EhConfigurationReaderTest
   @Test
   public void testOverrideGlobalAttributes()
   {
-    EhConfigurationTestReader reader =
-      new EhConfigurationTestReader("ehcache.006.xml", null, "ehcache.007.xml");
+    EhCacheConfigurationReader reader = createReader("ehcache.006.xml", null,
+                                          "ehcache.007.xml");
     Configuration c = createConfiguration(reader);
 
     assertTrue(c.getUpdateCheck());
@@ -270,7 +258,7 @@ public class EhConfigurationReaderTest
 
     try
     {
-      content = reader.read();
+      content = reader.doRead();
       config = ConfigurationFactory.parseConfiguration(content);
     }
     finally
@@ -283,178 +271,67 @@ public class EhConfigurationReaderTest
     return config;
   }
 
-  //~--- inner classes --------------------------------------------------------
-
   /**
-   * Class description
+   * Method description
    *
    *
-   * @version        Enter version here..., 13/03/19
-   * @author         Enter your name here...
+   * @param defaultConfiguration
+   *
+   * @return
    */
-  private class EhConfigurationTestReader extends EhCacheConfigurationReader
+  private EhCacheConfigurationReader createReader(String defaultConfiguration)
   {
-
-    /**
-     * Constructs ...
-     *
-     */
-    public EhConfigurationTestReader() {}
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param defaultConfiguration
-     */
-    public EhConfigurationTestReader(String defaultConfiguration)
-    {
-      this.defaultConfiguration = defaultConfiguration;
-    }
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param defaultConfiguration
-     * @param moduleConfigurations
-     */
-    public EhConfigurationTestReader(String defaultConfiguration,
-      Iterator<String> moduleConfigurations)
-    {
-      this.defaultConfiguration = defaultConfiguration;
-      this.moduleConfigurations = moduleConfigurations;
-    }
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param defaultConfiguration
-     * @param moduleConfigurations
-     * @param manualConfiguration
-     */
-    public EhConfigurationTestReader(String defaultConfiguration,
-      Iterator<String> moduleConfigurations, String manualConfiguration)
-    {
-      this.defaultConfiguration = defaultConfiguration;
-      this.moduleConfigurations = moduleConfigurations;
-      this.manualConfiguration = manualConfiguration;
-    }
-
-    //~--- get methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    @Override
-    public URL getDefaultResource()
-    {
-      URL url = null;
-
-      if (defaultConfiguration != null)
-      {
-        url = getResource(defaultConfiguration);
-      }
-
-      return url;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    @Override
-    public Iterator<URL> getModuleResources()
-    {
-      Iterator<URL> urlIterator;
-
-      if (moduleConfigurations == null)
-      {
-        urlIterator = Iterators.emptyIterator();
-      }
-      else
-      {
-        urlIterator = Iterators.transform(moduleConfigurations,
-          new Function<String, URL>()
-        {
-
-          @Override
-          public URL apply(String resource)
-          {
-            return getResource(resource);
-          }
-        });
-      }
-
-      return urlIterator;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    @Override
-    protected File getManualFileResource()
-    {
-      File file;
-
-      if (manualConfiguration == null)
-      {
-        file = mock(File.class);
-        when(file.exists()).thenReturn(Boolean.FALSE);
-      }
-      else
-      {
-        try
-        {
-          file = tempFolder.newFile();
-
-          URL manual = getResource(manualConfiguration);
-
-          Files.copy(Resources.newInputStreamSupplier(manual), file);
-        }
-        catch (IOException ex)
-        {
-          throw new RuntimeException("could not create manual config file", ex);
-        }
-      }
-
-      return file;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @param name
-     *
-     * @return
-     */
-    private URL getResource(String name)
-    {
-      return Resources.getResource("sonia/scm/cache/".concat(name));
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private String defaultConfiguration;
-
-    /** Field description */
-    private String manualConfiguration;
-
-    /** Field description */
-    private Iterator<String> moduleConfigurations;
+    return new EhCacheConfigurationReader(
+      new CacheConfigurationTestLoader(tempFolder, defaultConfiguration));
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param defaultConfiguration
+   * @param moduleConfiguration
+   * @param manualConfiguration
+   *
+   * @return
+   */
+  private EhCacheConfigurationReader createReader(String defaultConfiguration,
+    Iterator<String> moduleConfiguration, String manualConfiguration)
+  {
+    return new EhCacheConfigurationReader(
+      new CacheConfigurationTestLoader(
+        tempFolder, defaultConfiguration, moduleConfiguration,
+          manualConfiguration));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param defaultConfiguration
+   * @param moduleConfiguration
+   *
+   * @return
+   */
+  private EhCacheConfigurationReader createReader(String defaultConfiguration,
+    Iterator<String> moduleConfiguration)
+  {
+    return new EhCacheConfigurationReader(
+      new CacheConfigurationTestLoader(
+        tempFolder, defaultConfiguration, moduleConfiguration));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private EhCacheConfigurationReader createReader()
+  {
+    return new EhCacheConfigurationReader(
+      new CacheConfigurationTestLoader(tempFolder));
+  }
 
   //~--- fields ---------------------------------------------------------------
 

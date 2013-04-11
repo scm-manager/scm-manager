@@ -74,9 +74,7 @@ public class EhCacheManager implements CacheManager
 
     try
     {
-      EhCacheConfigurationReader reader = new EhCacheConfigurationReader();
-
-      stream = reader.read();
+      stream = EhCacheConfigurationReader.read();
       cacheManager = new net.sf.ehcache.CacheManager(stream);
     }
     finally

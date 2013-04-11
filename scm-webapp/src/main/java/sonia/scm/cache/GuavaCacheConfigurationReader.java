@@ -40,8 +40,6 @@ import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.SCMContext;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -84,9 +82,14 @@ public class GuavaCacheConfigurationReader
   /**
    * Constructs ...
    *
+   *
+   * @param loader
    */
-  private GuavaCacheConfigurationReader()
+  @VisibleForTesting
+  GuavaCacheConfigurationReader(CacheConfigurationLoader loader)
   {
+    this.loader = loader;
+
     try
     {
       this.context =
@@ -109,21 +112,9 @@ public class GuavaCacheConfigurationReader
    */
   public static GuavaCacheManagerConfiguration read()
   {
-    return new GuavaCacheConfigurationReader().doRead();
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @VisibleForTesting
-  protected URL getDefaultResource()
-  {
-    return GuavaCacheConfigurationReader.class.getResource(DEFAULT);
+    return new GuavaCacheConfigurationReader(
+      new DefaultCacheConfigurationLoader(
+        DEFAULT, MANUAL_RESOURCE, MODULE_RESOURCES)).doRead();
   }
 
   /**
@@ -133,59 +124,9 @@ public class GuavaCacheConfigurationReader
    * @return
    */
   @VisibleForTesting
-  protected File getManualFileResource()
+  GuavaCacheManagerConfiguration doRead()
   {
-    return new File(SCMContext.getContext().getBaseDirectory(),
-      MANUAL_RESOURCE);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
-  @VisibleForTesting
-  protected Iterator<URL> getModuleResources()
-  {
-    return CacheConfigurations.findModuleResources(
-      EhCacheConfigurationReader.class, MODULE_RESOURCES);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param caches
-   *
-   * @return
-   */
-  private Map<String, GuavaNamedCacheConfiguration> createNamedCacheMap(
-    List<GuavaNamedCacheConfiguration> caches)
-  {
-    Map<String, GuavaNamedCacheConfiguration> map = Maps.newLinkedHashMap();
-
-    for (GuavaNamedCacheConfiguration ncc : caches)
-    {
-      map.put(ncc.getName(), ncc);
-    }
-
-    return map;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private GuavaCacheManagerConfiguration doRead()
-  {
-    URL defaultConfigUrl = getDefaultResource();
+    URL defaultConfigUrl = loader.getDefaultResource();
 
     if (defaultConfigUrl == null)
     {
@@ -196,7 +137,7 @@ public class GuavaCacheConfigurationReader
     GuavaCacheManagerConfiguration config = readConfiguration(defaultConfigUrl,
                                               true);
 
-    Iterator<URL> it = getModuleResources();
+    Iterator<URL> it = loader.getModuleResources();
 
     while (it.hasNext())
     {
@@ -209,7 +150,7 @@ public class GuavaCacheConfigurationReader
       }
     }
 
-    File manualFile = getManualFileResource();
+    File manualFile = loader.getManualFileResource();
 
     if (manualFile.exists())
     {
@@ -231,6 +172,27 @@ public class GuavaCacheConfigurationReader
     }
 
     return config;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param caches
+   *
+   * @return
+   */
+  private Map<String, GuavaNamedCacheConfiguration> createNamedCacheMap(
+    List<GuavaNamedCacheConfiguration> caches)
+  {
+    Map<String, GuavaNamedCacheConfiguration> map = Maps.newLinkedHashMap();
+
+    for (GuavaNamedCacheConfiguration ncc : caches)
+    {
+      map.put(ncc.getName(), ncc);
+    }
+
+    return map;
   }
 
   /**
@@ -305,4 +267,7 @@ public class GuavaCacheConfigurationReader
 
   /** Field description */
   private JAXBContext context;
+
+  /** Field description */
+  private CacheConfigurationLoader loader;
 }
