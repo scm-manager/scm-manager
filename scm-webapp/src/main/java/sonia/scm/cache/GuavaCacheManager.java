@@ -84,6 +84,8 @@ public class GuavaCacheManager implements CacheManager
 
     for (GuavaNamedCacheConfiguration ncc : config.getCaches())
     {
+      logger.debug("create cache {} from configured configuration {}",
+        ncc.getName(), ncc);
       cacheMap.put(ncc.getName(), new GuavaCache(ncc));
     }
   }
