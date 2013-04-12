@@ -31,6 +31,10 @@
 
 package sonia.scm.cache;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;
@@ -39,6 +43,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -51,6 +56,34 @@ public class GuavaCacheConfiguration implements Serializable
 
   /** Field description */
   private static final long serialVersionUID = -8734373158089010603L;
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("concurrencyLevel", concurrencyLevel)
+                  .add("copyStrategy", copyStrategy)
+                  .add("expireAfterAccess", expireAfterAccess)
+                  .add("expireAfterWrite", expireAfterWrite)
+                  .add("initialCapacity", initialCapacity)
+                  .add("maximumSize", maximumSize)
+                  .add("maximumWeight", maximumWeight)
+                  .add("recordStats", recordStats)
+                  .add("softValues", softValues)
+                  .add("weakKeys", weakKeys)
+                  .add("weakValues", weakValues)
+                  .omitNullValues().toString();
+    //J+
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -183,6 +216,7 @@ public class GuavaCacheConfiguration implements Serializable
 
   /** Field description */
   @XmlAttribute
+  @XmlJavaTypeAdapter(XmlCopyStrategyAdapter.class)
   private CopyStrategy copyStrategy;
 
   /** Field description */

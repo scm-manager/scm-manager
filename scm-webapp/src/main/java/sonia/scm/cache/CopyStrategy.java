@@ -48,18 +48,22 @@ import java.util.Locale;
 public enum CopyStrategy
 {
 
-  NONE(false, false), READ(true, false), WRITE(false, true),
-    READWRITE(true, true);
+  NONE("none", false, false), READ("read", true, false),
+    WRITE("write", false, true), READWRITE("read-write", true, true);
 
   /**
    * Constructs ...
    *
    *
+   *
+   * @param configName
    * @param copyOnRead
    * @param copyOnWrite
    */
-  private CopyStrategy(boolean copyOnRead, boolean copyOnWrite)
+  private CopyStrategy(String configName, boolean copyOnRead,
+    boolean copyOnWrite)
   {
+    this.configName = configName;
     this.copyOnRead = copyOnRead;
     this.copyOnWrite = copyOnWrite;
   }
@@ -111,6 +115,21 @@ public enum CopyStrategy
       : object;
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getConfigName()
+  {
+    return configName;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
   /**
    * Method description
    *
@@ -138,6 +157,9 @@ public enum CopyStrategy
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String configName;
 
   /** Field description */
   private boolean copyOnRead;
