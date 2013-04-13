@@ -366,6 +366,13 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   },
 
   resetPanel: function(){
+    Ext.getCmp('repoRmButton').setDisabled(true);
+    if (state.clientConfig.enableRepositoryArchive){
+      var archiveBt = Ext.getCmp('repoArchiveButton');
+      archiveBt.setText(this.archiveText);
+      archiveBt.setDisabled(true);
+    }
+    this.getGrid().getSelectionModel().clearSelections();
     Sonia.repository.setEditPanel(Sonia.repository.DefaultPanel);
   },
 
@@ -388,7 +395,6 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
   
   repositoryCreated: function(item){
     var grid = this.getGrid();
-    this.clearRepositoryFilter(grid);
     
     grid.reload(function(){
       if (debug){
