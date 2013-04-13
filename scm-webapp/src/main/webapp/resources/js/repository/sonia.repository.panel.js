@@ -329,8 +329,8 @@ Sonia.repository.Panel = Ext.extend(Sonia.rest.Panel, {
       }
 
       var url = restUrl + 'repositories/' + item.id + '.json';
-      this.executeRemoteCall(this.archiveTitleText, 
-        String.format(this.archiveMsgText, item.name), 
+      this.executeRemoteCall(this.removeTitleText, 
+        String.format(this.removeMsgText, item.name), 
         'DELETE', url, null, function(result){
           main.handleFailure(
             result.status, 
