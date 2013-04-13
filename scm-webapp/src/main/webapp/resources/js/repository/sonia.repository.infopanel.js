@@ -47,7 +47,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   initComponent: function(){
     
     var contact = '';
-    if ( this.item.contact != null ){
+    if ( this.item.contact !== null ){
       contact = String.format(this.mailTemplate, this.item.contact);
     }
     
@@ -92,7 +92,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
         style: 'font-size: 12px'
       },
       items: items
-    }
+    };
 
     this.modifyDefaultConfig(config);
     
@@ -106,7 +106,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   
   getRepositoryUrlWithUsername: function(){
     var uri = Sonia.repository.createUrlFromObject(this.item);
-    if ( state.user.name != 'anonymous' ){
+    if ( state.user.name !== 'anonymous' ){
       var index = uri.indexOf("://");
       if ( index > 0 ){
         index += 3;
@@ -120,7 +120,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
     var text = null;
     for ( var i=0; i<state.repositoryTypes.length; i++ ){
       var type = state.repositoryTypes[i];
-      if ( type.name == t ){
+      if ( type.name === t ){
         text = type.displayName + " (" + t + ")";
         break;
       }
@@ -157,7 +157,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   },
 
   openChangesetViewer: function(changesetViewer){
-    if ( changesetViewer == null ){
+    if ( changesetViewer === null ){
       changesetViewer = this.createChangesetViewer();
     }
     main.addTab(changesetViewer);
