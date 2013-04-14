@@ -143,6 +143,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import sonia.scm.cache.GuavaCacheManager;
+import sonia.scm.security.DefaultSecuritySystem;
+import sonia.scm.security.SecuritySystem;
 
 /**
  *
@@ -271,6 +273,7 @@ public class ScmServletModule extends ServletModule
     bind(AuthenticationManager.class, ChainAuthenticatonManager.class);
     bind(SecurityContext.class).to(BasicSecurityContext.class);
     bind(WebSecurityContext.class).to(BasicSecurityContext.class);
+    bind(SecuritySystem.class).to(DefaultSecuritySystem.class);
     bind(AdministrationContext.class, DefaultAdministrationContext.class);
 
     // bind cache

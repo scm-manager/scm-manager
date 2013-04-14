@@ -459,9 +459,16 @@ public class ScmRealmTest
       AuthenticationResult.NOT_FOUND
     );
     
+    SecuritySystem securitySystem = mock(SecuritySystem.class);
+    when(
+      securitySystem.getConfiguration()
+    ).thenReturn(
+      new SecurityConfiguration()
+    );
 
     return new ScmRealm(
       new ScmConfiguration(),
+      securitySystem,
       new MapCacheManager(),
       userManager,
       groupManager,
