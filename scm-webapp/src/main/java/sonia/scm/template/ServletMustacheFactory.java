@@ -106,6 +106,11 @@ public class ServletMustacheFactory extends DefaultMustacheFactory
           resourceName);
       }
 
+      if (resourceName.startsWith("/"))
+      {
+        resourceName = resourceName.substring(1);
+      }
+
       ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
       if (classLoader == null)
@@ -120,7 +125,7 @@ public class ServletMustacheFactory extends DefaultMustacheFactory
     {
       if (logger.isTraceEnabled())
       {
-        logger.trace("found resoruce for {}, return reader", resourceName);
+        logger.trace("found resource for {}, return reader", resourceName);
       }
 
       reader = new BufferedReader(new InputStreamReader(is, Charsets.UTF_8));
