@@ -80,7 +80,7 @@ public class GitRepositoryViewer
 
   /** Field description */
   public static final String RESOURCE_GITINDEX =
-    "/sonia/scm/git.index.mustache";
+    "sonia/scm/git.index.mustache";
 
   /** Field description */
   private static final int CHANGESET_PER_BRANCH = 10;
