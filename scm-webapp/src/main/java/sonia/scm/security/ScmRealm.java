@@ -74,6 +74,7 @@ import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryEvent;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserEvent;
@@ -95,7 +96,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.repository.RepositoryManager;
 
 /**
  *
@@ -134,6 +134,7 @@ public class ScmRealm extends AuthorizingRealm
    * @param repositoryDAO
    * @param userDAO
    * @param authenticator
+   * @param manager
    * @param requestProvider
    * @param responseProvider
    */
@@ -141,8 +142,7 @@ public class ScmRealm extends AuthorizingRealm
   public ScmRealm(ScmConfiguration configuration, CacheManager cacheManager,
     UserManager userManager, GroupManager groupManager,
     RepositoryDAO repositoryDAO, UserDAO userDAO,
-    AuthenticationManager authenticator,
-    RepositoryManager manager,
+    AuthenticationManager authenticator, RepositoryManager manager,
     Provider<HttpServletRequest> requestProvider,
     Provider<HttpServletResponse> responseProvider)
   {
@@ -624,6 +624,9 @@ public class ScmRealm extends AuthorizingRealm
   private Set<String> createGroupSet(AuthenticationResult ar)
   {
     Set<String> groupSet = Sets.newHashSet();
+
+    // add group for all authenticated users
+    groupSet.add(GroupNames.AUTHENTICATED);
 
     // load external groups
     Collection<String> extGroups = ar.getGroups();

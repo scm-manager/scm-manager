@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -52,6 +53,12 @@ import java.util.Iterator;
  */
 public final class GroupNames implements Serializable, Iterable<String>
 {
+
+  /**
+   * Group for all authenticated users
+   * @since 1.31
+   */
+  public static final String AUTHENTICATED = "_authenticated";
 
   /** Field description */
   private static final long serialVersionUID = 8615685985213897947L;
