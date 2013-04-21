@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -305,8 +306,12 @@ public class ScmRealmTest
 
     assertNotNull(groups);
     assertFalse(groups.getCollection().isEmpty());
-    assertEquals(4, groups.getCollection().size());
-    assertThat(groups, containsInAnyOrder("g1", "g2", "g3", "g4"));
+    assertEquals(5, groups.getCollection().size());
+    //J-
+    assertThat(groups,
+      containsInAnyOrder("g1", "g2", "g3", "g4", GroupNames.AUTHENTICATED)
+    );
+    //J+
   }
 
   /**
