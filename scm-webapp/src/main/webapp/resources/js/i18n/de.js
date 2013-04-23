@@ -88,7 +88,8 @@ if (Sonia.login.Form){
     WaitMsgText: 'Übertrage Daten...',
     failedMsgText: 'Anmeldung fehlgeschlagen!',
     failedDescriptionText: 'Falscher Benutzername, Passwort oder sie haben nicht\n\
-                             genug Berechtigungen. Bitte versuchen sie es erneut.'
+                             genug Berechtigungen. Bitte versuchen sie es erneut.',
+    rememberMeText: 'Angemeldet bleiben'
   });
 
 }

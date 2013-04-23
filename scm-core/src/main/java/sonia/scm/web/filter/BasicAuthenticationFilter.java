@@ -156,7 +156,7 @@ public class BasicAuthenticationFilter extends HttpFilter
         }
       }
     }
-    else if (subject.isAuthenticated())
+    else if (subject.isAuthenticated() || subject.isRemembered())
     {
       if (logger.isTraceEnabled())
       {
