@@ -62,6 +62,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.security.Role;
 
 /**
  *
@@ -116,7 +117,8 @@ public final class MockUtil
     when(subject.isPermittedAll(anyCollectionOf(Permission.class))).thenReturn(
       Boolean.TRUE);
     when(subject.isPermittedAll()).thenReturn(Boolean.TRUE);
-    when(subject.hasRole("admin")).thenReturn(Boolean.TRUE);
+    when(subject.hasRole(Role.ADMIN)).thenReturn(Boolean.TRUE);
+    when(subject.hasRole(Role.USER)).thenReturn(Boolean.TRUE);
 
     PrincipalCollection collection = mock(PrincipalCollection.class);
 
