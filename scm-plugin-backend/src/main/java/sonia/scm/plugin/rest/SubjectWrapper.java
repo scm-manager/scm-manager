@@ -73,7 +73,7 @@ public class SubjectWrapper
   {
     String name;
 
-    if (subject.isAuthenticated())
+    if (subject.isAuthenticated() || subject.isRemembered())
     {
       name = (String) subject.getPrincipal();
     }
@@ -104,7 +104,7 @@ public class SubjectWrapper
    */
   public boolean isAuthenticated()
   {
-    return subject.isAuthenticated();
+    return subject.isAuthenticated() || subject.isRemembered();
   }
 
   //~--- fields ---------------------------------------------------------------

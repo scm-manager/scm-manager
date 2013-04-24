@@ -111,7 +111,7 @@ public class SecurityFilter extends HttpFilter
         chain.doFilter(new SecurityHttpServletRequestWrapper(request,
           getUser(subject)), response);
       }
-      else if (subject.isAuthenticated())
+      else if (subject.isAuthenticated() || subject.isRemembered())
       {
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
       }
@@ -142,8 +142,7 @@ public class SecurityFilter extends HttpFilter
    */
   protected boolean hasPermission(Subject subject)
   {
-    return ((configuration != null)
-      && configuration.isAnonymousAccessEnabled()) || subject.isAuthenticated();
+    return ((configuration != null) && configuration.isAnonymousAccessEnabled()) || subject.isAuthenticated() || subject.isRemembered();
   }
 
   /**
@@ -158,7 +157,7 @@ public class SecurityFilter extends HttpFilter
   {
     User user = null;
 
-    if (subject.isAuthenticated())
+    if (subject.isAuthenticated() || subject.isRemembered())
     {
       user = subject.getPrincipals().oneByType(User.class);
     }
