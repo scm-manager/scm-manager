@@ -242,7 +242,7 @@ public class DefaultAdministrationContext implements AdministrationContext
     {
       String username = null;
 
-      if (subject.isAuthenticated())
+      if (subject.hasRole(Role.USER))
       {
         username = principal;
       }

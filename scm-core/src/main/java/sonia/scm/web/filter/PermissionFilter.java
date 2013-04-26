@@ -65,6 +65,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.security.Role;
 
 /**
  * Abstract http filter to check repository permissions.
@@ -255,7 +256,7 @@ public abstract class PermissionFilter extends HttpFilter
   private void sendAccessDenied(HttpServletResponse response, Subject subject)
     throws IOException
   {
-    if (subject.isAuthenticated())
+    if (subject.hasRole(Role.USER))
     {
       response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }

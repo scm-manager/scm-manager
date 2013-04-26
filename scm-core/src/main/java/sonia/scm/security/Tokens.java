@@ -69,12 +69,33 @@ public final class Tokens
    * @param username username of the user to authenticate
    * @param password password of the user to authenticate
    *
-   * @return
+   * @return authentication token
    */
   public static AuthenticationToken createAuthenticationToken(
     HttpServletRequest request, String username, String password)
   {
-    return new UsernamePasswordToken(username, password,
+    return createAuthenticationToken(request, username, password, false);
+  }
+
+  /**
+   * Build an {@link AuthenticationToken} for use with
+   * {@link Subject#login(org.apache.shiro.authc.AuthenticationToken)}.
+   *
+   *
+   * @param request servlet request
+   * @param username username of the user to authenticate
+   * @param password password of the user to authenticate
+   * @param rememberMe true to remember the user across sessions
+   *
+   * @return authentication token
+   *
+   * @since 1.31
+   */
+  public static AuthenticationToken createAuthenticationToken(
+    HttpServletRequest request, String username, String password,
+    boolean rememberMe)
+  {
+    return new UsernamePasswordToken(username, password, rememberMe,
       request.getRemoteAddr());
   }
 }

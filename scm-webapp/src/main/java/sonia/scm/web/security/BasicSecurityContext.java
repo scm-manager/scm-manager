@@ -227,7 +227,7 @@ public class BasicSecurityContext implements WebSecurityContext
     T result = null;
     Subject subject = SecurityUtils.getSubject();
 
-    if (subject.isAuthenticated())
+    if (subject.isAuthenticated() ||  subject.isRemembered())
     {
       PrincipalCollection pc = subject.getPrincipals();
 

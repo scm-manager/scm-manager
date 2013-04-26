@@ -87,7 +87,7 @@ public final class SecurityUtil
   {
     Subject subject = SecurityUtils.getSubject();
 
-    if (!subject.isAuthenticated())
+    if (!subject.hasRole(Role.USER))
     {
       throw new ScmSecurityException("user is not authenticated");
     }

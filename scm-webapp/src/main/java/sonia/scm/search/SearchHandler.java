@@ -55,6 +55,7 @@ import java.util.Collection;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
+import sonia.scm.security.Role;
 
 /**
  *
@@ -112,7 +113,7 @@ public class SearchHandler<T>
   {
     Subject subject = SecurityUtils.getSubject();
 
-    if (!subject.isAuthenticated())
+    if (!subject.hasRole(Role.USER))
     {
       throw new ScmSecurityException("Authentication is required");
     }

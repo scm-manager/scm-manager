@@ -183,7 +183,7 @@ public final class PermissionUtil
 
     Subject subject = SecurityUtils.getSubject();
 
-    if (subject.isAuthenticated())
+    if (subject.isAuthenticated() || subject.isRemembered())
     {
       String username = subject.getPrincipal().toString();
 

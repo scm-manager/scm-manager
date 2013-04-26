@@ -65,6 +65,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import sonia.scm.security.Role;
 
 /**
  *
@@ -137,7 +138,7 @@ public class ChangePasswordResource
     Response response = null;
     Subject subject = SecurityUtils.getSubject();
 
-    if (!subject.isAuthenticated())
+    if (!subject.hasRole(Role.USER))
     {
       throw new ScmSecurityException("user is not authenticated");
     }

@@ -68,6 +68,7 @@ import java.util.Collections;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -131,6 +132,7 @@ public class AuthenticationResource
    * @param response the current http response
    * @param username the username for the authentication
    * @param password the password for the authentication
+   * @param rememberMe true to remember the user across sessions
    *
    * @return
    */
@@ -139,7 +141,8 @@ public class AuthenticationResource
   @TypeHint(ScmState.class)
   public ScmState authenticate(@Context HttpServletRequest request,
     @FormParam("username") String username,
-    @FormParam("password") String password)
+    @FormParam("password") String password, @FormParam("rememberMe")
+  @DefaultValue("false") boolean rememberMe)
   {
     ScmState state = null;
 
@@ -148,7 +151,7 @@ public class AuthenticationResource
     try
     {
       subject.login(Tokens.createAuthenticationToken(request, username,
-        password));
+        password, rememberMe));
       state = createState(subject);
     }
     catch (AuthenticationException ex)
@@ -253,11 +256,16 @@ public class AuthenticationResource
     Response response = null;
     Subject subject = SecurityUtils.getSubject();
 
-    if (subject.isAuthenticated())
+    if (subject.isAuthenticated() || subject.isRemembered())
     {
       if (logger.isDebugEnabled())
       {
-        logger.debug("return state for user {}", subject.getPrincipal());
+        String auth = subject.isRemembered()
+          ? "remembered"
+          : "authenticated";
+
+        logger.debug("return state for {} user {}", auth,
+          subject.getPrincipal());
       }
 
       ScmState state = createState(subject);

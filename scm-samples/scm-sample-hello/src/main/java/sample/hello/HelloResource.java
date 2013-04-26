@@ -66,7 +66,7 @@ public class HelloResource
     Subject subject = SecurityUtils.getSubject();
     String displayName = "Unknown";
 
-    if (subject.isAuthenticated())
+    if (subject.isAuthenticated() || subject.isRemembered())
     {
       displayName =
         subject.getPrincipals().oneByType(User.class).getDisplayName();
