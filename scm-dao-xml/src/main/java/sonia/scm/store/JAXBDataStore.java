@@ -61,9 +61,6 @@ import javax.xml.bind.Marshaller;
 public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
 {
 
-  /** Field description */
-  private static final String SUFFIX = ".xml";
-
   /**
    * the logger for JAXBDataStore
    */
@@ -82,7 +79,7 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
    */
   public JAXBDataStore(KeyGenerator keyGenerator, Class<T> type, File directory)
   {
-    super(directory, SUFFIX);
+    super(directory, StoreConstants.FILE_EXTENSION);
     this.keyGenerator = keyGenerator;
 
     try
