@@ -33,17 +33,26 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.store.Store;
-import sonia.scm.store.StoreFactory;
+import sonia.scm.store.ConfigurationEntryStore;
+import sonia.scm.store.ConfigurationEntryStoreFactory;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
+ * TODO add events
  *
  * @author Sebastian Sdorra
  * @since 1.31
@@ -64,9 +73,73 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @param storeFactory
    */
   @Inject
-  public DefaultSecuritySystem(StoreFactory storeFactory)
+  public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory)
   {
-    store = storeFactory.getStore(SecurityConfiguration.class, NAME);
+    store = storeFactory.getStore(AssignedPermission.class, NAME);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param permission
+   *
+   * @return
+   */
+  @Override
+  public StoredAssignedPermission addPermission(AssignedPermission permission)
+  {
+    assertIsAdmin();
+
+    String id = store.put(permission);
+
+    return new StoredAssignedPermission(id, permission);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param permission
+   */
+  @Override
+  public void deletePermission(StoredAssignedPermission permission)
+  {
+    assertIsAdmin();
+    deletePermission(permission.getId());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   */
+  @Override
+  public void deletePermission(String id)
+  {
+    assertIsAdmin();
+    store.remove(id);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param permission
+   */
+  @Override
+  public void modifyPermission(StoredAssignedPermission permission)
+  {
+    assertIsAdmin();
+
+    synchronized (store)
+    {
+      store.remove(permission.getId());
+      store.put(permission.getId(), new AssignedPermission(permission));
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -78,16 +151,48 @@ public class DefaultSecuritySystem implements SecuritySystem
    * @return
    */
   @Override
-  public SecurityConfiguration getConfiguration()
+  public List<StoredAssignedPermission> getAllPermissions()
   {
-    SecurityConfiguration configuration = store.get();
+    return getPermissions(null);
+  }
 
-    if (configuration == null)
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public List<PermissionDescriptor> getAvailablePermissions()
+  {
+
+    // TODO
+    return Collections.EMPTY_LIST;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param predicate
+   *
+   * @return
+   */
+  @Override
+  public List<StoredAssignedPermission> getPermissions(
+    Predicate<AssignedPermission> predicate)
+  {
+    Builder<StoredAssignedPermission> permissions = ImmutableList.builder();
+
+    for (Entry<String, AssignedPermission> e : store.getAll().entrySet())
     {
-      configuration = new SecurityConfiguration();
+      if ((predicate == null) || predicate.apply(e.getValue()))
+      {
+        permissions.add(new StoredAssignedPermission(e.getKey(), e.getValue()));
+      }
     }
 
-    return configuration;
+    return permissions.build();
   }
 
   /**
@@ -99,34 +204,24 @@ public class DefaultSecuritySystem implements SecuritySystem
   @Override
   public PrincipalCollection getSystemAccount()
   {
-    throw new UnsupportedOperationException("Not supported yet.");    // To change body of generated methods, choose Tools | Templates.
+
+    // TODO
+    throw new UnsupportedOperationException("Not supported yet.");
   }
 
-  //~--- set methods ----------------------------------------------------------
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
-   *
-   * @param newConfiguration
    */
-  @Override
-  public void setConfiguration(SecurityConfiguration newConfiguration)
+  private void assertIsAdmin()
   {
     SecurityUtils.getSubject().checkRole(Role.ADMIN);
-
-    SecurityConfiguration oldConfiguration = store.get();
-
-    store.set(newConfiguration);
-    //J-
-    ScmEventBus.getInstance().post(
-      new SecurityConfigurationChangedEvent(oldConfiguration, newConfiguration)
-    );
-    //J+
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Store<SecurityConfiguration> store;
+  private final ConfigurationEntryStore<AssignedPermission> store;
 }

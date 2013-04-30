@@ -36,6 +36,7 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
@@ -195,23 +196,6 @@ public class ScmRealm extends AuthorizingRealm
 
       cache.clear();
     }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param event
-   */
-  @Subscribe
-  public void onEvent(SecurityConfigurationChangedEvent event)
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("clear cache, because security configuration has changed");
-    }
-
-    cache.clear();
   }
 
   /**
@@ -503,7 +487,8 @@ public class ScmRealm extends AuthorizingRealm
    *
    * @return
    */
-  private List<String> collectGlobalPermissions(User user, GroupNames groups)
+  private List<String> collectGlobalPermissions(final User user,
+    final GroupNames groups)
   {
     if (logger.isTraceEnabled())
     {
@@ -512,21 +497,27 @@ public class ScmRealm extends AuthorizingRealm
 
     List<String> permissions = Lists.newArrayList();
 
-    List<GlobalPermission> globalPermissions =
-      securitySystem.getConfiguration().getGlobalPermissions();
-
-    for (GlobalPermission gp : globalPermissions)
+    List<StoredAssignedPermission> globalPermissions =
+      securitySystem.getPermissions(new Predicate<AssignedPermission>()
     {
-      if (isUserPermission(user, groups, gp))
-      {
-        if (logger.isTraceEnabled())
-        {
-          logger.trace("add permission {} for user {}", gp.getPermission(),
-            user.getName());
-        }
 
-        permissions.add(gp.getPermission());
+      @Override
+      public boolean apply(AssignedPermission input)
+      {
+        return isUserPermission(user, groups, input);
       }
+    });
+
+    for (StoredAssignedPermission gp : globalPermissions)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("add permission {} for user {}", gp.getPermission(),
+          user.getName());
+      }
+
+      permissions.add(gp.getPermission());
+
     }
 
     return permissions;
