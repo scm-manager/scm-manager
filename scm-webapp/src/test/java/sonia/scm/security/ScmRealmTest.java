@@ -30,10 +30,12 @@
  */
 
 
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provider;
@@ -48,6 +50,8 @@ import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.PrincipalCollection;
 
 import org.junit.Test;
+
+import org.mockito.Mockito;
 
 import sonia.scm.cache.MapCacheManager;
 import sonia.scm.config.ScmConfiguration;
@@ -75,6 +79,7 @@ import static org.mockito.Mockito.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -461,9 +466,9 @@ public class ScmRealmTest
     
     SecuritySystem securitySystem = mock(SecuritySystem.class);
     when(
-      securitySystem.getConfiguration()
+      securitySystem.getPermissions(Mockito.<Predicate>any())
     ).thenReturn(
-      new SecurityConfiguration()
+      Collections.EMPTY_LIST
     );
 
     return new ScmRealm(

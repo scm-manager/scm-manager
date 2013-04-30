@@ -42,14 +42,29 @@ import com.google.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+
+import java.net.URL;
+
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map.Entry;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * TODO add events
@@ -64,6 +79,16 @@ public class DefaultSecuritySystem implements SecuritySystem
   /** Field description */
   private static final String NAME = "security";
 
+  /** Field description */
+  private static final String PERMISSION_DESCRIPTOR =
+    "META-INF/scm/permissions.xml";
+
+  /**
+   * the logger for DefaultSecuritySystem
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(DefaultSecuritySystem.class);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -76,6 +101,7 @@ public class DefaultSecuritySystem implements SecuritySystem
   public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory)
   {
     store = storeFactory.getStore(AssignedPermission.class, NAME);
+    readAvailablePermissions();
   }
 
   //~--- methods --------------------------------------------------------------
@@ -165,9 +191,9 @@ public class DefaultSecuritySystem implements SecuritySystem
   @Override
   public List<PermissionDescriptor> getAvailablePermissions()
   {
+    assertIsAdmin();
 
-    // TODO
-    return Collections.EMPTY_LIST;
+    return availablePermissions;
   }
 
   /**
@@ -220,8 +246,151 @@ public class DefaultSecuritySystem implements SecuritySystem
     SecurityUtils.getSubject().checkRole(Role.ADMIN);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   * @param descriptorUrl
+   *
+   * @return
+   */
+  private List<PermissionDescriptor> parsePermissionDescriptor(
+    JAXBContext context, URL descriptorUrl)
+  {
+    List<PermissionDescriptor> descriptors = Collections.EMPTY_LIST;
+
+    try
+    {
+      PermissionDescriptors descriptorWrapper =
+        (PermissionDescriptors) context.createUnmarshaller().unmarshal(
+          descriptorUrl);
+
+      descriptors = descriptorWrapper.getPermissions();
+
+      logger.debug("found {} permissions at {}", descriptors.size(),
+        descriptorUrl);
+      logger.trace("permissions from {}: {}", descriptorUrl, descriptors);
+    }
+    catch (JAXBException ex)
+    {
+      logger.error("could not parse permission descriptor", ex);
+    }
+
+    return descriptors;
+  }
+
+  /**
+   * Method description
+   *
+   */
+  private void readAvailablePermissions()
+  {
+    Builder<PermissionDescriptor> builder = ImmutableList.builder();
+
+    try
+    {
+      JAXBContext context =
+        JAXBContext.newInstance(PermissionDescriptors.class);
+
+      Enumeration<URL> descirptorEnum =
+        getClassLoader().getResources(PERMISSION_DESCRIPTOR);
+
+      while (descirptorEnum.hasMoreElements())
+      {
+        URL descriptorUrl = descirptorEnum.nextElement();
+
+        logger.debug("read permission descriptor from {}", descriptorUrl);
+
+        builder.addAll(parsePermissionDescriptor(context, descriptorUrl));
+      }
+    }
+    catch (IOException ex)
+    {
+      logger.error("could not read permission descriptors", ex);
+    }
+    catch (JAXBException ex)
+    {
+      logger.error(
+        "could not create jaxb context to read permission descriptors", ex);
+    }
+
+    availablePermissions = builder.build();
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private ClassLoader getClassLoader()
+  {
+    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+    if (classLoader == null)
+    {
+      logger.warn("could not find context classloader, use default");
+
+      classLoader = DefaultSecuritySystem.class.getClassLoader();
+    }
+
+    return classLoader;
+  }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/04/30
+   * @author         Enter your name here...
+   */
+  @XmlRootElement(name = "permissions")
+  @XmlAccessorType(XmlAccessType.FIELD)
+  private static class PermissionDescriptors
+  {
+
+    /**
+     * Constructs ...
+     *
+     */
+    public PermissionDescriptors() {}
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public List<PermissionDescriptor> getPermissions()
+    {
+      if (permissions == null)
+      {
+        permissions = Collections.EMPTY_LIST;
+      }
+
+      return permissions;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    @XmlElement(name = "permission")
+    private List<PermissionDescriptor> permissions;
+  }
+
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private final ConfigurationEntryStore<AssignedPermission> store;
+
+  /** Field description */
+  private List<PermissionDescriptor> availablePermissions;
 }

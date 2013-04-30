@@ -49,7 +49,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  * @since 1.31
  */
-@XmlRootElement(name = "permissions")
+@XmlRootElement(name = "permission")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PermissionDescriptor implements Serializable
 {
