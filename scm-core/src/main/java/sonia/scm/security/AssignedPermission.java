@@ -31,27 +31,69 @@
 
 package sonia.scm.security;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.31
  */
-public class SecurityConfigurationChangedEvent
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "assigned-permission")
+public class AssignedPermission implements PermissionObject
 {
+
+  /**
+   * Constructor is only visible for JAXB.
+   *
+   */
+  public AssignedPermission() {}
 
   /**
    * Constructs ...
    *
    *
-   * @param oldConfiguration
-   * @param newConfiguration
+   * @param permission
    */
-  public SecurityConfigurationChangedEvent(
-    SecurityConfiguration oldConfiguration,
-    SecurityConfiguration newConfiguration)
+  public AssignedPermission(AssignedPermission permission)
   {
-    this.oldConfiguration = oldConfiguration;
-    this.newConfiguration = newConfiguration;
+    this.name = permission.name;
+    this.groupPermission = permission.groupPermission;
+    this.permission = permission.permission;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param name
+   * @param permission
+   */
+  public AssignedPermission(String name, String permission)
+  {
+    this.name = name;
+    this.permission = permission;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param name
+   * @param groupPermission
+   * @param permission
+   */
+  public AssignedPermission(String name, boolean groupPermission,
+    String permission)
+  {
+    this.name = name;
+    this.groupPermission = groupPermission;
+    this.permission = permission;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -62,9 +104,10 @@ public class SecurityConfigurationChangedEvent
    *
    * @return
    */
-  public SecurityConfiguration getNewConfiguration()
+  @Override
+  public String getName()
   {
-    return newConfiguration;
+    return name;
   }
 
   /**
@@ -73,16 +116,32 @@ public class SecurityConfigurationChangedEvent
    *
    * @return
    */
-  public SecurityConfiguration getOldConfiguration()
+  public String getPermission()
   {
-    return oldConfiguration;
+    return permission;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public boolean isGroupPermission()
+  {
+    return groupPermission;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SecurityConfiguration newConfiguration;
+  @XmlElement(name = "group-permission")
+  private boolean groupPermission;
 
   /** Field description */
-  private SecurityConfiguration oldConfiguration;
+  private String name;
+
+  /** Field description */
+  private String permission;
 }

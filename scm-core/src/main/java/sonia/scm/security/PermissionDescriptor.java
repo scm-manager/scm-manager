@@ -49,49 +49,36 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  * @since 1.31
  */
+@XmlRootElement(name = "permissions")
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "global-permission")
-public final class GlobalPermission implements PermissionObject, Serializable
+public class PermissionDescriptor implements Serializable
 {
 
   /** Field description */
-  private static final long serialVersionUID = 4794267414178121515L;
+  private static final long serialVersionUID = -9141065458354047154L;
 
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructor is only visible for JAXB.
    *
    */
-  public GlobalPermission() {}
+  public PermissionDescriptor() {}
 
   /**
    * Constructs ...
    *
    *
-   * @param id
-   * @param name
-   * @param permission
+   * @param displayName
+   * @param description
+   * @param value
    */
-  public GlobalPermission(String name, String permission)
+  public PermissionDescriptor(String displayName, String description,
+    String value)
   {
-    this(name, false, permission);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param id
-   * @param name
-   * @param group
-   * @param permission
-   */
-  public GlobalPermission(String name, boolean groupPermission, String permission)
-  {
-    this.name = name;
-    this.groupPermission = groupPermission;
-    this.permission = permission;
+    this.displayName = displayName;
+    this.description = description;
+    this.value = value;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -117,13 +104,11 @@ public final class GlobalPermission implements PermissionObject, Serializable
       return false;
     }
 
-    final GlobalPermission other = (GlobalPermission) obj;
+    final PermissionDescriptor other = (PermissionDescriptor) obj;
 
-    //J-
-    return Objects.equal(name, other.name)
-      && Objects.equal(groupPermission, other.groupPermission)
-      && Objects.equal(permission, other.permission);
-    //J+
+    return Objects.equal(displayName, other.displayName)
+      && Objects.equal(description, other.description)
+      && Objects.equal(value, other.value);
   }
 
   /**
@@ -135,7 +120,7 @@ public final class GlobalPermission implements PermissionObject, Serializable
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(name, groupPermission, permission);
+    return Objects.hashCode(displayName, description, value);
   }
 
   /**
@@ -147,12 +132,14 @@ public final class GlobalPermission implements PermissionObject, Serializable
   @Override
   public String toString()
   {
+
     //J-
     return Objects.toStringHelper(this)
-                  .add("name", name)
-                  .add("groupPermission", groupPermission)
-                  .add("permisison", permission)
+                  .add("displayName", displayName)
+                  .add("description", description)
+                  .add("value", value)
                   .toString();
+
     //J+
   }
 
@@ -164,10 +151,9 @@ public final class GlobalPermission implements PermissionObject, Serializable
    *
    * @return
    */
-  @Override
-  public String getName()
+  public String getDescription()
   {
-    return name;
+    return description;
   }
 
   /**
@@ -176,9 +162,9 @@ public final class GlobalPermission implements PermissionObject, Serializable
    *
    * @return
    */
-  public String getPermission()
+  public String getDisplayName()
   {
-    return permission;
+    return displayName;
   }
 
   /**
@@ -187,21 +173,20 @@ public final class GlobalPermission implements PermissionObject, Serializable
    *
    * @return
    */
-  @Override
-  public boolean isGroupPermission()
+  public String getValue()
   {
-    return groupPermission;
+    return value;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlElement(name = "group")
-  private boolean groupPermission;
+  private String description;
 
   /** Field description */
-  private String name;
+  @XmlElement(name = "display-name")
+  private String displayName;
 
   /** Field description */
-  private String permission;
+  private String value;
 }

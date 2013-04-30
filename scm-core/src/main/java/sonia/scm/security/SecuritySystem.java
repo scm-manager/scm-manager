@@ -33,7 +33,13 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Predicate;
+
 import org.apache.shiro.subject.PrincipalCollection;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.List;
 
 /**
  *
@@ -47,9 +53,65 @@ public interface SecuritySystem
    * Method description
    *
    *
+   * @param permission
+   *
    * @return
    */
-  public SecurityConfiguration getConfiguration();
+  public StoredAssignedPermission addPermission(AssignedPermission permission);
+
+  /**
+   * Method description
+   *
+   *
+   * @param permission
+   */
+  public void deletePermission(StoredAssignedPermission permission);
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   */
+  public void deletePermission(String id);
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   * @param permission
+   */
+  public void modifyPermission(StoredAssignedPermission permission);
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<StoredAssignedPermission> getAllPermissions();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public List<PermissionDescriptor> getAvailablePermissions();
+
+  /**
+   * Method description
+   *
+   *
+   * @param predicate
+   *
+   * @return
+   */
+  public List<StoredAssignedPermission> getPermissions(
+    Predicate<AssignedPermission> predicate);
 
   /**
    * Method description
@@ -58,14 +120,4 @@ public interface SecuritySystem
    * @return
    */
   public PrincipalCollection getSystemAccount();
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param configuration
-   */
-  public void setConfiguration(SecurityConfiguration configuration);
 }

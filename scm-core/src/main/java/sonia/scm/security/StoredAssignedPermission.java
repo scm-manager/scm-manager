@@ -31,18 +31,10 @@
 
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.collect.Lists;
-
 //~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -50,10 +42,32 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  * @since 1.31
  */
-@XmlRootElement(name = "security")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SecurityConfiguration
+@XmlRootElement(name = "assigned-permission")
+public class StoredAssignedPermission extends AssignedPermission
 {
+
+  /**
+   * Constructor is only visible for JAXB.
+   *
+   */
+  public StoredAssignedPermission() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param id
+   * @param permission
+   */
+  public StoredAssignedPermission(String id, AssignedPermission permission)
+  {
+    super(permission);
+    this.id = id;
+
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -61,20 +75,13 @@ public class SecurityConfiguration
    *
    * @return
    */
-  public List<GlobalPermission> getGlobalPermissions()
+  public String getId()
   {
-    if (globalPermissions == null)
-    {
-      globalPermissions = Lists.newArrayList();
-    }
-
-    return globalPermissions;
+    return id;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @XmlElement(name = "permission")
-  @XmlElementWrapper(name = "global-permissions")
-  private List<GlobalPermission> globalPermissions;
+  private String id;
 }
