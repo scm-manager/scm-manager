@@ -35,12 +35,14 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.User;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -123,15 +125,51 @@ public class ScmState
     Collection<String> groups, Collection<Type> repositoryTypes,
     String defaultUserType, ScmClientConfig clientConfig)
   {
+    this(provider, user, groups, repositoryTypes, defaultUserType,
+      clientConfig, null);
+  }
+
+  /**
+   * Constructs {@link ScmState} object.
+   *
+   *
+   * @param provider context provider
+   * @param user current user
+   * @param groups groups of the current user
+   * @param repositoryTypes available repository types
+   * @param defaultUserType default user type
+   * @param clientConfig client configuration
+   * @param availablePermissions list of available permissions
+   *
+   * @since 1.31
+   */
+  public ScmState(SCMContextProvider provider, User user,
+    Collection<String> groups, Collection<Type> repositoryTypes,
+    String defaultUserType, ScmClientConfig clientConfig,
+    List<PermissionDescriptor> availablePermissions)
+  {
     this.version = provider.getVersion();
     this.user = user;
     this.groups = groups;
     this.repositoryTypes = repositoryTypes;
     this.clientConfig = clientConfig;
     this.defaultUserType = defaultUserType;
+    this.availablePermissions = availablePermissions;
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns a list of available global permissions.
+   *
+   *
+   * @return available global permissions
+   * @since 1.31
+   */
+  public List<PermissionDescriptor> getAvailablePermissions()
+  {
+    return availablePermissions;
+  }
 
   /**
    * Returns configuration for SCM-Manager clients.
@@ -216,6 +254,18 @@ public class ScmState
   //~--- set methods ----------------------------------------------------------
 
   /**
+   * Sets a list of available global permissions.
+   *
+   *
+   * @param permissions list of available global permisisons
+   * @since 1.31
+   */
+  public void setAvailablePermissions(List<PermissionDescriptor> permissions)
+  {
+    this.availablePermissions = permissions;
+  }
+
+  /**
    * Setter for the client configuration
    *
    *
@@ -298,6 +348,12 @@ public class ScmState
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /**
+   * Avaliable global permission
+   * @since 1.31
+   */
+  private List<PermissionDescriptor> availablePermissions;
 
   /** Field description */
   private ScmClientConfig clientConfig;

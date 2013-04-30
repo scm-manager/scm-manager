@@ -56,6 +56,9 @@ import sonia.scm.ScmState;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupNames;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.security.PermissionDescriptor;
+import sonia.scm.security.Role;
+import sonia.scm.security.SecuritySystem;
 import sonia.scm.security.Tokens;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -64,6 +67,7 @@ import sonia.scm.user.UserManager;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -104,16 +108,18 @@ public class AuthenticationResource
    * @param repositoryManger
    * @param userManager
    * @param securityContextProvider
+   * @param securitySystem
    */
   @Inject
   public AuthenticationResource(SCMContextProvider contextProvider,
     ScmConfiguration configuration, RepositoryManager repositoryManger,
-    UserManager userManager)
+    UserManager userManager, SecuritySystem securitySystem)
   {
     this.contextProvider = contextProvider;
     this.configuration = configuration;
     this.repositoryManger = repositoryManger;
     this.userManager = userManager;
+    this.securitySystem = securitySystem;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -287,7 +293,8 @@ public class AuthenticationResource
    */
   private ScmState createAnonymousState()
   {
-    return createState(SCMContext.ANONYMOUS, Collections.EMPTY_LIST);
+    return createState(SCMContext.ANONYMOUS, Collections.EMPTY_LIST,
+      Collections.EMPTY_LIST);
   }
 
   /**
@@ -306,7 +313,14 @@ public class AuthenticationResource
     User user = collection.oneByType(User.class);
     GroupNames groups = collection.oneByType(GroupNames.class);
 
-    return createState(user, groups.getCollection());
+    List<PermissionDescriptor> ap = Collections.EMPTY_LIST;
+
+    if (subject.hasRole(Role.ADMIN))
+    {
+      ap = securitySystem.getAvailablePermissions();
+    }
+
+    return createState(user, groups.getCollection(), ap);
   }
 
   /**
@@ -315,14 +329,16 @@ public class AuthenticationResource
    *
    * @param user
    * @param groups
+   * @param availablePermissions
    *
    * @return
    */
-  private ScmState createState(User user, Collection<String> groups)
+  private ScmState createState(User user, Collection<String> groups,
+    List<PermissionDescriptor> availablePermissions)
   {
     return new ScmState(contextProvider, user, groups,
       repositoryManger.getConfiguredTypes(), userManager.getDefaultType(),
-      new ScmClientConfig(configuration));
+      new ScmClientConfig(configuration), availablePermissions);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -335,6 +351,9 @@ public class AuthenticationResource
 
   /** Field description */
   private RepositoryManager repositoryManger;
+
+  /** Field description */
+  private SecuritySystem securitySystem;
 
   /** Field description */
   private UserManager userManager;
