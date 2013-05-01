@@ -33,48 +33,45 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
+import com.google.common.base.Predicate;
 
-import org.apache.shiro.SecurityUtils;
-
-import org.codehaus.enunciate.jaxrs.TypeHint;
-import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
-
-import sonia.scm.security.Role;
-import sonia.scm.security.SecurityConfiguration;
+import sonia.scm.api.rest.Permission;
+import sonia.scm.security.AssignedPermission;
 import sonia.scm.security.SecuritySystem;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Path("security")
-@ExternallyManagedLifecycle
-public class SecurityConfigurationResource
+public class GroupPermissionResource extends AbstractPermissionResource
 {
 
   /**
    * Constructs ...
    *
    *
-   * @param system
+   * @param securitySystem
+   * @param name
    */
-  @Inject
-  public SecurityConfigurationResource(SecuritySystem system)
+  public GroupPermissionResource(SecuritySystem securitySystem, String name)
   {
-    this.system = system;
+    super(securitySystem, name);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param permission
+   *
+   * @return
+   */
+  @Override
+  protected AssignedPermission transformPermission(Permission permission)
+  {
+    return new AssignedPermission(name, true, permission.getValue());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -85,52 +82,54 @@ public class SecurityConfigurationResource
    *
    * @return
    */
-  @GET
-  @TypeHint(SecurityConfiguration.class)
-  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response getConfiguration()
+  @Override
+  protected Predicate<AssignedPermission> getPredicate()
   {
-    Response response = null;
-
-    if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
-    {
-      response = Response.ok(system.getConfiguration()).build();
-    }
-    else
-    {
-      response = Response.status(Response.Status.FORBIDDEN).build();
-    }
-
-    return response;
+    return new GroupPredicate(name);
   }
 
-  //~--- set methods ----------------------------------------------------------
+  //~--- inner classes --------------------------------------------------------
 
   /**
-   * Method description
+   * Class description
    *
    *
-   * @param uriInfo
-   * @param newConfig
-   *
-   * @return
+   * @version        Enter version here..., 13/05/01
+   * @author         Enter your name here...    
    */
-  @POST
-  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response setConfig(@Context UriInfo uriInfo,
-    SecurityConfiguration newConfig)
+  private static class GroupPredicate implements Predicate<AssignedPermission>
   {
 
-    // TODO replace by checkRole
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    /**
+     * Constructs ...
+     *
+     *
+     * @param name
+     */
+    public GroupPredicate(String name)
+    {
+      this.name = name;
+    }
 
-    system.setConfiguration(newConfig);
+    //~--- methods ------------------------------------------------------------
 
-    return Response.created(uriInfo.getRequestUri()).build();
+    /**
+     * Method description
+     *
+     *
+     * @param input
+     *
+     * @return
+     */
+    @Override
+    public boolean apply(AssignedPermission input)
+    {
+      return input.isGroupPermission() && input.getName().equals(name);
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private String name;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private SecuritySystem system;
 }
