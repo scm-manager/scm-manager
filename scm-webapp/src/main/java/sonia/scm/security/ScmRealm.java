@@ -76,6 +76,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.store.StoredAssignedPermissionEvent;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserEvent;
@@ -192,6 +193,27 @@ public class ScmRealm extends AuthorizingRealm
       {
         logger.debug("clear cache, because repository {} has changed",
           event.getItem().getName());
+      }
+
+      cache.clear();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param event
+   */
+  @Subscribe
+  public void onEvent(StoredAssignedPermissionEvent event)
+  {
+    if (event.getEventType().isPost())
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("clear cache, because permission {} has changed",
+          event.getPermission().getId());
       }
 
       cache.clear();
