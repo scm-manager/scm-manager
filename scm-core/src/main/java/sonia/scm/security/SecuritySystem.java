@@ -106,6 +106,16 @@ public interface SecuritySystem
    * Method description
    *
    *
+   * @param id
+   *
+   * @return
+   */
+  public StoredAssignedPermission getPermission(String id);
+
+  /**
+   * Method description
+   *
+   *
    * @param predicate
    *
    * @return

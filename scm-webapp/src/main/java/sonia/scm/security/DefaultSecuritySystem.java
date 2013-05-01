@@ -200,6 +200,30 @@ public class DefaultSecuritySystem implements SecuritySystem
    * Method description
    *
    *
+   * @param id
+   *
+   * @return
+   */
+  @Override
+  public StoredAssignedPermission getPermission(String id)
+  {
+    assertIsAdmin();
+
+    StoredAssignedPermission sap = null;
+    AssignedPermission ap = store.get(id);
+
+    if (ap != null)
+    {
+      sap = new StoredAssignedPermission(id, ap);
+    }
+
+    return sap;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param predicate
    *
    * @return
