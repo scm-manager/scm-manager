@@ -151,6 +151,10 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
           scope: this
         }
       }
+    },{
+      item: group,
+      xtype: 'permissionsPanel',
+      baseUrl: 'security/permission/group/' + group.name
     }]);
   }
 

@@ -51,10 +51,6 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   navGroupsText: 'Groups',
   tabGroupsText: 'Groups',
   
-  // TODO i18n
-  navPermissionsText: 'Permissions',
-  tabPermissionsText: 'Permissions',
-
   sectionLoginText: 'Login',
   navLoginText: 'Login',
 
@@ -165,12 +161,6 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       this.addTabPanel('groups', 'groupPanel', this.tabGroupsText);
     }
   },
-          
-  addPermissionsTabPanel: function(){
-    if (admin){
-      this.addTabPanel('permissions', 'permissionsPanel', this.tabPermissionsText);
-    }
-  },
 
   createMainMenu: function(){
     if ( debug ){
@@ -249,10 +239,6 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       },{
         label: this.navGroupsText,
         fn: this.addGroupsTabPanel,
-        scope: this
-      },{
-        label: this.navPermissionsText,
-        fn: this.addPermissionsTabPanel,
         scope: this
       });
     }
