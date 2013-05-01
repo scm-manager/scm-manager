@@ -50,26 +50,25 @@ Sonia.group.Panel = Ext.extend(Sonia.rest.Panel, {
         {xtype: 'tbbutton', text: this.reloadText, icon: this.reloadIcon, scope: this, handler: this.reload}
       ],
       items: [{
-          id: 'groupGrid',
-          xtype: 'groupGrid',
-          region: 'center',
-          parentPanel: this
-        }, {
-          id: 'groupEditPanel',
-          xtype: 'tabpanel',
-          activeTab: 0,
-          height: 250,
-          split: true,
-          border: true,
-          region: 'south',
-          items: [{
-            bodyCssClass: 'x-panel-mc',
-            title: this.titleText,
-            padding: 5,
-            html: this.emptyText
-          }]
-        }
-      ]
+        id: 'groupGrid',
+        xtype: 'groupGrid',
+        region: 'center',
+        parentPanel: this
+      }, {
+        id: 'groupEditPanel',
+        xtype: 'tabpanel',
+        activeTab: 0,
+        height: 250,
+        split: true,
+        border: true,
+        region: 'south',
+        items: [{
+          bodyCssClass: 'x-panel-mc',
+          title: this.titleText,
+          padding: 5,
+          html: this.emptyText
+        }]
+      }]
     };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));

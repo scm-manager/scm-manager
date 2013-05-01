@@ -39,6 +39,7 @@ Sonia.rest.Panel = Ext.extend(Ext.Panel, {
   addIcon: 'resources/images/add.png',
   removeIcon: 'resources/images/delete.png',
   reloadIcon: 'resources/images/reload.png',
+  helpIcon: 'resources/images/help.png',
   
   initComponent: function(){
     
@@ -48,7 +49,7 @@ Sonia.rest.Panel = Ext.extend(Ext.Panel, {
       enableTabScroll: true,
       region:'center',
       autoScroll: true
-    }
+    };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.rest.Panel.superclass.initComponent.apply(this, arguments);

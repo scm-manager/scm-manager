@@ -109,7 +109,7 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       helpText: this.activeHelpText,
       checked: true
     });
-
+    
     Ext.apply(this, Ext.apply(this.initialConfig, {items: items}));
     Sonia.user.FormPanel.superclass.initComponent.apply(this, arguments);
   },

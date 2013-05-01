@@ -31,16 +31,23 @@
 
 Sonia.security.PermissionsPanel = Ext.extend(Ext.Panel, {
 
+  addText: 'Add',
+  removeText: 'Remove',
+  reloadText: 'Reload',
+  
+  // icons
+  addIcon: 'resources/images/add.png',
+  removeIcon: 'resources/images/delete.png',
+  reloadIcon: 'resources/images/reload.png',
+  helpIcon: 'resources/images/help.png',
+
+
   //TODO i18n
   titleText: 'Permissions',
   
   permissionStore: null,
   baseUrl: null,
   
-  addIcon: 'resources/images/add.png',
-  removeIcon: 'resources/images/delete.png',
-  helpIcon: 'resources/images/help.png',
-
   initComponent: function(){
 
     this.permissionStore = new Sonia.rest.JsonStore({
@@ -98,6 +105,7 @@ Sonia.security.PermissionsPanel = Ext.extend(Ext.Panel, {
     var config = {
       title: this.titleText,
       bodyCssClass: 'x-panel-mc',
+      padding: 5,
       items: [{
         id: 'permissionGrid',
         xtype: 'editorgrid',
@@ -145,7 +153,7 @@ Sonia.security.PermissionsPanel = Ext.extend(Ext.Panel, {
         }]
       }]
     };
-
+    
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.security.PermissionsPanel.superclass.initComponent.apply(this, arguments);
   },
@@ -161,7 +169,6 @@ Sonia.security.PermissionsPanel = Ext.extend(Ext.Panel, {
   },
           
   modifyOrAddPermission: function(store, record){
-    console.log('------ modify --------');
     var id = record.get('id');
     if ( id ){
       this.modifyPermission(id, record);
@@ -198,8 +205,7 @@ Sonia.security.PermissionsPanel = Ext.extend(Ext.Panel, {
     });
   },
 
-  removePermission: function(store, record, index){
-    console.log('------ remove --------');
+  removePermission: function(store, record){
     Ext.Ajax.request({
       url: restUrl + this.baseUrl + '/' + record.get('id')  + '.json',
       method: 'DELETE',
