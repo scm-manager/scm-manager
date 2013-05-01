@@ -215,7 +215,7 @@ public class JAXBConfigurationEntryStore<V>
   @Override
   public V get(String id)
   {
-    logger.trace("get item {} from configuration store");
+    logger.trace("get item {} from configuration store", id);
 
     return entries.get(id);
   }
