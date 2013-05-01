@@ -36,6 +36,7 @@ package sonia.scm.security;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -45,8 +46,12 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.HandlerEvent;
+import sonia.scm.event.Subscriber;
+import sonia.scm.group.GroupEvent;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
+import sonia.scm.user.UserEvent;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -73,6 +78,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @since 1.31
  */
 @Singleton
+@Subscriber(async = true)
 public class DefaultSecuritySystem implements SecuritySystem
 {
 
@@ -148,6 +154,54 @@ public class DefaultSecuritySystem implements SecuritySystem
   {
     assertIsAdmin();
     store.remove(id);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param event
+   */
+  @Subscribe
+  public void handleEvent(final UserEvent event)
+  {
+    if (event.getEventType() == HandlerEvent.DELETE)
+    {
+      deletePermissions(new Predicate<AssignedPermission>()
+      {
+
+        @Override
+        public boolean apply(AssignedPermission p)
+        {
+          return !p.isGroupPermission()
+            && event.getItem().getName().equals(p.getName());
+        }
+      });
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param event
+   */
+  @Subscribe
+  public void handleEvent(final GroupEvent event)
+  {
+    if (event.getEventType() == HandlerEvent.DELETE)
+    {
+      deletePermissions(new Predicate<AssignedPermission>()
+      {
+
+        @Override
+        public boolean apply(AssignedPermission p)
+        {
+          return p.isGroupPermission()
+            && event.getItem().getName().equals(p.getName());
+        }
+      });
+    }
   }
 
   /**
@@ -268,6 +322,22 @@ public class DefaultSecuritySystem implements SecuritySystem
   private void assertIsAdmin()
   {
     SecurityUtils.getSubject().checkRole(Role.ADMIN);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param predicate
+   */
+  private void deletePermissions(Predicate<AssignedPermission> predicate)
+  {
+    List<StoredAssignedPermission> permissions = getPermissions(predicate);
+
+    for (StoredAssignedPermission permission : permissions)
+    {
+      deletePermission(permission);
+    }
   }
 
   /**
