@@ -47,10 +47,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.HandlerEvent;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.event.Subscriber;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
+import sonia.scm.store.StoredAssignedPermissionEvent;
 import sonia.scm.user.UserEvent;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -127,7 +129,15 @@ public class DefaultSecuritySystem implements SecuritySystem
 
     String id = store.put(permission);
 
-    return new StoredAssignedPermission(id, permission);
+    StoredAssignedPermission sap = new StoredAssignedPermission(id, permission);
+
+    //J-
+    ScmEventBus.getInstance().post(
+      new StoredAssignedPermissionEvent(HandlerEvent.CREATE, sap)
+    );
+    //J+
+
+    return sap;
   }
 
   /**
@@ -140,7 +150,12 @@ public class DefaultSecuritySystem implements SecuritySystem
   public void deletePermission(StoredAssignedPermission permission)
   {
     assertIsAdmin();
-    deletePermission(permission.getId());
+    store.remove(permission.getId());
+    //J-
+    ScmEventBus.getInstance().post(
+      new StoredAssignedPermissionEvent(HandlerEvent.CREATE, permission)
+    );
+    //J+
   }
 
   /**
@@ -153,7 +168,13 @@ public class DefaultSecuritySystem implements SecuritySystem
   public void deletePermission(String id)
   {
     assertIsAdmin();
-    store.remove(id);
+
+    AssignedPermission ap = store.get(id);
+
+    if (ap != null)
+    {
+      deletePermission(new StoredAssignedPermission(id, ap));
+    }
   }
 
   /**
@@ -220,6 +241,12 @@ public class DefaultSecuritySystem implements SecuritySystem
       store.remove(permission.getId());
       store.put(permission.getId(), new AssignedPermission(permission));
     }
+
+    //J-
+    ScmEventBus.getInstance().post(
+      new StoredAssignedPermissionEvent(HandlerEvent.CREATE, permission)
+    );
+    //J+    
   }
 
   //~--- get methods ----------------------------------------------------------
