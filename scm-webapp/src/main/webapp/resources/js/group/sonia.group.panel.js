@@ -70,7 +70,7 @@ Sonia.group.Panel = Ext.extend(Sonia.rest.Panel, {
           }]
         }
       ]
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.group.Panel.superclass.initComponent.apply(this, arguments);
@@ -104,7 +104,7 @@ Sonia.group.Panel = Ext.extend(Sonia.rest.Panel, {
         buttons: Ext.MessageBox.OKCANCEL,
         icon: Ext.MessageBox.QUESTION,
         fn: function(result){
-          if ( result == 'ok' ){
+          if ( result === 'ok' ){
 
             if ( debug ){
               console.debug( 'remove group ' + item.name );

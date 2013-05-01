@@ -69,9 +69,9 @@ Sonia.group.MemberFormPanel = Ext.extend(Sonia.group.FormPanel, {
       singleSelect: true
     });
 
-    if ( this.item != null ){
+    if ( this.item !== null ){
       var data = [];
-      if ( this.item.members != null ){
+      if ( this.item.members !== null ){
         for ( var i=0; i<this.item.members.length; i++ ){
           var a = [];
           a.push( this.item.members[i] );

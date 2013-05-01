@@ -39,7 +39,7 @@ Sonia.group.setEditPanel = function(panels){
   });
   editPanel.setActiveTab(0);
   editPanel.doLayout();
-}
+};
 
 /**
  * panels
@@ -51,4 +51,4 @@ Sonia.group.DefaultPanel = {
   bodyCssClass: 'x-panel-mc',
   padding: 5,
   html: 'Add or select a Group'
-}
+};

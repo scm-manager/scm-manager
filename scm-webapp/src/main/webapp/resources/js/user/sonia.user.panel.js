@@ -61,20 +61,20 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
         xtype: 'userGrid',
         region: 'center',
         parentPanel: this
-      },{
+      }, {
         id: 'userEditPanel',
-        layout: 'fit',
-        items: [{
-          region: 'south',
-          title: 'User Form',
-          xtype: 'panel',
-          padding: 5,
-          html: this.emptyText
-        }],
+        xtype: 'tabpanel',
+        activeTab: 0,
         height: 250,
         split: true,
-        border: false,
-        region: 'south'
+        border: true,
+        region: 'south',
+        items: [{
+          bodyCssClass: 'x-panel-mc',
+          title: 'User Form',
+          padding: 5,
+          html: this.emptyText
+        }]
       }]
     };
 
@@ -103,10 +103,8 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
   },
 
   showAddPanel: function(){
-    var editPanel = Ext.getCmp('userEditPanel');
-    editPanel.removeAll();
-    var panel = new Sonia.user.FormPanel({
-      region: 'south',
+    Sonia.user.setEditPanel({
+      xtype: 'userEditPanel',
       title: this.titleText,
       padding: 5,
       onUpdate: {
@@ -118,8 +116,6 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
         scope: this
       }
     });
-    editPanel.add(panel);
-    editPanel.doLayout();
   },
   
   resetPanel: function(){
@@ -140,7 +136,7 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
         buttons: Ext.MessageBox.OKCANCEL,
         icon: Ext.MessageBox.QUESTION,
         fn: function(result){
-          if ( result == 'ok' ){
+          if ( result === 'ok' ){
 
             if ( debug ){
               console.debug( 'remove user ' + item.name );

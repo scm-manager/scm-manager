@@ -105,7 +105,7 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
 
   renderMembers: function(members){
     var out = '';
-    if ( members != null ){
+    if ( members !== null ){
       var s = members.length;
       for ( var i=0; i<s; i++ ){
         out += members[i];
@@ -152,7 +152,6 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
         }
       }
     },{
-      item: group,
       xtype: 'permissionsPanel',
       baseUrl: 'security/permission/group/' + group.name
     }]);
