@@ -47,6 +47,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class StoredAssignedPermission extends AssignedPermission
 {
 
+  /** Field description */
+  private static final long serialVersionUID = -4593919877023168090L;
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructor is only visible for JAXB.
    *

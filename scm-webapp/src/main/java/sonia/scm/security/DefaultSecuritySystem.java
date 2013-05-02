@@ -52,7 +52,6 @@ import sonia.scm.event.Subscriber;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
-import sonia.scm.store.StoredAssignedPermissionEvent;
 import sonia.scm.user.UserEvent;
 
 //~--- JDK imports ------------------------------------------------------------

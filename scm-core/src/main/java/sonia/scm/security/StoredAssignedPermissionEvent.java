@@ -29,19 +29,30 @@
 
 
 
-package sonia.scm.store;
+package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+
 import sonia.scm.HandlerEvent;
-import sonia.scm.security.StoredAssignedPermission;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.Serializable;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.31
  */
-public class StoredAssignedPermissionEvent
+public final class StoredAssignedPermissionEvent implements Serializable
 {
+
+  /** Field description */
+  private static final long serialVersionUID = 706824497813169009L;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -55,6 +66,65 @@ public class StoredAssignedPermissionEvent
   {
     this.type = type;
     this.permission = permission;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final StoredAssignedPermissionEvent other =
+      (StoredAssignedPermissionEvent) obj;
+
+    return Objects.equal(type, other.type)
+      && Objects.equal(permission, other.permission);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(type, permission);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("type", type)
+                  .add("permission", permission)
+                  .toString();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------
