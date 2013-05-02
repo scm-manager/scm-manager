@@ -38,6 +38,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Permission object which is stored and assigned to a specific user or group.
  *
  * @author Sebastian Sdorra
  * @since 1.31
@@ -47,7 +48,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class StoredAssignedPermission extends AssignedPermission
 {
 
-  /** Field description */
+  /** serial version uid */
   private static final long serialVersionUID = -4593919877023168090L;
 
   //~--- constructors ---------------------------------------------------------
@@ -59,11 +60,11 @@ public class StoredAssignedPermission extends AssignedPermission
   public StoredAssignedPermission() {}
 
   /**
-   * Constructs ...
+   * Constructs a new StoredAssignedPermission.
    *
    *
-   * @param id
-   * @param permission
+   * @param id id of the permission object
+   * @param permission assigned permission object
    */
   public StoredAssignedPermission(String id, AssignedPermission permission)
   {
@@ -75,10 +76,10 @@ public class StoredAssignedPermission extends AssignedPermission
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the id of the stored permission object.
    *
    *
-   * @return
+   * @return id of permission
    */
   public String getId()
   {
@@ -87,6 +88,6 @@ public class StoredAssignedPermission extends AssignedPermission
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** id */
   private String id;
 }

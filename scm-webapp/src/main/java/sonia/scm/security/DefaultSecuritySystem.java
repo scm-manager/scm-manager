@@ -41,7 +41,6 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.PrincipalCollection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -323,20 +322,6 @@ public class DefaultSecuritySystem implements SecuritySystem
     }
 
     return permissions.build();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public PrincipalCollection getSystemAccount()
-  {
-
-    // TODO
-    throw new UnsupportedOperationException("Not supported yet.");
   }
 
   //~--- methods --------------------------------------------------------------

@@ -45,6 +45,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Permission object which is assigned to a specific user or group.
  *
  * @author Sebastian Sdorra
  * @since 1.31
@@ -54,7 +55,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class AssignedPermission implements PermissionObject, Serializable
 {
 
-  /** Field description */
+  /** serial version uid */
   private static final long serialVersionUID = -7411338422110323879L;
 
   //~--- constructors ---------------------------------------------------------
@@ -66,10 +67,10 @@ public class AssignedPermission implements PermissionObject, Serializable
   public AssignedPermission() {}
 
   /**
-   * Constructs ...
+   * Constructs a new AssignedPermission.
    *
    *
-   * @param permission
+   * @param permission assigned permission
    */
   public AssignedPermission(AssignedPermission permission)
   {
@@ -79,11 +80,11 @@ public class AssignedPermission implements PermissionObject, Serializable
   }
 
   /**
-   * Constructs ...
+   * Constructs a new AssingnedPermmission.
    *
    *
-   * @param name
-   * @param permission
+   * @param name name of the user
+   * @param permission permission string
    */
   public AssignedPermission(String name, String permission)
   {
@@ -92,12 +93,12 @@ public class AssignedPermission implements PermissionObject, Serializable
   }
 
   /**
-   * Constructs ...
+   * Constructs a new AssingnedPermmission.
    *
    *
-   * @param name
-   * @param groupPermission
-   * @param permission
+   * @param name name of the user or group
+   * @param groupPermission true if the permission should be assigned to a group
+   * @param permission permission string
    */
   public AssignedPermission(String name, boolean groupPermission,
     String permission)
@@ -110,12 +111,7 @@ public class AssignedPermission implements PermissionObject, Serializable
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public boolean equals(Object obj)
@@ -138,10 +134,7 @@ public class AssignedPermission implements PermissionObject, Serializable
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public int hashCode()
@@ -150,10 +143,7 @@ public class AssignedPermission implements PermissionObject, Serializable
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public String toString()
@@ -170,10 +160,10 @@ public class AssignedPermission implements PermissionObject, Serializable
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the name of the user or group which the permission is assigned.
    *
    *
-   * @return
+   * @return name of user or group
    */
   @Override
   public String getName()
@@ -182,10 +172,10 @@ public class AssignedPermission implements PermissionObject, Serializable
   }
 
   /**
-   * Method description
+   * Returns the string representation of the permission.
    *
    *
-   * @return
+   * @return string representation of the permission
    */
   public String getPermission()
   {
@@ -193,10 +183,10 @@ public class AssignedPermission implements PermissionObject, Serializable
   }
 
   /**
-   * Method description
+   * Returns true if the permission is assigned to a group.
    *
    *
-   * @return
+   * @return true if the permission is assigned to a group
    */
   @Override
   public boolean isGroupPermission()
@@ -206,13 +196,13 @@ public class AssignedPermission implements PermissionObject, Serializable
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** group permission indicator */
   @XmlElement(name = "group-permission")
   private boolean groupPermission;
 
-  /** Field description */
+  /** name of the user or group */
   private String name;
 
-  /** Field description */
+  /** string representation of the permission */
   private String permission;
 }

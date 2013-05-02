@@ -35,13 +35,12 @@ package sonia.scm.security;
 
 import com.google.common.base.Predicate;
 
-import org.apache.shiro.subject.PrincipalCollection;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
 
 /**
+ * The SecuritySystem manages global permissions.
  *
  * @author Sebastian Sdorra
  * @since 1.31
@@ -50,84 +49,76 @@ public interface SecuritySystem
 {
 
   /**
-   * Method description
+   * Store a new permission.
    *
    *
-   * @param permission
+   * @param permission permission to be stored
    *
-   * @return
+   * @return stored permission
    */
   public StoredAssignedPermission addPermission(AssignedPermission permission);
 
   /**
-   * Method description
+   * Delete stored permission.
    *
    *
-   * @param permission
+   * @param permission permission to be deleted
    */
   public void deletePermission(StoredAssignedPermission permission);
 
   /**
-   * Method description
+   * Delete stored permission.
    *
    *
-   * @param id
+   * @param id id  of the permission
    */
   public void deletePermission(String id);
 
   /**
-   * Method description
+   * Modify stored permission.
    *
    *
-   * @param id
-   * @param permission
+   * @param permission stored permisison
    */
   public void modifyPermission(StoredAssignedPermission permission);
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Return all stored permissions.
    *
    *
-   * @return
+   * @return stored permission
    */
   public List<StoredAssignedPermission> getAllPermissions();
 
   /**
-   * Method description
+   * Return all available permissions.
    *
    *
-   * @return
+   * @return available permissions
    */
   public List<PermissionDescriptor> getAvailablePermissions();
 
   /**
-   * Method description
+   * Return the stored permission which is stored with the given id.
    *
    *
-   * @param id
+   * @param id id of the stored permission
    *
-   * @return
+   * @return stored permission
    */
   public StoredAssignedPermission getPermission(String id);
 
   /**
-   * Method description
+   * Returns all stored permissions which are matched by the given
+   * {@link Predicate}.
    *
    *
-   * @param predicate
+   * @param predicate predicate to filter
    *
-   * @return
+   * @return filtered permissions
    */
   public List<StoredAssignedPermission> getPermissions(
     Predicate<AssignedPermission> predicate);
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public PrincipalCollection getSystemAccount();
 }

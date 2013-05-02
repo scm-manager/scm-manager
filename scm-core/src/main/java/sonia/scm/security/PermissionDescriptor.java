@@ -45,6 +45,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Descriptor for available permission objects.
  *
  * @author Sebastian Sdorra
  * @since 1.31
@@ -84,12 +85,7 @@ public class PermissionDescriptor implements Serializable
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public boolean equals(Object obj)
@@ -112,10 +108,7 @@ public class PermissionDescriptor implements Serializable
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public int hashCode()
@@ -124,10 +117,7 @@ public class PermissionDescriptor implements Serializable
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public String toString()
@@ -146,10 +136,10 @@ public class PermissionDescriptor implements Serializable
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the description of the permission.
    *
    *
-   * @return
+   * @return description
    */
   public String getDescription()
   {
@@ -157,10 +147,10 @@ public class PermissionDescriptor implements Serializable
   }
 
   /**
-   * Method description
+   * Returns the display name of the permission.
    *
    *
-   * @return
+   * @return display name
    */
   public String getDisplayName()
   {
@@ -168,10 +158,10 @@ public class PermissionDescriptor implements Serializable
   }
 
   /**
-   * Method description
+   * Returns the string representation of the permission.
    *
    *
-   * @return
+   * @return string representation
    */
   public String getValue()
   {
@@ -180,13 +170,13 @@ public class PermissionDescriptor implements Serializable
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** description */
   private String description;
 
-  /** Field description */
+  /** display name */
   @XmlElement(name = "display-name")
   private String displayName;
 
-  /** Field description */
+  /** value */
   private String value;
 }
