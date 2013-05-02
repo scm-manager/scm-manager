@@ -102,7 +102,7 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
 
   showAddPanel: function(){
     Sonia.user.setEditPanel({
-      xtype: 'userEditPanel',
+      xtype: 'userForm',
       title: this.titleText,
       padding: 5,
       onUpdate: {
