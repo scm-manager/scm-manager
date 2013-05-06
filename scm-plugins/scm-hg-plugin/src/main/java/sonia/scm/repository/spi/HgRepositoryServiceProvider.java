@@ -58,10 +58,18 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
   /** Field description */
-  public static final Set<Command> COMMANDS = EnumSet.of(Command.BLAME,
-                                                Command.BROWSE, Command.CAT,
-                                                Command.DIFF, Command.LOG,
-                                                Command.TAGS, Command.BRANCHES);
+  //J-
+  public static final Set<Command> COMMANDS = EnumSet.of(
+    Command.BLAME,
+    Command.BROWSE, 
+    Command.CAT,
+    Command.DIFF, 
+    Command.LOG,
+    Command.TAGS, 
+    Command.BRANCHES,
+    Command.INCOMING
+  );
+  //J+
 
   /** Field description */
   public static final Set<Feature> FEATURES =
@@ -77,9 +85,11 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
    * @param handler
    * @param repository
    */
-  HgRepositoryServiceProvider(HgRepositoryHandler handler, Repository repository)
+  HgRepositoryServiceProvider(HgRepositoryHandler handler,
+    Repository repository)
   {
     this.repository = repository;
+    this.handler = handler;
     this.repositoryDirectory = handler.getDirectory(repository);
     this.context = new HgCommandContext(handler.getConfig(), repository,
       repositoryDirectory);
@@ -168,6 +178,18 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
    * @return
    */
   @Override
+  public IncomingCommand getIncomingCommand()
+  {
+    return new HgIncomingCommand(context, repository, handler);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public HgLogCommand getLogCommand()
   {
     return new HgLogCommand(context, repository);
@@ -213,6 +235,9 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private HgCommandContext context;
+
+  /** Field description */
+  private HgRepositoryHandler handler;
 
   /** Field description */
   private Repository repository;
