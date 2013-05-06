@@ -294,7 +294,7 @@ public class HgLogChangesetCommand extends AbstractCommand
     {
       changeset.getParents().add(p1);
     }
-    
+
     in.mustMatch(' ');
 
     String p2 = readId(in, changeset, PROPERTY_PARENT2_REVISION);
@@ -393,7 +393,7 @@ public class HgLogChangesetCommand extends AbstractCommand
     {
       Integer rev = in.readDecimal();
 
-      if (rev != null && rev >= 0)
+      if ((rev != null) && (rev >= 0))
       {
         changeset.setProperty(propertyKey, String.valueOf(rev));
       }
@@ -459,7 +459,7 @@ public class HgLogChangesetCommand extends AbstractCommand
   private boolean isNullId(String id)
   {
     return ((id != null) && id.equals("-1:".concat(NULL_ID)))
-      || id.equals(NULL_ID);
+      || NULL_ID.equals(id);
   }
 
   //~--- fields ---------------------------------------------------------------
