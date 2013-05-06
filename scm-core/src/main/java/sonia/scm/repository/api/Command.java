@@ -51,5 +51,10 @@ public enum Command
   /**
    * @since 1.18
    */
-  BRANCHES;
+  BRANCHES,
+  
+  /**
+   * @since 1.31
+   */
+  INCOMING;
 }

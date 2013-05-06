@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.cache.CacheManager;
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
@@ -77,6 +78,7 @@ import java.io.IOException;
  * @apiviz.uses sonia.scm.repository.api.LogCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.TagsCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.BranchesCommandBuilder
+ * @apiviz.uses sonia.scm.repository.api.IncomingCommandBuilder
  */
 public final class RepositoryService implements Closeable
 {
@@ -233,6 +235,28 @@ public final class RepositoryService implements Closeable
     }
 
     return new DiffCommandBuilder(provider.getDiffCommand());
+  }
+
+  /**
+   * The incoming command shows new {@link Changeset}s found in a different
+   * repository location.
+   *
+   *
+   * @return instance of {@link IncomingCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *         by the implementation of the repository service provider.
+   * @since 1.31
+   */
+  public IncomingCommandBuilder getIncomingCommand()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create incoming command for repository {}",
+        repository.getName());
+    }
+
+    return new IncomingCommandBuilder(cacheManager,
+      provider.getIncomingCommand(), repository, preProcessorUtil);
   }
 
   /**
