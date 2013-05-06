@@ -79,6 +79,7 @@ import java.io.IOException;
  * @apiviz.uses sonia.scm.repository.api.TagsCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.BranchesCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.IncomingCommandBuilder
+ * @apiviz.uses sonia.scm.repository.api.OutgoingCommandBuilder
  */
 public final class RepositoryService implements Closeable
 {
@@ -276,6 +277,27 @@ public final class RepositoryService implements Closeable
 
     return new LogCommandBuilder(cacheManager, provider.getLogCommand(),
       repository, preProcessorUtil);
+  }
+
+  /**
+   * The outgoing command show changesets not found in a remote repository.
+   *
+   *
+   * @return instance of {@link OutgoingCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *         by the implementation of the repository service provider.
+   * @since 1.31
+   */
+  public OutgoingCommandBuilder getOutgoingCommand()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create outgoing command for repository {}",
+        repository.getName());
+    }
+
+    return new OutgoingCommandBuilder(cacheManager,
+      provider.getOutgoingCommand(), repository, preProcessorUtil);
   }
 
   /**

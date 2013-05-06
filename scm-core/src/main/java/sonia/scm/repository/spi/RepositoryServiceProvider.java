@@ -142,6 +142,7 @@ public abstract class RepositoryServiceProvider implements Closeable
    *
    *
    * @return
+   * @since 1.31
    */
   public IncomingCommand getIncomingCommand()
   {
@@ -157,6 +158,18 @@ public abstract class RepositoryServiceProvider implements Closeable
   public LogCommand getLogCommand()
   {
     throw new CommandNotSupportedException(Command.LOG);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.31
+   */
+  public OutgoingCommand getOutgoingCommand()
+  {
+    throw new CommandNotSupportedException(Command.OUTGOING);
   }
 
   /**
