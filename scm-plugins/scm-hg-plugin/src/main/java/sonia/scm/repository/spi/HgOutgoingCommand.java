@@ -29,32 +29,69 @@
 
 
 
-package sonia.scm.repository.spi.javahg;
+package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.Repository;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.spi.javahg.HgOutgoingChangesetCommand;
 
-import sonia.scm.repository.HgConfig;
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgIncomingChangesetCommand
-  extends HgIncomingOutgoingChangesetCommand
+public class HgOutgoingCommand extends AbstractCommand
+  implements OutgoingCommand
 {
 
   /**
    * Constructs ...
    *
    *
+   * @param context
    * @param repository
-   * @param config
+   * @param handler
    */
-  private HgIncomingChangesetCommand(Repository repository, HgConfig config)
+  public HgOutgoingCommand(HgCommandContext context, Repository repository,
+    HgRepositoryHandler handler)
   {
-    super(repository, config);
+    super(context, repository);
+    this.handler = handler;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  @Override
+  public ChangesetPagingResult getOutgoingChangesets(
+    OutgoingCommandRequest request)
+  {
+    File remoteRepository = handler.getDirectory(request.getRemoteRepository());
+
+    com.aragost.javahg.Repository repository = open();
+
+    // TODO implement paging
+
+    List<Changeset> changesets =
+      on(repository).execute(remoteRepository.getAbsolutePath());
+
+    return new ChangesetPagingResult(changesets.size(), changesets);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -64,27 +101,17 @@ public class HgIncomingChangesetCommand
    *
    *
    * @param repository
-   * @param config
    *
    * @return
    */
-  public static HgIncomingChangesetCommand on(Repository repository,
-    HgConfig config)
+  private HgOutgoingChangesetCommand on(
+    com.aragost.javahg.Repository repository)
   {
-    return new HgIncomingChangesetCommand(repository, config);
+    return HgOutgoingChangesetCommand.on(repository, getContext().getConfig());
   }
 
-  //~--- get methods ----------------------------------------------------------
+  //~--- fields ---------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getCommandName()
-  {
-    return "incoming";
-  }
+  /** Field description */
+  private HgRepositoryHandler handler;
 }

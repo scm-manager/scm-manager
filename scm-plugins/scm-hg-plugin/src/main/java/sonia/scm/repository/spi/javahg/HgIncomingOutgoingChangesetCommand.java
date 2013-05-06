@@ -34,15 +34,23 @@ package sonia.scm.repository.spi.javahg;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.aragost.javahg.Repository;
+import com.aragost.javahg.internals.HgInputStream;
 
+import com.google.common.io.Closeables;
+
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgConfig;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgIncomingChangesetCommand
-  extends HgIncomingOutgoingChangesetCommand
+public abstract class HgIncomingOutgoingChangesetCommand
+  extends AbstractChangesetCommand
 {
 
   /**
@@ -52,7 +60,8 @@ public class HgIncomingChangesetCommand
    * @param repository
    * @param config
    */
-  private HgIncomingChangesetCommand(Repository repository, HgConfig config)
+  public HgIncomingOutgoingChangesetCommand(Repository repository,
+    HgConfig config)
   {
     super(repository, config);
   }
@@ -63,28 +72,27 @@ public class HgIncomingChangesetCommand
    * Method description
    *
    *
-   * @param repository
-   * @param config
+   * @param remoteRepository
    *
    * @return
    */
-  public static HgIncomingChangesetCommand on(Repository repository,
-    HgConfig config)
+  public List<Changeset> execute(String remoteRepository)
   {
-    return new HgIncomingChangesetCommand(repository, config);
-  }
+    cmdAppend("--style", CHANGESET_EAGER_STYLE_PATH);
 
-  //~--- get methods ----------------------------------------------------------
+    List<Changeset> changesets = null;
+    HgInputStream stream = null;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getCommandName()
-  {
-    return "incoming";
+    try
+    {
+      stream = launchStream(remoteRepository);
+      changesets = readListFromStream(stream);
+    }
+    finally
+    {
+      Closeables.closeQuietly(stream);
+    }
+
+    return changesets;
   }
 }

@@ -41,7 +41,7 @@ import sonia.scm.repository.HgConfig;
  *
  * @author Sebastian Sdorra
  */
-public class HgIncomingChangesetCommand
+public class HgOutgoingChangesetCommand
   extends HgIncomingOutgoingChangesetCommand
 {
 
@@ -52,7 +52,7 @@ public class HgIncomingChangesetCommand
    * @param repository
    * @param config
    */
-  private HgIncomingChangesetCommand(Repository repository, HgConfig config)
+  public HgOutgoingChangesetCommand(Repository repository, HgConfig config)
   {
     super(repository, config);
   }
@@ -68,10 +68,10 @@ public class HgIncomingChangesetCommand
    *
    * @return
    */
-  public static HgIncomingChangesetCommand on(Repository repository,
+  public static HgOutgoingChangesetCommand on(Repository repository,
     HgConfig config)
   {
-    return new HgIncomingChangesetCommand(repository, config);
+    return new HgOutgoingChangesetCommand(repository, config);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -85,6 +85,6 @@ public class HgIncomingChangesetCommand
   @Override
   public String getCommandName()
   {
-    return "incoming";
+    return "outgoing";
   }
 }

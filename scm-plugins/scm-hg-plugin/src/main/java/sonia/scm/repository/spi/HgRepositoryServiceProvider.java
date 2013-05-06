@@ -67,7 +67,8 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
     Command.LOG,
     Command.TAGS, 
     Command.BRANCHES,
-    Command.INCOMING
+    Command.INCOMING,
+    Command.OUTGOING
   );
   //J+
 
@@ -193,6 +194,18 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public HgLogCommand getLogCommand()
   {
     return new HgLogCommand(context, repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public OutgoingCommand getOutgoingCommand()
+  {
+    return new HgOutgoingCommand(context, repository, handler);
   }
 
   /**
