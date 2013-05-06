@@ -157,7 +157,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   },
 
   openChangesetViewer: function(changesetViewer){
-    if ( changesetViewer === null ){
+    if ( ! changesetViewer ){
       changesetViewer = this.createChangesetViewer();
     }
     main.addTab(changesetViewer);

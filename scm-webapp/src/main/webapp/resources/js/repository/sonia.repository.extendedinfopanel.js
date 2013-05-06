@@ -103,7 +103,7 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
   },
   
   openRepositoryBrowser: function(browser){
-    if ( browser == null ){
+    if ( ! browser ){
       browser = this.createRepositoryBrowser();
     }
     main.addTab(browser);
