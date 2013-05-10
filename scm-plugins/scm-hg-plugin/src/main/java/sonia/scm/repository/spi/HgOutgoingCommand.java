@@ -33,16 +33,20 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.aragost.javahg.commands.ExecutionException;
+
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.javahg.HgOutgoingChangesetCommand;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,6 +56,11 @@ import java.util.List;
 public class HgOutgoingCommand extends AbstractCommand
   implements OutgoingCommand
 {
+
+  /** Field description */
+  private static final int NO_OUTGOING_CHANGESETS = 1;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -77,10 +86,13 @@ public class HgOutgoingCommand extends AbstractCommand
    * @param request
    *
    * @return
+   *
+   * @throws RepositoryException
    */
   @Override
   public ChangesetPagingResult getOutgoingChangesets(
     OutgoingCommandRequest request)
+    throws RepositoryException
   {
     File remoteRepository = handler.getDirectory(request.getRemoteRepository());
 
@@ -88,8 +100,23 @@ public class HgOutgoingCommand extends AbstractCommand
 
     // TODO implement paging
 
-    List<Changeset> changesets =
-      on(repository).execute(remoteRepository.getAbsolutePath());
+    List<Changeset> changesets;
+
+    try
+    {
+      changesets = on(repository).execute(remoteRepository.getAbsolutePath());
+    }
+    catch (ExecutionException ex)
+    {
+      if (ex.getCommand().getReturnCode() == NO_OUTGOING_CHANGESETS)
+      {
+        changesets = Collections.EMPTY_LIST;
+      }
+      else
+      {
+        throw new RepositoryException("could not execute outgoing command", ex);
+      }
+    }
 
     return new ChangesetPagingResult(changesets.size(), changesets);
   }
