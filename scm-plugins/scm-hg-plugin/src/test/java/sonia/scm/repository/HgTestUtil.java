@@ -37,6 +37,16 @@ package sonia.scm.repository;
 
 import org.junit.Assume;
 
+import sonia.scm.SCMContext;
+import sonia.scm.io.FileSystem;
+import sonia.scm.store.MemoryStoreFactory;
+
+import static org.mockito.Mockito.mock;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -73,5 +83,31 @@ public final class HgTestUtil
       System.out.println("WARNING mercurial test are disabled");
       Assume.assumeTrue(false);
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   *
+   * @return
+   */
+  public static HgRepositoryHandler createHandler(File directory)
+  {
+    TempSCMContextProvider context =
+      (TempSCMContextProvider) SCMContext.getContext();
+
+    context.setBaseDirectory(directory);
+
+    FileSystem fileSystem = mock(FileSystem.class);
+
+    HgRepositoryHandler handler =
+      new HgRepositoryHandler(new MemoryStoreFactory(), fileSystem,
+        new HgContextProvider());
+
+    handler.init(context);
+
+    return handler;
   }
 }

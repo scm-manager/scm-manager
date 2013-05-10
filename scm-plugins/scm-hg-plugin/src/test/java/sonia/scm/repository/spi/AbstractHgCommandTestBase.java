@@ -85,17 +85,7 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
   @Before
   public void initHgHandler() throws IOException
   {
-    File folder = tempFolder.newFolder();
-    TempSCMContextProvider context =
-      (TempSCMContextProvider) SCMContext.getContext();
-
-    context.setBaseDirectory(folder);
-
-    FileSystem fileSystem = mock(FileSystem.class);
-
-    this.handler = new HgRepositoryHandler(new MemoryStoreFactory(),
-      fileSystem, new HgContextProvider());
-    this.handler.init(context);
+    this.handler = HgTestUtil.createHandler(tempFolder.newFolder());
 
     HgTestUtil.checkForSkip(handler);
 
