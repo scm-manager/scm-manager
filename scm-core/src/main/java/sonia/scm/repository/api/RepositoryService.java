@@ -301,6 +301,25 @@ public final class RepositoryService implements Closeable
   }
 
   /**
+   * The pull command pull changes from a other repository.
+   *
+   * @return instance of {@link PullCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *         by the implementation of the repository service provider.
+   * @since 1.31
+   */
+  public PullCommandBuilder getPullCommand()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create pull command for repository {}",
+        repository.getName());
+    }
+
+    return new PullCommandBuilder(provider.getPullCommand());
+  }
+
+  /**
    * The push command push changes to a other repository.
    *
    * @return instance of {@link PushCommandBuilder}

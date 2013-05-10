@@ -31,33 +31,53 @@
 
 package sonia.scm.repository.api;
 
-//~--- JDK imports ------------------------------------------------------------
+//~--- non-JDK imports --------------------------------------------------------
 
-import javax.xml.bind.annotation.XmlRootElement;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.spi.PullCommand;
+import sonia.scm.repository.spi.PullCommandRequest;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.31
  */
-@XmlRootElement(name = "push-response")
-public final class PushResponse extends AbstractPushOrPullResponse
+public final class PullCommandBuilder
 {
 
   /**
    * Constructs ...
    *
+   *
+   * @param command
    */
-  public PushResponse() {}
+  PullCommandBuilder(PullCommand command)
+  {
+    this.command = command;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Method description
    *
    *
-   * @param changesetCount
+   * @param remoteRepository
+   *
+   * @return
    */
-  public PushResponse(int changesetCount)
+  public PullResponse pull(Repository remoteRepository)
   {
-    super(changesetCount);
+    request.setRemoteRepository(remoteRepository);
+
+    return command.pull(request);
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private PullCommand command;
+
+  /** Field description */
+  private PullCommandRequest request = new PullCommandRequest();
 }

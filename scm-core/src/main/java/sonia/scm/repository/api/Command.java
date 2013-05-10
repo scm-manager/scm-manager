@@ -52,9 +52,9 @@ public enum Command
    * @since 1.18
    */
   BRANCHES,
-  
+
   /**
    * @since 1.31
    */
-  INCOMING, OUTGOING, PUSH;
+  INCOMING, OUTGOING, PUSH, PULL;
 }

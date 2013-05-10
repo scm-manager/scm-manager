@@ -26,38 +26,23 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
-
 package sonia.scm.repository.api;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.31
  */
-@XmlRootElement(name = "push-response")
-public final class PushResponse extends AbstractPushOrPullResponse
+public final class PullResponse extends AbstractPushOrPullResponse
 {
 
-  /**
-   * Constructs ...
-   *
-   */
-  public PushResponse() {}
+  public PullResponse()
+  {
+  }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param changesetCount
-   */
-  public PushResponse(int changesetCount)
+  public PullResponse(int changesetCount)
   {
     super(changesetCount);
   }
+  
 }

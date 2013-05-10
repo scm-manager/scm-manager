@@ -29,35 +29,11 @@
 
 
 
-package sonia.scm.repository.api;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import javax.xml.bind.annotation.XmlRootElement;
+package sonia.scm.repository.spi;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.31
  */
-@XmlRootElement(name = "push-response")
-public final class PushResponse extends AbstractPushOrPullResponse
-{
-
-  /**
-   * Constructs ...
-   *
-   */
-  public PushResponse() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param changesetCount
-   */
-  public PushResponse(int changesetCount)
-  {
-    super(changesetCount);
-  }
-}
+public final class PullCommandRequest extends RemoteCommandRequest {}
