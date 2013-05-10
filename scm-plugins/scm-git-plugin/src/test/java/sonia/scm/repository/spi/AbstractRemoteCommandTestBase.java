@@ -64,7 +64,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class AbstractGitIncomingOutgoingCommandTestBase
+public class AbstractRemoteCommandTestBase
 {
 
   /**

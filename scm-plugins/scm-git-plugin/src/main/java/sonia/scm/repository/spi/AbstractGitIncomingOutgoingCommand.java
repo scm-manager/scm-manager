@@ -36,14 +36,11 @@ package sonia.scm.repository.spi;
 import com.google.common.collect.Lists;
 import com.google.common.io.Closeables;
 
-import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.transport.RefSpec;
 
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -59,7 +56,6 @@ import java.io.IOException;
 
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -70,16 +66,7 @@ public abstract class AbstractGitIncomingOutgoingCommand
 {
 
   /** Field description */
-  private static final String REFSPEC = "+refs/heads/*:refs/remote/scm/%s/*";
-
-  /** Field description */
-  private static final String REMOTE_REF = "refs/remote/scm/%s/%s";
-
-  /** Field description */
   private static final String REMOTE_REF_PREFIX = "refs/remote/scm/%s/";
-
-  /** Field description */
-  private static final int TIMEOUT = 5;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -115,6 +102,18 @@ public abstract class AbstractGitIncomingOutgoingCommand
     ObjectId remoteId)
     throws IOException;
 
+  /**
+   * Method description
+   *
+   *
+   * @param localId
+   * @param remoteId
+   *
+   * @return
+   */
+  protected abstract boolean retrieveChangesets(ObjectId localId,
+    ObjectId remoteId);
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -135,29 +134,17 @@ public abstract class AbstractGitIncomingOutgoingCommand
     Repository remoteRepository = request.getRemoteRepository();
 
     Git git = Git.wrap(open());
-    FetchCommand fetch = git.fetch();
 
-    fetch.setRemote(handler.getDirectory(remoteRepository).getAbsolutePath());
-    fetch.setRefSpecs(createRefSpec(remoteRepository));
-    fetch.setTimeout((int) TimeUnit.MINUTES.toSeconds(TIMEOUT));
-
-    try
-    {
-      fetch.call();
-    }
-    catch (GitAPIException ex)
-    {
-      throw new RepositoryException("could not fetch", ex);
-    }
+    GitUtil.fetch(git, handler.getDirectory(repository), remoteRepository);
 
     ObjectId localId = GitUtil.getRepositoryHead(git.getRepository());
     ObjectId remoteId = null;
-    
 
     Ref remoteBranch = getRemoteBranch(git.getRepository(), localId,
                          remoteRepository);
-    
-    if ( remoteBranch != null ){
+
+    if (remoteBranch != null)
+    {
       remoteId = remoteBranch.getObjectId();
     }
 
@@ -202,25 +189,6 @@ public abstract class AbstractGitIncomingOutgoingCommand
 
     return new ChangesetPagingResult(changesets.size(), changesets);
   }
-  
-  protected abstract boolean retrieveChangesets(ObjectId localId, ObjectId remoteId);
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  private RefSpec createRefSpec(Repository repository)
-  {
-    return new RefSpec(String.format(REFSPEC, repository.getId()));
-  }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -247,13 +215,14 @@ public abstract class AbstractGitIncomingOutgoingCommand
 
       if (localBranch != null)
       {
-        ref = repository.getRef(getScmRemoteRefName(remoteRepository,
+        ref = repository.getRef(GitUtil.getScmRemoteRefName(remoteRepository,
           localBranch));
       }
     }
     else
     {
-      ref = repository.getRef(getScmRemoteRefName(remoteRepository, "master"));
+      ref = repository.getRef(GitUtil.getScmRemoteRefName(remoteRepository,
+        "master"));
 
       if (ref == null)
       {
@@ -278,34 +247,6 @@ public abstract class AbstractGitIncomingOutgoingCommand
     }
 
     return ref;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param localBranch
-   *
-   * @return
-   */
-  private String getScmRemoteRefName(Repository repository, Ref localBranch)
-  {
-    return getScmRemoteRefName(repository, localBranch.getName());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param localBranch
-   *
-   * @return
-   */
-  private String getScmRemoteRefName(Repository repository, String localBranch)
-  {
-    return String.format(REMOTE_REF, repository.getId(), localBranch);
   }
 
   //~--- fields ---------------------------------------------------------------

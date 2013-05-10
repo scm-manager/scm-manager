@@ -33,10 +33,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Iterables;
-
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.transport.PushResult;
 
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -96,9 +93,8 @@ public class GitPushCommand extends AbstractGitCommand implements PushCommand
 
     try
     {
-      Iterable<PushResult> results = push.call();
-
-      response = new PushResponse(Iterables.size(results));
+      push.call();
+      response = new PushResponse();
     }
     catch (Exception ex)
     {

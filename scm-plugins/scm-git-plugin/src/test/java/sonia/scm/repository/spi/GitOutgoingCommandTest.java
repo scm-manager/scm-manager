@@ -53,7 +53,7 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  */
 public class GitOutgoingCommandTest
-  extends AbstractGitIncomingOutgoingCommandTestBase
+  extends AbstractRemoteCommandTestBase
 {
 
   /**
