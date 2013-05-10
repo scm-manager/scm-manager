@@ -55,11 +55,18 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
   /** Field description */
-  public static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
-                                                 Command.BROWSE, Command.CAT,
-                                                 Command.DIFF, Command.LOG,
-                                                 Command.TAGS,
-                                                 Command.BRANCHES);
+  //J-
+  public static final Set<Command> COMMANDS = ImmutableSet.of(
+    Command.BLAME,
+    Command.BROWSE,
+    Command.CAT,
+    Command.DIFF, 
+    Command.LOG,
+    Command.TAGS,
+    Command.BRANCHES, 
+    Command.INCOMING
+  );
+  //J+
 
   //~--- constructors ---------------------------------------------------------
 
@@ -160,6 +167,18 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
    * @return
    */
   @Override
+  public IncomingCommand getIncomingCommand()
+  {
+    return new GitIncomingCommand(handler, context, repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public LogCommand getLogCommand()
   {
     return new GitLogCommand(context, repository);
@@ -193,6 +212,9 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private GitContext context;
+
+  /** Field description */
+  private GitRepositoryHandler handler;
 
   /** Field description */
   private Repository repository;

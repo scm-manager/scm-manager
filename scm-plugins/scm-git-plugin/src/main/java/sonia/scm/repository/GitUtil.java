@@ -40,6 +40,9 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RepositoryCache;
@@ -382,11 +385,62 @@ public final class GitUtil
    * Method description
    *
    *
+   * @param repository
+   * @param id
+   *
+   * @return
+   *
+   * @throws IncorrectObjectTypeException
+   * @throws MissingObjectException
+   *
+   * @throws IOException
+   */
+  public static Ref getRefForCommit(org.eclipse.jgit.lib.Repository repository,
+    ObjectId id)
+    throws IOException
+  {
+    Ref ref = null;
+    RevWalk walk = null;
+
+    try
+    {
+      walk = new RevWalk(repository);
+
+      RevCommit commit = walk.parseCommit(id);
+
+      for (Map.Entry<String, Ref> e : repository.getAllRefs().entrySet())
+      {
+        if (e.getKey().startsWith(Constants.R_HEADS))
+        {
+          if (walk.isMergedInto(commit,
+            walk.parseCommit(e.getValue().getObjectId())))
+          {
+            ref = e.getValue();
+          }
+        }
+      }
+
+    }
+    finally
+    {
+      release(walk);
+    }
+
+    return ref;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repo
    *
    * @return
+   *
+   * @throws IOException
    */
   public static ObjectId getRepositoryHead(org.eclipse.jgit.lib.Repository repo)
+    throws IOException
   {
     ObjectId id = null;
     String head = null;
@@ -415,9 +469,25 @@ public final class GitUtil
       }
     }
 
+    if (id == null)
+    {
+      id = repo.resolve(Constants.HEAD);
+    }
+
     if (logger.isDebugEnabled())
     {
-      logger.debug("use {}:{} as repository head", head, id);
+      if ((head != null) && (id != null))
+      {
+        logger.debug("use {}:{} as repository head", head, id.name());
+      }
+      else if (id != null)
+      {
+        logger.debug("use {} as repository head", id.name());
+      }
+      else
+      {
+        logger.warn("could not find repository head");
+      }
     }
 
     return id;
@@ -470,7 +540,6 @@ public final class GitUtil
     }
 
     return name;
-
   }
 
   //~--- methods --------------------------------------------------------------
