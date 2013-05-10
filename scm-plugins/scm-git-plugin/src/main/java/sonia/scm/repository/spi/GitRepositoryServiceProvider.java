@@ -64,7 +64,9 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.LOG,
     Command.TAGS,
     Command.BRANCHES, 
-    Command.INCOMING
+    Command.INCOMING,
+    Command.OUTGOING,
+    Command.PUSH
   );
   //J+
 
@@ -182,6 +184,18 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   public LogCommand getLogCommand()
   {
     return new GitLogCommand(context, repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public PushCommand getPushCommand()
+  {
+    return new GitPushCommand(handler, context, repository);
   }
 
   /**
