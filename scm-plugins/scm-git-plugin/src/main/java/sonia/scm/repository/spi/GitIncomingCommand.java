@@ -33,34 +33,17 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Lists;
-import com.google.common.io.Closeables;
-
-import org.eclipse.jgit.api.FetchCommand;
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.transport.RefSpec;
 
-import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -83,14 +66,6 @@ public class GitIncomingCommand extends AbstractGitIncomingOutgoingCommand
   {
     super(handler, context, repository);
   }
-
-  @Override
-  protected boolean retrieveChangesets(ObjectId localId, ObjectId remoteId)
-  {
-    return remoteId != null;
-  }
-  
-  
 
   //~--- get methods ----------------------------------------------------------
 
@@ -136,5 +111,20 @@ public class GitIncomingCommand extends AbstractGitIncomingOutgoingCommand
     }
 
     logCommand.add(remoteId);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param localId
+   * @param remoteId
+   *
+   * @return
+   */
+  @Override
+  protected boolean retrieveChangesets(ObjectId localId, ObjectId remoteId)
+  {
+    return remoteId != null;
   }
 }
