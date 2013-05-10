@@ -56,5 +56,5 @@ public enum Command
   /**
    * @since 1.31
    */
-  INCOMING, OUTGOING;
+  INCOMING, OUTGOING, PUSH;
 }

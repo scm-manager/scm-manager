@@ -33,92 +33,23 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Objects;
-
-import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.AbstractPushOrPullResponse;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.31
  */
-public abstract class RemoteCommandRequest
+public interface PushCommand
 {
 
   /**
-   * {@inheritDoc}
-   */
-  @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final RemoteCommandRequest other = (RemoteCommandRequest) obj;
-
-    return Objects.equal(remoteRepository, other.remoteRepository);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(remoteRepository);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public String toString()
-  {
-
-    //J-
-    return Objects.toStringHelper(this)
-                  .add("remoteRepository", remoteRepository)
-                  .toString();
-    //J+
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
    * Method description
    *
    *
-   * @param remoteRepository
-   *
-   * @param remoteRepository
-   */
-  public void setRemoteRepository(Repository remoteRepository)
-  {
-    this.remoteRepository = remoteRepository;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
+   * @param request
    *
    * @return
    */
-  Repository getRemoteRepository()
-  {
-    return remoteRepository;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected Repository remoteRepository;
+  public AbstractPushOrPullResponse push(PushCommandRequest request);
 }

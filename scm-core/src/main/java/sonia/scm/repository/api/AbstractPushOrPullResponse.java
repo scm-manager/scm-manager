@@ -29,79 +29,38 @@
 
 
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
 
-import com.google.common.base.Objects;
-
-import sonia.scm.repository.Repository;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  *
  * @author Sebastian Sdorra
- * @since 1.31
+ * @since 1.31 
  */
-public abstract class RemoteCommandRequest
+@XmlAccessorType(XmlAccessType.FIELD)
+public abstract class AbstractPushOrPullResponse
 {
 
   /**
-   * {@inheritDoc}
+   * Constructs ...
+   *
    */
-  @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final RemoteCommandRequest other = (RemoteCommandRequest) obj;
-
-    return Objects.equal(remoteRepository, other.remoteRepository);
-  }
+  public AbstractPushOrPullResponse() {}
 
   /**
-   * {@inheritDoc}
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(remoteRepository);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public String toString()
-  {
-
-    //J-
-    return Objects.toStringHelper(this)
-                  .add("remoteRepository", remoteRepository)
-                  .toString();
-    //J+
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @param remoteRepository
-   *
-   * @param remoteRepository
+   * @param pushedChangesetCount
    */
-  public void setRemoteRepository(Repository remoteRepository)
+  public AbstractPushOrPullResponse(int changesetCount)
   {
-    this.remoteRepository = remoteRepository;
+    this.changesetCount = changesetCount;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -112,13 +71,14 @@ public abstract class RemoteCommandRequest
    *
    * @return
    */
-  Repository getRemoteRepository()
+  public int getChangesetCount()
   {
-    return remoteRepository;
+    return changesetCount;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  protected Repository remoteRepository;
+  @XmlElement(name = "changeset-count")
+  private int changesetCount;
 }

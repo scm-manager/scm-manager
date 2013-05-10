@@ -29,96 +29,54 @@
 
 
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Objects;
-
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.spi.PushCommand;
+import sonia.scm.repository.spi.PushCommandRequest;
 
 /**
  *
  * @author Sebastian Sdorra
- * @since 1.31
  */
-public abstract class RemoteCommandRequest
+public final class PushCommandBuilder
 {
 
   /**
-   * {@inheritDoc}
+   * Constructs ...
+   *
+   *
+   * @param command
    */
-  @Override
-  public boolean equals(Object obj)
+  PushCommandBuilder(PushCommand command)
   {
-    if (obj == null)
-    {
-      return false;
-    }
-
-    if (getClass() != obj.getClass())
-    {
-      return false;
-    }
-
-    final RemoteCommandRequest other = (RemoteCommandRequest) obj;
-
-    return Objects.equal(remoteRepository, other.remoteRepository);
+    this.command = command;
   }
 
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(remoteRepository);
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  @Override
-  public String toString()
-  {
-
-    //J-
-    return Objects.toStringHelper(this)
-                  .add("remoteRepository", remoteRepository)
-                  .toString();
-    //J+
-  }
-
-  //~--- set methods ----------------------------------------------------------
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
    * @param remoteRepository
-   *
-   * @param remoteRepository
-   */
-  public void setRemoteRepository(Repository remoteRepository)
-  {
-    this.remoteRepository = remoteRepository;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
    *
    * @return
    */
-  Repository getRemoteRepository()
+  public AbstractPushOrPullResponse push(Repository remoteRepository)
   {
-    return remoteRepository;
+    request.setRemoteRepository(remoteRepository);
+
+    return command.push(request);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  protected Repository remoteRepository;
+  private PushCommand command;
+
+  /** Field description */
+  private PushCommandRequest request = new PushCommandRequest();
 }

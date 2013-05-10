@@ -301,6 +301,25 @@ public final class RepositoryService implements Closeable
   }
 
   /**
+   * The push command push changes to a other repository.
+   *
+   * @return instance of {@link PushCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *         by the implementation of the repository service provider.
+   * @since 1.31
+   */
+  public PushCommandBuilder getPushCommand()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create push command for repository {}",
+        repository.getName());
+    }
+
+    return new PushCommandBuilder(provider.getPushCommand());
+  }
+
+  /**
    * Returns the repository of this service.
    *
    * @return repository of this service

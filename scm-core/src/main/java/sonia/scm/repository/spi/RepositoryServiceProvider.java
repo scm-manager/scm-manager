@@ -178,6 +178,17 @@ public abstract class RepositoryServiceProvider implements Closeable
    *
    * @return
    */
+  public PushCommand getPushCommand()
+  {
+    throw new CommandNotSupportedException(Command.PUSH);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public Set<Feature> getSupportedFeatures()
   {
     return Collections.EMPTY_SET;
