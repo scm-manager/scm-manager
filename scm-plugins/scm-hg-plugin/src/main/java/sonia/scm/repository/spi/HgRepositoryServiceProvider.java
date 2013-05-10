@@ -69,7 +69,8 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
     Command.BRANCHES,
     Command.INCOMING,
     Command.OUTGOING,
-    Command.PUSH
+    Command.PUSH,
+    Command.PULL
   );
   //J+
 
@@ -207,6 +208,18 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   public OutgoingCommand getOutgoingCommand()
   {
     return new HgOutgoingCommand(context, repository, handler);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public PullCommand getPullCommand()
+  {
+    return new HgPullCommand(handler, context, repository);
   }
 
   /**
