@@ -34,8 +34,13 @@ package sonia.scm.repository.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.PullCommand;
 import sonia.scm.repository.spi.PullCommandRequest;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 /**
  *
@@ -65,8 +70,12 @@ public final class PullCommandBuilder
    * @param remoteRepository
    *
    * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
   public PullResponse pull(Repository remoteRepository)
+    throws IOException, RepositoryException
   {
     request.setRemoteRepository(remoteRepository);
 
