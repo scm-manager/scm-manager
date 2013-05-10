@@ -41,7 +41,8 @@ import org.junit.Test;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.RepositoryException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -51,7 +52,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class GitIncomingCommandTest
+public class GitOutgoingCommandTest
   extends AbstractGitIncomingOutgoingCommandTestBase
 {
 
@@ -64,7 +65,7 @@ public class GitIncomingCommandTest
    * @throws RepositoryException
    */
   @Test
-  public void testGetIncomingChangesets()
+  public void testGetOutgoingChangesets()
     throws IOException, GitAPIException, RepositoryException
   {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
@@ -75,12 +76,12 @@ public class GitIncomingCommandTest
 
     RevCommit c2 = commit(outgoing, "added b");
 
-    GitIncomingCommand cmd = createCommand();
-    IncomingCommandRequest request = new IncomingCommandRequest();
+    GitOutgoingCommand cmd = createCommand();
+    OutgoingCommandRequest request = new OutgoingCommandRequest();
 
-    request.setRemoteRepository(outgoingRepository);
+    request.setRemoteRepository(incomgingRepository);
 
-    ChangesetPagingResult cpr = cmd.getIncomingChangesets(request);
+    ChangesetPagingResult cpr = cmd.getOutgoingChangesets(request);
 
     assertNotNull(cpr);
 
@@ -97,47 +98,15 @@ public class GitIncomingCommandTest
    * @throws RepositoryException
    */
   @Test
-  public void testGetIncomingChangesetsWithEmptyRepository()
+  public void testGetOutgoingChangesetsWithEmptyRepository()
     throws IOException, RepositoryException
   {
-    GitIncomingCommand cmd = createCommand();
-    IncomingCommandRequest request = new IncomingCommandRequest();
+    GitOutgoingCommand cmd = createCommand();
+    OutgoingCommandRequest request = new OutgoingCommandRequest();
 
-    request.setRemoteRepository(outgoingRepository);
+    request.setRemoteRepository(incomgingRepository);
 
-    ChangesetPagingResult cpr = cmd.getIncomingChangesets(request);
-
-    assertNotNull(cpr);
-
-    assertEquals(0, cpr.getTotal());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @throws GitAPIException
-   * @throws IOException
-   * @throws RepositoryException
-   */
-  @Test
-  public void testGetIncomingChangesetsWithUnrelatedRepository()
-    throws IOException, RepositoryException, GitAPIException
-  {
-    write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
-
-    commit(outgoing, "added a");
-
-    write(incoming, incomingDirectory, "b.txt", "content of b.txt");
-
-    commit(incoming, "added b");
-
-    GitIncomingCommand cmd = createCommand();
-    IncomingCommandRequest request = new IncomingCommandRequest();
-
-    request.setRemoteRepository(outgoingRepository);
-
-    ChangesetPagingResult cpr = cmd.getIncomingChangesets(request);
+    ChangesetPagingResult cpr = cmd.getOutgoingChangesets(request);
 
     assertNotNull(cpr);
 
@@ -150,9 +119,9 @@ public class GitIncomingCommandTest
    *
    * @return
    */
-  private GitIncomingCommand createCommand()
+  private GitOutgoingCommand createCommand()
   {
-    return new GitIncomingCommand(handler, new GitContext(incomingDirectory),
-      incomgingRepository);
+    return new GitOutgoingCommand(handler, new GitContext(outgoingDirectory),
+      outgoingRepository);
   }
 }
