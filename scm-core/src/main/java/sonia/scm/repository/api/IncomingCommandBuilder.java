@@ -33,6 +33,7 @@ package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.io.IOException;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
@@ -41,6 +42,7 @@ import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.IncomingCommand;
 import sonia.scm.repository.spi.IncomingCommandRequest;
 import sonia.scm.security.RepositoryPermission;
@@ -82,7 +84,7 @@ public final class IncomingCommandBuilder
    * @return incoming changesets
    */
   public ChangesetPagingResult getIncomingChangesets(
-    Repository remoteRepository)
+    Repository remoteRepository) throws IOException, RepositoryException
   {
     Subject subject = SecurityUtils.getSubject();
 
