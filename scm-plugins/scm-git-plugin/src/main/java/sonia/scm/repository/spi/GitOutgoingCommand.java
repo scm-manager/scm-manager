@@ -33,24 +33,11 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Lists;
-import com.google.common.io.Closeables;
-
-import org.eclipse.jgit.api.FetchCommand;
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LogCommand;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.transport.RefSpec;
 
-import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 
@@ -58,16 +45,12 @@ import sonia.scm.repository.RepositoryException;
 
 import java.io.IOException;
 
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GitIncomingCommand extends AbstractGitIncomingOutgoingCommand
-  implements IncomingCommand
+public class GitOutgoingCommand extends AbstractGitIncomingOutgoingCommand
+  implements OutgoingCommand
 {
 
   /**
@@ -78,19 +61,11 @@ public class GitIncomingCommand extends AbstractGitIncomingOutgoingCommand
    * @param context
    * @param repository
    */
-  GitIncomingCommand(GitRepositoryHandler handler, GitContext context,
+  GitOutgoingCommand(GitRepositoryHandler handler, GitContext context,
     Repository repository)
   {
     super(handler, context, repository);
   }
-
-  @Override
-  protected boolean retrieveChangesets(ObjectId localId, ObjectId remoteId)
-  {
-    return remoteId != null;
-  }
-  
-  
 
   //~--- get methods ----------------------------------------------------------
 
@@ -106,8 +81,8 @@ public class GitIncomingCommand extends AbstractGitIncomingOutgoingCommand
    * @throws RepositoryException
    */
   @Override
-  public ChangesetPagingResult getIncomingChangesets(
-    IncomingCommandRequest request)
+  public ChangesetPagingResult getOutgoingChangesets(
+    OutgoingCommandRequest request)
     throws IOException, RepositoryException
   {
     return getIncomingOrOutgoingChangesets(request);
@@ -130,11 +105,26 @@ public class GitIncomingCommand extends AbstractGitIncomingOutgoingCommand
     ObjectId remoteId)
     throws IOException
   {
-    if (localId != null)
-    {
-      logCommand.not(localId);
-    }
+    logCommand.add(localId);
 
-    logCommand.add(remoteId);
+    if (remoteId != null)
+    {
+      logCommand.not(remoteId);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param localId
+   * @param remoteId
+   *
+   * @return
+   */
+  @Override
+  protected boolean retrieveChangesets(ObjectId localId, ObjectId remoteId)
+  {
+    return localId != null;
   }
 }
