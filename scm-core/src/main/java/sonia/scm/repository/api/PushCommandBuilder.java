@@ -65,7 +65,7 @@ public final class PushCommandBuilder
    *
    * @return
    */
-  public AbstractPushOrPullResponse push(Repository remoteRepository)
+  public PushResponse push(Repository remoteRepository)
   {
     request.setRemoteRepository(remoteRepository);
 

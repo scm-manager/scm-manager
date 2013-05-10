@@ -33,7 +33,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.api.AbstractPushOrPullResponse;
+import sonia.scm.repository.api.PushResponse;
 
 /**
  *
@@ -51,5 +51,5 @@ public interface PushCommand
    *
    * @return
    */
-  public AbstractPushOrPullResponse push(PushCommandRequest request);
+  public PushResponse push(PushCommandRequest request);
 }
