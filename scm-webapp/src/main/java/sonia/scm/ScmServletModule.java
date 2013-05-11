@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.api.rest.UriExtensionsConfig;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.cache.EhCacheManager;
+import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.filter.AdminSecurityFilter;
@@ -86,13 +86,17 @@ import sonia.scm.resources.ScriptResourceServlet;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.security.DefaultKeyGenerator;
+import sonia.scm.security.DefaultSecuritySystem;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.security.SecurityContext;
+import sonia.scm.security.SecuritySystem;
 import sonia.scm.store.BlobStoreFactory;
+import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.FileBlobStoreFactory;
+import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.store.JAXBDataStoreFactory;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.ListenableStoreFactory;
@@ -142,7 +146,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import sonia.scm.cache.GuavaCacheManager;
 
 /**
  *
@@ -252,6 +255,8 @@ public class ScmServletModule extends ServletModule
     // bind core
     bind(StoreFactory.class, JAXBStoreFactory.class);
     bind(ListenableStoreFactory.class, JAXBStoreFactory.class);
+    bind(ConfigurationEntryStoreFactory.class,
+      JAXBConfigurationEntryStoreFactory.class);
     bind(DataStoreFactory.class, JAXBDataStoreFactory.class);
     bind(BlobStoreFactory.class, FileBlobStoreFactory.class);
     bind(ScmConfiguration.class).toInstance(config);
@@ -271,6 +276,7 @@ public class ScmServletModule extends ServletModule
     bind(AuthenticationManager.class, ChainAuthenticatonManager.class);
     bind(SecurityContext.class).to(BasicSecurityContext.class);
     bind(WebSecurityContext.class).to(BasicSecurityContext.class);
+    bind(SecuritySystem.class).to(DefaultSecuritySystem.class);
     bind(AdministrationContext.class, DefaultAdministrationContext.class);
 
     // bind cache

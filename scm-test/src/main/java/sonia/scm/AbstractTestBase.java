@@ -151,6 +151,7 @@ public class AbstractTestBase
     try
     {
       preTearDown();
+      clearSubject();
     }
     finally
     {
@@ -179,7 +180,7 @@ public class AbstractTestBase
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Clears Shiro's thread state, ensuring the thread remains clean for 
+   * Clears Shiro's thread state, ensuring the thread remains clean for
    * future test execution.
    */
   protected void clearSubject()

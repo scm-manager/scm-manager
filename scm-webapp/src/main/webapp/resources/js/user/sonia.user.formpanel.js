@@ -57,7 +57,7 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       fieldLabel: this.nameText,
       name: 'name',
       allowBlank: false,
-      readOnly: this.item != null,
+      readOnly: this.item !== null,
       helpText: this.usernameHelpText,
       vtype: 'username'
     },{
@@ -75,7 +75,7 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       helpText: this.mailHelpText
     }];
 
-    if ( this.item == null || this.item.type == state.defaultUserType ){
+    if ( this.item === null || this.item.type === state.defaultUserType ){
       items.push({
         fieldLabel: this.passwordText,
         id: 'pwd',
@@ -109,13 +109,13 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       helpText: this.activeHelpText,
       checked: true
     });
-
+    
     Ext.apply(this, Ext.apply(this.initialConfig, {items: items}));
     Sonia.user.FormPanel.superclass.initComponent.apply(this, arguments);
   },
   
   isReadOnly: function(){
-    return this.item != null && this.item.type != state.defaultUserType;
+    return this.item !== null && this.item.type !== state.defaultUserType;
   },
 
   fixRequest: function(user){

@@ -56,12 +56,12 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
         {text: this.okText, formBind: true, scope: this, handler: this.submit},
         {text: this.cancelText, scope: this, handler: this.cancel}
       ]
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.rest.FormPanel.superclass.initComponent.apply(this, arguments);
 
-    if ( this.item != null ){
+    if ( this.item !== null ){
       this.loadData(this.item);
     }
   },
@@ -77,7 +77,7 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
       console.debug( 'form submitted' );
     }
     var item = this.getForm().getFieldValues();
-    if ( this.item != null ){
+    if ( this.item !== null ){
       this.update(item);
     } else {
       this.create(item);

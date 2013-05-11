@@ -34,12 +34,15 @@ Ext.ns('Sonia.user');
 
 // functions
 
-Sonia.user.setEditPanel = function(panel){
+Sonia.user.setEditPanel = function(panels){
   var editPanel = Ext.getCmp('userEditPanel');
   editPanel.removeAll();
-  editPanel.add(panel);
+  Ext.each(panels, function(panel){
+    editPanel.add(panel);
+  });
+  editPanel.setActiveTab(0);
   editPanel.doLayout();
-}
+};
 
 /**
  * Panels
@@ -49,6 +52,7 @@ Sonia.user.DefaultPanel = {
   title: 'User Form',
   padding: 5,
   xtype: 'panel',
+  bodyCssClass: 'x-panel-mc',
   html: 'Add or select an User'
 };
 

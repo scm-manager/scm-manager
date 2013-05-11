@@ -50,7 +50,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   tabUsersText: 'Users',
   navGroupsText: 'Groups',
   tabGroupsText: 'Groups',
-
+  
   sectionLoginText: 'Login',
   navLoginText: 'Login',
 
@@ -236,8 +236,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         label: this.navUsersText,
         fn: this.addUsersTabPanel,
         scope: this
-      });
-      securitySection.links.push({
+      },{
         label: this.navGroupsText,
         fn: this.addGroupsTabPanel,
         scope: this

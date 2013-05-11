@@ -44,15 +44,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.group.GroupNames;
+import sonia.scm.security.RepositoryPermission;
 import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.web.security.WebSecurityContext;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.List;
 
 /**
  *
@@ -179,7 +175,7 @@ public final class PermissionUtil
   public static boolean hasPermission(ScmConfiguration configuration,
     Repository repository, PermissionType pt)
   {
-    boolean result = false;
+    boolean result;
 
     Subject subject = SecurityUtils.getSubject();
 
@@ -196,16 +192,7 @@ public final class PermissionUtil
       }
       else
       {
-        List<Permission> permissions = repository.getPermissions();
-
-        if (permissions != null)
-        {
-          GroupNames groupNames =
-            subject.getPrincipals().oneByType(GroupNames.class);
-
-          result = hasPermission(permissions, username, groupNames, pt);
-
-        }
+        result = subject.isPermitted(new RepositoryPermission(repository, pt));
       }
     }
     else
@@ -269,38 +256,5 @@ public final class PermissionUtil
     }
 
     return permitted;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param permissions
-   * @param username
-   * @param groups
-   * @param pt
-   *
-   * @return
-   */
-  private static boolean hasPermission(List<Permission> permissions,
-    String username, GroupNames groups, PermissionType pt)
-  {
-    boolean result = false;
-
-    for (Permission p : permissions)
-    {
-      String name = p.getName();
-
-      if (((name != null) && (p.getType().getValue() >= pt.getValue()))
-        && (name.equals(username)
-          || (p.isGroupPermission() && groups.contains(p.getName()))))
-      {
-        result = true;
-
-        break;
-      }
-    }
-
-    return result;
   }
 }

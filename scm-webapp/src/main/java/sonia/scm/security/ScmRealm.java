@@ -36,6 +36,7 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
@@ -128,6 +129,7 @@ public class ScmRealm extends AuthorizingRealm
    *
    *
    * @param configuration
+   * @param securitySystem
    * @param cacheManager
    * @param userManager
    * @param groupManager
@@ -139,7 +141,8 @@ public class ScmRealm extends AuthorizingRealm
    * @param responseProvider
    */
   @Inject
-  public ScmRealm(ScmConfiguration configuration, CacheManager cacheManager,
+  public ScmRealm(ScmConfiguration configuration,
+    SecuritySystem securitySystem, CacheManager cacheManager,
     UserManager userManager, GroupManager groupManager,
     RepositoryDAO repositoryDAO, UserDAO userDAO,
     AuthenticationManager authenticator, RepositoryManager manager,
@@ -147,6 +150,7 @@ public class ScmRealm extends AuthorizingRealm
     Provider<HttpServletResponse> responseProvider)
   {
     this.configuration = configuration;
+    this.securitySystem = securitySystem;
     this.userManager = userManager;
     this.groupManager = groupManager;
     this.repositoryDAO = repositoryDAO;
@@ -188,6 +192,27 @@ public class ScmRealm extends AuthorizingRealm
       {
         logger.debug("clear cache, because repository {} has changed",
           event.getItem().getName());
+      }
+
+      cache.clear();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param event
+   */
+  @Subscribe
+  public void onEvent(StoredAssignedPermissionEvent event)
+  {
+    if (event.getEventType().isPost())
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("clear cache, because permission {} has changed",
+          event.getPermission().getId());
       }
 
       cache.clear();
@@ -483,6 +508,51 @@ public class ScmRealm extends AuthorizingRealm
    *
    * @return
    */
+  private List<String> collectGlobalPermissions(final User user,
+    final GroupNames groups)
+  {
+    if (logger.isTraceEnabled())
+    {
+      logger.trace("collect global permissions for user {}", user.getName());
+    }
+
+    List<String> permissions = Lists.newArrayList();
+
+    List<StoredAssignedPermission> globalPermissions =
+      securitySystem.getPermissions(new Predicate<AssignedPermission>()
+    {
+
+      @Override
+      public boolean apply(AssignedPermission input)
+      {
+        return isUserPermission(user, groups, input);
+      }
+    });
+
+    for (StoredAssignedPermission gp : globalPermissions)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("add permission {} for user {}", gp.getPermission(),
+          user.getName());
+      }
+
+      permissions.add(gp.getPermission());
+
+    }
+
+    return permissions;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param groups
+   *
+   * @return
+   */
   private List<org.apache.shiro.authz.Permission> collectRepositoryPermissions(
     User user, GroupNames groups)
   {
@@ -585,7 +655,8 @@ public class ScmRealm extends AuthorizingRealm
     GroupNames groups)
   {
     Set<String> roles = Sets.newHashSet();
-    List<org.apache.shiro.authz.Permission> permissions = null;
+    List<org.apache.shiro.authz.Permission> permissions;
+    List<String> globalPermissions = null;
 
     roles.add(Role.USER);
 
@@ -604,11 +675,17 @@ public class ScmRealm extends AuthorizingRealm
     else
     {
       permissions = collectRepositoryPermissions(user, groups);
+      globalPermissions = collectGlobalPermissions(user, groups);
     }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
 
     info.addObjectPermissions(permissions);
+
+    if (globalPermissions != null)
+    {
+      info.addStringPermissions(globalPermissions);
+    }
 
     return info;
   }
@@ -737,7 +814,7 @@ public class ScmRealm extends AuthorizingRealm
    * @return
    */
   private boolean isUserPermission(User user, GroupNames groups,
-    Permission perm)
+    PermissionObject perm)
   {
     //J-
     return (perm.isGroupPermission() && groups.contains(perm.getName())) 
@@ -767,6 +844,9 @@ public class ScmRealm extends AuthorizingRealm
 
   /** Field description */
   private Provider<HttpServletResponse> responseProvider;
+
+  /** Field description */
+  private SecuritySystem securitySystem;
 
   /** Field description */
   private UserDAO userDAO;

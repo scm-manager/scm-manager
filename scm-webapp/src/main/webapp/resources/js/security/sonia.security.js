@@ -29,33 +29,5 @@
  *
  */
 
-Sonia.rest.Panel = Ext.extend(Ext.Panel, {
-  
-  addText: 'Add',
-  removeText: 'Remove',
-  reloadText: 'Reload',
-  
-  // icons
-  addIcon: 'resources/images/add.png',
-  removeIcon: 'resources/images/delete.png',
-  reloadIcon: 'resources/images/reload.png',
-  helpIcon: 'resources/images/help.png',
-  
-  initComponent: function(){
-    
-    var config = {
-      layout: 'border',
-      hideMode: 'offsets',
-      enableTabScroll: true,
-      region:'center',
-      autoScroll: true
-    };
-    
-    Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.rest.Panel.superclass.initComponent.apply(this, arguments);
-  }
-  
-});
-
-// register xtype
-Ext.reg('restPanel', Sonia.rest.Panel);
+// register namespace
+Ext.ns('Sonia.security');

@@ -47,7 +47,7 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
 
   initComponent: function(){
     this.addEvents('preCreate', 'created', 'preUpdate', 'updated', 'updateFailed', 'creationFailed');
-    Sonia.repository.FormPanel.superclass.initComponent.apply(this, arguments);
+    Sonia.group.FormPanel.superclass.initComponent.apply(this, arguments);
   },
 
   update: function(group){

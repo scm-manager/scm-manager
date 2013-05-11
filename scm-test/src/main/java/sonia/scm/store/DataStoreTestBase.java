@@ -30,26 +30,14 @@
  */
 
 
+
 package sonia.scm.store;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.junit.Before;
-import org.junit.Test;
-
-import sonia.scm.AbstractTestBase;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public abstract class DataStoreTestBase extends AbstractTestBase
+public abstract class DataStoreTestBase extends KeyValueStoreTestBase
 {
 
   /**
@@ -60,155 +48,6 @@ public abstract class DataStoreTestBase extends AbstractTestBase
    */
   protected abstract DataStoreFactory createDataStoreFactory();
 
-  /**
-   * Method description
-   *
-   */
-  @Before
-  public void before()
-  {
-    store = getDataStore();
-    store.clear();
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testClear()
-  {
-    testPutWithId();
-
-    store.clear();
-    assertNull(store.get("1"));
-    assertNull(store.get("2"));
-
-    assertTrue(store.getAll().isEmpty());
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testGet()
-  {
-    StoreObject other = store.get("1");
-
-    assertNull(other);
-
-    StoreObject obj = new StoreObject("test-1");
-
-    store.put("1", obj);
-    other = store.get("1");
-    assertNotNull(other);
-    assertEquals(obj, other);
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testGetAll()
-  {
-    StoreObject obj1 = new StoreObject("test-1");
-
-    store.put("1", obj1);
-
-    StoreObject obj2 = new StoreObject("test-2");
-
-    store.put("2", obj2);
-
-    Map<String, StoreObject> map = store.getAll();
-
-    assertNotNull(map);
-
-    assertFalse(map.isEmpty());
-    assertEquals(2, map.size());
-
-    assertEquals(obj1, map.get("1"));
-    assertEquals(obj2, map.get("2"));
-
-    assertNull(map.get("3"));
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testGetAllFromEmpty()
-  {
-    Map<String, StoreObject> map = store.getAll();
-
-    assertNotNull(map);
-    assertTrue(map.isEmpty());
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testGetFromEmpty()
-  {
-    StoreObject obj = store.get("test");
-
-    assertNull(obj);
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testPutWithId()
-  {
-    StoreObject obj1 = new StoreObject("test-1");
-
-    store.put("1", obj1);
-
-    StoreObject obj2 = new StoreObject("test-2");
-
-    store.put("2", obj2);
-
-    assertEquals(obj1, store.get("1"));
-    assertEquals(obj2, store.get("2"));
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testPutWithoutId()
-  {
-    StoreObject obj = new StoreObject("test-1");
-    String id = store.put(obj);
-
-    assertNotNull(id);
-
-    assertEquals(obj, store.get(id));
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testRemove()
-  {
-    testPutWithId();
-
-    store.remove("1");
-    assertNull(store.get("1"));
-    assertNotNull(store.get("2"));
-    store.remove("2");
-    assertNull(store.get("2"));
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -217,13 +56,9 @@ public abstract class DataStoreTestBase extends AbstractTestBase
    *
    * @return
    */
-  private DataStore<StoreObject> getDataStore()
+  @Override
+  protected DataStore<StoreObject> getDataStore()
   {
     return createDataStoreFactory().getStore(StoreObject.class, "test");
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private DataStore<StoreObject> store;
 }

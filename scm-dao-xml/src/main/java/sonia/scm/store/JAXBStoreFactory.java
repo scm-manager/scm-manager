@@ -56,12 +56,6 @@ import java.io.IOException;
 public class JAXBStoreFactory implements ListenableStoreFactory
 {
 
-  /** Field description */
-  public static final String CONFIGDIRECTORY_NAME = "config";
-
-  /** Field description */
-  public static final String FILE_EXTENSION = ".xml";
-
   /** the logger for JAXBStoreFactory */
   private static final Logger logger =
     LoggerFactory.getLogger(JAXBStoreFactory.class);
@@ -91,7 +85,7 @@ public class JAXBStoreFactory implements ListenableStoreFactory
   public void init(SCMContextProvider context)
   {
     configDirectory = new File(context.getBaseDirectory(),
-      CONFIGDIRECTORY_NAME);
+      StoreConstants.CONFIGDIRECTORY_NAME);
     IOUtil.mkdirs(configDirectory);
   }
 
@@ -115,7 +109,8 @@ public class JAXBStoreFactory implements ListenableStoreFactory
       throw new IllegalStateException("store factory is not initialized");
     }
 
-    File configFile = new File(configDirectory, name.concat(FILE_EXTENSION));
+    File configFile = new File(configDirectory,
+                        name.concat(StoreConstants.FILE_EXTENSION));
 
     if (logger.isDebugEnabled())
     {
