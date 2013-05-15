@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -41,6 +42,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
+import sonia.scm.AbstractTestBase;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.util.IOUtil;
@@ -63,7 +65,7 @@ import java.util.zip.ZipInputStream;
  *
  * @author Sebastian Sdorra
  */
-public abstract class ZippedRepositoryTestBase
+public abstract class ZippedRepositoryTestBase extends AbstractTestBase
 {
 
   /**
@@ -104,7 +106,7 @@ public abstract class ZippedRepositoryTestBase
   {
     assertNotNull(date);
     assertTrue("Date should not be older than current date",
-               date < System.currentTimeMillis());
+      date < System.currentTimeMillis());
   }
 
   /**
