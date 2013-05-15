@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.event.Subscriber;
 
 /**
  *
@@ -80,16 +81,38 @@ public class ScmEventBusModule extends AbstractModule
           @Override
           public void afterInjection(Object object)
           {
-            if (logger.isTraceEnabled())
-            {
-              logger.trace("register subscriber {}", object.getClass());
-            }
+            Class<?> clazz = object.getClass();
 
-            ScmEventBus.getInstance().register(object);
+            logger.trace("register subscriber {}", clazz);
+
+            ScmEventBus.getInstance().register(object, isAsync(clazz));
           }
         });
       }
 
     });
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param clazz
+   *
+   * @return
+   */
+  private boolean isAsync(Class<?> clazz)
+  {
+    boolean async = true;
+    Subscriber subscriber = clazz.getAnnotation(Subscriber.class);
+
+    if (subscriber != null)
+    {
+      async = subscriber.async();
+    }
+
+    return async;
   }
 }
