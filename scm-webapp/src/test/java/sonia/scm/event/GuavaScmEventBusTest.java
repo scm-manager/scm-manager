@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.event;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -48,6 +49,10 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserEvent;
 
 import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 /**
  *
@@ -133,7 +138,30 @@ public class GuavaScmEventBusTest extends AbstractTestBase
    *
    */
   @Test(expected = EventBusException.class)
-  public void testSyncPostWithException()
+  public void testSyncPostWithCheckedException()
+  {
+    GuavaScmEventBus eventBus = new GuavaScmEventBus();
+
+    eventBus.register(new Object()
+    {
+
+      @Subscribe
+      public void handleEvent(Object event) throws IOException
+      {
+        throw new IOException("could not handle event");
+      }
+
+    }, false);
+
+    eventBus.post(new Object());
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test(expected = RuntimeException.class)
+  public void testSyncPostWithRuntimeException()
   {
     GuavaScmEventBus eventBus = new GuavaScmEventBus();
 

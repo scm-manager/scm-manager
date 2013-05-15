@@ -30,9 +30,15 @@
  */
 
 
+
 package com.google.common.eventbus;
 
 //~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Throwables;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.event.EventBusException;
 
@@ -47,6 +53,14 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class ThrowingEventBus extends EventBus
 {
+
+  /**
+   * the logger for ThrowingEventBus
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ThrowingEventBus.class);
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * {@inheritDoc}
@@ -64,8 +78,13 @@ public class ThrowingEventBus extends EventBus
     }
     catch (InvocationTargetException ex)
     {
+      Throwable cause = ex.getCause();
+
+      Throwables.propagateIfPossible(cause);
+      logger.trace("could not propagate exception, throw as EventBusException");
+
       throw new EventBusException(
-        "could not handle event ".concat(event.toString()), ex);
+        "could not handle event ".concat(event.toString()), cause);
     }
   }
 }
