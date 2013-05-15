@@ -38,6 +38,7 @@ import com.aragost.javahg.Changeset;
 import org.junit.Test;
 
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.RepositoryException;
 
 import static org.junit.Assert.assertEquals;
@@ -148,7 +149,9 @@ public class HgOutgoingCommandTest extends IncomingOutgoingTestBase
    */
   private HgOutgoingCommand createOutgoingCommand()
   {
-    return new HgOutgoingCommand(new HgCommandContext(handler.getConfig(),
-      outgoingRepository, outgoingDirectory), outgoingRepository, handler);
+    return new HgOutgoingCommand(
+      new HgCommandContext(
+        HgTestUtil.createHookManager(), handler, outgoingRepository,
+          outgoingDirectory), outgoingRepository, handler);
   }
 }

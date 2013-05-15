@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgEnvironment;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgPythonScript;
 import sonia.scm.repository.HgRepositoryHandler;
@@ -51,7 +52,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.Util;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.EnvList;
@@ -78,12 +78,6 @@ public class HgCGIServlet extends HttpServlet
 {
 
   /** Field description */
-  public static final String ENV_CHALLENGE = "SCM_CHALLENGE";
-
-  /** Field description */
-  public static final String ENV_PYTHON_PATH = "PYTHONPATH";
-
-  /** Field description */
   public static final String ENV_REPOSITORY_NAME = "REPO_NAME";
 
   /** Field description */
@@ -91,12 +85,6 @@ public class HgCGIServlet extends HttpServlet
 
   /** Field description */
   public static final String ENV_SESSION_PREFIX = "SCM_";
-
-  /** Field description */
-  public static final String ENV_URL = "SCM_URL";
-
-  /** Field description */
-  public static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
 
   /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
@@ -240,12 +228,6 @@ public class HgCGIServlet extends HttpServlet
         env.set(key, session.getAttribute(key).toString());
       }
     }
-
-    // issue-97
-    if (!env.containsKey(SCM_CREDENTIALS))
-    {
-      env.set(SCM_CREDENTIALS, Util.EMPTY_STRING);
-    }
   }
 
   /**
@@ -265,7 +247,6 @@ public class HgCGIServlet extends HttpServlet
   {
     String name = repository.getName();
     File directory = handler.getDirectory(repository);
-    String pythonPath = HgUtil.getPythonPath(handler.getConfig());
     CGIExecutor executor = cgiExecutorFactory.createExecutor(configuration,
                              getServletContext(), request, response);
 
@@ -277,9 +258,15 @@ public class HgCGIServlet extends HttpServlet
     executor.getEnvironment().set(ENV_REPOSITORY_NAME, name);
     executor.getEnvironment().set(ENV_REPOSITORY_PATH,
       directory.getAbsolutePath());
-    executor.getEnvironment().set(ENV_URL, hookManager.createUrl(request));
-    executor.getEnvironment().set(ENV_CHALLENGE, hookManager.getChallenge());
-    executor.getEnvironment().set(ENV_PYTHON_PATH, pythonPath);
+    // add hook environment
+    //J-
+    HgEnvironment.prepareEnvironment(
+      executor.getEnvironment().asMutableMap(),
+      handler,
+      hookManager, 
+      request
+    );
+    //J+
 
     HttpSession session = request.getSession();
 

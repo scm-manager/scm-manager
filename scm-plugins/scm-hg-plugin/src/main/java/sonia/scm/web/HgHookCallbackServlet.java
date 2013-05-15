@@ -280,7 +280,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
       repositoryManager.fireHookEvent(HgRepositoryHandler.TYPE_NAME,
         repositoryName,
-        new HgRepositoryHookEvent(handler, repositoryName, node, type));
+        new HgRepositoryHookEvent(handler, hookManager, repositoryName, node, type));
     }
     catch (RepositoryNotFoundException ex)
     {

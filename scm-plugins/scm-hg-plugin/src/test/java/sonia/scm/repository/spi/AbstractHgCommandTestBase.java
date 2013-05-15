@@ -38,20 +38,13 @@ package sonia.scm.repository.spi;
 import org.junit.After;
 import org.junit.Before;
 
-import sonia.scm.SCMContext;
-import sonia.scm.io.FileSystem;
-import sonia.scm.repository.HgContextProvider;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.TempSCMContextProvider;
-import sonia.scm.store.MemoryStoreFactory;
-
-import static org.mockito.Mockito.*;
+import sonia.scm.util.MockUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -89,8 +82,20 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
 
     HgTestUtil.checkForSkip(handler);
 
-    cmdContext = new HgCommandContext(handler.getConfig(),
+    cmdContext = new HgCommandContext(HgTestUtil.createHookManager(), handler,
       RepositoryTestData.createHeartOfGold(), repositoryDirectory);
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Before
+  public void setUp()
+  {
+    setSubject(MockUtil.createAdminSubject());
   }
 
   //~--- get methods ----------------------------------------------------------

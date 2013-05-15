@@ -38,6 +38,7 @@ package sonia.scm.repository.spi;
 import com.google.inject.Inject;
 
 import sonia.scm.plugin.ext.Extension;
+import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 
@@ -58,12 +59,16 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
    * Constructs ...
    *
    *
+   *
+   * @param hookManager
    * @param handler
    */
   @Inject
-  public HgRepositoryServiceResolver(HgRepositoryHandler handler)
+  public HgRepositoryServiceResolver(HgRepositoryHandler handler,
+    HgHookManager hookManager)
   {
     this.handler = handler;
+    this.hookManager = hookManager;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -83,7 +88,8 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
 
     if (TYPE.equalsIgnoreCase(repository.getType()))
     {
-      provider = new HgRepositoryServiceProvider(handler, repository);
+      provider = new HgRepositoryServiceProvider(handler, hookManager,
+        repository);
     }
 
     return provider;
@@ -93,4 +99,7 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
 
   /** Field description */
   private HgRepositoryHandler handler;
+
+  /** Field description */
+  private HgHookManager hookManager;
 }

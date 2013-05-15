@@ -82,14 +82,17 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
    *
    *
    * @param configuration
+   * @param httpServletRequestProvider
    * @param httpClientProvider
    */
   @Inject
   public HgHookManager(ScmConfiguration configuration,
+    Provider<HttpServletRequest> httpServletRequestProvider,
     Provider<HttpClient> httpClientProvider)
   {
     this.configuration = configuration;
     this.configuration.addListener(this);
+    this.httpServletRequestProvider = httpServletRequestProvider;
     this.httpClientProvider = httpClientProvider;
   }
 
@@ -134,6 +137,36 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
     }
 
     return hookUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String createUrl()
+  {
+    String url = hookUrl;
+
+    if (url == null)
+    {
+      HttpServletRequest request = httpServletRequestProvider.get();
+
+      if (request != null)
+      {
+        url = createUrl(request);
+      }
+      else
+      {
+        logger.warn(
+          "created hook url {} without request, in some cases this could cause problems",
+          hookUrl);
+        url = createConfiguredUrl();
+      }
+    }
+
+    return url;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -330,4 +363,7 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
 
   /** Field description */
   private Provider<HttpClient> httpClientProvider;
+
+  /** Field description */
+  private Provider<HttpServletRequest> httpServletRequestProvider;
 }

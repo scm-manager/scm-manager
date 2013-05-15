@@ -38,6 +38,7 @@ package sonia.scm.repository.spi;
 import com.google.common.io.Closeables;
 
 import sonia.scm.repository.Feature;
+import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
@@ -85,16 +86,18 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
    *
    *
    *
+   *
+   * @param hookManager
    * @param handler
    * @param repository
    */
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
-    Repository repository)
+    HgHookManager hookManager, Repository repository)
   {
     this.repository = repository;
     this.handler = handler;
     this.repositoryDirectory = handler.getDirectory(repository);
-    this.context = new HgCommandContext(handler.getConfig(), repository,
+    this.context = new HgCommandContext(hookManager, handler, repository,
       repositoryDirectory);
   }
 

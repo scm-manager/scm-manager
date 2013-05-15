@@ -73,14 +73,17 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
    *
    *
    * @param handler
+   * @param hookManager
    * @param repositoryName
    * @param startRev
    * @param type
    */
   public HgRepositoryHookEvent(HgRepositoryHandler handler,
-    String repositoryName, String startRev, RepositoryHookType type)
+    HgHookManager hookManager, String repositoryName, String startRev,
+    RepositoryHookType type)
   {
     this.handler = handler;
+    this.hookManager = hookManager;
     this.repositoryName = repositoryName;
     this.startRev = startRev;
     this.type = type;
@@ -153,7 +156,7 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
 
     Repository repository = getRepository();
 
-    return new HgCommandContext(handler.getConfig(), repository,
+    return new HgCommandContext(hookManager, handler, repository,
       repositoryDirectory, pending);
   }
 
@@ -164,6 +167,9 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
 
   /** Field description */
   private HgRepositoryHandler handler;
+
+  /** Field description */
+  private HgHookManager hookManager;
 
   /** Field description */
   private String repositoryName;

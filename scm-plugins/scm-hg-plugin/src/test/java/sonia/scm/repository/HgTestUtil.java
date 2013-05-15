@@ -41,11 +41,13 @@ import sonia.scm.SCMContext;
 import sonia.scm.io.FileSystem;
 import sonia.scm.store.MemoryStoreFactory;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -109,5 +111,24 @@ public final class HgTestUtil
     handler.init(context);
 
     return handler;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static HgHookManager createHookManager()
+  {
+    HgHookManager hookManager = mock(HgHookManager.class);
+
+    when(hookManager.getChallenge()).thenReturn("challenge");
+    when(hookManager.createUrl()).thenReturn(
+      "http://localhost:8081/scm/hook/hg/");
+    when(hookManager.createUrl(any(HttpServletRequest.class))).thenReturn(
+      "http://localhost:8081/scm/hook/hg/");
+
+    return hookManager;
   }
 }
