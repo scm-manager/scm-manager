@@ -35,6 +35,8 @@ package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
+import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.ImmutableSet;
 
 import sonia.scm.util.Util;
@@ -79,6 +81,17 @@ public class EnvList
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Returns environment as mutable map.
+   *
+   * @return environment as mutable map
+   * @since 1.31
+   */
+  public Map<String, String> asMutableMap()
+  {
+    return new MapDelegate(envMap);
+  }
 
   /**
    * Method description
@@ -169,6 +182,65 @@ public class EnvList
 
     return result;
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/05/15
+   * @author         Enter your name here...
+   */
+  private static class MapDelegate extends ForwardingMap<String, String>
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param delegate
+     */
+    private MapDelegate(Map<String, String> delegate)
+    {
+      this.delegate = delegate;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param key
+     * @param value
+     *
+     * @return
+     */
+    @Override
+    public String put(String key, String value)
+    {
+      return super.put(key, key.concat("=").concat(Strings.nullToEmpty(value)));
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    protected Map<String, String> delegate()
+    {
+      return delegate;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private Map<String, String> delegate;
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
