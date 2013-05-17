@@ -33,10 +33,15 @@ package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
+import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.PushCommand;
 import sonia.scm.repository.spi.PushCommandRequest;
+import sonia.scm.security.RepositoryPermission;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -76,6 +81,14 @@ public final class PushCommandBuilder
   public PushResponse push(Repository remoteRepository)
     throws IOException, RepositoryException
   {
+    Subject subject = SecurityUtils.getSubject();
+
+    //J-
+    subject.checkPermission(
+      new RepositoryPermission(remoteRepository, PermissionType.WRITE)
+    );
+    //J+
+
     request.setRemoteRepository(remoteRepository);
 
     return command.push(request);
