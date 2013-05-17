@@ -316,7 +316,7 @@ public final class RepositoryService implements Closeable
         repository.getName());
     }
 
-    return new PullCommandBuilder(provider.getPullCommand());
+    return new PullCommandBuilder(provider.getPullCommand(), repository);
   }
 
   /**

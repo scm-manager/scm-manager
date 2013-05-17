@@ -33,10 +33,18 @@ package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.PullCommand;
 import sonia.scm.repository.spi.PullCommandRequest;
+import sonia.scm.security.RepositoryPermission;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -51,14 +59,24 @@ public final class PullCommandBuilder
 {
 
   /**
+   * the logger for PullCommandBuilder
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(PullCommandBuilder.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
    * Constructs ...
    *
    *
    * @param command
+   * @param localRepository
    */
-  PullCommandBuilder(PullCommand command)
+  PullCommandBuilder(PullCommand command, Repository localRepository)
   {
     this.command = command;
+    this.localRepository = localRepository;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -77,7 +95,20 @@ public final class PullCommandBuilder
   public PullResponse pull(Repository remoteRepository)
     throws IOException, RepositoryException
   {
+    Subject subject = SecurityUtils.getSubject();
+
+    //J-
+    subject.checkPermission(
+      new RepositoryPermission(localRepository, PermissionType.WRITE)
+    );
+    subject.checkPermission(
+      new RepositoryPermission(remoteRepository, PermissionType.READ)
+    );
+    //J+
+
     request.setRemoteRepository(remoteRepository);
+
+    logger.info("pull changes from {}", remoteRepository);
 
     return command.pull(request);
   }
@@ -86,6 +117,9 @@ public final class PullCommandBuilder
 
   /** Field description */
   private PullCommand command;
+
+  /** Field description */
+  private Repository localRepository;
 
   /** Field description */
   private PullCommandRequest request = new PullCommandRequest();
