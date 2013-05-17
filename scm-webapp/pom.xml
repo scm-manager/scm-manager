@@ -318,13 +318,6 @@
       <version>${selenium.version}</version>
       <scope>test</scope>
     </dependency>
-    
-    <dependency>
-      <groupId>com.jcraft</groupId>
-      <artifactId>jsch</artifactId>
-      <version>0.1.48</version>
-      <scope>test</scope>
-    </dependency>
 
     <dependency>
       <groupId>com.sun.jersey</groupId>
