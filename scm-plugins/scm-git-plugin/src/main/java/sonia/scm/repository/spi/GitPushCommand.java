@@ -85,6 +85,9 @@ public class GitPushCommand extends AbstractGitCommand implements PushCommand
     throws IOException, RepositoryException
   {
     PushResponse response = null;
+    
+    // TODO call hooks, but how?
+    
     File remoteRepository = handler.getDirectory(request.getRemoteRepository());
     org.eclipse.jgit.api.PushCommand push = Git.wrap(open()).push();
 
