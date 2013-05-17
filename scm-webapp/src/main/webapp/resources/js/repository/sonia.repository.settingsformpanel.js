@@ -32,7 +32,7 @@
 Sonia.repository.SettingsFormPanel = Ext.extend(Sonia.repository.FormPanel, {
 
   initComponent: function(){
-    var update = this.item != null;
+    var update = this.isUpdate();
 
     var config = {
       title: this.formTitleText,

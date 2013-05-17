@@ -28,7 +28,7 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
+Sonia.rest.FormPanel = Ext.extend(Ext.form.FormPanel,{
 
   okText: 'Ok',
   cancelText: 'Cancel',
@@ -66,6 +66,10 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
     }
   },
 
+  isUpdate: function(){
+    return this.item !== null;
+  },
+
   loadData: function(item){
     this.item = item;
     var data = {success: true, data: item};
@@ -77,7 +81,7 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
       console.debug( 'form submitted' );
     }
     var item = this.getForm().getFieldValues();
-    if ( this.item !== null ){
+    if ( this.isUpdate() ){
       this.update(item);
     } else {
       this.create(item);
