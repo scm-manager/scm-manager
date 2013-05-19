@@ -29,31 +29,38 @@
 
 
 
-package sonia.scm.repository.spi;
+package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.eclipse.jgit.api.Git;
+import com.google.inject.Inject;
 
-import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.api.PushResponse;
+import org.eclipse.jgit.transport.ScmTransportProtocol;
+import org.eclipse.jgit.transport.Transport;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.plugin.ext.Extension;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GitPushCommand extends AbstractGitCommand implements PushCommand
+@Extension
+public class GitContextListener implements ServletContextListener
 {
 
-  /** Field description */
-  private static final String SCHEME = "scm://";
+  /**
+   * the logger for GitContextListener
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(GitContextListener.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -61,15 +68,12 @@ public class GitPushCommand extends AbstractGitCommand implements PushCommand
    * Constructs ...
    *
    *
-   * @param handler
-   * @param context
-   * @param repository
+   * @param transportProtocol
    */
-  public GitPushCommand(GitRepositoryHandler handler, GitContext context,
-    Repository repository)
+  @Inject
+  public GitContextListener(ScmTransportProtocol transportProtocol)
   {
-    super(context, repository);
-    this.handler = handler;
+    this.transportProtocol = transportProtocol;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -78,39 +82,30 @@ public class GitPushCommand extends AbstractGitCommand implements PushCommand
    * Method description
    *
    *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
+   * @param sce
    */
   @Override
-  public PushResponse push(PushCommandRequest request)
-    throws IOException, RepositoryException
+  public void contextDestroyed(ServletContextEvent sce)
   {
-    PushResponse response = null;
-    File remoteRepository = handler.getDirectory(request.getRemoteRepository());
-    org.eclipse.jgit.api.PushCommand push = Git.wrap(open()).push();
 
-    push.setPushAll().setPushTags();
-    push.setRemote(SCHEME.concat(remoteRepository.getAbsolutePath()));
+    // do nothing
+  }
 
-    try
-    {
-      push.call();
-      response = new PushResponse();
-    }
-    catch (Exception ex)
-    {
-      throw new RepositoryException("could not execute push command", ex);
-    }
-
-    return response;
+  /**
+   * Method description
+   *
+   *
+   * @param sce
+   */
+  @Override
+  public void contextInitialized(ServletContextEvent sce)
+  {
+    logger.debug("register scm transport protocol");
+    Transport.register(transportProtocol);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private GitRepositoryHandler handler;
+  private ScmTransportProtocol transportProtocol;
 }
