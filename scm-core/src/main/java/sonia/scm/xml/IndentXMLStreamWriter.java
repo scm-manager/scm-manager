@@ -227,7 +227,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter
   public void writeEndDocument() throws XMLStreamException
   {
     writer.writeEndDocument();
-    writer.writeCharacters(LINE_SEPARATOR);
+    writeLineSeparator();
   }
 
   /**
@@ -286,7 +286,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter
   public void writeStartDocument() throws XMLStreamException
   {
     writer.writeStartDocument();
-    writer.writeCharacters(LINE_SEPARATOR);
+    writeLineSeparator();
   }
 
   /**
@@ -296,7 +296,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter
   public void writeStartDocument(String version) throws XMLStreamException
   {
     writer.writeStartDocument(version);
-    writer.writeCharacters(LINE_SEPARATOR);
+    writeLineSeparator();
   }
 
   /**
@@ -307,7 +307,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter
     throws XMLStreamException
   {
     writer.writeStartDocument(encoding, version);
-    writer.writeCharacters(LINE_SEPARATOR);
+    writeLineSeparator();
   }
 
   /**
@@ -401,6 +401,10 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter
   {
     writer.setPrefix(prefix, uri);
   }
+  
+  public void writeLineSeparator() throws XMLStreamException{
+    writer.writeCharacters(LINE_SEPARATOR);
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -434,7 +438,7 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter
 
     if (level == 0)
     {
-      writer.writeCharacters(LINE_SEPARATOR);
+      writeLineSeparator();
     }
 
     lastWasStart = false;

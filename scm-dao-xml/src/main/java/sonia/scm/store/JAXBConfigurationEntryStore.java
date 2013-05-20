@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.security.KeyGenerator;
+import sonia.scm.xml.IndentXMLStreamWriter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -348,18 +349,22 @@ public class JAXBConfigurationEntryStore<V>
   {
     logger.debug("store configuration to {}", file);
 
-    XMLStreamWriter writer = null;
+    IndentXMLStreamWriter writer = null;
 
     try
     {
-      writer = XMLOutputFactory.newFactory().createXMLStreamWriter(
-        new FileOutputStream(file));
+      //J-
+      writer = new IndentXMLStreamWriter(
+        XMLOutputFactory.newFactory().createXMLStreamWriter(
+          new FileOutputStream(file)
+        )
+      );
+      //J+
       writer.writeStartDocument();
       writer.writeStartElement(TAG_CONFIGURATION);
 
       Marshaller m = context.createMarshaller();
 
-      m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
       m.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 
       for (Entry<String, V> e : entries.entrySet())
