@@ -35,10 +35,13 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Preconditions;
 
+import org.eclipse.jgit.storage.file.FileRepository;
+
 import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.api.PushResponse;
+import sonia.scm.repository.api.PullResponse;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -49,23 +52,23 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class GitPushCommand extends AbstractPushOrPullCommand
-  implements PushCommand
+public class GitPullCommand extends AbstractPushOrPullCommand
+  implements PullCommand
 {
 
   /**
    * Constructs ...
    *
    *
-   * @param handler
+   * @param repositoryHandler
    * @param context
    * @param repository
    */
-  public GitPushCommand(GitRepositoryHandler handler, GitContext context,
-    Repository repository)
+  public GitPullCommand(GitRepositoryHandler repositoryHandler,
+    GitContext context, Repository repository)
   {
     super(context, repository);
-    this.handler = handler;
+    this.repositoryHandler = repositoryHandler;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -82,22 +85,38 @@ public class GitPushCommand extends AbstractPushOrPullCommand
    * @throws RepositoryException
    */
   @Override
-  public PushResponse push(PushCommandRequest request)
+  public PullResponse pull(PullCommandRequest request)
     throws IOException, RepositoryException
   {
-    Repository target = getRemoteRepository(request);
-    File targetDirectory = handler.getDirectory(target);
+    Repository sourceRepository = getRemoteRepository(request);
 
-    Preconditions.checkArgument(targetDirectory.exists(),
+    File sourceDirectory = repositoryHandler.getDirectory(sourceRepository);
+
+    Preconditions.checkArgument(sourceDirectory.exists(),
+      "source repository directory does not exists");
+
+    File targetDirectory = repositoryHandler.getDirectory(repository);
+
+    Preconditions.checkArgument(sourceDirectory.exists(),
       "target repository directory does not exists");
 
-    push(open(), targetDirectory);
+    org.eclipse.jgit.lib.Repository source = null;
 
-    return new PushResponse();
+    try
+    {
+      source = new FileRepository(sourceDirectory);
+      push(source, targetDirectory);
+    }
+    finally
+    {
+      GitUtil.close(source);
+    }
+
+    return new PullResponse();
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private GitRepositoryHandler handler;
+  private GitRepositoryHandler repositoryHandler;
 }

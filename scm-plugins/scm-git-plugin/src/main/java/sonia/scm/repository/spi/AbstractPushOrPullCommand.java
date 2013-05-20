@@ -35,8 +35,9 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Preconditions;
 
-import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.Repository;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.Repository;
+
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.api.PushResponse;
 
@@ -49,23 +50,25 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class GitPushCommand extends AbstractPushOrPullCommand
-  implements PushCommand
+public abstract class AbstractPushOrPullCommand extends AbstractGitCommand
 {
+
+  /** Field description */
+  private static final String SCHEME = "scm://";
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param handler
    * @param context
    * @param repository
    */
-  public GitPushCommand(GitRepositoryHandler handler, GitContext context,
-    Repository repository)
+  public AbstractPushOrPullCommand(GitContext context,
+    sonia.scm.repository.Repository repository)
   {
     super(context, repository);
-    this.handler = handler;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -76,28 +79,56 @@ public class GitPushCommand extends AbstractPushOrPullCommand
    *
    * @param request
    *
+   * @param source
+   * @param target
+   *
    * @return
    *
    * @throws IOException
    * @throws RepositoryException
    */
-  @Override
-  public PushResponse push(PushCommandRequest request)
+  protected PushResponse push(Repository source, File target)
     throws IOException, RepositoryException
   {
-    Repository target = getRemoteRepository(request);
-    File targetDirectory = handler.getDirectory(target);
+    PushResponse response = null;
+    org.eclipse.jgit.api.PushCommand push = Git.wrap(source).push();
 
-    Preconditions.checkArgument(targetDirectory.exists(),
-      "target repository directory does not exists");
+    push.setPushAll().setPushTags();
+    push.setRemote(SCHEME.concat(target.getAbsolutePath()));
 
-    push(open(), targetDirectory);
+    try
+    {
+      push.call();
+    }
+    catch (Exception ex)
+    {
+      throw new RepositoryException("could not execute push command", ex);
+    }
 
-    return new PushResponse();
+    return response;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
-  /** Field description */
-  private GitRepositoryHandler handler;
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  protected sonia.scm.repository.Repository getRemoteRepository(
+    RemoteCommandRequest request)
+  {
+    Preconditions.checkNotNull(request, "request is required");
+
+    sonia.scm.repository.Repository remoteRepository =
+      request.getRemoteRepository();
+
+    Preconditions.checkNotNull(remoteRepository,
+      "remote repository is required");
+
+    return remoteRepository;
+  }
 }
