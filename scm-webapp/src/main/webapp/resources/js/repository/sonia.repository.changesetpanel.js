@@ -71,7 +71,7 @@ Sonia.repository.ChangesetPanel = Ext.extend(Ext.Panel, {
       layout: 'fit',
       bbar: ['->', this.repository.name, ':', this.revision],
       items: [panel]
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ChangesetPanel.superclass.initComponent.apply(this, arguments);
@@ -99,7 +99,7 @@ Sonia.repository.ChangesetPanel = Ext.extend(Ext.Panel, {
       xtype: 'commitPanel',
       repository: this.repository,
       revision: this.revision
-    }
+    };
   },
   
   createDiffPanel: function(){
@@ -108,7 +108,7 @@ Sonia.repository.ChangesetPanel = Ext.extend(Ext.Panel, {
       xtype: 'syntaxHighlighterPanel',
       syntax: 'diff',
       contentUrl: this.createDiffUrl()
-    }
+    };
   },
   
   createDiffUrl: function(){
@@ -159,10 +159,10 @@ Sonia.History.register('changesetPanel', {
   },
   
   onChange: function(repoId, revision, view){
-    if (revision == 'null'){
+    if (revision === 'null'){
       revision = null;
     }
-    if (!view || view == 'null'){
+    if (!view || view === 'null'){
       view = 'commit';
     }
     var id = 'changesetPanel;' + repoId + ';' + revision;
@@ -177,7 +177,7 @@ Sonia.History.register('changesetPanel', {
           view: view,
           closable: true,
           autoScroll: true
-        }
+        };
       } else {
         panel.loadPanel(view);
       }

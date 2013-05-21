@@ -51,7 +51,7 @@ Ext.override(Ext.grid.GridPanel,{
   
   removeColumn: function(name, colIndex){
     this.store.removeField(name);
-    if(typeof colIndex != 'number'){
+    if(typeof colIndex !== 'number'){
       colIndex = this.colModel.findColumnIndex(name);
     }
     if(colIndex >= 0){

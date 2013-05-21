@@ -80,7 +80,7 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
           scope: this
         }
       }
-    }
+    };
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ImportWindow.superclass.initComponent.apply(this, arguments);
   },

@@ -177,11 +177,11 @@ Sonia.plugin.Grid = Ext.extend(Sonia.rest.Grid, {
     var out = "";
     var data = record.data;
     var id = Sonia.plugin.CenterInstance.getPluginId(data);
-    if ( data.state == 'AVAILABLE' ){
+    if ( data.state === 'AVAILABLE' ){
       out = String.format(this.actionLinkTemplate, 'Install', 'install', id);
-    } else if ( data.state == 'INSTALLED' ){
+    } else if ( data.state === 'INSTALLED' ){
       out = String.format(this.actionLinkTemplate, 'Uninstall', 'uninstall', id);
-    } else if ( data.state == 'UPDATE_AVAILABLE' ){
+    } else if ( data.state === 'UPDATE_AVAILABLE' ){
       out = String.format(this.actionLinkTemplate, 'Update', 'update', id);
       out += ', '
       out += String.format(this.actionLinkTemplate, 'Uninstall', 'uninstall', id);

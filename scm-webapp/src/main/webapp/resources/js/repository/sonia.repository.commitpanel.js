@@ -97,7 +97,7 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
       padding: 10,
       autoScroll: true,
       items: [this.commitPanel, this.diffPanel]
-    }
+    };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.CommitPanel.superclass.initComponent.apply(this, arguments);
@@ -122,7 +122,7 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
       scope: this,
       success: function(response){
         var changeset = Ext.decode(response.responseText);
-        this.update(changeset)
+        this.update(changeset);
       },
       failure: function(result){
         main.handleRestFailure(

@@ -64,7 +64,7 @@ Sonia.repository.PropertiesFormPanel = Ext.extend(Sonia.repository.FormPanel, {
         
         for ( var j in this.item.properties ){
           var property = this.item.properties[j];
-          if ( property.key == field.property ){
+          if ( property.key === field.property ){
             field.setValue(property.value);
           }
         }
@@ -86,7 +86,7 @@ Sonia.repository.PropertiesFormPanel = Ext.extend(Sonia.repository.FormPanel, {
         var result = !Ext.isEmpty(p.key);
         if ( result ){
           for (var i in this.properties[this.id]){
-            if ( p.key == this.properties[this.id][i].property ){
+            if ( p.key === this.properties[this.id][i].property ){
               result = false;
               break;
             }

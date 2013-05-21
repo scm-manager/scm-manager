@@ -60,7 +60,7 @@ Sonia.uistate.WebStorageProvider = Ext.extend(Ext.state.Provider,{
    * @param {Mixed} value The state data
    */
   set : function(name, value){
-    if(typeof value == "undefined" || value === null){
+    if(typeof value === "undefined" || value === null){
       this.clear(name);
     } else {
       localStorage.setItem(name, this.encodeValue(value));

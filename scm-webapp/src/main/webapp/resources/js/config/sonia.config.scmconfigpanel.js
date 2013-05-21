@@ -264,7 +264,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           });
         }
       }, generalConfigPanels]
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.config.ScmConfigPanel.superclass.initComponent.apply(this, arguments);

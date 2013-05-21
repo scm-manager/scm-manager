@@ -49,7 +49,7 @@ Sonia.navigation.NavPanel = Ext.extend(Ext.Panel, {
   },
 
   renderSections: function(){
-    if ( this.sections != null ){
+    if ( this.sections !== null ){
       this.addSections( this.sections );
     }
   },

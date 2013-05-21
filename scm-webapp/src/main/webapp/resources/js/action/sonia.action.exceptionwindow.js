@@ -77,7 +77,7 @@ Sonia.action.ExceptionWindow = Ext.extend(Ext.Window,{
         scope: this,
         handler: this.showDetails        
       }]
-    }
+    };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.action.ChangePasswordWindow.superclass.initComponent.apply(this, arguments);

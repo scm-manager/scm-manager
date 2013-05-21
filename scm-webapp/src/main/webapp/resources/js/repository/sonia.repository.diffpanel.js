@@ -54,7 +54,7 @@ Sonia.repository.DiffPanel = Ext.extend(Ext.Panel, {
         syntax: 'diff',
         contentUrl: this.diffUrl
       }]
-    }
+    };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.DiffPanel.superclass.initComponent.apply(this, arguments);
@@ -92,7 +92,7 @@ Sonia.History.register('diffPanel', {
           revision: revision,
           closable: true,
           autoScroll: true
-        }
+        };
       }
       main.addTab(panel);
     });

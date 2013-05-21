@@ -58,9 +58,9 @@ Ext.override(Ext.grid.GroupingView,{
   
   getPrefix: function(field){
     var prefix;
-    if ( this.idPrefix == '{grid.id}' ){
+    if ( this.idPrefix === '{grid.id}' ){
       prefix = this.grid.getId();
-    } else if (this.idPrefix == '{grid.el.id}') {
+    } else if (this.idPrefix === '{grid.el.id}') {
       prefix = this.grid.getGridEl().id;
     } else {
       prefix = this.idPrefix;

@@ -44,10 +44,10 @@ Sonia.navigation.NavSection = Ext.extend(Ext.Panel, {
 
 
   initComponent: function(){
-    if ( this.links == null ){
+    if ( this.links === null ){
       this.links = this.items;
     }
-    if ( this.links == null ){
+    if ( this.links === null ){
       this.links = [];
     }
 
@@ -59,7 +59,7 @@ Sonia.navigation.NavSection = Ext.extend(Ext.Panel, {
       frame: true,
       collapsible:true,
       style: 'margin: 5px'
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.navigation.NavSection.superclass.initComponent.apply(this, arguments);
@@ -68,7 +68,7 @@ Sonia.navigation.NavSection = Ext.extend(Ext.Panel, {
   doAction: function(e, t){
     e.stopEvent();
     Ext.each(this.links, function(navItem){
-      if ( navItem.id == t.id && Ext.isFunction(navItem.fn) ){
+      if ( navItem.id === t.id && Ext.isFunction(navItem.fn) ){
         var scope = navItem.scope;
         if ( Ext.isObject( scope )){
           navItem.fn.call(scope);

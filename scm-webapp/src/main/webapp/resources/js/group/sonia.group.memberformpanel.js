@@ -157,7 +157,7 @@ Sonia.group.MemberFormPanel = Ext.extend(Sonia.group.FormPanel, {
     var members = [];
     this.memberStore.data.each(function(record){
       members.push( record.data.member );
-    })
+    });
     item.members = members;
   },
 

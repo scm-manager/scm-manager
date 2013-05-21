@@ -81,7 +81,7 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
       }],
       bbar: bottomBar,
       items: [panel]
-    }
+    };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ContentPanel.superclass.initComponent.apply(this, arguments);
@@ -111,7 +111,7 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
       // TODO find a better way
       pageSize: 9999,
       startLimit: -1
-    }
+    };
   },
   
   openHistoryPanel: function(){
@@ -125,7 +125,7 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
       xtype: 'syntaxHighlighterPanel',
       syntax: Sonia.util.getExtension(this.path),
       contentUrl: this.contentUrl
-    }
+    };
   },
   
   openSyntaxPanel: function(){
@@ -140,7 +140,7 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
       repository: this.repository,
       revision: this.revision,
       path: this.path
-    }
+    };
   },
   
   openBlamePanel: function(){
@@ -172,7 +172,7 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
   
   appendRepositoryProperties: function(bar){
     bar.push('->',this.repository.name);
-    if ( this.revision != null ){
+    if ( this.revision !== null ){
       bar.push(': ', this.revision);
     }
   },
@@ -205,10 +205,10 @@ Sonia.History.register('contentPanel', {
   },
   
   onChange: function(repoId, revision, path, view){
-    if (revision == 'null'){
+    if (revision === 'null'){
       revision = null;
     }
-    if (!view || view == 'null'){
+    if (!view || view === 'null'){
       view = 'content';
     }
     var id = 'contentPanel;' + repoId + ';' + revision + ';' + path;
@@ -224,7 +224,7 @@ Sonia.History.register('contentPanel', {
           view: view,
           closable: true,
           autoScroll: true
-        }
+        };
       } else {
         panel.loadPanel(view);
       }

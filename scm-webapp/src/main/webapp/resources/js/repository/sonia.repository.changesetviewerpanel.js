@@ -56,7 +56,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
     var params = {
       start: this.start,
       limit: this.startLimit
-    }
+    };
     
     var baseParams = {};
     
@@ -100,7 +100,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
     };
     
     if ( ! this.inline ){
-      config.title = String.format(this.changesetViewerTitleText, this.repository.name)
+      config.title = String.format(this.changesetViewerTitleText, this.repository.name);
       
       var type = Sonia.repository.getTypeByName( this.repository.type );
       if ( type && type.supportedCommands && type.supportedCommands.indexOf('BRANCHES') >= 0){
@@ -112,7 +112,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
         displayInfo: true,
         pageSize: this.pageSize,
         prependButtons: true
-      }
+      };
     }
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
@@ -154,7 +154,7 @@ Sonia.repository.ChangesetViewerPanel = Ext.extend(Ext.Panel, {
           }
         }
       }]
-    }
+    };
   },
   
   selectBranch: function(combo, rec){
@@ -229,7 +229,7 @@ Sonia.History.register('repositoryChangesetViewerPanel', {
           pageSize: limit,
           closable: true,
           autoScroll: true
-        }
+        };
       } else {
         panel.loadChangesets(start, limit);
       }

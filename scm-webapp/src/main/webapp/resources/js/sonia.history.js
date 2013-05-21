@@ -40,7 +40,7 @@ Sonia.History = {
   
   add: function(token){
     if (this.initialized){
-      if (token != Ext.History.getToken()){
+      if (token !== Ext.History.getToken()){
         if (this.isInvokeable(this.recentlyChanged, token)){
           if ( debug ){
             console.debug('add history element ' + token);
@@ -177,7 +177,7 @@ Sonia.History = {
 
 Ext.History.on('ready', function(history){
   var token = history.getToken();
-  if (token && token != 'null'){
+  if (token && token !== 'null'){
     Sonia.History.onChange(token);
   }
   Sonia.History.initialized = true;

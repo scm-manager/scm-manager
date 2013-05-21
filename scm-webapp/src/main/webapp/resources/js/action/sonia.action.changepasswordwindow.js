@@ -96,7 +96,7 @@ Sonia.action.ChangePasswordWindow = Ext.extend(Ext.Window,{
           handler: this.cancel
         }]
       }]
-    }
+    };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.action.ChangePasswordWindow.superclass.initComponent.apply(this, arguments);

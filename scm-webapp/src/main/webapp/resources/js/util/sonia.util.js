@@ -46,7 +46,7 @@ Sonia.util.getServername = function(url){
     }
   }
   return url;
-}
+};
   
 Sonia.util.getContextPath = function(){
   var path = window.location.pathname;
@@ -57,7 +57,7 @@ Sonia.util.getContextPath = function(){
     }
   }
   return path;
-}
+};
 
 Sonia.util.getBaseUrl = function(){
   var url = location.href;
@@ -72,7 +72,7 @@ Sonia.util.getBaseUrl = function(){
     url = url.substring(0, url.length -1);
   }
   return url;
-}
+};
 
 Sonia.util.getName = function(path){
   var name = path;
@@ -81,7 +81,7 @@ Sonia.util.getName = function(path){
     name = path.substr(index +1);
   }
   return name;
-}
+};
 
 Sonia.util.getExtension = function(path){
   var ext = null;
@@ -90,15 +90,15 @@ Sonia.util.getExtension = function(path){
     ext = path.substr(index + 1, path.length);
   }
   return ext;
-}
+};
 
 Sonia.util.clone = function(obj) {
   var newObj = (this instanceof Array) ? [] : {};
   for (i in obj) {
-    if (i == 'clone') continue;
-    if (obj[i] && typeof obj[i] == "object") {
+    if (i === 'clone') continue;
+    if (obj[i] && typeof obj[i] === "object") {
       newObj[i] = Sonia.util.clone(obj[i]);
-    } else newObj[i] = obj[i]
+    } else newObj[i] = obj[i];
   }
   return newObj;
 };
@@ -116,7 +116,7 @@ Sonia.util.parseInt = function(string, defaultValue){
     result = defaultValue;
   }
   return result;
-}
+};
 
 Sonia.util.getStringFromArray = function(array){
   var value = '';
@@ -130,14 +130,14 @@ Sonia.util.getStringFromArray = function(array){
   }
 
   return value;
-}
+};
 
 Sonia.util.applySub = function(obj, name, p){
   if (name){
     obj = obj[name];
   }
   return Sonia.util.call(obj, p);
-}
+};
 
 Sonia.util.apply = function(obj, p){
   var result = null;
@@ -164,7 +164,7 @@ Sonia.util.apply = function(obj, p){
     }
   }
   return result;
-}
+};
 
 if (!Array.prototype.filter) {
   
@@ -176,20 +176,20 @@ if (!Array.prototype.filter) {
       }
     }
     return results;
-  }
+  };
   
 }
 
 Sonia.util.getProperty = function(properties, key){
   var value = null;
-  if ( properties != null ){
+  if ( properties !== null ){
     for (var i=0; i<properties.length; i++){
       var property = properties[i];
-      if ( property.key == key ){
+      if ( property.key === key ){
         value = property.value;
         break;
       }
     }
   }
   return value;
-}
+};

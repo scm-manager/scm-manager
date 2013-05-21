@@ -36,7 +36,7 @@ Sonia.config.RepositoryConfig = Ext.extend(Sonia.config.ConfigPanel,{
     var config = {
       title: main.tabRepositoryTypesText,
       panels: repositoryConfigPanels
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.config.RepositoryConfig.superclass.initComponent.apply(this, arguments);

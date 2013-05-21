@@ -33,9 +33,9 @@ Ext.override(Ext.data.Store,{
   addField: function(field){
     field = new Ext.data.Field(field);
     this.recordType.prototype.fields.replace(field);
-    if(typeof field.defaultValue != 'undefined'){
+    if(typeof field.defaultValue !== 'undefined'){
       this.each(function(r){
-        if(typeof r.data[field.name] == 'undefined'){
+        if(typeof r.data[field.name] === 'undefined'){
           r.data[field.name] = field.defaultValue;
         }
       });

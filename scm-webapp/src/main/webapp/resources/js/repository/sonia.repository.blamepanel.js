@@ -88,7 +88,7 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
           scope: this
         }
       }
-    }
+    };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.BlamePanel.superclass.initComponent.apply(this, arguments);
@@ -96,12 +96,12 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
   
   onClick: function(e){
     var el = e.getTarget('.blame-link');
-    if ( el != null ){
+    if ( el !== null ){
       var revision = el.rel;
       if (debug){
         console.debug('load content for ' + revision);
       }
-      this.openContentPanel(revision)
+      this.openContentPanel(revision);
     }
   },
   

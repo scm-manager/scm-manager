@@ -31,7 +31,7 @@
 Ext.override(Ext.grid.ColumnModel,{
 
   addColumn: function(column, colIndex){
-    if(typeof column == 'string'){
+    if(typeof column === 'string'){
       column = {
         header: column,
         dataIndex: column
@@ -39,7 +39,7 @@ Ext.override(Ext.grid.ColumnModel,{
     }
     var config = this.config;
     this.config = [];
-    if(typeof colIndex == 'number'){
+    if(typeof colIndex === 'number'){
       config.splice(colIndex, 0, column);
     }else{
       colIndex = config.push(column);

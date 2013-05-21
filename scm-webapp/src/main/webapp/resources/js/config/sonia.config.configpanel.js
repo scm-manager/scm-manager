@@ -45,7 +45,7 @@ Sonia.config.ConfigPanel = Ext.extend(Ext.Panel, {
       collapsible: false,
       collapsed: false,
       items: this.panels
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.config.ConfigPanel.superclass.initComponent.apply(this, arguments);

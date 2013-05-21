@@ -35,11 +35,12 @@ Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
     if ( ! config.listeners ){
       config.listeners = {};
     }
+    
     // fix jersey empty array problem
     config.listeners.exception = {
       fn: Sonia.rest.ExceptionHandler,
       scope: this
-    }
+    };
     
     var baseConfig = {
       autoLoad: true

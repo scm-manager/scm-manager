@@ -275,7 +275,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   },
   
   renderGroupName: function(v){
-    if (v == 'zzz__'){
+    if (v === 'zzz__'){
       v = this.mainGroup;
     }
     return v;
@@ -350,7 +350,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         var desc = rec.get('description');
         return (! query || rec.get('name').toLowerCase().indexOf(query) >= 0 ||
                (desc && desc.toLowerCase().indexOf(query) >= 0)) && 
-               (! this.filterRequest.type || rec.get('type') == this.filterRequest.type) &&
+               (! this.filterRequest.type || rec.get('type') === this.filterRequest.type) &&
                (archived || ! rec.get('archived'));
       }, this);
     }
@@ -372,7 +372,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         var desc = rec.get('description');
         return (! search || rec.get('name').toLowerCase().indexOf(search) >= 0 ||
                (desc && desc.toLowerCase().indexOf(search) >= 0)) && 
-               (! this.typeFilter || rec.get('type') == this.typeFilter);
+               (! this.typeFilter || rec.get('type') === this.typeFilter);
       }, this);
     }
   },
@@ -444,7 +444,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   renderRepositoryType: function(repositoryType){
     var displayName = this.unknownType;
     var rec = repositoryTypeStore.queryBy(function(rec){
-      return rec.data.name == repositoryType;
+      return rec.data.name === repositoryType;
     }).itemAt(0);
     if ( rec ){
       displayName = rec.get('displayName');

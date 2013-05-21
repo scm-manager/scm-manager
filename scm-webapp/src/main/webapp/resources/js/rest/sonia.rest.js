@@ -39,7 +39,7 @@ Sonia.rest.ExceptionHandler = function(proxy, type, action, options, response, a
   if (debug){
     console.debug('store returned statuscode ' + status);
   }
-  if ( status == 200 && action == 'read' && response.responseText == 'null' ){
+  if ( status === 200 && action === 'read' && response.responseText === 'null' ){
     if ( debug ){
       console.debug( 'empty array, clear whole store' );
     }
@@ -54,4 +54,4 @@ Sonia.rest.ExceptionHandler = function(proxy, type, action, options, response, a
       String.format(Sonia.rest.exceptionMsgText, status)
     );
   }
-}
+};

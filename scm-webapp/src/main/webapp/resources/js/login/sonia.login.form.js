@@ -139,7 +139,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
   },
 
   specialKeyPressed: function(field, e){
-    if (e.getKey() == e.ENTER) {
+    if (e.getKey() === e.ENTER) {
       var form = this.getForm();
       if ( form.isValid() ){
         this.authenticate();

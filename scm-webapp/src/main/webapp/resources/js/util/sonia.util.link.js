@@ -46,6 +46,7 @@ Sonia.util.Link = Ext.extend(Ext.BoxComponent, {
       style: config.style, 
       'class': cl
     };
+    
     config.listeners = {
       render: function(c) {
         c.getEl().on('click', function(){
@@ -54,7 +55,7 @@ Sonia.util.Link = Ext.extend(Ext.BoxComponent, {
           }
         }, this);
       }
-    }
+    };
   
     Sonia.util.Link.superclass.constructor.apply(this, arguments);
     this.text = config.text;
