@@ -495,11 +495,10 @@
             </configuration>
           </plugin>
 
-
           <plugin>
             <groupId>sonia.maven</groupId>
             <artifactId>web-compressor</artifactId>
-            <version>1.4</version>
+            <version>1.5</version>
             <executions>
               <execution>
                 <phase>prepare-package</phase>
