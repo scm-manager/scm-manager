@@ -77,6 +77,9 @@ public class AetherPluginHandler
   private static final Logger logger =
     LoggerFactory.getLogger(AetherPluginHandler.class);
 
+  /** Field description */
+  private static final Object LOCK = new Object();
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -137,15 +140,10 @@ public class AetherPluginHandler
    */
   public void install(String gav)
   {
-    if (logger.isInfoEnabled())
+    synchronized (LOCK)
     {
-      logger.info("try to install plugin with gav: {}", gav);
+      doInstall(gav);
     }
-
-    Dependency dependency = Aether.createDependency(gav);
-    List<Dependency> dependencies = getInstalledDependencies(null);
-
-    collectDependencies(dependency, dependencies);
   }
 
   /**
@@ -157,19 +155,9 @@ public class AetherPluginHandler
    */
   public void uninstall(String id)
   {
-    if (logger.isInfoEnabled())
+    synchronized (LOCK)
     {
-      logger.info("try to uninstall plugin: {}", id);
-    }
-
-    if (classpath != null)
-    {
-      synchronized (Classpath.class)
-      {
-        List<Dependency> dependencies = getInstalledDependencies(id);
-
-        collectDependencies(null, dependencies);
-      }
+      doUninstall(id);
     }
   }
 
@@ -223,15 +211,10 @@ public class AetherPluginHandler
         classpath = new Classpath();
       }
 
-      synchronized (Classpath.class)
-      {
+      Set<String> classpathSet = createClasspathSet(resolver.createClassPath());
 
-        Set<String> classpathSet =
-          createClasspathSet(resolver.createClassPath());
-
-        classpath.setPathSet(classpathSet);
-        storeClasspath();
-      }
+      classpath.setPathSet(classpathSet);
+      storeClasspath();
     }
     catch (Exception ex)
     {
@@ -269,6 +252,46 @@ public class AetherPluginHandler
     }
 
     return classpathSet;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param gav
+   */
+  private void doInstall(String gav)
+  {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("try to install plugin with gav: {}", gav);
+    }
+
+    Dependency dependency = Aether.createDependency(gav);
+    List<Dependency> dependencies = getInstalledDependencies(null);
+
+    collectDependencies(dependency, dependencies);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   */
+  private void doUninstall(String id)
+  {
+    if (logger.isInfoEnabled())
+    {
+      logger.info("try to uninstall plugin: {}", id);
+    }
+
+    if (classpath != null)
+    {
+      List<Dependency> dependencies = getInstalledDependencies(id);
+
+      collectDependencies(null, dependencies);
+    }
   }
 
   /**
