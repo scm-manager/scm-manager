@@ -120,7 +120,8 @@ public class AetherPluginHandler
     }
     catch (JAXBException ex)
     {
-      throw new ConfigurationException(ex);
+      throw new ConfigurationException(
+        "could not create jaxb context for classpath file", ex);
     }
 
     classpathFile = new File(localRepositoryDirectory,
@@ -135,7 +136,7 @@ public class AetherPluginHandler
       }
       catch (JAXBException ex)
       {
-        logger.error(ex.getMessage(), ex);
+        logger.error("could not read classpath file", ex);
       }
     }
 
@@ -294,7 +295,8 @@ public class AetherPluginHandler
     }
     catch (Exception ex)
     {
-      throw new PluginException(ex);
+      throw new PluginException(
+        "could not collect dependencies or store classpath file", ex);
     }
   }
 
