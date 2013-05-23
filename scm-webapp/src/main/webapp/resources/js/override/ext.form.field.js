@@ -34,7 +34,7 @@ Ext.form.Field.prototype.afterRenderExt = Ext.form.Field.prototype.afterRender;
 Ext.override(Ext.form.Field, {
 
   afterRender : function() {
-    if ( this.helpText !== null ){
+    if ( this.helpText ){
       this.renderHelp( this.helpText );
     }
     this.afterRenderExt.apply(this, arguments);
