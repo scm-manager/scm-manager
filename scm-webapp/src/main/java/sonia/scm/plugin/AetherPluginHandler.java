@@ -35,32 +35,21 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.apache.maven.repository.internal.MavenRepositorySystemSession;
+import com.google.common.collect.Lists;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.sonatype.aether.RepositorySystem;
-import org.sonatype.aether.collection.CollectRequest;
 import org.sonatype.aether.graph.Dependency;
-import org.sonatype.aether.graph.DependencyFilter;
-import org.sonatype.aether.graph.DependencyNode;
-import org.sonatype.aether.repository.LocalArtifactRegistration;
 import org.sonatype.aether.repository.LocalRepository;
-import org.sonatype.aether.repository.LocalRepositoryManager;
-import org.sonatype.aether.repository.Proxy;
 import org.sonatype.aether.repository.RemoteRepository;
-import org.sonatype.aether.repository.RepositoryPolicy;
-import org.sonatype.aether.resolution.DependencyRequest;
-import org.sonatype.aether.util.artifact.DefaultArtifact;
-import org.sonatype.aether.util.graph.PreorderNodeListGenerator;
 
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.boot.BootstrapListener;
 import sonia.scm.boot.Classpath;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.net.Proxies;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -68,7 +57,6 @@ import sonia.scm.util.Util;
 
 import java.io.File;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -85,15 +73,9 @@ import javax.xml.bind.Marshaller;
 public class AetherPluginHandler
 {
 
-  /** Field description */
-  public static final String PLUGIN_SCOPE = "runtime";
-
   /** the logger for AetherPluginHandler */
   private static final Logger logger =
     LoggerFactory.getLogger(AetherPluginHandler.class);
-
-  /** Field description */
-  private static final DependencyFilter FILTER = new AetherDependencyFilter();
 
   //~--- constructors ---------------------------------------------------------
 
@@ -141,7 +123,7 @@ public class AetherPluginHandler
     }
 
     IOUtil.mkdirs(localRepositoryDirectory);
-    repositorySystem = createRepositorySystem();
+    repositorySystem = Aether.createRepositorySystem();
     localRepository = new LocalRepository(localRepositoryDirectory);
   }
 
@@ -160,8 +142,7 @@ public class AetherPluginHandler
       logger.info("try to install plugin with gav: {}", gav);
     }
 
-    Dependency dependency = new Dependency(new DefaultArtifact(gav),
-                              PLUGIN_SCOPE);
+    Dependency dependency = Aether.createDependency(gav);
     List<Dependency> dependencies = getInstalledDependencies(null);
 
     collectDependencies(dependency, dependencies);
@@ -202,27 +183,12 @@ public class AetherPluginHandler
    */
   public void setPluginRepositories(Collection<PluginRepository> repositories)
   {
-    remoteRepositories = new ArrayList<RemoteRepository>();
+    remoteRepositories = Lists.newArrayList();
 
     for (PluginRepository repository : repositories)
     {
-      RemoteRepository rr = new RemoteRepository(repository.getId(), "default",
-                              repository.getUrl());
-
-      if (Proxies.isEnabled(configuration, rr.getHost()))
-      {
-        Proxy proxy = DefaultProxySelector.createProxy(configuration);
-
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("enable proxy {} for {}", proxy.getHost(),
-            repository.getUrl());
-        }
-
-        rr.setProxy(proxy);
-      }
-
-      remoteRepositories.add(rr);
+      remoteRepositories.add(Aether.createRemoteRepository(configuration,
+        repository));
     }
   }
 
@@ -234,60 +200,34 @@ public class AetherPluginHandler
    *
    * @param dependency
    * @param dependencies
+   * @param localDependencies
    */
   private void collectDependencies(Dependency dependency,
-    List<Dependency> dependencies)
+    List<Dependency> localDependencies)
   {
-    CollectRequest request = new CollectRequest(dependency, dependencies,
-                               remoteRepositories);
-    MavenRepositorySystemSession session = new MavenRepositorySystemSession();
-
-    session.setChecksumPolicy(RepositoryPolicy.CHECKSUM_POLICY_WARN);
-
-    if (configuration.isEnableProxy())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("enable proxy selector to collect dependencies");
-      }
-
-      session.setProxySelector(new DefaultProxySelector(configuration));
-    }
-
-    // register installed to local repository manager
-    LocalRepositoryManager localRepositoryManager =
-      repositorySystem.newLocalRepositoryManager(localRepository);
-
-    for (Dependency dep : dependencies)
-    {
-      localRepositoryManager.add(session,
-        new LocalArtifactRegistration(dep.getArtifact()));
-    }
-
-    session.setLocalRepositoryManager(localRepositoryManager);
-
     try
     {
-      DependencyNode node = repositorySystem.collectDependencies(session,
-                              request).getRoot();
-      DependencyRequest dr = new DependencyRequest(node, FILTER);
+      AetherDependencyResolver resolver =
+        new AetherDependencyResolver(configuration, repositorySystem,
+          localRepository, remoteRepositories);
 
-      repositorySystem.resolveDependencies(session, dr);
+      resolver.resolveRemoteDependency(dependency);
+
+      for (Dependency localDependency : localDependencies)
+      {
+        resolver.resolveLocalDependency(localDependency);
+      }
+
+      if (classpath == null)
+      {
+        classpath = new Classpath();
+      }
 
       synchronized (Classpath.class)
       {
-        if (classpath == null)
-        {
-          classpath = new Classpath();
-        }
-
-        PreorderNodeListGenerator nodeListGenerator =
-          new PreorderNodeListGenerator();
-
-        node.accept(nodeListGenerator);
 
         Set<String> classpathSet =
-          createClasspathSet(nodeListGenerator.getClassPath());
+          createClasspathSet(resolver.createClassPath());
 
         classpath.setPathSet(classpathSet);
         storeClasspath();
@@ -335,17 +275,6 @@ public class AetherPluginHandler
    * Method description
    *
    *
-   * @return
-   */
-  private RepositorySystem createRepositorySystem()
-  {
-    return new AetherServiceLocator().getService(RepositorySystem.class);
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @throws JAXBException
    */
   private void storeClasspath() throws JAXBException
@@ -368,7 +297,7 @@ public class AetherPluginHandler
    */
   private List<Dependency> getInstalledDependencies(String skipId)
   {
-    List<Dependency> dependencies = new ArrayList<Dependency>();
+    List<Dependency> dependencies = Lists.newArrayList();
     Collection<PluginInformation> installed =
       pluginManager.get(new StatePluginFilter(PluginState.INSTALLED));
 
@@ -380,8 +309,7 @@ public class AetherPluginHandler
 
         if (Util.isNotEmpty(id) && ((skipId == null) ||!id.equals(skipId)))
         {
-          dependencies.add(new Dependency(new DefaultArtifact(id),
-            PLUGIN_SCOPE));
+          dependencies.add(Aether.createDependency(id));
         }
       }
     }
