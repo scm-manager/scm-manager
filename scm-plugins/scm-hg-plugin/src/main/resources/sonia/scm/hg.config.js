@@ -121,7 +121,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
           });
           wizard.on('finish', function(config){
             var self = Ext.getCmp('hgConfigForm');
-            if ( config != null ){
+            if ( config ){
               if (debug){
                 console.debug( 'load config from wizard and submit to server' );
               }
@@ -137,7 +137,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         },
         scope: this
       }]
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.hg.ConfigPanel.superclass.initComponent.apply(this, arguments);
@@ -193,7 +193,7 @@ Ext.reg("hgConfigPanel", Sonia.hg.ConfigPanel);
 
 // i18n
 
-if ( i18n != null && i18n.country == 'de' ){
+if ( i18n && i18n.country === 'de' ){
 
   Ext.override(Sonia.hg.ConfigPanel, {
 
@@ -251,7 +251,7 @@ Sonia.repository.typeIcons['hg'] = 'resources/images/icons/16x16/mercurial.png';
 Ext.override(Sonia.repository.ChangesetViewerGrid, {
   
   isMercurialRepository: function(){
-    return this.repository.type == 'hg';
+    return this.repository.type === 'hg';
   },
   
   getChangesetId: function(id, record){

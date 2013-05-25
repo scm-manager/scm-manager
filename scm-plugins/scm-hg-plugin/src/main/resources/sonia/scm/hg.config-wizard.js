@@ -62,7 +62,7 @@ Sonia.hg.ConfigWizard = Ext.extend(Ext.Window,{
           }
         }
       }]
-    }
+    };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.hg.ConfigWizard.superclass.initComponent.apply(this, arguments);
@@ -292,7 +292,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
           }
         }]
       }]
-    }
+    };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.hg.ConfigWizardPanel.superclass.initComponent.apply(this, arguments);
@@ -315,12 +315,12 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
     
     var next = -1;
     
-    if ( id == 'cod' && direction == 1 ){
+    if ( id === 'cod' && direction === 1 ){
       var v = Ext.getCmp('configureOrDownload').getValue().getRawValue();
       var df = false;
-      if ( v == 'localInstall' ){
+      if ( v === 'localInstall' ){
         next = 1;
-      } else if ( v == 'remoteInstall' ){
+      } else if ( v === 'remoteInstall' ){
         next = 2;
         df = true;
       }
@@ -328,7 +328,7 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
       Ext.getCmp('move-next').setDisabled(true);
       Ext.getCmp('finish').setDisabled(df);
     } 
-    else if (direction == -1 && (id == 'localInstall' || id == 'remoteInstall')) {
+    else if (direction === -1 && (id === 'localInstall' || id === 'remoteInstall')) {
       next = 0;
       Ext.getCmp('move-prev').setDisabled(true);
       Ext.getCmp('move-next').setDisabled(false);
@@ -342,9 +342,9 @@ Sonia.hg.ConfigWizardPanel = Ext.extend(Ext.Panel,{
   
   applyChanges: function(){
     var v = Ext.getCmp('configureOrDownload').getValue().getRawValue();
-    if ( v == 'localInstall' ){
+    if ( v === 'localInstall' ){
       this.applyLocalConfiguration();
-    } else if ( v == 'remoteInstall' ){
+    } else if ( v === 'remoteInstall' ){
       this.applyRemoteConfiguration();
     }
   },
@@ -427,7 +427,7 @@ Ext.reg('hgConfigWizardPanel', Sonia.hg.ConfigWizardPanel);
 
 // i18n
 
-if ( i18n != null && i18n.country == 'de' ){
+if ( i18n && i18n.country === 'de' ){
 
   Ext.override(Sonia.hg.ConfigWizardPanel, {
 
