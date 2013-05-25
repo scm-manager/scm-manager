@@ -61,7 +61,7 @@ Sonia.rest.FormPanel = Ext.extend(Ext.form.FormPanel,{
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.rest.FormPanel.superclass.initComponent.apply(this, arguments);
 
-    if ( this.item !== null ){
+    if ( this.item ){
       this.loadData(this.item);
     }
   },

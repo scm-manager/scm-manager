@@ -119,7 +119,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
   renderUrl: function(url){
     var result = '';
-    if ( url !== null ){
+    if ( url ){
       result = String.format( this.urlTemplate, url );
     }
     return result;
@@ -127,7 +127,7 @@ Sonia.rest.Grid = Ext.extend(Ext.grid.GridPanel, {
 
   renderMailto: function(mail){
     var result = '';
-    if ( mail !== null ){
+    if ( mail ){
       result = String.format( this.mailtoTemplate, mail );
     }
     return result;

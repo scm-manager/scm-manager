@@ -167,18 +167,18 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
   renderChangesetMetadata: function(author, p, record){
     var authorValue = '';
-    if ( author !== null ){
+    if ( author ){
       authorValue = author.name;
-      if ( author.mail !== null ){
+      if ( author.mail ){
         authorValue += ' ' + String.format(this.mailTemplate, author.mail);
       }
     }
     var description = record.data.description;
-    // if ( description != null ){
+    // if ( description ){
     //  description = Ext.util.Format.htmlEncode(description);
     // }
     var date = record.data.date;
-    if ( date !== null ){
+    if ( date ){
       date = Ext.util.Format.formatTimestamp(date);
     }
     return String.format(
@@ -198,7 +198,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
   getLabeledValue: function(label, array){
     var result = '';
-    if ( array !== null && array.length > 0 ){
+    if ( array && array.length > 0 ){
       result = label + ': ' + Sonia.util.getStringFromArray(array);
     }
     return result;

@@ -182,7 +182,7 @@ if (!Array.prototype.filter) {
 
 Sonia.util.getProperty = function(properties, key){
   var value = null;
-  if ( properties !== null ){
+  if ( properties ){
     for (var i=0; i<properties.length; i++){
       var property = properties[i];
       if ( property.key === key ){

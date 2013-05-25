@@ -45,7 +45,7 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
   
   modifyDefaultConfig: function(config){
     var items = config.items;
-    if ( items === null ){
+    if ( ! items ){
       items = [];
     }
     items.push({

@@ -47,7 +47,7 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   initComponent: function(){
     
     var contact = '';
-    if ( this.item.contact !== null ){
+    if ( this.item.contact ){
       contact = String.format(this.mailTemplate, this.item.contact);
     }
     

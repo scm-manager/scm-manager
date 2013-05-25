@@ -105,7 +105,7 @@ Sonia.group.Grid = Ext.extend(Sonia.rest.Grid, {
 
   renderMembers: function(members){
     var out = '';
-    if ( members !== null ){
+    if ( members ){
       var s = members.length;
       for ( var i=0; i<s; i++ ){
         out += members[i];

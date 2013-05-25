@@ -96,7 +96,7 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
   
   onClick: function(e){
     var el = e.getTarget('.blame-link');
-    if ( el !== null ){
+    if ( el ){
       var revision = el.rel;
       if (debug){
         console.debug('load content for ' + revision);

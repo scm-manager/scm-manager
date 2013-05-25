@@ -73,7 +73,7 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
         },
         listeners: {
           render: function(){
-            if ( this.onLoad !== null && Ext.isFunction( this.onLoad ) ){
+            if ( this.onLoad && Ext.isFunction( this.onLoad ) ){
               this.onLoad(this.el);
             }
           },
@@ -108,7 +108,7 @@ Sonia.config.ConfigForm = Ext.extend(Ext.form.FormPanel, {
 
   submitForm: function(){
     var form = this.getForm();
-    if ( this.onSubmit !== null && Ext.isFunction( this.onSubmit ) ){
+    if ( this.onSubmit && Ext.isFunction( this.onSubmit ) ){
       this.onSubmit( form.getValues() );
     }
   }

@@ -207,7 +207,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   
   loadStore: function(store, records, extra){
     var path = extra.params.path;
-    if ( path !== null && path.length > 0 ){
+    if ( path && path.length > 0 ){
       
       var index = path.lastIndexOf('/');
       if ( index > 0 ){
@@ -240,7 +240,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   onClick: function(e){
     var el = e.getTarget('.scm-browser');
     
-    if ( el !== null ){
+    if ( el ){
     
       var rel = el.rel;
       var index = rel.indexOf(':');
@@ -288,7 +288,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   
   appendRepositoryProperties: function(bar){
     bar.push('->',this.repository.name);
-    if ( this.revision !== null ){
+    if ( this.revision ){
       bar.push(': ', this.revision);
     }
   },
@@ -381,7 +381,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     }
     
     items.push('->', this.repository.name);
-    if ( this.revision !== null ){
+    if ( this.revision ){
       items.push(':', this.revision);
     }
     

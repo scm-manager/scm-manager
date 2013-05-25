@@ -172,7 +172,7 @@ Sonia.repository.ContentPanel = Ext.extend(Ext.Panel, {
   
   appendRepositoryProperties: function(bar){
     bar.push('->',this.repository.name);
-    if ( this.revision !== null ){
+    if ( this.revision ){
       bar.push(': ', this.revision);
     }
   },

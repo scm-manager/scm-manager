@@ -44,10 +44,10 @@ Sonia.navigation.NavSection = Ext.extend(Ext.Panel, {
 
 
   initComponent: function(){
-    if ( this.links === null ){
+    if ( ! this.links ){
       this.links = this.items;
     }
-    if ( this.links === null ){
+    if ( ! this.links ){
       this.links = [];
     }
 

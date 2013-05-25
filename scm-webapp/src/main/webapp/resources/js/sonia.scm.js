@@ -99,7 +99,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   getInfoPanel: function(type){
     var rp = null;
     var panel = this.infoPanels[type];
-    if ( panel === null ){
+    if ( ! panel ){
       rp = {
         xtype: 'repositoryInfoPanel'
       };
@@ -224,7 +224,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         }]
       }]);
 
-      if ( securitySection === null ){
+      if ( ! securitySection ){
         securitySection = {
           id: 'securityConfig',
           title: this.sectionSecurityText,
@@ -243,7 +243,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       });
     }
 
-    if ( securitySection !== null ){
+    if ( securitySection ){
       panel.addSection( securitySection );
     }
 
@@ -291,7 +291,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
   addTab: function(panel){
     var tab = this.mainTabPanel.findById(panel.id);
-    if ( tab === null ){
+    if ( !tab ){
       this.mainTabPanel.add(panel);
     }
     this.mainTabPanel.setActiveTab(panel.id);
@@ -362,10 +362,10 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
         var s = null;
         var text = response.responseText;
-        if ( text !== null && text.length > 0 ){
+        if ( text && text.length > 0 ){
           s = Ext.decode( text );
         }
-        if ( s !== null && s.success ){
+        if ( s && s.success ){
           this.loadState(s);
         } else {
           // show login window
@@ -428,10 +428,10 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         buttons: Ext.Msg.OKCANCEL
       });      
     } else {
-      if ( title === null ){
+      if ( ! title ){
         title = this.errorTitle;
       }
-      if ( message === null ){
+      if ( ! message ){
         message = this.errorMessage;
       }
 
@@ -454,7 +454,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       
       message = String.format(message, status);
       
-      if ( text === null ){
+      if ( ! text ){
 
         Ext.MessageBox.show({
           title: title,

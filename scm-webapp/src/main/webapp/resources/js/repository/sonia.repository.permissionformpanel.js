@@ -121,8 +121,8 @@ Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
         }
     });
 
-    if ( this.item !== null ){
-      if ( this.item.permissions === null ){
+    if ( this.item ){
+      if ( !this.item.permissions ){
         this.item.permissions = [];
       }
       this.permissionStore.loadData( this.item );

@@ -71,7 +71,7 @@ Sonia.repository.createContentId = function(repository, path, revision){
 };
 
 Sonia.repository.isOwner = function(repository){
-  return admin || repository.permissions !== null;
+  return admin || repository.permissions;
 };
 
 Sonia.repository.setEditPanel = function(panels){
