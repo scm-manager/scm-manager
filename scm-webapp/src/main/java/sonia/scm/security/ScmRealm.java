@@ -665,25 +665,6 @@ public class ScmRealm extends AuthorizingRealm
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   * @param groups
-   * @param perm
-   *
-   * @return
-   */
-  private boolean isUserPermission(User user, GroupNames groups,
-    PermissionObject perm)
-  {
-    //J-
-    return (perm.isGroupPermission() && groups.contains(perm.getName())) 
-      || ((!perm.isGroupPermission()) && user.getName().equals(perm.getName()));
-    //J+
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
