@@ -32,6 +32,9 @@
 package sonia.scm.repository.api;
 
 /**
+ * The {@link PullResponse} is the result of the 
+ * {@link PullCommandBuilder#pull(sonia.scm.repository.Repository)} method and
+ * contains informations over the executed pull command.
  *
  * @author Sebastian Sdorra
  * @since 1.31
@@ -40,16 +43,16 @@ public final class PullResponse extends AbstractPushOrPullResponse
 {
 
   /**
-   * Constructs ...
+   * Constructs a new PullResponse.
    *
    */
   public PullResponse() {}
 
   /**
-   * Constructs ...
+   * Constructs a new PullResponse.
    *
    *
-   * @param changesetCount
+   * @param changesetCount count of pulled changesets
    */
   public PullResponse(long changesetCount)
   {

@@ -177,6 +177,7 @@ public abstract class RepositoryServiceProvider implements Closeable
    *
    *
    * @return
+   * @since 1.31
    */
   public PullCommand getPullCommand()
   {
@@ -188,6 +189,7 @@ public abstract class RepositoryServiceProvider implements Closeable
    *
    *
    * @return
+   * @since 1.31
    */
   public PushCommand getPushCommand()
   {

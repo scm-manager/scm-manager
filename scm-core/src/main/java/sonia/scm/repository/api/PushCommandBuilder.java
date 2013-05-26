@@ -48,17 +48,18 @@ import sonia.scm.security.RepositoryPermission;
 import java.io.IOException;
 
 /**
- *
+ * The push command push changes to a other repository.
+ * 
  * @author Sebastian Sdorra
+ * @since 1.31
  */
 public final class PushCommandBuilder
 {
 
   /**
-   * Constructs ...
+   * Constructs a new PushCommandBuilder.
    *
-   *
-   * @param command
+   * @param command implementation of the {@link PushCommand}
    */
   PushCommandBuilder(PushCommand command)
   {
@@ -68,12 +69,11 @@ public final class PushCommandBuilder
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Push all changes to the given remote repository.
    *
+   * @param remoteRepository remote repository
    *
-   * @param remoteRepository
-   *
-   * @return
+   * @return informations of the executed push command
    *
    * @throws IOException
    * @throws RepositoryException
@@ -96,9 +96,9 @@ public final class PushCommandBuilder
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** push command implementation */
   private PushCommand command;
 
-  /** Field description */
+  /** push command request */
   private PushCommandRequest request = new PushCommandRequest();
 }

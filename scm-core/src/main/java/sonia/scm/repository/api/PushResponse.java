@@ -36,7 +36,10 @@ package sonia.scm.repository.api;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- *
+ * The {@link PushResponse} is the result of the 
+ * {@link PushCommandBuilder#push(sonia.scm.repository.Repository)} method and
+ * contains informations over the executed push command.
+ * 
  * @author Sebastian Sdorra
  * @since 1.31
  */
@@ -45,16 +48,16 @@ public final class PushResponse extends AbstractPushOrPullResponse
 {
 
   /**
-   * Constructs ...
+   * Constructs a new PushResponse.
    *
    */
   public PushResponse() {}
 
   /**
-   * Constructs ...
+   * Constructs a new PushResponse.
    *
    *
-   * @param changesetCount
+   * @param changesetCount count of pushed changesets
    */
   public PushResponse(long changesetCount)
   {

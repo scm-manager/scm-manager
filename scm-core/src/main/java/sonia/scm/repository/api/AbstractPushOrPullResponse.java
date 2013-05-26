@@ -38,25 +38,28 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 
 /**
+ * Abstract base class for {@link PushResponse} and {@link PullResponse}.
  *
  * @author Sebastian Sdorra
- * @since 1.31 
+ * @since 1.31
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class AbstractPushOrPullResponse
 {
 
   /**
-   * Constructs ...
+   * Constructs a new AbstractPushOrPullResponse.
    *
    */
   public AbstractPushOrPullResponse() {}
 
   /**
-   * Constructs ...
+   * Constructs a new AbstractPushOrPullResponse.
    *
    *
-   * @param pushedChangesetCount
+   * @param pushedChangesetCount count of pushed/pulled changesets
+   *
+   * @param changesetCount
    */
   public AbstractPushOrPullResponse(long changesetCount)
   {
@@ -66,10 +69,10 @@ public abstract class AbstractPushOrPullResponse
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the count of pushed/pulled changesets.
    *
    *
-   * @return
+   * @return count of pushed/pulled changesets
    */
   public long getChangesetCount()
   {
@@ -78,7 +81,7 @@ public abstract class AbstractPushOrPullResponse
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** count of pushed/pulled changesets */
   @XmlElement(name = "changeset-count")
   private long changesetCount;
 }

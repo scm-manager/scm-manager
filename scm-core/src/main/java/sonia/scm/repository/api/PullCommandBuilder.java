@@ -51,6 +51,7 @@ import sonia.scm.security.RepositoryPermission;
 import java.io.IOException;
 
 /**
+ * The pull command pull changes from a other repository.
  *
  * @author Sebastian Sdorra
  * @since 1.31
@@ -67,11 +68,11 @@ public final class PullCommandBuilder
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new PullCommandBuilder.
    *
    *
-   * @param command
-   * @param localRepository
+   * @param command pull command implementation
+   * @param localRepository local repository
    */
   PullCommandBuilder(PullCommand command, Repository localRepository)
   {
@@ -82,12 +83,12 @@ public final class PullCommandBuilder
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Pull all changes from the given remote repository.
    *
    *
-   * @param remoteRepository
+   * @param remoteRepository remote repository
    *
-   * @return
+   * @return informations over the executed pull command
    *
    * @throws IOException
    * @throws RepositoryException
@@ -115,12 +116,12 @@ public final class PullCommandBuilder
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** pull command implementation */
   private PullCommand command;
 
-  /** Field description */
+  /** local repository */
   private Repository localRepository;
 
-  /** Field description */
+  /** pull command request */
   private PullCommandRequest request = new PullCommandRequest();
 }
