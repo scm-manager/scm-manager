@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -54,9 +55,6 @@ import java.util.Locale;
  */
 public class RepositoryPermissionResolver implements PermissionResolver
 {
-
-  /** Field description */
-  private static final String TYPE_REPOSITORY = "repository";
 
   /**
    * the logger for RepositoryPermissionResolver
@@ -86,7 +84,7 @@ public class RepositoryPermissionResolver implements PermissionResolver
     {
       String type = permissionIt.next();
 
-      if (type.equals(TYPE_REPOSITORY))
+      if (type.equals(RepositoryPermission.TYPE))
       {
         permission = createRepositoryPermission(permissionIt);
       }

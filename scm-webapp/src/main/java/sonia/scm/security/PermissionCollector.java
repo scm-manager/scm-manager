@@ -34,6 +34,7 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -100,7 +101,7 @@ public class PermissionCollector
    */
   public List<Permission> collect(User user, GroupNames groups)
   {
-    Builder<Permission> builder = new Builder<Permission>();
+    Builder<Permission> builder = ImmutableList.builder();
 
     collectRepositoryPermissions(builder, user, groups);
     collectGlobalPermissions(builder, user, groups);

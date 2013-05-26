@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -51,8 +52,15 @@ import java.io.Serializable;
  * @author Sebastian Sdorra
  * @since 1.21
  */
-public final class RepositoryPermission implements Permission, Serializable
+public final class RepositoryPermission
+  implements StringablePermission, Serializable
 {
+
+  /**
+   * Type string of the permission
+   * @since 1.31
+   */
+  public static final String TYPE = "repository";
 
   /** Field description */
   public static final String WILDCARD = "*";
@@ -174,6 +182,22 @@ public final class RepositoryPermission implements Permission, Serializable
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String getAsString()
+  {
+    StringBuilder buffer = new StringBuilder(TYPE);
+
+    buffer.append(":").append(repositoryId).append(":").append(permissionType);
+
+    return buffer.toString();
+  }
 
   /**
    * Method description

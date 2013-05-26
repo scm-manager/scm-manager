@@ -35,11 +35,14 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
@@ -56,9 +59,11 @@ import sonia.scm.ScmState;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupNames;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.security.PermissionCollector;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.security.Role;
 import sonia.scm.security.SecuritySystem;
+import sonia.scm.security.StringablePermission;
 import sonia.scm.security.Tokens;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -110,17 +115,20 @@ public class AuthenticationResource
    * @param userManager
    * @param securityContextProvider
    * @param securitySystem
+   * @param collector
    */
   @Inject
   public AuthenticationResource(SCMContextProvider contextProvider,
     ScmConfiguration configuration, RepositoryManager repositoryManger,
-    UserManager userManager, SecuritySystem securitySystem)
+    UserManager userManager, SecuritySystem securitySystem,
+    PermissionCollector collector)
   {
     this.contextProvider = contextProvider;
     this.configuration = configuration;
     this.repositoryManger = repositoryManger;
     this.userManager = userManager;
     this.securitySystem = securitySystem;
+    this.permissionCollector = collector;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -302,7 +310,7 @@ public class AuthenticationResource
   private ScmState createAnonymousState()
   {
     return createState(SCMContext.ANONYMOUS, Collections.EMPTY_LIST,
-      Collections.EMPTY_LIST);
+      Collections.EMPTY_LIST, Collections.EMPTY_LIST);
   }
 
   /**
@@ -328,7 +336,18 @@ public class AuthenticationResource
       ap = securitySystem.getAvailablePermissions();
     }
 
-    return createState(user, groups.getCollection(), ap);
+    Builder<String> builder = ImmutableList.builder();
+
+    for (Permission p : permissionCollector.collect(user, groups))
+    {
+      if (p instanceof StringablePermission)
+      {
+        builder.add(((StringablePermission) p).getAsString());
+      }
+
+    }
+
+    return createState(user, groups.getCollection(), builder.build(), ap);
   }
 
   /**
@@ -337,16 +356,19 @@ public class AuthenticationResource
    *
    * @param user
    * @param groups
+   * @param assignedPermissions
    * @param availablePermissions
    *
    * @return
    */
   private ScmState createState(User user, Collection<String> groups,
+    List<String> assignedPermissions,
     List<PermissionDescriptor> availablePermissions)
   {
     return new ScmState(contextProvider, user, groups,
       repositoryManger.getConfiguredTypes(), userManager.getDefaultType(),
-      new ScmClientConfig(configuration), availablePermissions);
+      new ScmClientConfig(configuration), assignedPermissions,
+      availablePermissions);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -356,6 +378,9 @@ public class AuthenticationResource
 
   /** Field description */
   private SCMContextProvider contextProvider;
+
+  /** Field description */
+  private PermissionCollector permissionCollector;
 
   /** Field description */
   private RepositoryManager repositoryManger;

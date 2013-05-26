@@ -126,7 +126,7 @@ public class ScmState
     String defaultUserType, ScmClientConfig clientConfig)
   {
     this(provider, user, groups, repositoryTypes, defaultUserType,
-      clientConfig, null);
+      clientConfig, null, null);
   }
 
   /**
@@ -139,6 +139,7 @@ public class ScmState
    * @param repositoryTypes available repository types
    * @param defaultUserType default user type
    * @param clientConfig client configuration
+   * @param assignedPermission
    * @param availablePermissions list of available permissions
    *
    * @since 1.31
@@ -146,6 +147,7 @@ public class ScmState
   public ScmState(SCMContextProvider provider, User user,
     Collection<String> groups, Collection<Type> repositoryTypes,
     String defaultUserType, ScmClientConfig clientConfig,
+    List<String> assignedPermission,
     List<PermissionDescriptor> availablePermissions)
   {
     this.version = provider.getVersion();
@@ -154,10 +156,23 @@ public class ScmState
     this.repositoryTypes = repositoryTypes;
     this.clientConfig = clientConfig;
     this.defaultUserType = defaultUserType;
+    this.assignedPermissions = assignedPermission;
     this.availablePermissions = availablePermissions;
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Return a list of assigned permissions.
+   *
+   *
+   * @return list of assigned permissions
+   * @since 1.31
+   */
+  public List<String> getAssignedPermissions()
+  {
+    return assignedPermissions;
+  }
 
   /**
    * Returns a list of available global permissions.
@@ -254,6 +269,18 @@ public class ScmState
   //~--- set methods ----------------------------------------------------------
 
   /**
+   * Sets a list of assigned permissions.
+   *
+   *
+   * @param assignedPermissions list of assigned permissions
+   * @since 1.31
+   */
+  public void setAssignedPermissions(List<String> assignedPermissions)
+  {
+    this.assignedPermissions = assignedPermissions;
+  }
+
+  /**
    * Sets a list of available global permissions.
    *
    *
@@ -348,6 +375,9 @@ public class ScmState
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private List<String> assignedPermissions;
 
   /**
    * Avaliable global permission
