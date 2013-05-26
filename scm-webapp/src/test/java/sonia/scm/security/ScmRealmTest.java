@@ -470,18 +470,20 @@ public class ScmRealmTest
     
     SecuritySystem securitySystem = mock(SecuritySystem.class);
     when(
-      securitySystem.getPermissions(Mockito.<Predicate>any())
+      securitySystem.getPermissions(Mockito.any(Predicate.class))
     ).thenReturn(
       Collections.EMPTY_LIST
     );
+    
+    PermissionCollector collector = new PermissionCollector(repositoryDAO,
+      securitySystem, new RepositoryPermissionResolver());
 
     return new ScmRealm(
       new ScmConfiguration(),
-      securitySystem,
+      collector,
       new MapCacheManager(),
       userManager,
       groupManager,
-      repositoryDAO,
       userDAO,
       authManager,
       null,

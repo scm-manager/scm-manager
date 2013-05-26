@@ -42,6 +42,8 @@ import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
+import org.apache.shiro.authz.permission.PermissionResolver;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,6 +92,7 @@ import sonia.scm.security.DefaultSecuritySystem;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.MessageDigestEncryptionHandler;
+import sonia.scm.security.RepositoryPermissionResolver;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.security.SecuritySystem;
 import sonia.scm.store.BlobStoreFactory;
@@ -273,6 +276,7 @@ public class ScmServletModule extends ServletModule
     pluginLoader.processExtensions(binder());
 
     // bind security stuff
+    bind(PermissionResolver.class, RepositoryPermissionResolver.class);
     bind(AuthenticationManager.class, ChainAuthenticatonManager.class);
     bind(SecurityContext.class).to(BasicSecurityContext.class);
     bind(WebSecurityContext.class).to(BasicSecurityContext.class);

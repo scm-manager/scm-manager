@@ -36,7 +36,6 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
@@ -70,10 +69,7 @@ import sonia.scm.event.Subscriber;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupNames;
-import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
@@ -130,6 +126,7 @@ public class ScmRealm extends AuthorizingRealm
    *
    * @param configuration
    * @param securitySystem
+   * @param collector
    * @param cacheManager
    * @param userManager
    * @param groupManager
@@ -142,18 +139,16 @@ public class ScmRealm extends AuthorizingRealm
    */
   @Inject
   public ScmRealm(ScmConfiguration configuration,
-    SecuritySystem securitySystem, CacheManager cacheManager,
-    UserManager userManager, GroupManager groupManager,
-    RepositoryDAO repositoryDAO, UserDAO userDAO,
+    PermissionCollector collector, CacheManager cacheManager,
+    UserManager userManager, GroupManager groupManager, UserDAO userDAO,
     AuthenticationManager authenticator, RepositoryManager manager,
     Provider<HttpServletRequest> requestProvider,
     Provider<HttpServletResponse> responseProvider)
   {
     this.configuration = configuration;
-    this.securitySystem = securitySystem;
+    this.collector = collector;
     this.userManager = userManager;
     this.groupManager = groupManager;
-    this.repositoryDAO = repositoryDAO;
     this.userDAO = userDAO;
     this.authenticator = authenticator;
     this.requestProvider = requestProvider;
@@ -503,121 +498,6 @@ public class ScmRealm extends AuthorizingRealm
    * Method description
    *
    *
-   * @param user
-   * @param groups
-   *
-   * @return
-   */
-  private List<String> collectGlobalPermissions(final User user,
-    final GroupNames groups)
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("collect global permissions for user {}", user.getName());
-    }
-
-    List<String> permissions = Lists.newArrayList();
-
-    List<StoredAssignedPermission> globalPermissions =
-      securitySystem.getPermissions(new Predicate<AssignedPermission>()
-    {
-
-      @Override
-      public boolean apply(AssignedPermission input)
-      {
-        return isUserPermission(user, groups, input);
-      }
-    });
-
-    for (StoredAssignedPermission gp : globalPermissions)
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("add permission {} for user {}", gp.getPermission(),
-          user.getName());
-      }
-
-      permissions.add(gp.getPermission());
-
-    }
-
-    return permissions;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   * @param groups
-   *
-   * @return
-   */
-  private List<org.apache.shiro.authz.Permission> collectRepositoryPermissions(
-    User user, GroupNames groups)
-  {
-    List<org.apache.shiro.authz.Permission> permissions = Lists.newArrayList();
-
-    for (Repository repository : repositoryDAO.getAll())
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("collect permissions for repository {} and user {}",
-          repository.getName(), user.getName());
-      }
-
-      collectRepositoryPermissions(permissions, repository, user, groups);
-    }
-
-    return permissions;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param permissions
-   * @param repository
-   * @param user
-   * @param groups
-   */
-  private void collectRepositoryPermissions(
-    List<org.apache.shiro.authz.Permission> permissions, Repository repository,
-    User user, GroupNames groups)
-  {
-    List<Permission> repositoryPermissions = repository.getPermissions();
-
-    if (Util.isNotEmpty(repositoryPermissions))
-    {
-
-      for (Permission permission : repositoryPermissions)
-      {
-        if (isUserPermission(user, groups, permission))
-        {
-          RepositoryPermission rp = new RepositoryPermission(repository,
-                                      permission.getType());
-
-          if (logger.isTraceEnabled())
-          {
-            logger.trace("add repository permission {} for user {}", rp,
-              user.getName());
-          }
-
-          permissions.add(rp);
-        }
-      }
-    }
-    else if (logger.isTraceEnabled())
-    {
-      logger.trace("repository {} has not permission entries",
-        repository.getName());
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param token
    * @param result
    *
@@ -674,18 +554,12 @@ public class ScmRealm extends AuthorizingRealm
     }
     else
     {
-      permissions = collectRepositoryPermissions(user, groups);
-      globalPermissions = collectGlobalPermissions(user, groups);
+      permissions = collector.collect(user, groups);
     }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
 
     info.addObjectPermissions(permissions);
-
-    if (globalPermissions != null)
-    {
-      info.addStringPermissions(globalPermissions);
-    }
 
     return info;
   }
@@ -831,22 +705,19 @@ public class ScmRealm extends AuthorizingRealm
   private Cache<String, AuthorizationInfo> cache;
 
   /** Field description */
+  private PermissionCollector collector;
+
+  /** Field description */
   private ScmConfiguration configuration;
 
   /** Field description */
   private GroupManager groupManager;
 
   /** Field description */
-  private RepositoryDAO repositoryDAO;
-
-  /** Field description */
   private Provider<HttpServletRequest> requestProvider;
 
   /** Field description */
   private Provider<HttpServletResponse> responseProvider;
-
-  /** Field description */
-  private SecuritySystem securitySystem;
 
   /** Field description */
   private UserDAO userDAO;
