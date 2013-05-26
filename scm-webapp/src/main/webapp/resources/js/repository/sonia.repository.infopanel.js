@@ -43,6 +43,11 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   contactText: 'Contact: ',
   urlText: 'Url: ',
   changesetViewerText: 'Commits',
+  
+  // TODO i18n
+  accessText: 'Access:',
+  accessReadOnly: 'Read-Only access',
+  accessReadWrite: 'Read+Write access',
 
   initComponent: function(){
     
@@ -50,6 +55,11 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
     if ( this.item.contact ){
       contact = String.format(this.mailTemplate, this.item.contact);
     }
+    
+    var access = this.accessReadOnly;
+    if ( Sonia.repository.getPermissionType(this.item) !== 'READ' ){
+      access = this.accessReadWrite;
+    } 
     
     var items = [{
       xtype: 'label',
@@ -69,6 +79,12 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
     },{
       xtype: 'box',
       html: contact
+    },{
+      xtype: 'label',
+      text: this.accessText
+    },{
+      xtype: 'box',
+      html: '<span style="font-weight: bold; color: #747170">' + access + '</span>'
     },{
       xtype: 'label',
       text: this.urlText

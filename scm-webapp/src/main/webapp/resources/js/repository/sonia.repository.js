@@ -102,6 +102,27 @@ Sonia.repository.getTypeByName = function(name){
   return type;
 };
 
+Sonia.repository.getPermissionType = function(repository){
+  var values = [];
+  values['READ'] = 0;
+  values['WRITE'] = 10;
+  values['OWNER'] = 20;
+  
+  var type = 'READ';
+  
+  if (state.assignedPermissions){
+    Ext.each(state.assignedPermissions, function(p){
+      var parts = p.split(':');
+      if ( parts[0] === 'repository' && (parts[1] === '*' || parts[1] === repository.id)){
+        if ( values[parts[2]] > values[type] ){
+          type = parts[2];
+        }
+      }
+    });
+  }
+  return type;
+};
+
 /**
  * default panel
  */
