@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.group.GroupNames;
+import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.user.User;
@@ -103,8 +104,25 @@ public class PermissionCollector
   {
     Builder<Permission> builder = ImmutableList.builder();
 
-    collectRepositoryPermissions(builder, user, groups);
-    collectGlobalPermissions(builder, user, groups);
+    if (user.isActive())
+    {
+      if (user.isAdmin())
+      {
+        //J-
+        builder.add(
+          new RepositoryPermission(
+            RepositoryPermission.WILDCARD, 
+            PermissionType.OWNER
+          )
+        );
+        //J+
+      }
+      else
+      {
+        collectRepositoryPermissions(builder, user, groups);
+        collectGlobalPermissions(builder, user, groups);
+      }
+    }
 
     return builder.build();
   }

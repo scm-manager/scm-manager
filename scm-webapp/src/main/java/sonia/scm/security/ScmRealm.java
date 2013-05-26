@@ -36,7 +36,6 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
@@ -69,7 +68,6 @@ import sonia.scm.event.Subscriber;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupNames;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
@@ -88,7 +86,6 @@ import sonia.scm.web.security.AuthenticationState;
 import java.io.IOException;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -535,8 +532,6 @@ public class ScmRealm extends AuthorizingRealm
     GroupNames groups)
   {
     Set<String> roles = Sets.newHashSet();
-    List<org.apache.shiro.authz.Permission> permissions;
-    List<String> globalPermissions = null;
 
     roles.add(Role.USER);
 
@@ -548,18 +543,11 @@ public class ScmRealm extends AuthorizingRealm
       }
 
       roles.add(Role.ADMIN);
-      permissions = Lists.newArrayList();
-      permissions.add(new RepositoryPermission(RepositoryPermission.WILDCARD,
-        PermissionType.OWNER));
-    }
-    else
-    {
-      permissions = collector.collect(user, groups);
     }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
 
-    info.addObjectPermissions(permissions);
+    info.addObjectPermissions(collector.collect(user, groups));
 
     return info;
   }
