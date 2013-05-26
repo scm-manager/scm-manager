@@ -58,7 +58,7 @@ public abstract class AbstractPushOrPullResponse
    *
    * @param pushedChangesetCount
    */
-  public AbstractPushOrPullResponse(int changesetCount)
+  public AbstractPushOrPullResponse(long changesetCount)
   {
     this.changesetCount = changesetCount;
   }
@@ -71,7 +71,7 @@ public abstract class AbstractPushOrPullResponse
    *
    * @return
    */
-  public int getChangesetCount()
+  public long getChangesetCount()
   {
     return changesetCount;
   }
@@ -80,5 +80,5 @@ public abstract class AbstractPushOrPullResponse
 
   /** Field description */
   @XmlElement(name = "changeset-count")
-  private int changesetCount;
+  private long changesetCount;
 }

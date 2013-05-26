@@ -56,7 +56,7 @@ public final class PushResponse extends AbstractPushOrPullResponse
    *
    * @param changesetCount
    */
-  public PushResponse(int changesetCount)
+  public PushResponse(long changesetCount)
   {
     super(changesetCount);
   }

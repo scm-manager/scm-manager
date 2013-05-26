@@ -26,6 +26,9 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+
+
+
 package sonia.scm.repository.api;
 
 /**
@@ -36,13 +39,20 @@ package sonia.scm.repository.api;
 public final class PullResponse extends AbstractPushOrPullResponse
 {
 
-  public PullResponse()
-  {
-  }
+  /**
+   * Constructs ...
+   *
+   */
+  public PullResponse() {}
 
-  public PullResponse(int changesetCount)
+  /**
+   * Constructs ...
+   *
+   *
+   * @param changesetCount
+   */
+  public PullResponse(long changesetCount)
   {
     super(changesetCount);
   }
-  
 }
