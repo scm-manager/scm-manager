@@ -239,7 +239,10 @@ if (Sonia.repository.InfoPanel){
     contactText: 'Kontakt: ',
     urlText: 'Url: ',
     // german ??
-    changesetViewerText: 'Commits'
+    changesetViewerText: 'Commits',
+    accessText: 'Zugriff:',
+    accessReadOnly: 'Nur lesender Zugriff',
+    accessReadWrite: 'Lese und Schreibzugriff'
   });
 
 }

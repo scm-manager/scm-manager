@@ -44,7 +44,6 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
   urlText: 'Url: ',
   changesetViewerText: 'Commits',
   
-  // TODO i18n
   accessText: 'Access:',
   accessReadOnly: 'Read-Only access',
   accessReadWrite: 'Read+Write access',
