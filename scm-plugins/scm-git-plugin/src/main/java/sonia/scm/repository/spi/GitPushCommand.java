@@ -91,9 +91,7 @@ public class GitPushCommand extends AbstractPushOrPullCommand
     Preconditions.checkArgument(targetDirectory.exists(),
       "target repository directory does not exists");
 
-    push(open(), targetDirectory);
-
-    return new PushResponse();
+    return new PushResponse(push(open(), targetDirectory));
   }
 
   //~--- fields ---------------------------------------------------------------

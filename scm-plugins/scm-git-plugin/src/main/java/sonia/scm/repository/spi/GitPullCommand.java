@@ -100,19 +100,22 @@ public class GitPullCommand extends AbstractPushOrPullCommand
     Preconditions.checkArgument(sourceDirectory.exists(),
       "target repository directory does not exists");
 
+    PullResponse response = null;
+
     org.eclipse.jgit.lib.Repository source = null;
 
     try
     {
       source = new FileRepository(sourceDirectory);
-      push(source, targetDirectory);
+      response = new PullResponse(push(source, targetDirectory));
+
     }
     finally
     {
       GitUtil.close(source);
     }
 
-    return new PullResponse();
+    return response;
   }
 
   //~--- fields ---------------------------------------------------------------

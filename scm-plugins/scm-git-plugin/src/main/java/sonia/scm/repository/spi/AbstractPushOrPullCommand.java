@@ -34,17 +34,27 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.PushResult;
+import org.eclipse.jgit.transport.RemoteRefUpdate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.api.PushResponse;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
+
+import java.util.Collection;
 
 /**
  *
@@ -55,6 +65,12 @@ public abstract class AbstractPushOrPullCommand extends AbstractGitCommand
 
   /** Field description */
   private static final String SCHEME = "scm://";
+
+  /**
+   * the logger for AbstractPushOrPullCommand
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(AbstractPushOrPullCommand.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -87,25 +103,37 @@ public abstract class AbstractPushOrPullCommand extends AbstractGitCommand
    * @throws IOException
    * @throws RepositoryException
    */
-  protected PushResponse push(Repository source, File target)
+  protected long push(Repository source, File target)
     throws IOException, RepositoryException
   {
-    PushResponse response = null;
-    org.eclipse.jgit.api.PushCommand push = Git.wrap(source).push();
+    Git git = Git.wrap(source);
+    org.eclipse.jgit.api.PushCommand push = git.push();
 
     push.setPushAll().setPushTags();
     push.setRemote(SCHEME.concat(target.getAbsolutePath()));
 
+    long counter = -1;
+
     try
     {
-      push.call();
+      Iterable<PushResult> results = push.call();
+
+      if (results != null)
+      {
+        counter = 0;
+
+        for (PushResult result : results)
+        {
+          counter += count(git, result);
+        }
+      }
     }
     catch (Exception ex)
     {
       throw new RepositoryException("could not execute push command", ex);
     }
 
-    return response;
+    return counter;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -130,5 +158,79 @@ public abstract class AbstractPushOrPullCommand extends AbstractGitCommand
       "remote repository is required");
 
     return remoteRepository;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param git
+   * @param result
+   *
+   * @return
+   */
+  private long count(Git git, PushResult result)
+  {
+    long counter = 0;
+    Collection<RemoteRefUpdate> updates = result.getRemoteUpdates();
+
+    for (RemoteRefUpdate update : updates)
+    {
+      counter += count(git, update);
+    }
+
+    return counter;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param git
+   * @param update
+   *
+   * @return
+   */
+  private long count(Git git, RemoteRefUpdate update)
+  {
+    long counter = 0;
+
+    try
+    {
+      org.eclipse.jgit.api.LogCommand log = git.log();
+      ObjectId oldId = update.getExpectedOldObjectId();
+
+      if (oldId != null)
+      {
+        log.not(oldId);
+      }
+
+      ObjectId newId = update.getNewObjectId();
+
+      if (newId != null)
+      {
+        log.add(newId);
+
+        Iterable<RevCommit> commits = log.call();
+
+        if (commits != null)
+        {
+          counter += Iterables.size(commits);
+        }
+      }
+      else
+      {
+        logger.warn("update without new object id");
+      }
+
+    }
+    catch (Exception ex)
+    {
+      logger.error("could not count pushed changesets", ex);
+    }
+
+    return counter;
   }
 }
