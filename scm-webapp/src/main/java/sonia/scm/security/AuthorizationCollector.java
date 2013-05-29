@@ -35,9 +35,8 @@ package sonia.scm.security;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -56,6 +55,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupNames;
+import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryEvent;
@@ -372,6 +372,7 @@ public class AuthorizationCollector
     GroupNames groups)
   {
     Set<String> roles;
+    Set<Permission> permissions;
 
     if (user.isAdmin())
     {
@@ -381,19 +382,30 @@ public class AuthorizationCollector
       }
 
       roles = ImmutableSet.of(Role.USER, Role.ADMIN);
+
+      //J-
+      Permission adminPermission = new RepositoryPermission(
+        RepositoryPermission.WILDCARD,
+        PermissionType.OWNER
+      );
+      //J+
+
+      permissions = ImmutableSet.of(adminPermission);
     }
     else
     {
       roles = ImmutableSet.of(Role.USER);
+
+      Builder<Permission> builder = ImmutableSet.builder();
+
+      collectGlobalPermissions(builder, user, groups);
+      collectRepositoryPermissions(builder, user, groups);
+      permissions = builder.build();
     }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
 
-    Builder<Permission> permissions = ImmutableList.builder();
-
-    collectGlobalPermissions(permissions, user, groups);
-    collectRepositoryPermissions(permissions, user, groups);
-    info.addObjectPermissions(permissions.build());
+    info.addObjectPermissions(permissions);
 
     return info;
   }
