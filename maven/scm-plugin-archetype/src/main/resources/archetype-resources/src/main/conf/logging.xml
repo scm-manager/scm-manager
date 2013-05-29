@@ -32,44 +32,27 @@
 
 -->
 
-<!--
-    Document   : archetype-metadata.xml
-    Created on : December 29, 2010, 4:58 PM
-    Author     : sdorra
-    Description:
-        Purpose of the document follows.
--->
+<configuration>
 
-<archetype-descriptor name="scm-plugin">
-  <fileSets>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+    </encoder>
     
-    <fileSet filtered="true" packaged="true" encoding="UTF-8">
-      <directory>src/main/java</directory>
-      <includes>
-        <include>**/*.java</include>
-      </includes>
-    </fileSet>
+  </appender>
 
-    <fileSet filtered="true" encoding="UTF-8">
-       <directory>src/main/resources</directory>
-       <includes>
-         <include>**/*.xml</include>
-       </includes>
-    </fileSet>
-    
-    <fileSet filtered="true" encoding="UTF-8">
-       <directory>src/main/conf</directory>
-       <includes>
-         <include>**/*.xml</include>
-       </includes>
-    </fileSet>
+  <logger name="sonia.scm" level="INFO" />
+  <logger name="${package}" level="TRACE" />
+  
+  <!-- suppress massive gzip logging -->
+  <logger name="sonia.scm.filter.GZipFilter" level="WARN" />
+  <logger name="sonia.scm.filter.GZipResponseStream" level="WARN" />
+  
+  <logger name="sonia.scm.util.ServiceUtil" level="WARN" />
 
-    <fileSet filtered="false" encoding="UTF-8">
-       <directory>src/main/resources</directory>
-       <includes>
-         <include>**/*.js</include>
-       </includes>
-    </fileSet>
+  <root level="WARN">
+    <appender-ref ref="STDOUT" />
+  </root>
 
-  </fileSets>
-</archetype-descriptor>
+</configuration>

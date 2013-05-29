@@ -7,7 +7,7 @@
   <parent>
     <artifactId>scm-plugins</artifactId>
     <groupId>sonia.scm.plugins</groupId>
-    <version>1.8</version>
+    <version>1.23</version>
   </parent>
 
   <groupId>${groupId}</groupId>
@@ -36,6 +36,21 @@
     </dependency>
 
   </dependencies>
+  
+  <build>
+    <plugins>
+      
+      <plugin>
+        <groupId>sonia.scm.maven</groupId>
+        <artifactId>scm-maven-plugin</artifactId>
+        <version>1.30</version>
+        <configuration>
+          <loggginConfiguration>src/main/conf/logging.xml</loggginConfiguration>
+        </configuration>
+      </plugin>
+      
+    </plugins>
+  </build>
 
   <repositories>
     

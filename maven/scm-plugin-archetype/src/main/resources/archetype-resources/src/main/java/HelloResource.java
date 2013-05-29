@@ -34,9 +34,13 @@ package ${package};
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
-import sonia.scm.security.SecurityContext;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
+import sonia.scm.SCMContext;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.security.Role;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -45,39 +49,55 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+/**
+ * Sample RESTful WebService endpoint. 
+ * This sample resource is available at /api/rest/hello
+ */
 @Path("hello")
-public class HelloResource {
+public class HelloResource
+{
 
   /**
-   * Constructs ...
+   * Constructs a new HelloResource and injects all required dependencies.
    *
    *
-   * @param securityContextProvider
+   * @param securityContextProvider SCM-Manager context
    */
   @Inject
-  public HelloResource(Provider<SecurityContext> securityContextProvider)
+  public HelloResource(SCMContextProvider context)
   {
-    message = "Hello "
-              + securityContextProvider.get().getUser().getDisplayName();
+    this.context = context;
   }
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a hello message
    *
    *
-   * @return
+   * @return hello message
    */
   @GET
   @Produces(MediaType.TEXT_PLAIN)
   public String getHelloMessage()
   {
-    return message;
+    Subject subject = SecurityUtils.getSubject();
+    String username;
+
+    if (subject.hasRole(Role.USER))
+    {
+      username = (String) subject.getPrincipal();
+    }
+    else
+    {
+      username = SCMContext.USER_ANONYMOUS;
+    }
+
+    return "Hello " + username + " from SCM-Manager " + context.getVersion();
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private String message;
+  /** SCM-Manager context */
+  private SCMContextProvider context;
 }
