@@ -33,15 +33,19 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.authz.permission.PermissionResolver;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -52,36 +56,34 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupNames;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.user.User;
+import sonia.scm.user.UserEvent;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class PermissionCollector
+public class AuthorizationCollector
 {
 
-  // CACHE Authorization info ???
-  
   /** Field description */
-  private static final String NAME = "sonia.cache.permissions";
+  private static final String CACHE_NAME = "sonia.cache.authorizing";
 
   /**
-   * the logger for PermissionCollector
+   * the logger for AuthorizationCollector
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(PermissionCollector.class);
+    LoggerFactory.getLogger(AuthorizationCollector.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -96,11 +98,12 @@ public class PermissionCollector
    * @param resolver
    */
   @Inject
-  public PermissionCollector(CacheManager cacheManager,
+  public AuthorizationCollector(CacheManager cacheManager,
     RepositoryDAO repositoryDAO, SecuritySystem securitySystem,
     PermissionResolver resolver)
   {
-    this.cache = cacheManager.getCache(String.class, List.class, NAME);
+    this.cache = cacheManager.getCache(String.class, AuthorizationInfo.class,
+      CACHE_NAME);
     this.repositoryDAO = repositoryDAO;
     this.securitySystem = securitySystem;
     this.resolver = resolver;
@@ -114,24 +117,45 @@ public class PermissionCollector
    *
    * @return
    */
-  public List<Permission> collect()
+  public AuthorizationInfo collect()
   {
-    List<Permission> permissions;
+    AuthorizationInfo authorizationInfo;
     Subject subject = SecurityUtils.getSubject();
 
     if (subject.hasRole(Role.USER))
     {
-      PrincipalCollection pc = subject.getPrincipals();
-
-      permissions = collect(pc.oneByType(User.class),
-        pc.oneByType(GroupNames.class));
+      authorizationInfo = collect(subject.getPrincipals());
     }
     else
     {
-      permissions = Collections.EMPTY_LIST;
+      authorizationInfo = new SimpleAuthorizationInfo();
     }
 
-    return permissions;
+    return authorizationInfo;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param event
+   */
+  @Subscribe
+  public void onEvent(UserEvent event)
+  {
+    if (event.getEventType().isPost())
+    {
+      User user = event.getItem();
+
+      if (logger.isDebugEnabled())
+      {
+        logger.debug(
+          "clear cache of user {}, because user properties have changed",
+          user.getName());
+      }
+
+      cache.remove(user.getId());
+    }
   }
 
   /**
@@ -183,19 +207,39 @@ public class PermissionCollector
    * @param user
    * @param groups
    *
+   * @param principals
+   *
    * @return
    */
-  List<Permission> collect(User user, GroupNames groups)
+  AuthorizationInfo collect(PrincipalCollection principals)
   {
-    List<Permission> permissions = cache.get(user.getName());
+    Preconditions.checkNotNull(principals, "principals parameter is required");
 
-    if (permissions == null)
+    User user = principals.oneByType(User.class);
+
+    Preconditions.checkNotNull(user, "no user found in principal collection");
+
+    AuthorizationInfo info = cache.get(user.getId());
+
+    if (info == null)
     {
-      permissions = doCollect(user, groups);
-      cache.put(user.getName(), permissions);
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("collect AuthorizationInfo for user {}", user.getName());
+      }
+
+      GroupNames groupNames = principals.oneByType(GroupNames.class);
+
+      info = createAuthorizationInfo(user, groupNames);
+      cache.put(user.getId(), info);
+    }
+    else if (logger.isTraceEnabled())
+    {
+      logger.trace("retrieve AuthorizationInfo for user {} from cache",
+        user.getName());
     }
 
-    return permissions;
+    return info;
   }
 
   /**
@@ -324,31 +368,34 @@ public class PermissionCollector
    *
    * @return
    */
-  private List<Permission> doCollect(User user, GroupNames groups)
+  private AuthorizationInfo createAuthorizationInfo(User user,
+    GroupNames groups)
   {
-    Builder<Permission> builder = ImmutableList.builder();
+    Set<String> roles;
 
-    if (user.isActive())
+    if (user.isAdmin())
     {
-      if (user.isAdmin())
+      if (logger.isDebugEnabled())
       {
-        //J-
-        builder.add(
-          new RepositoryPermission(
-            RepositoryPermission.WILDCARD, 
-            PermissionType.OWNER
-          )
-        );
-        //J+
+        logger.debug("grant admin role for user {}", user.getName());
       }
-      else
-      {
-        collectRepositoryPermissions(builder, user, groups);
-        collectGlobalPermissions(builder, user, groups);
-      }
+
+      roles = ImmutableSet.of(Role.USER, Role.ADMIN);
+    }
+    else
+    {
+      roles = ImmutableSet.of(Role.USER);
     }
 
-    return builder.build();
+    SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
+
+    Builder<Permission> permissions = ImmutableList.builder();
+
+    collectGlobalPermissions(permissions, user, groups);
+    collectRepositoryPermissions(permissions, user, groups);
+    info.addObjectPermissions(permissions.build());
+
+    return info;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -375,7 +422,7 @@ public class PermissionCollector
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Cache<String, List> cache;
+  private Cache<String, AuthorizationInfo> cache;
 
   /** Field description */
   private RepositoryDAO repositoryDAO;

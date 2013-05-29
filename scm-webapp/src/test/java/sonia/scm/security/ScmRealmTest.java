@@ -478,7 +478,7 @@ public class ScmRealmTest
     
     CacheManager cacheManager = new MapCacheManager();
     
-    PermissionCollector collector = new PermissionCollector(
+    AuthorizationCollector collector = new AuthorizationCollector(
       cacheManager, 
       repositoryDAO,
       securitySystem, 
@@ -488,7 +488,7 @@ public class ScmRealmTest
     return new ScmRealm(
       new ScmConfiguration(),
       collector,
-      cacheManager,
+      // cacheManager,
       userManager,
       groupManager,
       userDAO,

@@ -37,7 +37,6 @@ package sonia.scm.security;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -52,7 +51,6 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.pam.UnsupportedTokenException;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -61,8 +59,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.HandlerEvent;
-import sonia.scm.cache.Cache;
-import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.Subscriber;
 import sonia.scm.group.Group;
@@ -71,7 +67,6 @@ import sonia.scm.group.GroupNames;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
-import sonia.scm.user.UserEvent;
 import sonia.scm.user.UserEventHack;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
@@ -103,9 +98,6 @@ public class ScmRealm extends AuthorizingRealm
   public static final String NAME = "scm";
 
   /** Field description */
-  private static final String CACHE_NAME = "sonia.cache.authorizing";
-
-  /** Field description */
   private static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
 
   /**
@@ -135,8 +127,8 @@ public class ScmRealm extends AuthorizingRealm
    */
   @Inject
   public ScmRealm(ScmConfiguration configuration,
-    PermissionCollector collector, CacheManager cacheManager,
-    UserManager userManager, GroupManager groupManager, UserDAO userDAO,
+    AuthorizationCollector collector,UserManager userManager, 
+    GroupManager groupManager, UserDAO userDAO, 
     AuthenticationManager authenticator, RepositoryManager manager,
     Provider<HttpServletRequest> requestProvider,
     Provider<HttpServletResponse> responseProvider)
@@ -149,10 +141,6 @@ public class ScmRealm extends AuthorizingRealm
     this.authenticator = authenticator;
     this.requestProvider = requestProvider;
     this.responseProvider = responseProvider;
-
-    // init cache
-    this.cache = cacheManager.getCache(String.class, AuthorizationInfo.class,
-      CACHE_NAME);
 
     // set token class
     setAuthenticationTokenClass(UsernamePasswordToken.class);
@@ -167,30 +155,6 @@ public class ScmRealm extends AuthorizingRealm
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param event
-   */
-  @Subscribe
-  public void onEvent(UserEvent event)
-  {
-    if (event.getEventType().isPost())
-    {
-      User user = event.getItem();
-
-      if (logger.isDebugEnabled())
-      {
-        logger.debug(
-          "clear cache of user {}, because user properties have changed",
-          user.getName());
-      }
-
-      cache.remove(user.getId());
-    }
-  }
 
   /**
    * Method description
@@ -250,29 +214,7 @@ public class ScmRealm extends AuthorizingRealm
   protected AuthorizationInfo doGetAuthorizationInfo(
     PrincipalCollection principals)
   {
-    User user = principals.oneByType(User.class);
-
-    AuthorizationInfo info = cache.get(user.getId());
-
-    if (info == null)
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("collect AuthorizationInfo for user {}", user.getName());
-      }
-
-      GroupNames groups = principals.oneByType(GroupNames.class);
-
-      info = createAuthorizationInfo(user, groups);
-      cache.put(user.getId(), info);
-    }
-    else if (logger.isTraceEnabled())
-    {
-      logger.trace("retrieve AuthorizationInfo for user {} from cache",
-        user.getName());
-    }
-
-    return info;
+    return collector.collect(principals);
   }
 
   /**
@@ -480,39 +422,6 @@ public class ScmRealm extends AuthorizingRealm
    * Method description
    *
    *
-   * @param user
-   * @param groups
-   *
-   * @return
-   */
-  private AuthorizationInfo createAuthorizationInfo(User user,
-    GroupNames groups)
-  {
-    Set<String> roles = Sets.newHashSet();
-
-    roles.add(Role.USER);
-
-    if (user.isAdmin())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("grant admin role for user {}", user.getName());
-      }
-
-      roles.add(Role.ADMIN);
-    }
-
-    SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
-
-    info.addObjectPermissions(collector.collect(user, groups));
-
-    return info;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param ar
    *
    * @return
@@ -628,10 +537,7 @@ public class ScmRealm extends AuthorizingRealm
   private AuthenticationManager authenticator;
 
   /** Field description */
-  private Cache<String, AuthorizationInfo> cache;
-
-  /** Field description */
-  private PermissionCollector collector;
+  private AuthorizationCollector collector;
 
   /** Field description */
   private ScmConfiguration configuration;

@@ -59,7 +59,7 @@ import sonia.scm.ScmState;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupNames;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.security.PermissionCollector;
+import sonia.scm.security.AuthorizationCollector;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.security.Role;
 import sonia.scm.security.SecuritySystem;
@@ -121,7 +121,7 @@ public class AuthenticationResource
   public AuthenticationResource(SCMContextProvider contextProvider,
     ScmConfiguration configuration, RepositoryManager repositoryManger,
     UserManager userManager, SecuritySystem securitySystem,
-    PermissionCollector collector)
+    AuthorizationCollector collector)
   {
     this.contextProvider = contextProvider;
     this.configuration = configuration;
@@ -338,7 +338,7 @@ public class AuthenticationResource
 
     Builder<String> builder = ImmutableList.builder();
 
-    for (Permission p : permissionCollector.collect())
+    for (Permission p : permissionCollector.collect().getObjectPermissions())
     {
       if (p instanceof StringablePermission)
       {
@@ -380,7 +380,7 @@ public class AuthenticationResource
   private SCMContextProvider contextProvider;
 
   /** Field description */
-  private PermissionCollector permissionCollector;
+  private AuthorizationCollector permissionCollector;
 
   /** Field description */
   private RepositoryManager repositoryManger;

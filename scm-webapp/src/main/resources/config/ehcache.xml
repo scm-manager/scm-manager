@@ -126,6 +126,7 @@
         timeToIdleSeconds="1200"
         timeToLiveSeconds="2400"
         diskPersistent="false"
+        copyOnRead="true"
   />
   
   <!--
