@@ -338,7 +338,7 @@ public class AuthenticationResource
 
     Builder<String> builder = ImmutableList.builder();
 
-    for (Permission p : permissionCollector.collect(user, groups))
+    for (Permission p : permissionCollector.collect())
     {
       if (p instanceof StringablePermission)
       {

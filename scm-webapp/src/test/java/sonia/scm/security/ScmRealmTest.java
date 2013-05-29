@@ -53,6 +53,7 @@ import org.junit.Test;
 
 import org.mockito.Mockito;
 
+import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.MapCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.Group;
@@ -475,13 +476,19 @@ public class ScmRealmTest
       Collections.EMPTY_LIST
     );
     
-    PermissionCollector collector = new PermissionCollector(repositoryDAO,
-      securitySystem, new RepositoryPermissionResolver());
+    CacheManager cacheManager = new MapCacheManager();
+    
+    PermissionCollector collector = new PermissionCollector(
+      cacheManager, 
+      repositoryDAO,
+      securitySystem, 
+      new RepositoryPermissionResolver()
+    );
 
     return new ScmRealm(
       new ScmConfiguration(),
       collector,
-      new MapCacheManager(),
+      cacheManager,
       userManager,
       groupManager,
       userDAO,

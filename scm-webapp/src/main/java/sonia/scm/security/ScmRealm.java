@@ -68,7 +68,6 @@ import sonia.scm.event.Subscriber;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupNames;
-import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
@@ -168,48 +167,6 @@ public class ScmRealm extends AuthorizingRealm
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param event
-   */
-  @Subscribe
-  public void onEvent(RepositoryEvent event)
-  {
-    if (event.getEventType().isPost())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("clear cache, because repository {} has changed",
-          event.getItem().getName());
-      }
-
-      cache.clear();
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param event
-   */
-  @Subscribe
-  public void onEvent(StoredAssignedPermissionEvent event)
-  {
-    if (event.getEventType().isPost())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("clear cache, because permission {} has changed",
-          event.getPermission().getId());
-      }
-
-      cache.clear();
-    }
-  }
 
   /**
    * Method description

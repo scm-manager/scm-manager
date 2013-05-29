@@ -36,24 +36,32 @@ package sonia.scm.security;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.permission.PermissionResolver;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.cache.Cache;
+import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupNames;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.user.User;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -63,6 +71,11 @@ import java.util.List;
 @Singleton
 public class PermissionCollector
 {
+
+  // CACHE Authorization info ???
+  
+  /** Field description */
+  private static final String NAME = "sonia.cache.permissions";
 
   /**
    * the logger for PermissionCollector
@@ -76,14 +89,18 @@ public class PermissionCollector
    * Constructs ...
    *
    *
+   *
+   * @param cacheManager
    * @param repositoryDAO
    * @param securitySystem
    * @param resolver
    */
   @Inject
-  public PermissionCollector(RepositoryDAO repositoryDAO,
-    SecuritySystem securitySystem, PermissionResolver resolver)
+  public PermissionCollector(CacheManager cacheManager,
+    RepositoryDAO repositoryDAO, SecuritySystem securitySystem,
+    PermissionResolver resolver)
   {
+    this.cache = cacheManager.getCache(String.class, List.class, NAME);
     this.repositoryDAO = repositoryDAO;
     this.securitySystem = securitySystem;
     this.resolver = resolver;
@@ -95,36 +112,90 @@ public class PermissionCollector
    * Method description
    *
    *
+   * @return
+   */
+  public List<Permission> collect()
+  {
+    List<Permission> permissions;
+    Subject subject = SecurityUtils.getSubject();
+
+    if (subject.hasRole(Role.USER))
+    {
+      PrincipalCollection pc = subject.getPrincipals();
+
+      permissions = collect(pc.oneByType(User.class),
+        pc.oneByType(GroupNames.class));
+    }
+    else
+    {
+      permissions = Collections.EMPTY_LIST;
+    }
+
+    return permissions;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param event
+   */
+  @Subscribe
+  public void onEvent(RepositoryEvent event)
+  {
+    if (event.getEventType().isPost())
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("clear cache, because repository {} has changed",
+          event.getItem().getName());
+      }
+
+      cache.clear();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param event
+   */
+  @Subscribe
+  public void onEvent(StoredAssignedPermissionEvent event)
+  {
+    if (event.getEventType().isPost())
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("clear cache, because permission {} has changed",
+          event.getPermission().getId());
+      }
+
+      cache.clear();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param user
    * @param groups
    *
    * @return
    */
-  public List<Permission> collect(User user, GroupNames groups)
+  List<Permission> collect(User user, GroupNames groups)
   {
-    Builder<Permission> builder = ImmutableList.builder();
+    List<Permission> permissions = cache.get(user.getName());
 
-    if (user.isActive())
+    if (permissions == null)
     {
-      if (user.isAdmin())
-      {
-        //J-
-        builder.add(
-          new RepositoryPermission(
-            RepositoryPermission.WILDCARD, 
-            PermissionType.OWNER
-          )
-        );
-        //J+
-      }
-      else
-      {
-        collectRepositoryPermissions(builder, user, groups);
-        collectGlobalPermissions(builder, user, groups);
-      }
+      permissions = doCollect(user, groups);
+      cache.put(user.getName(), permissions);
     }
 
-    return builder.build();
+    return permissions;
   }
 
   /**
@@ -244,6 +315,42 @@ public class PermissionCollector
     }
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param user
+   * @param groups
+   *
+   * @return
+   */
+  private List<Permission> doCollect(User user, GroupNames groups)
+  {
+    Builder<Permission> builder = ImmutableList.builder();
+
+    if (user.isActive())
+    {
+      if (user.isAdmin())
+      {
+        //J-
+        builder.add(
+          new RepositoryPermission(
+            RepositoryPermission.WILDCARD, 
+            PermissionType.OWNER
+          )
+        );
+        //J+
+      }
+      else
+      {
+        collectRepositoryPermissions(builder, user, groups);
+        collectGlobalPermissions(builder, user, groups);
+      }
+    }
+
+    return builder.build();
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -266,6 +373,9 @@ public class PermissionCollector
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private Cache<String, List> cache;
 
   /** Field description */
   private RepositoryDAO repositoryDAO;
