@@ -44,12 +44,14 @@ import sonia.scm.security.SecuritySystem;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Path("security/permission")
+@ExternallyManagedLifecycle
 public class SecuritySystemResource
 {
 
