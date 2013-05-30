@@ -726,7 +726,7 @@
             </executions>
             <configuration>
               <configFile>src/main/doc/enunciate.xml</configFile>
-              <docsDir>${project.build.directory}/docs</docsDir>
+              <docsDir>${project.build.directory}/restdocs</docsDir>
             </configuration>
             <dependencies>
               <dependency>
@@ -735,6 +735,25 @@
                 <version>${enunciate.version}</version>
               </dependency>
             </dependencies>
+          </plugin>
+          
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.3</version>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/doc/assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
           
         </plugins>
