@@ -71,11 +71,9 @@ public class GZipFilterConfig
   /**
    * Enables or disables response buffering. Default buffering is enabled.
    *
-   *
-   * @param bufferRequest true to enabled response buffering.
+   * @param bufferResponse true to enabled response buffering.
+   * 
    * @deprecated use {@link #setBufferResponse(boolean)} instead.
-   *
-   * @param bufferResponse
    */
   @Deprecated
   public void setBufferRequest(boolean bufferResponse)
@@ -86,10 +84,7 @@ public class GZipFilterConfig
   /**
    * Enables or disables response buffering. Default buffering is enabled.
    *
-   *
-   * @param bufferRequest true to enabled response buffering.
-   *
-   * @param bufferResponse
+   * @param bufferResponse true to enabled response buffering.
    */
   public void setBufferResponse(boolean bufferResponse)
   {

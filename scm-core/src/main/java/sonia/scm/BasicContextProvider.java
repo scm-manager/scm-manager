@@ -108,17 +108,13 @@ public class BasicContextProvider implements SCMContextProvider
   //~--- methods --------------------------------------------------------------
 
   /**
-   * {@see java.io.Closeable#close()}
-   *
-   *
-   * @throws IOException
+   * {@inheritDoc}
    */
   @Override
   public void close() throws IOException {}
 
   /**
-   * {@see SCMContextProvider#init()}
-   *
+   * {@inheritDoc}
    */
   @Override
   public void init() {}
@@ -126,10 +122,7 @@ public class BasicContextProvider implements SCMContextProvider
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * {@see SCMContextProvider#getBaseDirectory()}
-   *
-   *
-   * @return {@see SCMContextProvider#getBaseDirectory()}
+   * {@inheritDoc}
    */
   @Override
   public File getBaseDirectory()
@@ -139,8 +132,6 @@ public class BasicContextProvider implements SCMContextProvider
 
   /**
    * {@inheritDoc}
-   *
-   * @return
    */
   @Override
   public Stage getStage()
@@ -150,9 +141,6 @@ public class BasicContextProvider implements SCMContextProvider
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @return
    */
   @Override
   public Throwable getStartupError()

@@ -226,11 +226,10 @@ public class ScmConfiguration
 
   /**
    * Returns the date format for the user interface. This format is a
-   * JavaScript date format, see
-   * {@link http://jacwright.com/projects/javascript/date_format}.
-   *
-   *
-   * @return JavaScript date format
+   * JavaScript date format, from the library moment.js.
+   * 
+   * @see <a href="http://momentjs.com/docs/#/parsing/" target="_blank">http://momentjs.com/docs/#/parsing/</a>
+   * @return moment.js date format
    */
   public String getDateFormat()
   {
@@ -486,10 +485,10 @@ public class ScmConfiguration
   }
 
   /**
-   * Method description
+   * Sets the date format for the ui.
    *
    *
-   * @param dateFormat
+   * @param dateFormat date format for ui
    */
   public void setDateFormat(String dateFormat)
   {
@@ -752,7 +751,8 @@ public class ScmConfiguration
   private boolean disableGroupingGrid = false;
 
   /**
-   * JavaScript date format, see http://jacwright.com/projects/javascript/date_format
+   * JavaScript date format from moment.js
+   * @see <a href="http://momentjs.com/docs/#/parsing/" target="_blank">http://momentjs.com/docs/#/parsing/</a>
    */
   private String dateFormat = DEFAULT_DATEFORMAT;
 

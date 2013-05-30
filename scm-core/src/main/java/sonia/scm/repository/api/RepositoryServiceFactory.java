@@ -130,7 +130,6 @@ public final class RepositoryServiceFactory
    *
    * @param cacheManager cache manager
    * @param repositoryManager manager for repositories
-   * @param securityContextProvider provider for the current security context
    * @param resolvers a set of {@link RepositoryServiceResolver}
    * @param preProcessorUtil helper object for pre processor handling
    *

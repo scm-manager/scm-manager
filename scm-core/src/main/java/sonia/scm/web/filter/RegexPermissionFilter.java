@@ -68,7 +68,6 @@ public abstract class RegexPermissionFilter extends PermissionFilter
    *
    *
    * @param configuration
-   * @param securityContextProvider
    * @param repositoryManager
    */
   public RegexPermissionFilter(ScmConfiguration configuration,

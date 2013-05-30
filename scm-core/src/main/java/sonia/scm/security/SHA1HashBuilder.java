@@ -120,7 +120,6 @@ public class SHA1HashBuilder extends MessageDigestHashBuilder
    * @param salt
    * @param iterations
    * @param appendSalt
-   * @param enableLable
    * @param enableLabel
    */
   public SHA1HashBuilder(String value, byte[] salt, int iterations,

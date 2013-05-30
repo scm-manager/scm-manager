@@ -36,6 +36,7 @@ package sonia.scm.event;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +52,7 @@ import java.util.ServiceLoader;
  * themselves. The ScmEventBus searches its implementation with the
  * {@link ServiceLoader}.
  *
- * @see {@link EventBus}
+ * @see EventBus
  * @author Sebastian Sdorra
  * @since 1.23
  *

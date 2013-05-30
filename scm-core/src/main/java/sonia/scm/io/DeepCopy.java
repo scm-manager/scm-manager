@@ -48,7 +48,7 @@ import java.io.ObjectOutputStream;
  *
  * @author Sebastian Sdorra
  * @since 1.29
- * @see http://javatechniques.com/blog/faster-deep-copies-of-java-objects
+ * @see <a href="http://javatechniques.com/blog/faster-deep-copies-of-java-objects" target="_blank">http://javatechniques.com/blog/faster-deep-copies-of-java-objects</a>
  */
 public final class DeepCopy
 {

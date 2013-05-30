@@ -114,7 +114,7 @@ public class ChildFirstURLClassLoader extends URLClassLoader
    * </ol>
    *
    * If the class was found using the above steps, and the {@code resolve} flag
-   * is true, this method will then invoke the {@link resolveClass(Class)}
+   * is true, this method will then invoke the {@link #resolveClass(Class)}
    * method on the resulting Class object. Subclasses of ClassLoader are
    * encouraged to override {@link ClassLoader#findClass(String)}, rather than
    * this method.

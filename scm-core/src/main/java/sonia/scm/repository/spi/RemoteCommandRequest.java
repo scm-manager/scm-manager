@@ -94,9 +94,6 @@ public abstract class RemoteCommandRequest
   /**
    * Method description
    *
-   *
-   * @param remoteRepository
-   *
    * @param remoteRepository
    */
   public void setRemoteRepository(Repository remoteRepository)

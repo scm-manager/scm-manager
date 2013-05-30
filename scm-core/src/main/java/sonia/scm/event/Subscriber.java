@@ -55,9 +55,9 @@ import sonia.scm.EagerSingleton;
  * {@link EagerSingleton} scope for your object. E.g.:
  * 
  * <pre><code>
- *   @Extension
- *   @Subscriber
- *   @EagerSingleton
+ *   {@code @}Extension
+ *   {@code @}Subscriber
+ *   {@code @}EagerSingleton
  *   public class MyListener {
  * 
  *     @Subscribe

@@ -34,7 +34,7 @@ package sonia.scm.user;
 
 /**
  * The UserNotFoundException is thrown e.g. from the
- * {@link UserManager#modify(User)} if the user does not exists.
+ * modify method of the {@link UserManager}, if the user does not exists.
  *
  * @author Sebastian Sdorra
  * @since 1.28

@@ -62,7 +62,7 @@ public interface RepositoryHookSupport
 
   /**
    * Fires a post receive hook event. This methods calls the
-   * {@link PostReceiveRepositoryHook#onPostReceive(Repository, List)} 
+   * {@link PostReceiveRepositoryHook#onEvent(RepositoryHookEvent)} 
    * of each registered {@link PostReceiveRepositoryHook}.
    *
    * @param repository that has changed
@@ -72,7 +72,7 @@ public interface RepositoryHookSupport
 
   /**
    * Fires a post receive hook event. This methods calls the
-   * {@link PostReceiveRepositoryHook#onPostReceive(Repository, List)} 
+   * {@link PostReceiveRepositoryHook#onEvent(RepositoryHookEvent)} 
    * of each registered {@link PostReceiveRepositoryHook}.
    *
    *

@@ -34,7 +34,7 @@ package sonia.scm.group;
 
 /**
  * The GroupNotFoundException is thrown e.g. from the
- * {@link GroupManager#modify(Group)} if the group does not exists.
+ * modify method of the {@link GroupManager}, if the group does not exists.
  *
  * @author Sebastian Sdorra
  *

@@ -222,7 +222,7 @@ public final class BrowseCommandBuilder
   /**
    * Disabling the last commit means that every call to
    * {@link FileObject#getDescription()} and
-   * {@link FileObject#getLastModified()) will return {@code null}, but this
+   * {@link FileObject#getLastModified()} will return {@code null}, but this
    * will also reduce the execution time.
    *
    *

@@ -151,7 +151,7 @@ public final class PermissionUtil
    * @param pt
    *
    * @return
-   * @deprecated use {@link #hasPermission(Repository,PermissionType)} instead
+   * @deprecated use {@link #hasPermission(ScmConfiguration, Repository, PermissionType)} instead
    */
   @Deprecated
   public static boolean hasPermission(Repository repository,

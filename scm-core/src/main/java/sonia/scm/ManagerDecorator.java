@@ -40,23 +40,23 @@ import java.util.Collection;
 import java.util.Comparator;
 
 /**
- * Basic decorator for manager classes
+ * Basic decorator for manager classes.
  *
  * @author Sebastian Sdorra
  * @since 1.23
  *
- * @param <T>
- * @param <E>
+ * @param <T> model type
+ * @param <E> exception type
  */
 public class ManagerDecorator<T extends ModelObject, E extends Exception>
   implements Manager<T, E>
 {
 
   /**
-   * Constructs ...
+   * Constructs a new ManagerDecorator.
    *
    *
-   * @param decorated
+   * @param decorated manager implementation
    */
   public ManagerDecorator(Manager<T, E> decorated)
   {
@@ -67,9 +67,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @throws IOException
    */
   @Override
   public void close() throws IOException
@@ -79,12 +76,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @param object
-   *
-   * @throws E
-   * @throws IOException
    */
   @Override
   public void create(T object) throws E, IOException
@@ -94,12 +85,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @param object
-   *
-   * @throws E
-   * @throws IOException
    */
   @Override
   public void delete(T object) throws E, IOException
@@ -109,9 +94,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @param context
    */
   @Override
   public void init(SCMContextProvider context)
@@ -121,12 +103,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @param object
-   *
-   * @throws E
-   * @throws IOException
    */
   @Override
   public void modify(T object) throws E, IOException
@@ -136,12 +112,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @param object
-   *
-   * @throws E
-   * @throws IOException
    */
   @Override
   public void refresh(T object) throws E, IOException
@@ -153,11 +123,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @param id
-   *
-   * @return
    */
   @Override
   public T get(String id)
@@ -167,9 +132,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @return
    */
   @Override
   public Collection<T> getAll()
@@ -179,11 +141,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @param comparator
-   *
-   * @return
    */
   @Override
   public Collection<T> getAll(Comparator<T> comparator)
@@ -193,12 +150,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @param start
-   * @param limit
-   *
-   * @return
    */
   @Override
   public Collection<T> getAll(int start, int limit)
@@ -208,13 +159,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @param comparator
-   * @param start
-   * @param limit
-   *
-   * @return
    */
   @Override
   public Collection<T> getAll(Comparator<T> comparator, int start, int limit)
@@ -224,9 +168,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @return
    */
   @Override
   public Long getLastModified()
@@ -236,6 +177,6 @@ public class ManagerDecorator<T extends ModelObject, E extends Exception>
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** manager implementation */
   private Manager<T, E> decorated;
 }

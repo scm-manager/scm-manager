@@ -56,10 +56,7 @@ public abstract class AbstractPushOrPullResponse
   /**
    * Constructs a new AbstractPushOrPullResponse.
    *
-   *
-   * @param pushedChangesetCount count of pushed/pulled changesets
-   *
-   * @param changesetCount
+   * @param changesetCount count of pushed/pulled changesets
    */
   public AbstractPushOrPullResponse(long changesetCount)
   {
