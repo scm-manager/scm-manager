@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -65,6 +66,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 /**
+ * Abstract base class for global permission resources.
  *
  * @author Sebastian Sdorra
  * @since 1.31
@@ -73,11 +75,11 @@ public abstract class AbstractPermissionResource
 {
 
   /**
-   * Constructs ...
+   * Constructs a new {@link AbstractPermissionResource}.
    *
    *
-   * @param securitySystem
-   * @param name
+   * @param securitySystem security system
+   * @param name name of the user or group
    */
   protected AbstractPermissionResource(SecuritySystem securitySystem,
     String name)
@@ -89,12 +91,12 @@ public abstract class AbstractPermissionResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Transforms a {@link Permission} to a {@link AssignedPermission}.
    *
    *
-   * @param permission
+   * @param permission permission object to transform
    *
-   * @return
+   * @return transformed {@link AssignedPermission}
    */
   protected abstract AssignedPermission transformPermission(
     Permission permission);
@@ -102,23 +104,28 @@ public abstract class AbstractPermissionResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a {@link Predicate} to filter permissions.
    *
    *
-   * @return
+   * @return {@link Predicate} to filter permissions
    */
   protected abstract Predicate<AssignedPermission> getPredicate();
 
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Adds a new permission to the user or group managed by the resource.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>201 add successful</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
+   * @param uriInfo uri informations
+   * @param permission permission to add
    *
-   * @param uriInfo
-   * @param permission
-   *
-   * @return
+   * @return web response
    */
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -132,12 +139,19 @@ public abstract class AbstractPermissionResource
   }
 
   /**
-   * Method description
+   * Deletes a permission from the user or group managed by the resource.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 delete successful</li>
+   *   <li>400 bad request, permission id does not belong to the user or group</li>
+   *   <li>404 not found, no permission with the specified id available</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
+   * @param id id of the permission
    *
-   * @param id
-   *
-   * @return
+   * @return web response
    */
   @DELETE
   @Path("{id}")
@@ -151,13 +165,21 @@ public abstract class AbstractPermissionResource
   }
 
   /**
-   * Method description
+   * Updates the specified permission on the user or group managed by the
+   * resource.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>204 update successful</li>
+   *   <li>400 bad request, permission id does not belong to the user or group</li>
+   *   <li>404 not found, no permission with the specified id available</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
+   * @param id id of the permission
+   * @param permission updated permission
    *
-   * @param id
-   * @param permission
-   *
-   * @return
+   * @return web response
    */
   @PUT
   @Path("{id}")
@@ -175,12 +197,20 @@ public abstract class AbstractPermissionResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the {@link Permission} with the specified id.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>400 bad request, permission id does not belong to the user or group</li>
+   *   <li>404 not found, no permission with the specified id available</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
    *
-   * @param id
+   * @param id id of the {@link Permission}
    *
-   * @return
+   * @return {@link Permission} with the specified id
    */
   @GET
   @Path("{id}")
@@ -193,10 +223,15 @@ public abstract class AbstractPermissionResource
   }
 
   /**
-   * Method description
+   * Returns all permissions of the user or group managed by the resource.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 get successful</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @return
+   * @return all permissions of the user or group
    */
   @GET
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
@@ -206,12 +241,12 @@ public abstract class AbstractPermissionResource
   }
 
   /**
-   * Method description
+   * Returns the {@link StoredAssignedPermission} with the given id.
    *
    *
-   * @param id
+   * @param id id of the stored permission
    *
-   * @return
+   * @return {@link StoredAssignedPermission} with the given id
    */
   private StoredAssignedPermission getPermission(String id)
   {
@@ -231,12 +266,12 @@ public abstract class AbstractPermissionResource
   }
 
   /**
-   * Method description
+   * Returns all permissions which matches the given {@link Predicate}.
    *
    *
-   * @param predicate
+   * @param predicate predicate for filtering
    *
-   * @return
+   * @return all permissions which matches the given {@link Predicate}
    */
   private List<Permission> getPermissions(
     Predicate<AssignedPermission> predicate)
@@ -258,9 +293,9 @@ public abstract class AbstractPermissionResource
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** name of the user or the group */
   protected String name;
 
-  /** Field description */
+  /** security system */
   private SecuritySystem securitySystem;
 }

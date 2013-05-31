@@ -41,18 +41,20 @@ import sonia.scm.security.AssignedPermission;
 import sonia.scm.security.SecuritySystem;
 
 /**
+ * Resource to manage global group permission for a specified group.
  *
  * @author Sebastian Sdorra
+ * @since 1.31
  */
 public class GroupPermissionResource extends AbstractPermissionResource
 {
 
   /**
-   * Constructs ...
+   * Constructs a new group permissions resource
    *
    *
-   * @param securitySystem
-   * @param name
+   * @param securitySystem security system
+   * @param name name of the group
    */
   public GroupPermissionResource(SecuritySystem securitySystem, String name)
   {
@@ -62,12 +64,7 @@ public class GroupPermissionResource extends AbstractPermissionResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @param permission
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   protected AssignedPermission transformPermission(Permission permission)
@@ -78,10 +75,7 @@ public class GroupPermissionResource extends AbstractPermissionResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   protected Predicate<AssignedPermission> getPredicate()
@@ -92,20 +86,16 @@ public class GroupPermissionResource extends AbstractPermissionResource
   //~--- inner classes --------------------------------------------------------
 
   /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/05/01
-   * @author         Enter your name here...    
+   * Group predicate to filter permissions.
    */
   private static class GroupPredicate implements Predicate<AssignedPermission>
   {
 
     /**
-     * Constructs ...
+     * Constructs a new group predicate
      *
      *
-     * @param name
+     * @param name name of the group
      */
     public GroupPredicate(String name)
     {
@@ -115,12 +105,13 @@ public class GroupPermissionResource extends AbstractPermissionResource
     //~--- methods ------------------------------------------------------------
 
     /**
-     * Method description
+     * Returns true if the permission is a group permission and the name is 
+     * equals.
      *
+     * @param input permission
      *
-     * @param input
-     *
-     * @return
+     * @return true if the permission is a group permission and the name is 
+     * equals
      */
     @Override
     public boolean apply(AssignedPermission input)
@@ -130,7 +121,7 @@ public class GroupPermissionResource extends AbstractPermissionResource
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
+    /** name of the group */
     private String name;
   }
 }
