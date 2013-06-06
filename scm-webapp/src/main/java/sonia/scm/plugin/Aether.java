@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -43,6 +44,7 @@ import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.collection.CollectRequest;
 import org.sonatype.aether.collection.DependencyCollectionException;
+import org.sonatype.aether.collection.DependencyGraphTransformer;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.graph.DependencyNode;
@@ -56,6 +58,13 @@ import org.sonatype.aether.resolution.DependencyResolutionException;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 import org.sonatype.aether.util.artifact.JavaScopes;
 import org.sonatype.aether.util.filter.DependencyFilterUtils;
+import org.sonatype.aether.util.graph.transformer
+  .ChainedDependencyGraphTransformer;
+import org.sonatype.aether.util.graph.transformer.ConflictMarker;
+import org.sonatype.aether.util.graph.transformer.JavaDependencyContextRefiner;
+import org.sonatype.aether.util.graph.transformer.JavaEffectiveScopeCalculator;
+import org.sonatype.aether.util.graph.transformer
+  .NearestVersionConflictResolver;
 
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.Proxies;
@@ -174,7 +183,7 @@ public final class Aether
 
     if (configuration.isEnableProxy())
     {
-        logger.debug("enable proxy selector to collect dependencies");
+      logger.debug("enable proxy selector to collect dependencies");
       session.setProxySelector(new DefaultProxySelector(configuration));
     }
 
@@ -182,6 +191,18 @@ public final class Aether
       system.newLocalRepositoryManager(localRepository);
 
     session.setLocalRepositoryManager(localRepositoryManager);
+
+    // create graph transformer to resolve dependency conflicts
+    //J-
+    DependencyGraphTransformer dgt = new ChainedDependencyGraphTransformer(
+      new ConflictMarker(), 
+      new JavaEffectiveScopeCalculator(),
+      new NearestVersionConflictResolver(),
+      new JavaDependencyContextRefiner() 
+    );
+    //J+
+
+    session.setDependencyGraphTransformer(dgt);
 
     return session;
   }
