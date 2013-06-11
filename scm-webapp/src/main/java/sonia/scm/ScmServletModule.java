@@ -220,7 +220,6 @@ public class ScmServletModule extends ServletModule
    *
    *
    * @param pluginLoader
-   * @param bindExtProcessor
    * @param overrides
    */
   ScmServletModule(DefaultPluginLoader pluginLoader, ClassOverrides overrides)
