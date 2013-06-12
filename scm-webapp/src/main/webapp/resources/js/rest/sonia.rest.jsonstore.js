@@ -31,38 +31,16 @@
 
 Sonia.rest.JsonStore = Ext.extend( Ext.data.JsonStore, {
 
-  errorTitleText: 'Error',
-  errorMsgText: 'Could not load items. Server returned status: {0}',
-
   constructor: function(config) {
     if ( ! config.listeners ){
       config.listeners = {};
     }
+    
     // fix jersey empty array problem
     config.listeners.exception = {
-      fn: function(proxy, type, action, options, response, arg){
-        var status = response.status;
-        if (debug){
-          console.debug('store returned statuscode ' + status);
-        }
-        if ( status == 200 && action == 'read' && response.responseText == 'null' ){
-          if ( debug ){
-            console.debug( 'empty array, clear whole store' );
-          }
-          this.removeAll();
-        } else {
-          if (debug){
-            console.debug( 'error during store load, status: ' + status );
-          }
-          main.handleRestFailure(
-            response, 
-            this.errorTitleText, 
-            this.errorMsgText
-          );
-        }
-      },
+      fn: Sonia.rest.ExceptionHandler,
       scope: this
-    }
+    };
     
     var baseConfig = {
       autoLoad: true

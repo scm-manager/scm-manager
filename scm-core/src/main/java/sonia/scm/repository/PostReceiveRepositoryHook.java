@@ -39,7 +39,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 /**
+ * Base class for asynchronous post receive repository hook.
  *
+ * @see RepositoryHookType#POST_RECEIVE
  * @author Sebastian Sdorra
  * @since 1.8
  */
@@ -47,7 +49,7 @@ public abstract class PostReceiveRepositoryHook implements RepositoryHook
 {
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -59,7 +61,7 @@ public abstract class PostReceiveRepositoryHook implements RepositoryHook
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return

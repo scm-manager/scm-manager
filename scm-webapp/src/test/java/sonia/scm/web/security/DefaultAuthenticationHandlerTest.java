@@ -44,10 +44,11 @@ import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.user.DefaultUserManager;
 import sonia.scm.user.User;
 import sonia.scm.user.UserListener;
 import sonia.scm.user.UserTestData;
-import sonia.scm.user.DefaultUserManager;
+import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
@@ -61,7 +62,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.user.xml.XmlUserDAO;
 
 /**
  *
@@ -141,13 +141,16 @@ public class DefaultAuthenticationHandlerTest extends AbstractTestBase
     when(listenerProvider.get()).thenReturn(new HashSet<UserListener>());
 
     XmlUserDAO userDAO = new XmlUserDAO(storeFactory);
-    
-    DefaultUserManager userManager =
-      new DefaultUserManager(MockUtil.getAdminSecurityContextProvider(),
-                         userDAO, listenerProvider);
+
+    setSubject(MockUtil.createAdminSubject());
+
+    DefaultUserManager userManager = new DefaultUserManager(userDAO,
+                                       listenerProvider);
 
     userManager.init(contextProvider);
     userManager.create(slarti);
+    clearSubject();
+
     handler = new DefaultAuthenticationHandler(userManager, enc);
     handler.init(contextProvider);
     request = MockUtil.getHttpServletRequest();

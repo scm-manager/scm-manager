@@ -261,12 +261,12 @@ public class ServletContainerDetector
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Returns true if the given class exists in the system classpath.
    *
    *
-   * @param clazz
+   * @param clazz class name to search in classpath
    *
-   * @return
+   * @return true if class exists in system classpath
    */
   private boolean detect(String clazz)
   {

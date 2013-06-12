@@ -50,8 +50,16 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class WrapperUtil
+public final class WrapperUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private WrapperUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -78,7 +86,6 @@ public class WrapperUtil
    *
    *
    *
-   * @param baseUrl
    *
    * @param config
    * @param repositories
@@ -86,7 +93,7 @@ public class WrapperUtil
    * @return
    */
   public static List<RepositoryWrapper> wrapRepositories(ServerConfig config,
-          Collection<Repository> repositories)
+    Collection<Repository> repositories)
   {
     List<RepositoryWrapper> wrappers = new ArrayList<RepositoryWrapper>();
 

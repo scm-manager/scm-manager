@@ -37,7 +37,11 @@ package sonia.scm.util;
 
 import com.google.inject.Provider;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
 import sonia.scm.SCMContext;
+import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.security.SecurityContext;
 import sonia.scm.user.User;
@@ -46,39 +50,48 @@ import sonia.scm.user.User;
  *
  * @author Sebastian Sdorra
  */
-public class SecurityUtil
+public final class SecurityUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private SecurityUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
    *
    * @param contextProvider
+   * @deprecated use {@link Subject#checkRole(java.lang.String)} with {
+   * @link Role#ADMIN} instead.
    */
+  @Deprecated
   public static void assertIsAdmin(
-          Provider<? extends SecurityContext> contextProvider)
+    Provider<? extends SecurityContext> contextProvider)
   {
-    assertIsAdmin(contextProvider.get());
+    assertIsAdmin();
   }
 
   /**
-   * Method description
+   * This method is only present for compatibility reasons.
+   * Use {@link Subject#checkRole(java.lang.String)} with {
+   * @link Role#ADMIN} instead.
    *
-   *
-   * @param context
+   * @since 1.21
    */
-  public static void assertIsAdmin(SecurityContext context)
+  public static void assertIsAdmin()
   {
-    AssertUtil.assertIsNotNull(context);
+    Subject subject = SecurityUtils.getSubject();
 
-    User user = context.getUser();
-
-    if (user == null)
+    if (!subject.hasRole(Role.USER))
     {
       throw new ScmSecurityException("user is not authenticated");
     }
-
-    if (!user.isAdmin())
+    else if (!subject.hasRole(Role.ADMIN))
     {
       throw new ScmSecurityException("admin account is required");
     }
@@ -88,10 +101,24 @@ public class SecurityUtil
    * Method description
    *
    *
+   * @param context
+   * @deprecated use {@link Subject#checkRole(java.lang.String)} with {
+   * @link Role#ADMIN} instead.
+   */
+  @Deprecated
+  public static void assertIsAdmin(SecurityContext context)
+  {
+    assertIsAdmin();
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param contextProvider
    */
   public static void assertIsNotAnonymous(
-          Provider<? extends SecurityContext> contextProvider)
+    Provider<? extends SecurityContext> contextProvider)
   {
     if (isAnonymous(contextProvider))
     {
@@ -124,7 +151,7 @@ public class SecurityUtil
    * @return
    */
   public static User getCurrentUser(
-          Provider<? extends SecurityContext> contextProvider)
+    Provider<? extends SecurityContext> contextProvider)
   {
     AssertUtil.assertIsNotNull(contextProvider);
 
@@ -151,7 +178,7 @@ public class SecurityUtil
    * @return
    */
   public static boolean isAdmin(
-          Provider<? extends SecurityContext> contextProvider)
+    Provider<? extends SecurityContext> contextProvider)
   {
     return isAdmin(contextProvider.get());
   }
@@ -169,7 +196,7 @@ public class SecurityUtil
     AssertUtil.assertIsNotNull(contextProvider);
 
     return (contextProvider.getUser() != null)
-           && contextProvider.getUser().isAdmin();
+      && contextProvider.getUser().isAdmin();
   }
 
   /**
@@ -181,7 +208,7 @@ public class SecurityUtil
    * @return
    */
   public static boolean isAnonymous(
-          Provider<? extends SecurityContext> contextProvider)
+    Provider<? extends SecurityContext> contextProvider)
   {
     return isAnonymous(contextProvider.get());
   }

@@ -41,7 +41,9 @@ import java.net.URL;
  *
  * @author Sebastian Sdorra
  * @since 1.8
+ * @deprecated use {@link ProxyConfigurationProvider} instead.
  */
+@Deprecated
 public class BasicProxyURLProvider implements ProxyURLProvider
 {
 

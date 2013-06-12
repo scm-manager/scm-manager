@@ -30,9 +30,11 @@
  */
 
 
+
 package sonia.scm.filter;
 
 /**
+ * Configuration for the {@link GZipFilter}.
  *
  * @author Sebastian Sdorra
  * @since 1.16
@@ -41,32 +43,56 @@ public class GZipFilterConfig
 {
 
   /**
-   * Method description
+   * Returns true if the response should be buffered.
    *
    *
-   * @return
+   * @return true if the response should be buffered
+   * @deprecated use {@link #isBufferResponse()} instead.
    */
+  @Deprecated
   public boolean isBufferRequest()
   {
-    return bufferRequest;
+    return bufferResponse;
+  }
+
+  /**
+   * Returns true if the response should be buffered.
+   *
+   *
+   * @return true if the response should be buffered
+   */
+  public boolean isBufferResponse()
+  {
+    return bufferResponse;
   }
 
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Enables or disables response buffering. Default buffering is enabled.
    *
-   *
-   * @param bufferRequest
-   *
+   * @param bufferResponse true to enabled response buffering.
+   * 
+   * @deprecated use {@link #setBufferResponse(boolean)} instead.
    */
-  public void setBufferRequest(boolean bufferRequest)
+  @Deprecated
+  public void setBufferRequest(boolean bufferResponse)
   {
-    this.bufferRequest = bufferRequest;
+    this.bufferResponse = bufferResponse;
+  }
+
+  /**
+   * Enables or disables response buffering. Default buffering is enabled.
+   *
+   * @param bufferResponse true to enabled response buffering.
+   */
+  public void setBufferResponse(boolean bufferResponse)
+  {
+    this.bufferResponse = bufferResponse;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private boolean bufferRequest = true;
+  private boolean bufferResponse = true;
 }

@@ -36,15 +36,17 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.Role;
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.ScmConfigurationUtil;
-import sonia.scm.util.SecurityUtil;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -76,11 +78,8 @@ public class ConfigurationResource
    * @param securityContextProvider
    */
   @Inject
-  public ConfigurationResource(
-          Provider<WebSecurityContext> securityContextProvider,
-          ScmConfiguration configuration)
+  public ConfigurationResource(ScmConfiguration configuration)
   {
-    this.securityContextProvider = securityContextProvider;
     this.configuration = configuration;
   }
 
@@ -98,7 +97,7 @@ public class ConfigurationResource
   {
     Response response = null;
 
-    if (SecurityUtil.isAdmin(securityContextProvider))
+    if (SecurityUtils.getSubject().hasRole(Role.ADMIN))
     {
       response = Response.ok(configuration).build();
     }
@@ -124,9 +123,17 @@ public class ConfigurationResource
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response setConfig(@Context UriInfo uriInfo,
-                            ScmConfiguration newConfig)
+    ScmConfiguration newConfig)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvider);
+
+    // TODO replace by checkRole
+    Subject subject = SecurityUtils.getSubject();
+
+    if (!subject.hasRole(Role.ADMIN))
+    {
+      throw new ScmSecurityException("admin privileges required");
+    }
+
     configuration.load(newConfig);
 
     synchronized (ScmConfiguration.class)
@@ -141,7 +148,4 @@ public class ConfigurationResource
 
   /** Field description */
   public ScmConfiguration configuration;
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 }

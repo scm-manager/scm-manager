@@ -33,6 +33,16 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.io.Closeables;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.repository.spi.HgCommandContext;
+import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -50,6 +60,12 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
   /** Field description */
   public static final String REV_TIP = "tip";
 
+  /**
+   * the logger for HgRepositoryHookEvent
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgRepositoryHookEvent.class);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -57,15 +73,17 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
    *
    *
    * @param handler
+   * @param hookManager
    * @param repositoryName
    * @param startRev
    * @param type
    */
   public HgRepositoryHookEvent(HgRepositoryHandler handler,
-                               String repositoryName, String startRev,
-                               RepositoryHookType type)
+    HgHookManager hookManager, String repositoryName, String startRev,
+    RepositoryHookType type)
   {
     this.handler = handler;
+    this.hookManager = hookManager;
     this.repositoryName = repositoryName;
     this.startRev = startRev;
     this.type = type;
@@ -84,19 +102,24 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
   {
     if (changesets == null)
     {
+      HgCommandContext context = null;
+
       try
       {
-        ChangesetPagingResult result =
-          createChangesetViewer().getChangesets(startRev, REV_TIP);
+        context = createCommandContext();
 
-        if (result != null)
-        {
-          changesets = result.getChangesets();
-        }
+        HgLogChangesetCommand cmd = HgLogChangesetCommand.on(context.open(),
+                                      handler.getConfig());
+
+        changesets = cmd.rev(startRev.concat(":").concat(REV_TIP)).execute();
       }
       catch (Exception ex)
       {
-        throw new RuntimeException("could not load changesets", ex);
+        logger.error("could not retrieve changesets", ex);
+      }
+      finally
+      {
+        Closeables.closeQuietly(context);
       }
     }
 
@@ -123,7 +146,7 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
    *
    * @return
    */
-  private HgChangesetViewer createChangesetViewer()
+  private HgCommandContext createCommandContext()
   {
     File directory = handler.getConfig().getRepositoryDirectory();
     File repositoryDirectory = new File(directory, repositoryName);
@@ -131,8 +154,10 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
     // use HG_PENDING only for pre receive hooks
     boolean pending = type == RepositoryHookType.PRE_RECEIVE;
 
-    return handler.getChangesetViewer(repositoryDirectory,
-                                      new HgContext(pending));
+    Repository repository = getRepository();
+
+    return new HgCommandContext(hookManager, handler, repository,
+      repositoryDirectory, pending);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -142,6 +167,9 @@ public class HgRepositoryHookEvent extends AbstractRepositoryHookEvent
 
   /** Field description */
   private HgRepositoryHandler handler;
+
+  /** Field description */
+  private HgHookManager hookManager;
 
   /** Field description */
   private String repositoryName;

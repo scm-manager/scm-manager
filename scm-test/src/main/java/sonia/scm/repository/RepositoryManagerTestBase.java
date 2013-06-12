@@ -35,9 +35,15 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.apache.shiro.subject.Subject;
+
+import org.junit.Before;
 import org.junit.Test;
 
+import sonia.scm.HandlerEvent;
+import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
+import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
 
@@ -46,14 +52,26 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 public abstract class RepositoryManagerTestBase
-        extends ManagerTestBase<Repository, RepositoryException>
+  extends ManagerTestBase<Repository, RepositoryException>
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param archiveEnabled
+   *
+   * @return
+   */
+  protected abstract RepositoryManager createRepositoryManager(
+    boolean archiveEnabled);
 
   /**
    * Method description
@@ -96,11 +114,50 @@ public abstract class RepositoryManagerTestBase
   @Test
   public void testDelete() throws RepositoryException, IOException
   {
-    Repository heartOfGold = createTestRepository();
-    String id = heartOfGold.getId();
+    delete(manager, createTestRepository());
+  }
 
-    manager.delete(heartOfGold);
-    assertNull(manager.get(id));
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test(expected = RepositoryIsNotArchivedException.class)
+  public void testDeleteNonArchived() throws RepositoryException, IOException
+  {
+    delete(createRepositoryManager(true), createTestRepository());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test(expected = RepositoryNotFoundException.class)
+  public void testDeleteNotFound() throws RepositoryException, IOException
+  {
+    manager.delete(createRepositoryWithId());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testDeleteWithEnabledArchive()
+    throws RepositoryException, IOException
+  {
+    Repository repository = createTestRepository();
+
+    repository.setArchived(true);
+    delete(createRepositoryManager(true), repository);
   }
 
   /**
@@ -156,8 +213,8 @@ public abstract class RepositoryManagerTestBase
         foundHeart = true;
         heartReference = repository;
       }
-      else if (repository.getId().equals(
-              happyVerticalPeopleTransporter.getId()))
+      else if (
+        repository.getId().equals(happyVerticalPeopleTransporter.getId()))
       {
         assertRepositoriesEquals(happyVerticalPeopleTransporter, repository);
         foundTransporter = true;
@@ -171,7 +228,45 @@ public abstract class RepositoryManagerTestBase
     assertNotSame(heartOfGold, heartReference);
     heartReference.setDescription("prototype ship");
     assertFalse(
-        heartOfGold.getDescription().equals(heartReference.getDescription()));
+      heartOfGold.getDescription().equals(heartReference.getDescription()));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testListener() throws RepositoryException, IOException
+  {
+    RepositoryManager repoManager = createRepositoryManager(false);
+    TestListener listener = new TestListener();
+
+    repoManager.addListener(listener);
+
+    Repository repository = RepositoryTestData.create42Puzzle();
+
+    repoManager.create(repository);
+    assertRepositoriesEquals(repository, listener.preRepository);
+    assertSame(HandlerEvent.BEFORE_CREATE, listener.preEvent);
+    assertRepositoriesEquals(repository, listener.postRepository);
+    assertSame(HandlerEvent.CREATE, listener.postEvent);
+
+    repository.setDescription("changed description");
+    repoManager.modify(repository);
+    assertRepositoriesEquals(repository, listener.preRepository);
+    assertSame(HandlerEvent.BEFORE_MODIFY, listener.preEvent);
+    assertRepositoriesEquals(repository, listener.postRepository);
+    assertSame(HandlerEvent.MODIFY, listener.postEvent);
+
+    repoManager.delete(repository);
+
+    assertRepositoriesEquals(repository, listener.preRepository);
+    assertSame(HandlerEvent.BEFORE_DELETE, listener.preEvent);
+    assertRepositoriesEquals(repository, listener.postRepository);
+    assertSame(HandlerEvent.DELETE, listener.postEvent);
   }
 
   /**
@@ -202,10 +297,10 @@ public abstract class RepositoryManagerTestBase
    * @throws IOException
    * @throws RepositoryException
    */
-  @Test(expected = RepositoryException.class)
-  public void testModifyNotExisting() throws RepositoryException, IOException
+  @Test(expected = RepositoryNotFoundException.class)
+  public void testModifyNotFound() throws RepositoryException, IOException
   {
-    manager.modify(RepositoryTestData.createHeartOfGold());
+    manager.modify(createRepositoryWithId());
   }
 
   /**
@@ -225,6 +320,59 @@ public abstract class RepositoryManagerTestBase
     manager.refresh(heartOfGold);
     assertEquals(description, heartOfGold.getDescription());
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test(expected = RepositoryNotFoundException.class)
+  public void testRefreshNotFound() throws RepositoryException, IOException
+  {
+    manager.refresh(createRepositoryWithId());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testRepositoryHook() throws RepositoryException, IOException
+  {
+    CountingReceiveHook hook = new CountingReceiveHook();
+    RepositoryManager repoManager = createRepositoryManager(false);
+
+    repoManager.addHook(hook);
+    assertEquals(0, hook.eventsReceived);
+
+    Repository repository = createTestRepository();
+
+    repoManager.fireHookEvent(repository, new TestRepositoryHookEvent());
+    assertEquals(1, hook.eventsReceived);
+    repoManager.fireHookEvent(repository, new TestRepositoryHookEvent());
+    assertEquals(2, hook.eventsReceived);
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Before
+  public void setAdminSubject()
+  {
+    Subject admin = MockUtil.createAdminSubject();
+
+    setSubject(admin);
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -255,7 +403,7 @@ public abstract class RepositoryManagerTestBase
    * @throws RepositoryException
    */
   private Repository createRepository(Repository repository)
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     manager.create(repository);
     assertNotNull(repository.getId());
@@ -270,15 +418,30 @@ public abstract class RepositoryManagerTestBase
    *
    *
    * @return
+   */
+  private Repository createRepositoryWithId()
+  {
+    Repository repository = RepositoryTestData.createHeartOfGold();
+
+    repository.setId("abc");
+
+    return repository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
    *
    * @throws IOException
    * @throws RepositoryException
    */
   private Repository createSecondTestRepository()
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     return createRepository(
-        RepositoryTestData.createHappyVerticalPeopleTransporter());
+      RepositoryTestData.createHappyVerticalPeopleTransporter());
   }
 
   /**
@@ -291,8 +454,173 @@ public abstract class RepositoryManagerTestBase
    * @throws RepositoryException
    */
   private Repository createTestRepository()
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     return createRepository(RepositoryTestData.createHeartOfGold());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param manager
+   * @param repository
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  private void delete(Manager<Repository, RepositoryException> manager,
+    Repository repository)
+    throws RepositoryException, IOException
+  {
+    String id = repository.getId();
+
+    manager.delete(repository);
+    assertNull(manager.get(id));
+  }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/01/29
+   * @author         Enter your name here...
+   */
+  private static class CountingReceiveHook extends PreReceiveRepositoryHook
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @param event
+     */
+    @Override
+    public void onEvent(RepositoryHookEvent event)
+    {
+      eventsReceived++;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private int eventsReceived = 0;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/01/29
+   * @author         Enter your name here...
+   */
+  private static class TestListener implements RepositoryListener
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @param repository
+     * @param event
+     */
+    @Override
+    public void onEvent(Repository repository, HandlerEvent event)
+    {
+      if (event.isPost())
+      {
+        this.postRepository = repository;
+        this.postEvent = event;
+      }
+      else if (event.isPre())
+      {
+        this.preRepository = repository;
+        this.preEvent = event;
+      }
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private HandlerEvent postEvent;
+
+    /** Field description */
+    private Repository postRepository;
+
+    /** Field description */
+    private HandlerEvent preEvent;
+
+    /** Field description */
+    private Repository preRepository;
+  }
+
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/01/29
+   * @author         Enter your name here...
+   */
+  private static class TestRepositoryHookEvent implements RepositoryHookEvent
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public Collection<Changeset> getChangesets()
+    {
+      return Collections.EMPTY_LIST;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public Repository getRepository()
+    {
+      return repository;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public RepositoryHookType getType()
+    {
+      return RepositoryHookType.PRE_RECEIVE;
+    }
+
+    //~--- set methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param repository
+     */
+    @Override
+    public void setRepository(Repository repository)
+    {
+      this.repository = repository;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private Repository repository;
   }
 }

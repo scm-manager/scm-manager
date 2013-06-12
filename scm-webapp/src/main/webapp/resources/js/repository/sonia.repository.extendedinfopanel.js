@@ -45,7 +45,7 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
   
   modifyDefaultConfig: function(config){
     var items = config.items;
-    if ( items == null ){
+    if ( ! items ){
       items = [];
     }
     items.push({
@@ -99,11 +99,11 @@ Sonia.repository.ExtendedInfoPanel = Ext.extend(Sonia.repository.InfoPanel,{
       xtype: 'repositoryBrowser',
       repository: this.item,
       closable: true
-    }
+    };
   },
   
   openRepositoryBrowser: function(browser){
-    if ( browser == null ){
+    if ( ! browser ){
       browser = this.createRepositoryBrowser();
     }
     main.addTab(browser);

@@ -116,7 +116,7 @@ public class GitChangesetViewer implements ChangesetViewer
 
         if (commit != null)
         {
-          converter = new GitChangesetConverter(gr, revWalk, GitUtil.ID_LENGTH);
+          converter = new GitChangesetConverter(gr, revWalk);
           changeset = converter.createChangeset(commit);
         }
         else if (logger.isWarnEnabled())
@@ -169,7 +169,7 @@ public class GitChangesetViewer implements ChangesetViewer
 
       if (!gr.getAllRefs().isEmpty())
       {
-        converter = new GitChangesetConverter(gr, GitUtil.ID_LENGTH);
+        converter = new GitChangesetConverter(gr);
 
         Git git = new Git(gr);
         ObjectId headId = GitUtil.getRepositoryHead(gr);
@@ -253,7 +253,7 @@ public class GitChangesetViewer implements ChangesetViewer
 
       if (!gr.getAllRefs().isEmpty())
       {
-        converter = new GitChangesetConverter(gr, GitUtil.ID_LENGTH);
+        converter = new GitChangesetConverter(gr);
 
         Git git = new Git(gr);
         ObjectId revisionId = GitUtil.getRevisionId(gr, revision);

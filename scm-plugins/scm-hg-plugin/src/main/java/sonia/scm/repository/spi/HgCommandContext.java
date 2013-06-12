@@ -44,6 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgEnvironment;
+import sonia.scm.repository.HgHookManager;
+import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.spi.javahg.HgFileviewExtension;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -76,20 +79,44 @@ public class HgCommandContext implements Closeable
    * Constructs ...
    *
    *
-   * @param config
+   *
+   * @param hookManager
+   * @param handler
    * @param repository
    * @param directory
    */
-  HgCommandContext(HgConfig config, sonia.scm.repository.Repository repository,
+  public HgCommandContext(HgHookManager hookManager,
+    HgRepositoryHandler handler, sonia.scm.repository.Repository repository,
     File directory)
   {
-    this.config = config;
+    this(hookManager, handler, repository, directory, false);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   *
+   * @param hookManager
+   * @param config
+   * @param hanlder
+   * @param repository
+   * @param directory
+   * @param pending
+   */
+  public HgCommandContext(HgHookManager hookManager,
+    HgRepositoryHandler hanlder, sonia.scm.repository.Repository repository,
+    File directory, boolean pending)
+  {
+    this.hookManager = hookManager;
+    this.hanlder = hanlder;
     this.directory = directory;
-    encoding = repository.getProperty(PROPERTY_ENCODING);
+    this.encoding = repository.getProperty(PROPERTY_ENCODING);
+    this.pending = pending;
 
     if (Strings.isNullOrEmpty(encoding))
     {
-      encoding = config.getEncoding();
+      encoding = hanlder.getConfig().getEncoding();
     }
   }
 
@@ -123,7 +150,11 @@ public class HgCommandContext implements Closeable
       RepositoryConfiguration repoConfiguration =
         RepositoryConfiguration.DEFAULT;
 
+      HgEnvironment.prepareEnvironment(repoConfiguration.getEnvironment(),
+        hanlder, hookManager);
+
       repoConfiguration.addExtension(HgFileviewExtension.class);
+      repoConfiguration.setEnablePendingChangesets(pending);
 
       try
       {
@@ -141,23 +172,42 @@ public class HgCommandContext implements Closeable
         logger.error("could not set encoding for mercurial", ex);
       }
 
-      repoConfiguration.setHgBin(config.getHgBinary());
+      repoConfiguration.setHgBin(hanlder.getConfig().getHgBinary());
       repository = Repository.open(repoConfiguration, directory);
     }
 
     return repository;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
-  /** Field description */
-  private HgConfig config;
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public HgConfig getConfig()
+  {
+    return hanlder.getConfig();
+  }
+
+  //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private File directory;
 
   /** Field description */
   private String encoding;
+
+  /** Field description */
+  private HgRepositoryHandler hanlder;
+
+  /** Field description */
+  private HgHookManager hookManager;
+
+  /** Field description */
+  private boolean pending;
 
   /** Field description */
   private Repository repository;

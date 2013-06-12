@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +120,7 @@ public class SvnPreReceiveHookEvent extends AbstractRepositoryHookEvent
    */
   private Collection<Changeset> fetchChangesets()
   {
-    List<Changeset> csets = new ArrayList<Changeset>();
+    List<Changeset> csets = new ArrayList<Changeset>(1);
     SVNClientManager cm = null;
 
     try

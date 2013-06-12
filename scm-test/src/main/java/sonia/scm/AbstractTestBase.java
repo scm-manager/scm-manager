@@ -35,7 +35,15 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.UnavailableSecurityManagerException;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.support.SubjectThreadState;
+import org.apache.shiro.util.LifecycleUtils;
+import org.apache.shiro.util.ThreadState;
+
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 
 import sonia.scm.util.IOUtil;
@@ -56,6 +64,81 @@ import java.util.UUID;
 public class AbstractTestBase
 {
 
+  /** Field description */
+  private static ThreadState subjectThreadState;
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @AfterClass
+  public static void tearDownShiro()
+  {
+    doClearSubject();
+
+    try
+    {
+      org.apache.shiro.mgt.SecurityManager securityManager =
+        getSecurityManager();
+
+      LifecycleUtils.destroy(securityManager);
+    }
+    catch (UnavailableSecurityManagerException e)
+    {
+
+      // we don't care about this when cleaning up the test environment
+      // (for example, maybe the subclass is a unit test and it didn't
+      // need a SecurityManager instance because it was using only
+      // mock Subject instances)
+    }
+
+    setSecurityManager(null);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected static org.apache.shiro.mgt.SecurityManager getSecurityManager()
+  {
+    return SecurityUtils.getSecurityManager();
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param securityManager
+   */
+  protected static void setSecurityManager(
+    org.apache.shiro.mgt.SecurityManager securityManager)
+  {
+    SecurityUtils.setSecurityManager(securityManager);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  private static void doClearSubject()
+  {
+    if (subjectThreadState != null)
+    {
+      subjectThreadState.clear();
+      subjectThreadState = null;
+    }
+  }
+
   /**
    * Method description
    *
@@ -68,6 +151,7 @@ public class AbstractTestBase
     try
     {
       preTearDown();
+      clearSubject();
     }
     finally
     {
@@ -87,13 +171,35 @@ public class AbstractTestBase
   public void setUpTest() throws Exception
   {
     tempDirectory = new File(System.getProperty("java.io.tmpdir"),
-                             UUID.randomUUID().toString());
+      UUID.randomUUID().toString());
     assertTrue(tempDirectory.mkdirs());
     contextProvider = MockUtil.getSCMContextProvider(tempDirectory);
     postSetUp();
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Clears Shiro's thread state, ensuring the thread remains clean for
+   * future test execution.
+   */
+  protected void clearSubject()
+  {
+    doClearSubject();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param subject
+   *
+   * @return
+   */
+  protected ThreadState createThreadState(Subject subject)
+  {
+    return new SubjectThreadState(subject);
+  }
 
   /**
    * Method description
@@ -111,7 +217,32 @@ public class AbstractTestBase
    */
   protected void preTearDown() throws Exception {}
 
-  ;
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  protected Subject getSubject()
+  {
+    return SecurityUtils.getSubject();
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Allows subclasses to set the currently executing {@link Subject} instance.
+   *
+   * @param subject the Subject instance
+   */
+  protected void setSubject(Subject subject)
+  {
+    clearSubject();
+    subjectThreadState = createThreadState(subject);
+    subjectThreadState.bind();
+  }
 
   //~--- fields ---------------------------------------------------------------
 

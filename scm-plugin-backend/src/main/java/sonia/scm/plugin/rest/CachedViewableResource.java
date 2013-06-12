@@ -60,7 +60,7 @@ import javax.servlet.ServletContext;
  * @author Sebastian Sdorra
  */
 public class CachedViewableResource extends ViewableResource
-        implements PluginBackendListener
+  implements PluginBackendListener
 {
 
   /** the logger for CachedViewableResource */
@@ -80,12 +80,15 @@ public class CachedViewableResource extends ViewableResource
    * @param cacheName
    */
   public CachedViewableResource(ServletContext context, PluginBackend backend,
-                                BackendConfiguration configuration,
-                                CacheManager cacheManager, String cacheName)
+    BackendConfiguration configuration, CacheManager cacheManager,
+    String cacheName)
   {
     super(context, configuration);
     this.cacheName = cacheName;
     this.cache = cacheManager.getCache(cacheName);
+
+    // register backend listener
+    backend.addListener(this);
   }
 
   //~--- methods --------------------------------------------------------------

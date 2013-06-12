@@ -35,6 +35,8 @@ package sonia.scm.plugin.rest;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.apache.shiro.SecurityUtils;
+
 import sonia.scm.plugin.BackendConfiguration;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -59,7 +61,7 @@ public class ViewableResource
    * @param configuration
    */
   public ViewableResource(ServletContext context,
-                          BackendConfiguration configuration)
+    BackendConfiguration configuration)
   {
     this.contextPath = context.getContextPath();
     this.configuration = configuration;
@@ -82,6 +84,7 @@ public class ViewableResource
     vars.put("contextPath", contextPath);
     vars.put("configuration", configuration);
     vars.put("title", title);
+    vars.put("subject", new SubjectWrapper(SecurityUtils.getSubject()));
 
     return vars;
   }
@@ -89,7 +92,7 @@ public class ViewableResource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private BackendConfiguration configuration;
+  protected BackendConfiguration configuration;
 
   /** Field description */
   private String contextPath;

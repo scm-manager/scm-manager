@@ -50,7 +50,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   tabUsersText: 'Users',
   navGroupsText: 'Groups',
   tabGroupsText: 'Groups',
-
+  
   sectionLoginText: 'Login',
   navLoginText: 'Login',
 
@@ -99,7 +99,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   getInfoPanel: function(type){
     var rp = null;
     var panel = this.infoPanels[type];
-    if ( panel == null ){
+    if ( ! panel ){
       rp = {
         xtype: 'repositoryInfoPanel'
       };
@@ -191,8 +191,9 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
     var securitySection = null;
 
-    if ( state.user.type == state.defaultUserType && state.user.name != 'anonymous' ){
+    if ( state.user.type === state.defaultUserType && state.user.name !== 'anonymous' ){
       securitySection = {
+        id: 'securityConfig',
         title: this.sectionSecurityText,
         links: [{
           label: this.navChangePasswordText,
@@ -200,7 +201,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
             new Sonia.action.ChangePasswordWindow().show();
           }
         }]
-      }
+      };
     }
 
     if ( admin ){
@@ -223,30 +224,30 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
         }]
       }]);
 
-      if ( securitySection == null ){
+      if ( ! securitySection ){
         securitySection = {
+          id: 'securityConfig',
           title: this.sectionSecurityText,
           links: []
-        }
+        };
       }
 
       securitySection.links.push({
         label: this.navUsersText,
         fn: this.addUsersTabPanel,
         scope: this
-      });
-      securitySection.links.push({
+      },{
         label: this.navGroupsText,
         fn: this.addGroupsTabPanel,
         scope: this
       });
     }
 
-    if ( securitySection != null ){
+    if ( securitySection ){
       panel.addSection( securitySection );
     }
 
-    if ( state.user.name == 'anonymous' ){
+    if ( state.user.name === 'anonymous' ){
       panel.addSection({
         id: 'navLogin',
         title: this.sectionLoginText,
@@ -290,7 +291,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
   addTab: function(panel){
     var tab = this.mainTabPanel.findById(panel.id);
-    if ( tab == null ){
+    if ( !tab ){
       this.mainTabPanel.add(panel);
     }
     this.mainTabPanel.setActiveTab(panel.id);
@@ -361,10 +362,10 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
         var s = null;
         var text = response.responseText;
-        if ( text != null && text.length > 0 ){
+        if ( text && text.length > 0 ){
           s = Ext.decode( text );
         }
-        if ( s != null && s.success ){
+        if ( s && s.success ){
           this.loadState(s);
         } else {
           // show login window
@@ -402,35 +403,35 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       console.debug( 'handle failure for status code: ' + status );
     }
     // TODO handle already exists exceptions specific
-    if ( status == 401 ){
+    if ( status === 401 ){
       Ext.Msg.show({
         title: this.errorSessionExpiredTitle,
         msg: this.errorSessionExpiredMessage,
         buttons: Ext.Msg.OKCANCEL,
         fn: function(btn){
-          if ( btn == 'ok' ){
+          if ( btn === 'ok' ){
             this.login();
           }
         },
         scope: this
       });
-    } else if ( status == 403 ){
+    } else if ( status === 403 ){
       Ext.Msg.show({
         title: this.errorNoPermissionsTitle,
         msg: this.errorNoPermissionsMessage,
         buttons: Ext.Msg.OKCANCEL
       });
-    } else if ( status == 404 ){
+    } else if ( status === 404 ){
       Ext.Msg.show({
         title: this.errorNotFoundTitle,
         msg: this.errorNotFoundMessage,
         buttons: Ext.Msg.OKCANCEL
       });      
     } else {
-      if ( title == null ){
+      if ( ! title ){
         title = this.errorTitle;
       }
-      if ( message == null ){
+      if ( ! message ){
         message = this.errorMessage;
       }
 
@@ -453,7 +454,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       
       message = String.format(message, status);
       
-      if ( text == null ){
+      if ( ! text ){
 
         Ext.MessageBox.show({
           title: title,
@@ -482,7 +483,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
       } else {
         callback();
       }
-    }
+    };
     if ( this.scripts.indexOf(url) < 0 ){
       var js = document.createElement('script');
       js.type = "text/javascript";
@@ -495,7 +496,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
               this.readyState === 'complete'){
               doCallback();
           }
-        }
+        };
       } else {
         js.onload = doCallback;
         js.onerror = doCallback;
@@ -533,7 +534,7 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
   },
   
   renderUserInformations: function(state){
-    if ( state.user.name != 'anonymous' ){
+    if ( state.user.name !== 'anonymous' ){
       var tpl = new Ext.XTemplate(this.loggedInTextTemplate);
       tpl.overwrite(Ext.get('scm-userinfo'), state);
       var text = '';
@@ -574,7 +575,20 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 
 Ext.onReady(function(){
 
-  Ext.state.Manager.setProvider(new Ext.state.CookieProvider());
+  var stateProvider;
+  if ( typeof(Storage) !== "undefined" ){
+    if (debug){
+      console.debug('use localStore to save application state');
+    }
+    stateProvider = new Sonia.uistate.WebStorageProvider();
+  } else {
+    if (debug){
+      console.debug('use cookies to save application state, because localStore is not available');
+    }
+    stateProvider = new Ext.state.CookieProvider();
+  }
+
+  Ext.state.Manager.setProvider(stateProvider);
 
   var mainTabPanel = new Ext.TabPanel({
     id: 'mainTabPanel',

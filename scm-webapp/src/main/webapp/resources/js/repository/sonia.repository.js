@@ -45,7 +45,13 @@ Ext.ns('Sonia.repository');
 
 Sonia.repository.openListeners = [];
 
+Sonia.repository.typeIcons = [];
+
 // functions
+
+Sonia.repository.getTypeIcon = function(type){
+  return Sonia.repository.typeIcons[type];
+};
 
 Sonia.repository.createContentUrl = function(repository, path, revision){
   var contentUrl = restUrl + 'repositories/' + repository.id  + '/';
@@ -54,7 +60,7 @@ Sonia.repository.createContentUrl = function(repository, path, revision){
     contentUrl += "&revision=" + revision;
   }
   return contentUrl;
-}
+};
 
 Sonia.repository.createContentId = function(repository, path, revision){
   var id = repository.id + '-b-'  + path;
@@ -62,11 +68,11 @@ Sonia.repository.createContentId = function(repository, path, revision){
     id += '-r-' + revision;
   }
   return id;
-}
+};
 
 Sonia.repository.isOwner = function(repository){
-  return admin || repository.permissions != null;
-}
+  return admin || repository.permissions;
+};
 
 Sonia.repository.setEditPanel = function(panels){
   var editPanel = Ext.getCmp('repositoryEditPanel');
@@ -76,25 +82,46 @@ Sonia.repository.setEditPanel = function(panels){
   });
   editPanel.setActiveTab(0);
   editPanel.doLayout();
-}
+};
 
 Sonia.repository.createUrl = function(type, name){
-  return Sonia.util.getBaseUrl() + '/' + type + '/' + name
-}
+  return Sonia.util.getBaseUrl() + '/' + type + '/' + name;
+};
 
 Sonia.repository.createUrlFromObject = function(repository){
   return Sonia.repository.createUrl(repository.type, repository.name);
-}
+};
 
 Sonia.repository.getTypeByName = function(name){
   var type = null;
   repositoryTypeStore.queryBy(function(rec){
-    if ( rec.get('name') == name ){
+    if ( rec.get('name') === name ){
       type = rec.data;
     }
   });
   return type;
-}
+};
+
+Sonia.repository.getPermissionType = function(repository){
+  var values = [];
+  values['READ'] = 0;
+  values['WRITE'] = 10;
+  values['OWNER'] = 20;
+  
+  var type = 'READ';
+  
+  if (state.assignedPermissions){
+    Ext.each(state.assignedPermissions, function(p){
+      var parts = p.split(':');
+      if ( parts[0] === 'repository' && (parts[1] === '*' || parts[1] === repository.id)){
+        if ( values[parts[2]] > values[type] ){
+          type = parts[2];
+        }
+      }
+    });
+  }
+  return type;
+};
 
 /**
  * default panel
@@ -106,7 +133,7 @@ Sonia.repository.DefaultPanel = {
   xtype: 'panel',
   bodyCssClass: 'x-panel-mc',
   html: 'Add or select an Repository'
-}
+};
 
 // load object from store or from web service
 
@@ -131,7 +158,7 @@ Sonia.repository.get = function(id, callback){
         var type = id.substring(0, index);
         var name = id.substring(index);
         index = store.findBy(function(rec){
-          return rec.get('name') == name && rec.get('type') == type;
+          return rec.get('name') === name && rec.get('type') === type;
         });
         if ( index >= 0 ){
           rec = store.getAt(index);
@@ -162,4 +189,4 @@ Sonia.repository.get = function(id, callback){
       }
     }); 
   }
-}
+};

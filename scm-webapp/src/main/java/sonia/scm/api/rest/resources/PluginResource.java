@@ -35,24 +35,36 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.api.rest.RestActionResult;
+import sonia.scm.api.rest.RestActionUploadResult;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.OverviewPluginFilter;
+import sonia.scm.plugin.PluginConditionFailedException;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginInformationComparator;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.ArrayList;
+import com.sun.jersey.multipart.FormDataParam;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -60,6 +72,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 /**
  *
@@ -70,6 +83,14 @@ import javax.ws.rs.core.Response;
 @ExternallyManagedLifecycle
 public class PluginResource
 {
+
+  /**
+   * the logger for PluginResource
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(PluginResource.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -84,6 +105,52 @@ public class PluginResource
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Installs a plugin from a package.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>412 precondition failed</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   *
+   * @param uploadedInputStream
+   * @return
+   *
+   * @throws IOException
+   */
+  @POST
+  @Path("install-package")
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public Response install(
+    @FormDataParam("package") InputStream uploadedInputStream)
+    throws IOException
+  {
+    Response response = null;
+
+    try
+    {
+      pluginManager.installPackage(uploadedInputStream);
+      response = Response.ok(new RestActionUploadResult(true)).build();
+    }
+    catch (PluginConditionFailedException ex)
+    {
+      logger.warn(
+        "could not install plugin package, because the condition failed", ex);
+      response = Response.status(Status.PRECONDITION_FAILED).entity(
+        new RestActionResult(false)).build();
+    }
+    catch (Exception ex)
+    {
+      logger.warn("plugin installation failed", ex);
+      response =
+        Response.serverError().entity(new RestActionResult(false)).build();
+    }
+
+    return response;
+  }
 
   /**
    * Installs a plugin.<br />
@@ -104,6 +171,32 @@ public class PluginResource
     pluginManager.install(id);
 
     return Response.ok().build();
+  }
+
+  /**
+   * Installs a plugin from a package. This method is a workaround for ExtJS
+   * file upload, which requires text/html as content-type.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>412 precondition failed</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   *
+   * @param uploadedInputStream
+   * @return
+   *
+   * @throws IOException
+   */
+  @POST
+  @Path("install-package.html")
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Produces(MediaType.TEXT_HTML)
+  public Response installFromUI(
+    @FormDataParam("package") InputStream uploadedInputStream)
+    throws IOException
+  {
+    return install(uploadedInputStream);
   }
 
   /**
@@ -236,9 +329,11 @@ public class PluginResource
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Collection<PluginInformation> getOverview()
   {
-    List<PluginInformation> plugins = new ArrayList<PluginInformation>(
-                                        pluginManager.get(
-                                          OverviewPluginFilter.INSTANCE));
+    //J-
+    List<PluginInformation> plugins = Lists.newArrayList(
+      pluginManager.get(OverviewPluginFilter.INSTANCE)
+    );
+    //J+
 
     Collections.sort(plugins, PluginInformationComparator.INSTANCE);
 
@@ -248,7 +343,7 @@ public class PluginResource
     while (it.hasNext())
     {
       PluginInformation pi = it.next();
-      String id = pi.getGroupId().concat(":").concat(pi.getArtifactId());
+      String id = pi.getId(false);
 
       if ((last != null) && id.equals(last))
       {

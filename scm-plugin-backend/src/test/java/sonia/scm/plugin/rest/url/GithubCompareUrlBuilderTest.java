@@ -35,6 +35,7 @@ package sonia.scm.plugin.rest.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.plugin.url.GithubUrlBuilder;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

@@ -36,6 +36,7 @@ package sonia.scm.user;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.HandlerEvent;
+import sonia.scm.event.ScmEventBus;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -44,6 +45,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Abstract base class for {@link UserManager} implementations. This class
+ * implements the listener methods of the {@link UserManager} interface.
  *
  * @author Sebastian Sdorra
  */
@@ -51,10 +54,10 @@ public abstract class AbstractUserManager implements UserManager
 {
 
   /**
-   * Method description
+   * Register a {@link UserListener}.
    *
    *
-   * @param listener
+   * @param listener {@link UserListener} to register
    */
   @Override
   public void addListener(UserListener listener)
@@ -63,10 +66,10 @@ public abstract class AbstractUserManager implements UserManager
   }
 
   /**
-   * Method description
+   * Register a {@link java.util.Collection} of {@link UserListener}s.
    *
    *
-   * @param listeners
+   * @param listeners listeners to register
    */
   @Override
   public void addListeners(Collection<UserListener> listeners)
@@ -75,10 +78,10 @@ public abstract class AbstractUserManager implements UserManager
   }
 
   /**
-   * Method description
+   * Remove specified {@link UserListener}.
    *
    *
-   * @param listener
+   * @param listener to remove
    */
   @Override
   public void removeListener(UserListener listener)
@@ -87,11 +90,12 @@ public abstract class AbstractUserManager implements UserManager
   }
 
   /**
-   * Method description
+   * Calls the {@link UserListener#onEvent(User,sonia.scm.HandlerEvent)}
+   * method of all registered listeners and send a {@link UserEvent} to
+   * the {@link ScmEventBus}.
    *
-   *
-   * @param user
-   * @param event
+   * @param user user that has changed
+   * @param event type of change event
    */
   protected void fireEvent(User user, HandlerEvent event)
   {
@@ -99,6 +103,8 @@ public abstract class AbstractUserManager implements UserManager
     {
       listener.onEvent(user, event);
     }
+
+    ScmEventBus.getInstance().post(new UserEvent(user, event));
   }
 
   //~--- fields ---------------------------------------------------------------

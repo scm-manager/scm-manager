@@ -59,12 +59,20 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  * @since 1.11
  */
-public class RepositoryUtil
+public final class RepositoryUtil
 {
 
   /** the logger for RepositoryUtil */
   private static final Logger logger =
     LoggerFactory.getLogger(RepositoryUtil.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private RepositoryUtil() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -79,8 +87,7 @@ public class RepositoryUtil
    * @since 1.16
    */
   public static void appendUrl(ScmConfiguration configuration,
-                               RepositoryManager repositoryManager,
-                               Repository repository)
+    RepositoryManager repositoryManager, Repository repository)
   {
     RepositoryHandler handler =
       repositoryManager.getHandler(repository.getType());
@@ -106,8 +113,7 @@ public class RepositoryUtil
    * @since 1.16
    */
   public static void appendUrl(HttpServletRequest request,
-                               RepositoryManager repositoryManager,
-                               Repository repository)
+    RepositoryManager repositoryManager, Repository repository)
   {
     RepositoryHandler handler =
       repositoryManager.getHandler(repository.getType());
@@ -131,7 +137,7 @@ public class RepositoryUtil
    * @return
    */
   public static List<File> searchRepositoryDirectories(File directory,
-          String... names)
+    String... names)
   {
     List<File> repositories = new ArrayList<File>();
 
@@ -154,11 +160,11 @@ public class RepositoryUtil
    * @throws IOException
    */
   public static String getRepositoryName(AbstractRepositoryHandler handler,
-          String directoryPath)
-          throws IOException
+    String directoryPath)
+    throws IOException
   {
     return getRepositoryName(handler.getConfig().getRepositoryDirectory(),
-                             new File(directoryPath));
+      new File(directoryPath));
   }
 
   /**
@@ -173,11 +179,11 @@ public class RepositoryUtil
    * @throws IOException
    */
   public static String getRepositoryName(SimpleRepositoryConfig config,
-          String directoryPath)
-          throws IOException
+    String directoryPath)
+    throws IOException
   {
     return getRepositoryName(config.getRepositoryDirectory(),
-                             new File(directoryPath));
+      new File(directoryPath));
   }
 
   /**
@@ -192,11 +198,11 @@ public class RepositoryUtil
    * @throws IOException
    */
   public static String getRepositoryName(AbstractRepositoryHandler handler,
-          File directory)
-          throws IOException
+    File directory)
+    throws IOException
   {
     return getRepositoryName(handler.getConfig().getRepositoryDirectory(),
-                             directory);
+      directory);
   }
 
   /**
@@ -211,8 +217,8 @@ public class RepositoryUtil
    * @throws IOException
    */
   public static String getRepositoryName(SimpleRepositoryConfig config,
-          File directory)
-          throws IOException
+    File directory)
+    throws IOException
   {
     return getRepositoryName(config.getRepositoryDirectory(), directory);
   }
@@ -229,7 +235,7 @@ public class RepositoryUtil
    * @throws IOException
    */
   public static String getRepositoryName(File baseDirectory, File directory)
-          throws IOException
+    throws IOException
   {
     String name = null;
     String path = directory.getCanonicalPath();
@@ -262,8 +268,8 @@ public class RepositoryUtil
    * @throws IOException
    */
   public static List<String> getRepositoryNames(
-          AbstractRepositoryHandler handler, String... directoryNames)
-          throws IOException
+    AbstractRepositoryHandler handler, String... directoryNames)
+    throws IOException
   {
     return getRepositoryNames(handler.getConfig(), directoryNames);
   }
@@ -280,8 +286,8 @@ public class RepositoryUtil
    * @throws IOException
    */
   public static List<String> getRepositoryNames(SimpleRepositoryConfig config,
-          String... directoryNames)
-          throws IOException
+    String... directoryNames)
+    throws IOException
   {
     return getRepositoryNames(config.getRepositoryDirectory(), directoryNames);
   }
@@ -298,8 +304,8 @@ public class RepositoryUtil
    * @throws IOException
    */
   public static List<String> getRepositoryNames(File baseDirectory,
-          String... directoryNames)
-          throws IOException
+    String... directoryNames)
+    throws IOException
   {
     List<String> repositories = new ArrayList<String>();
     List<File> repositoryFiles = searchRepositoryDirectories(baseDirectory,
@@ -329,7 +335,7 @@ public class RepositoryUtil
    * @param names
    */
   private static void searchRepositoryDirectories(List<File> repositories,
-          File directory, List<String> names)
+    File directory, List<String> names)
   {
     boolean found = false;
 

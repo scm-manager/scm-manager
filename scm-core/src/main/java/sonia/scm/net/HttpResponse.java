@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Response of a {@link HttpRequest} execute by the {@link HttpClient}.
  *
  * @author Sebastian Sdorra
  */
@@ -50,48 +51,48 @@ public interface HttpResponse extends Closeable
 {
 
   /**
-   * Method description
+   * Returns the response body as stream.
    *
    *
-   * @return
+   * @return response body as stream
    *
    * @throws IOException
    */
   public InputStream getContent() throws IOException;
 
   /**
-   * Method description
+   * Returns the response body as string.
    *
    *
-   * @return
+   * @return response body as string
    *
    * @throws IOException
    */
   public String getContentAsString() throws IOException;
 
   /**
-   * Method description
+   * Returns the value of the first response header with the given name.
    *
    *
-   * @param name
+   * @param name name of the response header
    *
-   * @return
+   * @return value of the first response header with the given name
    */
   public String getHeader(String name);
 
   /**
-   * Method description
+   * Returns a map with all response headers.
    *
    *
-   * @return
+   * @return map with all response headers
    */
   public Map<String, List<String>> getHeaderMap();
 
   /**
-   * Method description
+   * Returns the status code of the response.
    *
    *
-   * @return
+   * @return status code
    *
    * @throws IOException
    */

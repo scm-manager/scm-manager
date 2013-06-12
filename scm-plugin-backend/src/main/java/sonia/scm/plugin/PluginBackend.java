@@ -94,14 +94,6 @@ public interface PluginBackend extends ListenerSupport<PluginBackendListener>
    *
    * @return
    */
-  public File getBaseDirectory();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public Set<String> getExcludes();
 
   /**

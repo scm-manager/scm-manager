@@ -30,3 +30,28 @@
  */
 Ext.ns("Sonia.rest");
 
+
+Sonia.rest.exceptionTitleText = 'Error';
+Sonia.rest.exceptionMsgText = 'Could not load items. Server returned status: {0}';
+
+Sonia.rest.ExceptionHandler = function(proxy, type, action, options, response, arg){
+  var status = response.status;
+  if (debug){
+    console.debug('store returned statuscode ' + status);
+  }
+  if ( status === 200 && action === 'read' && response.responseText === 'null' ){
+    if ( debug ){
+      console.debug( 'empty array, clear whole store' );
+    }
+    this.removeAll();
+  } else {
+    if (debug){
+      console.debug( 'error during store load, status: ' + status );
+    }
+    main.handleRestFailure(
+      response, 
+      Sonia.rest.exceptionTitleText, 
+      String.format(Sonia.rest.exceptionMsgText, status)
+    );
+  }
+};

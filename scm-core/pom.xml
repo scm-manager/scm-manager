@@ -6,12 +6,12 @@
   <parent>
     <artifactId>scm</artifactId>
     <groupId>sonia.scm</groupId>
-    <version>1.19-SNAPSHOT</version>
+    <version>1.32-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-core</artifactId>
-  <version>1.19-SNAPSHOT</version>
+  <version>1.32-SNAPSHOT</version>
   <name>scm-core</name>
 
   <dependencies>
@@ -31,6 +31,14 @@
       <artifactId>slf4j-api</artifactId>
       <groupId>org.slf4j</groupId>
       <version>${slf4j.version}</version>
+    </dependency>
+    
+    <!-- security -->
+    
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-core</artifactId>
+      <version>${shiro.version}</version>
     </dependency>
     
     <!-- injection -->
@@ -72,7 +80,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>13.0</version>
+      <version>14.0.1</version>
     </dependency>
     
     <dependency>
@@ -82,5 +90,41 @@
     </dependency>
 
   </dependencies>
+  
+  <build>
+    <plugins>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9</version>
+        <configuration>
+          <useStandardDocletOptions>true</useStandardDocletOptions>
+          <charset>${project.build.sourceEncoding}</charset>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <docencoding>${project.build.sourceEncoding}</docencoding>
+          <breakiterator>true</breakiterator>
+          <version>true</version>
+          <author>true</author>
+          <keywords>true</keywords>
+          <javadocDirectory>${basedir}/src/main/javadoc</javadocDirectory>
+          <docfilessubdirs>true</docfilessubdirs>
+          <useStandardDocletOptions>true</useStandardDocletOptions>
+          <overview>${basedir}/src/main/javadoc/overview.html</overview>
+          <doctitle>SCM-Manager API Reference (${project.version})</doctitle>
+          <windowtitle>SCM-Manager API Reference (${project.version})</windowtitle>
+          <links>
+            <link>http://download.oracle.com/javase/6/docs/api/</link>
+            <link>http://download.oracle.com/docs/cd/E17802_01/products/products/servlet/2.5/docs/servlet-2_5-mr2/</link>
+            <link>http://jersey.java.net/nonav/apidocs/${jersey.version}/jersey/</link>
+            <link>http://google-guice.googlecode.com/svn/tags/3.0/javadoc/</link>
+            <link>http://www.slf4j.org/api/</link>
+            <link>http://shiro.apache.org/static/current/apidocs/</link>
+          </links>
+        </configuration>
+      </plugin>
+      
+    </plugins>
+  </build>
   
 </project>

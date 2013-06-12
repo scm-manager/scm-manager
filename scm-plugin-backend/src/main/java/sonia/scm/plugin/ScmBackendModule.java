@@ -36,29 +36,28 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.multibindings.Multibinder;
-import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
 
 import net.sf.ehcache.CacheManager;
 
 import sonia.scm.ConfigurationException;
-import sonia.scm.plugin.rest.PluginResource;
-import sonia.scm.plugin.rest.url.BitbucketUrlBuilder;
-import sonia.scm.plugin.rest.url.GithubUrlBuilder;
-import sonia.scm.plugin.rest.url.UrlBuilder;
-import sonia.scm.plugin.rest.url.UrlBuilderFactory;
+import sonia.scm.plugin.rest.api.PluginResource;
 import sonia.scm.plugin.scanner.DefaultPluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerFactory;
 import sonia.scm.plugin.scanner.PluginScannerScheduler;
 import sonia.scm.plugin.scanner.TimerPluginScannerScheduler;
-import sonia.scm.util.Util;
-import sonia.scm.web.proxy.ProxyServet;
-import sonia.scm.web.proxy.ProxyURLProvider;
+import sonia.scm.plugin.url.BitbucketUrlBuilder;
+import sonia.scm.plugin.url.GithubUrlBuilder;
+import sonia.scm.plugin.url.UrlBuilder;
+import sonia.scm.plugin.url.UrlBuilderFactory;
+import sonia.scm.web.proxy.ProxyConfigurationProvider;
+import sonia.scm.web.proxy.ProxyServlet;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 import java.io.File;
 
@@ -78,22 +77,19 @@ public class ScmBackendModule extends ServletModule
   public static final String CACHE_CONFIG = "/config/ehcache.xml";
 
   /** Field description */
-  public static final String DIRECTORY_DEFAULT = ".scm-backend";
-
-  /** Field description */
-  public static final String DIRECTORY_ENVIRONMENT = "SCMBACKEND_HOME";
-
-  /** Field description */
-  public static final String DIRECTORY_PROPERTY = "scm-backend.home";
-
-  /** Field description */
   public static final String FILE_CONFIG = "config.xml";
 
   /** Field description */
-  public static final String PATTERN_API = "/api/*";
+  public static final String PACKAGE = "sonia.scm.plugin.rest";
 
   /** Field description */
-  public static final String PATTERN_PAGE = "/page/*";
+  public static final String PATTERN_NEWS = "/news*";
+
+  /** Field description */
+  public static final String PATTERN_REST_API = "/*";
+
+  /** Field description */
+  public static final String PATTERN_REST_EXCLUDE = "/(template/|news).*";
 
   //~--- methods --------------------------------------------------------------
 
@@ -104,27 +100,17 @@ public class ScmBackendModule extends ServletModule
   @Override
   protected void configureServlets()
   {
-    File baseDirectory = findBaseDirectory();
-
-    if (baseDirectory == null)
-    {
-      throw new ConfigurationException("could not find base directory");
-    }
-
-    File configurationFile = getConfigurationFile(baseDirectory);
+    File configurationFile = BaseDirectory.getFile(FILE_CONFIG);
 
     if (!configurationFile.exists())
     {
       throw new ConfigurationException(
-          "could not find configuration at ".concat(
-            configurationFile.getPath()));
+        "could not find configuration at ".concat(configurationFile.getPath()));
     }
 
     BackendConfiguration configuration = JAXB.unmarshal(configurationFile,
                                            BackendConfiguration.class);
 
-    bind(File.class).annotatedWith(Names.named(DIRECTORY_PROPERTY)).toInstance(
-        baseDirectory);
     bind(BackendConfiguration.class).toInstance(configuration);
     bind(PluginBackend.class).to(DefaultPluginBackend.class);
     bind(PluginScannerFactory.class).to(DefaultPluginScannerFactory.class);
@@ -147,59 +133,18 @@ public class ScmBackendModule extends ServletModule
     bind(UrlBuilderFactory.class);
 
     // news proxy
-    bind(ProxyURLProvider.class).to(NewsProxyURLProvider.class);
-    serve("/news*").with(ProxyServet.class);
+    bind(ProxyConfigurationProvider.class).to(NewsProxyURLProvider.class);
+    serve(PATTERN_NEWS).with(ProxyServlet.class);
 
+    // redirect for start page
+    filter(PATTERN_REST_API).through(RedirectFilter.class);
+
+    // rest
     Map<String, String> params = new HashMap<String, String>();
 
-    params.put(PackagesResourceConfig.PROPERTY_PACKAGES,
-               "sonia.scm.plugin.rest");
-    serve(PATTERN_API, PATTERN_PAGE).with(GuiceContainer.class, params);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private File findBaseDirectory()
-  {
-    String path = System.getProperty(DIRECTORY_PROPERTY);
-
-    if (Util.isEmpty(path))
-    {
-      path = System.getenv(DIRECTORY_ENVIRONMENT);
-
-      if (Util.isEmpty(path))
-      {
-        path = System.getProperty("user.home").concat(File.separator).concat(
-          DIRECTORY_DEFAULT);
-      }
-    }
-
-    File directory = new File(path);
-
-    if (!directory.exists() &&!directory.mkdirs())
-    {
-      throw new IllegalStateException("could not create directory");
-    }
-
-    return directory;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param baseDirectory
-   *
-   * @return
-   */
-  private File getConfigurationFile(File baseDirectory)
-  {
-    return new File(baseDirectory, FILE_CONFIG);
+    params.put(PackagesResourceConfig.PROPERTY_PACKAGES, PACKAGE);
+    params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX,
+      PATTERN_REST_EXCLUDE);
+    filter(PATTERN_REST_API).through(GuiceContainer.class, params);
   }
 }

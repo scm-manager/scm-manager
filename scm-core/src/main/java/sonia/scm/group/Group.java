@@ -36,6 +36,7 @@ package sonia.scm.group;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
@@ -44,7 +45,6 @@ import sonia.scm.util.ValidationUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -61,7 +61,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "groups")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Group extends BasicPropertiesAware
-        implements ModelObject, Iterable<String>
+  implements ModelObject, Iterable<String>
 {
 
   /** Field description */
@@ -87,7 +87,7 @@ public class Group extends BasicPropertiesAware
   {
     this.type = type;
     this.name = name;
-    this.members = new ArrayList<String>();
+    this.members = Lists.newArrayList();
   }
 
   /**
@@ -119,7 +119,7 @@ public class Group extends BasicPropertiesAware
   {
     this.type = type;
     this.name = name;
-    this.members = new ArrayList<String>();
+    this.members = Lists.newArrayList();
 
     if (Util.isNotEmpty(members))
     {
@@ -139,7 +139,7 @@ public class Group extends BasicPropertiesAware
    */
   public boolean add(String member)
   {
-    return members.add(member);
+    return getMembers().add(member);
   }
 
   /**
@@ -213,12 +213,12 @@ public class Group extends BasicPropertiesAware
     final Group other = (Group) obj;
 
     return Objects.equal(name, other.name)
-           && Objects.equal(description, other.description)
-           && Objects.equal(members, other.members)
-           && Objects.equal(type, other.type)
-           && Objects.equal(creationDate, other.creationDate)
-           && Objects.equal(lastModified, other.lastModified)
-           && Objects.equal(properties, other.properties);
+      && Objects.equal(description, other.description)
+      && Objects.equal(members, other.members)
+      && Objects.equal(type, other.type)
+      && Objects.equal(creationDate, other.creationDate)
+      && Objects.equal(lastModified, other.lastModified)
+      && Objects.equal(properties, other.properties);
   }
 
   /**
@@ -231,7 +231,7 @@ public class Group extends BasicPropertiesAware
   public int hashCode()
   {
     return Objects.hashCode(name, description, members, type, creationDate,
-                            lastModified, properties);
+      lastModified, properties);
   }
 
   /**
@@ -340,7 +340,7 @@ public class Group extends BasicPropertiesAware
   {
     if (members == null)
     {
-      members = new ArrayList<String>();
+      members = Lists.newArrayList();
     }
 
     return members;

@@ -34,7 +34,7 @@ Ext.form.Field.prototype.afterRenderExt = Ext.form.Field.prototype.afterRender;
 Ext.override(Ext.form.Field, {
 
   afterRender : function() {
-    if ( this.helpText != null ){
+    if ( this.helpText ){
       this.renderHelp( this.helpText );
     }
     this.afterRenderExt.apply(this, arguments);
@@ -51,13 +51,19 @@ Ext.override(Ext.form.Field, {
       src: 'resources/images/help.png',
       cls: cls
     });
-
-    Ext.QuickTips.register({
+    
+    var quickTip = {
       target : helpButton,
       title : '',
       text : text,
       enabled : true
-    });
+    };
+    
+    if (this.helpDisableAutoHide){
+      quickTip.autoHide = !this.helpDisableAutoHide;
+    }
+
+    Ext.QuickTips.register(quickTip);
   },
 
   getHelpButtonClass: function(){

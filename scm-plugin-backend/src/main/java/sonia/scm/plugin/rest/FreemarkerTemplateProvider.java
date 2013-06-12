@@ -66,7 +66,7 @@ public class FreemarkerTemplateProvider implements ViewProcessor<String>
 {
 
   /** Field description */
-  public static final String DIRECTORY_TEMPLATES = "/";
+  public static final String DIRECTORY_TEMPLATES = "/WEB-INF/ftl";
 
   /** Field description */
   private static final String EXTENSION = ".html";
@@ -87,7 +87,7 @@ public class FreemarkerTemplateProvider implements ViewProcessor<String>
   {
     configuration = new Configuration();
     configuration.setServletContextForTemplateLoading(servletContext,
-            DIRECTORY_TEMPLATES);
+      DIRECTORY_TEMPLATES);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -124,7 +124,7 @@ public class FreemarkerTemplateProvider implements ViewProcessor<String>
    */
   @Override
   public void writeTo(String resolvedPath, Viewable viewable, OutputStream out)
-          throws IOException
+    throws IOException
   {
     if (logger.isDebugEnabled())
     {

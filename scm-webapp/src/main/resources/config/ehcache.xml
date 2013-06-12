@@ -40,7 +40,9 @@
         Purpose of the document follows.
 -->
 
-<ehcache xmlns="http://ehcache.org/ehcache.xsd">
+<ehcache xmlns="http://ehcache.org/ehcache.xsd"
+         updateCheck="false"
+         maxBytesLocalDisk="512M">
 
 
   <!--
@@ -88,55 +90,160 @@
   -->
 
   <defaultCache
-        maxElementsInMemory="20000"
+        maxEntriesLocalHeap="100"
+        maxEntriesLocalDisk="10000"
         eternal="false"
-        overflowToDisk="false"
+        overflowToDisk="true"
         timeToIdleSeconds="1200"
         timeToLiveSeconds="2400"
         diskPersistent="false"
-        diskExpiryThreadIntervalSeconds="2400"
+        diskExpiryThreadIntervalSeconds="120"
   />
 
+  <!--
+    Authentication cache
+    average: 1K
+  -->
   <cache
         name="sonia.cache.auth"
-        maxElementsInMemory="200000"
+        maxEntriesLocalHeap="1000"
         eternal="false"
         overflowToDisk="false"
         timeToIdleSeconds="30"
         timeToLiveSeconds="60"
         diskPersistent="false"
   />
-
+  
+  <!--
+    Authorization cache
+    average: 3K
+  -->
+  <cache
+        name="sonia.cache.authorizing"
+        maxEntriesLocalHeap="1000"
+        eternal="false"
+        overflowToDisk="false"
+        timeToIdleSeconds="1200"
+        timeToLiveSeconds="2400"
+        diskPersistent="false"
+        copyOnRead="true"
+  />
+  
+  <!--
+    PluginCenter cache
+    average: 30K
+  -->
   <cache
         name="sonia.cache.plugins"
-        maxElementsInMemory="10"
+        maxEntriesLocalHeap="5"
         eternal="false"
         overflowToDisk="false"
         timeToLiveSeconds="3600"
         diskPersistent="false"
   />
 
+  <!-- 
+    Search cache for users
+    average: 0.5K
+  -->
   <cache
         name="sonia.cache.search.users"
-        maxElementsInMemory="10000"
+        maxEntriesLocalHeap="10000"
         eternal="false"
         overflowToDisk="false"
         timeToLiveSeconds="5400"
         diskPersistent="false"
   />
 
+  <!-- 
+    Search cache for groups
+    average: 0.5K
+  -->
   <cache
         name="sonia.cache.search.groups"
-        maxElementsInMemory="1000"
+        maxEntriesLocalHeap="1000"
         eternal="false"
         overflowToDisk="false"
         timeToLiveSeconds="5400"
         diskPersistent="false"
   />
   
+  <!-- new repository api -->
+  
+  <!--
+    Changeset cache
+    average: 25K
+  -->
+  <cache
+        name="sonia.cache.cmd.log"
+        maxEntriesLocalHeap="200"
+        maxEntriesLocalDisk="10000"
+        eternal="true"
+        overflowToDisk="true"
+        diskPersistent="false"
+        copyOnRead="true"
+        copyOnWrite="true"
+  />
+  
+  <!--
+    FileObject cache
+    average: 1.5K
+  -->
+  <cache
+        name="sonia.cache.cmd.browse"
+        maxEntriesLocalHeap="3000"
+        maxEntriesLocalDisk="20000"
+        eternal="true"
+        overflowToDisk="true"
+        diskPersistent="false"
+        copyOnRead="true"
+        copyOnWrite="true"
+  />
+
+  <!--
+    BlameResult cache
+    average: 15K
+  -->
+  <cache
+        name="sonia.cache.cmd.blame"
+        maxEntriesLocalHeap="1000"
+        maxEntriesLocalDisk="10000"
+        eternal="true"
+        overflowToDisk="true"
+        diskPersistent="false"
+        copyOnRead="true"
+        copyOnWrite="true"
+  />
+  
+  <!--
+    Tag cache
+    average: 5K
+  -->
+  <cache
+        name="sonia.cache.cmd.tags"
+        maxEntriesLocalHeap="500"
+        eternal="true"
+        overflowToDisk="false"
+        diskPersistent="false"
+  />
+  
+  <!--
+    Branch cache
+    average: 2.5K
+  -->
+  <cache
+        name="sonia.cache.cmd.branches"
+        maxEntriesLocalHeap="1000"
+        eternal="true"
+        overflowToDisk="false"
+        diskPersistent="false"
+  />
+  
+  <!-- deprecated old repository api -->
+  
   <cache
         name="sonia.cache.repository.changesets"
-        maxElementsInMemory="20000"
+        maxEntriesLocalHeap="200"
         eternal="false"
         overflowToDisk="false"
         timeToLiveSeconds="86400"
@@ -145,7 +252,7 @@
   
   <cache
         name="sonia.cache.repository.browser"
-        maxElementsInMemory="10000"
+        maxEntriesLocalHeap="200"
         eternal="false"
         overflowToDisk="false"
         timeToLiveSeconds="86400"
@@ -154,60 +261,7 @@
   
   <cache
         name="sonia.cache.repository.blame"
-        maxElementsInMemory="1000"
-        eternal="false"
-        overflowToDisk="false"
-        timeToLiveSeconds="86400"
-        diskPersistent="false"
-  />
-  
-  <!-- new repository api -->
-  
-  <cache
-        name="sonia.cache.cmd.log"
-        maxElementsInMemory="20000"
-        eternal="false"
-        overflowToDisk="false"
-        timeToLiveSeconds="86400"
-        diskPersistent="false"
-        copyOnRead="true"
-        copyOnWrite="true"
-  />
-  
-  <cache
-        name="sonia.cache.cmd.browse"
-        maxElementsInMemory="10000"
-        eternal="false"
-        overflowToDisk="false"
-        timeToLiveSeconds="86400"
-        diskPersistent="false"
-        copyOnRead="true"
-        copyOnWrite="true"
-  />
-  
-  <cache
-        name="sonia.cache.cmd.blame"
-        maxElementsInMemory="1000"
-        eternal="false"
-        overflowToDisk="false"
-        timeToLiveSeconds="86400"
-        diskPersistent="false"
-        copyOnRead="true"
-        copyOnWrite="true"
-  />
-  
-  <cache
-        name="sonia.cache.cmd.tags"
-        maxElementsInMemory="1000"
-        eternal="false"
-        overflowToDisk="false"
-        timeToLiveSeconds="86400"
-        diskPersistent="false"
-  />
-  
-  <cache
-        name="sonia.cache.cmd.branches"
-        maxElementsInMemory="1000"
+        maxEntriesLocalHeap="100"
         eternal="false"
         overflowToDisk="false"
         timeToLiveSeconds="86400"

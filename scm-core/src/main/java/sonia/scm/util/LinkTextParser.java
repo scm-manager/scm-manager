@@ -46,17 +46,25 @@ import java.util.regex.Pattern;
  *
  * @author Sebastian Sdorra
  */
-public class LinkTextParser
+public final class LinkTextParser
 {
 
   /** Field description */
   private static final Pattern REGEX_URL =
     Pattern.compile(
-        "\\(?\\b((?:https?://|ftps?://|mailto:|www[.])[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|])");
+      "\\(?\\b((?:https?://|ftps?://|mailto:|www[.])[-A-Za-z0-9+&@#/%?=~_()|!:,.;]*[-A-Za-z0-9+&@#/%=~_()|])");
 
   /** Field description */
   private static final String REPLACE_URL =
     "<a target=\"_blank\" href=\"{1}\">{0}</a>";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private LinkTextParser() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -103,12 +111,12 @@ public class LinkTextParser
       if (token.getReplacement() != null)
       {
         buffer.append(MessageFormat.format(REPLACE_URL, token.getValue(),
-                                           token.getReplacement()));
+          token.getReplacement()));
       }
       else
       {
         buffer.append(token.getValue().replace("<", "&lt;").replace(">",
-                "&gt;"));
+          "&gt;"));
       }
     }
 
@@ -122,7 +130,7 @@ public class LinkTextParser
    *
    *
    * @version        Enter version here..., 11/11/06
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   private static class Token
   {

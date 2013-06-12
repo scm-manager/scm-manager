@@ -39,13 +39,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.eclipse.jgit.http.server.GitServlet;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.resolver.RepositoryResolver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.util.HttpUtil;
@@ -86,18 +83,19 @@ public class ScmGitServlet extends GitServlet
    *
    * @param repositoryResolver
    * @param receivePackFactory
+   * @param repositoryViewer
    * @param repositoryProvider
    * @param repositoryRequestListenerUtil
    */
   @Inject
-  public ScmGitServlet(
-          GitRepositoryResolver repositoryResolver,
-          GitReceivePackFactory receivePackFactory,
-          RepositoryProvider repositoryProvider,
-          RepositoryRequestListenerUtil repositoryRequestListenerUtil)
+  public ScmGitServlet(GitRepositoryResolver repositoryResolver,
+    GitReceivePackFactory receivePackFactory,
+    GitRepositoryViewer repositoryViewer,
+    RepositoryProvider repositoryProvider,
+    RepositoryRequestListenerUtil repositoryRequestListenerUtil)
   {
-    this.resolver = repositoryResolver;
     this.repositoryProvider = repositoryProvider;
+    this.repositoryViewer = repositoryViewer;
     this.repositoryRequestListenerUtil = repositoryRequestListenerUtil;
     setRepositoryResolver(repositoryResolver);
     setReceivePackFactory(receivePackFactory);
@@ -117,8 +115,8 @@ public class ScmGitServlet extends GitServlet
    */
   @Override
   protected void service(HttpServletRequest request,
-                         HttpServletResponse response)
-          throws ServletException, IOException
+    HttpServletResponse response)
+    throws ServletException, IOException
   {
     String uri = HttpUtil.getStrippedURI(request);
 
@@ -129,7 +127,7 @@ public class ScmGitServlet extends GitServlet
       if (repository != null)
       {
         if (repositoryRequestListenerUtil.callListeners(request, response,
-                repository))
+          repository))
         {
           super.service(request, response);
         }
@@ -145,7 +143,7 @@ public class ScmGitServlet extends GitServlet
     }
     else
     {
-      printGitInformation(request, response);
+      printGitInformation(response);
     }
   }
 
@@ -160,29 +158,20 @@ public class ScmGitServlet extends GitServlet
    * @throws IOException
    * @throws ServletException
    */
-  private void printGitInformation(HttpServletRequest request,
-                                   HttpServletResponse response)
-          throws ServletException, IOException
+  private void printGitInformation(HttpServletResponse response)
+    throws ServletException, IOException
   {
     sonia.scm.repository.Repository scmRepository = repositoryProvider.get();
 
     if (scmRepository != null)
     {
-      Repository repository = null;
-
       try
       {
-        repository = resolver.open(request, scmRepository.getName());
-        new GitRepositoryViewer().handleRequest(response, repository,
-                scmRepository.getName());
+        repositoryViewer.handleRequest(response, scmRepository);
       }
       catch (Exception ex)
       {
-        throw new ServletException(ex);
-      }
-      finally
-      {
-        GitUtil.close(repository);
+        throw new ServletException("could not create repository view", ex);
       }
     }
     else
@@ -200,5 +189,5 @@ public class ScmGitServlet extends GitServlet
   private RepositoryRequestListenerUtil repositoryRequestListenerUtil;
 
   /** Field description */
-  private RepositoryResolver<HttpServletRequest> resolver;
+  private GitRepositoryViewer repositoryViewer;
 }

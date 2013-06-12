@@ -40,9 +40,11 @@ import com.aragost.javahg.Repository;
 import com.aragost.javahg.internals.AbstractCommand;
 import com.aragost.javahg.internals.HgInputStream;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 import sonia.scm.repository.FileObject;
+import sonia.scm.repository.SubRepository;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -88,6 +90,33 @@ public class HgFileviewCommand extends AbstractCommand
    *
    *
    * @return
+   */
+  public HgFileviewCommand disableLastCommit()
+  {
+    disableLastCommit = true;
+    cmdAppend("-d");
+
+    return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public HgFileviewCommand disableSubRepositoryDetection()
+  {
+    cmdAppend("-s");
+
+    return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
    *
    * @throws IOException
    */
@@ -112,7 +141,10 @@ public class HgFileviewCommand extends AbstractCommand
       {
         file = readFile(stream);
       }
-      else if (type == 's') {}
+      else if (type == 's')
+      {
+        file = readSubRepository(stream);
+      }
 
       if (file != null)
       {
@@ -134,6 +166,19 @@ public class HgFileviewCommand extends AbstractCommand
   public HgFileviewCommand path(String path)
   {
     cmdAppend("-p", path);
+
+    return this;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public HgFileviewCommand recursive()
+  {
+    cmdAppend("-c");
 
     return this;
   }
@@ -212,11 +257,49 @@ public class HgFileviewCommand extends AbstractCommand
     file.setLength(stream.decimalIntUpTo(' '));
 
     DateTime timestamp = stream.dateTimeUpTo(' ');
+    String description = stream.textUpTo('\0');
 
-    file.setLastModified(timestamp.getDate().getTime());
-    file.setDescription(stream.textUpTo('\0'));
+    if (!disableLastCommit)
+    {
+      file.setLastModified(timestamp.getDate().getTime());
+      file.setDescription(description);
+    }
 
     return file;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param stream
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private FileObject readSubRepository(HgInputStream stream) throws IOException
+  {
+    FileObject directory = new FileObject();
+    String path = removeTrailingSlash(stream.textUpTo('\n'));
+
+    directory.setName(getNameFromPath(path));
+    directory.setDirectory(true);
+    directory.setPath(path);
+
+    String revision = stream.textUpTo(' ');
+    String url = stream.textUpTo('\0');
+
+    SubRepository subRepository = new SubRepository(url);
+
+    if (!Strings.isNullOrEmpty(revision))
+    {
+      subRepository.setRevision(revision);
+    }
+
+    directory.setSubRepository(subRepository);
+
+    return directory;
   }
 
   /**
@@ -249,7 +332,7 @@ public class HgFileviewCommand extends AbstractCommand
    */
   private String getNameFromPath(String path)
   {
-    int index = path.lastIndexOf("/");
+    int index = path.lastIndexOf('/');
 
     if (index > 0)
     {
@@ -262,5 +345,5 @@ public class HgFileviewCommand extends AbstractCommand
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String rev;
+  private boolean disableLastCommit = false;
 }

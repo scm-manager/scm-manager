@@ -35,17 +35,19 @@ package sonia.scm.net;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
+
 import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ * Http request which can be executed by the {@link HttpClient}.
  *
  * @author Sebastian Sdorra
  * @since 1.9
@@ -54,10 +56,10 @@ public class HttpRequest
 {
 
   /**
-   * Constructs ...
+   * Constructs a new HttpRequest.
    *
    *
-   * @param url
+   * @param url url for the request
    */
   public HttpRequest(String url)
   {
@@ -67,13 +69,13 @@ public class HttpRequest
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Add a http header for the request.
    *
    *
-   * @param name
-   * @param values
+   * @param name name of the request header
+   * @param values values of the request header
    *
-   * @return
+   * @return {@code this}
    */
   public HttpRequest addHeader(String name, String... values)
   {
@@ -90,13 +92,13 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Add a parameter to the request.
    *
    *
-   * @param name
-   * @param values
+   * @param name name of the parameter
+   * @param values values of the parameter
    *
-   * @return
+   * @return {@code this}
    */
   public HttpRequest addParameters(String name, String... values)
   {
@@ -115,10 +117,10 @@ public class HttpRequest
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Return a map with http headers used for the request.
    *
    *
-   * @return
+   * @return map with http headers
    */
   public Map<String, List<String>> getHeaders()
   {
@@ -126,10 +128,10 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Return a map with http parameters for the request.
    *
    *
-   * @return
+   * @return map with http parameters
    */
   public Map<String, List<String>> getParameters()
   {
@@ -137,10 +139,10 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Returns the password for http basic authentication.
    *
    *
-   * @return
+   * @return password for http basic authentication
    */
   public String getPassword()
   {
@@ -148,10 +150,10 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Returns the url for the request.
    *
    *
-   * @return
+   * @return url of the request
    */
   public String getUrl()
   {
@@ -159,10 +161,10 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Returns the username for http basic authentication.
    *
    *
-   * @return
+   * @return username for http basic authentication
    */
   public String getUsername()
   {
@@ -170,10 +172,10 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Returns true if the request decodes gzip compression.
    *
    *
-   * @return
+   * @return true if the request decodes gzip compression
    *
    * @since 1.14
    */
@@ -183,10 +185,10 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Returns true if the verification of ssl certificates is disabled.
    *
    *
-   * @return
+   * @return true if certificate verification is disabled
    * @since 1.17
    */
   public boolean isDisableCertificateValidation()
@@ -195,10 +197,10 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Returns true if the ssl hostname validation is disabled.
    *
    *
-   * @return
+   * @return true if the ssl hostname validation is disabled
    * @since 1.17
    */
   public boolean isDisableHostnameValidation()
@@ -207,10 +209,10 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Returns true if the proxy settings are ignored.
    *
    *
-   * @return
+   * @return true if the proxy settings are ignored
    * @since 1.17
    */
   public boolean isIgnoreProxySettings()
@@ -221,13 +223,13 @@ public class HttpRequest
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Enabled http basic authentication.
    *
    *
-   * @param username
-   * @param password
+   * @param username username for http basic authentication
+   * @param password password for http basic authentication
    *
-   * @return
+   * @return {@code this}
    */
   public HttpRequest setBasicAuthentication(String username, String password)
   {
@@ -238,12 +240,12 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Enable or disabled gzip decoding. The default value is false.
    *
    *
-   * @param decodeGZip
+   * @param decodeGZip true to enable gzip decoding
    *
-   * @return
+   * @return {@code this}
    *
    * @since 1.14
    */
@@ -255,23 +257,25 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Enable or disable certificate validation of ssl certificates. The default
+   * value is false.
    *
    *
-   * @param disableCertificateValidation
+   * @param disableCertificateValidation true to disable certificate validation
    * @since 1.17
    */
   public void setDisableCertificateValidation(
-          boolean disableCertificateValidation)
+    boolean disableCertificateValidation)
   {
     this.disableCertificateValidation = disableCertificateValidation;
   }
 
   /**
-   * Method description
+   * Enable or disable the validation of ssl hostnames. The default value is
+   * false.
    *
    *
-   * @param disableHostnameValidation
+   * @param disableHostnameValidation true to disable ssl hostname validation
    * @since 1.17
    */
   public void setDisableHostnameValidation(boolean disableHostnameValidation)
@@ -280,12 +284,12 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Set http headers for the request.
    *
    *
-   * @param headers
+   * @param headers headers for the request
    *
-   * @return
+   * @return {@code this}
    */
   public HttpRequest setHeaders(Map<String, List<String>> headers)
   {
@@ -295,10 +299,10 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Ignore proxy settings. The default value is false.
    *
    *
-   * @param ignoreProxySettings
+   * @param ignoreProxySettings true to ignore proxy settings.
    * @since 1.17
    */
   public void setIgnoreProxySettings(boolean ignoreProxySettings)
@@ -307,12 +311,12 @@ public class HttpRequest
   }
 
   /**
-   * Method description
+   * Set http parameters for the request.
    *
    *
-   * @param parameters
+   * @param parameters parameters for the request
    *
-   * @return
+   * @return {@code this}
    */
   public HttpRequest setParameters(Map<String, List<String>> parameters)
   {
@@ -324,21 +328,21 @@ public class HttpRequest
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Append values to map.
    *
    *
-   * @param map
-   * @param name
-   * @param values
+   * @param map map to append values
+   * @param name name of the key
+   * @param values values to append
    */
   private void appendValues(Map<String, List<String>> map, String name,
-                            String[] values)
+    String[] values)
   {
     List<String> valueList = map.get(name);
 
     if (valueList == null)
     {
-      valueList = new ArrayList<String>();
+      valueList = Lists.newArrayList();
       map.put(name, valueList);
     }
 
@@ -350,30 +354,30 @@ public class HttpRequest
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** map of request headers */
   private Map<String, List<String>> headers;
 
-  /** Field description */
+  /** ignore proxy settings */
   private boolean ignoreProxySettings = false;
 
-  /** Field description */
+  /** disable ssl hostname validation */
   private boolean disableHostnameValidation = false;
 
-  /** Field description */
+  /** disable ssl certificate validation */
   private boolean disableCertificateValidation = false;
 
-  /** Field description */
+  /** decode gzip */
   private boolean decodeGZip = false;
 
-  /** Field description */
+  /** map of parameters */
   private Map<String, List<String>> parameters;
 
-  /** Field description */
+  /** password for http basic authentication */
   private String password;
 
-  /** Field description */
+  /** url for the request */
   private String url;
 
-  /** Field description */
+  /** username for http basic authentication */
   private String username;
 }

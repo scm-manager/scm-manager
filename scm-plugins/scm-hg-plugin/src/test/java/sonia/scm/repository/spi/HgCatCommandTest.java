@@ -37,7 +37,6 @@ package sonia.scm.repository.spi;
 
 import org.junit.Test;
 
-import sonia.scm.repository.HgContext;
 import sonia.scm.repository.RepositoryException;
 
 import static org.junit.Assert.*;

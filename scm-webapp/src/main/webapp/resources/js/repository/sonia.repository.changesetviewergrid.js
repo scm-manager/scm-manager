@@ -47,10 +47,10 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
                             <img src="resources/images/delete.png" alt="Deleted"><span class="cs-mod-txt">{2}</span>\
                           </div>',
   
-  idsTemplate: new Ext.XTemplate('<div class="cs-commit">Commit: <a class="scm-link cs-diff-link" rel="{id}">{id}</a></div>\
-                <div class="cs-tree">Source: <a class="scm-link cs-tree-link" rel="{id}">{id}</a></div>\
-                <tpl if="parent"><div class="cs-parent">Parent: <a class="scm-link cs-diff-link" rel="{parent}">{parent}</a></div></tpl>\
-                <tpl if="parent2"><div class="cs-parent">Parent: <a class="scm-link cs-diff-link" rel="{parent2}">{parent2}</a></div></tpl>'),
+  idsTemplate: new Ext.XTemplate('<div class="cs-commit">Commit: <a class="scm-link cs-diff-link" rel="{id}">{id:id}</a></div>\
+                <div class="cs-tree">Source: <a class="scm-link cs-tree-link" rel="{id}">{id:id}</a></div>\
+                <tpl if="parent"><div class="cs-parent">Parent: <a class="scm-link cs-diff-link" rel="{parent}">{parent:id}</a></div></tpl>\
+                <tpl if="parent2"><div class="cs-parent">Parent: <a class="scm-link cs-diff-link" rel="{parent2}">{parent2:id}</a></div></tpl>'),
   
   tagsAndBranchesTemplate: new Ext.XTemplate('<div class="changeset-tags"><tpl if="tags"><tpl for="tags"><span class="cs-tag"><a title="Tag {.}">{.}</a></span></tpl></tpl></div>\
                             <div class="changeset-branches"><tpl if="branches"><tpl for="branches"><span class="cs-branch"><a title="Branch {.}">{.}</a></span></tpl></tpl></div>'),
@@ -105,7 +105,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
           scope: this
         }
       }
-    }
+    };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.ChangesetViewerGrid.superclass.initComponent.apply(this, arguments);
@@ -167,18 +167,18 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
   renderChangesetMetadata: function(author, p, record){
     var authorValue = '';
-    if ( author != null ){
+    if ( author ){
       authorValue = author.name;
-      if ( author.mail != null ){
+      if ( author.mail ){
         authorValue += ' ' + String.format(this.mailTemplate, author.mail);
       }
     }
     var description = record.data.description;
-    // if ( description != null ){
+    // if ( description ){
     //  description = Ext.util.Format.htmlEncode(description);
     // }
     var date = record.data.date;
-    if ( date != null ){
+    if ( date ){
       date = Ext.util.Format.formatTimestamp(date);
     }
     return String.format(
@@ -198,25 +198,33 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
   getLabeledValue: function(label, array){
     var result = '';
-    if ( array != null && array.length > 0 ){
+    if ( array && array.length > 0 ){
       result = label + ': ' + Sonia.util.getStringFromArray(array);
     }
     return result;
   },
+  
+  getChangesetId: function(id, record){
+    return id;
+  },
+  
+  getParentIds: function(id, record){
+    return record.get('parents');
+  },
 
   renderIds: function(value, p, record){
-    var parent = null;
+    var parents = this.getParentIds(value, record);
+    var parent1 = null;
     var parent2 = null;
-    var parents = record.get('parents');
     if ( parents ){
-      parent = parents[0];
-      if ( parents.length >= 1 ){
+      parent1 = parents[0];
+      if (parents.length > 1){
         parent2 = parents[1];
       }
     }
     return this.idsTemplate.apply({
-      id: value,
-      parent: parent,
+      id: this.getChangesetId(value, record),
+      parent: parent1,
       parent2: parent2
     });
   },

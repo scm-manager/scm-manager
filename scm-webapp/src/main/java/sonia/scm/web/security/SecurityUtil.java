@@ -42,9 +42,19 @@ import sonia.scm.SCMContext;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated
  */
-public class SecurityUtil
+@Deprecated
+public final class SecurityUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private SecurityUtil() {}
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -55,7 +65,7 @@ public class SecurityUtil
    * @return
    */
   public static String getUsername(
-          Provider<WebSecurityContext> securityContextProvider)
+    Provider<WebSecurityContext> securityContextProvider)
   {
     return getUsername(securityContextProvider.get());
   }

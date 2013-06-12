@@ -39,24 +39,28 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
+import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
+
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.security.Role;
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.store.StoreFactory;
-import sonia.scm.template.TemplateHandler;
-import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.SystemUtil;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-import java.io.StringWriter;
+import com.sun.jersey.api.view.Viewable;
 
-import java.util.Collection;
+import java.io.IOException;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -72,11 +76,12 @@ import javax.ws.rs.core.MediaType;
  * @author Sebastian Sdorra
  */
 @Path("support")
+@ExternallyManagedLifecycle
 public class SupportResource
 {
 
   /** Field description */
-  public static final String TEMPLATE = "/support";
+  public static final String TEMPLATE = "/templates/support.mustache";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -94,17 +99,11 @@ public class SupportResource
    * @param repositoryManager
    */
   @Inject
-  public SupportResource(WebSecurityContext securityContext,
-                         SCMContextProvider context,
-                         TemplateHandler templateHandler,
-                         ScmConfiguration configuration,
-                         PluginManager pluginManager,
-                         StoreFactory storeFactory,
-                         RepositoryManager repositoryManager)
+  public SupportResource(SCMContextProvider context,
+    ScmConfiguration configuration, PluginManager pluginManager,
+    StoreFactory storeFactory, RepositoryManager repositoryManager)
   {
-    this.securityContext = securityContext;
     this.context = context;
-    this.templateHandler = templateHandler;
     this.configuration = configuration;
     this.pluginManager = pluginManager;
     this.storeFactoryClass = storeFactory.getClass();
@@ -123,9 +122,14 @@ public class SupportResource
    */
   @GET
   @Produces(MediaType.TEXT_HTML)
-  public String getSupport() throws IOException
+  public Viewable getSupport() throws IOException
   {
-    SecurityUtil.assertIsAdmin(securityContext);
+    Subject subject = SecurityUtils.getSubject();
+
+    if (!subject.hasRole(Role.ADMIN))
+    {
+      throw new ScmSecurityException("admin privileges required");
+    }
 
     Map<String, Object> env = Maps.newHashMap();
 
@@ -136,11 +140,7 @@ public class SupportResource
     env.put("system", new SystemInformation());
     env.put("repositoryHandlers", getRepositoryHandlers());
 
-    StringWriter writer = new StringWriter();
-
-    templateHandler.render(TEMPLATE, writer, env);
-
-    return writer.toString();
+    return new Viewable(TEMPLATE, env);
   }
 
   /**
@@ -382,7 +382,7 @@ public class SupportResource
      * @param storeFactoryClass
      */
     public VersionInformation(SCMContextProvider context,
-                              Class<?> storeFactoryClass)
+      Class<?> storeFactoryClass)
     {
       version = context.getVersion();
       stage = context.getStage().name();
@@ -452,11 +452,5 @@ public class SupportResource
   private RepositoryManager repositoryManager;
 
   /** Field description */
-  private WebSecurityContext securityContext;
-
-  /** Field description */
   private Class<?> storeFactoryClass;
-
-  /** Field description */
-  private TemplateHandler templateHandler;
 }

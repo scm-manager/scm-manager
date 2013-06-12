@@ -6,12 +6,12 @@
   <parent>
     <artifactId>scm-clients</artifactId>
     <groupId>sonia.scm.clients</groupId>
-    <version>1.19-SNAPSHOT</version>
+    <version>1.32-SNAPSHOT</version>
   </parent>
   
   <groupId>sonia.scm.clients</groupId>
   <artifactId>scm-cli-client</artifactId>
-  <version>1.19-SNAPSHOT</version>
+  <version>1.32-SNAPSHOT</version>
   <name>scm-cli-client</name>
 
   <dependencies>
@@ -33,29 +33,9 @@
     </dependency>
     
     <dependency>
-      <artifactId>scm-core</artifactId>
-      <groupId>sonia.scm</groupId>
-      <version>1.19-SNAPSHOT</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>guice</artifactId>
-          <groupId>com.google.inject</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>guice-servlet</artifactId>
-          <groupId>com.google.inject.extensions</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>guice-multibindings</artifactId>
-          <groupId>com.google.inject.extensions</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    
-    <dependency>
       <groupId>sonia.scm.clients</groupId>
       <artifactId>scm-client-impl</artifactId>
-      <version>1.19-SNAPSHOT</version>
+      <version>1.32-SNAPSHOT</version>
     </dependency>
     
     <dependency>

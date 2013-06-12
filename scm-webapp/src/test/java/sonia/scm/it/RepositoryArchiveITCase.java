@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -43,7 +44,6 @@ import org.junit.runners.Parameterized;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.client.RepositoryClientException;
 
 import static org.junit.Assert.*;
 
@@ -56,7 +56,6 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
-import java.io.IOException;
 
 /**
  *
@@ -98,9 +97,10 @@ public class RepositoryArchiveITCase extends RepositoryTypeITCaseBase
   @After
   public void deleteTestRepository()
   {
+    setArchiveMode(false);
+
     if (repository != null)
     {
-      setArchiveMode(false);
       deleteRepository(client, repository.getId());
     }
 

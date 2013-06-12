@@ -44,11 +44,14 @@ import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.shiro.SecurityUtils;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated use {@link SecurityUtils#getSecurityManager()} instead.
  */
+@Deprecated
 public interface WebSecurityContext extends SecurityContext
 {
 

@@ -56,6 +56,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Represents a changeset/commit of a repository.
  *
  * @author Sebastian Sdorra
  */
@@ -71,18 +72,18 @@ public class Changeset extends BasicPropertiesAware
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new instance of changeset.
    *
    */
   public Changeset() {}
 
   /**
-   * Constructs ...
+   * Constructs a new instance of changeset.
    *
    *
-   * @param id
-   * @param date
-   * @param author
+   * @param id id of the changeset
+   * @param date date of the changeset
+   * @param author author of the changeset
    */
   public Changeset(String id, Long date, Person author)
   {
@@ -90,13 +91,13 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Constructs ...
+   * Constructs a new instance of changeset.
    *
    *
-   * @param id
-   * @param date
-   * @param author
-   * @param description
+   * @param id id of the changeset
+   * @param date date of the changeset
+   * @param author author of the changeset
+   * @param description description of the changeset
    */
   public Changeset(String id, Long date, Person author, String description)
   {
@@ -155,7 +156,7 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -194,10 +195,10 @@ public class Changeset extends BasicPropertiesAware
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the author of the changeset.
    *
    *
-   * @return
+   * @return author of the changeset
    */
   public Person getAuthor()
   {
@@ -205,10 +206,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Returns the branches of the changeset.
    *
    *
-   * @return
+   * @return branches of the changeset
    */
   public List<String> getBranches()
   {
@@ -221,10 +222,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Returns the creation date of the changeset.
    *
    *
-   * @return
+   * @return date of the changeset
    */
   public Long getDate()
   {
@@ -232,10 +233,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Return the description (commit message) of the changeset.
    *
    *
-   * @return
+   * @return description of the changeset
    */
   public String getDescription()
   {
@@ -243,10 +244,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Returns the id of the changeset.
    *
    *
-   * @return
+   * @return id of the changeset
    */
   public String getId()
   {
@@ -254,10 +255,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Returns the file modifications, which was done with this changeset.
    *
    *
-   * @return
+   * @return file modifications
    */
   public Modifications getModifications()
   {
@@ -270,7 +271,7 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Return the ids of the parent changesets.
    *
    *
    * @return
@@ -287,10 +288,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Returns tags associated with this changeset.
    *
    *
-   * @return
+   * @return tags of the changeset
    */
   public List<String> getTags()
   {
@@ -303,10 +304,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Returns true if the changeset is valid.
    *
    *
-   * @return
+   * @return true if the changeset is valid
    */
   @Override
   public boolean isValid()
@@ -318,10 +319,10 @@ public class Changeset extends BasicPropertiesAware
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Sets the author of the changeset.
    *
    *
-   * @param author
+   * @param author author of the changeset
    */
   public void setAuthor(Person author)
   {
@@ -329,10 +330,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Sets the branches of the changeset.
    *
    *
-   * @param branches
+   * @param branches branches of the changeset
    */
   public void setBranches(List<String> branches)
   {
@@ -340,10 +341,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Sets the date of the changeset.
    *
    *
-   * @param date
+   * @param date date of the changeset
    */
   public void setDate(Long date)
   {
@@ -351,10 +352,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Sets the description (commit message) of the changeset.
    *
    *
-   * @param description
+   * @param description description of the changeset
    */
   public void setDescription(String description)
   {
@@ -362,10 +363,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Sets the id of the changeset.
    *
    *
-   * @param id
+   * @param id id of the changeset
    */
   public void setId(String id)
   {
@@ -373,10 +374,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Sets the file modification of the changeset.
    *
    *
-   * @param modifications
+   * @param modifications file modifications
    */
   public void setModifications(Modifications modifications)
   {
@@ -384,10 +385,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Sets the parents of the changeset.
    *
    *
-   * @param parents
+   * @param parents parents of the changeset
    * @since 1.11
    */
   public void setParents(List<String> parents)
@@ -396,10 +397,10 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Method description
+   * Sets the tags of the changeset
    *
    *
-   * @param tags
+   * @param tags tags of the changeset
    */
   public void setTags(List<String> tags)
   {

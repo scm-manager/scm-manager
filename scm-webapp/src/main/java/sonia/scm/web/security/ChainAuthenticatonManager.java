@@ -35,8 +35,10 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -47,6 +49,7 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
@@ -56,6 +59,7 @@ import sonia.scm.util.Util;
 import java.io.IOException;
 import java.io.Serializable;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -82,27 +86,31 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    * Constructs ...
    *
    *
+   *
+   * @param userManager
    * @param authenticationHandlerSet
    * @param encryptionHandler
    * @param cacheManager
    * @param authenticationListenerProvider
+   * @param authenticationListeners
    */
   @Inject
-  public ChainAuthenticatonManager(
-          Set<AuthenticationHandler> authenticationHandlerSet,
-          EncryptionHandler encryptionHandler, CacheManager cacheManager,
-          Provider<Set<AuthenticationListener>> authenticationListenerProvider)
+  public ChainAuthenticatonManager(UserManager userManager,
+    Set<AuthenticationHandler> authenticationHandlerSet,
+    EncryptionHandler encryptionHandler, CacheManager cacheManager,
+    Set<AuthenticationListener> authenticationListeners)
   {
     AssertUtil.assertIsNotEmpty(authenticationHandlerSet);
     AssertUtil.assertIsNotNull(cacheManager);
-    this.authenticationHandlerSet = authenticationHandlerSet;
+    this.authenticationHandlers = sort(userManager, authenticationHandlerSet);
     this.encryptionHandler = encryptionHandler;
-    this.authenticationListenerProvider = authenticationListenerProvider;
     this.cache = cacheManager.getCache(String.class,
-                                       AuthenticationCacheValue.class,
-                                       CACHE_NAME);
+      AuthenticationCacheValue.class, CACHE_NAME);
 
-    // addListeners(authenticationListeners);
+    if (Util.isNotEmpty(authenticationListeners))
+    {
+      addListeners(authenticationListeners);
+    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -120,7 +128,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    */
   @Override
   public AuthenticationResult authenticate(HttpServletRequest request,
-          HttpServletResponse response, String username, String password)
+    HttpServletResponse response, String username, String password)
   {
     AssertUtil.assertIsNotEmpty(username);
     AssertUtil.assertIsNotEmpty(password);
@@ -133,7 +141,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
       if (logger.isTraceEnabled())
       {
         logger.trace("no authentication result for user {} found in cache",
-                     username);
+          username);
       }
 
       ar = doAuthentication(request, response, username, password);
@@ -141,7 +149,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
       if ((ar != null) && ar.isCacheable())
       {
         cache.put(username,
-                  new AuthenticationCacheValue(ar, encryptedPassword));
+          new AuthenticationCacheValue(ar, encryptedPassword));
       }
     }
     else if (logger.isDebugEnabled())
@@ -161,7 +169,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
   @Override
   public void close() throws IOException
   {
-    for (AuthenticationHandler authenticator : authenticationHandlerSet)
+    for (AuthenticationHandler authenticator : authenticationHandlers)
     {
       if (logger.isTraceEnabled())
       {
@@ -181,7 +189,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
   @Override
   public void init(SCMContextProvider context)
   {
-    for (AuthenticationHandler authenticator : authenticationHandlerSet)
+    for (AuthenticationHandler authenticator : authenticationHandlers)
     {
       if (logger.isTraceEnabled())
       {
@@ -189,14 +197,6 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
       }
 
       authenticator.init(context);
-    }
-
-    Set<AuthenticationListener> listeners =
-      authenticationListenerProvider.get();
-
-    if (Util.isNotEmpty(listeners))
-    {
-      addListeners(listeners);
     }
   }
 
@@ -212,7 +212,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    * @return
    */
   private AuthenticationResult doAuthentication(HttpServletRequest request,
-          HttpServletResponse response, String username, String password)
+    HttpServletResponse response, String username, String password)
   {
     AuthenticationResult ar = null;
 
@@ -221,12 +221,12 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
       logger.trace("start authentication chain for user {}", username);
     }
 
-    for (AuthenticationHandler authenticator : authenticationHandlerSet)
+    for (AuthenticationHandler authenticator : authenticationHandlers)
     {
       if (logger.isTraceEnabled())
       {
         logger.trace("check authenticator {} for user {}",
-                     authenticator.getClass(), username);
+          authenticator.getClass(), username);
       }
 
       try
@@ -237,12 +237,12 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
         if (logger.isDebugEnabled())
         {
           logger.debug("authenticator {} ends with result, {}",
-                       authenticator.getClass().getName(), result);
+            authenticator.getClass().getName(), result);
         }
 
         if ((result != null) && (result.getState() != null)
-            && (result.getState().isSuccessfully()
-                || (result.getState() == AuthenticationState.FAILED)))
+          && (result.getState().isSuccessfully()
+            || (result.getState() == AuthenticationState.FAILED)))
         {
           if (result.getState().isSuccessfully() && (result.getUser() != null))
           {
@@ -260,11 +260,46 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
       }
       catch (Exception ex)
       {
-        logger.error(ex.getMessage(), ex);
+        logger.error(
+          "error durring authentication process of ".concat(
+            authenticator.getClass().getName()), ex);
       }
     }
 
     return ar;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param userManager
+   * @param authenticationHandlerSet
+   *
+   * @return
+   */
+  @VisibleForTesting
+  private List<AuthenticationHandler> sort(UserManager userManager,
+    Set<AuthenticationHandler> authenticationHandlerSet)
+  {
+    List<AuthenticationHandler> handlers =
+      Lists.newArrayListWithCapacity(authenticationHandlerSet.size());
+
+    String first = Strings.nullToEmpty(userManager.getDefaultType());
+
+    for (AuthenticationHandler handler : authenticationHandlerSet)
+    {
+      if (first.equals(handler.getType()))
+      {
+        handlers.add(0, handler);
+      }
+      else
+      {
+        handlers.add(handler);
+      }
+    }
+
+    return handlers;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -279,7 +314,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    * @return
    */
   private AuthenticationResult getCached(String username,
-          String encryptedPassword)
+    String encryptedPassword)
   {
     AuthenticationResult result = null;
     AuthenticationCacheValue value = cache.get(username);
@@ -326,7 +361,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
     {
       this.authenticationResult =
         new AuthenticationResult(ar.getUser().clone(), ar.getGroups(),
-                                 ar.getState());
+          ar.getState());
       this.password = password;
     }
 
@@ -343,10 +378,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Set<AuthenticationHandler> authenticationHandlerSet;
-
-  /** Field description */
-  private Provider<Set<AuthenticationListener>> authenticationListenerProvider;
+  private List<AuthenticationHandler> authenticationHandlers;
 
   /** Field description */
   private Cache<String, AuthenticationCacheValue> cache;

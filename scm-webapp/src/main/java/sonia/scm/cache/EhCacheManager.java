@@ -35,6 +35,7 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Closeables;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -43,6 +44,7 @@ import org.slf4j.LoggerFactory;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *
@@ -67,8 +69,18 @@ public class EhCacheManager implements CacheManager
    */
   public EhCacheManager()
   {
-    cacheManager =
-      new net.sf.ehcache.CacheManager(EhCacheManager.class.getResource(CONFIG));
+
+    InputStream stream = null;
+
+    try
+    {
+      stream = EhCacheConfigurationReader.read();
+      cacheManager = new net.sf.ehcache.CacheManager(stream);
+    }
+    finally
+    {
+      Closeables.closeQuietly(stream);
+    }
   }
 
   /**
@@ -111,7 +123,8 @@ public class EhCacheManager implements CacheManager
    * @return
    */
   @Override
-  public <K, V> Cache<K, V> getCache(Class<K> key, Class<V> value, String name)
+  public synchronized <K, V> Cache<K, V> getCache(Class<K> key, Class<V> value,
+    String name)
   {
     net.sf.ehcache.Cache c = cacheManager.getCache(name);
 

@@ -35,6 +35,8 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,19 +50,34 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.List;
 import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SvnUtil
+public final class SvnUtil
 {
+
+  /**
+   * svn path updated
+   * same as modified ({@link SVNLogEntryPath#TYPE_MODIFIED})?
+   */
+  private static final char TYPE_UPDATED = 'U';
 
   /**
    * the logger for SvnUtil
    */
   private static final Logger logger = LoggerFactory.getLogger(SvnUtil.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private SvnUtil() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -72,7 +89,7 @@ public class SvnUtil
    * @param entry
    */
   public static void appendModification(Modifications modifications,
-          SVNLogEntryPath entry)
+    SVNLogEntryPath entry)
   {
     appendModification(modifications, entry.getType(), entry.getPath());
   }
@@ -85,7 +102,7 @@ public class SvnUtil
    * @param entry
    */
   public static void appendModification(Modifications modifications,
-          SVNChangeEntry entry)
+    SVNChangeEntry entry)
   {
     appendModification(modifications, entry.getType(), entry.getPath());
   }
@@ -99,7 +116,7 @@ public class SvnUtil
    * @param path
    */
   public static void appendModification(Modifications modifications, char type,
-          String path)
+    String path)
   {
     if (path.startsWith("/"))
     {
@@ -118,10 +135,14 @@ public class SvnUtil
 
         break;
 
+      case TYPE_UPDATED :
       case SVNLogEntryPath.TYPE_MODIFIED :
         modifications.getModified().add(path);
 
         break;
+
+      default :
+        logger.debug("unknown modification type {}", type);
     }
   }
 
@@ -141,7 +162,7 @@ public class SvnUtil
       }
       catch (Exception ex)
       {
-        logger.error("could not close svn repository session");
+        logger.error("could not close svn repository session", ex);
       }
     }
   }
@@ -187,6 +208,26 @@ public class SvnUtil
    * Method description
    *
    *
+   * @param entries
+   *
+   * @return
+   */
+  public static List<Changeset> createChangesets(List<SVNLogEntry> entries)
+  {
+    List<Changeset> changesets = Lists.newArrayList();
+
+    for (SVNLogEntry entry : entries)
+    {
+      changesets.add(createChangeset(entry));
+    }
+
+    return changesets;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param clientManager
    */
   public static void dispose(SVNClientManager clientManager)
@@ -217,7 +258,7 @@ public class SvnUtil
    * @throws RepositoryException
    */
   public static long getRevisionNumber(String revision)
-          throws RepositoryException
+    throws RepositoryException
   {
     long revisionNumber = -1;
 

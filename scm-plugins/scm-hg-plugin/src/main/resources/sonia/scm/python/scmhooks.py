@@ -48,12 +48,22 @@ def callHookUrl(ui, repo, hooktype, node):
     url = baseUrl + hooktype
     ui.debug( "send scm-hook to " + url + " and " + node + "\n" )
     data = urllib.urlencode({'node': node, 'challenge': challenge, 'credentials': credentials, 'repositoryPath': repo.root})
-    conn = urllib2.urlopen(url, data);
+    # open url but ignore proxy settings
+    proxy_handler = urllib2.ProxyHandler({})
+    opener = urllib2.build_opener(proxy_handler)
+    req = urllib2.Request(url, data)
+    conn = opener.open(req)
     if conn.code >= 200 and conn.code < 300:
       ui.debug( "scm-hook " + hooktype + " success with status code " + str(conn.code) + "\n" )
       abort = False
     else:
       ui.warn( "ERROR: scm-hook failed with error code " + str(conn.code) + "\n" )
+  except urllib2.URLError, e:
+    msg = e.read();
+    if len(msg) > 0:
+      ui.warn( "ERROR: " + msg)
+    else:
+      ui.warn( "ERROR: scm-hook failed with error code " + str(e.getcode()) + "\n" )
   except ValueError:
     ui.warn( "scm-hook failed with an exception\n" )
   return abort

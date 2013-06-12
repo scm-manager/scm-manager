@@ -61,7 +61,7 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
         inputValue: 'true',
         helpText: this.disabledHelpText
       }]
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.git.ConfigPanel.superclass.initComponent.apply(this, arguments);
@@ -73,7 +73,7 @@ Ext.reg("gitConfigPanel", Sonia.git.ConfigPanel);
 
 // i18n
 
-if ( i18n != null && i18n.country == 'de' ){
+if ( i18n && i18n.country === 'de' ){
 
   Ext.override(Sonia.git.ConfigPanel, {
 
@@ -100,10 +100,12 @@ initCallbacks.push(function(main){
   });
 });
 
-
-
 // register panel
 
 registerConfigPanel({
   xtype : 'gitConfigPanel'
 });
+
+// register type icon
+
+Sonia.repository.typeIcons['git'] = 'resources/images/icons/16x16/git.png';

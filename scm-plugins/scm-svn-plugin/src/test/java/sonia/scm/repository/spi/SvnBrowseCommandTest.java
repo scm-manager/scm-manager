@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -65,40 +66,17 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
   @Test
   public void testBrowse() throws IOException, RepositoryException
   {
-    BrowserResult result =
-      createCommand().getBrowserResult(new BrowseCommandRequest());
+    List<FileObject> foList = getRootFromTip(new BrowseCommandRequest());
 
-    assertNotNull(result);
+    FileObject a = getFileObject(foList, "a.txt");
+    FileObject c = getFileObject(foList, "c");
 
-    List<FileObject> foList = result.getFiles();
-
-    assertNotNull(foList);
-    assertFalse(foList.isEmpty());
-    assertEquals(2, foList.size());
-
-    FileObject a = null;
-    FileObject c = null;
-
-    for (FileObject f : foList)
-    {
-      if ("a.txt".equals(f.getName()))
-      {
-        a = f;
-      }
-      else if ("c".equals(f.getName()))
-      {
-        c = f;
-      }
-    }
-
-    assertNotNull(a);
     assertFalse(a.isDirectory());
     assertEquals("a.txt", a.getName());
     assertEquals("a.txt", a.getPath());
     assertEquals("added line for blame test", a.getDescription());
     assertTrue(a.getLength() > 0);
     checkDate(a.getLastModified());
-    assertNotNull(c);
     assertTrue(c.isDirectory());
     assertEquals("c", c.getName());
     assertEquals("c", c.getPath());
@@ -163,10 +141,109 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
    * Method description
    *
    *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testDisableLastCommit() throws IOException, RepositoryException
+  {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+
+    request.setDisableLastCommit(true);
+
+    List<FileObject> foList = getRootFromTip(request);
+
+    FileObject a = getFileObject(foList, "a.txt");
+
+    assertNull(a.getDescription());
+    assertNull(a.getLastModified());
+  }
+  
+  @Test
+  public void testRecursive() throws IOException, RepositoryException
+  {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setRecursive(true);
+    BrowserResult result = createCommand().getBrowserResult(request);
+
+    assertNotNull(result);
+
+    List<FileObject> foList = result.getFiles();
+
+    assertNotNull(foList);
+    assertFalse(foList.isEmpty());
+    assertEquals(4, foList.size());
+    
+    for ( FileObject fo : foList ){
+      System.out.println(fo);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   private SvnBrowseCommand createCommand()
   {
     return new SvnBrowseCommand(createContext(), repository);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param foList
+   * @param name
+   *
+   * @return
+   */
+  private FileObject getFileObject(List<FileObject> foList, String name)
+  {
+    FileObject a = null;
+
+    for (FileObject f : foList)
+    {
+      if (name.equals(f.getName()))
+      {
+        a = f;
+
+        break;
+      }
+    }
+
+    assertNotNull(a);
+
+    return a;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  private List<FileObject> getRootFromTip(BrowseCommandRequest request)
+    throws IOException, RepositoryException
+  {
+    BrowserResult result = createCommand().getBrowserResult(request);
+
+    assertNotNull(result);
+
+    List<FileObject> foList = result.getFiles();
+
+    assertNotNull(foList);
+    assertFalse(foList.isEmpty());
+    assertEquals(2, foList.size());
+
+    return foList;
   }
 }

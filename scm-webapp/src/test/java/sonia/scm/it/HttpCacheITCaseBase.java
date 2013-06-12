@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -111,19 +112,23 @@ public abstract class HttpCacheITCaseBase<T>
   /**
    * Method description
    *
+   *
+   * @throws InterruptedException
    */
   @Test
-  public void changingCollectionLastModifiedTest()
+  public void changingCollectionLastModifiedTest() throws InterruptedException
   {
     ClientResponse response = getCollectionResponse();
     long lastModified = getLastModified(response);
 
+    // wait 1 second because http date is not millisecond precision
+    Thread.sleep(1000l);
     item = createSampleItem();
     response = getCollectionResponse();
 
     long otherLastModified = getLastModified(response);
 
-    assertEquals(lastModified, otherLastModified);
+    assertNotEquals(lastModified, otherLastModified);
   }
 
   /**

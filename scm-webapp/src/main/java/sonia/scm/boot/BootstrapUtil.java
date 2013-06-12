@@ -35,10 +35,19 @@ package sonia.scm.boot;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.net.ChildFirstURLClassLoader;
+
 //~--- JDK imports ------------------------------------------------------------
+
+import java.net.URL;
+import java.net.URLClassLoader;
+
+import java.util.List;
 
 import javax.servlet.ServletContext;
 
@@ -46,17 +55,75 @@ import javax.servlet.ServletContext;
  *
  * @author Sebastian Sdorra
  */
-public class BootstrapUtil
+public final class BootstrapUtil
 {
 
   /** Field description */
   public static final String CLASSLOADER = "sonia.scm.BoostrapClassLoader";
 
+  /** Field description */
+  private static final String STRATEGY =
+    "sonia.scm.plugin.classloader.strategy";
+
+  /** Field description */
+  private static final String STRATEGY_CHILDFIRST = "child-first";
+
+  /** Field description */
+  private static final String STRATEGY_PARENTFIRST = "parent-first";
+
   /** the logger for BootstrapUtil */
   private static final Logger logger =
     LoggerFactory.getLogger(BootstrapUtil.class);
 
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private BootstrapUtil() {}
+
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param classpathURLs
+   * @param parent
+   *
+   * @return
+   */
+  public static ClassLoader createClassLoader(List<URL> classpathURLs,
+    ClassLoader parent)
+  {
+    ClassLoader classLoader = null;
+    URL[] urls = classpathURLs.toArray(new URL[classpathURLs.size()]);
+    String strategy = System.getProperty(STRATEGY);
+
+    if (!Strings.isNullOrEmpty(strategy))
+    {
+      if (STRATEGY_CHILDFIRST.equals(strategy))
+      {
+        logger.info("using {} as plugin classloading strategy",
+          STRATEGY_CHILDFIRST);
+        classLoader = new ChildFirstURLClassLoader(urls, parent);
+      }
+      else if (!STRATEGY_PARENTFIRST.equals(strategy))
+      {
+        logger.warn("unknown plugin classloading strategy {}", strategy);
+      }
+    }
+
+    if (classLoader == null)
+    {
+      logger.info("using {} as plugin classloading strategy",
+        STRATEGY_PARENTFIRST);
+      classLoader = new URLClassLoader(urls, parent);
+    }
+
+    return classLoader;
+  }
 
   /**
    * Method description
@@ -78,7 +145,7 @@ public class BootstrapUtil
     }
     catch (Exception ex)
     {
-      logger.error(ex.getMessage(), ex);
+      logger.error("could not load class ".concat(clazz.getName()), ex);
     }
 
     return instance;
@@ -96,7 +163,7 @@ public class BootstrapUtil
    * @return
    */
   public static <T> T loadClass(ClassLoader classLoader, Class<T> clazz,
-                                String className)
+    String className)
   {
     T instance = null;
 
@@ -106,7 +173,7 @@ public class BootstrapUtil
     }
     catch (Exception ex)
     {
-      logger.error(ex.getMessage(), ex);
+      logger.error("could not load class ".concat(className), ex);
     }
 
     return instance;
@@ -133,7 +200,7 @@ public class BootstrapUtil
     }
     catch (Exception ex)
     {
-      logger.error(ex.getMessage(), ex);
+      logger.error("could not load class ".concat(className), ex);
     }
 
     return instance;
@@ -164,7 +231,7 @@ public class BootstrapUtil
    * @param classLoader
    */
   public static void setClassLoader(ServletContext context,
-                                    ClassLoader classLoader)
+    ClassLoader classLoader)
   {
     context.setAttribute(CLASSLOADER, classLoader);
   }

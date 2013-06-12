@@ -88,7 +88,7 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
           scope: this
         }
       }
-    }
+    };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.BlamePanel.superclass.initComponent.apply(this, arguments);
@@ -96,12 +96,12 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
   
   onClick: function(e){
     var el = e.getTarget('.blame-link');
-    if ( el != null ){
+    if ( el ){
       var revision = el.rel;
       if (debug){
         console.debug('load content for ' + revision);
       }
-      this.openContentPanel(revision)
+      this.openContentPanel(revision);
     }
   },
   
@@ -123,7 +123,8 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
   },
   
   renderRevision: function(value, metadata, record){
-    var title = 'Revision: ' + value;
+    var shortId = Ext.util.Format.id(value);
+    var title = 'Revision: ' + shortId;
     var tip = 'Author: ' + record.get('author').name;
     var when = record.get('when');
     if ( when ){
@@ -136,7 +137,7 @@ Sonia.repository.BlamePanel = Ext.extend(Ext.grid.GridPanel, {
     metadata.attr = 'ext:qtitle="' + title + '"' + ' ext:qtip="' + tip + '"';
     return String.format(
       this.linkTemplate,
-      Ext.util.Format.ellipsis(value, 10),
+      shortId,
       value
     );
   },

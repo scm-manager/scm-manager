@@ -29,6 +29,8 @@
  *
  */
 
+
+
 package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -56,7 +58,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  * @since 1.15
  */
-public class WebUtil
+public final class WebUtil
 {
 
   /** Field description */
@@ -110,6 +112,14 @@ public class WebUtil
   /** Field description */
   private static final Logger logger = LoggerFactory.getLogger(WebUtil.class);
 
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private WebUtil() {}
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -146,7 +156,7 @@ public class WebUtil
    * @param seconds
    */
   public static void addStaticCacheControls(HttpServletResponse response,
-          long seconds)
+    long seconds)
   {
     long time = new Date().getTime();
 
@@ -199,7 +209,7 @@ public class WebUtil
   public static String getETag(File file)
   {
     return new StringBuilder("W/\"").append(file.length()).append(
-        file.lastModified()).append("\"").toString();
+      file.lastModified()).append("\"").toString();
   }
 
   /**
@@ -280,7 +290,7 @@ public class WebUtil
     Date modifiedSince = getIfModifiedSinceDate(request);
 
     if ((modifiedSince != null)
-        && (modifiedSince.getTime() == file.lastModified()))
+      && (modifiedSince.getTime() == file.lastModified()))
     {
       result = false;
     }
@@ -290,7 +300,7 @@ public class WebUtil
       String inmEtag = request.getHeader(HEADER_INM);
 
       if ((inmEtag != null) && (inmEtag.length() > 0)
-          && inmEtag.equals(getETag(file)))
+        && inmEtag.equals(getETag(file)))
       {
         result = false;
       }

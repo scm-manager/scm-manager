@@ -44,6 +44,7 @@
 
     var defaults = {
       maxItems: -1,
+      disableCache: false,
       paramName: "url",
       itemClass: "feeds",
       errorTitle: "Error",
@@ -59,9 +60,13 @@
 
     function loadFeeds(){
       loadingView();
+      var feedUrl = url;
+      if ( options.disableCache ){
+        feedUrl += "?_dc=" + new Date().getTime();
+      }
       $.ajax({
         type: "GET",
-        url: url,
+        url: feedUrl,
         dataType: "xml",
         success: renderFeeds,
         failure: renderErrorMsg

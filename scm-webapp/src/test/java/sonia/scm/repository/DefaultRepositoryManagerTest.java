@@ -40,11 +40,11 @@ import com.google.inject.Provider;
 import org.junit.Test;
 
 import sonia.scm.Type;
-import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.xml.XmlRepositoryDAO;
+import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
-import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
 
@@ -73,7 +73,7 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
    */
   @Test
   public void getRepositoryFromRequestUriTest()
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     RepositoryManager m = createManager();
 
@@ -86,9 +86,9 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
     assertEquals("scm-test", m.getFromUri("hg/scm-test").getName());
     assertEquals("scm-test", m.getFromUri("/hg/scm-test").getName());
     assertEquals("project1/test-1",
-                 m.getFromUri("/git/project1/test-1").getName());
+      m.getFromUri("/git/project1/test-1").getName());
     assertEquals("project1/test-1",
-                 m.getFromUri("/git/project1/test-1/ka/some/path").getName());
+      m.getFromUri("/git/project1/test-1/ka/some/path").getName());
     assertNull(m.getFromUri("/git/project1/test-3/ka/some/path"));
   }
 
@@ -102,6 +102,21 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
    */
   @Override
   protected DefaultRepositoryManager createManager()
+  {
+    return createRepositoryManager(false);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param archiveEnabled
+   *
+   * @return
+   */
+  @Override
+  protected DefaultRepositoryManager createRepositoryManager(
+    boolean archiveEnabled)
   {
     Set<RepositoryHandler> handlerSet = new HashSet<RepositoryHandler>();
     StoreFactory factory = new JAXBStoreFactory();
@@ -137,9 +152,31 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
 
     ScmConfiguration configuration = new ScmConfiguration();
 
+    configuration.setEnableRepositoryArchive(archiveEnabled);
+
     return new DefaultRepositoryManager(configuration, contextProvider,
-            MockUtil.getAdminSecurityContextProvider(), repositoryDAO,
-            handlerSet, listenerProvider, hookProvider);
+      new DefaultKeyGenerator(), repositoryDAO, handlerSet, listenerProvider,
+      hookProvider, createEmptyPreProcessorUtil());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private PreProcessorUtil createEmptyPreProcessorUtil()
+  {
+    //J-
+    return new PreProcessorUtil(
+      new HashSet<ChangesetPreProcessor>(),
+      new HashSet<ChangesetPreProcessorFactory>(),
+      new HashSet<FileObjectPreProcessor>(),
+      new HashSet<FileObjectPreProcessorFactory>(),
+      new HashSet<BlameLinePreProcessor>(),
+      new HashSet<BlameLinePreProcessorFactory>()
+    );
+    //J+
   }
 
   /**
@@ -153,7 +190,7 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
    * @throws RepositoryException
    */
   private void createRepository(RepositoryManager m, Repository repository)
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     m.create(repository);
   }

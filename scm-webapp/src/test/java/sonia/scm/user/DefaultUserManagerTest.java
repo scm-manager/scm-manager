@@ -48,6 +48,7 @@ import static org.mockito.Mockito.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import org.junit.Before;
 
 /**
  *
@@ -55,6 +56,11 @@ import java.util.Set;
  */
 public class DefaultUserManagerTest extends UserManagerTestBase
 {
+  
+  @Before
+  public void setAdminSubject(){
+    setSubject(MockUtil.createAdminSubject());
+  }
 
   /**
    * Method description
@@ -74,8 +80,7 @@ public class DefaultUserManagerTest extends UserManagerTestBase
     when(listenerProvider.get()).thenReturn(new HashSet<UserListener>());
 
     XmlUserDAO userDAO = new XmlUserDAO(factory);
-
-    return new DefaultUserManager(MockUtil.getAdminSecurityContextProvider(),
-                                  userDAO, listenerProvider);
+    
+    return new DefaultUserManager(userDAO, listenerProvider);
   }
 }

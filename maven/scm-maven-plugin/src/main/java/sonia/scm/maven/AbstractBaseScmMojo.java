@@ -94,14 +94,17 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
    * @throws MojoExecutionException
    */
   protected List<String> createExcludeList(File warFile)
-          throws MojoExecutionException
+    throws MojoExecutionException
   {
     List<String> excludeList = new ArrayList<String>();
     InputStream input = null;
 
+    JarFile file = null;
+
     try
     {
-      JarFile file = new JarFile(warFile);
+      file = new JarFile(warFile);
+
       JarEntry entry = file.getJarEntry(RESOURCE_DEPENDENCY_LIST);
 
       if (entry == null)
@@ -124,19 +127,17 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
       }
       finally
       {
-        if (scanner != null)
-        {
-          scanner.close();
-        }
+        Util.close(scanner);
       }
     }
     catch (IOException ex)
     {
-      throw new MojoExecutionException("could not read dependency file");
+      throw new MojoExecutionException("could not read dependency file", ex);
     }
     finally
     {
       IOUtils.closeQuietly(input);
+      Util.close(getLog(), file);
     }
 
     return excludeList;
@@ -152,15 +153,31 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
    * @throws MojoExecutionException
    */
   protected void installArtifacts(List<String> excludeList)
-          throws MojoExecutionException
+    throws MojoExecutionException
   {
     File pluginDirectory = new File(scmHome, "plugins");
+
+    installArtifacts(excludeList, pluginDirectory);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param excludeList
+   * @param pluginDirectory
+   *
+   * @throws MojoExecutionException
+   */
+  protected void installArtifacts(List<String> excludeList,
+    File pluginDirectory)
+    throws MojoExecutionException
+  {
 
     if (!pluginDirectory.exists() &&!pluginDirectory.mkdirs())
     {
       throw new MojoExecutionException(
-          "could not create plugin directory ".concat(
-            pluginDirectory.getPath()));
+        "could not create plugin directory ".concat(pluginDirectory.getPath()));
     }
 
     String repositoryUrl = "file://".concat(pluginDirectory.getAbsolutePath());
@@ -170,24 +187,24 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     if (layout == null)
     {
       throw new MojoExecutionException(
-          "could not find repository layout ".concat(repositoryLayout));
+        "could not find repository layout ".concat(repositoryLayout));
     }
 
     ArtifactRepository pluginRepository =
       artifactRepositoryFactory.createDeploymentArtifactRepository(
-          "scm-run-plugin", repositoryUrl, layout, true);
+        "scm-run-plugin", repositoryUrl, layout, true);
     List<String> classpath = new ArrayList<String>();
     String pluginDirectoryPath = pluginDirectory.getAbsolutePath();
 
     installArtifact(excludeList, pluginDirectoryPath, classpath,
-                    pluginRepository, getPluginArtifact());
+      pluginRepository, getPluginArtifact());
 
     if (artifacts != null)
     {
       for (Artifact artifact : artifacts)
       {
         installArtifact(excludeList, pluginDirectoryPath, classpath,
-                        pluginRepository, artifact);
+          pluginRepository, artifact);
       }
     }
 
@@ -207,6 +224,19 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
    * Method description
    *
    *
+   * @param artifact
+   *
+   * @return
+   */
+  protected String getId(Artifact artifact)
+  {
+    return artifact.getGroupId().concat(":").concat(artifact.getArtifactId());
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   protected Artifact getPluginArtifact()
@@ -214,7 +244,7 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     if (projectArtifact.getFile() == null)
     {
       File file = new File(project.getBuild().getDirectory(),
-                           project.getBuild().getFinalName().concat(".jar"));
+                    project.getBuild().getFinalName().concat(".jar"));
 
       projectArtifact.setFile(file);
     }
@@ -253,9 +283,8 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
 
     Artifact artifact =
       artifactFactory.createArtifact(webApplication.getGroupId(),
-                                     webApplication.getArtifactId(),
-                                     webApplication.getVersion(), "",
-                                     webApplication.getType());
+        webApplication.getArtifactId(), webApplication.getVersion(), "",
+        webApplication.getType());
 
     try
     {
@@ -294,9 +323,8 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
    * @throws ArtifactInstallationException
    */
   private void install(String pluginDirectoryPath, List<String> classpath,
-                       File source, Artifact artifact,
-                       ArtifactRepository localRepository)
-          throws ArtifactInstallationException
+    File source, Artifact artifact, ArtifactRepository localRepository)
+    throws ArtifactInstallationException
   {
     try
     {
@@ -309,7 +337,7 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
       }
 
       getLog().info("Installing artifact " + source.getPath() + " to "
-                    + destination);
+        + destination);
       FileUtils.copyFile(source, destination);
 
       String relativePath =
@@ -320,7 +348,7 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
     catch (IOException e)
     {
       throw new ArtifactInstallationException("Error installing artifact: "
-              + e.getMessage(), e);
+        + e.getMessage(), e);
     }
   }
 
@@ -339,14 +367,11 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
    * @throws MojoExecutionException
    */
   private void installArtifact(List<String> excludeList,
-                               String pluginDirectoryPath,
-                               List<String> classpath,
-                               ArtifactRepository pluginRepository,
-                               Artifact artifact)
-          throws MojoExecutionException
+    String pluginDirectoryPath, List<String> classpath,
+    ArtifactRepository pluginRepository, Artifact artifact)
+    throws MojoExecutionException
   {
-    String id =
-      artifact.getGroupId().concat(":").concat(artifact.getArtifactId());
+    String id = getId(artifact);
 
     if (!excludeList.contains(id))
     {
@@ -358,7 +383,7 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
           // See: http://mail-archives.apache.org/mod_mbox/maven-dev/200511.mbox/%3c437288F4.4080003@apache.org%3e
           artifact.isSnapshot();
           install(pluginDirectoryPath, classpath, artifact.getFile(), artifact,
-                  pluginRepository);
+            pluginRepository);
         }
         catch (ArtifactInstallationException e)
         {
@@ -368,7 +393,7 @@ public abstract class AbstractBaseScmMojo extends AbstractScmMojo
       else
       {
         throw new MojoExecutionException(
-            "could not find file for ".concat(artifact.getId()));
+          "could not find file for ".concat(artifact.getId()));
       }
     }
   }

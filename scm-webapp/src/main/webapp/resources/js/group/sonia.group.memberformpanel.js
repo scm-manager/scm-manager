@@ -69,9 +69,9 @@ Sonia.group.MemberFormPanel = Ext.extend(Sonia.group.FormPanel, {
       singleSelect: true
     });
 
-    if ( this.item != null ){
+    if ( this.item ){
       var data = [];
-      if ( this.item.members != null ){
+      if ( this.item.members ){
         for ( var i=0; i<this.item.members.length; i++ ){
           var a = [];
           a.push( this.item.members[i] );
@@ -157,7 +157,7 @@ Sonia.group.MemberFormPanel = Ext.extend(Sonia.group.FormPanel, {
     var members = [];
     this.memberStore.data.each(function(record){
       members.push( record.data.member );
-    })
+    });
     item.members = members;
   },
 

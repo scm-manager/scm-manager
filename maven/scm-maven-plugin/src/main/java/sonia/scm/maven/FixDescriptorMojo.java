@@ -307,11 +307,7 @@ public class FixDescriptorMojo extends AbstractMojo
                  project.getDescription());
     }
 
-    if (!author)
-    {
-
-      // ??
-    }
+    // TODO handle author node
   }
 
   /**

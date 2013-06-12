@@ -101,7 +101,8 @@ public class HgRepositoryHandler
   /** Field description */
   public static final Type TYPE = new RepositoryType(TYPE_NAME,
                                     TYPE_DISPLAYNAME,
-                                    HgRepositoryServiceProvider.COMMANDS);
+                                    HgRepositoryServiceProvider.COMMANDS,
+                                    HgRepositoryServiceProvider.FEATURES);
 
   /** the logger for HgRepositoryHandler */
   private static final Logger logger =
@@ -545,6 +546,9 @@ public class HgRepositoryHandler
   {
     ExtendedCommand cmd = new ExtendedCommand(config.getHgBinary(), "init",
                             directory.getAbsolutePath());
+
+    // copy system environment, because of the PATH variable
+    cmd.setUseSystemEnvironment(true);
 
     // issue-97
     cmd.setWorkDirectory(baseDirectory);

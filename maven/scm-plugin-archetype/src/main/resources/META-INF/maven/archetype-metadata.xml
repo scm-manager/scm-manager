@@ -56,6 +56,13 @@
          <include>**/*.xml</include>
        </includes>
     </fileSet>
+    
+    <fileSet filtered="true" encoding="UTF-8">
+       <directory>src/main/conf</directory>
+       <includes>
+         <include>**/*.xml</include>
+       </includes>
+    </fileSet>
 
     <fileSet filtered="false" encoding="UTF-8">
        <directory>src/main/resources</directory>

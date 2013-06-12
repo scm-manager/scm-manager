@@ -37,7 +37,6 @@ package sonia.scm.client;
 
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
-import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tags;
 

@@ -65,8 +65,10 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  * @since 1.8
+ * @deprecated use {@link ProxyServlet} instead
  */
 @Singleton
+@Deprecated
 public class ProxyServet extends HttpServlet
 {
 

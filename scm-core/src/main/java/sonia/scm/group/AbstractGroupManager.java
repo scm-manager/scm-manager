@@ -36,6 +36,7 @@ package sonia.scm.group;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.HandlerEvent;
+import sonia.scm.event.ScmEventBus;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -56,7 +57,7 @@ public abstract class AbstractGroupManager implements GroupManager
    * Register a {@link GroupListener}.
    *
    *
-   * @param listener - {@link GroupListener} to register
+   * @param listener {@link GroupListener} to register
    */
   @Override
   public void addListener(GroupListener listener)
@@ -68,7 +69,7 @@ public abstract class AbstractGroupManager implements GroupManager
    * Register a {@link java.util.Collection} of {@link GroupListener}s.
    *
    *
-   * @param listeners - listeners to register
+   * @param listeners listeners to register
    */
   @Override
   public void addListeners(Collection<GroupListener> listeners)
@@ -90,9 +91,10 @@ public abstract class AbstractGroupManager implements GroupManager
 
   /**
    * Calls the {@link GroupListener#onEvent(Group,sonia.scm.HandlerEvent)}
-   * method of all registered listeners.
+   * method of all registered listeners and send a {@link GroupEvent} to
+   * the {@link ScmEventBus}.
    *
-   * @param group that has changed
+   * @param group group that has changed
    * @param event type of change event
    */
   protected void fireEvent(Group group, HandlerEvent event)
@@ -101,6 +103,8 @@ public abstract class AbstractGroupManager implements GroupManager
     {
       listener.onEvent(group, event);
     }
+
+    ScmEventBus.getInstance().post(new GroupEvent(group, event));
   }
 
   //~--- fields ---------------------------------------------------------------

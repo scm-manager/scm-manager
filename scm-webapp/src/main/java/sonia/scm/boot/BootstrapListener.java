@@ -47,7 +47,6 @@ import java.io.File;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -108,12 +107,12 @@ public class BootstrapListener implements ServletContextListener
     if (logger.isInfoEnabled())
     {
       logger.info("start scm-manager {} in stage: {}", context.getVersion(),
-                  context.getStage());
+        context.getStage());
     }
 
     ClassLoader classLoader = null;
     File pluginDirectory = new File(context.getBaseDirectory(),
-                                    PLUGIN_DIRECTORY);
+                             PLUGIN_DIRECTORY);
 
     if (pluginDirectory.exists())
     {
@@ -153,7 +152,7 @@ public class BootstrapListener implements ServletContextListener
       }
 
       scmContextListener = BootstrapUtil.loadClass(classLoader,
-              ServletContextListener.class, LISTENER);
+        ServletContextListener.class, LISTENER);
       Thread.currentThread().setContextClassLoader(classLoader);
       BootstrapUtil.setClassLoader(sce.getServletContext(), classLoader);
     }
@@ -182,7 +181,7 @@ public class BootstrapListener implements ServletContextListener
    * @return
    */
   private ClassLoader createClassLoader(File pluginDirectory,
-          Classpath classpath)
+    Classpath classpath)
   {
     if (logger.isDebugEnabled())
     {
@@ -224,8 +223,8 @@ public class BootstrapListener implements ServletContextListener
       }
     }
 
-    return new URLClassLoader(classpathURLs.toArray(new URL[0]),
-                              getParentClassLoader());
+    return BootstrapUtil.createClassLoader(classpathURLs,
+      getParentClassLoader());
   }
 
   //~--- get methods ----------------------------------------------------------

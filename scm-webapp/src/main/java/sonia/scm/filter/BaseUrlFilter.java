@@ -35,6 +35,7 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -78,6 +79,22 @@ public class BaseUrlFilter extends HttpFilter
    * Method description
    *
    *
+   * @param requestUrl
+   * @param baseUrl
+   *
+   * @return
+   */
+  @VisibleForTesting
+  boolean startsWith(String requestUrl, String baseUrl)
+  {
+    return HttpUtil.normalizeUrl(requestUrl).startsWith(
+      HttpUtil.normalizeUrl(baseUrl));
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param request
    * @param response
    * @param chain
@@ -87,8 +104,8 @@ public class BaseUrlFilter extends HttpFilter
    */
   @Override
   protected void doFilter(HttpServletRequest request,
-                          HttpServletResponse response, FilterChain chain)
-          throws IOException, ServletException
+    HttpServletResponse response, FilterChain chain)
+    throws IOException, ServletException
   {
     if (Util.isEmpty(configuration.getBaseUrl()))
     {
@@ -139,8 +156,8 @@ public class BaseUrlFilter extends HttpFilter
    */
   private boolean isBaseUrl(HttpServletRequest request)
   {
-    return request.getRequestURL().toString().startsWith(
-        configuration.getBaseUrl());
+    return startsWith(request.getRequestURL().toString(),
+      configuration.getBaseUrl());
   }
 
   //~--- fields ---------------------------------------------------------------

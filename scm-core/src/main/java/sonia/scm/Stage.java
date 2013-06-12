@@ -35,7 +35,7 @@ package sonia.scm;
 /**
  * The constants in this class represent the current state of the running
  * SCM_Manager instance. The stage can be queried by calling
- * {@link SCMContextProvider#getProjectStage()}.
+ * {@link SCMContextProvider#getStage()}.
  *
  * @author Sebastian Sdorra
  * @since 1.12

@@ -105,7 +105,7 @@ Sonia.repository.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
   
   getIdFromResponse: function(response){
     var id = null;
-    var location = response.getResponseHeader('Location')
+    var location = response.getResponseHeader('Location');
     if (location){
       var parts = location.split('/');
       id = parts[parts.length - 1];

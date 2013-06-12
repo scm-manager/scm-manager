@@ -37,8 +37,16 @@ package sonia.scm.user;
  *
  * @author Sebastian Sdorra
  */
-public class UserTestData
+public final class UserTestData
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private UserTestData() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -104,7 +112,7 @@ public class UserTestData
   public static User createTrillian()
   {
     return new User("trillian", "Tricia McMillan",
-                    "tricia.mcmillan@hitchhiker.com");
+      "tricia.mcmillan@hitchhiker.com");
   }
 
   /**
@@ -116,6 +124,6 @@ public class UserTestData
   public static User createZaphod()
   {
     return new User("zaphod", "Zaphod Beeblebrox",
-                    "zaphod.beeblebrox@hitchhiker.com");
+      "zaphod.beeblebrox@hitchhiker.com");
   }
 }

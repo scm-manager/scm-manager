@@ -30,12 +30,20 @@
  */
 
 
+
 package sonia.scm.security;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.apache.shiro.crypto.hash.Md5Hash;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 1.13
+ * @deprecated use {@link Md5Hash} instead.
  */
+@Deprecated
 public class MD5HashBuilder extends MessageDigestHashBuilder
 {
 
@@ -99,7 +107,7 @@ public class MD5HashBuilder extends MessageDigestHashBuilder
    * @param appendSalt
    */
   public MD5HashBuilder(String value, byte[] salt, int iterations,
-                        boolean appendSalt)
+    boolean appendSalt)
   {
     super(DIGEST, value, salt, iterations, appendSalt, false);
   }
@@ -115,7 +123,7 @@ public class MD5HashBuilder extends MessageDigestHashBuilder
    * @param enableLabel
    */
   public MD5HashBuilder(String value, byte[] salt, int iterations,
-                        boolean appendSalt, boolean enableLabel)
+    boolean appendSalt, boolean enableLabel)
   {
     super(DIGEST, value, salt, iterations, appendSalt, enableLabel);
   }

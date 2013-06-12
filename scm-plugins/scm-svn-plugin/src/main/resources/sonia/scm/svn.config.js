@@ -104,7 +104,7 @@ Sonia.svn.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
         inputValue: 'true',
         helpText: this.disabledHelpText
       }]
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.svn.ConfigPanel.superclass.initComponent.apply(this, arguments);
@@ -116,7 +116,7 @@ Ext.reg("svnConfigPanel", Sonia.svn.ConfigPanel);
 
 // i18n
 
-if ( i18n != null && i18n.country == 'de' ){
+if ( i18n && i18n.country === 'de' ){
 
   Ext.override(Sonia.svn.ConfigPanel, {
 
@@ -153,3 +153,7 @@ initCallbacks.push(function(main){
 registerConfigPanel({
   xtype : 'svnConfigPanel'
 });
+
+// register type icon
+
+Sonia.repository.typeIcons['svn'] = 'resources/images/icons/16x16/subversion.png';

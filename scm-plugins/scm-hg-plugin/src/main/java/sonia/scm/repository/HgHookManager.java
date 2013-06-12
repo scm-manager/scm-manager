@@ -54,9 +54,6 @@ import sonia.scm.util.Util;
 
 import java.io.IOException;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -85,14 +82,17 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
    *
    *
    * @param configuration
+   * @param httpServletRequestProvider
    * @param httpClientProvider
    */
   @Inject
   public HgHookManager(ScmConfiguration configuration,
-                       Provider<HttpClient> httpClientProvider)
+    Provider<HttpServletRequest> httpServletRequestProvider,
+    Provider<HttpClient> httpClientProvider)
   {
     this.configuration = configuration;
     this.configuration.addListener(this);
+    this.httpServletRequestProvider = httpServletRequestProvider;
     this.httpClientProvider = httpClientProvider;
   }
 
@@ -139,6 +139,36 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
     return hookUrl;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String createUrl()
+  {
+    String url = hookUrl;
+
+    if (url == null)
+    {
+      HttpServletRequest request = httpServletRequestProvider.get();
+
+      if (request != null)
+      {
+        url = createUrl(request);
+      }
+      else
+      {
+        logger.warn(
+          "created hook url {} without request, in some cases this could cause problems",
+          hookUrl);
+        url = createConfiguredUrl();
+      }
+    }
+
+    return url;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -180,7 +210,7 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
       if (logger.isDebugEnabled())
       {
         logger.debug(
-            "create hook url from configured base url because force base url is enabled");
+          "create hook url from configured base url because force base url is enabled");
       }
 
       hookUrl = createConfiguredUrl();
@@ -204,8 +234,8 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
         if (logger.isWarnEnabled())
         {
           logger.warn(
-              "hook url {} from request does not work, try now localhost",
-              hookUrl);
+            "hook url {} from request does not work, try now localhost",
+            hookUrl);
         }
 
         hookUrl = createLocalUrl(request);
@@ -215,8 +245,8 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
           if (logger.isWarnEnabled())
           {
             logger.warn(
-                "localhost hook url {} does not work, try now from configured base url",
-                hookUrl);
+              "localhost hook url {} does not work, try now from configured base url",
+              hookUrl);
           }
 
           hookUrl = createConfiguredUrl();
@@ -239,7 +269,7 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
   private String createConfiguredUrl()
   {
     return HttpUtil.getUriWithoutEndSeperator(
-        configuration.getBaseUrl()).concat("/hook/hg/");
+      configuration.getBaseUrl()).concat("/hook/hg/");
   }
 
   /**
@@ -269,8 +299,8 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
     if (logger.isErrorEnabled())
     {
       logger.error(
-          "disabling mercurial hooks, because hook url {} seems not to work",
-          hookUrl);
+        "disabling mercurial hooks, because hook url {} seems not to work",
+        hookUrl);
     }
 
     hookUrl = Util.EMPTY_STRING;
@@ -333,4 +363,7 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
 
   /** Field description */
   private Provider<HttpClient> httpClientProvider;
+
+  /** Field description */
+  private Provider<HttpServletRequest> httpServletRequestProvider;
 }

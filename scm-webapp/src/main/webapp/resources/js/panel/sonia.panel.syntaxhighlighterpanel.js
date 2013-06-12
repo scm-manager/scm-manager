@@ -148,13 +148,13 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
       console.debug( 'try to find brush for ' + this.syntax );
     }
     
-    if ( this.syntax != 'plain' ){
+    if ( this.syntax !== 'plain' ){
       var s = null;
       var found = false;
       for (var i=0; i<this.syntaxes.length; i++){
         s = this.syntaxes[i];
         for ( var j=0;j<s.aliases.length; j++ ){
-          if ( this.syntax == s.aliases[j] ){
+          if ( this.syntax === s.aliases[j] ){
             found = true;
             this.brushUrl = s.fileName;
             if (debug){

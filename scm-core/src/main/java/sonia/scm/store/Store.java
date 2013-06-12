@@ -34,29 +34,33 @@
 package sonia.scm.store;
 
 /**
+ * Store for configuration objects. <strong>Note:</strong> the default
+ * implementation use JAXB to marshall the configuration objects.
+ * 
+ * TODO for 2.0 rename to ConfigurationStore
  *
  * @author Sebastian Sdorra
  *
- * @param <T>
+ * @param <T> type of the configuration objects
  */
 public interface Store<T>
 {
 
   /**
-   * Method description
+   * Returns the configuration object from store.
    *
    *
-   * @return
+   * @return configuration object from store
    */
   public T get();
 
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Stores the given configuration object to the store.
    *
    *
-   * @param obejct
+   * @param obejct configuration object to store
    */
   public void set(T obejct);
 }

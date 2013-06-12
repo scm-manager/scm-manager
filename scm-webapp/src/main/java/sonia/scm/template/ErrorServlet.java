@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,6 +38,9 @@ package sonia.scm.template;
 import com.google.common.base.Throwables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
 import sonia.scm.util.IOUtil;
@@ -64,7 +68,16 @@ public class ErrorServlet extends HttpServlet
 {
 
   /** Field description */
+  private static final String TEMPALTE = "/error.mustache";
+
+  /** Field description */
   private static final long serialVersionUID = -3289076078469757874L;
+
+  /**
+   * the logger for ErrorServlet
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ErrorServlet.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -74,12 +87,14 @@ public class ErrorServlet extends HttpServlet
    *
    * @param context
    * @param handler
+   * @param templateEngineFactory
    */
   @Inject
-  public ErrorServlet(SCMContextProvider context, TemplateHandler handler)
+  public ErrorServlet(SCMContextProvider context,
+    TemplateEngineFactory templateEngineFactory)
   {
     this.context = context;
-    this.handler = handler;
+    this.templateEngineFactory = templateEngineFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -96,7 +111,7 @@ public class ErrorServlet extends HttpServlet
    */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException
+    throws ServletException, IOException
   {
     processRequest(request, response);
   }
@@ -113,8 +128,8 @@ public class ErrorServlet extends HttpServlet
    */
   @Override
   protected void doPost(HttpServletRequest request,
-                        HttpServletResponse response)
-          throws ServletException, IOException
+    HttpServletResponse response)
+    throws ServletException, IOException
   {
     processRequest(request, response);
   }
@@ -130,8 +145,8 @@ public class ErrorServlet extends HttpServlet
    * @throws ServletException
    */
   private void processRequest(HttpServletRequest request,
-                              HttpServletResponse response)
-          throws ServletException, IOException
+    HttpServletResponse response)
+    throws ServletException, IOException
   {
     PrintWriter writer = null;
 
@@ -148,11 +163,22 @@ public class ErrorServlet extends HttpServlet
       }
 
       env.put("error", error);
-      handler.render("/error.html", writer, env);
+
+      TemplateEngine engine = templateEngineFactory.getDefaultEngine();
+      Template template = engine.getTemplate(TEMPALTE);
+
+      if (template != null)
+      {
+        template.execute(writer, env);
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("could not find template {}", TEMPALTE);
+      }
     }
     finally
     {
-      IOUtil.close(context);
+      IOUtil.close(writer);
     }
   }
 
@@ -162,5 +188,5 @@ public class ErrorServlet extends HttpServlet
   private SCMContextProvider context;
 
   /** Field description */
-  private TemplateHandler handler;
+  private TemplateEngineFactory templateEngineFactory;
 }

@@ -57,7 +57,7 @@ public class PluginScannerRunnable implements Runnable
    * @param directory
    */
   public PluginScannerRunnable(PluginBackend backend,
-                               PluginScanner pluginScanner, File directory)
+    PluginScanner pluginScanner, File directory)
   {
     this.backend = backend;
     this.pluginScanner = pluginScanner;

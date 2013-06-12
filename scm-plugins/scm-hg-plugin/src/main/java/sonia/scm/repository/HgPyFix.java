@@ -1,27 +1,29 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
+ * Copyright (c) 2010, Sebastian Sdorra
+ * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- * this list of conditions and the following disclaimer. 2. Redistributions in
- * binary form must reproduce the above copyright notice, this list of
- * conditions and the following disclaimer in the documentation and/or other
- * materials provided with the distribution. 3. Neither the name of SCM-Manager;
- * nor the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
+ *    this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 3. Neither the name of SCM-Manager; nor the names of its
+ *    contributors may be used to endorse or promote products derived from this
+ *    software without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE FOR ANY
+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+ * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * http://bitbucket.org/sdorra/scm-manager
  *
@@ -54,7 +56,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class HgPyFix
+public final class HgPyFix
 {
 
   /** Field description */
@@ -71,6 +73,14 @@ public class HgPyFix
    */
   private static final Logger logger = LoggerFactory.getLogger(HgUtil.class);
 
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private HgPyFix() {}
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -82,16 +92,24 @@ public class HgPyFix
    */
   public static void fixHgPy(SCMContextProvider context, HgConfig config)
   {
-    String basePath = context.getBaseDirectory().getAbsolutePath();
-
-    String hg = config.getHgBinary();
-
-    if (hg.startsWith(basePath) && hg.endsWith(HG_BAT))
+    if ((config != null) && config.isValid())
     {
-      File file = new File(hg);
+      String basePath = context.getBaseDirectory().getAbsolutePath();
 
-      file = new File(file.getParentFile(), HG_PY);
-      fixHgPy(file);
+      String hg = config.getHgBinary();
+
+      if (hg.startsWith(basePath) && hg.endsWith(HG_BAT))
+      {
+        File file = new File(hg);
+
+        file = new File(file.getParentFile(), HG_PY);
+        fixHgPy(file);
+      }
+    }
+    else if (logger.isDebugEnabled())
+    {
+      logger.debug(
+        "could not fix hg.py, because the configuration is not valid");
     }
   }
 
@@ -99,7 +117,6 @@ public class HgPyFix
    * Visible for testing
    *
    *
-   * @param hg
    *
    * @param hgBat
    */

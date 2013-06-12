@@ -1,0 +1,87 @@
+                  <!-- content end -->
+                </div>
+              </article>        
+            </div>
+            <div class="primary" id="sidebar">
+              <ul class="xoxo">
+                <li id="linkcat-3" class="widget-container widget_links">
+                  <h3 class="widget-title">Links</h3>
+                  <ul class="xoxo blogroll">
+                    <li>
+                      <a href="https://bitbucket.org/sdorra/scm-manager/wiki/download" target="_blank">Download</a>
+                    </li>
+                    <li>
+                      <a href="https://bitbucket.org/sdorra/scm-manager/issues?status=new&amp;status=open" target="_blank">Issue Tracker</a>
+                    </li>
+                    <li>
+                      <a href="http://groups.google.com/group/scmmanager" target="_blank">Mailing List</a>
+                    </li>
+                    <li>
+                      <a href="https://bitbucket.org/sdorra/scm-manager/wiki" target="_blank">Wiki</a>
+                    </li>
+                  </ul>
+                </li>
+                <li class="widget-container widget_recent_entries">
+                  <h3 class="widget-title">Latest News</h3>
+                  <div id="news"></div>
+                  <script type="text/javascript">
+                  $(document).ready(function(){
+                    $('#news').feeds('${contextPath}/news', {
+                      loadingImage: '${contextPath}/template/css/images/load.gif',
+                      maxItems: 3
+                    });
+                  });
+                </script>
+                </li> 
+                <li class="widget-container widget_links">
+                  <h3 class="widget-title">Social</h3>
+                  <div style="position: relative; display: block;" id="social4i">
+                    <div style="float:left;margin-right: 8px;" class="socialicons">
+                      <div id="fb-root" style="float: left;"></div><script src="http://connect.facebook.net/en_US/all.js#appId=221636557882194&xfbml=1"></script><fb:like href="http://www.scm-manager.org" send="false" layout="box_count" width="52" show_faces="true" font=""></fb:like>
+                    </div>
+                    <div style="float:left;margin-right: 8px;" class="socialicons">
+                      <g:plusone size="tall" href="http://www.scm-manager.org"></g:plusone>
+                    </div>
+                    <div style="float:left;margin-right: 8px;" class="socialicons">
+                      <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.scm-manager.org" data-count="vertical">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+                    </div>
+                    <div style="clear: both;"></div>
+                  </div>
+                  <script type="text/javascript">
+                    (function() {
+                      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                      po.src = 'https://apis.google.com/js/plusone.js';
+                      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+                    })();
+                  </script>
+                </li>
+                <li class="widget-container widget_links">
+                  <h3 class="widget-title">Donate</h3>
+                  <form method="post" action="https://www.paypal.com/cgi-bin/webscr">
+                    <input type="hidden" value="_s-xclick" name="cmd">
+                    <input type="hidden" value="GLUQJWKA7EPDE" name="hosted_button_id">
+                    <input type="image" border="0" alt="PayPal - The safer, easier way to pay online!" name="submit" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif">
+                    <img width="1" height="1" border="0" src="https://www.paypalobjects.com/de_DE/i/scr/pixel.gif" alt="">
+                  </form>
+                </li>
+                <li class="widget-container widget_links">
+                  <h3 class="widget-title">Build and test</h3>
+                  <a href="https://scm-manager.ci.cloudbees.com/">
+                    <img alt="Cloudbees" src="http://static-www.cloudbees.com/images/badges/BuiltOnDEV.png">
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer id="colophon">
+        <div class="col-width">
+          <div id="site-generator">
+            <p>&copy; Sebastian Sdorra</p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

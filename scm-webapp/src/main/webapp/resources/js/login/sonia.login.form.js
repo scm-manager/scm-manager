@@ -39,11 +39,12 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
   WaitMsgText: 'Sending data...',
   failedMsgText: 'Login failed!',
   failedDescriptionText: 'Incorrect username, password or not enough permission. Please Try again.',
+  rememberMeText: 'Remember me',
 
   initComponent: function(){
 
     var config = {
-      labelWidth: 80,
+      labelWidth: 120,
       url: restUrl + "authentication/login.json",
       frame: true,
       title: this.titleText,
@@ -76,6 +77,11 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
             scope: this
           }
         }
+      },{
+        xtype: 'checkbox',
+        fieldLabel: this.rememberMeText,
+        name: 'rememberMe',
+        inputValue: 'true'
       }],
       buttons:[{
           text: this.cancelText,
@@ -133,7 +139,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
   },
 
   specialKeyPressed: function(field, e){
-    if (e.getKey() == e.ENTER) {
+    if (e.getKey() === e.ENTER) {
       var form = this.getForm();
       if ( form.isValid() ){
         this.authenticate();

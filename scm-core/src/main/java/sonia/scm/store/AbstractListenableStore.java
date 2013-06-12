@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -44,36 +45,38 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
+ * Base class for {@link ListenableStore}. The AbstractListenableStore provides
+ * methods for event and listener handling.
  *
  * @author Sebastian Sdorra
  * @since 1.16
  *
- * @param <T>
+ * @param <T> type of store objects
  */
 public abstract class AbstractListenableStore<T> implements ListenableStore<T>
 {
 
   /**
-   * Method description
+   * Read the stored object.
    *
    *
-   * @return
+   * @return stored object
    */
   protected abstract T readObject();
 
   /**
-   * Method description
+   * Write object to the store.
    *
    *
-   * @param object
+   * @param object object to write
    */
   protected abstract void writeObject(T object);
 
   /**
-   * Method description
+   * Add a listener to the store.
    *
    *
-   * @param listener
+   * @param listener listener for store
    */
   @Override
   public void addListener(ConfigChangedListener<T> listener)
@@ -82,10 +85,10 @@ public abstract class AbstractListenableStore<T> implements ListenableStore<T>
   }
 
   /**
-   * Method description
+   * Add a collection of listeners to the store.
    *
    *
-   * @param listeners
+   * @param listeners listeners for store
    */
   @Override
   public void addListeners(Collection<ConfigChangedListener<T>> listeners)
@@ -94,10 +97,10 @@ public abstract class AbstractListenableStore<T> implements ListenableStore<T>
   }
 
   /**
-   * Method description
+   * Remove a listener from the store
    *
    *
-   * @param listener
+   * @param listener listener to remove
    */
   @Override
   public void removeListener(ConfigChangedListener<T> listener)
@@ -108,7 +111,7 @@ public abstract class AbstractListenableStore<T> implements ListenableStore<T>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @return
@@ -127,7 +130,7 @@ public abstract class AbstractListenableStore<T> implements ListenableStore<T>
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * {@inheritDoc}
    *
    *
    * @param obejct
@@ -143,10 +146,10 @@ public abstract class AbstractListenableStore<T> implements ListenableStore<T>
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Fire a store event.
    *
    *
-   * @param object
+   * @param object changed object
    */
   protected void fireEvent(T object)
   {
@@ -158,9 +161,9 @@ public abstract class AbstractListenableStore<T> implements ListenableStore<T>
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** listeners */
   protected Set<ConfigChangedListener<T>> listeners = Sets.newHashSet();
 
-  /** Field description */
+  /** stored object */
   protected T storeObject;
 }

@@ -30,13 +30,20 @@
  */
 
 
+
 package sonia.scm.security;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.apache.shiro.crypto.hash.Sha512Hash;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.13
+ * @deprecated use {@link Sha512Hash} instead.
  */
+@Deprecated
 public class SHA512HashBuilder extends MessageDigestHashBuilder
 {
 
@@ -100,7 +107,7 @@ public class SHA512HashBuilder extends MessageDigestHashBuilder
    * @param appendSalt
    */
   public SHA512HashBuilder(String value, byte[] salt, int iterations,
-                           boolean appendSalt)
+    boolean appendSalt)
   {
     super(DIGEST, value, salt, iterations, appendSalt, false);
   }
@@ -116,7 +123,7 @@ public class SHA512HashBuilder extends MessageDigestHashBuilder
    * @param enableLabel
    */
   public SHA512HashBuilder(String value, byte[] salt, int iterations,
-                           boolean appendSalt, boolean enableLabel)
+    boolean appendSalt, boolean enableLabel)
   {
     super(DIGEST, value, salt, iterations, appendSalt, enableLabel);
   }

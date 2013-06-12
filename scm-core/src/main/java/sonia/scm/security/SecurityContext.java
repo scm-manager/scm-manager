@@ -35,12 +35,16 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.apache.shiro.SecurityUtils;
+
 import sonia.scm.user.User;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated use {@link SecurityUtils#getSubject()} instead.
  */
+@Deprecated
 public interface SecurityContext
 {
 

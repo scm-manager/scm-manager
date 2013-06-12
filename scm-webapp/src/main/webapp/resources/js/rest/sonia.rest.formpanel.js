@@ -28,7 +28,7 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
+Sonia.rest.FormPanel = Ext.extend(Ext.form.FormPanel,{
 
   okText: 'Ok',
   cancelText: 'Cancel',
@@ -56,14 +56,18 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
         {text: this.okText, formBind: true, scope: this, handler: this.submit},
         {text: this.cancelText, scope: this, handler: this.cancel}
       ]
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.rest.FormPanel.superclass.initComponent.apply(this, arguments);
 
-    if ( this.item != null ){
+    if ( this.item ){
       this.loadData(this.item);
     }
+  },
+
+  isUpdate: function(){
+    return this.item !== null;
   },
 
   loadData: function(item){
@@ -77,7 +81,7 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
       console.debug( 'form submitted' );
     }
     var item = this.getForm().getFieldValues();
-    if ( this.item != null ){
+    if ( this.isUpdate() ){
       this.update(item);
     } else {
       this.create(item);
@@ -94,8 +98,10 @@ Sonia.rest.FormPanel = Ext.extend(Ext.FormPanel,{
   execCallback: function(obj, item){
     if ( Ext.isFunction( obj ) ){
       obj(item);
-    } else if ( Ext.isObject( obj )){
+    } else if ( Ext.isObject( obj ) && Ext.isFunction(obj.fn) ){
       obj.fn.call( obj.scope, item );
+    } else if (debug){
+      console.debug('obj ' + obj + ' is not valid callback object');
     }
   },
 

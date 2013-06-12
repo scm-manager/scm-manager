@@ -37,15 +37,17 @@ package sonia.scm.search;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
-import com.google.inject.Provider;
+import com.google.common.collect.Lists;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.cache.Cache;
-import sonia.scm.util.SecurityUtil;
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -53,6 +55,7 @@ import java.util.Collection;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;
+import sonia.scm.security.Role;
 
 /**
  *
@@ -77,11 +80,10 @@ public class SearchHandler<T>
    * @param cache
    * @param searchable
    */
-  public SearchHandler(Provider<WebSecurityContext> securityContextProvider,
-                       Cache<String, SearchResults> cache,
-                       Searchable<T> searchable)
+  public SearchHandler(Cache<String, SearchResults> cache,
+    Searchable<T> searchable)
   {
-    this.securityContextProvider = securityContextProvider;
+
     this.cache = cache;
     this.searchable = searchable;
   }
@@ -107,9 +109,14 @@ public class SearchHandler<T>
    * @return
    */
   public SearchResults search(String queryString,
-                              Function<T, SearchResult> function)
+    Function<T, SearchResult> function)
   {
-    SecurityUtil.assertIsNotAnonymous(securityContextProvider);
+    Subject subject = SecurityUtils.getSubject();
+
+    if (!subject.hasRole(Role.USER))
+    {
+      throw new ScmSecurityException("Authentication is required");
+    }
 
     if (Util.isEmpty(queryString))
     {
@@ -134,7 +141,11 @@ public class SearchHandler<T>
           Collections2.transform(users, function);
 
         result.setSuccess(true);
-        result.setResults(resultCollection);
+
+        // create a copy of the result collection to reduce memory
+        // use ArrayList instead of ImmutableList for copy, 
+        // because the list must be mutable for decorators
+        result.setResults(Lists.newArrayList(resultCollection));
         cache.put(queryString, result);
       }
     }
@@ -201,9 +212,6 @@ public class SearchHandler<T>
 
   /** Field description */
   protected Searchable<T> searchable;
-
-  /** Field description */
-  protected Provider<WebSecurityContext> securityContextProvider;
 
   /** Field description */
   private int maxResults = 5;

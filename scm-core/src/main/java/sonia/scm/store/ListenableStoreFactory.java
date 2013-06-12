@@ -33,22 +33,27 @@
 package sonia.scm.store;
 
 /**
- *
+ * The ListenableStoreFactory can be used to create new or get existing
+ * {@link ListenableStore}s.
+ * 
  * @author Sebastian Sdorra
  * @since 1.16
+ * 
+ * @apiviz.landmark
+ * @apiviz.uses sonia.scm.store.ListenableStore
  */
 public interface ListenableStoreFactory extends StoreFactory
 {
 
   /**
-   * Method description
+   * Get an existing {@link ListenableStore} or create a new one.
    *
    *
-   * @param type
-   * @param name
-   * @param <T>
+   * @param type type of the store objects
+   * @param name name of the store
+   * @param <T> type of the store objects
    *
-   * @return
+   * @return {@link ListenableStore} of the given type and name
    */
   @Override
   public <T> ListenableStore<T> getStore(Class<T> type, String name);

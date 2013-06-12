@@ -37,8 +37,16 @@ package sonia.scm.repository;
  *
  * @author Sebastian Sdorra
  */
-public class RepositoryTestData
+public final class RepositoryTestData
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private RepositoryTestData() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -80,7 +88,7 @@ public class RepositoryTestData
   public static Repository createHappyVerticalPeopleTransporter()
   {
     return createHappyVerticalPeopleTransporter(
-        DummyRepositoryHandler.TYPE_NAME);
+      DummyRepositoryHandler.TYPE_NAME);
   }
 
   /**
@@ -97,12 +105,12 @@ public class RepositoryTestData
 
     happyVerticalPeopleTransporter.setType(type);
     happyVerticalPeopleTransporter.setContact(
-        "zaphod.beeblebrox@hitchhiker.com");
+      "zaphod.beeblebrox@hitchhiker.com");
     happyVerticalPeopleTransporter.setName("happyVerticalPeopleTransporter");
     happyVerticalPeopleTransporter.setDescription(
-        "Happy Vertical People Transporter");
+      "Happy Vertical People Transporter");
     happyVerticalPeopleTransporter.setUrl(
-        "http://hitchhiker.com/dummy/HeartOfGold");
+      "http://hitchhiker.com/dummy/HeartOfGold");
 
     return happyVerticalPeopleTransporter;
   }
@@ -134,7 +142,7 @@ public class RepositoryTestData
     heartOfGold.setContact("zaphod.beeblebrox@hitchhiker.com");
     heartOfGold.setName("HeartOfGold");
     heartOfGold.setDescription(
-        "Heart of Gold is the first prototype ship to successfully utilise the revolutionary Infinite Improbability Drive");
+      "Heart of Gold is the first prototype ship to successfully utilise the revolutionary Infinite Improbability Drive");
     heartOfGold.setUrl("http://hitchhiker.com/dummy/HeartOfGold");
 
     return heartOfGold;
@@ -149,7 +157,7 @@ public class RepositoryTestData
   public static Repository createRestaurantAtTheEndOfTheUniverse()
   {
     return createRestaurantAtTheEndOfTheUniverse(
-        DummyRepositoryHandler.TYPE_NAME);
+      DummyRepositoryHandler.TYPE_NAME);
   }
 
   /**

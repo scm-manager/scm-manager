@@ -54,6 +54,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   proxyPortText: 'Proxy Port',
   proxyUserText: 'Proxy User',
   proxyPasswordText: 'Proxy Password',
+  proxyExcludesText: 'Proxy Excludes',
   baseUrlText: 'Base Url',
   forceBaseUrlText: 'Force Base Url',
   disableGroupingGridText: 'Disable repository Groups',
@@ -62,8 +63,11 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
 
   // help
   servernameHelpText: 'The name of this server. This name will be part of the repository url.',
-  // TODO
-  dateFormatHelpText: 'JavaScript date format.',
+  // TODO i18n
+  dateFormatHelpText: 'Moments date format. Please have a look at \n\
+                      <a href="http://momentjs.com/docs/#/displaying/format/" target="_blank">http://momentjs.com/docs/#/displaying/format/</a>.<br />\n\
+                      <b>Note:</b><br />\n\
+                      {0} - is replaced by a "time ago" string (e.g. 2 hours ago).',
   pluginRepositoryHelpText: 'The url of the plugin repository.<br />Explanation of the {placeholders}:\n\
   <br /><b>version</b> = SCM-Manager Version<br /><b>os</b> = Operation System<br /><b>arch</b> = Architecture',
   enableForwardingHelpText: 'Enbale mod_proxy port forwarding.',
@@ -79,6 +83,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   proxyPortHelpText: 'The proxy port',
   proxyUserHelpText: 'The username for the proxy server authentication.',
   proxyPasswordHelpText: 'The password for the proxy server authentication.',
+  proxyExcludesHelpText: 'A comma separated list of glob patterns for hostnames which should be excluded from proxy settings.',
   baseUrlHelpText: 'The url of the application (with context path) i.e. http://localhost:8080/scm',
   forceBaseUrlHelpText: 'Redirects to the base url if the request comes from a other url',
   disableGroupingGridHelpText: 'Disable repository Groups. A complete page reload is required after a change of this value.',
@@ -120,6 +125,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           fieldLabel: this.dateFormatText,
           name: 'dateFormat',
           helpText: this.dateFormatHelpText,
+          helpDisableAutoHide: true,
           allowBlank: false
         },{
           xtype: 'textfield',
@@ -146,6 +152,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
               Ext.getCmp('proxyPort').setDisabled( ! this.checked );
               Ext.getCmp('proxyUser').setDisabled( ! this.checked );
               Ext.getCmp('proxyPassword').setDisabled( ! this.checked );
+              Ext.getCmp('proxyExcludes').setDisabled( ! this.checked );
             }
           }
         },{
@@ -180,6 +187,14 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'proxyPassword',
           disabled: true,
           helpText: this.proxyPasswordHelpText,
+          allowBlank: true
+        },{
+          id: 'proxyExcludes',
+          xtype: 'textfield',
+          fieldLabel: this.proxyExcludesText,
+          name: 'proxy-excludes',
+          disabled: true,
+          helpText: this.proxyExcludesHelpText,
           allowBlank: true
         },{
           xtype : 'textfield',
@@ -230,6 +245,9 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
               if ( obj.enableProxy ){
                 Ext.getCmp('proxyServer').setDisabled(false);
                 Ext.getCmp('proxyPort').setDisabled(false);
+                Ext.getCmp('proxyUser').setDisabled(false);
+                Ext.getCmp('proxyPassword').setDisabled(false);
+                Ext.getCmp('proxyExcludes').setDisabled(false);
               }
               clearTimeout(tid);
               el.unmask();
@@ -246,7 +264,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           });
         }
       }, generalConfigPanels]
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.config.ScmConfigPanel.superclass.initComponent.apply(this, arguments);

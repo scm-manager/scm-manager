@@ -77,11 +77,14 @@ public final class LogCommandRequest implements Serializable, Resetable
 
     final LogCommandRequest other = (LogCommandRequest) obj;
 
+    //J-
     return Objects.equal(startChangeset, other.startChangeset)
       && Objects.equal(endChangeset, other.endChangeset)
       && Objects.equal(pagingStart, other.pagingStart)
       && Objects.equal(pagingLimit, other.pagingLimit)
-      && Objects.equal(path, other.path) && Objects.equal(branch, other.branch);
+      && Objects.equal(path, other.path) 
+      && Objects.equal(branch, other.branch);
+    //J+
   }
 
   /**

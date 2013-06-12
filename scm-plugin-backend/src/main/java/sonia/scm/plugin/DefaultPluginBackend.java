@@ -37,7 +37,6 @@ package sonia.scm.plugin;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,13 +97,10 @@ public class DefaultPluginBackend extends AbstractPluginBackend
    * @param configuration
    */
   @Inject
-  public DefaultPluginBackend(
-          @Named(ScmBackendModule.DIRECTORY_PROPERTY) File baseDirectory,
-          BackendConfiguration configuration)
+  public DefaultPluginBackend(BackendConfiguration configuration)
   {
-    this.baseDirectory = baseDirectory;
     this.configuration = configuration;
-    this.storeFile = new File(baseDirectory, FILE_STORE);
+    this.storeFile = BaseDirectory.getFile(FILE_STORE);
 
     try
     {
@@ -204,18 +200,6 @@ public class DefaultPluginBackend extends AbstractPluginBackend
    * @return
    */
   @Override
-  public File getBaseDirectory()
-  {
-    return baseDirectory;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
   public Set<String> getExcludes()
   {
     return configuration.getExcludes();
@@ -281,7 +265,7 @@ public class DefaultPluginBackend extends AbstractPluginBackend
    */
   private void readScannedFiles() throws IOException
   {
-    File file = new File(baseDirectory, FILE_SCANNED);
+    File file = BaseDirectory.getFile(FILE_SCANNED);
 
     if (file.exists())
     {
@@ -347,7 +331,7 @@ public class DefaultPluginBackend extends AbstractPluginBackend
       logger.info("store scanned files");
     }
 
-    File file = new File(baseDirectory, FILE_SCANNED);
+    File file = BaseDirectory.getFile(FILE_SCANNED);
     PrintWriter writer = null;
 
     try
@@ -370,9 +354,6 @@ public class DefaultPluginBackend extends AbstractPluginBackend
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private File baseDirectory;
 
   /** Field description */
   private BackendConfiguration configuration;

@@ -36,12 +36,16 @@ package sonia.scm.filter;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
+import sonia.scm.SCMContext;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.user.User;
 import sonia.scm.web.filter.HttpFilter;
 import sonia.scm.web.filter.SecurityHttpServletRequestWrapper;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -69,12 +73,12 @@ public class SecurityFilter extends HttpFilter
    * Constructs ...
    *
    *
-   * @param securityContextProvider
+   * @param configuration
    */
   @Inject
-  public SecurityFilter(Provider<WebSecurityContext> securityContextProvider)
+  public SecurityFilter(ScmConfiguration configuration)
   {
-    this.securityContextProvider = securityContextProvider;
+    this.configuration = configuration;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -92,40 +96,37 @@ public class SecurityFilter extends HttpFilter
    */
   @Override
   protected void doFilter(HttpServletRequest request,
-                          HttpServletResponse response, FilterChain chain)
-          throws IOException, ServletException
+    HttpServletResponse response, FilterChain chain)
+    throws IOException, ServletException
   {
-    WebSecurityContext securityContext = securityContextProvider.get();
+    Subject subject = SecurityUtils.getSubject();
 
-    if (securityContext != null)
+    String uri =
+      request.getRequestURI().substring(request.getContextPath().length());
+
+    if (!uri.startsWith(URL_AUTHENTICATION))
     {
-      String uri =
-        request.getRequestURI().substring(request.getContextPath().length());
-
-      if (!uri.startsWith(URL_AUTHENTICATION))
+      if (hasPermission(subject))
       {
-        if (hasPermission(securityContext))
-        {
-          chain.doFilter(new SecurityHttpServletRequestWrapper(request,
-                  securityContext.getUser()), response);
-        }
-        else if (securityContext.isAuthenticated())
-        {
-          response.sendError(HttpServletResponse.SC_FORBIDDEN);
-        }
-        else
-        {
-          response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-        }
+        chain.doFilter(new SecurityHttpServletRequestWrapper(request,
+          getUser(subject)), response);
+      }
+      else if (subject.isAuthenticated() || subject.isRemembered())
+      {
+        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      }
+      else if (configuration.isAnonymousAccessEnabled())
+      {
+        response.sendError(HttpServletResponse.SC_FORBIDDEN);
       }
       else
       {
-        chain.doFilter(request, response);
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
       }
     }
     else
     {
-      response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+      chain.doFilter(request, response);
     }
   }
 
@@ -135,17 +136,41 @@ public class SecurityFilter extends HttpFilter
    * Method description
    *
    *
-   * @param securityContext
+   * @param subject
    *
    * @return
    */
-  protected boolean hasPermission(WebSecurityContext securityContext)
+  protected boolean hasPermission(Subject subject)
   {
-    return securityContext.isAuthenticated();
+    return ((configuration != null) && configuration.isAnonymousAccessEnabled()) || subject.isAuthenticated() || subject.isRemembered();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param subject
+   *
+   * @return
+   */
+  private User getUser(Subject subject)
+  {
+    User user = null;
+
+    if (subject.isAuthenticated() || subject.isRemembered())
+    {
+      user = subject.getPrincipals().oneByType(User.class);
+    }
+    else
+    {
+      user = SCMContext.ANONYMOUS;
+    }
+
+    return user;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
+  private ScmConfiguration configuration;
 }

@@ -30,6 +30,9 @@
  */
 Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
 
+  // templates
+  typeIconTemplate: '<img src="{0}" alt="{1}" title="{2}">',
+
   colNameText: 'Name',
   colTypeText: 'Type',
   colContactText: 'Contact',
@@ -109,7 +112,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         load: {
           fn: this.storeLoad,
           scope: this
-        }
+        },
+        exception: Sonia.rest.ExceptionHandler
       }
     });
 
@@ -120,6 +124,11 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         width: 125
       },
       columns: [{
+        id: 'iconType',
+        dataIndex: 'type',
+        renderer: this.renderTypeIcon,
+        width: 20
+      },{
         id: 'name', 
         header: this.colNameText, 
         dataIndex: 'name', 
@@ -130,7 +139,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         header: this.colTypeText, 
         dataIndex: 'type', 
         renderer: this.renderRepositoryType, 
-        width: 80
+        width: 80,
+        hidden: true
       },{
         id: 'contact', 
         header: this.colContactText, 
@@ -199,6 +209,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         }
       },
       view: new Ext.grid.GroupingView({
+        idPrefix: '{grid.id}',
         enableGrouping: ! state.clientConfig.disableGroupingGrid,
         enableNoGroups: false,
         forceFit: true,
@@ -216,6 +227,20 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     if (this.parentPanel){
       this.parentPanel.repositoryGrid = this;
     }
+  },
+  
+  renderTypeIcon: function(type){
+    var result = '';
+    var icon = Sonia.repository.getTypeIcon(type);
+    if ( icon ){
+      var displayName = type;
+      var t = Sonia.repository.getTypeByName(type);
+      if (t){
+        displayName = t.displayName;
+      }
+      result = String.format(this.typeIconTemplate, icon, type, displayName);
+    }
+    return result;
   },
   
   renderRepositoryUrl: function(name, meta, record){
@@ -250,7 +275,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   },
   
   renderGroupName: function(v){
-    if (v == 'zzz__'){
+    if (v === 'zzz__'){
       v = this.mainGroup;
     }
     return v;
@@ -325,7 +350,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         var desc = rec.get('description');
         return (! query || rec.get('name').toLowerCase().indexOf(query) >= 0 ||
                (desc && desc.toLowerCase().indexOf(query) >= 0)) && 
-               (! this.filterRequest.type || rec.get('type') == this.filterRequest.type) &&
+               (! this.filterRequest.type || rec.get('type') === this.filterRequest.type) &&
                (archived || ! rec.get('archived'));
       }, this);
     }
@@ -347,7 +372,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         var desc = rec.get('description');
         return (! search || rec.get('name').toLowerCase().indexOf(search) >= 0 ||
                (desc && desc.toLowerCase().indexOf(search) >= 0)) && 
-               (! this.typeFilter || rec.get('type') == this.typeFilter);
+               (! this.typeFilter || rec.get('type') === this.typeFilter);
       }, this);
     }
   },
@@ -400,18 +425,18 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         }
       });
       
-      // call open listeners
-      Ext.each(Sonia.repository.openListeners, function(listener){
-        if (Ext.isFunction(listener)){
-          listener(item, panels);
-        } else {
-          listener.call(listener.scope, item, panels);
-        }
-      });
-      
     } else {
       Ext.getCmp('repoRmButton').setDisabled(true);
     }
+    
+    // call open listeners
+    Ext.each(Sonia.repository.openListeners, function(listener){
+      if (Ext.isFunction(listener)){
+        listener(item, panels);
+      } else {
+        listener.call(listener.scope, item, panels);
+      }
+    });
 
     Sonia.repository.setEditPanel(panels);
   },
@@ -419,7 +444,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   renderRepositoryType: function(repositoryType){
     var displayName = this.unknownType;
     var rec = repositoryTypeStore.queryBy(function(rec){
-      return rec.data.name == repositoryType;
+      return rec.data.name === repositoryType;
     }).itemAt(0);
     if ( rec ){
       displayName = rec.get('displayName');

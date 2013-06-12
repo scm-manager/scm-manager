@@ -41,6 +41,11 @@ package sonia.scm.security;
 public class CipherException extends RuntimeException
 {
 
+  /** Field description */
+  private static final long serialVersionUID = -310359939906084281L;
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructs ...
    *

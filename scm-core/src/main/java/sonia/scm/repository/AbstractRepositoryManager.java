@@ -35,10 +35,14 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.HandlerEvent;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
@@ -46,13 +50,14 @@ import sonia.scm.util.Util;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
+ * Abstract base class for {@link RepositoryManager} implementations. This class
+ * implements the listener and hook methods of the {@link RepositoryManager}
+ * interface.
  *
  * @author Sebastian Sdorra
  */
@@ -66,20 +71,21 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Sends a {@link RepositoryHookEvent} to the specified
+   * {@link RepositoryHook}.
    *
    *
-   * @param hook
-   * @param event
+   * @param hook receiving repository hook
+   * @param event hook event
    */
   protected abstract void fireHookEvent(RepositoryHook hook,
-          RepositoryHookEvent event);
+    RepositoryHookEvent event);
 
   /**
-   * Method description
+   * Registers a {@link RepositoryHook}
    *
    *
-   * @param hook
+   * @param hook hook to register
    */
   @Override
   public void addHook(RepositoryHook hook)
@@ -116,10 +122,10 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Method description
+   * Register a {@link Collection} of {@link RepositoryHook}s
    *
    *
-   * @param hooks
+   * @param hooks hooks to register
    */
   @Override
   public void addHooks(Collection<RepositoryHook> hooks)
@@ -131,10 +137,10 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Method description
+   * Register a {@link RepositoryListener}.
    *
    *
-   * @param listener
+   * @param listener {@link RepositoryListener} to register
    */
   @Override
   public void addListener(RepositoryListener listener)
@@ -143,10 +149,10 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Method description
+   * Register a {@link java.util.Collection} of {@link RepositoryListener}s.
    *
    *
-   * @param listeners
+   * @param listeners listeners to register
    */
   @Override
   public void addListeners(Collection<RepositoryListener> listeners)
@@ -155,11 +161,13 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Method description
+   * Sends a {@link RepositoryHookEvent} to each registered
+   * {@link RepositoryHook} and sends the {@link RepositoryHookEvent} to
+   * the {@link ScmEventBus}.
    *
    *
-   * @param repository
-   * @param event
+   * @param repository changed repository
+   * @param event event to be fired
    */
   @Override
   public void fireHookEvent(Repository repository, RepositoryHookEvent event)
@@ -168,6 +176,12 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
     AssertUtil.assertIsNotNull(event);
     AssertUtil.assertIsNotNull(event.getType());
     event.setRepository(repository);
+
+    // prepare the event
+    event = prepareHookEvent(event);
+
+    // post wrapped hook to event system
+    ScmEventBus.getInstance().post(WrappedRepositoryHookEvent.wrap(event));
 
     List<RepositoryHook> hooks = hookMap.get(event.getType());
 
@@ -206,10 +220,10 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Method description
+   * Remove specified {@link RepositoryListener}.
    *
    *
-   * @param listener
+   * @param listener to remove
    */
   @Override
   public void removeListener(RepositoryListener listener)
@@ -218,11 +232,12 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Method description
+   * Calls the {@link RepositoryListener#onEvent(Repository,sonia.scm.HandlerEvent)}
+   * method of all registered listeners and send a {@link RepositoryEvent} to
+   * the {@link ScmEventBus}.
    *
-   *
-   * @param repository
-   * @param event
+   * @param repository repository that has changed
+   * @param event type of change event
    */
   protected void fireEvent(Repository repository, HandlerEvent event)
   {
@@ -230,16 +245,30 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
     {
       listener.onEvent(repository, event);
     }
+
+    ScmEventBus.getInstance().post(new RepositoryEvent(repository, event));
+  }
+
+  /**
+   * Prepare a hook event before it is fired to the event system of SCM-Manager.
+   *
+   *
+   * @param event hook event
+   * @since 1.26
+   *
+   * @return
+   */
+  protected RepositoryHookEvent prepareHookEvent(RepositoryHookEvent event)
+  {
+    return event;
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** repository hooks map */
   private Map<RepositoryHookType, List<RepositoryHook>> hookMap =
-    new EnumMap<RepositoryHookType,
-                List<RepositoryHook>>(RepositoryHookType.class);
+    Maps.newEnumMap(RepositoryHookType.class);
 
-  /** Field description */
-  private Set<RepositoryListener> listenerSet =
-    new HashSet<RepositoryListener>();
+  /** repository listeners */
+  private Set<RepositoryListener> listenerSet = Sets.newHashSet();
 }

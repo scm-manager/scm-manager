@@ -55,11 +55,21 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
   /** Field description */
-  public static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
-                                                 Command.BROWSE, Command.CAT,
-                                                 Command.DIFF, Command.LOG,
-                                                 Command.TAGS,
-                                                 Command.BRANCHES);
+  //J-
+  public static final Set<Command> COMMANDS = ImmutableSet.of(
+    Command.BLAME,
+    Command.BROWSE,
+    Command.CAT,
+    Command.DIFF, 
+    Command.LOG,
+    Command.TAGS,
+    Command.BRANCHES, 
+    Command.INCOMING,
+    Command.OUTGOING,
+    Command.PUSH,
+    Command.PULL
+  );
+  //J+
 
   //~--- constructors ---------------------------------------------------------
 
@@ -73,6 +83,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   public GitRepositoryServiceProvider(GitRepositoryHandler handler,
     Repository repository)
   {
+    this.handler = handler;
     this.repository = repository;
     context = new GitContext(handler.getDirectory(repository));
   }
@@ -160,9 +171,45 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
    * @return
    */
   @Override
+  public IncomingCommand getIncomingCommand()
+  {
+    return new GitIncomingCommand(handler, context, repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public LogCommand getLogCommand()
   {
     return new GitLogCommand(context, repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public PullCommand getPullCommand()
+  {
+    return new GitPullCommand(handler, context, repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public PushCommand getPushCommand()
+  {
+    return new GitPushCommand(handler, context, repository);
   }
 
   /**
@@ -193,6 +240,9 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   private GitContext context;
+
+  /** Field description */
+  private GitRepositoryHandler handler;
 
   /** Field description */
   private Repository repository;

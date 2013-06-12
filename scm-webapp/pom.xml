@@ -6,13 +6,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>1.19-SNAPSHOT</version>
+    <version>1.32-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-webapp</artifactId>
   <packaging>war</packaging>
-  <version>1.19-SNAPSHOT</version>
+  <version>1.32-SNAPSHOT</version>
   <name>scm-webapp</name>
 
   <dependencies>
@@ -38,31 +38,45 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>1.19-SNAPSHOT</version>
+      <version>1.32-SNAPSHOT</version>
     </dependency>
     
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-dao-xml</artifactId>
-      <version>1.19-SNAPSHOT</version>
+      <version>1.32-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
-      <version>1.19-SNAPSHOT</version>
+      <version>1.32-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
-      <version>1.19-SNAPSHOT</version>
+      <version>1.32-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-git-plugin</artifactId>
-      <version>1.19-SNAPSHOT</version>
+      <version>1.32-SNAPSHOT</version>
+    </dependency>
+    
+    <!-- security -->
+
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-web</artifactId>
+      <version>${shiro.version}</version>
+    </dependency>
+            
+    <dependency>
+      <groupId>org.apache.shiro</groupId>
+      <artifactId>shiro-guice</artifactId>
+      <version>${shiro.version}</version>
     </dependency>
 
     <!-- rest api -->
@@ -107,6 +121,12 @@
       </exclusions>
     </dependency>
     
+    <dependency>
+      <groupId>com.sun.jersey.contribs</groupId>
+      <artifactId>jersey-multipart</artifactId>
+      <version>${jersey.version}</version>
+    </dependency>
+    
     <!-- injection -->
 
     <dependency>
@@ -121,6 +141,12 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>${logback.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>${slf4j.version}</version>
     </dependency>
     
     <dependency>
@@ -143,6 +169,12 @@
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
       <version>1.8.3</version>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     
     <dependency>
@@ -163,6 +195,12 @@
       <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>
       <version>${freemarker.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.spullara.mustache.java</groupId>
+      <artifactId>compiler</artifactId>
+      <version>${mustache.version}</version>
     </dependency>
 
     <!-- aether -->
@@ -197,6 +235,12 @@
       <version>${aether.version}</version>
     </dependency>
     
+    <dependency>
+      <groupId>org.sonatype.aether</groupId>
+      <artifactId>aether-connector-file</artifactId>
+      <version>${aether.version}</version>
+    </dependency>
+    
     <!-- rest documentation -->
     
     <dependency>
@@ -221,7 +265,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>1.19-SNAPSHOT</version>
+      <version>1.32-SNAPSHOT</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -234,7 +278,7 @@
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-git-plugin</artifactId>
-      <version>1.19-SNAPSHOT</version>
+      <version>1.32-SNAPSHOT</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
@@ -242,7 +286,7 @@
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-hg-plugin</artifactId>
-      <version>1.19-SNAPSHOT</version>
+      <version>1.32-SNAPSHOT</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
@@ -250,7 +294,7 @@
     <dependency>
       <groupId>sonia.scm.plugins</groupId>
       <artifactId>scm-svn-plugin</artifactId>
-      <version>1.19-SNAPSHOT</version>
+      <version>1.32-SNAPSHOT</version>
       <classifier>tests</classifier>
       <scope>test</scope>
     </dependency>
@@ -258,21 +302,20 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>2.25.0</version>
+      <version>${selenium.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-firefox-driver</artifactId>
-      <version>2.25.0</version>
-      <scope>test</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>com.jcraft</groupId>
-      <artifactId>jsch</artifactId>
-      <version>0.1.48</version>
+      <version>${selenium.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -288,6 +331,12 @@
       <artifactId>jersey-apache-client</artifactId>
       <version>${jersey.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-logging</artifactId>
+          <groupId>commons-logging</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
   </dependencies>
@@ -309,8 +358,10 @@
           <excludes>
             <exclude>target/**</exclude>
             <exclude>.hg/**</exclude>
-            <exclude>**/extjs/**</exclude>
-            <exclude>**/syntaxhighlighter/**</exclude>
+            <exclude>src/main/webapp/resources/extjs/**</exclude>
+            <exclude>src/main/webapp/resources/syntaxhighlighter/**</exclude>
+            <exclude>src/main/webapp/resources/moment/**</exclude>
+            <exclude>**/*.mustache</exclude>
           </excludes>
           <strictCheck>true</strictCheck>
         </configuration>
@@ -355,8 +406,8 @@
 
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
-        <artifactId>maven-jetty-plugin</artifactId>
-        <version>6.1.26</version>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>${jetty.version}</version>
         <configuration>
           <stopPort>8005</stopPort>
           <stopKey>STOP</stopKey>
@@ -369,15 +420,21 @@
               <name>scm.stage</name>
               <value>${scm.stage}</value>
             </systemProperty>
+            <systemProperty>
+              <name>java.awt.headless</name>
+              <value>true</value>
+            </systemProperty>
           </systemProperties>
           <connectors>
-            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
               <port>8081</port>
               <maxIdleTime>60000</maxIdleTime>
-              <headerBufferSize>16384</headerBufferSize>
+              <requestHeaderSize>16384</requestHeaderSize>
             </connector>
           </connectors>
-          <contextPath>/scm</contextPath>
+          <webApp>
+            <contextPath>/scm</contextPath>
+          </webApp>
           <source>${project.build.javaLevel}</source>
           <target>${project.build.javaLevel}</target>
           <encoding>${project.build.sourceEncoding}</encoding>
@@ -394,11 +451,13 @@
     <scm.stage>DEVELOPMENT</scm.stage>
     <scm.home>target/scm-it</scm.home>
     <environment.profile>default</environment.profile>
-    <enunciate.version>1.25</enunciate.version>
+    <selenium.version>2.28.0</selenium.version>
+    <enunciate.version>1.26.2</enunciate.version>
     <aether.version>1.13.1</aether.version>
     <wagon.version>1.0</wagon.version>
-    <maven.version>3.0.4</maven.version>
-    <netbeans.hint.deploy.server>gfv3ee6</netbeans.hint.deploy.server>
+    <maven.version>3.0.5</maven.version>
+    <mustache.version>0.8.12</mustache.version>
+    <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
   </properties>
 
   <profiles>
@@ -411,7 +470,7 @@
         <dependency>
           <groupId>sonia.scm</groupId>
           <artifactId>scm-dao-orientdb</artifactId>
-          <version>1.19-SNAPSHOT</version>
+          <version>1.32-SNAPSHOT</version>
         </dependency>
         
       </dependencies>
@@ -436,11 +495,10 @@
             </configuration>
           </plugin>
 
-
           <plugin>
             <groupId>sonia.maven</groupId>
             <artifactId>web-compressor</artifactId>
-            <version>1.2</version>
+            <version>1.5</version>
             <executions>
               <execution>
                 <phase>prepare-package</phase>
@@ -450,8 +508,8 @@
               </execution>
             </executions>
             <configuration>
-              <source>src/main/webapp/index.html</source>
-              <target>${project.build.directory}/web-compressor/index.html</target>
+              <source>src/main/webapp/index.mustache</source>
+              <target>${project.build.directory}/web-compressor/index.mustache</target>
             </configuration>
           </plugin>
 
@@ -496,8 +554,8 @@
 
           <plugin>
             <groupId>org.mortbay.jetty</groupId>
-            <artifactId>maven-jetty-plugin</artifactId>
-            <version>6.1.26</version>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>${jetty.version}</version>
             <configuration>
               <stopPort>8085</stopPort>
               <stopKey>STOP</stopKey>
@@ -508,9 +566,10 @@
                 </systemProperty>
               </systemProperties>
               <connectors>
-                <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
                   <port>8081</port>
                   <maxIdleTime>60000</maxIdleTime>
+                  <requestHeaderSize>16384</requestHeaderSize>
                 </connector>
               </connectors>
               <source>${project.build.javaLevel}</source>
@@ -575,8 +634,8 @@
           
           <plugin>
             <groupId>org.mortbay.jetty</groupId>
-            <artifactId>maven-jetty-plugin</artifactId>
-            <version>6.1.26</version>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>${jetty.version}</version>
             <configuration>
               <stopPort>8086</stopPort>
               <stopKey>STOP</stopKey>
@@ -587,9 +646,10 @@
                 </systemProperty>
               </systemProperties>
               <connectors>
-                <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
                   <port>8082</port>
                   <maxIdleTime>60000</maxIdleTime>
+                  <requestHeaderSize>16384</requestHeaderSize>
                 </connector>
               </connectors>
               <source>${project.build.javaLevel}</source>
@@ -666,7 +726,7 @@
             </executions>
             <configuration>
               <configFile>src/main/doc/enunciate.xml</configFile>
-              <docsDir>${project.build.directory}/docs</docsDir>
+              <docsDir>${project.build.directory}/restdocs</docsDir>
             </configuration>
             <dependencies>
               <dependency>
@@ -675,6 +735,25 @@
                 <version>${enunciate.version}</version>
               </dependency>
             </dependencies>
+          </plugin>
+          
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.3</version>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/doc/assembly.xml</descriptor>
+              </descriptors>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
           
         </plugins>

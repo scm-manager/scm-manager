@@ -55,7 +55,6 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 

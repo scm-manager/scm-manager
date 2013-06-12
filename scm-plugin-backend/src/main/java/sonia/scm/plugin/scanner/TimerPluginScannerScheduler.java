@@ -74,8 +74,7 @@ public class TimerPluginScannerScheduler implements PluginScannerScheduler
    */
   @Inject
   public TimerPluginScannerScheduler(PluginBackend backend,
-                                     BackendConfiguration configuration,
-                                     PluginScannerFactory scannerFactory)
+    BackendConfiguration configuration, PluginScannerFactory scannerFactory)
   {
     this.backend = backend;
     this.configuration = configuration;
@@ -105,7 +104,7 @@ public class TimerPluginScannerScheduler implements PluginScannerScheduler
     if (logger.isInfoEnabled())
     {
       logger.info("start scanner task with an interval of {}",
-                  Util.convertTime(configuration.getScannInterval()));
+        Util.convertTime(configuration.getScannInterval()));
     }
 
     PluginScannerTimerTask task = new PluginScannerTimerTask(backend,

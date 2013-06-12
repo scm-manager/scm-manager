@@ -51,6 +51,7 @@
   <resources>
     <resource>src/main/resources/META-INF/scm/plugin.xml</resource>
     <resource>src/main/resources/scm/sample.hello.js</resource>
+    <resource>src/main/conf/logging.xml</resource>
   </resources>
 
 </archetype>

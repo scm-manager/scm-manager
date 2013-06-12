@@ -35,16 +35,16 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
+import com.google.common.collect.ImmutableSet;
 
 import org.junit.Test;
 
 import sonia.scm.AbstractTestBase;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.cache.CacheManager;
-import sonia.scm.cache.EhCacheManager;
+import sonia.scm.cache.MapCacheManager;
 import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.user.User;
+import sonia.scm.user.UserManager;
 import sonia.scm.user.UserTestData;
 import sonia.scm.util.MockUtil;
 
@@ -56,7 +56,7 @@ import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,6 +76,8 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
   @Test
   public void testAuthenticateFailed()
   {
+    manager = createManager();
+
     AuthenticationResult result = manager.authenticate(request, response,
                                     trillian.getName(), "trillian");
 
@@ -89,6 +91,8 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
   @Test
   public void testAuthenticateNotFound()
   {
+    manager = createManager();
+
     AuthenticationResult result = manager.authenticate(request, response,
                                     "dent", "trillian");
 
@@ -102,6 +106,8 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
   @Test
   public void testAuthenticateSuccess()
   {
+    manager = createManager();
+
     AuthenticationResult result = manager.authenticate(request, response,
                                     trillian.getName(), "trillian123");
 
@@ -109,10 +115,36 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
     assertUserEquals(trillian, result.getUser());
     assertEquals("trilliansType", result.getUser().getType());
     result = manager.authenticate(request, response, perfect.getName(),
-                                  "perfect123");
+      "perfect123");
     assertNotNull(perfect);
     assertUserEquals(perfect, result.getUser());
     assertEquals("perfectsType", result.getUser().getType());
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testAuthenticationOrder()
+  {
+    User trillian = UserTestData.createTrillian();
+
+    trillian.setPassword("trillian123");
+
+    SingleUserAuthenticaionHandler a1 =
+      new SingleUserAuthenticaionHandler("a1", trillian);
+    SingleUserAuthenticaionHandler a2 =
+      new SingleUserAuthenticaionHandler("a2", trillian);
+
+    manager = createManager("a2", a1, a2);
+
+    AuthenticationResult result = manager.authenticate(request, response,
+                                    trillian.getName(), "trillian123");
+
+    assertNotNull(result);
+    assertEquals(AuthenticationState.SUCCESS, result.getState());
+    assertEquals("a2", result.getUser().getType());
   }
 
   /**
@@ -124,26 +156,6 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
   @Override
   protected void postSetUp() throws Exception
   {
-    Set<AuthenticationHandler> handlerSet =
-      new HashSet<AuthenticationHandler>();
-
-    perfect = UserTestData.createPerfect();
-    perfect.setPassword("perfect123");
-    handlerSet.add(new SingleUserAuthenticaionHandler("perfectsType", perfect));
-    trillian = UserTestData.createTrillian();
-    trillian.setPassword("trillian123");
-    handlerSet.add(new SingleUserAuthenticaionHandler("trilliansType",
-            trillian));
-
-    Provider<Set<AuthenticationListener>> listenerProvider =
-      mock(Provider.class);
-
-    when(listenerProvider.get()).thenReturn(
-        new HashSet<AuthenticationListener>());
-    manager = new ChainAuthenticatonManager(handlerSet,
-            new MessageDigestEncryptionHandler(), cacheManager,
-            listenerProvider);
-    manager.init(contextProvider);
     request = MockUtil.getHttpServletRequest();
     response = MockUtil.getHttpServletResponse();
   }
@@ -174,6 +186,49 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
     assertEquals(user.getMail(), other.getMail());
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private ChainAuthenticatonManager createManager()
+  {
+    perfect = UserTestData.createPerfect();
+    perfect.setPassword("perfect123");
+    trillian = UserTestData.createTrillian();
+    trillian.setPassword("trillian123");
+
+    return createManager("",
+      new SingleUserAuthenticaionHandler("perfectsType", perfect),
+      new SingleUserAuthenticaionHandler("trilliansType", trillian));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param defaultType
+   * @param handlers
+   *
+   * @return
+   */
+  private ChainAuthenticatonManager createManager(String defaultType,
+    AuthenticationHandler... handlers)
+  {
+    Set<AuthenticationHandler> handlerSet = ImmutableSet.copyOf(handlers);
+
+    UserManager userManager = mock(UserManager.class);
+
+    when(userManager.getDefaultType()).thenReturn(defaultType);
+    manager = new ChainAuthenticatonManager(userManager, handlerSet,
+      new MessageDigestEncryptionHandler(), new MapCacheManager(),
+      Collections.EMPTY_SET);
+    manager.init(contextProvider);
+
+    return manager;
+  }
+
   //~--- inner classes --------------------------------------------------------
 
   /**
@@ -184,7 +239,7 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
    * @author         Sebastian Sdorra
    */
   private static class SingleUserAuthenticaionHandler
-          implements AuthenticationHandler
+    implements AuthenticationHandler
   {
 
     /**
@@ -215,7 +270,7 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
      */
     @Override
     public AuthenticationResult authenticate(HttpServletRequest request,
-            HttpServletResponse response, String username, String password)
+      HttpServletResponse response, String username, String password)
     {
       AuthenticationResult result = null;
 
@@ -223,7 +278,7 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
       {
         if (password.equals(user.getPassword()))
         {
-          result = new AuthenticationResult(user);
+          result = new AuthenticationResult(user.clone());
         }
         else
         {
@@ -281,10 +336,6 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
 
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private CacheManager cacheManager =
-    new EhCacheManager(net.sf.ehcache.CacheManager.create());
 
   /** Field description */
   private ChainAuthenticatonManager manager;

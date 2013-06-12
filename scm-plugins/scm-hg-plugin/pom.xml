@@ -6,12 +6,12 @@
   <parent>
     <groupId>sonia.scm.plugins</groupId>
     <artifactId>scm-plugins</artifactId>
-    <version>1.19-SNAPSHOT</version>
+    <version>1.32-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm.plugins</groupId>
   <artifactId>scm-hg-plugin</artifactId>
-  <version>1.19-SNAPSHOT</version>
+  <version>1.32-SNAPSHOT</version>
   <name>scm-hg-plugin</name>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>Plugin for the version control system Mercurial</description>
@@ -28,7 +28,7 @@
     <dependency>
       <groupId>com.aragost.javahg</groupId>
       <artifactId>javahg</artifactId>
-      <version>0.3.1-scm</version>
+      <version>0.6</version>
     </dependency>
 
     <!-- test scope -->
@@ -36,7 +36,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-test</artifactId>
-      <version>1.19-SNAPSHOT</version>
+      <version>1.32-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
 
@@ -46,6 +46,25 @@
   
   <build>
     <plugins>
+      
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <version>1.9.0</version>
+        <configuration>
+          <header>http://download.scm-manager.org/licenses/mvn-license.txt</header>
+          <includes>
+            <include>src/**</include>
+            <include>**/test/**</include>
+          </includes>
+          <excludes>
+            <exclude>target/**</exclude>
+            <exclude>.hg/**</exclude>
+            <exclude>**/fileview.py</exclude>
+          </excludes>
+          <strictCheck>true</strictCheck>
+        </configuration>
+      </plugin>
         
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -71,7 +90,6 @@
       <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
     
-    <!--
     <repository>
       <releases>
         <enabled>false</enabled>
@@ -82,9 +100,8 @@
       <id>sonatype-ossrh</id>
       <name>Sonatype Open Source Software Repository Hosting</name>
       <layout>default</layout>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+      <url>https://oss.sonatype.org/content/groups/public/</url>
     </repository>
-    -->
   
   </repositories>
  

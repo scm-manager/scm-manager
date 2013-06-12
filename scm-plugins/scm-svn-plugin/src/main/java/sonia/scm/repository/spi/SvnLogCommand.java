@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -102,7 +103,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
    */
   @Override
   public Changeset getChangeset(String revision)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     Changeset changeset = null;
 
@@ -149,7 +150,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
    */
   @Override
   public ChangesetPagingResult getChangesets(LogCommandRequest request)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     if (logger.isDebugEnabled())
     {
@@ -184,7 +185,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
         pathArray = new String[] { request.getPath() };
       }
 
-      List<Changeset> changesetList = Lists.newArrayList();
+      List<SVNLogEntry> changesetList = Lists.newArrayList();
       Collection<SVNLogEntry> entries = repository.log(pathArray, null,
                                           startRev, endRev, true, true);
 
@@ -192,7 +193,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
       {
         if (entry.getRevision() <= maxRev)
         {
-          changesetList.add(SvnUtil.createChangeset(entry));
+          changesetList.add(entry);
         }
       }
 
@@ -201,7 +202,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
       int max = request.getPagingLimit() + start;
       int end = total;
 
-      if (end > max)
+      if ((max > 0) && (end > max))
       {
         end = max;
       }
@@ -211,13 +212,21 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
         start = 0;
       }
 
-      changesetList = Lists.newArrayList(changesetList.subList(start, end));
-      changesets = new ChangesetPagingResult(total, changesetList);
+      if (logger.isTraceEnabled())
+      {
+        logger.trace(
+          "create sublist from {} to {} of total {} collected changesets",
+          start, end, total);
+      }
+
+      changesetList = changesetList.subList(start, end);
+      changesets = new ChangesetPagingResult(total,
+        SvnUtil.createChangesets(changesetList));
     }
     catch (NumberFormatException ex)
     {
       throw new RepositoryException(
-          "could not parse revision ".concat(startRevision), ex);
+        "could not parse revision ".concat(startRevision), ex);
     }
     catch (SVNException ex)
     {

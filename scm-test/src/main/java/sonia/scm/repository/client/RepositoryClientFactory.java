@@ -41,8 +41,16 @@ import java.io.File;
  *
  * @author Sebastian Sdorra
  */
-public class RepositoryClientFactory
+public final class RepositoryClientFactory
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private RepositoryClientFactory() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -57,8 +65,8 @@ public class RepositoryClientFactory
    * @throws RepositoryClientException
    */
   public static RepositoryClient createClient(String type,
-          File localRepository, String remoteRepository)
-          throws RepositoryClientException
+    File localRepository, String remoteRepository)
+    throws RepositoryClientException
   {
     return createClient(type, localRepository, remoteRepository, null, null);
   }
@@ -78,9 +86,9 @@ public class RepositoryClientFactory
    * @throws RepositoryClientException
    */
   public static RepositoryClient createClient(String type,
-          File localRepository, String remoteRepository, String username,
-          String password)
-          throws RepositoryClientException
+    File localRepository, String remoteRepository, String username,
+    String password)
+    throws RepositoryClientException
   {
     RepositoryClient client = null;
 
@@ -89,17 +97,17 @@ public class RepositoryClientFactory
       if ("git".equals(type))
       {
         client = new GitRepositoryClient(localRepository, remoteRepository,
-                                         username, password);
+          username, password);
       }
       else if ("svn".equals(type))
       {
         client = new SvnRepositoryClient(localRepository, remoteRepository,
-                                         username, password);
+          username, password);
       }
       else if ("hg".equals(type))
       {
         client = new HgRepositoryClient(localRepository, remoteRepository,
-                                        username, password);
+          username, password);
       }
     }
     catch (Exception ex)

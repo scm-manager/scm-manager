@@ -46,7 +46,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-@ExtensionPoint
+@ExtensionPoint(multi=false)
 public interface FileSystem
 {
 

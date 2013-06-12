@@ -35,9 +35,13 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,13 +55,14 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.security.CipherUtil;
+import sonia.scm.security.Tokens;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -120,16 +125,14 @@ public class HgHookCallbackServlet extends HttpServlet
    * @param securityContextProvider
    */
   @Inject
-  public HgHookCallbackServlet(
-          RepositoryManager repositoryManager, HgRepositoryHandler handler,
-          HgHookManager hookManager, Provider<HgContext> contextProvider,
-          Provider<WebSecurityContext> securityContextProvider)
+  public HgHookCallbackServlet(RepositoryManager repositoryManager,
+    HgRepositoryHandler handler, HgHookManager hookManager,
+    Provider<HgContext> contextProvider)
   {
     this.repositoryManager = repositoryManager;
     this.handler = handler;
     this.hookManager = hookManager;
     this.contextProvider = contextProvider;
-    this.securityContextProvider = securityContextProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -146,7 +149,7 @@ public class HgHookCallbackServlet extends HttpServlet
    */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException
+    throws ServletException, IOException
   {
     String ping = request.getParameter(PARAM_PING);
 
@@ -172,8 +175,8 @@ public class HgHookCallbackServlet extends HttpServlet
    */
   @Override
   protected void doPost(HttpServletRequest request,
-                        HttpServletResponse response)
-          throws ServletException, IOException
+    HttpServletResponse response)
+    throws ServletException, IOException
   {
     String strippedURI = HttpUtil.getStrippedURI(request);
     Matcher m = REGEX_URL.matcher(strippedURI);
@@ -194,7 +197,7 @@ public class HgHookCallbackServlet extends HttpServlet
 
           if (Util.isNotEmpty(credentials))
           {
-            authenticate(request, response, credentials);
+            authenticate(request, credentials);
           }
 
           hookCallback(response, repositoryId, type, challenge, node);
@@ -228,8 +231,7 @@ public class HgHookCallbackServlet extends HttpServlet
    * @param response
    * @param credentials
    */
-  private void authenticate(HttpServletRequest request,
-                            HttpServletResponse response, String credentials)
+  private void authenticate(HttpServletRequest request, String credentials)
   {
     try
     {
@@ -241,10 +243,10 @@ public class HgHookCallbackServlet extends HttpServlet
 
         if (credentialsArray.length >= 2)
         {
-          WebSecurityContext context = securityContextProvider.get();
+          Subject subject = SecurityUtils.getSubject();
 
-          context.authenticate(request, response, credentialsArray[0],
-                               credentialsArray[1]);
+          subject.login(Tokens.createAuthenticationToken(request,
+            credentialsArray[0], credentialsArray[1]));
         }
       }
     }
@@ -266,8 +268,8 @@ public class HgHookCallbackServlet extends HttpServlet
    * @throws IOException
    */
   private void fireHook(HttpServletResponse response, String repositoryName,
-                        String node, RepositoryHookType type)
-          throws IOException
+    String node, RepositoryHookType type)
+    throws IOException
   {
     try
     {
@@ -277,9 +279,8 @@ public class HgHookCallbackServlet extends HttpServlet
       }
 
       repositoryManager.fireHookEvent(HgRepositoryHandler.TYPE_NAME,
-                                      repositoryName,
-                                      new HgRepositoryHookEvent(handler,
-                                        repositoryName, node, type));
+        repositoryName,
+        new HgRepositoryHookEvent(handler, hookManager, repositoryName, node, type));
     }
     catch (RepositoryNotFoundException ex)
     {
@@ -294,6 +295,10 @@ public class HgHookCallbackServlet extends HttpServlet
       }
 
       response.sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+    catch (Exception ex)
+    {
+      sendError(response, ex);
     }
   }
 
@@ -310,9 +315,8 @@ public class HgHookCallbackServlet extends HttpServlet
    * @throws IOException
    */
   private void hookCallback(HttpServletResponse response,
-                            String repositoryName, String typeName,
-                            String challenge, String node)
-          throws IOException
+    String repositoryName, String typeName, String challenge, String node)
+    throws IOException
   {
     if (hookManager.isAcceptAble(challenge))
     {
@@ -349,6 +353,39 @@ public class HgHookCallbackServlet extends HttpServlet
       }
 
       response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param response
+   * @param ex
+   *
+   * @throws IOException
+   */
+  private void sendError(HttpServletResponse response, Exception ex)
+    throws IOException
+  {
+    logger.warn("hook ended with exception", ex);
+    response.setStatus(HttpServletResponse.SC_CONFLICT);
+
+    String msg = ex.getMessage();
+
+    if (msg != null)
+    {
+      PrintWriter writer = null;
+
+      try
+      {
+        writer = response.getWriter();
+        writer.println(msg);
+      }
+      finally
+      {
+        Closeables.closeQuietly(writer);
+      }
     }
   }
 
@@ -404,7 +441,4 @@ public class HgHookCallbackServlet extends HttpServlet
 
   /** Field description */
   private RepositoryManager repositoryManager;
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 }

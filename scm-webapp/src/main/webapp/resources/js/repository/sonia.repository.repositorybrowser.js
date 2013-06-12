@@ -139,33 +139,30 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }
     };
     
-    var type = Sonia.repository.getTypeByName( this.repository.type );
-    if ( type && type.supportedCommands && type.supportedCommands.indexOf('BRANCHES') >= 0){
-      config.tbar = this.createTopToolbar();
-    }
+    config.tbar = this.createTopToolbar();
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.repository.RepositoryBrowser.superclass.initComponent.apply(this, arguments);
   },
   
   createTopToolbar: function(){
-    var tagStore = new Sonia.rest.JsonStore({
-      proxy: new Ext.data.HttpProxy({
-        url: restUrl + 'repositories/' + this.repository.id + '/tags.json',
-        method: 'GET',
-        disableCaching: false
-      }),
-      root: 'tag',
-      idProperty: 'name',
-      fields: [ 'name', 'revision' ]
-    });
+    var items = [this.repository.name];
+    
+    var type = Sonia.repository.getTypeByName( this.repository.type );
+    if ( type && type.supportedCommands && type.supportedCommands.indexOf('TAGS') >= 0){
+    
+      var tagStore = new Sonia.rest.JsonStore({
+        proxy: new Ext.data.HttpProxy({
+          url: restUrl + 'repositories/' + this.repository.id + '/tags.json',
+          method: 'GET',
+          disableCaching: false
+        }),
+        root: 'tag',
+        idProperty: 'name',
+        fields: [ 'name', 'revision' ]
+      });
 
-    var tbar = {
-      xtype: 'toolbar',
-      items: [
-        this.repository.name,
-        '->',
-        'Tags:', ' ',{
+      items.push('->','Tags:', ' ',{
         xtype: 'combo',
         valueField: 'revision',
         displayField: 'name',
@@ -179,8 +176,14 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
             scope: this
           }
         }
-      }]
+      });
+    
     }
+    
+    var tbar = {
+      xtype: 'toolbar',
+      items: [items]
+    };
     
     return tbar;
   },
@@ -204,7 +207,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   
   loadStore: function(store, records, extra){
     var path = extra.params.path;
-    if ( path != null && path.length > 0 ){
+    if ( path && path.length > 0 ){
       
       var index = path.lastIndexOf('/');
       if ( index > 0 ){
@@ -237,7 +240,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   onClick: function(e){
     var el = e.getTarget('.scm-browser');
     
-    if ( el != null ){
+    if ( el ){
     
       var rel = el.rel;
       var index = rel.indexOf(':');
@@ -245,9 +248,9 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         var prefix = rel.substring(0, index);
         var path = rel.substring(index + 1);
         
-        if ( prefix == 'sub' ){
+        if ( prefix === 'sub' ){
           this.openSubRepository(path);
-        } else if ( prefix == 'dir' ){
+        } else if ( prefix === 'dir' ){
           this.changeDirectory(path);
         } else {
           this.openFile(path);
@@ -277,7 +280,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
           revision: revision,
           closable: true,
           autoScroll: true
-        }
+        };
       }
       main.addTab(panel);
     });
@@ -285,7 +288,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   
   appendRepositoryProperties: function(bar){
     bar.push('->',this.repository.name);
-    if ( this.revision != null ){
+    if ( this.revision ){
       bar.push(': ', this.revision);
     }
   },
@@ -323,7 +326,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     
     var params = {
       path: path
-    }
+    };
     
     if (this.revision){
       params.revision = this.revision;
@@ -370,7 +373,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     var currentPath = '';
     var items = [this.createFolderButton(currentPath, '')];
           
-    if ( path != '' ){
+    if ( path !== '' ){
       for (var i=0; i<parts.length; i++){
         currentPath += parts[i] + '/';
         items.push(this.createFolderButton(currentPath, parts[i]));
@@ -378,7 +381,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     }
     
     items.push('->', this.repository.name);
-    if ( this.revision != null ){
+    if ( this.revision ){
       items.push(':', this.revision);
     }
     
@@ -392,7 +395,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     if ( i > 0 ){
       url = url.substring( i + ctxPath.length );
     }
-    if ( url.indexOf('/') == 0 ){
+    if ( url.indexOf('/') === 0 ){
       url = url.substring(1);
     }
     return url;
@@ -401,7 +404,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   transformLink: function(url, revision){
     var link = null;
     var server = Sonia.util.getServername(url);
-    if ( server == window.location.hostname || server == 'localhost' ){
+    if ( server === window.location.hostname || server === 'localhost' ){
       var repositoryPath = this.getRepositoryPath( url );
       if (repositoryPath){
         link = 'sub:' + repositoryPath;
@@ -413,7 +416,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     return link;
   },
   
-  renderName: function(name, p, record){
+  renderLink: function(text, record){
     var subRepository = record.get('subrepository');
     var folder = record.get('directory');
     var path = null;
@@ -441,7 +444,11 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       template = this.templateInternalLink;
     }
     
-    return String.format(template, name, path);
+    return String.format(template, text, path);    
+  },
+  
+  renderName: function(name, p, record){
+    return this.renderLink(name, record);
   },
   
   renderIcon: function(directory, p, record){
@@ -456,7 +463,8 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     } else {
       icon = this.iconDocument;
     }
-    return String.format(this.templateIcon, icon, name, name);
+    var img = String.format(this.templateIcon, icon, name, name);
+    return this.renderLink(img, record);
   },
   
   renderLength: function(length, p, record){
@@ -487,10 +495,10 @@ Sonia.History.register('repositoryBrowser', {
   },
   
   onChange: function(repoId, revision, path){
-    if (revision == 'null'){
+    if (revision === 'null'){
       revision = null;
     }
-    if (path == 'null'){
+    if (path === 'null'){
       path = '';
     }
     var id = 'repositoryBrowser;' + repoId + ';' + revision;
@@ -504,7 +512,7 @@ Sonia.History.register('repositoryBrowser', {
           revision: revision,
           closable: true,
           autoScroll: true
-        }
+        };
         if (path){
           panel.path = path;
         }

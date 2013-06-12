@@ -36,24 +36,15 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.After;
-import org.junit.Assume;
 import org.junit.Before;
 
-import sonia.scm.SCMContext;
-import sonia.scm.io.FileSystem;
-import sonia.scm.repository.HgContextProvider;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgTestUtil;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.TempSCMContextProvider;
-import sonia.scm.store.MemoryStoreFactory;
-
-import static org.mockito.Mockito.*;
+import sonia.scm.util.MockUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -87,22 +78,24 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
   @Before
   public void initHgHandler() throws IOException
   {
-    File folder = tempFolder.newFolder();
-    TempSCMContextProvider context =
-      (TempSCMContextProvider) SCMContext.getContext();
-
-    context.setBaseDirectory(folder);
-
-    FileSystem fileSystem = mock(FileSystem.class);
-
-    this.handler = new HgRepositoryHandler(new MemoryStoreFactory(),
-      fileSystem, new HgContextProvider());
-    this.handler.init(context);
+    this.handler = HgTestUtil.createHandler(tempFolder.newFolder());
 
     HgTestUtil.checkForSkip(handler);
 
-    cmdContext = new HgCommandContext(handler.getConfig(),
+    cmdContext = new HgCommandContext(HgTestUtil.createHookManager(), handler,
       RepositoryTestData.createHeartOfGold(), repositoryDirectory);
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Before
+  public void setUp()
+  {
+    setSubject(MockUtil.createAdminSubject());
   }
 
   //~--- get methods ----------------------------------------------------------

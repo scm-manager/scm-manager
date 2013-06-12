@@ -216,7 +216,6 @@ public class PreProcessorUtil
    *
    *
    * @param repository
-   * @param changeset
    * @param result
    */
   public void prepareForReturn(Repository repository, BrowserResult result)

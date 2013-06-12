@@ -38,7 +38,7 @@ Sonia.group.PropertiesFormPanel = Ext.extend(Sonia.group.FormPanel, {
         fieldLabel: this.nameText,
         name: 'name',
         allowBlank: false,
-        readOnly: this.item != null,
+        readOnly: this.item !== null,
         helpText: this.nameHelpText,
         vtype: 'name'
       },{
@@ -47,7 +47,7 @@ Sonia.group.PropertiesFormPanel = Ext.extend(Sonia.group.FormPanel, {
         xtype: 'textarea',
         helpText: this.descriptionHelpText
       }]
-    }
+    };
     
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.group.PropertiesFormPanel.superclass.initComponent.apply(this, arguments);

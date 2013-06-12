@@ -35,6 +35,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.user.User;
 import sonia.scm.util.ServiceUtil;
 
 /**
@@ -43,7 +44,7 @@ import sonia.scm.util.ServiceUtil;
  *
  * @author Sebastian Sdorra
  */
-public class SCMContext
+public final class SCMContext
 {
 
   /** Default java package for finding extensions */
@@ -52,8 +53,24 @@ public class SCMContext
   /** Name of the anonymous user */
   public static final String USER_ANONYMOUS = "anonymous";
 
+  /**
+   * the anonymous user
+   * @since 1.21
+   */
+  public static final User ANONYMOUS = new User(USER_ANONYMOUS,
+                                         "SCM Anonymous",
+                                         "scm-anonymous@scm-manager.com");
+
   /** Singleton instance of {@link SCMContextProvider} */
   private static volatile SCMContextProvider provider;
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private SCMContext() {}
 
   //~--- get methods ----------------------------------------------------------
 

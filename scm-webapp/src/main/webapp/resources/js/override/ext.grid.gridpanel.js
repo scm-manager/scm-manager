@@ -29,7 +29,12 @@
  *
  */
 
+Ext.grid.GridPanel.prototype.applyStateExt = Ext.grid.GridPanel.prototype.applyState;
+Ext.grid.GridPanel.prototype.getStateExt = Ext.grid.GridPanel.prototype.getState;
+
 Ext.override(Ext.grid.GridPanel,{
+
+  stateEvents : ['columnmove', 'columnresize', 'sortchange', 'groupchange', 'toggleGroup'],
 
   addColumn: function(field, column, colIndex){
     if(!column){
@@ -46,12 +51,32 @@ Ext.override(Ext.grid.GridPanel,{
   
   removeColumn: function(name, colIndex){
     this.store.removeField(name);
-    if(typeof colIndex != 'number'){
+    if(typeof colIndex !== 'number'){
       colIndex = this.colModel.findColumnIndex(name);
     }
     if(colIndex >= 0){
       this.colModel.removeColumn(colIndex);
     }
+  },
+  
+  applyState: function(state){
+    var view = this.getView();
+    if (view && view.applyState){
+      var groups = state.groups;
+      if (groups){
+        view.applyState(groups);
+      }
+    }
+    this.applyStateExt(state);
+  },
+  
+  getState: function(){
+    var state = this.getStateExt();
+    var view = this.getView();
+    if (view && view.getState){
+      state.groups = view.getState();
+    }
+    return state;
   }
   
 });

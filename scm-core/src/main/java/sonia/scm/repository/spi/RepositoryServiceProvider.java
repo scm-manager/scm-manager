@@ -35,6 +35,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.CommandNotSupportedException;
 
@@ -43,6 +44,7 @@ import sonia.scm.repository.api.CommandNotSupportedException;
 import java.io.Closeable;
 import java.io.IOException;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -140,10 +142,69 @@ public abstract class RepositoryServiceProvider implements Closeable
    *
    *
    * @return
+   * @since 1.31
+   */
+  public IncomingCommand getIncomingCommand()
+  {
+    throw new CommandNotSupportedException(Command.INCOMING);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
    */
   public LogCommand getLogCommand()
   {
     throw new CommandNotSupportedException(Command.LOG);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.31
+   */
+  public OutgoingCommand getOutgoingCommand()
+  {
+    throw new CommandNotSupportedException(Command.OUTGOING);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.31
+   */
+  public PullCommand getPullCommand()
+  {
+    throw new CommandNotSupportedException(Command.PULL);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.31
+   */
+  public PushCommand getPushCommand()
+  {
+    throw new CommandNotSupportedException(Command.PUSH);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Set<Feature> getSupportedFeatures()
+  {
+    return Collections.EMPTY_SET;
   }
 
   /**

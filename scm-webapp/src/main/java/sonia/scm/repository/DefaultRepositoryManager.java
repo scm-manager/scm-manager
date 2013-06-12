@@ -36,9 +36,15 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.concurrent.SubjectAwareExecutorService;
+import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,20 +55,18 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -71,7 +75,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -84,6 +90,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 {
 
   /** Field description */
+  private static final String THREAD_NAME = "Hook-%s";
+
+  /** Field description */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultRepositoryManager.class);
 
@@ -92,31 +101,38 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   /**
    * Constructs ...
    *
-   *
-   *
-   *
-   *
    * @param configuration
    * @param contextProvider
-   * @param securityContextProvider
+   * @param keyGenerator
    * @param repositoryDAO
    * @param handlerSet
    * @param repositoryListenersProvider
    * @param repositoryHooksProvider
+   * @param preProcessorUtil
    */
   @Inject
-  public DefaultRepositoryManager(
-          ScmConfiguration configuration, SCMContextProvider contextProvider,
-          Provider<WebSecurityContext> securityContextProvider,
-          RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
-          Provider<Set<RepositoryListener>> repositoryListenersProvider,
-          Provider<Set<RepositoryHook>> repositoryHooksProvider)
+  public DefaultRepositoryManager(ScmConfiguration configuration,
+    SCMContextProvider contextProvider, KeyGenerator keyGenerator,
+    RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
+    Provider<Set<RepositoryListener>> repositoryListenersProvider,
+    Provider<Set<RepositoryHook>> repositoryHooksProvider,
+    PreProcessorUtil preProcessorUtil)
   {
     this.configuration = configuration;
-    this.securityContextProvider = securityContextProvider;
+    this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
     this.repositoryListenersProvider = repositoryListenersProvider;
     this.repositoryHooksProvider = repositoryHooksProvider;
+    this.preProcessorUtil = preProcessorUtil;
+
+    //J-
+    ThreadFactory factory = new ThreadFactoryBuilder()
+      .setNameFormat(THREAD_NAME).build();
+    this.executorService = new SubjectAwareExecutorService(
+      Executors.newCachedThreadPool(factory)
+    );
+    //J+
+
     handlerMap = new HashMap<String, RepositoryHandler>();
     types = new HashSet<Type>();
 
@@ -137,6 +153,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   @Override
   public void close() throws IOException
   {
+    executorService.shutdown();
+
     for (RepositoryHandler handler : handlerMap.values())
     {
       IOUtil.close(handler);
@@ -154,15 +172,15 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * @throws RepositoryException
    */
   public void create(Repository repository, boolean createRepository)
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     if (logger.isInfoEnabled())
     {
       logger.info("create repository {} of type {}", repository.getName(),
-                  repository.getType());
+        repository.getType());
     }
 
-    SecurityUtil.assertIsAdmin(securityContextProvider);
+    assertIsAdmin();
     AssertUtil.assertIsValid(repository);
 
     if (repositoryDAO.contains(repository))
@@ -170,7 +188,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
       throw new RepositoryAllreadyExistExeption();
     }
 
-    repository.setId(UUID.randomUUID().toString());
+    repository.setId(keyGenerator.createKey());
     repository.setCreationDate(System.currentTimeMillis());
 
     if (createRepository)
@@ -194,7 +212,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public void create(Repository repository)
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     create(repository, true);
   }
@@ -210,12 +228,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public void delete(Repository repository)
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     if (logger.isInfoEnabled())
     {
       logger.info("delete repository {} of type {}", repository.getName(),
-                  repository.getType());
+        repository.getType());
     }
 
     assertIsOwner(repository);
@@ -223,7 +241,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     if (configuration.isEnableRepositoryArchive() &&!repository.isArchived())
     {
       throw new RepositoryIsNotArchivedException(
-          "Repository could not deleted, because it is not archived.");
+        "Repository could not deleted, because it is not archived.");
     }
 
     if (repositoryDAO.contains(repository))
@@ -234,8 +252,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     }
     else
     {
-      throw new RepositoryException(
-          "repository ".concat(repository.getName()).concat(" not found"));
+      throw new RepositoryNotFoundException(
+        "repository ".concat(repository.getName()).concat(" not found"));
     }
 
     fireEvent(repository, HandlerEvent.DELETE);
@@ -253,7 +271,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public void fireHookEvent(String type, String name, RepositoryHookEvent event)
-          throws RepositoryNotFoundException
+    throws RepositoryNotFoundException
   {
     Repository repository = repositoryDAO.get(type, name);
 
@@ -276,7 +294,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public void fireHookEvent(String id, RepositoryHookEvent event)
-          throws RepositoryNotFoundException
+    throws RepositoryNotFoundException
   {
     Repository repository = repositoryDAO.get(id);
 
@@ -299,7 +317,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public void importRepository(Repository repository)
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     create(repository, false);
   }
@@ -339,12 +357,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public void modify(Repository repository)
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     if (logger.isInfoEnabled())
     {
       logger.info("modify repository {} of type {}", repository.getName(),
-                  repository.getType());
+        repository.getType());
     }
 
     AssertUtil.assertIsValid(repository);
@@ -362,8 +380,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     }
     else
     {
-      throw new RepositoryException(
-          "repository ".concat(repository.getName()).concat(" not found"));
+      throw new RepositoryNotFoundException(
+        "repository ".concat(repository.getName()).concat(" not found"));
     }
 
     fireEvent(repository, HandlerEvent.MODIFY);
@@ -380,7 +398,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public void refresh(Repository repository)
-          throws RepositoryException, IOException
+    throws RepositoryException, IOException
   {
     AssertUtil.assertIsNotNull(repository);
     assertIsReader(repository);
@@ -394,8 +412,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     }
     else
     {
-      throw new RepositoryException(
-          "repository ".concat(repository.getName()).concat(" not found"));
+      throw new RepositoryNotFoundException(
+        "repository ".concat(repository.getName()).concat(" not found"));
     }
   }
 
@@ -468,7 +486,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   @Override
   public Collection<Repository> getAll(Comparator<Repository> comparator)
   {
-    List<Repository> repositories = new ArrayList<Repository>();
+    List<Repository> repositories = Lists.newArrayList();
 
     for (Repository repository : repositoryDAO.getAll())
     {
@@ -513,10 +531,10 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public Collection<Repository> getAll(Comparator<Repository> comparator,
-          int start, int limit)
+    int start, int limit)
   {
     return Util.createSubCollection(repositoryDAO.getAll(), comparator,
-                                    new CollectionAppender<Repository>()
+      new CollectionAppender<Repository>()
     {
       @Override
       public void append(Collection<Repository> collection, Repository item)
@@ -553,7 +571,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public BlameViewer getBlameViewer(Repository repository)
-          throws RepositoryException
+    throws RepositoryException
   {
     AssertUtil.assertIsNotNull(repository);
 
@@ -579,7 +597,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public ChangesetViewer getChangesetViewer(Repository repository)
-          throws RepositoryException
+    throws RepositoryException
   {
     AssertUtil.assertIsNotNull(repository);
     isReader(repository);
@@ -596,7 +614,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   @Override
   public Collection<Type> getConfiguredTypes()
   {
-    List<Type> validTypes = new ArrayList<Type>();
+    List<Type> validTypes = Lists.newArrayList();
 
     for (RepositoryHandler handler : handlerMap.values())
     {
@@ -621,7 +639,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public DiffViewer getDiffViewer(Repository repository)
-          throws RepositoryException
+    throws RepositoryException
   {
     AssertUtil.assertIsNotNull(repository);
 
@@ -697,7 +715,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     if ((repository == null) && logger.isDebugEnabled())
     {
       logger.debug("could not find repository with type {} and uri {}", type,
-                   uri);
+        uri);
     }
 
     return repository;
@@ -773,7 +791,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    */
   @Override
   public RepositoryBrowser getRepositoryBrowser(Repository repository)
-          throws RepositoryException
+    throws RepositoryException
   {
     AssertUtil.assertIsNotNull(repository);
     isReader(repository);
@@ -807,15 +825,14 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   {
     if (hook.isAsync())
     {
-      new Thread(new RepositoryHookTask(hook, event)).start();
+      executorService.execute(new RepositoryHookTask(hook, event));
     }
     else
     {
       if (logger.isDebugEnabled())
       {
         Object[] args = new Object[] { event.getType(),
-                                       hook.getClass().getName(),
-                                       event.getRepository().getName() };
+          hook.getClass().getName(), event.getRepository().getName() };
 
         logger.debug("execute {} hook {} for repository {}", args);
       }
@@ -828,12 +845,26 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * Method description
    *
    *
+   * @param event
+   *
+   * @return
+   */
+  @Override
+  protected RepositoryHookEvent prepareHookEvent(RepositoryHookEvent event)
+  {
+    return SynchronizedRepositoryHookEvent.wrap(event, preProcessorUtil);
+  }
+
+  /**
+   * Method description
+   *
+   *
    *
    * @param contextProvider
    * @param handler
    */
   private void addHandler(SCMContextProvider contextProvider,
-                          RepositoryHandler handler)
+    RepositoryHandler handler)
   {
     AssertUtil.assertIsNotNull(handler);
 
@@ -844,13 +875,13 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     if (handlerMap.containsKey(type.getName()))
     {
       throw new ConfigurationException(
-          type.getName().concat("allready registered"));
+        type.getName().concat("allready registered"));
     }
 
     if (logger.isInfoEnabled())
     {
       logger.info("added RepositoryHandler {} for type {}", handler.getClass(),
-                  type);
+        type);
     }
 
     handlerMap.put(type.getName(), handler);
@@ -861,25 +892,44 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   /**
    * Method description
    *
+   */
+  private void assertIsAdmin()
+  {
+    if (!SecurityUtils.getSubject().hasRole("admin"))
+    {
+      throw new ScmSecurityException("admin role is required");
+    }
+  }
+
+  /**
+   * TODO use {@link Subject#checkPermission(org.apache.shiro.authz.Permission)}
+   * in version 2.x.
+   *
    *
    * @param repository
    */
   private void assertIsOwner(Repository repository)
   {
-    PermissionUtil.assertPermission(repository, securityContextProvider,
-                                    PermissionType.OWNER);
+    if (!isPermitted(repository, PermissionType.OWNER))
+    {
+      throw new ScmSecurityException(
+        "owner permission is required, access denied");
+    }
   }
 
   /**
-   * Method description
-   *
+   * TODO use {@link Subject#checkPermission(org.apache.shiro.authz.Permission)}
+   * in version 2.x.
    *
    * @param repository
    */
   private void assertIsReader(Repository repository)
   {
-    PermissionUtil.assertPermission(repository, securityContextProvider,
-                                    PermissionType.READ);
+    if (!isReader(repository))
+    {
+      throw new ScmSecurityException(
+        "reader permission is required, access denied");
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -896,7 +946,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * @throws RepositoryException
    */
   private RepositoryHandler getHandler(Repository repository)
-          throws RepositoryException
+    throws RepositoryException
   {
     String type = repository.getType();
     RepositoryHandler handler = handlerMap.get(type);
@@ -904,7 +954,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     if (handler == null)
     {
       throw new RepositoryHandlerNotFoundException(
-          "could not find handler for ".concat(type));
+        "could not find handler for ".concat(type));
     }
     else if (!handler.isConfigured())
     {
@@ -943,13 +993,26 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    *
    *
    * @param repository
+   * @param type
+   *
+   * @return
+   */
+  private boolean isPermitted(Repository repository, PermissionType type)
+  {
+    return PermissionUtil.hasPermission(configuration, repository, type);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
    *
    * @return
    */
   private boolean isReader(Repository repository)
   {
-    return PermissionUtil.hasPermission(repository, securityContextProvider,
-            PermissionType.READ);
+    return isPermitted(repository, PermissionType.READ);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -958,7 +1021,16 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   private ScmConfiguration configuration;
 
   /** Field description */
+  private ExecutorService executorService;
+
+  /** Field description */
   private Map<String, RepositoryHandler> handlerMap;
+
+  /** Field description */
+  private KeyGenerator keyGenerator;
+
+  /** Field description */
+  private PreProcessorUtil preProcessorUtil;
 
   /** Field description */
   private RepositoryDAO repositoryDAO;
@@ -968,9 +1040,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private Provider<Set<RepositoryListener>> repositoryListenersProvider;
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 
   /** Field description */
   private Set<Type> types;

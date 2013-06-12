@@ -33,6 +33,10 @@
 
 package sonia.scm.repository.spi;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -43,4 +47,187 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
 
   /** Field description */
   private static final long serialVersionUID = 7956624623516803183L;
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public BrowseCommandRequest clone()
+  {
+    BrowseCommandRequest clone = null;
+
+    try
+    {
+      clone = (BrowseCommandRequest) super.clone();
+    }
+    catch (CloneNotSupportedException e)
+    {
+
+      // this shouldn't happen, since we are Cloneable
+      throw new InternalError("CatCommandRequest seems not to be cloneable");
+    }
+
+    return clone;
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final BrowseCommandRequest other = (BrowseCommandRequest) obj;
+
+    return super.equals(obj) && Objects.equal(recursive, other.recursive)
+      && Objects.equal(disableLastCommit, other.disableLastCommit)
+      && Objects.equal(disableSubRepositoryDetection,
+        other.disableSubRepositoryDetection);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(super.hashCode(), recursive, disableLastCommit,
+      disableSubRepositoryDetection);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("path", getPath())
+                  .add("revision", getRevision())
+                  .add("recursive", recursive)
+                  .add("disableLastCommit", disableLastCommit)
+                  .add("disableSubRepositoryDetection", disableSubRepositoryDetection)
+                  .toString();
+    //J+
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * True to disable the last commit.
+   *
+   *
+   * @param disableLastCommit true to disable the last commit
+   *
+   * @since 1.26
+   */
+  public void setDisableLastCommit(boolean disableLastCommit)
+  {
+    this.disableLastCommit = disableLastCommit;
+  }
+
+  /**
+   * Enable or Disable sub repository detection. Default is enabled.
+   *
+   *
+   * @param disableSubRepositoryDetection true to disable sub repository detection
+   *
+   * @since 1.26
+   */
+  public void setDisableSubRepositoryDetection(
+    boolean disableSubRepositoryDetection)
+  {
+    this.disableSubRepositoryDetection = disableSubRepositoryDetection;
+  }
+
+  /**
+   * True to enable recursive file object browsing.
+   *
+   *
+   * @param recursive true to enable recursive browsing
+   *
+   * @since 1.26
+   */
+  public void setRecursive(boolean recursive)
+  {
+    this.recursive = recursive;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns true if the last commit is disabled.
+   *
+   *
+   * @return true if the last commit is disabled
+   *
+   * @since 1.26
+   */
+  boolean isDisableLastCommit()
+  {
+    return disableLastCommit;
+  }
+
+  /**
+   * Returns true if the detection of sub repositories is disabled.
+   *
+   *
+   * @return true if sub repository detection is disabled.
+   *
+   * @since 1.26
+   */
+  boolean isDisableSubRepositoryDetection()
+  {
+    return disableSubRepositoryDetection;
+  }
+
+  /**
+   * Returns true if recursive file object browsing is enabled.
+   *
+   *
+   * @return true recursive is enabled
+   *
+   * @since 1.26
+   */
+  boolean isRecursive()
+  {
+    return recursive;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** disable last commit */
+  private boolean disableLastCommit = false;
+
+  /** disable detection of sub repositories */
+  private boolean disableSubRepositoryDetection = false;
+
+  /** browse file objects recursive */
+  private boolean recursive = false;
 }

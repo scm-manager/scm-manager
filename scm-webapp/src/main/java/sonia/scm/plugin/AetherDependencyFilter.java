@@ -109,7 +109,7 @@ public class AetherDependencyFilter implements DependencyFilter
     try
     {
       scanner = new Scanner(
-          AetherDependencyFilter.class.getResourceAsStream(EXCLUDE_LIST));
+        AetherDependencyFilter.class.getResourceAsStream(EXCLUDE_LIST));
 
       while (scanner.hasNextLine())
       {
@@ -118,7 +118,10 @@ public class AetherDependencyFilter implements DependencyFilter
     }
     finally
     {
-      scanner.close();
+      if (scanner != null)
+      {
+        scanner.close();
+      }
     }
   }
 

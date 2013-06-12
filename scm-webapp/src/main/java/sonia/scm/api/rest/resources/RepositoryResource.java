@@ -38,8 +38,9 @@ package sonia.scm.api.rest.resources;
 import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
+
+import org.apache.shiro.SecurityUtils;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
@@ -55,7 +56,6 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
@@ -71,10 +71,11 @@ import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.security.RepositoryPermission;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -137,14 +138,12 @@ public class RepositoryResource
   @Inject
   public RepositoryResource(ScmConfiguration configuration,
     RepositoryManager repositoryManager,
-    Provider<WebSecurityContext> securityContextProvider,
     RepositoryServiceFactory servicefactory)
   {
     super(repositoryManager);
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.servicefactory = servicefactory;
-    this.securityContextProvider = securityContextProvider;
     setDisableCache(false);
   }
 
@@ -469,6 +468,9 @@ public class RepositoryResource
    * @param id the id of the repository
    * @param revision the revision of the file
    * @param path the path of the folder
+   * @param disableLastCommit true disables fetch of last commit message
+   * @param disableSubRepositoryDetection true disables sub repository detection
+   * @param recursive true to enable recursive browsing
    *
    * @return a list of folders and files for the given folder
    *
@@ -479,9 +481,16 @@ public class RepositoryResource
   @Path("{id}/browse")
   @TypeHint(BrowserResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public Response getBrowserResult(@PathParam("id") String id,
-    @QueryParam("revision") String revision, @QueryParam("path") String path)
+  //J-
+  public Response getBrowserResult(
+    @PathParam("id") String id,
+    @QueryParam("revision") String revision, 
+    @QueryParam("path") String path,
+    @QueryParam("disableLastCommit") @DefaultValue("false") boolean disableLastCommit,
+    @QueryParam("disableSubRepositoryDetection") @DefaultValue("false") boolean disableSubRepositoryDetection,
+    @QueryParam("recursive") @DefaultValue("false") boolean recursive)
     throws RepositoryException, IOException
+  //J+
   {
     Response response = null;
     RepositoryService service = null;
@@ -501,6 +510,12 @@ public class RepositoryResource
       {
         builder.setPath(path);
       }
+
+      //J-
+      builder.setDisableLastCommit(disableLastCommit)
+             .setDisableSubRepositoryDetection(disableSubRepositoryDetection)
+             .setRecursive(recursive);
+      //J+
 
       BrowserResult result = builder.getBrowserResult();
 
@@ -658,7 +673,7 @@ public class RepositoryResource
    * @param id the id of the repository
    * @param path path of a file
    * @param revision the revision of the file specified by the path parameter
-   * @param branch
+   * @param branch name of the branch
    * @param start the start value for paging
    * @param limit the limit value for paging
    *
@@ -776,8 +791,14 @@ public class RepositoryResource
         builder.setRevision(revision);
       }
 
-      output = new BrowserStreamingOutput(builder, path);
+      output = new BrowserStreamingOutput(service, builder, path);
 
+     /**
+      * protection for crlf injection
+      * see https://bitbucket.org/sdorra/scm-manager/issue/320/crlf-injection-vulnerability-in-diff-api
+      */
+      path = HttpUtil.removeCRLFInjectionChars(path);
+      
       String contentDispositionName = getContentDispositionNameFromPath(path);
 
       response = Response.ok(output).header("Content-Disposition",
@@ -796,10 +817,6 @@ public class RepositoryResource
     {
       logger.error("could not retrive content", ex);
       response = createErrorResonse(ex);
-    }
-    finally
-    {
-      Closeables.closeQuietly(service);
     }
 
     return response;
@@ -837,6 +854,12 @@ public class RepositoryResource
     AssertUtil.assertIsNotEmpty(id);
     AssertUtil.assertIsNotEmpty(revision);
 
+    /**
+     * check for a crlf injection attack
+     * see https://bitbucket.org/sdorra/scm-manager/issue/320/crlf-injection-vulnerability-in-diff-api
+     */
+    HttpUtil.checkForCRLFInjection(revision);
+
     RepositoryService service = null;
     Response response = null;
 
@@ -860,8 +883,8 @@ public class RepositoryResource
                       revision).concat(".diff");
       String contentDispositionName = getContentDispositionName(name);
 
-      response = Response.ok(new DiffStreamingOutput(builder)).header(
-        "Content-Disposition", contentDispositionName).build();
+      response = Response.ok(new DiffStreamingOutput(service,
+        builder)).header("Content-Disposition", contentDispositionName).build();
     }
     catch (RepositoryNotFoundException ex)
     {
@@ -875,10 +898,6 @@ public class RepositoryResource
     {
       logger.error("could not create diff", ex);
       response = createErrorResonse(ex);
-    }
-    finally
-    {
-      Closeables.closeQuietly(service);
     }
 
     return response;
@@ -976,8 +995,7 @@ public class RepositoryResource
   {
     for (Repository repository : repositories)
     {
-      RepositoryUtil.appendUrl(configuration, repositoryManager, repository);
-      prepareRepository(repository);
+      prepareForReturn(repository);
     }
 
     return repositories;
@@ -1047,6 +1065,12 @@ public class RepositoryResource
     }
     else
     {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("remove properties and permissions from repository, "
+          + "because the user is not privileged");
+      }
+
       repository.setProperties(null);
       repository.setPermissions(null);
     }
@@ -1079,7 +1103,7 @@ public class RepositoryResource
   private String getContentDispositionNameFromPath(String path)
   {
     String name = path;
-    int index = path.lastIndexOf("/");
+    int index = path.lastIndexOf('/');
 
     if (index >= 0)
     {
@@ -1099,8 +1123,9 @@ public class RepositoryResource
    */
   private boolean isOwner(Repository repository)
   {
-    return PermissionUtil.hasPermission(repository, securityContextProvider,
-      PermissionType.OWNER);
+
+    return SecurityUtils.getSubject().isPermitted(
+      new RepositoryPermission(repository, PermissionType.OWNER));
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -1110,9 +1135,6 @@ public class RepositoryResource
 
   /** Field description */
   private RepositoryManager repositoryManager;
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 
   /** Field description */
   private RepositoryServiceFactory servicefactory;

@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.orientdb;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -54,7 +55,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class OrientDBUtil
+public final class OrientDBUtil
 {
 
   /** Field description */
@@ -65,6 +66,14 @@ public class OrientDBUtil
    */
   private static final Logger logger =
     LoggerFactory.getLogger(OrientDBUtil.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private OrientDBUtil() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -93,7 +102,7 @@ public class OrientDBUtil
    * @return
    */
   public static List<ODocument> executeListResultQuery(
-          ODatabaseDocumentTx connection, String query, Object... parameters)
+    ODatabaseDocumentTx connection, String query, Object... parameters)
   {
     if (logger.isTraceEnabled())
     {
@@ -118,7 +127,7 @@ public class OrientDBUtil
    * @return
    */
   public static ODocument executeSingleResultQuery(
-          ODatabaseDocumentTx connection, String query, Object... parameters)
+    ODatabaseDocumentTx connection, String query, Object... parameters)
   {
     if (logger.isTraceEnabled())
     {
@@ -152,7 +161,7 @@ public class OrientDBUtil
    * @return
    */
   public static <T> List<ODocument> transformToDocuments(
-          Converter<T> converter, List<T> items)
+    Converter<T> converter, List<T> items)
   {
     List<ODocument> docs = null;
 
@@ -175,14 +184,14 @@ public class OrientDBUtil
    * @return
    */
   public static <T> List<T> transformToItems(Converter<T> converter,
-          List<ODocument> docs)
+    List<ODocument> docs)
   {
     List<T> items = null;
 
     if (Util.isNotEmpty(docs))
     {
       items = Lists.transform(docs,
-                              new DocumentConverterFunction<T>(converter));
+        new DocumentConverterFunction<T>(converter));
     }
 
     return items;
@@ -200,7 +209,7 @@ public class OrientDBUtil
    * @author         Enter your name here...
    */
   private static class DocumentConverterFunction<T>
-          implements Function<ODocument, T>
+    implements Function<ODocument, T>
   {
 
     /**
@@ -248,7 +257,7 @@ public class OrientDBUtil
    * @author         Enter your name here...
    */
   private static class ItemConverterFunction<F>
-          implements Function<F, ODocument>
+    implements Function<F, ODocument>
   {
 
     /**

@@ -35,23 +35,14 @@ package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.DateTime;
 import com.aragost.javahg.Repository;
-import com.aragost.javahg.internals.AbstractCommand;
 import com.aragost.javahg.internals.HgInputStream;
-import com.aragost.javahg.internals.RuntimeIOException;
 import com.aragost.javahg.internals.Utils;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.Modifications;
-import sonia.scm.repository.Person;
+import sonia.scm.repository.HgConfig;
 
 //~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
 
 import java.util.List;
 
@@ -59,46 +50,19 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class HgLogChangesetCommand extends AbstractCommand
+public class HgLogChangesetCommand extends AbstractChangesetCommand
 {
-
-  /** Field description */
-  private static final String BRANCH_DEFAULT = "default";
-
-  /**
-   * Character sequence that indicate the begin and end of the
-   * changeset in the command output.
-   * <p>
-   * This pattern is written by the CHANGESET_STYLE_PATH
-   */
-  private static final byte[] CHANGESET_PATTERN = Utils.randomBytes();
-
-  /** Field description */
-  private static final String CHANGESET_LAZY_STYLE_PATH =
-    Utils.resourceAsFile("/sonia/scm/styles/changesets-lazy.style",
-      ImmutableMap.of("pattern", CHANGESET_PATTERN)).getPath();
-
-  /** Field description */
-  private static final String CHANGESET_EAGER_STYLE_PATH =
-    Utils.resourceAsFile("/sonia/scm/styles/changesets-eager.style",
-      ImmutableMap.of("pattern", CHANGESET_PATTERN)).getPath();
-
-  /** Field description */
-  private static final String NULL_ID =
-    "0000000000000000000000000000000000000000";
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
    * @param repository
+   * @param config
    */
-  public HgLogChangesetCommand(Repository repository)
+  private HgLogChangesetCommand(Repository repository, HgConfig config)
   {
-    super(repository);
-    withDebugFlag();
+    super(repository, config);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -108,12 +72,13 @@ public class HgLogChangesetCommand extends AbstractCommand
    *
    *
    * @param repository
+   * @param config
    *
    * @return
    */
-  public static HgLogChangesetCommand on(Repository repository)
+  public static HgLogChangesetCommand on(Repository repository, HgConfig config)
   {
-    return new HgLogChangesetCommand(repository);
+    return new HgLogChangesetCommand(repository, config);
   }
 
   /**
@@ -219,9 +184,12 @@ public class HgLogChangesetCommand extends AbstractCommand
   public int singleRevision(String... files)
   {
     Integer rev = Utils.single(loadRevisions(files));
-    if ( rev == null ){
+
+    if (rev == null)
+    {
       rev = -1;
     }
+
     return rev;
   }
 
@@ -237,169 +205,5 @@ public class HgLogChangesetCommand extends AbstractCommand
   public String getCommandName()
   {
     return "log";
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param in
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private Changeset createFromInputStream(HgInputStream in) throws IOException
-  {
-    Changeset changeset = new Changeset();
-    byte[] node = in.next(40);
-    String nodeString = new String(node);
-
-    changeset.setId(nodeString);
-
-    String user = in.textUpTo('\n');
-
-    changeset.setAuthor(Person.toPerson(user));
-
-    DateTime timestamp = in.dateTimeUpTo('\n');
-
-    changeset.setDate(timestamp.getDate().getTime());
-
-    String branch = in.textUpTo('\n');
-
-    if (!BRANCH_DEFAULT.equals(branch))
-    {
-      changeset.getBranches().add(branch);
-    }
-
-    in.upTo(':');
-
-    String p1 = in.nextAsText(40);
-
-    if (!NULL_ID.equals(p1))
-    {
-      changeset.getParents().add(p1);
-    }
-
-    in.upTo(':');
-
-    String p2 = in.nextAsText(40);
-
-    if (!NULL_ID.equals(p2))
-    {
-      changeset.getParents().add(p2);
-    }
-
-    in.mustMatch(' ');    // skip space part of {parents}
-
-    Modifications modifications = changeset.getModifications();
-
-    String line = in.textUpTo('\n');
-
-    while (line.length() > 0)
-    {
-
-      if (line.startsWith("a "))
-      {
-        modifications.getAdded().add(line.substring(2));
-      }
-      else if (line.startsWith("m "))
-      {
-        modifications.getModified().add(line.substring(2));
-      }
-      else if (line.startsWith("d "))
-      {
-        modifications.getRemoved().add(line.substring(2));
-      }
-      else if (line.startsWith("t "))
-      {
-        changeset.getTags().add(line.substring(2));
-      }
-
-      line = in.textUpTo('\n');
-    }
-
-    String message = in.textUpTo('\0');
-
-    changeset.setDescription(message);
-
-    return changeset;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param stream
-   *
-   * @return
-   */
-  private List<Integer> loadRevisionsFromStream(HgInputStream stream)
-  {
-    List<Integer> revisions = Lists.newArrayList();
-
-    try
-    {
-      while (stream.peek() != -1)
-      {
-        int rev = stream.revisionUpTo(' ');
-
-        if (rev >= 0)
-        {
-          revisions.add(rev);
-        }
-      }
-
-    }
-    catch (IOException ex)
-    {
-      throw new RuntimeIOException(ex);
-    }
-
-    return revisions;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param in
-   *
-   * @return
-   */
-  private List<Changeset> readListFromStream(HgInputStream in)
-  {
-    List<Changeset> changesets = Lists.newArrayList();
-
-    try
-    {
-      boolean found = in.find(CHANGESET_PATTERN);
-
-      if (found)
-      {
-        while (!in.match(CHANGESET_PATTERN))
-        {
-
-          Changeset cset = createFromInputStream(in);
-
-          if (cset != null)
-          {
-            changesets.add(cset);
-          }
-        }
-
-        Utils.consumeAll(in);
-      }
-
-      // If the pattern is not found there is no changsets
-    }
-    catch (IOException e)
-    {
-      throw new RuntimeIOException(e);
-    }
-
-    return changesets;
   }
 }

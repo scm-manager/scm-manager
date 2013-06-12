@@ -45,6 +45,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   configWizardLabelText: 'Start Configuration Wizard',
   encodingText: 'Encoding',
   disabledText: 'Disabled',
+  showRevisionInIdText: 'Show Revision',
 
   // helpText
   hgBinaryHelpText: 'Location of Mercurial binary.',
@@ -55,6 +56,8 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
   encodingHelpText: 'Repository Encoding.',
   disabledHelpText: 'Enable or disable the Mercurial plugin. \n\
                     Note you have to reload the page, after changing this value.',
+  showRevisionInIdHelpText: 'Show revision as part of the node id. Note: \n\
+          You have to restart the ApplicationServer to affect cached changesets.',
 
   initComponent: function(){
 
@@ -97,6 +100,12 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         helpText: this.useOptimizedBytecodeHelpText
       },{
         xtype: 'checkbox',
+        name: 'showRevisionInId',
+        fieldLabel: this.showRevisionInIdText,
+        inputValue: 'true',
+        helpText: this.showRevisionInIdHelpText
+      },{
+        xtype: 'checkbox',
         name: 'disabled',
         fieldLabel: this.disabledText,
         inputValue: 'true',
@@ -112,7 +121,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
           });
           wizard.on('finish', function(config){
             var self = Ext.getCmp('hgConfigForm');
-            if ( config != null ){
+            if ( config ){
               if (debug){
                 console.debug( 'load config from wizard and submit to server' );
               }
@@ -128,7 +137,7 @@ Sonia.hg.ConfigPanel = Ext.extend(Sonia.config.ConfigForm, {
         },
         scope: this
       }]
-    }
+    };
 
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.hg.ConfigPanel.superclass.initComponent.apply(this, arguments);
@@ -184,7 +193,7 @@ Ext.reg("hgConfigPanel", Sonia.hg.ConfigPanel);
 
 // i18n
 
-if ( i18n != null && i18n.country == 'de' ){
+if ( i18n && i18n.country === 'de' ){
 
   Ext.override(Sonia.hg.ConfigPanel, {
 
@@ -200,6 +209,7 @@ if ( i18n != null && i18n.country == 'de' ){
     configWizardText: 'Konfigurations-Assistenten starten',
     configWizardLabelText: 'Konfigurations-Assistent',
     disabledText: 'Deaktivieren',
+    showRevisionInIdText: 'Zeige Revision an',
 
     // helpText
     hgBinaryHelpText: 'Pfad zum "hg" Befehl.',
@@ -208,7 +218,10 @@ if ( i18n != null && i18n.country == 'de' ){
     repositoryDirectoryHelpText: 'Verzeichnis der Mercurial-Repositories.',
     useOptimizedBytecodeHelpText: 'Optimierten Bytecode verwenden (python -O).',
     disabledHelpText: 'Aktivieren oder deaktivieren des Mercurial Plugins.\n\
-      Die Seite muss neu geladen werden wenn dieser Wert geändert wird.'
+      Die Seite muss neu geladen werden wenn dieser Wert geändert wird.',
+    showRevisionInIdHelpText: 'Zeige die Revision als teil der NodeId an. \n\
+          Der ApplicationServer muss neugestartet werden um zwischengespeicherte\n\
+           Changesets zuändern.'
   });
 
 }
@@ -227,4 +240,48 @@ initCallbacks.push(function(main){
 registerConfigPanel({
   id: 'hgConfigForm',
   xtype : 'hgConfigPanel'
+});
+
+// register type icon
+
+Sonia.repository.typeIcons['hg'] = 'resources/images/icons/16x16/mercurial.png';
+
+// override ChangesetViewerGrid to render changeset id's with revisions
+
+Ext.override(Sonia.repository.ChangesetViewerGrid, {
+  
+  isMercurialRepository: function(){
+    return this.repository.type === 'hg';
+  },
+  
+  getChangesetId: function(id, record){
+    if ( this.isMercurialRepository() ){
+      var rev = Sonia.util.getProperty(record.get('properties'), 'hg.rev');
+      if ( rev ){
+        id = rev + ':' + id;
+      }
+    }
+    return id;
+  },
+  
+  getParentIds: function(id, record){
+    var parents = record.get('parents');
+    if ( this.isMercurialRepository() ){
+      if ( parents && parents.length > 0 ){
+        var properties = record.get('properties');
+        var rev = Sonia.util.getProperty(properties, 'hg.p1.rev');
+        if (rev){
+          parents[0] = rev + ':' + parents[0];
+        }
+        if ( parents.length > 1 ){
+          rev = Sonia.util.getProperty(properties, 'hg.p2.rev');          
+          if (rev){
+            parents[1] = rev + ':' + parents[1];
+          }
+        }
+      }
+    }
+    return parents;
+  }
+  
 });

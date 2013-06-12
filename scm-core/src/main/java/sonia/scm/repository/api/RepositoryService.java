@@ -39,6 +39,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.cache.CacheManager;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Feature;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
@@ -74,6 +76,10 @@ import java.io.IOException;
  * @apiviz.uses sonia.scm.repository.api.CatCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.DiffCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.LogCommandBuilder
+ * @apiviz.uses sonia.scm.repository.api.TagsCommandBuilder
+ * @apiviz.uses sonia.scm.repository.api.BranchesCommandBuilder
+ * @apiviz.uses sonia.scm.repository.api.IncomingCommandBuilder
+ * @apiviz.uses sonia.scm.repository.api.OutgoingCommandBuilder
  */
 public final class RepositoryService implements Closeable
 {
@@ -233,6 +239,28 @@ public final class RepositoryService implements Closeable
   }
 
   /**
+   * The incoming command shows new {@link Changeset}s found in a different
+   * repository location.
+   *
+   *
+   * @return instance of {@link IncomingCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *         by the implementation of the repository service provider.
+   * @since 1.31
+   */
+  public IncomingCommandBuilder getIncomingCommand()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create incoming command for repository {}",
+        repository.getName());
+    }
+
+    return new IncomingCommandBuilder(cacheManager,
+      provider.getIncomingCommand(), repository, preProcessorUtil);
+  }
+
+  /**
    * The log command shows revision history of entire repository or files.
    *
    * @return instance of {@link LogCommandBuilder}
@@ -249,6 +277,65 @@ public final class RepositoryService implements Closeable
 
     return new LogCommandBuilder(cacheManager, provider.getLogCommand(),
       repository, preProcessorUtil);
+  }
+
+  /**
+   * The outgoing command show changesets not found in a remote repository.
+   *
+   *
+   * @return instance of {@link OutgoingCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *         by the implementation of the repository service provider.
+   * @since 1.31
+   */
+  public OutgoingCommandBuilder getOutgoingCommand()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create outgoing command for repository {}",
+        repository.getName());
+    }
+
+    return new OutgoingCommandBuilder(cacheManager,
+      provider.getOutgoingCommand(), repository, preProcessorUtil);
+  }
+
+  /**
+   * The pull command pull changes from a other repository.
+   *
+   * @return instance of {@link PullCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *         by the implementation of the repository service provider.
+   * @since 1.31
+   */
+  public PullCommandBuilder getPullCommand()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create pull command for repository {}",
+        repository.getName());
+    }
+
+    return new PullCommandBuilder(provider.getPullCommand(), repository);
+  }
+
+  /**
+   * The push command push changes to a other repository.
+   *
+   * @return instance of {@link PushCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *         by the implementation of the repository service provider.
+   * @since 1.31
+   */
+  public PushCommandBuilder getPushCommand()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create push command for repository {}",
+        repository.getName());
+    }
+
+    return new PushCommandBuilder(provider.getPushCommand());
   }
 
   /**
@@ -291,6 +378,19 @@ public final class RepositoryService implements Closeable
   public boolean isSupported(Command command)
   {
     return provider.getSupportedCommands().contains(command);
+  }
+
+  /**
+   * Returns true if the feature is supported by the repository service.
+   *
+   *
+   * @param feature feature
+   *
+   * @return true if the feature is supported
+   */
+  public boolean isSupported(Feature feature)
+  {
+    return provider.getSupportedFeatures().contains(feature);
   }
 
   //~--- fields ---------------------------------------------------------------

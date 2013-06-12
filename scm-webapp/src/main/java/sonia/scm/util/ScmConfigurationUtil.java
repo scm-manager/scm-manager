@@ -56,7 +56,7 @@ import javax.xml.bind.Unmarshaller;
  *
  * @author Sebastian Sdorra
  */
-public class ScmConfigurationUtil
+public final class ScmConfigurationUtil
 {
 
   /** Field description */
@@ -72,13 +72,13 @@ public class ScmConfigurationUtil
    * Constructs ...
    *
    */
-  public ScmConfigurationUtil()
+  private ScmConfigurationUtil()
   {
     try
     {
       context = JAXBContext.newInstance(ScmConfiguration.class);
       file = new File(SCMContext.getContext().getBaseDirectory(),
-                      ScmConfiguration.PATH);
+        ScmConfiguration.PATH);
     }
     catch (JAXBException ex)
     {

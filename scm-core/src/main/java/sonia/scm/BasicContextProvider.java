@@ -108,17 +108,13 @@ public class BasicContextProvider implements SCMContextProvider
   //~--- methods --------------------------------------------------------------
 
   /**
-   * {@see java.io.Closeable#close()}
-   *
-   *
-   * @throws IOException
+   * {@inheritDoc}
    */
   @Override
   public void close() throws IOException {}
 
   /**
-   * {@see SCMContextProvider#init()}
-   *
+   * {@inheritDoc}
    */
   @Override
   public void init() {}
@@ -126,10 +122,7 @@ public class BasicContextProvider implements SCMContextProvider
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * {@see SCMContextProvider#getBaseDirectory()}
-   *
-   *
-   * @return {@see SCMContextProvider#getBaseDirectory()}
+   * {@inheritDoc}
    */
   @Override
   public File getBaseDirectory()
@@ -139,8 +132,6 @@ public class BasicContextProvider implements SCMContextProvider
 
   /**
    * {@inheritDoc}
-   *
-   * @return
    */
   @Override
   public Stage getStage()
@@ -150,9 +141,6 @@ public class BasicContextProvider implements SCMContextProvider
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @return
    */
   @Override
   public Throwable getStartupError()
@@ -206,6 +194,19 @@ public class BasicContextProvider implements SCMContextProvider
     if (!directory.exists() &&!directory.mkdirs())
     {
       String msg = "could not create home directory at ".concat(
+                     directory.getAbsolutePath());
+
+      // do not use logger
+      // http://www.slf4j.org/codes.html#substituteLogger
+      System.err.println("===================================================");
+      System.err.append("Error: ").println(msg);
+      System.err.println("===================================================");
+
+      throw new IllegalStateException(msg);
+    }
+    else if (directory.exists() && !directory.canWrite())
+    {
+      String msg = "could not modify home directory at ".concat(
                      directory.getAbsolutePath());
 
       // do not use logger

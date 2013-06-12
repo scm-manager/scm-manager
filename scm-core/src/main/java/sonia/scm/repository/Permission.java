@@ -37,6 +37,8 @@ package sonia.scm.repository;
 
 import com.google.common.base.Objects;
 
+import sonia.scm.security.PermissionObject;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;
@@ -52,7 +54,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "permissions")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Permission implements Serializable
+public class Permission implements PermissionObject, Serializable
 {
 
   /** Field description */
@@ -135,7 +137,7 @@ public class Permission implements Serializable
     final Permission other = (Permission) obj;
 
     return Objects.equal(name, other.name) && Objects.equal(type, other.type)
-           && Objects.equal(groupPermission, groupPermission);
+      && Objects.equal(groupPermission, groupPermission);
   }
 
   /**
@@ -176,6 +178,7 @@ public class Permission implements Serializable
    *
    * @return name of the user or group
    */
+  @Override
   public String getName()
   {
     return name;
@@ -198,6 +201,7 @@ public class Permission implements Serializable
    *
    * @return true if the permision is a group permission
    */
+  @Override
   public boolean isGroupPermission()
   {
     return groupPermission;

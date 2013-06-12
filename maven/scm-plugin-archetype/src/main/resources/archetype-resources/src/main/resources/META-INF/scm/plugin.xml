@@ -35,16 +35,14 @@
 <plugin>
 
   <information>
-    <groupId>${dollar}{project.groupId}</groupId>
-    <artifactId>${dollar}{project.artifactId}</artifactId>
-    <version>${dollar}{project.version}</version>
-    <name>${dollar}{project.name}</name>
-    <description>${dollar}{project.description}</description>
     <!--
     <author></author>
-    <url>${dollar}{project.url}</url>
     -->
   </information>
+
+  <conditions>
+    <min-version>${dollar}{project.parent.version}</min-version>
+  </conditions>
 
   <packages>
     <package>${package}</package>

@@ -42,8 +42,16 @@ import sonia.scm.util.Util;
  * @author Sebastian Sdorra
  * @since 1.11
  */
-public class UrlUtil
+public final class UrlUtil
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private UrlUtil() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -59,7 +67,7 @@ public class UrlUtil
 
     if (Util.isNotEmpty(revision))
     {
-      int index = revision.indexOf(":");
+      int index = revision.indexOf(':');
 
       if (index > 0)
       {

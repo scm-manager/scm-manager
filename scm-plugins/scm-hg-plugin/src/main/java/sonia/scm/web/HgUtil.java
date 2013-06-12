@@ -48,11 +48,19 @@ import java.io.File;
  *
  * @author Sebastian Sdorra
  */
-public class HgUtil
+public final class HgUtil
 {
 
   /** Field description */
   public static final String REVISION_TIP = "tip";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private HgUtil() {}
 
   //~--- get methods ----------------------------------------------------------
 

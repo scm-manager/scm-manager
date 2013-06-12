@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -46,8 +47,16 @@ import java.util.Scanner;
  *
  * @author Sebastian Sdorra
  */
-public class GitSubModuleParser
+public final class GitSubModuleParser
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  private GitSubModuleParser() {}
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * //~--- methods --------------------------------------------------------------

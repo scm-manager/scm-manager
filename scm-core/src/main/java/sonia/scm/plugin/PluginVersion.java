@@ -45,7 +45,8 @@ import sonia.scm.util.AssertUtil;
 import java.util.Locale;
 
 /**
- *
+ * TODO for 2.0: rename to version and move to another package.
+ * 
  * @author Sebastian Sdorra
  */
 public class PluginVersion implements Comparable<PluginVersion>
@@ -67,7 +68,7 @@ public class PluginVersion implements Comparable<PluginVersion>
   {
     this.unparsedVersion = versionString;
 
-    int index = versionString.indexOf("-");
+    int index = versionString.indexOf('-');
     String versionPart = null;
     String qualifierPart = null;
 

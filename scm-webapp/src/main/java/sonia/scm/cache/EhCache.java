@@ -35,6 +35,8 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
+
 import net.sf.ehcache.Element;
 
 import org.slf4j.Logger;
@@ -184,6 +186,18 @@ public class EhCache<K, V> implements Cache<K, V>
     }
 
     return value;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @VisibleForTesting
+  net.sf.ehcache.Cache getCacheImplementation()
+  {
+    return cache;
   }
 
   //~--- fields ---------------------------------------------------------------

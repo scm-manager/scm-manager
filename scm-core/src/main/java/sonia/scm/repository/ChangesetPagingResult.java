@@ -33,6 +33,10 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;
@@ -47,6 +51,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * The changeset paging result is used to do a paging over the
+ * {@link Changeset}s of a {@link Repository}.
  *
  * @author Sebastian Sdorra
  */
@@ -61,17 +67,17 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new changeset paging result.
    *
    */
   public ChangesetPagingResult() {}
 
   /**
-   * Constructs ...
+   * Constructs a new changeset paging result.
    *
    *
-   * @param total
-   * @param changesets
+   * @param total total number of changesets
+   * @param changesets current list of fetched changesets
    */
   public ChangesetPagingResult(int total, List<Changeset> changesets)
   {
@@ -85,7 +91,46 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
    * Method description
    *
    *
+   * @param obj
+   *
    * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final ChangesetPagingResult other = (ChangesetPagingResult) obj;
+
+    return Objects.equal(changesets, other.changesets)
+      && Objects.equal(total, other.total);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(changesets, total);
+  }
+
+  /**
+   * Returns an iterator which can iterate over the current list of changesets.
+   *
+   *
+   * @return iterator for current list of changesets
    * @since 1.8
    */
   @Override
@@ -101,13 +146,30 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
     return it;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Method description
    *
    *
    * @return
+   */
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("changesets", changesets)
+                  .add("total", total)
+                  .toString();
+    //J+
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns the current list of changesets.
+   *
+   *
+   * @return current list of changesets
    */
   public List<Changeset> getChangesets()
   {
@@ -115,10 +177,10 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   }
 
   /**
-   * Method description
+   * Returns the total number of changesets.
    *
    *
-   * @return
+   * @return total number of changesets
    */
   public int getTotal()
   {
@@ -128,10 +190,10 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Sets the current list of changesets.
    *
    *
-   * @param changesets
+   * @param changesets current list of changesets
    */
   public void setChangesets(List<Changeset> changesets)
   {
@@ -139,10 +201,10 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
   }
 
   /**
-   * Method description
+   * Sets the total number of changesets
    *
    *
-   * @param total
+   * @param total total number of changesets
    */
   public void setTotal(int total)
   {
@@ -151,11 +213,11 @@ public class ChangesetPagingResult implements Iterable<Changeset>, Serializable
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** current list of changesets */
   @XmlElement(name = "changeset")
   @XmlElementWrapper(name = "changesets")
   private List<Changeset> changesets;
 
-  /** Field description */
+  /** total number of changesets */
   private int total;
 }

@@ -35,7 +35,6 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
 

@@ -88,7 +88,8 @@ if (Sonia.login.Form){
     WaitMsgText: 'Übertrage Daten...',
     failedMsgText: 'Anmeldung fehlgeschlagen!',
     failedDescriptionText: 'Falscher Benutzername, Passwort oder sie haben nicht\n\
-                             genug Berechtigungen. Bitte versuchen sie es erneut.'
+                             genug Berechtigungen. Bitte versuchen sie es erneut.',
+    rememberMeText: 'Angemeldet bleiben'
   });
 
 }
@@ -238,7 +239,10 @@ if (Sonia.repository.InfoPanel){
     contactText: 'Kontakt: ',
     urlText: 'Url: ',
     // german ??
-    changesetViewerText: 'Commits'
+    changesetViewerText: 'Commits',
+    accessText: 'Zugriff:',
+    accessReadOnly: 'Nur lesender Zugriff',
+    accessReadWrite: 'Lese und Schreibzugriff'
   });
 
 }
@@ -303,6 +307,7 @@ if (Sonia.config.ScmConfigPanel){
     proxyPortText: 'Proxy Port',
     proxyUserText: 'Proxy User',
     proxyPasswordText: 'Proxy Passwort',
+    proxyExcludesText: 'Proxy Ausnahmen',
     baseUrlText: 'Basis-URL',
     forceBaseUrlText: 'Basis-URL forcieren',
     disableGroupingGridText: 'Repository-Gruppierung deaktivieren',
@@ -333,6 +338,7 @@ if (Sonia.config.ScmConfigPanel){
     proxyPortHelpText: 'Der Proxy-Port',
     proxyUserHelpText: 'Der Benutzername für die Authentifizierung am Proxy-Server.',
     proxyPasswordHelpText: 'Das Passwort für die Authentifizierung am Proxy-Server.',
+    proxyExcludesHelpText: 'Eine Komma-separierte liste von Glob-Patterns für servername die von den Proxy-Einstellungen ausgenommen werden sollen',
     baseUrlHelpText: 'Die vollständige URL des Server, inclusive Context-Pfad z.B.: http://localhost:8080/scm.',
     forceBaseUrlHelpText: 'Leitet alle Zugriffe die nicht von der Basis-URL kommen auf die Basis-URL um.',
     disableGroupingGridHelpText: 'Repository grupierung deaktivieren. Wenn dieser Wert verändert wird muss die Seite neu geladen werden.',

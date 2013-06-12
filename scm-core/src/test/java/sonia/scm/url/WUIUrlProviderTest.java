@@ -34,8 +34,6 @@ package sonia.scm.url;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.HttpUtil;
-
 /**
  *
  * @author Sebastian Sdorra

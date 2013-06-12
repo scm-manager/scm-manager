@@ -69,6 +69,9 @@ public class AbstractHgHandler
 {
 
   /** Field description */
+  protected static final String ENV_ID_REVISION = "SCM_ID_REVISION";
+
+  /** Field description */
   protected static final String ENV_NODE = "HG_NODE";
 
   /** Field description */
@@ -126,7 +129,7 @@ public class AbstractHgHandler
    * @param repositoryDirectory
    */
   protected AbstractHgHandler(HgRepositoryHandler handler, HgContext context,
-                              Repository repository)
+    Repository repository)
   {
     this(handler, context, repository, handler.getDirectory(repository));
   }
@@ -142,7 +145,7 @@ public class AbstractHgHandler
    * @param repositoryDirectory
    */
   protected AbstractHgHandler(HgRepositoryHandler handler, HgContext context,
-                              Repository repository, File repositoryDirectory)
+    Repository repository, File repositoryDirectory)
   {
     this.handler = handler;
     this.context = context;
@@ -198,8 +201,8 @@ public class AbstractHgHandler
    * @throws IOException
    */
   protected Process createHgProcess(Map<String, String> extraEnv,
-                                    String... args)
-          throws IOException
+    String... args)
+    throws IOException
   {
     return createProcess(extraEnv, handler.getConfig().getHgBinary(), args);
   }
@@ -216,12 +219,11 @@ public class AbstractHgHandler
    * @throws IOException
    */
   protected Process createScriptProcess(HgPythonScript script,
-          Map<String, String> extraEnv)
-          throws IOException
+    Map<String, String> extraEnv)
+    throws IOException
   {
-    return createProcess(
-        extraEnv, handler.getConfig().getPythonBinary(),
-        script.getFile(SCMContext.getContext()).getAbsolutePath());
+    return createProcess(extraEnv, handler.getConfig().getPythonBinary(),
+      script.getFile(SCMContext.getContext()).getAbsolutePath());
   }
 
   /**
@@ -273,11 +275,11 @@ public class AbstractHgHandler
    * @throws RepositoryException
    */
   protected <T> T getResultFromScript(Class<T> resultType,
-          HgPythonScript script)
-          throws IOException, RepositoryException
+    HgPythonScript script)
+    throws IOException, RepositoryException
   {
     return getResultFromScript(resultType, script,
-                               new HashMap<String, String>());
+      new HashMap<String, String>());
   }
 
   /**
@@ -295,8 +297,8 @@ public class AbstractHgHandler
    * @throws RepositoryException
    */
   protected <T> T getResultFromScript(Class<T> resultType,
-          HgPythonScript script, Map<String, String> extraEnv)
-          throws IOException, RepositoryException
+    HgPythonScript script, Map<String, String> extraEnv)
+    throws IOException, RepositoryException
   {
     Process p = createScriptProcess(script, extraEnv);
     T result = null;
@@ -341,8 +343,8 @@ public class AbstractHgHandler
    * @throws IOException
    */
   private Process createProcess(Map<String, String> extraEnv, String cmd,
-                                String... args)
-          throws IOException
+    String... args)
+    throws IOException
   {
     HgConfig config = handler.getConfig();
     List<String> cmdList = new ArrayList<String>();
@@ -383,6 +385,12 @@ public class AbstractHgHandler
     env.put(ENV_PYTHONIOENCODING, ENCODING);
     env.put(ENV_HGENCODING, ENCODING);
 
+    //J-
+    env.put(ENV_ID_REVISION, 
+      String.valueOf(handler.getConfig().isShowRevisionInId())
+    );
+    //J+
+
     if (context.isSystemEnvironment())
     {
       env.putAll(System.getenv());
@@ -393,7 +401,7 @@ public class AbstractHgHandler
       if (logger.isDebugEnabled())
       {
         logger.debug("enable hg pending for {}",
-                     repositoryDirectory.getAbsolutePath());
+          repositoryDirectory.getAbsolutePath());
       }
 
       env.put(ENV_PENDING, repositoryDirectory.getAbsolutePath());
@@ -413,7 +421,7 @@ public class AbstractHgHandler
       StringBuilder msg = new StringBuilder("start process in directory '");
 
       msg.append(repositoryDirectory.getAbsolutePath()).append(
-          "' with env: \n");
+        "' with env: \n");
 
       for (Map.Entry<String, String> e : env.entrySet())
       {

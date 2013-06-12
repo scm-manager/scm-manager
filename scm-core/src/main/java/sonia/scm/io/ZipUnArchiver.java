@@ -46,6 +46,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -70,6 +71,30 @@ public class ZipUnArchiver extends AbstractUnArchiver
    * Method description
    *
    *
+   * @param inputStream
+   * @param outputDirectory
+   *
+   * @throws IOException
+   * @since 1.21
+   */
+  public void extractArchive(InputStream inputStream, File outputDirectory)
+    throws IOException
+  {
+    ZipInputStream input = new ZipInputStream(inputStream);
+
+    ZipEntry entry = input.getNextEntry();
+
+    while (entry != null)
+    {
+      extractEntry(outputDirectory, input, entry);
+      entry = input.getNextEntry();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param archive
    * @param outputDirectory
    *
@@ -77,27 +102,20 @@ public class ZipUnArchiver extends AbstractUnArchiver
    */
   @Override
   protected void extractArchive(File archive, File outputDirectory)
-          throws IOException
+    throws IOException
   {
     if (logger.isDebugEnabled())
     {
       logger.debug("extract zip \"{}\" to \"{}\"", archive.getPath(),
-                   outputDirectory.getAbsolutePath());
+        outputDirectory.getAbsolutePath());
     }
 
-    ZipInputStream input = null;
+    InputStream input = null;
 
     try
     {
-      input = new ZipInputStream(new FileInputStream(archive));
-
-      ZipEntry entry = input.getNextEntry();
-
-      while (entry != null)
-      {
-        extractEntry(outputDirectory, input, entry);
-        entry = input.getNextEntry();
-      }
+      input = new FileInputStream(archive);
+      extractArchive(input, outputDirectory);
     }
     finally
     {
@@ -135,8 +153,8 @@ public class ZipUnArchiver extends AbstractUnArchiver
    * @throws IOException
    */
   private void extractEntry(File outputDirectory, ZipInputStream input,
-                            ZipEntry entry)
-          throws IOException
+    ZipEntry entry)
+    throws IOException
   {
     try
     {
@@ -177,7 +195,7 @@ public class ZipUnArchiver extends AbstractUnArchiver
    * @throws IOException
    */
   private void extractFile(ZipInputStream input, File outputFile)
-          throws IOException
+    throws IOException
   {
     FileOutputStream output = null;
 

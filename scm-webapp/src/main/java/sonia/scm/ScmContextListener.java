@@ -35,27 +35,29 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 
+import org.apache.shiro.guice.web.ShiroWebModule;
+
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.DefaultPluginLoader;
-import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.StoreFactory;
+import sonia.scm.upgrade.UpgradeManager;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.IOUtil;
 import sonia.scm.web.security.AuthenticationManager;
-import sonia.scm.web.security.LocalSecurityContextHolder;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 
 /**
@@ -95,13 +97,11 @@ public class ScmContextListener extends GuiceServletContextListener
       // close CacheManager
       IOUtil.close(globalInjector.getInstance(CacheManager.class));
 
-      // remove thread local store
-      globalInjector.getInstance(LocalSecurityContextHolder.class).destroy();
-
-      // call destroy event
-      globalInjector.getInstance(
-          ServletContextListenerHolder.class).contextDestroyed(
-          servletContextEvent);
+      //J-
+      // call destroy of servlet context listeners
+      globalInjector.getInstance(ServletContextListenerHolder.class)
+                    .contextDestroyed(servletContextEvent);
+      //J+
     }
 
     super.contextDestroyed(servletContextEvent);
@@ -116,9 +116,11 @@ public class ScmContextListener extends GuiceServletContextListener
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent)
   {
+    this.servletContext = servletContextEvent.getServletContext();
+
     if (SCMContext.getContext().getStartupError() == null)
     {
-      ScmUpgradeHandler upgradeHandler = new ScmUpgradeHandler();
+      UpgradeManager upgradeHandler = new UpgradeManager();
 
       upgradeHandler.doUpgrade();
     }
@@ -132,9 +134,14 @@ public class ScmContextListener extends GuiceServletContextListener
     // call destroy event
     if ((globalInjector != null) &&!startupError)
     {
-      globalInjector.getInstance(
-          ServletContextListenerHolder.class).contextInitialized(
-          servletContextEvent);
+      //J-
+      // bind eager singletons
+      globalInjector.getInstance(EagerSingletonModule.class)
+                    .initialize(globalInjector);
+      // init servlet context listeners
+      globalInjector.getInstance(ServletContextListenerHolder.class)
+                    .contextInitialized(servletContextEvent);
+      //J+
     }
   }
 
@@ -155,7 +162,7 @@ public class ScmContextListener extends GuiceServletContextListener
     }
     else
     {
-      globalInjector = getDefaultInjector();
+      globalInjector = getDefaultInjector(servletContext);
     }
 
     return globalInjector;
@@ -165,55 +172,28 @@ public class ScmContextListener extends GuiceServletContextListener
    * Method description
    *
    *
+   *
+   * @param servletContext
    * @return
    */
-  private Injector getDefaultInjector()
+  private Injector getDefaultInjector(ServletContext servletContext)
   {
-    PluginLoader pluginLoader = new DefaultPluginLoader();
-    BindingExtensionProcessor bindExtProcessor =
-      new BindingExtensionProcessor();
-
-    pluginLoader.processExtensions(bindExtProcessor);
+    DefaultPluginLoader pluginLoader = new DefaultPluginLoader(servletContext);
 
     ClassOverrides overrides = ClassOverrides.findOverrides();
-    ScmServletModule main = new ScmServletModule(pluginLoader,
-                              bindExtProcessor, overrides);
-    List<Module> moduleList = new ArrayList<Module>();
+    ScmServletModule main = new ScmServletModule(pluginLoader, overrides);
+    List<Module> moduleList = Lists.newArrayList();
 
-    moduleList.addAll(bindExtProcessor.getModuleSet());
+    moduleList.add(new ScmInitializerModule());
+    moduleList.add(new ScmEventBusModule());
+    moduleList.add(new EagerSingletonModule());
+    moduleList.add(ShiroWebModule.guiceFilterModule());
+    moduleList.add(main);
+    moduleList.add(new ScmSecurityModule(servletContext));
+    moduleList.addAll(pluginLoader.getModuleSet());
     moduleList.addAll(overrides.getModules());
-    moduleList.add(0, main);
 
-    Injector injector = Guice.createInjector(moduleList);
-    SCMContextProvider context = SCMContext.getContext();
-
-    // init StoreFactory
-    injector.getInstance(StoreFactory.class).init(context);
-
-    // init RepositoryManager
-    RepositoryManager repositoryManager =
-      injector.getInstance(RepositoryManager.class);
-
-    repositoryManager.addHooks(bindExtProcessor.getHooks());
-    repositoryManager.init(context);
-
-    // init UserManager
-    UserManager userManager = injector.getInstance(UserManager.class);
-
-    userManager.init(context);
-
-    // init GroupManager
-    GroupManager groupManager = injector.getInstance(GroupManager.class);
-
-    groupManager.init(context);
-
-    // init Authenticator
-    AuthenticationManager authenticationManager =
-      injector.getInstance(AuthenticationManager.class);
-
-    authenticationManager.init(context);
-
-    return injector;
+    return Guice.createInjector(moduleList);
   }
 
   /**
@@ -231,6 +211,9 @@ public class ScmContextListener extends GuiceServletContextListener
 
   /** Field description */
   private Injector globalInjector;
+
+  /** Field description */
+  private ServletContext servletContext;
 
   /** Field description */
   private boolean startupError = false;

@@ -6,12 +6,12 @@
   <parent>
     <artifactId>scm</artifactId>
     <groupId>sonia.scm</groupId>
-    <version>1.19-SNAPSHOT</version>
+    <version>1.32-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-server</artifactId>
-  <version>1.19-SNAPSHOT</version>
+  <version>1.32-SNAPSHOT</version>
   <name>scm-server</name>
   <packaging>jar</packaging>
 
@@ -56,7 +56,7 @@
       <plugin>
         <groupId>sonia.maven</groupId>
         <artifactId>appassembler-maven-plugin</artifactId>
-        <version>1.2.0.2</version>
+        <version>1.2.0.3</version>
         <executions>
           <execution>
             <id>scm-app</id>
@@ -83,6 +83,7 @@
                   
                   <jvmSettings>
                     <systemProperties>
+                      <arg>java.awt.headless=true</arg>
                       <arg>logback.configurationFile=logging.xml</arg>
                     </systemProperties>
                   </jvmSettings>

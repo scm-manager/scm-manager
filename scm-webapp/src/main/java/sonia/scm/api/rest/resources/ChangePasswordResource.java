@@ -36,7 +36,9 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
@@ -46,11 +48,11 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.api.rest.RestActionResult;
 import sonia.scm.security.EncryptionHandler;
+import sonia.scm.security.ScmSecurityException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -63,6 +65,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import sonia.scm.security.Role;
 
 /**
  *
@@ -88,13 +91,11 @@ public class ChangePasswordResource
    * @param securityContextProvider
    */
   @Inject
-  public ChangePasswordResource(
-          UserManager userManager, EncryptionHandler encryptionHandler,
-          Provider<WebSecurityContext> securityContextProvider)
+  public ChangePasswordResource(UserManager userManager,
+    EncryptionHandler encryptionHandler)
   {
     this.userManager = userManager;
     this.encryptionHandler = encryptionHandler;
-    this.securityContextProvider = securityContextProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -121,8 +122,8 @@ public class ChangePasswordResource
   @TypeHint(RestActionResult.class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response changePassword(@FormParam("old-password") String oldPassword,
-                                 @FormParam("new-password") String newPassword)
-          throws UserException, IOException
+    @FormParam("new-password") String newPassword)
+    throws UserException, IOException
   {
     AssertUtil.assertIsNotEmpty(oldPassword);
     AssertUtil.assertIsNotEmpty(newPassword);
@@ -135,8 +136,14 @@ public class ChangePasswordResource
     }
 
     Response response = null;
-    WebSecurityContext securityContext = securityContextProvider.get();
-    User currentUser = securityContext.getUser();
+    Subject subject = SecurityUtils.getSubject();
+
+    if (!subject.hasRole(Role.USER))
+    {
+      throw new ScmSecurityException("user is not authenticated");
+    }
+
+    User currentUser = subject.getPrincipals().oneByType(User.class);
 
     if (logger.isInfoEnabled())
     {
@@ -177,9 +184,6 @@ public class ChangePasswordResource
 
   /** Field description */
   private EncryptionHandler encryptionHandler;
-
-  /** Field description */
-  private Provider<WebSecurityContext> securityContextProvider;
 
   /** Field description */
   private UserManager userManager;

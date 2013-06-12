@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 import org.eclipse.jgit.diff.DiffEntry;
@@ -84,10 +85,9 @@ public class GitChangesetConverter implements Closeable
    * @param repository
    * @param idLength
    */
-  public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
-    int idLength)
+  public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository)
   {
-    this(repository, null, idLength);
+    this(repository, null);
   }
 
   /**
@@ -99,14 +99,18 @@ public class GitChangesetConverter implements Closeable
    * @param idLength
    */
   public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
-    RevWalk revWalk, int idLength)
+    RevWalk revWalk)
   {
     this.repository = repository;
-    this.idLength = idLength;
 
-    if (revWalk == null)
+    if (revWalk != null)
     {
-      revWalk = new RevWalk(repository);
+      this.revWalk = revWalk;
+
+    }
+    else
+    {
+      this.revWalk = new RevWalk(repository);
     }
 
     this.tags = GitUtil.createTagMap(repository, revWalk);
@@ -129,7 +133,6 @@ public class GitChangesetConverter implements Closeable
    * Method description
    *
    *
-   *
    * @param commit
    *
    * @return
@@ -138,7 +141,43 @@ public class GitChangesetConverter implements Closeable
    */
   public Changeset createChangeset(RevCommit commit) throws IOException
   {
-    String id = commit.getId().abbreviate(idLength).name();
+    List<String> branches = Lists.newArrayList();
+    Set<Ref> refs = repository.getAllRefsByPeeledObjectId().get(commit.getId());
+
+    if (Util.isNotEmpty(refs))
+    {
+
+      for (Ref ref : refs)
+      {
+        String branch = GitUtil.getBranch(ref);
+
+        if (branch != null)
+        {
+          branches.add(branch);
+        }
+      }
+
+    }
+
+    return createChangeset(commit, branches);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param commit
+   * @param branches
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  public Changeset createChangeset(RevCommit commit, List<String> branches)
+    throws IOException
+  {
+    String id = commit.getId().name();
     List<String> parentList = null;
     RevCommit[] parents = commit.getParents();
 
@@ -148,7 +187,7 @@ public class GitChangesetConverter implements Closeable
 
       for (RevCommit parent : parents)
       {
-        parentList.add(parent.getId().abbreviate(idLength).name());
+        parentList.add(parent.getId().name());
       }
     }
 
@@ -173,27 +212,13 @@ public class GitChangesetConverter implements Closeable
 
     Collection<String> tagCollection = tags.get(commit.getId());
 
-    if (tagCollection != null)
+    if (Util.isNotEmpty(tagCollection))
     {
-      changeset.getTags().addAll(tagCollection);
+      // create a copy of the tag collection to reduce memory on caching
+      changeset.getTags().addAll(Lists.newArrayList(tagCollection));
     }
 
-    Set<Ref> refs = repository.getAllRefsByPeeledObjectId().get(commit.getId());
-
-    if (Util.isNotEmpty(refs))
-    {
-
-      for (Ref ref : refs)
-      {
-        String branch = GitUtil.getBranch(ref);
-
-        if (branch != null)
-        {
-          changeset.getBranches().add(branch);
-        }
-      }
-
-    }
+    changeset.setBranches(branches);
 
     return changeset;
   }
@@ -264,7 +289,8 @@ public class GitChangesetConverter implements Closeable
       {
         if (logger.isTraceEnabled())
         {
-          logger.trace("no parent at position 0 for commit {}", commit);
+          logger.trace("no parent tree at position 0 for commit {}",
+            commit.getName());
         }
 
         treeWalk.addTree(new EmptyTreeIterator());
@@ -274,7 +300,7 @@ public class GitChangesetConverter implements Closeable
     {
       if (logger.isTraceEnabled())
       {
-        logger.trace("no parent available for commit {}", commit);
+        logger.trace("no parent available for commit {}", commit.getName());
       }
 
       treeWalk.addTree(new EmptyTreeIterator());
@@ -301,9 +327,6 @@ public class GitChangesetConverter implements Closeable
   }
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private int idLength;
 
   /** Field description */
   private org.eclipse.jgit.lib.Repository repository;

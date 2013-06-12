@@ -35,6 +35,7 @@ package sonia.scm.config;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Sets;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -69,11 +70,11 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement(name = "scm-config")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ScmConfiguration
-        implements ListenerSupport<ConfigChangedListener<ScmConfiguration>>
+  implements ListenerSupport<ConfigChangedListener<ScmConfiguration>>
 {
 
   /** Default JavaScript date format */
-  public static final String DEFAULT_DATEFORMAT = "Y-m-d H:i:s";
+  public static final String DEFAULT_DATEFORMAT = "YYYY-MM-DD HH:mm:ss";
 
   /** Default plugin url */
   public static final String DEFAULT_PLUGINURL =
@@ -115,7 +116,7 @@ public class ScmConfiguration
    */
   @Override
   public void addListeners(
-          Collection<ConfigChangedListener<ScmConfiguration>> listeners)
+    Collection<ConfigChangedListener<ScmConfiguration>> listeners)
   {
     listeners.addAll(listeners);
   }
@@ -162,6 +163,7 @@ public class ScmConfiguration
     this.proxyServer = other.proxyServer;
     this.proxyUser = other.proxyUser;
     this.proxyPassword = other.proxyPassword;
+    this.proxyExcludes = other.proxyExcludes;
     this.forceBaseUrl = other.forceBaseUrl;
     this.baseUrl = other.baseUrl;
     this.disableGroupingGrid = other.disableGroupingGrid;
@@ -224,11 +226,10 @@ public class ScmConfiguration
 
   /**
    * Returns the date format for the user interface. This format is a
-   * JavaScript date format, see
-   * {@link http://jacwright.com/projects/javascript/date_format}.
-   *
-   *
-   * @return JavaScript date format
+   * JavaScript date format, from the library moment.js.
+   * 
+   * @see <a href="http://momentjs.com/docs/#/parsing/" target="_blank">http://momentjs.com/docs/#/parsing/</a>
+   * @return moment.js date format
    */
   public String getDateFormat()
   {
@@ -256,13 +257,31 @@ public class ScmConfiguration
    * <li><b>os</b> = Operation System</li>
    * <li><b>arch</b> = Architecture</li>
    * </ul>
-   * For example {@link http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false"}
+   * For example http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false
    *
    * @return the complete plugin url.
    */
   public String getPluginUrl()
   {
     return pluginUrl;
+  }
+
+  /**
+   * Returns a set of glob patterns for urls which should excluded from
+   * proxy settings.
+   *
+   *
+   * @return set of glob patterns
+   * @since 1.23
+   */
+  public Set<String> getProxyExcludes()
+  {
+    if (proxyExcludes == null)
+    {
+      proxyExcludes = Sets.newHashSet();
+    }
+
+    return proxyExcludes;
   }
 
   /**
@@ -466,10 +485,10 @@ public class ScmConfiguration
   }
 
   /**
-   * Method description
+   * Sets the date format for the ui.
    *
    *
-   * @param dateFormat
+   * @param dateFormat date format for ui
    */
   public void setDateFormat(String dateFormat)
   {
@@ -574,6 +593,19 @@ public class ScmConfiguration
   }
 
   /**
+   * Set glob patterns for urls which are should be excluded from proxy
+   * settings.
+   *
+   *
+   * @param proxyExcludes glob patterns
+   * @since 1.23
+   */
+  public void setProxyExcludes(Set<String> proxyExcludes)
+  {
+    this.proxyExcludes = proxyExcludes;
+  }
+
+  /**
    * Method description
    *
    *
@@ -675,6 +707,11 @@ public class ScmConfiguration
   @XmlElement(name = "plugin-url")
   private String pluginUrl = DEFAULT_PLUGINURL;
 
+  /** glob patterns for urls which are excluded from proxy */
+  @XmlElement(name = "proxy-excludes")
+  @XmlJavaTypeAdapter(XmlSetStringAdapter.class)
+  private Set<String> proxyExcludes;
+
   /** Field description */
   private String proxyPassword;
 
@@ -714,7 +751,8 @@ public class ScmConfiguration
   private boolean disableGroupingGrid = false;
 
   /**
-   * JavaScript date format, see http://jacwright.com/projects/javascript/date_format
+   * JavaScript date format from moment.js
+   * @see <a href="http://momentjs.com/docs/#/parsing/" target="_blank">http://momentjs.com/docs/#/parsing/</a>
    */
   private String dateFormat = DEFAULT_DATEFORMAT;
 

@@ -47,7 +47,6 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
-import sonia.scm.security.SecurityContext;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.Util;
@@ -87,11 +86,9 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @param groupListenerProvider
    */
   @Inject
-  public DefaultGroupManager(Provider<SecurityContext> securityContextProvider,
-                             GroupDAO groupDAO,
+  public DefaultGroupManager(GroupDAO groupDAO,
                              Provider<Set<GroupListener>> groupListenerProvider)
   {
-    this.securityContextProvider = securityContextProvider;
     this.groupDAO = groupDAO;
     this.groupListenerProvider = groupListenerProvider;
   }
@@ -136,7 +133,7 @@ public class DefaultGroupManager extends AbstractGroupManager
                   group.getType());
     }
 
-    SecurityUtil.assertIsAdmin(securityContextProvider);
+    SecurityUtil.assertIsAdmin();
 
     if (groupDAO.contains(group.getName()))
     {
@@ -167,7 +164,7 @@ public class DefaultGroupManager extends AbstractGroupManager
                   group.getType());
     }
 
-    SecurityUtil.assertIsAdmin(securityContextProvider);
+    SecurityUtil.assertIsAdmin();
 
     String name = group.getName();
 
@@ -179,7 +176,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
     else
     {
-      throw new GroupException("user does not exists");
+      throw new GroupNotFoundException("user does not exists");
     }
   }
 
@@ -218,7 +215,7 @@ public class DefaultGroupManager extends AbstractGroupManager
                   group.getType());
     }
 
-    SecurityUtil.assertIsAdmin(securityContextProvider);
+    SecurityUtil.assertIsAdmin();
 
     String name = group.getName();
 
@@ -231,7 +228,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
     else
     {
-      throw new GroupException("group does not exists");
+      throw new GroupNotFoundException("group does not exists");
     }
   }
 
@@ -253,13 +250,13 @@ public class DefaultGroupManager extends AbstractGroupManager
                   group.getType());
     }
 
-    SecurityUtil.assertIsAdmin(securityContextProvider);
+    SecurityUtil.assertIsAdmin();
 
     Group fresh = groupDAO.get(group.getName());
 
     if (fresh == null)
     {
-      throw new GroupException("group does not exists");
+      throw new GroupNotFoundException("group does not exists");
     }
 
     fresh.copyProperties(group);
@@ -346,7 +343,7 @@ public class DefaultGroupManager extends AbstractGroupManager
   @Override
   public Collection<Group> getAll(Comparator<Group> comparator)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvider);
+    SecurityUtil.assertIsAdmin();
 
     List<Group> groups = new ArrayList<Group>();
 
@@ -378,7 +375,7 @@ public class DefaultGroupManager extends AbstractGroupManager
   public Collection<Group> getAll(Comparator<Group> comparator, int start,
                                   int limit)
   {
-    SecurityUtil.assertIsAdmin(securityContextProvider);
+    SecurityUtil.assertIsAdmin();
 
     return Util.createSubCollection(groupDAO.getAll(), comparator,
                                     new CollectionAppender<Group>()
@@ -449,7 +446,4 @@ public class DefaultGroupManager extends AbstractGroupManager
 
   /** Field description */
   private Provider<Set<GroupListener>> groupListenerProvider;
-
-  /** Field description */
-  private Provider<SecurityContext> securityContextProvider;
 }

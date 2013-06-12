@@ -37,8 +37,18 @@ package sonia.scm.util;
 
 import com.google.inject.Provider;
 
+import org.apache.shiro.authz.Permission;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.subject.Subject.Builder;
+
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
 import sonia.scm.SCMContextProvider;
 import sonia.scm.user.User;
+import sonia.scm.user.UserTestData;
 import sonia.scm.web.security.DummyWebSecurityContext;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -48,15 +58,123 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.security.Role;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class MockUtil
+public final class MockUtil
 {
+
+  /** Field description */
+  private static final User ADMIN = new User("scmadmin", "SCM Admin",
+                                      "scmadmin@scm.org");
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  private MockUtil() {}
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static Subject createAdminSubject()
+  {
+    Subject subject = mock(Subject.class);
+
+    when(subject.isAuthenticated()).thenReturn(Boolean.TRUE);
+    when(subject.isPermitted(anyListOf(Permission.class))).then(
+      new Answer<Boolean[]>()
+    {
+
+      @Override
+      public Boolean[] answer(InvocationOnMock invocation) throws Throwable
+      {
+        List<Permission> permissions =
+          (List<Permission>) invocation.getArguments()[0];
+        Boolean[] returnArray = new Boolean[permissions.size()];
+
+        Arrays.fill(returnArray, Boolean.TRUE);
+
+        return returnArray;
+      }
+    });
+    when(subject.isPermitted(any(Permission.class))).thenReturn(Boolean.TRUE);
+    when(subject.isPermitted(any(String.class))).thenReturn(Boolean.TRUE);
+    when(subject.isPermittedAll(anyCollectionOf(Permission.class))).thenReturn(
+      Boolean.TRUE);
+    when(subject.isPermittedAll()).thenReturn(Boolean.TRUE);
+    when(subject.hasRole(Role.ADMIN)).thenReturn(Boolean.TRUE);
+    when(subject.hasRole(Role.USER)).thenReturn(Boolean.TRUE);
+
+    PrincipalCollection collection = mock(PrincipalCollection.class);
+
+    when(collection.getPrimaryPrincipal()).thenReturn(ADMIN.getId());
+    when(collection.oneByType(User.class)).thenReturn(ADMIN);
+
+    when(subject.getPrincipal()).thenReturn(ADMIN.getId());
+    when(subject.getPrincipals()).thenReturn(collection);
+
+    return subject;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public static Subject createUserSubject()
+  {
+    return createUserSubject(null);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param securityManager
+   * @return
+   */
+  public static Subject createUserSubject(
+    org.apache.shiro.mgt.SecurityManager securityManager)
+  {
+    SimplePrincipalCollection collection = new SimplePrincipalCollection();
+    User user = UserTestData.createTrillian();
+
+    collection.add(user.getName(), "junit");
+    collection.add(user, "junit");
+
+    Builder builder;
+
+    if (securityManager != null)
+    {
+      builder = new Subject.Builder(securityManager);
+    }
+    else
+    {
+      builder = new Subject.Builder();
+    }
+
+    return builder.principals(collection).authenticated(true).buildSubject();
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description

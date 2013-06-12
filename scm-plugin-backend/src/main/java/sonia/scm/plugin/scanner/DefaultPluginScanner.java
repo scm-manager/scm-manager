@@ -145,12 +145,11 @@ public class DefaultPluginScanner implements PluginScanner
    * @param filter
    */
   private void scannDirectory(PluginBackend backend, Set<File> scannedFiles,
-                              Set<PluginInformation> plugins, File directory,
-                              FileFilter filter)
+    Set<PluginInformation> plugins, File directory, FileFilter filter)
   {
-    if (logger.isDebugEnabled())
+    if (logger.isTraceEnabled())
     {
-      logger.debug("scann directory {}", directory.getPath());
+      logger.trace("scann directory {}", directory.getPath());
     }
 
     File[] files = directory.listFiles(filter);
@@ -171,7 +170,7 @@ public class DefaultPluginScanner implements PluginScanner
         catch (Exception ex)
         {
           logger.error(
-              "could not read plugin descriptor ".concat(file.getPath()), ex);
+            "could not read plugin descriptor ".concat(file.getPath()), ex);
         }
       }
     }
@@ -189,11 +188,11 @@ public class DefaultPluginScanner implements PluginScanner
    * @throws JAXBException
    */
   private void scannFile(Set<PluginInformation> plugins, File file)
-          throws IOException, JAXBException
+    throws IOException, JAXBException
   {
     if (logger.isDebugEnabled())
     {
-      logger.debug("scann file {}", file.getPath());
+      logger.trace("scann file {}", file.getPath());
     }
 
     JarInputStream inputStream = null;
@@ -217,8 +216,10 @@ public class DefaultPluginScanner implements PluginScanner
             (Plugin) pluginContext.createUnmarshaller().unmarshal(inputStream);
 
           if ((plugin != null) && (plugin.getInformation() != null)
-              && plugin.getInformation().isValid())
+            && plugin.getInformation().isValid())
           {
+            logger.debug("analyze plugin: {}", plugin);
+
             PluginCondition condition = plugin.getCondition();
 
             if (condition != null)

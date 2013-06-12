@@ -35,6 +35,9 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
 import org.junit.Test;
 
 import sonia.scm.Manager;
@@ -56,7 +59,7 @@ import java.util.UUID;
  * @author Sebastian Sdorra
  */
 public abstract class UserManagerTestBase
-        extends ManagerTestBase<User, UserException>
+  extends ManagerTestBase<User, UserException>
 {
 
   /** Field description */
@@ -120,6 +123,19 @@ public abstract class UserManagerTestBase
     assertNotNull(manager.get("zaphod"));
     manager.delete(zaphod);
     assertNull(manager.get("zaphod"));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws UserException
+   */
+  @Test(expected = UserNotFoundException.class)
+  public void testDeleteNotFound() throws UserException, IOException
+  {
+    manager.delete(UserTestData.createDent());
   }
 
   /**
@@ -250,9 +266,7 @@ public abstract class UserManagerTestBase
   @Test(expected = UserException.class)
   public void testModifyNotExisting() throws UserException, IOException
   {
-    User zaphod = UserTestData.createZaphod();
-
-    manager.modify(zaphod);
+    manager.modify(UserTestData.createZaphod());
   }
 
   /**
@@ -265,7 +279,7 @@ public abstract class UserManagerTestBase
    */
   @Test
   public void testMultiThreaded()
-          throws UserException, IOException, InterruptedException
+    throws UserException, IOException, InterruptedException
   {
     int initialSize = manager.getAll().size();
     List<MultiThreadTester> testers = new ArrayList<MultiThreadTester>();
@@ -275,8 +289,11 @@ public abstract class UserManagerTestBase
       testers.add(new MultiThreadTester(manager));
     }
 
+    Subject subject = SecurityUtils.getSubject();
+
     for (MultiThreadTester tester : testers)
     {
+      subject.associateWith(tester);
       new Thread(tester).start();
     }
 
@@ -316,6 +333,19 @@ public abstract class UserManagerTestBase
     zaphod.setDisplayName("Tricia McMillan");
     manager.refresh(zaphod);
     assertEquals(zaphod.getDisplayName(), "Zaphod Beeblebrox");
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   * @throws UserException
+   */
+  @Test(expected = UserNotFoundException.class)
+  public void testRefreshNotFound() throws UserException, IOException
+  {
+    manager.refresh(UserTestData.createDent());
   }
 
   /**
@@ -393,7 +423,7 @@ public abstract class UserManagerTestBase
     {
       String id = UUID.randomUUID().toString();
       User user = new User(id, id.concat(" displayName"),
-                           id.concat("@mail.com"));
+                    id.concat("@mail.com"));
 
       manager.create(user);
 
@@ -410,7 +440,7 @@ public abstract class UserManagerTestBase
      * @throws UserException
      */
     private void modifyAndDeleteUser(User user)
-            throws UserException, IOException
+      throws UserException, IOException
     {
       String name = user.getName();
       String nd = name.concat(" new displayname");
