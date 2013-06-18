@@ -90,7 +90,7 @@ public class EhCacheConfigurationReader
     "ext".concat(File.separator).concat("ehcache.xml");
 
   /** Field description */
-  private static final String MODULE_RESOURCES = "/META-INF/scm/ehcache.xml";
+  private static final String MODULE_RESOURCES = "META-INF/scm/ehcache.xml";
 
   /**
    * the logger for EhCacheConfigurationReader

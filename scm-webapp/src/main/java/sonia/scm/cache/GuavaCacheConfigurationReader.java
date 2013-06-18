@@ -71,7 +71,7 @@ public class GuavaCacheConfigurationReader
     "ext".concat(File.separator).concat("gcache.xml");
 
   /** Field description */
-  private static final String MODULE_RESOURCES = "/META-INF/scm/gcache.xml";
+  private static final String MODULE_RESOURCES = "META-INF/scm/gcache.xml";
 
   /**
    * the logger for CacheConfigurationReader
