@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -140,6 +141,11 @@ public class GuavaCacheConfigurationReader
 
     Iterator<URL> it = loader.getModuleResources();
 
+    if (!it.hasNext())
+    {
+      logger.debug("no module configuration found");
+    }
+
     while (it.hasNext())
     {
       GuavaCacheManagerConfiguration moduleConfig =
@@ -240,6 +246,8 @@ public class GuavaCacheConfigurationReader
   private GuavaCacheManagerConfiguration readConfiguration(URL url,
     boolean fail)
   {
+    logger.debug("read cache configuration from {}", url);
+
     GuavaCacheManagerConfiguration config = null;
 
     try
