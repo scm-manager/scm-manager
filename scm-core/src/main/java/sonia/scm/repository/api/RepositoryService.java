@@ -70,6 +70,7 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  * @since 1.17
  *
+ * @apiviz.uses sonia.scm.repository.Feature
  * @apiviz.uses sonia.scm.repository.api.Command
  * @apiviz.uses sonia.scm.repository.api.BlameCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.BrowseCommandBuilder
@@ -387,6 +388,8 @@ public final class RepositoryService implements Closeable
    * @param feature feature
    *
    * @return true if the feature is supported
+   * 
+   * @since 1.25
    */
   public boolean isSupported(Feature feature)
   {
