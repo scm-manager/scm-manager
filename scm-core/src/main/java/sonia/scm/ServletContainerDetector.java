@@ -42,8 +42,27 @@ package sonia.scm;
  */
 public class ServletContainerDetector
 {
+	/** Make usage of the logging framework. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(ServletContainerDetector.class);
+	/** Servlet request for alternate detection method. */
+	private HttpServletRequest request = null;
 
   /**
+	 * Constructs a new ServletContainerDetector.
+	 */
+	public ServletContainerDetector() {
+
+	}
+
+	/**
+	 * Constructs a new ServletContainerDetector depending on the ServletRequest.
+	 * @param req The ServletRequest.
+	 */
+	public ServletContainerDetector(final HttpServletRequest req) {
+		request = req;
+	}
+
+	/**
    * Detects the ServletContainer.
    *
    *
@@ -55,6 +74,16 @@ public class ServletContainerDetector
   }
 
   /**
+	 * Alternate detection of ServletContainer using DefaultServletDetection.
+	 * @param req The used Servlet instance.
+	 * @return the detected ServletContainer.
+	 */
+	public static ServletContainer detect(final HttpServletRequest req)
+	{
+		return new ServletContainerDetector(req).detectContainer();
+	}
+
+	/**
    * Detects the ServletContainer.
    *
    *
@@ -62,6 +91,7 @@ public class ServletContainerDetector
    */
   public ServletContainer detectContainer()
   {
+		LOGGER.trace("Detecting servlet container...");
     ServletContainer container = ServletContainer.UNKNOWN;
 
     if (isScmServer())
@@ -104,10 +134,18 @@ public class ServletContainerDetector
     {
       container = ServletContainer.JETTY;
     }
+		else if (isEclipseJetty())
+		{
+			container = ServletContainer.ECLIPSE_JETTY;
+		}
     else if (isTomcat())
     {
       container = ServletContainer.TOMCAT;
     }
+
+		if (ServletContainer.UNKNOWN.equals(container)) {
+			LOGGER.trace("Servlet container is unknown.");
+		}
 
     return container;
   }
@@ -133,7 +171,7 @@ public class ServletContainerDetector
    */
   public boolean isGlassfish()
   {
-    String value = System.getProperty("com.sun.aas.instanceRoot");
+		final String value = System.getProperty("com.sun.aas.instanceRoot");
 
     if (value != null)
     {
@@ -186,6 +224,21 @@ public class ServletContainerDetector
   }
 
   /**
+	 * Returns true if the ServletContainer is a Eclipse Jetty.
+	 *
+	 *
+	 * @return true if the ServletContainer is a Eclipse Jetty
+	 */
+	public boolean isEclipseJetty()
+	{
+		boolean jetty = detect("/org/eclipse/jetty/server/Server.class");
+		if (!jetty && null != request) {
+			jetty = detectDefaultServlet("org.eclipse.jetty");
+		}
+		return jetty;
+	}
+
+	/**
    * Returns true if the ServletContainer is a OC4J.
    *
    *
@@ -268,19 +321,19 @@ public class ServletContainerDetector
    *
    * @return true if class exists in system classpath
    */
-  private boolean detect(String clazz)
+	private boolean detect(final String clazz)
   {
     try
     {
-      ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+			final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
 
       systemClassLoader.loadClass(clazz);
 
       return true;
     }
-    catch (ClassNotFoundException cnfe)
+		catch (final ClassNotFoundException cnfe)
     {
-      Class<?> classObj = getClass();
+			final Class<?> classObj = getClass();
 
       if (classObj.getResource(clazz) != null)
       {
@@ -292,4 +345,22 @@ public class ServletContainerDetector
       }
     }
   }
+
+	/**
+	 * An alternate detection. The default servlet that must be implemented by each application, so we can get it's
+	 * class name and compare against our suggestion.
+	 * @param keyword Part of the class path that is needed at the implementation class.
+	 */
+	private boolean detectDefaultServlet(final String keyword)
+	{
+		// Request the default servlet (its pretty safe to say it will always be there)
+		final RequestDispatcher dispatcher = request.getSession().getServletContext().getNamedDispatcher("default");
+		if (dispatcher == null)
+		{
+			return false;
+		}
+
+		// If the request dispatcher implementation contains the keyword, we can claim a match
+		return dispatcher.getClass().getName().contains(keyword);
+	}
 }

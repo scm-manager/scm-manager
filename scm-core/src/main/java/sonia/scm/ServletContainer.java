@@ -40,6 +40,19 @@ package sonia.scm;
  */
 public enum ServletContainer
 {
-  SCM_SERVER, JETTY, TOMCAT, GLASSFISH, JBOSS, GERONIMO, JONAS, OC4J, RESIN,
-  WEBLOGIC, WEBSPHERE, UNKNOWN;
+	SCM_SERVER,
+	/** Jetty version <= 6 */
+	JETTY,
+	/** Jetty version >= 7 */
+	ECLIPSE_JETTY,
+	TOMCAT,
+	GLASSFISH,
+	JBOSS,
+	GERONIMO,
+	JONAS,
+	OC4J,
+	RESIN,
+	WEBLOGIC,
+	WEBSPHERE,
+	UNKNOWN;
 }
