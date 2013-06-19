@@ -33,14 +33,15 @@
 
 package sonia.scm;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
+//~--- non-JDK imports --------------------------------------------------------
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.triology.scm.plugins.restart.ServletContainer;
-import de.triology.scm.plugins.restart.ServletContainerDetector;
+//~--- JDK imports ------------------------------------------------------------
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Detects the ServletContainer.
@@ -51,331 +52,352 @@ import de.triology.scm.plugins.restart.ServletContainerDetector;
  */
 public class ServletContainerDetector
 {
-	/** Make usage of the logging framework. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(ServletContainerDetector.class);
-	/** Servlet request for alternate detection method. */
-	private HttpServletRequest request = null;
 
-	/**
-	 * Constructs a new ServletContainerDetector.
-	 * @deprecated Use {@link ServletContainerDetector#detect(HttpServletRequest)} instead.
-	 */
-	@Deprecated
-	public ServletContainerDetector() {
+  /** Make usage of the logging framework. */
+  private static final Logger LOGGER =
+    LoggerFactory.getLogger(ServletContainerDetector.class);
 
-	}
+  //~--- constructors ---------------------------------------------------------
 
-	/**
-	 * Constructs a new ServletContainerDetector depending on the ServletRequest.
-	 * @param req The ServletRequest.
-	 */
-	private ServletContainerDetector(final HttpServletRequest req) {
-		request = req;
-	}
+  /**
+   * Constructs a new ServletContainerDetector.
+   * @deprecated Use {@link ServletContainerDetector#detect(HttpServletRequest)} instead.
+   */
+  @Deprecated
+  public ServletContainerDetector() {}
 
-	/**
-	 * Detects the ServletContainer.
-	 *
-	 * @deprecated Use {@link ServletContainerDetector#detect(HttpServletRequest)} instead.
-	 * @return the detected ServletContainer
-	 */
-	@Deprecated
-	public static ServletContainer detect()
-	{
-		return new ServletContainerDetector().detectContainer();
-	}
+  /**
+   * Constructs a new ServletContainerDetector depending on the ServletRequest.
+   * @param req The ServletRequest.
+   */
+  private ServletContainerDetector(final HttpServletRequest req)
+  {
+    request = req;
+  }
 
-	/**
-	 * Alternate detection of ServletContainer using DefaultServletDetection.
-	 * @param req The used Servlet instance.
-	 * @return the detected ServletContainer.
-	 */
-	public static ServletContainer detect(final HttpServletRequest req)
-	{
-		return new ServletContainerDetector(req).detectContainer();
-	}
+  //~--- methods --------------------------------------------------------------
 
-	/**
-	 * Detects the ServletContainer.
-	 *
-	 *
-	 * @return the detected ServletContainer
-	 */
-	public ServletContainer detectContainer()
-	{
-		LOGGER.trace("Detecting servlet container...");
-		ServletContainer container = ServletContainer.UNKNOWN;
+  /**
+   * Detects the ServletContainer.
+   *
+   * @deprecated Use {@link ServletContainerDetector#detect(HttpServletRequest)} instead.
+   * @return the detected ServletContainer
+   */
+  @Deprecated
+  public static ServletContainer detect()
+  {
+    return new ServletContainerDetector().detectContainer();
+  }
 
-		if (isScmServer())
-		{
-			container = ServletContainer.SCM_SERVER;
-		}
-		else if (isGeronimo())
-		{
-			container = ServletContainer.GERONIMO;
-		}
-		else if (isGlassfish())
-		{
-			container = ServletContainer.GLASSFISH;
-		}
-		else if (isJBoss())
-		{
-			container = ServletContainer.JBOSS;
-		}
-		else if (isJOnAS())
-		{
-			container = ServletContainer.JONAS;
-		}
-		else if (isOC4J())
-		{
-			container = ServletContainer.OC4J;
-		}
-		else if (isResin())
-		{
-			container = ServletContainer.RESIN;
-		}
-		else if (isWebLogic())
-		{
-			container = ServletContainer.WEBLOGIC;
-		}
-		else if (isWebSphere())
-		{
-			container = ServletContainer.WEBSPHERE;
-		}
-		else if (isJetty())
-		{
-			container = ServletContainer.JETTY;
-		}
-		else if (isEclipseJetty())
-		{
-			container = ServletContainer.ECLIPSE_JETTY;
-		}
-		else if (isTomcat())
-		{
-			container = ServletContainer.TOMCAT;
-		}
+  /**
+   * Alternate detection of ServletContainer using DefaultServletDetection.
+   *
+   * @param req The used Servlet instance.
+   * @return the detected ServletContainer.
+   * @since 1.32
+   */
+  public static ServletContainer detect(final HttpServletRequest req)
+  {
+    return new ServletContainerDetector(req).detectContainer();
+  }
 
-		if (ServletContainer.UNKNOWN.equals(container)) {
-			LOGGER.trace("Servlet container is unknown.");
-		}
+  /**
+   * Detects the ServletContainer.
+   *
+   *
+   * @return the detected ServletContainer
+   */
+  public ServletContainer detectContainer()
+  {
+    LOGGER.trace("Detecting servlet container...");
 
-		return container;
-	}
+    ServletContainer container = ServletContainer.UNKNOWN;
 
-	//~--- get methods ----------------------------------------------------------
+    if (isScmServer())
+    {
+      container = ServletContainer.SCM_SERVER;
+    }
+    else if (isGeronimo())
+    {
+      container = ServletContainer.GERONIMO;
+    }
+    else if (isGlassfish())
+    {
+      container = ServletContainer.GLASSFISH;
+    }
+    else if (isJBoss())
+    {
+      container = ServletContainer.JBOSS;
+    }
+    else if (isJOnAS())
+    {
+      container = ServletContainer.JONAS;
+    }
+    else if (isOC4J())
+    {
+      container = ServletContainer.OC4J;
+    }
+    else if (isResin())
+    {
+      container = ServletContainer.RESIN;
+    }
+    else if (isWebLogic())
+    {
+      container = ServletContainer.WEBLOGIC;
+    }
+    else if (isWebSphere())
+    {
+      container = ServletContainer.WEBSPHERE;
+    }
+    else if (isJetty())
+    {
+      container = ServletContainer.JETTY;
+    }
+    else if (isEclipseJetty())
+    {
+      container = ServletContainer.ECLIPSE_JETTY;
+    }
+    else if (isTomcat())
+    {
+      container = ServletContainer.TOMCAT;
+    }
 
-	/**
-	 * Returns true if the ServletContainer is a Geronimo.
-	 *
-	 *
-	 * @return true if the ServletContainer is a Geronimo
-	 */
-	public boolean isGeronimo()
-	{
-		return detect("/org/apache/geronimo/system/main/Daemon.class");
-	}
+    if (ServletContainer.UNKNOWN.equals(container))
+    {
+      LOGGER.trace("Servlet container is unknown.");
+    }
 
-	/**
-	 * Returns true if the ServletContainer is a Glassfish.
-	 *
-	 *
-	 * @return true if the ServletContainer is a Glassfish
-	 */
-	public boolean isGlassfish()
-	{
-		final String value = System.getProperty("com.sun.aas.instanceRoot");
+    return container;
+  }
 
-		if (value != null)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+  //~--- get methods ----------------------------------------------------------
 
-	/**
-	 * Returns true if the ServletContainer is a JBoss.
-	 *
-	 *
-	 * @return true if the ServletContainer is a JBos
-	 */
-	public boolean isJBoss()
-	{
-		return detect("/org/jboss/Main.class");
-	}
+  /**
+   * Returns true if the ServletContainer is a Eclipse Jetty.
+   *
+   * @since 1.32
+   * @return true if the ServletContainer is a Eclipse Jetty
+   */
+  public boolean isEclipseJetty()
+  {
+    boolean jetty = detect("/org/eclipse/jetty/server/Server.class");
 
-	/**
-	 * Returns true if the ServletContainer is a JOnAS.
-	 *
-	 *
-	 * @return true if the ServletContainer is a JOnAS
-	 */
-	public boolean isJOnAS()
-	{
-		boolean jonas = detect("/org/objectweb/jonas/server/Server.class");
+    if (!jetty && (null != request))
+    {
+      jetty = detectDefaultServlet("org.eclipse.jetty");
+    }
 
-		if (!jonas && (System.getProperty("jonas.root") != null))
-		{
-			jonas = true;
-		}
+    return jetty;
+  }
 
-		return jonas;
-	}
+  /**
+   * Returns true if the ServletContainer is a Geronimo.
+   *
+   *
+   * @return true if the ServletContainer is a Geronimo
+   */
+  public boolean isGeronimo()
+  {
+    return detect("/org/apache/geronimo/system/main/Daemon.class");
+  }
 
-	/**
-	 * Returns true if the ServletContainer is a Jetty.
-	 *
-	 *
-	 * @return true if the ServletContainer is a Jetty
-	 */
-	public boolean isJetty()
-	{
-		return detect("/org/mortbay/jetty/Server.class");
-	}
+  /**
+   * Returns true if the ServletContainer is a Glassfish.
+   *
+   *
+   * @return true if the ServletContainer is a Glassfish
+   */
+  public boolean isGlassfish()
+  {
+    final String value = System.getProperty("com.sun.aas.instanceRoot");
 
-	/**
-	 * Returns true if the ServletContainer is a Eclipse Jetty.
-	 *
-	 * @since 1.32
-	 * @return true if the ServletContainer is a Eclipse Jetty
-	 */
-	public boolean isEclipseJetty()
-	{
-		boolean jetty = detect("/org/eclipse/jetty/server/Server.class");
-		if (!jetty && null != request) {
-			jetty = detectDefaultServlet("org.eclipse.jetty");
-		}
-		return jetty;
-	}
+    if (value != null)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  }
 
-	/**
-	 * Returns true if the ServletContainer is a OC4J.
-	 *
-	 *
-	 * @return true if the ServletContainer is a OC4J
-	 */
-	public boolean isOC4J()
-	{
-		return detect("oracle.oc4j.util.ClassUtils");
-	}
+  /**
+   * Returns true if the ServletContainer is a JBoss.
+   *
+   *
+   * @return true if the ServletContainer is a JBos
+   */
+  public boolean isJBoss()
+  {
+    return detect("/org/jboss/Main.class");
+  }
 
-	/**
-	 * Returns true if the ServletContainer is a Resin.
-	 *
-	 *
-	 * @return true if the ServletContainer is a Resin
-	 */
-	public boolean isResin()
-	{
-		return detect("/com/caucho/server/resin/Resin.class");
-	}
+  /**
+   * Returns true if the ServletContainer is a JOnAS.
+   *
+   *
+   * @return true if the ServletContainer is a JOnAS
+   */
+  public boolean isJOnAS()
+  {
+    boolean jonas = detect("/org/objectweb/jonas/server/Server.class");
 
-	/**
-	 * Returns true if the ServletContainer is a SCM-Server.
-	 *
-	 *
-	 * @return true if the ServletContainer is a SCM-Server
-	 */
-	public boolean isScmServer()
-	{
-		LOGGER.debug("App name is: " + System.getProperty("app.name"));
-		return "scm-server".equals(System.getProperty("app.name"));
-	}
+    if (!jonas && (System.getProperty("jonas.root") != null))
+    {
+      jonas = true;
+    }
 
-	/**
-	 * Returns true if the ServletContainer is a Tomcat.
-	 *
-	 *
-	 * @return true if the ServletContainer is a Tomcat
-	 */
-	public boolean isTomcat()
-	{
-		boolean tomcat = detect("/org/apache/catalina/startup/Bootstrap.class");
+    return jonas;
+  }
 
-		if (!tomcat)
-		{
-			tomcat = detect("/org/apache/catalina/startup/Embedded.class");
-		}
+  /**
+   * Returns true if the ServletContainer is a Jetty.
+   *
+   *
+   * @return true if the ServletContainer is a Jetty
+   */
+  public boolean isJetty()
+  {
+    return detect("/org/mortbay/jetty/Server.class");
+  }
 
-		return tomcat;
-	}
+  /**
+   * Returns true if the ServletContainer is a OC4J.
+   *
+   *
+   * @return true if the ServletContainer is a OC4J
+   */
+  public boolean isOC4J()
+  {
+    return detect("oracle.oc4j.util.ClassUtils");
+  }
 
-	/**
-	 * Returns true if the ServletContainer is a WebLogic.
-	 *
-	 *
-	 * @return true if the ServletContainer is a WebLogic
-	 */
-	public boolean isWebLogic()
-	{
-		return detect("/weblogic/Server.class");
-	}
+  /**
+   * Returns true if the ServletContainer is a Resin.
+   *
+   *
+   * @return true if the ServletContainer is a Resin
+   */
+  public boolean isResin()
+  {
+    return detect("/com/caucho/server/resin/Resin.class");
+  }
 
-	/**
-	 * Returns true if the ServletContainer is a WebSphere.
-	 *
-	 *
-	 * @return true if the ServletContainer is a WebSpere
-	 */
-	public boolean isWebSphere()
-	{
-		return detect("/com/ibm/websphere/product/VersionInfo.class");
-	}
+  /**
+   * Returns true if the ServletContainer is a SCM-Server.
+   *
+   *
+   * @return true if the ServletContainer is a SCM-Server
+   */
+  public boolean isScmServer()
+  {
+    LOGGER.debug("App name is: " + System.getProperty("app.name"));
 
-	//~--- methods --------------------------------------------------------------
+    return "scm-server".equals(System.getProperty("app.name"));
+  }
 
-	/**
-	 * Returns true if the given class exists in the system classpath.
-	 *
-	 *
-	 * @param clazz class name to search in classpath
-	 *
-	 * @return true if class exists in system classpath
-	 */
-	private boolean detect(final String clazz)
-	{
-		try
-		{
-			final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+  /**
+   * Returns true if the ServletContainer is a Tomcat.
+   *
+   *
+   * @return true if the ServletContainer is a Tomcat
+   */
+  public boolean isTomcat()
+  {
+    boolean tomcat = detect("/org/apache/catalina/startup/Bootstrap.class");
 
-			systemClassLoader.loadClass(clazz);
+    if (!tomcat)
+    {
+      tomcat = detect("/org/apache/catalina/startup/Embedded.class");
+    }
 
-			return true;
-		}
-		catch (final ClassNotFoundException cnfe)
-		{
-			final Class<?> classObj = getClass();
+    return tomcat;
+  }
 
-			if (classObj.getResource(clazz) != null)
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-	}
+  /**
+   * Returns true if the ServletContainer is a WebLogic.
+   *
+   *
+   * @return true if the ServletContainer is a WebLogic
+   */
+  public boolean isWebLogic()
+  {
+    return detect("/weblogic/Server.class");
+  }
 
-	/**
-	 * An alternate detection. The default servlet that must be implemented by each application, so we can get it's
-	 * class name and compare against our suggestion.
-	 * 
-	 * @since 1.32
-	 * @param keyword Part of the class path that is needed at the implementation class.
-	 */
-	private boolean detectDefaultServlet(final String keyword)
-	{
-		// Request the default servlet (its pretty safe to say it will always be there)
-		final RequestDispatcher dispatcher = request.getSession().getServletContext().getNamedDispatcher("default");
-		if (dispatcher == null)
-		{
-			return false;
-		}
+  /**
+   * Returns true if the ServletContainer is a WebSphere.
+   *
+   *
+   * @return true if the ServletContainer is a WebSpere
+   */
+  public boolean isWebSphere()
+  {
+    return detect("/com/ibm/websphere/product/VersionInfo.class");
+  }
 
-		// If the request dispatcher implementation contains the keyword, we can claim a match
-		return dispatcher.getClass().getName().contains(keyword);
-	}
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Returns true if the given class exists in the system classpath.
+   *
+   *
+   * @param clazz class name to search in classpath
+   *
+   * @return true if class exists in system classpath
+   */
+  private boolean detect(final String clazz)
+  {
+    try
+    {
+      final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+
+      systemClassLoader.loadClass(clazz);
+
+      return true;
+    }
+    catch (final ClassNotFoundException cnfe)
+    {
+      final Class<?> classObj = getClass();
+
+      if (classObj.getResource(clazz) != null)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+  }
+
+  /**
+   * An alternate detection. The default servlet that must be implemented by each application, so we can get it's
+   * class name and compare against our suggestion.
+   *
+   * @since 1.32
+   * @param keyword Part of the class path that is needed at the implementation class.
+   *
+   * @return
+   */
+  private boolean detectDefaultServlet(final String keyword)
+  {
+
+    // Request the default servlet (its pretty safe to say it will always be there)
+    final RequestDispatcher dispatcher =
+      request.getSession().getServletContext().getNamedDispatcher("default");
+
+    if (dispatcher == null)
+    {
+      return false;
+    }
+
+    // If the request dispatcher implementation contains the keyword, we can claim a match
+    return dispatcher.getClass().getName().contains(keyword);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Servlet request for alternate detection method. */
+  private HttpServletRequest request = null;
 }
