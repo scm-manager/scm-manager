@@ -60,10 +60,6 @@ public final class SystemUtil
     new Platform(System.getProperty(PROPERTY_OSNAME),
       System.getProperty(PROPERTY_ARCH), System.getProperty(PROPERTY_OSARCH));
 
-  /** Field description */
-  private static ServletContainer servletContainer =
-    ServletContainerDetector.detect();
-
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -125,10 +121,12 @@ public final class SystemUtil
    *
    *
    * @return
+   * @deprecated use {@link ServletContainerDetector#detect(javax.servlet.http.HttpServletRequest)) instead
    */
+  @Deprecated
   public static ServletContainer getServletContainer()
   {
-    return servletContainer;
+    return ServletContainerDetector.detect();
   }
 
   /**
