@@ -45,6 +45,7 @@ import org.apache.shiro.subject.Subject;
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.ServletContainerDetector;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.PluginManager;
@@ -65,6 +66,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+
+import javax.servlet.http.HttpServletRequest;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -97,17 +100,20 @@ public class SupportResource
    * @param pluginManager
    * @param storeFactory
    * @param repositoryManager
+   * @param request
    */
   @Inject
   public SupportResource(SCMContextProvider context,
     ScmConfiguration configuration, PluginManager pluginManager,
-    StoreFactory storeFactory, RepositoryManager repositoryManager)
+    StoreFactory storeFactory, RepositoryManager repositoryManager,
+    HttpServletRequest request)
   {
     this.context = context;
     this.configuration = configuration;
     this.pluginManager = pluginManager;
     this.storeFactoryClass = storeFactory.getClass();
     this.repositoryManager = repositoryManager;
+    this.request = request;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -137,7 +143,7 @@ public class SupportResource
     env.put("configuration", configuration);
     env.put("pluginManager", pluginManager);
     env.put("runtime", new RuntimeInformation());
-    env.put("system", new SystemInformation());
+    env.put("system", new SystemInformation(request));
     env.put("repositoryHandlers", getRepositoryHandlers());
 
     return new Viewable(TEMPLATE, env);
@@ -262,12 +268,14 @@ public class SupportResource
     /**
      * Constructs ...
      *
+     *
+     * @param request
      */
-    public SystemInformation()
+    public SystemInformation(HttpServletRequest request)
     {
       os = SystemUtil.getOS();
       arch = SystemUtil.getArch();
-      container = SystemUtil.getServletContainer().name();
+      container = ServletContainerDetector.detect(request).name();
       java = System.getProperty("java.vendor").concat("/").concat(
         System.getProperty("java.version"));
       locale = Locale.getDefault().toString();
@@ -450,6 +458,9 @@ public class SupportResource
 
   /** Field description */
   private RepositoryManager repositoryManager;
+
+  /** Field description */
+  private HttpServletRequest request;
 
   /** Field description */
   private Class<?> storeFactoryClass;
