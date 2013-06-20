@@ -85,9 +85,6 @@ public class JAXBConfigurationEntryStore<V>
 {
 
   /** Field description */
-  private static final Object LOCK = new Object();
-
-  /** Field description */
   private static final String TAG_CONFIGURATION = "configuration";
 
   /** Field description */
@@ -116,11 +113,11 @@ public class JAXBConfigurationEntryStore<V>
    * @param file
    * @param type
    */
-  JAXBConfigurationEntryStore(KeyGenerator keyGenerator, File file,
+  JAXBConfigurationEntryStore(File file, KeyGenerator keyGenerator,
     Class<V> type)
   {
-    this.keyGenerator = keyGenerator;
     this.file = file;
+    this.keyGenerator = keyGenerator;
     this.type = type;
 
     try
@@ -149,7 +146,7 @@ public class JAXBConfigurationEntryStore<V>
   {
     logger.debug("clear configuration store");
 
-    synchronized (LOCK)
+    synchronized (file)
     {
       entries.clear();
       store();
@@ -186,7 +183,7 @@ public class JAXBConfigurationEntryStore<V>
   {
     logger.debug("put item {} to configuration store", id);
 
-    synchronized (LOCK)
+    synchronized (file)
     {
       entries.put(id, item);
       store();
@@ -204,7 +201,7 @@ public class JAXBConfigurationEntryStore<V>
   {
     logger.debug("remove item {} from configuration store", id);
 
-    synchronized (LOCK)
+    synchronized (file)
     {
       entries.remove(id);
       store();
@@ -430,13 +427,13 @@ public class JAXBConfigurationEntryStore<V>
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private final File file;
+
+  /** Field description */
   private JAXBContext context;
 
   /** Field description */
   private Map<String, V> entries = Maps.newHashMap();
-
-  /** Field description */
-  private File file;
 
   /** Field description */
   private KeyGenerator keyGenerator;

@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -100,8 +101,13 @@ public class JAXBConfigurationEntryStoreFactory
     logger.debug("create new configuration store for type {} with name {}",
       type, name);
 
-    return new JAXBConfigurationEntryStore<T>(keyGenerator,
-      new File(directory, name.concat(StoreConstants.FILE_EXTENSION)), type);
+    //J-
+    return new JAXBConfigurationEntryStore<T>(
+      new File(directory,name.concat(StoreConstants.FILE_EXTENSION)), 
+      keyGenerator, 
+      type
+    );
+    //J+
   }
 
   //~--- fields ---------------------------------------------------------------
