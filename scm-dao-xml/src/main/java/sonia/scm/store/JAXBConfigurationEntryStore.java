@@ -30,10 +30,12 @@
  */
 
 
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
@@ -47,7 +49,13 @@ import sonia.scm.xml.IndentXMLStreamWriter;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -65,7 +73,6 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.stream.StreamSource;
 
 /**
  *
@@ -295,6 +302,32 @@ public class JAXBConfigurationEntryStore<V>
   }
 
   /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws FileNotFoundException
+   */
+  private Reader createReader() throws FileNotFoundException
+  {
+    return new InputStreamReader(new FileInputStream(file), Charsets.UTF_8);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws FileNotFoundException
+   */
+  private Writer createWriter() throws FileNotFoundException
+  {
+    return new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8);
+  }
+
+  /**
    *   Method description
    *
    *
@@ -312,7 +345,7 @@ public class JAXBConfigurationEntryStore<V>
     {
       Unmarshaller u = context.createUnmarshaller();
 
-      reader = xmlInputFactory.createXMLStreamReader(new StreamSource(file));
+      reader = xmlInputFactory.createXMLStreamReader(createReader());
       reader.nextTag();
       reader.nextTag();
 
@@ -357,7 +390,7 @@ public class JAXBConfigurationEntryStore<V>
       //J-
       writer = new IndentXMLStreamWriter(
         XMLOutputFactory.newFactory().createXMLStreamWriter(
-          new FileOutputStream(file)
+          createWriter()
         )
       );
       //J+
