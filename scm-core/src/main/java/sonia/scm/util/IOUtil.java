@@ -654,7 +654,7 @@ public final class IOUtil
       close(in);
     }
 
-    return content.toString();
+    return content;
   }
 
   /**

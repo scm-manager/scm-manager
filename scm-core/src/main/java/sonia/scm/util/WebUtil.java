@@ -165,7 +165,7 @@ public final class WebUtil
     String cc = "max-age=".concat(Long.toString(seconds)).concat(", public");
 
     // use public for https
-    response.addHeader(HEADER_CACHECONTROL, cc.toString());
+    response.addHeader(HEADER_CACHECONTROL, cc);
   }
 
   /**
