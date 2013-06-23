@@ -63,7 +63,7 @@ public class LimitedSortedSet<E> extends ForwardingSortedSet<E>
    */
   public LimitedSortedSet(int maxSize)
   {
-    this.treeSet = Sets.newTreeSet();
+    this.sortedSet = new TreeSet<E>();
     this.maxSize = maxSize;
   }
 
@@ -77,7 +77,7 @@ public class LimitedSortedSet<E> extends ForwardingSortedSet<E>
    */
   public LimitedSortedSet(Comparator<E> comparator, int maxSize)
   {
-    this.treeSet = Sets.newTreeSet(comparator);
+    this.sortedSet = Sets.newTreeSet(comparator);
     this.maxSize = maxSize;
   }
 
@@ -118,7 +118,7 @@ public class LimitedSortedSet<E> extends ForwardingSortedSet<E>
   @Override
   protected SortedSet<E> delegate()
   {
-    return treeSet;
+    return sortedSet;
   }
 
   /**
@@ -139,5 +139,5 @@ public class LimitedSortedSet<E> extends ForwardingSortedSet<E>
   private int maxSize;
 
   /** delegate set */
-  private TreeSet treeSet;
+  private SortedSet<E> sortedSet;
 }
