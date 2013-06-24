@@ -35,9 +35,12 @@ package sonia.scm.installer;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.io.DirectoryFileFilter;
 import sonia.scm.repository.HgConfig;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -65,6 +68,9 @@ public class MacOSHgInstaller extends UnixHgInstaller
   public static final String PATH_HG_BREW_INSTALLATION =
     "/usr/local/Cellar/mercurial";
 
+  /** Field description */
+  public static final String PATH_PYTHON = "python";
+
   /** the logger for MacOSHgInstaller */
   private static final Logger logger =
     LoggerFactory.getLogger(MacOSHgInstaller.class);
@@ -89,7 +95,7 @@ public class MacOSHgInstaller extends UnixHgInstaller
 
     if (PATH_HG.equals(hg))
     {
-      hg = resolvePath();
+      hg = resolvePath(hg);
     }
 
     if (PATH_HG_BREW.equals(hg))
@@ -100,15 +106,7 @@ public class MacOSHgInstaller extends UnixHgInstaller
 
       if (file.getAbsolutePath().startsWith(PATH_HG_BREW_INSTALLATION))
       {
-        String pythonPath = file.getParent();
-
-        if (logger.isInfoEnabled())
-        {
-          logger.info("found mercurial brew install set python path to {}",
-                      pythonPath);
-        }
-
-        config.setPythonPath(pythonPath);
+        useHomebrewInstallation(config, file);
       }
     }
   }
@@ -117,11 +115,38 @@ public class MacOSHgInstaller extends UnixHgInstaller
    * Method description
    *
    *
+   * @param parent
+   *
    * @return
    */
-  private String resolvePath()
+  private File findPythonDirectory(File parent)
   {
-    String hg = PATH_HG;
+    File pythonDirectory = null;
+
+    for (File d : parent.listFiles(DirectoryFileFilter.instance))
+    {
+      if (d.getName().startsWith("python"))
+      {
+        pythonDirectory = d;
+
+        break;
+      }
+    }
+
+    return pythonDirectory;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   *
+   * @param binaryName
+   * @return
+   */
+  private String resolvePath(String binaryName)
+  {
+    String binary = binaryName;
 
     try
     {
@@ -129,15 +154,15 @@ public class MacOSHgInstaller extends UnixHgInstaller
 
       for (String p : path.split(":"))
       {
-        File file = new File(p, PATH_HG);
+        File file = new File(p, binaryName);
 
         if (file.exists())
         {
-          hg = file.getAbsolutePath();
+          binary = file.getAbsolutePath();
 
           if (logger.isDebugEnabled())
           {
-            logger.debug("resolve hg path to {}", hg);
+            logger.debug("resolve {} path to {}", binaryName, binary);
           }
 
           break;
@@ -146,9 +171,59 @@ public class MacOSHgInstaller extends UnixHgInstaller
     }
     catch (Exception ex)
     {
-      logger.error("could not resolve hg path", ex);
+      logger.error("could not resolve binary path", ex);
     }
 
-    return hg;
+    return binary;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param config
+   * @param file
+   */
+  private void useHomebrewInstallation(HgConfig config, File file)
+  {
+    File parent = file.getParentFile().getParentFile();
+    File libDirectory = new File(parent, "lib");
+
+    if (!libDirectory.exists())
+    {
+      libDirectory = new File(parent, "libexec");
+    }
+
+    if (libDirectory.exists())
+    {
+      File pythonDirectory = findPythonDirectory(libDirectory);
+
+      if (pythonDirectory != null)
+      {
+        File sitePackageDirectory = new File(pythonDirectory, "site-packages");
+
+        if (sitePackageDirectory.exists())
+        {
+          libDirectory = sitePackageDirectory;
+        }
+
+        String pythonPath = libDirectory.getPath();
+
+        if (logger.isInfoEnabled())
+        {
+          logger.info("found mercurial brew install set python path to {}",
+            pythonPath);
+        }
+
+        config.setPythonPath(pythonPath);
+      }
+    }
+
+    String python = config.getPythonBinary();
+
+    if (PATH_PYTHON.equals(python))
+    {
+      config.setPythonBinary(resolvePath(python));
+    }
   }
 }
