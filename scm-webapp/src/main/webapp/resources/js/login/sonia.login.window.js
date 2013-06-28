@@ -45,7 +45,7 @@ Sonia.login.Window = Ext.extend(Ext.Window,{
 
     var config = {
       layout:'fit',
-      width:300,
+      width:320,
       height:150,
       closable: false,
       resizable: false,
