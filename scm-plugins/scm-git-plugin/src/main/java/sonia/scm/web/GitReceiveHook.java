@@ -52,6 +52,9 @@ import sonia.scm.repository.RepositoryUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
+import java.io.IOException;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -127,8 +130,9 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     try
     {
       Repository repository = rpack.getRepository();
-      String repositoryName = RepositoryUtil.getRepositoryName(handler,
-                                repository.getDirectory());
+      String repositoryName = resolveRepositoryName(repository);
+
+      logger.trace("resolved repository name to {}", repositoryName);
 
       repositoryManager.fireHookEvent(GitRepositoryHandler.TYPE_NAME,
         repositoryName,
@@ -147,7 +151,6 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    *
    *
    * @param rpack
-   * @param receiveCommands
    * @param commands
    * @param type
    */
@@ -172,6 +175,32 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     {
       logger.debug("no receive commands found to process");
     }
+  }
+
+  /**
+   * Resolve the name of the repository.
+   * This method was introduced to fix issue #415.
+   *
+   * @param repository jgit repository
+   *
+   * @return name of repository
+   *
+   * @throws IOException
+   */
+  private String resolveRepositoryName(Repository repository) throws IOException
+  {
+    File directory;
+
+    if (repository.isBare())
+    {
+      directory = repository.getDirectory();
+    }
+    else
+    {
+      directory = repository.getWorkTree();
+    }
+
+    return RepositoryUtil.getRepositoryName(handler, directory);
   }
 
   //~--- fields ---------------------------------------------------------------
