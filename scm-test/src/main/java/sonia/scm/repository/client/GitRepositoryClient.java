@@ -46,6 +46,7 @@ import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.NoRemoteRepositoryException;
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefComparator;
@@ -53,7 +54,6 @@ import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.TextProgressMonitor;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.PushResult;
@@ -100,8 +100,8 @@ public class GitRepositoryClient extends AbstractRepositoryClient
    * @throws URISyntaxException
    */
   GitRepositoryClient(File localRepository, String remoteRepository,
-                      String username, String password)
-          throws URISyntaxException, IOException
+    String username, String password)
+    throws URISyntaxException, IOException
   {
     super(localRepository, remoteRepository);
     uri = new URIish(remoteRepository);
@@ -111,11 +111,11 @@ public class GitRepositoryClient extends AbstractRepositoryClient
       uri.setUser(username);
       uri.setPass(password);
       credentialsProvider = new UsernamePasswordCredentialsProvider(username,
-              password);
+        password);
     }
 
     this.repository = new FileRepository(new File(localRepository,
-            Constants.DOT_GIT));
+      Constants.DOT_GIT));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -131,7 +131,7 @@ public class GitRepositoryClient extends AbstractRepositoryClient
    */
   @Override
   public void add(String file, String... others)
-          throws RepositoryClientException
+    throws RepositoryClientException
   {
     AddCommand cmd = new Git(repository).add();
 
@@ -172,7 +172,7 @@ public class GitRepositoryClient extends AbstractRepositoryClient
             case REJECTED :
             case REJECTED_CURRENT_BRANCH :
               throw new RepositoryClientException("could not checkout, status "
-                      + ru.getResult().name());
+                + ru.getResult().name());
           }
         }
 
@@ -253,9 +253,8 @@ public class GitRepositoryClient extends AbstractRepositoryClient
               case REJECTED_REMOTE_CHANGED :
               case REJECTED_OTHER_REASON :
                 throw new RepositoryClientException(
-                    "could not update ref ".concat(
-                      refUpdate.getSrcRef()).concat(
-                      " status ".concat(refUpdate.getStatus().toString())));
+                  "could not update ref ".concat(refUpdate.getSrcRef()).concat(
+                    " status ".concat(refUpdate.getStatus().toString())));
             }
           }
         }
@@ -288,7 +287,7 @@ public class GitRepositoryClient extends AbstractRepositoryClient
     {
       repository.create(false);
       addRemote("origin", new URIish(remoteRepository), "master", null, true,
-                null);
+        null);
     }
     catch (Exception ex)
     {
@@ -311,10 +310,9 @@ public class GitRepositoryClient extends AbstractRepositoryClient
    * @throws URISyntaxException
    */
   private void addRemote(final String remoteName, final URIish uri,
-                         final String branchName, final String tagName,
-                         final boolean allSelected,
-                         final Collection<Ref> selectedBranches)
-          throws URISyntaxException, IOException
+    final String branchName, final String tagName, final boolean allSelected,
+    final Collection<Ref> selectedBranches)
+    throws URISyntaxException, IOException
   {
 
 //  add remote configuration
@@ -349,18 +347,18 @@ public class GitRepositoryClient extends AbstractRepositoryClient
 
 //  setup the default remote branch for branchName
     repository.getConfig().setString("branch", branchName, "remote",
-                                     remoteName);
+      remoteName);
 
     if (branchName != null)
     {
       repository.getConfig().setString("branch", branchName, "merge",
-                                       Constants.R_HEADS + branchName);
+        Constants.R_HEADS + branchName);
     }
 
     if (tagName != null)
     {
       repository.getConfig().setString("branch", branchName, "merge",
-                                       Constants.R_TAGS + branchName);
+        Constants.R_TAGS + branchName);
     }
 
     repository.getConfig().save();
@@ -476,8 +474,7 @@ public class GitRepositoryClient extends AbstractRepositoryClient
    * @throws MissingObjectException
    */
   private RevCommit parseCommit(Ref branch)
-          throws MissingObjectException, IncorrectObjectTypeException,
-                 IOException
+    throws MissingObjectException, IncorrectObjectTypeException, IOException
   {
     final RevWalk rw = new RevWalk(repository);
     final RevCommit commit;
@@ -506,8 +503,8 @@ public class GitRepositoryClient extends AbstractRepositoryClient
    * @throws URISyntaxException
    */
   private FetchResult runFetch()
-          throws NotSupportedException, URISyntaxException, TransportException,
-                 RepositoryClientException
+    throws NotSupportedException, URISyntaxException, TransportException,
+    RepositoryClientException
   {
     FetchResult r = null;
 

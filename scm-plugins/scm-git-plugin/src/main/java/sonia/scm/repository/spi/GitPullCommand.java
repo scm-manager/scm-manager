@@ -30,13 +30,14 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 
-import org.eclipse.jgit.storage.file.FileRepository;
+import org.eclipse.jgit.internal.storage.file.FileRepository;
 
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
