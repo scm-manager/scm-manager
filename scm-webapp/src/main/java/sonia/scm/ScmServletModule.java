@@ -149,6 +149,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.repository.spi.HookEventFacade;
 
 /**
  *
@@ -326,6 +328,10 @@ public class ScmServletModule extends ServletModule
 
     // bind repository service factory
     bind(RepositoryServiceFactory.class);
+    
+    // bind new hook api
+    bind(HookContextFactory.class);
+    bind(HookEventFacade.class);
 
     // bind debug logging filter
     if ("true".equalsIgnoreCase(System.getProperty(SYSTEM_PROPERTY_DEBUG_HTTP)))
