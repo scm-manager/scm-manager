@@ -852,7 +852,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   @Override
   protected RepositoryHookEvent prepareHookEvent(RepositoryHookEvent event)
   {
-    return SynchronizedRepositoryHookEvent.wrap(event, preProcessorUtil);
+    if (!(event instanceof ExtendedRepositoryHookEvent))
+    {
+      event = SynchronizedRepositoryHookEvent.wrap(event, preProcessorUtil);
+    }
+
+    return event;
   }
 
   /**
