@@ -30,6 +30,7 @@
  */
 
 
+
 package org.eclipse.jgit.transport;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -46,7 +47,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.web.GitReceiveHook;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -80,18 +81,17 @@ public class ScmTransportProtocol extends TransportProtocol
    * Constructs ...
    *
    *
-   * @param repositoryManager
-   * @param handler
    *
-   * @param repositoryManagerProvider
+   * @param hookEventFacadeProvider
+   *
    * @param repositoryHandlerProvider
    */
   @Inject
   public ScmTransportProtocol(
-    Provider<RepositoryManager> repositoryManagerProvider,
+    Provider<HookEventFacade> hookEventFacadeProvider,
     Provider<GitRepositoryHandler> repositoryHandlerProvider)
   {
-    this.repositoryManagerProvider = repositoryManagerProvider;
+    this.hookEventFacadeProvider = hookEventFacadeProvider;
     this.repositoryHandlerProvider = repositoryHandlerProvider;
   }
 
@@ -149,7 +149,7 @@ public class ScmTransportProtocol extends TransportProtocol
 
     //J-
     return new TransportLocalWithHooks(
-      repositoryManagerProvider.get(), 
+      hookEventFacadeProvider.get(),
       repositoryHandlerProvider.get(), 
       local, uri, gitDir
     );
@@ -198,17 +198,18 @@ public class ScmTransportProtocol extends TransportProtocol
      * Constructs ...
      *
      *
-     * @param repositoryManager
+     *
+     * @param hookEventFacade
      * @param handler
      * @param local
      * @param uri
      * @param gitDir
      */
-    public TransportLocalWithHooks(RepositoryManager repositoryManager,
+    public TransportLocalWithHooks(HookEventFacade hookEventFacade,
       GitRepositoryHandler handler, Repository local, URIish uri, File gitDir)
     {
       super(local, uri, gitDir);
-      this.repositoryManager = repositoryManager;
+      this.hookEventFacade = hookEventFacade;
       this.handler = handler;
     }
 
@@ -227,9 +228,9 @@ public class ScmTransportProtocol extends TransportProtocol
     {
       ReceivePack pack = new ReceivePack(dst);
 
-      if ((repositoryManager != null) && (handler != null))
+      if ((hookEventFacade != null) && (handler != null))
       {
-        GitReceiveHook hook = new GitReceiveHook(repositoryManager, handler);
+        GitReceiveHook hook = new GitReceiveHook(hookEventFacade, handler);
 
         pack.setPreReceiveHook(hook);
         pack.setPostReceiveHook(hook);
@@ -244,15 +245,15 @@ public class ScmTransportProtocol extends TransportProtocol
     private GitRepositoryHandler handler;
 
     /** Field description */
-    private RepositoryManager repositoryManager;
+    private HookEventFacade hookEventFacade;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Provider<GitRepositoryHandler> repositoryHandlerProvider;
+  private Provider<HookEventFacade> hookEventFacadeProvider;
 
   /** Field description */
-  private Provider<RepositoryManager> repositoryManagerProvider;
+  private Provider<GitRepositoryHandler> repositoryHandlerProvider;
 }

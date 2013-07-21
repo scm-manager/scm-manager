@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -46,7 +47,6 @@ import org.junit.Test;
 
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.PushResponse;
 
 import static org.junit.Assert.*;
@@ -111,11 +111,11 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
   {
 
     // store reference to handle weak references
-    proto = new ScmTransportProtocol(new Provider<RepositoryManager>()
+    proto = new ScmTransportProtocol(new Provider<HookEventFacade>()
     {
 
       @Override
-      public RepositoryManager get()
+      public HookEventFacade get()
       {
         return null;
       }

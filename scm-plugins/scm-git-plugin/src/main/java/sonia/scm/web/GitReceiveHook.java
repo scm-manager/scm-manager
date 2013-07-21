@@ -45,10 +45,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.GitRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryUtil;
+import sonia.scm.repository.spi.GitHookContextProvider;
+import sonia.scm.repository.spi.HookEventFacade;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -75,13 +75,14 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    * Constructs ...
    *
    *
-   * @param repositoryManager
+   *
+   * @param hookEventFacade
    * @param handler
    */
-  public GitReceiveHook(RepositoryManager repositoryManager,
+  public GitReceiveHook(HookEventFacade hookEventFacade,
     GitRepositoryHandler handler)
   {
-    this.repositoryManager = repositoryManager;
+    this.hookEventFacade = hookEventFacade;
     this.handler = handler;
   }
 
@@ -134,9 +135,12 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
 
       logger.trace("resolved repository name to {}", repositoryName);
 
-      repositoryManager.fireHookEvent(GitRepositoryHandler.TYPE_NAME,
-        repositoryName,
-        new GitRepositoryHookEvent(rpack, receiveCommands, type));
+      GitHookContextProvider context = new GitHookContextProvider(rpack,
+                                         receiveCommands, type);
+
+      hookEventFacade.handle(GitRepositoryHandler.TYPE_NAME,
+        repositoryName).fireHookEvent(type, context);
+      
     }
     catch (Exception ex)
     {
@@ -209,5 +213,5 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   private GitRepositoryHandler handler;
 
   /** Field description */
-  private RepositoryManager repositoryManager;
+  private HookEventFacade hookEventFacade;
 }

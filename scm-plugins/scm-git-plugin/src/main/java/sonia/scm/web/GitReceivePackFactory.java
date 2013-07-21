@@ -45,7 +45,7 @@ import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
 import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
 
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.spi.HookEventFacade;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -56,21 +56,22 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  */
 public class GitReceivePackFactory
-        implements ReceivePackFactory<HttpServletRequest>
+  implements ReceivePackFactory<HttpServletRequest>
 {
 
   /**
    * Constructs ...
    *
    *
-   * @param repositoryManager
+   *
+   * @param hookEventFacade
    * @param handler
    */
   @Inject
-  public GitReceivePackFactory(RepositoryManager repositoryManager,
-                               GitRepositoryHandler handler)
+  public GitReceivePackFactory(HookEventFacade hookEventFacade,
+    GitRepositoryHandler handler)
   {
-    hook = new GitReceiveHook(repositoryManager, handler);
+    hook = new GitReceiveHook(hookEventFacade, handler);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -89,7 +90,7 @@ public class GitReceivePackFactory
    */
   @Override
   public ReceivePack create(HttpServletRequest request, Repository repository)
-          throws ServiceNotEnabledException, ServiceNotAuthorizedException
+    throws ServiceNotEnabledException, ServiceNotAuthorizedException
   {
     ReceivePack rpack = defaultFactory.create(request, repository);
 
