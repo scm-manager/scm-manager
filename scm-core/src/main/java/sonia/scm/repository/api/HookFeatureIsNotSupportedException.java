@@ -29,92 +29,64 @@
 
 
 
-package sonia.scm.repository.spi;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.repository.api.HookException;
-import sonia.scm.repository.api.HookFeature;
-import sonia.scm.repository.api.HookFeatureIsNotSupportedException;
-import sonia.scm.repository.api.HookMessageProvider;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
+package sonia.scm.repository.api;
 
 /**
+ * This exception is thrown if the underlying provider of the 
+ * {@link HookContext} does not support the requested {@link HookFeature}.
  *
  * @author Sebastian Sdorra
  * @since 1.33
  */
-public abstract class HookContextProvider
+public class HookFeatureIsNotSupportedException extends HookException
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public final HookMessageProvider getMessageProvider()
-  {
-    if (clientDisconnected)
-    {
-      throw new HookException(
-        "message provider is only available in a synchronous hook execution.");
-    }
+  /** Field description */
+  private static final long serialVersionUID = -7670872902321373610L;
 
-    return createMessageProvider();
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs a new {@link HookFeatureIsNotSupportedException}.
+   *
+   *
+   * @param unsupportedFeature feature which is not supported
+   */
+  public HookFeatureIsNotSupportedException(HookFeature unsupportedFeature)
+  {
+    super(unsupportedFeature.toString().concat(" is not supported"));
+    this.unsupportedFeature = unsupportedFeature;
   }
 
-  //~--- methods --------------------------------------------------------------
-
   /**
-   * Method description
+   * Constructs a new {@link HookFeatureIsNotSupportedException}.
    *
+   *
+   * @param message message for the exception
+   * @param unsupportedFeature feature which is not supported
    */
-  final void handleClientDisconnect()
+  public HookFeatureIsNotSupportedException(String message,
+    HookFeature unsupportedFeature)
   {
-    clientDisconnected = true;
+    super(message);
+    this.unsupportedFeature = unsupportedFeature;
   }
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the feature which is not supported.
    *
    *
-   * @return
+   * @return unsupported hook feature
    */
-  public abstract Set<HookFeature> getSupportedFeatures();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public HookChangesetProvider getChangesetProvider()
+  public HookFeature getUnsupportedFeature()
   {
-    throw new HookFeatureIsNotSupportedException(
-      HookFeature.CHANGESET_PROVIDER);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected HookMessageProvider createMessageProvider()
-  {
-    throw new HookFeatureIsNotSupportedException(HookFeature.MESSAGE_PROVIDER);
+    return unsupportedFeature;
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private boolean clientDisconnected = false;
+  /** unsupported hook feature */
+  private HookFeature unsupportedFeature;
 }

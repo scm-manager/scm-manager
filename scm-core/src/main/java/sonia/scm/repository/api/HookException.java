@@ -29,92 +29,60 @@
 
 
 
-package sonia.scm.repository.spi;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.repository.api.HookException;
-import sonia.scm.repository.api.HookFeature;
-import sonia.scm.repository.api.HookFeatureIsNotSupportedException;
-import sonia.scm.repository.api.HookMessageProvider;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
+package sonia.scm.repository.api;
 
 /**
+ * Base exception for all exceptions which can occur during the hook
+ * initialization.
  *
  * @author Sebastian Sdorra
  * @since 1.33
  */
-public abstract class HookContextProvider
+public class HookException extends RuntimeException
 {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public final HookMessageProvider getMessageProvider()
-  {
-    if (clientDisconnected)
-    {
-      throw new HookException(
-        "message provider is only available in a synchronous hook execution.");
-    }
-
-    return createMessageProvider();
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  final void handleClientDisconnect()
-  {
-    clientDisconnected = true;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public abstract Set<HookFeature> getSupportedFeatures();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public HookChangesetProvider getChangesetProvider()
-  {
-    throw new HookFeatureIsNotSupportedException(
-      HookFeature.CHANGESET_PROVIDER);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected HookMessageProvider createMessageProvider()
-  {
-    throw new HookFeatureIsNotSupportedException(HookFeature.MESSAGE_PROVIDER);
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
   /** Field description */
-  private boolean clientDisconnected = false;
+  private static final long serialVersionUID = 2572704247316715734L;
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  public HookException() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   */
+  public HookException(String message)
+  {
+    super(message);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param cause
+   */
+  public HookException(Throwable cause)
+  {
+    super(cause);
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param message
+   * @param cause
+   */
+  public HookException(String message, Throwable cause)
+  {
+    super(message, cause);
+  }
 }

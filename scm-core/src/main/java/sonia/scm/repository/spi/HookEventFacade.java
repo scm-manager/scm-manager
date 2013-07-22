@@ -169,7 +169,7 @@ public final class HookEventFacade
         new ExtendedRepositoryHookEvent(context, repository, type);
 
       repositoryManager.fireHookEvent(repository, event);
-      hookContextProvider.handleClientFinalization();
+      hookContextProvider.handleClientDisconnect();
     }
 
     //~--- fields -------------------------------------------------------------
