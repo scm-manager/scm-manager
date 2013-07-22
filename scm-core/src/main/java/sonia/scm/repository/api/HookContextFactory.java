@@ -35,6 +35,9 @@ package sonia.scm.repository.api;
 
 import com.google.inject.Inject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.HookContextProvider;
@@ -47,6 +50,14 @@ import sonia.scm.repository.spi.HookContextProvider;
  */
 public final class HookContextFactory
 {
+
+  /**
+   * the logger for HookContextFactory
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HookContextFactory.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new {@link HookContextFactory}.
@@ -74,6 +85,9 @@ public final class HookContextFactory
   public HookContext createContext(HookContextProvider provider,
     Repository repository)
   {
+    logger.debug("create new hook context for repository {}",
+      repository.getName());
+
     return new HookContext(provider, repository, preProcessorUtil);
   }
 

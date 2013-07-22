@@ -33,6 +33,9 @@ package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
@@ -48,6 +51,14 @@ import sonia.scm.repository.spi.HookContextProvider;
  */
 public final class HookContext
 {
+
+  /**
+   * the logger for HookContext
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HookContext.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -76,6 +87,12 @@ public final class HookContext
    */
   public HookChangesetBuilder getChangesetProvider()
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create changeset provider for repository {}",
+        repository.getName());
+    }
+
     //J-
     return new HookChangesetBuilder(
       repository, 
@@ -97,6 +114,12 @@ public final class HookContext
    */
   public HookMessageProvider getMessageProvider()
   {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create message provider for repository {}",
+        repository.getName());
+    }
+
     return provider.getMessageProvider();
   }
 
