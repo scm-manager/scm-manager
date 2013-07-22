@@ -29,86 +29,12 @@
 
 
 
-package sonia.scm.repository.spi;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.repository.api.HookFeature;
-import sonia.scm.repository.api.HookMessageProvider;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
+package sonia.scm.repository.api;
 
 /**
+ * Enumeration of available hook features.
  *
  * @author Sebastian Sdorra
  * @since 1.33
  */
-public abstract class HookContextProvider
-{
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public final HookMessageProvider getMessageProvider()
-  {
-    if (clientFinalization)
-    {
-
-      // TODO
-      throw new IllegalArgumentException();
-    }
-
-    return createMessageProvider();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public abstract Set<HookFeature> getSupportedFeatures();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public HookChangesetProvider getChangesetProvider()
-  {
-    return null;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  void handleClientFinalization()
-  {
-    clientFinalization = true;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected HookMessageProvider createMessageProvider()
-  {
-    return null;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private boolean clientFinalization = false;
-}
+public enum HookFeature { MESSAGE_PROVIDER, CHANGESET_PROVIDER; }

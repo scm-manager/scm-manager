@@ -38,11 +38,14 @@ import org.eclipse.jgit.transport.ReceivePack;
 
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.GitHookMessageProvider;
+import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookMessageProvider;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -50,6 +53,12 @@ import java.util.List;
  */
 public class GitHookContextProvider extends HookContextProvider
 {
+
+  /** Field description */
+  private static final Set<HookFeature> SUPPORTED_FEATURES =
+    EnumSet.of(HookFeature.MESSAGE_PROVIDER, HookFeature.CHANGESET_PROVIDER);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -65,6 +74,20 @@ public class GitHookContextProvider extends HookContextProvider
     this.receivePack = receivePack;
     this.receiveCommands = receiveCommands;
     this.type = type;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public HookMessageProvider createMessageProvider()
+  {
+    return new GitHookMessageProvider(receivePack);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -88,9 +111,9 @@ public class GitHookContextProvider extends HookContextProvider
    * @return
    */
   @Override
-  public HookMessageProvider createMessageProvider()
+  public Set<HookFeature> getSupportedFeatures()
   {
-    return new GitHookMessageProvider(receivePack);
+    return SUPPORTED_FEATURES;
   }
 
   //~--- fields ---------------------------------------------------------------

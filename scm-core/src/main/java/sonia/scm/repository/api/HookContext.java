@@ -39,6 +39,9 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.HookContextProvider;
 
 /**
+ * The context for all repository hooks. With the {@link HookContext} class it
+ * is able to send messages back to the client and retrieve {@link Changeset}s
+ * which are added during this push/commit.
  *
  * @author Sebastian Sdorra
  * @since 1.33
@@ -65,7 +68,7 @@ public final class HookContext
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns a {@link HookChangesetBuilder} which is able to return all 
+   * Returns a {@link HookChangesetBuilder} which is able to return all
    * {@link Changeset}'s during this push/commit.
    *
    *
@@ -95,6 +98,19 @@ public final class HookContext
   public HookMessageProvider getMessageProvider()
   {
     return provider.getMessageProvider();
+  }
+
+  /**
+   * Returns true if the underlying provider support the requested feature.
+   *
+   *
+   * @param feature feature to check if it is supported
+   *
+   * @return true if the feature is supported
+   */
+  public boolean isFeatureSupported(HookFeature feature)
+  {
+    return provider.getSupportedFeatures().contains(feature);
   }
 
   //~--- fields ---------------------------------------------------------------
