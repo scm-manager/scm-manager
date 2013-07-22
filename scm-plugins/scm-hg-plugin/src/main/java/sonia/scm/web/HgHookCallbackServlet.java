@@ -49,11 +49,13 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.HgRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryUtil;
+import sonia.scm.repository.spi.HgHookContextProvider;
+import sonia.scm.repository.spi.HookEventFacade;
+import sonia.scm.repositorya.api.HgHookMessage;
+import sonia.scm.repositorya.api.HgHookMessage.Severity;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.security.Tokens;
 import sonia.scm.util.HttpUtil;
@@ -64,6 +66,7 @@ import sonia.scm.util.Util;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -118,18 +121,18 @@ public class HgHookCallbackServlet extends HttpServlet
    * Constructs ...
    *
    *
-   * @param repositoryManager
+   *
+   * @param hookEventFacade
    * @param handler
    * @param hookManager
    * @param contextProvider
-   * @param securityContextProvider
    */
   @Inject
-  public HgHookCallbackServlet(RepositoryManager repositoryManager,
+  public HgHookCallbackServlet(HookEventFacade hookEventFacade,
     HgRepositoryHandler handler, HgHookManager hookManager,
     Provider<HgContext> contextProvider)
   {
-    this.repositoryManager = repositoryManager;
+    this.hookEventFacade = hookEventFacade;
     this.handler = handler;
     this.hookManager = hookManager;
     this.contextProvider = contextProvider;
@@ -228,7 +231,6 @@ public class HgHookCallbackServlet extends HttpServlet
    *
    *
    * @param request
-   * @param response
    * @param credentials
    */
   private void authenticate(HttpServletRequest request, String credentials)
@@ -278,9 +280,14 @@ public class HgHookCallbackServlet extends HttpServlet
         contextProvider.get().setPending(true);
       }
 
-      repositoryManager.fireHookEvent(HgRepositoryHandler.TYPE_NAME,
-        repositoryName,
-        new HgRepositoryHookEvent(handler, hookManager, repositoryName, node, type));
+      HgHookContextProvider context = new HgHookContextProvider(handler,
+                                        repositoryName, hookManager, node,
+                                        type);
+
+      hookEventFacade.handle(HgRepositoryHandler.TYPE_NAME,
+        repositoryName).fireHookEvent(type, context);
+
+      printMessages(response, context);
     }
     catch (RepositoryNotFoundException ex)
     {
@@ -353,6 +360,52 @@ public class HgHookCallbackServlet extends HttpServlet
       }
 
       response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param resonse
+   * @param context
+   *
+   * @throws IOException
+   */
+  private void printMessages(HttpServletResponse resonse,
+    HgHookContextProvider context)
+    throws IOException
+  {
+    List<HgHookMessage> msgs = context.getHgMessageProvider().getMessages();
+
+    if (Util.isNotEmpty(msgs))
+    {
+      PrintWriter writer = null;
+
+      try
+      {
+        writer = resonse.getWriter();
+
+        for (HgHookMessage msg : msgs)
+        {
+          writer.append('_');
+
+          if (msg.getSeverity() == Severity.ERROR)
+          {
+            writer.append("e[SCM] Error: ");
+          }
+          else
+          {
+            writer.append("n[SCM] ");
+          }
+
+          writer.println(msg.getMessage());
+        }
+      }
+      finally
+      {
+        Closeables.close(writer, false);
+      }
     }
   }
 
@@ -437,8 +490,8 @@ public class HgHookCallbackServlet extends HttpServlet
   private HgRepositoryHandler handler;
 
   /** Field description */
-  private HgHookManager hookManager;
+  private HookEventFacade hookEventFacade;
 
   /** Field description */
-  private RepositoryManager repositoryManager;
+  private HgHookManager hookManager;
 }

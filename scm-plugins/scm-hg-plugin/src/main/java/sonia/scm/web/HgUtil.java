@@ -35,14 +35,28 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.aragost.javahg.Repository;
+import com.aragost.javahg.RepositoryConfiguration;
+
+import com.google.common.base.Strings;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.SCMContext;
 import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgEnvironment;
+import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgPythonScript;
+import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.spi.javahg.HgFileviewExtension;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+
+import java.nio.charset.Charset;
 
 /**
  *
@@ -54,6 +68,11 @@ public final class HgUtil
   /** Field description */
   public static final String REVISION_TIP = "tip";
 
+  /**
+   * the logger for HgUtil
+   */
+  private static final Logger logger = LoggerFactory.getLogger(HgUtil.class);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -61,6 +80,56 @@ public final class HgUtil
    *
    */
   private HgUtil() {}
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param handler
+   * @param hookManager
+   * @param directory
+   * @param encoding
+   * @param pending
+   *
+   * @return
+   */
+  public static Repository open(HgRepositoryHandler handler,
+    HgHookManager hookManager, File directory, String encoding, boolean pending)
+  {
+    String enc = encoding;
+
+    if (Strings.isNullOrEmpty(enc))
+    {
+      enc = handler.getConfig().getEncoding();
+    }
+
+    RepositoryConfiguration repoConfiguration = RepositoryConfiguration.DEFAULT;
+
+    HgEnvironment.prepareEnvironment(repoConfiguration.getEnvironment(),
+      handler, hookManager);
+
+    repoConfiguration.addExtension(HgFileviewExtension.class);
+    repoConfiguration.setEnablePendingChangesets(pending);
+
+    try
+    {
+      Charset charset = Charset.forName(enc);
+
+      logger.trace("set encoding {} for mercurial", enc);
+
+      repoConfiguration.setEncoding(charset);
+    }
+    catch (IllegalArgumentException ex)
+    {
+      logger.error("could not set encoding for mercurial", ex);
+    }
+
+    repoConfiguration.setHgBin(handler.getConfig().getHgBinary());
+
+    return Repository.open(repoConfiguration, directory);
+  }
 
   //~--- get methods ----------------------------------------------------------
 

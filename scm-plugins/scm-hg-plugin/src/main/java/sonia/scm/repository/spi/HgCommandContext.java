@@ -36,26 +36,19 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.aragost.javahg.Repository;
-import com.aragost.javahg.RepositoryConfiguration;
 
 import com.google.common.base.Strings;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.HgEnvironment;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.spi.javahg.HgFileviewExtension;
+import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-
-import java.nio.charset.Charset;
 
 /**
  *
@@ -66,12 +59,6 @@ public class HgCommandContext implements Closeable
 
   /** Field description */
   private static final String PROPERTY_ENCODING = "hg.encoding";
-
-  /**
-   * the logger for HgCommandContext
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgCommandContext.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -98,7 +85,6 @@ public class HgCommandContext implements Closeable
    *
    *
    * @param hookManager
-   * @param config
    * @param hanlder
    * @param repository
    * @param directory
@@ -147,33 +133,8 @@ public class HgCommandContext implements Closeable
   {
     if (repository == null)
     {
-      RepositoryConfiguration repoConfiguration =
-        RepositoryConfiguration.DEFAULT;
-
-      HgEnvironment.prepareEnvironment(repoConfiguration.getEnvironment(),
-        hanlder, hookManager);
-
-      repoConfiguration.addExtension(HgFileviewExtension.class);
-      repoConfiguration.setEnablePendingChangesets(pending);
-
-      try
-      {
-        Charset charset = Charset.forName(encoding);
-
-        if (logger.isTraceEnabled())
-        {
-          logger.trace("set encoding {} for mercurial", encoding);
-        }
-
-        repoConfiguration.setEncoding(charset);
-      }
-      catch (IllegalArgumentException ex)
-      {
-        logger.error("could not set encoding for mercurial", ex);
-      }
-
-      repoConfiguration.setHgBin(hanlder.getConfig().getHgBinary());
-      repository = Repository.open(repoConfiguration, directory);
+      repository = HgUtil.open(hanlder, hookManager, directory, encoding,
+        pending);
     }
 
     return repository;

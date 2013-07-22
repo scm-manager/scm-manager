@@ -55,6 +55,9 @@ def callHookUrl(ui, repo, hooktype, node):
     conn = opener.open(req)
     if conn.code >= 200 and conn.code < 300:
       ui.debug( "scm-hook " + hooktype + " success with status code " + str(conn.code) + "\n" )
+      for line in conn:
+        if line.startswith("_e") or line.startswith("_n"):
+          ui.warn(line[2:]);
       abort = False
     else:
       ui.warn( "ERROR: scm-hook failed with error code " + str(conn.code) + "\n" )
