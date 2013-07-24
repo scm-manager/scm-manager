@@ -46,6 +46,11 @@ import org.tmatesoft.svn.core.internal.io.fs.FSHook;
 import org.tmatesoft.svn.core.internal.io.fs.FSHookEvent;
 import org.tmatesoft.svn.core.internal.io.fs.FSHooks;
 
+import sonia.scm.repository.spi.AbstractSvnHookChangesetProvider;
+import sonia.scm.repository.spi.HookEventFacade;
+import sonia.scm.repository.spi.SvnHookContextProvider;
+import sonia.scm.repository.spi.SvnPostReceiveHookChangesetProvier;
+import sonia.scm.repository.spi.SvnPreReceiveHookChangesetProvier;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
@@ -72,13 +77,14 @@ public class SvnRepositoryHook implements FSHook
    * Constructs ...
    *
    *
-   * @param repositoryManager
+   *
+   * @param hookEventFacade
    * @param handler
    */
-  public SvnRepositoryHook(RepositoryManager repositoryManager,
-                           SvnRepositoryHandler handler)
+  public SvnRepositoryHook(HookEventFacade hookEventFacade,
+    SvnRepositoryHandler handler)
   {
-    this.repositoryManager = repositoryManager;
+    this.hookEventFacade = hookEventFacade;
     this.handler = handler;
   }
 
@@ -107,7 +113,8 @@ public class SvnRepositoryHook implements FSHook
         {
           long revision = Long.parseLong(args[0]);
 
-          fireHook(directory, new SvnPostReceiveHookEvent(directory, revision));
+          fireHook(directory,
+            new SvnPostReceiveHookChangesetProvier(directory, revision));
         }
         catch (NumberFormatException ex)
         {
@@ -129,7 +136,8 @@ public class SvnRepositoryHook implements FSHook
 
         if (Util.isNotEmpty(tx))
         {
-          fireHook(directory, new SvnPreReceiveHookEvent(directory, tx));
+          fireHook(directory,
+            new SvnPreReceiveHookChangesetProvier(directory, tx));
         }
         else if (logger.isWarnEnabled())
         {
@@ -148,20 +156,27 @@ public class SvnRepositoryHook implements FSHook
    *
    *
    * @param directory
-   * @param hookEvent
+   * @param changesetProvider
    *
    * @throws SVNCancelException
    */
-  private void fireHook(File directory, RepositoryHookEvent hookEvent)
-          throws SVNCancelException
+  private void fireHook(File directory,
+    AbstractSvnHookChangesetProvider changesetProvider)
+    throws SVNCancelException
   {
     try
     {
       String name = getRepositoryName(directory);
 
       name = IOUtil.trimSeperatorChars(name);
-      repositoryManager.fireHookEvent(SvnRepositoryHandler.TYPE_NAME, name,
-                                      hookEvent);
+
+      //J-
+      hookEventFacade.handle(SvnRepositoryHandler.TYPE_NAME, name)
+        .fireHookEvent(
+          changesetProvider.getType(),
+          new SvnHookContextProvider(changesetProvider)
+        );
+      //J+
     }
     catch (Exception ex)
     {
@@ -171,7 +186,7 @@ public class SvnRepositoryHook implements FSHook
       }
 
       throw new SVNCancelException(
-          SVNErrorMessage.create(SVNErrorCode.CANCELLED, ex.getMessage()));
+        SVNErrorMessage.create(SVNErrorCode.CANCELLED, ex.getMessage()));
     }
   }
 
@@ -200,5 +215,5 @@ public class SvnRepositoryHook implements FSHook
   private SvnRepositoryHandler handler;
 
   /** Field description */
-  private RepositoryManager repositoryManager;
+  private HookEventFacade hookEventFacade;
 }

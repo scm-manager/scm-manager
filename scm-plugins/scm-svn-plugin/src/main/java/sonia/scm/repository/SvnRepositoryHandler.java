@@ -62,6 +62,7 @@ import sonia.scm.util.Util;
 
 import java.io.File;
 import java.io.IOException;
+import sonia.scm.repository.spi.HookEventFacade;
 
 /**
  *
@@ -107,7 +108,7 @@ public class SvnRepositoryHandler
    */
   @Inject
   public SvnRepositoryHandler(StoreFactory storeFactory, FileSystem fileSystem,
-    RepositoryManager repositoryManager)
+    HookEventFacade eventFacade)
   {
     super(storeFactory, fileSystem);
 
@@ -118,9 +119,9 @@ public class SvnRepositoryHandler
     FSRepositoryFactory.setup();
 
     // register hook
-    if (repositoryManager != null)
+    if (eventFacade != null)
     {
-      FSHooks.registerHook(new SvnRepositoryHook(repositoryManager, this));
+      FSHooks.registerHook(new SvnRepositoryHook(eventFacade, this));
     }
     else if (logger.isWarnEnabled())
     {
