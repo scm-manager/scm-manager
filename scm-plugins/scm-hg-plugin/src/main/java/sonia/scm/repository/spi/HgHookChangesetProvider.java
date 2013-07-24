@@ -44,8 +44,6 @@ import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 import sonia.scm.web.HgUtil;
 
-import static sonia.scm.repository.HgRepositoryHookEvent.REV_TIP;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -111,7 +109,7 @@ public class HgHookChangesetProvider implements HookChangesetProvider
                                       handler.getConfig());
 
         response = new HookChangesetResponse(
-          cmd.rev(startRev.concat(":").concat(REV_TIP)).execute());
+          cmd.rev(startRev.concat(":").concat(HgUtil.REVISION_TIP)).execute());
       }
       catch (Exception ex)
       {
