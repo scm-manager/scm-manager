@@ -29,43 +29,47 @@
 
 
 
-package sonia.scm.repositorya.api;
+package sonia.scm.repository.api;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.collect.Lists;
+
+import sonia.scm.repository.api.HgHookMessage.Severity;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.Serializable;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public final class HgHookMessage implements Serializable
+public class HgHookMessageProvider implements HookMessageProvider
 {
 
-  /** Field description */
-  private static final long serialVersionUID = 1804492842452344326L;
-
-  //~--- constant enums -------------------------------------------------------
-
   /**
-   * Enum description
-   *
-   */
-  public static enum Severity { NOTE, ERROR; }
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
+   * Method description
    *
    *
-   * @param severity
    * @param message
    */
-  public HgHookMessage(Severity severity, String message)
+  @Override
+  public void sendError(String message)
   {
-    this.severity = severity;
-    this.message = message;
+    getMessages().add(new HgHookMessage(Severity.ERROR, message));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param message
+   */
+  @Override
+  public void sendMessage(String message)
+  {
+    getMessages().add(new HgHookMessage(Severity.NOTE, message));
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -76,27 +80,18 @@ public final class HgHookMessage implements Serializable
    *
    * @return
    */
-  public String getMessage()
+  public List<HgHookMessage> getMessages()
   {
-    return message;
-  }
+    if (messages == null)
+    {
+      messages = Lists.newArrayList();
+    }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Severity getSeverity()
-  {
-    return severity;
+    return messages;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String message;
-
-  /** Field description */
-  private Severity severity;
+  private List<HgHookMessage> messages;
 }

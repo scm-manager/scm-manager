@@ -38,7 +38,7 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookMessageProvider;
-import sonia.scm.repositorya.api.HgHookMessageProvider;
+import sonia.scm.repository.api.HgHookMessageProvider;
 
 //~--- JDK imports ------------------------------------------------------------
 
