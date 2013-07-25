@@ -431,7 +431,7 @@
 
     <!-- repostitory libraries -->
     <jgit.version>2.3.1.201302201838-r</jgit.version>
-    <svnkit.version>1.7.9-scm2</svnkit.version>
+    <svnkit.version>1.7.10-scm2-SNAPSHOT</svnkit.version>
 
     <!-- build properties -->
     <project.build.javaLevel>1.6</project.build.javaLevel>
