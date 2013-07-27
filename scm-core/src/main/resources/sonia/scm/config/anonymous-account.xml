@@ -43,7 +43,7 @@
 <users>
   <name>anonymous</name>
   <displayName>SCM Anonymous</displayName>
-  <mail>scm-anonymous@scm-manager.com</mail>
+  <mail>scm-anonymous@scm-manager.org</mail>
   <admin>false</admin>
   <type>xml</type>
 </users>
