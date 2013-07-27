@@ -36,7 +36,6 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
 
-import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.GitHookMessageProvider;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookMessageProvider;
