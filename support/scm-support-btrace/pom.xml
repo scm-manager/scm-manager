@@ -53,7 +53,7 @@
   </dependencies>
   
   <properties>
-    <btrace.version>1.2</btrace.version>
+    <btrace.version>1.2.3</btrace.version>
   </properties>
   
 </project>
