@@ -37,7 +37,6 @@ import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
 
 import sonia.scm.repository.GitHookChangesetCollector;
-import sonia.scm.repository.RepositoryHookType;
 
 //~--- JDK imports ------------------------------------------------------------
 
