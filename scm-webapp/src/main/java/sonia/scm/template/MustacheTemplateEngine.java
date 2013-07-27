@@ -36,6 +36,7 @@ package sonia.scm.template;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheException;
 
 import com.google.common.base.Throwables;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -92,8 +93,7 @@ public class MustacheTemplateEngine implements TemplateEngine
     ThreadFactory threadFactory =
       new ThreadFactoryBuilder().setNameFormat(THREAD_NAME).build();
 
-    factory.setExecutorService(Executors.
-      newCachedThreadPool(threadFactory));
+    factory.setExecutorService(Executors.newCachedThreadPool(threadFactory));
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -166,29 +166,15 @@ public class MustacheTemplateEngine implements TemplateEngine
     }
     catch (MustacheTemplateNotFoundException ex)
     {
-      if (logger.isWarnEnabled())
-      {
-        logger.warn("could not find mustache template at {}", templatePath);
-      }
+      logger.warn("could not find mustache template at {}", templatePath);
     }
     catch (UncheckedExecutionException ex)
     {
-      Throwable cause = ex.getCause();
-
-      if (cause instanceof MustacheTemplateNotFoundException)
-      {
-        if (logger.isWarnEnabled())
-        {
-          logger.warn("could not find mustache template at {}", templatePath);
-        }
-      }
-      else
-      {
-        Throwables.propagateIfInstanceOf(cause, IOException.class);
-
-        throw new TemplateParseException(
-          "could not parse template for resource ".concat(templatePath), cause);
-      }
+      handleWrappedException(ex, templatePath);
+    }
+    catch (MustacheException ex)
+    {
+      handleWrappedException(ex, templatePath);
     }
     catch (Exception ex)
     {
@@ -211,6 +197,35 @@ public class MustacheTemplateEngine implements TemplateEngine
   public TemplateType getType()
   {
     return TYPE;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param ex
+   * @param templatePath
+   *
+   * @throws IOException
+   */
+  private void handleWrappedException(Exception ex, String templatePath)
+    throws IOException
+  {
+    Throwable cause = ex.getCause();
+
+    if (cause instanceof MustacheTemplateNotFoundException)
+    {
+      logger.warn("could not find mustache template at {}", templatePath);
+    }
+    else
+    {
+      Throwables.propagateIfInstanceOf(cause, IOException.class);
+
+      throw new TemplateParseException(
+        "could not parse template for resource ".concat(templatePath), cause);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
