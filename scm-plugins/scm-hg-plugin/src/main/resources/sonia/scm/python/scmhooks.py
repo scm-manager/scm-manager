@@ -42,6 +42,11 @@ baseUrl = os.environ['SCM_URL']
 challenge = os.environ['SCM_CHALLENGE']
 credentials = os.environ['SCM_CREDENTIALS']
 
+def printMessages(ui, msgs):
+  for line in msgs:
+    if line.startswith("_e") or line.startswith("_n"):
+      ui.warn(line[2:]);
+
 def callHookUrl(ui, repo, hooktype, node):
   abort = True
   try:
@@ -55,16 +60,14 @@ def callHookUrl(ui, repo, hooktype, node):
     conn = opener.open(req)
     if conn.code >= 200 and conn.code < 300:
       ui.debug( "scm-hook " + hooktype + " success with status code " + str(conn.code) + "\n" )
-      for line in conn:
-        if line.startswith("_e") or line.startswith("_n"):
-          ui.warn(line[2:]);
+      printMessages(ui, conn)
       abort = False
     else:
       ui.warn( "ERROR: scm-hook failed with error code " + str(conn.code) + "\n" )
   except urllib2.URLError, e:
     msg = e.read();
     if len(msg) > 0:
-      ui.warn( "ERROR: " + msg)
+      printMessages(ui, msg.splitlines(True))
     else:
       ui.warn( "ERROR: scm-hook failed with error code " + str(e.getcode()) + "\n" )
   except ValueError:

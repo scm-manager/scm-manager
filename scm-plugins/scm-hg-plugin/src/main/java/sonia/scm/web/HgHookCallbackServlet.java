@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -52,10 +53,11 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryUtil;
-import sonia.scm.repository.spi.HgHookContextProvider;
-import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.repository.api.HgHookMessage;
 import sonia.scm.repository.api.HgHookMessage.Severity;
+import sonia.scm.repository.api.HookMessageProvider;
+import sonia.scm.repository.spi.HgHookContextProvider;
+import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.security.Tokens;
 import sonia.scm.util.HttpUtil;
@@ -273,6 +275,8 @@ public class HgHookCallbackServlet extends HttpServlet
     String node, RepositoryHookType type)
     throws IOException
   {
+    HgHookContextProvider context = null;
+
     try
     {
       if (type == RepositoryHookType.PRE_RECEIVE)
@@ -280,9 +284,8 @@ public class HgHookCallbackServlet extends HttpServlet
         contextProvider.get().setPending(true);
       }
 
-      HgHookContextProvider context = new HgHookContextProvider(handler,
-                                        repositoryName, hookManager, node,
-                                        type);
+      context = new HgHookContextProvider(handler, repositoryName, hookManager,
+        node, type);
 
       hookEventFacade.handle(HgRepositoryHandler.TYPE_NAME,
         repositoryName).fireHookEvent(type, context);
@@ -305,7 +308,7 @@ public class HgHookCallbackServlet extends HttpServlet
     }
     catch (Exception ex)
     {
-      sendError(response, ex);
+      sendError(response, context, ex);
     }
   }
 
@@ -367,6 +370,29 @@ public class HgHookCallbackServlet extends HttpServlet
    * Method description
    *
    *
+   * @param writer
+   * @param msg
+   */
+  private void printMessage(PrintWriter writer, HgHookMessage msg)
+  {
+    writer.append('_');
+
+    if (msg.getSeverity() == Severity.ERROR)
+    {
+      writer.append("e[SCM] Error: ");
+    }
+    else
+    {
+      writer.append("n[SCM] ");
+    }
+
+    writer.println(msg.getMessage());
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param resonse
    * @param context
    *
@@ -386,21 +412,7 @@ public class HgHookCallbackServlet extends HttpServlet
       {
         writer = resonse.getWriter();
 
-        for (HgHookMessage msg : msgs)
-        {
-          writer.append('_');
-
-          if (msg.getSeverity() == Severity.ERROR)
-          {
-            writer.append("e[SCM] Error: ");
-          }
-          else
-          {
-            writer.append("n[SCM] ");
-          }
-
-          writer.println(msg.getMessage());
-        }
+        printMessages(writer, msgs);
       }
       finally
       {
@@ -413,27 +425,59 @@ public class HgHookCallbackServlet extends HttpServlet
    * Method description
    *
    *
+   * @param writer
+   * @param msgs
+   */
+  private void printMessages(PrintWriter writer, List<HgHookMessage> msgs)
+  {
+    for (HgHookMessage msg : msgs)
+    {
+      printMessage(writer, msg);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param response
+   * @param context
    * @param ex
    *
    * @throws IOException
    */
-  private void sendError(HttpServletResponse response, Exception ex)
+  private void sendError(HttpServletResponse response,
+    HgHookContextProvider context, Exception ex)
     throws IOException
   {
     logger.warn("hook ended with exception", ex);
     response.setStatus(HttpServletResponse.SC_CONFLICT);
 
     String msg = ex.getMessage();
+    List<HgHookMessage> msgs = null;
 
-    if (msg != null)
+    if (context != null)
+    {
+      msgs = context.getHgMessageProvider().getMessages();
+    }
+
+    if (!Strings.isNullOrEmpty(msg) || Util.isNotEmpty(msgs))
     {
       PrintWriter writer = null;
 
       try
       {
         writer = response.getWriter();
-        writer.println(msg);
+
+        if (Util.isNotEmpty(msgs))
+        {
+          printMessages(writer, msgs);
+        }
+
+        if (!Strings.isNullOrEmpty(msg))
+        {
+          printMessage(writer, new HgHookMessage(Severity.ERROR, msg));
+        }
       }
       finally
       {
