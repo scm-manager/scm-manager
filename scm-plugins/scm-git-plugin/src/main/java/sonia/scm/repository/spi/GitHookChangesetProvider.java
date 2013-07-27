@@ -56,14 +56,12 @@ public class GitHookChangesetProvider implements HookChangesetProvider
    *
    * @param receivePack
    * @param receiveCommands
-   * @param type
    */
   public GitHookChangesetProvider(ReceivePack receivePack,
-    List<ReceiveCommand> receiveCommands, RepositoryHookType type)
+    List<ReceiveCommand> receiveCommands)
   {
     this.receivePack = receivePack;
     this.receiveCommands = receiveCommands;
-    this.type = type;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -100,7 +98,4 @@ public class GitHookChangesetProvider implements HookChangesetProvider
 
   /** Field description */
   private HookChangesetResponse response;
-
-  /** Field description */
-  private RepositoryHookType type;
 }

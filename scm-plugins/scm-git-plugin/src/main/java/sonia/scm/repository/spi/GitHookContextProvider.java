@@ -66,14 +66,12 @@ public class GitHookContextProvider extends HookContextProvider
    *
    * @param receivePack
    * @param receiveCommands
-   * @param type
    */
   public GitHookContextProvider(ReceivePack receivePack,
-    List<ReceiveCommand> receiveCommands, RepositoryHookType type)
+    List<ReceiveCommand> receiveCommands)
   {
     this.receivePack = receivePack;
     this.receiveCommands = receiveCommands;
-    this.type = type;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -101,7 +99,7 @@ public class GitHookContextProvider extends HookContextProvider
   @Override
   public HookChangesetProvider getChangesetProvider()
   {
-    return new GitHookChangesetProvider(receivePack, receiveCommands, type);
+    return new GitHookChangesetProvider(receivePack, receiveCommands);
   }
 
   /**
@@ -123,7 +121,4 @@ public class GitHookContextProvider extends HookContextProvider
 
   /** Field description */
   private ReceivePack receivePack;
-
-  /** Field description */
-  private RepositoryHookType type;
 }

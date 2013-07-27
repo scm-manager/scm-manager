@@ -136,11 +136,11 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
       logger.trace("resolved repository name to {}", repositoryName);
 
       GitHookContextProvider context = new GitHookContextProvider(rpack,
-                                         receiveCommands, type);
+                                         receiveCommands);
 
       hookEventFacade.handle(GitRepositoryHandler.TYPE_NAME,
         repositoryName).fireHookEvent(type, context);
-      
+
     }
     catch (Exception ex)
     {
