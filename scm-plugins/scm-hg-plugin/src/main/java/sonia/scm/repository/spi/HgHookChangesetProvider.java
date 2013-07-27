@@ -95,7 +95,7 @@ public class HgHookChangesetProvider implements HookChangesetProvider
    * @return
    */
   @Override
-  public HookChangesetResponse handleRequest(HookChangesetRequest request)
+  public synchronized HookChangesetResponse handleRequest(HookChangesetRequest request)
   {
     if (response == null)
     {

@@ -77,20 +77,31 @@ public abstract class AbstractSvnHookChangesetProvider
    * @return
    */
   @Override
-  public HookChangesetResponse handleRequest(HookChangesetRequest request)
+  public synchronized HookChangesetResponse handleRequest(
+    HookChangesetRequest request)
   {
-    Changeset c = fetchChangeset();
-    Iterable<Changeset> iterable;
-
-    if (c == null)
+    if (response == null)
     {
-      iterable = Collections.EMPTY_SET;
-    }
-    else
-    {
-      iterable = ImmutableSet.of(c);
+      Changeset c = fetchChangeset();
+      Iterable<Changeset> iterable;
+
+      if (c == null)
+      {
+        iterable = Collections.EMPTY_SET;
+      }
+      else
+      {
+        iterable = ImmutableSet.of(c);
+      }
+
+      response = new HookChangesetResponse(iterable);
     }
 
-    return new HookChangesetResponse(iterable);
+    return response;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private HookChangesetResponse response;
 }
