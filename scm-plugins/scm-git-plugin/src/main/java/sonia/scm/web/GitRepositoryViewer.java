@@ -40,6 +40,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,10 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.template.Template;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
+import sonia.scm.url.RepositoryUrlProvider;
+import sonia.scm.url.UrlProvider;
+import sonia.scm.url.UrlProviderFactory;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -66,6 +71,7 @@ import java.io.Writer;
 import java.util.Date;
 import java.util.Iterator;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -79,8 +85,7 @@ public class GitRepositoryViewer
   public static final String MIMETYPE_HTML = "text/html";
 
   /** Field description */
-  public static final String RESOURCE_GITINDEX =
-    "sonia/scm/git.index.mustache";
+  public static final String RESOURCE_GITINDEX = "sonia/scm/git.index.mustache";
 
   /** Field description */
   private static final int CHANGESET_PER_BRANCH = 10;
@@ -114,23 +119,36 @@ public class GitRepositoryViewer
    * Method description
    *
    *
+   *
+   * @param request
    * @param response
    * @param repository
    *
    * @throws IOException
    * @throws RepositoryException
    */
-  public void handleRequest(HttpServletResponse response, Repository repository)
+  public void handleRequest(HttpServletRequest request,
+    HttpServletResponse response, Repository repository)
     throws RepositoryException, IOException
   {
+
+    String baseUrl = HttpUtil.getCompleteUrl(request);
+
+    UrlProvider urlProvider = UrlProviderFactory.createUrlProvider(baseUrl,
+                                UrlProviderFactory.TYPE_WUI);
+
     response.setContentType(MIMETYPE_HTML);
+
+    RepositoryUrlProvider rup = urlProvider.getRepositoryUrlProvider();
 
     TemplateEngine engine = templateEngineFactory.getDefaultEngine();
     Template template = engine.getTemplate(RESOURCE_GITINDEX);
     //J-
     ImmutableMap<String,Object> env = ImmutableMap.of(
       "repository", repository, 
-      "branches", createBranchesModel(repository)
+      "branches", createBranchesModel(repository),
+      "commitViewLink", rup.getChangesetUrl(repository.getId(), 0, 20),
+      "sourceViewLink", rup.getBrowseUrl(repository.getId(), null, null)
     );
     //J+
 
@@ -143,7 +161,7 @@ public class GitRepositoryViewer
     }
     finally
     {
-      Closeables.closeQuietly(writer);
+      Closeables.close(writer, true);
     }
   }
 

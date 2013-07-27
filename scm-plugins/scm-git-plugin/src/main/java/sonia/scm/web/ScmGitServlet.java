@@ -143,7 +143,7 @@ public class ScmGitServlet extends GitServlet
     }
     else
     {
-      printGitInformation(response);
+      printGitInformation(request, response);
     }
   }
 
@@ -158,7 +158,8 @@ public class ScmGitServlet extends GitServlet
    * @throws IOException
    * @throws ServletException
    */
-  private void printGitInformation(HttpServletResponse response)
+  private void printGitInformation(HttpServletRequest request,
+    HttpServletResponse response)
     throws ServletException, IOException
   {
     sonia.scm.repository.Repository scmRepository = repositoryProvider.get();
@@ -167,7 +168,7 @@ public class ScmGitServlet extends GitServlet
     {
       try
       {
-        repositoryViewer.handleRequest(response, scmRepository);
+        repositoryViewer.handleRequest(request, response, scmRepository);
       }
       catch (Exception ex)
       {
