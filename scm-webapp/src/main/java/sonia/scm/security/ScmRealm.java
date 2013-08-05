@@ -60,7 +60,6 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.HandlerEvent;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.event.Subscriber;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupNames;
@@ -90,7 +89,6 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 @Singleton
-@Subscriber
 public class ScmRealm extends AuthorizingRealm
 {
 

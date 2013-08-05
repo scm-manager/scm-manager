@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -55,6 +56,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.group.GroupEvent;
 import sonia.scm.group.GroupNames;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
@@ -205,8 +207,27 @@ public class AuthorizationCollector
    * Method description
    *
    *
-   * @param user
-   * @param groups
+   * @param event
+   */
+  @Subscribe
+  public void onEvent(GroupEvent event)
+  {
+    if (event.getEventType().isPost())
+    {
+      if (logger.isDebugEnabled())
+      {
+        logger.debug("clear cache, because group {} has changed",
+          event.getItem().getId());
+      }
+
+      cache.clear();
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    *
    * @param principals
    *
@@ -252,7 +273,6 @@ public class AuthorizationCollector
    * @param user
    * @param groups
    *
-   * @return
    */
   private void collectGlobalPermissions(Builder<Permission> builder,
     final User user, final GroupNames groups)
@@ -299,7 +319,6 @@ public class AuthorizationCollector
    * @param user
    * @param groups
    *
-   * @return
    */
   private void collectRepositoryPermissions(Builder<Permission> builder,
     User user, GroupNames groups)
@@ -320,7 +339,6 @@ public class AuthorizationCollector
    * Method description
    *
    *
-   * @param permissions
    *
    * @param builder
    * @param repository
