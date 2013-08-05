@@ -30,12 +30,14 @@
  */
 
 
+
 package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 
+import sonia.scm.event.Event;
 import sonia.scm.user.User;
 
 /**
@@ -53,6 +55,7 @@ public class AuthenticationEvent
    *
    * @param user successful authenticated user
    */
+  @Event
   public AuthenticationEvent(User user)
   {
     this.user = user;

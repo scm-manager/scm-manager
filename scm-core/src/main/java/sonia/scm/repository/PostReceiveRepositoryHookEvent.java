@@ -32,6 +32,8 @@
 
 package sonia.scm.repository;
 
+import sonia.scm.event.Event;
+
 /**
  * Post receive repository hook events are fired after a repository has changed. 
  * This class is wrapper of {@link RepositoryHookEvent} for the event system of 
@@ -40,6 +42,7 @@ package sonia.scm.repository;
  * @author Sebastian Sdorra
  * @since 1.23
  */
+@Event
 public final class PostReceiveRepositoryHookEvent
   extends WrappedRepositoryHookEvent
 {

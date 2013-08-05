@@ -41,6 +41,7 @@ import sonia.scm.HandlerEvent;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;
+import sonia.scm.event.Event;
 
 /**
  * Event which is fired after a {@link StoredAssignedPermission} was added,
@@ -49,6 +50,7 @@ import java.io.Serializable;
  * @author Sebastian Sdorra
  * @since 1.31
  */
+@Event
 public final class StoredAssignedPermissionEvent implements Serializable
 {
 

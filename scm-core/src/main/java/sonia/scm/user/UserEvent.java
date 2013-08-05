@@ -37,6 +37,7 @@ package sonia.scm.user;
 import com.google.common.base.Objects;
 
 import sonia.scm.HandlerEvent;
+import sonia.scm.event.Event;
 import sonia.scm.event.HandlerEventBase;
 
 /**
@@ -45,6 +46,7 @@ import sonia.scm.event.HandlerEventBase;
  * @author Sebastian Sdorra
  * @since 1.23
  */
+@Event
 public final class UserEvent implements HandlerEventBase<User>
 {
 
