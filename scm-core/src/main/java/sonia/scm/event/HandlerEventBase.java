@@ -37,7 +37,7 @@ package sonia.scm.event;
 import sonia.scm.HandlerEvent;
 
 /**
- * Base class for hadler events.
+ * Base class for handler events.
  *
  * TODO for 2.0 rename to HandlerEvent
  *
