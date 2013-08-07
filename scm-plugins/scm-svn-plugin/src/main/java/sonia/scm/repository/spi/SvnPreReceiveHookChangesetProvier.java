@@ -122,6 +122,7 @@ public class SvnPreReceiveHookChangesetProvier
       if (entry != null)
       {
         changeset = SvnUtil.createChangeset(entry);
+        changeset.setId(SvnUtil.createTransactionEntryId(transaction));
 
         clientManager.doGetChanged(repositoryDirectory, transaction,
           new SvnModificationHandler(changeset), true);

@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 
 import org.slf4j.Logger;
@@ -60,6 +61,9 @@ import java.util.Map;
 public final class SvnUtil
 {
 
+  /** Field description */
+  private static final String ID_TRANSACTION_PREFIX = "-1:";
+
   /**
    * svn path updated
    * same as modified ({@link SVNLogEntryPath#TYPE_MODIFIED})?
@@ -70,6 +74,10 @@ public final class SvnUtil
    * the logger for SvnUtil
    */
   private static final Logger logger = LoggerFactory.getLogger(SvnUtil.class);
+
+  /** Field description */
+  private static final String ID_TRANSACTION_PATTERN =
+    ID_TRANSACTION_PREFIX.concat("%s");
 
   //~--- constructors ---------------------------------------------------------
 
@@ -228,6 +236,19 @@ public final class SvnUtil
    * Method description
    *
    *
+   * @param transaction
+   *
+   * @return
+   */
+  public static String createTransactionEntryId(String transaction)
+  {
+    return String.format(ID_TRANSACTION_PATTERN, transaction);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param clientManager
    */
   public static void dispose(SVNClientManager clientManager)
@@ -275,5 +296,31 @@ public final class SvnUtil
     }
 
     return revisionNumber;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   *
+   * @return
+   */
+  public static String getTransactionId(String id)
+  {
+    return id.substring(ID_TRANSACTION_PREFIX.length());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   *
+   * @return
+   */
+  public static boolean isTransactionEntryId(String id)
+  {
+    return Strings.nullToEmpty(id).startsWith(ID_TRANSACTION_PREFIX);
   }
 }

@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -40,6 +41,8 @@ import org.slf4j.LoggerFactory;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNProperties;
 import org.tmatesoft.svn.core.io.SVNRepository;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import org.tmatesoft.svn.core.wc.admin.SVNLookClient;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
@@ -93,25 +96,95 @@ public class SvnCatCommand extends AbstractSvnCommand implements CatCommand
    */
   @Override
   public void getCatResult(CatCommandRequest request, OutputStream output)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     if (logger.isDebugEnabled())
     {
       logger.debug("try to get content for {}", request);
     }
 
-    long revisionNumber = SvnUtil.getRevisionNumber(request.getRevision());
+    String revision = request.getRevision();
+
+    if (SvnUtil.isTransactionEntryId(revision))
+    {
+      String txn = SvnUtil.getTransactionId(revision);
+
+      getCatFromTransaction(request, output, txn);
+    }
+    else
+    {
+
+      long revisionNumber = SvnUtil.getRevisionNumber(revision);
+
+      getCatFromRevision(request, output, revisionNumber);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param output
+   * @param revision
+   *
+   * @throws RepositoryException
+   */
+  private void getCatFromRevision(CatCommandRequest request,
+    OutputStream output, long revision)
+    throws RepositoryException
+  {
+    logger.debug("try to read content from revision {} and path {}", revision,
+      request.getPath());
 
     try
     {
       SVNRepository svnRepository = open();
 
-      svnRepository.getFile(request.getPath(), revisionNumber,
-                            new SVNProperties(), output);
+      svnRepository.getFile(request.getPath(), revision, new SVNProperties(),
+        output);
     }
     catch (SVNException ex)
     {
-      logger.error("could not open repository", ex);
+      throw new RepositoryException("could not get content from revision", ex);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param output
+   * @param txn
+   *
+   * @throws RepositoryException
+   */
+  private void getCatFromTransaction(CatCommandRequest request,
+    OutputStream output, String txn)
+    throws RepositoryException
+  {
+    logger.debug("try to read content from transaction {} and path {}", txn,
+      request.getPath());
+
+    SVNClientManager cm = null;
+
+    try
+    {
+      cm = SVNClientManager.newInstance();
+
+      SVNLookClient client = cm.getLookClient();
+
+      client.doCat(context.getDirectory(), request.getPath(), txn, output);
+    }
+    catch (SVNException ex)
+    {
+      throw new RepositoryException("could not get content from transaction",
+        ex);
+    }
+    finally
+    {
+      SvnUtil.dispose(cm);
     }
   }
 }
