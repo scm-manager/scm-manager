@@ -36,9 +36,9 @@ package sonia.scm.repository.spi;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryHookType;
+import sonia.scm.repository.api.HgHookMessageProvider;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookMessageProvider;
-import sonia.scm.repository.api.HgHookMessageProvider;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -72,11 +72,8 @@ public class HgHookContextProvider extends HookContextProvider
     String repositoryName, HgHookManager hookManager, String startRev,
     RepositoryHookType type)
   {
-    this.handler = handler;
-    this.repositoryName = repositoryName;
-    this.hookManager = hookManager;
-    this.startRev = startRev;
-    this.type = type;
+    this.hookChangesetProvider = new HgHookChangesetProvider(handler,
+      repositoryName, hookManager, startRev, type);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -90,8 +87,7 @@ public class HgHookContextProvider extends HookContextProvider
   @Override
   public HookChangesetProvider getChangesetProvider()
   {
-    return new HgHookChangesetProvider(handler, repositoryName, hookManager,
-      startRev, type);
+    return hookChangesetProvider;
   }
 
   /**
@@ -139,20 +135,8 @@ public class HgHookContextProvider extends HookContextProvider
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private HgRepositoryHandler handler;
-
-  /** Field description */
   private HgHookMessageProvider hgMessageProvider;
 
   /** Field description */
-  private HgHookManager hookManager;
-
-  /** Field description */
-  private String repositoryName;
-
-  /** Field description */
-  private String startRev;
-
-  /** Field description */
-  private RepositoryHookType type;
+  private HgHookChangesetProvider hookChangesetProvider;
 }
