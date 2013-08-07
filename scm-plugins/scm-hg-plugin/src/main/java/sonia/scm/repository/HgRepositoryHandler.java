@@ -316,6 +316,24 @@ public class HgRepositoryHandler
    *
    * @return
    */
+  public HgContext getHgContext()
+  {
+    HgContext context = hgContextProvider.get();
+
+    if (context == null)
+    {
+      context = new HgContext();
+    }
+
+    return context;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
   public ImportHandler getImportHandler()
   {

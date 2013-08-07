@@ -76,7 +76,8 @@ public class HgCommandContext implements Closeable
     HgRepositoryHandler handler, sonia.scm.repository.Repository repository,
     File directory)
   {
-    this(hookManager, handler, repository, directory, false);
+    this(hookManager, handler, repository, directory,
+      handler.getHgContext().isPending());
   }
 
   /**
