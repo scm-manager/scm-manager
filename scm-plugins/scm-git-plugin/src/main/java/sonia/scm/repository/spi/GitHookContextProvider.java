@@ -70,7 +70,8 @@ public class GitHookContextProvider extends HookContextProvider
     List<ReceiveCommand> receiveCommands)
   {
     this.receivePack = receivePack;
-    this.receiveCommands = receiveCommands;
+    this.changesetProvider = new GitHookChangesetProvider(receivePack,
+      receiveCommands);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -98,7 +99,7 @@ public class GitHookContextProvider extends HookContextProvider
   @Override
   public HookChangesetProvider getChangesetProvider()
   {
-    return new GitHookChangesetProvider(receivePack, receiveCommands);
+    return changesetProvider;
   }
 
   /**
@@ -116,7 +117,7 @@ public class GitHookContextProvider extends HookContextProvider
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private List<ReceiveCommand> receiveCommands;
+  private GitHookChangesetProvider changesetProvider;
 
   /** Field description */
   private ReceivePack receivePack;
