@@ -100,10 +100,23 @@ public class RunMojo extends AbstractBaseScmMojo
    *
    *
    * @return
+   * @deprecated use {@link #getLoggingConfiguration()} instead
    */
+  @Deprecated
   public String getLoggginConfiguration()
   {
     return loggginConfiguration;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getLoggingConfiguration()
+  {
+    return loggingConfiguration;
   }
 
   /**
@@ -201,10 +214,23 @@ public class RunMojo extends AbstractBaseScmMojo
    *
    *
    * @param loggginConfiguration
+   * @deprecated use {@link #setLoggingConfiguration(java.lang.String)} instead
    */
+  @Deprecated
   public void setLoggginConfiguration(String loggginConfiguration)
   {
     this.loggginConfiguration = loggginConfiguration;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param loggingConfiguration
+   */
+  public void setLoggingConfiguration(String loggingConfiguration)
+  {
+    this.loggingConfiguration = loggingConfiguration;
   }
 
   /**
@@ -272,6 +298,8 @@ public class RunMojo extends AbstractBaseScmMojo
    * @param warFile
    *
    * @throws MojoFailureException
+   *
+   * @throws MojoExecutionException
    */
   private void runServletContainer(File warFile) throws MojoExecutionException
   {
@@ -283,8 +311,13 @@ public class RunMojo extends AbstractBaseScmMojo
       System.setProperty("scm.stage", stage);
       System.out.println("SET STAGE " + stage);
 
+      if (loggingConfiguration == null)
+      {
+        loggingConfiguration = loggginConfiguration;
+      }
+
       // enable debug logging
-      System.setProperty("logback.configurationFile", loggginConfiguration);
+      System.setProperty("logback.configurationFile", loggingConfiguration);
 
       Server server = new Server();
       SelectChannelConnector connector = new SelectChannelConnector();
@@ -294,7 +327,7 @@ public class RunMojo extends AbstractBaseScmMojo
       if (openBrowser && Desktop.isDesktopSupported())
       {
         connector.addLifeCycleListener(new OpenBrowserListener(getLog(), port,
-                contextPath));
+          contextPath));
       }
 
       connector.setPort(port);
@@ -333,9 +366,14 @@ public class RunMojo extends AbstractBaseScmMojo
   private String contextPath = "/scm";
 
   /**
-   * @parameter expression="${loggingConfiguration}" default-value="/logback.default.xml"
+   * @parameter
    */
   private String loggginConfiguration;
+
+  /**
+   * @parameter expression="${loggingConfiguration}" default-value="/logback.default.xml"
+   */
+  private String loggingConfiguration;
 
   /**
    * @parameter
