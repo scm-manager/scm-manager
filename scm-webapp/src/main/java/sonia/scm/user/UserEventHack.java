@@ -74,13 +74,44 @@ public final class UserEventHack
   public static void fireEvent(UserManager userManager, User user,
     HandlerEvent event)
   {
-    if (userManager instanceof AbstractUserManager)
+    AbstractUserManager abstractUserManager =
+      getAbstractUserManager(userManager);
+
+    if (abstractUserManager != null)
     {
-      ((AbstractUserManager) userManager).fireEvent(user, event);
+      abstractUserManager.fireEvent(user, event);
     }
     else if (logger.isWarnEnabled())
     {
       logger.warn("user manager is not an instance of AbstractUserManager");
     }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param userManager
+   *
+   * @return
+   */
+  private static AbstractUserManager getAbstractUserManager(
+    UserManager userManager)
+  {
+    AbstractUserManager abstractUserManager = null;
+
+    if (userManager instanceof UserManagerDecorator)
+    {
+      abstractUserManager = getAbstractUserManager(
+        ((UserManagerDecorator) userManager).getDecorated());
+    }
+    else if (userManager instanceof AbstractUserManager)
+    {
+      abstractUserManager = (AbstractUserManager) userManager;
+    }
+
+    return abstractUserManager;
   }
 }

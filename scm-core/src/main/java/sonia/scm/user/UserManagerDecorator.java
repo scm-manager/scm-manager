@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -130,6 +131,19 @@ public class UserManagerDecorator extends ManagerDecorator<User, UserException>
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns the decorated {@link UserManager}.
+   *
+   *
+   * @return decorated {@link UserManager}
+   * 
+   * @since 1.34
+   */
+  public UserManager getDecorated()
+  {
+    return decorated;
+  }
 
   /**
    * {@inheritDoc}

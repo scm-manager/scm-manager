@@ -30,12 +30,14 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.ManagerDecorator;
 import sonia.scm.Type;
+import sonia.scm.group.GroupManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -265,6 +267,19 @@ public class RepositoryManagerDecorator
   public Collection<Type> getConfiguredTypes()
   {
     return decorated.getConfiguredTypes();
+  }
+
+  /**
+   * Returns the decorated {@link RepositoryManager}.
+   *
+   *
+   * @return decorated {@link RepositoryManager}
+   *
+   * @since 1.34
+   */
+  public RepositoryManager getDecorated()
+  {
+    return decorated;
   }
 
   /**

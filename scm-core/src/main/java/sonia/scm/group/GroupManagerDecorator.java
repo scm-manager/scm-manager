@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -116,6 +117,19 @@ public class GroupManagerDecorator
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns the decorated {@link GroupManager}.
+   *
+   *
+   * @return decorated {@link GroupManager}
+   *
+   * @since 1.34
+   */
+  public GroupManager getDecorated()
+  {
+    return decorated;
+  }
 
   /**
    * {@inheritDoc}
