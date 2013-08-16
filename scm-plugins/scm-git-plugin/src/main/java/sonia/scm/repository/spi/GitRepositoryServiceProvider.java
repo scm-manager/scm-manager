@@ -195,6 +195,18 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
    * @return
    */
   @Override
+  public OutgoingCommand getOutgoingCommand()
+  {
+    return new GitOutgoingCommand(handler, context, repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public PullCommand getPullCommand()
   {
     return new GitPullCommand(handler, context, repository);
