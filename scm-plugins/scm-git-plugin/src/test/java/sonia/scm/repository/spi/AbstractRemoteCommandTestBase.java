@@ -30,18 +30,23 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
+import com.google.inject.Provider;
 
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.ScmTransportProtocol;
+import org.eclipse.jgit.transport.Transport;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
@@ -95,6 +100,49 @@ public class AbstractRemoteCommandTestBase
     when(handler.getDirectory(outgoingRepository)).thenReturn(
       outgoingDirectory);
   }
+
+  /**
+   * Method description
+   *
+   */
+  @After
+  public void tearDownProtocol()
+  {
+    Transport.unregister(proto);
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Before
+  public void setUpProtocol()
+  {
+
+    // store reference to handle weak references
+    proto = new ScmTransportProtocol(new Provider<HookEventFacade>()
+    {
+
+      @Override
+      public HookEventFacade get()
+      {
+        return null;
+      }
+    }, new Provider<GitRepositoryHandler>()
+    {
+
+      @Override
+      public GitRepositoryHandler get()
+      {
+        return null;
+      }
+    });
+    Transport.register(proto);
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -163,6 +211,9 @@ public class AbstractRemoteCommandTestBase
   public TemporaryFolder tempFolder = new TemporaryFolder();
 
   /** Field description */
+  protected GitRepositoryHandler handler;
+
+  /** Field description */
   protected Repository incomgingRepository;
 
   /** Field description */
@@ -181,5 +232,5 @@ public class AbstractRemoteCommandTestBase
   protected Repository outgoingRepository;
 
   /** Field description */
-  protected GitRepositoryHandler handler;
+  private ScmTransportProtocol proto;
 }

@@ -35,17 +35,12 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
-
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
-import org.eclipse.jgit.transport.Transport;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.api.PushResponse;
 
@@ -99,39 +94,6 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
     assertEquals(o2, commits.next());
     assertEquals(o1, commits.next());
   }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  @Before
-  public void setUpProtocol()
-  {
-
-    // store reference to handle weak references
-    proto = new ScmTransportProtocol(new Provider<HookEventFacade>()
-    {
-
-      @Override
-      public HookEventFacade get()
-      {
-        return null;
-      }
-    }, new Provider<GitRepositoryHandler>()
-    {
-
-      @Override
-      public GitRepositoryHandler get()
-      {
-        return null;
-      }
-    });
-    Transport.register(proto);
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description

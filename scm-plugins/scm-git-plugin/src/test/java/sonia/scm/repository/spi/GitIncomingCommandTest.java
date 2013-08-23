@@ -47,6 +47,7 @@ import static org.junit.Assert.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import org.junit.Ignore;
 
 /**
  *
@@ -89,6 +90,44 @@ public class GitIncomingCommandTest
     assertCommitsEquals(c1, cpr.getChangesets().get(0));
     assertCommitsEquals(c2, cpr.getChangesets().get(1));
   }
+  
+    /**
+   * Method description
+   *
+   *
+   * @throws GitAPIException
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testGetIncomingChangesetsWithAllreadyPullChangesets()
+    throws IOException, GitAPIException, RepositoryException
+  {
+    write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
+
+    commit(outgoing, "added a");
+    
+    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory), incomgingRepository);
+    PullCommandRequest req = new PullCommandRequest();
+    req.setRemoteRepository(outgoingRepository);
+    pull.pull(req);
+
+    write(outgoing, outgoingDirectory, "b.txt", "content of b.txt");
+
+    RevCommit c2 = commit(outgoing, "added b");
+
+    GitIncomingCommand cmd = createCommand();
+    IncomingCommandRequest request = new IncomingCommandRequest();
+
+    request.setRemoteRepository(outgoingRepository);
+
+    ChangesetPagingResult cpr = cmd.getIncomingChangesets(request);
+
+    assertNotNull(cpr);
+
+    assertEquals(1, cpr.getTotal());
+    assertCommitsEquals(c2, cpr.getChangesets().get(0));
+  }
 
   /**
    * Method description
@@ -114,7 +153,7 @@ public class GitIncomingCommandTest
   }
 
   /**
-   * Method description
+   * Check for correct behaviour
    *
    *
    * @throws GitAPIException
@@ -122,6 +161,7 @@ public class GitIncomingCommandTest
    * @throws RepositoryException
    */
   @Test
+  @Ignore
   public void testGetIncomingChangesetsWithUnrelatedRepository()
     throws IOException, RepositoryException, GitAPIException
   {

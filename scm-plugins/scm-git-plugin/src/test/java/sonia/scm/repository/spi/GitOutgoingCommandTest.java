@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -53,8 +54,7 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public class GitOutgoingCommandTest
-  extends AbstractRemoteCommandTestBase
+public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
 {
 
   /**
@@ -89,6 +89,47 @@ public class GitOutgoingCommandTest
     assertEquals(2, cpr.getTotal());
     assertCommitsEquals(c1, cpr.getChangesets().get(0));
     assertCommitsEquals(c2, cpr.getChangesets().get(1));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws GitAPIException
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  @Test
+  public void testGetOutgoingChangesetsWithAllreadyPushedChanges()
+    throws IOException, GitAPIException, RepositoryException
+  {
+    write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
+
+    commit(outgoing, "added a");
+
+    GitPushCommand push = new GitPushCommand(handler,
+                            new GitContext(outgoingDirectory),
+                            outgoingRepository);
+    PushCommandRequest req = new PushCommandRequest();
+
+    req.setRemoteRepository(incomgingRepository);
+    push.push(req);
+
+    write(outgoing, outgoingDirectory, "b.txt", "content of b.txt");
+
+    RevCommit c2 = commit(outgoing, "added b");
+
+    GitOutgoingCommand cmd = createCommand();
+    OutgoingCommandRequest request = new OutgoingCommandRequest();
+
+    request.setRemoteRepository(incomgingRepository);
+
+    ChangesetPagingResult cpr = cmd.getOutgoingChangesets(request);
+
+    assertNotNull(cpr);
+
+    assertEquals(1, cpr.getTotal());
+    assertCommitsEquals(c2, cpr.getChangesets().get(0));
   }
 
   /**
