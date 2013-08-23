@@ -41,6 +41,8 @@ import com.google.common.io.Closeables;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.api.DiffFormat;
+import sonia.scm.repository.spi.javahg.HgDiffInternalCommand;
 import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -85,8 +87,14 @@ public class HgDiffCommand extends AbstractCommand implements DiffCommand
     throws IOException, RepositoryException
   {
     com.aragost.javahg.Repository hgRepo = open();
-    com.aragost.javahg.commands.DiffCommand cmd =
-      com.aragost.javahg.commands.DiffCommand.on(hgRepo);
+
+    HgDiffInternalCommand cmd = HgDiffInternalCommand.on(hgRepo);
+    DiffFormat format = request.getFormat();
+
+    if (format == DiffFormat.GIT)
+    {
+      cmd.git();
+    }
 
     cmd.change(HgUtil.getRevision(request.getRevision()));
 
