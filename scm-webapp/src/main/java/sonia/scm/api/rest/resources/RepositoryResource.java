@@ -68,6 +68,7 @@ import sonia.scm.repository.api.BrowseCommandBuilder;
 import sonia.scm.repository.api.CatCommandBuilder;
 import sonia.scm.repository.api.CommandNotSupportedException;
 import sonia.scm.repository.api.DiffCommandBuilder;
+import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -129,11 +130,7 @@ public class RepositoryResource
    *
    * @param configuration
    * @param repositoryManager
-   * @param securityContextProvider
    * @param servicefactory
-   * @param changesetViewerUtil
-   * @param repositoryBrowserUtil
-   * @param blameViewerUtil
    */
   @Inject
   public RepositoryResource(ScmConfiguration configuration,
@@ -793,12 +790,12 @@ public class RepositoryResource
 
       output = new BrowserStreamingOutput(service, builder, path);
 
-     /**
-      * protection for crlf injection
-      * see https://bitbucket.org/sdorra/scm-manager/issue/320/crlf-injection-vulnerability-in-diff-api
-      */
+      /**
+       * protection for crlf injection
+       * see https://bitbucket.org/sdorra/scm-manager/issue/320/crlf-injection-vulnerability-in-diff-api
+       */
       path = HttpUtil.removeCRLFInjectionChars(path);
-      
+
       String contentDispositionName = getContentDispositionNameFromPath(path);
 
       response = Response.ok(output).header("Content-Disposition",
@@ -837,6 +834,7 @@ public class RepositoryResource
    * @param id the id of the repository
    * @param revision the revision of the file
    * @param path path to the file
+   * @param format
    *
    * @return the modifications of a {@link Changeset}
    *
@@ -848,7 +846,8 @@ public class RepositoryResource
   @TypeHint(DiffStreamingOutput.class)
   @Produces(MediaType.APPLICATION_OCTET_STREAM)
   public Response getDiff(@PathParam("id") String id,
-    @QueryParam("revision") String revision, @QueryParam("path") String path)
+    @QueryParam("revision") String revision, @QueryParam("path") String path,
+    @QueryParam("format") DiffFormat format)
     throws RepositoryException, IOException
   {
     AssertUtil.assertIsNotEmpty(id);
@@ -877,6 +876,11 @@ public class RepositoryResource
       if (!Strings.isNullOrEmpty(path))
       {
         builder.setPath(path);
+      }
+
+      if (format != null)
+      {
+        builder.setFormat(format);
       }
 
       String name = service.getRepository().getName().concat("-").concat(
