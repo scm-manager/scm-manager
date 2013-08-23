@@ -598,7 +598,12 @@ public final class GitUtil
   public static String getScmRemoteRefName(Repository repository,
     String localBranch)
   {
-    return String.format(REMOTE_REF, repository.getId(), localBranch);
+    String branch = localBranch;
+    if ( localBranch.startsWith(REF_HEAD_PREFIX) )
+    {
+      branch = localBranch.substring(REF_HEAD_PREFIX.length());
+    }
+    return String.format(REMOTE_REF, repository.getId(), branch);
   }
 
   /**
