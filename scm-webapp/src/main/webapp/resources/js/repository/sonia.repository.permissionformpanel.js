@@ -57,6 +57,12 @@ Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
         sortable: true
       },
       columns: [{
+          id: 'groupPermission',
+          xtype: 'checkcolumn',
+          header: this.colGroupPermissionText,
+          dataIndex: 'groupPermission',
+          width: 40
+        },{
           id: 'name',
           header: this.colNameText,
           dataIndex: 'name',
@@ -82,16 +88,10 @@ Sonia.repository.PermissionFormPanel = Ext.extend(Sonia.repository.FormPanel, {
               ]
             })
           })
-        },{
-         id: 'groupPermission',
-         xtype: 'checkcolumn',
-         header: this.colGroupPermissionText,
-         dataIndex: 'groupPermission',
-         width: 40
         }],
 
         getCellEditor: function(colIndex, rowIndex) {
-          if (colIndex === 0) {
+          if (this.getColumnId(colIndex) === 'name') {
             var store = null;
             var rec = permissionStore.getAt(rowIndex);
             if ( rec.data.groupPermission ){
