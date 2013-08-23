@@ -37,7 +37,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Preconditions;
 
-import org.eclipse.jgit.internal.storage.file.FileRepository;
+import org.eclipse.jgit.api.Git;
 
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
@@ -108,9 +108,8 @@ public class GitPullCommand extends AbstractPushOrPullCommand
 
     try
     {
-      source = new FileRepository(sourceDirectory);
+      source = Git.open(sourceDirectory).getRepository();
       response = new PullResponse(push(source, targetDirectory));
-
     }
     finally
     {
