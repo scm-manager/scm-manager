@@ -30,13 +30,13 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
@@ -92,10 +92,7 @@ public abstract class AbstractPushOrPullCommand extends AbstractGitCommand
 
   /**
    * Method description
-   *
-   *
-   * @param request
-   *
+   * 
    * @param source
    * @param target
    *
@@ -131,7 +128,7 @@ public abstract class AbstractPushOrPullCommand extends AbstractGitCommand
     }
     catch (Exception ex)
     {
-      throw new RepositoryException("could not execute push command", ex);
+      throw new RepositoryException("could not execute push/pull command", ex);
     }
 
     return counter;
@@ -229,7 +226,7 @@ public abstract class AbstractPushOrPullCommand extends AbstractGitCommand
     }
     catch (Exception ex)
     {
-      logger.error("could not count pushed changesets", ex);
+      logger.error("could not count pushed/pulled changesets", ex);
     }
 
     return counter;
