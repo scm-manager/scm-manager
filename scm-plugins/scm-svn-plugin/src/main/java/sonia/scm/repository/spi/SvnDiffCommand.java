@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -51,6 +52,7 @@ import org.tmatesoft.svn.core.wc.SVNRevision;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.SvnUtil;
+import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -101,7 +103,7 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand
    */
   @Override
   public void getDiffResult(DiffCommandRequest request, OutputStream output)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     if (logger.isDebugEnabled())
     {
@@ -139,10 +141,11 @@ public class SvnDiffCommand extends AbstractSvnCommand implements DiffCommand
 
       long currentRev = SvnUtil.getRevisionNumber(request.getRevision());
 
+      diffClient.setGitDiffFormat(request.getFormat() == DiffFormat.GIT);
+
       diffClient.doDiff(svnurl, SVNRevision.HEAD,
-                        SVNRevision.create(currentRev - 1),
-                        SVNRevision.create(currentRev), SVNDepth.INFINITY,
-                        false, output);
+        SVNRevision.create(currentRev - 1), SVNRevision.create(currentRev),
+        SVNDepth.INFINITY, false, output);
     }
     catch (SVNException ex)
     {
