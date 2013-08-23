@@ -38,6 +38,7 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Strings;
 
 import sonia.scm.Validateable;
+import sonia.scm.repository.api.DiffFormat;
 
 /**
  *
@@ -92,4 +93,39 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
     return !Strings.isNullOrEmpty(getPath())
       ||!Strings.isNullOrEmpty(getRevision());
   }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Sets the diff format which should be used for the output.
+   *
+   *
+   * @param format format of the diff output
+   * 
+   * @since 1.34
+   */
+  public void setFormat(DiffFormat format)
+  {
+    this.format = format;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Return the output format of the diff command.
+   *
+   *
+   * @return output format
+   * 
+   * @since 1.34
+   */
+  DiffFormat getFormat()
+  {
+    return format;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** diff format */
+  private DiffFormat format = DiffFormat.NATIVE;
 }

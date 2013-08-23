@@ -110,7 +110,7 @@ public final class DiffCommandBuilder
    * @throws RepositoryException
    */
   public DiffCommandBuilder retriveContent(OutputStream outputStream)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     getDiffResult(outputStream);
 
@@ -147,6 +147,26 @@ public final class DiffCommandBuilder
   }
 
   //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Sets the diff format which should be used for the output. 
+   * <strong>Note: </strong> If the repository provider does not support the 
+   * diff format, it will fallback to its default format.
+   *
+   *
+   * @param format format of the diff output
+   *
+   * @return {@code this}
+   * 
+   * @since 1.34
+   */
+  public DiffCommandBuilder setFormat(DiffFormat format)
+  {
+    Preconditions.checkNotNull(format, "format could not be null");
+    request.setFormat(format);
+
+    return this;
+  }
 
   /**
    * Show the difference only for the given path.
@@ -191,11 +211,11 @@ public final class DiffCommandBuilder
    * @throws RepositoryException
    */
   private void getDiffResult(OutputStream outputStream)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     Preconditions.checkNotNull(outputStream, "OutputStream is required");
     Preconditions.checkArgument(request.isValid(),
-                                "path and/or revision is required");
+      "path and/or revision is required");
 
     if (logger.isDebugEnabled())
     {
