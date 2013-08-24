@@ -44,6 +44,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 /**
+ * Compare {@link FileObject}'s by its name.
  *
  * @author Sebastian Sdorra
  */
@@ -72,7 +73,7 @@ public class FileObjectNameComparator
   @Override
   public int compare(FileObject o1, FileObject o2)
   {
-    int result = 0;
+    int result;
 
     if (o1.isDirectory() &&!o2.isDirectory())
     {

@@ -49,6 +49,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * The FileObject represents a file or a directory in a repository.
  *
  * @author Sebastian Sdorra
  * @since 1.5
@@ -58,18 +59,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class FileObject implements LastModifiedAware, Serializable
 {
 
-  /** Field description */
+  /** serial version uid */
   private static final long serialVersionUID = -5562537629609891499L;
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @param obj
-   *
-   * @return
    */
   @Override
   public boolean equals(Object obj)
@@ -86,19 +82,19 @@ public class FileObject implements LastModifiedAware, Serializable
 
     final FileObject other = (FileObject) obj;
 
-    return Objects.equal(name, other.name) && Objects.equal(path, other.path)
+    //J-
+    return Objects.equal(name, other.name) 
+           && Objects.equal(path, other.path)
            && Objects.equal(directory, other.directory)
            && Objects.equal(description, other.description)
            && Objects.equal(length, other.length)
            && Objects.equal(subRepository, other.subRepository)
            && Objects.equal(lastModified, other.lastModified);
+    //J+
   }
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @return
    */
   @Override
   public int hashCode()
@@ -109,9 +105,6 @@ public class FileObject implements LastModifiedAware, Serializable
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @return
    */
   @Override
   public String toString()
@@ -132,10 +125,11 @@ public class FileObject implements LastModifiedAware, Serializable
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the last commit message for this file. The method will return null,
+   * if the repository provider is not able to get the last commit for the path.
    *
    *
-   * @return
+   * @return last commit message
    */
   public String getDescription()
   {
@@ -143,10 +137,11 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Method description
+   * Returns the last commit date for this. The method will return null,
+   * if the repository provider is not able to get the last commit for the path.
    *
    *
-   * @return
+   * @return last commit date
    */
   @Override
   public Long getLastModified()
@@ -155,10 +150,10 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Method description
+   * Returns the length of the file.
    *
    *
-   * @return
+   * @return length of file
    */
   public long getLength()
   {
@@ -166,10 +161,10 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Method description
+   * Returns the name of the file.
    *
    *
-   * @return
+   * @return name of file
    */
   public String getName()
   {
@@ -177,10 +172,10 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Method description
+   * Returns the path of the file.
    *
    *
-   * @return
+   * @return path of file
    */
   public String getPath()
   {
@@ -188,10 +183,11 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Method description
+   * Return sub repository informations or null if the file is not 
+   * sub repository.
    *
    * @since 1.10
-   * @return
+   * @return sub repository informations or null
    */
   public SubRepository getSubRepository()
   {
@@ -199,10 +195,10 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Method description
+   * Returns true if the file is a directory.
    *
    *
-   * @return
+   * @return true if file is a directory
    */
   public boolean isDirectory()
   {
@@ -212,10 +208,10 @@ public class FileObject implements LastModifiedAware, Serializable
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Sets the description of the file.
    *
    *
-   * @param description
+   * @param description description of file
    */
   public void setDescription(String description)
   {
@@ -223,10 +219,10 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Method description
+   * Set to true to indicate that the file is a directory.
    *
    *
-   * @param directory
+   * @param directory true for directory
    */
   public void setDirectory(boolean directory)
   {
@@ -234,10 +230,10 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Method description
+   * Sets the last modified date of the file.
    *
    *
-   * @param lastModified
+   * @param lastModified last modified date
    */
   public void setLastModified(Long lastModified)
   {
@@ -245,10 +241,10 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Method description
+   * Sets the length of the file.
    *
    *
-   * @param length
+   * @param length file length
    */
   public void setLength(long length)
   {
@@ -256,10 +252,10 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Method description
+   * Sets the name of the file.
    *
    *
-   * @param name
+   * @param name filename
    */
   public void setName(String name)
   {
@@ -267,10 +263,10 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Method description
+   * Sets the path of the file.
    *
    *
-   * @param path
+   * @param path file path
    */
   public void setPath(String path)
   {
@@ -278,12 +274,11 @@ public class FileObject implements LastModifiedAware, Serializable
   }
 
   /**
-   * Method description
-   *
+   * Set sub repository information for the file.
    *
    * @since 1.10
    *
-   * @param subRepository
+   * @param subRepository sub repository informations
    */
   public void setSubRepository(SubRepository subRepository)
   {
@@ -292,25 +287,25 @@ public class FileObject implements LastModifiedAware, Serializable
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** file description */
   private String description;
 
-  /** Field description */
+  /** directory indicator */
   private boolean directory;
 
-  /** Field description */
+  /** last modified date */
   private Long lastModified;
 
-  /** Field description */
+  /** file length */
   private long length;
 
-  /** Field description */
+  /** filename */
   private String name;
 
-  /** Field description */
+  /** file path */
   private String path;
 
-  /** Field description */
+  /** sub repository informations */
   @XmlElement(name = "subrepository")
   private SubRepository subRepository;
 }
