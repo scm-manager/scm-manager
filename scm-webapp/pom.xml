@@ -543,6 +543,9 @@
                 <resource>
                   <directory>${project.build.directory}/web-compressor</directory>
                 </resource>
+                <resource>
+                  <directory>${project.build.directory}/dependency-rewrite</directory>
+                </resource>
               </webResources>
             </configuration>
           </plugin>
