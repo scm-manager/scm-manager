@@ -45,8 +45,8 @@ import org.tmatesoft.svn.core.internal.server.dav.DAVConfig;
 import org.tmatesoft.svn.core.internal.server.dav.DAVServlet;
 
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
@@ -69,6 +69,9 @@ public class SvnDAVServlet extends DAVServlet
 {
 
   /** Field description */
+  private static final String HEADER_CONTEXTPATH = "X-Forwarded-Ctx";
+
+  /** Field description */
   private static final long serialVersionUID = -1462257085465785945L;
 
   /** the logger for SvnDAVServlet */
@@ -86,10 +89,9 @@ public class SvnDAVServlet extends DAVServlet
    * @param repositoryRequestListenerUtil
    */
   @Inject
-  public SvnDAVServlet(
-          SvnRepositoryHandler handler,
-          RepositoryProvider repositoryProvider,
-          RepositoryRequestListenerUtil repositoryRequestListenerUtil)
+  public SvnDAVServlet(SvnRepositoryHandler handler,
+    RepositoryProvider repositoryProvider,
+    RepositoryRequestListenerUtil repositoryRequestListenerUtil)
   {
     this.handler = handler;
     this.repositoryProvider = repositoryProvider;
@@ -110,17 +112,17 @@ public class SvnDAVServlet extends DAVServlet
    */
   @Override
   public void service(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException
+    throws ServletException, IOException
   {
     Repository repository = repositoryProvider.get();
 
     if (repository != null)
     {
       if (repositoryRequestListenerUtil.callListeners(request, response,
-              repository))
+        repository))
       {
         super.service(new SvnHttpServletRequestWrapper(request,
-                repositoryProvider), response);
+          repositoryProvider), response);
       }
       else if (logger.isDebugEnabled())
       {
@@ -130,7 +132,7 @@ public class SvnDAVServlet extends DAVServlet
     else
     {
       super.service(new SvnHttpServletRequestWrapper(request,
-              repositoryProvider), response);
+        repositoryProvider), response);
     }
   }
 
@@ -158,7 +160,7 @@ public class SvnDAVServlet extends DAVServlet
    * @author         Enter your name here...
    */
   private static class SvnHttpServletRequestWrapper
-          extends HttpServletRequestWrapper
+    extends HttpServletRequestWrapper
   {
 
     /**
@@ -169,13 +171,32 @@ public class SvnDAVServlet extends DAVServlet
      * @param repositoryProvider
      */
     public SvnHttpServletRequestWrapper(HttpServletRequest request,
-            RepositoryProvider repositoryProvider)
+      RepositoryProvider repositoryProvider)
     {
       super(request);
       this.repositoryProvider = repositoryProvider;
     }
 
     //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public String getContextPath()
+    {
+      String header = getHeader(HEADER_CONTEXTPATH);
+
+      if ((header == null) ||!isValidContextPath(header))
+      {
+        header = super.getContextPath();
+      }
+
+      return header;
+    }
 
     /**
      * Method description
@@ -228,6 +249,32 @@ public class SvnDAVServlet extends DAVServlet
       }
 
       return servletPath;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @param ctx
+     *
+     * @return
+     */
+    private boolean isValidContextPath(String ctx)
+    {
+      int length = ctx.length();
+
+      boolean result = (length == 0)
+                       || ((length > 1)
+                         && ctx.startsWith(HttpUtil.SEPARATOR_PATH));
+
+      if (!result)
+      {
+        logger.warn(
+          "header {} contains a non valid context path, fallback to default",
+          HEADER_CONTEXTPATH);
+      }
+
+      return result;
     }
 
     //~--- fields -------------------------------------------------------------
