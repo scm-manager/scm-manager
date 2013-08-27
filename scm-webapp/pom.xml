@@ -406,19 +406,22 @@
                 <!--
                 add beans.xml to jersey-guice and guava
                 -->
-                
+                <property name="beans.file" value="src/main/webapp/WEB-INF/beans.xml" />
+                <property name="temp.dir" value="${project.build.directory}/tmp" />
+                <property name="rewrite.dir" value="${project.build.directory}/dependency-rewrite/WEB-INF/lib" />
+                <property name="suffix" value="gfcdifix" />
+
                 <!-- jersey guice -->
-                
-                <unzip src="${com.sun.jersey.contribs:jersey-guice:jar}" dest="${project.build.directory}/tmp/jersey-guice"/>
-                <copy file="src/main/webapp/WEB-INF/beans.xml" toDir="${project.build.directory}/tmp/jersey-guice/META-INF" />
-                <zip basedir="${project.build.directory}/tmp/jersey-guice" destfile="${project.build.directory}/dependency-rewrite/WEB-INF/lib/jersey-guice-${jersey.version}.jar"/>
+                <property name="jersey.tmp" value="${temp.dir}/jersey-guice" />
+                <unzip src="${com.sun.jersey.contribs:jersey-guice:jar}" dest="${jersey.tmp}"/>
+                <copy file="${beans.file}" toDir="${jersey.tmp}/META-INF" />
+                <zip basedir="${jersey.tmp}" destfile="${rewrite.dir}/jersey-guice-${jersey.version}-${suffix}.jar"/>
                 
                 <!-- guava -->
-                
-                <unzip src="${com.google.guava:guava:jar}" dest="${project.build.directory}/tmp/guava"/>
-                <copy file="src/main/webapp/WEB-INF/beans.xml" toDir="${project.build.directory}/tmp/guava/META-INF" />
-                <zip basedir="${project.build.directory}/tmp/guava" destfile="${project.build.directory}/dependency-rewrite/WEB-INF/lib/guava-${guava.version}.jar"/>
-                
+                <property name="guava.tmp" value="${temp.dir}/guava" />
+                <unzip src="${com.google.guava:guava:jar}" dest="${guava.tmp}"/>
+                <copy file="${beans.file}" toDir="${guava.tmp}/META-INF" />
+                <zip basedir="${guava.tmp}" destfile="${rewrite.dir}/guava-${guava.version}-${suffix}.jar"/>
               </target>
             </configuration>
           </execution>
