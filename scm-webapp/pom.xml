@@ -113,12 +113,8 @@
       <groupId>com.sun.jersey.contribs</groupId>
       <artifactId>jersey-guice</artifactId>
       <version>${jersey.version}</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>jersey-grizzly2</artifactId>
-          <groupId>com.sun.jersey</groupId>
-        </exclusion>
-      </exclusions>
+      <!-- included by dependency rewrite -->
+      <scope>provided</scope>
     </dependency>
     
     <dependency>
@@ -187,6 +183,14 @@
       <groupId>asm</groupId>
       <artifactId>asm</artifactId>
       <version>3.3.1</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+      <!-- included by dependency rewrite -->
+      <scope>provided</scope>
     </dependency>
     
     <!-- template engine -->
@@ -385,6 +389,57 @@
           </execution>
         </executions>
       </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>repack</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <!--
+                add beans.xml to jersey-guice and guava
+                -->
+                <property name="beans.file" value="src/main/webapp/WEB-INF/beans.xml" />
+                <property name="temp.dir" value="${project.build.directory}/tmp" />
+                <property name="rewrite.dir" value="${project.build.directory}/dependency-rewrite/WEB-INF/lib" />
+                <property name="suffix" value="gfcdifix" />
+
+                <!-- jersey guice -->
+                <property name="jersey.tmp" value="${temp.dir}/jersey-guice" />
+                <unzip src="${com.sun.jersey.contribs:jersey-guice:jar}" dest="${jersey.tmp}"/>
+                <copy file="${beans.file}" toDir="${jersey.tmp}/META-INF" />
+                <zip basedir="${jersey.tmp}" destfile="${rewrite.dir}/jersey-guice-${jersey.version}-${suffix}.jar"/>
+                
+                <!-- guava -->
+                <property name="guava.tmp" value="${temp.dir}/guava" />
+                <unzip src="${com.google.guava:guava:jar}" dest="${guava.tmp}"/>
+                <copy file="${beans.file}" toDir="${guava.tmp}/META-INF" />
+                <zip basedir="${guava.tmp}" destfile="${rewrite.dir}/guava-${guava.version}-${suffix}.jar"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.2</version>
+        <configuration>
+          <webResources>
+            <resource>
+              <directory>${project.build.directory}/dependency-rewrite</directory>
+            </resource>
+          </webResources>
+        </configuration>
+      </plugin>
 
       <plugin>
         <groupId>sonia.maven</groupId>
@@ -490,6 +545,9 @@
               <webResources>
                 <resource>
                   <directory>${project.build.directory}/web-compressor</directory>
+                </resource>
+                <resource>
+                  <directory>${project.build.directory}/dependency-rewrite</directory>
                 </resource>
               </webResources>
             </configuration>
