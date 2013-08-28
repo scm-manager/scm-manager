@@ -35,6 +35,7 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -110,6 +111,36 @@ public final class GroupNames implements Serializable, Iterable<String>
   public boolean contains(String groupName)
   {
     return collection.contains(groupName);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final GroupNames other = (GroupNames) obj;
+
+    return Objects.equal(collection, other.collection);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(collection);
   }
 
   /**

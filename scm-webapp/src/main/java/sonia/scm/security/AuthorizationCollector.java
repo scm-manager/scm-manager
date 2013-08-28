@@ -35,6 +35,7 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
@@ -105,7 +106,7 @@ public class AuthorizationCollector
     RepositoryDAO repositoryDAO, SecuritySystem securitySystem,
     PermissionResolver resolver)
   {
-    this.cache = cacheManager.getCache(String.class, AuthorizationInfo.class,
+    this.cache = cacheManager.getCache(CacheKey.class, AuthorizationInfo.class,
       CACHE_NAME);
     this.repositoryDAO = repositoryDAO;
     this.securitySystem = securitySystem;
@@ -157,7 +158,8 @@ public class AuthorizationCollector
           user.getName());
       }
 
-      cache.remove(user.getId());
+      // check if this is neccessary
+      cache.clear();
     }
   }
 
@@ -241,7 +243,11 @@ public class AuthorizationCollector
 
     Preconditions.checkNotNull(user, "no user found in principal collection");
 
-    AuthorizationInfo info = cache.get(user.getId());
+    GroupNames groupNames = principals.oneByType(GroupNames.class);
+
+    CacheKey cacheKey = new CacheKey(user.getId(), groupNames);
+
+    AuthorizationInfo info = cache.get(cacheKey);
 
     if (info == null)
     {
@@ -250,10 +256,8 @@ public class AuthorizationCollector
         logger.trace("collect AuthorizationInfo for user {}", user.getName());
       }
 
-      GroupNames groupNames = principals.oneByType(GroupNames.class);
-
       info = createAuthorizationInfo(user, groupNames);
-      cache.put(user.getId(), info);
+      cache.put(cacheKey, info);
     }
     else if (logger.isTraceEnabled())
     {
@@ -450,10 +454,78 @@ public class AuthorizationCollector
     //J+
   }
 
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/08/28
+   * @author         Enter your name here...
+   */
+  private static class CacheKey
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param username
+     * @param groupnames
+     */
+    private CacheKey(String username, GroupNames groupnames)
+    {
+      this.username = username;
+      this.groupnames = groupnames;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object obj)
+    {
+      if (obj == null)
+      {
+        return false;
+      }
+
+      if (getClass() != obj.getClass())
+      {
+        return false;
+      }
+
+      final CacheKey other = (CacheKey) obj;
+
+      return Objects.equal(username, other.username)
+        && Objects.equal(groupnames, other.groupnames);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode()
+    {
+      return Objects.hashCode(username, groupnames);
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private final GroupNames groupnames;
+
+    /** Field description */
+    private final String username;
+  }
+
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Cache<String, AuthorizationInfo> cache;
+  private Cache<CacheKey, AuthorizationInfo> cache;
 
   /** Field description */
   private RepositoryDAO repositoryDAO;
