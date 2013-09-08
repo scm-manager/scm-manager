@@ -434,7 +434,7 @@
     <svnkit.version>1.7.10-scm3</svnkit.version>
     
     <!-- util libraries -->
-    <guava.version>14.0.1</guava.version>
+    <guava.version>15.0</guava.version>
 
     <!-- build properties -->
     <project.build.javaLevel>1.6</project.build.javaLevel>
