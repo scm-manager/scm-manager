@@ -35,6 +35,7 @@ package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 
 import org.slf4j.Logger;
@@ -99,8 +100,8 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    * @param response
    */
   public DefaultCGIExecutor(ScmConfiguration configuration,
-                            ServletContext context, HttpServletRequest request,
-                            HttpServletResponse response)
+    ServletContext context, HttpServletRequest request,
+    HttpServletResponse response)
   {
     this.configuration = configuration;
     this.context = context;
@@ -149,9 +150,13 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     String path = command.getAbsolutePath();
     String pathTranslated = request.getPathTranslated();
 
-    if (Util.isEmpty(pathTranslated))
+    if (Strings.isNullOrEmpty(pathTranslated))
     {
       pathTranslated = path;
+    }
+    else
+    {
+      pathTranslated = HttpUtil.removeMatrixParameter(pathTranslated);
     }
 
     env.set(ENV_PATH_TRANSLATED, pathTranslated);
@@ -296,8 +301,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     String uri = HttpUtil.removeMatrixParameter(request.getRequestURI());
     String scriptName = uri.substring(0, uri.length() - pathInfo.length());
     String scriptPath = context.getRealPath(scriptName);
-    String pathTranslated =
-      HttpUtil.removeMatrixParameter(request.getPathTranslated());
     int len = request.getContentLength();
     EnvList env = new EnvList();
 
@@ -331,7 +334,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     env.set(ENV_CONTENT_TYPE, Util.nonNull(request.getContentType()));
     env.set(ENV_GATEWAY_INTERFACE, CGI_VERSION);
     env.set(ENV_PATH_INFO, pathInfo);
-    env.set(ENV_PATH_TRANSLATED, pathTranslated);
     env.set(ENV_QUERY_STRING, request.getQueryString());
     env.set(ENV_REMOTE_ADDR, request.getRemoteAddr());
     env.set(ENV_REMOTE_HOST, request.getRemoteHost());
@@ -351,9 +353,8 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
     env.set(ENV_SERVER_PORT, Integer.toString(serverPort));
     env.set(ENV_SERVER_PROTOCOL, Util.nonNull(request.getProtocol()));
-    env.set(
-        ENV_SERVER_SOFTWARE,
-        SERVER_SOFTWARE_PREFIX.concat(SCMContext.getContext().getVersion()));
+    env.set(ENV_SERVER_SOFTWARE,
+      SERVER_SOFTWARE_PREFIX.concat(SCMContext.getContext().getVersion()));
 
     Enumeration enm = request.getHeaderNames();
 
@@ -363,13 +364,13 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
       String value = request.getHeader(name);
 
       env.set(ENV_HTTP_HEADER_PREFIX + name.toUpperCase().replace('-', '_'),
-              value);
+        value);
     }
 
     // these extra ones were from printenv on www.dev.nomura.co.uk
     env.set(ENV_HTTPS, (request.isSecure()
-                        ? ENV_HTTPS_VALUE_ON
-                        : ENV_HTTPS_VALUE_OFF));
+      ? ENV_HTTPS_VALUE_ON
+      : ENV_HTTPS_VALUE_OFF));
 
     if (SystemUtil.isWindows())
     {
@@ -552,8 +553,8 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     catch (IOException ex)
     {
       logger.error(
-          "could not read from ServletInputStream and write to ProcessOutputStream",
-          ex);
+        "could not read from ServletInputStream and write to ProcessOutputStream",
+        ex);
     }
     finally
     {
@@ -574,8 +575,8 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    * @throws IOException
    */
   private void waitForFinish(Process process, ServletOutputStream output,
-                             long content)
-          throws IOException
+    long content)
+    throws IOException
   {
     try
     {
@@ -586,14 +587,14 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
         if (logger.isTraceEnabled())
         {
           logger.trace(
-              "handle status code {} with statusCodeHandler, there are {} bytes written to outputstream",
-              exitCode, content);
+            "handle status code {} with statusCodeHandler, there are {} bytes written to outputstream",
+            exitCode, content);
         }
 
         if (content == 0)
         {
           getStatusCodeHandler().handleStatusCode(request, response, output,
-                  exitCode);
+            exitCode);
         }
         else
         {
