@@ -54,11 +54,9 @@ public class SearchUtilTest
   public void testMultiMatchesAll()
   {
     assertTrue(SearchUtil.matchesAll(new SearchRequest("test"), "test",
-                                     "test hello", "hello test",
-                                     "hello test hello"));
+      "test hello", "hello test", "hello test hello"));
     assertFalse(SearchUtil.matchesAll(new SearchRequest("test"), "test",
-                                      "test hello", "hello test",
-                                      "hello test hello", "ka"));
+      "test hello", "hello test", "hello test hello", "ka"));
   }
 
   /**
@@ -69,13 +67,11 @@ public class SearchUtilTest
   public void testMultiMatchesOne()
   {
     assertTrue(SearchUtil.matchesOne(new SearchRequest("test"), "test",
-                                     "test hello", "hello test",
-                                     "hello test hello"));
+      "test hello", "hello test", "hello test hello"));
     assertTrue(SearchUtil.matchesOne(new SearchRequest("test"), "test",
-                                     "test hello", "hello test",
-                                     "hello test hello", "ka"));
+      "test hello", "hello test", "hello test hello", "ka"));
     assertTrue(SearchUtil.matchesOne(new SearchRequest("test"), "hans", "uew",
-                                     "klaus", "hello test hello", "ka"));
+      "klaus", "hello test hello", "ka"));
   }
 
   /**
@@ -89,15 +85,15 @@ public class SearchUtilTest
     assertTrue(SearchUtil.matchesAll(new SearchRequest("test"), "hello test"));
     assertTrue(SearchUtil.matchesAll(new SearchRequest("test"), "test hello"));
     assertTrue(SearchUtil.matchesAll(new SearchRequest("test"),
-                                     "hello test hello"));
+      "hello test hello"));
     assertFalse(SearchUtil.matchesAll(new SearchRequest("test"),
-                                      "hello hello"));
+      "hello hello"));
     assertFalse(SearchUtil.matchesAll(new SearchRequest("test"),
-                                      "hello te hello"));
+      "hello te hello"));
     assertFalse(SearchUtil.matchesAll(new SearchRequest("test"),
-                                      "hello TEST hello"));
+      "hello TEST hello"));
     assertFalse(SearchUtil.matchesAll(new SearchRequest("test"),
-                                      "hello TesT hello"));
+      "hello TesT hello"));
   }
 
   /**
@@ -109,15 +105,15 @@ public class SearchUtilTest
   {
     assertTrue(SearchUtil.matchesAll(new SearchRequest("test", true), "tEsT"));
     assertTrue(SearchUtil.matchesAll(new SearchRequest("test", true),
-                                     "heLLo teSt"));
+      "heLLo teSt"));
     assertTrue(SearchUtil.matchesAll(new SearchRequest("test", true),
-                                     "TEST hellO"));
+      "TEST hellO"));
     assertTrue(SearchUtil.matchesAll(new SearchRequest("test", true),
-                                     "hEllO tEsT hEllO"));
+      "hEllO tEsT hEllO"));
     assertFalse(SearchUtil.matchesAll(new SearchRequest("test", true),
-                                      "heLLo heLLo"));
+      "heLLo heLLo"));
     assertFalse(SearchUtil.matchesAll(new SearchRequest("test", true),
-                                      "heLLo te heLLo"));
+      "heLLo te heLLo"));
   }
 
   /**
@@ -131,15 +127,15 @@ public class SearchUtilTest
     assertTrue(SearchUtil.matchesOne(new SearchRequest("test"), "hello test"));
     assertTrue(SearchUtil.matchesOne(new SearchRequest("test"), "test hello"));
     assertTrue(SearchUtil.matchesOne(new SearchRequest("test"),
-                                     "hello test hello"));
+      "hello test hello"));
     assertFalse(SearchUtil.matchesOne(new SearchRequest("test"),
-                                      "hello hello"));
+      "hello hello"));
     assertFalse(SearchUtil.matchesOne(new SearchRequest("test"),
-                                      "hello te hello"));
+      "hello te hello"));
     assertFalse(SearchUtil.matchesOne(new SearchRequest("test"),
-                                      "hello TEST hello"));
+      "hello TEST hello"));
     assertFalse(SearchUtil.matchesOne(new SearchRequest("test"),
-                                      "hello TesT hello"));
+      "hello TesT hello"));
   }
 
   /**
@@ -151,15 +147,36 @@ public class SearchUtilTest
   {
     assertTrue(SearchUtil.matchesOne(new SearchRequest("test", true), "tEsT"));
     assertTrue(SearchUtil.matchesOne(new SearchRequest("test", true),
-                                     "heLLo teSt"));
+      "heLLo teSt"));
     assertTrue(SearchUtil.matchesOne(new SearchRequest("test", true),
-                                     "TEST hellO"));
+      "TEST hellO"));
     assertTrue(SearchUtil.matchesOne(new SearchRequest("test", true),
-                                     "hEllO tEsT hEllO"));
+      "hEllO tEsT hEllO"));
     assertFalse(SearchUtil.matchesOne(new SearchRequest("test", true),
-                                      "heLLo heLLo"));
+      "heLLo heLLo"));
     assertFalse(SearchUtil.matchesOne(new SearchRequest("test", true),
-                                      "heLLo te heLLo"));
+      "heLLo te heLLo"));
+  }
+
+  /**
+   * Test for issue 441
+   *
+   */
+  @Test
+  public void testSpecialCharacter()
+  {
+    assertTrue(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"),
+      "test\\hansolo"));
+    assertTrue(SearchUtil.matchesAll(new SearchRequest("*\\hansolo"),
+      "test\\hansolo"));
+    assertTrue(SearchUtil.matchesAll(new SearchRequest("test\\*"),
+      "test\\hansolo"));
+    assertTrue(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"),
+      "abc test\\hansolo abc"));
+    assertFalse(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"),
+      "testhansolo"));
+    assertFalse(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"),
+      "test\\hnsolo"));
   }
 
   /**
@@ -170,7 +187,7 @@ public class SearchUtilTest
   public void testWildcardMatches()
   {
     assertTrue(SearchUtil.matchesAll(new SearchRequest("*test*"),
-                                     "hello test hello"));
+      "hello test hello"));
     assertTrue(SearchUtil.matchesAll(new SearchRequest("?es?"), "test"));
     assertTrue(SearchUtil.matchesAll(new SearchRequest("t*t"), "test"));
   }
