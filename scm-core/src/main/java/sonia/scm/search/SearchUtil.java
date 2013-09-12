@@ -45,6 +45,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -197,7 +198,7 @@ public final class SearchUtil
       query = query.toLowerCase(Locale.ENGLISH);
     }
 
-    query = query.replace("*", ".*").replace("?", ".");
+    query = query.replace("\\", "\\\\").replace("*", ".*").replace("?", ".");
     query = ".*".concat(query).concat(".*");
 
     if (request.isIgnoreCase())
