@@ -189,8 +189,6 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
-      <!-- included by dependency rewrite -->
-      <scope>provided</scope>
     </dependency>
     
     <!-- template engine -->
