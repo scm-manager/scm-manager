@@ -35,6 +35,8 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -87,7 +89,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    */
   @Inject
   public DefaultGroupManager(GroupDAO groupDAO,
-                             Provider<Set<GroupListener>> groupListenerProvider)
+    Provider<Set<GroupListener>> groupListenerProvider)
   {
     this.groupDAO = groupDAO;
     this.groupListenerProvider = groupListenerProvider;
@@ -130,7 +132,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     if (logger.isInfoEnabled())
     {
       logger.info("create group {} of type {}", group.getName(),
-                  group.getType());
+        group.getType());
     }
 
     SecurityUtil.assertIsAdmin();
@@ -140,6 +142,7 @@ public class DefaultGroupManager extends AbstractGroupManager
       throw new GroupAllreadyExistExeption();
     }
 
+    removeDuplicateMembers(group);
     group.setCreationDate(System.currentTimeMillis());
     fireEvent(group, HandlerEvent.BEFORE_CREATE);
     groupDAO.add(group);
@@ -161,7 +164,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     if (logger.isInfoEnabled())
     {
       logger.info("delete group {} of type {}", group.getName(),
-                  group.getType());
+        group.getType());
     }
 
     SecurityUtil.assertIsAdmin();
@@ -212,7 +215,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     if (logger.isInfoEnabled())
     {
       logger.info("modify group {} of type {}", group.getName(),
-                  group.getType());
+        group.getType());
     }
 
     SecurityUtil.assertIsAdmin();
@@ -221,6 +224,7 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     if (groupDAO.contains(name))
     {
+      removeDuplicateMembers(group);
       group.setLastModified(System.currentTimeMillis());
       fireEvent(group, HandlerEvent.BEFORE_MODIFY);
       groupDAO.modify(group);
@@ -247,7 +251,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     if (logger.isInfoEnabled())
     {
       logger.info("refresh group {} of type {}", group.getName(),
-                  group.getType());
+        group.getType());
     }
 
     SecurityUtil.assertIsAdmin();
@@ -279,7 +283,7 @@ public class DefaultGroupManager extends AbstractGroupManager
     }
 
     return SearchUtil.search(searchRequest, groupDAO.getAll(),
-                             new TransformFilter<Group>()
+      new TransformFilter<Group>()
     {
       @Override
       public Group accept(Group group)
@@ -287,7 +291,7 @@ public class DefaultGroupManager extends AbstractGroupManager
         Group result = null;
 
         if (SearchUtil.matchesOne(searchRequest, group.getName(),
-                                  group.getDescription()))
+          group.getDescription()))
         {
           result = group.clone();
         }
@@ -373,12 +377,12 @@ public class DefaultGroupManager extends AbstractGroupManager
    */
   @Override
   public Collection<Group> getAll(Comparator<Group> comparator, int start,
-                                  int limit)
+    int limit)
   {
     SecurityUtil.assertIsAdmin();
 
     return Util.createSubCollection(groupDAO.getAll(), comparator,
-                                    new CollectionAppender<Group>()
+      new CollectionAppender<Group>()
     {
       @Override
       public void append(Collection<Group> collection, Group item)
@@ -437,6 +441,23 @@ public class DefaultGroupManager extends AbstractGroupManager
   public Long getLastModified()
   {
     return groupDAO.getLastModified();
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Remove duplicate members from group.
+   * Have a look at issue #439
+   *
+   *
+   * @param group group
+   */
+  private void removeDuplicateMembers(Group group)
+  {
+    List<String> members =
+      Lists.newArrayList(ImmutableSet.copyOf(group.getMembers()));
+
+    group.setMembers(members);
   }
 
   //~--- fields ---------------------------------------------------------------

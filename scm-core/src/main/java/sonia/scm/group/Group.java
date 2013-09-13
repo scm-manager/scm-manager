@@ -55,6 +55,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Organizes users into a group for easier permissions management.
+ * 
+ * TODO for 2.0: Use a set instead of a list for members
  *
  * @author Sebastian Sdorra
  */
