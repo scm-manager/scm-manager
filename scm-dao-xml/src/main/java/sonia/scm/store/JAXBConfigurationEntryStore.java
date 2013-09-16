@@ -366,7 +366,7 @@ public class JAXBConfigurationEntryStore<V>
         if (!element.isNil())
         {
           V v = element.getValue();
-          System.out.println( "value: " + v );
+          logger.trace("add element {} to configuration entry store", v);
 
           entries.put(key, v);
         }
