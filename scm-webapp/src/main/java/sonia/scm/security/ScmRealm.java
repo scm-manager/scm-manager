@@ -108,15 +108,11 @@ public class ScmRealm extends AuthorizingRealm
   /**
    * Constructs ...
    *
-   *
-   *
    * @param configuration
-   * @param securitySystem
+   * @param loginAttemptHandler
    * @param collector
-   * @param cacheManager
    * @param userManager
    * @param groupManager
-   * @param repositoryDAO
    * @param userDAO
    * @param authenticator
    * @param manager
@@ -125,6 +121,7 @@ public class ScmRealm extends AuthorizingRealm
    */
   @Inject
   public ScmRealm(ScmConfiguration configuration,
+    LoginAttemptHandler loginAttemptHandler,
     AuthorizationCollector collector,UserManager userManager, 
     GroupManager groupManager, UserDAO userDAO, 
     AuthenticationManager authenticator, RepositoryManager manager,
@@ -132,6 +129,7 @@ public class ScmRealm extends AuthorizingRealm
     Provider<HttpServletResponse> responseProvider)
   {
     this.configuration = configuration;
+    this.loginAttemptHandler = loginAttemptHandler;
     this.collector = collector;
     this.userManager = userManager;
     this.groupManager = groupManager;
@@ -151,6 +149,8 @@ public class ScmRealm extends AuthorizingRealm
     // set components
     setPermissionResolver(new RepositoryPermissionResolver());
   }
+  
+  private final LoginAttemptHandler loginAttemptHandler;
 
   //~--- methods --------------------------------------------------------------
 
@@ -174,6 +174,8 @@ public class ScmRealm extends AuthorizingRealm
     {
       throw new UnsupportedTokenException("ScmAuthenticationToken is required");
     }
+    
+    loginAttemptHandler.beforeAuthentication(authToken);
 
     UsernamePasswordToken token = (UsernamePasswordToken) authToken;
 
@@ -184,6 +186,7 @@ public class ScmRealm extends AuthorizingRealm
 
     if ((result != null) && (AuthenticationState.SUCCESS == result.getState()))
     {
+      loginAttemptHandler.onSuccessfulAuthentication(authToken, result);
       info = createAuthenticationInfo(token, result);
     }
     else if ((result != null)
@@ -194,6 +197,7 @@ public class ScmRealm extends AuthorizingRealm
     }
     else
     {
+      loginAttemptHandler.onUnsuccessfulAuthentication(authToken, result);
       throw new AccountException("authentication failed");
     }
 
@@ -532,26 +536,26 @@ public class ScmRealm extends AuthorizingRealm
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private AuthenticationManager authenticator;
+  private final AuthenticationManager authenticator;
 
   /** Field description */
-  private AuthorizationCollector collector;
+  private final AuthorizationCollector collector;
 
   /** Field description */
-  private ScmConfiguration configuration;
+  private final ScmConfiguration configuration;
 
   /** Field description */
-  private GroupManager groupManager;
+  private final GroupManager groupManager;
 
   /** Field description */
-  private Provider<HttpServletRequest> requestProvider;
+  private final Provider<HttpServletRequest> requestProvider;
 
   /** Field description */
-  private Provider<HttpServletResponse> responseProvider;
+  private final Provider<HttpServletResponse> responseProvider;
 
   /** Field description */
-  private UserDAO userDAO;
+  private final UserDAO userDAO;
 
   /** Field description */
-  private UserManager userManager;
+  private final UserManager userManager;
 }

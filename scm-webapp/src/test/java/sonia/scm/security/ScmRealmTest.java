@@ -41,6 +41,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Provider;
 
 import org.apache.shiro.authc.AccountException;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -484,9 +485,25 @@ public class ScmRealmTest
       securitySystem, 
       new RepositoryPermissionResolver()
     );
+    
+    LoginAttemptHandler dummyLoginAttemptHandler = new LoginAttemptHandler()
+    {
+      @Override
+      public void beforeAuthentication(AuthenticationToken token)
+        throws AuthenticationException {}
+
+      @Override
+      public void onSuccessfulAuthentication(AuthenticationToken token,
+        AuthenticationResult result) throws AuthenticationException {}
+
+      @Override
+      public void onUnsuccessfulAuthentication(AuthenticationToken token,
+        AuthenticationResult result) throws AuthenticationException {}
+    };
 
     return new ScmRealm(
       new ScmConfiguration(),
+      dummyLoginAttemptHandler,
       collector,
       // cacheManager,
       userManager,

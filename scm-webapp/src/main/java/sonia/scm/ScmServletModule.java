@@ -79,7 +79,9 @@ import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryManagerProvider;
 import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.resources.DefaultResourceManager;
 import sonia.scm.resources.DevelopmentResourceManager;
@@ -87,10 +89,12 @@ import sonia.scm.resources.ResourceManager;
 import sonia.scm.resources.ScriptResourceServlet;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.security.CipherUtil;
+import sonia.scm.security.ConfigurableLoginAttemptHandler;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.DefaultSecuritySystem;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.KeyGenerator;
+import sonia.scm.security.LoginAttemptHandler;
 import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.security.RepositoryPermissionResolver;
 import sonia.scm.security.SecurityContext;
@@ -149,8 +153,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import sonia.scm.repository.api.HookContextFactory;
-import sonia.scm.repository.spi.HookEventFacade;
 
 /**
  *
@@ -283,6 +285,7 @@ public class ScmServletModule extends ServletModule
     bind(WebSecurityContext.class).to(BasicSecurityContext.class);
     bind(SecuritySystem.class).to(DefaultSecuritySystem.class);
     bind(AdministrationContext.class, DefaultAdministrationContext.class);
+    bind(LoginAttemptHandler.class, ConfigurableLoginAttemptHandler.class);
 
     // bind cache
     bind(CacheManager.class, GuavaCacheManager.class);
@@ -328,7 +331,7 @@ public class ScmServletModule extends ServletModule
 
     // bind repository service factory
     bind(RepositoryServiceFactory.class);
-    
+
     // bind new hook api
     bind(HookContextFactory.class);
     bind(HookEventFacade.class);
