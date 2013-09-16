@@ -97,6 +97,30 @@ public class JAXBConfigurationEntryStoreTest
 
     assertEquals("tuser3", a3.getName());
   }
+  
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testLoadWrongFormat() throws IOException
+  {
+    ConfigurationEntryStore<AssignedPermission> store =
+      createPermissionStore(RESOURCE_WRONG);
+    AssignedPermission a1 = store.get("3ZOHKUePB3");
+
+    assertEquals("tuser", a1.getName());
+
+    AssignedPermission a2 = store.get("7COHL2j1G1");
+
+    assertEquals("tuser2", a2.getName());
+
+    AssignedPermission a3 = store.get("A0OHL3Qqw2");
+
+    assertEquals("tuser3", a3.getName());
+  }
 
   /**
    *  Method description

@@ -346,7 +346,7 @@ public class JAXBConfigurationEntryStore<V>
 
       // configuration
       reader.nextTag();
-      
+
       // entry start
       reader.nextTag();
 
@@ -366,6 +366,7 @@ public class JAXBConfigurationEntryStore<V>
         if (!element.isNil())
         {
           V v = element.getValue();
+
           logger.trace("add element {} to configuration entry store", v);
 
           entries.put(key, v);
@@ -375,11 +376,13 @@ public class JAXBConfigurationEntryStore<V>
           logger.warn("could not unmarshall object of entry store");
         }
 
-        // closed entry tag
-        reader.nextTag();
+        // closed or new entry tag
+        if (reader.nextTag() == XMLStreamReader.END_ELEMENT)
+        {
 
-        // start new entry
-        reader.nextTag();
+          // fixed format, start new entry
+          reader.nextTag();
+        }
       }
     }
     catch (Exception ex)
@@ -412,6 +415,7 @@ public class JAXBConfigurationEntryStore<V>
       );
       //J+
       writer.writeStartDocument();
+
       // configuration start
       writer.writeStartElement(TAG_CONFIGURATION);
 
@@ -421,11 +425,14 @@ public class JAXBConfigurationEntryStore<V>
 
       for (Entry<String, V> e : entries.entrySet())
       {
+
         // entry start
         writer.writeStartElement(TAG_ENTRY);
+
         // key start
         writer.writeStartElement(TAG_KEY);
         writer.writeCharacters(e.getKey());
+
         // key end
         writer.writeEndElement();
 
@@ -434,6 +441,7 @@ public class JAXBConfigurationEntryStore<V>
                               e.getValue());
 
         m.marshal(je, writer);
+
         // entry end
         writer.writeEndElement();
       }
