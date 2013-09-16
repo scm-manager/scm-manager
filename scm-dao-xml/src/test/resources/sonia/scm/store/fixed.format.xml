@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<configuration>
+  <entry>
+    <key>3ZOHKUePB3</key>
+    <value>
+      <group-permission>false</group-permission>
+      <name>tuser</name>
+      <permission>repository:*:READ</permission>
+    </value>
+  </entry>
+  <entry>
+    <key>A0OHL3Qqw2</key>
+    <value>
+      <group-permission>false</group-permission>
+      <name>tuser3</name>
+      <permission>repository:*:OWNER</permission>
+    </value>
+  </entry>
+  <entry>
+    <key>7COHL2j1G1</key>
+    <value>
+      <group-permission>false</group-permission>
+      <name>tuser2</name>
+      <permission>repository:*:WRITE</permission>
+    </value>
+  </entry>
+</configuration>

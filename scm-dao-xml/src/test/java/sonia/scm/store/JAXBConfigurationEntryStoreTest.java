@@ -30,18 +30,98 @@
  */
 
 
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Closeables;
+import com.google.common.io.Resources;
+
+import org.junit.Test;
+
+import sonia.scm.security.AssignedPermission;
 import sonia.scm.security.UUIDKeyGenerator;
+
+import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import java.net.URL;
+
+import java.util.UUID;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class JAXBConfigurationEntryStoreTest extends ConfigurationEntryStoreTestBase
+public class JAXBConfigurationEntryStoreTest
+  extends ConfigurationEntryStoreTestBase
 {
+
+  /** Field description */
+  private static final String RESOURCE_FIXED =
+    "sonia/scm/store/fixed.format.xml";
+
+  /** Field description */
+  private static final String RESOURCE_WRONG =
+    "sonia/scm/store/wrong.format.xml";
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testLoad() throws IOException
+  {
+    ConfigurationEntryStore<AssignedPermission> store =
+      createPermissionStore(RESOURCE_FIXED);
+    AssignedPermission a1 = store.get("3ZOHKUePB3");
+
+    assertEquals("tuser", a1.getName());
+
+    AssignedPermission a2 = store.get("7COHL2j1G1");
+
+    assertEquals("tuser2", a2.getName());
+
+    AssignedPermission a3 = store.get("A0OHL3Qqw2");
+
+    assertEquals("tuser3", a3.getName());
+  }
+
+  /**
+   *  Method description
+   *
+   *
+   *  @throws IOException
+   */
+  @Test
+  public void testStoreAndLoad() throws IOException
+  {
+    String name = UUID.randomUUID().toString();
+    ConfigurationEntryStore<AssignedPermission> store =
+      createPermissionStore(RESOURCE_FIXED, name);
+
+    store.put("a45", new AssignedPermission("tuser4", "repository:create"));
+    store =
+      createConfigurationStoreFactory().getStore(AssignedPermission.class,
+        name);
+
+    AssignedPermission ap = store.get("a45");
+
+    assertNotNull(ap);
+    assertEquals("tuser4", ap.getName());
+    assertEquals("repository:create", ap.getPermission());
+  }
 
   /**
    * Method description
@@ -54,5 +134,75 @@ public class JAXBConfigurationEntryStoreTest extends ConfigurationEntryStoreTest
   {
     return new JAXBConfigurationEntryStoreFactory(new UUIDKeyGenerator(),
       contextProvider);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param resource
+   * @param name
+   *
+   * @throws IOException
+   */
+  private void copy(String resource, String name) throws IOException
+  {
+    URL url = Resources.getResource(resource);
+    File confdir = new File(contextProvider.getBaseDirectory(), "config");
+    File file = new File(confdir, name.concat(".xml"));
+    OutputStream output = null;
+
+    try
+    {
+      output = new FileOutputStream(file);
+      Resources.copy(url, output);
+    }
+    finally
+    {
+      Closeables.close(output, true);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param resource
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private ConfigurationEntryStore<AssignedPermission> createPermissionStore(
+    String resource)
+    throws IOException
+  {
+    return createPermissionStore(resource, null);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param resource
+   * @param name
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private ConfigurationEntryStore<AssignedPermission> createPermissionStore(
+    String resource, String name)
+    throws IOException
+  {
+    if (name == null)
+    {
+      name = UUID.randomUUID().toString();
+    }
+
+    copy(resource, name);
+
+    return createConfigurationStoreFactory().getStore(AssignedPermission.class,
+      name);
   }
 }

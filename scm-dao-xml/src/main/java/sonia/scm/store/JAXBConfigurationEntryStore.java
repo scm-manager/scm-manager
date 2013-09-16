@@ -343,7 +343,11 @@ public class JAXBConfigurationEntryStore<V>
       Unmarshaller u = context.createUnmarshaller();
 
       reader = xmlInputFactory.createXMLStreamReader(createReader());
+
+      // configuration
       reader.nextTag();
+      
+      // entry start
       reader.nextTag();
 
       while (reader.isStartElement() && reader.getLocalName().equals(TAG_ENTRY))
@@ -354,12 +358,28 @@ public class JAXBConfigurationEntryStore<V>
 
         String key = reader.getElementText();
 
-        // read entry
+        // read value
         reader.nextTag();
 
-        V v = (V) u.unmarshal(reader, type).getValue();
+        JAXBElement<V> element = u.unmarshal(reader, type);
 
-        entries.put(key, v);
+        if (!element.isNil())
+        {
+          V v = element.getValue();
+          System.out.println( "value: " + v );
+
+          entries.put(key, v);
+        }
+        else
+        {
+          logger.warn("could not unmarshall object of entry store");
+        }
+
+        // closed entry tag
+        reader.nextTag();
+
+        // start new entry
+        reader.nextTag();
       }
     }
     catch (Exception ex)
@@ -392,6 +412,7 @@ public class JAXBConfigurationEntryStore<V>
       );
       //J+
       writer.writeStartDocument();
+      // configuration start
       writer.writeStartElement(TAG_CONFIGURATION);
 
       Marshaller m = context.createMarshaller();
@@ -400,17 +421,24 @@ public class JAXBConfigurationEntryStore<V>
 
       for (Entry<String, V> e : entries.entrySet())
       {
+        // entry start
         writer.writeStartElement(TAG_ENTRY);
+        // key start
         writer.writeStartElement(TAG_KEY);
         writer.writeCharacters(e.getKey());
+        // key end
         writer.writeEndElement();
 
+        // value
         JAXBElement<V> je = new JAXBElement<V>(QName.valueOf(TAG_VALUE), type,
                               e.getValue());
 
         m.marshal(je, writer);
+        // entry end
+        writer.writeEndElement();
       }
 
+      // configuration end
       writer.writeEndElement();
       writer.writeEndDocument();
     }
