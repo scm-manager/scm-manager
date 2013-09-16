@@ -27,12 +27,25 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+
+
+
 package sonia.scm.security;
 
-import java.util.concurrent.TimeUnit;
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+
 import org.junit.Test;
+
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.web.security.AuthenticationResult;
+import sonia.scm.web.security.AuthenticationState;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -40,25 +53,87 @@ import sonia.scm.web.security.AuthenticationResult;
  */
 public class ConfigurableLoginAttemptHandlerTest
 {
- 
-  @Test
-  public void testLoginAttempt() throws InterruptedException
+
+  /**
+   * Method description
+   *
+   */
+  @Test(expected = ExcessiveAttemptsException.class)
+  public void testLoginAttemptLimitReached()
   {
-    ConfigurableLoginAttemptHandler handler = new ConfigurableLoginAttemptHandler(null);
+    LoginAttemptHandler handler = createHandler(2, 2);
     UsernamePasswordToken token = new UsernamePasswordToken("hansolo", "hobbo");
+
     handler.beforeAuthentication(token);
     handler.onUnsuccessfulAuthentication(token, AuthenticationResult.FAILED);
-        handler.beforeAuthentication(token);
+    handler.beforeAuthentication(token);
     handler.onUnsuccessfulAuthentication(token, AuthenticationResult.FAILED);
-        handler.beforeAuthentication(token);
-    handler.onUnsuccessfulAuthentication(token, AuthenticationResult.FAILED);
-        handler.beforeAuthentication(token);
-    handler.onUnsuccessfulAuthentication(token, AuthenticationResult.FAILED);
-        handler.beforeAuthentication(token);
-    handler.onUnsuccessfulAuthentication(token, AuthenticationResult.FAILED);
-    // asd
-    Thread.currentThread().sleep(TimeUnit.SECONDS.toMillis(10));
     handler.beforeAuthentication(token);
   }
-  
+
+  /**
+   * Method description
+   *
+   *
+   * @throws InterruptedException
+   */
+  @Test
+  public void testLoginAttemptLimitTimeout() throws InterruptedException
+  {
+    LoginAttemptHandler handler = createHandler(2, 1);
+    UsernamePasswordToken token = new UsernamePasswordToken("hansolo", "hobbo");
+
+    handler.beforeAuthentication(token);
+    handler.onUnsuccessfulAuthentication(token, AuthenticationResult.FAILED);
+    handler.beforeAuthentication(token);
+    handler.onUnsuccessfulAuthentication(token, AuthenticationResult.FAILED);
+    Thread.currentThread().sleep(TimeUnit.MILLISECONDS.toMillis(1200l));
+    handler.beforeAuthentication(token);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws InterruptedException
+   */
+  @Test
+  public void testLoginAttemptResetOnSuccess() throws InterruptedException
+  {
+    LoginAttemptHandler handler = createHandler(2, 1);
+    UsernamePasswordToken token = new UsernamePasswordToken("hansolo", "hobbo");
+
+    handler.beforeAuthentication(token);
+    handler.onUnsuccessfulAuthentication(token, AuthenticationResult.FAILED);
+    handler.beforeAuthentication(token);
+    handler.onUnsuccessfulAuthentication(token, AuthenticationResult.FAILED);
+
+    handler.onSuccessfulAuthentication(token,
+      new AuthenticationResult(AuthenticationState.SUCCESS));
+
+    handler.beforeAuthentication(token);
+    handler.onUnsuccessfulAuthentication(token, AuthenticationResult.FAILED);
+    handler.beforeAuthentication(token);
+    handler.onUnsuccessfulAuthentication(token, AuthenticationResult.FAILED);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param loginAttemptLimit
+   * @param loginAttemptLimitTimeout
+   *
+   * @return
+   */
+  private LoginAttemptHandler createHandler(int loginAttemptLimit,
+    long loginAttemptLimitTimeout)
+  {
+    ScmConfiguration configuration = new ScmConfiguration();
+
+    configuration.setLoginAttemptLimit(loginAttemptLimit);
+    configuration.setLoginAttemptLimitTimeout(loginAttemptLimitTimeout);
+
+    return new ConfigurableLoginAttemptHandler(configuration);
+  }
 }

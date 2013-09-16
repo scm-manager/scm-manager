@@ -96,16 +96,82 @@ public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler
   public void beforeAuthentication(AuthenticationToken token)
     throws AuthenticationException
   {
+    if (isEnabled())
+    {
+      handleBeforeAuthentication(token);
+    }
+    else
+    {
+      logger.trace("LoginAttemptHandler is disabled");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param token
+   * @param result
+   *
+   * @throws AuthenticationException
+   */
+  @Override
+  public void onSuccessfulAuthentication(AuthenticationToken token,
+    AuthenticationResult result)
+    throws AuthenticationException
+  {
+    if (isEnabled())
+    {
+      handleOnSuccessfulAuthentication(token);
+    }
+    else
+    {
+      logger.trace("LoginAttemptHandler is disabled");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param token
+   * @param result
+   *
+   * @throws AuthenticationException
+   */
+  @Override
+  public void onUnsuccessfulAuthentication(AuthenticationToken token,
+    AuthenticationResult result)
+    throws AuthenticationException
+  {
+    if (isEnabled())
+    {
+      handleOnUnsuccessfulAuthentication(token);
+    }
+    else
+    {
+      logger.trace("LoginAttemptHandler is disabled");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param token
+   */
+  private void handleBeforeAuthentication(AuthenticationToken token)
+  {
     LoginAttempt attempt = getAttempt(token);
     long time = System.currentTimeMillis() - attempt.lastAttempt;
 
-    if (time > TimeUnit.SECONDS.toMillis(5l))
+    if (time > getLoginAttemptLimitTimeout())
     {
       logger.debug("reset login attempts for {}, because of time",
         token.getPrincipal());
       attempt.reset();
     }
-    else if (attempt.counter >= 5)
+    else if (attempt.counter >= configuration.getLoginAttemptLimit())
     {
       logger.warn("account {} is temporary locked, because of {}",
         token.getPrincipal(), attempt);
@@ -124,9 +190,7 @@ public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler
    *
    * @throws AuthenticationException
    */
-  @Override
-  public void onSuccessfulAuthentication(AuthenticationToken token,
-    AuthenticationResult result)
+  private void handleOnSuccessfulAuthentication(AuthenticationToken token)
     throws AuthenticationException
   {
     logger.debug("reset login attempts for {}, because of successful login",
@@ -143,9 +207,7 @@ public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler
    *
    * @throws AuthenticationException
    */
-  @Override
-  public void onUnsuccessfulAuthentication(AuthenticationToken token,
-    AuthenticationResult result)
+  private void handleOnUnsuccessfulAuthentication(AuthenticationToken token)
     throws AuthenticationException
   {
     logger.debug("increase failed login attempts for {}", token.getPrincipal());
@@ -177,6 +239,30 @@ public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler
     }
 
     return attempt;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private long getLoginAttemptLimitTimeout()
+  {
+    return TimeUnit.SECONDS.toMillis(
+      configuration.getLoginAttemptLimitTimeout());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private boolean isEnabled()
+  {
+    return (configuration.getLoginAttemptLimit() > 0)
+      && (configuration.getLoginAttemptLimitTimeout() > 0l);
   }
 
   //~--- inner classes --------------------------------------------------------
