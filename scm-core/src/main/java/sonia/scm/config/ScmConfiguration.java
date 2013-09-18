@@ -767,6 +767,7 @@ public class ScmConfiguration
    *
    * @since 1.34
    */
+  @XmlElement(name = "login-attempt-limit-timeout")
   private long loginAttemptLimitTimeout = TimeUnit.MINUTES.toSeconds(5l);
 
   /** Field description */

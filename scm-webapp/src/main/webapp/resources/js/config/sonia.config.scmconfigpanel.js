@@ -49,6 +49,10 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   errorMsgText: 'Could not load config.',
   errorSubmitMsgText: 'Could not submit config.',
   
+  // TODO i18n
+  loginAttemptLimitText: 'Login Attempt Limit',
+  loginAttemptLimitTimeoutText: 'Login Attempt Limit Timeout',
+  
   enableProxyText: 'Enable Proxy',
   proxyServerText: 'Proxy Server',
   proxyPortText: 'Proxy Port',
@@ -77,6 +81,11 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   sslPortHelpText: 'The ssl port.',
   adminGroupsHelpText: 'Comma seperated list of groups with admin permissions.',
   adminUsersHelpText: 'Comma seperated list of users with admin permissions.',
+  
+  // TODO i18n
+  loginAttemptLimitHelpText: 'Maximum allowed login attempts. Use -1 to disable the login attempt limit.',
+  loginAttemptLimitTimeoutHelpText: 'Timeout in seconds for users which are temporary disabled,\
+                                     because of too many failed login attempts.',
   
   enableProxyHelpText: 'Enable Proxy',
   proxyServerHelpText: 'The proxy server',
@@ -140,6 +149,18 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'anonymousAccessEnabled',
           inputValue: 'true',
           helpText: this.allowAnonymousAccessHelpText
+        },{
+          xtype: 'numberfield',
+          fieldLabel: this.loginAttemptLimitText,
+          name: 'login-attempt-limit',
+          allowBlank: false,
+          helpText: this.loginAttemptLimitHelpText          
+        },{
+          xtype: 'numberfield',
+          fieldLabel: this.loginAttemptLimitTimeoutText,
+          name: 'login-attempt-limit-timeout',
+          allowBlank: false,
+          helpText: this.loginAttemptLimitTimeoutHelpText          
         },{
           xtype: 'checkbox',
           fieldLabel: this.enableProxyText,
