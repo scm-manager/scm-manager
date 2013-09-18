@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigChangedListener;
 import sonia.scm.ListenerSupport;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.xml.XmlSetStringAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -142,6 +143,9 @@ public class ScmConfiguration
 
       listener.configChanged(this);
     }
+
+    // fire event to event bus
+    ScmEventBus.getInstance().post(new ScmConfigurationChangedEvent(this));
   }
 
   /**
