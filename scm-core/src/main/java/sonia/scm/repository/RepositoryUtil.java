@@ -250,7 +250,7 @@ public final class RepositoryUtil
     }
     else if (logger.isWarnEnabled())
     {
-      logger.warn("path is shorter as the main hg repository path");
+      logger.warn("path is shorter as the main repository path");
     }
 
     return name;
