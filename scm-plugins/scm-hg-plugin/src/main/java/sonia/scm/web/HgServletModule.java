@@ -40,6 +40,7 @@ import com.google.inject.servlet.ServletModule;
 import sonia.scm.installer.HgPackageReader;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.repository.HgContext;
+import sonia.scm.repository.HgContextProvider;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
@@ -66,7 +67,7 @@ public class HgServletModule extends ServletModule
   @Override
   protected void configureServlets()
   {
-    bind(HgContext.class);
+    bind(HgContext.class).toProvider(HgContextProvider.class);
     bind(HgHookManager.class);
     bind(HgPackageReader.class);
 

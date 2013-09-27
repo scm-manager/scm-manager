@@ -30,11 +30,16 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Inject;
 import com.google.inject.Provider;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -42,6 +47,14 @@ import com.google.inject.Provider;
  */
 public class HgContextProvider implements Provider<HgContext>
 {
+
+  /**
+   * the logger for HgContextProvider
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgContextProvider.class);
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -52,6 +65,20 @@ public class HgContextProvider implements Provider<HgContext>
   @Override
   public HgContext get()
   {
-    return new HgContext();
+    HgContext ctx = context;
+
+    if (ctx == null)
+    {
+      ctx = new HgContext();
+      logger.trace("context is null, we are probably out of request scope");
+    }
+
+    return ctx;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @Inject(optional = true)
+  private HgContext context;
 }
