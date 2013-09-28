@@ -177,7 +177,7 @@ public class ConfigurableLoginAttemptHandler implements LoginAttemptHandler
         token.getPrincipal(), attempt);
       attempt.increase();
 
-      throw new ExcessiveAttemptsException("account is temporarly locked");
+      throw new ExcessiveAttemptsException("account is temporary locked");
     }
   }
 
