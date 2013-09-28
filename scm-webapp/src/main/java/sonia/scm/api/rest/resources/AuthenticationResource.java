@@ -42,6 +42,8 @@ import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
@@ -56,6 +58,7 @@ import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.ScmClientConfig;
 import sonia.scm.ScmState;
+import sonia.scm.api.rest.RestActionResult;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupNames;
 import sonia.scm.repository.RepositoryManager;
@@ -67,6 +70,7 @@ import sonia.scm.security.StringablePermission;
 import sonia.scm.security.Tokens;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -83,10 +87,13 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
@@ -103,6 +110,15 @@ public class AuthenticationResource
   private static final Logger logger =
     LoggerFactory.getLogger(AuthenticationResource.class);
 
+  //~--- constant enums -------------------------------------------------------
+
+  /**
+   * Enum description
+   *
+   */
+  private static enum WUIAuthenticationFailure { LOCKED, TEMPORARY_LOCKED,
+    WRONG_CREDENTIALS; }
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -113,7 +129,6 @@ public class AuthenticationResource
    * @param configuration
    * @param repositoryManger
    * @param userManager
-   * @param securityContextProvider
    * @param securitySystem
    * @param collector
    */
@@ -143,7 +158,6 @@ public class AuthenticationResource
    * </ul>
    *
    * @param request the current http request
-   * @param response the current http response
    * @param username the username for the authentication
    * @param password the password for the authentication
    * @param rememberMe true to remember the user across sessions
@@ -153,20 +167,52 @@ public class AuthenticationResource
   @POST
   @Path("login")
   @TypeHint(ScmState.class)
-  public ScmState authenticate(@Context HttpServletRequest request,
+  public Response authenticate(@Context HttpServletRequest request,
     @FormParam("username") String username,
     @FormParam("password") String password, @FormParam("rememberMe")
   @DefaultValue("false") boolean rememberMe)
   {
-    ScmState state = null;
-
+    Response response;
     Subject subject = SecurityUtils.getSubject();
 
     try
     {
       subject.login(Tokens.createAuthenticationToken(request, username,
         password, rememberMe));
-      state = createState(subject);
+      response = Response.ok(createState(subject)).build();
+    }
+    catch (DisabledAccountException ex)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace(
+          "authentication failed, account user ".concat(username).concat(
+            " is locked"), ex);
+      }
+      else
+      {
+        logger.warn("authentication failed, account {} is locked", username);
+      }
+
+      response = handleFailedAuthentication(request, ex,
+        Response.Status.FORBIDDEN, WUIAuthenticationFailure.LOCKED);
+    }
+    catch (ExcessiveAttemptsException ex)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace(
+          "authentication failed, account user ".concat(username).concat(
+            " is temporary locked"), ex);
+      }
+      else
+      {
+        logger.warn("authentication failed, account {} is temporary locked",
+          username);
+      }
+
+      response = handleFailedAuthentication(request, ex,
+        Response.Status.FORBIDDEN, WUIAuthenticationFailure.TEMPORARY_LOCKED);
     }
     catch (AuthenticationException ex)
     {
@@ -174,15 +220,17 @@ public class AuthenticationResource
       {
         logger.trace("authentication failed for user ".concat(username), ex);
       }
-      else if (logger.isWarnEnabled())
+      else
       {
         logger.warn("authentication failed for user {}", username);
       }
 
-      throw new WebApplicationException(Response.Status.UNAUTHORIZED);
+      response = handleFailedAuthentication(request, ex,
+        Response.Status.UNAUTHORIZED,
+        WUIAuthenticationFailure.WRONG_CREDENTIALS);
     }
 
-    return state;
+    return response;
   }
 
   /**
@@ -209,7 +257,7 @@ public class AuthenticationResource
 
     subject.logout();
 
-    Response resp = null;
+    Response resp;
 
     if (configuration.isAnonymousAccessEnabled())
     {
@@ -267,7 +315,7 @@ public class AuthenticationResource
   @TypeHint(ScmState.class)
   public Response getState(@Context HttpServletRequest request)
   {
-    Response response = null;
+    Response response;
     Subject subject = SecurityUtils.getSubject();
 
     if (subject.isAuthenticated() || subject.isRemembered())
@@ -371,23 +419,117 @@ public class AuthenticationResource
       availablePermissions);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param ex
+   * @param status
+   * @param failure
+   *
+   * @return
+   */
+  private Response handleFailedAuthentication(HttpServletRequest request,
+    AuthenticationException ex, Response.Status status,
+    WUIAuthenticationFailure failure)
+  {
+    Response response;
+
+    if (HttpUtil.isWUIRequest(request))
+    {
+      response = Response.ok(new WUIAuthenticationFailedResult(failure,
+        ex.getMessage())).build();
+    }
+    else
+    {
+      response = Response.status(status).build();
+    }
+
+    return response;
+  }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 13/09/28
+   * @author         Enter your name here...
+   */
+  @XmlRootElement(name = "result")
+  @XmlAccessorType(XmlAccessType.FIELD)
+  private static final class WUIAuthenticationFailedResult
+    extends RestActionResult
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param failure
+     * @param mesage
+     */
+    public WUIAuthenticationFailedResult(WUIAuthenticationFailure failure,
+      String mesage)
+    {
+      super(false);
+      this.failure = failure;
+      this.mesage = mesage;
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public WUIAuthenticationFailure getFailure()
+    {
+      return failure;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    public String getMesage()
+    {
+      return mesage;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private final WUIAuthenticationFailure failure;
+
+    /** Field description */
+    private final String mesage;
+  }
+
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ScmConfiguration configuration;
+  private final ScmConfiguration configuration;
 
   /** Field description */
-  private SCMContextProvider contextProvider;
+  private final SCMContextProvider contextProvider;
 
   /** Field description */
-  private AuthorizationCollector permissionCollector;
+  private final AuthorizationCollector permissionCollector;
 
   /** Field description */
-  private RepositoryManager repositoryManger;
+  private final RepositoryManager repositoryManger;
 
   /** Field description */
-  private SecuritySystem securitySystem;
+  private final SecuritySystem securitySystem;
 
   /** Field description */
-  private UserManager userManager;
+  private final UserManager userManager;
 }

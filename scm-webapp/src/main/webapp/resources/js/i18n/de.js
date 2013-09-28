@@ -89,6 +89,9 @@ if (Sonia.login.Form){
     failedMsgText: 'Anmeldung fehlgeschlagen!',
     failedDescriptionText: 'Falscher Benutzername, Passwort oder sie haben nicht\n\
                              genug Berechtigungen. Bitte versuchen sie es erneut.',
+    accountLockedText: 'Der Account ist gesperrt.',
+    accountTemporaryLockedText: 'Der Account ist momentan gesperrt. \n\
+                                 Versuchen sie es später nochmal.',
     rememberMeText: 'Angemeldet bleiben'
   });
 
