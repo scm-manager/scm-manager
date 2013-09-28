@@ -35,15 +35,11 @@ package sonia.scm.api.rest;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.security.ScmSecurityException;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 /**
@@ -52,31 +48,15 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 public class ScmSecurityExceptionMapper
-        implements ExceptionMapper<ScmSecurityException>
+  extends StatusExceptionMapper<ScmSecurityException>
 {
 
-  /** the logger for ScmSecurityExceptionMapper */
-  private static final Logger logger =
-    LoggerFactory.getLogger(ScmSecurityExceptionMapper.class);
-
-  //~--- methods --------------------------------------------------------------
-
   /**
-   * Method description
+   * Constructs ...
    *
-   *
-   * @param exception
-   *
-   * @return
    */
-  @Override
-  public Response toResponse(ScmSecurityException exception)
+  public ScmSecurityExceptionMapper()
   {
-    if (logger.isWarnEnabled())
-    {
-      logger.warn(exception.getMessage(), exception);
-    }
-
-    return Response.status(Response.Status.FORBIDDEN).build();
+    super(ScmSecurityException.class, Response.Status.FORBIDDEN);
   }
 }
