@@ -168,8 +168,12 @@ public class BasicAuthenticationFilter extends HttpFilter
     else if ((configuration != null)
       && configuration.isAnonymousAccessEnabled())
     {
-      user = SCMContext.ANONYMOUS;
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("anonymous access granted");
+      }
 
+      user = SCMContext.ANONYMOUS;
     }
 
     if (user == null)
