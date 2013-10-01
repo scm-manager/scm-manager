@@ -55,7 +55,6 @@ import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.repository.api.HgHookMessage;
 import sonia.scm.repository.api.HgHookMessage.Severity;
-import sonia.scm.repository.api.HookMessageProvider;
 import sonia.scm.repository.spi.HgHookContextProvider;
 import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.security.CipherUtil;
