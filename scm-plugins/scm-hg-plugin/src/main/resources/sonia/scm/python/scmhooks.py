@@ -45,7 +45,8 @@ credentials = os.environ['SCM_CREDENTIALS']
 def printMessages(ui, msgs):
   for line in msgs:
     if line.startswith("_e") or line.startswith("_n"):
-      ui.warn(line[2:]);
+      line = line[2:];
+    ui.warn(line);
 
 def callHookUrl(ui, repo, hooktype, node):
   abort = True
