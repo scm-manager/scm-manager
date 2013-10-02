@@ -43,7 +43,6 @@ import com.google.inject.servlet.ServletModule;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
 import org.apache.shiro.authz.permission.PermissionResolver;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -130,6 +129,7 @@ import sonia.scm.util.DebugServlet;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
+import sonia.scm.web.filter.AutoLoginFilter;
 import sonia.scm.web.filter.LoggingFilter;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.ApiBasicAuthenticationFilter;
@@ -140,6 +140,7 @@ import sonia.scm.web.security.DefaultAdministrationContext;
 import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
+
 
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
@@ -347,6 +348,7 @@ public class ScmServletModule extends ServletModule
      *      PATTERN_STATIC_RESOURCES).through(StaticResourceFilter.class);
      */
     filter(PATTERN_ALL).through(BaseUrlFilter.class);
+    filter(PATTERN_ALL).through(AutoLoginFilter.class);
     filterRegex(RESOURCE_REGEX).through(GZipFilter.class);
     filter(PATTERN_RESTAPI,
       PATTERN_DEBUG).through(ApiBasicAuthenticationFilter.class);

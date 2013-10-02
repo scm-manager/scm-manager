@@ -39,11 +39,14 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.web.filter.AutoLoginModule;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
+
 import java.io.IOException;
+import java.util.Set;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -76,9 +79,10 @@ public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
    * @param configuration
    */
   @Inject
-  public ApiBasicAuthenticationFilter(ScmConfiguration configuration)
+  public ApiBasicAuthenticationFilter(ScmConfiguration configuration,
+			Set<AutoLoginModule> autoLoginModules)
   {
-    super(configuration);
+    super(configuration, autoLoginModules);
   }
 
   //~--- methods --------------------------------------------------------------
