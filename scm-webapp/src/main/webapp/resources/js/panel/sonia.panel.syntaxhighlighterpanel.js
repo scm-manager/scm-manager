@@ -114,7 +114,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
   },{
     name: 'SQL',
     aliases: ['sql'],
-    fileName: 'shBrushScala.js'
+    fileName: 'shBrushSql.js'
   },{
     name: 'Visual Basic',
     aliases: ['vb', 'vbnet'],
