@@ -240,12 +240,11 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
             authenticator.getClass().getName(), result);
         }
 
-        // CR: Removed check on state=failed to allow next module to
-        // continue
         if ((result != null) && (result.getState() != null)
-          && result.getState().isSuccessfully())
+          && (result.getState().isSuccessfully()
+            || (result.getState() == AuthenticationState.FAILED)))
         {
-          if (result.getUser() != null)
+          if (result.getState().isSuccessfully() && (result.getUser() != null))
           {
             User user = result.getUser();
 
