@@ -35,6 +35,11 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   path: null,
   
   repositoryBrowserTitleText: 'Source {0}',
+
+  colNameText: 'Name',
+  colLengthText: 'Length',
+  colLastModifiedText: 'Last Modified',
+  colDescriptionText: 'Description',
   
   iconFolder: 'resources/images/folder.png',
   iconDocument: 'resources/images/document.png',
@@ -92,24 +97,24 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       },{
         id: 'name',
         dataIndex: 'name',
-        header: 'Name',
+        header: this.colNameText,
         renderer: this.renderName,
         scope: this,
         width: 180
       },{
         id: 'length',
         dataIndex: 'length',
-        header: 'Length',
+        header: this.colLengthText,
         renderer: this.renderLength
       },{
         id: 'lastModified',
         dataIndex: 'lastModified',
-        header: 'Last Modified',
+        header: this.colLastModifiedText,
         renderer: Ext.util.Format.formatTimestamp
       },{
         id: 'description',
         dataIndex: 'description',
-        header: 'Description'
+        header: this.colDescriptionText
       },{
         id: 'subrepository',
         dataIndex: 'subrepository',
