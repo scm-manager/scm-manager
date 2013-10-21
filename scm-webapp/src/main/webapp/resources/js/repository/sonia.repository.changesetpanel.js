@@ -37,7 +37,7 @@ Sonia.repository.ChangesetPanel = Ext.extend(Ext.Panel, {
   
   // labels
   title: 'Commit {0}',
-  commitLabel: 'Commmit',
+  commitLabel: 'Commit',
   diffLabel: 'Diff',
   rawDiffLabel: 'Raw Diff',
 
