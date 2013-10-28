@@ -102,14 +102,21 @@ public class ValidationUtilTest
     assertTrue(ValidationUtil.isNameValid("test.git"));
     assertTrue(ValidationUtil.isNameValid("Test123.git"));
     assertTrue(ValidationUtil.isNameValid("Test123-git"));
-    assertTrue(ValidationUtil.isNameValid("Test_repository-123.git"));
+    assertTrue(ValidationUtil.isNameValid("Test_user-123.git"));
+    assertTrue(ValidationUtil.isNameValid("test@scm-manager.de"));
+    assertTrue(ValidationUtil.isNameValid("test 123"));
+    assertTrue(ValidationUtil.isNameValid("t"));
 
     // false
-    assertFalse(ValidationUtil.isNameValid("test 123"));
-    assertFalse(ValidationUtil.isNameValid("test@123"));
+    assertFalse(ValidationUtil.isNameValid(" test 123"));
+    assertFalse(ValidationUtil.isNameValid(" test 123 "));
+    assertFalse(ValidationUtil.isNameValid("test 123 "));
     assertFalse(ValidationUtil.isNameValid("test/123"));
     assertFalse(ValidationUtil.isNameValid("test%123"));
     assertFalse(ValidationUtil.isNameValid("test:123"));
+    assertFalse(ValidationUtil.isNameValid("t "));
+    assertFalse(ValidationUtil.isNameValid(" t"));
+    assertFalse(ValidationUtil.isNameValid(" t "));
   }
 
   /**
@@ -228,35 +235,5 @@ public class ValidationUtilTest
     {
       assertFalse(ValidationUtil.isRepositoryNameValid(path));
     }
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testIsUsernameValid()
-  {
-
-    // true
-    assertTrue(ValidationUtil.isUsernameValid("test"));
-    assertTrue(ValidationUtil.isUsernameValid("test.git"));
-    assertTrue(ValidationUtil.isUsernameValid("Test123.git"));
-    assertTrue(ValidationUtil.isUsernameValid("Test123-git"));
-    assertTrue(ValidationUtil.isUsernameValid("Test_user-123.git"));
-    assertTrue(ValidationUtil.isUsernameValid("test@scm-manager.de"));
-    assertTrue(ValidationUtil.isUsernameValid("test 123"));
-    assertTrue(ValidationUtil.isUsernameValid("t"));
-
-    // false
-    assertFalse(ValidationUtil.isUsernameValid(" test 123"));
-    assertFalse(ValidationUtil.isUsernameValid(" test 123 "));
-    assertFalse(ValidationUtil.isUsernameValid("test 123 "));
-    assertFalse(ValidationUtil.isUsernameValid("test/123"));
-    assertFalse(ValidationUtil.isUsernameValid("test%123"));
-    assertFalse(ValidationUtil.isUsernameValid("test:123"));
-    assertFalse(ValidationUtil.isUsernameValid("t "));
-    assertFalse(ValidationUtil.isUsernameValid(" t"));
-    assertFalse(ValidationUtil.isUsernameValid(" t "));
   }
 }
