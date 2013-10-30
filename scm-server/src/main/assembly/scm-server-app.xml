@@ -92,6 +92,16 @@
       <destName>logging.xml</destName>
     </file>
     
+    <!--
+      create work directory, see
+      https://bitbucket.org/sdorra/scm-manager/issue/464/scmserver-login-page-fails-to-render
+    -->
+    
+    <file>
+      <source>src/main/assembly/WORKDIR.txt</source>
+      <outputDirectory>work</outputDirectory>
+    </file>
+    
   </files>
   
 </assembly>
