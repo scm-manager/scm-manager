@@ -83,7 +83,6 @@ public class GitChangesetConverter implements Closeable
    *
    *
    * @param repository
-   * @param idLength
    */
   public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository)
   {
@@ -96,7 +95,6 @@ public class GitChangesetConverter implements Closeable
    *
    * @param repository
    * @param revWalk
-   * @param idLength
    */
   public GitChangesetConverter(org.eclipse.jgit.lib.Repository repository,
     RevWalk revWalk)
@@ -195,7 +193,13 @@ public class GitChangesetConverter implements Closeable
     PersonIdent authorIndent = commit.getAuthorIdent();
     Person author = new Person(authorIndent.getName(),
                       authorIndent.getEmailAddress());
-    String message = commit.getShortMessage();
+    String message = commit.getFullMessage();
+
+    if (message != null)
+    {
+      message = message.trim();
+    }
+
     Changeset changeset = new Changeset(id, date, author, message);
 
     if (parentList != null)
@@ -214,6 +218,7 @@ public class GitChangesetConverter implements Closeable
 
     if (Util.isNotEmpty(tagCollection))
     {
+
       // create a copy of the tag collection to reduce memory on caching
       changeset.getTags().addAll(Lists.newArrayList(tagCollection));
     }

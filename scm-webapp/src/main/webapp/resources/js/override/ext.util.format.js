@@ -54,6 +54,13 @@ Ext.apply(Ext.util.Format, {
   
   id: function(value){
     return this.substr(value, 0, 12);
+  },
+  
+  convertLineBreaks: function(value){
+    if (value){
+      value = value.replace(/(\r\n|\n|\r)/gm, "<br />");
+    }
+    return value;
   }
   
 });

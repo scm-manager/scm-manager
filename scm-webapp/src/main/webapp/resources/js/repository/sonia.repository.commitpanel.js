@@ -45,7 +45,7 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
                        </div>\n\
                        <div class="left-content left-side">\n\
                         <h1>Commit {id}</h1>\n\
-                        <p>{description}</p>\n\
+                        <p>{description:convertLineBreaks}</p>\n\
                         <p>\n\
                           <tpl for="author">\n\
                             {name}<tpl if="mail"> &lt;<a href="mailto:{mail}">{mail}</a>&gt;</tpl>\n\
