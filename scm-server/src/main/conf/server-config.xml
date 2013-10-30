@@ -69,6 +69,9 @@
       <Arg>org.eclipse.jetty.servlet.Default.dirAllowed</Arg>
       <Arg>false</Arg>
     </Call>
+    <Set name="tempDirectory">
+      <SystemProperty name="basedir" default="."/>/work
+    </Set>
   </New>
 
   <New id="docroot" class="org.eclipse.jetty.webapp.WebAppContext">
@@ -81,6 +84,9 @@
           </Array>
         </Arg>
       </New>
+    </Set>
+    <Set name="tempDirectory">
+      <SystemProperty name="basedir" default="."/>/work
     </Set>
   </New>
   
