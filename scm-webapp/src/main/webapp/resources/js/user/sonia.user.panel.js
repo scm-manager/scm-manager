@@ -69,7 +69,7 @@ Sonia.user.Panel = Ext.extend(Sonia.rest.Panel, {
         region: 'south',
         items: [{
           bodyCssClass: 'x-panel-mc',
-          title: 'User Form',
+          title: this.titleText,
           padding: 5,
           html: this.emptyText
         }]
