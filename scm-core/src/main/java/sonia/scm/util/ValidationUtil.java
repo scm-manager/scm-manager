@@ -55,15 +55,12 @@ public final class ValidationUtil
     "^[A-z0-9][\\w.-]*@[A-z0-9][\\w\\-\\.]+\\.[A-z0-9]{2,6}$";
 
   /** Field description */
-  private static final String REGEX_NAME = "^[A-z0-9\\.\\-_]+$";
+  private static final String REGEX_NAME =
+    "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$";
 
   /** Field description */
   private static final String REGEX_REPOSITORYNAME =
     "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])^[A-z0-9\\.][A-z0-9\\.\\-_/]*$";
-
-  /** Field description */
-  private static final String REGEX_USERNAME =
-    "^[A-z0-9\\.\\-_@]|[^ ]([A-z0-9\\.\\-_@ ]*[A-z0-9\\.\\-_@]|[^ ])?$";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -185,10 +182,12 @@ public final class ValidationUtil
    * @param username
    *
    * @return
+   * @deprecated use {@link #isNameValid(String)}
    */
+  @Deprecated
   public static boolean isUsernameValid(String username)
   {
-    return Util.isNotEmpty(username) && username.matches(REGEX_USERNAME);
+    return isNameValid(username);
   }
 
   /**
