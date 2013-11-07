@@ -425,8 +425,6 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
   {
     String line = null;
 
-    response.setContentLength(-1);
-
     while ((line = getTextLineFromStream(is)).length() > 0)
     {
       if (logger.isTraceEnabled())
