@@ -85,15 +85,18 @@ public class SvnDAVServlet extends DAVServlet
    *
    *
    * @param handler
+   * @param collectionRenderer
    * @param repositoryProvider
    * @param repositoryRequestListenerUtil
    */
   @Inject
   public SvnDAVServlet(SvnRepositoryHandler handler,
+    SvnCollectionRenderer collectionRenderer,
     RepositoryProvider repositoryProvider,
     RepositoryRequestListenerUtil repositoryRequestListenerUtil)
   {
     this.handler = handler;
+    this.collectionRenderer = collectionRenderer;
     this.repositoryProvider = repositoryProvider;
     this.repositoryRequestListenerUtil = repositoryRequestListenerUtil;
   }
@@ -147,7 +150,8 @@ public class SvnDAVServlet extends DAVServlet
   @Override
   protected DAVConfig getDAVConfig()
   {
-    return new SvnDAVConfig(super.getDAVConfig(), handler, repositoryProvider);
+    return new SvnDAVConfig(super.getDAVConfig(), handler, collectionRenderer,
+      repositoryProvider);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -285,6 +289,9 @@ public class SvnDAVServlet extends DAVServlet
 
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private SvnCollectionRenderer collectionRenderer;
 
   /** Field description */
   private SvnRepositoryHandler handler;

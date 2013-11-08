@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.tmatesoft.svn.core.internal.server.dav.CollectionRenderer;
 import org.tmatesoft.svn.core.internal.server.dav.DAVConfig;
 import org.tmatesoft.svn.core.internal.server.dav.SVNPathBasedAccess;
 
@@ -59,12 +60,15 @@ public class SvnDAVConfig extends DAVConfig
    *
    * @param davConfig
    * @param handler
+   * @param collectionRenderer
    * @param repositoryProvider
    */
   public SvnDAVConfig(DAVConfig davConfig, SvnRepositoryHandler handler,
-                      RepositoryProvider repositoryProvider)
+    CollectionRenderer collectionRenderer,
+    RepositoryProvider repositoryProvider)
   {
     this.davConfig = davConfig;
+    this.collectionRenderer = collectionRenderer;
     this.handler = handler;
     this.repositoryProvider = repositoryProvider;
   }
@@ -81,6 +85,18 @@ public class SvnDAVConfig extends DAVConfig
   public String getActivitiesDBPath()
   {
     return null;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public CollectionRenderer getCollectionRenderer()
+  {
+    return collectionRenderer;
   }
 
   /**
@@ -285,11 +301,14 @@ public class SvnDAVConfig extends DAVConfig
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private DAVConfig davConfig;
+  private final CollectionRenderer collectionRenderer;
 
   /** Field description */
-  private SvnRepositoryHandler handler;
+  private final DAVConfig davConfig;
 
   /** Field description */
-  private RepositoryProvider repositoryProvider;
+  private final SvnRepositoryHandler handler;
+
+  /** Field description */
+  private final RepositoryProvider repositoryProvider;
 }
