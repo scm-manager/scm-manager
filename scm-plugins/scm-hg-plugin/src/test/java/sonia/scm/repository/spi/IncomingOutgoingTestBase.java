@@ -47,11 +47,9 @@ import com.google.common.io.Files;
 
 import org.junit.Before;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import sonia.scm.AbstractTestBase;
-import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgRepositoryHandler;
