@@ -53,7 +53,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
     fileName: 'shBrushCSharp.js'
   },{
     name: 'C++',
-    aliases: ['cpp', 'c'],
+    aliases: ['cpp', 'c', 'h', 'hh', 'cc'],
     fileName: 'shBrushCpp.js'
   },{
     name: 'CSS',
@@ -81,7 +81,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
     fileName: 'shBrushJScript.js'
   },{
     name: 'Java',
-    aliases: ['java'],
+    aliases: ['java', 'idl'],
     fileName: 'shBrushJava.js'
   },{
     name: 'JavaFX',
