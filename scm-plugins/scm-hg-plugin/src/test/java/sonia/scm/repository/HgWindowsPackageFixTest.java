@@ -55,7 +55,7 @@ import java.net.URL;
  *
  * @author Sebastian Sdorra
  */
-public class HgPyFixTest
+public class HgWindowsPackageFixTest
 {
 
   /**
@@ -137,10 +137,10 @@ public class HgPyFixTest
    */
   private File testModify(File file)
   {
-    HgPyFix.fixHgPy(file);
-    assertTrue(HgPyFix.isSetBinaryAvailable(file));
+    HgWindowsPackageFix.fixHgPy(file);
+    assertTrue(HgWindowsPackageFix.isSetBinaryAvailable(file));
 
-    File mod = new File(file.getParentFile(), HgPyFix.MODIFY_MARK);
+    File mod = new File(file.getParentFile(), HgWindowsPackageFix.MODIFY_MARK_01);
 
     assertTrue(mod.exists());
 

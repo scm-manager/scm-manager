@@ -191,7 +191,7 @@ public class HgRepositoryHandler
     // fix wrong hg.bat from package installation
     if (SystemUtil.isWindows())
     {
-      HgPyFix.fixHgPy(context, getConfig());
+      HgWindowsPackageFix.fixHgPackage(context, getConfig());
     }
   }
 
