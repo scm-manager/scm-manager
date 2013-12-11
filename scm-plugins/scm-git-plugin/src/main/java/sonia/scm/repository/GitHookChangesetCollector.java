@@ -189,6 +189,7 @@ public class GitHookChangesetCollector
     finally
     {
       IOUtil.close(converter);
+      GitUtil.release(walk);
     }
 
     return changesets;
