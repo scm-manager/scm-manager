@@ -370,13 +370,13 @@ public final class IOUtil
   }
 
   /**
-   *   Method description
+   * Method description
    *
    *
-   *   @param file
+   * @param file
    * @param silent
    *
-   *   @throws IOException
+   * @throws IOException
    */
   public static void delete(File file, boolean silent) throws IOException
   {
@@ -388,22 +388,35 @@ public final class IOUtil
       {
         for (File child : children)
         {
-          delete(child);
+          delete(child, silent);
         }
       }
     }
 
-    if (!file.delete())
+    for (int i = 20; !file.delete(); i--)
     {
-      String message = "could not delete file ".concat(file.getPath());
+      if (i <= 20)
+      {
+        String message = "could not delete file ".concat(file.getPath());
 
-      if (silent)
-      {
-        logger.error(message);
+        if (silent)
+        {
+          logger.error(message);
+        }
+        else
+        {
+          throw new IOException(message);
+        }
       }
-      else
+
+      try
       {
-        throw new IOException(message);
+        logger.warn("sleep 250ms, because of delete for file {} failed", file);
+        Thread.sleep(250);
+      }
+      catch (InterruptedException ex)
+      {
+        logger.warn("sleep of delete method interrupted", ex);
       }
     }
   }
