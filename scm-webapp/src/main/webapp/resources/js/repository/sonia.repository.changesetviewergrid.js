@@ -174,9 +174,13 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
       }
     }
     var description = record.data.description;
-    // if ( description ){
-    //  description = Ext.util.Format.htmlEncode(description);
-    // }
+    if ( description ){
+      //  description = Ext.util.Format.htmlEncode(description);
+      var index = description.indexOf('\n');
+      if ( index > 0 ){
+        description = description.substring(0, index) + " ...";
+      }
+    }
     var date = record.data.date;
     if ( date ){
       date = Ext.util.Format.formatTimestamp(date);
