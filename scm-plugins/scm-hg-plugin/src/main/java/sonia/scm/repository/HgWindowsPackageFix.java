@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
 import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 
@@ -56,11 +57,20 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  */
-public final class HgPyFix
+public final class HgWindowsPackageFix
 {
+  
+  /** Field description */
+  private static final String PYTHONPATH_WRONG = "set PYTHONPATH=%~dp0..\\lib;%PYTHONHOME%\\Lib";
+  
+  /** Field description */
+  private static final String PYTHONPATH_FIXED = "set PYTHONPATH=%~dp0..\\lib;%PYTHONHOME%\\Lib;%PYTHONPATH%";
 
   /** Field description */
-  static final String MODIFY_MARK = ".setbinary";
+  static final String MODIFY_MARK_01 = ".setbinary";
+  
+  /** Field description */
+  static final String MODIFY_MARK_02 = ".setpythonpath";
 
   /** Field description */
   private static final String HG_BAT = "hg.bat";
@@ -79,7 +89,7 @@ public final class HgPyFix
    * Constructs ...
    *
    */
-  private HgPyFix() {}
+  private HgWindowsPackageFix() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -90,7 +100,7 @@ public final class HgPyFix
    * @param context
    * @param config
    */
-  public static void fixHgPy(SCMContextProvider context, HgConfig config)
+  public static void fixHgPackage(SCMContextProvider context, HgConfig config)
   {
     if ((config != null) && config.isValid())
     {
@@ -101,6 +111,7 @@ public final class HgPyFix
       if (hg.startsWith(basePath) && hg.endsWith(HG_BAT))
       {
         File file = new File(hg);
+        fixHgBat(file);
 
         file = new File(file.getParentFile(), HG_PY);
         fixHgPy(file);
@@ -112,33 +123,75 @@ public final class HgPyFix
         "could not fix hg.py, because the configuration is not valid");
     }
   }
+  
+  /**
+   * Visible for testing
+   *
+   * @param hgBat
+   */
+  static void fixHgBat(File hgBat){
+    if (hgBat.exists())
+    {
+      File binDirectory = hgBat.getParentFile();
+      File modifyMark = new File(binDirectory, MODIFY_MARK_02);
+      if (!modifyMark.exists())
+      {
+        try 
+        {
+          String content = Files.toString(hgBat, Charsets.UTF_8);
+          if (!content.contains(PYTHONPATH_FIXED))
+          {
+            content = content.replace(PYTHONPATH_WRONG, PYTHONPATH_FIXED);
+            Files.write(content, hgBat, Charsets.UTF_8);
+          }
+          createModifyMark(modifyMark);
+        } 
+        catch (IOException ex)
+        {
+          logger.error("could not read content of {}", hgBat);
+          throw Throwables.propagate(ex);
+        }
+      } 
+      else 
+      {
+        logger.debug("hg.bat allready fixed");
+      }
+    } 
+    else 
+    {
+      logger.warn("could not find hg.bat at {}", hgBat);
+    }
+  }
+  
+  
+          
 
   /**
    * Visible for testing
    *
    *
    *
-   * @param hgBat
+   * @param hgPy
    */
-  static void fixHgPy(File hgBat)
+  static void fixHgPy(File hgPy)
   {
 
-    if (hgBat.exists())
+    if (hgPy.exists())
     {
 
-      File binDirectory = hgBat.getParentFile();
-      File modifyMark = new File(binDirectory, MODIFY_MARK);
+      File binDirectory = hgPy.getParentFile();
+      File modifyMark = new File(binDirectory, MODIFY_MARK_01);
 
       if (!modifyMark.exists())
       {
         if (logger.isDebugEnabled())
         {
-          logger.debug("check hg.bat for setbinary at {}", hgBat);
+          logger.debug("check hg.py for setbinary at {}", hgPy);
         }
 
-        if (!isSetBinaryAvailable(hgBat))
+        if (!isSetBinaryAvailable(hgPy))
         {
-          injectSetBinary(hgBat);
+          injectSetBinary(hgPy);
         }
         else
         {
@@ -147,13 +200,13 @@ public final class HgPyFix
       }
       else if (logger.isDebugEnabled())
       {
-        logger.debug("hg.bat allready fixed");
+        logger.debug("hg.py allready fixed");
       }
 
     }
     else if (logger.isWarnEnabled())
     {
-      logger.warn("could not find hg.bat at {}", hgBat);
+      logger.warn("could not find hg.py at {}", hgPy);
     }
   }
 
@@ -237,7 +290,7 @@ public final class HgPyFix
   private static void injectSetBinary(File hg)
   {
     String lineSeparator = System.getProperty("line.separator");
-    File mod = new File(hg.getParentFile(), MODIFY_MARK);
+    File mod = new File(hg.getParentFile(), MODIFY_MARK_01);
 
     hg.renameTo(mod);
 
