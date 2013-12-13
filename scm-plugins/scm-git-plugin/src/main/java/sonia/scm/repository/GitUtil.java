@@ -48,9 +48,9 @@ import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.RepositoryCache;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.treewalk.TreeWalk;
@@ -84,6 +84,15 @@ public final class GitUtil
 
   /** Field description */
   public static final String REF_MASTER = "master";
+
+  /** Field description */
+  private static final String DIRECTORY_DOTGIT = ".git";
+
+  /** Field description */
+  private static final String DIRECTORY_OBJETCS = "objects";
+
+  /** Field description */
+  private static final String DIRECTORY_REFS = "refs";
 
   /** Field description */
   private static final String PREFIX_HEADS = "refs/heads/";
@@ -222,8 +231,23 @@ public final class GitUtil
   public static org.eclipse.jgit.lib.Repository open(File directory)
     throws IOException
   {
-    return RepositoryCache.open(RepositoryCache.FileKey.lenient(directory,
-      FS.DETECTED), true);
+    FS fs = FS.DETECTED;
+    FileRepositoryBuilder builder = new FileRepositoryBuilder();
+
+    builder.setFS(fs);
+
+    if (isGitDirectory(fs, directory))
+    {
+
+      // bare repository
+      builder.setGitDir(directory).setBare();
+    }
+    else
+    {
+      builder.setWorkTree(directory);
+    }
+
+    return builder.build();
   }
 
   /**
@@ -599,10 +623,12 @@ public final class GitUtil
     String localBranch)
   {
     String branch = localBranch;
-    if ( localBranch.startsWith(REF_HEAD_PREFIX) )
+
+    if (localBranch.startsWith(REF_HEAD_PREFIX))
     {
       branch = localBranch.substring(REF_HEAD_PREFIX.length());
     }
+
     return String.format(REMOTE_REF, repository.getId(), branch);
   }
 
@@ -624,6 +650,37 @@ public final class GitUtil
     }
 
     return name;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param dir
+   *
+   * @return
+   */
+  public static boolean isGitDirectory(File dir)
+  {
+    return isGitDirectory(FS.DETECTED, dir);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param fs
+   * @param dir
+   *
+   * @return
+   */
+  public static boolean isGitDirectory(FS fs, File dir)
+  {
+    //J-
+    return fs.resolve(dir, DIRECTORY_OBJETCS).exists()
+      && fs.resolve(dir, DIRECTORY_REFS).exists() 
+      &&!fs.resolve(dir, DIRECTORY_DOTGIT).exists();
+    //J+
   }
 
   //~--- methods --------------------------------------------------------------
