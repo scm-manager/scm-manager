@@ -212,13 +212,32 @@ public class PreProcessorUtil
    */
   public void prepareForReturn(Repository repository, Changeset changeset)
   {
+    prepareForReturn(repository, changeset, true);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   * @param changeset
+   * @param escape
+   *
+   * @since 1.35
+   */
+  public void prepareForReturn(Repository repository, Changeset changeset,
+    boolean escape)
+  {
     if (logger.isTraceEnabled())
     {
       logger.trace("prepare changeset {} of repository {} for return",
         changeset.getId(), repository.getName());
     }
 
-    EscapeUtil.escape(changeset);
+    if (escape)
+    {
+      EscapeUtil.escape(changeset);
+    }
 
     PreProcessorHandler<Changeset> handler =
       new PreProcessorHandler<Changeset>(changesetPreProcessorFactorySet,
