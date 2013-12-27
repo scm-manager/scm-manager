@@ -95,9 +95,9 @@ public final class HookChangesetBuilder
 
   /**
    * Returns a immutable {@link List} of added {@link Changeset}'s.
-   * <strong>Note:</strong> Use this method only if you need a {@link List}, if 
-   * you just want to iterate over the {@link Changeset}'s use 
-   * {@link #getChangesets()} instead. The {@link #getChangesets()} needs less 
+   * <strong>Note:</strong> Use this method only if you need a {@link List}, if
+   * you just want to iterate over the {@link Changeset}'s use
+   * {@link #getChangesets()} instead. The {@link #getChangesets()} needs less
    * memory and should be much more faster then this method.
    *
    * @return immutable {@link List} of added {@link Changeset}'s
@@ -108,7 +108,7 @@ public final class HookChangesetBuilder
   }
 
   /**
-   * Returns an {@link Iterable} which is able to return all {@link Changeset}s 
+   * Returns an {@link Iterable} which is able to return all {@link Changeset}s
    * which are added to the repository.
    *
    * @return {@link Iterable} for added {@link Changeset}s
@@ -132,7 +132,8 @@ public final class HookChangesetBuilder
           try
           {
             copy = DeepCopy.copy(c);
-            preProcessorUtil.prepareForReturn(repository, copy);
+            preProcessorUtil.prepareForReturn(repository, copy,
+              !disableEscaping);
           }
           catch (IOException ex)
           {
@@ -156,6 +157,24 @@ public final class HookChangesetBuilder
   //~--- set methods ----------------------------------------------------------
 
   /**
+   * Disable html escaping for the returned changesets. By default all
+   * changesets are html escaped.
+   *
+   *
+   * @param disableEscaping true to disable the html escaping
+   *
+   * @return {@code this}
+   *
+   * @since 1.35
+   */
+  public HookChangesetBuilder setDisableEscaping(boolean disableEscaping)
+  {
+    this.disableEscaping = disableEscaping;
+
+    return this;
+  }
+
+  /**
    * Disable the execution of pre processors.
    *
    *
@@ -172,6 +191,9 @@ public final class HookChangesetBuilder
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** disable escaping */
+  private boolean disableEscaping = false;
 
   /** disable pre processors marker */
   private boolean disablePreProcessors = false;

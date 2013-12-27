@@ -190,7 +190,7 @@ public final class BlameCommandBuilder
 
     if (!disablePreProcessors && (result != null))
     {
-      preProcessorUtil.prepareForReturn(repository, result);
+      preProcessorUtil.prepareForReturn(repository, result, !disableEscaping);
     }
 
     return result;
@@ -211,6 +211,24 @@ public final class BlameCommandBuilder
   public BlameCommandBuilder setDisableCache(boolean disableCache)
   {
     this.disableCache = disableCache;
+
+    return this;
+  }
+  
+  /**
+   * Disable html escaping for the returned blame lines. By default all
+   * blame lines are html escaped.
+   *
+   *
+   * @param disableEscaping true to disable the html escaping
+   *
+   * @return {@code this}
+   *
+   * @since 1.35
+   */
+  public BlameCommandBuilder setDisableEscaping(boolean disableEscaping)
+  {
+    this.disableEscaping = disableEscaping;
 
     return this;
   }
@@ -349,6 +367,9 @@ public final class BlameCommandBuilder
   /** the cache */
   private Cache<CacheKey, BlameResult> cache;
 
+  /** disable escaping */
+  private boolean disableEscaping = false;
+  
   /** disable change */
   private boolean disableCache = false;
 

@@ -301,12 +301,15 @@ public class GitRepositoryViewer
 
       try
       {
-        ChangesetPagingResult cpr = service.getLogCommand().setBranch(
-                                      name).setPagingLimit(
-                                      CHANGESET_PER_BRANCH).getChangesets();
-        Iterable<ChangesetModel> changesets = Iterables.transform(cpr,
-                                                new Function<Changeset,
-                                                  ChangesetModel>()
+        //J-
+        ChangesetPagingResult cpr = service.getLogCommand()
+                                           .setDisableEscaping(true)
+                                           .setBranch(name)
+                                           .setPagingLimit(CHANGESET_PER_BRANCH)
+                                           .getChangesets();
+        
+        Iterable<ChangesetModel> changesets = 
+          Iterables.transform(cpr, new Function<Changeset,ChangesetModel>()
         {
 
           @Override
@@ -315,6 +318,7 @@ public class GitRepositoryViewer
             return new ChangesetModel(changeset);
           }
         });
+        //J+
 
         model = new BranchModel(name, changesets);
       }
