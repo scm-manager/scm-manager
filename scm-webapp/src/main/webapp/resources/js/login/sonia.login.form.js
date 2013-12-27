@@ -44,6 +44,21 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
   rememberMeText: 'Remember me',
 
   initComponent: function(){
+    var buttons = [];
+    if (scmGlobalConfiguration.anonymousAccessEnabled){
+      buttons.push({
+        text: this.cancelText,
+        scope: this,
+        handler: this.cancel
+      });
+    }
+    buttons.push({
+      id: 'loginButton',
+      text: this.loginText,
+      formBind: true,
+      scope: this,
+      handler: this.authenticate
+    });
 
     var config = {
       labelWidth: 120,
@@ -85,17 +100,7 @@ Sonia.login.Form = Ext.extend(Ext.FormPanel,{
         name: 'rememberMe',
         inputValue: 'true'
       }],
-      buttons:[{
-          text: this.cancelText,
-          scope: this,
-          handler: this.cancel
-        },{
-          id: 'loginButton',
-          text: this.loginText,
-          formBind: true,
-          scope: this,
-          handler: this.authenticate
-      }]
+      buttons: buttons
     };
 
     this.addEvents('cancel', 'failure');

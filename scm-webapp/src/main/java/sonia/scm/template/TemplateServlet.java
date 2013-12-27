@@ -39,10 +39,13 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import freemarker.template.Configuration;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.resources.ResourceManager;
 import sonia.scm.resources.ResourceType;
 import sonia.scm.util.IOUtil;
@@ -97,17 +100,18 @@ public class TemplateServlet extends HttpServlet
    *
    *
    * @param context
-   * @param templateHandler
    * @param templateEngineFactory
+   * @param configuration
    * @param resourceManager
    */
   @Inject
   public TemplateServlet(SCMContextProvider context,
     TemplateEngineFactory templateEngineFactory,
-    ResourceManager resourceManager)
+    ResourceManager resourceManager, ScmConfiguration configuration)
   {
     this.templateEngineFactory = templateEngineFactory;
     this.resourceManager = resourceManager;
+    this.configuration = configuration;
     this.version = context.getVersion();
   }
 
@@ -131,6 +135,7 @@ public class TemplateServlet extends HttpServlet
     String contextPath = request.getContextPath();
 
     params.put("contextPath", contextPath);
+    params.put("configuration", configuration);
     params.put("version", version);
 
     params.put("scripts", resourceManager.getResources(ResourceType.SCRIPT));
@@ -237,11 +242,14 @@ public class TemplateServlet extends HttpServlet
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ResourceManager resourceManager;
+  private final ScmConfiguration configuration;
 
   /** Field description */
-  private TemplateEngineFactory templateEngineFactory;
+  private final ResourceManager resourceManager;
 
   /** Field description */
-  private String version;
+  private final TemplateEngineFactory templateEngineFactory;
+
+  /** Field description */
+  private final String version;
 }
