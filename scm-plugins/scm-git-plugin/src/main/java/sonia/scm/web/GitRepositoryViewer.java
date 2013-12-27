@@ -40,7 +40,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -252,10 +251,10 @@ public class GitRepositoryViewer
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private Iterable<ChangesetModel> changesets;
+    private final Iterable<ChangesetModel> changesets;
 
     /** Field description */
-    private String name;
+    private final String name;
   }
 
 
@@ -299,12 +298,15 @@ public class GitRepositoryViewer
 
       try
       {
-        ChangesetPagingResult cpr = service.getLogCommand().setBranch(
-                                      name).setPagingLimit(
-                                      CHANGESET_PER_BRANCH).getChangesets();
-        Iterable<ChangesetModel> changesets = Iterables.transform(cpr,
-                                                new Function<Changeset,
-                                                  ChangesetModel>()
+        //J-
+        ChangesetPagingResult cpr = service.getLogCommand()
+                                           .setDisableEscaping(true)
+                                           .setBranch(name)
+                                           .setPagingLimit(CHANGESET_PER_BRANCH)
+                                           .getChangesets();
+        
+        Iterable<ChangesetModel> changesets = 
+          Iterables.transform(cpr, new Function<Changeset,ChangesetModel>()
         {
 
           @Override
@@ -313,6 +315,7 @@ public class GitRepositoryViewer
             return new ChangesetModel(changeset);
           }
         });
+        //J+
 
         model = new BranchModel(name, changesets);
       }
@@ -327,7 +330,7 @@ public class GitRepositoryViewer
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private RepositoryService service;
+    private final RepositoryService service;
   }
 
 
@@ -369,7 +372,7 @@ public class GitRepositoryViewer
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private Iterable<BranchModel> branches;
+    private final Iterable<BranchModel> branches;
   }
 
 
@@ -440,15 +443,15 @@ public class GitRepositoryViewer
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private Changeset changeset;
+    private final Changeset changeset;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryServiceFactory repositoryServiceFactory;
+  private final RepositoryServiceFactory repositoryServiceFactory;
 
   /** Field description */
-  private TemplateEngineFactory templateEngineFactory;
+  private final TemplateEngineFactory templateEngineFactory;
 }
