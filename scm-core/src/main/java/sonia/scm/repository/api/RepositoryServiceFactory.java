@@ -35,7 +35,9 @@ package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.legman.ReferenceType;
 import com.github.legman.Subscribe;
+
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -48,15 +50,18 @@ import sonia.scm.HandlerEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKeyFilter;
+import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.Tags;
@@ -67,9 +72,6 @@ import sonia.scm.security.ScmSecurityException;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Set;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.PostReceiveRepositoryHookEvent;
-import sonia.scm.repository.RepositoryEvent;
 
 /**
  * The {@link RepositoryServiceFactory} is the entrypoint of the repository api.
@@ -135,7 +137,7 @@ public final class RepositoryServiceFactory
    * @param repositoryManager manager for repositories
    * @param resolvers a set of {@link RepositoryServiceResolver}
    * @param preProcessorUtil helper object for pre processor handling
-   * 
+   *
    * @since 1.21
    */
   @Inject
@@ -149,8 +151,7 @@ public final class RepositoryServiceFactory
     this.resolvers = resolvers;
     this.preProcessorUtil = preProcessorUtil;
 
-    CacheClearHook cch = new CacheClearHook(cacheManager);
-    ScmEventBus.getInstance().register(cch);
+    ScmEventBus.getInstance().register(new CacheClearHook(cacheManager));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -329,7 +330,7 @@ public final class RepositoryServiceFactory
      *
      * @param event
      */
-    @Subscribe
+    @Subscribe(referenceType = ReferenceType.STRONG)
     public void onEvent(PostReceiveRepositoryHookEvent event)
     {
       Repository repository = event.getRepository();
@@ -349,8 +350,8 @@ public final class RepositoryServiceFactory
      * @param repository
      * @param event
      */
-    @Subscribe
-    public void onEvent(RepositoryEvent  event)
+    @Subscribe(referenceType = ReferenceType.STRONG)
+    public void onEvent(RepositoryEvent event)
     {
       if (event.getEventType() == HandlerEvent.DELETE)
       {
@@ -384,37 +385,37 @@ public final class RepositoryServiceFactory
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
-    private Cache<BlameCommandBuilder.CacheKey, BlameResult> blameCache;
+    /** blame cache */
+    private final Cache<BlameCommandBuilder.CacheKey, BlameResult> blameCache;
 
-    /** Field description */
-    private Cache<BranchesCommandBuilder.CacheKey, Branches> branchesCache;
+    /** branches cache */
+    private final Cache<BranchesCommandBuilder.CacheKey, Branches> branchesCache;
 
-    /** Field description */
-    private Cache<BrowseCommandBuilder.CacheKey, BrowserResult> browseCache;
+    /** browse cache */
+    private final Cache<BrowseCommandBuilder.CacheKey, BrowserResult> browseCache;
 
-    /** Field description */
-    private Cache<LogCommandBuilder.CacheKey, ChangesetPagingResult> logCache;
+    /** log cache */
+    private final Cache<LogCommandBuilder.CacheKey, ChangesetPagingResult> logCache;
 
-    /** Field description */
-    private Cache<TagsCommandBuilder.CacheKey, Tags> tagsCache;
+    /** tags cache */
+    private final Cache<TagsCommandBuilder.CacheKey, Tags> tagsCache;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private CacheManager cacheManager;
+  /** cache manager */
+  private final CacheManager cacheManager;
 
   /** scm-manager configuration */
-  private ScmConfiguration configuration;
+  private final ScmConfiguration configuration;
 
-  /** Field description */
-  private PreProcessorUtil preProcessorUtil;
+  /** pre processor util */
+  private final PreProcessorUtil preProcessorUtil;
 
-  /** Field description */
-  private RepositoryManager repositoryManager;
+  /** repository manager */
+  private final RepositoryManager repositoryManager;
 
-  /** Field description */
-  private Set<RepositoryServiceResolver> resolvers;
+  /** service resolvers */
+  private final Set<RepositoryServiceResolver> resolvers;
 }
