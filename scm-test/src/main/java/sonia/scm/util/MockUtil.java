@@ -35,7 +35,6 @@ package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
 
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.PrincipalCollection;

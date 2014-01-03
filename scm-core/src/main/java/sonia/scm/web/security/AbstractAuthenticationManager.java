@@ -35,18 +35,12 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Sets;
 
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.user.User;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Abstract base class for {@link AuthenticationManager} implementations. This

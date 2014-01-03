@@ -36,7 +36,6 @@ package sonia.scm.web.filter;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Throwables;
-import com.google.inject.Provider;
 import com.google.inject.ProvisionException;
 
 import org.slf4j.Logger;

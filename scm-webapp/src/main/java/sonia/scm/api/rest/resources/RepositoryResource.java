@@ -61,7 +61,6 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
-import sonia.scm.repository.RepositoryUtil;
 import sonia.scm.repository.Tags;
 import sonia.scm.repository.api.BlameCommandBuilder;
 import sonia.scm.repository.api.BrowseCommandBuilder;

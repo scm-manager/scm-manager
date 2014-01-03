@@ -36,7 +36,6 @@ package sonia.scm.web.filter;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Splitter;
-import com.google.inject.Provider;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;

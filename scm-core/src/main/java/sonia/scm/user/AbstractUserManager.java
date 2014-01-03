@@ -40,9 +40,6 @@ import sonia.scm.event.ScmEventBus;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Abstract base class for {@link UserManager} implementations. This class

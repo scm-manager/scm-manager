@@ -55,7 +55,6 @@ import sonia.scm.logging.SVNKitLogger;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.repository.spi.SvnRepositoryServiceProvider;
 import sonia.scm.store.StoreFactory;
-import sonia.scm.util.AssertUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------

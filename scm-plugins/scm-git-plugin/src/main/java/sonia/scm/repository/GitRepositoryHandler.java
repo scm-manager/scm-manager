@@ -45,7 +45,6 @@ import sonia.scm.io.FileSystem;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.repository.spi.GitRepositoryServiceProvider;
 import sonia.scm.store.StoreFactory;
-import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 

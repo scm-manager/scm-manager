@@ -35,19 +35,12 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
 
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.util.MockUtil;
 
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.Before;
 
 /**

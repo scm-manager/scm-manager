@@ -57,7 +57,6 @@ import sonia.scm.io.INISection;
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.repository.spi.HgRepositoryServiceProvider;
 import sonia.scm.store.StoreFactory;
-import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;

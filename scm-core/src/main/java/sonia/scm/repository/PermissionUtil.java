@@ -35,7 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -46,7 +45,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.RepositoryPermission;
 import sonia.scm.security.Role;
-import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 
 /**

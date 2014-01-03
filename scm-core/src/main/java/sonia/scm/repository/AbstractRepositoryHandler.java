@@ -49,9 +49,6 @@ import sonia.scm.store.StoreFactory;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  *

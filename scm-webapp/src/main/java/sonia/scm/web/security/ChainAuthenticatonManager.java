@@ -52,7 +52,6 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
