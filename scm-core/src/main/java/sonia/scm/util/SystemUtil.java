@@ -36,8 +36,6 @@ package sonia.scm.util;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Platform;
-import sonia.scm.ServletContainer;
-import sonia.scm.ServletContainerDetector;
 
 /**
  *
@@ -114,19 +112,6 @@ public final class SystemUtil
   public static Platform getPlatform()
   {
     return platform;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   * @deprecated use {@link ServletContainerDetector#detect(javax.servlet.http.HttpServletRequest)) instead
-   */
-  @Deprecated
-  public static ServletContainer getServletContainer()
-  {
-    return ServletContainerDetector.detect();
   }
 
   /**

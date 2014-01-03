@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -80,24 +79,6 @@ public abstract class ProviderPermissionFilter extends PermissionFilter
   {
     super(configuration);
     this.repositoryProvider = repositoryProvider;
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param configuration
-   * @param securityContextProvider
-   * @param repositoryProvider
-   * @deprecated
-   */
-  @Deprecated
-  public ProviderPermissionFilter(ScmConfiguration configuration,
-    Provider<WebSecurityContext> securityContextProvider,
-    RepositoryProvider repositoryProvider)
-  {
-    this(configuration, repositoryProvider);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -136,5 +117,5 @@ public abstract class ProviderPermissionFilter extends PermissionFilter
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryProvider repositoryProvider;
+  private final RepositoryProvider repositoryProvider;
 }

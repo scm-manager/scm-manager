@@ -50,9 +50,7 @@ import sonia.scm.plugin.ExtensionPoint;
 @ExtensionPoint
 public interface RepositoryHandler
         extends Handler<Repository, RepositoryException>,
-                ListenerSupport<ConfigChangedListener>,
-                RepositoryBrowserProvider, ChangesetViewerProvider,
-                DiffViewerProvider, BlameViewerProvider
+                ListenerSupport<ConfigChangedListener>
 {
 
   /**

@@ -37,7 +37,6 @@ package sonia.scm.repository;
 
 import sonia.scm.ManagerDecorator;
 import sonia.scm.Type;
-import sonia.scm.group.GroupManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -223,39 +222,6 @@ public class RepositoryManagerDecorator
     return decorated.get(type, name);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public BlameViewer getBlameViewer(Repository repository)
-    throws RepositoryException
-  {
-    return decorated.getBlameViewer(repository);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public ChangesetViewer getChangesetViewer(Repository repository)
-    throws RepositoryException
-  {
-    return decorated.getChangesetViewer(repository);
-  }
 
   /**
    * {@inheritDoc}
@@ -282,22 +248,6 @@ public class RepositoryManagerDecorator
     return decorated;
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public DiffViewer getDiffViewer(Repository repository)
-    throws RepositoryException
-  {
-    return decorated.getDiffViewer(repository);
-  }
 
   /**
    * {@inheritDoc}
@@ -356,22 +306,6 @@ public class RepositoryManagerDecorator
     return decorated.getHandler(type);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public RepositoryBrowser getRepositoryBrowser(Repository repository)
-    throws RepositoryException
-  {
-    return decorated.getRepositoryBrowser(repository);
-  }
 
   /**
    * {@inheritDoc}
@@ -388,5 +322,5 @@ public class RepositoryManagerDecorator
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryManager decorated;
+  private final RepositoryManager decorated;
 }

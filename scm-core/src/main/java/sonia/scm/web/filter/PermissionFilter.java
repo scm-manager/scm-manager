@@ -53,7 +53,6 @@ import sonia.scm.repository.Repository;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -89,21 +88,6 @@ public abstract class PermissionFilter extends HttpFilter
    * @since 1.21
    */
   public PermissionFilter(ScmConfiguration configuration)
-  {
-    this.configuration = configuration;
-  }
-
-  /**
-   * Constructs a new permission filter
-   *
-   * @param configuration global scm-manager configuration
-   * @param securityContextProvider security context provider
-   * 
-   * @deprecated {@link #PermissionFilter(ScmConfiguration)} instead
-   */
-  @Deprecated
-  public PermissionFilter(ScmConfiguration configuration,
-    Provider<WebSecurityContext> securityContextProvider)
   {
     this.configuration = configuration;
   }

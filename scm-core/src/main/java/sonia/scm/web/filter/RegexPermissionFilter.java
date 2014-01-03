@@ -35,12 +35,10 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
 
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -75,24 +73,6 @@ public abstract class RegexPermissionFilter extends PermissionFilter
   {
     super(configuration);
     this.repositoryManager = repositoryManager;
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param configuration
-   * @param securityContextProvider
-   * @param repositoryManager
-   * @deprecated
-   */
-  @Deprecated
-  public RegexPermissionFilter(ScmConfiguration configuration,
-    Provider<WebSecurityContext> securityContextProvider,
-    RepositoryManager repositoryManager)
-  {
-    this(configuration, repositoryManager);
   }
 
   //~--- get methods ----------------------------------------------------------

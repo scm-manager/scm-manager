@@ -77,6 +77,7 @@ import java.util.Collection;
  *
  * @author Sebastian Sdorra
  */
+@Ignore
 @RunWith(Parameterized.class)
 public class AnonymousAccessITCase
 {
@@ -312,15 +313,17 @@ public class AnonymousAccessITCase
     File directory = temporaryFolder.newFolder();
     RepositoryClient client = null;
 
+    // TODO create repository url
+    
     if ((username != null) && (password != null))
     {
       client = RepositoryClientFactory.createClient(repositoryType, directory,
-              repository.getUrl(), username, password);
+              null, username, password);
     }
     else
     {
       client = RepositoryClientFactory.createClient(repositoryType, directory,
-              repository.getUrl());
+              null);
     }
 
     client.init();

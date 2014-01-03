@@ -563,52 +563,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * Method description
    *
    *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public BlameViewer getBlameViewer(Repository repository)
-    throws RepositoryException
-  {
-    AssertUtil.assertIsNotNull(repository);
-
-    BlameViewer viewer = null;
-
-    if (isReader(repository))
-    {
-      viewer = getHandler(repository).getBlameViewer(repository);
-    }
-
-    return viewer;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public ChangesetViewer getChangesetViewer(Repository repository)
-    throws RepositoryException
-  {
-    AssertUtil.assertIsNotNull(repository);
-    isReader(repository);
-
-    return getHandler(repository).getChangesetViewer(repository);
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @return
    */
   @Override
@@ -626,33 +580,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
     return validTypes;
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public DiffViewer getDiffViewer(Repository repository)
-    throws RepositoryException
-  {
-    AssertUtil.assertIsNotNull(repository);
-
-    DiffViewer viewer = null;
-
-    if (isReader(repository))
-    {
-      viewer = getHandler(repository).getDiffViewer(repository);
-    }
-
-    return viewer;
-  }
-
+  
   /**
    * Method description
    *
@@ -777,26 +705,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   public Long getLastModified()
   {
     return repositoryDAO.getLastModified();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public RepositoryBrowser getRepositoryBrowser(Repository repository)
-    throws RepositoryException
-  {
-    AssertUtil.assertIsNotNull(repository);
-    isReader(repository);
-
-    return getHandler(repository).getRepositoryBrowser(repository);
   }
 
   /**

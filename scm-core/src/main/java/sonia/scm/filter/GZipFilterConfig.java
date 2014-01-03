@@ -42,18 +42,6 @@ package sonia.scm.filter;
 public class GZipFilterConfig
 {
 
-  /**
-   * Returns true if the response should be buffered.
-   *
-   *
-   * @return true if the response should be buffered
-   * @deprecated use {@link #isBufferResponse()} instead.
-   */
-  @Deprecated
-  public boolean isBufferRequest()
-  {
-    return bufferResponse;
-  }
 
   /**
    * Returns true if the response should be buffered.
@@ -67,19 +55,6 @@ public class GZipFilterConfig
   }
 
   //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Enables or disables response buffering. Default buffering is enabled.
-   *
-   * @param bufferResponse true to enabled response buffering.
-   * 
-   * @deprecated use {@link #setBufferResponse(boolean)} instead.
-   */
-  @Deprecated
-  public void setBufferRequest(boolean bufferResponse)
-  {
-    this.bufferResponse = bufferResponse;
-  }
 
   /**
    * Enables or disables response buffering. Default buffering is enabled.

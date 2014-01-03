@@ -98,7 +98,7 @@ public class FreemarkerTemplateEngine implements TemplateEngine
         new MultiTemplateLoader(
             new TemplateLoader[] {
               new WebappTemplateLoader(servletContext, DIRECTORY_ROOT),
-              new ClassTemplateLoader(FreemarkerTemplateHandler.class,
+              new ClassTemplateLoader(FreemarkerTemplateEngine.class,
                                       DIRECTORY_ROOT) 
             }
         )

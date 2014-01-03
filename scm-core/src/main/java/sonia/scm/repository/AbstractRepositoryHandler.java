@@ -191,35 +191,6 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
    * Method description
    *
    *
-   * @param repository
-   *
-   * @return
-   * @since 1.8
-   */
-  @Override
-  public BlameViewer getBlameViewer(Repository repository)
-  {
-    return null;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param repository
-   * @return
-   */
-  @Override
-  public ChangesetViewer getChangesetViewer(Repository repository)
-  {
-    return null;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @return
    */
   public C getConfig()
@@ -227,22 +198,6 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
     return config;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public DiffViewer getDiffViewer(Repository repository)
-          throws RepositoryException
-  {
-    return null;
-  }
 
   /**
    * Method description
@@ -257,21 +212,6 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   {
     throw new NotSupportedFeatuerException(
         "import handler is not supported by this repository handler");
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   * @since 1.5
-   */
-  @Override
-  public RepositoryBrowser getRepositoryBrowser(Repository repository)
-  {
-    return null;
   }
 
   /**

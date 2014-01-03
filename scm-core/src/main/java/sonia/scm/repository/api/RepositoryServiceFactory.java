@@ -128,26 +128,6 @@ public final class RepositoryServiceFactory
    * should not be called manually, it should only be used by the injection
    * container.
    *
-   * @param cacheManager cache manager
-   * @param repositoryManager manager for repositories
-   * @param resolvers a set of {@link RepositoryServiceResolver}
-   * @param preProcessorUtil helper object for pre processor handling
-   *
-   * @deprecated
-   */
-  @Deprecated
-  public RepositoryServiceFactory(CacheManager cacheManager,
-    RepositoryManager repositoryManager,
-    Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil)
-  {
-    this(null, cacheManager, repositoryManager, resolvers, preProcessorUtil);
-  }
-
-  /**
-   * Constructs a new {@link RepositoryServiceFactory}. This constructor
-   * should not be called manually, it should only be used by the injection
-   * container.
-   *
    *
    * @param configuration configuration
    * @param cacheManager cache manager

@@ -109,8 +109,6 @@ public final class RepositoryTestData
     happyVerticalPeopleTransporter.setName("happyVerticalPeopleTransporter");
     happyVerticalPeopleTransporter.setDescription(
       "Happy Vertical People Transporter");
-    happyVerticalPeopleTransporter.setUrl(
-      "http://hitchhiker.com/dummy/HeartOfGold");
 
     return happyVerticalPeopleTransporter;
   }
@@ -143,7 +141,6 @@ public final class RepositoryTestData
     heartOfGold.setName("HeartOfGold");
     heartOfGold.setDescription(
       "Heart of Gold is the first prototype ship to successfully utilise the revolutionary Infinite Improbability Drive");
-    heartOfGold.setUrl("http://hitchhiker.com/dummy/HeartOfGold");
 
     return heartOfGold;
   }

@@ -57,9 +57,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface RepositoryManager
         extends TypeManager<Repository, RepositoryException>,
-                ListenerSupport<RepositoryListener>, RepositoryBrowserProvider,
-                RepositoryHookSupport, ChangesetViewerProvider,
-                BlameViewerProvider, DiffViewerProvider
+                ListenerSupport<RepositoryListener>, 
+                RepositoryHookSupport
 {
 
   /**

@@ -100,19 +100,6 @@ public class RunMojo extends AbstractBaseScmMojo
    *
    *
    * @return
-   * @deprecated use {@link #getLoggingConfiguration()} instead
-   */
-  @Deprecated
-  public String getLoggginConfiguration()
-  {
-    return loggginConfiguration;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
    */
   public String getLoggingConfiguration()
   {
@@ -207,19 +194,6 @@ public class RunMojo extends AbstractBaseScmMojo
   public void setContextPath(String contextPath)
   {
     this.contextPath = contextPath;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param loggginConfiguration
-   * @deprecated use {@link #setLoggingConfiguration(java.lang.String)} instead
-   */
-  @Deprecated
-  public void setLoggginConfiguration(String loggginConfiguration)
-  {
-    this.loggginConfiguration = loggginConfiguration;
   }
 
   /**

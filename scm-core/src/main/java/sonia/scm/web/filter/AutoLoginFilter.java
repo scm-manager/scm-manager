@@ -26,9 +26,28 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
+
+
+
 package sonia.scm.web.filter;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.user.User;
+
+//~--- JDK imports ------------------------------------------------------------
+
 import java.io.IOException;
+
 import java.util.Set;
 
 import javax.servlet.FilterChain;
@@ -36,102 +55,122 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import sonia.scm.user.User;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 /**
  * This filter calls all AutoLoginModule objects to try an auto-login. It can be
  * used on its own, usually at the global context ('/*') or as a base class like
  * BasicAuthenticationFilter.
- * 
+ *
  * @author Clemens Rabe
  */
 @Singleton
-public class AutoLoginFilter extends HttpFilter {
+public class AutoLoginFilter extends HttpFilter
+{
 
-	/** the logger for AutoLoginFilter */
-	private static final Logger logger = LoggerFactory
-			.getLogger(AutoLoginFilter.class);
+  /** the logger for AutoLoginFilter */
+  private static final Logger logger =
+    LoggerFactory.getLogger(AutoLoginFilter.class);
 
-	@Deprecated
-	public AutoLoginFilter() {
-	}
+  //~--- constructors ---------------------------------------------------------
 
-	/**
-	 * Constructor.
-	 * 
-	 * @param autoLoginModules
-	 *            - The auto-login modules.
-	 */
-	@Inject
-	public AutoLoginFilter(Set<AutoLoginModule> autoLoginModules) {
-		this.autoLoginModules = autoLoginModules;
-	}
+  /**
+   * Constructor.
+   *
+   * @param autoLoginModules
+   *            - The auto-login modules.
+   */
+  @Inject
+  public AutoLoginFilter(Set<AutoLoginModule> autoLoginModules)
+  {
+    this.autoLoginModules = autoLoginModules;
+  }
 
-	@Override
-	protected void doFilter(HttpServletRequest request,
-			HttpServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-		User user = getAuthenticatedUser(request, response);
+  //~--- methods --------------------------------------------------------------
 
-		if (user == null)
-			chain.doFilter(request, response);
-		else
-			chain.doFilter(
-					new SecurityHttpServletRequestWrapper(request, user),
-					response);
-	}
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   * @param chain
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  @Override
+  protected void doFilter(HttpServletRequest request,
+    HttpServletResponse response, FilterChain chain)
+    throws IOException, ServletException
+  {
+    User user = getAuthenticatedUser(request, response);
 
-	/**
-	 * Check all known AutoLoginModule objects to authenticate the user using
-	 * the current request.
-	 * 
-	 * @param request
-	 *            - The servlet request.
-	 * @param response
-	 *            - The servlet response.
-	 * @return The user or null if no user was found.
-	 */
-	protected User getAuthenticatedUser(HttpServletRequest request,
-			HttpServletResponse response) {
-		Subject subject = SecurityUtils.getSubject();
-		User user = null;
+    if (user == null)
+    {
+      chain.doFilter(request, response);
+    }
+    else
+    {
+      chain.doFilter(new SecurityHttpServletRequestWrapper(request, user),
+        response);
+    }
+  }
 
-		if (subject.isAuthenticated() || subject.isRemembered()) {
-			if (logger.isTraceEnabled()) {
-				logger.trace("user is allready authenticated");
-			}
+  //~--- get methods ----------------------------------------------------------
 
-			user = subject.getPrincipals().oneByType(User.class);
-		} else {
-			// Try the known filters first
-			for (AutoLoginModule filter : autoLoginModules) {
-				user = filter.authenticate(request, response, subject);
+  /**
+   * Check all known AutoLoginModule objects to authenticate the user using
+   * the current request.
+   *
+   * @param request
+   *            - The servlet request.
+   * @param response
+   *            - The servlet response.
+   * @return The user or null if no user was found.
+   */
+  protected User getAuthenticatedUser(HttpServletRequest request,
+    HttpServletResponse response)
+  {
+    Subject subject = SecurityUtils.getSubject();
+    User user = null;
 
-				if (user != null) {
-					if (logger.isTraceEnabled()) {
-						logger.trace(
-								"user {} successfully authenticated by authentication filter",
-								user.getName());
-					}
-					break;
-				}
-			}
-		}
+    if (subject.isAuthenticated() || subject.isRemembered())
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("user is allready authenticated");
+      }
 
-		return user;
-	}
+      user = subject.getPrincipals().oneByType(User.class);
+    }
+    else
+    {
 
-	/**
-	 * Set of AutoLoginModule objects.
-	 */
-	private Set<AutoLoginModule> autoLoginModules;
+      // Try the known filters first
+      for (AutoLoginModule filter : autoLoginModules)
+      {
+        user = filter.authenticate(request, response, subject);
 
+        if (user != null)
+        {
+          if (logger.isTraceEnabled())
+          {
+            logger.trace(
+              "user {} successfully authenticated by authentication filter",
+              user.getName());
+          }
+
+          break;
+        }
+      }
+    }
+
+    return user;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /**
+   * Set of AutoLoginModule objects.
+   */
+  private final Set<AutoLoginModule> autoLoginModules;
 }

@@ -69,11 +69,9 @@ import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.repository.ChangesetViewerUtil;
 import sonia.scm.repository.DefaultRepositoryManager;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryBrowserUtil;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryManagerProvider;
@@ -96,7 +94,6 @@ import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.LoginAttemptHandler;
 import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.security.RepositoryPermissionResolver;
-import sonia.scm.security.SecurityContext;
 import sonia.scm.security.SecuritySystem;
 import sonia.scm.store.BlobStoreFactory;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
@@ -109,11 +106,9 @@ import sonia.scm.store.ListenableStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.template.DefaultEngine;
 import sonia.scm.template.FreemarkerTemplateEngine;
-import sonia.scm.template.FreemarkerTemplateHandler;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
-import sonia.scm.template.TemplateHandler;
 import sonia.scm.template.TemplateServlet;
 import sonia.scm.url.RestJsonUrlProvider;
 import sonia.scm.url.RestXmlUrlProvider;
@@ -134,10 +129,8 @@ import sonia.scm.web.filter.LoggingFilter;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.ApiBasicAuthenticationFilter;
 import sonia.scm.web.security.AuthenticationManager;
-import sonia.scm.web.security.BasicSecurityContext;
 import sonia.scm.web.security.ChainAuthenticatonManager;
 import sonia.scm.web.security.DefaultAdministrationContext;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -282,8 +275,6 @@ public class ScmServletModule extends ServletModule
     // bind security stuff
     bind(PermissionResolver.class, RepositoryPermissionResolver.class);
     bind(AuthenticationManager.class, ChainAuthenticatonManager.class);
-    bind(SecurityContext.class).to(BasicSecurityContext.class);
-    bind(WebSecurityContext.class).to(BasicSecurityContext.class);
     bind(SecuritySystem.class).to(DefaultSecuritySystem.class);
     bind(AdministrationContext.class, DefaultAdministrationContext.class);
     bind(LoginAttemptHandler.class, ConfigurableLoginAttemptHandler.class);
@@ -303,8 +294,6 @@ public class ScmServletModule extends ServletModule
     bindDecorated(GroupManager.class, DefaultGroupManager.class,
       GroupManagerProvider.class);
     bind(CGIExecutorFactory.class, DefaultCGIExecutorFactory.class);
-    bind(ChangesetViewerUtil.class);
-    bind(RepositoryBrowserUtil.class);
 
     // bind httpclient
     bind(HttpClient.class, URLHttpClient.class);
@@ -362,7 +351,6 @@ public class ScmServletModule extends ServletModule
     serve(PATTERN_PLUGIN_SCRIPT).with(ScriptResourceServlet.class);
 
     // template
-    bind(TemplateHandler.class).to(FreemarkerTemplateHandler.class);
     serve(PATTERN_INDEX, "/").with(TemplateServlet.class);
 
     Multibinder<TemplateEngine> engineBinder =
@@ -593,8 +581,8 @@ public class ScmServletModule extends ServletModule
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ClassOverrides overrides;
+  private final ClassOverrides overrides;
 
   /** Field description */
-  private DefaultPluginLoader pluginLoader;
+  private final DefaultPluginLoader pluginLoader;
 }

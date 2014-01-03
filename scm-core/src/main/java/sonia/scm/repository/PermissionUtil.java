@@ -48,7 +48,6 @@ import sonia.scm.security.RepositoryPermission;
 import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.web.security.WebSecurityContext;
 
 /**
  *
@@ -72,93 +71,6 @@ public final class PermissionUtil
   private PermissionUtil() {}
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param securityContext
-   * @param pt
-   * @deprecated
-   */
-  @Deprecated
-  public static void assertPermission(Repository repository,
-    WebSecurityContext securityContext, PermissionType pt)
-  {
-    assertPermission(repository, pt);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param securityContextProvider
-   * @param pt
-   */
-  @Deprecated
-  public static void assertPermission(Repository repository,
-    Provider<WebSecurityContext> securityContextProvider, PermissionType pt)
-  {
-    assertPermission(repository, securityContextProvider.get(), pt);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param pt
-   *
-   * @since 1.21
-   */
-  @Deprecated
-  public static void assertPermission(Repository repository, PermissionType pt)
-  {
-    if (!hasPermission(null, repository, pt))
-    {
-      throw new ScmSecurityException("action denied");
-    }
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param securityContextProvider
-   * @param pt
-   *
-   * @return
-   * @deprecated
-   */
-  @Deprecated
-  public static boolean hasPermission(Repository repository,
-    Provider<WebSecurityContext> securityContextProvider, PermissionType pt)
-  {
-    return hasPermission(null, repository, pt);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param securityContext
-   * @param pt
-   *
-   * @return
-   * @deprecated use {@link #hasPermission(ScmConfiguration, Repository, PermissionType)} instead
-   */
-  @Deprecated
-  public static boolean hasPermission(Repository repository,
-    WebSecurityContext securityContext, PermissionType pt)
-  {
-    return hasPermission(null, repository, pt);
-  }
 
   /**
    * Method description
@@ -205,25 +117,6 @@ public final class PermissionUtil
     }
 
     return result;
-  }
-
-  /**
-   * Returns true if the repository is writable.
-   *
-   *
-   * @param configuration SCM-Manager main configuration
-   * @param repository repository to check
-   * @param securityContext current user security context
-   *
-   * @return true if the repository is writable
-   * @since 1.14
-   * @deprecated use {@link #isWritable(ScmConfiguration, Repository)} instead
-   */
-  @Deprecated
-  public static boolean isWritable(ScmConfiguration configuration,
-    Repository repository, WebSecurityContext securityContext)
-  {
-    return isWritable(configuration, repository);
   }
 
   /**

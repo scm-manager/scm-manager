@@ -49,8 +49,6 @@ import org.mockito.stubbing.Answer;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
-import sonia.scm.web.security.DummyWebSecurityContext;
-import sonia.scm.web.security.WebSecurityContext;
 
 import static org.mockito.Mockito.*;
 
@@ -175,26 +173,6 @@ public final class MockUtil
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static Provider<WebSecurityContext> getAdminSecurityContextProvider()
-  {
-    User admin = new User("scmadmin", "SCM Admin", "scmadmin@scm.org");
-
-    admin.setAdmin(true);
-
-    DummyWebSecurityContext context = new DummyWebSecurityContext(admin);
-    Provider<WebSecurityContext> scp = mock(Provider.class);
-
-    when(scp.get()).thenReturn(context);
-
-    return scp;
-  }
 
   /**
    * Method description

@@ -101,121 +101,12 @@ public class GitRepositoryHandler
    * Method description
    *
    *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public BlameViewer getBlameViewer(Repository repository)
-  {
-    GitBlameViewer blameViewer = null;
-
-    AssertUtil.assertIsNotNull(repository);
-
-    String type = repository.getType();
-
-    AssertUtil.assertIsNotEmpty(type);
-
-    if (TYPE_NAME.equals(type))
-    {
-      blameViewer = new GitBlameViewer(this, repository);
-    }
-    else
-    {
-      throw new IllegalArgumentException("git repository is required");
-    }
-
-    return blameViewer;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public ChangesetViewer getChangesetViewer(Repository repository)
-  {
-    GitChangesetViewer changesetViewer = null;
-
-    AssertUtil.assertIsNotNull(repository);
-
-    String type = repository.getType();
-
-    AssertUtil.assertIsNotEmpty(type);
-
-    if (TYPE_NAME.equals(type))
-    {
-      changesetViewer = new GitChangesetViewer(this, repository);
-    }
-    else
-    {
-      throw new IllegalArgumentException("git repository is required");
-    }
-
-    return changesetViewer;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public DiffViewer getDiffViewer(Repository repository)
-  {
-    GitDiffViewer diffViewer = null;
-
-    AssertUtil.assertIsNotNull(repository);
-
-    String type = repository.getType();
-
-    AssertUtil.assertIsNotEmpty(type);
-
-    if (TYPE_NAME.equals(type))
-    {
-      diffViewer = new GitDiffViewer(this, repository);
-    }
-    else
-    {
-      throw new IllegalArgumentException("git repository is required");
-    }
-
-    return diffViewer;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @return
    */
   @Override
   public ImportHandler getImportHandler()
   {
     return new GitImportHandler(this);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public RepositoryBrowser getRepositoryBrowser(Repository repository)
-  {
-    AssertUtil.assertIsNotNull(repository);
-
-    return new GitRepositoryBrowser(this, repository);
   }
 
   /**

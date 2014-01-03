@@ -160,7 +160,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject
     repository.setLastModified(lastModified);
     repository.setDescription(description);
     repository.setPermissions(permissions);
-    repository.setUrl(url);
     repository.setPublicReadable(publicReadable);
     repository.setArchived(archived);
   }
@@ -213,7 +212,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject
            && Objects.equal(archived, other.archived)
            && Objects.equal(permissions, other.permissions)
            && Objects.equal(type, other.type) 
-           && Objects.equal(url, other.url)
            && Objects.equal(creationDate, other.creationDate)
            && Objects.equal(lastModified, other.lastModified)
            && Objects.equal(properties, other.properties);
@@ -230,7 +228,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   public int hashCode()
   {
     return Objects.hashCode(id, name, contact, description, publicReadable,
-      archived, permissions, type, url, creationDate, lastModified, properties);
+      archived, permissions, type, creationDate, lastModified, properties);
   }
 
   /**
@@ -252,7 +250,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject
             .add("archived", archived)
             .add("permissions", permissions)
             .add("type", type)
-            .add("url", url)
             .add("lastModified", lastModified)
             .add("creationDate", creationDate)
             .add("properties", properties)
@@ -357,19 +354,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   public String getType()
   {
     return type;
-  }
-
-  /**
-   * Returns the base url of the {@link Repository}.
-   *
-   *
-   * @return base url
-   * @deprecated use {@link #createUrl(String)}
-   */
-  @Deprecated
-  public String getUrl()
-  {
-    return url;
   }
 
   /**
@@ -529,19 +513,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject
     this.type = type;
   }
 
-  /**
-   * Sets the base url of the {@link Repository}
-   *
-   *
-   * @param url base url
-   * @deprecated
-   */
-  @Deprecated
-  public void setUrl(String url)
-  {
-    this.url = url;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -574,9 +545,4 @@ public class Repository extends BasicPropertiesAware implements ModelObject
 
   /** Field description */
   private String type;
-
-  /**
-   * @deprecated use {@link #createUrl(java.lang.String)} instead
-   */
-  private String url;
 }

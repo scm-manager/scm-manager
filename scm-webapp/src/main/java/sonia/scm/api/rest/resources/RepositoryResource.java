@@ -1016,8 +1016,24 @@ public class RepositoryResource
   @Override
   protected Repository prepareForReturn(Repository repository)
   {
-    RepositoryUtil.appendUrl(configuration, repositoryManager, repository);
-    prepareRepository(repository);
+    if (isOwner(repository))
+    {
+      if (repository.getPermissions() == null)
+      {
+        repository.setPermissions(new ArrayList<Permission>());
+      }
+    }
+    else
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("remove properties and permissions from repository, "
+          + "because the user is not privileged");
+      }
+
+      repository.setProperties(null);
+      repository.setPermissions(null);
+    }
 
     return repository;
   }
@@ -1049,38 +1065,6 @@ public class RepositoryResource
   {
     return PATH_PART;
   }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   */
-  private void prepareRepository(Repository repository)
-  {
-    if (isOwner(repository))
-    {
-      if (repository.getPermissions() == null)
-      {
-        repository.setPermissions(new ArrayList<Permission>());
-      }
-    }
-    else
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("remove properties and permissions from repository, "
-          + "because the user is not privileged");
-      }
-
-      repository.setProperties(null);
-      repository.setPermissions(null);
-    }
-  }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description

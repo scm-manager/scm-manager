@@ -179,21 +179,6 @@ public final class ValidationUtil
    * Method description
    *
    *
-   * @param username
-   *
-   * @return
-   * @deprecated use {@link #isNameValid(String)}
-   */
-  @Deprecated
-  public static boolean isUsernameValid(String username)
-  {
-    return isNameValid(username);
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param validateable
    *
    * @return

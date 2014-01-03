@@ -136,121 +136,12 @@ public class SvnRepositoryHandler
    * Method description
    *
    *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public BlameViewer getBlameViewer(Repository repository)
-  {
-    SvnBlameViewer blameViewer = null;
-
-    AssertUtil.assertIsNotNull(repository);
-
-    String type = repository.getType();
-
-    AssertUtil.assertIsNotEmpty(type);
-
-    if (TYPE_NAME.equals(type))
-    {
-      blameViewer = new SvnBlameViewer(this, repository);
-    }
-    else
-    {
-      throw new IllegalArgumentException("svn repository is required");
-    }
-
-    return blameViewer;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public ChangesetViewer getChangesetViewer(Repository repository)
-  {
-    SvnChangesetViewer changesetViewer = null;
-
-    AssertUtil.assertIsNotNull(repository);
-
-    String type = repository.getType();
-
-    AssertUtil.assertIsNotEmpty(type);
-
-    if (TYPE_NAME.equals(type))
-    {
-      changesetViewer = new SvnChangesetViewer(this, repository);
-    }
-    else
-    {
-      throw new IllegalArgumentException("svn repository is required");
-    }
-
-    return changesetViewer;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public DiffViewer getDiffViewer(Repository repository)
-  {
-    SvnDiffViewer diffViewer = null;
-
-    AssertUtil.assertIsNotNull(repository);
-
-    String type = repository.getType();
-
-    AssertUtil.assertIsNotEmpty(type);
-
-    if (TYPE_NAME.equals(type))
-    {
-      diffViewer = new SvnDiffViewer(this, repository);
-    }
-    else
-    {
-      throw new IllegalArgumentException("svn repository is required");
-    }
-
-    return diffViewer;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @return
    */
   @Override
   public ImportHandler getImportHandler()
   {
     return new SvnImportHandler(this);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public RepositoryBrowser getRepositoryBrowser(Repository repository)
-  {
-    AssertUtil.assertIsNotNull(repository);
-
-    return new SvnRepositoryBrowser(this, repository);
   }
 
   /**

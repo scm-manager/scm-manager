@@ -37,7 +37,6 @@ package sonia.scm;
 
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.User;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -65,48 +64,6 @@ public class ScmState
    *
    */
   public ScmState() {}
-
-  /**
-   * Constructs {@link ScmState} object.
-   *
-   *
-   * @param provider - context provider
-   * @param securityContext - security context of the current user
-   * @param repositoryTypes - available repository types
-   * @param clientConfig - client configuration
-   */
-  @Deprecated
-  public ScmState(SCMContextProvider provider,
-    WebSecurityContext securityContext, Collection<Type> repositoryTypes,
-    ScmClientConfig clientConfig)
-  {
-    this(provider, securityContext, repositoryTypes, null, clientConfig);
-  }
-
-  /**
-   * Constructs {@link ScmState} object.
-   *
-   *
-   * @param provider - context provider
-   * @param securityContext - security context of the current user
-   * @param repositoryTypes - available repository types
-   * @param clientConfig - client configuration
-   * @param defaultUserType = Default user type
-   *
-   * @since 1.14
-   */
-  @Deprecated
-  public ScmState(SCMContextProvider provider,
-    WebSecurityContext securityContext, Collection<Type> repositoryTypes,
-    String defaultUserType, ScmClientConfig clientConfig)
-  {
-    this.version = provider.getVersion();
-    this.user = securityContext.getUser();
-    this.groups = securityContext.getGroups();
-    this.repositoryTypes = repositoryTypes;
-    this.clientConfig = clientConfig;
-    this.defaultUserType = defaultUserType;
-  }
 
   /**
    * Constructs {@link ScmState} object.

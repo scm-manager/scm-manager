@@ -60,13 +60,6 @@ public class ServletContainerDetector
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs a new ServletContainerDetector.
-   * @deprecated Use {@link ServletContainerDetector#detect(HttpServletRequest)} instead.
-   */
-  @Deprecated
-  public ServletContainerDetector() {}
-
-  /**
    * Constructs a new ServletContainerDetector depending on the ServletRequest.
    * @param req The ServletRequest.
    */
@@ -79,18 +72,6 @@ public class ServletContainerDetector
 
   /**
    * Detects the ServletContainer.
-   *
-   * @deprecated Use {@link ServletContainerDetector#detect(HttpServletRequest)} instead.
-   * @return the detected ServletContainer
-   */
-  @Deprecated
-  public static ServletContainer detect()
-  {
-    return new ServletContainerDetector().detectContainer();
-  }
-
-  /**
-   * Alternate detection of ServletContainer using DefaultServletDetection.
    *
    * @param req The used Servlet instance.
    * @return the detected ServletContainer.
@@ -211,14 +192,7 @@ public class ServletContainerDetector
   {
     final String value = System.getProperty("com.sun.aas.instanceRoot");
 
-    if (value != null)
-    {
-      return true;
-    }
-    else
-    {
-      return false;
-    }
+    return value != null;
   }
 
   /**
@@ -348,13 +322,14 @@ public class ServletContainerDetector
    */
   private boolean detect(final String clazz)
   {
+    boolean result = false;
     try
     {
       final ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
 
       systemClassLoader.loadClass(clazz);
 
-      return true;
+      result = true;
     }
     catch (final ClassNotFoundException cnfe)
     {
@@ -362,13 +337,10 @@ public class ServletContainerDetector
 
       if (classObj.getResource(clazz) != null)
       {
-        return true;
-      }
-      else
-      {
-        return false;
+        result = true;
       }
     }
+    return result;
   }
 
   /**

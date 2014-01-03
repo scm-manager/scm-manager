@@ -174,13 +174,6 @@ public class ScmConfiguration
     this.enableRepositoryArchive = other.enableRepositoryArchive;
     this.loginAttemptLimit = other.loginAttemptLimit;
     this.loginAttemptLimitTimeout = other.loginAttemptLimitTimeout;
-
-    // deprecated fields
-    this.servername = other.servername;
-    this.sslPort = other.sslPort;
-    this.enableSSL = other.enableSSL;
-    this.enablePortForward = other.enablePortForward;
-    this.forwardPort = other.forwardPort;
   }
 
   /**
@@ -241,19 +234,6 @@ public class ScmConfiguration
   public String getDateFormat()
   {
     return dateFormat;
-  }
-
-  /**
-   * Returns the forwarding port.
-   *
-   *
-   * @return forwarding port
-   * @deprecated use {@link #getBaseUrl()}
-   */
-  @Deprecated
-  public int getForwardPort()
-  {
-    return forwardPort;
   }
 
   /**
@@ -363,31 +343,6 @@ public class ScmConfiguration
   }
 
   /**
-   * Returns the servername of the SCM-Manager host.
-   *
-   *
-   * @return servername of the SCM-Manager host
-   * @deprecated use {@link #getBaseUrl()}
-   */
-  public String getServername()
-  {
-    return servername;
-  }
-
-  /**
-   * Returns the ssl port.
-   *
-   *
-   * @return ssl port
-   * @deprecated use {@link #getBaseUrl()} and {@link #isForceBaseUrl()}
-   */
-  @Deprecated
-  public int getSslPort()
-  {
-    return sslPort;
-  }
-
-  /**
    * Returns true if the anonymous access to the SCM-Manager is enabled.
    *
    *
@@ -407,19 +362,6 @@ public class ScmConfiguration
   public boolean isDisableGroupingGrid()
   {
     return disableGroupingGrid;
-  }
-
-  /**
-   * Returns true if port forwarding is enabled.
-   *
-   *
-   * @return true if port forwarding is enabled
-   * @deprecated use {@link #getBaseUrl()}
-   */
-  @Deprecated
-  public boolean isEnablePortForward()
-  {
-    return enablePortForward;
   }
 
   /**
@@ -443,19 +385,6 @@ public class ScmConfiguration
   public boolean isEnableRepositoryArchive()
   {
     return enableRepositoryArchive;
-  }
-
-  /**
-   * Returns true if ssl is enabled.
-   *
-   *
-   * @return true if ssl is enabled
-   * @deprecated use {@link #getBaseUrl()} and {@link #isForceBaseUrl()}
-   */
-  @Deprecated
-  public boolean isEnableSSL()
-  {
-    return enableSSL;
   }
 
   /**
@@ -543,19 +472,6 @@ public class ScmConfiguration
    * Method description
    *
    *
-   * @param enablePortForward
-   * @deprecated use {@link #setBaseUrl(String)}
-   */
-  @Deprecated
-  public void setEnablePortForward(boolean enablePortForward)
-  {
-    this.enablePortForward = enablePortForward;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param enableProxy
    */
   public void setEnableProxy(boolean enableProxy)
@@ -579,38 +495,12 @@ public class ScmConfiguration
    * Method description
    *
    *
-   * @param enableSSL
-   * @deprecated use {@link #setBaseUrl(String)} and {$link #setForceBaseUrl(boolean)}
-   */
-  @Deprecated
-  public void setEnableSSL(boolean enableSSL)
-  {
-    this.enableSSL = enableSSL;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param forceBaseUrl
    * @since 1.5
    */
   public void setForceBaseUrl(boolean forceBaseUrl)
   {
     this.forceBaseUrl = forceBaseUrl;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param forwardPort
-   * @deprecated use {@link #setBaseUrl(String)}
-   */
-  @Deprecated
-  public void setForwardPort(int forwardPort)
-  {
-    this.forwardPort = forwardPort;
   }
 
   /**
@@ -709,31 +599,6 @@ public class ScmConfiguration
     this.proxyUser = proxyUser;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param servername
-   * @deprecated use {@link #setBaseUrl(String)}
-   */
-  public void setServername(String servername)
-  {
-    this.servername = servername;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param sslPort
-   * @deprecated use {@link #setBaseUrl(String)} and {@link #setForceBaseUrl(boolean)}
-   */
-  @Deprecated
-  public void setSslPort(int sslPort)
-  {
-    this.sslPort = sslPort;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -753,10 +618,6 @@ public class ScmConfiguration
   /** Field description */
   @XmlElement(name = "force-base-url")
   private boolean forceBaseUrl;
-
-  /** @deprecated use {@link #baseUrl} */
-  @Deprecated
-  private int forwardPort = 80;
 
   /**
    * Maximum allowed login attempts.
@@ -797,21 +658,6 @@ public class ScmConfiguration
 
   /** Field description */
   private String proxyUser;
-
-  /** @deprecated use {@link #baseUrl} */
-  private String servername = "localhost";
-
-  /** @deprecated use {@link #baseUrl} and {@link #forceBaseUrl} */
-  @Deprecated
-  private boolean enableSSL = false;
-
-  /** @deprecated use {@link #baseUrl} */
-  @Deprecated
-  private boolean enablePortForward = false;
-
-  /** @deprecated use {@link #baseUrl} and {@link #forceBaseUrl} */
-  @Deprecated
-  private int sslPort = 8181;
 
   /** Configuration change listeners */
   @XmlTransient

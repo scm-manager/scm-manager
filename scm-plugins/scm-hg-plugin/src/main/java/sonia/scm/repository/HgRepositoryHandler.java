@@ -216,104 +216,6 @@ public class HgRepositoryHandler
    * Method description
    *
    *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public BlameViewer getBlameViewer(Repository repository)
-  {
-    BlameViewer blameViewer = null;
-
-    AssertUtil.assertIsNotNull(repository);
-
-    String type = repository.getType();
-
-    AssertUtil.assertIsNotEmpty(type);
-
-    if (TYPE_NAME.equals(type))
-    {
-      blameViewer = new HgBlameViewer(this, hgContextProvider.get(),
-        repository);
-    }
-    else
-    {
-      throw new IllegalArgumentException("mercurial repository is required");
-    }
-
-    return blameViewer;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public ChangesetViewer getChangesetViewer(Repository repository)
-  {
-    HgChangesetViewer changesetViewer = null;
-
-    AssertUtil.assertIsNotNull(repository);
-
-    String type = repository.getType();
-
-    AssertUtil.assertIsNotEmpty(type);
-
-    if (TYPE_NAME.equals(type))
-    {
-      changesetViewer = new HgChangesetViewer(this, jaxbContext,
-        hgContextProvider.get(), repository);
-    }
-    else
-    {
-      throw new IllegalArgumentException("mercurial repository is required");
-    }
-
-    return changesetViewer;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   *
-   * @throws RepositoryException
-   */
-  @Override
-  public DiffViewer getDiffViewer(Repository repository)
-    throws RepositoryException
-  {
-    DiffViewer diffViewer = null;
-
-    AssertUtil.assertIsNotNull(repository);
-
-    String type = repository.getType();
-
-    AssertUtil.assertIsNotEmpty(type);
-
-    if (TYPE_NAME.equals(type))
-    {
-      diffViewer = new HgDiffViewer(this, hgContextProvider.get(), repository);
-    }
-    else
-    {
-      throw new IllegalArgumentException("mercurial repository is required");
-    }
-
-    return diffViewer;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @return
    */
   public HgContext getHgContext()
@@ -349,20 +251,6 @@ public class HgRepositoryHandler
   public JAXBContext getJaxbContext()
   {
     return jaxbContext;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  @Override
-  public RepositoryBrowser getRepositoryBrowser(Repository repository)
-  {
-    return new HgRepositoryBrowser(this, hgContextProvider.get(), repository);
   }
 
   /**
@@ -479,44 +367,6 @@ public class HgRepositoryHandler
     }
 
     return write;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryDirectory
-   *
-   * @return
-   */
-  HgChangesetViewer getChangesetViewer(File repositoryDirectory)
-  {
-    return getChangesetViewer(repositoryDirectory, hgContextProvider.get());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repositoryDirectory
-   * @param context
-   *
-   * @return
-   */
-  HgChangesetViewer getChangesetViewer(File repositoryDirectory,
-    HgContext context)
-  {
-    AssertUtil.assertIsNotNull(repositoryDirectory);
-    AssertUtil.assertIsNotNull(context);
-
-    if (!repositoryDirectory.isDirectory())
-    {
-      throw new IllegalStateException("directory not found");
-    }
-
-    return new HgChangesetViewer(this, context, repositoryDirectory);
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -810,7 +660,7 @@ public class HgRepositoryHandler
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Provider<HgContext> hgContextProvider;
+  private final Provider<HgContext> hgContextProvider;
 
   /** Field description */
   private JAXBContext jaxbContext;

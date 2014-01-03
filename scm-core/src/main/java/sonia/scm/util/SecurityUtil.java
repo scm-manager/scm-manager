@@ -35,16 +35,11 @@ package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
-import sonia.scm.SCMContext;
 import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
-import sonia.scm.security.SecurityContext;
-import sonia.scm.user.User;
 
 /**
  *
@@ -60,21 +55,6 @@ public final class SecurityUtil
   private SecurityUtil() {}
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param contextProvider
-   * @deprecated use {@link Subject#checkRole(java.lang.String)} with {
-   * @link Role#ADMIN} instead.
-   */
-  @Deprecated
-  public static void assertIsAdmin(
-    Provider<? extends SecurityContext> contextProvider)
-  {
-    assertIsAdmin();
-  }
 
   /**
    * This method is only present for compatibility reasons.
@@ -95,134 +75,5 @@ public final class SecurityUtil
     {
       throw new ScmSecurityException("admin account is required");
     }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   * @deprecated use {@link Subject#checkRole(java.lang.String)} with {
-   * @link Role#ADMIN} instead.
-   */
-  @Deprecated
-  public static void assertIsAdmin(SecurityContext context)
-  {
-    assertIsAdmin();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param contextProvider
-   */
-  public static void assertIsNotAnonymous(
-    Provider<? extends SecurityContext> contextProvider)
-  {
-    if (isAnonymous(contextProvider))
-    {
-      throw new ScmSecurityException("anonymous is not allowed here");
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   */
-  public static void assertIsNotAnonymous(SecurityContext context)
-  {
-    if (isAnonymous(context))
-    {
-      throw new ScmSecurityException("anonymous is not allowed here");
-    }
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param contextProvider
-   *
-   * @return
-   */
-  public static User getCurrentUser(
-    Provider<? extends SecurityContext> contextProvider)
-  {
-    AssertUtil.assertIsNotNull(contextProvider);
-
-    SecurityContext context = contextProvider.get();
-
-    AssertUtil.assertIsNotNull(context);
-
-    User user = context.getUser();
-
-    if (user == null)
-    {
-      throw new ScmSecurityException("user is not authenticated");
-    }
-
-    return user;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param contextProvider
-   *
-   * @return
-   */
-  public static boolean isAdmin(
-    Provider<? extends SecurityContext> contextProvider)
-  {
-    return isAdmin(contextProvider.get());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param contextProvider
-   *
-   * @return
-   */
-  public static boolean isAdmin(SecurityContext contextProvider)
-  {
-    AssertUtil.assertIsNotNull(contextProvider);
-
-    return (contextProvider.getUser() != null)
-      && contextProvider.getUser().isAdmin();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param contextProvider
-   *
-   * @return
-   */
-  public static boolean isAnonymous(
-    Provider<? extends SecurityContext> contextProvider)
-  {
-    return isAnonymous(contextProvider.get());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   *
-   * @return
-   */
-  public static boolean isAnonymous(SecurityContext context)
-  {
-    return SCMContext.USER_ANONYMOUS.equals(context.getUser().getName());
   }
 }

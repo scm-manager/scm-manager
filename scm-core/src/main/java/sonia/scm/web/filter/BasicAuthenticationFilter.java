@@ -52,8 +52,6 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.user.User;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
-import sonia.scm.web.security.AuthenticationHandler;
-import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -90,16 +88,6 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param securityContextProvider
-   * @deprecated use the constructor with out arguments instead.
-   */
-  @Deprecated
-  public BasicAuthenticationFilter(
-    Provider<WebSecurityContext> securityContextProvider) {}
 
   /**
    * Constructs a new basic authenticaton filter
@@ -281,5 +269,5 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ScmConfiguration configuration;
+  private final ScmConfiguration configuration;
 }
