@@ -104,17 +104,17 @@ public class DefaultCacheConfigurationLoader implements CacheConfigurationLoader
   public Iterator<URL> getModuleResources()
   {
     return CacheConfigurations.findModuleResources(
-      EhCacheConfigurationReader.class, moduleResources);
+      DefaultCacheConfigurationLoader.class, moduleResources);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String defaultResource;
+  private final String defaultResource;
 
   /** Field description */
-  private String manualFileResource;
+  private final String manualFileResource;
 
   /** Field description */
-  private String moduleResources;
+  private final String moduleResources;
 }

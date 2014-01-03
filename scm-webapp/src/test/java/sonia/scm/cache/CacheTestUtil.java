@@ -57,17 +57,6 @@ public final class CacheTestUtil
    *
    * @return
    */
-  public static EhCacheManager createDefaultEhCacheManager()
-  {
-    return new EhCacheManager(net.sf.ehcache.CacheManager.create());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public static GuavaCacheManager createDefaultGuavaCacheManager()
   {
     GuavaCacheConfiguration config = new GuavaCacheConfiguration();

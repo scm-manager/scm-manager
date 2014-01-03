@@ -157,5 +157,9 @@
 
     <finalName>scm-plugin-backend</finalName>
   </build>
+  
+  <properties>
+    <ehcache.version>2.6.6</ehcache.version>
+  </properties>
 
 </project>

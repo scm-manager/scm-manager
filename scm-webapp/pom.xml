@@ -151,14 +151,6 @@
       <version>${slf4j.version}</version>
     </dependency>
     
-    <!-- cache -->
-
-    <dependency>
-      <groupId>net.sf.ehcache</groupId>
-      <artifactId>ehcache-core</artifactId>
-      <version>${ehcache.version}</version>
-    </dependency>
-    
     <!-- only for BeanComparator, replace with own implementation -->
     
     <dependency>
