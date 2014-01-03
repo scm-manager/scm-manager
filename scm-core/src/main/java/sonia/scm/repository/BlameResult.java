@@ -54,8 +54,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * Changeset information by line for a given file.
  *
- * TODO for 2.0 implement {@link Iterable}
- *
  * @author Sebastian Sdorra
  * @since 1.8
  */
