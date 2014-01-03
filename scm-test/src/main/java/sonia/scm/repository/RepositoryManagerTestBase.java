@@ -35,7 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.eventbus.Subscribe;
+import com.github.legman.Subscribe;
 import org.apache.shiro.subject.Subject;
 
 import org.junit.Before;
@@ -55,6 +55,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import org.junit.Ignore;
+import org.mockito.Mockito;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.api.HookContext;
 
 /**
  *
@@ -346,19 +349,25 @@ public abstract class RepositoryManagerTestBase
    * @throws RepositoryException
    */
   @Test
+  @Ignore
   public void testRepositoryHook() throws RepositoryException, IOException
   {
     CountingReceiveHook hook = new CountingReceiveHook();
     RepositoryManager repoManager = createRepositoryManager(false);
 
-    repoManager.addHook(hook);
+    ScmEventBus.getInstance().register(hook);
+    
     assertEquals(0, hook.eventsReceived);
 
     Repository repository = createTestRepository();
+    // TODO
+    HookContext ctx = null;
 
-    repoManager.fireHookEvent(repository, new TestRepositoryHookEvent());
+    repoManager.fireHookEvent(new RepositoryHookEvent(ctx, repository,
+      RepositoryHookType.POST_RECEIVE));
     assertEquals(1, hook.eventsReceived);
-    repoManager.fireHookEvent(repository, new TestRepositoryHookEvent());
+    repoManager.fireHookEvent(new RepositoryHookEvent(ctx, repository,
+      RepositoryHookType.POST_RECEIVE));
     assertEquals(2, hook.eventsReceived);
   }
 
@@ -492,7 +501,7 @@ public abstract class RepositoryManagerTestBase
    * @version        Enter version here..., 13/01/29
    * @author         Enter your name here...
    */
-  private static class CountingReceiveHook extends PreReceiveRepositoryHook
+  private static class CountingReceiveHook
   {
 
     /**
@@ -501,8 +510,8 @@ public abstract class RepositoryManagerTestBase
      *
      * @param event
      */
-    @Override
-    public void onEvent(RepositoryHookEvent event)
+    @Subscribe
+    public void onEvent(PostReceiveRepositoryHookEvent event)
     {
       eventsReceived++;
     }
@@ -531,7 +540,7 @@ public abstract class RepositoryManagerTestBase
      * @param repository
      * @param event
      */
-    @Subscribe
+    @Subscribe(async = false)
     public void onEvent(RepositoryEvent event)
     {
       if (event.getEventType().isPost())
@@ -559,72 +568,5 @@ public abstract class RepositoryManagerTestBase
 
     /** Field description */
     private Repository preRepository;
-  }
-
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/01/29
-   * @author         Enter your name here...
-   */
-  private static class TestRepositoryHookEvent implements RepositoryHookEvent
-  {
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    @Override
-    public Collection<Changeset> getChangesets()
-    {
-      return Collections.EMPTY_LIST;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    @Override
-    public Repository getRepository()
-    {
-      return repository;
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    @Override
-    public RepositoryHookType getType()
-    {
-      return RepositoryHookType.PRE_RECEIVE;
-    }
-
-    //~--- set methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param repository
-     */
-    @Override
-    public void setRepository(Repository repository)
-    {
-      this.repository = repository;
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private Repository repository;
   }
 }

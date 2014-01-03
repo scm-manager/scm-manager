@@ -35,9 +35,9 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.Inject;
 
-import sonia.scm.repository.ExtendedRepositoryHookEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
@@ -165,31 +165,31 @@ public final class HookEventFacade
     {
       HookContext context =
         hookContextFactory.createContext(hookContextProvider, repository);
-      ExtendedRepositoryHookEvent event =
-        new ExtendedRepositoryHookEvent(context, repository, type);
+      RepositoryHookEvent event = new RepositoryHookEvent(context, repository,
+                                    type);
 
-      repositoryManager.fireHookEvent(repository, event);
+      repositoryManager.fireHookEvent(event);
       hookContextProvider.handleClientDisconnect();
     }
 
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private HookContextFactory hookContextFactory;
+    private final HookContextFactory hookContextFactory;
 
     /** Field description */
-    private Repository repository;
+    private final Repository repository;
 
     /** Field description */
-    private RepositoryManager repositoryManager;
+    private final RepositoryManager repositoryManager;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private HookContextFactory hookContextFactory;
+  private final HookContextFactory hookContextFactory;
 
   /** Field description */
-  private RepositoryManager repositoryManager;
+  private final RepositoryManager repositoryManager;
 }

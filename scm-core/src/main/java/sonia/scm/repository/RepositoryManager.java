@@ -55,9 +55,17 @@ import javax.servlet.http.HttpServletRequest;
  * @apiviz.uses sonia.scm.repository.RepositoryHandler
  */
 public interface RepositoryManager
-        extends TypeManager<Repository, RepositoryException>,
-                RepositoryHookSupport
+  extends TypeManager<Repository, RepositoryException>
 {
+
+  /**
+   * Fire {@link RepositoryHookEvent} to the event bus.
+   *
+   * @param event hook event
+   *
+   * @since 2.0.0
+   */
+  public void fireHookEvent(RepositoryHookEvent event);
 
   /**
    * Imports an existing {@link Repository}.
@@ -70,7 +78,7 @@ public interface RepositoryManager
    * @throws RepositoryException
    */
   public void importRepository(Repository repository)
-          throws IOException, RepositoryException;
+    throws IOException, RepositoryException;
 
   //~--- get methods ----------------------------------------------------------
 

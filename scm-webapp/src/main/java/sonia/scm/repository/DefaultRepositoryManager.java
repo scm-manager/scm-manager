@@ -39,7 +39,6 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
@@ -106,22 +105,16 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * @param keyGenerator
    * @param repositoryDAO
    * @param handlerSet
-   * @param repositoryListenersProvider
-   * @param repositoryHooksProvider
    * @param preProcessorUtil
    */
   @Inject
   public DefaultRepositoryManager(ScmConfiguration configuration,
     SCMContextProvider contextProvider, KeyGenerator keyGenerator,
-    RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
-    Provider<Set<RepositoryHook>> repositoryHooksProvider,
-    PreProcessorUtil preProcessorUtil)
+    RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet)
   {
     this.configuration = configuration;
     this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
-    this.repositoryHooksProvider = repositoryHooksProvider;
-    this.preProcessorUtil = preProcessorUtil;
 
     //J-
     ThreadFactory factory = new ThreadFactoryBuilder()
@@ -256,54 +249,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
     fireEvent(repository, HandlerEvent.DELETE);
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   * @param name
-   * @param event
-   *
-   * @throws RepositoryNotFoundException
-   */
-  @Override
-  public void fireHookEvent(String type, String name, RepositoryHookEvent event)
-    throws RepositoryNotFoundException
-  {
-    Repository repository = repositoryDAO.get(type, name);
-
-    if (repository == null)
-    {
-      throw new RepositoryNotFoundException();
-    }
-
-    fireHookEvent(repository, event);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   * @param event
-   *
-   * @throws RepositoryNotFoundException
-   */
-  @Override
-  public void fireHookEvent(String id, RepositoryHookEvent event)
-    throws RepositoryNotFoundException
-  {
-    Repository repository = repositoryDAO.get(id);
-
-    if (repository == null)
-    {
-      throw new RepositoryNotFoundException();
-    }
-
-    fireHookEvent(repository, event);
-  }
-
+  
   /**
    * Method description
    *
@@ -329,12 +275,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   @Override
   public void init(SCMContextProvider context)
   {
-    Set<RepositoryHook> hooks = repositoryHooksProvider.get();
-
-    if (Util.isNotEmpty(hooks))
-    {
-      addHooks(hooks);
-    }
   }
 
   /**
@@ -716,53 +656,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * Method description
    *
    *
-   * @param hook
-   * @param event
-   */
-  @Override
-  protected void fireHookEvent(RepositoryHook hook, RepositoryHookEvent event)
-  {
-    if (hook.isAsync())
-    {
-      executorService.execute(new RepositoryHookTask(hook, event));
-    }
-    else
-    {
-      if (logger.isDebugEnabled())
-      {
-        Object[] args = new Object[] { event.getType(),
-          hook.getClass().getName(), event.getRepository().getName() };
-
-        logger.debug("execute {} hook {} for repository {}", args);
-      }
-
-      hook.onEvent(event);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param event
-   *
-   * @return
-   */
-  @Override
-  protected RepositoryHookEvent prepareHookEvent(RepositoryHookEvent event)
-  {
-    if (!(event instanceof ExtendedRepositoryHookEvent))
-    {
-      event = SynchronizedRepositoryHookEvent.wrap(event, preProcessorUtil);
-    }
-
-    return event;
-  }
-
-  /**
-   * Method description
-   *
-   *
    *
    * @param contextProvider
    * @param handler
@@ -922,26 +815,20 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ScmConfiguration configuration;
+  private final ScmConfiguration configuration;
 
   /** Field description */
-  private ExecutorService executorService;
+  private final ExecutorService executorService;
 
   /** Field description */
-  private Map<String, RepositoryHandler> handlerMap;
+  private final Map<String, RepositoryHandler> handlerMap;
 
   /** Field description */
-  private KeyGenerator keyGenerator;
+  private final KeyGenerator keyGenerator;
 
   /** Field description */
-  private PreProcessorUtil preProcessorUtil;
+  private final RepositoryDAO repositoryDAO;
 
   /** Field description */
-  private RepositoryDAO repositoryDAO;
-
-  /** Field description */
-  private Provider<Set<RepositoryHook>> repositoryHooksProvider;
-
-  /** Field description */
-  private Set<Type> types;
+  private final Set<Type> types;
 }

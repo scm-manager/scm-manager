@@ -33,9 +33,9 @@
 
 package sonia.scm.repository;
 
-//~--- JDK imports ------------------------------------------------------------
+//~--- non-JDK imports --------------------------------------------------------
 
-import java.util.Collection;
+import sonia.scm.repository.api.HookContext;
 
 /**
  * Repository hook event represents an change event of a repository.
@@ -43,42 +43,66 @@ import java.util.Collection;
  * @author Sebastian Sdorra
  * @since 1.6
  */
-public interface RepositoryHookEvent
+public class RepositoryHookEvent
 {
 
   /**
-   * Returns a collection of changesets which are added with this repository
-   * event.
+   * Constructs a new {@link ExtendedRepositoryHookEvent}.
    *
-   *
-   * @return a collection of added changesets
+   * @param context context of current hook
+   * @param repository
+   * @param type type of current hook
    */
-  public Collection<Changeset> getChangesets();
+  public RepositoryHookEvent(HookContext context, Repository repository,
+    RepositoryHookType type)
+  {
+    this.context = context;
+    this.repository = repository;
+    this.type = type;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns the repository which was modified.
+   * Returns the context of the current hook.
    *
-   *
-   * @return modified repository
+   * @return context of current hook
    */
-  public Repository getRepository();
+  public HookContext getContext()
+  {
+    return context;
+  }
 
   /**
-   * Returns the type of hook event.
+   * Method description
    *
    *
-   * @return type of hook event
+   * @return
    */
-  public RepositoryHookType getType();
-
-  //~--- set methods ----------------------------------------------------------
+  public Repository getRepository()
+  {
+    return repository;
+  }
 
   /**
-   * Sets the modified repository. This method is only for internal use and
-   * should never be called on a hook.
+   * Method description
    *
    *
-   * @param repository modified repository
+   * @return
    */
-  void setRepository(Repository repository);
+  public RepositoryHookType getType()
+  {
+    return type;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** context of current hook */
+  private final HookContext context;
+
+  /** modified repository */
+  private final Repository repository;
+
+  /** hook type */
+  private final RepositoryHookType type;
 }

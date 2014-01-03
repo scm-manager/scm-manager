@@ -43,14 +43,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEvent;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.util.AssertUtil;
-import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Abstract base class for {@link RepositoryManager} implementations. This class
@@ -69,129 +61,23 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Sends a {@link RepositoryHookEvent} to the specified
-   * {@link RepositoryHook}.
-   *
-   *
-   * @param hook receiving repository hook
-   * @param event hook event
-   */
-  protected abstract void fireHookEvent(RepositoryHook hook,
-    RepositoryHookEvent event);
-
-  /**
-   * Registers a {@link RepositoryHook}
-   *
-   *
-   * @param hook hook to register
-   */
-  @Override
-  public void addHook(RepositoryHook hook)
-  {
-    Collection<RepositoryHookType> types = hook.getTypes();
-
-    if (types != null)
-    {
-      for (RepositoryHookType type : types)
-      {
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("register {} hook {}", type, hook.getClass());
-        }
-
-        synchronized (AbstractRepositoryManager.class)
-        {
-          List<RepositoryHook> hooks = hookMap.get(type);
-
-          if (hooks == null)
-          {
-            hooks = new ArrayList<RepositoryHook>();
-            hookMap.put(type, hooks);
-          }
-
-          hooks.add(hook);
-        }
-      }
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("could not find any repository type");
-    }
-  }
-
-  /**
-   * Register a {@link Collection} of {@link RepositoryHook}s
-   *
-   *
-   * @param hooks hooks to register
-   */
-  @Override
-  public void addHooks(Collection<RepositoryHook> hooks)
-  {
-    for (RepositoryHook hook : hooks)
-    {
-      addHook(hook);
-    }
-  }
-
-
-  /**
    * Sends a {@link RepositoryHookEvent} to each registered
    * {@link RepositoryHook} and sends the {@link RepositoryHookEvent} to
    * the {@link ScmEventBus}.
    *
-   *
-   * @param repository changed repository
    * @param event event to be fired
    */
-  @Override
-  public void fireHookEvent(Repository repository, RepositoryHookEvent event)
+  public void fireHookEvent(RepositoryHookEvent event)
   {
-    AssertUtil.assertIsNotNull(repository);
     AssertUtil.assertIsNotNull(event);
+    AssertUtil.assertIsNotNull(event.getRepository());
     AssertUtil.assertIsNotNull(event.getType());
-    event.setRepository(repository);
 
     // prepare the event
     event = prepareHookEvent(event);
 
     // post wrapped hook to event system
     ScmEventBus.getInstance().post(WrappedRepositoryHookEvent.wrap(event));
-
-    List<RepositoryHook> hooks = hookMap.get(event.getType());
-
-    if (Util.isNotEmpty(hooks))
-    {
-      for (RepositoryHook hook : hooks)
-      {
-        fireHookEvent(hook, event);
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param hook
-   */
-  @Override
-  public void removeHook(RepositoryHook hook)
-  {
-    Collection<RepositoryHookType> types = hook.getTypes();
-
-    if (types != null)
-    {
-      for (RepositoryHookType type : types)
-      {
-        List<RepositoryHook> hooks = hookMap.get(type);
-
-        if (hooks != null)
-        {
-          hooks.remove(hook);
-        }
-      }
-    }
   }
 
   /**
@@ -218,10 +104,4 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   {
     return event;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** repository hooks map */
-  private Map<RepositoryHookType, List<RepositoryHook>> hookMap =
-    Maps.newEnumMap(RepositoryHookType.class);
 }

@@ -33,21 +33,13 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.repository.api.HookContext;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collection;
-
 /**
  * Base class for {@link RepositoryHookEvent} wrappers.
  *
  * @author Sebastian Sdorra
  * @since 1.23
  */
-public class WrappedRepositoryHookEvent
+public class WrappedRepositoryHookEvent extends RepositoryHookEvent
 {
 
   /**
@@ -58,7 +50,8 @@ public class WrappedRepositoryHookEvent
    */
   protected WrappedRepositoryHookEvent(RepositoryHookEvent wrappedEvent)
   {
-    this.wrappedEvent = wrappedEvent;
+    super(wrappedEvent.getContext(), wrappedEvent.getRepository(),
+      wrappedEvent.getType());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -93,69 +86,4 @@ public class WrappedRepositoryHookEvent
 
     return wrappedEvent;
   }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns a collection of changesets which are added with this repository
-   * event.
-   *
-   *
-   * @return a collection of added changesets
-   */
-  public Collection<Changeset> getChangesets()
-  {
-    return wrappedEvent.getChangesets();
-  }
-
-  /**
-   * Returns the context of the current hook. The method returns null if no 
-   * context is available for this hook event. It is possible to check if a hook 
-   * is available with the {@link #isContextAvailable()} method.
-   *
-   *
-   * @return context of current hook or null
-   * 
-   * @since 1.33
-   */
-  public HookContext getContext()
-  {
-    HookContext context = null;
-
-    if (isContextAvailable())
-    {
-      context = ((ExtendedRepositoryHookEvent) wrappedEvent).getContext();
-    }
-
-    return context;
-  }
-
-  /**
-   * Returns the repository which was modified.
-   *
-   *
-   * @return modified repository
-   */
-  public Repository getRepository()
-  {
-    return wrappedEvent.getRepository();
-  }
-
-  /**
-   * Returns true if a {@link HookContext} is available.
-   *
-   *
-   * @return true if a {@link HookContext} is available
-   * 
-   * @since 1.33
-   */
-  public boolean isContextAvailable()
-  {
-    return wrappedEvent instanceof ExtendedRepositoryHookEvent;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** wrapped event */
-  private RepositoryHookEvent wrappedEvent;
 }

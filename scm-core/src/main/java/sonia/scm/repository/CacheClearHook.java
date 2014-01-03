@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.legman.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +52,7 @@ import java.util.Collection;
  * @author Sebastian Sdorra
  * @since 1.6
  */
-public class CacheClearHook implements RepositoryHook
+public class CacheClearHook
 {
 
   /** the logger for CacheClearHook */
@@ -106,8 +107,8 @@ public class CacheClearHook implements RepositoryHook
    *
    * @param event
    */
-  @Override
-  public void onEvent(RepositoryHookEvent event)
+  @Subscribe
+  public void onEvent(PostReceiveRepositoryHookEvent event)
   {
     if (logger.isDebugEnabled())
     {
@@ -121,30 +122,6 @@ public class CacheClearHook implements RepositoryHook
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Collection<RepositoryHookType> getTypes()
-  {
-    return types;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public boolean isAsync()
-  {
-    return true;
-  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -166,12 +143,10 @@ public class CacheClearHook implements RepositoryHook
    * Method description
    *
    *
-   * @param manager
    * @param cache
    */
-  protected void init(RepositoryManager manager, Cache<?, ?> cache)
+  protected void init(Cache<?, ?> cache)
   {
-    manager.addHook(this);
     this.cache = cache;
   }
 
@@ -179,8 +154,4 @@ public class CacheClearHook implements RepositoryHook
 
   /** Field description */
   private Cache<?, ?> cache;
-
-  /** Field description */
-  private Collection<RepositoryHookType> types =
-    Arrays.asList(RepositoryHookType.POST_RECEIVE);
 }

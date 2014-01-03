@@ -73,100 +73,21 @@ public class RepositoryManagerDecorator
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @param hook
    */
   @Override
-  public void addHook(RepositoryHook hook)
+  public void fireHookEvent(RepositoryHookEvent event)
   {
-    decorated.addHook(hook);
+    decorated.fireHookEvent(event);
   }
 
   /**
    * {@inheritDoc}
-   *
-   *
-   * @param hooks
-   */
-  @Override
-  public void addHooks(Collection<RepositoryHook> hooks)
-  {
-    decorated.addHooks(hooks);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param repository
-   * @param event
-   */
-  @Override
-  public void fireHookEvent(Repository repository, RepositoryHookEvent event)
-  {
-    decorated.fireHookEvent(repository, event);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param type
-   * @param name
-   * @param event
-   *
-   * @throws RepositoryNotFoundException
-   */
-  @Override
-  public void fireHookEvent(String type, String name, RepositoryHookEvent event)
-    throws RepositoryNotFoundException
-  {
-    decorated.fireHookEvent(type, name, event);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param id
-   * @param event
-   *
-   * @throws RepositoryNotFoundException
-   */
-  @Override
-  public void fireHookEvent(String id, RepositoryHookEvent event)
-    throws RepositoryNotFoundException
-  {
-    decorated.fireHookEvent(id, event);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param repository
-   *
-   * @throws IOException
-   * @throws RepositoryException
    */
   @Override
   public void importRepository(Repository repository)
     throws IOException, RepositoryException
   {
     decorated.importRepository(repository);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param hook
-   */
-  @Override
-  public void removeHook(RepositoryHook hook)
-  {
-    decorated.removeHook(hook);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -185,7 +106,6 @@ public class RepositoryManagerDecorator
   {
     return decorated.get(type, name);
   }
-
 
   /**
    * {@inheritDoc}
@@ -211,7 +131,6 @@ public class RepositoryManagerDecorator
   {
     return decorated;
   }
-
 
   /**
    * {@inheritDoc}
@@ -269,7 +188,6 @@ public class RepositoryManagerDecorator
   {
     return decorated.getHandler(type);
   }
-
 
   /**
    * {@inheritDoc}

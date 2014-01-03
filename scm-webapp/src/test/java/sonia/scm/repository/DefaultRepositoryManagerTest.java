@@ -35,8 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
-
 import org.junit.Test;
 
 import sonia.scm.Type;
@@ -47,8 +45,6 @@ import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 
 import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -140,10 +136,6 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
       }
     });
 
-    Provider<Set<RepositoryHook>> hookProvider = mock(Provider.class);
-
-    when(hookProvider.get()).thenReturn(new HashSet<RepositoryHook>());
-
     XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(factory);
 
     ScmConfiguration configuration = new ScmConfiguration();
@@ -151,28 +143,7 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
     configuration.setEnableRepositoryArchive(archiveEnabled);
 
     return new DefaultRepositoryManager(configuration, contextProvider,
-      new DefaultKeyGenerator(), repositoryDAO, handlerSet,
-      hookProvider, createEmptyPreProcessorUtil());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private PreProcessorUtil createEmptyPreProcessorUtil()
-  {
-    //J-
-    return new PreProcessorUtil(
-      new HashSet<ChangesetPreProcessor>(),
-      new HashSet<ChangesetPreProcessorFactory>(),
-      new HashSet<FileObjectPreProcessor>(),
-      new HashSet<FileObjectPreProcessorFactory>(),
-      new HashSet<BlameLinePreProcessor>(),
-      new HashSet<BlameLinePreProcessorFactory>()
-    );
-    //J+
+      new DefaultKeyGenerator(), repositoryDAO, handlerSet);
   }
 
   /**
