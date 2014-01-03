@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
 
 import sonia.scm.util.Util;
 
@@ -43,7 +44,6 @@ import sonia.scm.util.Util;
 
 import java.io.Serializable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -104,7 +104,7 @@ public class Modifications implements Serializable
    * @param removed
    */
   public Modifications(List<String> added, List<String> modified,
-                       List<String> removed)
+    List<String> removed)
   {
     this.added = added;
     this.modified = modified;
@@ -137,8 +137,8 @@ public class Modifications implements Serializable
     final Modifications other = (Modifications) obj;
 
     return Objects.equal(added, other.added)
-           && Objects.equal(modified, other.modified)
-           && Objects.equal(removed, other.removed);
+      && Objects.equal(modified, other.modified)
+      && Objects.equal(removed, other.removed);
   }
 
   /**
@@ -183,7 +183,7 @@ public class Modifications implements Serializable
   {
     if (added == null)
     {
-      added = new ArrayList<String>();
+      added = Lists.newArrayList();
     }
 
     return added;
@@ -199,7 +199,7 @@ public class Modifications implements Serializable
   {
     if (modified == null)
     {
-      modified = new ArrayList<String>();
+      modified = Lists.newArrayList();
     }
 
     return modified;
@@ -215,7 +215,7 @@ public class Modifications implements Serializable
   {
     if (removed == null)
     {
-      removed = new ArrayList<String>();
+      removed = Lists.newArrayList();
     }
 
     return removed;
@@ -261,15 +261,15 @@ public class Modifications implements Serializable
   /** list of added files */
   @XmlElement(name = "file")
   @XmlElementWrapper(name = "added")
-  public List<String> added;
+  private List<String> added;
 
   /** list of modified files */
   @XmlElement(name = "file")
   @XmlElementWrapper(name = "modified")
-  public List<String> modified;
+  private List<String> modified;
 
   /** list of removed files */
   @XmlElement(name = "file")
   @XmlElementWrapper(name = "removed")
-  public List<String> removed;
+  private List<String> removed;
 }
