@@ -41,12 +41,10 @@ import sonia.scm.plugin.ExtensionPoint;
  * A pre processor for {@link Changeset} objects. A pre processor is able to 
  * modify the object before it is delivered to the user interface.
  * 
- * TODO for 2.0 extends {@link PreProcessor} interface.
- * 
  * @author Sebastian Sdorra
  */
 @ExtensionPoint
-public interface ChangesetPreProcessor
+public interface ChangesetPreProcessor extends PreProcessor<Changeset>
 {
 
   /**
@@ -55,5 +53,6 @@ public interface ChangesetPreProcessor
    *
    * @param changeset changeset to process
    */
+  @Override
   public void process(Changeset changeset);
 }

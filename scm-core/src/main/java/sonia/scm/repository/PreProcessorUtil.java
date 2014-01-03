@@ -35,8 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Function;
-import com.google.common.collect.Collections2;
 import com.google.inject.Inject;
 
 import org.slf4j.Logger;
@@ -84,50 +82,10 @@ public class PreProcessorUtil
     Set<BlameLinePreProcessor> blameLinePreProcessorSet,
     Set<BlameLinePreProcessorFactory> blameLinePreProcessorFactorySet)
   {
-    this.changesetPreProcessorSet =
-      Collections2.transform(changesetPreProcessorSet,
-        new Function<ChangesetPreProcessor, ChangesetPreProcessorWrapper>()
-    {
-      @Override
-      public ChangesetPreProcessorWrapper apply(ChangesetPreProcessor input)
-      {
-        return new ChangesetPreProcessorWrapper(input);
-      }
-    });
-    this.changesetPreProcessorFactorySet =
-      Collections2.transform(changesetPreProcessorFactorySet,
-        new Function<ChangesetPreProcessorFactory,
-          ChangesetPreProcessorFactoryWrapper>()
-    {
-      @Override
-      public ChangesetPreProcessorFactoryWrapper apply(
-        ChangesetPreProcessorFactory input)
-      {
-        return new ChangesetPreProcessorFactoryWrapper(input);
-      }
-    });
-    this.fileObjectPreProcessorSet =
-      Collections2.transform(fileObjectPreProcessorSet,
-        new Function<FileObjectPreProcessor, FileObjectPreProcessorWrapper>()
-    {
-      @Override
-      public FileObjectPreProcessorWrapper apply(FileObjectPreProcessor input)
-      {
-        return new FileObjectPreProcessorWrapper(input);
-      }
-    });
-    this.fileObjectPreProcessorFactorySet =
-      Collections2.transform(fileObjectPreProcessorFactorySet,
-        new Function<FileObjectPreProcessorFactory,
-          FileObjectPreProcessorFactoryWrapper>()
-    {
-      @Override
-      public FileObjectPreProcessorFactoryWrapper apply(
-        FileObjectPreProcessorFactory input)
-      {
-        return new FileObjectPreProcessorFactoryWrapper(input);
-      }
-    });
+    this.changesetPreProcessorSet = changesetPreProcessorSet;
+    this.changesetPreProcessorFactorySet = changesetPreProcessorFactorySet;
+    this.fileObjectPreProcessorSet = fileObjectPreProcessorSet;
+    this.fileObjectPreProcessorFactorySet = fileObjectPreProcessorFactorySet;
     this.blameLinePreProcessorSet = blameLinePreProcessorSet;
     this.blameLinePreProcessorFactorySet = blameLinePreProcessorFactorySet;
   }
@@ -342,203 +300,6 @@ public class PreProcessorUtil
    * Class description
    *
    *
-   * @version        Enter version here..., 12/06/16
-   * @author         Enter your name here...
-   */
-  private static class ChangesetPreProcessorFactoryWrapper
-    implements PreProcessorFactory<Changeset>
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param preProcessorFactory
-     */
-    public ChangesetPreProcessorFactoryWrapper(
-      ChangesetPreProcessorFactory preProcessorFactory)
-    {
-      this.preProcessorFactory = preProcessorFactory;
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param repository
-     *
-     * @return
-     */
-    @Override
-    public PreProcessor<Changeset> createPreProcessor(Repository repository)
-    {
-      PreProcessor<Changeset> preProcessor = null;
-      ChangesetPreProcessor changesetPreProcessor =
-        preProcessorFactory.createPreProcessor(repository);
-
-      if (changesetPreProcessor != null)
-      {
-        preProcessor = new ChangesetPreProcessorWrapper(changesetPreProcessor);
-      }
-
-      return preProcessor;
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private ChangesetPreProcessorFactory preProcessorFactory;
-  }
-
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 12/06/16
-   * @author         Enter your name here...
-   */
-  private static class ChangesetPreProcessorWrapper
-    implements PreProcessor<Changeset>
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param preProcessor
-     */
-    public ChangesetPreProcessorWrapper(ChangesetPreProcessor preProcessor)
-    {
-      this.preProcessor = preProcessor;
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param item
-     */
-    @Override
-    public void process(Changeset item)
-    {
-      preProcessor.process(item);
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private ChangesetPreProcessor preProcessor;
-  }
-
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 12/06/16
-   * @author         Enter your name here...
-   */
-  private static class FileObjectPreProcessorFactoryWrapper
-    implements PreProcessorFactory<FileObject>
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param preProcessorFactory
-     */
-    public FileObjectPreProcessorFactoryWrapper(
-      FileObjectPreProcessorFactory preProcessorFactory)
-    {
-      this.preProcessorFactory = preProcessorFactory;
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param repository
-     *
-     * @return
-     */
-    @Override
-    public PreProcessor<FileObject> createPreProcessor(Repository repository)
-    {
-      PreProcessor<FileObject> preProcessor = null;
-      FileObjectPreProcessor fileObjectPreProcessor =
-        preProcessorFactory.createPreProcessor(repository);
-
-      if (fileObjectPreProcessor != null)
-      {
-        preProcessor =
-          new FileObjectPreProcessorWrapper(fileObjectPreProcessor);
-      }
-
-      return preProcessor;
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private FileObjectPreProcessorFactory preProcessorFactory;
-  }
-
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 12/06/16
-   * @author         Enter your name here...
-   */
-  private static class FileObjectPreProcessorWrapper
-    implements PreProcessor<FileObject>
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param preProcessor
-     */
-    public FileObjectPreProcessorWrapper(FileObjectPreProcessor preProcessor)
-    {
-      this.preProcessor = preProcessor;
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param item
-     */
-    @Override
-    public void process(FileObject item)
-    {
-      preProcessor.process(item);
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private FileObjectPreProcessor preProcessor;
-  }
-
-
-  /**
-   * Class description
-   *
-   *
    * @param <T>
    *
    * @version        Enter version here..., 12/06/16
@@ -669,33 +430,33 @@ public class PreProcessorUtil
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private Collection<? extends PreProcessorFactory<T>> preProcessorFactorySet;
+    private final Collection<? extends PreProcessorFactory<T>> preProcessorFactorySet;
 
     /** Field description */
-    private Collection<? extends PreProcessor<T>> preProcessorSet;
+    private final Collection<? extends PreProcessor<T>> preProcessorSet;
 
     /** Field description */
-    private Repository repository;
+    private final Repository repository;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Collection<BlameLinePreProcessorFactory> blameLinePreProcessorFactorySet;
+  private final Collection<BlameLinePreProcessorFactory> blameLinePreProcessorFactorySet;
 
   /** Field description */
-  private Collection<BlameLinePreProcessor> blameLinePreProcessorSet;
+  private final Collection<BlameLinePreProcessor> blameLinePreProcessorSet;
 
   /** Field description */
-  private Collection<ChangesetPreProcessorFactoryWrapper> changesetPreProcessorFactorySet;
+  private final Collection<ChangesetPreProcessorFactory> changesetPreProcessorFactorySet;
 
   /** Field description */
-  private Collection<ChangesetPreProcessorWrapper> changesetPreProcessorSet;
+  private final Collection<ChangesetPreProcessor> changesetPreProcessorSet;
 
   /** Field description */
-  private Collection<FileObjectPreProcessorFactoryWrapper> fileObjectPreProcessorFactorySet;
+  private final Collection<FileObjectPreProcessorFactory> fileObjectPreProcessorFactorySet;
 
   /** Field description */
-  private Collection<FileObjectPreProcessorWrapper> fileObjectPreProcessorSet;
+  private final Collection<FileObjectPreProcessor> fileObjectPreProcessorSet;
 }

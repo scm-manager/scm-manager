@@ -47,7 +47,7 @@ import sonia.scm.plugin.ExtensionPoint;
  * @since 1.10
  */
 @ExtensionPoint
-public interface FileObjectPreProcessor
+public interface FileObjectPreProcessor extends PreProcessor<FileObject>
 {
 
   /**
@@ -56,5 +56,6 @@ public interface FileObjectPreProcessor
    *
    * @param fileObject file object to process
    */
+  @Override
   public void process(FileObject fileObject);
 }

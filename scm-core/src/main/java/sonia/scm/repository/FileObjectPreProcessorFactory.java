@@ -40,14 +40,13 @@ import sonia.scm.plugin.ExtensionPoint;
 /**
  * The FileObjectPreProcessorFactory create {@link FileObjectPreProcessor}
  * objects for a specific repository.
- * 
- * TODO for 2.0 extends {@link PreProcessorFactory} interface.
  *
  * @author Sebastian Sdorra
  * @since 1.10
  */
 @ExtensionPoint
 public interface FileObjectPreProcessorFactory
+  extends PreProcessorFactory<FileObject>
 {
 
   /**
@@ -58,5 +57,6 @@ public interface FileObjectPreProcessorFactory
    *
    * @return {@link FileObjectPreProcessor} for the given repository
    */
+  @Override
   public FileObjectPreProcessor createPreProcessor(Repository repository);
 }
