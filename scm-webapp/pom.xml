@@ -131,6 +131,20 @@
       <version>${guice.version}</version>
     </dependency>
     
+    <!-- event bus -->
+    
+    <dependency>
+      <groupId>com.github.legman.support</groupId>
+      <artifactId>guice</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.github.legman.support</groupId>
+      <artifactId>shiro</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+    
     <!-- logging -->
 
     <dependency>

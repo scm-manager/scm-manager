@@ -75,6 +75,14 @@
       <version>${jersey.version}</version>
     </dependency>
     
+    <!-- event bus -->
+    
+    <dependency>
+      <groupId>com.github.legman</groupId>
+      <artifactId>core</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+    
     <!-- util -->
     
     <dependency>

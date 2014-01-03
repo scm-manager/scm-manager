@@ -31,34 +31,41 @@
 
 
 
-package com.google.common.eventbus;
+package sonia.scm.event;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Throwables;
+import com.github.legman.EventBus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.event.EventBusException;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.lang.reflect.InvocationTargetException;
-
 /**
- * {@link EventBus} which is able to throw {@link EventBusException}.
  *
  * @author Sebastian Sdorra
  */
-public class ThrowingEventBus extends EventBus
+public class LegmanScmEventBus extends ScmEventBus
 {
 
+  /** Field description */
+  private static final String NAME = "ScmEventBus";
+
   /**
-   * the logger for ThrowingEventBus
+   * the logger for LegmanScmEventBus
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(ThrowingEventBus.class);
+    LoggerFactory.getLogger(LegmanScmEventBus.class);
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   */
+  public LegmanScmEventBus()
+  {
+    eventBus = new EventBus(NAME);
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -67,24 +74,51 @@ public class ThrowingEventBus extends EventBus
    *
    *
    * @param event
-   * @param wrapper
    */
   @Override
-  void dispatch(Object event, EventHandler wrapper)
+  public void post(Object event)
   {
+    logger.debug("post {} to event bus", event);
+    eventBus.post(event);
+  }
+
+  /**
+   * Registers a object to the eventbus.
+   *
+   * @param object object to register
+   *
+   * @see {@link #register(java.lang.Object)}
+   */
+  @Override
+  public void register(Object object)
+  {
+    logger.debug("register {} to event bus", object);
+    eventBus.register(object);
+  }
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @param object
+   */
+  @Override
+  public void unregister(Object object)
+  {
+    logger.debug("unregister {} from event bus", object);
+
     try
     {
-      wrapper.handleEvent(event);
+      eventBus.unregister(object);
     }
-    catch (InvocationTargetException ex)
+    catch (IllegalArgumentException ex)
     {
-      Throwable cause = ex.getCause();
-
-      Throwables.propagateIfPossible(cause);
-      logger.trace("could not propagate exception, throw as EventBusException");
-
-      throw new EventBusException(
-        "could not handle event ".concat(event.toString()), cause);
+      logger.trace("object {} was not registered", object);
     }
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** event bus */
+  private final EventBus eventBus;
 }

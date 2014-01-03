@@ -35,8 +35,8 @@ package sonia.scm.event;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.eventbus.EventBus;
-import com.google.common.eventbus.Subscribe;
+import com.github.legman.EventBus;
+import com.github.legman.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,9 +120,8 @@ public abstract class ScmEventBus
    * subscriber for the event bus.
    *
    * @param subscriber subscriber object
-   * @param async should the subscriber receive the event in async manner
    */
-  public abstract void register(Object subscriber, boolean async);
+  public abstract void register(Object subscriber);
 
   /**
    * Unregister the given subscriber object from the event bus.
@@ -130,24 +129,4 @@ public abstract class ScmEventBus
    * @param subscriber subscriber object to unregister
    */
   public abstract void unregister(Object subscriber);
-
-  /**
-   * Calls the {@link #register(Object, boolean)} method, after reading the
-   * value of {@link Subscriber#async()}. If the {@link Subscriber} annotation
-   * is not present than the object is registered as async.
-   *
-   * @param subscriber subscriber object
-   */
-  public void register(Object subscriber)
-  {
-    boolean async = true;
-    Subscriber a = subscriber.getClass().getAnnotation(Subscriber.class);
-
-    if (a != null)
-    {
-      async = a.async();
-    }
-
-    register(subscriber, async);
-  }
 }

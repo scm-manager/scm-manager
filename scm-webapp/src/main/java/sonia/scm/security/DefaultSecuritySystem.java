@@ -30,14 +30,16 @@
  */
 
 
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.legman.Subscribe;
+
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -48,7 +50,6 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.HandlerEvent;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.event.Subscriber;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
@@ -79,7 +80,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @since 1.31
  */
 @Singleton
-@Subscriber(async = true)
 public class DefaultSecuritySystem implements SecuritySystem
 {
 
@@ -445,7 +445,7 @@ public class DefaultSecuritySystem implements SecuritySystem
 
     return classLoader;
   }
-  
+
   //~--- inner classes --------------------------------------------------------
 
   /**

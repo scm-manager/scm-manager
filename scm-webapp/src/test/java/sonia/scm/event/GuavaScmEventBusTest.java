@@ -35,7 +35,7 @@ package sonia.scm.event;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.eventbus.Subscribe;
+import com.github.legman.Subscribe;
 
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.subject.Subject;
@@ -90,7 +90,7 @@ public class GuavaScmEventBusTest extends AbstractTestBase
 
     String currentThread = Thread.currentThread().getName();
 
-    GuavaScmEventBus eventBus = new GuavaScmEventBus();
+    LegmanScmEventBus eventBus = new LegmanScmEventBus();
 
     eventBus.register(new Object()
     {
@@ -99,7 +99,7 @@ public class GuavaScmEventBusTest extends AbstractTestBase
       {
         thread = Thread.currentThread().getName();
       }
-    }, true);
+    });
 
     eventBus.post(new UserEvent(new User("test"), HandlerEvent.CREATE));
 
@@ -117,16 +117,16 @@ public class GuavaScmEventBusTest extends AbstractTestBase
 
     String currentThread = Thread.currentThread().getName();
 
-    GuavaScmEventBus eventBus = new GuavaScmEventBus();
+    LegmanScmEventBus eventBus = new LegmanScmEventBus();
 
     eventBus.register(new Object()
     {
-      @Subscribe
+      @Subscribe(async = false)
       public void handleEvent(Object event)
       {
         thread = Thread.currentThread().getName();
       }
-    }, false);
+    });
 
     eventBus.post(new Object());
 
@@ -134,24 +134,24 @@ public class GuavaScmEventBusTest extends AbstractTestBase
   }
 
   /**
-   * Method description
+   * TODO replace RuntimeException with EventBusException in legman 1.2.0.
    *
    */
-  @Test(expected = EventBusException.class)
+  @Test(expected = RuntimeException.class)
   public void testSyncPostWithCheckedException()
   {
-    GuavaScmEventBus eventBus = new GuavaScmEventBus();
+    LegmanScmEventBus eventBus = new LegmanScmEventBus();
 
     eventBus.register(new Object()
     {
 
-      @Subscribe
+      @Subscribe(async = false)
       public void handleEvent(Object event) throws IOException
       {
         throw new IOException("could not handle event");
       }
 
-    }, false);
+    });
 
     eventBus.post(new Object());
   }
@@ -163,18 +163,18 @@ public class GuavaScmEventBusTest extends AbstractTestBase
   @Test(expected = RuntimeException.class)
   public void testSyncPostWithRuntimeException()
   {
-    GuavaScmEventBus eventBus = new GuavaScmEventBus();
+    LegmanScmEventBus eventBus = new LegmanScmEventBus();
 
     eventBus.register(new Object()
     {
 
-      @Subscribe
+      @Subscribe(async = false)
       public void handleEvent(Object event)
       {
         throw new RuntimeException("could not handle event");
       }
 
-    }, false);
+    });
 
     eventBus.post(new Object());
   }
