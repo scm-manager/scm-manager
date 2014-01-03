@@ -60,64 +60,13 @@ public abstract class AbstractAuthenticationManager
 {
 
   /**
-   * Register a {@link AuthenticationListener}.
    *
+   * Send a {@link AuthenticationEvent} to the {@link ScmEventBus}.
    *
-   * @param listener {@link AuthenticationListener} to register
-   */
-  @Override
-  public void addListener(AuthenticationListener listener)
-  {
-    this.listeners.add(listener);
-  }
-
-  /**
-   * Register a {@link java.util.Collection} of {@link AuthenticationListener}s.
-   *
-   *
-   * @param listeners listeners to register
-   */
-  @Override
-  public void addListeners(Collection<AuthenticationListener> listeners)
-  {
-    this.listeners.addAll(listeners);
-  }
-
-  /**
-   * Remove specified {@link AuthenticationListener}.
-   *
-   *
-   * @param listener to remove
-   */
-  @Override
-  public void removeListener(AuthenticationListener listener)
-  {
-    this.listeners.remove(listener);
-  }
-
-  /**
-   *
-   * Calls the {@link AuthenticationListener#onAuthentication(HttpServletRequest,HttpServletResponse,User)}
-   * method of all registered listeners and send a {@link AuthenticationEvent}
-   * to the {@link ScmEventBus}.
-   *
-   * @param request current http request
-   * @param response current http response
    * @param user successful authenticated user
    */
-  protected void fireAuthenticationEvent(HttpServletRequest request,
-    HttpServletResponse response, User user)
+  protected void fireAuthenticationEvent(User user)
   {
-    for (AuthenticationListener listener : listeners)
-    {
-      listener.onAuthentication(request, response, user);
-    }
-
     ScmEventBus.getInstance().post(new AuthenticationEvent(user));
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** authentication listeners */
-  private Set<AuthenticationListener> listeners = Sets.newHashSet();
 }

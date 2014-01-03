@@ -38,9 +38,9 @@ package sonia.scm.repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.ConfigChangedListener;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.store.Store;
 import sonia.scm.store.StoreFactory;
 
@@ -60,7 +60,7 @@ import java.util.Set;
  * @param <C>
  */
 public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig>
-        implements RepositoryHandler
+  implements RepositoryHandler
 {
 
   /** the logger for AbstractRepositoryHandler */
@@ -91,30 +91,6 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   protected abstract Class<C> getConfigClass();
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param listener
-   */
-  @Override
-  public void addListener(ConfigChangedListener listener)
-  {
-    listenerSet.add(listener);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param listeners
-   */
-  @Override
-  public void addListeners(Collection<ConfigChangedListener> listeners)
-  {
-    listenerSet.addAll(listeners);
-  }
 
   /**
    * Method description
@@ -159,18 +135,6 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   /**
    * Method description
    *
-   *
-   * @param listener
-   */
-  @Override
-  public void removeListener(ConfigChangedListener listener)
-  {
-    listenerSet.remove(listener);
-  }
-
-  /**
-   * Method description
-   *
    */
   public void storeConfig()
   {
@@ -198,7 +162,6 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
     return config;
   }
 
-
   /**
    * Method description
    *
@@ -211,7 +174,7 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
   public ImportHandler getImportHandler() throws NotSupportedFeatuerException
   {
     throw new NotSupportedFeatuerException(
-        "import handler is not supported by this repository handler");
+      "import handler is not supported by this repository handler");
   }
 
   /**
@@ -248,10 +211,8 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
    */
   private void fireConfigChanged()
   {
-    for (ConfigChangedListener listener : listenerSet)
-    {
-      listener.configChanged(config);
-    }
+    ScmEventBus.getInstance().post(
+      new RepositoryHandlerConfigChangedEvent<C>(config));
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -264,8 +225,4 @@ public abstract class AbstractRepositoryHandler<C extends SimpleRepositoryConfig
 
   /** Field description */
   protected Store<C> store;
-
-  /** Field description */
-  private Set<ConfigChangedListener> listenerSet =
-    new HashSet<ConfigChangedListener>();
 }

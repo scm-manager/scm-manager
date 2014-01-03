@@ -140,10 +140,6 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
       }
     });
 
-    Provider<Set<RepositoryListener>> listenerProvider = mock(Provider.class);
-
-    when(listenerProvider.get()).thenReturn(new HashSet<RepositoryListener>());
-
     Provider<Set<RepositoryHook>> hookProvider = mock(Provider.class);
 
     when(hookProvider.get()).thenReturn(new HashSet<RepositoryHook>());
@@ -155,7 +151,7 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
     configuration.setEnableRepositoryArchive(archiveEnabled);
 
     return new DefaultRepositoryManager(configuration, contextProvider,
-      new DefaultKeyGenerator(), repositoryDAO, handlerSet, listenerProvider,
+      new DefaultKeyGenerator(), repositoryDAO, handlerSet,
       hookProvider, createEmptyPreProcessorUtil());
   }
 

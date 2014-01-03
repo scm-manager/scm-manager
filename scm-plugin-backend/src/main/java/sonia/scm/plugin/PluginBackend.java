@@ -33,10 +33,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.ListenerSupport;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -49,8 +45,28 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
-public interface PluginBackend extends ListenerSupport<PluginBackendListener>
+public interface PluginBackend
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param listener
+   * 
+   * @since 2.0.0
+   */
+  public void addListener(PluginBackendListener listener);
+
+  /**
+   * Method description
+   *
+   *
+   * @param listeners
+   * 
+   * @since 2.0.0
+   */
+  public void addListeners(Collection<PluginBackendListener> listeners);
 
   /**
    * Method description
@@ -85,6 +101,16 @@ public interface PluginBackend extends ListenerSupport<PluginBackendListener>
    * @param scannedFiles
    */
   public void addScannedFiles(File... scannedFiles);
+
+  /**
+   * Method description
+   *
+   *
+   * @param listener
+   * 
+   * @since 2.0.0
+   */
+  public void removeListener(PluginBackendListener listener);
 
   //~--- get methods ----------------------------------------------------------
 

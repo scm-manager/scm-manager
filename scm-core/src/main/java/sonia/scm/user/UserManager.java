@@ -35,7 +35,6 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.ListenerSupport;
 import sonia.scm.Manager;
 import sonia.scm.search.Searchable;
 
@@ -46,8 +45,7 @@ import sonia.scm.search.Searchable;
  * @author Sebastian Sdorra
  */
 public interface UserManager
-        extends Manager<User, UserException>, Searchable<User>,
-                ListenerSupport<UserListener>
+        extends Manager<User, UserException>, Searchable<User>
 {
 
   /**

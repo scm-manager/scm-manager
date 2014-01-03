@@ -36,6 +36,7 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Sets;
+import com.google.common.eventbus.Subscribe;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -44,7 +45,6 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.ConfigChangedListener;
 import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
@@ -80,6 +80,7 @@ import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import sonia.scm.config.ScmConfigurationChangedEvent;
 
 /**
  *
@@ -87,7 +88,7 @@ import javax.xml.bind.Unmarshaller;
  */
 @Singleton
 public class DefaultPluginManager
-  implements PluginManager, ConfigChangedListener<ScmConfiguration>
+  implements PluginManager
 {
 
   /** Field description */
@@ -114,7 +115,6 @@ public class DefaultPluginManager
    *
    *
    * @param context
-   * @param securityContextProvicer
    * @param configuration
    * @param pluginLoader
    * @param cacheManager
@@ -151,8 +151,6 @@ public class DefaultPluginManager
     {
       throw new ConfigurationException(ex);
     }
-
-    this.configuration.addListener(this);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -178,8 +176,8 @@ public class DefaultPluginManager
    *
    * @param config
    */
-  @Override
-  public void configChanged(ScmConfiguration config)
+  @Subscribe
+  public void configChanged(ScmConfigurationChangedEvent config)
   {
     clearCache();
   }

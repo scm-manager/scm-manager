@@ -70,30 +70,6 @@ public class UserManagerDecorator extends ManagerDecorator<User, UserException>
    * {@inheritDoc}
    *
    *
-   * @param listener
-   */
-  @Override
-  public void addListener(UserListener listener)
-  {
-    decorated.addListener(listener);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param listeners
-   */
-  @Override
-  public void addListeners(Collection<UserListener> listeners)
-  {
-    decorated.addListeners(listeners);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
    * @param username
    *
    * @return
@@ -102,18 +78,6 @@ public class UserManagerDecorator extends ManagerDecorator<User, UserException>
   public boolean contains(String username)
   {
     return decorated.contains(username);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param listener
-   */
-  @Override
-  public void removeListener(UserListener listener)
-  {
-    decorated.removeListener(listener);
   }
 
   /**
@@ -160,5 +124,5 @@ public class UserManagerDecorator extends ManagerDecorator<User, UserException>
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private UserManager decorated;
+  private final UserManager decorated;
 }

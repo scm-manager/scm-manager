@@ -36,7 +36,6 @@ package sonia.scm.web.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import sonia.scm.Initable;
-import sonia.scm.ListenerSupport;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -50,7 +49,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 public interface AuthenticationManager
-        extends Initable, Closeable, ListenerSupport<AuthenticationListener>
+        extends Initable, Closeable
 {
 
   /**

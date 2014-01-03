@@ -101,17 +101,12 @@ public class DefaultUserManager extends AbstractUserManager
   /**
    * Constructs ...
    *
-   *
-   * @param scurityContextProvider
    * @param userDAO
-   * @param userListenerProvider
    */
   @Inject
-  public DefaultUserManager(UserDAO userDAO,
-    Provider<Set<UserListener>> userListenerProvider)
+  public DefaultUserManager(UserDAO userDAO)
   {
     this.userDAO = userDAO;
-    this.userListenerProvider = userListenerProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -238,13 +233,6 @@ public class DefaultUserManager extends AbstractUserManager
     if (!userDAO.contains("scmadmin") &&!userDAO.contains("anonymous"))
     {
       createDefaultAccounts();
-    }
-
-    Set<UserListener> listeners = userListenerProvider.get();
-
-    if (Util.isNotEmpty(listeners))
-    {
-      addListeners(listeners);
     }
   }
 
@@ -546,8 +534,5 @@ public class DefaultUserManager extends AbstractUserManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private UserDAO userDAO;
-
-  /** Field description */
-  private Provider<Set<UserListener>> userListenerProvider;
+  private final UserDAO userDAO;
 }

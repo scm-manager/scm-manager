@@ -35,9 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.ConfigChangedListener;
 import sonia.scm.Handler;
-import sonia.scm.ListenerSupport;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.plugin.ExtensionPoint;
 
@@ -49,8 +47,7 @@ import sonia.scm.plugin.ExtensionPoint;
  */
 @ExtensionPoint
 public interface RepositoryHandler
-        extends Handler<Repository, RepositoryException>,
-                ListenerSupport<ConfigChangedListener>
+        extends Handler<Repository, RepositoryException>
 {
 
   /**

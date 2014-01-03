@@ -41,8 +41,6 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.ConfigChangedListener;
-import sonia.scm.ListenerSupport;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.xml.XmlSetStringAdapter;
 
@@ -72,7 +70,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement(name = "scm-config")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ScmConfiguration
-  implements ListenerSupport<ConfigChangedListener<ScmConfiguration>>
 {
 
   /** Default JavaScript date format */
@@ -97,33 +94,6 @@ public class ScmConfiguration
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Register a {@link sonia.scm.ConfigChangedListener}
-   *
-   *
-   *
-   * @param listener
-   */
-  @Override
-  public void addListener(ConfigChangedListener<ScmConfiguration> listener)
-  {
-    listeners.add(listener);
-  }
-
-  /**
-   * Register a {@link java.util.Collection} of {@link sonia.scm.ConfigChangedListener}
-   *
-   *
-   *
-   * @param listeners
-   */
-  @Override
-  public void addListeners(
-    Collection<ConfigChangedListener<ScmConfiguration>> listeners)
-  {
-    listeners.addAll(listeners);
-  }
-
-  /**
    * Calls the {@link sonia.scm.ConfigChangedListener#configChanged(Object)}
    * method of all registered listeners.
    */
@@ -132,16 +102,6 @@ public class ScmConfiguration
     if (logger.isDebugEnabled())
     {
       logger.debug("fire config changed event");
-    }
-
-    for (ConfigChangedListener listener : listeners)
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("call listener {}", listener.getClass().getName());
-      }
-
-      listener.configChanged(this);
     }
 
     // fire event to event bus
@@ -174,18 +134,6 @@ public class ScmConfiguration
     this.enableRepositoryArchive = other.enableRepositoryArchive;
     this.loginAttemptLimit = other.loginAttemptLimit;
     this.loginAttemptLimitTimeout = other.loginAttemptLimitTimeout;
-  }
-
-  /**
-   * Unregister a listener object.
-   *
-   *
-   * @param listener
-   */
-  @Override
-  public void removeListener(ConfigChangedListener listener)
-  {
-    listeners.remove(listener);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -658,11 +606,6 @@ public class ScmConfiguration
 
   /** Field description */
   private String proxyUser;
-
-  /** Configuration change listeners */
-  @XmlTransient
-  private Set<ConfigChangedListener> listeners =
-    new HashSet<ConfigChangedListener>();
 
   /** Field description */
   private boolean enableRepositoryArchive = false;

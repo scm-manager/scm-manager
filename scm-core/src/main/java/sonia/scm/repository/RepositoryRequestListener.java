@@ -47,6 +47,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Listener before a repository request is executed. Repository request are
  * request to a repository from a client like git, mercurial or svn.
+ * 
+ * TODO replace with event bus implementation.
  *
  * @author Sebastian Sdorra
  * @since 1.10

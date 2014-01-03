@@ -40,10 +40,6 @@ import sonia.scm.event.ScmEventBus;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Abstract base class for {@link GroupManager} implementations. This class
  * implements the listener methods of the {@link GroupManager} interface.
@@ -54,61 +50,13 @@ public abstract class AbstractGroupManager implements GroupManager
 {
 
   /**
-   * Register a {@link GroupListener}.
-   *
-   *
-   * @param listener {@link GroupListener} to register
-   */
-  @Override
-  public void addListener(GroupListener listener)
-  {
-    listenerSet.add(listener);
-  }
-
-  /**
-   * Register a {@link java.util.Collection} of {@link GroupListener}s.
-   *
-   *
-   * @param listeners listeners to register
-   */
-  @Override
-  public void addListeners(Collection<GroupListener> listeners)
-  {
-    listenerSet.addAll(listeners);
-  }
-
-  /**
-   * Remove specified {@link GroupListener}.
-   *
-   *
-   * @param listener to remove
-   */
-  @Override
-  public void removeListener(GroupListener listener)
-  {
-    listenerSet.remove(listener);
-  }
-
-  /**
-   * Calls the {@link GroupListener#onEvent(Group,sonia.scm.HandlerEvent)}
-   * method of all registered listeners and send a {@link GroupEvent} to
-   * the {@link ScmEventBus}.
+   * Send a {@link GroupEvent} to the {@link ScmEventBus}.
    *
    * @param group group that has changed
    * @param event type of change event
    */
   protected void fireEvent(Group group, HandlerEvent event)
   {
-    for (GroupListener listener : listenerSet)
-    {
-      listener.onEvent(group, event);
-    }
-
     ScmEventBus.getInstance().post(new GroupEvent(group, event));
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** registered listeners */
-  private Set<GroupListener> listenerSet = new HashSet<GroupListener>();
 }

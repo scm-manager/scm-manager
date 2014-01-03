@@ -44,7 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.orientdb.OrientDBUtil;
-import sonia.scm.store.AbstractListenableStore;
+import sonia.scm.store.AbstractStore;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -61,7 +61,7 @@ import javax.xml.bind.JAXBException;
  *
  * @param <T>
  */
-public class OrientDBStore<T> extends AbstractListenableStore<T>
+public class OrientDBStore<T> extends AbstractStore<T>
 {
 
   /** Field description */
@@ -178,7 +178,6 @@ public class OrientDBStore<T> extends AbstractListenableStore<T>
       context.createMarshaller().marshal(t, buffer);
       doc.field(FIELD_DATA, buffer.toString());
       doc.save();
-      fireEvent(t);
     }
     catch (JAXBException ex)
     {

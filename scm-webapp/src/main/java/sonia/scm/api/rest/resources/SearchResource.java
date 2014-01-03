@@ -36,22 +36,20 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
-import sonia.scm.HandlerEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.Group;
-import sonia.scm.group.GroupListener;
 import sonia.scm.group.GroupManager;
 import sonia.scm.search.SearchHandler;
 import sonia.scm.search.SearchResult;
 import sonia.scm.search.SearchResults;
 import sonia.scm.user.User;
-import sonia.scm.user.UserListener;
 import sonia.scm.user.UserManager;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -61,6 +59,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import sonia.scm.group.GroupEvent;
+import sonia.scm.user.UserEvent;
 
 /**
  *
@@ -69,7 +69,7 @@ import javax.ws.rs.core.MediaType;
 @Singleton
 @Path("search")
 @ExternallyManagedLifecycle
-public class SearchResource implements UserListener, GroupListener
+public class SearchResource
 {
 
   /** Field description */
@@ -84,7 +84,6 @@ public class SearchResource implements UserListener, GroupListener
    * Constructs ...
    *
    *
-   * @param securityContextProvider
    * @param userManager
    * @param groupManager
    * @param cacheManager
@@ -95,16 +94,12 @@ public class SearchResource implements UserListener, GroupListener
   {
 
     // create user searchhandler
-    userManager.addListener(this);
-
     Cache<String, SearchResults> userCache =
       cacheManager.getCache(String.class, SearchResults.class, CACHE_USER);
 
     this.userSearchHandler = new SearchHandler<User>(userCache, userManager);
 
     // create group searchhandler
-    groupManager.addListener(this);
-
     Cache<String, SearchResults> groupCache =
       cacheManager.getCache(String.class, SearchResults.class, CACHE_GROUP);
 
@@ -118,26 +113,28 @@ public class SearchResource implements UserListener, GroupListener
    * Method description
    *
    *
-   * @param user
    * @param event
    */
-  @Override
-  public void onEvent(User user, HandlerEvent event)
+  @Subscribe
+  public void onEvent(UserEvent event)
   {
-    userSearchHandler.clearCache();
+    if ( event.getEventType().isPost() ){
+      userSearchHandler.clearCache();
+    }
   }
 
   /**
    * Method description
    *
    *
-   * @param group
    * @param event
    */
-  @Override
-  public void onEvent(Group group, HandlerEvent event)
+  @Subscribe
+  public void onEvent(GroupEvent event)
   {
-    groupSearchHandler.clearCache();
+    if ( event.getEventType().isPost() ){
+      groupSearchHandler.clearCache();
+    }
   }
 
   /**
@@ -211,8 +208,8 @@ public class SearchResource implements UserListener, GroupListener
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SearchHandler<Group> groupSearchHandler;
+  private final SearchHandler<Group> groupSearchHandler;
 
   /** Field description */
-  private SearchHandler<User> userSearchHandler;
+  private final SearchHandler<User> userSearchHandler;
 }

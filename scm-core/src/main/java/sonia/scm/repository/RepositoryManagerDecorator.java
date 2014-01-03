@@ -99,30 +99,6 @@ public class RepositoryManagerDecorator
    * {@inheritDoc}
    *
    *
-   * @param listener
-   */
-  @Override
-  public void addListener(RepositoryListener listener)
-  {
-    decorated.addListener(listener);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param listeners
-   */
-  @Override
-  public void addListeners(Collection<RepositoryListener> listeners)
-  {
-    decorated.addListeners(listeners);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
    * @param repository
    * @param event
    */
@@ -191,18 +167,6 @@ public class RepositoryManagerDecorator
   public void removeHook(RepositoryHook hook)
   {
     decorated.removeHook(hook);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param listener
-   */
-  @Override
-  public void removeListener(RepositoryListener listener)
-  {
-    decorated.removeListener(listener);
   }
 
   //~--- get methods ----------------------------------------------------------

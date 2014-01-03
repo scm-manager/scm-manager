@@ -91,14 +91,11 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    * @param authenticationHandlerSet
    * @param encryptionHandler
    * @param cacheManager
-   * @param authenticationListenerProvider
-   * @param authenticationListeners
    */
   @Inject
   public ChainAuthenticatonManager(UserManager userManager,
     Set<AuthenticationHandler> authenticationHandlerSet,
-    EncryptionHandler encryptionHandler, CacheManager cacheManager,
-    Set<AuthenticationListener> authenticationListeners)
+    EncryptionHandler encryptionHandler, CacheManager cacheManager)
   {
     AssertUtil.assertIsNotEmpty(authenticationHandlerSet);
     AssertUtil.assertIsNotNull(cacheManager);
@@ -106,11 +103,6 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
     this.encryptionHandler = encryptionHandler;
     this.cache = cacheManager.getCache(String.class,
       AuthenticationCacheValue.class, CACHE_NAME);
-
-    if (Util.isNotEmpty(authenticationListeners))
-    {
-      addListeners(authenticationListeners);
-    }
   }
 
   //~--- methods --------------------------------------------------------------
@@ -252,7 +244,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
             ar = result;
 
             // notify authentication listeners
-            fireAuthenticationEvent(request, response, user);
+            fireAuthenticationEvent(user);
           }
 
           break;

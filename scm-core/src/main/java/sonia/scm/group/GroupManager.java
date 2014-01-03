@@ -35,7 +35,6 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.ListenerSupport;
 import sonia.scm.Manager;
 import sonia.scm.search.Searchable;
 
@@ -50,8 +49,7 @@ import java.util.Collection;
  * @author Sebastian Sdorra
  */
 public interface GroupManager
-        extends Manager<Group, GroupException>, Searchable<Group>,
-                ListenerSupport<GroupListener>
+        extends Manager<Group, GroupException>, Searchable<Group>
 {
 
   /**

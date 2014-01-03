@@ -35,7 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.ListenerSupport;
 import sonia.scm.Type;
 import sonia.scm.TypeManager;
 
@@ -57,7 +56,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface RepositoryManager
         extends TypeManager<Repository, RepositoryException>,
-                ListenerSupport<RepositoryListener>, 
                 RepositoryHookSupport
 {
 

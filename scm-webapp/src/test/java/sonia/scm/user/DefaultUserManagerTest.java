@@ -75,12 +75,8 @@ public class DefaultUserManagerTest extends UserManagerTestBase
 
     factory.init(contextProvider);
 
-    Provider<Set<UserListener>> listenerProvider = mock(Provider.class);
-
-    when(listenerProvider.get()).thenReturn(new HashSet<UserListener>());
-
     XmlUserDAO userDAO = new XmlUserDAO(factory);
     
-    return new DefaultUserManager(userDAO, listenerProvider);
+    return new DefaultUserManager(userDAO);
   }
 }

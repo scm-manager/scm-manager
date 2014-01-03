@@ -35,6 +35,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -42,7 +43,6 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.ConfigChangedListener;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.HttpClient;
 import sonia.scm.net.HttpRequest;
@@ -57,13 +57,16 @@ import java.io.IOException;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import sonia.scm.config.ScmConfigurationChangedEvent;
+import sonia.scm.event.Subscriber;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
+@Subscriber(async = false)
+public class HgHookManager
 {
 
   /** Field description */
@@ -91,7 +94,6 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
     Provider<HttpClient> httpClientProvider)
   {
     this.configuration = configuration;
-    this.configuration.addListener(this);
     this.httpServletRequestProvider = httpServletRequestProvider;
     this.httpClientProvider = httpClientProvider;
   }
@@ -104,8 +106,8 @@ public class HgHookManager implements ConfigChangedListener<ScmConfiguration>
    *
    * @param config
    */
-  @Override
-  public void configChanged(ScmConfiguration config)
+  @Subscribe
+  public void configChanged(ScmConfigurationChangedEvent config)
   {
     hookUrl = null;
   }

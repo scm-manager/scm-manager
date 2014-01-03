@@ -136,29 +136,6 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
     }
   }
 
-  /**
-   * Register a {@link RepositoryListener}.
-   *
-   *
-   * @param listener {@link RepositoryListener} to register
-   */
-  @Override
-  public void addListener(RepositoryListener listener)
-  {
-    listenerSet.add(listener);
-  }
-
-  /**
-   * Register a {@link java.util.Collection} of {@link RepositoryListener}s.
-   *
-   *
-   * @param listeners listeners to register
-   */
-  @Override
-  public void addListeners(Collection<RepositoryListener> listeners)
-  {
-    listenerSet.addAll(listeners);
-  }
 
   /**
    * Sends a {@link RepositoryHookEvent} to each registered
@@ -220,32 +197,13 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
-   * Remove specified {@link RepositoryListener}.
-   *
-   *
-   * @param listener to remove
-   */
-  @Override
-  public void removeListener(RepositoryListener listener)
-  {
-    listenerSet.remove(listener);
-  }
-
-  /**
-   * Calls the {@link RepositoryListener#onEvent(Repository,sonia.scm.HandlerEvent)}
-   * method of all registered listeners and send a {@link RepositoryEvent} to
-   * the {@link ScmEventBus}.
+   * Send a {@link RepositoryEvent} to the {@link ScmEventBus}.
    *
    * @param repository repository that has changed
    * @param event type of change event
    */
   protected void fireEvent(Repository repository, HandlerEvent event)
   {
-    for (RepositoryListener listener : listenerSet)
-    {
-      listener.onEvent(repository, event);
-    }
-
     ScmEventBus.getInstance().post(new RepositoryEvent(repository, event));
   }
 
@@ -268,7 +226,4 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   /** repository hooks map */
   private Map<RepositoryHookType, List<RepositoryHook>> hookMap =
     Maps.newEnumMap(RepositoryHookType.class);
-
-  /** repository listeners */
-  private Set<RepositoryListener> listenerSet = Sets.newHashSet();
 }

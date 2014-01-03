@@ -222,8 +222,7 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
 
     when(userManager.getDefaultType()).thenReturn(defaultType);
     manager = new ChainAuthenticatonManager(userManager, handlerSet,
-      new MessageDigestEncryptionHandler(), new MapCacheManager(),
-      Collections.EMPTY_SET);
+      new MessageDigestEncryptionHandler(), new MapCacheManager());
     manager.init(contextProvider);
 
     return manager;

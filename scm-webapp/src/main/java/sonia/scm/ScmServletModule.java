@@ -102,7 +102,6 @@ import sonia.scm.store.FileBlobStoreFactory;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.store.JAXBDataStoreFactory;
 import sonia.scm.store.JAXBStoreFactory;
-import sonia.scm.store.ListenableStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.template.DefaultEngine;
 import sonia.scm.template.MustacheTemplateEngine;
@@ -253,7 +252,6 @@ public class ScmServletModule extends ServletModule
 
     // bind core
     bind(StoreFactory.class, JAXBStoreFactory.class);
-    bind(ListenableStoreFactory.class, JAXBStoreFactory.class);
     bind(ConfigurationEntryStoreFactory.class,
       JAXBConfigurationEntryStoreFactory.class);
     bind(DataStoreFactory.class, JAXBDataStoreFactory.class);

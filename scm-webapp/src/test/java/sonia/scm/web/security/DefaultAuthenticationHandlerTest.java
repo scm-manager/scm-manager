@@ -35,8 +35,6 @@ package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Provider;
-
 import org.junit.Test;
 
 import sonia.scm.AbstractTestBase;
@@ -46,19 +44,13 @@ import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.user.DefaultUserManager;
 import sonia.scm.user.User;
-import sonia.scm.user.UserListener;
 import sonia.scm.user.UserTestData;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
 
-import static org.mockito.Mockito.*;
-
 //~--- JDK imports ------------------------------------------------------------
-
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -136,16 +128,11 @@ public class DefaultAuthenticationHandlerTest extends AbstractTestBase
 
     storeFactory.init(contextProvider);
 
-    Provider<Set<UserListener>> listenerProvider = mock(Provider.class);
-
-    when(listenerProvider.get()).thenReturn(new HashSet<UserListener>());
-
     XmlUserDAO userDAO = new XmlUserDAO(storeFactory);
 
     setSubject(MockUtil.createAdminSubject());
 
-    DefaultUserManager userManager = new DefaultUserManager(userDAO,
-                                       listenerProvider);
+    DefaultUserManager userManager = new DefaultUserManager(userDAO);
 
     userManager.init(contextProvider);
     userManager.create(slarti);

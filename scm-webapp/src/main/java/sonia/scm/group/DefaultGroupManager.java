@@ -83,16 +83,12 @@ public class DefaultGroupManager extends AbstractGroupManager
    * Constructs ...
    *
    *
-   * @param securityContextProvider
    * @param groupDAO
-   * @param groupListenerProvider
    */
   @Inject
-  public DefaultGroupManager(GroupDAO groupDAO,
-    Provider<Set<GroupListener>> groupListenerProvider)
+  public DefaultGroupManager(GroupDAO groupDAO)
   {
     this.groupDAO = groupDAO;
-    this.groupListenerProvider = groupListenerProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -192,12 +188,6 @@ public class DefaultGroupManager extends AbstractGroupManager
   @Override
   public void init(SCMContextProvider context)
   {
-    Set<GroupListener> listeners = groupListenerProvider.get();
-
-    if (Util.isNotEmpty(listeners))
-    {
-      addListeners(listeners);
-    }
   }
 
   /**
@@ -464,7 +454,4 @@ public class DefaultGroupManager extends AbstractGroupManager
 
   /** Field description */
   private GroupDAO groupDAO;
-
-  /** Field description */
-  private Provider<Set<GroupListener>> groupListenerProvider;
 }

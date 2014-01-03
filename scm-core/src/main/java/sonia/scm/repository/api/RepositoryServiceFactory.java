@@ -37,6 +37,7 @@ package sonia.scm.repository.api;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -53,12 +54,9 @@ import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
-import sonia.scm.repository.PostReceiveRepositoryHook;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKeyFilter;
-import sonia.scm.repository.RepositoryHookEvent;
-import sonia.scm.repository.RepositoryListener;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
 import sonia.scm.repository.Tags;
@@ -69,6 +67,9 @@ import sonia.scm.security.ScmSecurityException;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Set;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.RepositoryEvent;
 
 /**
  * The {@link RepositoryServiceFactory} is the entrypoint of the repository api.
@@ -149,9 +150,7 @@ public final class RepositoryServiceFactory
     this.preProcessorUtil = preProcessorUtil;
 
     CacheClearHook cch = new CacheClearHook(cacheManager);
-
-    repositoryManager.addHook(cch);
-    repositoryManager.addListener(cch);
+    ScmEventBus.getInstance().register(cch);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -296,8 +295,7 @@ public final class RepositoryServiceFactory
    * @version        Enter version here..., 12/06/16
    * @author         Enter your name here...
    */
-  private static class CacheClearHook extends PostReceiveRepositoryHook
-    implements RepositoryListener
+  private static class CacheClearHook
   {
 
     /**
@@ -331,8 +329,8 @@ public final class RepositoryServiceFactory
      *
      * @param event
      */
-    @Override
-    public void onEvent(RepositoryHookEvent event)
+    @Subscribe
+    public void onEvent(PostReceiveRepositoryHookEvent event)
     {
       Repository repository = event.getRepository();
 
@@ -351,12 +349,12 @@ public final class RepositoryServiceFactory
      * @param repository
      * @param event
      */
-    @Override
-    public void onEvent(Repository repository, HandlerEvent event)
+    @Subscribe
+    public void onEvent(RepositoryEvent  event)
     {
-      if (event == HandlerEvent.DELETE)
+      if (event.getEventType() == HandlerEvent.DELETE)
       {
-        clearCaches(repository.getId());
+        clearCaches(event.getItem().getId());
       }
     }
 

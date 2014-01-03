@@ -114,14 +114,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   public DefaultRepositoryManager(ScmConfiguration configuration,
     SCMContextProvider contextProvider, KeyGenerator keyGenerator,
     RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
-    Provider<Set<RepositoryListener>> repositoryListenersProvider,
     Provider<Set<RepositoryHook>> repositoryHooksProvider,
     PreProcessorUtil preProcessorUtil)
   {
     this.configuration = configuration;
     this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
-    this.repositoryListenersProvider = repositoryListenersProvider;
     this.repositoryHooksProvider = repositoryHooksProvider;
     this.preProcessorUtil = preProcessorUtil;
 
@@ -331,13 +329,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   @Override
   public void init(SCMContextProvider context)
   {
-    Set<RepositoryListener> listeners = repositoryListenersProvider.get();
-
-    if (Util.isNotEmpty(listeners))
-    {
-      addListeners(listeners);
-    }
-
     Set<RepositoryHook> hooks = repositoryHooksProvider.get();
 
     if (Util.isNotEmpty(hooks))
@@ -950,9 +941,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
   /** Field description */
   private Provider<Set<RepositoryHook>> repositoryHooksProvider;
-
-  /** Field description */
-  private Provider<Set<RepositoryListener>> repositoryListenersProvider;
 
   /** Field description */
   private Set<Type> types;

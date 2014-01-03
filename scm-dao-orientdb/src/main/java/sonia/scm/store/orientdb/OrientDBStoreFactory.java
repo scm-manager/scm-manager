@@ -47,7 +47,6 @@ import com.orientechnologies.orient.core.metadata.schema.OType;
 
 import sonia.scm.SCMContextProvider;
 import sonia.scm.orientdb.OrientDBUtil;
-import sonia.scm.store.ListenableStoreFactory;
 import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -56,13 +55,14 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import sonia.scm.store.StoreFactory;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class OrientDBStoreFactory implements ListenableStoreFactory
+public class OrientDBStoreFactory implements StoreFactory
 {
 
   /**
@@ -158,5 +158,5 @@ public class OrientDBStoreFactory implements ListenableStoreFactory
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Provider<ODatabaseDocumentTx> connectionProvider;
+  private final Provider<ODatabaseDocumentTx> connectionProvider;
 }

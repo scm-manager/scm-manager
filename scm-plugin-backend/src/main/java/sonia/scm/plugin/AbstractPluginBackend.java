@@ -59,7 +59,6 @@ public abstract class AbstractPluginBackend implements PluginBackend
    *
    *   @param listener
    */
-  @Override
   public void addListener(PluginBackendListener listener)
   {
     listenerSet.add(listener);
@@ -71,7 +70,6 @@ public abstract class AbstractPluginBackend implements PluginBackend
    *
    * @param listeners
    */
-  @Override
   public void addListeners(Collection<PluginBackendListener> listeners)
   {
     listenerSet.addAll(listeners);
@@ -113,7 +111,6 @@ public abstract class AbstractPluginBackend implements PluginBackend
    *
    * @param listener
    */
-  @Override
   public void removeListener(PluginBackendListener listener)
   {
     listenerSet.remove(listener);

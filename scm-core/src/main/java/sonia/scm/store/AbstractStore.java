@@ -35,16 +35,69 @@ package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.ConfigChangedListener;
-import sonia.scm.ListenerSupport;
-
 /**
- * Store for configuration objects with listener support.
+ * Base class for {@link Store}.
  *
  * @author Sebastian Sdorra
  * @since 1.16
  *
  * @param <T> type of store objects
  */
-public interface ListenableStore<T>
-  extends Store<T>, ListenerSupport<ConfigChangedListener<T>> {}
+public abstract class AbstractStore<T> implements Store<T>
+{
+
+  /**
+   * Read the stored object.
+   *
+   *
+   * @return stored object
+   */
+  protected abstract T readObject();
+
+  /**
+   * Write object to the store.
+   *
+   *
+   * @param object object to write
+   */
+  protected abstract void writeObject(T object);
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @return
+   */
+  @Override
+  public T get()
+  {
+    if (storeObject == null)
+    {
+      storeObject = readObject();
+    }
+
+    return storeObject;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * {@inheritDoc}
+   *
+   *
+   * @param obejct
+   */
+  @Override
+  public void set(T obejct)
+  {
+    writeObject(obejct);
+    this.storeObject = obejct;
+  }
+  
+  //~--- fields ---------------------------------------------------------------
+
+  /** stored object */
+  protected T storeObject;
+}

@@ -53,7 +53,7 @@ import java.io.IOException;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class JAXBStoreFactory implements ListenableStoreFactory
+public class JAXBStoreFactory implements StoreFactory
 {
 
   /** the logger for JAXBStoreFactory */

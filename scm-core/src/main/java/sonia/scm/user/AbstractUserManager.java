@@ -54,61 +54,13 @@ public abstract class AbstractUserManager implements UserManager
 {
 
   /**
-   * Register a {@link UserListener}.
-   *
-   *
-   * @param listener {@link UserListener} to register
-   */
-  @Override
-  public void addListener(UserListener listener)
-  {
-    listenerSet.add(listener);
-  }
-
-  /**
-   * Register a {@link java.util.Collection} of {@link UserListener}s.
-   *
-   *
-   * @param listeners listeners to register
-   */
-  @Override
-  public void addListeners(Collection<UserListener> listeners)
-  {
-    listenerSet.addAll(listeners);
-  }
-
-  /**
-   * Remove specified {@link UserListener}.
-   *
-   *
-   * @param listener to remove
-   */
-  @Override
-  public void removeListener(UserListener listener)
-  {
-    listenerSet.remove(listener);
-  }
-
-  /**
-   * Calls the {@link UserListener#onEvent(User,sonia.scm.HandlerEvent)}
-   * method of all registered listeners and send a {@link UserEvent} to
-   * the {@link ScmEventBus}.
+   * Send a {@link UserEvent} to the {@link ScmEventBus}.
    *
    * @param user user that has changed
    * @param event type of change event
    */
   protected void fireEvent(User user, HandlerEvent event)
   {
-    for (UserListener listener : listenerSet)
-    {
-      listener.onEvent(user, event);
-    }
-
     ScmEventBus.getInstance().post(new UserEvent(user, event));
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Set<UserListener> listenerSet = new HashSet<UserListener>();
 }

@@ -70,42 +70,6 @@ public class GroupManagerDecorator
    * {@inheritDoc}
    *
    *
-   * @param listener
-   */
-  @Override
-  public void addListener(GroupListener listener)
-  {
-    decorated.addListener(listener);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param listeners
-   */
-  @Override
-  public void addListeners(Collection<GroupListener> listeners)
-  {
-    decorated.addListeners(listeners);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param listener
-   */
-  @Override
-  public void removeListener(GroupListener listener)
-  {
-    decorated.removeListener(listener);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
    * @param searchRequest
    *
    * @return
@@ -148,5 +112,5 @@ public class GroupManagerDecorator
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private GroupManager decorated;
+  private final GroupManager decorated;
 }
