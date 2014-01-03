@@ -184,12 +184,6 @@
     </dependency>
     
     <!-- template engine -->
-
-    <dependency>
-      <groupId>org.freemarker</groupId>
-      <artifactId>freemarker</artifactId>
-      <version>${freemarker.version}</version>
-    </dependency>
     
     <dependency>
       <groupId>com.github.spullara.mustache.java</groupId>

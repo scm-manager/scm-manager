@@ -40,7 +40,6 @@ import com.google.inject.servlet.ServletModule;
 
 import sonia.scm.template.DefaultEngine;
 import sonia.scm.template.ErrorServlet;
-import sonia.scm.template.FreemarkerTemplateEngine;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
@@ -67,7 +66,6 @@ public class ScmErrorModule extends ServletModule
       Multibinder.newSetBinder(binder(), TemplateEngine.class);
 
     engineBinder.addBinding().to(MustacheTemplateEngine.class);
-    engineBinder.addBinding().to(FreemarkerTemplateEngine.class);
     bind(TemplateEngine.class).annotatedWith(DefaultEngine.class).to(
       MustacheTemplateEngine.class);
     bind(TemplateEngineFactory.class);

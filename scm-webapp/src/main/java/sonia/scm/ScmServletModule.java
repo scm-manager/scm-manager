@@ -105,7 +105,6 @@ import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.ListenableStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.template.DefaultEngine;
-import sonia.scm.template.FreemarkerTemplateEngine;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
@@ -357,7 +356,6 @@ public class ScmServletModule extends ServletModule
       Multibinder.newSetBinder(binder(), TemplateEngine.class);
 
     engineBinder.addBinding().to(MustacheTemplateEngine.class);
-    engineBinder.addBinding().to(FreemarkerTemplateEngine.class);
     bind(TemplateEngine.class).annotatedWith(DefaultEngine.class).to(
       MustacheTemplateEngine.class);
     bind(TemplateEngineFactory.class);

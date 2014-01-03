@@ -39,8 +39,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import freemarker.template.Configuration;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
