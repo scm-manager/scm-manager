@@ -197,7 +197,11 @@ public final class HttpUtil
    */
   public static String append(String uri, String suffix)
   {
-    if (!uri.endsWith(SEPARATOR_PATH) &&!suffix.startsWith(SEPARATOR_PATH))
+    if ( uri.endsWith(SEPARATOR_PATH) && suffix.startsWith(SEPARATOR_PATH) )
+    {
+      uri = uri.substring( 0, uri.length() - 1 );
+    } 
+    else if (!uri.endsWith(SEPARATOR_PATH) &&!suffix.startsWith(SEPARATOR_PATH))
     {
       uri = uri.concat(SEPARATOR_PATH);
     }
@@ -490,18 +494,7 @@ public final class HttpUtil
   public static String getCompleteUrl(ScmConfiguration configuration,
     String path)
   {
-    String url = configuration.getBaseUrl();
-
-    if (url.endsWith(SEPARATOR_PATH) && path.startsWith(SEPARATOR_PATH))
-    {
-      url = url.substring(0, url.length());
-    }
-    else if (!path.startsWith(SEPARATOR_PATH))
-    {
-      path = SEPARATOR_PATH.concat(path);
-    }
-
-    return url.concat(path);
+    return append(configuration.getBaseUrl(), path);
   }
 
   /**

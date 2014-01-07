@@ -59,6 +59,33 @@ public class HttpUtilTest
    *
    */
   @Test
+  public void appendTest()
+  {
+    //J-
+    assertEquals(
+      "http://www.scm-manager/scm/test", 
+      HttpUtil.append("http://www.scm-manager/scm/", "test")
+    );
+    assertEquals(
+      "http://www.scm-manager/scm/test", 
+      HttpUtil.append("http://www.scm-manager/scm", "test")
+    );
+    assertEquals(
+      "http://www.scm-manager/scm/test", 
+      HttpUtil.append("http://www.scm-manager/scm", "/test")
+    );
+    assertEquals(
+      "http://www.scm-manager/scm/test", 
+      HttpUtil.append("http://www.scm-manager/scm/", "/test")
+    );
+    //J+
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
   public void normalizeUrlTest()
   {
     assertEquals("http://www.scm-manager/scm",
@@ -171,6 +198,10 @@ public class HttpUtilTest
     config.setBaseUrl("http://www.scm-manager.org/scm");
     assertEquals("http://www.scm-manager.org/scm/test/path",
       HttpUtil.getCompleteUrl(config, "test/path"));
+    assertEquals("http://www.scm-manager.org/scm/test/path",
+      HttpUtil.getCompleteUrl(config, "/test/path"));
+
+    config.setBaseUrl("http://www.scm-manager.org/scm/");
     assertEquals("http://www.scm-manager.org/scm/test/path",
       HttpUtil.getCompleteUrl(config, "/test/path"));
   }
