@@ -32,7 +32,7 @@
 	};
 
 	Brush.prototype	= new SyntaxHighlighter.Highlighter();
-	Brush.aliases	= ['java'];
+	Brush.aliases	= ['java','idl'];
 
 	SyntaxHighlighter.brushes.Java = Brush;
 
