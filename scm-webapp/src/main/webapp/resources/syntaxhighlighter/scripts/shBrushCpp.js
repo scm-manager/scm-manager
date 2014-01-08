@@ -88,7 +88,7 @@
 	};
 
 	Brush.prototype	= new SyntaxHighlighter.Highlighter();
-	Brush.aliases	= ['cpp', 'c'];
+	Brush.aliases	= ['cpp', 'hpp', 'hxx', 'cxx', 'hh', 'cc', 'c', 'h'];
 
 	SyntaxHighlighter.brushes.Cpp = Brush;
 
