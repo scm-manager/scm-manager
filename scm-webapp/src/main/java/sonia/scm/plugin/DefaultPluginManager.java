@@ -36,6 +36,7 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
+
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
@@ -51,6 +52,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.config.ScmConfigurationChangedEvent;
 import sonia.scm.io.ZipUnArchiver;
 import sonia.scm.net.HttpClient;
 import sonia.scm.util.AssertUtil;
@@ -80,15 +82,13 @@ import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import sonia.scm.config.ScmConfigurationChangedEvent;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class DefaultPluginManager
-  implements PluginManager
+public class DefaultPluginManager implements PluginManager
 {
 
   /** Field description */
@@ -100,6 +100,9 @@ public class DefaultPluginManager
   /** the logger for DefaultPluginManager */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultPluginManager.class);
+
+  /** enable or disable remote plugins */
+  private static final boolean REMOTE_PLUGINS_ENABLED = false;
 
   /** Field description */
   public static final PluginFilter FILTER_UPDATES =
@@ -613,7 +616,11 @@ public class DefaultPluginManager
           logger.info("fetch plugin informations from {}", pluginUrl);
         }
 
-        if (Util.isNotEmpty(pluginUrl))
+        /**
+         * remote plugins are disabled for early 2.0.0-SNAPSHOTS
+         * TODO enable remote plugins later
+         */
+        if (REMOTE_PLUGINS_ENABLED && Util.isNotEmpty(pluginUrl))
         {
           InputStream input = null;
 
@@ -743,19 +750,19 @@ public class DefaultPluginManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Cache<String, PluginCenter> cache;
+  private final Cache<String, PluginCenter> cache;
 
   /** Field description */
-  private Provider<HttpClient> clientProvider;
+  private final Provider<HttpClient> clientProvider;
 
   /** Field description */
-  private ScmConfiguration configuration;
+  private final ScmConfiguration configuration;
 
   /** Field description */
-  private SCMContextProvider context;
+  private final SCMContextProvider context;
 
   /** Field description */
-  private Map<String, Plugin> installedPlugins;
+  private final Map<String, Plugin> installedPlugins;
 
   /** Field description */
   private AetherPluginHandler pluginHandler;
