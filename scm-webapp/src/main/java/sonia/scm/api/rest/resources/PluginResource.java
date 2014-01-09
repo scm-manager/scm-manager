@@ -46,11 +46,11 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.api.rest.RestActionResult;
 import sonia.scm.api.rest.RestActionUploadResult;
-import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.OverviewPluginFilter;
 import sonia.scm.plugin.PluginConditionFailedException;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginInformationComparator;
+import sonia.scm.plugin.PluginManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -99,7 +99,7 @@ public class PluginResource
    * @param pluginManager
    */
   @Inject
-  public PluginResource(DefaultPluginManager pluginManager)
+  public PluginResource(PluginManager pluginManager)
   {
     this.pluginManager = pluginManager;
   }
@@ -358,6 +358,6 @@ public class PluginResource
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private DefaultPluginManager pluginManager;
+  /** plugin manager */
+  private final PluginManager pluginManager;
 }
