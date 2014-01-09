@@ -35,7 +35,7 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Filter;
+import com.google.common.base.Predicate;
 
 /**
  * The main interface for the cache.
@@ -86,16 +86,16 @@ public interface Cache<K, V>
   public boolean remove(K key);
 
   /**
-   * Remove all elements with matching {@link Filter} from this cache.
+   * Remove all elements with matching {@link Predicate} from this cache.
    * The method returns true if the operation was successful.
    *
    * @since 1.9
    *
-   * @param filter - The filter to match cache keys
+   * @param predicate - predicate to match cache keys
    *
    * @return true if the operation was successful
    */
-  public boolean removeAll(Filter<K> filter);
+  public boolean removeAll(Predicate<K> predicate);
 
   //~--- get methods ----------------------------------------------------------
 

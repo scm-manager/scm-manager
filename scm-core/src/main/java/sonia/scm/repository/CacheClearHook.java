@@ -36,16 +36,13 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
+
+import com.google.common.base.Predicate;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.Filter;
 import sonia.scm.cache.Cache;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Arrays;
-import java.util.Collection;
 
 /**
  *
@@ -77,18 +74,18 @@ public class CacheClearHook
    *
    * @since 1.9
    *
-   * @param filter
+   * @param predicate
    */
-  public void clearCache(Filter filter)
+  public void clearCache(Predicate predicate)
   {
-    if (filter != null)
+    if (predicate != null)
     {
       if (logger.isDebugEnabled())
       {
         logger.debug("clear cache, with filter");
       }
 
-      cache.removeAll(filter);
+      cache.removeAll(predicate);
     }
     else
     {
@@ -113,17 +110,11 @@ public class CacheClearHook
     if (logger.isDebugEnabled())
     {
       logger.debug("clear cache because repository {} has changed",
-                   event.getRepository().getName());
+        event.getRepository().getName());
     }
 
-    Filter filter = createFilter(event);
-
-    clearCache(filter);
+    clearCache(createPredicate(event));
   }
-
-  //~--- get methods ----------------------------------------------------------
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -134,7 +125,7 @@ public class CacheClearHook
    * @param event
    * @return
    */
-  protected Filter<?> createFilter(RepositoryHookEvent event)
+  protected Predicate<?> createPredicate(RepositoryHookEvent event)
   {
     return null;
   }

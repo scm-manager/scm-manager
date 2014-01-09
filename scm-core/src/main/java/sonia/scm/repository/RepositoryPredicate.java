@@ -31,25 +31,72 @@
 
 
 
-package sonia.scm;
+package sonia.scm.repository;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Predicate;
 
 /**
- * Util class for filtering of objects.
  *
  * @author Sebastian Sdorra
+ * @since 1.9
  *
- * @param <T>
  */
-public interface Filter<T>
+public class RepositoryPredicate implements Predicate<RepositoryCacheKey>
 {
 
   /**
-   * Tests whether the item is filtered.
+   * Constructs ...
    *
    *
-   * @param item for the accept test
-   *
-   * @return true if the object is accepted
+   * @param repository
    */
-  public boolean accept(T item);
+  public RepositoryPredicate(Repository repository)
+  {
+    this(repository.getId());
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param event
+   */
+  public RepositoryPredicate(RepositoryHookEvent event)
+  {
+    this(event.getRepository());
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param repositoryId
+   */
+  public RepositoryPredicate(String repositoryId)
+  {
+    this.repositoryId = repositoryId;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param key
+   *
+   * @return
+   */
+  @Override
+  public boolean apply(RepositoryCacheKey key)
+  {
+    return repositoryId.equals(key.getRepositoryId());
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** repository id */
+  private final String repositoryId;
 }

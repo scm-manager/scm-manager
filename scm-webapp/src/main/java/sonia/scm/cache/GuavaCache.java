@@ -35,12 +35,11 @@ package sonia.scm.cache;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.Filter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -178,13 +177,13 @@ public class GuavaCache<K, V> implements Cache<K, V>
    * @return
    */
   @Override
-  public boolean removeAll(Filter<K> filter)
+  public boolean removeAll(Predicate<K> filter)
   {
     Set<K> keysToRemove = Sets.newHashSet();
 
     for (K key : cache.asMap().keySet())
     {
-      if (filter.accept(key))
+      if (filter.apply(key))
       {
         keysToRemove.add(key);
       }

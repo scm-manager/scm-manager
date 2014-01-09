@@ -35,38 +35,18 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Filter;
+import com.google.common.base.Predicate;
 
 /**
  *
  * @author Sebastian Sdorra
- * @since 1.9
+ * @since 1.17
  *
+ * @param <T>
  */
-public class RepositoryFilter implements Filter<RepositoryCacheKey>
+public class RepositoryCacheKeyPredicate<T extends RepositoryCacheKey>
+  implements Predicate<T>
 {
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param repository
-   */
-  public RepositoryFilter(Repository repository)
-  {
-    this(repository.getId());
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param event
-   */
-  public RepositoryFilter(RepositoryHookEvent event)
-  {
-    this(event.getRepository());
-  }
 
   /**
    * Constructs ...
@@ -74,7 +54,7 @@ public class RepositoryFilter implements Filter<RepositoryCacheKey>
    *
    * @param repositoryId
    */
-  public RepositoryFilter(String repositoryId)
+  public RepositoryCacheKeyPredicate(String repositoryId)
   {
     this.repositoryId = repositoryId;
   }
@@ -85,18 +65,18 @@ public class RepositoryFilter implements Filter<RepositoryCacheKey>
    * Method description
    *
    *
-   * @param key
+   * @param item
    *
    * @return
    */
   @Override
-  public boolean accept(RepositoryCacheKey key)
+  public boolean apply(T item)
   {
-    return repositoryId.equals(key.getRepositoryId());
+    return repositoryId.equals(item.getRepositoryId());
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String repositoryId;
+  private final String repositoryId;
 }

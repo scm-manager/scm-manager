@@ -30,13 +30,13 @@
  */
 
 
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Maps;
-
-import sonia.scm.Filter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -113,13 +113,13 @@ public class MapCache<K, V> implements Cache<K, V>
    * @return
    */
   @Override
-  public boolean removeAll(Filter<K> filter)
+  public boolean removeAll(Predicate<K> filter)
   {
     boolean result = false;
 
     for (K key : map.keySet())
     {
-      if (filter.accept(key))
+      if (filter.apply(key))
       {
         if (remove(key))
         {
@@ -150,5 +150,5 @@ public class MapCache<K, V> implements Cache<K, V>
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Map<K, V> map = Maps.newHashMap();
+  private final Map<K, V> map = Maps.newHashMap();
 }

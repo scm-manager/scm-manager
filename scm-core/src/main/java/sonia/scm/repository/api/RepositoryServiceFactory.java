@@ -60,7 +60,7 @@ import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryCacheKeyFilter;
+import sonia.scm.repository.RepositoryCacheKeyPredicate;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
@@ -365,8 +365,8 @@ public final class RepositoryServiceFactory
         logger.debug("clear caches for repository id {}", repositoryId);
       }
 
-      RepositoryCacheKeyFilter filter =
-        new RepositoryCacheKeyFilter(repositoryId);
+      RepositoryCacheKeyPredicate filter =
+        new RepositoryCacheKeyPredicate(repositoryId);
 
       blameCache.removeAll(filter);
       browseCache.removeAll(filter);

@@ -34,11 +34,11 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Predicate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import sonia.scm.Filter;
 import sonia.scm.util.IOUtil;
 
 import static org.junit.Assert.*;
@@ -142,10 +142,10 @@ public abstract class CacheTestBase
     cache.put("test-2", "test123");
     cache.put("a-1", "test123");
     cache.put("a-2", "test123");
-    cache.removeAll(new Filter<String>()
+    cache.removeAll(new Predicate<String>()
     {
       @Override
-      public boolean accept(String item)
+      public boolean apply(String item)
       {
         return item.startsWith("test");
       }

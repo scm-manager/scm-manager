@@ -35,7 +35,9 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.Filter;
+import com.google.common.base.Predicate;
+
+
 
 /**
  *
@@ -54,8 +56,8 @@ public class PartCacheClearHook extends CacheClearHook
    * @return
    */
   @Override
-  protected Filter<?> createFilter(RepositoryHookEvent event)
+  protected Predicate<?> createPredicate(RepositoryHookEvent event)
   {
-    return new RepositoryFilter(event);
+    return new RepositoryPredicate(event);
   }
 }
