@@ -116,8 +116,7 @@ public final class LogCommandBuilder
   LogCommandBuilder(CacheManager cacheManager, LogCommand logCommand,
     Repository repository, PreProcessorUtil preProcessorUtil)
   {
-    this.cache = cacheManager.getCache(CacheKey.class,
-      ChangesetPagingResult.class, CACHE_NAME);
+    this.cache = cacheManager.getCache(CACHE_NAME);
     this.logCommand = logCommand;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
@@ -172,7 +171,7 @@ public final class LogCommandBuilder
   public Changeset getChangeset(String id)
     throws IOException, RepositoryException
   {
-    Changeset changeset = null;
+    Changeset changeset;
 
     if (disableCache)
     {
@@ -234,7 +233,7 @@ public final class LogCommandBuilder
   public ChangesetPagingResult getChangesets()
     throws IOException, RepositoryException
   {
-    ChangesetPagingResult cpr = null;
+    ChangesetPagingResult cpr;
 
     if (disableCache)
     {
@@ -453,6 +452,7 @@ public final class LogCommandBuilder
     {
       this.repositoryId = repository.getId();
       this.request = request;
+      this.changesetId = null;
     }
 
     /**
@@ -467,6 +467,7 @@ public final class LogCommandBuilder
     {
       this.repositoryId = repository.getId();
       this.changesetId = changesetId;
+      this.request = null;
     }
 
     //~--- methods ------------------------------------------------------------
@@ -528,20 +529,29 @@ public final class LogCommandBuilder
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private String changesetId;
+    private final String changesetId;
 
     /** Field description */
-    private String repositoryId;
+    private final String repositoryId;
 
     /** Field description */
-    private LogCommandRequest request;
+    private final LogCommandRequest request;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
   /** cache for changesets */
-  private Cache<CacheKey, ChangesetPagingResult> cache;
+  private final Cache<CacheKey, ChangesetPagingResult> cache;
+
+  /** Implementation of the log command */
+  private final LogCommand logCommand;
+
+  /** Field description */
+  private final PreProcessorUtil preProcessorUtil;
+
+  /** repository to query */
+  private final Repository repository;
 
   /** disable escaping */
   private boolean disableEscaping = false;
@@ -552,15 +562,6 @@ public final class LogCommandBuilder
   /** disable the execution of pre processors */
   private boolean disablePreProcessors = false;
 
-  /** Implementation of the log command */
-  private LogCommand logCommand;
-
-  /** Field description */
-  private PreProcessorUtil preProcessorUtil;
-
-  /** repository to query */
-  private Repository repository;
-
   /** request for the log command */
-  private LogCommandRequest request = new LogCommandRequest();
+  private final LogCommandRequest request = new LogCommandRequest();
 }

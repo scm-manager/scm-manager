@@ -41,14 +41,13 @@ import sonia.scm.event.Event;
  * Pre receive repository hook events are fired before a change is written
  * through the repository. This class is wrapper of {@link RepositoryHookEvent}
  * for the event system of SCM-Manager.
- * 
- * TODO: make final for version 2.0
  *
  * @author Sebastian Sdorra
  * @since 1.23
  */
 @Event
-public class PreReceiveRepositoryHookEvent extends WrappedRepositoryHookEvent
+public final class PreReceiveRepositoryHookEvent
+  extends WrappedRepositoryHookEvent
 {
 
   /**

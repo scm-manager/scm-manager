@@ -51,14 +51,11 @@ public interface CacheManager extends Closeable
    * Returns the cache with the specified types and name. 
    * If the cache does not exist, a new cache is created.
    *
-   *
-   * @param key - The type of the keys for the cache
-   * @param value - The type of cache elements
    * @param name - The name of the cache
    * @param <K> - The type of the keys for the cache
    * @param <V>  - The type of cache elements
    *
    * @return the cache with the specified types and name
    */
-  public <K, V> Cache<K, V> getCache(Class<K> key, Class<V> value, String name);
+  public <K, V> Cache<K, V> getCache(String name);
 }

@@ -76,7 +76,7 @@ public abstract class CacheTestBase
   public void before()
   {
     cm = createCacheManager();
-    cache = cm.getCache(String.class, String.class, "test");
+    cache = cm.getCache("test");
   }
 
   /**

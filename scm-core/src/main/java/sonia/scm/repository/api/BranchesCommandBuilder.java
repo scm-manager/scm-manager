@@ -94,8 +94,7 @@ public final class BranchesCommandBuilder
   BranchesCommandBuilder(CacheManager cacheManager,
     BranchesCommand branchesCommand, Repository repository)
   {
-    this.cache = cacheManager.getCache(CacheKey.class, Branches.class,
-      CACHE_NAME);
+    this.cache = cacheManager.getCache(CACHE_NAME);
     this.branchesCommand = branchesCommand;
     this.repository = repository;
   }
@@ -113,7 +112,7 @@ public final class BranchesCommandBuilder
    */
   public Branches getBranches() throws RepositoryException, IOException
   {
-    Branches branches = null;
+    Branches branches;
 
     if (disableCache)
     {
@@ -270,22 +269,22 @@ public final class BranchesCommandBuilder
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
-    private String repositoryId;
+    /** repository id */
+    private final String repositoryId;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
   /** branches command implementation */
-  private BranchesCommand branchesCommand;
+  private final BranchesCommand branchesCommand;
 
   /** cache for branches */
-  private Cache<CacheKey, Branches> cache;
+  private final Cache<CacheKey, Branches> cache;
 
   /** disable cache */
   private boolean disableCache = false;
 
   /** repository */
-  private Repository repository;
+  private final Repository repository;
 }

@@ -89,10 +89,8 @@ public abstract class CacheManagerTestBase<C extends Cache>
   @Test
   public void testSameReference()
   {
-    Cache<String, String> c1 = cacheManager.getCache(String.class,
-                                 String.class, "test-1");
-    Cache<String, String> c2 = cacheManager.getCache(String.class,
-                                 String.class, "test-1");
+    Cache<String, String> c1 = cacheManager.getCache("test-1");
+    Cache<String, String> c2 = cacheManager.getCache("test-1");
 
     assertIsSame(c1, c2);
   }
@@ -203,16 +201,16 @@ public abstract class CacheManagerTestBase<C extends Cache>
     @Override
     public Cache call() throws Exception
     {
-      return cacheManager.getCache(String.class, String.class, name);
+      return cacheManager.getCache(name);
     }
 
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private CacheManager cacheManager;
+    private final CacheManager cacheManager;
 
     /** Field description */
-    private String name;
+    private final String name;
   }
 
 

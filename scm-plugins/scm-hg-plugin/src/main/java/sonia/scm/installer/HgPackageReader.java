@@ -91,7 +91,7 @@ public class HgPackageReader
   public HgPackageReader(CacheManager cacheManager,
                          Provider<HttpClient> httpClientProvider)
   {
-    cache = cacheManager.getCache(String.class, HgPackages.class, CACHENAME);
+    cache = cacheManager.getCache(CACHENAME);
     this.httpClientProvider = httpClientProvider;
   }
 
@@ -248,8 +248,8 @@ public class HgPackageReader
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Cache<String, HgPackages> cache;
+  private final Cache<String, HgPackages> cache;
 
   /** Field description */
-  private Provider<HttpClient> httpClientProvider;
+  private final Provider<HttpClient> httpClientProvider;
 }

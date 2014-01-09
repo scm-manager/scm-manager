@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -94,7 +95,7 @@ public final class TagsCommandBuilder
   TagsCommandBuilder(CacheManager cacheManager, TagsCommand command,
     Repository repository)
   {
-    this.cache = cacheManager.getCache(CacheKey.class, Tags.class, CACHE_NAME);
+    this.cache = cacheManager.getCache(CACHE_NAME);
     this.command = command;
     this.repository = repository;
   }
@@ -112,7 +113,7 @@ public final class TagsCommandBuilder
    */
   public Tags getTags() throws RepositoryException, IOException
   {
-    Tags tags = null;
+    Tags tags;
 
     if (disableCache)
     {
@@ -270,22 +271,22 @@ public final class TagsCommandBuilder
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
-    private String repositoryId;
+    /** repository id */
+    private final String repositoryId;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
   /** cache for changesets */
-  private Cache<CacheKey, Tags> cache;
+  private final Cache<CacheKey, Tags> cache;
 
-  /** Field description */
-  private TagsCommand command;
+  /** command implementation */
+  private final TagsCommand command;
 
-  /** Field description */
+  /** repository */
+  private final Repository repository;
+
+  /** disable cache */
   private boolean disableCache = false;
-
-  /** Field description */
-  private Repository repository;
 }

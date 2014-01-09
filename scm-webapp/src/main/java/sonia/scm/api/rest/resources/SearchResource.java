@@ -36,6 +36,7 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
+
 import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -45,11 +46,13 @@ import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.Group;
+import sonia.scm.group.GroupEvent;
 import sonia.scm.group.GroupManager;
 import sonia.scm.search.SearchHandler;
 import sonia.scm.search.SearchResult;
 import sonia.scm.search.SearchResults;
 import sonia.scm.user.User;
+import sonia.scm.user.UserEvent;
 import sonia.scm.user.UserManager;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -59,8 +62,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import sonia.scm.group.GroupEvent;
-import sonia.scm.user.UserEvent;
 
 /**
  *
@@ -94,14 +95,13 @@ public class SearchResource
   {
 
     // create user searchhandler
-    Cache<String, SearchResults> userCache =
-      cacheManager.getCache(String.class, SearchResults.class, CACHE_USER);
+    Cache<String, SearchResults> userCache = cacheManager.getCache(CACHE_USER);
 
     this.userSearchHandler = new SearchHandler<User>(userCache, userManager);
 
     // create group searchhandler
     Cache<String, SearchResults> groupCache =
-      cacheManager.getCache(String.class, SearchResults.class, CACHE_GROUP);
+      cacheManager.getCache(CACHE_GROUP);
 
     this.groupSearchHandler = new SearchHandler<Group>(groupCache,
       groupManager);
@@ -118,7 +118,8 @@ public class SearchResource
   @Subscribe
   public void onEvent(UserEvent event)
   {
-    if ( event.getEventType().isPost() ){
+    if (event.getEventType().isPost())
+    {
       userSearchHandler.clearCache();
     }
   }
@@ -132,7 +133,8 @@ public class SearchResource
   @Subscribe
   public void onEvent(GroupEvent event)
   {
-    if ( event.getEventType().isPost() ){
+    if (event.getEventType().isPost())
+    {
       groupSearchHandler.clearCache();
     }
   }

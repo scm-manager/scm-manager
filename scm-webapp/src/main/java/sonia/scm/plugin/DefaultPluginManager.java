@@ -130,8 +130,7 @@ public class DefaultPluginManager implements PluginManager
   {
     this.context = context;
     this.configuration = configuration;
-    this.cache = cacheManager.getCache(String.class, PluginCenter.class,
-      CACHE_NAME);
+    this.cache = cacheManager.getCache(CACHE_NAME);
     this.clientProvider = clientProvider;
     installedPlugins = new HashMap<String, Plugin>();
 

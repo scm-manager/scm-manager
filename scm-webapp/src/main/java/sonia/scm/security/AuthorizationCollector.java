@@ -106,8 +106,7 @@ public class AuthorizationCollector
     RepositoryDAO repositoryDAO, SecuritySystem securitySystem,
     PermissionResolver resolver)
   {
-    this.cache = cacheManager.getCache(CacheKey.class, AuthorizationInfo.class,
-      CACHE_NAME);
+    this.cache = cacheManager.getCache(CACHE_NAME);
     this.repositoryDAO = repositoryDAO;
     this.securitySystem = securitySystem;
     this.resolver = resolver;
@@ -524,15 +523,15 @@ public class AuthorizationCollector
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private Cache<CacheKey, AuthorizationInfo> cache;
+  /** authorization cache */
+  private final Cache<CacheKey, AuthorizationInfo> cache;
 
-  /** Field description */
-  private RepositoryDAO repositoryDAO;
+  /** repository dao */
+  private final RepositoryDAO repositoryDAO;
 
-  /** Field description */
-  private PermissionResolver resolver;
+  /** permission resolver */
+  private final PermissionResolver resolver;
 
-  /** Field description */
-  private SecuritySystem securitySystem;
+  /** security system */
+  private final SecuritySystem securitySystem;
 }

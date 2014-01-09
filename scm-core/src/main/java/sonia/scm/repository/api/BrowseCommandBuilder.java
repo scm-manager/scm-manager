@@ -108,8 +108,7 @@ public final class BrowseCommandBuilder
   BrowseCommandBuilder(CacheManager cacheManager, BrowseCommand browseCommand,
     Repository repository, PreProcessorUtil preProcessorUtil)
   {
-    this.cache = cacheManager.getCache(CacheKey.class, BrowserResult.class,
-      CACHE_NAME);
+    this.cache = cacheManager.getCache(CACHE_NAME);
     this.browseCommand = browseCommand;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
@@ -424,21 +423,21 @@ public final class BrowseCommandBuilder
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
-    private String repositoryId;
+    /** repository id */
+    private final String repositoryId;
 
-    /** Field description */
-    private BrowseCommandRequest request;
+    /** request object */
+    private final BrowseCommandRequest request;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
   /** implementation of the browse command */
-  private BrowseCommand browseCommand;
+  private final BrowseCommand browseCommand;
 
   /** cache */
-  private Cache<CacheKey, BrowserResult> cache;
+  private final Cache<CacheKey, BrowserResult> cache;
 
   /** disable escaping */
   private boolean disableEscaping = false;
@@ -450,11 +449,11 @@ public final class BrowseCommandBuilder
   private boolean disablePreProcessors = false;
 
   /** Field description */
-  private PreProcessorUtil preProcessorUtil;
+  private final PreProcessorUtil preProcessorUtil;
 
   /** the repsitory */
-  private Repository repository;
+  private final Repository repository;
 
   /** request for the command */
-  private BrowseCommandRequest request = new BrowseCommandRequest();
+  private final BrowseCommandRequest request = new BrowseCommandRequest();
 }

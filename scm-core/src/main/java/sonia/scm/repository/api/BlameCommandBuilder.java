@@ -105,8 +105,7 @@ public final class BlameCommandBuilder
   BlameCommandBuilder(CacheManager cacheManager, BlameCommand blameCommand,
                       Repository repository, PreProcessorUtil preProcessorUtil)
   {
-    this.cache = cacheManager.getCache(CacheKey.class, BlameResult.class,
-                                       CACHE_NAME);
+    this.cache = cacheManager.getCache(CACHE_NAME);
     this.blameCommand = blameCommand;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
@@ -151,7 +150,7 @@ public final class BlameCommandBuilder
 
     requestClone.setPath(path);
 
-    BlameResult result = null;
+    BlameResult result;
 
     if (disableCache)
     {
@@ -351,21 +350,21 @@ public final class BlameCommandBuilder
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
-    private String repositoryId;
+    /** repository id */
+    private final String repositoryId;
 
-    /** Field description */
-    private BlameCommandRequest request;
+    /** request object */
+    private final BlameCommandRequest request;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
   /** implementation of the blame command */
-  private BlameCommand blameCommand;
+  private final BlameCommand blameCommand;
 
   /** the cache */
-  private Cache<CacheKey, BlameResult> cache;
+  private final Cache<CacheKey, BlameResult> cache;
 
   /** disable escaping */
   private boolean disableEscaping = false;
@@ -377,11 +376,11 @@ public final class BlameCommandBuilder
   private boolean disablePreProcessors = false;
 
   /** Field description */
-  private PreProcessorUtil preProcessorUtil;
+  private final PreProcessorUtil preProcessorUtil;
 
   /** the repository */
-  private Repository repository;
+  private final Repository repository;
 
   /** request for the blame command implementation */
-  private BlameCommandRequest request = new BlameCommandRequest();
+  private final BlameCommandRequest request = new BlameCommandRequest();
 }

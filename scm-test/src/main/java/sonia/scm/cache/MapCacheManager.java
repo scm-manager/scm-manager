@@ -70,8 +70,6 @@ public class MapCacheManager implements CacheManager
    * Method description
    *
    *
-   * @param key
-   * @param value
    * @param name
    * @param <K>
    * @param <V>
@@ -79,103 +77,22 @@ public class MapCacheManager implements CacheManager
    * @return
    */
   @Override
-  public <K, V> Cache<K, V> getCache(Class<K> key, Class<V> value, String name)
+  public <K, V> Cache<K, V> getCache(String name)
   {
-    CacheKey cacheKey = new CacheKey(key, value, name);
-    Cache<K, V> cache = cacheMap.get(cacheKey);
+    Cache<K, V> cache = cacheMap.get(name);
 
     if (cache == null)
     {
       cache = new MapCache<K, V>();
-      cacheMap.put(cacheKey, cache);
+      cacheMap.put(name, cache);
     }
 
     return cache;
-  }
-
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 12/06/24
-   * @author         Enter your name here...
-   */
-  private static class CacheKey
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param key
-     * @param value
-     * @param name
-     */
-    public CacheKey(Class key, Class value, String name)
-    {
-      this.key = key;
-      this.value = value;
-      this.name = name;
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param obj
-     *
-     * @return
-     */
-    @Override
-    public boolean equals(Object obj)
-    {
-      if (obj == null)
-      {
-        return false;
-      }
-
-      if (getClass() != obj.getClass())
-      {
-        return false;
-      }
-
-      final CacheKey other = (CacheKey) obj;
-
-      return Objects.equal(key, other.key) && Objects.equal(value, other.value)
-             && Objects.equal(name, other.name);
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    @Override
-    public int hashCode()
-    {
-      return Objects.hashCode(key, value, name);
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private Class key;
-
-    /** Field description */
-    private String name;
-
-    /** Field description */
-    private Class value;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Map<CacheKey, Cache> cacheMap = Maps.newHashMap();
+  private final Map<String, Cache> cacheMap = Maps.newHashMap();
 }

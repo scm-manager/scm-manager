@@ -307,19 +307,11 @@ public final class RepositoryServiceFactory
      */
     public CacheClearHook(CacheManager cacheManager)
     {
-      this.blameCache =
-        cacheManager.getCache(BlameCommandBuilder.CacheKey.class,
-          BlameResult.class, BlameCommandBuilder.CACHE_NAME);
-      this.browseCache =
-        cacheManager.getCache(BrowseCommandBuilder.CacheKey.class,
-          BrowserResult.class, BrowseCommandBuilder.CACHE_NAME);
-      this.logCache = cacheManager.getCache(LogCommandBuilder.CacheKey.class,
-        ChangesetPagingResult.class, LogCommandBuilder.CACHE_NAME);
-      this.tagsCache = cacheManager.getCache(TagsCommandBuilder.CacheKey.class,
-        Tags.class, TagsCommandBuilder.CACHE_NAME);
-      this.branchesCache =
-        cacheManager.getCache(BranchesCommandBuilder.CacheKey.class,
-          Branches.class, BranchesCommandBuilder.CACHE_NAME);
+      this.blameCache = cacheManager.getCache(BlameCommandBuilder.CACHE_NAME);
+      this.browseCache = cacheManager.getCache(BrowseCommandBuilder.CACHE_NAME);
+      this.logCache = cacheManager.getCache(LogCommandBuilder.CACHE_NAME);
+      this.tagsCache = cacheManager.getCache(TagsCommandBuilder.CACHE_NAME);
+      this.branchesCache =cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME);
     }
 
     //~--- methods ------------------------------------------------------------

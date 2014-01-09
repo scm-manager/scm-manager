@@ -100,8 +100,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
     AssertUtil.assertIsNotNull(cacheManager);
     this.authenticationHandlers = sort(userManager, authenticationHandlerSet);
     this.encryptionHandler = encryptionHandler;
-    this.cache = cacheManager.getCache(String.class,
-      AuthenticationCacheValue.class, CACHE_NAME);
+    this.cache = cacheManager.getCache(CACHE_NAME);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -368,12 +367,12 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private List<AuthenticationHandler> authenticationHandlers;
+  /** authentication handlers */
+  private final List<AuthenticationHandler> authenticationHandlers;
 
-  /** Field description */
-  private Cache<String, AuthenticationCacheValue> cache;
+  /** authentication cache */
+  private final Cache<String, AuthenticationCacheValue> cache;
 
-  /** Field description */
-  private EncryptionHandler encryptionHandler;
+  /** encryption handler */
+  private final EncryptionHandler encryptionHandler;
 }

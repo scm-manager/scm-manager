@@ -118,8 +118,6 @@ public class GuavaCacheManager implements CacheManager
    * Method description
    *
    *
-   * @param key
-   * @param value
    * @param name
    * @param <K>
    * @param <V>
@@ -127,8 +125,7 @@ public class GuavaCacheManager implements CacheManager
    * @return
    */
   @Override
-  public synchronized <K, V> GuavaCache<K, V> getCache(Class<K> key,
-    Class<V> value, String name)
+  public synchronized <K, V> GuavaCache<K, V> getCache(String name)
   {
     logger.trace("try to retrieve cache {}", name);
 
