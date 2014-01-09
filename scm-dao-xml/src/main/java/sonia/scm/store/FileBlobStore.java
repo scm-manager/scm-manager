@@ -142,7 +142,7 @@ public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore
   @Override
   public void remove(Blob blob)
   {
-    Preconditions.checkNotNull("blob argument is required");
+    Preconditions.checkNotNull(blob, "blob argument is required");
     remove(blob.getId());
   }
 
@@ -196,6 +196,6 @@ public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private KeyGenerator keyGenerator;
+  /** key generator */
+  private final KeyGenerator keyGenerator;
 }
