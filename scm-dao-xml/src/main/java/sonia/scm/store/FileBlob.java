@@ -46,7 +46,7 @@ import java.io.OutputStream;
  *
  * @author Sebastian Sdorra
  */
-public class FileBlob implements Blob
+public final class FileBlob implements Blob
 {
 
   /**
@@ -122,8 +122,8 @@ public class FileBlob implements Blob
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private File file;
+  private final File file;
 
   /** Field description */
-  private String id;
+  private final String id;
 }

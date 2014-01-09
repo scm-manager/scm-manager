@@ -105,11 +105,11 @@ public class FileBasedStoreFactory
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SCMContextProvider context;
+  private final SCMContextProvider context;
 
   /** Field description */
   private File dataDirectory;
 
   /** Field description */
-  private String dataDirectoryName;
+  private final String dataDirectoryName;
 }

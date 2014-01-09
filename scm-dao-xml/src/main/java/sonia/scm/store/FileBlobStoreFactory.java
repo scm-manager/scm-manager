@@ -98,6 +98,6 @@ public class FileBlobStoreFactory extends FileBasedStoreFactory
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private KeyGenerator keyGenerator;
+  /** key generator */
+  private final KeyGenerator keyGenerator;
 }

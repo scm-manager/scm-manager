@@ -199,5 +199,5 @@ public abstract class FileBasedStore<T> implements StoreBase<T>
   protected File directory;
 
   /** Field description */
-  private String suffix;
+  private final String suffix;
 }
