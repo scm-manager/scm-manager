@@ -43,13 +43,11 @@ import static org.junit.Assert.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import org.junit.Ignore;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Ignore
 public class GitRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase
 {
 
