@@ -36,14 +36,18 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
+
 import org.apache.shiro.subject.Subject;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import sonia.scm.HandlerEvent;
 import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.api.HookContext;
 import sonia.scm.util.MockUtil;
 
 import static org.junit.Assert.*;
@@ -53,11 +57,6 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 
 import java.util.Collection;
-import java.util.Collections;
-import org.junit.Ignore;
-import org.mockito.Mockito;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.api.HookContext;
 
 /**
  *
@@ -244,14 +243,12 @@ public abstract class RepositoryManagerTestBase
    * @throws RepositoryException
    */
   @Test
-  @Ignore
   public void testListener() throws RepositoryException, IOException
   {
     RepositoryManager repoManager = createRepositoryManager(false);
     TestListener listener = new TestListener();
 
-    // TODO
-    // repoManager.addListener(listener);
+    ScmEventBus.getInstance().register(listener);
 
     Repository repository = RepositoryTestData.create42Puzzle();
 
@@ -356,10 +353,11 @@ public abstract class RepositoryManagerTestBase
     RepositoryManager repoManager = createRepositoryManager(false);
 
     ScmEventBus.getInstance().register(hook);
-    
+
     assertEquals(0, hook.eventsReceived);
 
     Repository repository = createTestRepository();
+
     // TODO
     HookContext ctx = null;
 
