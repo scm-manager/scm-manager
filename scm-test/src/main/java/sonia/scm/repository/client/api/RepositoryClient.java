@@ -30,16 +30,16 @@
  */
 
 
+
 package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.io.Closeables;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.client.spi.RepositoryClientProvider;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -87,7 +87,7 @@ public final class RepositoryClient implements Closeable
       logger.trace("close client provider");
     }
 
-    Closeables.closeQuietly(clientProvider);
+    IOUtil.close(clientProvider);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -204,5 +204,5 @@ public final class RepositoryClient implements Closeable
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryClientProvider clientProvider;
+  private final RepositoryClientProvider clientProvider;
 }

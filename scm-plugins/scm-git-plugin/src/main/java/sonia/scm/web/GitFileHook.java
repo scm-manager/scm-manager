@@ -30,12 +30,13 @@
  */
 
 
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Stopwatch;
-import com.google.common.io.Closeables;
+import com.google.common.io.Closer;
 
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
@@ -54,7 +55,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-
 
 /**
  *
@@ -91,8 +91,8 @@ public class GitFileHook
    * @param rpack
    * @param commands
    */
-  private GitFileHook(RepositoryHookType type,
-    ReceivePack rpack, Iterable<ReceiveCommand> commands)
+  private GitFileHook(RepositoryHookType type, ReceivePack rpack,
+    Iterable<ReceiveCommand> commands)
   {
     this.type = type;
     this.rpack = rpack;
@@ -106,13 +106,12 @@ public class GitFileHook
    *
    *
    *
-   * @param executor
    * @param type
    * @param rpack
    * @param commands
    */
-  public static void execute(RepositoryHookType type,
-    ReceivePack rpack, Iterable<ReceiveCommand> commands)
+  public static void execute(RepositoryHookType type, ReceivePack rpack,
+    Iterable<ReceiveCommand> commands)
   {
     new GitFileHook(type, rpack, commands).execute();
   }
@@ -208,14 +207,18 @@ public class GitFileHook
   private void execute(File hook)
   {
     Process p;
-    PrintWriter writer = null;
-    BufferedReader stdReader = null;
+    Closer closer = Closer.create();
 
     try
     {
       p = createProcess(hook);
-      writer = new PrintWriter(p.getOutputStream());
-      stdReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+      PrintWriter writer =
+        closer.register(new PrintWriter(p.getOutputStream()));
+      BufferedReader stdReader = closer.register(
+                                   new BufferedReader(
+                                     new InputStreamReader(
+                                       p.getInputStream())));
 
       for (ReceiveCommand rc : commands)
       {
@@ -224,9 +227,9 @@ public class GitFileHook
         logger.trace("write rc output \"{}\" to hook {}", output, hook);
         writer.println(output);
       }
-      
+
       writer.close();
-      
+
       String line = stdReader.readLine();
 
       while (line != null)
@@ -256,8 +259,7 @@ public class GitFileHook
     }
     finally
     {
-      Closeables.closeQuietly(writer);
-      Closeables.closeQuietly(stdReader);
+      IOUtil.close(closer);
     }
   }
 
@@ -318,11 +320,11 @@ public class GitFileHook
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Iterable<ReceiveCommand> commands;
+  private final Iterable<ReceiveCommand> commands;
 
   /** Field description */
-  private ReceivePack rpack;
+  private final ReceivePack rpack;
 
   /** Field description */
-  private RepositoryHookType type;
+  private final RepositoryHookType type;
 }

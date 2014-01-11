@@ -54,6 +54,7 @@ import java.io.OutputStream;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import sonia.scm.util.IOUtil;
 
 /**
  *
@@ -134,18 +135,18 @@ public class BrowserStreamingOutput implements StreamingOutput
     }
     finally
     {
-      Closeables.closeQuietly(repositoryService);
+      IOUtil.close(repositoryService);
     }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private CatCommandBuilder builder;
+  private final CatCommandBuilder builder;
 
   /** Field description */
-  private String path;
+  private final String path;
 
   /** Field description */
-  private RepositoryService repositoryService;
+  private final RepositoryService repositoryService;
 }

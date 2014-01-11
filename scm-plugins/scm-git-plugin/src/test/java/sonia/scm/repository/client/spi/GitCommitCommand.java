@@ -48,6 +48,7 @@ import sonia.scm.repository.client.api.RepositoryClientException;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import sonia.scm.util.IOUtil;
 
 /**
  *
@@ -103,7 +104,7 @@ public class GitCommitCommand implements CommitCommand
     }
     finally
     {
-      Closeables.closeQuietly(converter);
+      IOUtil.close(converter);
     }
 
     return changeset;
@@ -112,5 +113,5 @@ public class GitCommitCommand implements CommitCommand
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Git git;
+  private final Git git;
 }

@@ -37,7 +37,6 @@ package sonia.scm.plugin;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import com.google.common.io.Closeables;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 
@@ -55,6 +54,7 @@ import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionBinder;
 import sonia.scm.plugin.ext.ExtensionProcessor;
 import sonia.scm.plugin.ext.Extensions;
+import sonia.scm.util.IOUtil;
 import sonia.scm.web.security.DefaultAuthenticationHandler;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -146,8 +146,6 @@ public class DefaultPluginLoader implements PluginLoader
    *
    * @param classLoader
    * @param packages
-   * @param annotation
-   * @param processor
    * @param extensionPointProcessor
    * @param extensionProcessor
    * @param <T>
@@ -488,7 +486,7 @@ public class DefaultPluginLoader implements PluginLoader
       }
       finally
       {
-        Closeables.closeQuietly(input);
+        IOUtil.close(input);
       }
     }
   }
@@ -607,7 +605,7 @@ public class DefaultPluginLoader implements PluginLoader
     }
     finally
     {
-      Closeables.closeQuietly(content);
+      IOUtil.close(content);
     }
   }
 
@@ -639,10 +637,19 @@ public class DefaultPluginLoader implements PluginLoader
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private AnnotationScannerFactory annotationScannerFactory;
+  private final AnnotationScannerFactory annotationScannerFactory;
 
   /** Field description */
-  private Set<AnnotatedClass<Extension>> bounds = Sets.newHashSet();
+  private final Set<AnnotatedClass<Extension>> bounds = Sets.newHashSet();
+
+  /** Field description */
+  private final Set<Module> moduleSet = Sets.newHashSet();
+
+  /** Field description */
+  private final Set<Plugin> installedPlugins = new HashSet<Plugin>();
+
+  /** Field description */
+  private final ServletContext servletContext;
 
   /** Field description */
   private URL coreFile;
@@ -652,13 +659,4 @@ public class DefaultPluginLoader implements PluginLoader
 
   /** Field description */
   private Set<AnnotatedClass<Extension>> extensions;
-
-  /** Field description */
-  private Set<Module> moduleSet = Sets.newHashSet();
-
-  /** Field description */
-  private Set<Plugin> installedPlugins = new HashSet<Plugin>();
-
-  /** Field description */
-  private ServletContext servletContext;
 }

@@ -226,14 +226,14 @@ public class SvnBlameHandler implements ISVNAnnotateHandler
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private List<BlameLine> blameLines;
+  private final List<BlameLine> blameLines;
 
   /** Field description */
-  private Map<Long, String> descriptionCache = new HashMap<Long, String>();
+  private final Map<Long, String> descriptionCache = new HashMap<Long, String>();
 
   /** Field description */
-  private String path;
+  private final String path;
 
   /** Field description */
-  private SVNRepository svnRepository;
+  private final SVNRepository svnRepository;
 }

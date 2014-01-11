@@ -54,6 +54,7 @@ import java.io.OutputStream;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import sonia.scm.util.IOUtil;
 
 /**
  *
@@ -129,15 +130,15 @@ public class DiffStreamingOutput implements StreamingOutput
     }
     finally
     {
-      Closeables.closeQuietly(repositoryService);
+      IOUtil.close(repositoryService);
     }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private DiffCommandBuilder builder;
+  private final DiffCommandBuilder builder;
 
   /** Field description */
-  private RepositoryService repositoryService;
+  private final RepositoryService repositoryService;
 }

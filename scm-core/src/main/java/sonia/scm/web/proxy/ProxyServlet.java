@@ -30,13 +30,14 @@
  */
 
 
+
 package sonia.scm.web.proxy;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.Closeables;
+import com.google.common.io.Closer;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -48,6 +49,8 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import java.net.HttpURLConnection;
 
@@ -152,7 +155,7 @@ public class ProxyServlet extends HttpServlet
 
       con.disconnect();
     }
-    catch (Exception ex)
+    catch (IOException ex)
     {
       logger.error("could not proxy request", ex);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -172,13 +175,14 @@ public class ProxyServlet extends HttpServlet
   private void copyContent(HttpURLConnection con, HttpServletResponse response)
     throws IOException
   {
-    BufferedInputStream webToProxyBuf = null;
-    BufferedOutputStream proxyToClientBuf = null;
+    Closer closer = Closer.create();
 
     try
     {
-      webToProxyBuf = new BufferedInputStream(con.getInputStream());
-      proxyToClientBuf = new BufferedOutputStream(response.getOutputStream());
+      InputStream webToProxyBuf =
+        closer.register(new BufferedInputStream(con.getInputStream()));
+      OutputStream proxyToClientBuf =
+        closer.register(new BufferedOutputStream(response.getOutputStream()));
 
       long bytes = ByteStreams.copy(webToProxyBuf, proxyToClientBuf);
 
@@ -186,8 +190,7 @@ public class ProxyServlet extends HttpServlet
     }
     finally
     {
-      Closeables.closeQuietly(webToProxyBuf);
-      Closeables.closeQuietly(proxyToClientBuf);
+      closer.close();
     }
   }
 
@@ -307,5 +310,5 @@ public class ProxyServlet extends HttpServlet
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ProxyConfigurationProvider configurationProvider;
+  private final ProxyConfigurationProvider configurationProvider;
 }

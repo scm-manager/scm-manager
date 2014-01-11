@@ -36,7 +36,6 @@ package sonia.scm.repository.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
-import com.google.common.io.Closeables;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.DiffCommand;
 import sonia.scm.repository.spi.DiffCommandRequest;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -140,7 +140,7 @@ public final class DiffCommandBuilder
     }
     finally
     {
-      Closeables.closeQuietly(baos);
+      IOUtil.close(baos);
     }
 
     return content;
@@ -149,15 +149,15 @@ public final class DiffCommandBuilder
   //~--- set methods ----------------------------------------------------------
 
   /**
-   * Sets the diff format which should be used for the output. 
-   * <strong>Note: </strong> If the repository provider does not support the 
+   * Sets the diff format which should be used for the output.
+   * <strong>Note: </strong> If the repository provider does not support the
    * diff format, it will fallback to its default format.
    *
    *
    * @param format format of the diff output
    *
    * @return {@code this}
-   * 
+   *
    * @since 1.34
    */
   public DiffCommandBuilder setFormat(DiffFormat format)
@@ -228,8 +228,8 @@ public final class DiffCommandBuilder
   //~--- fields ---------------------------------------------------------------
 
   /** implementation of the diff command */
-  private DiffCommand diffCommand;
+  private final DiffCommand diffCommand;
 
   /** request for the diff command implementation */
-  private DiffCommandRequest request = new DiffCommandRequest();
+  private final DiffCommandRequest request = new DiffCommandRequest();
 }

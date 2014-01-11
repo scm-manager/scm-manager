@@ -35,7 +35,7 @@ package sonia.scm.io;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.Closeables;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -84,7 +84,7 @@ public abstract class AbstractWriter<T>
     }
     finally
     {
-      Closeables.closeQuietly(output);
+      IOUtil.close(output);
     }
   }
 

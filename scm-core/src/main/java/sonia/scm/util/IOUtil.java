@@ -129,7 +129,7 @@ public final class IOUtil
       }
       catch (IOException ex)
       {
-        logger.error(ex.getMessage(), ex);
+        logger.warn("IOException thrown while closing Closeable.", ex);
       }
     }
   }

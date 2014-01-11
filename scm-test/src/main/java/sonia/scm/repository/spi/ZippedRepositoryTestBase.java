@@ -35,7 +35,6 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.Closeables;
 import com.google.common.io.Resources;
 
 import org.junit.Before;
@@ -125,8 +124,6 @@ public abstract class ZippedRepositoryTestBase extends AbstractTestBase
    *
    *
    * @return
-   *
-   * @throws IOException
    */
   protected File createRepositoryDirectory()
   {
@@ -190,7 +187,7 @@ public abstract class ZippedRepositoryTestBase extends AbstractTestBase
           }
           finally
           {
-            Closeables.closeQuietly(output);
+            IOUtil.close(output);
           }
         }
 
@@ -200,7 +197,7 @@ public abstract class ZippedRepositoryTestBase extends AbstractTestBase
     }
     finally
     {
-      Closeables.closeQuietly(zip);
+      IOUtil.close(zip);
     }
   }
 

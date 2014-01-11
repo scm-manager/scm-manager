@@ -56,6 +56,7 @@ import java.net.URL;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
+import sonia.scm.util.IOUtil;
 
 /**
  *
@@ -228,7 +229,7 @@ public abstract class TemplateEngineTestBase
     }
     finally
     {
-      Closeables.closeQuietly(input);
+      IOUtil.close(input);
     }
   }
 }

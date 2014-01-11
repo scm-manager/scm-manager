@@ -177,6 +177,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.0</version>
         <configuration>
+          <showWarnings>true</showWarnings>
+          <showDeprecation>true</showDeprecation>
           <source>${project.build.javaLevel}</source>
           <target>${project.build.javaLevel}</target>
           <encoding>${project.build.sourceEncoding}</encoding>

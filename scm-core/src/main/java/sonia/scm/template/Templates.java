@@ -35,10 +35,10 @@ package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.Closeables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -124,7 +124,7 @@ public final class Templates
     }
     finally
     {
-      Closeables.closeQuietly(reader);
+      IOUtil.close(reader);
     }
 
   }

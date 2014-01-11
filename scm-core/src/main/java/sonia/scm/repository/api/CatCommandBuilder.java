@@ -37,7 +37,6 @@ package sonia.scm.repository.api;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.io.Closeables;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +45,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.CatCommand;
 import sonia.scm.repository.spi.CatCommandRequest;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -117,8 +117,8 @@ public final class CatCommandBuilder
    * @throws RepositoryException
    */
   public CatCommandBuilder retriveContent(OutputStream outputStream,
-          String path)
-          throws IOException, RepositoryException
+    String path)
+    throws IOException, RepositoryException
   {
     getCatResult(outputStream, path);
 
@@ -149,7 +149,7 @@ public final class CatCommandBuilder
     }
     finally
     {
-      Closeables.closeQuietly(baos);
+      IOUtil.close(baos);
     }
 
     return content;
@@ -185,11 +185,11 @@ public final class CatCommandBuilder
    * @throws RepositoryException
    */
   private void getCatResult(OutputStream outputStream, String path)
-          throws IOException, RepositoryException
+    throws IOException, RepositoryException
   {
     Preconditions.checkNotNull(outputStream, "OutputStream is required");
     Preconditions.checkArgument(!Strings.isNullOrEmpty(path),
-                                "path is required");
+      "path is required");
 
     CatCommandRequest requestClone = request.clone();
 
@@ -206,8 +206,8 @@ public final class CatCommandBuilder
   //~--- fields ---------------------------------------------------------------
 
   /** implementation of the cat command */
-  private CatCommand catCommand;
+  private final CatCommand catCommand;
 
   /** request for the cat command */
-  private CatCommandRequest request = new CatCommandRequest();
+  private final CatCommandRequest request = new CatCommandRequest();
 }

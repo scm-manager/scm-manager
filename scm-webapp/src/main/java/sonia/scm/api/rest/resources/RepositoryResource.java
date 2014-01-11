@@ -36,7 +36,6 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -75,6 +74,7 @@ import sonia.scm.security.RepositoryPermission;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -383,7 +383,7 @@ public class RepositoryResource
     }
     finally
     {
-      Closeables.closeQuietly(service);
+      IOUtil.close(service);
     }
 
     return response;
@@ -443,7 +443,7 @@ public class RepositoryResource
     }
     finally
     {
-      Closeables.closeQuietly(service);
+      IOUtil.close(service);
     }
 
     return response;
@@ -534,7 +534,7 @@ public class RepositoryResource
     }
     finally
     {
-      Closeables.closeQuietly(service);
+      IOUtil.close(service);
     }
 
     return response;
@@ -638,7 +638,7 @@ public class RepositoryResource
       }
       finally
       {
-        Closeables.closeQuietly(service);
+        IOUtil.close(service);
       }
     }
     else
@@ -741,7 +741,7 @@ public class RepositoryResource
     }
     finally
     {
-      Closeables.closeQuietly(service);
+      IOUtil.close(service);
     }
 
     return response;
@@ -960,7 +960,7 @@ public class RepositoryResource
     }
     finally
     {
-      Closeables.closeQuietly(service);
+      IOUtil.close(service);
     }
 
     return response;

@@ -35,7 +35,6 @@ package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.Closeables;
 import com.google.inject.Singleton;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -235,7 +234,7 @@ public class DebugServlet extends HttpServlet
     }
     finally
     {
-      Closeables.closeQuietly(writer);
+      IOUtil.close(writer);
     }
   }
 

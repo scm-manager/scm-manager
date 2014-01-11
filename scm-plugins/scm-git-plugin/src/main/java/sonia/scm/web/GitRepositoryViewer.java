@@ -60,6 +60,7 @@ import sonia.scm.template.TemplateEngineFactory;
 import sonia.scm.url.RepositoryUrlProvider;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -196,7 +197,7 @@ public class GitRepositoryViewer
     }
     finally
     {
-      Closeables.closeQuietly(service);
+      IOUtil.close(service);
     }
 
     return model;

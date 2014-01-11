@@ -36,12 +36,12 @@ package sonia.scm.web.filter;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
-import com.google.common.io.Closeables;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -87,8 +87,8 @@ public class LoggingFilter extends HttpFilter
    */
   @Override
   protected void doFilter(HttpServletRequest request,
-                          HttpServletResponse response, FilterChain chain)
-          throws IOException, ServletException
+    HttpServletResponse response, FilterChain chain)
+    throws IOException, ServletException
   {
     if (logger.isDebugEnabled())
     {
@@ -120,11 +120,11 @@ public class LoggingFilter extends HttpFilter
     logger.debug("Info: Request-Uri = {}", request.getRequestURI());
     logger.debug("Info: Remote-Addr = {}", request.getRemoteAddr());
     logger.debug("Info: Remote-User = {}",
-                 Util.nonNull(request.getRemoteUser()));
+      Util.nonNull(request.getRemoteUser()));
     logger.debug("Info: Content-Size = {}",
-                 Integer.toString(request.getContentLength()));
+      Integer.toString(request.getContentLength()));
     logger.debug("Info: Content-Type = {}",
-                 Util.nonNull(request.getContentType()));
+      Util.nonNull(request.getContentType()));
     logger.debug("Info: Method = {}", request.getMethod());
     logger.debug("Info: AuthType = {}", Util.nonNull(request.getAuthType()));
 
@@ -156,7 +156,7 @@ public class LoggingFilter extends HttpFilter
         String parameter = (String) parameters.nextElement();
 
         logger.debug("Parameter: {} = {}", parameter,
-                     request.getParameter(parameter));
+          request.getParameter(parameter));
       }
     }
 
@@ -169,7 +169,7 @@ public class LoggingFilter extends HttpFilter
         String attribute = (String) attributes.nextElement();
 
         logger.debug("Attribute: {} = {}", attribute,
-                     request.getAttribute(attribute).toString());
+          request.getAttribute(attribute).toString());
       }
     }
 
@@ -186,7 +186,7 @@ public class LoggingFilter extends HttpFilter
         String sAttribute = (String) sAttributes.nextElement();
 
         logger.debug("Session-Attribute: {} = {}", sAttribute,
-                     request.getSession().getAttribute(sAttribute).toString());
+          request.getSession().getAttribute(sAttribute).toString());
       }
     }
 
@@ -212,18 +212,18 @@ public class LoggingFilter extends HttpFilter
    * @throws IOException
    */
   private void logResponse(HttpServletResponse orgResponse,
-                           BufferedHttpServletResponse response)
-          throws IOException
+    BufferedHttpServletResponse response)
+    throws IOException
   {
     logger.debug("**************** response ****************");
     logger.debug("status code = {}",
-                 Integer.toString(response.getStatusCode()));
+      Integer.toString(response.getStatusCode()));
     logger.debug("status message = {}",
-                 Util.nonNull(response.getStatusMessage()));
+      Util.nonNull(response.getStatusMessage()));
     logger.debug("charset = {}", Util.nonNull(response.getCharacterEncoding()));
     logger.debug("content-type = {}", Util.nonNull(response.getContentType()));
     logger.debug("content-length = {}",
-                 Integer.toString(response.getContentLength()));
+      Integer.toString(response.getContentLength()));
 
     for (Cookie cookie : response.getCookies())
     {
@@ -250,7 +250,7 @@ public class LoggingFilter extends HttpFilter
         }
         finally
         {
-          Closeables.closeQuietly(out);
+          IOUtil.close(out);
         }
 
         logger.trace("Content: ".concat(new String(content)));
@@ -297,6 +297,6 @@ public class LoggingFilter extends HttpFilter
   private boolean isTextRequest(String contentType)
   {
     return !Strings.isNullOrEmpty(contentType)
-           && contentType.toLowerCase(Locale.ENGLISH).startsWith("text");
+      && contentType.toLowerCase(Locale.ENGLISH).startsWith("text");
   }
 }
