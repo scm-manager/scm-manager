@@ -39,7 +39,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -70,14 +69,12 @@ import com.sun.jersey.api.client.WebResource;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Ignore
 @RunWith(Parameterized.class)
 public class AnonymousAccessITCase
 {
@@ -188,31 +185,6 @@ public class AnonymousAccessITCase
   }
 
   /**
-   * Issue 97
-   *
-   *
-   * @throws IOException
-   * @throws RepositoryClientException
-   */
-  @Test
-  @Ignore
-  public void testAllowedAnonymousPush()
-          throws IOException, RepositoryClientException
-  {
-    Client client = createAdminClient();
-    WebResource resource = createResource(client,
-                             "repository/".concat(repository.getId()));
-
-    repository.setPermissions(Arrays.asList(PERMISSION_ANONYMOUS_WRITE));
-    resource.post(ClientResponse.class, repository);
-
-    RepositoryClient repositoryClient = createAnonymousRepositoryClient();
-
-    createRandomFile(repositoryClient);
-    repositoryClient.commit("added test files");
-  }
-
-  /**
    * Method description
    *
    *
@@ -236,10 +208,9 @@ public class AnonymousAccessITCase
    * @throws IOException
    * @throws RepositoryClientException
    */
-  @Ignore
   @Test(expected = RepositoryClientException.class)
   public void testDeniedAnonymousPush()
-          throws IOException, RepositoryClientException
+    throws IOException, RepositoryClientException
   {
     RepositoryClient repositoryClient = createAnonymousRepositoryClient();
 
@@ -256,7 +227,7 @@ public class AnonymousAccessITCase
    */
   @Test
   public void testSimpleAdminPush()
-          throws RepositoryClientException, IOException
+    throws RepositoryClientException, IOException
   {
     RepositoryClient client = createAdminRepositoryClient();
 
@@ -274,7 +245,7 @@ public class AnonymousAccessITCase
    * @throws RepositoryClientException
    */
   private RepositoryClient createAdminRepositoryClient()
-          throws IOException, RepositoryClientException
+    throws IOException, RepositoryClientException
   {
     return createRepositoryClient(ADMIN_USERNAME, ADMIN_PASSWORD);
   }
@@ -289,7 +260,7 @@ public class AnonymousAccessITCase
    * @throws RepositoryClientException
    */
   private RepositoryClient createAnonymousRepositoryClient()
-          throws IOException, RepositoryClientException
+    throws IOException, RepositoryClientException
   {
     return createRepositoryClient(null, null);
   }
@@ -307,23 +278,23 @@ public class AnonymousAccessITCase
    * @throws RepositoryClientException
    */
   private RepositoryClient createRepositoryClient(String username,
-          String password)
-          throws IOException, RepositoryClientException
+    String password)
+    throws IOException, RepositoryClientException
   {
     File directory = temporaryFolder.newFolder();
     RepositoryClient client = null;
 
-    // TODO create repository url
-    
+    String url = repository.createUrl(URL);
+
     if ((username != null) && (password != null))
     {
       client = RepositoryClientFactory.createClient(repositoryType, directory,
-              null, username, password);
+        url, username, password);
     }
     else
     {
       client = RepositoryClientFactory.createClient(repositoryType, directory,
-              null);
+        url);
     }
 
     client.init();

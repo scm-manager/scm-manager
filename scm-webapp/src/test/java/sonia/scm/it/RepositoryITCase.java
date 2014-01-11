@@ -35,8 +35,7 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.AfterClass;
-import org.junit.Ignore;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -46,6 +45,7 @@ import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.util.IOUtil;
 
 import static org.junit.Assert.*;
 
@@ -87,9 +87,32 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   /**
    * Method description
    *
+   *
+   * @return
    */
-  @AfterClass
-  public static void cleanup()
+  @Parameters
+  public static Collection<String[]> createParameters()
+  {
+    Collection<String[]> params = new ArrayList<String[]>();
+
+    params.add(new String[] { "git" });
+
+    params.add(new String[] { "svn" });
+
+    if (IOUtil.search("hg") != null)
+    {
+      params.add(new String[] { "hg" });
+    }
+
+    return params;
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @After
+  public void cleanup()
   {
     Client client = createClient();
 
@@ -114,34 +137,8 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   /**
    * Method description
    *
-   *
-   * @return
-   */
-  @Parameters
-  public static Collection<String[]> createParameters()
-  {
-    Collection<String[]> params = new ArrayList<String[]>();
-
-    params.add(new String[] { "git" });
-
-    /*
-     * params.add(new String[] { "svn" });
-     *
-     * if (IOUtil.search("hg") != null)
-     * {
-     * params.add(new String[] { "hg" });
-     * }
-     */
-
-    return params;
-  }
-
-  /**
-   * Method description
-   *
    */
   @Test
-  @Ignore
   public void create()
   {
     Repository repository =
@@ -155,7 +152,6 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    *
    */
   @Test
-  @Ignore
   public void delete()
   {
     Repository repository =
@@ -170,14 +166,20 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    *
    */
 
-  // @Test
+  @Test
   public void doubleCreate()
   {
     Repository repository = RepositoryTestData.create42Puzzle(repositoryType);
 
     repository = createRepository(client, repository);
 
-    // repository = createRepository(repository);
+    WebResource wr = createResource(client, "repositories");
+    ClientResponse response = wr.post(ClientResponse.class, repository);
+
+    assertNotNull(response);
+
+    // TODO should be 409?
+    assertEquals(500, response.getStatus());
   }
 
   /**
@@ -185,7 +187,6 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    *
    */
   @Test
-  @Ignore
   public void modify()
   {
     Repository repository =
@@ -206,7 +207,6 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
     Repository other = getRepositoryById(client, repository.getId());
 
     assertRepositoriesEquals(repository, other);
-    deleteRepository(client, repository.getId());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -259,5 +259,5 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String repositoryType;
+  private final String repositoryType;
 }

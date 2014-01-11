@@ -68,13 +68,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import org.junit.Ignore;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Ignore
 public class RepositoryITCaseBase
 {
 
@@ -142,10 +140,9 @@ public class RepositoryITCaseBase
 
     try
     {
-      // TODO create repository url
       RepositoryClient rc =
         RepositoryClientFactory.createClient(repository.getType(), directory,
-          null, username, password);
+          repository.createUrl(URL), username, password);
 
       rc.init();
       addTestFiles(rc);
@@ -345,9 +342,8 @@ public class RepositoryITCaseBase
   protected RepositoryClient createRepositoryClient(User user, File directory)
           throws RepositoryClientException
   {
-    // TODO create repository url
     return RepositoryClientFactory.createClient(repository.getType(),
-            directory, null, user.getName(), password);
+            directory, repository.createUrl(URL), user.getName(), password);
   }
 
   //~--- fields ---------------------------------------------------------------

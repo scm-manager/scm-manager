@@ -77,7 +77,6 @@ import java.util.Random;
  *
  * @author Sebastian Sdorra
  */
-@Ignore
 @RunWith(Parameterized.class)
 public class ChangesetViewerITCase extends AbstractAdminITCaseBase
 {
@@ -116,9 +115,8 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
    * @throws RepositoryClientException
    */
   @Test
-  @Ignore
   public void cachingTest()
-          throws RepositoryClientException, IOException, InterruptedException
+    throws RepositoryClientException, IOException, InterruptedException
   {
     RepositoryClient rc = createRepositoryClient();
 
@@ -166,7 +164,7 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
    */
   @Test
   public void simpleTest()
-          throws RepositoryClientException, IOException, InterruptedException
+    throws RepositoryClientException, IOException, InterruptedException
   {
     RepositoryClient rc = createRepositoryClient();
 
@@ -188,8 +186,8 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
    * @throws RepositoryClientException
    */
   private void addTestFile(RepositoryClient rc, String name, int count,
-                           boolean sleep)
-          throws IOException, RepositoryClientException, InterruptedException
+    boolean sleep)
+    throws IOException, RepositoryClientException, InterruptedException
   {
     File file = new File(localDirectory, name.concat(".txt"));
 
@@ -263,12 +261,11 @@ public class ChangesetViewerITCase extends AbstractAdminITCaseBase
    * @throws RepositoryClientException
    */
   private RepositoryClient createRepositoryClient()
-          throws RepositoryClientException
+    throws RepositoryClientException
   {
-    // TODO create repository url
     return RepositoryClientFactory.createClient(repositoryType, localDirectory,
-            null, IntegrationTestUtil.ADMIN_USERNAME,
-            IntegrationTestUtil.ADMIN_PASSWORD);
+      repository.createUrl(URL), IntegrationTestUtil.ADMIN_USERNAME,
+      IntegrationTestUtil.ADMIN_PASSWORD);
   }
 
   /**

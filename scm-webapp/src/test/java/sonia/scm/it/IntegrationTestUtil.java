@@ -77,6 +77,8 @@ public final class IntegrationTestUtil
   /** Field description */
   public static final String ADMIN_USERNAME = "scmadmin";
 
+  public static final String URL = "http://localhost:8081/scm";
+  
   /** Field description */
   public static final String BASE_URL = "http://localhost:8081/scm/api/rest/";
 
