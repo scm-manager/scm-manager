@@ -104,12 +104,10 @@ public class JAXBStore<T> extends AbstractStore<T>
    * @return
    */
   @Override
+  @SuppressWarnings("unchecked")
   protected T readObject()
   {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("load {} from store {}", type, configFile);
-    }
+    logger.debug("load {} from store {}", type, configFile);
 
     T result = null;
 
@@ -140,7 +138,7 @@ public class JAXBStore<T> extends AbstractStore<T>
     if (logger.isDebugEnabled())
     {
       logger.debug("store {} to {}", object.getClass().getName(),
-                   configFile.getPath());
+        configFile.getPath());
     }
 
     try

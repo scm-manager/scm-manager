@@ -72,6 +72,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import sonia.scm.util.IOUtil;
 
 /**
  *
@@ -99,7 +100,6 @@ public class GitBrowseCommand extends AbstractGitCommand
    *
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
   public GitBrowseCommand(GitContext context, Repository repository)
   {
@@ -120,6 +120,7 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @throws RepositoryException
    */
   @Override
+  @SuppressWarnings("unchecked")
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
     throws IOException, RepositoryException
   {
@@ -462,6 +463,7 @@ public class GitBrowseCommand extends AbstractGitCommand
    * @throws IOException
    * @throws RepositoryException
    */
+  @SuppressWarnings("unchecked")
   private Map<String,
     SubRepository> getSubRepositories(org.eclipse.jgit.lib.Repository repo,
       ObjectId revision)
@@ -474,10 +476,11 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
 
     Map<String, SubRepository> subRepositories = null;
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    ByteArrayOutputStream baos = null;
 
     try
     {
+      baos = new ByteArrayOutputStream();
       new GitCatCommand(context, repository).getContent(repo, revision,
         PATH_MODULES, baos);
       subRepositories = GitSubModuleParser.parse(baos.toString());
@@ -486,6 +489,8 @@ public class GitBrowseCommand extends AbstractGitCommand
     {
       logger.trace("could not find .gitmodules", ex);
       subRepositories = Collections.EMPTY_MAP;
+    } finally {
+      IOUtil.close(baos);
     }
 
     return subRepositories;
@@ -494,6 +499,6 @@ public class GitBrowseCommand extends AbstractGitCommand
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Map<ObjectId, Map<String, SubRepository>> subrepositoryCache =
+  private final Map<ObjectId, Map<String, SubRepository>> subrepositoryCache =
     Maps.newHashMap();
 }

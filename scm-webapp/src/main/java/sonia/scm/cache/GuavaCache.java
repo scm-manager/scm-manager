@@ -81,6 +81,7 @@ public class GuavaCache<K, V> implements Cache<K, V>
    * @param configuration
    * @param name
    */
+  @SuppressWarnings("unchecked")
   public GuavaCache(GuavaCacheConfiguration configuration, String name)
   {
     this(GuavaCaches.create(configuration, name),

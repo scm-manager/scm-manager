@@ -76,6 +76,7 @@ public class AnnotatedClass<T extends Annotation>
    * @return
    */
   @Override
+  @SuppressWarnings("unchecked")
   public boolean equals(Object obj)
   {
     if (obj == null)

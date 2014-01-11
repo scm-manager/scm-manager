@@ -215,6 +215,7 @@ public class HgCGIServlet extends HttpServlet
    * @param env
    * @param session
    */
+  @SuppressWarnings("unchecked")
   private void passSessionAttributes(EnvList env, HttpSession session)
   {
     Enumeration<String> enm = session.getAttributeNames();

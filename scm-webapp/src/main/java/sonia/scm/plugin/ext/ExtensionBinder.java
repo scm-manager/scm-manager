@@ -143,6 +143,7 @@ public class ExtensionBinder
    * @param extensionPointClass
    * @param extensions
    */
+  @SuppressWarnings("unchecked")
   private void bindExtensionPoint(Set<AnnotatedClass<Extension>> found,
     Class extensionPointClass, Set<AnnotatedClass<Extension>> extensions)
   {
@@ -169,6 +170,7 @@ public class ExtensionBinder
    * @param extensionPointClass
    * @param extensions
    */
+  @SuppressWarnings("unchecked")
   private void bindMultiExtensionPoint(Set<AnnotatedClass<Extension>> found,
     Class extensionPointClass, Set<AnnotatedClass<Extension>> extensions)
   {
@@ -221,6 +223,7 @@ public class ExtensionBinder
    * @param extensionPointClass
    * @param extensionClass
    */
+  @SuppressWarnings("unchecked")
   private void bindSingleInstance(Class extensionPointClass,
     Class extensionClass)
   {

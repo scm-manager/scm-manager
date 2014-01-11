@@ -52,6 +52,7 @@ public class GuavaCacheCopyTest extends CacheCopyTestBase
    * @return
    */
   @Override
+  @SuppressWarnings("unchecked")
   protected Cache<String, MutableObject> createCache(CopyStrategy strategy)
   {
     return new GuavaCache(CacheBuilder.newBuilder().build(), strategy, "ka");

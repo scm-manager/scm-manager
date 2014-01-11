@@ -189,6 +189,7 @@ public class DefaultAnnotationScanner implements AnnotationScanner
    * @param annotation
    * @param managedClass
    */
+  @SuppressWarnings("unchecked")
   private void processAnnotation(Class<?> annotationClass,
     Annotation annotation, Class<?> managedClass)
   {
@@ -317,6 +318,7 @@ public class DefaultAnnotationScanner implements AnnotationScanner
    * @param extensionObjects
    * @param managedClass
    */
+  @SuppressWarnings("unchecked")
   private void processManagedClass(Class<?> managedClass)
   {
     logger.trace("check managed class {} for annotations", managedClass);

@@ -355,6 +355,7 @@ public class AuthenticationResource
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   private ScmState createAnonymousState()
   {
     return createState(SCMContext.ANONYMOUS, Collections.EMPTY_LIST,
@@ -371,6 +372,7 @@ public class AuthenticationResource
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   private ScmState createState(Subject subject)
   {
     PrincipalCollection collection = subject.getPrincipals();

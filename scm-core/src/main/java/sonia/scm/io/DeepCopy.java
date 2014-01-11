@@ -65,6 +65,7 @@ public final class DeepCopy
    *
    * @throws IOException
    */
+  @SuppressWarnings("unchecked")
   public static <T> T copy(T orig) throws IOException
   {
     T obj = null;

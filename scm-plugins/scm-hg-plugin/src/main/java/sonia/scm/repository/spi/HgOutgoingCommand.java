@@ -91,6 +91,7 @@ public class HgOutgoingCommand extends AbstractCommand
    * @throws RepositoryException
    */
   @Override
+  @SuppressWarnings("unchecked")
   public ChangesetPagingResult getOutgoingChangesets(
     OutgoingCommandRequest request)
     throws RepositoryException

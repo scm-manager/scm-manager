@@ -361,6 +361,7 @@ public class DefaultSecuritySystem implements SecuritySystem
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   private List<PermissionDescriptor> parsePermissionDescriptor(
     JAXBContext context, URL descriptorUrl)
   {
@@ -474,6 +475,7 @@ public class DefaultSecuritySystem implements SecuritySystem
      *
      * @return
      */
+    @SuppressWarnings("unchecked")
     public List<PermissionDescriptor> getPermissions()
     {
       if (permissions == null)

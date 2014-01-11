@@ -163,6 +163,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    * @throws RepositoryException
    */
   @Override
+  @SuppressWarnings("unchecked")
   public ChangesetPagingResult getChangesets(LogCommandRequest request)
     throws IOException, RepositoryException
   {

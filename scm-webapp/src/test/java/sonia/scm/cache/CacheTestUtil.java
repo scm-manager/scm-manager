@@ -57,6 +57,7 @@ public final class CacheTestUtil
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public static GuavaCacheManager createDefaultGuavaCacheManager()
   {
     GuavaCacheConfiguration config = new GuavaCacheConfiguration();

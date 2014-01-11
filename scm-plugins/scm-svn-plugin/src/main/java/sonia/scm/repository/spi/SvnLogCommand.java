@@ -102,6 +102,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
    * @throws RepositoryException
    */
   @Override
+  @SuppressWarnings("unchecked")
   public Changeset getChangeset(String revision)
     throws IOException, RepositoryException
   {
@@ -149,6 +150,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
    * @throws RepositoryException
    */
   @Override
+  @SuppressWarnings("unchecked")
   public ChangesetPagingResult getChangesets(LogCommandRequest request)
     throws IOException, RepositoryException
   {

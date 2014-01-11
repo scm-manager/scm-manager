@@ -203,6 +203,7 @@ public class ProxyServlet extends HttpServlet
    * @param request
    * @param con
    */
+  @SuppressWarnings("unchecked")
   private void copyRequestHeaders(ProxyConfiguration configuration,
     HttpServletRequest request, HttpURLConnection con)
   {

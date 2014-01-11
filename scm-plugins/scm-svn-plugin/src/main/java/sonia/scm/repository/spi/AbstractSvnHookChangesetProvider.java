@@ -77,6 +77,7 @@ public abstract class AbstractSvnHookChangesetProvider
    * @return
    */
   @Override
+  @SuppressWarnings("unchecked")
   public synchronized HookChangesetResponse handleRequest(
     HookChangesetRequest request)
   {

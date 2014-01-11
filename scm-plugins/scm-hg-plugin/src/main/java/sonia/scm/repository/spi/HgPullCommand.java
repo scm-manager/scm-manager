@@ -86,6 +86,7 @@ public class HgPullCommand extends AbstractCommand implements PullCommand
    * @throws RepositoryException
    */
   @Override
+  @SuppressWarnings("unchecked")
   public PullResponse pull(PullCommandRequest request)
     throws RepositoryException, IOException
   {
@@ -109,5 +110,5 @@ public class HgPullCommand extends AbstractCommand implements PullCommand
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private HgRepositoryHandler handler;
+  private final HgRepositoryHandler handler;
 }

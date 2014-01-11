@@ -89,6 +89,7 @@ public final class MockUtil
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public static Subject createAdminSubject()
   {
     Subject subject = mock(Subject.class);

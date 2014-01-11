@@ -34,7 +34,6 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -94,5 +93,6 @@ public class MapCacheManager implements CacheManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  @SuppressWarnings("unchecked")
   private final Map<String, Cache> cacheMap = Maps.newHashMap();
 }

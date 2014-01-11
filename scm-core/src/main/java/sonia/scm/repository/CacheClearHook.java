@@ -76,6 +76,7 @@ public class CacheClearHook
    *
    * @param predicate
    */
+  @SuppressWarnings("unchecked")
   public void clearCache(Predicate predicate)
   {
     if (predicate != null)

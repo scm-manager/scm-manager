@@ -205,6 +205,7 @@ public class SubCommandHandler
    *
    * @param line
    */
+  @SuppressWarnings("unchecked")
   private void parseLine(String line)
   {
     line = line.trim();

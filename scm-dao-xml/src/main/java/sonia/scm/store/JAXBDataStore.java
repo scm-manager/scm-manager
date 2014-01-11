@@ -175,6 +175,7 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
    * @return
    */
   @Override
+  @SuppressWarnings("unchecked")
   protected T read(File file)
   {
     T item = null;
@@ -203,5 +204,5 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T>
   private JAXBContext context;
 
   /** Field description */
-  private KeyGenerator keyGenerator;
+  private final KeyGenerator keyGenerator;
 }

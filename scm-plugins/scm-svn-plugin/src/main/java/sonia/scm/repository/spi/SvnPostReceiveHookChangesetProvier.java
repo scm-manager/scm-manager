@@ -105,6 +105,7 @@ public class SvnPostReceiveHookChangesetProvier
    * @return
    */
   @Override
+  @SuppressWarnings("unchecked")
   protected Changeset fetchChangeset()
   {
     Changeset changeset = null;

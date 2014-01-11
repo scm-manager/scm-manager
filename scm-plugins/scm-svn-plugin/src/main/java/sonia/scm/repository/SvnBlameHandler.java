@@ -189,6 +189,7 @@ public class SvnBlameHandler implements ISVNAnnotateHandler
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   private String getDescription(long revision)
   {
     String description = descriptionCache.get(revision);

@@ -67,6 +67,7 @@ public class RepositoryType extends Type
    * @param displayName display name of the type
    * @param supportedCommands supported commands of the type
    */
+  @SuppressWarnings("unchecked")
   public RepositoryType(String name, String displayName,
     Set<Command> supportedCommands)
   {

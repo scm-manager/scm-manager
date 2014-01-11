@@ -135,6 +135,7 @@ public final class BootstrapUtil
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public static <T> T loadClass(ClassLoader classLoader, Class<T> clazz)
   {
     T instance = null;
@@ -162,6 +163,7 @@ public final class BootstrapUtil
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public static <T> T loadClass(ClassLoader classLoader, Class<T> clazz,
     String className)
   {
@@ -190,6 +192,7 @@ public final class BootstrapUtil
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public static <T> T loadClass(Class<T> clazz, String className)
   {
     T instance = null;

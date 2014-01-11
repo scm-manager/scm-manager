@@ -106,6 +106,7 @@ public class SvnBrowseCommand extends AbstractSvnCommand
    * @throws RepositoryException
    */
   @Override
+  @SuppressWarnings("unchecked")
   public BrowserResult getBrowserResult(BrowseCommandRequest request)
     throws IOException, RepositoryException
   {
@@ -172,6 +173,7 @@ public class SvnBrowseCommand extends AbstractSvnCommand
    *
    * @throws SVNException
    */
+  @SuppressWarnings("unchecked")
   private void browseRecursive(SVNRepository svnRepository,
     long revisionNumber, BrowseCommandRequest request,
     List<FileObject> children, Collection<SVNDirEntry> entries, String basePath)

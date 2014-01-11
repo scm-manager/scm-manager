@@ -202,6 +202,7 @@ public abstract class RepositoryServiceProvider implements Closeable
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public Set<Feature> getSupportedFeatures()
   {
     return Collections.EMPTY_SET;

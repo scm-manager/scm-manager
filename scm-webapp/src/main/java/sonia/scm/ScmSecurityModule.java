@@ -72,6 +72,7 @@ public class ScmSecurityModule extends ShiroWebModule
    *
    */
   @Override
+  @SuppressWarnings("unchecked")
   protected void configureShiroWeb()
   {
 

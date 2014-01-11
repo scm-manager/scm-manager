@@ -79,6 +79,7 @@ public class GuavaCacheManagerConfiguration
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public List<GuavaNamedCacheConfiguration> getCaches()
   {
     if (caches == null)

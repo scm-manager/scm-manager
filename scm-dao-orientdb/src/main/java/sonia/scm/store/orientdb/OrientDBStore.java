@@ -118,6 +118,7 @@ public class OrientDBStore<T> extends AbstractStore<T>
    * @return
    */
   @Override
+  @SuppressWarnings("unchecked")
   protected T readObject()
   {
     T result = null;

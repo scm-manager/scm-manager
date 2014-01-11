@@ -163,6 +163,7 @@ public class ProxyConfiguration
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public Set<String> getRequestHeaderExcludes()
   {
     if (requestHeaderExcludes == null)
@@ -179,6 +180,7 @@ public class ProxyConfiguration
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public Set<String> getResponseHeaderExcludes()
   {
     if (responseHeaderExcludes == null)

@@ -421,6 +421,7 @@ public class DefaultPluginLoader implements PluginLoader
    *
    * @throws MalformedURLException
    */
+  @SuppressWarnings("unchecked")
   private void locateCoreFile() throws MalformedURLException
   {
     Set<String> paths = servletContext.getResourcePaths(PATH_WEBINFLIB);

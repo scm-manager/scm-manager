@@ -125,6 +125,7 @@ public class GuavaCacheManager implements CacheManager
    * @return
    */
   @Override
+  @SuppressWarnings("unchecked")
   public synchronized <K, V> GuavaCache<K, V> getCache(String name)
   {
     logger.trace("try to retrieve cache {}", name);

@@ -538,9 +538,10 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   private Comparator<T> createComparator(String sortby, boolean desc)
   {
-    Comparator comparator = null;
+    Comparator comparator;
 
     if (desc)
     {

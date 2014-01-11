@@ -184,6 +184,7 @@ public class RepositoryManagerDecorator
    * @return
    */
   @Override
+  @SuppressWarnings("unchecked")
   public RepositoryHandler getHandler(String type)
   {
     return decorated.getHandler(type);

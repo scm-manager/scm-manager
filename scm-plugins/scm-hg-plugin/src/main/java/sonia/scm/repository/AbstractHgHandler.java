@@ -296,6 +296,7 @@ public class AbstractHgHandler
    * @throws IOException
    * @throws RepositoryException
    */
+  @SuppressWarnings("unchecked")
   protected <T> T getResultFromScript(Class<T> resultType,
     HgPythonScript script, Map<String, String> extraEnv)
     throws IOException, RepositoryException

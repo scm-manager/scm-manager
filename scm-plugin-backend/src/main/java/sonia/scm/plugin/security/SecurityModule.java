@@ -155,6 +155,7 @@ public class SecurityModule extends ShiroWebModule
    *
    */
   @Override
+  @SuppressWarnings("unchecked")
   protected void configureShiroWeb()
   {
     bindConstants();

@@ -133,6 +133,7 @@ public class DebugServlet extends HttpServlet
    *
    * @param writer
    */
+  @SuppressWarnings("unchecked")
   private void appendContextAttributes(PrintWriter writer)
   {
     writer.append("<h2>ServletContext Attributes</h2>");
@@ -161,6 +162,7 @@ public class DebugServlet extends HttpServlet
    * @param writer
    * @param session
    */
+  @SuppressWarnings("unchecked")
   private void appendSessionAttributes(PrintWriter writer,
     final HttpSession session)
   {

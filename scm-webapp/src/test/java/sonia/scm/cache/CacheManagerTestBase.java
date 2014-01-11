@@ -103,6 +103,7 @@ public abstract class CacheManagerTestBase<C extends Cache>
    * @throws InterruptedException
    */
   @Test
+  @SuppressWarnings("unchecked")
   public void testSameReferenceMultiThreaded()
     throws InterruptedException, ExecutionException
   {

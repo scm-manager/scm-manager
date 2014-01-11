@@ -219,9 +219,10 @@ public class ClassOverrides implements Iterable<ClassOverride>
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public List<? extends Module> getModules()
   {
-    List<? extends Module> modules = null;
+    List<? extends Module> modules;
 
     if (Util.isNotEmpty(moduleClasses))
     {
@@ -265,6 +266,7 @@ public class ClassOverrides implements Iterable<ClassOverride>
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public <T> Class<T> getOverride(Class<T> clazz)
   {
     Class<T> implementation = null;

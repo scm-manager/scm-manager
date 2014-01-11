@@ -87,6 +87,7 @@ public class DevelopmentResourceManager extends AbstractResourceManager
    * @param resourceMap
    */
   @Override
+  @SuppressWarnings("unchecked")
   protected void collectResources(Map<ResourceKey, Resource> resourceMap)
   {
     List<String> scripts = getScriptResources();

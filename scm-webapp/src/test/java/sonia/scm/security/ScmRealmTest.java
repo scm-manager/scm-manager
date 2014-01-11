@@ -378,6 +378,7 @@ public class ScmRealmTest
    * @param repositories
    * @return
    */
+  @SuppressWarnings("unchecked")
   private ScmRealm createRealm(User user,
     Collection<String> authenticationGroups, Collection<Group> dbGroups,
     Collection<Repository> repositories)

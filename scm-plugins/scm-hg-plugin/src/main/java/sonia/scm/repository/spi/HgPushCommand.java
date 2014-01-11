@@ -86,6 +86,7 @@ public class HgPushCommand extends AbstractCommand implements PushCommand
    * @throws RepositoryException
    */
   @Override
+  @SuppressWarnings("unchecked")
   public PushResponse push(PushCommandRequest request)
     throws RepositoryException, IOException
   {
@@ -109,5 +110,5 @@ public class HgPushCommand extends AbstractCommand implements PushCommand
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private HgRepositoryHandler handler;
+  private final HgRepositoryHandler handler;
 }

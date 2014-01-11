@@ -84,6 +84,7 @@ public final class Util
    *
    * @return
    */
+  @SuppressWarnings("unchecked")
   public static <T extends Comparable> int compare(T object, T otherObject)
   {
     int result = 0;
@@ -268,7 +269,7 @@ public final class Util
     int limit)
   {
     List<T> result = new ArrayList<T>();
-    List<T> valueList = new ArrayList(values);
+    List<T> valueList = new ArrayList<T>(values);
 
     if (comparator != null)
     {
