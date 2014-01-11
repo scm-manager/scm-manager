@@ -36,15 +36,23 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 
 import static org.junit.Assert.*;
+
+import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -57,8 +65,31 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(HookContext.class)
 public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  @Override
+  public HookContext createHookContext(Repository repository)
+  {
+    HookContext ctx = mock(HookContext.class);
+
+    when(ctx.isFeatureSupported(any(HookFeature.class))).thenReturn(
+      Boolean.FALSE);
+
+    return ctx;
+  }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description

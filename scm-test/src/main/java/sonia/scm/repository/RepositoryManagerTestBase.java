@@ -40,7 +40,6 @@ import com.github.legman.Subscribe;
 import org.apache.shiro.subject.Subject;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import sonia.scm.HandlerEvent;
@@ -65,6 +64,16 @@ import java.util.Collection;
 public abstract class RepositoryManagerTestBase
   extends ManagerTestBase<Repository, RepositoryException>
 {
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  public abstract HookContext createHookContext(Repository repository);
 
   /**
    * Method description
@@ -346,7 +355,6 @@ public abstract class RepositoryManagerTestBase
    * @throws RepositoryException
    */
   @Test
-  @Ignore
   public void testRepositoryHook() throws RepositoryException, IOException
   {
     CountingReceiveHook hook = new CountingReceiveHook();
@@ -357,9 +365,7 @@ public abstract class RepositoryManagerTestBase
     assertEquals(0, hook.eventsReceived);
 
     Repository repository = createTestRepository();
-
-    // TODO
-    HookContext ctx = null;
+    HookContext ctx = createHookContext(repository);
 
     repoManager.fireHookEvent(new RepositoryHookEvent(ctx, repository,
       RepositoryHookType.POST_RECEIVE));
@@ -508,8 +514,20 @@ public abstract class RepositoryManagerTestBase
      *
      * @param event
      */
-    @Subscribe
+    @Subscribe(async = false)
     public void onEvent(PostReceiveRepositoryHookEvent event)
+    {
+      eventsReceived++;
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @param event
+     */
+    @Subscribe(async = false)
+    public void onEvent(PreReceiveRepositoryHookEvent event)
     {
       eventsReceived++;
     }
