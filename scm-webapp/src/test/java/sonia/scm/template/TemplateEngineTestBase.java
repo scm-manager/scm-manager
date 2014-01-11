@@ -36,7 +36,6 @@ package sonia.scm.template;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Maps;
-import com.google.common.io.Closeables;
 
 import org.junit.Test;
 
@@ -187,7 +186,7 @@ public abstract class TemplateEngineTestBase
     }
     finally
     {
-      Closeables.closeQuietly(input);
+      IOUtil.close(input);
     }
   }
 
