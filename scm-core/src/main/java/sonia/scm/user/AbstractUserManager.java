@@ -35,7 +35,7 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -56,7 +56,7 @@ public abstract class AbstractUserManager implements UserManager
    * @param user user that has changed
    * @param event type of change event
    */
-  protected void fireEvent(User user, HandlerEvent event)
+  protected void fireEvent(User user, HandlerEventType event)
   {
     ScmEventBus.getInstance().post(new UserEvent(user, event));
   }

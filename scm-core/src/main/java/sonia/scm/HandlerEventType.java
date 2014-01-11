@@ -35,12 +35,10 @@ package sonia.scm;
 
 /**
  * Handler event type.
- * 
- * TODO for 2.0 rename to HandlerEventType
  *
  * @author Sebastian Sdorra
  */
-public enum HandlerEvent
+public enum HandlerEventType
 {
 
   /**
@@ -82,7 +80,7 @@ public enum HandlerEvent
    *
    * @param post
    */
-  private HandlerEvent(boolean post)
+  private HandlerEventType(boolean post)
   {
     this.post = post;
   }
@@ -116,5 +114,5 @@ public enum HandlerEvent
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private boolean post;
+  private final boolean post;
 }

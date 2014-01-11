@@ -35,7 +35,7 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -55,7 +55,7 @@ public abstract class AbstractGroupManager implements GroupManager
    * @param group group that has changed
    * @param event type of change event
    */
-  protected void fireEvent(Group group, HandlerEvent event)
+  protected void fireEvent(Group group, HandlerEventType event)
   {
     ScmEventBus.getInstance().post(new GroupEvent(group, event));
   }

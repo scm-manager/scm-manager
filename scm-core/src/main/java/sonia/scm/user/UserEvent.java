@@ -36,9 +36,9 @@ package sonia.scm.user;
 
 import com.google.common.base.Objects;
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.event.Event;
-import sonia.scm.event.HandlerEventBase;
+import sonia.scm.event.HandlerEvent;
 
 /**
  * The UserEvent is fired if a user object changes.
@@ -47,7 +47,7 @@ import sonia.scm.event.HandlerEventBase;
  * @since 1.23
  */
 @Event
-public final class UserEvent implements HandlerEventBase<User>
+public final class UserEvent implements HandlerEvent<User>
 {
 
   /**
@@ -57,7 +57,7 @@ public final class UserEvent implements HandlerEventBase<User>
    * @param user changed user
    * @param eventType type of the event
    */
-  public UserEvent(User user, HandlerEvent eventType)
+  public UserEvent(User user, HandlerEventType eventType)
   {
     this.user = user;
     this.eventType = eventType;
@@ -91,7 +91,7 @@ public final class UserEvent implements HandlerEventBase<User>
    * @return
    */
   @Override
-  public HandlerEvent getEventType()
+  public HandlerEventType getEventType()
   {
     return eventType;
   }
@@ -111,8 +111,8 @@ public final class UserEvent implements HandlerEventBase<User>
   //~--- fields ---------------------------------------------------------------
 
   /** type of the event */
-  private HandlerEvent eventType;
+  private final HandlerEventType eventType;
 
   /** changed user */
-  private User user;
+  private final User user;
 }

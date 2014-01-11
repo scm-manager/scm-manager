@@ -40,7 +40,7 @@ import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.util.AssertUtil;
 
@@ -86,7 +86,7 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
    * @param repository repository that has changed
    * @param event type of change event
    */
-  protected void fireEvent(Repository repository, HandlerEvent event)
+  protected void fireEvent(Repository repository, HandlerEventType event)
   {
     ScmEventBus.getInstance().post(new RepositoryEvent(repository, event));
   }

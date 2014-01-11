@@ -36,9 +36,9 @@ package sonia.scm.repository;
 
 import com.google.common.base.Objects;
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.event.Event;
-import sonia.scm.event.HandlerEventBase;
+import sonia.scm.event.HandlerEvent;
 
 /**
  * The RepositoryEvent is fired if a {@link Repository} object changes.
@@ -47,7 +47,7 @@ import sonia.scm.event.HandlerEventBase;
  * @since 1.23
  */
 @Event
-public final class RepositoryEvent implements HandlerEventBase<Repository>
+public final class RepositoryEvent implements HandlerEvent<Repository>
 {
 
   /**
@@ -57,7 +57,7 @@ public final class RepositoryEvent implements HandlerEventBase<Repository>
    * @param repository changed repository
    * @param eventType type of the event
    */
-  public RepositoryEvent(Repository repository, HandlerEvent eventType)
+  public RepositoryEvent(Repository repository, HandlerEventType eventType)
   {
     this.repository = repository;
     this.eventType = eventType;
@@ -91,7 +91,7 @@ public final class RepositoryEvent implements HandlerEventBase<Repository>
    * @return
    */
   @Override
-  public HandlerEvent getEventType()
+  public HandlerEventType getEventType()
   {
     return eventType;
   }
@@ -111,8 +111,8 @@ public final class RepositoryEvent implements HandlerEventBase<Repository>
   //~--- fields ---------------------------------------------------------------
 
   /** event type */
-  private HandlerEvent eventType;
+  private final HandlerEventType eventType;
 
   /** changed repository */
-  private Repository repository;
+  private final Repository repository;
 }

@@ -46,7 +46,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
@@ -345,7 +345,7 @@ public final class RepositoryServiceFactory
     @Subscribe(referenceType = ReferenceType.STRONG)
     public void onEvent(RepositoryEvent event)
     {
-      if (event.getEventType() == HandlerEvent.DELETE)
+      if (event.getEventType() == HandlerEventType.DELETE)
       {
         clearCaches(event.getItem().getId());
       }

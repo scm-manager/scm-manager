@@ -37,9 +37,9 @@ package sonia.scm.group;
 
 import com.google.common.base.Objects;
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.event.Event;
-import sonia.scm.event.HandlerEventBase;
+import sonia.scm.event.HandlerEvent;
 
 /**
  * The GroupEvent is fired if a group object changes.
@@ -48,7 +48,7 @@ import sonia.scm.event.HandlerEventBase;
  * @since 1.23
  */
 @Event
-public final class GroupEvent implements HandlerEventBase<Group>
+public final class GroupEvent implements HandlerEvent<Group>
 {
 
   /**
@@ -58,7 +58,7 @@ public final class GroupEvent implements HandlerEventBase<Group>
    * @param group changed group
    * @param eventType type of the event
    */
-  public GroupEvent(Group group, HandlerEvent eventType)
+  public GroupEvent(Group group, HandlerEventType eventType)
   {
     this.group = group;
     this.eventType = eventType;
@@ -92,7 +92,7 @@ public final class GroupEvent implements HandlerEventBase<Group>
    * @return
    */
   @Override
-  public HandlerEvent getEventType()
+  public HandlerEventType getEventType()
   {
     return eventType;
   }
@@ -112,8 +112,8 @@ public final class GroupEvent implements HandlerEventBase<Group>
   //~--- fields ---------------------------------------------------------------
 
   /** event type */
-  private HandlerEvent eventType;
+  private final HandlerEventType eventType;
 
   /** changed group */
-  private Group group;
+  private final Group group;
 }

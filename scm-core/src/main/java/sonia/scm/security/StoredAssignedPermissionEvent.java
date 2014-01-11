@@ -36,7 +36,7 @@ package sonia.scm.security;
 
 import com.google.common.base.Objects;
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -66,7 +66,7 @@ public final class StoredAssignedPermissionEvent implements Serializable
    * @param type type of the event
    * @param permission permission object which has changed
    */
-  public StoredAssignedPermissionEvent(HandlerEvent type,
+  public StoredAssignedPermissionEvent(HandlerEventType type,
     StoredAssignedPermission permission)
   {
     this.type = type;
@@ -129,7 +129,7 @@ public final class StoredAssignedPermissionEvent implements Serializable
    *
    * @return type of event
    */
-  public HandlerEvent getEventType()
+  public HandlerEventType getEventType()
   {
     return type;
   }
@@ -151,5 +151,5 @@ public final class StoredAssignedPermissionEvent implements Serializable
   private StoredAssignedPermission permission;
 
   /** type of the event */
-  private HandlerEvent type;
+  private HandlerEventType type;
 }
