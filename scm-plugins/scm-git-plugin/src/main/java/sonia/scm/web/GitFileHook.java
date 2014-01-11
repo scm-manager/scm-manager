@@ -187,7 +187,7 @@ public class GitFileHook
       {
         logger.debug("try to execute hook {}", hook);
 
-        Stopwatch sw = new Stopwatch().start();
+        Stopwatch sw = Stopwatch.createStarted();
 
         execute(hook);
         logger.debug("file hook {} executed in {}", hook, sw.stop());
