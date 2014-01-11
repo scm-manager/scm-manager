@@ -66,7 +66,7 @@
   <modules>
     <module>scm-core</module>
     <module>scm-test</module>
-    <module>maven</module>
+    <module>scm-maven-plugins</module>
     <module>scm-plugins</module>
     <module>scm-samples</module>
     <module>scm-dao-xml</module>
@@ -75,7 +75,7 @@
     <module>scm-server</module>
     <module>scm-plugin-backend</module>
     <module>scm-clients</module>
-    <module>support</module>
+    <module>scm-support</module>
   </modules>
 
   <repositories>
