@@ -38,7 +38,7 @@ package sonia.scm.user;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 
 /**
  *
@@ -71,15 +71,15 @@ public final class UserEventHack
    * @param user
    * @param event
    */
-  public static void fireEvent(UserManager userManager, User user,
-    HandlerEvent event)
+  public static void fireEvent(UserManager userManager, HandlerEventType event,
+    User user)
   {
     AbstractUserManager abstractUserManager =
       getAbstractUserManager(userManager);
 
     if (abstractUserManager != null)
     {
-      abstractUserManager.fireEvent(user, event);
+      abstractUserManager.fireEvent(event, user);
     }
     else if (logger.isWarnEnabled())
     {

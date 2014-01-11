@@ -35,11 +35,10 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Objects;
 
 import sonia.scm.HandlerEventType;
+import sonia.scm.event.AbstractHandlerEvent;
 import sonia.scm.event.Event;
-import sonia.scm.event.HandlerEvent;
 
 /**
  * The GroupEvent is fired if a group object changes.
@@ -48,72 +47,31 @@ import sonia.scm.event.HandlerEvent;
  * @since 1.23
  */
 @Event
-public final class GroupEvent implements HandlerEvent<Group>
+public final class GroupEvent extends AbstractHandlerEvent<Group>
 {
 
   /**
-   * Constructs new group event
+   * Constructs a new group event.
    *
    *
-   * @param group changed group
    * @param eventType type of the event
+   * @param group changed group
    */
-  public GroupEvent(Group group, HandlerEventType eventType)
+  public GroupEvent(HandlerEventType eventType, Group group)
   {
-    this.group = group;
-    this.eventType = eventType;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    //J-
-    return Objects.toStringHelper(this)
-                  .add("eventType", eventType)
-                  .add("group", group)
-                  .toString();
-    //J+
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public HandlerEventType getEventType()
-  {
-    return eventType;
+    super(eventType, group);
   }
 
   /**
-   * {@inheritDoc}
+   * Constructs a new group event.
    *
    *
-   * @return
+   * @param eventType type of the event
+   * @param group changed group
+   * @param oldGroup old group
    */
-  @Override
-  public Group getItem()
+  public GroupEvent(HandlerEventType eventType, Group group, Group oldGroup)
   {
-    return group;
+    super(eventType, group, oldGroup);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** event type */
-  private final HandlerEventType eventType;
-
-  /** changed group */
-  private final Group group;
 }

@@ -67,6 +67,7 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
    *
    * @param event event to be fired
    */
+  @Override
   public void fireHookEvent(RepositoryHookEvent event)
   {
     AssertUtil.assertIsNotNull(event);
@@ -83,12 +84,26 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   /**
    * Send a {@link RepositoryEvent} to the {@link ScmEventBus}.
    *
-   * @param repository repository that has changed
    * @param event type of change event
+   * @param repository repository that has changed
+   * @param oldRepository old repository
    */
-  protected void fireEvent(Repository repository, HandlerEventType event)
+  protected void fireEvent(HandlerEventType event, Repository repository,
+    Repository oldRepository)
   {
-    ScmEventBus.getInstance().post(new RepositoryEvent(repository, event));
+    ScmEventBus.getInstance().post(new RepositoryEvent(event, repository,
+      oldRepository));
+  }
+
+  /**
+   * Send a {@link RepositoryEvent} to the {@link ScmEventBus}.
+   *
+   * @param event type of change event
+   * @param repository repository that has changed
+   */
+  protected void fireEvent(HandlerEventType event, Repository repository)
+  {
+    ScmEventBus.getInstance().post(new RepositoryEvent(event, repository));
   }
 
   /**

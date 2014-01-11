@@ -44,7 +44,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import sonia.scm.AbstractTestBase;
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.user.User;
 import sonia.scm.user.UserEvent;
 
@@ -101,7 +101,7 @@ public class GuavaScmEventBusTest extends AbstractTestBase
       }
     });
 
-    eventBus.post(new UserEvent(new User("test"), HandlerEvent.CREATE));
+    eventBus.post(new UserEvent(HandlerEventType.CREATE, new User("test")));
 
     assertNotEquals(thread, currentThread);
   }

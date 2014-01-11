@@ -43,7 +43,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
@@ -138,9 +138,9 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     removeDuplicateMembers(group);
     group.setCreationDate(System.currentTimeMillis());
-    fireEvent(group, HandlerEvent.BEFORE_CREATE);
+    fireEvent(HandlerEventType.BEFORE_CREATE, group);
     groupDAO.add(group);
-    fireEvent(group, HandlerEvent.CREATE);
+    fireEvent(HandlerEventType.CREATE, group);
   }
 
   /**
@@ -167,9 +167,9 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     if (groupDAO.contains(name))
     {
-      fireEvent(group, HandlerEvent.BEFORE_DELETE);
+      fireEvent(HandlerEventType.BEFORE_DELETE, group);
       groupDAO.delete(group);
-      fireEvent(group, HandlerEvent.DELETE);
+      fireEvent(HandlerEventType.DELETE, group);
     }
     else
     {
@@ -184,9 +184,7 @@ public class DefaultGroupManager extends AbstractGroupManager
    * @param context
    */
   @Override
-  public void init(SCMContextProvider context)
-  {
-  }
+  public void init(SCMContextProvider context) {}
 
   /**
    * Method description
@@ -210,13 +208,15 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     String name = group.getName();
 
-    if (groupDAO.contains(name))
+    Group oldGroup = groupDAO.get(name);
+
+    if (oldGroup != null)
     {
       removeDuplicateMembers(group);
       group.setLastModified(System.currentTimeMillis());
-      fireEvent(group, HandlerEvent.BEFORE_MODIFY);
+      fireEvent(HandlerEventType.BEFORE_MODIFY, group, oldGroup);
       groupDAO.modify(group);
-      fireEvent(group, HandlerEvent.MODIFY);
+      fireEvent(HandlerEventType.MODIFY, group, oldGroup);
     }
     else
     {

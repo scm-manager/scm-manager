@@ -44,7 +44,7 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.TransformFilter;
 import sonia.scm.search.SearchRequest;
@@ -179,9 +179,9 @@ public class DefaultUserManager extends AbstractUserManager
 
     AssertUtil.assertIsValid(user);
     user.setCreationDate(System.currentTimeMillis());
-    fireEvent(user, HandlerEvent.BEFORE_CREATE);
+    fireEvent(HandlerEventType.BEFORE_CREATE, user);
     userDAO.add(user);
-    fireEvent(user, HandlerEvent.CREATE);
+    fireEvent(HandlerEventType.CREATE, user);
   }
 
   /**
@@ -207,9 +207,9 @@ public class DefaultUserManager extends AbstractUserManager
 
     if (userDAO.contains(name))
     {
-      fireEvent(user, HandlerEvent.BEFORE_DELETE);
+      fireEvent(HandlerEventType.BEFORE_DELETE, user);
       userDAO.delete(user);
-      fireEvent(user, HandlerEvent.DELETE);
+      fireEvent(HandlerEventType.DELETE, user);
     }
     else
     {
@@ -267,14 +267,16 @@ public class DefaultUserManager extends AbstractUserManager
     }
 
     String name = user.getName();
+    
+    User oldUser = userDAO.get(name);
 
-    if (userDAO.contains(name))
+    if (oldUser != null)
     {
       AssertUtil.assertIsValid(user);
       user.setLastModified(System.currentTimeMillis());
-      fireEvent(user, HandlerEvent.BEFORE_MODIFY);
+      fireEvent(HandlerEventType.BEFORE_MODIFY, user, oldUser);
       userDAO.modify(user);
-      fireEvent(user, HandlerEvent.MODIFY);
+      fireEvent(HandlerEventType.MODIFY, user, oldUser);
     }
     else
     {

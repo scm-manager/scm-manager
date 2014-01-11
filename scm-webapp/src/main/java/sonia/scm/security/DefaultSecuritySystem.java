@@ -48,7 +48,7 @@ import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.store.ConfigurationEntryStore;
@@ -132,7 +132,7 @@ public class DefaultSecuritySystem implements SecuritySystem
 
     //J-
     ScmEventBus.getInstance().post(
-      new StoredAssignedPermissionEvent(HandlerEvent.CREATE, sap)
+      new StoredAssignedPermissionEvent(HandlerEventType.CREATE, sap)
     );
     //J+
 
@@ -152,7 +152,7 @@ public class DefaultSecuritySystem implements SecuritySystem
     store.remove(permission.getId());
     //J-
     ScmEventBus.getInstance().post(
-      new StoredAssignedPermissionEvent(HandlerEvent.CREATE, permission)
+      new StoredAssignedPermissionEvent(HandlerEventType.CREATE, permission)
     );
     //J+
   }
@@ -185,7 +185,7 @@ public class DefaultSecuritySystem implements SecuritySystem
   @Subscribe
   public void handleEvent(final UserEvent event)
   {
-    if (event.getEventType() == HandlerEvent.DELETE)
+    if (event.getEventType() == HandlerEventType.DELETE)
     {
       deletePermissions(new Predicate<AssignedPermission>()
       {
@@ -209,7 +209,7 @@ public class DefaultSecuritySystem implements SecuritySystem
   @Subscribe
   public void handleEvent(final GroupEvent event)
   {
-    if (event.getEventType() == HandlerEvent.DELETE)
+    if (event.getEventType() == HandlerEventType.DELETE)
     {
       deletePermissions(new Predicate<AssignedPermission>()
       {
@@ -243,7 +243,7 @@ public class DefaultSecuritySystem implements SecuritySystem
 
     //J-
     ScmEventBus.getInstance().post(
-      new StoredAssignedPermissionEvent(HandlerEvent.CREATE, permission)
+      new StoredAssignedPermissionEvent(HandlerEventType.CREATE, permission)
     );
     //J+    
   }

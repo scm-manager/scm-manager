@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.ConfigurationException;
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
@@ -105,7 +105,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * @param keyGenerator
    * @param repositoryDAO
    * @param handlerSet
-   * @param preProcessorUtil
    */
   @Inject
   public DefaultRepositoryManager(ScmConfiguration configuration,
@@ -187,9 +186,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
       getHandler(repository).create(repository);
     }
 
-    fireEvent(repository, HandlerEvent.BEFORE_CREATE);
+    fireEvent(HandlerEventType.BEFORE_CREATE, repository);
     repositoryDAO.add(repository);
-    fireEvent(repository, HandlerEvent.CREATE);
+    fireEvent(HandlerEventType.CREATE, repository);
   }
 
   /**
@@ -237,19 +236,18 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
     if (repositoryDAO.contains(repository))
     {
-      fireEvent(repository, HandlerEvent.BEFORE_DELETE);
+      fireEvent(HandlerEventType.BEFORE_DELETE, repository);
       getHandler(repository).delete(repository);
       repositoryDAO.delete(repository);
+      fireEvent(HandlerEventType.DELETE, repository);
     }
     else
     {
       throw new RepositoryNotFoundException(
         "repository ".concat(repository.getName()).concat(" not found"));
     }
-
-    fireEvent(repository, HandlerEvent.DELETE);
   }
-  
+
   /**
    * Method description
    *
@@ -273,9 +271,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    * @param context
    */
   @Override
-  public void init(SCMContextProvider context)
-  {
-  }
+  public void init(SCMContextProvider context) {}
 
   /**
    * Method description
@@ -298,24 +294,23 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
     AssertUtil.assertIsValid(repository);
 
-    Repository notModifiedRepository = repositoryDAO.get(repository.getType(),
-                                         repository.getName());
+    Repository oldRepository = repositoryDAO.get(repository.getType(),
+                                 repository.getName());
 
-    if (notModifiedRepository != null)
+    if (oldRepository != null)
     {
-      assertIsOwner(notModifiedRepository);
-      fireEvent(repository, HandlerEvent.BEFORE_MODIFY);
+      assertIsOwner(oldRepository);
+      fireEvent(HandlerEventType.BEFORE_MODIFY, repository, oldRepository);
       repository.setLastModified(System.currentTimeMillis());
       getHandler(repository).modify(repository);
       repositoryDAO.modify(repository);
+      fireEvent(HandlerEventType.MODIFY, repository, oldRepository);
     }
     else
     {
       throw new RepositoryNotFoundException(
         "repository ".concat(repository.getName()).concat(" not found"));
     }
-
-    fireEvent(repository, HandlerEvent.MODIFY);
   }
 
   /**
@@ -511,7 +506,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
     return validTypes;
   }
-  
+
   /**
    * Method description
    *

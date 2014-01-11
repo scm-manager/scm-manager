@@ -30,15 +30,14 @@
  */
 
 
+
 package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Objects;
-
 import sonia.scm.HandlerEventType;
+import sonia.scm.event.AbstractHandlerEvent;
 import sonia.scm.event.Event;
-import sonia.scm.event.HandlerEvent;
 
 /**
  * The UserEvent is fired if a user object changes.
@@ -47,72 +46,31 @@ import sonia.scm.event.HandlerEvent;
  * @since 1.23
  */
 @Event
-public final class UserEvent implements HandlerEvent<User>
+public final class UserEvent extends AbstractHandlerEvent<User>
 {
 
   /**
-   * Constructs new UserEvent.
+   * Constructs a new user event.
    *
    *
+   * @param eventType event type
    * @param user changed user
+   */
+  public UserEvent(HandlerEventType eventType, User user)
+  {
+    super(eventType, user);
+  }
+
+  /**
+   * Constructs a new user event.
+   *
+   *
    * @param eventType type of the event
+   * @param user changed user
+   * @param oldUser old user
    */
-  public UserEvent(User user, HandlerEventType eventType)
+  public UserEvent(HandlerEventType eventType, User user, User oldUser)
   {
-    this.user = user;
-    this.eventType = eventType;
+    super(eventType, user, oldUser);
   }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    //J-
-    return Objects.toStringHelper(this)
-                  .add("eventType", eventType)
-                  .add("user", user)
-                  .toString();
-    //J+
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public HandlerEventType getEventType()
-  {
-    return eventType;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public User getItem()
-  {
-    return user;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** type of the event */
-  private final HandlerEventType eventType;
-
-  /** changed user */
-  private final User user;
 }

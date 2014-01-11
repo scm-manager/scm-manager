@@ -41,7 +41,7 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 
 import static org.mockito.Mockito.*;
 
@@ -118,7 +118,7 @@ public class UserEventHackTest
    */
   private void fireEvent(UserManager u)
   {
-    UserEventHack.fireEvent(u, new User(), HandlerEvent.CREATE);
+    UserEventHack.fireEvent(u, HandlerEventType.CREATE, new User());
   }
 
   /**
@@ -129,8 +129,8 @@ public class UserEventHackTest
    */
   private void verify(int count)
   {
-    verifier.verify(userManager, calls(count)).fireEvent(any(User.class),
-      any(HandlerEvent.class));
+    verifier.verify(userManager,
+      calls(count)).fireEvent(any(HandlerEventType.class), any(User.class));
   }
 
   //~--- fields ---------------------------------------------------------------

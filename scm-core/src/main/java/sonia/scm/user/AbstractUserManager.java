@@ -38,9 +38,6 @@ package sonia.scm.user;
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 
-//~--- JDK imports ------------------------------------------------------------
-
-
 /**
  * Abstract base class for {@link UserManager} implementations. This class
  * implements the listener methods of the {@link UserManager} interface.
@@ -53,11 +50,23 @@ public abstract class AbstractUserManager implements UserManager
   /**
    * Send a {@link UserEvent} to the {@link ScmEventBus}.
    *
+   * @param event type of change event
+   * @param user user that has changed
+   * @param oldUser old user
+   */
+  protected void fireEvent(HandlerEventType event, User user, User oldUser)
+  {
+    ScmEventBus.getInstance().post(new UserEvent(event, user, oldUser));
+  }
+
+  /**
+   * Send a {@link UserEvent} to the {@link ScmEventBus}.
+   *
    * @param user user that has changed
    * @param event type of change event
    */
-  protected void fireEvent(User user, HandlerEventType event)
+  protected void fireEvent(HandlerEventType event, User user)
   {
-    ScmEventBus.getInstance().post(new UserEvent(user, event));
+    ScmEventBus.getInstance().post(new UserEvent(event, user));
   }
 }

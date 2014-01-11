@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,6 +38,7 @@ package sonia.scm.repository;
 import com.google.common.base.Objects;
 
 import sonia.scm.HandlerEventType;
+import sonia.scm.event.AbstractHandlerEvent;
 import sonia.scm.event.Event;
 import sonia.scm.event.HandlerEvent;
 
@@ -47,72 +49,32 @@ import sonia.scm.event.HandlerEvent;
  * @since 1.23
  */
 @Event
-public final class RepositoryEvent implements HandlerEvent<Repository>
+public final class RepositoryEvent extends AbstractHandlerEvent<Repository>
 {
 
   /**
-   * Constructs new repository event
+   * Constructs a new repository event.
    *
    *
-   * @param repository changed repository
    * @param eventType type of the event
+   * @param repository changed repository
    */
-  public RepositoryEvent(Repository repository, HandlerEventType eventType)
+  public RepositoryEvent(HandlerEventType eventType, Repository repository)
   {
-    this.repository = repository;
-    this.eventType = eventType;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    //J-
-    return Objects.toStringHelper(this)
-                  .add("eventType", eventType)
-                  .add("repository", repository)
-                  .toString();
-    //J+
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public HandlerEventType getEventType()
-  {
-    return eventType;
+    super(eventType, repository);
   }
 
   /**
-   * {@inheritDoc}
+   * Constructs a new repository event.
    *
    *
-   * @return
+   * @param eventType type of the event
+   * @param repository changed repository
+   * @param oldRepository old repository
    */
-  @Override
-  public Repository getItem()
+  public RepositoryEvent(HandlerEventType eventType, Repository repository,
+    Repository oldRepository)
   {
-    return repository;
+    super(eventType, repository, oldRepository);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** event type */
-  private final HandlerEventType eventType;
-
-  /** changed repository */
-  private final Repository repository;
 }

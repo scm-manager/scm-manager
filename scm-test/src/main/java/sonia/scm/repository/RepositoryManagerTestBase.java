@@ -42,7 +42,7 @@ import org.apache.shiro.subject.Subject;
 import org.junit.Before;
 import org.junit.Test;
 
-import sonia.scm.HandlerEvent;
+import sonia.scm.HandlerEventType;
 import sonia.scm.Manager;
 import sonia.scm.ManagerTestBase;
 import sonia.scm.event.ScmEventBus;
@@ -263,23 +263,23 @@ public abstract class RepositoryManagerTestBase
 
     repoManager.create(repository);
     assertRepositoriesEquals(repository, listener.preRepository);
-    assertSame(HandlerEvent.BEFORE_CREATE, listener.preEvent);
+    assertSame(HandlerEventType.BEFORE_CREATE, listener.preEvent);
     assertRepositoriesEquals(repository, listener.postRepository);
-    assertSame(HandlerEvent.CREATE, listener.postEvent);
+    assertSame(HandlerEventType.CREATE, listener.postEvent);
 
     repository.setDescription("changed description");
     repoManager.modify(repository);
     assertRepositoriesEquals(repository, listener.preRepository);
-    assertSame(HandlerEvent.BEFORE_MODIFY, listener.preEvent);
+    assertSame(HandlerEventType.BEFORE_MODIFY, listener.preEvent);
     assertRepositoriesEquals(repository, listener.postRepository);
-    assertSame(HandlerEvent.MODIFY, listener.postEvent);
+    assertSame(HandlerEventType.MODIFY, listener.postEvent);
 
     repoManager.delete(repository);
 
     assertRepositoriesEquals(repository, listener.preRepository);
-    assertSame(HandlerEvent.BEFORE_DELETE, listener.preEvent);
+    assertSame(HandlerEventType.BEFORE_DELETE, listener.preEvent);
     assertRepositoriesEquals(repository, listener.postRepository);
-    assertSame(HandlerEvent.DELETE, listener.postEvent);
+    assertSame(HandlerEventType.DELETE, listener.postEvent);
   }
 
   /**
@@ -574,13 +574,13 @@ public abstract class RepositoryManagerTestBase
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private HandlerEvent postEvent;
+    private HandlerEventType postEvent;
 
     /** Field description */
     private Repository postRepository;
 
     /** Field description */
-    private HandlerEvent preEvent;
+    private HandlerEventType preEvent;
 
     /** Field description */
     private Repository preRepository;

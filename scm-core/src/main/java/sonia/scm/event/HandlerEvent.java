@@ -63,4 +63,15 @@ public interface HandlerEvent<T>
    * @return changed item
    */
   public T getItem();
+
+  /**
+   * Returns old item or null. This method returns always expect for
+   * modification events.
+   *
+   *
+   * @return old item or null
+   *
+   * @since 2.0.0
+   */
+  public T getOldItem();
 }
