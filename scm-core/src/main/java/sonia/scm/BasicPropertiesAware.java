@@ -35,13 +35,15 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+import com.google.common.collect.Maps;
+
 import sonia.scm.xml.XmlMapStringAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -81,14 +83,7 @@ public class BasicPropertiesAware implements PropertiesAware, Serializable
 
     final BasicPropertiesAware other = (BasicPropertiesAware) obj;
 
-    if ((this.properties != other.properties)
-      && ((this.properties == null)
-        ||!this.properties.equals(other.properties)))
-    {
-      return false;
-    }
-
-    return true;
+    return Objects.equal(properties, other.properties);
   }
 
   /**
@@ -98,13 +93,7 @@ public class BasicPropertiesAware implements PropertiesAware, Serializable
   @Override
   public int hashCode()
   {
-    int hash = 7;
-
-    hash = 41 * hash + ((this.properties != null)
-      ? this.properties.hashCode()
-      : 0);
-
-    return hash;
+    return Objects.hashCode(properties);
   }
 
   /**
@@ -114,7 +103,7 @@ public class BasicPropertiesAware implements PropertiesAware, Serializable
   @Override
   public void removeProperty(String key)
   {
-    properties.remove(key);
+    getProperties().remove(key);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -126,6 +115,11 @@ public class BasicPropertiesAware implements PropertiesAware, Serializable
   @Override
   public Map<String, String> getProperties()
   {
+    if (properties == null)
+    {
+      properties = Maps.newHashMap();
+    }
+
     return properties;
   }
 
@@ -136,7 +130,7 @@ public class BasicPropertiesAware implements PropertiesAware, Serializable
   @Override
   public String getProperty(String key)
   {
-    return properties.get(key);
+    return getProperties().get(key);
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -158,12 +152,12 @@ public class BasicPropertiesAware implements PropertiesAware, Serializable
   @Override
   public void setProperty(String key, String value)
   {
-    properties.put(key, value);
+    getProperties().put(key, value);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** map to hold the properties */
   @XmlJavaTypeAdapter(XmlMapStringAdapter.class)
-  protected Map<String, String> properties = new HashMap<String, String>();
+  protected Map<String, String> properties;
 }
