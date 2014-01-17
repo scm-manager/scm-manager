@@ -242,14 +242,25 @@ public class HgHookCallbackServlet extends HttpServlet
 
       if (Util.isNotEmpty(credentials))
       {
-        String[] credentialsArray = credentials.split(":");
+        int index = credentials.indexOf(':');
 
-        if (credentialsArray.length >= 2)
+        if (index > 0 && index < credentials.length())
         {
           Subject subject = SecurityUtils.getSubject();
 
-          subject.login(Tokens.createAuthenticationToken(request,
-            credentialsArray[0], credentialsArray[1]));
+          //J-
+          subject.login(
+            Tokens.createAuthenticationToken(
+              request, 
+              credentials.substring(0, index), 
+              credentials.substring(index + 1)
+            )
+          );
+          //J+
+        }
+        else
+        {
+          logger.error("could not find delimiter");
         }
       }
     }
