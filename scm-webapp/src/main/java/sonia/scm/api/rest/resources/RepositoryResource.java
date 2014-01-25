@@ -1032,6 +1032,7 @@ public class RepositoryResource
 
       repository.setProperties(null);
       repository.setPermissions(null);
+      repository.setHealthCheckFailures(null);
     }
 
     return repository;
@@ -1118,11 +1119,11 @@ public class RepositoryResource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ScmConfiguration configuration;
+  private final ScmConfiguration configuration;
 
   /** Field description */
-  private RepositoryManager repositoryManager;
+  private final RepositoryManager repositoryManager;
 
   /** Field description */
-  private RepositoryServiceFactory servicefactory;
+  private final RepositoryServiceFactory servicefactory;
 }

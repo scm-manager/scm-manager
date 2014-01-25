@@ -559,7 +559,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
    *
    * @since 1.36
    */
-  void setHealthCheckFailures(List<HealthCheckFailure> healthCheckFailures)
+  public void setHealthCheckFailures(List<HealthCheckFailure> healthCheckFailures)
   {
     this.healthCheckFailures = healthCheckFailures;
   }
