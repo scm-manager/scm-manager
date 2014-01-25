@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -72,6 +73,17 @@ public class DefaultKeyGenerator implements KeyGenerator
    * Method description
    *
    *
+   * @param args
+   */
+  public static void main(String[] args)
+  {
+    System.out.println(new DefaultKeyGenerator().createKey());
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   @Override
@@ -107,8 +119,8 @@ public class DefaultKeyGenerator implements KeyGenerator
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private AtomicLong sessionKey = new AtomicLong();
+  private final AtomicLong sessionKey = new AtomicLong();
 
   /** Field description */
-  private Random random = new Random();
+  private final Random random = new Random();
 }
