@@ -45,6 +45,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   unknownType: 'Unknown',
   
   archiveIcon: 'resources/images/archive.png',
+  warningIcon: 'resources/images/warning.png',
   
   filterRequest: null,
   
@@ -97,6 +98,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
           name: 'properties'
         },{
           name: 'archived'
+        },{
+          name: 'healthCheckFailures'
         }]
       }),
       sortInfo: {
@@ -215,7 +218,15 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         forceFit: true,
         groupMode: 'value',
         enableGroupingMenu: false,
-        groupTextTpl: '{group} ({[values.rs.length]} {[values.rs.length > 1 ? "Repositories" : "Repository"]})'
+        groupTextTpl: '{group} ({[values.rs.length]} {[values.rs.length > 1 ? "Repositories" : "Repository"]})',
+        getRowClass: function(record){
+          var rowClass = '';
+          var healthFailures = record.get('healthCheckFailures');
+          if (healthFailures && healthFailures.length > 0){
+            rowClass = 'unhealthy';
+          }
+          return rowClass;
+        }
       })
     };
     
@@ -229,8 +240,21 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     }
   },
   
-  renderTypeIcon: function(type){
-    var result = '';
+  renderTypeIcon: function(type, meta, record){
+    var result;
+    if ( record ){
+      var healthFailures = record.get('healthCheckFailures');
+      if (healthFailures && healthFailures.length > 0){
+         result = String.format(this.typeIconTemplate, this.warningIcon, type, type);
+      }
+    }
+    if (!result){
+      result = this.getTypeIcon(type);
+    }
+    return result;
+  },
+  
+  getTypeIcon: function(type){
     var icon = Sonia.repository.getTypeIcon(type);
     if ( icon ){
       var displayName = type;
@@ -427,6 +451,13 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
       
     } else {
       Ext.getCmp('repoRmButton').setDisabled(true);
+    }
+    
+    if (admin && item.healthCheckFailures && item.healthCheckFailures.length > 0){
+      panels.push({
+        xtype: 'repositoryHealthCheckFailurePanel',
+        healthCheckFailures: item.healthCheckFailures
+      });
     }
     
     // call open listeners
