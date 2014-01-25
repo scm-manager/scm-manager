@@ -450,10 +450,10 @@
 
     <!-- repostitory libraries -->
     <jgit.version>3.2.0.201312181205-r</jgit.version>
-    <svnkit.version>1.7.10-scm4</svnkit.version>
+    <svnkit.version>1.8.3-scm1</svnkit.version>
     
     <!-- util libraries -->
-    <guava.version>15.0</guava.version>
+    <guava.version>16.0</guava.version>
 
     <!-- build properties -->
     <project.build.javaLevel>1.6</project.build.javaLevel>
