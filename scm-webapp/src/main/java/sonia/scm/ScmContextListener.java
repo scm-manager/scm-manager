@@ -59,6 +59,7 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import sonia.scm.repository.HealthCheckContextListener;
 
 /**
  *
@@ -140,6 +141,8 @@ public class ScmContextListener extends GuiceServletContextListener
                     .initialize(globalInjector);
       // init servlet context listeners
       globalInjector.getInstance(ServletContextListenerHolder.class)
+                    .contextInitialized(servletContextEvent);
+      globalInjector.getInstance(HealthCheckContextListener.class)
                     .contextInitialized(servletContextEvent);
       //J+
     }

@@ -47,11 +47,13 @@ import sonia.scm.util.ValidationUtil;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -59,8 +61,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name = "repositories")
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "repositories")
 public class Repository extends BasicPropertiesAware implements ModelObject
 {
 
@@ -163,6 +165,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject
     repository.setUrl(url);
     repository.setPublicReadable(publicReadable);
     repository.setArchived(archived);
+
+    // do not copy health check results
   }
 
   /**
@@ -216,7 +220,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject
            && Objects.equal(url, other.url)
            && Objects.equal(creationDate, other.creationDate)
            && Objects.equal(lastModified, other.lastModified)
-           && Objects.equal(properties, other.properties);
+           && Objects.equal(properties, other.properties)
+           && Objects.equal(healthCheckFailures, other.healthCheckFailures);
     //J+
   }
 
@@ -230,7 +235,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   public int hashCode()
   {
     return Objects.hashCode(id, name, contact, description, publicReadable,
-      archived, permissions, type, url, creationDate, lastModified, properties);
+      archived, permissions, type, url, creationDate, lastModified, properties,
+      healthCheckFailures);
   }
 
   /**
@@ -256,6 +262,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject
             .add("lastModified", lastModified)
             .add("creationDate", creationDate)
             .add("properties", properties)
+            .add("healthCheckFailures", healthCheckFailures)
             .toString();
     //J+
   }
@@ -294,6 +301,24 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   public String getDescription()
   {
     return description;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * @since 1.36
+   */
+  @SuppressWarnings("unchecked")
+  public List<HealthCheckFailure> getHealthCheckFailures()
+  {
+    if (healthCheckFailures == null)
+    {
+      healthCheckFailures = Collections.EMPTY_LIST;
+    }
+
+    return healthCheckFailures;
   }
 
   /**
@@ -382,6 +407,19 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   public boolean isArchived()
   {
     return archived;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @since 1.36
+   */
+  public boolean isHealthy()
+  {
+    return Util.isEmpty(healthCheckFailures);
   }
 
   /**
@@ -542,6 +580,19 @@ public class Repository extends BasicPropertiesAware implements ModelObject
     this.url = url;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param healthCheckFailures
+   *
+   * @since 1.36
+   */
+  void setHealthCheckFailures(List<HealthCheckFailure> healthCheckFailures)
+  {
+    this.healthCheckFailures = healthCheckFailures;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -552,6 +603,13 @@ public class Repository extends BasicPropertiesAware implements ModelObject
 
   /** Field description */
   private String description;
+
+  /**
+   * @since 1.36
+   */
+  @XmlElement(name = "healthCheckFailure")
+  @XmlElementWrapper(name = "healthCheckFailures")
+  private List<HealthCheckFailure> healthCheckFailures;
 
   /** Field description */
   private String id;

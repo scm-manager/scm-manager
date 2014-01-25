@@ -154,6 +154,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import sonia.scm.repository.HealthCheckContextListener;
+import sonia.scm.repository.HealthChecker;
 
 /**
  *
@@ -275,6 +277,9 @@ public class ScmServletModule extends ServletModule
     bind(CipherHandler.class).toInstance(cu.getCipherHandler());
     bind(EncryptionHandler.class, MessageDigestEncryptionHandler.class);
     bind(FileSystem.class, DefaultFileSystem.class);
+    
+    // bind health check stuff
+    bind(HealthCheckContextListener.class);
 
     // bind extensions
     pluginLoader.processExtensions(binder());
