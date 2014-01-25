@@ -35,6 +35,7 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -57,6 +58,7 @@ import sonia.scm.util.Util;
 import com.sun.jersey.core.util.Base64;
 
 import java.io.IOException;
+
 import java.util.Set;
 
 import javax.servlet.FilterChain;
@@ -87,17 +89,17 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
 
   //~--- constructors ---------------------------------------------------------
 
-
   /**
    * Constructs a new basic authenticaton filter
    *
    * @param configuration scm-manager global configuration
+   * @param autoLoginModules auto login modules
    *
    * @since 1.21
    */
   @Inject
   public BasicAuthenticationFilter(ScmConfiguration configuration,
-                                   Set<AutoLoginModule> autoLoginModules)
+    Set<AutoLoginModule> autoLoginModules)
   {
     super(autoLoginModules);
     this.configuration = configuration;
@@ -133,7 +135,8 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
       {
         if (logger.isTraceEnabled())
         {
-          logger.trace("found basic authorization header, start authentication");
+          logger.trace(
+            "found basic authorization header, start authentication");
         }
 
         user = authenticate(request, response, subject, authentication);
@@ -179,12 +182,13 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
   }
 
   /**
-   * Method description
+   * Sends status code 401 back to client, if no authorization header was found,
+   * if a authorization is present and the authentication failed the method will
+   * send status code 403.
    *
-   *
-   * @param request
-   * @param response
-   * @param chain
+   * @param request servlet request
+   * @param response servlet response
+   * @param chain filter chain
    *
    * @throws IOException
    * @throws ServletException
@@ -195,7 +199,16 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
     HttpServletResponse response, FilterChain chain)
     throws IOException, ServletException
   {
-    HttpUtil.sendUnauthorized(request, response);
+    String authentication = request.getHeader(HEADER_AUTHORIZATION);
+
+    if (Strings.isNullOrEmpty(authentication))
+    {
+      HttpUtil.sendUnauthorized(request, response);
+    }
+    else
+    {
+      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+    }
   }
 
   /**
