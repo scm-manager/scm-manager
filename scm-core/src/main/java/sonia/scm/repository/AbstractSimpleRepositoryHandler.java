@@ -64,7 +64,7 @@ import java.net.URL;
  * @param <C>
  */
 public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepositoryConfig>
-        extends AbstractRepositoryHandler<C>
+        extends AbstractRepositoryHandler<C> implements RepositoryDirectoryHandler
 {
 
   /** Field description */
@@ -249,6 +249,7 @@ public abstract class AbstractSimpleRepositoryHandler<C extends SimpleRepository
    *
    * @return
    */
+  @Override
   public File getDirectory(Repository repository)
   {
     File directory = null;
