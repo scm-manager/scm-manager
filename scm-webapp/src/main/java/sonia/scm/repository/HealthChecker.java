@@ -85,6 +85,33 @@ public final class HealthChecker
    * Method description
    *
    *
+   * @param id
+   *
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   * @throws RepositoryNotFoundException
+   */
+  public void check(String id)
+    throws RepositoryNotFoundException, RepositoryException, IOException
+  {
+    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+
+    Repository repository = repositoryManager.get(id);
+
+    if (repository == null)
+    {
+      throw new RepositoryNotFoundException(
+        "could not find repository with id ".concat(id));
+    }
+
+    check(repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param repository
    *
    * @throws IOException

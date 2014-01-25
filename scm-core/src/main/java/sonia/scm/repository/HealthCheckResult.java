@@ -33,6 +33,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableSet;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -40,6 +41,7 @@ import com.google.common.collect.ImmutableSet;
 import java.util.Set;
 
 /**
+ * Result of {@link HealthCheck}.
  *
  * @author Sebastian Sdorra
  * @since 1.36
@@ -47,7 +49,7 @@ import java.util.Set;
 public final class HealthCheckResult
 {
 
-  /** Field description */
+  /** healthy result */
   private static final HealthCheckResult HEALTHY =
     new HealthCheckResult(ImmutableSet.<HealthCheckFailure>of());
 
@@ -67,10 +69,9 @@ public final class HealthCheckResult
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a {@link HealthCheckResult} for a healthy repository.
    *
-   *
-   * @return
+   * @return {@link HealthCheckResult} for a healthy repository
    */
   public static HealthCheckResult healthy()
   {
@@ -78,12 +79,12 @@ public final class HealthCheckResult
   }
 
   /**
-   * Method description
+   * Returns a {@link HealthCheckResult} for a unhealthy repository.
    *
    *
-   * @param failures
+   * @param failures failures of failed {@link HealthCheck}s
    *
-   * @return
+   * @return {@link HealthCheckResult} for a unhealthy repository
    */
   public static HealthCheckResult unhealthy(
     Iterable<HealthCheckFailure> failures)
@@ -92,13 +93,13 @@ public final class HealthCheckResult
   }
 
   /**
-   * Method description
+   * Returns a {@link HealthCheckResult} for a unhealthy repository.
    *
    *
-   * @param failure
-   * @param otherFailures
+   * @param failure failure of {@link HealthCheck}
+   * @param otherFailures failures of failed {@link HealthCheck}s
    *
-   * @return
+   * @return {@link HealthCheckResult} for a unhealthy repository
    */
   public static HealthCheckResult unhealthy(HealthCheckFailure failure,
     HealthCheckFailure... otherFailures)
@@ -114,12 +115,43 @@ public final class HealthCheckResult
   }
 
   /**
-   * Method description
+   * {@inheritDoc}
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final HealthCheckResult other = (HealthCheckResult) obj;
+
+    return Objects.equal(failures, other.failures);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(failures);
+  }
+
+  /**
+   * Merge this {@link HealthCheckResult} with another 
+   * {@link HealthCheckResult}.
    *
    *
-   * @param otherResult
+   * @param otherResult result to merge with
    *
-   * @return
+   * @return merged {@link HealthCheckResult}
    */
   public HealthCheckResult merge(HealthCheckResult otherResult)
   {
@@ -144,13 +176,22 @@ public final class HealthCheckResult
     return merged;
   }
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString()
+  {
+    return Objects.toStringHelper(this).add("failures", failures).toString();
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a {@link Set} of {@link HealthCheckFailure}s. The set is empty if 
+   * the repository is healthy.
    *
-   *
-   * @return
+   * @return {@link Set} of {@link HealthCheckFailure}s
    */
   public Set<HealthCheckFailure> getFailures()
   {
@@ -158,10 +199,9 @@ public final class HealthCheckResult
   }
 
   /**
-   * Method description
+   * Returns {@code true} if the result is healthy.
    *
-   *
-   * @return
+   * @return {@code true} if the result is healthy
    */
   public boolean isHealthy()
   {
@@ -169,10 +209,9 @@ public final class HealthCheckResult
   }
 
   /**
-   * Method description
+   * Returns {@code true} if the result is unhealthy
    *
-   *
-   * @return
+   * @return {@code true} if the result is unhealthy.
    */
   public boolean isUnhealthy()
   {
@@ -181,6 +220,6 @@ public final class HealthCheckResult
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** set of failures */
   private final Set<HealthCheckFailure> failures;
 }

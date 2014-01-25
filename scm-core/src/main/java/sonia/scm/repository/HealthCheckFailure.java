@@ -42,6 +42,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
+ * Single failure of a {@link HealthCheck}.
  *
  * @author Sebastian Sdorra
  * @since 1.36
@@ -52,17 +53,18 @@ public final class HealthCheckFailure
 {
 
   /**
-   * Constructs ...
+   * Constructs a new {@link HealthCheckFailure}. 
+   * This constructor is only for JAXB.
    *
    */
   HealthCheckFailure() {}
 
   /**
-   * Constructs ...
+   * Constructs a new {@link HealthCheckFailure}. 
    *
-   * @param id
-   * @param summary
-   * @param description
+   * @param id id of the failure
+   * @param summary summary of the failure
+   * @param description description of the failure
    */
   public HealthCheckFailure(String id, String summary, String description)
   {
@@ -72,10 +74,10 @@ public final class HealthCheckFailure
   /**
    * Constructs ...
    *
-   * @param id
-   * @param summary
-   * @param url
-   * @param description
+   * @param id id of the failure
+   * @param summary summary of the failure
+   * @param url url of the failure
+   * @param description description of the failure
    */
   public HealthCheckFailure(String id, String summary, String url,
     String description)
@@ -89,12 +91,7 @@ public final class HealthCheckFailure
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public boolean equals(Object obj)
@@ -120,10 +117,7 @@ public final class HealthCheckFailure
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public int hashCode()
@@ -132,10 +126,7 @@ public final class HealthCheckFailure
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public String toString()
@@ -153,10 +144,9 @@ public final class HealthCheckFailure
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the description of this failure.
    *
-   *
-   * @return
+   * @return description of this failure
    */
   public String getDescription()
   {
@@ -164,10 +154,9 @@ public final class HealthCheckFailure
   }
 
   /**
-   * Method description
+   * Returns the id of this failure.
    *
-   *
-   * @return
+   * @return id of this failure
    */
   public String getId()
   {
@@ -175,10 +164,9 @@ public final class HealthCheckFailure
   }
 
   /**
-   * Method description
+   * Returns the summary of the failure.
    *
-   *
-   * @return
+   * @return summary of the failure
    */
   public String getSummary()
   {
@@ -186,10 +174,9 @@ public final class HealthCheckFailure
   }
 
   /**
-   * Method description
+   * Return the url of the failure.
    *
-   *
-   * @return
+   * @return url of the failure
    */
   public String getUrl()
   {
@@ -198,15 +185,15 @@ public final class HealthCheckFailure
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** description of failure */
   private String description;
 
-  /** Field description */
+  /** id of failure */
   private String id;
 
-  /** Field description */
+  /** summary of failure */
   private String summary;
 
-  /** Field description */
+  /** url of failure */
   private String url;
 }
