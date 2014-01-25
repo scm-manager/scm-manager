@@ -456,6 +456,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
     if (admin && item.healthCheckFailures && item.healthCheckFailures.length > 0){
       panels.push({
         xtype: 'repositoryHealthCheckFailurePanel',
+        grid: this,
+        repository: item,
         healthCheckFailures: item.healthCheckFailures
       });
     }

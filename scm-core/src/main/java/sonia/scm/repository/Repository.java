@@ -301,10 +301,11 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns a {@link List} of {@link HealthCheckFailure}s. The {@link List}
+   * is empty if the repository is healthy.
    *
    *
-   * @return
+   * @return {@link List} of {@link HealthCheckFailure}s
    * @since 1.36
    */
   @SuppressWarnings("unchecked")
@@ -394,10 +395,10 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Returns {@code true} if the repository is healthy.
    *
    *
-   * @return
+   * @return {@code true} if the repository is healthy
    *
    * @since 1.36
    */
@@ -552,10 +553,9 @@ public class Repository extends BasicPropertiesAware implements ModelObject
   }
 
   /**
-   * Method description
+   * Sets {@link HealthCheckFailure} for a unhealthy repository.
    *
-   *
-   * @param healthCheckFailures
+   * @param healthCheckFailures list of {@link HealthCheckFailure}s
    *
    * @since 1.36
    */

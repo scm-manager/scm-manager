@@ -31,9 +31,13 @@
 
 package sonia.scm.repository;
 
+//~--- non-JDK imports --------------------------------------------------------
+
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
+ * Repository health check. Executes a check to verify the health
+ * state of a repository.
  *
  * @author Sebastian Sdorra
  * @since 1.36
@@ -43,12 +47,12 @@ public interface HealthCheck
 {
 
   /**
-   * Method description
+   * Returns the result of the repository health check.
    *
    *
-   * @param repository
+   * @param repository repository to check
    *
-   * @return
+   * @return result of the health check
    */
   public HealthCheckResult check(Repository repository);
 }

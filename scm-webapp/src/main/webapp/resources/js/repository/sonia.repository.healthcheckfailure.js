@@ -35,17 +35,24 @@ Sonia.repository.HealthCheckFailure = Ext.extend(Ext.Panel, {
   title: 'Health check',
   linkTemplate: '<a target="_blank" href="{0}">{0}</a>',
   
+  errorTitleText: 'Error',
+  errorDescriptionText: 'Could not execute health check.',
+  
   initComponent: function(){
     var items = [];
     
     if ( this.healthCheckFailures && this.healthCheckFailures.length > 0 ){
       for (var i=0; i<this.healthCheckFailures.length; i++){
-        if (i>0){
-          this.appendSpacer(items);
-        }
         this.appendHealthCheckFailures(items,this.healthCheckFailures[i]);
       }
     }
+    items.push({
+      xtype: 'link',
+      style: 'font-weight: bold',
+      text: 'rerun health checks',
+      handler: this.rerunHealthChecks,
+      scope: this
+    });
     
     var config = {
       title: this.title,
@@ -67,12 +74,34 @@ Sonia.repository.HealthCheckFailure = Ext.extend(Ext.Panel, {
     Sonia.repository.HealthCheckFailure.superclass.initComponent.apply(this, arguments);
   },
   
-  appendSpacer: function(items){
-    items.push({
-      xtype: 'box',
-      height: 10,
-      colspan: 2
+  rerunHealthChecks: function(){
+    var url = restUrl + 'repositories/' + this.repository.id + '/healthcheck.json';
+    var el = this.el;
+    var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
+    
+    Ext.Ajax.request({
+      url: url,
+      method: 'POST',
+      scope: this,
+      success: function(){
+        clearTimeout(tid);
+        this.grid.reload(function(){
+          this.grid.selectById(this.repository.id);
+        }, this);
+        el.unmask();
+      },
+      failure: function(result){
+        clearTimeout(tid);
+        el.unmask();
+        main.handleFailure(
+          result.status, 
+          this.errorTitleText, 
+          this.errorDescriptionText
+        );
+      }
     });
+    
+    this.grid.reload();
   },
   
   appendHealthCheckFailures: function(items, hcf){
@@ -101,6 +130,11 @@ Sonia.repository.HealthCheckFailure = Ext.extend(Ext.Panel, {
         text: hcf.description
       });
     }
+    items.push({
+      xtype: 'box',
+      height: 10,
+      colspan: 2
+    });
   }
   
 });

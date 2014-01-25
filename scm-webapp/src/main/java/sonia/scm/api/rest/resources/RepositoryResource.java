@@ -53,6 +53,7 @@ import sonia.scm.repository.Branches;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.HealthChecker;
 import sonia.scm.repository.Permission;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
@@ -130,16 +131,18 @@ public class RepositoryResource
    * @param configuration
    * @param repositoryManager
    * @param servicefactory
+   * @param healthChecker
    */
   @Inject
   public RepositoryResource(ScmConfiguration configuration,
     RepositoryManager repositoryManager,
-    RepositoryServiceFactory servicefactory)
+    RepositoryServiceFactory servicefactory, HealthChecker healthChecker)
   {
     super(repositoryManager);
     this.configuration = configuration;
     this.repositoryManager = repositoryManager;
     this.servicefactory = servicefactory;
+    this.healthChecker = healthChecker;
     setDisableCache(false);
   }
 
@@ -212,7 +215,7 @@ public class RepositoryResource
       }
       catch (ScmSecurityException ex)
       {
-        logger.warn("delete not allowd", ex);
+        logger.warn("delete not allowed", ex);
         response = Response.status(Response.Status.FORBIDDEN).build();
       }
       catch (Exception ex)
@@ -225,6 +228,50 @@ public class RepositoryResource
     {
       logger.warn("could not find repository {}", id);
       response = Response.status(Status.NOT_FOUND).build();
+    }
+
+    return response;
+  }
+
+  /**
+   * Re run repository health checks.<br />
+   * Status codes:
+   * <ul>
+   *  <li>201 re run success</li>
+   *  <li>403 forbidden, the current user has no owner privileges</li>
+   *  <li>404 could not find repository</li>
+   *  <li>500 internal server error</li>
+   * </ul>
+   *
+   * @param id id of the repository
+   *
+   * @return
+   */
+  @POST
+  @Path("{id}/healthcheck")
+  public Response runHealthChecks(@PathParam("id") String id)
+  {
+    Response response;
+
+    try
+    {
+      healthChecker.check(id);
+      response = Response.ok().build();
+    }
+    catch (RepositoryNotFoundException ex)
+    {
+      logger.warn("could not find repository ".concat(id), ex);
+      response = Response.status(Status.NOT_FOUND).build();
+    }
+    catch (RepositoryException ex)
+    {
+      logger.error("error occured during health check", ex);
+      response = Response.serverError().build();
+    }
+    catch (IOException ex)
+    {
+      logger.error("error occured during health check", ex);
+      response = Response.serverError().build();
     }
 
     return response;
@@ -1120,6 +1167,9 @@ public class RepositoryResource
 
   /** Field description */
   private final ScmConfiguration configuration;
+
+  /** Field description */
+  private final HealthChecker healthChecker;
 
   /** Field description */
   private final RepositoryManager repositoryManager;
