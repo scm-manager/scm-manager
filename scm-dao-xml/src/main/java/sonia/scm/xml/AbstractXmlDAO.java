@@ -34,6 +34,7 @@ package sonia.scm.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -229,7 +230,8 @@ public abstract class AbstractXmlDAO<I extends ModelObject,
   @Override
   public Collection<I> getAll()
   {
-    return db.values();
+    // avoid concurrent modification exceptions
+    return ImmutableList.copyOf(db.values());
   }
 
   /**
