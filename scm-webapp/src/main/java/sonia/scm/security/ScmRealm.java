@@ -121,9 +121,8 @@ public class ScmRealm extends AuthorizingRealm
    */
   @Inject
   public ScmRealm(ScmConfiguration configuration,
-    LoginAttemptHandler loginAttemptHandler,
-    AuthorizationCollector collector,UserManager userManager, 
-    GroupManager groupManager, UserDAO userDAO, 
+    LoginAttemptHandler loginAttemptHandler, AuthorizationCollector collector,
+    UserManager userManager, GroupManager groupManager, UserDAO userDAO,
     AuthenticationManager authenticator, RepositoryManager manager,
     Provider<HttpServletRequest> requestProvider,
     Provider<HttpServletResponse> responseProvider)
@@ -149,8 +148,6 @@ public class ScmRealm extends AuthorizingRealm
     // set components
     setPermissionResolver(new RepositoryPermissionResolver());
   }
-  
-  private final LoginAttemptHandler loginAttemptHandler;
 
   //~--- methods --------------------------------------------------------------
 
@@ -174,7 +171,7 @@ public class ScmRealm extends AuthorizingRealm
     {
       throw new UnsupportedTokenException("ScmAuthenticationToken is required");
     }
-    
+
     loginAttemptHandler.beforeAuthentication(authToken);
 
     UsernamePasswordToken token = (UsernamePasswordToken) authToken;
@@ -198,6 +195,7 @@ public class ScmRealm extends AuthorizingRealm
     else
     {
       loginAttemptHandler.onUnsuccessfulAuthentication(authToken, result);
+
       throw new AccountException("authentication failed");
     }
 
@@ -362,7 +360,10 @@ public class ScmRealm extends AuthorizingRealm
     // modify existing user, copy properties except password and admin
     if (user.copyProperties(dbUser, false))
     {
-      userManager.modify(dbUser);
+      user.setLastModified(System.currentTimeMillis());
+      UserEventHack.fireEvent(userManager, user, HandlerEvent.BEFORE_MODIFY);
+      userDAO.modify(user);
+      UserEventHack.fireEvent(userManager, user, HandlerEvent.MODIFY);
     }
   }
 
@@ -546,6 +547,9 @@ public class ScmRealm extends AuthorizingRealm
 
   /** Field description */
   private final GroupManager groupManager;
+
+  /** Field description */
+  private final LoginAttemptHandler loginAttemptHandler;
 
   /** Field description */
   private final Provider<HttpServletRequest> requestProvider;
