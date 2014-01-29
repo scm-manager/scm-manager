@@ -416,7 +416,7 @@ public final class HttpUtil
     throws IOException
   {
 
-    sendUnauthorized(null, response);
+    sendUnauthorized(null, response, AUTHENTICATION_REALM);
   }
 
   /**
@@ -427,17 +427,50 @@ public final class HttpUtil
    * @param response http response
    *
    * @throws IOException
-   *
-   * @since 1.19
    */
   public static void sendUnauthorized(HttpServletRequest request,
     HttpServletResponse response)
     throws IOException
   {
+    sendUnauthorized(request, response, AUTHENTICATION_REALM);
+  }
+
+  /**
+   * Send an unauthorized header back to the client
+   *
+   *
+   * @param response - the http response
+   * @param realmDescription - realm description
+   *
+   * @throws IOException
+   */
+  public static void sendUnauthorized(HttpServletResponse response, String realmDescription)
+    throws IOException
+  {
+    sendUnauthorized(null, response, realmDescription);
+  }
+
+  /**
+   * Send an unauthorized header back to the client
+   *
+   *
+   * @param request http request
+   * @param response http response
+   * @param realmDescription realm description
+   *
+   * @throws IOException
+   *
+   * @since 1.19
+   */
+  public static void sendUnauthorized(HttpServletRequest request,
+    HttpServletResponse response,
+    String realmDescription)
+    throws IOException
+  {
     if ((request == null) ||!isWUIRequest(request))
     {
       response.setHeader(HEADER_WWW_AUTHENTICATE,
-        "Basic realm=\"".concat(AUTHENTICATION_REALM).concat("\""));
+        "Basic realm=\"".concat(realmDescription).concat("\""));
 
     }
     else if (logger.isTraceEnabled())

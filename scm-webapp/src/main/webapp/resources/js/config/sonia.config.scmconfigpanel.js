@@ -34,6 +34,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
 
   titleText: 'General Settings',
   servnameText: 'Servername',
+  realmDescriptionText: 'Realm description',
   dateFormatText: 'Date format',
   enableForwardingText: 'Enable forwarding (mod_proxy)',
   forwardPortText: 'Forward Port',
@@ -67,6 +68,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
 
   // help
   servernameHelpText: 'The name of this server. This name will be part of the repository url.',
+  realmDescriptionHelpText: 'Enter authentication realm description',
   // TODO i18n
   dateFormatHelpText: 'Moments date format. Please have a look at \n\
                       <a href="http://momentjs.com/docs/#/displaying/format/" target="_blank">http://momentjs.com/docs/#/displaying/format/</a>.<br />\n\
@@ -129,6 +131,12 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'enableRepositoryArchive',
           inputValue: 'true',
           helpText: this.enableRepositoryArchiveHelpText
+        },{
+          xtype: 'textfield',
+          fieldLabel: this.realmDescriptionText,
+          name: 'realmDescription',
+          allowBlank: false,
+          helpText: this.realmDescriptionHelpText
         },{
           xtype: 'textfield',
           fieldLabel: this.dateFormatText,
