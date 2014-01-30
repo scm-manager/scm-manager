@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ConfigChangedListener;
 import sonia.scm.ListenerSupport;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.xml.XmlSetStringAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -157,6 +158,7 @@ public class ScmConfiguration
    */
   public void load(ScmConfiguration other)
   {
+    this.realmDescription = other.realmDescription;
     this.dateFormat = other.dateFormat;
     this.pluginUrl = other.pluginUrl;
     this.anonymousAccessEnabled = other.anonymousAccessEnabled;
@@ -229,6 +231,17 @@ public class ScmConfiguration
   public String getBaseUrl()
   {
     return baseUrl;
+  }
+
+    /**
+     * Returns the realm description.
+     *
+     *
+     * @return realm description
+     */
+  public String getRealmDescription()
+  {
+      return realmDescription;
   }
 
   /**
@@ -514,6 +527,17 @@ public class ScmConfiguration
   public void setBaseUrl(String baseUrl)
   {
     this.baseUrl = baseUrl;
+  }
+
+  /**
+   * Sets the realm description.
+   *
+   *
+   * @param realmDescription
+   */
+  public void setRealmDescription(String realmDescription)
+  {
+      this.realmDescription = realmDescription;
   }
 
   /**
@@ -823,6 +847,13 @@ public class ScmConfiguration
 
   /** Field description */
   private boolean disableGroupingGrid = false;
+
+  /**
+   *
+   * Authentication realm for basic authentication.
+   *
+   */
+  private String realmDescription = HttpUtil.AUTHENTICATION_REALM;
 
   /**
    * JavaScript date format from moment.js
