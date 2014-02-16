@@ -233,17 +233,6 @@ public class ScmConfiguration
     return baseUrl;
   }
 
-    /**
-     * Returns the realm description.
-     *
-     *
-     * @return realm description
-     */
-  public String getRealmDescription()
-  {
-      return realmDescription;
-  }
-
   /**
    * Returns the date format for the user interface. This format is a
    * JavaScript date format, from the library moment.js.
@@ -376,6 +365,17 @@ public class ScmConfiguration
   }
 
   /**
+   * Returns the realm description.
+   *
+   *
+   * @return realm description
+   */
+  public String getRealmDescription()
+  {
+    return realmDescription;
+  }
+
+  /**
    * Returns the servername of the SCM-Manager host.
    *
    *
@@ -482,6 +482,19 @@ public class ScmConfiguration
     return forceBaseUrl;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * 
+   * @since 1.36
+   */
+  public boolean isSkipFailedAuthenticators()
+  {
+    return skipFailedAuthenticators;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -527,17 +540,6 @@ public class ScmConfiguration
   public void setBaseUrl(String baseUrl)
   {
     this.baseUrl = baseUrl;
-  }
-
-  /**
-   * Sets the realm description.
-   *
-   *
-   * @param realmDescription
-   */
-  public void setRealmDescription(String realmDescription)
-  {
-      this.realmDescription = realmDescription;
   }
 
   /**
@@ -734,6 +736,17 @@ public class ScmConfiguration
   }
 
   /**
+   * Sets the realm description.
+   *
+   *
+   * @param realmDescription
+   */
+  public void setRealmDescription(String realmDescription)
+  {
+    this.realmDescription = realmDescription;
+  }
+
+  /**
    * Method description
    *
    *
@@ -743,6 +756,19 @@ public class ScmConfiguration
   public void setServername(String servername)
   {
     this.servername = servername;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param skipFailedAuthenticators
+   * 
+   * @since 1.36
+   */
+  public void setSkipFailedAuthenticators(boolean skipFailedAuthenticators)
+  {
+    this.skipFailedAuthenticators = skipFailedAuthenticators;
   }
 
   /**
@@ -790,21 +816,6 @@ public class ScmConfiguration
   @XmlElement(name = "login-attempt-limit")
   private int loginAttemptLimit = -1;
 
-  /**
-   * Login attempt timeout.
-   *
-   * @since 1.34
-   */
-  @XmlElement(name = "login-attempt-limit-timeout")
-  private long loginAttemptLimitTimeout = TimeUnit.MINUTES.toSeconds(5l);
-
-  /** Field description */
-  private boolean enableProxy = false;
-
-  /** Field description */
-  @XmlElement(name = "plugin-url")
-  private String pluginUrl = DEFAULT_PLUGINURL;
-
   /** glob patterns for urls which are excluded from proxy */
   @XmlElement(name = "proxy-excludes")
   @XmlJavaTypeAdapter(XmlSetStringAdapter.class)
@@ -825,9 +836,32 @@ public class ScmConfiguration
   /** @deprecated use {@link #baseUrl} */
   private String servername = "localhost";
 
+  /**
+   * Skip failed authenticators.
+   *
+   * @since 1.36
+   */
+  @XmlElement(name = "skip-failed-authenticators")
+  private boolean skipFailedAuthenticators = false;
+
+  /** Field description */
+  @XmlElement(name = "plugin-url")
+  private String pluginUrl = DEFAULT_PLUGINURL;
+
+  /**
+   * Login attempt timeout.
+   *
+   * @since 1.34
+   */
+  @XmlElement(name = "login-attempt-limit-timeout")
+  private long loginAttemptLimitTimeout = TimeUnit.MINUTES.toSeconds(5l);
+
   /** @deprecated use {@link #baseUrl} and {@link #forceBaseUrl} */
   @Deprecated
   private boolean enableSSL = false;
+
+  /** Field description */
+  private boolean enableProxy = false;
 
   /** @deprecated use {@link #baseUrl} */
   @Deprecated
@@ -836,6 +870,13 @@ public class ScmConfiguration
   /** @deprecated use {@link #baseUrl} and {@link #forceBaseUrl} */
   @Deprecated
   private int sslPort = 8181;
+
+  /**
+   *
+   * Authentication realm for basic authentication.
+   *
+   */
+  private String realmDescription = HttpUtil.AUTHENTICATION_REALM;
 
   /** Configuration change listeners */
   @XmlTransient
@@ -847,13 +888,6 @@ public class ScmConfiguration
 
   /** Field description */
   private boolean disableGroupingGrid = false;
-
-  /**
-   *
-   * Authentication realm for basic authentication.
-   *
-   */
-  private String realmDescription = HttpUtil.AUTHENTICATION_REALM;
 
   /**
    * JavaScript date format from moment.js

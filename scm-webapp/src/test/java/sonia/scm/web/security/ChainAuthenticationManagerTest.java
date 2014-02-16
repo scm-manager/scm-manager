@@ -42,6 +42,7 @@ import org.junit.Test;
 import sonia.scm.AbstractTestBase;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.cache.MapCacheManager;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -137,7 +138,7 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
     SingleUserAuthenticaionHandler a2 =
       new SingleUserAuthenticaionHandler("a2", trillian);
 
-    manager = createManager("a2", a1, a2);
+    manager = createManager("a2", false, a1, a2);
 
     AuthenticationResult result = manager.authenticate(request, response,
                                     trillian.getName(), "trillian123");
@@ -145,6 +146,24 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
     assertNotNull(result);
     assertEquals(AuthenticationState.SUCCESS, result.getState());
     assertEquals("a2", result.getUser().getType());
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testStopChain()
+  {
+    ChainAuthenticatonManager cam = createManager("", false);
+
+    assertTrue(cam.stopChain(new AuthenticationResult(perfect)));
+    assertTrue(cam.stopChain(AuthenticationResult.FAILED));
+    assertFalse(cam.stopChain(AuthenticationResult.NOT_FOUND));
+    cam = createManager("", true);
+    assertTrue(cam.stopChain(new AuthenticationResult(perfect)));
+    assertFalse(cam.stopChain(AuthenticationResult.FAILED));
+    assertFalse(cam.stopChain(AuthenticationResult.NOT_FOUND));
   }
 
   /**
@@ -199,7 +218,7 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
     trillian = UserTestData.createTrillian();
     trillian.setPassword("trillian123");
 
-    return createManager("",
+    return createManager("", false,
       new SingleUserAuthenticaionHandler("perfectsType", perfect),
       new SingleUserAuthenticaionHandler("trilliansType", trillian));
   }
@@ -209,20 +228,33 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
    *
    *
    * @param defaultType
+   * @param skipFailedAuthenticators
    * @param handlers
    *
    * @return
    */
   private ChainAuthenticatonManager createManager(String defaultType,
-    AuthenticationHandler... handlers)
+    boolean skipFailedAuthenticators, AuthenticationHandler... handlers)
   {
+    if ( handlers == null || handlers.length == 0 ){
+      //J-
+      handlers = new AuthenticationHandler[]{
+        new SingleUserAuthenticaionHandler("perfectsType", perfect),
+        new SingleUserAuthenticaionHandler("trilliansType", trillian)
+      };
+      //J+
+    }
+    ScmConfiguration configuration = new ScmConfiguration();
+
+    configuration.setSkipFailedAuthenticators(skipFailedAuthenticators);
+
     Set<AuthenticationHandler> handlerSet = ImmutableSet.copyOf(handlers);
 
     UserManager userManager = mock(UserManager.class);
 
     when(userManager.getDefaultType()).thenReturn(defaultType);
-    manager = new ChainAuthenticatonManager(userManager, handlerSet,
-      new MessageDigestEncryptionHandler(), new MapCacheManager(),
+    manager = new ChainAuthenticatonManager(configuration, userManager,
+      handlerSet, new MessageDigestEncryptionHandler(), new MapCacheManager(),
       Collections.EMPTY_SET);
     manager.init(contextProvider);
 
@@ -328,10 +360,10 @@ public class ChainAuthenticationManagerTest extends AbstractTestBase
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private String type;
+    private final String type;
 
     /** Field description */
-    private User user;
+    private final User user;
   }
 
 

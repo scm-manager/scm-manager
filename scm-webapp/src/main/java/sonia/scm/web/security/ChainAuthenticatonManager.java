@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.EncryptionHandler;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -87,21 +88,24 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    *
    *
    *
+   *
+   * @param configuration
    * @param userManager
    * @param authenticationHandlerSet
    * @param encryptionHandler
    * @param cacheManager
-   * @param authenticationListenerProvider
    * @param authenticationListeners
    */
   @Inject
-  public ChainAuthenticatonManager(UserManager userManager,
+  public ChainAuthenticatonManager(ScmConfiguration configuration,
+    UserManager userManager,
     Set<AuthenticationHandler> authenticationHandlerSet,
     EncryptionHandler encryptionHandler, CacheManager cacheManager,
     Set<AuthenticationListener> authenticationListeners)
   {
     AssertUtil.assertIsNotEmpty(authenticationHandlerSet);
     AssertUtil.assertIsNotNull(cacheManager);
+    this.configuration = configuration;
     this.authenticationHandlers = sort(userManager, authenticationHandlerSet);
     this.encryptionHandler = encryptionHandler;
     this.cache = cacheManager.getCache(String.class,
@@ -204,6 +208,22 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
    * Method description
    *
    *
+   * @param result
+   *
+   * @return
+   */
+  boolean stopChain(AuthenticationResult result)
+  {
+    return (result != null) && (result.getState() != null)
+      && (result.getState().isSuccessfully()
+        || ((result.getState() == AuthenticationState.FAILED)
+          &&!configuration.isSkipFailedAuthenticators()));
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param request
    * @param response
    * @param username
@@ -240,9 +260,7 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
             authenticator.getClass().getName(), result);
         }
 
-        if ((result != null) && (result.getState() != null)
-          && (result.getState().isSuccessfully()
-            || (result.getState() == AuthenticationState.FAILED)))
+        if (stopChain(result))
         {
           if (result.getState().isSuccessfully() && (result.getUser() != null))
           {
@@ -378,11 +396,14 @@ public class ChainAuthenticatonManager extends AbstractAuthenticationManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private List<AuthenticationHandler> authenticationHandlers;
+  private final List<AuthenticationHandler> authenticationHandlers;
 
   /** Field description */
-  private Cache<String, AuthenticationCacheValue> cache;
+  private final Cache<String, AuthenticationCacheValue> cache;
 
   /** Field description */
-  private EncryptionHandler encryptionHandler;
+  private final ScmConfiguration configuration;
+
+  /** Field description */
+  private final EncryptionHandler encryptionHandler;
 }

@@ -51,6 +51,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   errorSubmitMsgText: 'Could not submit config.',
   
   // TODO i18n
+  skipFailedAuthenticatorsText: 'Skip failed authenticators',
   loginAttemptLimitText: 'Login Attempt Limit',
   loginAttemptLimitTimeoutText: 'Login Attempt Limit Timeout',
   
@@ -85,6 +86,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   adminUsersHelpText: 'Comma seperated list of users with admin permissions.',
   
   // TODO i18n
+  skipFailedAuthenticatorsHelpText: 'Do not stop the authentication chain, \n\
+                                     if an authenticator finds the user but fails to authenticate the user.',
   loginAttemptLimitHelpText: 'Maximum allowed login attempts. Use -1 to disable the login attempt limit.',
   loginAttemptLimitTimeoutHelpText: 'Timeout in seconds for users which are temporary disabled,\
                                      because of too many failed login attempts.',
@@ -157,6 +160,12 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'anonymousAccessEnabled',
           inputValue: 'true',
           helpText: this.allowAnonymousAccessHelpText
+        },{
+          xtype: 'checkbox',
+          fieldLabel: this.skipFailedAuthenticatorsText,
+          name: 'skip-failed-authenticators',
+          inputValue: 'true',
+          helpText: this.skipFailedAuthenticatorsHelpText
         },{
           xtype: 'numberfield',
           fieldLabel: this.loginAttemptLimitText,
