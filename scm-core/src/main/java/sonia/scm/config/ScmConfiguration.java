@@ -174,6 +174,7 @@ public class ScmConfiguration
     this.baseUrl = other.baseUrl;
     this.disableGroupingGrid = other.disableGroupingGrid;
     this.enableRepositoryArchive = other.enableRepositoryArchive;
+    this.skipFailedAuthenticators = other.skipFailedAuthenticators;
     this.loginAttemptLimit = other.loginAttemptLimit;
     this.loginAttemptLimitTimeout = other.loginAttemptLimitTimeout;
 
@@ -483,10 +484,10 @@ public class ScmConfiguration
   }
 
   /**
-   * Method description
+   * Returns true if failed authenticators are skipped.
    *
    *
-   * @return
+   * @return true if failed authenticators are skipped
    * 
    * @since 1.36
    */
@@ -759,10 +760,10 @@ public class ScmConfiguration
   }
 
   /**
-   * Method description
+   * If set to true the authentication chain is not stopped, if an 
+   * authenticator finds the user but fails to authenticate the user.
    *
-   *
-   * @param skipFailedAuthenticators
+   * @param skipFailedAuthenticators true to skip failed authenticators
    * 
    * @since 1.36
    */
