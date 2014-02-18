@@ -203,7 +203,7 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
 
     if (Strings.isNullOrEmpty(authentication))
     {
-      HttpUtil.sendUnauthorized(request, response);
+      HttpUtil.sendUnauthorized(request, response, configuration.getRealmDescription());
     }
     else
     {

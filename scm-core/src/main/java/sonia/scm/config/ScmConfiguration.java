@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.xml.XmlSetStringAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -114,6 +115,7 @@ public class ScmConfiguration
    */
   public void load(ScmConfiguration other)
   {
+    this.realmDescription = other.realmDescription;
     this.dateFormat = other.dateFormat;
     this.pluginUrl = other.pluginUrl;
     this.anonymousAccessEnabled = other.anonymousAccessEnabled;
@@ -129,6 +131,7 @@ public class ScmConfiguration
     this.baseUrl = other.baseUrl;
     this.disableGroupingGrid = other.disableGroupingGrid;
     this.enableRepositoryArchive = other.enableRepositoryArchive;
+    this.skipFailedAuthenticators = other.skipFailedAuthenticators;
     this.loginAttemptLimit = other.loginAttemptLimit;
     this.loginAttemptLimitTimeout = other.loginAttemptLimitTimeout;
   }
@@ -288,6 +291,18 @@ public class ScmConfiguration
   }
 
   /**
+   * Returns the realm description.
+   *
+   *
+   * @return realm description
+   */
+  public String getRealmDescription()
+  {
+    return realmDescription;
+  }
+
+
+  /**
    * Returns true if the anonymous access to the SCM-Manager is enabled.
    *
    *
@@ -341,6 +356,19 @@ public class ScmConfiguration
   public boolean isForceBaseUrl()
   {
     return forceBaseUrl;
+  }
+
+  /**
+   * Returns true if failed authenticators are skipped.
+   *
+   *
+   * @return true if failed authenticators are skipped
+   * 
+   * @since 1.36
+   */
+  public boolean isSkipFailedAuthenticators()
+  {
+    return skipFailedAuthenticators;
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -544,6 +572,30 @@ public class ScmConfiguration
     this.proxyUser = proxyUser;
   }
 
+  /**
+   * Sets the realm description.
+   *
+   *
+   * @param realmDescription
+   */
+  public void setRealmDescription(String realmDescription)
+  {
+    this.realmDescription = realmDescription;
+  }
+
+  /**
+   * If set to true the authentication chain is not stopped, if an 
+   * authenticator finds the user but fails to authenticate the user.
+   *
+   * @param skipFailedAuthenticators true to skip failed authenticators
+   * 
+   * @since 1.36
+   */
+  public void setSkipFailedAuthenticators(boolean skipFailedAuthenticators)
+  {
+    this.skipFailedAuthenticators = skipFailedAuthenticators;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -572,21 +624,6 @@ public class ScmConfiguration
   @XmlElement(name = "login-attempt-limit")
   private int loginAttemptLimit = -1;
 
-  /**
-   * Login attempt timeout.
-   *
-   * @since 1.34
-   */
-  @XmlElement(name = "login-attempt-limit-timeout")
-  private long loginAttemptLimitTimeout = TimeUnit.MINUTES.toSeconds(5l);
-
-  /** Field description */
-  private boolean enableProxy = false;
-
-  /** Field description */
-  @XmlElement(name = "plugin-url")
-  private String pluginUrl = DEFAULT_PLUGINURL;
-
   /** glob patterns for urls which are excluded from proxy */
   @XmlElement(name = "proxy-excludes")
   @XmlJavaTypeAdapter(XmlSetStringAdapter.class)
@@ -603,6 +640,36 @@ public class ScmConfiguration
 
   /** Field description */
   private String proxyUser;
+
+  /**
+   * Skip failed authenticators.
+   *
+   * @since 1.36
+   */
+  @XmlElement(name = "skip-failed-authenticators")
+  private boolean skipFailedAuthenticators = false;
+
+  /** Field description */
+  @XmlElement(name = "plugin-url")
+  private String pluginUrl = DEFAULT_PLUGINURL;
+
+  /**
+   * Login attempt timeout.
+   *
+   * @since 1.34
+   */
+  @XmlElement(name = "login-attempt-limit-timeout")
+  private long loginAttemptLimitTimeout = TimeUnit.MINUTES.toSeconds(5l);
+
+  /** Field description */
+  private boolean enableProxy = false;
+
+  /**
+   *
+   * Authentication realm for basic authentication.
+   *
+   */
+  private String realmDescription = HttpUtil.AUTHENTICATION_REALM;
 
   /** Field description */
   private boolean enableRepositoryArchive = false;

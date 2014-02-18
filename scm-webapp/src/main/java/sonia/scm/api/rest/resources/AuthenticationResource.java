@@ -35,6 +35,8 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.inject.Inject;
@@ -153,6 +155,7 @@ public class AuthenticationResource
    * <br />
    * <ul>
    *   <li>200 success</li>
+   *   <li>400 bad request, required parameter is missing.</li>
    *   <li>401 unauthorized, the specified username or password is wrong</li>
    *   <li>500 internal server error</li>
    * </ul>
@@ -172,6 +175,11 @@ public class AuthenticationResource
     @FormParam("password") String password, @FormParam("rememberMe")
   @DefaultValue("false") boolean rememberMe)
   {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(username),
+      "username parameter is required");
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(password),
+      "password parameter is required");
+
     Response response;
     Subject subject = SecurityUtils.getSubject();
 

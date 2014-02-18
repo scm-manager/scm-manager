@@ -40,7 +40,7 @@ if (Ext.form.VTypes){
     passwordText: 'Die Passwörter stimmen nicht überein!',
     nameTest: 'Der Name ist invalid.',
     usernameText: 'Der Benutzername ist invalid.',
-    repositoryNameText: 'Der Name des Repositorys ist ungültig.',
+    repositoryNameText: 'Der Name des Repositorys ist ungültig.'
   });
 
 }
@@ -349,6 +349,10 @@ if (Sonia.config.ScmConfigPanel){
     adminGroupsHelpText: 'Komma getrennte Liste von Gruppen mit Administrationsrechten.',
     adminUsersHelpText: 'Komma getrennte Liste von Benutzern mit Administrationsrechten.',
     
+    skipFailedAuthenticatorsText: 'Überspringe fehlgeschlagene Authentifizierer',
+    skipFailedAuthenticatorsHelpText: 'Setzt die Authentifizierungs-Kette fort,\n\
+                                       auch wenn ein ein Authentifizierer einen Benutzer gefunden hat,\n\
+                                       diesen aber nicht Authentifizieren kann.',
     loginAttemptLimitText: 'Login Attempt Limit',
     loginAttemptLimitTimeoutText: 'Login Attempt Limit Timeout',
     loginAttemptLimitHelpText: 'Maximale Anzahl gescheiterte Loginversuche. Der Wert -1 deaktiviert die Begrenzung.', 

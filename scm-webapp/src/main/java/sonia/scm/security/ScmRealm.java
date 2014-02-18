@@ -361,7 +361,10 @@ public class ScmRealm extends AuthorizingRealm
     // modify existing user, copy properties except password and admin
     if (user.copyProperties(dbUser, false))
     {
-      userManager.modify(dbUser);
+      user.setLastModified(System.currentTimeMillis());
+      UserEventHack.fireEvent(userManager, HandlerEventType.BEFORE_MODIFY, user);
+      userDAO.modify(user);
+      UserEventHack.fireEvent(userManager, HandlerEventType.MODIFY, user);
     }
   }
 

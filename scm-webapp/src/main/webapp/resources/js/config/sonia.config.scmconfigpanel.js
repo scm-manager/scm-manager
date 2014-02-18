@@ -34,6 +34,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
 
   titleText: 'General Settings',
   servnameText: 'Servername',
+  realmDescriptionText: 'Realm description',
   dateFormatText: 'Date format',
   enableForwardingText: 'Enable forwarding (mod_proxy)',
   forwardPortText: 'Forward Port',
@@ -50,6 +51,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   errorSubmitMsgText: 'Could not submit config.',
   
   // TODO i18n
+  skipFailedAuthenticatorsText: 'Skip failed authenticators',
   loginAttemptLimitText: 'Login Attempt Limit',
   loginAttemptLimitTimeoutText: 'Login Attempt Limit Timeout',
   
@@ -67,6 +69,7 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
 
   // help
   servernameHelpText: 'The name of this server. This name will be part of the repository url.',
+  realmDescriptionHelpText: 'Enter authentication realm description',
   // TODO i18n
   dateFormatHelpText: 'Moments date format. Please have a look at \n\
                       <a href="http://momentjs.com/docs/#/displaying/format/" target="_blank">http://momentjs.com/docs/#/displaying/format/</a>.<br />\n\
@@ -83,6 +86,8 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   adminUsersHelpText: 'Comma seperated list of users with admin permissions.',
   
   // TODO i18n
+  skipFailedAuthenticatorsHelpText: 'Do not stop the authentication chain, \n\
+                                     if an authenticator finds the user but fails to authenticate the user.',
   loginAttemptLimitHelpText: 'Maximum allowed login attempts. Use -1 to disable the login attempt limit.',
   loginAttemptLimitTimeoutHelpText: 'Timeout in seconds for users which are temporary disabled,\
                                      because of too many failed login attempts.',
@@ -131,6 +136,12 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           helpText: this.enableRepositoryArchiveHelpText
         },{
           xtype: 'textfield',
+          fieldLabel: this.realmDescriptionText,
+          name: 'realmDescription',
+          allowBlank: false,
+          helpText: this.realmDescriptionHelpText
+        },{
+          xtype: 'textfield',
           fieldLabel: this.dateFormatText,
           name: 'dateFormat',
           helpText: this.dateFormatHelpText,
@@ -149,6 +160,12 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'anonymousAccessEnabled',
           inputValue: 'true',
           helpText: this.allowAnonymousAccessHelpText
+        },{
+          xtype: 'checkbox',
+          fieldLabel: this.skipFailedAuthenticatorsText,
+          name: 'skip-failed-authenticators',
+          inputValue: 'true',
+          helpText: this.skipFailedAuthenticatorsHelpText
         },{
           xtype: 'numberfield',
           fieldLabel: this.loginAttemptLimitText,

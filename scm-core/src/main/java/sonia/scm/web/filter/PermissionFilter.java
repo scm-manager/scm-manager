@@ -245,7 +245,7 @@ public abstract class PermissionFilter extends HttpFilter
     }
     else
     {
-      HttpUtil.sendUnauthorized(response);
+      HttpUtil.sendUnauthorized(response, configuration.getRealmDescription());
     }
   }
 

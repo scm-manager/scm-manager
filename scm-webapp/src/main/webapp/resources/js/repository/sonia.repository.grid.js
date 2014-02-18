@@ -99,7 +99,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         },{
           name: 'archived'
         },{
-          name: 'healthCheckFailures'
+          name: 'healthCheckFailures',
+          defaultValue: null
         }]
       }),
       sortInfo: {
