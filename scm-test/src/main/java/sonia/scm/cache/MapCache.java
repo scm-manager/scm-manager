@@ -187,6 +187,18 @@ public class MapCache<K, V>
     return map.get(key);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public CacheStatistics getStatistics()
+  {
+    return null;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
