@@ -34,7 +34,7 @@ package sonia.scm.upgrade;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.plugin.PluginVersion;
+import sonia.scm.version.Version;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -59,5 +59,5 @@ public interface UpgradeHandler
    * @param newVersion new version
    */
   public void doUpgrade(File homeDirectory, File configDirectory,
-    PluginVersion oldVersion, PluginVersion newVersion);
+    Version oldVersion, Version newVersion);
 }

@@ -41,6 +41,7 @@ import sonia.scm.PlatformType;
 import sonia.scm.SCMContext;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
+import sonia.scm.version.Version;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -235,7 +236,7 @@ public class PluginCondition implements Cloneable, Serializable
     if (Util.isNotEmpty(minVersion) && Util.isNotEmpty(version))
     {
       supported = (minVersion.equalsIgnoreCase(version)
-        || new PluginVersion(version).isNewer(minVersion));
+        || new Version(version).isNewer(minVersion));
     }
 
     if (supported && Util.isNotEmpty(this.os) && Util.isNotEmpty(os))

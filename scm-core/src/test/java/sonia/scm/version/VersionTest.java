@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.version;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -47,7 +47,7 @@ import java.util.Arrays;
  *
  * @author Sebastian Sdorra
  */
-public class PluginVersionTest
+public class VersionTest
 {
 
   /**
@@ -57,31 +57,31 @@ public class PluginVersionTest
   @Test
   public void parseSimpleVersion()
   {
-    PluginVersion v = new PluginVersion("1.0");
+    Version v = new Version("1.0");
 
     assertTrue(v.getMajor() == 1);
     assertTrue(v.getMinor() == 0);
-    assertTrue(v.getMaintenance() == 0);
+    assertTrue(v.getPatch() == 0);
     assertFalse(v.isSnapshot());
-    assertTrue(v.getType() == PluginVersionType.RELEASE);
+    assertTrue(v.getType() == VersionType.RELEASE);
     assertEquals(v.getParsedVersion(), "1.0.0");
 
     // test with snapshot
-    v = new PluginVersion("1.1-SNAPSHOT");
+    v = new Version("1.1-SNAPSHOT");
     assertTrue(v.getMajor() == 1);
     assertTrue(v.getMinor() == 1);
-    assertTrue(v.getMaintenance() == 0);
+    assertTrue(v.getPatch() == 0);
     assertTrue(v.isSnapshot());
-    assertTrue(v.getType() == PluginVersionType.RELEASE);
+    assertTrue(v.getType() == VersionType.RELEASE);
     assertEquals(v.getParsedVersion(), "1.1.0-SNAPSHOT");
 
     // test with maintenance
-    v = new PluginVersion("2.3.14");
+    v = new Version("2.3.14");
     assertTrue(v.getMajor() == 2);
     assertTrue(v.getMinor() == 3);
-    assertTrue(v.getMaintenance() == 14);
+    assertTrue(v.getPatch() == 14);
     assertFalse(v.isSnapshot());
-    assertTrue(v.getType() == PluginVersionType.RELEASE);
+    assertTrue(v.getType() == VersionType.RELEASE);
     assertEquals(v.getParsedVersion(), "2.3.14");
   }
 
@@ -92,23 +92,23 @@ public class PluginVersionTest
   @Test
   public void parseTypeVersions()
   {
-    PluginVersion v = new PluginVersion("1.0-alpha");
+    Version v = new Version("1.0-alpha");
 
     assertTrue(v.getMajor() == 1);
     assertTrue(v.getMinor() == 0);
-    assertTrue(v.getMaintenance() == 0);
+    assertTrue(v.getPatch() == 0);
     assertFalse(v.isSnapshot());
-    assertTrue(v.getType() == PluginVersionType.ALPHA);
+    assertTrue(v.getType() == VersionType.ALPHA);
     assertTrue(v.getTypeVersion() == 1);
     assertEquals(v.getParsedVersion(), "1.0.0-alpha1");
 
     // Test release candidate
-    v = new PluginVersion("2.1.2-RC3");
+    v = new Version("2.1.2-RC3");
     assertTrue(v.getMajor() == 2);
     assertTrue(v.getMinor() == 1);
-    assertTrue(v.getMaintenance() == 2);
+    assertTrue(v.getPatch() == 2);
     assertFalse(v.isSnapshot());
-    assertTrue(v.getType() == PluginVersionType.RELEASE_CANDIDAT);
+    assertTrue(v.getType() == VersionType.RELEASE_CANDIDAT);
     assertTrue(v.getTypeVersion() == 3);
     assertEquals(v.getParsedVersion(), "2.1.2-RC3");
   }
@@ -120,17 +120,17 @@ public class PluginVersionTest
   @Test
   public void testCompareTo()
   {
-    PluginVersion[] versions = new PluginVersion[9];
+    Version[] versions = new Version[9];
 
-    versions[0] = PluginVersion.createVersion("2.3.1-SNAPSHOT");
-    versions[1] = PluginVersion.createVersion("2.3.1-beta1");
-    versions[2] = PluginVersion.createVersion("2.3.1-beta2");
-    versions[3] = PluginVersion.createVersion("2.3.1-M1");
-    versions[4] = PluginVersion.createVersion("2.3.1-alpha2");
-    versions[5] = PluginVersion.createVersion("2.3.1-RC1");
-    versions[6] = PluginVersion.createVersion("2.3.1");
-    versions[7] = PluginVersion.createVersion("2.3");
-    versions[8] = PluginVersion.createVersion("2.4.6");
+    versions[0] = Version.createVersion("2.3.1-SNAPSHOT");
+    versions[1] = Version.createVersion("2.3.1-beta1");
+    versions[2] = Version.createVersion("2.3.1-beta2");
+    versions[3] = Version.createVersion("2.3.1-M1");
+    versions[4] = Version.createVersion("2.3.1-alpha2");
+    versions[5] = Version.createVersion("2.3.1-RC1");
+    versions[6] = Version.createVersion("2.3.1");
+    versions[7] = Version.createVersion("2.3");
+    versions[8] = Version.createVersion("2.4.6");
     Arrays.sort(versions);
     assertEquals(versions[0].getParsedVersion(), "2.4.6");
     assertEquals(versions[1].getParsedVersion(), "2.3.1");
@@ -150,9 +150,9 @@ public class PluginVersionTest
   @Test
   public void testIsNewer()
   {
-    assertFalse(PluginVersion.createVersion("1.0").isNewer("1.0.1"));
-    assertTrue(PluginVersion.createVersion("1.1").isNewer("1.1-alpha1"));
-    assertTrue(PluginVersion.createVersion("1.1").isNewer("1.1-RC5"));
+    assertFalse(Version.createVersion("1.0").isNewer("1.0.1"));
+    assertTrue(Version.createVersion("1.1").isNewer("1.1-alpha1"));
+    assertTrue(Version.createVersion("1.1").isNewer("1.1-RC5"));
   }
 
   /**
@@ -162,8 +162,8 @@ public class PluginVersionTest
   @Test
   public void testIsOlder()
   {
-    assertFalse(PluginVersion.createVersion("1.0.1").isOlder("1.0"));
-    assertTrue(PluginVersion.createVersion("1.1-alpha1").isOlder("1.1"));
-    assertTrue(PluginVersion.createVersion("1.1-RC5").isOlder("1.1"));
+    assertFalse(Version.createVersion("1.0.1").isOlder("1.0"));
+    assertTrue(Version.createVersion("1.1-alpha1").isOlder("1.1"));
+    assertTrue(Version.createVersion("1.1-RC5").isOlder("1.1"));
   }
 }

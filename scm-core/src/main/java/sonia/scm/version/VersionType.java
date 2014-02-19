@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.version;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -44,7 +44,7 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public enum PluginVersionType
+public enum VersionType
 {
   EARLY_ACESS("ea", 0, "early", "earlyaccess"), MILESTONE("M", 1, "milestone"),
   ALPHA("alpha", 2), BETA("beta", 3),
@@ -56,7 +56,7 @@ public enum PluginVersionType
    *
    * @param value
    */
-  private PluginVersionType(int value)
+  private VersionType(int value)
   {
     this(null, value);
   }
@@ -70,7 +70,7 @@ public enum PluginVersionType
    * @param value
    * @param aliases
    */
-  private PluginVersionType(String id, int value, String... aliases)
+  private VersionType(String id, int value, String... aliases)
   {
     this.id = id;
     this.value = value;

@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.version;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -49,16 +49,15 @@ import java.util.Locale;
 /**
  * Version object for comparing and parsing versions.
  * 
- * TODO for 2.0: rename to version and move to another package.
  *
  * @author Sebastian Sdorra
  */
-public class PluginVersion implements Comparable<PluginVersion>
+public final class Version implements Comparable<Version>
 {
 
-  /** the logger for PluginVersion */
+  /** the logger for Version */
   private static final Logger logger =
-    LoggerFactory.getLogger(PluginVersion.class);
+    LoggerFactory.getLogger(Version.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -68,12 +67,12 @@ public class PluginVersion implements Comparable<PluginVersion>
    *
    * @param versionString string representation of the version
    */
-  public PluginVersion(String versionString)
+  public Version(String versionString)
   {
     this.unparsedVersion = versionString;
 
     int index = versionString.indexOf('-');
-    String versionPart = null;
+    String versionPart;
     String qualifierPart = null;
 
     if (index > 0)
@@ -87,7 +86,7 @@ public class PluginVersion implements Comparable<PluginVersion>
     }
 
     parseVersionPart(versionPart);
-    type = PluginVersionType.RELEASE;
+    type = VersionType.RELEASE;
 
     if (qualifierPart != null)
     {
@@ -109,13 +108,13 @@ public class PluginVersion implements Comparable<PluginVersion>
    *
    * @return version object
    */
-  public static PluginVersion createVersion(String versionString)
+  public static Version createVersion(String versionString)
   {
-    PluginVersion version = null;
+    Version version = null;
 
     try
     {
-      version = new PluginVersion(versionString);
+      version = new Version(versionString);
     }
     catch (NumberFormatException ex)
     {
@@ -132,7 +131,7 @@ public class PluginVersion implements Comparable<PluginVersion>
    * {@inheritDoc}
    */
   @Override
-  public int compareTo(PluginVersion o)
+  public int compareTo(Version o)
   {
     Preconditions.checkNotNull(o);
 
@@ -164,7 +163,7 @@ public class PluginVersion implements Comparable<PluginVersion>
       return false;
     }
 
-    final PluginVersion other = (PluginVersion) obj;
+    final Version other = (Version) obj;
 
     return Objects.equal(major, other.major)
       && Objects.equal(minor, other.minor)
@@ -246,7 +245,7 @@ public class PluginVersion implements Comparable<PluginVersion>
    *
    * @return version type
    */
-  public PluginVersionType getType()
+  public VersionType getType()
   {
     return type;
   }
@@ -280,7 +279,7 @@ public class PluginVersion implements Comparable<PluginVersion>
    *
    * @return true if newer
    */
-  public boolean isNewer(PluginVersion o)
+  public boolean isNewer(Version o)
   {
     return compareTo(o) < 0;
   }
@@ -295,7 +294,7 @@ public class PluginVersion implements Comparable<PluginVersion>
    */
   public boolean isNewer(String versionString)
   {
-    PluginVersion o = PluginVersion.createVersion(versionString);
+    Version o = Version.createVersion(versionString);
 
     return (o != null) && isNewer(o);
   }
@@ -308,7 +307,7 @@ public class PluginVersion implements Comparable<PluginVersion>
    *
    * @return true if older
    */
-  public boolean isOlder(PluginVersion o)
+  public boolean isOlder(Version o)
   {
     return compareTo(o) > 0;
   }
@@ -323,7 +322,7 @@ public class PluginVersion implements Comparable<PluginVersion>
    */
   public boolean isOlder(String versionString)
   {
-    PluginVersion o = PluginVersion.createVersion(versionString);
+    Version o = Version.createVersion(versionString);
 
     return (o != null) && isOlder(o);
   }
@@ -386,7 +385,7 @@ public class PluginVersion implements Comparable<PluginVersion>
 
     if (qualifier.length() > 0)
     {
-      for (PluginVersionType versionType : PluginVersionType.values())
+      for (VersionType versionType : VersionType.values())
       {
         for (String name : versionType.getNames())
         {
@@ -492,7 +491,7 @@ public class PluginVersion implements Comparable<PluginVersion>
   private boolean snapshot;
 
   /** version type */
-  private PluginVersionType type;
+  private VersionType type;
 
   /** type version */
   private int typeVersion = 1;
