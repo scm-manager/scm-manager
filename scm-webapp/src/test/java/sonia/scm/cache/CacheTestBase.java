@@ -30,16 +30,20 @@
  */
 
 
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Predicate;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import sonia.scm.util.IOUtil;
+
+import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
 
@@ -112,6 +116,21 @@ public abstract class CacheTestBase
    *
    */
   @Test
+  public void testOverride()
+  {
+    cache.put("test", "test123");
+
+    String previous = cache.put("test", "test456");
+
+    assertEquals("test123", previous);
+    assertEquals("test456", cache.get("test"));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
   public void testPutAndGet()
   {
     cache.put("test", "test123");
@@ -127,7 +146,10 @@ public abstract class CacheTestBase
   {
     cache.put("test", "test123");
     assertEquals("test123", cache.get("test"));
-    cache.remove("test");
+
+    String previous = cache.remove("test");
+
+    assertEquals("test123", previous);
     assertNull(cache.get("test"));
   }
 
@@ -139,10 +161,11 @@ public abstract class CacheTestBase
   public void testRemoveAll()
   {
     cache.put("test-1", "test123");
-    cache.put("test-2", "test123");
+    cache.put("test-2", "test456");
     cache.put("a-1", "test123");
     cache.put("a-2", "test123");
-    cache.removeAll(new Predicate<String>()
+
+    Iterable<String> previous = cache.removeAll(new Predicate<String>()
     {
       @Override
       public boolean apply(String item)
@@ -150,10 +173,30 @@ public abstract class CacheTestBase
         return item.startsWith("test");
       }
     });
+
+    assertThat(previous, containsInAnyOrder("test123", "test456"));
     assertNull(cache.get("test-1"));
     assertNull(cache.get("test-2"));
     assertNotNull(cache.get("a-1"));
     assertNotNull(cache.get("a-2"));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testSize()
+  {
+    assertEquals(0, cache.size());
+    cache.put("test", "test123");
+    assertEquals(1, cache.size());
+    cache.put("test-1", "test123");
+    assertEquals(2, cache.size());
+    cache.remove("test");
+    assertEquals(1, cache.size());
+    cache.clear();
+    assertEquals(0, cache.size());
   }
 
   //~--- fields ---------------------------------------------------------------

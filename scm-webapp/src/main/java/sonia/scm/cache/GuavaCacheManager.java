@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -52,7 +53,8 @@ import java.util.Map;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class GuavaCacheManager implements CacheManager
+public class GuavaCacheManager
+  implements CacheManager, org.apache.shiro.cache.CacheManager
 {
 
   /**

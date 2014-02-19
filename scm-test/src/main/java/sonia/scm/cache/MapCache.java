@@ -37,10 +37,14 @@ package sonia.scm.cache;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -50,7 +54,8 @@ import java.util.Map;
  * @param <K>
  * @param <V>
  */
-public class MapCache<K, V> implements Cache<K, V>
+public class MapCache<K, V>
+  implements Cache<K, V>, org.apache.shiro.cache.Cache<K, V>
 {
 
   /**
@@ -81,13 +86,27 @@ public class MapCache<K, V> implements Cache<K, V>
    * Method description
    *
    *
-   * @param key
-   * @param value
+   * @return
    */
   @Override
-  public void put(K key, V value)
+  public Set<K> keys()
   {
-    map.put(key, value);
+    return Collections.unmodifiableSet(map.keySet());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param key
+   * @param value
+   *
+   * @return
+   */
+  @Override
+  public V put(K key, V value)
+  {
+    return map.put(key, value);
   }
 
   /**
@@ -99,9 +118,9 @@ public class MapCache<K, V> implements Cache<K, V>
    * @return
    */
   @Override
-  public boolean remove(K key)
+  public V remove(K key)
   {
-    return map.remove(key) != null;
+    return map.remove(key);
   }
 
   /**
@@ -113,22 +132,43 @@ public class MapCache<K, V> implements Cache<K, V>
    * @return
    */
   @Override
-  public boolean removeAll(Predicate<K> filter)
+  public Iterable<V> removeAll(Predicate<K> filter)
   {
-    boolean result = false;
+    Set<V> values = Sets.newHashSet();
 
     for (K key : map.keySet())
     {
       if (filter.apply(key))
       {
-        if (remove(key))
-        {
-          result = true;
-        }
+        values.add(remove(key));
       }
     }
 
-    return result;
+    return values;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int size()
+  {
+    return map.size();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Collection<V> values()
+  {
+    return Collections.unmodifiableCollection(map.values());
   }
 
   //~--- get methods ----------------------------------------------------------

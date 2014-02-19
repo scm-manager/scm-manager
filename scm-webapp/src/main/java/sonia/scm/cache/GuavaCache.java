@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -43,6 +44,8 @@ import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collection;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -52,7 +55,8 @@ import java.util.Set;
  * @param <K>
  * @param <V>
  */
-public class GuavaCache<K, V> implements Cache<K, V>
+public class GuavaCache<K, V>
+  implements Cache<K, V>, org.apache.shiro.cache.Cache<K, V>
 {
 
   /**
@@ -144,13 +148,31 @@ public class GuavaCache<K, V> implements Cache<K, V>
    * Method description
    *
    *
-   * @param key
-   * @param value
+   * @return
    */
   @Override
-  public void put(K key, V value)
+  public Set<K> keys()
   {
+    return cache.asMap().keySet();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param key
+   * @param value
+   *
+   * @return
+   */
+  @Override
+  public V put(K key, V value)
+  {
+    V previous = cache.getIfPresent(key);
+
     cache.put(key, copyStrategy.copyOnWrite(value));
+
+    return previous;
   }
 
   /**
@@ -162,11 +184,13 @@ public class GuavaCache<K, V> implements Cache<K, V>
    * @return
    */
   @Override
-  public boolean remove(K key)
+  public V remove(K key)
   {
+    V value = cache.getIfPresent(key);
+
     cache.invalidate(key);
 
-    return true;
+    return value;
   }
 
   /**
@@ -178,27 +202,50 @@ public class GuavaCache<K, V> implements Cache<K, V>
    * @return
    */
   @Override
-  public boolean removeAll(Predicate<K> filter)
+  public Iterable<V> removeAll(Predicate<K> filter)
   {
+    Set<V> removedValues = Sets.newHashSet();
     Set<K> keysToRemove = Sets.newHashSet();
 
-    for (K key : cache.asMap().keySet())
+    for (Entry<K, V> e : cache.asMap().entrySet())
     {
-      if (filter.apply(key))
+      if (filter.apply(e.getKey()))
       {
-        keysToRemove.add(key);
+        keysToRemove.add(e.getKey());
+        removedValues.add(e.getValue());
       }
     }
-
-    boolean result = false;
 
     if (!keysToRemove.isEmpty())
     {
       cache.invalidateAll(keysToRemove);
-      result = true;
     }
 
-    return result;
+    return removedValues;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int size()
+  {
+    return (int) cache.size();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Collection<V> values()
+  {
+    return cache.asMap().values();
   }
 
   //~--- get methods ----------------------------------------------------------

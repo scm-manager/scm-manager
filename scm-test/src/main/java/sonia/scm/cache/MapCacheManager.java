@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -47,7 +48,8 @@ import java.util.Map;
  * @author Sebastian Sdorra
  * @since 1.17
  */
-public class MapCacheManager implements CacheManager
+public class MapCacheManager
+  implements CacheManager, org.apache.shiro.cache.CacheManager
 {
 
   /**
@@ -76,9 +78,9 @@ public class MapCacheManager implements CacheManager
    * @return
    */
   @Override
-  public <K, V> Cache<K, V> getCache(String name)
+  public synchronized <K, V> MapCache<K, V> getCache(String name)
   {
-    Cache<K, V> cache = cacheMap.get(name);
+    MapCache<K, V> cache = cacheMap.get(name);
 
     if (cache == null)
     {
@@ -89,10 +91,9 @@ public class MapCacheManager implements CacheManager
     return cache;
   }
 
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   @SuppressWarnings("unchecked")
-  private final Map<String, Cache> cacheMap = Maps.newHashMap();
+  private final Map<String, MapCache> cacheMap = Maps.newHashMap();
 }

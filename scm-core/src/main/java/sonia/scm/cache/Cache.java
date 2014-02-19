@@ -43,8 +43,8 @@ import com.google.common.base.Predicate;
  *
  * @author Sebastian Sdorra
  *
- * @param <K> - The type of the keys for the cache
- * @param <V> - The type of cache elements
+ * @param <K> type of the keys for the cache
+ * @param <V> type of cached elements
  */
 public interface Cache<K, V>
 {
@@ -59,7 +59,7 @@ public interface Cache<K, V>
    * Returns true if this cache contains an element with the specified key.
    *
    *
-   * @param key - The key of the cached element
+   * @param key key of the cached element
    *
    * @return true if this cache contains an element with the specified key
    */
@@ -69,33 +69,43 @@ public interface Cache<K, V>
    * Put a new element to this cache.
    *
    *
-   * @param key - The key of the element to cache
-   * @param value - The element that should be cached
+   * @param key key of the element to cache
+   * @param value element that should be cached
+   *
+   * @return previous cached value or null
    */
-  public void put(K key, V value);
+  public V put(K key, V value);
 
   /**
-   * Remove the element with the specified key from this cache. The method
-   * returns true if the operation was successful.
+   * Remove the element with the specified key from this cache. Return previous
+   * cached value.
    *
+   * @param key key of the cached element
    *
-   * @param key - The key of the cached element
-   *
-   * @return true if the operation was successful
+   * @return previous cached value or null
    */
-  public boolean remove(K key);
+  public V remove(K key);
 
   /**
    * Remove all elements with matching {@link Predicate} from this cache.
-   * The method returns true if the operation was successful.
+   * The method returns all previous cached values.
    *
    * @since 1.9
    *
-   * @param predicate - predicate to match cache keys
+   * @param predicate predicate to match cache keys
    *
-   * @return true if the operation was successful
+   * @return all previous cached values
    */
-  public boolean removeAll(Predicate<K> predicate);
+  public Iterable<V> removeAll(Predicate<K> predicate);
+
+  /**
+   * Returns the number of entries in the cache.
+   *
+   * @return number of entries in the cache
+   * 
+   * @since 2.0.0
+   */
+  public int size();
 
   //~--- get methods ----------------------------------------------------------
 
@@ -103,8 +113,7 @@ public interface Cache<K, V>
    * Returns the element with the specified key.
    * Returns null if the cache contains no element with the specified key.
    *
-   *
-   * @param key - The key of the cached element
+   * @param key key of the cached element
    *
    * @return The cached element with the specified key or null
    */
