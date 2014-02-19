@@ -140,7 +140,7 @@ public class PluginVersion implements Comparable<PluginVersion>
     return ComparisonChain.start()
       .compare(o.major, major)
       .compare(o.minor, minor)
-      .compare(o.maintenance, maintenance)
+      .compare(o.patch, patch)
       .compare(o.type.getValue(), type.getValue())
       .compare(o.typeVersion, typeVersion)
       .compareTrueFirst(o.snapshot, snapshot)
@@ -168,7 +168,7 @@ public class PluginVersion implements Comparable<PluginVersion>
 
     return Objects.equal(major, other.major)
       && Objects.equal(minor, other.minor)
-      && Objects.equal(maintenance, other.maintenance)
+      && Objects.equal(patch, other.patch)
       && Objects.equal(type, other.type)
       && Objects.equal(typeVersion, other.typeVersion)
       && Objects.equal(snapshot, other.snapshot)
@@ -181,7 +181,7 @@ public class PluginVersion implements Comparable<PluginVersion>
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(major, minor, maintenance, type, typeVersion,
+    return Objects.hashCode(major, minor, patch, type, typeVersion,
       snapshot, parsedVersion);
   }
 
@@ -197,14 +197,14 @@ public class PluginVersion implements Comparable<PluginVersion>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns the maintenance part of the version.
+   * Returns the patch part of the version.
    *
    *
-   * @return maintenance part
+   * @return patch part
    */
-  public int getMaintenance()
+  public int getPatch()
   {
-    return maintenance;
+    return patch;
   }
 
   /**
@@ -351,7 +351,7 @@ public class PluginVersion implements Comparable<PluginVersion>
   {
     StringBuilder v = new StringBuilder();
 
-    v.append(major).append(".").append(minor).append(".").append(maintenance);
+    v.append(major).append(".").append(minor).append(".").append(patch);
 
     String typeId = type.getId();
 
@@ -465,7 +465,7 @@ public class PluginVersion implements Comparable<PluginVersion>
 
         if (parts.length > 2)
         {
-          maintenance = Integer.parseInt(parts[2]);
+          patch = Integer.parseInt(parts[2]);
         }
       }
     }
@@ -479,8 +479,8 @@ public class PluginVersion implements Comparable<PluginVersion>
   /** unparsed version */
   private final String unparsedVersion;
 
-  /** maintenance part */
-  private int maintenance = 0;
+  /** patch part */
+  private int patch = 0;
 
   /** major part */
   private int major = 0;
