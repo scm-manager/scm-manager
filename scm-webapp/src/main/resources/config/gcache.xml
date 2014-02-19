@@ -93,7 +93,7 @@
     expireAfterWrite="5400"
   />
   
-  <!-- new repository api -->
+  <!-- repository api -->
   
   <!--
     Changeset cache

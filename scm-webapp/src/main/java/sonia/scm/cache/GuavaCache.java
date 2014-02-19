@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  *
@@ -110,6 +111,10 @@ public class GuavaCache<K, V>
     if (copyStrategy != null)
     {
       this.copyStrategy = copyStrategy;
+    }
+    else
+    {
+      this.copyStrategy = CopyStrategy.NONE;
     }
   }
 
@@ -266,19 +271,42 @@ public class GuavaCache<K, V>
     if (value != null)
     {
       value = copyStrategy.copyOnRead(value);
+      hitCount.incrementAndGet();
+    }
+    else
+    {
+      missCount.incrementAndGet();
     }
 
     return value;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public CacheStatistics getStatistics()
+  {
+    return new CacheStatistics(name, hitCount.get(), missCount.get());
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private com.google.common.cache.Cache<K, V> cache;
+  private final com.google.common.cache.Cache<K, V> cache;
 
   /** Field description */
-  private CopyStrategy copyStrategy = CopyStrategy.NONE;
+  private final CopyStrategy copyStrategy;
 
   /** Field description */
-  private String name;
+  private final AtomicLong hitCount = new AtomicLong();
+
+  /** Field description */
+  private final AtomicLong missCount = new AtomicLong();
+
+  /** Field description */
+  private final String name;
 }

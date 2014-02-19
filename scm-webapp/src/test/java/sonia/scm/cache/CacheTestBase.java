@@ -46,6 +46,7 @@ import sonia.scm.util.IOUtil;
 import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
+import org.junit.Assume;
 
 /**
  *
@@ -179,6 +180,30 @@ public abstract class CacheTestBase
     assertNull(cache.get("test-2"));
     assertNotNull(cache.get("a-1"));
     assertNotNull(cache.get("a-2"));
+  }
+  
+  @Test
+  public void testCacheStatistics(){
+    CacheStatistics stats = cache.getStatistics();
+    // skip test if implementation does not support stats
+    Assume.assumeTrue( stats != null );
+    assertEquals("test", stats.getName());
+    assertEquals(0l, stats.getHitCount());
+    assertEquals(0l, stats.getMissCount());
+    cache.put("test-1", "test123");
+    cache.put("test-2", "test456");
+    cache.get("test-1");
+    cache.get("test-1");
+    cache.get("test-1");
+    cache.get("test-3");
+    // check that stats have not changed
+    assertEquals(0l, stats.getHitCount());
+    assertEquals(0l, stats.getMissCount());
+    stats = cache.getStatistics();
+    assertEquals(3l, stats.getHitCount());
+    assertEquals(1l, stats.getMissCount());
+    assertEquals(0.75d, stats.getHitRate(), 0.0d);
+    assertEquals(0.25d, stats.getMissRate(), 0.0d);
   }
 
   /**

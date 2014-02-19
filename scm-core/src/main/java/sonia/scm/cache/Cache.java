@@ -102,7 +102,7 @@ public interface Cache<K, V>
    * Returns the number of entries in the cache.
    *
    * @return number of entries in the cache
-   * 
+   *
    * @since 2.0.0
    */
   public int size();
@@ -118,4 +118,15 @@ public interface Cache<K, V>
    * @return The cached element with the specified key or null
    */
   public V get(K key);
+
+  /**
+   * Returns performance statistics of the cache or null if the cache does not
+   * support statistics. The returned statistic is a snapshot of the current
+   * performance.
+   *
+   * @return performance statistics or null
+   *
+   * @since 2.0.0
+   */
+  public CacheStatistics getStatistics();
 }
