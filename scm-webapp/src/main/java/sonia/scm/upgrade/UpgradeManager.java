@@ -44,7 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
-import sonia.scm.plugin.PluginVersion;
+import sonia.scm.version.Version;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -164,8 +164,8 @@ public class UpgradeManager
 
     try
     {
-      PluginVersion oldVersion = PluginVersion.createVersion(oldVersionString);
-      PluginVersion newVersion = PluginVersion.createVersion(newVersionString);
+      Version oldVersion = Version.parse(oldVersionString);
+      Version newVersion = Version.parse(newVersionString);
 
       doUpgradesForOldVersion(baseDirectory, configDirectory, oldVersion,
         newVersion);
@@ -190,7 +190,7 @@ public class UpgradeManager
    * @param newVersion
    */
   private void doUpgradesForOldVersion(File baseDirectory,
-    File configDirectory, PluginVersion oldVersion, PluginVersion newVersion)
+    File configDirectory, Version oldVersion, Version newVersion)
   {
     List<UpgradeHandler> upgradeHandlers = collectUpgradeHandlers();
 

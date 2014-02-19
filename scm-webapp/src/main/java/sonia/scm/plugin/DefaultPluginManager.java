@@ -35,6 +35,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.version.Version;
 import com.github.legman.Subscribe;
 
 import com.google.common.collect.Sets;
@@ -721,7 +722,7 @@ public class DefaultPluginManager implements PluginManager
     PluginInformation installed)
   {
     boolean result = false;
-    PluginVersion version = PluginVersion.createVersion(available.getVersion());
+    Version version = Version.parse(available.getVersion());
 
     if (version != null)
     {

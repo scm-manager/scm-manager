@@ -50,7 +50,7 @@ import sonia.scm.plugin.PluginBackend;
 import sonia.scm.plugin.PluginBackendListener;
 import sonia.scm.plugin.PluginCenter;
 import sonia.scm.plugin.PluginInformation;
-import sonia.scm.plugin.PluginVersion;
+import sonia.scm.version.Version;
 import sonia.scm.plugin.rest.PluginInformationComparator;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -264,7 +264,7 @@ public class PluginResource implements PluginBackendListener
    */
   private boolean isNewer(PluginInformation plugin, PluginInformation newest)
   {
-    return new PluginVersion(plugin.getVersion()).isNewer(newest.getVersion());
+    return Version.parse(plugin.getVersion()).isNewer(newest.getVersion());
   }
 
   /**

@@ -44,7 +44,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import sonia.scm.SCMContext;
-import sonia.scm.plugin.PluginVersion;
+import sonia.scm.version.Version;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -79,7 +79,7 @@ public class ClientDateFormatUpgradeHandler extends XmlUpgradeHandler
    */
   @Override
   public void doUpgrade(File homeDirectory, File configDirectory,
-    PluginVersion oldVersion, PluginVersion newVersion)
+    Version oldVersion, Version newVersion)
   {
     if (oldVersion.isOlder("1.23"))
     {

@@ -46,7 +46,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import sonia.scm.SCMContext;
-import sonia.scm.plugin.PluginVersion;
+import sonia.scm.version.Version;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -90,7 +90,7 @@ public class TimestampUpgradeHandler extends XmlUpgradeHandler
    */
   @Override
   public void doUpgrade(File homeDirectory, File configDirectory,
-    PluginVersion oldVersion, PluginVersion newVersion)
+    Version oldVersion, Version newVersion)
   {
     if (oldVersion.isOlder("1.2"))
     {

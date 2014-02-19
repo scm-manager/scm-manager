@@ -236,7 +236,7 @@ public class PluginCondition implements Cloneable, Serializable
     if (Util.isNotEmpty(minVersion) && Util.isNotEmpty(version))
     {
       supported = (minVersion.equalsIgnoreCase(version)
-        || new Version(version).isNewer(minVersion));
+        || Version.parse(version).isNewer(minVersion));
     }
 
     if (supported && Util.isNotEmpty(this.os) && Util.isNotEmpty(os))

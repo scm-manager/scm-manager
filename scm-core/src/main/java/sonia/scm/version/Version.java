@@ -39,27 +39,18 @@ import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ComparisonChain;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Locale;
 
 /**
  * Version object for comparing and parsing versions.
- * 
+ *
  *
  * @author Sebastian Sdorra
  */
 public final class Version implements Comparable<Version>
 {
-
-  /** the logger for Version */
-  private static final Logger logger =
-    LoggerFactory.getLogger(Version.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new version object
@@ -67,7 +58,7 @@ public final class Version implements Comparable<Version>
    *
    * @param versionString string representation of the version
    */
-  public Version(String versionString)
+  private Version(String versionString)
   {
     this.unparsedVersion = versionString;
 
@@ -101,14 +92,11 @@ public final class Version implements Comparable<Version>
   /**
    * Creates a new version of the given string.
    *
-   * TODO throw exception if not parseable
-   *
-   *
    * @param versionString string representation of the version
    *
    * @return version object
    */
-  public static Version createVersion(String versionString)
+  public static Version parse(String versionString)
   {
     Version version = null;
 
@@ -118,10 +106,8 @@ public final class Version implements Comparable<Version>
     }
     catch (NumberFormatException ex)
     {
-      if (logger.isWarnEnabled())
-      {
-        logger.warn("could not parse version ".concat(versionString), ex);
-      }
+      throw new VersionParseException(
+        "could not parse version ".concat(versionString), ex);
     }
 
     return version;
@@ -166,8 +152,7 @@ public final class Version implements Comparable<Version>
     final Version other = (Version) obj;
 
     return Objects.equal(major, other.major)
-      && Objects.equal(minor, other.minor)
-      && Objects.equal(patch, other.patch)
+      && Objects.equal(minor, other.minor) && Objects.equal(patch, other.patch)
       && Objects.equal(type, other.type)
       && Objects.equal(typeVersion, other.typeVersion)
       && Objects.equal(snapshot, other.snapshot)
@@ -180,8 +165,8 @@ public final class Version implements Comparable<Version>
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(major, minor, patch, type, typeVersion,
-      snapshot, parsedVersion);
+    return Objects.hashCode(major, minor, patch, type, typeVersion, snapshot,
+      parsedVersion);
   }
 
   /**
@@ -194,17 +179,6 @@ public final class Version implements Comparable<Version>
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns the patch part of the version.
-   *
-   *
-   * @return patch part
-   */
-  public int getPatch()
-  {
-    return patch;
-  }
 
   /**
    * Returns the major part of the version.
@@ -237,6 +211,17 @@ public final class Version implements Comparable<Version>
   public String getParsedVersion()
   {
     return parsedVersion;
+  }
+
+  /**
+   * Returns the patch part of the version.
+   *
+   *
+   * @return patch part
+   */
+  public int getPatch()
+  {
+    return patch;
   }
 
   /**
@@ -273,7 +258,7 @@ public final class Version implements Comparable<Version>
   }
 
   /**
-   * Returns true if the current version is newer than the given version.
+   * Returns true if the given version is newer.
    *
    * @param o other version
    *
@@ -285,7 +270,7 @@ public final class Version implements Comparable<Version>
   }
 
   /**
-   * Returns true if the current version is newer than the given version.
+   * Returns true if the given version is newer.
    *
    *
    * @param versionString other version
@@ -294,13 +279,13 @@ public final class Version implements Comparable<Version>
    */
   public boolean isNewer(String versionString)
   {
-    Version o = Version.createVersion(versionString);
+    Version o = Version.parse(versionString);
 
     return (o != null) && isNewer(o);
   }
 
   /**
-   * Returns true if the current version is older than the given version.
+   * Returns true if the given version is older.
    *
    *
    * @param o other version
@@ -313,7 +298,7 @@ public final class Version implements Comparable<Version>
   }
 
   /**
-   * Returns true if the current version is older than the given version.
+   * Returns true if the given version is older.
    *
    *
    * @param versionString other version
@@ -322,7 +307,7 @@ public final class Version implements Comparable<Version>
    */
   public boolean isOlder(String versionString)
   {
-    Version o = Version.createVersion(versionString);
+    Version o = Version.parse(versionString);
 
     return (o != null) && isOlder(o);
   }
@@ -478,14 +463,14 @@ public final class Version implements Comparable<Version>
   /** unparsed version */
   private final String unparsedVersion;
 
-  /** patch part */
-  private int patch = 0;
-
   /** major part */
   private int major = 0;
 
   /** minor part */
   private int minor = 0;
+
+  /** patch part */
+  private int patch = 0;
 
   /** is a snapshot */
   private boolean snapshot;
