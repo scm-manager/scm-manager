@@ -35,18 +35,22 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
+import com.google.common.collect.ComparisonChain;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.util.AssertUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Locale;
 
 /**
- * TODO for 2.0: rename to version and move to another package.
+ * Version object for comparing and parsing versions.
  * 
+ * TODO for 2.0: rename to version and move to another package.
+ *
  * @author Sebastian Sdorra
  */
 public class PluginVersion implements Comparable<PluginVersion>
@@ -59,10 +63,10 @@ public class PluginVersion implements Comparable<PluginVersion>
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new version object
    *
    *
-   * @param versionString
+   * @param versionString string representation of the version
    */
   public PluginVersion(String versionString)
   {
@@ -96,21 +100,14 @@ public class PluginVersion implements Comparable<PluginVersion>
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Enum description
+   * Creates a new version of the given string.
+   *
+   * TODO throw exception if not parseable
    *
    *
-   * @param versionString
+   * @param versionString string representation of the version
    *
-   * @return
-   */
-
-  /**
-   * Method description
-   *
-   *
-   * @param versionString
-   *
-   * @return
+   * @return version object
    */
   public static PluginVersion createVersion(String versionString)
   {
@@ -132,62 +129,27 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param o
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public int compareTo(PluginVersion o)
   {
-    AssertUtil.assertIsNotNull(o);
+    Preconditions.checkNotNull(o);
 
-    int result = o.major - major;
-
-    if (result == 0)
-    {
-      result = o.minor - minor;
-
-      if (result == 0)
-      {
-        result = o.maintenance - maintenance;
-
-        if (result == 0)
-        {
-          result = o.type.getValue() - type.getValue();
-
-          if (result == 0)
-          {
-            result = o.typeVersion - typeVersion;
-
-            if (result == 0)
-            {
-              if (o.snapshot &&!snapshot)
-              {
-                result = -1;
-              }
-              else if (!o.snapshot && snapshot)
-              {
-                result = 1;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    return result;
+    //J-
+    return ComparisonChain.start()
+      .compare(o.major, major)
+      .compare(o.minor, minor)
+      .compare(o.maintenance, maintenance)
+      .compare(o.type.getValue(), type.getValue())
+      .compare(o.typeVersion, typeVersion)
+      .compareTrueFirst(o.snapshot, snapshot)
+      .result();
+    //J+
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public boolean equals(Object obj)
@@ -204,79 +166,27 @@ public class PluginVersion implements Comparable<PluginVersion>
 
     final PluginVersion other = (PluginVersion) obj;
 
-    if (this.maintenance != other.maintenance)
-    {
-      return false;
-    }
-
-    if (this.major != other.major)
-    {
-      return false;
-    }
-
-    if (this.minor != other.minor)
-    {
-      return false;
-    }
-
-    if ((this.parsedVersion == null)
-      ? (other.parsedVersion != null)
-      : !this.parsedVersion.equals(other.parsedVersion))
-    {
-      return false;
-    }
-
-    if (this.snapshot != other.snapshot)
-    {
-      return false;
-    }
-
-    if (this.type != other.type)
-    {
-      return false;
-    }
-
-    if (this.typeVersion != other.typeVersion)
-    {
-      return false;
-    }
-
-    return true;
+    return Objects.equal(major, other.major)
+      && Objects.equal(minor, other.minor)
+      && Objects.equal(maintenance, other.maintenance)
+      && Objects.equal(type, other.type)
+      && Objects.equal(typeVersion, other.typeVersion)
+      && Objects.equal(snapshot, other.snapshot)
+      && Objects.equal(parsedVersion, other.parsedVersion);
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public int hashCode()
   {
-    int hash = 5;
-
-    hash = 61 * hash + this.maintenance;
-    hash = 61 * hash + this.major;
-    hash = 61 * hash + this.minor;
-    hash = 61 * hash + ((this.parsedVersion != null)
-      ? this.parsedVersion.hashCode()
-      : 0);
-    hash = 61 * hash + (this.snapshot
-      ? 1
-      : 0);
-    hash = 61 * hash + ((this.type != null)
-      ? this.type.hashCode()
-      : 0);
-    hash = 61 * hash + this.typeVersion;
-
-    return hash;
+    return Objects.hashCode(major, minor, maintenance, type, typeVersion,
+      snapshot, parsedVersion);
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public String toString()
@@ -287,10 +197,10 @@ public class PluginVersion implements Comparable<PluginVersion>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the maintenance part of the version.
    *
    *
-   * @return
+   * @return maintenance part
    */
   public int getMaintenance()
   {
@@ -298,10 +208,10 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Returns the major part of the version.
    *
    *
-   * @return
+   * @return major part
    */
   public int getMajor()
   {
@@ -309,10 +219,10 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Returns the minor part of the version.
    *
    *
-   * @return
+   * @return minor part
    */
   public int getMinor()
   {
@@ -320,10 +230,10 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Returns the string representation of the parsed version.
    *
    *
-   * @return
+   * @return parsed version string
    */
   public String getParsedVersion()
   {
@@ -331,10 +241,10 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Returns the version type (alpha, beta, milestone, etc.) of the version.
    *
    *
-   * @return
+   * @return version type
    */
   public PluginVersionType getType()
   {
@@ -342,10 +252,10 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Returns the version of the type e.g. beta-1 would return 1.
    *
    *
-   * @return
+   * @return version of the type
    */
   public int getTypeVersion()
   {
@@ -353,10 +263,10 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Returns the unparsed string representation of the version.
    *
    *
-   * @return
+   * @return unparsed version string
    */
   public String getUnparsedVersion()
   {
@@ -364,12 +274,11 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Returns true if the current version is newer than the given version.
    *
+   * @param o other version
    *
-   * @param o
-   *
-   * @return
+   * @return true if newer
    */
   public boolean isNewer(PluginVersion o)
   {
@@ -377,12 +286,12 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Returns true if the current version is newer than the given version.
    *
    *
-   * @param versionString
+   * @param versionString other version
    *
-   * @return
+   * @return true if newer
    */
   public boolean isNewer(String versionString)
   {
@@ -392,12 +301,12 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Returns true if the current version is older than the given version.
    *
    *
-   * @param o
+   * @param o other version
    *
-   * @return
+   * @return true if older
    */
   public boolean isOlder(PluginVersion o)
   {
@@ -405,12 +314,12 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Returns true if the current version is older than the given version.
    *
    *
-   * @param versionString
+   * @param versionString other version
    *
-   * @return
+   * @return true if older
    */
   public boolean isOlder(String versionString)
   {
@@ -420,10 +329,10 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Returns true if the version is a snapshot.
    *
    *
-   * @return
+   * @return true if version is a snapshot
    */
   public boolean isSnapshot()
   {
@@ -433,10 +342,10 @@ public class PluginVersion implements Comparable<PluginVersion>
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Created parsed string version.
    *
    *
-   * @return
+   * @return parsed version
    */
   private String createParsedVersion()
   {
@@ -460,10 +369,10 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Parses the qualifier part of the version.
    *
    *
-   * @param qualifierPart
+   * @param qualifierPart qualifier part
    */
   private void parseQualifierPart(String qualifierPart)
   {
@@ -537,10 +446,10 @@ public class PluginVersion implements Comparable<PluginVersion>
   }
 
   /**
-   * Method description
+   * Parse version part
    *
    *
-   * @param versionPart
+   * @param versionPart version part
    */
   private void parseVersionPart(String versionPart)
   {
@@ -564,27 +473,27 @@ public class PluginVersion implements Comparable<PluginVersion>
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** parsed version */
+  private final String parsedVersion;
+
+  /** unparsed version */
+  private final String unparsedVersion;
+
+  /** maintenance part */
   private int maintenance = 0;
 
-  /** Field description */
+  /** major part */
   private int major = 0;
 
-  /** Field description */
+  /** minor part */
   private int minor = 0;
 
-  /** Field description */
-  private String parsedVersion;
-
-  /** Field description */
+  /** is a snapshot */
   private boolean snapshot;
 
-  /** Field description */
+  /** version type */
   private PluginVersionType type;
 
-  /** Field description */
+  /** type version */
   private int typeVersion = 1;
-
-  /** Field description */
-  private String unparsedVersion;
 }
