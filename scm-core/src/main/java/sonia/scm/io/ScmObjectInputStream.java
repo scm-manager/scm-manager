@@ -87,7 +87,8 @@ public class ScmObjectInputStream extends ObjectInputStream
     }
     catch (ClassNotFoundException ex)
     {
-      logger.warn("could not find class ".concat(desc.getName()), ex);
+      // do not log the exception, because the class 
+      // is mostly found by the parent method.
     }
 
     if (clazz == null)
