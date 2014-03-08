@@ -370,6 +370,7 @@ public class ScmConfiguration
    *
    *
    * @return realm description
+   * @since 1.36
    */
   public String getRealmDescription()
   {
@@ -741,6 +742,7 @@ public class ScmConfiguration
    *
    *
    * @param realmDescription
+   * @since 1.36
    */
   public void setRealmDescription(String realmDescription)
   {

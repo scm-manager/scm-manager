@@ -443,6 +443,8 @@ public final class HttpUtil
    * @param realmDescription - realm description
    *
    * @throws IOException
+   * 
+   * @since 1.36
    */
   public static void sendUnauthorized(HttpServletResponse response, String realmDescription)
     throws IOException
