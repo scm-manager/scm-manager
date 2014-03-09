@@ -177,6 +177,12 @@ public class SearchUtilTest
       "testhansolo"));
     assertFalse(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"),
       "test\\hnsolo"));
+    assertTrue(SearchUtil.matchesAll(new SearchRequest("{test,hansolo} tst"),
+      "{test,hansolo} tst"));
+    assertTrue(SearchUtil.matchesAll(new SearchRequest("(test,hansolo) tst"),
+      "(test,hansolo) tst"));
+    assertTrue(SearchUtil.matchesAll(new SearchRequest("[test,hansolo] tst"),
+      "[test,hansolo] tst"));
   }
 
   /**
