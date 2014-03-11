@@ -35,7 +35,6 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -84,7 +83,8 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
 
   /** Field description */
   public static final String HEADER_AUTHORIZATION = "Authorization";
-  
+
+  /** marker for failed authentication */
   private static final String ATTRIBUTE_FAILED_AUTH = "sonia.scm.auth.failed";
 
   /** the logger for BasicAuthenticationFilter */
@@ -197,7 +197,7 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
   }
 
   /**
-   * Sends status code 403 back to client, if the authentication has failed. 
+   * Sends status code 403 back to client, if the authentication has failed.
    * In all other cases the method will send status code 403 back to client.
    *
    * @param request servlet request
@@ -213,6 +213,7 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
     HttpServletResponse response, FilterChain chain)
     throws IOException, ServletException
   {
+
     // send only forbidden, if the authentication has failed.
     // see https://bitbucket.org/sdorra/scm-manager/issue/545/git-clone-with-username-in-url-does-not
     if (Boolean.TRUE.equals(request.getAttribute(ATTRIBUTE_FAILED_AUTH)))
@@ -221,7 +222,8 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
     }
     else
     {
-      HttpUtil.sendUnauthorized(request, response, configuration.getRealmDescription());
+      HttpUtil.sendUnauthorized(request, response,
+        configuration.getRealmDescription());
     }
   }
 
@@ -243,7 +245,7 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
     String token = authentication.substring(6);
 
     token = new String(Base64.decode(token.getBytes()));
-    
+
     int index = token.indexOf(CREDENTIAL_SEPARATOR);
     User user = null;
 
@@ -268,8 +270,10 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
         }
         catch (AuthenticationException ex)
         {
+
           // add a marker to the request that the authentication has failed
           request.setAttribute(ATTRIBUTE_FAILED_AUTH, Boolean.TRUE);
+
           if (logger.isTraceEnabled())
           {
             logger.trace("authentication failed for user ".concat(username),
