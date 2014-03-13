@@ -173,6 +173,17 @@
       <version>3.2.1</version>
     </dependency>
     
+    <!-- 
+      fix installation of httpasswd-plugin 
+      https://groups.google.com/d/topic/scmmanager/eN7UtG8TwW8/discussion
+    -->
+    
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.8</version>
+    </dependency>
+    
     <dependency>
       <groupId>asm</groupId>
       <artifactId>asm</artifactId>
