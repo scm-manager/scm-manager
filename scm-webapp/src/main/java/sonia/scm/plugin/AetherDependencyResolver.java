@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -116,32 +117,17 @@ public class AetherDependencyResolver
    *
    *
    * @param dependency
+   * @param dependencies
    *
    * @throws DependencyCollectionException
    * @throws DependencyResolutionException
    */
-  public void resolveLocalDependency(Dependency dependency)
+  public void resolveDependencies(Dependency dependency,
+    List<Dependency> dependencies)
     throws DependencyCollectionException, DependencyResolutionException
   {
-    CollectRequest request = new CollectRequest();
-
-    request.setRoot(dependency);
-    resolveDependency(request);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param dependency
-   *
-   * @throws DependencyCollectionException
-   * @throws DependencyResolutionException
-   */
-  public void resolveRemoteDependency(Dependency dependency)
-    throws DependencyCollectionException, DependencyResolutionException
-  {
-    resolveDependency(new CollectRequest(dependency, remoteRepositories));
+    resolveDependency(new CollectRequest(dependency, dependencies,
+      remoteRepositories));
   }
 
   /**
