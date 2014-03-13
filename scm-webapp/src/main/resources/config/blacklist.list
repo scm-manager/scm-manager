@@ -1,0 +1,10 @@
+
+The following dependencies are blacklisted
+   commons-logging:commons-logging
+   log4j:log4j
+   junit:junit
+   org.mockito:mockito-core
+   org.mockito:mockito-all
+   org.mockito:mockito-junit
+   org.testng:testng
+   org.powermock:powermock

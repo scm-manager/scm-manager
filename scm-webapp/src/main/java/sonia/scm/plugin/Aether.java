@@ -57,6 +57,7 @@ import org.sonatype.aether.resolution.DependencyRequest;
 import org.sonatype.aether.resolution.DependencyResolutionException;
 import org.sonatype.aether.util.artifact.DefaultArtifact;
 import org.sonatype.aether.util.artifact.JavaScopes;
+import org.sonatype.aether.util.filter.AndDependencyFilter;
 import org.sonatype.aether.util.filter.DependencyFilterUtils;
 import org.sonatype.aether.util.graph.transformer
   .ChainedDependencyGraphTransformer;
@@ -77,7 +78,11 @@ public final class Aether
 {
 
   /** Field description */
-  private static final DependencyFilter FILTER = new AetherDependencyFilter();
+  private static final DependencyFilter FILTER =
+    new AndDependencyFilter(
+      new CoreDependencyFilter(),
+      new BlacklistDependencyFilter()
+    );
 
   /**
    * the logger for Aether
@@ -167,7 +172,6 @@ public final class Aether
    *
    *
    * @param system
-   * @param repositoryManager
    * @param localRepository
    * @param configuration
    *
