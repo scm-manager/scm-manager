@@ -431,7 +431,7 @@
 
     <!-- repostitory libraries -->
     <jgit.version>3.3.0.201403021825-r</jgit.version>
-    <svnkit.version>1.8.4-scm2-SNAPSHOT</svnkit.version>
+    <svnkit.version>1.8.4-scm2</svnkit.version>
     
     <!-- util libraries -->
     <guava.version>15.0</guava.version>
