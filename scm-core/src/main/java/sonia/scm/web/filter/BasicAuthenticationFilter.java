@@ -239,7 +239,8 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
     HttpServletResponse response)
     throws IOException
   {
-    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+    HttpUtil.sendUnauthorized(request, response,
+      configuration.getRealmDescription());
   }
 
   /**
