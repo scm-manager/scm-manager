@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
@@ -66,8 +67,11 @@ import sonia.scm.util.Util;
 import java.io.File;
 import java.io.IOException;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -95,6 +99,9 @@ public final class GitUtil
   private static final String DIRECTORY_REFS = "refs";
 
   /** Field description */
+  private static final String HEADER_USERAGENT = "User-Agent";
+
+  /** Field description */
   private static final String PREFIX_HEADS = "refs/heads/";
 
   /** Field description */
@@ -108,6 +115,9 @@ public final class GitUtil
 
   /** Field description */
   private static final int TIMEOUT = 5;
+
+  /** Field description */
+  private static final String USERAGENT_GIT = "git/";
 
   /** the logger for GitUtil */
   private static final Logger logger = LoggerFactory.getLogger(GitUtil.class);
@@ -650,6 +660,20 @@ public final class GitUtil
     }
 
     return name;
+  }
+
+  /**
+   * Returns true if the request comes from a git client.
+   *
+   *
+   * @param request servlet request
+   *
+   * @return true if the client is git
+   */
+  public static boolean isGitClient(HttpServletRequest request)
+  {
+    return Strings.nullToEmpty(request.getHeader(HEADER_USERAGENT)).toLowerCase(
+      Locale.ENGLISH).startsWith(USERAGENT_GIT);
   }
 
   /**

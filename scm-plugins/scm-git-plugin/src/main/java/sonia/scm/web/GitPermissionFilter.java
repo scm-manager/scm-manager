@@ -38,13 +38,19 @@ package sonia.scm.web;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.eclipse.jgit.http.server.GitSmartHttpTools;
+
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.web.filter.ProviderPermissionFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
-import sonia.scm.config.ScmConfiguration;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -66,22 +72,50 @@ public class GitPermissionFilter extends ProviderPermissionFilter
   /** Field description */
   public static final String URI_REF_INFO = "/info/refs";
 
+  /** Field description */
+  private static final String MESSAGE_NOT_ENOUGH_PRIVILEGES =
+    "You do not have enough access privileges for this operation.";
+
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
-   *
-   *
-   * @param securityContextProvider
+   * @param configuration
    * @param repositoryProvider
    */
   @Inject
-  public GitPermissionFilter(
-          ScmConfiguration configuration,
-          RepositoryProvider repositoryProvider)
+  public GitPermissionFilter(ScmConfiguration configuration,
+    RepositoryProvider repositoryProvider)
   {
     super(configuration, repositoryProvider);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   *
+   * @throws IOException
+   */
+  @Override
+  protected void sendNotEnoughPrivilegesError(HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException
+  {
+    if (GitUtil.isGitClient(request))
+    {
+      GitSmartHttpTools.sendError(request, response,
+        HttpServletResponse.SC_FORBIDDEN, MESSAGE_NOT_ENOUGH_PRIVILEGES);
+    }
+    else
+    {
+      super.sendNotEnoughPrivilegesError(request, response);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -100,8 +134,8 @@ public class GitPermissionFilter extends ProviderPermissionFilter
     String uri = request.getRequestURI();
 
     return uri.endsWith(URI_RECEIVE_PACK)
-           || (uri.endsWith(URI_REF_INFO)
-               && PARAMETER_VALUE_RECEIVE.equals(
-                   request.getParameter(PARAMETER_SERVICE)));
+      || (uri.endsWith(URI_REF_INFO)
+        && PARAMETER_VALUE_RECEIVE.equals(
+          request.getParameter(PARAMETER_SERVICE)));
   }
 }
