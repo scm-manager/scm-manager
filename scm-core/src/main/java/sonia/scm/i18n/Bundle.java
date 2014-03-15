@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.i18n;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -41,6 +42,7 @@ import sonia.scm.util.Util;
 import java.text.MessageFormat;
 
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
@@ -134,8 +136,33 @@ public class Bundle
     return msg;
   }
 
+  /**
+   * Returns the value of the key, formatted with {@link MessageFormat} or null 
+   * if the key is not present in the bundle.
+   *
+   *
+   * @param key key in the properties file
+   * @param args format arguments
+   *
+   * @return formated message or null
+   * 
+   * @since 1.37
+   */
+  public String getStringIfPresent(String key, Object... args)
+  {
+    String msg = null;
+
+    try
+    {
+      msg = getString(key, args);
+    }
+    catch (MissingResourceException ex) {}
+
+    return msg;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ResourceBundle bundle;
+  private final ResourceBundle bundle;
 }
