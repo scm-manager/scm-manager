@@ -218,13 +218,45 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
     // see https://bitbucket.org/sdorra/scm-manager/issue/545/git-clone-with-username-in-url-does-not
     if (Boolean.TRUE.equals(request.getAttribute(ATTRIBUTE_FAILED_AUTH)))
     {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      sendFailedAuthenticationError(request, response);
     }
     else
     {
-      HttpUtil.sendUnauthorized(request, response,
-        configuration.getRealmDescription());
+      sendUnauthorizedError(request, response);
     }
+  }
+
+  /**
+   * Sends an error for a failed authentication back to client.
+   *
+   *
+   * @param request http request
+   * @param response http response
+   *
+   * @throws IOException
+   */
+  protected void sendFailedAuthenticationError(HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException
+  {
+    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+  }
+
+  /**
+   * Sends an unauthorized error back to client.
+   *
+   *
+   * @param request http request
+   * @param response http response
+   *
+   * @throws IOException
+   */
+  protected void sendUnauthorizedError(HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException
+  {
+    HttpUtil.sendUnauthorized(request, response,
+      configuration.getRealmDescription());
   }
 
   /**
@@ -300,6 +332,6 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private ScmConfiguration configuration;
+  /** scm main configuration */
+  protected ScmConfiguration configuration;
 }

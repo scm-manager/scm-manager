@@ -50,6 +50,7 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
@@ -65,7 +66,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.security.Role;
 
 /**
  * Abstract http filter to check repository permissions.
@@ -98,7 +98,7 @@ public abstract class PermissionFilter extends HttpFilter
    *
    * @param configuration global scm-manager configuration
    * @param securityContextProvider security context provider
-   * 
+   *
    * @deprecated {@link #PermissionFilter(ScmConfiguration)} instead
    */
   @Deprecated
@@ -133,11 +133,11 @@ public abstract class PermissionFilter extends HttpFilter
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Checks the permission for the requested repository. If the user has enough 
+   * Checks the permission for the requested repository. If the user has enough
    * permission, then the filter chain is called.
    *
    *
-   * @param request http request 
+   * @param request http request
    * @param response http response
    * @param chain filter chain
    *
@@ -179,7 +179,7 @@ public abstract class PermissionFilter extends HttpFilter
               getUserName(subject));
           }
 
-          sendAccessDenied(response, subject);
+          sendAccessDenied(request, response, subject);
         }
       }
       else
@@ -216,9 +216,41 @@ public abstract class PermissionFilter extends HttpFilter
           subject.getPrincipal());
       }
 
-      sendAccessDenied(response, subject);
+      sendAccessDenied(request, response, subject);
     }
 
+  }
+
+  /**
+   * Sends a "not enough privileges" error back to client.
+   *
+   *
+   * @param request http request
+   * @param response http response
+   *
+   * @throws IOException
+   */
+  protected void sendNotEnoughPrivilegesError(HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException
+  {
+    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+  }
+
+  /**
+   * Sends an unauthorized error back to client.
+   *
+   *
+   * @param request http request
+   * @param response http response
+   *
+   * @throws IOException
+   */
+  protected void sendUnauthorizedError(HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException
+  {
+    HttpUtil.sendUnauthorized(response, configuration.getRealmDescription());
   }
 
   /**
@@ -247,22 +279,23 @@ public abstract class PermissionFilter extends HttpFilter
   /**
    * Send access denied to the servlet response.
    *
-   *
+   * @param request current http request object
    * @param response current http response object
    * @param subject user subject
    *
    * @throws IOException
    */
-  private void sendAccessDenied(HttpServletResponse response, Subject subject)
+  private void sendAccessDenied(HttpServletRequest request,
+    HttpServletResponse response, Subject subject)
     throws IOException
   {
     if (subject.hasRole(Role.USER))
     {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      sendNotEnoughPrivilegesError(request, response);
     }
     else
     {
-      HttpUtil.sendUnauthorized(response, configuration.getRealmDescription());
+      sendUnauthorizedError(request, response);
     }
   }
 
@@ -351,5 +384,5 @@ public abstract class PermissionFilter extends HttpFilter
   //~--- fields ---------------------------------------------------------------
 
   /** scm-manager global configuration */
-  private ScmConfiguration configuration;
+  private final ScmConfiguration configuration;
 }
