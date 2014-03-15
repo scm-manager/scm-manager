@@ -39,15 +39,22 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.tmatesoft.svn.core.SVNErrorCode;
+
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.RepositoryProvider;
+import sonia.scm.repository.ScmSvnErrorCode;
+import sonia.scm.repository.SvnUtil;
 import sonia.scm.web.filter.ProviderPermissionFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -58,22 +65,16 @@ public class SvnPermissionFilter extends ProviderPermissionFilter
 {
 
   /** Field description */
-  private static Set<String> WRITEMETHOD_SET = ImmutableSet.of("MKACTIVITY",
-                                                 "PROPPATCH", "PUT",
-                                                 "CHECKOUT", "MKCOL", "MOVE",
-                                                 "COPY", "DELETE", "LOCK",
-                                                 "UNLOCK", "MERGE");
+  private static final Set<String> WRITEMETHOD_SET =
+    ImmutableSet.of("MKACTIVITY", "PROPPATCH", "PUT", "CHECKOUT", "MKCOL",
+      "MOVE", "COPY", "DELETE", "LOCK", "UNLOCK", "MERGE");
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
-   *
-   *
-   *
    * @param configuration
-   * @param securityContextProvider
    * @param repository
    */
   @Inject
@@ -81,6 +82,33 @@ public class SvnPermissionFilter extends ProviderPermissionFilter
     RepositoryProvider repository)
   {
     super(configuration, repository);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   *
+   * @throws IOException
+   */
+  @Override
+  protected void sendNotEnoughPrivilegesError(HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException
+  {
+    if (SvnUtil.isSvnClient(request))
+    {
+      SvnUtil.sendError(request, response, HttpServletResponse.SC_FORBIDDEN,
+        ScmSvnErrorCode.AUTHZ_NOT_ENOUGH_PRIVILEGES);
+    }
+    else
+    {
+      super.sendNotEnoughPrivilegesError(request, response);
+    }
   }
 
   //~--- get methods ----------------------------------------------------------

@@ -37,6 +37,7 @@ package sonia.scm.util;
 
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Strings;
+import com.google.common.io.ByteStreams;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,7 @@ import sonia.scm.config.ScmConfiguration;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import java.net.URLDecoder;
@@ -158,6 +160,9 @@ public final class HttpUtil
   public static final String STATUS_UNAUTHORIZED_MESSAGE =
     "Authorization Required";
 
+  /** Field description */
+  private static final int SKIP_SIZE = 4096;
+
   /** the logger for HttpUtil */
   private static final Logger logger = LoggerFactory.getLogger(HttpUtil.class);
 
@@ -167,7 +172,7 @@ public final class HttpUtil
    */
   private static final Pattern PATTERN_URLNORMALIZE =
     Pattern.compile("(?:(http://[^:]+):80(/.+)?|(https://[^:]+):443(/.+)?)");
-  
+
   /**
    * CharMatcher to select cr/lf and '%' characters
    * @since 1.28
@@ -197,10 +202,10 @@ public final class HttpUtil
    */
   public static String append(String uri, String suffix)
   {
-    if ( uri.endsWith(SEPARATOR_PATH) && suffix.startsWith(SEPARATOR_PATH) )
+    if (uri.endsWith(SEPARATOR_PATH) && suffix.startsWith(SEPARATOR_PATH))
     {
-      uri = uri.substring( 0, uri.length() - 1 );
-    } 
+      uri = uri.substring(0, uri.length() - 1);
+    }
     else if (!uri.endsWith(SEPARATOR_PATH) &&!suffix.startsWith(SEPARATOR_PATH))
     {
       uri = uri.concat(SEPARATOR_PATH);
@@ -297,6 +302,38 @@ public final class HttpUtil
     }
 
     return value;
+  }
+
+  /**
+   * Skips to complete body of a request.
+   *
+   *
+   * @param request http request
+   *
+   * @since 1.37
+   */
+  public static void drainBody(HttpServletRequest request)
+  {
+    if (isChunked(request) || (request.getContentLength() > 0))
+    {
+      InputStream in = null;
+
+      try
+      {
+        in = request.getInputStream();
+
+        while ((0 < in.skip(SKIP_SIZE)) || (0 <= in.read()))
+        {
+
+          // nothing
+        }
+      }
+      catch (IOException e) {}
+      finally
+      {
+        IOUtil.close(in);
+      }
+    }
   }
 
   /**
@@ -443,10 +480,11 @@ public final class HttpUtil
    * @param realmDescription - realm description
    *
    * @throws IOException
-   * 
+   *
    * @since 1.36
    */
-  public static void sendUnauthorized(HttpServletResponse response, String realmDescription)
+  public static void sendUnauthorized(HttpServletResponse response,
+    String realmDescription)
     throws IOException
   {
     sendUnauthorized(null, response, realmDescription);
@@ -465,8 +503,7 @@ public final class HttpUtil
    * @since 1.19
    */
   public static void sendUnauthorized(HttpServletRequest request,
-    HttpServletResponse response,
-    String realmDescription)
+    HttpServletResponse response, String realmDescription)
     throws IOException
   {
     if ((request == null) ||!isWUIRequest(request))
@@ -669,6 +706,21 @@ public final class HttpUtil
     }
 
     return uri;
+  }
+
+  /**
+   * Returns true if the body of the request is chunked.
+   *
+   *
+   * @param request http request
+   *
+   * @return true if the request is chunked
+   *
+   * @since 1.37
+   */
+  public static boolean isChunked(HttpServletRequest request)
+  {
+    return "chunked".equals(request.getHeader("Transfer-Encoding"));
   }
 
   /**
