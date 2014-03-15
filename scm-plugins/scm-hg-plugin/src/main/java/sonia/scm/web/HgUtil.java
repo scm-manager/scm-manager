@@ -58,6 +58,10 @@ import java.io.File;
 
 import java.nio.charset.Charset;
 
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -67,6 +71,12 @@ public final class HgUtil
 
   /** Field description */
   public static final String REVISION_TIP = "tip";
+
+  /** Field description */
+  private static final String HEADER_USERAGENT = "User-Agent";
+
+  /** Field description */
+  private static final String USERAGENT_HG = "mercurial/";
 
   /**
    * the logger for HgUtil
@@ -179,5 +189,19 @@ public final class HgUtil
     return Util.isEmpty(revision)
       ? REVISION_TIP
       : revision;
+  }
+
+  /**
+   * Returns true if the request comes from a mercurial client.
+   *
+   *
+   * @param request servlet request
+   *
+   * @return true if the client is mercurial
+   */
+  public static boolean isHgClient(HttpServletRequest request)
+  {
+    return Strings.nullToEmpty(request.getHeader(HEADER_USERAGENT)).toLowerCase(
+      Locale.ENGLISH).startsWith(USERAGENT_HG);
   }
 }
