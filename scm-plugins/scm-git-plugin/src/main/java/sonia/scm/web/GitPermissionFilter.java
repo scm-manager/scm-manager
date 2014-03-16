@@ -40,6 +40,7 @@ import com.google.inject.Singleton;
 
 import org.eclipse.jgit.http.server.GitSmartHttpTools;
 
+import sonia.scm.ClientMessages;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.RepositoryProvider;
@@ -71,10 +72,6 @@ public class GitPermissionFilter extends ProviderPermissionFilter
 
   /** Field description */
   public static final String URI_REF_INFO = "/info/refs";
-
-  /** Field description */
-  private static final String MESSAGE_NOT_ENOUGH_PRIVILEGES =
-    "You do not have enough access privileges for this operation.";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -110,7 +107,8 @@ public class GitPermissionFilter extends ProviderPermissionFilter
     if (GitUtil.isGitClient(request))
     {
       GitSmartHttpTools.sendError(request, response,
-        HttpServletResponse.SC_FORBIDDEN, MESSAGE_NOT_ENOUGH_PRIVILEGES);
+        HttpServletResponse.SC_FORBIDDEN,
+        ClientMessages.get(request).notEnoughPrivileges());
     }
     else
     {

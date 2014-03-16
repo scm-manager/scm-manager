@@ -33,7 +33,6 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -44,7 +43,6 @@ import sonia.scm.web.filter.BasicAuthenticationFilter;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import java.util.Set;
 

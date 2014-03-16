@@ -39,17 +39,8 @@ import org.tmatesoft.svn.core.SVNErrorCode;
  *
  * @author Sebastian Sdorra
  */
-public class ScmSvnErrorCode extends SVNErrorCode
+public final class ScmSvnErrorCode extends SVNErrorCode
 {
-
-  /** Field description */
-  public static final SVNErrorCode AUTHN_FAILED =
-    new ScmSvnErrorCode(AUTHN_CATEGORY, 4, "Authentication failed");
-
-  /** Field description */
-  public static final SVNErrorCode AUTHZ_NOT_ENOUGH_PRIVILEGES =
-    new ScmSvnErrorCode(AUTHZ_CATEGORY, 4,
-      "You do not have enough access privileges for this operation.");
 
   /** Field description */
   private static final long serialVersionUID = -6864996390796610410L;
@@ -67,5 +58,20 @@ public class ScmSvnErrorCode extends SVNErrorCode
   protected ScmSvnErrorCode(int category, int index, String description)
   {
     super(category, index, description);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param description
+   *
+   * @return
+   */
+  public static ScmSvnErrorCode authzNotEnoughPrivileges(String description)
+  {
+    return new ScmSvnErrorCode(AUTHZ_CATEGORY, 4, description);
   }
 }

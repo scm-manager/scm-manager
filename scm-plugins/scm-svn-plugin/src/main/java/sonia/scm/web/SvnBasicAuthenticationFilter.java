@@ -36,11 +36,9 @@ package sonia.scm.web;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.tmatesoft.svn.core.SVNErrorCode;
-
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.ScmSvnErrorCode;
 import sonia.scm.repository.SvnUtil;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.web.filter.AutoLoginModule;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
@@ -52,7 +50,6 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.util.HttpUtil;
 
 /**
  *

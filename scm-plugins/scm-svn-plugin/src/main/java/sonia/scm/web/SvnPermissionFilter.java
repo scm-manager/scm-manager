@@ -39,8 +39,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.tmatesoft.svn.core.SVNErrorCode;
-
+import sonia.scm.ClientMessages;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.ScmSvnErrorCode;
@@ -102,8 +101,16 @@ public class SvnPermissionFilter extends ProviderPermissionFilter
   {
     if (SvnUtil.isSvnClient(request))
     {
-      SvnUtil.sendError(request, response, HttpServletResponse.SC_FORBIDDEN,
-        ScmSvnErrorCode.AUTHZ_NOT_ENOUGH_PRIVILEGES);
+      //J-
+      SvnUtil.sendError(
+        request, 
+        response, 
+        HttpServletResponse.SC_FORBIDDEN,
+        ScmSvnErrorCode.authzNotEnoughPrivileges(
+          ClientMessages.get(request).notEnoughPrivileges()
+        )
+      );
+      //J+
     }
     else
     {

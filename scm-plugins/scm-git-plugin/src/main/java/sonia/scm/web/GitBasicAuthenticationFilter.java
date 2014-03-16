@@ -38,6 +38,7 @@ import com.google.inject.Singleton;
 
 import org.eclipse.jgit.http.server.GitSmartHttpTools;
 
+import sonia.scm.ClientMessages;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.web.filter.AutoLoginModule;
@@ -59,12 +60,6 @@ import javax.servlet.http.HttpServletResponse;
 @Singleton
 public class GitBasicAuthenticationFilter extends BasicAuthenticationFilter
 {
-
-  /** Field description */
-  private static final String MESSAGE_FAILED_AUTHENTICATION =
-    "Invalid username or password.";
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -96,10 +91,12 @@ public class GitBasicAuthenticationFilter extends BasicAuthenticationFilter
     HttpServletResponse response)
     throws IOException
   {
+    System.out.println(ClientMessages.get(request).failedAuthentication());
     if (GitUtil.isGitClient(request))
     {
       GitSmartHttpTools.sendError(request, response,
-        HttpServletResponse.SC_FORBIDDEN, MESSAGE_FAILED_AUTHENTICATION);
+        HttpServletResponse.SC_FORBIDDEN,
+        ClientMessages.get(request).failedAuthentication());
     }
     else
     {
