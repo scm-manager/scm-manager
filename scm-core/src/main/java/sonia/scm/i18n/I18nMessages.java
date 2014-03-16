@@ -43,6 +43,8 @@ import java.lang.reflect.Field;
 
 import java.util.Locale;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * The I18nMessages class instantiates a class and initializes all {@link String}
  * fields with values from a resource bundle. The resource bundle must have the
@@ -83,6 +85,22 @@ public final class I18nMessages
   public static <T> T get(Class<T> msgClass)
   {
     return get(msgClass, Locale.ENGLISH);
+  }
+
+  /**
+   * Same as {@link #get(java.lang.Class, java.util.Locale)}, with locale
+   * from servlet request ({@link HttpServletRequest#getLocale()}).
+   *
+   *
+   * @param msgClass message class
+   * @param request servlet request
+   * @param <T> type of message class
+   *
+   * @return
+   */
+  public static <T> T get(Class<T> msgClass, HttpServletRequest request)
+  {
+    return get(msgClass, request.getLocale());
   }
 
   /**
@@ -156,7 +174,7 @@ public final class I18nMessages
     Class msgClass, Object instance)
     throws IllegalArgumentException, IllegalAccessException
   {
-    for (Field field : msgClass.getFields())
+    for (Field field : msgClass.getDeclaredFields())
     {
       if (field.getType().isAssignableFrom(String.class))
       {
