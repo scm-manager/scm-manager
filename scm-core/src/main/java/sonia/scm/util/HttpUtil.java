@@ -53,6 +53,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -78,6 +79,9 @@ public final class HttpUtil
    * @since 1.19
    */
   public static final String HEADER_SCM_CLIENT = "X-SCM-Client";
+
+  /** Field description */
+  public static final String HEADER_USERAGENT = "User-Agent";
 
   /** authentication header */
   public static final String HEADER_WWW_AUTHENTICATE = "WWW-Authenticate";
@@ -520,6 +524,26 @@ public final class HttpUtil
 
     response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
       STATUS_UNAUTHORIZED_MESSAGE);
+  }
+
+  /**
+   * Returns true if the User-Agent header of the current request starts with
+   * the given string.
+   *
+   *
+   * @param request http request
+   * @param userAgent string to test against the header
+   *
+   * @return true if the header starts with the given string
+   *
+   * @since 1.37
+   */
+  public static boolean userAgentStartsWith(HttpServletRequest request,
+    String userAgent)
+  {
+    return Strings.nullToEmpty(request.getHeader(HEADER_USERAGENT)).toLowerCase(
+      Locale.ENGLISH).startsWith(
+      Strings.nullToEmpty(userAgent).toLowerCase(Locale.ENGLISH));
   }
 
   //~--- get methods ----------------------------------------------------------
