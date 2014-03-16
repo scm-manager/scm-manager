@@ -35,6 +35,7 @@ package sonia.scm.i18n;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -83,7 +84,7 @@ public class Bundle
    */
   public static Bundle getBundle(String path)
   {
-    return new Bundle(ResourceBundle.getBundle(path));
+    return getBundle(path, null, null);
   }
 
   /**
@@ -97,7 +98,35 @@ public class Bundle
    */
   public static Bundle getBundle(String path, Locale locale)
   {
-    return new Bundle(ResourceBundle.getBundle(path, locale));
+    return getBundle(path, locale, null);
+  }
+
+  /**
+   * Creates a new bundle instance
+   *
+   *
+   * @param path path to the properties file
+   * @param locale locale for the properties file
+   * @param classLoader classLoader to load
+   *
+   * @return new bundle instance
+   *
+   * @since 1.37
+   */
+  public static Bundle getBundle(String path, Locale locale,
+    ClassLoader classLoader)
+  {
+    if (locale == null)
+    {
+      locale = Locale.ENGLISH;
+    }
+
+    if (classLoader == null)
+    {
+      classLoader = ClassLoaders.getContextClassLoader(Bundle.class);
+    }
+
+    return new Bundle(ResourceBundle.getBundle(path, locale, classLoader));
   }
 
   /**
@@ -137,7 +166,7 @@ public class Bundle
   }
 
   /**
-   * Returns the value of the key, formatted with {@link MessageFormat} or null 
+   * Returns the value of the key, formatted with {@link MessageFormat} or null
    * if the key is not present in the bundle.
    *
    *
@@ -145,7 +174,7 @@ public class Bundle
    * @param args format arguments
    *
    * @return formated message or null
-   * 
+   *
    * @since 1.37
    */
   public String getStringIfPresent(String key, Object... args)
@@ -163,6 +192,6 @@ public class Bundle
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** resource bundle */
   private final ResourceBundle bundle;
 }

@@ -37,6 +37,8 @@ import com.google.common.base.Objects;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
+import sonia.scm.util.ClassLoaders;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.lang.reflect.Field;
@@ -142,7 +144,8 @@ public final class I18nMessages
    */
   private static <T> T createInstance(Class<T> msgClass, Locale locale)
   {
-    Bundle bundle = Bundle.getBundle(msgClass.getName(), locale);
+    Bundle bundle = Bundle.getBundle(msgClass.getName(), locale,
+                      ClassLoaders.getContextClassLoader(msgClass));
     T instance = null;
 
     try
