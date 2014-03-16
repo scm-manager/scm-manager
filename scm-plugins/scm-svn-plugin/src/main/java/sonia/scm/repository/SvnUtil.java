@@ -62,7 +62,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,9 +76,6 @@ public final class SvnUtil
 
   /** Field description */
   public static final String XML_CONTENT_TYPE = "text/xml; charset=\"utf-8\"";
-
-  /** Field description */
-  private static final String HEADER_USERAGENT = "User-Agent";
 
   /** Field description */
   private static final String ID_TRANSACTION_PREFIX = "-1:";
@@ -410,8 +406,7 @@ public final class SvnUtil
    */
   public static boolean isSvnClient(HttpServletRequest request)
   {
-    return Strings.nullToEmpty(request.getHeader(HEADER_USERAGENT)).toLowerCase(
-      Locale.ENGLISH).startsWith(USERAGENT_SVN);
+    return HttpUtil.userAgentStartsWith(request, USERAGENT_SVN);
   }
 
   /**

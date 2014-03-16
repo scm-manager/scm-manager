@@ -50,6 +50,7 @@ import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgPythonScript;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.spi.javahg.HgFileviewExtension;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -57,8 +58,6 @@ import sonia.scm.util.Util;
 import java.io.File;
 
 import java.nio.charset.Charset;
-
-import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -71,9 +70,6 @@ public final class HgUtil
 
   /** Field description */
   public static final String REVISION_TIP = "tip";
-
-  /** Field description */
-  private static final String HEADER_USERAGENT = "User-Agent";
 
   /** Field description */
   private static final String USERAGENT_HG = "mercurial/";
@@ -201,7 +197,6 @@ public final class HgUtil
    */
   public static boolean isHgClient(HttpServletRequest request)
   {
-    return Strings.nullToEmpty(request.getHeader(HEADER_USERAGENT)).toLowerCase(
-      Locale.ENGLISH).startsWith(USERAGENT_HG);
+    return HttpUtil.userAgentStartsWith(request, USERAGENT_HG);
   }
 }

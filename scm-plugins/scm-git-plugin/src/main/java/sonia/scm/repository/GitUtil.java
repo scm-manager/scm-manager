@@ -60,6 +60,7 @@ import org.eclipse.jgit.util.FS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -97,9 +98,6 @@ public final class GitUtil
 
   /** Field description */
   private static final String DIRECTORY_REFS = "refs";
-
-  /** Field description */
-  private static final String HEADER_USERAGENT = "User-Agent";
 
   /** Field description */
   private static final String PREFIX_HEADS = "refs/heads/";
@@ -672,8 +670,7 @@ public final class GitUtil
    */
   public static boolean isGitClient(HttpServletRequest request)
   {
-    return Strings.nullToEmpty(request.getHeader(HEADER_USERAGENT)).toLowerCase(
-      Locale.ENGLISH).startsWith(USERAGENT_GIT);
+    return HttpUtil.userAgentStartsWith(request, USERAGENT_GIT);
   }
 
   /**
