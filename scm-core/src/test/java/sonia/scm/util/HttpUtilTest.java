@@ -184,6 +184,23 @@ public class HttpUtilTest
 
   }
 
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void userAgentStartsWithTest()
+  {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+
+    when(request.getHeader(HttpUtil.HEADER_USERAGENT)).thenReturn(
+      "git/1.7.10.5997.gaa4aa");
+    assertTrue(HttpUtil.userAgentStartsWith(request, "git/"));
+    assertTrue(HttpUtil.userAgentStartsWith(request, "GIT/"));
+    assertFalse(HttpUtil.userAgentStartsWith(request, "git/a"));
+    assertFalse(HttpUtil.userAgentStartsWith(request, "sobbo/"));
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**

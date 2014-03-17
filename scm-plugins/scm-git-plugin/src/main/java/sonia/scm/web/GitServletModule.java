@@ -40,7 +40,6 @@ import com.google.inject.servlet.ServletModule;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 
 import sonia.scm.plugin.ext.Extension;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 /**
  *
@@ -68,7 +67,7 @@ public class GitServletModule extends ServletModule
     bind(ScmTransportProtocol.class);
 
     // serlvelts and filters
-    filter(PATTERN_GIT).through(BasicAuthenticationFilter.class);
+    filter(PATTERN_GIT).through(GitBasicAuthenticationFilter.class);
     filter(PATTERN_GIT).through(GitPermissionFilter.class);
     serve(PATTERN_GIT).with(ScmGitServlet.class);
   }

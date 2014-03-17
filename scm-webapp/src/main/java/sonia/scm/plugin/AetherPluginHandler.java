@@ -199,12 +199,7 @@ public class AetherPluginHandler
         new AetherDependencyResolver(configuration, repositorySystem,
           localRepository, remoteRepositories);
 
-      resolver.resolveRemoteDependency(dependency);
-
-      for (Dependency localDependency : localDependencies)
-      {
-        resolver.resolveLocalDependency(localDependency);
-      }
+      resolver.resolveDependencies(dependency, localDependencies);
 
       if (classpath == null)
       {

@@ -64,9 +64,7 @@ Sonia.action.ChangePasswordWindow = Ext.extend(Ext.Window,{
           name: 'old-password',
           fieldLabel: this.oldPasswordText,
           inputType: 'password',
-          allowBlank: false,
-          minLength: 6,
-          maxLength: 32
+          allowBlank: false
         },{
           id: 'new-password',
           name: 'new-password',

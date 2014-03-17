@@ -75,7 +75,7 @@ Ext.apply(Ext.form.VTypes, {
   // username validator
   
   username: function(val){
-    return name(val);
+    return this.name(val);
   },
   
   usernameText: 'The username is invalid.'

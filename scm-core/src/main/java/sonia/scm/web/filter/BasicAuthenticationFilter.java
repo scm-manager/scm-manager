@@ -35,7 +35,6 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -82,6 +81,9 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
 
   /** Field description */
   public static final String HEADER_AUTHORIZATION = "Authorization";
+
+  /** marker for failed authentication */
+  private static final String ATTRIBUTE_FAILED_AUTH = "sonia.scm.auth.failed";
 
   /** the logger for BasicAuthenticationFilter */
   private static final Logger logger =
@@ -182,9 +184,8 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
   }
 
   /**
-   * Sends status code 401 back to client, if no authorization header was found,
-   * if a authorization is present and the authentication failed the method will
-   * send status code 403.
+   * Sends status code 403 back to client, if the authentication has failed.
+   * In all other cases the method will send status code 403 back to client.
    *
    * @param request servlet request
    * @param response servlet response
@@ -199,16 +200,51 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
     HttpServletResponse response, FilterChain chain)
     throws IOException, ServletException
   {
-    String authentication = request.getHeader(HEADER_AUTHORIZATION);
 
-    if (Strings.isNullOrEmpty(authentication))
+    // send only forbidden, if the authentication has failed.
+    // see https://bitbucket.org/sdorra/scm-manager/issue/545/git-clone-with-username-in-url-does-not
+    if (Boolean.TRUE.equals(request.getAttribute(ATTRIBUTE_FAILED_AUTH)))
     {
-      HttpUtil.sendUnauthorized(request, response, configuration.getRealmDescription());
+      sendFailedAuthenticationError(request, response);
     }
     else
     {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN);
+      sendUnauthorizedError(request, response);
     }
+  }
+
+  /**
+   * Sends an error for a failed authentication back to client.
+   *
+   *
+   * @param request http request
+   * @param response http response
+   *
+   * @throws IOException
+   */
+  protected void sendFailedAuthenticationError(HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException
+  {
+    HttpUtil.sendUnauthorized(request, response,
+      configuration.getRealmDescription());
+  }
+
+  /**
+   * Sends an unauthorized error back to client.
+   *
+   *
+   * @param request http request
+   * @param response http response
+   *
+   * @throws IOException
+   */
+  protected void sendUnauthorizedError(HttpServletRequest request,
+    HttpServletResponse response)
+    throws IOException
+  {
+    HttpUtil.sendUnauthorized(request, response,
+      configuration.getRealmDescription());
   }
 
   /**
@@ -254,6 +290,10 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
         }
         catch (AuthenticationException ex)
         {
+
+          // add a marker to the request that the authentication has failed
+          request.setAttribute(ATTRIBUTE_FAILED_AUTH, Boolean.TRUE);
+
           if (logger.isTraceEnabled())
           {
             logger.trace("authentication failed for user ".concat(username),
@@ -280,6 +320,6 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private final ScmConfiguration configuration;
+  /** scm main configuration */
+  protected ScmConfiguration configuration;
 }

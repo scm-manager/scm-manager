@@ -30,10 +30,12 @@
  */
 
 
+
 package sonia.scm.i18n;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -41,6 +43,7 @@ import sonia.scm.util.Util;
 import java.text.MessageFormat;
 
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
@@ -81,7 +84,7 @@ public class Bundle
    */
   public static Bundle getBundle(String path)
   {
-    return new Bundle(ResourceBundle.getBundle(path));
+    return getBundle(path, null, null);
   }
 
   /**
@@ -95,7 +98,35 @@ public class Bundle
    */
   public static Bundle getBundle(String path, Locale locale)
   {
-    return new Bundle(ResourceBundle.getBundle(path, locale));
+    return getBundle(path, locale, null);
+  }
+
+  /**
+   * Creates a new bundle instance
+   *
+   *
+   * @param path path to the properties file
+   * @param locale locale for the properties file
+   * @param classLoader classLoader to load
+   *
+   * @return new bundle instance
+   *
+   * @since 1.37
+   */
+  public static Bundle getBundle(String path, Locale locale,
+    ClassLoader classLoader)
+  {
+    if (locale == null)
+    {
+      locale = Locale.ENGLISH;
+    }
+
+    if (classLoader == null)
+    {
+      classLoader = ClassLoaders.getContextClassLoader(Bundle.class);
+    }
+
+    return new Bundle(ResourceBundle.getBundle(path, locale, classLoader));
   }
 
   /**
@@ -134,8 +165,33 @@ public class Bundle
     return msg;
   }
 
+  /**
+   * Returns the value of the key, formatted with {@link MessageFormat} or null
+   * if the key is not present in the bundle.
+   *
+   *
+   * @param key key in the properties file
+   * @param args format arguments
+   *
+   * @return formated message or null
+   *
+   * @since 1.37
+   */
+  public String getStringIfPresent(String key, Object... args)
+  {
+    String msg = null;
+
+    try
+    {
+      msg = getString(key, args);
+    }
+    catch (MissingResourceException ex) {}
+
+    return msg;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private ResourceBundle bundle;
+  /** resource bundle */
+  private final ResourceBundle bundle;
 }

@@ -409,7 +409,7 @@ public class JAXBConfigurationEntryStore<V>
     {
       //J-
       writer = new IndentXMLStreamWriter(
-        XMLOutputFactory.newFactory().createXMLStreamWriter(
+        XMLOutputFactory.newInstance().createXMLStreamWriter(
           createWriter()
         )
       );

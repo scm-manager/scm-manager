@@ -69,7 +69,7 @@ public class SvnServletModule extends ServletModule
   protected void configureServlets()
   {
     filter(PATTERN_SVN).through(SvnGZipFilter.class);
-    filter(PATTERN_SVN).through(BasicAuthenticationFilter.class);
+    filter(PATTERN_SVN).through(SvnBasicAuthenticationFilter.class);
     filter(PATTERN_SVN).through(SvnPermissionFilter.class);
 
     Map<String, String> parameters = new HashMap<String, String>();

@@ -98,7 +98,22 @@ public class GetRepositorySubCommand extends TemplateSubCommand
   protected void run()
   {
     ScmClientSession session = createSession();
-    Repository repository = session.getRepositoryHandler().get(id);
+
+    Repository repository;
+
+    int index = id.indexOf("/");
+
+    if (index > 0)
+    {
+      String type = id.substring(0, index);
+      String name = id.substring(index + 1);
+      
+      repository = session.getRepositoryHandler().get(type, name);
+    }
+    else
+    {
+      repository = session.getRepositoryHandler().get(id);
+    }
 
     if (repository != null)
     {
@@ -117,7 +132,7 @@ public class GetRepositorySubCommand extends TemplateSubCommand
 
   /** Field description */
   @Argument(
-    usage = "optionRepositoryId",
+    usage = "optionRepositoryIdOrTypeAndName",
     metaVar = "repositoryid",
     required = true
   )

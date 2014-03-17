@@ -30,7 +30,12 @@
  */
 
 
+
 package sonia.scm.io;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.io.Closer;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -70,12 +75,15 @@ public final class DeepCopy
   {
     T obj = null;
 
+    Closer closer = Closer.create();
+
     try
     {
 
       // Write the object out to a byte array
-      FastByteArrayOutputStream fbos = new FastByteArrayOutputStream();
-      ObjectOutputStream out = new ObjectOutputStream(fbos);
+      FastByteArrayOutputStream fbos =
+        closer.register(new FastByteArrayOutputStream());
+      ObjectOutputStream out = closer.register(new ObjectOutputStream(fbos));
 
       out.writeObject(orig);
       out.flush();
@@ -83,13 +91,20 @@ public final class DeepCopy
 
       // Retrieve an input stream from the byte array and read
       // a copy of the object back in.
-      ObjectInputStream in = new ObjectInputStream(fbos.getInputStream());
+      // use ScmObjectInputStream to solve ClassNotFoundException
+      // for plugin classes
+      ObjectInputStream in =
+        closer.register(new ScmObjectInputStream(fbos.getInputStream()));
 
       obj = (T) in.readObject();
     }
     catch (Exception ex)
     {
       throw new IOException("could not copy object", ex);
+    }
+    finally
+    {
+      closer.close();
     }
 
     return obj;

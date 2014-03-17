@@ -35,41 +35,46 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Throwables;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.graph.DependencyNode;
 
-import sonia.scm.util.Util;
-
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.HashSet;
+import java.io.IOException;
+
 import java.util.List;
-import java.util.Scanner;
 import java.util.Set;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class AetherDependencyFilter implements DependencyFilter
+public abstract class AbstractDependencyFilter implements DependencyFilter
 {
 
-  /** Field description */
-  public static final String EXCLUDE_LIST = "/config/dependencies.list";
-
-  //~--- constructors ---------------------------------------------------------
-
   /**
-   * Constructs ...
-   *
+   * the logger for AbstractDependencyFilter
    */
-  public AetherDependencyFilter()
-  {
-    loadExcludes();
-  }
+  private static final Logger logger =
+    LoggerFactory.getLogger(AbstractDependencyFilter.class);
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  protected abstract Set<String> loadExcludeSet() throws IOException;
 
   /**
    * Method description
@@ -91,62 +96,44 @@ public class AetherDependencyFilter implements DependencyFilter
 
       if (artifact != null)
       {
-        result = !exludeSet.contains(getId(artifact));
+        String id = getId(artifact);
+
+        result = !getExludeSet().contains(id);
+
+        if (!result && logger.isDebugEnabled())
+        {
+          logger.debug("exlcude dependency {} because it is blacklisted", id);
+        }
       }
     }
 
     return result;
   }
 
-  /**
-   * Method description
-   *
-   */
-  private void loadExcludes()
-  {
-    Scanner scanner = null;
-
-    try
-    {
-      scanner = new Scanner(
-        AetherDependencyFilter.class.getResourceAsStream(EXCLUDE_LIST));
-
-      while (scanner.hasNextLine())
-      {
-        parseLine(scanner.nextLine());
-      }
-    }
-    finally
-    {
-      if (scanner != null)
-      {
-        scanner.close();
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param line
-   */
-  private void parseLine(String line)
-  {
-    line = line.trim();
-
-    if (Util.isNotEmpty(line))
-    {
-      String[] parts = line.split(":");
-
-      if (parts.length >= 2)
-      {
-        exludeSet.add(parts[0].concat(":").concat(parts[1]));
-      }
-    }
-  }
-
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private Set<String> getExludeSet()
+  {
+    if (exludeSet == null)
+    {
+      try
+      {
+        exludeSet = loadExcludeSet();
+      }
+      catch (IOException ex)
+      {
+        throw Throwables.propagate(ex);
+      }
+    }
+
+    return exludeSet;
+  }
 
   /**
    * Method description
@@ -164,5 +151,5 @@ public class AetherDependencyFilter implements DependencyFilter
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Set<String> exludeSet = new HashSet<String>();
+  private Set<String> exludeSet;
 }

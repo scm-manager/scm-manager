@@ -57,9 +57,6 @@ public class HgPermissionFilter extends ProviderPermissionFilter
   /**
    * Constructs ...
    *
-   *
-   * @param securityContextProvider
-   *
    * @param configuration
    * @param repositoryProvider
    */

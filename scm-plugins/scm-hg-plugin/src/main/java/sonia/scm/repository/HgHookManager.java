@@ -37,8 +37,11 @@ package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
 
+import com.google.common.base.Objects;
 import com.google.inject.Inject;
+import com.google.inject.OutOfScopeException;
 import com.google.inject.Provider;
+import com.google.inject.ProvisionException;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
@@ -152,7 +155,7 @@ public class HgHookManager
 
     if (url == null)
     {
-      HttpServletRequest request = httpServletRequestProvider.get();
+      HttpServletRequest request = getHttpServletRequest();
 
       if (request != null)
       {
@@ -160,10 +163,10 @@ public class HgHookManager
       }
       else
       {
-        logger.warn(
-          "created hook url {} without request, in some cases this could cause problems",
-          hookUrl);
         url = createConfiguredUrl();
+        logger.warn(
+          "created url {} without request, in some cases this could cause problems",
+          url);
       }
     }
 
@@ -269,8 +272,14 @@ public class HgHookManager
    */
   private String createConfiguredUrl()
   {
+    //J-
     return HttpUtil.getUriWithoutEndSeperator(
-      configuration.getBaseUrl()).concat("/hook/hg/");
+      Objects.firstNonNull(
+        configuration.getBaseUrl(), 
+        "http://localhost:8080/scm"
+      )
+    ).concat("/hook/hg/");
+    //J+
   }
 
   /**
@@ -308,6 +317,32 @@ public class HgHookManager
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private HttpServletRequest getHttpServletRequest()
+  {
+    HttpServletRequest request = null;
+
+    try
+    {
+      request = httpServletRequestProvider.get();
+    }
+    catch (ProvisionException ex)
+    {
+      logger.debug("http servlet request is not available");
+    }
+    catch (OutOfScopeException ex)
+    {
+      logger.debug("http servlet request is not available");
+    }
+
+    return request;
+  }
 
   /**
    * Method description
