@@ -54,6 +54,7 @@ import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionBinder;
 import sonia.scm.plugin.ext.ExtensionProcessor;
 import sonia.scm.plugin.ext.Extensions;
+import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.IOUtil;
 import sonia.scm.web.security.DefaultAuthenticationHandler;
 
@@ -123,7 +124,8 @@ public class DefaultPluginLoader implements PluginLoader
     this.servletContext = servletContext;
     this.annotationScannerFactory = new DefaultAnnotationScannerFactory();
 
-    ClassLoader classLoader = getClassLoader();
+    ClassLoader classLoader =
+      ClassLoaders.getContextClassLoader(DefaultPluginLoader.class);
 
     try
     {
@@ -502,7 +504,8 @@ public class DefaultPluginLoader implements PluginLoader
    */
   private void scanForAnnotations()
   {
-    ClassLoader classLoader = getClassLoader();
+    ClassLoader classLoader =
+      ClassLoaders.getContextClassLoader(DefaultPluginLoader.class);
 
     AnnotationCollector<ExtensionPoint> extensionPointCollector =
       new AnnotationCollector<ExtensionPoint>();
@@ -608,31 +611,6 @@ public class DefaultPluginLoader implements PluginLoader
     {
       IOUtil.close(content);
     }
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * TODO create util method
-   *
-   *
-   * @return
-   */
-  private ClassLoader getClassLoader()
-  {
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-    if (classLoader == null)
-    {
-      if (logger.isWarnEnabled())
-      {
-        logger.warn("could not use context classloader, try to use default");
-      }
-
-      classLoader = DefaultPluginManager.class.getClassLoader();
-    }
-
-    return classLoader;
   }
 
   //~--- fields ---------------------------------------------------------------
