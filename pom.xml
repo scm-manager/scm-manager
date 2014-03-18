@@ -64,9 +64,10 @@
   </prerequisites>
 
   <modules>
+    <module>scm-annotations</module>
+    <module>scm-maven-plugins</module>
     <module>scm-core</module>
     <module>scm-test</module>
-    <module>scm-maven-plugins</module>
     <module>scm-plugins</module>
     <module>scm-samples</module>
     <module>scm-dao-xml</module>
@@ -467,7 +468,7 @@
     <project.build.javaLevel>1.6</project.build.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
-    <jdk.classifier />
+    <jdk.classifier/>
   </properties>
 
 </project>

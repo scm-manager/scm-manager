@@ -17,11 +17,39 @@
   
   <dependencies>
     
+    <!-- scm annotations -->
+    
     <dependency>
       <groupId>sonia.scm</groupId>
-      <artifactId>scm-core</artifactId>
+      <artifactId>scm-annotations</artifactId>
       <version>2.0.0-SNAPSHOT</version>
     </dependency>
+    
+    <!-- rest api -->
+
+    <dependency>
+      <groupId>com.sun.jersey</groupId>
+      <artifactId>jersey-core</artifactId>
+      <version>${jersey.version}</version>
+    </dependency>
+    
+    <!-- event bus -->
+    
+    <dependency>
+      <groupId>com.github.legman</groupId>
+      <artifactId>core</artifactId>
+      <version>${legman.version}</version>
+    </dependency>
+    
+    <!-- util -->
+    
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
+    
+    <!-- meta-inf services -->
     
     <dependency>
       <groupId>org.kohsuke.metainf-services</groupId>

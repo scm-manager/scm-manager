@@ -25,6 +25,14 @@
       <scope>provided</scope>
     </dependency>
     
+    <!-- annotations -->
+    
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-annotations</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+    </dependency>
+    
     <!-- logging -->
 
     <dependency>
@@ -95,6 +103,15 @@
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
       <version>2.6</version>
+    </dependency>
+    
+    <!-- annotation processor -->
+    
+    <dependency>
+      <groupId>sonia.scm.maven</groupId>
+      <artifactId>scm-annotation-processor</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
 
   </dependencies>
