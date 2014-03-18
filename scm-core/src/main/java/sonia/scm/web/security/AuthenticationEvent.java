@@ -46,6 +46,7 @@ import sonia.scm.user.User;
  * @author Sebastian Sdorra
  * @since 1.27
  */
+@Event
 public class AuthenticationEvent
 {
 
@@ -55,7 +56,6 @@ public class AuthenticationEvent
    *
    * @param user successful authenticated user
    */
-  @Event
   public AuthenticationEvent(User user)
   {
     this.user = user;
