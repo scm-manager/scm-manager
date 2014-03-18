@@ -43,6 +43,11 @@ import org.w3c.dom.Element;
 public class ClassSetElement implements DescriptorElement
 {
 
+  /** Field description */
+  private static final String EL_CLASS = "class";
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructs ...
    *
@@ -72,7 +77,7 @@ public class ClassSetElement implements DescriptorElement
 
     for (String c : classes)
     {
-      Element classEl = doc.createElement("class");
+      Element classEl = doc.createElement(EL_CLASS);
 
       classEl.setTextContent(c);
       element.appendChild(classEl);

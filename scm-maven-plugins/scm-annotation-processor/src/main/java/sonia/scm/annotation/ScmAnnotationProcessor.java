@@ -49,6 +49,7 @@ import sonia.scm.plugin.PluginAnnotation;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,6 +81,7 @@ import javax.tools.StandardLocation;
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.Provider;
 
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
@@ -97,6 +99,15 @@ import javax.xml.transform.stream.StreamResult;
 @SupportedAnnotationTypes("*")
 public final class ScmAnnotationProcessor extends AbstractProcessor
 {
+
+  /** Field description */
+  private static final String DESCRIPTOR_MODULE = "META-INF/scm/module.xml";
+
+  /** Field description */
+  private static final String DESCRIPTOR_PLUGIN = "META-INF/scm/plugin.xml";
+
+  /** Field description */
+  private static final String EMPTY = "";
 
   /** Field description */
   private static final Set<String> SUBSCRIBE_ANNOTATIONS =
@@ -186,29 +197,57 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
    * Method description
    *
    *
+   * @param filer
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private File findDescriptor(Filer filer) throws IOException
+  {
+    FileObject f = filer.getResource(StandardLocation.CLASS_OUTPUT, EMPTY,
+                     DESCRIPTOR_PLUGIN);
+    File file = new File(f.toUri());
+
+    if (!file.exists())
+    {
+      f = filer.getResource(StandardLocation.CLASS_OUTPUT, EMPTY,
+        DESCRIPTOR_MODULE);
+      file = new File(f.toUri());
+    }
+
+    return file;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param f
+   *
+   * @param file
    *
    * @return
    */
-  private Document parseDocument(FileObject f)
+  private Document parseDocument(File file)
   {
     Document doc = null;
     InputStream input = null;
 
     try
     {
-      File file = new File(f.toUri());
+      DocumentBuilder builder =
+        DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
       if (file.exists())
       {
-        input = f.openInputStream();
-        doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
-          input);
+        input = new FileInputStream(file);
+        doc = builder.parse(input);
       }
       else
       {
-        processingEnv.getMessager().printMessage(Kind.WARNING,
-          "could not find plugin descriptor");
+        doc = builder.newDocument();
+        doc.appendChild(doc.createElement("module"));
       }
     }
     catch (Exception ex)
@@ -243,17 +282,9 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
    * Method description
    *
    *
-   *
-   * @param classes
+   * @param descriptorElements
    * @param elementName
    * @param elements
-   *
-   * @param descriptorElements
-   * @param roundEnv
-   * @param annotationClass
-   * @param pa
-   * @param typeElement
-   * @param <T>
    *
    * @return
    */
@@ -265,7 +296,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
 
     for (Element e : elements)
     {
-      if (e.getKind().isClass())
+      if (e.getKind().isClass() || e.getKind().isInterface())
       {
         TypeElement type = (TypeElement) e;
 
@@ -311,9 +342,6 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
    * Method description
    *
    *
-   * @param roundEnv
-   * @param classes
-   *
    * @param descriptorElements
    */
   private void write(Set<DescriptorElement> descriptorElements)
@@ -322,10 +350,9 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
 
     try
     {
-      FileObject f = filer.getResource(StandardLocation.CLASS_OUTPUT, "",
-                       "META-INF/scm/plugin.xml");
+      File file = findDescriptor(filer);
 
-      Document doc = parseDocument(f);
+      Document doc = parseDocument(file);
 
       if (doc != null)
       {
@@ -336,7 +363,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
           el.append(doc, root);
         }
 
-        writeDocument(doc, f);
+        writeDocument(doc, file);
       }
     }
     catch (Exception ex)
@@ -351,14 +378,16 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
    *
    * @param doc
    * @param f
+   * @param file
    */
-  private void writeDocument(Document doc, FileObject f)
+  private void writeDocument(Document doc, File file)
   {
     Writer writer = null;
 
     try
     {
-      writer = new FileWriter(new File(f.toUri()));
+      file.getParentFile().mkdirs();
+      writer = new FileWriter(file);
 
       Transformer transformer =
         TransformerFactory.newInstance().newTransformer();

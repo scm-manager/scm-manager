@@ -43,6 +43,17 @@ import org.w3c.dom.Element;
 public class SubscriberElement implements DescriptorElement
 {
 
+  /** Field description */
+  private static final String EL_CLASS = "class";
+
+  /** Field description */
+  private static final String EL_EVENT = "event";
+
+  /** Field description */
+  private static final String EL_SUBSCRIBER = "subscriber";
+
+  //~--- constructors ---------------------------------------------------------
+
   /**
    * Constructs ...
    *
@@ -68,13 +79,13 @@ public class SubscriberElement implements DescriptorElement
   @Override
   public void append(Document doc, Element root)
   {
-    Element subscriberEl = doc.createElement("subscriber");
-    Element classEl = doc.createElement("class");
+    Element subscriberEl = doc.createElement(EL_SUBSCRIBER);
+    Element classEl = doc.createElement(EL_CLASS);
 
     classEl.setTextContent(subscriberType);
     subscriberEl.appendChild(classEl);
 
-    Element eventEl = doc.createElement("event");
+    Element eventEl = doc.createElement(EL_EVENT);
 
     eventEl.setTextContent(eventType);
     subscriberEl.appendChild(eventEl);
