@@ -33,6 +33,10 @@
 
 package sonia.scm.plugin.ext;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.plugin.PluginAnnotation;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.lang.annotation.Documented;
@@ -47,5 +51,6 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Target({ ElementType.TYPE })
+@PluginAnnotation("extensions")
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Extension {}

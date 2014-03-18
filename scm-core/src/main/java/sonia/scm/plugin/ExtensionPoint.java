@@ -47,6 +47,7 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Target({ ElementType.TYPE })
+@PluginAnnotation("extension-points")
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExtensionPoint
 {

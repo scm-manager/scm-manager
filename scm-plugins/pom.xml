@@ -28,6 +28,15 @@
       <artifactId>scm-core</artifactId>
       <version>2.0.0-SNAPSHOT</version>
     </dependency>
+    
+    <!-- annotation processor -->
+    
+    <dependency>
+      <groupId>sonia.scm.maven</groupId>
+      <artifactId>scm-annotation-processor</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
 
   </dependencies>
 
