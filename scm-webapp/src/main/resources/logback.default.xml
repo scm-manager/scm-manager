@@ -59,6 +59,9 @@
   <logger name="sonia.scm.util.ServiceUtil" level="WARN" />
   <logger name="sonia.scm.plugin.ext.DefaultAnnotationScanner" level="INFO" />
   
+  <!-- event bus -->
+  <logger name="sonia.scm.event.LegmanScmEventBus" level="INFO" />
+  
   <!-- aether -->
   <!--
   <logger name="org.sonatype.aether" level="TRACE" />

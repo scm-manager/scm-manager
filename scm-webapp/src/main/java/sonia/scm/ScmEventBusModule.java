@@ -42,9 +42,6 @@ import com.google.inject.spi.InjectionListener;
 import com.google.inject.spi.TypeEncounter;
 import com.google.inject.spi.TypeListener;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.event.ScmEventBus;
 
 /**
@@ -53,14 +50,6 @@ import sonia.scm.event.ScmEventBus;
  */
 public class ScmEventBusModule extends AbstractModule
 {
-
-  /**
-   * the logger for ScmSubscriberModule
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(ScmEventBusModule.class);
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -81,8 +70,6 @@ public class ScmEventBusModule extends AbstractModule
           public void afterInjection(Object object)
           {
             Class<?> clazz = object.getClass();
-
-            logger.trace("register subscriber {}", clazz);
 
             ScmEventBus.getInstance().register(object);
           }
