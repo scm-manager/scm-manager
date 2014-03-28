@@ -39,10 +39,10 @@ import com.google.inject.Provider;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.RequestScoped;
-import com.google.inject.servlet.ServletModule;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
 import org.apache.shiro.authz.permission.PermissionResolver;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,11 +66,11 @@ import sonia.scm.net.HttpClient;
 import sonia.scm.net.URLHttpClient;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.DefaultPluginManager;
-import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
 import sonia.scm.repository.DefaultRepositoryManager;
 import sonia.scm.repository.DefaultRepositoryProvider;
+import sonia.scm.repository.HealthCheckContextListener;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryManager;
@@ -132,27 +132,21 @@ import sonia.scm.web.security.DefaultAdministrationContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
-import sonia.scm.repository.HealthCheckContextListener;
-import sonia.scm.repository.HealthChecker;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ScmServletModule extends ServletModule
+public class ScmServletModule extends JerseyServletModule
 {
 
   /** Field description */
@@ -267,7 +261,7 @@ public class ScmServletModule extends ServletModule
     bind(CipherHandler.class).toInstance(cu.getCipherHandler());
     bind(EncryptionHandler.class, MessageDigestEncryptionHandler.class);
     bind(FileSystem.class, DefaultFileSystem.class);
-    
+
     // bind health check stuff
     bind(HealthCheckContextListener.class);
 
@@ -376,65 +370,16 @@ public class ScmServletModule extends ServletModule
      */
     params.put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE.toString());
     params.put(ResourceConfig.FEATURE_REDIRECT, Boolean.TRUE.toString());
+    
+    /*
+     * TODO remove UriExtensionsConfig and PackagesResourceConfig
+     * to stop jersey classpath scanning
+     */
+    
     params.put(ServletContainer.RESOURCE_CONFIG_CLASS,
       UriExtensionsConfig.class.getName());
-
-    String restPath = getRestPackages();
-
-    if (logger.isInfoEnabled())
-    {
-      logger.info("configure jersey with package path: {}", restPath);
-    }
-
-    params.put(PackagesResourceConfig.PROPERTY_PACKAGES, restPath);
+    params.put(PackagesResourceConfig.PROPERTY_PACKAGES, "unbound");
     serve(PATTERN_RESTAPI).with(GuiceContainer.class, params);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param packageSet
-   * @param plugin
-   */
-  private void appendPluginPackages(Set<String> packageSet, Plugin plugin)
-  {
-    Set<String> pluginPackageSet = plugin.getPackageSet();
-
-    if (pluginPackageSet != null)
-    {
-      for (String pluginPkg : pluginPackageSet)
-      {
-        boolean append = true;
-
-        for (String pkg : packageSet)
-        {
-          if (pluginPkg.startsWith(pkg))
-          {
-            append = false;
-
-            break;
-          }
-        }
-
-        if (append)
-        {
-          if (logger.isDebugEnabled())
-          {
-            String name = "unknown";
-
-            if (plugin.getInformation() != null)
-            {
-              name = plugin.getInformation().getName();
-            }
-
-            logger.debug("plugin {} added rest path {}", name, pluginPkg);
-          }
-
-          packageSet.add(pluginPkg);
-        }
-      }
-    }
   }
 
   /**
@@ -523,44 +468,6 @@ public class ScmServletModule extends ServletModule
   }
 
   //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private String getRestPackages()
-  {
-    Set<String> packageSet = new HashSet<String>();
-
-    packageSet.add(SCMContext.DEFAULT_PACKAGE);
-
-    Collection<Plugin> plugins = pluginLoader.getInstalledPlugins();
-
-    if (plugins != null)
-    {
-      for (Plugin plugin : plugins)
-      {
-        appendPluginPackages(packageSet, plugin);
-      }
-    }
-
-    StringBuilder buffer = new StringBuilder();
-    Iterator<String> pkgIterator = packageSet.iterator();
-
-    while (pkgIterator.hasNext())
-    {
-      buffer.append(pkgIterator.next());
-
-      if (pkgIterator.hasNext())
-      {
-        buffer.append(";");
-      }
-    }
-
-    return buffer.toString();
-  }
 
   /**
    * Load ScmConfiguration with JAXB

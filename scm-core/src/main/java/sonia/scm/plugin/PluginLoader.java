@@ -35,11 +35,15 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.inject.Binder;
+import com.google.inject.Module;
+
 import sonia.scm.plugin.ext.ExtensionProcessor;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
+import java.util.Set;
 
 /**
  *
@@ -52,11 +56,27 @@ public interface PluginLoader
    * Method description
    *
    *
-   * @param processor
+   * @param binder
    */
-  public void processExtensions(ExtensionProcessor processor);
+  public void processExtensions(Binder binder);
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Collection<Module> getInjectionModules();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Collection<ScmModule> getInstalledModules();
 
   /**
    * Method description

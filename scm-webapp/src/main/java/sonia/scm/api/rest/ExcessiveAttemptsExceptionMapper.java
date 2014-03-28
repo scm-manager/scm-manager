@@ -38,11 +38,13 @@ import org.apache.shiro.authc.ExcessiveAttemptsException;
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Provider;
 
 /**
  *
  * @author Sebastian Sdorra
  */
+@Provider
 public class ExcessiveAttemptsExceptionMapper
   extends StatusExceptionMapper<ExcessiveAttemptsException>
 {

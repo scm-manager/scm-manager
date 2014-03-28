@@ -35,7 +35,10 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.inject.Binder;
 import com.google.inject.Module;
@@ -43,43 +46,21 @@ import com.google.inject.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.SCMContext;
-import sonia.scm.plugin.ext.AnnotatedClass;
-import sonia.scm.plugin.ext.AnnotationCollector;
-import sonia.scm.plugin.ext.AnnotationProcessor;
-import sonia.scm.plugin.ext.AnnotationScanner;
-import sonia.scm.plugin.ext.AnnotationScannerFactory;
-import sonia.scm.plugin.ext.DefaultAnnotationScannerFactory;
-import sonia.scm.plugin.ext.Extension;
 import sonia.scm.plugin.ext.ExtensionBinder;
-import sonia.scm.plugin.ext.ExtensionProcessor;
-import sonia.scm.plugin.ext.Extensions;
 import sonia.scm.util.ClassLoaders;
-import sonia.scm.util.IOUtil;
-import sonia.scm.web.security.DefaultAuthenticationHandler;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
-import java.lang.annotation.Annotation;
-
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
 
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextListener;
-
-import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
 
 /**
  *
@@ -89,23 +70,10 @@ public class DefaultPluginLoader implements PluginLoader
 {
 
   /** Field description */
-  public static final String ENCODING = "UTF-8";
-
-  /** Field description */
-  public static final String EXTENSION_JAR = ".jar";
+  public static final String PATH_MODULECONFIG = "META-INF/scm/module.xml";
 
   /** Field description */
   public static final String PATH_PLUGINCONFIG = "META-INF/scm/plugin.xml";
-
-  /** Field description */
-  public static final String PATH_WEBINFLIB = "/WEB-INF/lib";
-
-  /** Field description */
-  public static final String PATH_SCMCORE = PATH_WEBINFLIB.concat("/scm-core");
-
-  /** Field description */
-  public static final String REGE_COREPLUGIN =
-    "^.*(?:/|\\\\)WEB-INF(?:/|\\\\)lib(?:/|\\\\).*\\.jar$";
 
   /** the logger for DefaultPluginLoader */
   private static final Logger logger =
@@ -116,27 +84,26 @@ public class DefaultPluginLoader implements PluginLoader
   /**
    * Constructs ...
    *
-   *
-   * @param servletContext
    */
-  public DefaultPluginLoader(ServletContext servletContext)
+  public DefaultPluginLoader()
   {
-    this.servletContext = servletContext;
-    this.annotationScannerFactory = new DefaultAnnotationScannerFactory();
-
     ClassLoader classLoader =
       ClassLoaders.getContextClassLoader(DefaultPluginLoader.class);
 
     try
     {
-      locateCoreFile();
-      loadPlugins(classLoader);
-      scanForAnnotations();
-      findModules();
+      JAXBContext context = JAXBContext.newInstance(ScmModule.class,
+                              Plugin.class);
+
+      modules = getInstalled(classLoader, context, PATH_MODULECONFIG);
+      plugins = getInstalled(classLoader, context, PATH_PLUGINCONFIG);
+
+      appendExtensions(multiple, single, extensions, modules);
+      appendExtensions(multiple, single, extensions, plugins);
     }
-    catch (IOException ex)
+    catch (Exception ex)
     {
-      throw new RuntimeException(ex);
+      throw Throwables.propagate(ex);
     }
   }
 
@@ -146,60 +113,25 @@ public class DefaultPluginLoader implements PluginLoader
    * Method description
    *
    *
-   * @param classLoader
-   * @param packages
-   * @param extensionPointProcessor
-   * @param extensionProcessor
-   * @param <T>
-   *
-   * @return
-   */
-  public <T extends Annotation> AnnotationScanner createAnnotationScanner(
-    ClassLoader classLoader, Collection<String> packages,
-    AnnotationProcessor<ExtensionPoint> extensionPointProcessor,
-    AnnotationProcessor<Extension> extensionProcessor)
-  {
-    AnnotationScanner scanner = annotationScannerFactory.create(classLoader,
-                                  packages);
-
-    if (extensionPointProcessor != null)
-    {
-      scanner.addProcessor(ExtensionPoint.class, extensionPointProcessor);
-    }
-
-    if (extensionProcessor != null)
-    {
-      scanner.addProcessor(Extension.class, extensionProcessor);
-    }
-
-    return scanner;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param binder
    */
+  @Override
   public void processExtensions(Binder binder)
   {
-    new ExtensionBinder(binder).bind(bounds, extensionPoints, extensions);
-  }
+    logger.info("start processing extensions");
 
-  /**
-   * Method description
-   *
-   *
-   * @param processor
-   */
-  @Override
-  public void processExtensions(ExtensionProcessor processor)
-  {
-    for (AnnotatedClass<Extension> extension : extensions)
+    appendExtensions(multiple, single, extensions, modules);
+    appendExtensions(multiple, single, extensions, plugins);
+
+    if (logger.isInfoEnabled())
     {
-      processor.processExtension(extension.getAnnotation(),
-        extension.getAnnotatedClass());
+      logger.info(
+        "found {} extensions for {} multiple and {} single extension points",
+        extensions.size(), multiple.size(), single.size());
     }
+
+    // TODO bind jax-rs providers always as singleton
+    new ExtensionBinder(binder).bind(multiple, single, extensions);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -211,9 +143,9 @@ public class DefaultPluginLoader implements PluginLoader
    * @return
    */
   @Override
-  public Collection<Plugin> getInstalledPlugins()
+  public Set<Module> getInjectionModules()
   {
-    return installedPlugins;
+    return ImmutableSet.copyOf(injectionModules);
   }
 
   /**
@@ -222,9 +154,22 @@ public class DefaultPluginLoader implements PluginLoader
    *
    * @return
    */
-  public Set<Module> getModuleSet()
+  @Override
+  public Collection<ScmModule> getInstalledModules()
   {
-    return moduleSet;
+    return modules;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public Collection<Plugin> getInstalledPlugins()
+  {
+    return plugins;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -233,409 +178,103 @@ public class DefaultPluginLoader implements PluginLoader
    * Method description
    *
    *
-   * @param moduleClass
+   * @param multiple
+   * @param single
+   * @param extensions
+   * @param mods
    */
-  private void addModule(Class moduleClass)
+  private void appendExtensions(Set<Class> multiple, Set<Class> single,
+    Set<Class> extensions, Iterable<? extends ScmModule> mods)
   {
-    try
+    for (ScmModule mod : mods)
     {
-      logger.info("add module {}", moduleClass);
-      moduleSet.add((Module) moduleClass.newInstance());
-    }
-    catch (Exception ex)
-    {
-      logger.error(
-        "could not create module instance of ".concat(moduleClass.getName()),
-        ex);
-    }
-
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
-  private String decodePath(String path)
-  {
-    File file = new File(path);
-
-    if (!file.exists())
-    {
-      try
+      for (ExtensionPointElement epe : mod.getExtensionPoints())
       {
-        path = URLDecoder.decode(path, ENCODING);
-      }
-      catch (IOException ex)
-      {
-        logger.error("could not decode path ".concat(path), ex);
-      }
-    }
-
-    return path;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param url
-   *
-   * @return
-   */
-  private String extractResourcePath(URL url)
-  {
-    String path = url.toExternalForm();
-
-    if (path.startsWith("file:"))
-    {
-      path = path.substring("file:".length(),
-        path.length() - "/META-INF/scm/plugin.xml".length());
-    }
-    else
-    {
-
-      // jar:file:/some/path/file.jar!/META-INF/scm/plugin.xml
-      path = path.substring("jar:file:".length(), path.lastIndexOf('!'));
-      path = decodePath(path);
-    }
-
-    logger.trace("extrace resource path {} from url {}", path, url);
-
-    return path;
-  }
-
-  /**
-   * Method description
-   *
-   */
-  private void findModules()
-  {
-    for (AnnotatedClass<Extension> extension : extensions)
-    {
-      Class extensionClass = extension.getAnnotatedClass();
-
-      if (Module.class.isAssignableFrom(extensionClass))
-      {
-        bounds.add(extension);
-        addModule(extensionClass);
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param url
-   */
-  private void loadPlugin(URL url)
-  {
-    String path = extractResourcePath(url);
-
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("try to load plugin from {}", path);
-    }
-
-    try
-    {
-      boolean corePlugin = path.matches(REGE_COREPLUGIN);
-
-      if (logger.isInfoEnabled())
-      {
-        logger.info("load {}plugin {}", corePlugin
-          ? "core "
-          : " ", path);
-      }
-
-      Plugin plugin = JAXB.unmarshal(url, Plugin.class);
-      PluginInformation info = plugin.getInformation();
-      PluginCondition condition = plugin.getCondition();
-
-      if (condition != null)
-      {
-        info.setCondition(condition);
-      }
-
-      if (info != null)
-      {
-        info.setState(corePlugin
-          ? PluginState.CORE
-          : PluginState.INSTALLED);
-      }
-
-      plugin.setPath(path);
-
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("add plugin {} to installed plugins", info.getId());
-      }
-
-      installedPlugins.add(plugin);
-    }
-    catch (Exception ex)
-    {
-      logger.error("could not load plugin ".concat(path), ex);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param classLoader
-   *
-   * @throws IOException
-   */
-  private void loadPlugins(ClassLoader classLoader) throws IOException
-  {
-    Enumeration<URL> urlEnum = classLoader.getResources(PATH_PLUGINCONFIG);
-
-    if (urlEnum != null)
-    {
-      while (urlEnum.hasMoreElements())
-      {
-        URL url = urlEnum.nextElement();
-
-        loadPlugin(url);
-      }
-
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("loaded {} plugins", installedPlugins.size());
-      }
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("no plugin descriptor found");
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param classLoader
-   *
-   * @throws MalformedURLException
-   */
-  @SuppressWarnings("unchecked")
-  private void locateCoreFile() throws MalformedURLException
-  {
-    Set<String> paths = servletContext.getResourcePaths(PATH_WEBINFLIB);
-
-    for (String path : paths)
-    {
-      if (path.startsWith(PATH_SCMCORE) && path.endsWith(EXTENSION_JAR))
-      {
-        coreFile = servletContext.getResource(path);
-
-        break;
-      }
-    }
-
-    if (coreFile == null)
-    {
-      throw new IllegalStateException("could not find scm-core file");
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param classLoader
-   * @param packageSet
-   * @param extensionPointCollector
-   * @param extensionCollector
-   * @param file
-   *
-   * @throws IOException
-   */
-  private void scanFile(ClassLoader classLoader, Collection<String> packageSet,
-    AnnotationCollector<ExtensionPoint> extensionPointCollector,
-    AnnotationCollector<Extension> extensionCollector, File file)
-    throws IOException
-  {
-    if (logger.isTraceEnabled())
-    {
-      String type = file.isDirectory()
-        ? "directory"
-        : "jar";
-
-      logger.trace("search extensions in packages {} of {} file {}",
-        new Object[] { packageSet,
-        type, file });
-    }
-
-    if (file.isDirectory())
-    {
-      createAnnotationScanner(classLoader, packageSet, extensionPointCollector,
-        extensionCollector).scanDirectory(file);
-    }
-    else
-    {
-      InputStream input = null;
-
-      try
-      {
-        input = new FileInputStream(file);
-        createAnnotationScanner(classLoader, packageSet,
-          extensionPointCollector, extensionCollector).scanArchive(input);
-      }
-      finally
-      {
-        IOUtil.close(input);
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param processor
-   *
-   * @param binder
-   */
-  private void scanForAnnotations()
-  {
-    ClassLoader classLoader =
-      ClassLoaders.getContextClassLoader(DefaultPluginLoader.class);
-
-    AnnotationCollector<ExtensionPoint> extensionPointCollector =
-      new AnnotationCollector<ExtensionPoint>();
-    AnnotationCollector<Extension> extensionCollector =
-      new AnnotationCollector<Extension>();
-
-    logger.debug("search extension points in {}", coreFile);
-
-    Set<String> corePackages = ImmutableSet.of("sonia.scm");
-
-    try
-    {
-      scanURL(classLoader, corePackages, extensionPointCollector, null,
-        coreFile);
-    }
-    catch (Exception ex)
-    {
-      throw new IllegalStateException("could not process scm-core", ex);
-    }
-
-    for (Plugin plugin : installedPlugins)
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("search extensions from plugin {}",
-          plugin.getInformation().getId());
-      }
-
-      try
-      {
-        Set<String> packageSet = plugin.getPackageSet();
-
-        if (packageSet == null)
+        if (epe.isMultiple())
         {
-          packageSet = new HashSet<String>();
-        }
-
-        packageSet.add(SCMContext.DEFAULT_PACKAGE);
-
-        File pluginFile = new File(plugin.getPath());
-
-        if (pluginFile.exists())
-        {
-          scanFile(classLoader, packageSet, extensionPointCollector,
-            extensionCollector, pluginFile);
+          multiple.add(epe.getClazz());
         }
         else
         {
-          logger.error("could not find plugin file {}", plugin.getPath());
+          single.add(epe.getClazz());
         }
       }
-      catch (IOException ex)
+
+      for (Class extensionClass : mod.getExtensions())
       {
-        logger.error("error during extension processing", ex);
+        if (Module.class.isAssignableFrom(extensionClass))
+        {
+          try
+          {
+            injectionModules.add((Module) extensionClass.newInstance());
+          }
+          catch (Exception ex)
+          {
+            logger.error("could not create instance of module", ex);
+          }
+        }
+        else
+        {
+          extensions.add(extensionClass);
+        }
       }
+
+      Iterables.addAll(extensions, mod.getJaxrsProviders());
+      Iterables.addAll(extensions, mod.getJaxrsResources());
     }
-
-    //J-
-    extensionPoints = extensionPointCollector.getAnnotatedClasses();
-    extensionPoints.add(
-      new AnnotatedClass<ExtensionPoint>(
-        Extensions.createExtensionPoint(true), 
-        ServletContextListener.class
-      )
-    );
-
-    extensions = extensionCollector.getAnnotatedClasses();
-    extensions.add( 
-      new AnnotatedClass<Extension>(
-        Extensions.createExtension(), 
-        DefaultAuthenticationHandler.class
-      ) 
-    );
-    //J+
   }
+
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
    * @param classLoader
-   * @param packageSet
-   * @param extensionPointCollector
-   * @param extensionCollector
-   * @param file
+   * @param context
+   * @param path
+   * @param <T>
+   *
+   * @return
    *
    * @throws IOException
+   * @throws JAXBException
    */
-  private void scanURL(ClassLoader classLoader, Collection<String> packageSet,
-    AnnotationCollector<ExtensionPoint> extensionPointCollector,
-    AnnotationCollector<Extension> extensionCollector, URL file)
-    throws IOException
+  private <T> Set<T> getInstalled(ClassLoader classLoader, JAXBContext context,
+    String path)
+    throws IOException, JAXBException
   {
-    InputStream content = null;
+    Builder<T> builder = ImmutableSet.builder();
+    Enumeration<URL> urls = classLoader.getResources(path);
 
-    try
+    while (urls.hasMoreElements())
     {
-      content = file.openStream();
-      createAnnotationScanner(classLoader, packageSet, extensionPointCollector,
-        extensionCollector).scanArchive(content);
+      URL url = urls.nextElement();
+      T module = (T) context.createUnmarshaller().unmarshal(url);
+
+      builder.add(module);
     }
-    finally
-    {
-      IOUtil.close(content);
-    }
+
+    return builder.build();
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final AnnotationScannerFactory annotationScannerFactory;
+  private Set<ScmModule> modules;
 
   /** Field description */
-  private final Set<AnnotatedClass<Extension>> bounds = Sets.newHashSet();
+  private Set<Class> multiple = Sets.newHashSet();
 
   /** Field description */
-  private final Set<Module> moduleSet = Sets.newHashSet();
+  private Set<Plugin> plugins;
 
   /** Field description */
-  private final Set<Plugin> installedPlugins = new HashSet<Plugin>();
+  private Set<Class> single = Sets.newHashSet();
 
   /** Field description */
-  private final ServletContext servletContext;
+  private Set<Module> injectionModules = Sets.newHashSet();
 
   /** Field description */
-  private URL coreFile;
-
-  /** Field description */
-  private Set<AnnotatedClass<ExtensionPoint>> extensionPoints;
-
-  /** Field description */
-  private Set<AnnotatedClass<Extension>> extensions;
+  private Set<Class> extensions = Sets.newHashSet();
 }

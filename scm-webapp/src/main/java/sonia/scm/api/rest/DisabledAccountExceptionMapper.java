@@ -38,11 +38,13 @@ import org.apache.shiro.authc.DisabledAccountException;
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Provider;
 
 /**
  *
  * @author Sebastian Sdorra
  */
+@Provider
 public class DisabledAccountExceptionMapper
   extends StatusExceptionMapper<DisabledAccountException>
 {

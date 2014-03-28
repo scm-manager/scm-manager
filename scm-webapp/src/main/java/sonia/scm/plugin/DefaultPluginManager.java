@@ -211,7 +211,8 @@ public class DefaultPluginManager implements PluginManager
         // ugly workaround
         Plugin newPlugin = new Plugin();
 
-        newPlugin.setInformation(plugin);
+        // TODO check
+        // newPlugin.setInformation(plugin);
         installedPlugins.put(id, newPlugin);
       }
     }

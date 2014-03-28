@@ -52,11 +52,13 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.plugin.ext.Extension;
 
 /**
  *
  * @author Sebastian Sdorra
  */
+@Extension
 @Singleton
 public class DefaultAuthenticationHandler implements AuthenticationHandler
 {

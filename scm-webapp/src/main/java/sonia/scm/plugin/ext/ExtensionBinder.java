@@ -38,6 +38,8 @@ package sonia.scm.plugin.ext;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.inject.Binder;
+import com.google.inject.Scopes;
+import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.ScopedBindingBuilder;
 import com.google.inject.multibindings.Multibinder;
 
@@ -45,18 +47,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.EagerSingleton;
-import sonia.scm.plugin.ExtensionPoint;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Set;
 
+import javax.ws.rs.ext.Provider;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public class ExtensionBinder
+public final class ExtensionBinder
 {
 
   /**
@@ -84,53 +87,57 @@ public class ExtensionBinder
    * Method description
    *
    *
-   *
-   * @param bounds
-   * @param extensionPoints
+   * @param mutipleExtensionPoints
+   * @param singleExtensionPoints
    * @param extensions
    */
-  public void bind(Set<AnnotatedClass<Extension>> bounds,
-    Set<AnnotatedClass<ExtensionPoint>> extensionPoints,
-    Set<AnnotatedClass<Extension>> extensions)
+  public void bind(Set<Class> mutipleExtensionPoints,
+    Set<Class> singleExtensionPoints, Set<Class> extensions)
   {
     if (logger.isInfoEnabled())
     {
       logger.info("bind {} extensions to {} extension points",
-        extensions.size(), extensionPoints.size());
+        extensions.size(),
+        mutipleExtensionPoints.size() + singleExtensionPoints.size());
     }
 
-    for (AnnotatedClass<ExtensionPoint> extensionPoint : extensionPoints)
-    {
-      ExtensionPoint extensionPointAnnotation = extensionPoint.getAnnotation();
-      Class extensionPointClass = extensionPoint.getAnnotatedClass();
+    Set<Class> boundClasses = Sets.newHashSet();
 
-      if (extensionPointAnnotation.multi())
+    for (Class extensionPointClass : mutipleExtensionPoints)
+    {
+      bindMultiExtensionPoint(boundClasses, extensionPointClass, extensions);
+    }
+
+    for (Class extensionPointClass : singleExtensionPoints)
+    {
+      bindExtensionPoint(boundClasses, extensionPointClass, extensions);
+    }
+
+    Set<Class> extensionsCopy = Sets.newHashSet(extensions);
+
+    Iterables.removeAll(extensionsCopy, boundClasses);
+
+    for (Class extension : extensionsCopy)
+    {
+      AnnotatedBindingBuilder abb = binder.bind(extension);
+
+      if (isProvider(extension))
       {
-        bindMultiExtensionPoint(bounds, extensionPointClass, extensions);
+        logger.info("bind provider {} as singleton", extension);
+        abb.in(Scopes.SINGLETON);
+      }
+      else if (isEagerSingleton(extension))
+      {
+
+        logger.info("bind {} as eager singleton, without extensionpoint",
+          extension);
+        abb.asEagerSingleton();
       }
       else
       {
-        bindExtensionPoint(bounds, extensionPointClass, extensions);
+        logger.info("bind {}, without extensionpoint", extension);
+        binder.bind(extension);
       }
-    }
-
-    Set<AnnotatedClass<Extension>> extensionsCopy = Sets.newHashSet(extensions);
-
-    Iterables.removeAll(extensionsCopy, bounds);
-
-    for (AnnotatedClass<Extension> extension : extensionsCopy)
-    {
-      boolean eagerSingleton = isEagerSingleton(extension.getAnnotatedClass());
-      String as = Util.EMPTY_STRING;
-
-      if (eagerSingleton)
-      {
-        as = " as eager singleton";
-      }
-
-      logger.info("bind {}{}, without extensionpoint",
-        extension.getAnnotatedClass(), as);
-      binder.bind(extension.getAnnotatedClass());
     }
   }
 
@@ -140,23 +147,31 @@ public class ExtensionBinder
    *
    *
    * @param found
+   *
+   * @param boundClasses
    * @param extensionPointClass
    * @param extensions
    */
   @SuppressWarnings("unchecked")
-  private void bindExtensionPoint(Set<AnnotatedClass<Extension>> found,
-    Class extensionPointClass, Set<AnnotatedClass<Extension>> extensions)
+  private void bindExtensionPoint(Set<Class> boundClasses,
+    Class extensionPointClass, Set<Class> extensions)
   {
-    for (AnnotatedClass<Extension> extension : extensions)
-    {
-      Class extensionClass = extension.getAnnotatedClass();
+    boolean bound = false;
 
+    for (Class extensionClass : extensions)
+    {
       if (extensionPointClass.isAssignableFrom(extensionClass))
       {
-        found.add(extension);
-        bindSingleInstance(extensionPointClass, extensionClass);
+        if (bound)
+        {
+          throw new IllegalStateException(
+            "extension point ".concat(extensionPointClass.getName()).concat(
+              " is not multiple and is already bound to another class"));
+        }
 
-        break;
+        bindSingleInstance(extensionPointClass, extensionClass);
+        boundClasses.add(extensionClass);
+        bound = true;
       }
     }
   }
@@ -167,12 +182,14 @@ public class ExtensionBinder
    *
    *
    * @param found
+   *
+   * @param boundClasses
    * @param extensionPointClass
    * @param extensions
    */
   @SuppressWarnings("unchecked")
-  private void bindMultiExtensionPoint(Set<AnnotatedClass<Extension>> found,
-    Class extensionPointClass, Set<AnnotatedClass<Extension>> extensions)
+  private void bindMultiExtensionPoint(Set<Class> boundClasses,
+    Class extensionPointClass, Iterable<Class> extensions)
   {
     if (logger.isInfoEnabled())
     {
@@ -182,10 +199,8 @@ public class ExtensionBinder
     Multibinder multibinder = Multibinder.newSetBinder(binder,
                                 extensionPointClass);
 
-    for (AnnotatedClass<Extension> extension : extensions)
+    for (Class extensionClass : extensions)
     {
-      Class extensionClass = extension.getAnnotatedClass();
-
       if (extensionPointClass.isAssignableFrom(extensionClass))
       {
         boolean eagerSingleton = isEagerSingleton(extensionClass);
@@ -203,8 +218,6 @@ public class ExtensionBinder
             extensionClass.getName(), extensionPointClass.getName(), as);
         }
 
-        found.add(extension);
-
         ScopedBindingBuilder sbb = multibinder.addBinding().to(extensionClass);
 
         if (eagerSingleton)
@@ -212,6 +225,8 @@ public class ExtensionBinder
           sbb.asEagerSingleton();
           logger.info("bind {} as eager singleton");
         }
+
+        boundClasses.add(extensionClass);
       }
     }
   }
@@ -261,13 +276,26 @@ public class ExtensionBinder
    *
    * @return
    */
-  private boolean isEagerSingleton(Class<?> extensionClass)
+  private boolean isEagerSingleton(Class extensionClass)
   {
     return extensionClass.isAnnotationPresent(EagerSingleton.class);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param extensionClass
+   *
+   * @return
+   */
+  private boolean isProvider(Class extensionClass)
+  {
+    return extensionClass.isAnnotationPresent(Provider.class);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Binder binder;
+  private final Binder binder;
 }
