@@ -39,14 +39,10 @@ import com.google.common.base.Objects;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Set;
-
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -54,8 +50,32 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Plugin
+public final class Plugin extends ScmModule
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  Plugin() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param information
+   * @param resources
+   * @param condition
+   */
+  public Plugin(PluginInformation information, PluginResources resources,
+    PluginCondition condition)
+  {
+    this.information = information;
+    this.resources = resources;
+    this.condition = condition;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -82,8 +102,6 @@ public class Plugin
 
     return Objects.equal(condition, other.condition)
       && Objects.equal(information, other.information)
-      && Objects.equal(packageSet, other.packageSet)
-      && Objects.equal(path, other.path)
       && Objects.equal(resources, other.resources);
   }
 
@@ -96,8 +114,7 @@ public class Plugin
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(condition, information, packageSet, packageSet,
-      resources);
+    return Objects.hashCode(condition, information, resources);
   }
 
   /**
@@ -113,8 +130,6 @@ public class Plugin
     return Objects.toStringHelper(this)
                   .add("condition", condition)
                   .add("information", information)
-                  .add("packageSet", packageSet)
-                  .add("path", path)
                   .add("resources", resources)
                   .toString();
     //J+
@@ -150,89 +165,9 @@ public class Plugin
    *
    * @return
    */
-  public Set<String> getPackageSet()
-  {
-    return packageSet;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getPath()
-  {
-    return path;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public PluginResources getResources()
   {
     return resources;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param condition
-   */
-  public void setCondition(PluginCondition condition)
-  {
-    this.condition = condition;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param information
-   */
-  public void setInformation(PluginInformation information)
-  {
-    this.information = information;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param packageSet
-   */
-  public void setPackageSet(Set<String> packageSet)
-  {
-    this.packageSet = packageSet;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   */
-  public void setPath(String path)
-  {
-    this.path = path;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param resources
-   */
-  public void setResources(PluginResources resources)
-  {
-    this.resources = resources;
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -243,15 +178,6 @@ public class Plugin
 
   /** Field description */
   private PluginInformation information;
-
-  /** Field description */
-  @XmlElement(name = "package")
-  @XmlElementWrapper(name = "packages")
-  private Set<String> packageSet;
-
-  /** Field description */
-  @XmlTransient
-  private String path;
 
   /** Field description */
   private PluginResources resources;

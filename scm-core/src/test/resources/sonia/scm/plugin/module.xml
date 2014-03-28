@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<module>
+  
+  <!-- subscribers -->
+  <subscriber>
+    <class>java.lang.Long</class>
+    <event>java.lang.Integer</event>
+  </subscriber>
+
+  <subscriber>
+    <class>java.lang.Double</class>
+    <event>java.lang.Float</event>
+  </subscriber>
+
+  <!-- events -->
+
+  <event>
+    <class>java.lang.String</class>
+  </event>
+
+  <event>
+    <class>java.lang.Boolean</class>
+  </event>
+
+  <!-- extension points -->
+
+  <extension-point>
+    <class>java.lang.String</class>
+  </extension-point>
+
+  <extension-point>
+    <class>java.lang.Integer</class>
+    <multi>false</multi>
+  </extension-point>
+
+  <extension-point>
+    <class>java.lang.Long</class>
+    <multi>true</multi>
+  </extension-point>
+
+  <!-- extensions -->
+
+  <extension>
+    <class>java.lang.String</class>
+  </extension>
+
+  <extension>
+    <class>java.lang.Integer</class>
+  </extension>
+  
+  <!-- jax-rs providers -->
+  
+  <jaxrs-provider>
+    <class>java.lang.Integer</class>
+  </jaxrs-provider>
+  
+  <jaxrs-provider>
+    <class>java.lang.Long</class>
+  </jaxrs-provider>
+  
+  <!-- jax-rs resources -->
+  
+  <jaxrs-resource>
+    <class>java.lang.Float</class>
+  </jaxrs-resource>
+  
+  <jaxrs-resource>
+    <class>java.lang.Double</class>
+  </jaxrs-resource>
+
+</module>
