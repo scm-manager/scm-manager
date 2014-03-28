@@ -36,6 +36,11 @@ package sonia.scm.annotation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Map;
+import java.util.Map.Entry;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -55,7 +60,8 @@ public class ClassSetElement implements DescriptorElement
    * @param elementName
    * @param classes
    */
-  public ClassSetElement(String elementName, Iterable<String> classes)
+  public ClassSetElement(String elementName,
+    Iterable<ClassWithAttributes> classes)
   {
     this.elementName = elementName;
     this.classes = classes;
@@ -73,23 +79,67 @@ public class ClassSetElement implements DescriptorElement
   @Override
   public void append(Document doc, Element root)
   {
-    Element element = doc.createElement(elementName);
 
-    for (String c : classes)
+    for (ClassWithAttributes c : classes)
     {
+      Element element = doc.createElement(elementName);
       Element classEl = doc.createElement(EL_CLASS);
 
-      classEl.setTextContent(c);
+      classEl.setTextContent(c.className);
+
+      for (Entry<String, String> e : c.attributes.entrySet())
+      {
+        Element attr = doc.createElement(e.getKey());
+        attr.setTextContent(e.getValue());
+        element.appendChild(attr);
+      }
+
       element.appendChild(classEl);
+      root.appendChild(element);
     }
 
-    root.appendChild(element);
+    
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 14/03/18
+   * @author         Enter your name here...
+   */
+  public static class ClassWithAttributes
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param className
+     * @param attributes
+     */
+    public ClassWithAttributes(String className, Map<String, String> attributes)
+    {
+      this.className = className;
+      this.attributes = attributes;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private final Map<String, String> attributes;
+
+    /** Field description */
+    private final String className;
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final Iterable<String> classes;
+  private final Iterable<ClassWithAttributes> classes;
 
   /** Field description */
   private final String elementName;

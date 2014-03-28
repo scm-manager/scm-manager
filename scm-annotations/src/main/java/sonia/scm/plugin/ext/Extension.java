@@ -51,6 +51,6 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Target({ ElementType.TYPE })
-@PluginAnnotation("extensions")
+@PluginAnnotation("extension")
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Extension {}
