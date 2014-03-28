@@ -69,8 +69,6 @@ public class ScmEventBusModule extends AbstractModule
           @Override
           public void afterInjection(Object object)
           {
-            Class<?> clazz = object.getClass();
-
             ScmEventBus.getInstance().register(object);
           }
         });
