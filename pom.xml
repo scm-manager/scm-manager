@@ -462,7 +462,7 @@
     <svnkit.version>1.8.4-scm2</svnkit.version>
     
     <!-- util libraries -->
-    <guava.version>16.0</guava.version>
+    <guava.version>16.0.1</guava.version>
 
     <!-- build properties -->
     <project.build.javaLevel>1.6</project.build.javaLevel>
