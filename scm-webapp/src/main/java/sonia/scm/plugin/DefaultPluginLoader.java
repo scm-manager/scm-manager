@@ -46,7 +46,6 @@ import com.google.inject.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.plugin.ext.ExtensionBinder;
 import sonia.scm.util.ClassLoaders;
 
 //~--- JDK imports ------------------------------------------------------------

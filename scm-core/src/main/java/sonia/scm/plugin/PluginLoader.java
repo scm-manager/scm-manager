@@ -38,12 +38,9 @@ package sonia.scm.plugin;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 
-import sonia.scm.plugin.ext.ExtensionProcessor;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
-import java.util.Set;
 
 /**
  *
