@@ -50,7 +50,6 @@ import sonia.scm.web.HgUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -126,7 +125,6 @@ public class AbstractHgHandler
    * @param handler
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
   protected AbstractHgHandler(HgRepositoryHandler handler, HgContext context,
     Repository repository)
@@ -304,7 +302,6 @@ public class AbstractHgHandler
     Process p = createScriptProcess(script, extraEnv);
     T result = null;
     InputStream input = null;
-    OutputStream output = null;
 
     try
     {
@@ -322,8 +319,7 @@ public class AbstractHgHandler
     }
     finally
     {
-      Closeables.closeQuietly(input);
-      Closeables.closeQuietly(output);
+      Closeables.close(input, true);
     }
 
     return result;

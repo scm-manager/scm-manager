@@ -117,7 +117,7 @@ public class HgDiffCommand extends AbstractCommand implements DiffCommand
     }
     finally
     {
-      Closeables.closeQuietly(inputStream);
+      Closeables.close(inputStream, true);
     }
   }
 }

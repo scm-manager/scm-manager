@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,10 +38,9 @@ package sonia.scm.repository.spi.javahg;
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.internals.HgInputStream;
 
-import com.google.common.io.Closeables;
-
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgConfig;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -91,7 +91,7 @@ public abstract class HgIncomingOutgoingChangesetCommand
     }
     finally
     {
-      Closeables.closeQuietly(stream);
+      IOUtil.close(stream);
     }
 
     return changesets;

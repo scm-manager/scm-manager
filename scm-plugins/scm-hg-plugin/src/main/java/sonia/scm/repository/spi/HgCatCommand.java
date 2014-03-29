@@ -97,7 +97,7 @@ public class HgCatCommand extends AbstractCommand implements CatCommand
     }
     finally
     {
-      Closeables.closeQuietly(input);
+      Closeables.close(input, true);
     }
   }
 }

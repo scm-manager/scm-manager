@@ -28,7 +28,15 @@
     <dependency>
       <groupId>com.aragost.javahg</groupId>
       <artifactId>javahg</artifactId>
-      <version>0.7</version>
+      <version>0.8-SNAPSHOT</version>
+    </dependency>
+    
+    <!-- fix conflict with javahg -->
+    
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
     </dependency>
 
     <!-- test scope -->
@@ -39,7 +47,7 @@
       <version>2.0.0-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
-
+    
   </dependencies>
   
   <!-- create test jar -->

@@ -112,7 +112,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public void close() throws IOException
   {
-    Closeables.closeQuietly(context);
+    Closeables.close(context, true);
   }
 
   //~--- get methods ----------------------------------------------------------

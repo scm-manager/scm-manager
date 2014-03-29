@@ -121,7 +121,7 @@ public class HgWindowsPackageFixTest
     }
     finally
     {
-      Closeables.closeQuietly(fos);
+      Closeables.close(fos, true);
     }
 
     return file;

@@ -37,13 +37,13 @@ package sonia.scm.repository;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
-import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContextProvider;
+import sonia.scm.util.IOUtil;
 import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -59,16 +59,10 @@ import java.io.IOException;
  */
 public final class HgWindowsPackageFix
 {
-  
-  /** Field description */
-  private static final String PYTHONPATH_WRONG = "set PYTHONPATH=%~dp0..\\lib;%PYTHONHOME%\\Lib";
-  
-  /** Field description */
-  private static final String PYTHONPATH_FIXED = "set PYTHONPATH=%~dp0..\\lib;%PYTHONHOME%\\Lib;%PYTHONPATH%";
 
   /** Field description */
   static final String MODIFY_MARK_01 = ".setbinary";
-  
+
   /** Field description */
   static final String MODIFY_MARK_02 = ".setpythonpath";
 
@@ -77,6 +71,14 @@ public final class HgWindowsPackageFix
 
   /** Field description */
   private static final String HG_PY = "hg.py";
+
+  /** Field description */
+  private static final String PYTHONPATH_FIXED =
+    "set PYTHONPATH=%~dp0..\\lib;%PYTHONHOME%\\Lib;%PYTHONPATH%";
+
+  /** Field description */
+  private static final String PYTHONPATH_WRONG =
+    "set PYTHONPATH=%~dp0..\\lib;%PYTHONHOME%\\Lib";
 
   /**
    * the logger for HgUtil
@@ -111,6 +113,7 @@ public final class HgWindowsPackageFix
       if (hg.startsWith(basePath) && hg.endsWith(HG_BAT))
       {
         File file = new File(hg);
+
         fixHgBat(file);
 
         file = new File(file.getParentFile(), HG_PY);
@@ -123,48 +126,50 @@ public final class HgWindowsPackageFix
         "could not fix hg.py, because the configuration is not valid");
     }
   }
-  
+
   /**
    * Visible for testing
    *
    * @param hgBat
    */
-  static void fixHgBat(File hgBat){
+  static void fixHgBat(File hgBat)
+  {
     if (hgBat.exists())
     {
       File binDirectory = hgBat.getParentFile();
       File modifyMark = new File(binDirectory, MODIFY_MARK_02);
+
       if (!modifyMark.exists())
       {
-        try 
+        try
         {
           String content = Files.toString(hgBat, Charsets.UTF_8);
+
           if (!content.contains(PYTHONPATH_FIXED))
           {
             content = content.replace(PYTHONPATH_WRONG, PYTHONPATH_FIXED);
             Files.write(content, hgBat, Charsets.UTF_8);
           }
+
           createModifyMark(modifyMark);
-        } 
+        }
         catch (IOException ex)
         {
           logger.error("could not read content of {}", hgBat);
+
           throw Throwables.propagate(ex);
         }
-      } 
-      else 
+      }
+      else
       {
         logger.debug("hg.bat allready fixed");
       }
-    } 
-    else 
+    }
+    else
     {
       logger.warn("could not find hg.bat at {}", hgBat);
     }
   }
-  
-  
-          
 
   /**
    * Visible for testing
@@ -252,7 +257,7 @@ public final class HgWindowsPackageFix
     }
     finally
     {
-      Closeables.closeQuietly(reader);
+      IOUtil.close(reader);
     }
 
     return setBinaryAvailable;
@@ -327,8 +332,8 @@ public final class HgWindowsPackageFix
     }
     finally
     {
-      Closeables.closeQuietly(reader);
-      Closeables.closeQuietly(writer);
+      IOUtil.close(reader);
+      IOUtil.close(writer);
     }
   }
 }
