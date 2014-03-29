@@ -42,7 +42,7 @@ import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
 import sonia.scm.Type;
 import sonia.scm.io.FileSystem;
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.GitRepositoryServiceProvider;
 import sonia.scm.store.StoreFactory;
 

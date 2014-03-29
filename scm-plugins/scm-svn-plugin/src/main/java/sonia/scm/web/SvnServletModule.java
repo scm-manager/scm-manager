@@ -37,7 +37,7 @@ package sonia.scm.web;
 
 import com.google.inject.servlet.ServletModule;
 
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.plugin.Extension;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 //~--- JDK imports ------------------------------------------------------------

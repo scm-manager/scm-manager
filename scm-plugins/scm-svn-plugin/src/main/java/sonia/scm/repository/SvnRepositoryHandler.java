@@ -52,7 +52,7 @@ import org.tmatesoft.svn.util.SVNDebugLog;
 import sonia.scm.Type;
 import sonia.scm.io.FileSystem;
 import sonia.scm.logging.SVNKitLogger;
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.SvnRepositoryServiceProvider;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.Util;

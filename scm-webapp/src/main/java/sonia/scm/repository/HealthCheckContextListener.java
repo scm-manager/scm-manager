@@ -37,7 +37,7 @@ import com.google.inject.Inject;
 
 import org.apache.shiro.SecurityUtils;
 
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.plugin.Extension;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.PrivilegedAction;
 

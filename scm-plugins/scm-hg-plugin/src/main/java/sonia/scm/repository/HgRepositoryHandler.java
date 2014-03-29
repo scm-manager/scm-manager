@@ -54,7 +54,7 @@ import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.HgRepositoryServiceProvider;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.util.IOUtil;

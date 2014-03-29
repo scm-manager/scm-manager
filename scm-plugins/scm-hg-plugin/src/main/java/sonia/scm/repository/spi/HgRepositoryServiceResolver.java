@@ -37,7 +37,7 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.Inject;
 
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;

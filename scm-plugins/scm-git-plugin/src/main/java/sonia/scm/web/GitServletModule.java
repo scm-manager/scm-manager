@@ -39,7 +39,7 @@ import com.google.inject.servlet.ServletModule;
 
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.plugin.Extension;
 
 /**
  *

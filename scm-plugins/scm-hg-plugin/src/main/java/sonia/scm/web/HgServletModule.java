@@ -38,7 +38,7 @@ package sonia.scm.web;
 import com.google.inject.servlet.ServletModule;
 
 import sonia.scm.installer.HgPackageReader;
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgContextProvider;
 import sonia.scm.repository.HgHookManager;

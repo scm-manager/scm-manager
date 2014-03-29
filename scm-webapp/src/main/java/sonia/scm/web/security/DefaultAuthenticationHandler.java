@@ -52,7 +52,7 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.plugin.Extension;
 
 /**
  *

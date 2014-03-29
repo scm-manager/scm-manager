@@ -31,7 +31,7 @@
 
 
 
-package sonia.scm.plugin.ext;
+package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 

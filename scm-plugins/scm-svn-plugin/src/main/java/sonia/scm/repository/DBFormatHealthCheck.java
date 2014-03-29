@@ -47,7 +47,7 @@ import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
-import sonia.scm.plugin.ext.Extension;
+import sonia.scm.plugin.Extension;
 
 //~--- JDK imports ------------------------------------------------------------
 
