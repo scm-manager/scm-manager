@@ -218,8 +218,8 @@ public class DefaultPluginLoader implements PluginLoader
         }
       }
 
-      Iterables.addAll(extensions, mod.getJaxrsProviders());
-      Iterables.addAll(extensions, mod.getJaxrsResources());
+      Iterables.addAll(extensions, mod.getRestProviders());
+      Iterables.addAll(extensions, mod.getRestResources());
     }
   }
 

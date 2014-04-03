@@ -100,9 +100,9 @@ public class ScmModule
    *
    * @return
    */
-  public Iterable<Class<?>> getJaxrsProviders()
+  public Iterable<Class<?>> getRestProviders()
   {
-    return unwrap(jaxrsProviders);
+    return unwrap(restProviders);
   }
 
   /**
@@ -111,9 +111,9 @@ public class ScmModule
    *
    * @return
    */
-  public Iterable<Class<?>> getJaxrsResources()
+  public Iterable<Class<?>> getRestResources()
   {
-    return unwrap(jaxrsResources);
+    return unwrap(restResources);
   }
 
   /**
@@ -217,12 +217,12 @@ public class ScmModule
   private Set<ClassElement> extensions;
 
   /** Field description */
-  @XmlElement(name = "jaxrs-provider")
-  private Set<ClassElement> jaxrsProviders;
+  @XmlElement(name = "rest-provider")
+  private Set<ClassElement> restProviders;
 
   /** Field description */
-  @XmlElement(name = "jaxrs-resource")
-  private Set<ClassElement> jaxrsResources;
+  @XmlElement(name = "rest-resource")
+  private Set<ClassElement> restResources;
 
   /** Field description */
   @XmlElement(name = "subscriber")

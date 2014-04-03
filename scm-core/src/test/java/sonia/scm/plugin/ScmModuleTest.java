@@ -97,14 +97,14 @@ public class ScmModuleTest
       )
     );
     assertThat(
-      module.getJaxrsProviders(), 
+      module.getRestProviders(), 
       containsInAnyOrder(
         (Class<?>) Integer.class,
         (Class<?>) Long.class
       )
     );
     assertThat(
-      module.getJaxrsResources(), 
+      module.getRestResources(), 
       containsInAnyOrder(
         (Class<?>) Float.class,
         (Class<?>) Double.class

@@ -121,8 +121,8 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
 
   /** Field description */
   private static final Set<ClassAnnotation> CLASS_ANNOTATIONS =
-    ImmutableSet.of(new ClassAnnotation("jaxrs-resource", Path.class),
-      new ClassAnnotation("jaxrs-provider", Provider.class));
+    ImmutableSet.of(new ClassAnnotation("rest-resource", Path.class),
+      new ClassAnnotation("rest-provider", Provider.class));
 
   //~--- methods --------------------------------------------------------------
 
