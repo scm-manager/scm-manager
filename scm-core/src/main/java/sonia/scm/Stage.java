@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm;
 
 /**
@@ -46,10 +47,41 @@ public enum Stage
   /**
    * This value indicates SCM-Manager is right now in development.
    */
-  DEVELOPMENT,
+  DEVELOPMENT(com.google.inject.Stage.DEVELOPMENT),
 
   /**
    * This value indicates SCM-Manager is right now productive.
    */
-  PRODUCTION
+  PRODUCTION(com.google.inject.Stage.PRODUCTION);
+
+  /**
+   * Constructs a new Stage
+   *
+   *
+   * @param injectionStage injection stage
+   */
+  private Stage(com.google.inject.Stage injectionStage)
+  {
+    this.injectionStage = injectionStage;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns the injection stage
+   *
+   *
+   * @return injection stage
+   * 
+   * @since 2.0.0
+   */
+  public com.google.inject.Stage getInjectionStage()
+  {
+    return injectionStage;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** injection stage */
+  private final com.google.inject.Stage injectionStage;
 }

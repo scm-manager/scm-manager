@@ -46,6 +46,7 @@ import org.apache.shiro.guice.web.ShiroWebModule;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.DefaultPluginLoader;
+import sonia.scm.repository.HealthCheckContextListener;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.upgrade.UpgradeManager;
@@ -59,7 +60,6 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
-import sonia.scm.repository.HealthCheckContextListener;
 
 /**
  *
@@ -196,7 +196,9 @@ public class ScmContextListener extends GuiceServletContextListener
     moduleList.addAll(pluginLoader.getInjectionModules());
     moduleList.addAll(overrides.getModules());
 
-    return Guice.createInjector(moduleList);
+    SCMContextProvider ctx = SCMContext.getContext();
+
+    return Guice.createInjector(ctx.getStage().getInjectionStage(), moduleList);
   }
 
   /**
