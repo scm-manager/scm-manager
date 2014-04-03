@@ -30,17 +30,22 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.io.Closeables;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
+import sonia.scm.repository.SvnUtil;
 import sonia.scm.repository.api.Command;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 import java.util.Set;
 
@@ -53,8 +58,8 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
 
   /** Field description */
   public static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
-                                                 Command.BROWSE, Command.CAT,
-                                                 Command.DIFF, Command.LOG);
+                                                Command.BROWSE, Command.CAT,
+                                                Command.DIFF, Command.LOG);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -66,10 +71,24 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
    * @param repository
    */
   SvnRepositoryServiceProvider(SvnRepositoryHandler handler,
-                               Repository repository)
+    Repository repository)
   {
     this.repository = repository;
     this.context = new SvnContext(handler.getDirectory(repository));
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Override
+  public void close() throws IOException
+  {
+    Closeables.close(context, true);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -149,8 +168,8 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SvnContext context;
+  private final SvnContext context;
 
   /** Field description */
-  private Repository repository;
+  private final Repository repository;
 }
