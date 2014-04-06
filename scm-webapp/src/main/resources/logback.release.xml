@@ -61,14 +61,14 @@
 
     <append>true</append>
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+      <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
     </encoder>
   </appender>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+      <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
     </encoder>
     
   </appender>
