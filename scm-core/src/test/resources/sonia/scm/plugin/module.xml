@@ -48,24 +48,24 @@
     <class>java.lang.Integer</class>
   </extension>
   
-  <!-- jax-rs providers -->
+  <!-- rest providers -->
   
-  <jaxrs-provider>
+  <rest-provider>
     <class>java.lang.Integer</class>
-  </jaxrs-provider>
+  </rest-provider>
   
-  <jaxrs-provider>
+  <rest-provider>
     <class>java.lang.Long</class>
-  </jaxrs-provider>
+  </rest-provider>
   
   <!-- jax-rs resources -->
   
-  <jaxrs-resource>
+  <rest-resource>
     <class>java.lang.Float</class>
-  </jaxrs-resource>
+  </rest-resource>
   
-  <jaxrs-resource>
+  <rest-resource>
     <class>java.lang.Double</class>
-  </jaxrs-resource>
+  </rest-resource>
 
 </module>
