@@ -71,9 +71,17 @@
         <version>2.0.0-SNAPSHOT</version>
         <executions>
           <execution>
+            <id>fix-descriptor</id>
             <phase>process-resources</phase>
             <goals>
               <goal>fix-descriptor</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>append-dependencies</id>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>append-dependencies</goal>
             </goals>
           </execution>
         </executions>
