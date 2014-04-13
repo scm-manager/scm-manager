@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.api.rest.RestActionResult;
 import sonia.scm.api.rest.RestActionUploadResult;
-import sonia.scm.plugin.OverviewPluginFilter;
+import sonia.scm.plugin.OverviewPluginPredicate;
 import sonia.scm.plugin.PluginConditionFailedException;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginInformationComparator;
@@ -331,7 +331,7 @@ public class PluginResource
   {
     //J-
     List<PluginInformation> plugins = Lists.newArrayList(
-      pluginManager.get(OverviewPluginFilter.INSTANCE)
+      pluginManager.get(OverviewPluginPredicate.INSTANCE)
     );
     //J+
 

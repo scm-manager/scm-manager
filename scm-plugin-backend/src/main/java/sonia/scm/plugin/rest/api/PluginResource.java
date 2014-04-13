@@ -174,7 +174,7 @@ public class PluginResource implements PluginBackendListener
       }
 
       List<PluginInformation> plugins =
-        backend.getPlugins(new DefaultPluginFilter(version, os, arch,
+        backend.getPlugins(new DefaultPluginPredicate(version, os, arch,
           snapshot));
 
       pc = new PluginCenter();

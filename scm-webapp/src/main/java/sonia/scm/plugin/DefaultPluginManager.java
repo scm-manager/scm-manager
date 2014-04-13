@@ -35,9 +35,9 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.version.Version;
 import com.github.legman.Subscribe;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
@@ -61,6 +61,7 @@ import sonia.scm.util.IOUtil;
 import sonia.scm.util.SecurityUtil;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
+import sonia.scm.version.Version;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -106,8 +107,8 @@ public class DefaultPluginManager implements PluginManager
   private static final boolean REMOTE_PLUGINS_ENABLED = false;
 
   /** Field description */
-  public static final PluginFilter FILTER_UPDATES =
-    new StatePluginFilter(PluginState.UPDATE_AVAILABLE);
+  public static final Predicate<PluginInformation> FILTER_UPDATES =
+    new StatePluginPredicate(PluginState.UPDATE_AVAILABLE);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -384,20 +385,20 @@ public class DefaultPluginManager implements PluginManager
    * Method description
    *
    *
-   * @param filter
+   * @param predicate
    *
    * @return
    */
   @Override
-  public Set<PluginInformation> get(PluginFilter filter)
+  public Set<PluginInformation> get(Predicate<PluginInformation> predicate)
   {
-    AssertUtil.assertIsNotNull(filter);
+    AssertUtil.assertIsNotNull(predicate);
     SecurityUtil.assertIsAdmin();
 
     Set<PluginInformation> infoSet = new HashSet<PluginInformation>();
 
-    filter(infoSet, getInstalled(), filter);
-    filter(infoSet, getPluginCenter().getPlugins(), filter);
+    filter(infoSet, getInstalled(), predicate);
+    filter(infoSet, getPluginCenter().getPlugins(), predicate);
 
     return infoSet;
   }
@@ -514,14 +515,15 @@ public class DefaultPluginManager implements PluginManager
    *
    * @param target
    * @param source
-   * @param filter
+   * @param predicate
    */
   private void filter(Set<PluginInformation> target,
-    Collection<PluginInformation> source, PluginFilter filter)
+    Collection<PluginInformation> source,
+    Predicate<PluginInformation> predicate)
   {
     for (PluginInformation info : source)
     {
-      if (filter.accept(info))
+      if (predicate.apply(info))
       {
         target.add(info);
       }

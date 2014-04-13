@@ -35,6 +35,7 @@ package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.google.common.base.Predicate;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -108,7 +109,7 @@ public interface PluginManager
    *
    * @return
    */
-  public Collection<PluginInformation> get(PluginFilter filter);
+  public Collection<PluginInformation> get(Predicate<PluginInformation> filter);
 
   /**
    * Method description

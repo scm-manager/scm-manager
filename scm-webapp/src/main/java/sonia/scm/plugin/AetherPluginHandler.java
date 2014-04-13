@@ -317,7 +317,7 @@ public class AetherPluginHandler
   {
     List<Dependency> dependencies = Lists.newArrayList();
     Collection<PluginInformation> installed =
-      pluginManager.get(new StatePluginFilter(PluginState.INSTALLED));
+      pluginManager.get(new StatePluginPredicate(PluginState.INSTALLED));
 
     if (installed != null)
     {

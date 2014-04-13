@@ -31,14 +31,45 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.plugin.rest.api;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Predicate;
+import sonia.scm.plugin.PluginCondition;
+import sonia.scm.plugin.PluginInformation;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface PluginFilter
+public class DefaultPluginPredicate implements Predicate<PluginInformation>
 {
+
+  /** Field description */
+  public static final String VERSION_SNAPSHOT = "SNAPSHOT";
+
+  //~--- constructors ---------------------------------------------------------
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param version
+   * @param os
+   * @param arch
+   * @param snapshot
+   */
+  public DefaultPluginPredicate(String version, String os, String arch,
+    boolean snapshot)
+  {
+    this.version = version;
+    this.os = os;
+    this.arch = arch;
+    this.snapshot = snapshot;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -48,5 +79,28 @@ public interface PluginFilter
    *
    * @return
    */
-  public boolean accept(PluginInformation plugin);
+  @Override
+  public boolean apply(PluginInformation plugin)
+  {
+    PluginCondition condition = plugin.getCondition();
+
+    return (snapshot
+      ||!plugin.getVersion().toUpperCase().contains(
+        VERSION_SNAPSHOT)) && ((condition != null)
+          && condition.isSupported(version, os, arch) || (condition == null));
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String arch;
+
+  /** Field description */
+  private String os;
+
+  /** Field description */
+  private boolean snapshot;
+
+  /** Field description */
+  private String version;
 }

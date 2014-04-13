@@ -33,6 +33,10 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Predicate;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
@@ -53,7 +57,7 @@ public interface PluginBackend
    *
    *
    * @param listener
-   * 
+   *
    * @since 2.0.0
    */
   public void addListener(PluginBackendListener listener);
@@ -63,7 +67,7 @@ public interface PluginBackend
    *
    *
    * @param listeners
-   * 
+   *
    * @since 2.0.0
    */
   public void addListeners(Collection<PluginBackendListener> listeners);
@@ -107,7 +111,7 @@ public interface PluginBackend
    *
    *
    * @param listener
-   * 
+   *
    * @since 2.0.0
    */
   public void removeListener(PluginBackendListener listener);
@@ -133,12 +137,12 @@ public interface PluginBackend
   /**
    * Method description
    *
-   *
-   * @param filter
+   * @param predicate
    *
    * @return
    */
-  public List<PluginInformation> getPlugins(PluginFilter filter);
+  public List<PluginInformation> getPlugins(
+    Predicate<PluginInformation> predicate);
 
   /**
    * Method description

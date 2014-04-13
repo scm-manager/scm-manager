@@ -35,6 +35,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Predicate;
 import sonia.scm.util.LinkTextParser;
 import sonia.scm.util.Util;
 
@@ -191,10 +192,10 @@ public final class PluginUtil
     PluginBackend backend, final String groupId, final String artifactId)
   {
     List<PluginInformation> pluginVersions =
-      backend.getPlugins(new PluginFilter()
+      backend.getPlugins(new Predicate<PluginInformation>()
     {
       @Override
-      public boolean accept(PluginInformation plugin)
+      public boolean apply(PluginInformation plugin)
       {
         return groupId.equals(plugin.getGroupId())
           && artifactId.equals(plugin.getArtifactId());

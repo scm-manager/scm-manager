@@ -35,6 +35,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -92,8 +93,6 @@ public class DefaultPluginBackend extends AbstractPluginBackend
    * Constructs ...
    *
    *
-   *
-   * @param baseDirectory
    * @param configuration
    */
   @Inject
@@ -221,19 +220,19 @@ public class DefaultPluginBackend extends AbstractPluginBackend
    * Method description
    *
    *
-   * @param filter
+   * @param predicate
    *
    * @return
    */
   @Override
-  public List<PluginInformation> getPlugins(PluginFilter filter)
+  public List<PluginInformation> getPlugins(Predicate<PluginInformation> predicate)
   {
     List<PluginInformation> filteredPlugins =
       new ArrayList<PluginInformation>();
 
     for (PluginInformation plugin : pluginStore)
     {
-      if (filter.accept(plugin))
+      if (predicate.apply(plugin))
       {
         filteredPlugins.add(plugin);
       }

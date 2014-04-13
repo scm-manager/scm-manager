@@ -33,16 +33,27 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Predicate;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public class OverviewPluginFilter implements PluginFilter
+public class StatePluginPredicate implements Predicate<PluginInformation>
 {
 
-  /** Field description */
-  public static final OverviewPluginFilter INSTANCE =
-    new OverviewPluginFilter();
+  /**
+   * Constructs ...
+   *
+   *
+   * @param state
+   */
+  public StatePluginPredicate(PluginState state)
+  {
+    this.state = state;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -55,8 +66,13 @@ public class OverviewPluginFilter implements PluginFilter
    * @return
    */
   @Override
-  public boolean accept(PluginInformation plugin)
+  public boolean apply(PluginInformation plugin)
   {
-    return plugin.getState() != PluginState.NEWER_VERSION_INSTALLED;
+    return state == plugin.getState();
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final PluginState state;
 }

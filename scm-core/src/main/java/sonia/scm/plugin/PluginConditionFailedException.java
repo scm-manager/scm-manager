@@ -86,5 +86,5 @@ public final class PluginConditionFailedException extends PluginException
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private PluginCondition condition;
+  private final PluginCondition condition;
 }
