@@ -39,9 +39,12 @@ import com.google.common.base.Objects;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Set;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -66,13 +69,15 @@ public final class Plugin extends ScmModule
    * @param information
    * @param resources
    * @param condition
+   * @param dependencies
    */
   public Plugin(PluginInformation information, PluginResources resources,
-    PluginCondition condition)
+    PluginCondition condition, Set<String> dependencies)
   {
     this.information = information;
     this.resources = resources;
     this.condition = condition;
+    this.dependencies = dependencies;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -102,7 +107,8 @@ public final class Plugin extends ScmModule
 
     return Objects.equal(condition, other.condition)
       && Objects.equal(information, other.information)
-      && Objects.equal(resources, other.resources);
+      && Objects.equal(resources, other.resources)
+      && Objects.equal(dependencies, other.dependencies);
   }
 
   /**
@@ -114,7 +120,7 @@ public final class Plugin extends ScmModule
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(condition, information, resources);
+    return Objects.hashCode(condition, information, resources, dependencies);
   }
 
   /**
@@ -131,6 +137,7 @@ public final class Plugin extends ScmModule
                   .add("condition", condition)
                   .add("information", information)
                   .add("resources", resources)
+                  .add("dependencies", dependencies)
                   .toString();
     //J+
   }
@@ -146,6 +153,19 @@ public final class Plugin extends ScmModule
   public PluginCondition getCondition()
   {
     return condition;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * 
+   * @since 2.0.0
+   */
+  public Set<String> getDependencies()
+  {
+    return dependencies;
   }
 
   /**
@@ -175,6 +195,11 @@ public final class Plugin extends ScmModule
   /** Field description */
   @XmlElement(name = "conditions")
   private PluginCondition condition;
+
+  /** Field description */
+  @XmlElement(name = "dependency")
+  @XmlElementWrapper(name = "dependencies")
+  private Set<String> dependencies;
 
   /** Field description */
   private PluginInformation information;

@@ -179,7 +179,7 @@ public class ScmModule
    *
    *
    * @version        Enter version here..., 14/03/28
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   private static class Unwrapper implements Function<ClassElement, Class<?>>
   {
@@ -199,8 +199,6 @@ public class ScmModule
     }
   }
 
-
-  ;
 
   //~--- fields ---------------------------------------------------------------
 
