@@ -54,6 +54,28 @@ public class PluginResources
 {
 
   /**
+   * Constructs ...
+   *
+   */
+  PluginResources() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param scriptResources
+   * @param stylesheetResources
+   */
+  public PluginResources(Set<String> scriptResources,
+    Set<String> stylesheetResources)
+  {
+    this.scriptResources = scriptResources;
+    this.stylesheetResources = stylesheetResources;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
    * Method description
    *
    *
@@ -131,30 +153,6 @@ public class PluginResources
   public Set<String> getStylesheetResources()
   {
     return stylesheetResources;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param scriptResources
-   */
-  public void setScriptResources(Set<String> scriptResources)
-  {
-    this.scriptResources = scriptResources;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param stylesheetResources
-   */
-  public void setStylesheetResources(Set<String> stylesheetResources)
-  {
-    this.stylesheetResources = stylesheetResources;
   }
 
   //~--- fields ---------------------------------------------------------------

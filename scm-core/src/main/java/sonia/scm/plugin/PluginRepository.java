@@ -33,6 +33,10 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.Serializable;
@@ -53,7 +57,7 @@ public class PluginRepository implements Serializable
    * Constructs ...
    *
    */
-  public PluginRepository() {}
+  PluginRepository() {}
 
   /**
    * Constructs ...
@@ -93,21 +97,7 @@ public class PluginRepository implements Serializable
 
     final PluginRepository other = (PluginRepository) obj;
 
-    if ((this.id == null)
-        ? (other.id != null)
-        : !this.id.equals(other.id))
-    {
-      return false;
-    }
-
-    if ((this.url == null)
-        ? (other.url != null)
-        : !this.url.equals(other.url))
-    {
-      return false;
-    }
-
-    return true;
+    return Objects.equal(id, other.id) && Objects.equal(url, other.url);
   }
 
   /**
@@ -119,16 +109,7 @@ public class PluginRepository implements Serializable
   @Override
   public int hashCode()
   {
-    int hash = 7;
-
-    hash = 37 * hash + ((this.id != null)
-                        ? this.id.hashCode()
-                        : 0);
-    hash = 37 * hash + ((this.url != null)
-                        ? this.url.hashCode()
-                        : 0);
-
-    return hash;
+    return Objects.hashCode(id, url);
   }
 
   /**
@@ -140,11 +121,8 @@ public class PluginRepository implements Serializable
   @Override
   public String toString()
   {
-    StringBuilder out = new StringBuilder("PluginRepository{id=");
-
-    out.append(id).append(", url=").append(url).append(")");
-
-    return out.toString();
+    return Objects.toStringHelper(this).add("id", id).add("url",
+      url).toString();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -169,30 +147,6 @@ public class PluginRepository implements Serializable
   public String getUrl()
   {
     return url;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param id
-   */
-  public void setId(String id)
-  {
-    this.id = id;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param url
-   */
-  public void setUrl(String url)
-  {
-    this.url = url;
   }
 
   //~--- fields ---------------------------------------------------------------

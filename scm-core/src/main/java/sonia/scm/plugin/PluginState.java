@@ -70,5 +70,5 @@ public enum PluginState
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  int compareValue;
+  private final int compareValue;
 }
