@@ -91,7 +91,6 @@ public class GitBasicAuthenticationFilter extends BasicAuthenticationFilter
     HttpServletResponse response)
     throws IOException
   {
-    System.out.println(ClientMessages.get(request).failedAuthentication());
     if (GitUtil.isGitClient(request))
     {
       GitSmartHttpTools.sendError(request, response,
