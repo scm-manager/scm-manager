@@ -38,6 +38,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   colContactText: 'Contact',
   colDescriptionText: 'Description',
   colCreationDateText: 'Creation date',
+  colLastModifiedText: 'Last modified',
   colUrlText: 'Url',
   colArchiveText: 'Archive',
   emptyText: 'No repository is configured',
@@ -90,6 +91,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
           name: 'description'
         },{
           name: 'creationDate'
+        },{
+          name: 'lastModified'
         },{
           name: 'public'
         },{
@@ -159,6 +162,12 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
         header: this.colCreationDateText, 
         dataIndex: 'creationDate', 
         renderer: Ext.util.Format.formatTimestamp
+      },{
+        id: 'lastModified', 
+        header: this.colLastModifiedText, 
+        dataIndex: 'lastModified', 
+        renderer: Ext.util.Format.formatTimestamp,
+        hidden: true
       },{
         id: 'Url', 
         header: this.colUrlText, 
