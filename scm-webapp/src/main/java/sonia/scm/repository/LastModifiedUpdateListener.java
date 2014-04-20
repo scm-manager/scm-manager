@@ -147,6 +147,7 @@ public final class LastModifiedUpdateListener
 
       if (dbr != null)
       {
+        logger.info("update last modified date of repository {}", dbr.getId());
         dbr.setLastModified(System.currentTimeMillis());
 
         try
