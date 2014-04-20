@@ -155,7 +155,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import sonia.scm.repository.HealthCheckContextListener;
-import sonia.scm.repository.HealthChecker;
+import sonia.scm.repository.LastModifiedUpdateListener;
 
 /**
  *
@@ -378,6 +378,9 @@ public class ScmServletModule extends ServletModule
     bind(TemplateEngine.class).annotatedWith(DefaultEngine.class).to(
       MustacheTemplateEngine.class);
     bind(TemplateEngineFactory.class);
+    
+    // bind events
+    bind(LastModifiedUpdateListener.class);
 
     // jersey
     Map<String, String> params = new HashMap<String, String>();
