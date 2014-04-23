@@ -33,6 +33,10 @@
 
 package sonia.scm.util;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Strings;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.math.BigInteger;
@@ -351,21 +355,37 @@ public final class Util
   }
 
   /**
-   * Method description
+   * Returns an emtpy string, if the object is null. Otherwise the result of
+   * the toString method of the object is returned is returned.
    *
-   *
-   * @param value
-   *
+   * @param value object
    *
    * @since 1.13
    *
-   * @return
+   * @return string value or empty string
    */
   public static String nonNull(Object value)
   {
     return (value != null)
       ? value.toString()
       : "";
+  }
+
+  /**
+   * Returns an emtpy string, if the string is null. Otherwise the string
+   * is returned. The method is available to fix a possible linkage error which
+   * was introduced with version 1.14. Please have a look at:
+   * https://bitbucket.org/sdorra/scm-manager/issue/569/active-directory-plugin-not-working-in
+   *
+   * @param value string value
+   *
+   * @return string value or empty string
+   *
+   * @since 1.38
+   */
+  public static String nonNull(String value)
+  {
+    return Strings.nullToEmpty(value);
   }
 
   /**
