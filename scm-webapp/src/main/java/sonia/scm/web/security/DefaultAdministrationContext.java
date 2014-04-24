@@ -86,8 +86,6 @@ public class DefaultAdministrationContext implements AdministrationContext
    *
    *
    * @param injector
-   * @param userSessionProvider
-   * @param contextHolder
    * @param securityManager
    */
   @Inject
@@ -182,6 +180,22 @@ public class DefaultAdministrationContext implements AdministrationContext
    * Method description
    *
    *
+   * @return
+   */
+  private Subject createAdminSubject()
+  {
+    //J-
+    return new Subject.Builder(securityManager)
+      .authenticated(true)
+      .principals(principalCollection)
+      .buildSubject();
+    //J+
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param action
    */
   private void doRunAsInNonWebSessionContext(PrivilegedAction action)
@@ -195,12 +209,7 @@ public class DefaultAdministrationContext implements AdministrationContext
     {
       SecurityUtils.setSecurityManager(securityManager);
 
-      //J-
-      Subject subject = new Subject.Builder(securityManager)
-        .authenticated(true)
-        .principals(principalCollection)
-        .buildSubject(); 
-      //J+
+      Subject subject = createAdminSubject();
       ThreadState state = new SubjectThreadState(subject);
 
       state.bind();
@@ -240,7 +249,7 @@ public class DefaultAdministrationContext implements AdministrationContext
 
     if (logger.isInfoEnabled())
     {
-      String username = null;
+      String username;
 
       if (subject.hasRole(Role.USER))
       {
@@ -255,7 +264,12 @@ public class DefaultAdministrationContext implements AdministrationContext
         action.getClass().getName());
     }
 
-    subject.runAs(principalCollection);
+    Subject adminSubject = createAdminSubject();
+
+    // do not use runas, because we want only execute this action in this
+    // thread as administrator. Runas could affect other threads
+
+    ThreadContext.bind(adminSubject);
 
     try
     {
@@ -263,32 +277,20 @@ public class DefaultAdministrationContext implements AdministrationContext
     }
     finally
     {
-
-      PrincipalCollection collection = subject.releaseRunAs();
-
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("release runas for user {}/{}",
-          principal, collection.getPrimaryPrincipal());
-      }
-
-      if (!subject.getPrincipal().equals(principal))
-      {
-        logger.error("release runas failed, {} is not equal with {}, logout.",
-          subject.getPrincipal(), principal);
-        subject.logout();
-      }
+      logger.debug("release administration context for user {}/{}", principal,
+        subject.getPrincipal());
+      ThreadContext.bind(subject);
     }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Injector injector;
+  private final Injector injector;
+
+  /** Field description */
+  private final org.apache.shiro.mgt.SecurityManager securityManager;
 
   /** Field description */
   private PrincipalCollection principalCollection;
-
-  /** Field description */
-  private org.apache.shiro.mgt.SecurityManager securityManager;
 }
