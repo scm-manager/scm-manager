@@ -125,7 +125,11 @@ Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
       var index = uri.indexOf("://");
       if ( index > 0 ){
         index += 3;
-        uri = uri.substring(0, index) + state.user.name + "@" + uri.substring(index);
+        var username = state.user.name;
+        // escape backslash for active directory users
+        // see https://bitbucket.org/sdorra/scm-manager/issue/570/incorrect-git-checkout-url-generated-for
+        username = username.replace('\\', '\\\\');
+        uri = uri.substring(0, index) + username + "@" + uri.substring(index);
       }
     }
     return uri;
