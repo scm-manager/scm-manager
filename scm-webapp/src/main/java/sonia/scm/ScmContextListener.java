@@ -196,10 +196,9 @@ public class ScmContextListener extends GuiceServletContextListener
     moduleList.addAll(pluginLoader.getInjectionModules());
     moduleList.addAll(overrides.getModules());
 
-    // TODO: fix cyclic dependencies in production environment
-    // SCMContextProvider ctx = SCMContext.getContext();
-    // return Guice.createInjector(ctx.getStage().getInjectionStage(), moduleList);
-    return Guice.createInjector(moduleList);
+    SCMContextProvider ctx = SCMContext.getContext();
+
+    return Guice.createInjector(ctx.getStage().getInjectionStage(), moduleList);
   }
 
   /**
