@@ -485,7 +485,7 @@
             </systemProperty>
             <systemProperty>
               <name>scm.stage</name>
-              <value>production</value>
+              <value>${scm.stage}</value>
             </systemProperty>
             <systemProperty>
               <name>java.awt.headless</name>
