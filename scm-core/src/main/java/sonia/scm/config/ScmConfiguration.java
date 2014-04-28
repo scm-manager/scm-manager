@@ -360,11 +360,24 @@ public class ScmConfiguration
   }
 
   /**
+   * Returns true if the login attempt limit is enabled.
+   *
+   *
+   * @return true if login attempt limit is enabled
+   *
+   * @since 1.37
+   */
+  public boolean isLoginAttemptLimitEnabled()
+  {
+    return loginAttemptLimit > 0;
+  }
+
+  /**
    * Returns true if failed authenticators are skipped.
    *
    *
    * @return true if failed authenticators are skipped
-   * 
+   *
    * @since 1.36
    */
   public boolean isSkipFailedAuthenticators()
@@ -590,7 +603,7 @@ public class ScmConfiguration
    * authenticator finds the user but fails to authenticate the user.
    *
    * @param skipFailedAuthenticators true to skip failed authenticators
-   * 
+   *
    * @since 1.36
    */
   public void setSkipFailedAuthenticators(boolean skipFailedAuthenticators)

@@ -170,7 +170,9 @@ public abstract class RepositoryManagerTestBase
     Repository repository = createTestRepository();
 
     repository.setArchived(true);
-    delete(createRepositoryManager(true), repository);
+    RepositoryManager drm = createRepositoryManager(true);
+    drm.init(contextProvider);
+    delete(drm, repository);
   }
 
   /**
@@ -255,6 +257,7 @@ public abstract class RepositoryManagerTestBase
   public void testListener() throws RepositoryException, IOException
   {
     RepositoryManager repoManager = createRepositoryManager(false);
+    repoManager.init(contextProvider);
     TestListener listener = new TestListener();
 
     ScmEventBus.getInstance().register(listener);

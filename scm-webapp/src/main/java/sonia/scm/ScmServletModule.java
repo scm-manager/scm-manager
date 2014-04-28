@@ -202,7 +202,7 @@ public class ScmServletModule extends JerseyServletModule
     PATTERN_STYLESHEET, "*.json", "*.xml", "*.txt" };
 
   /** Field description */
-  private static Logger logger =
+  private static final Logger logger =
     LoggerFactory.getLogger(ScmServletModule.class);
 
   //~--- constructors ---------------------------------------------------------
@@ -356,7 +356,7 @@ public class ScmServletModule extends JerseyServletModule
     bind(TemplateEngine.class).annotatedWith(DefaultEngine.class).to(
       MustacheTemplateEngine.class);
     bind(TemplateEngineFactory.class);
-
+    
     // jersey
     Map<String, String> params = new HashMap<String, String>();
 

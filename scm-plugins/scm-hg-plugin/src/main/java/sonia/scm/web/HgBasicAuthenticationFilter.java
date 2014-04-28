@@ -87,7 +87,8 @@ public class HgBasicAuthenticationFilter extends BasicAuthenticationFilter
     HttpServletResponse response)
     throws IOException
   {
-    if (HgUtil.isHgClient(request))
+    if (HgUtil.isHgClient(request)
+      && (configuration.isLoginAttemptLimitEnabled()))
     {
       response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }

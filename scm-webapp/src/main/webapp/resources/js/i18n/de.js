@@ -163,6 +163,7 @@ if ( Sonia.repository.Grid ){
     colContactText: 'Kontakt',
     colDescriptionText: 'Beschreibung',
     colCreationDateText: 'Erstellungsdatum',
+    colLastModifiedText: 'Zuletzt geändert',
     colUrlText: 'Url',
     colArchiveText: 'Archiv',
     emptyText: 'Es wurde kein Repository konfiguriert',

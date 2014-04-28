@@ -574,9 +574,20 @@ Sonia.scm.Main = Ext.extend(Ext.util.Observable, {
 });
 
 Ext.onReady(function(){
+  
+  function isLocalStorageAvailable(){
+   var mod = '__scm-manager';
+    try {
+        localStorage.setItem(mod, mod);
+        localStorage.removeItem(mod);
+        return true;
+    } catch(e) {
+        return false;
+    }
+  }
 
   var stateProvider;
-  if ( typeof(Storage) !== "undefined" ){
+  if (isLocalStorageAvailable()){
     if (debug){
       console.debug('use localStore to save application state');
     }

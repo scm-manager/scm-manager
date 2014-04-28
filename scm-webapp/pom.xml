@@ -205,6 +205,14 @@
       <version>${guava.version}</version>
     </dependency>
     
+    <!-- fix version conflict -->
+    
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.2.6</version>
+    </dependency>
+    
     <!-- template engine -->
     
     <dependency>
@@ -477,7 +485,7 @@
             </systemProperty>
             <systemProperty>
               <name>scm.stage</name>
-              <value>${scm.stage}</value>
+              <value>production</value>
             </systemProperty>
             <systemProperty>
               <name>java.awt.headless</name>
