@@ -34,6 +34,7 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
@@ -56,14 +57,16 @@ public final class HookEventFacade
    * Constructs ...
    *
    *
-   * @param repositoryManager
+   * @param repositoryManagerProvider
    * @param hookContextFactory
+   *
+   * @since 1.38
    */
   @Inject
-  public HookEventFacade(RepositoryManager repositoryManager,
+  public HookEventFacade(Provider<RepositoryManager> repositoryManagerProvider,
     HookContextFactory hookContextFactory)
   {
-    this.repositoryManager = repositoryManager;
+    this.repositoryManagerProvider = repositoryManagerProvider;
     this.hookContextFactory = hookContextFactory;
   }
 
@@ -81,7 +84,7 @@ public final class HookEventFacade
    */
   public HookEventHandler handle(String id) throws RepositoryException
   {
-    return handle(repositoryManager.get(id));
+    return handle(repositoryManagerProvider.get().get(id));
   }
 
   /**
@@ -98,7 +101,7 @@ public final class HookEventFacade
   public HookEventHandler handle(String type, String repositoryName)
     throws RepositoryException
   {
-    return handle(repositoryManager.get(type, repositoryName));
+    return handle(repositoryManagerProvider.get().get(type, repositoryName));
   }
 
   /**
@@ -119,8 +122,8 @@ public final class HookEventFacade
       throw new RepositoryNotFoundException("could not find repository");
     }
 
-    return new HookEventHandler(repositoryManager, hookContextFactory,
-      repository);
+    return new HookEventHandler(repositoryManagerProvider.get(),
+      hookContextFactory, repository);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -191,5 +194,5 @@ public final class HookEventFacade
   private final HookContextFactory hookContextFactory;
 
   /** Field description */
-  private final RepositoryManager repositoryManager;
+  private final Provider<RepositoryManager> repositoryManagerProvider;
 }
