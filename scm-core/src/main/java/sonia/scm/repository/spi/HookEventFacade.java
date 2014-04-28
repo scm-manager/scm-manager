@@ -34,6 +34,7 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import sonia.scm.repository.ExtendedRepositoryHookEvent;
 import sonia.scm.repository.Repository;
@@ -56,15 +57,33 @@ public final class HookEventFacade
    * Constructs ...
    *
    *
-   * @param repositoryManager
+   * @param repositoryManagerProvider
    * @param hookContextFactory
+   *
+   * @since 1.38
    */
   @Inject
+  public HookEventFacade(Provider<RepositoryManager> repositoryManagerProvider,
+    HookContextFactory hookContextFactory)
+  {
+    this.repositoryManagerProvider = repositoryManagerProvider;
+    this.hookContextFactory = hookContextFactory;
+  }
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param repositoryManager
+   * @param hookContextFactory
+   *
+   * @deprecated use {@link #HookEventFacade(Provider, HookContextFactory) instead.
+   */
+  @Deprecated
   public HookEventFacade(RepositoryManager repositoryManager,
     HookContextFactory hookContextFactory)
   {
-    this.repositoryManager = repositoryManager;
-    this.hookContextFactory = hookContextFactory;
+    this(new RepositoryManagerProvider(repositoryManager), hookContextFactory);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -81,7 +100,7 @@ public final class HookEventFacade
    */
   public HookEventHandler handle(String id) throws RepositoryException
   {
-    return handle(repositoryManager.get(id));
+    return handle(repositoryManagerProvider.get().get(id));
   }
 
   /**
@@ -98,7 +117,7 @@ public final class HookEventFacade
   public HookEventHandler handle(String type, String repositoryName)
     throws RepositoryException
   {
-    return handle(repositoryManager.get(type, repositoryName));
+    return handle(repositoryManagerProvider.get().get(type, repositoryName));
   }
 
   /**
@@ -119,8 +138,8 @@ public final class HookEventFacade
       throw new RepositoryNotFoundException("could not find repository");
     }
 
-    return new HookEventHandler(repositoryManager, hookContextFactory,
-      repository);
+    return new HookEventHandler(repositoryManagerProvider.get(),
+      hookContextFactory, repository);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -185,11 +204,54 @@ public final class HookEventFacade
   }
 
 
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 14/04/28
+   * @author         Enter your name here...
+   */
+  private static class RepositoryManagerProvider
+    implements Provider<RepositoryManager>
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param repositoryManager
+     */
+    public RepositoryManagerProvider(RepositoryManager repositoryManager)
+    {
+      this.repositoryManager = repositoryManager;
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     */
+    @Override
+    public RepositoryManager get()
+    {
+      return repositoryManager;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private final RepositoryManager repositoryManager;
+  }
+
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private HookContextFactory hookContextFactory;
 
   /** Field description */
-  private RepositoryManager repositoryManager;
+  private Provider<RepositoryManager> repositoryManagerProvider;
 }
