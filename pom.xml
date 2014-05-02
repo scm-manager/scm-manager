@@ -69,7 +69,6 @@
     <module>scm-core</module>
     <module>scm-test</module>
     <module>scm-plugins</module>
-    <module>scm-samples</module>
     <module>scm-dao-xml</module>
     <module>scm-webapp</module>
     <module>scm-server</module>
