@@ -261,6 +261,7 @@
           <localCheckout>true</localCheckout>
           <releaseProfiles>release,APIviz,doc</releaseProfiles>
           <tagNameFormat>@{project.version}</tagNameFormat>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
         </configuration>
       </plugin>
 
