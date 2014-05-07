@@ -30,7 +30,10 @@
  */
 
 
+
 package sonia.scm.api.rest;
+
+//~--- JDK imports ------------------------------------------------------------
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -38,9 +41,18 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Sebastian Sdorra
  */
-@XmlRootElement(name="result")
+@XmlRootElement(name = "result")
 public class RestActionUploadResult extends RestActionResult
 {
+
+  /**
+   * Constructs ...
+   *
+   */
+  public RestActionUploadResult()
+  {
+    this(true);
+  }
 
   /**
    * Constructs ...
