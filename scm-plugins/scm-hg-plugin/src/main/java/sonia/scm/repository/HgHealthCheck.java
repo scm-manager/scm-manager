@@ -97,4 +97,20 @@ public final class HgHealthCheck extends DirectoryHealthCheck
 
     return result;
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns {@code true} if the repository is from type mercurial.
+   *
+   *
+   * @param repository repository for the health check
+   *
+   * @return {@code true} for a mercurial repository
+   */
+  @Override
+  protected boolean isCheckResponsible(Repository repository)
+  {
+    return HgRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType());
+  }
 }
