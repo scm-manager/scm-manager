@@ -48,7 +48,7 @@ import java.io.File;
  * @since 1.39
  */
 @Extension
-public class GitHealthCheck extends DirectoryHealthCheck
+public final class GitHealthCheck extends DirectoryHealthCheck
 {
 
   /** Field description */
