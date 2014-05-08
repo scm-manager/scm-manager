@@ -40,12 +40,12 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.net.ChildFirstURLClassLoader;
+import sonia.scm.plugin.ChildFirstPluginClassLoader;
+import sonia.scm.plugin.DefaultPluginClassLoader;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.net.URL;
-import java.net.URLClassLoader;
 
 import java.util.List;
 
@@ -107,7 +107,7 @@ public final class BootstrapUtil
       {
         logger.info("using {} as plugin classloading strategy",
           STRATEGY_CHILDFIRST);
-        classLoader = new ChildFirstURLClassLoader(urls, parent);
+        classLoader = new ChildFirstPluginClassLoader(urls, parent);
       }
       else if (!STRATEGY_PARENTFIRST.equals(strategy))
       {
@@ -119,7 +119,7 @@ public final class BootstrapUtil
     {
       logger.info("using {} as plugin classloading strategy",
         STRATEGY_PARENTFIRST);
-      classLoader = new URLClassLoader(urls, parent);
+      classLoader = new DefaultPluginClassLoader(urls, parent);
     }
 
     return classLoader;
