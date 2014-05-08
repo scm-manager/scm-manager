@@ -37,7 +37,6 @@ package sonia.scm.repository;
 
 import sonia.scm.ManagerDecorator;
 import sonia.scm.Type;
-import sonia.scm.group.GroupManager;
 
 //~--- JDK imports ------------------------------------------------------------
 

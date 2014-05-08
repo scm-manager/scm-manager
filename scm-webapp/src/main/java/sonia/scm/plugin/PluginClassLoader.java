@@ -31,10 +31,6 @@
 
 package sonia.scm.plugin;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.Closeable;
-
 /**
  * The PluginClassLoader interface is mainly a marker to find the class loader
  * in a memory dump. This should make it easier to find class loader leaks.

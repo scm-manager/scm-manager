@@ -40,7 +40,6 @@ import com.google.common.io.Closeables;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
-import sonia.scm.repository.SvnUtil;
 import sonia.scm.repository.api.Command;
 
 //~--- JDK imports ------------------------------------------------------------
