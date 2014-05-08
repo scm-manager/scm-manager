@@ -235,4 +235,17 @@ public final class BootstrapUtil
   {
     context.setAttribute(CLASSLOADER, classLoader);
   }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   */
+  public static void removeClassLoader(ServletContext context)
+  {
+    context.removeAttribute(CLASSLOADER);
+  }
 }
