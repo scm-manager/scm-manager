@@ -70,7 +70,7 @@ public abstract class DirectoryHealthCheck implements HealthCheck
   private static final HealthCheckFailure DIRECTORY_DOES_NOT_EXISTS =
     new HealthCheckFailure("1oOTx803F1",
       "repository directory does not exists",
-      "The repository does not exists. Perhaps it was deleted outside of scm-manafer.");
+      "The repository does not exists. Perhaps it was deleted outside of scm-manager.");
 
   /**
    * the logger for DirectoryHealthCheck
