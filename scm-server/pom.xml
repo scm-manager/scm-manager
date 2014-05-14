@@ -56,7 +56,7 @@
       <plugin>
         <groupId>sonia.maven</groupId>
         <artifactId>appassembler-maven-plugin</artifactId>
-        <version>1.2.0.3</version>
+        <version>1.2.1.1-SNAPSHOT</version>
         <executions>
           <execution>
             <id>scm-app</id>
@@ -67,7 +67,7 @@
             </goals>
             <configuration>
               <target>${project.build.directory}/appassembler</target>
-              <assembleDirectory>${project.build.directory}/appassembler/commons-daemon/scm-server</assembleDirectory>
+              <assembleDirectory>${exploded.directory}</assembleDirectory>
               <repoPath>lib</repoPath>
               <repositoryLayout>flat</repositoryLayout>
               <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
@@ -131,7 +131,7 @@
                   <artifactId>scm-webapp</artifactId>
                   <version>${project.version}</version>
                   <type>war</type>
-                  <outputDirectory>${project.build.directory}/appassembler/commons-daemon/scm-server/var/webapp</outputDirectory>
+                  <outputDirectory>${exploded.directory}/var/webapp</outputDirectory>
                   <destFileName>scm-webapp.war</destFileName>
                 </artifactItem>
               </artifactItems>
@@ -164,8 +164,127 @@
     <finalName>scm-server</finalName>
   </build>
   
+  <profiles>
+    <profile>
+      <id>nativepkg</id>
+      
+      <build>
+        <plugins>
+          
+          <plugin>
+            <groupId>com.github.sdorra</groupId>
+            <artifactId>nativepkg-maven-plugin</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>rpm</goal>
+                </goals>
+                <phase>package</phase>
+              </execution>
+            </executions>
+            <configuration>
+              <attach>true</attach>
+              <release>${maven.build.timestamp}</release>
+              <section>devel</section>
+              <group>Development/Tools</group>
+              <vendor>SCM-Manager</vendor>
+              <license>BSD 3-Clause</license>
+              <url>www.scm-manager.org</url>
+              <summary>${project.description}</summary>
+              <packager>Sebastian Sdorra &lt;s.sdorra@gmail.com&gt;</packager>
+              <platform>
+                <architecture>noarch</architecture>
+                <os>linux</os>
+              </platform>
+              <mappings>
+                <files>
+                  <file>
+                    <path>/opt/scm-server/bin/scm-server</path>
+                    <source>${exploded.directory}/bin/scm-server</source>
+                    <mode>0744</mode>
+                  </file>
+                  <file>
+                    <path>/opt/scm-server/conf/server-config.xml</path>
+                    <source>${project.basedir}/src/main/conf/server-config.xml</source>
+                    <config>true</config>
+                  </file>
+                  <file>
+                    <path>/opt/scm-server/conf/logging.xml</path>
+                    <source>${project.basedir}/src/main/nativepkg/logging.xml</source>
+                    <config>true</config>
+                  </file>
+                  <file>
+                    <path>/opt/scm-server/libexec/jsvc-linux-i686</path>
+                    <source>${exploded.directory}/libexec/jsvc-linux-i686</source>
+                    <mode>0744</mode>
+                  </file>
+                  <file>
+                    <path>/opt/scm-server/libexec/jsvc-linux-x86_64</path>
+                    <source>${exploded.directory}/libexec/jsvc-linux-x86_64</source>
+                    <mode>0744</mode>
+                  </file>
+                  <file>
+                    <path>/opt/scm-server/var/webapp/scm-webapp.war</path>
+                    <source>${exploded.directory}/var/webapp/scm-webapp.war</source>
+                  </file>
+                  <file>
+                    <path>/opt/scm-server/var/webapp/docroot/index.html</path>
+                    <source>${basedir}/src/main/docroot/index.html</source>
+                  </file>
+                  <file>
+                    <path>/etc/default/scm-server</path>
+                    <source>${project.basedir}/src/main/nativepkg/default</source>
+                    <mode>0744</mode>
+                    <config>true</config>
+                  </file>
+                  <file>
+                    <path>/etc/init.d/scm-server</path>
+                    <source>${project.basedir}/src/main/nativepkg/rpm-init-script</source>
+                    <mode>0744</mode>
+                  </file>
+                </files>
+                <links>
+                  <link>
+                    <source>/usr/sbin/scm-server</source>
+                    <target>/opt/scm-server/bin/scm-server</target>
+                  </link>
+                  <link>
+                    <source>/opt/scm-server/var/log</source>
+                    <target>/var/log/scm</target>
+                  </link>
+                  <link>
+                    <source>/opt/scm-server/work</source>
+                    <target>/var/cache/scm/work</target>
+                  </link>
+                </links>
+                <directories>
+                  <directory>
+                    <path>/opt/scm-server/lib</path>
+                    <source>${exploded.directory}/lib</source>
+                  </directory>
+                  <directory>
+                    <path>/var/cache/scm/work</path>
+                  </directory>
+                  <directory>
+                    <path>/var/log/scm</path>
+                  </directory>
+                  <directory>
+                    <path>/var/lib/scm</path>
+                  </directory>
+                </directories>
+              </mappings>         
+            </configuration>
+          </plugin>
+          
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  
   <properties>
     <commons.daemon.version>1.0.15</commons.daemon.version>
+    <exploded.directory>${project.build.directory}/appassembler/commons-daemon/scm-server</exploded.directory>
   </properties>
 
 </project>
