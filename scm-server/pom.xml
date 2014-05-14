@@ -20,7 +20,7 @@
     <dependency>
       <groupId>commons-daemon</groupId>
       <artifactId>commons-daemon</artifactId>
-      <version>1.0.10</version>
+      <version>${commons.daemon.version}</version>
     </dependency>
 
     <dependency>
@@ -75,7 +75,7 @@
                 <daemon>
 
                   <id>scm-server</id>
-                  <version>1.0.10</version>
+                  <version>${commons.daemon.version}</version>
                   <mainClass>sonia.scm.server.ScmServerDaemon</mainClass>
                   <platforms>
                     <platform>commons-daemon</platform>
@@ -163,5 +163,9 @@
 
     <finalName>scm-server</finalName>
   </build>
+  
+  <properties>
+    <commons.daemon.version>1.0.15</commons.daemon.version>
+  </properties>
 
 </project>
