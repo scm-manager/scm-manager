@@ -178,6 +178,7 @@
             <executions>
               <execution>
                 <goals>
+                  <goal>deb</goal>
                   <goal>rpm</goal>
                 </goals>
                 <phase>package</phase>
@@ -197,6 +198,7 @@
                 <architecture>noarch</architecture>
                 <os>linux</os>
               </platform>
+              <rpmPreInstallScript>${project.basedir}/src/main/nativepkg/rpm-create-user</rpmPreInstallScript>
               <mappings>
                 <files>
                   <file>
@@ -246,10 +248,6 @@
                 </files>
                 <links>
                   <link>
-                    <source>/usr/sbin/scm-server</source>
-                    <target>/opt/scm-server/bin/scm-server</target>
-                  </link>
-                  <link>
                     <source>/opt/scm-server/var/log</source>
                     <target>/var/log/scm</target>
                   </link>
@@ -265,12 +263,21 @@
                   </directory>
                   <directory>
                     <path>/var/cache/scm/work</path>
+                    <uname>scm</uname>
+                    <gname>scm</gname>
+                    <dirMode>0700</dirMode>
                   </directory>
                   <directory>
                     <path>/var/log/scm</path>
+                    <uname>root</uname>
+                    <gname>scm</gname>
+                    <dirMode>0770</dirMode>
                   </directory>
                   <directory>
                     <path>/var/lib/scm</path>
+                    <uname>scm</uname>
+                    <gname>scm</gname>
+                    <dirMode>0700</dirMode>
                   </directory>
                 </directories>
               </mappings>         

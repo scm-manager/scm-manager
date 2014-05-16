@@ -33,10 +33,10 @@
 PORT=8080
 
 # change user
-# USER=scm
+USER=scm
 
 # home of scm-manager
-SCM_HOME=/var/lib/scm
+export SCM_HOME=/var/lib/scm
 
 # alternative jvm path
 JAVA_HOME="/usr/lib/jvm/jre"
