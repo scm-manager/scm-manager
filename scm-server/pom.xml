@@ -198,7 +198,9 @@
                 <architecture>noarch</architecture>
                 <os>linux</os>
               </platform>
-              <rpmPreInstallScript>${project.basedir}/src/main/nativepkg/rpm-create-user</rpmPreInstallScript>
+              <scripts>
+                <postInstall>${project.basedir}/src/main/nativepkg/create-user</postInstall>
+              </scripts>
               <mappings>
                 <files>
                   <file>
@@ -242,7 +244,7 @@
                   </file>
                   <file>
                     <path>/etc/init.d/scm-server</path>
-                    <source>${project.basedir}/src/main/nativepkg/rpm-init-script</source>
+                    <source>${project.basedir}/src/main/nativepkg/init-script</source>
                     <mode>0744</mode>
                   </file>
                 </files>
@@ -269,7 +271,7 @@
                   </directory>
                   <directory>
                     <path>/var/log/scm</path>
-                    <uname>root</uname>
+                    <uname>scm</uname>
                     <gname>scm</gname>
                     <dirMode>0770</dirMode>
                   </directory>
