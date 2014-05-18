@@ -43,6 +43,7 @@ import com.google.inject.servlet.ServletModule;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 
 import org.apache.shiro.authz.permission.PermissionResolver;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,6 +73,8 @@ import sonia.scm.plugin.PluginManager;
 import sonia.scm.repository.ChangesetViewerUtil;
 import sonia.scm.repository.DefaultRepositoryManager;
 import sonia.scm.repository.DefaultRepositoryProvider;
+import sonia.scm.repository.HealthCheckContextListener;
+import sonia.scm.repository.LastModifiedUpdateListener;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryBrowserUtil;
 import sonia.scm.repository.RepositoryDAO;
@@ -141,7 +144,6 @@ import sonia.scm.web.security.WebSecurityContext;
 
 //~--- JDK imports ------------------------------------------------------------
 
-
 import com.sun.jersey.api.core.PackagesResourceConfig;
 import com.sun.jersey.api.core.ResourceConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
@@ -154,8 +156,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import sonia.scm.repository.HealthCheckContextListener;
-import sonia.scm.repository.LastModifiedUpdateListener;
 
 /**
  *
@@ -277,7 +277,7 @@ public class ScmServletModule extends ServletModule
     bind(CipherHandler.class).toInstance(cu.getCipherHandler());
     bind(EncryptionHandler.class, MessageDigestEncryptionHandler.class);
     bind(FileSystem.class, DefaultFileSystem.class);
-    
+
     // bind health check stuff
     bind(HealthCheckContextListener.class);
 
@@ -378,7 +378,7 @@ public class ScmServletModule extends ServletModule
     bind(TemplateEngine.class).annotatedWith(DefaultEngine.class).to(
       MustacheTemplateEngine.class);
     bind(TemplateEngineFactory.class);
-    
+
     // bind events
     bind(LastModifiedUpdateListener.class);
 
@@ -395,6 +395,7 @@ public class ScmServletModule extends ServletModule
      */
     params.put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE.toString());
     params.put(ResourceConfig.FEATURE_REDIRECT, Boolean.TRUE.toString());
+    params.put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.TRUE.toString());
     params.put(ServletContainer.RESOURCE_CONFIG_CLASS,
       UriExtensionsConfig.class.getName());
 
