@@ -94,10 +94,10 @@ public class ScmServer extends Thread
     {
       if (!initialized)
       {
-        server.join();
+        init();
       }
 
-      server.start();
+      server.join();
     }
     catch (Exception ex)
     {
