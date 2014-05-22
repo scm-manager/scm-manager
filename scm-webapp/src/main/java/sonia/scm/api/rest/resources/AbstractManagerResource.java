@@ -196,7 +196,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
       }
       catch (Exception ex)
       {
-        logger.error("error during create", ex);
+        logger.error("error during delete", ex);
         response = createErrorResonse(ex);
       }
     }
@@ -230,7 +230,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
     }
     catch (ScmSecurityException ex)
     {
-      logger.warn("delete not allowd", ex);
+      logger.warn("update not allowd", ex);
       response = Response.status(Response.Status.FORBIDDEN).build();
     }
     catch (Exception ex)
