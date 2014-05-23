@@ -84,7 +84,7 @@ public class GitRepositoryViewer
   public static final String MIMETYPE_HTML = "text/html";
 
   /** Field description */
-  public static final String RESOURCE_GITINDEX = "sonia/scm/git.index.mustache";
+  public static final String RESOURCE_GITINDEX = "/sonia/scm/git.index.mustache";
 
   /** Field description */
   private static final int CHANGESET_PER_BRANCH = 10;

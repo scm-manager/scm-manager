@@ -78,7 +78,7 @@ public class SvnCollectionRenderer implements CollectionRenderer
 
   /** Field description */
   private static final String RESOURCE_SVNINDEX =
-    "sonia/scm/svn.index.mustache";
+    "/sonia/scm/svn.index.mustache";
 
   /**
    * the logger for SvnCollectionRenderer
