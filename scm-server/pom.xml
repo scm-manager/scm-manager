@@ -186,6 +186,7 @@
             </executions>
             <configuration>
               <attach>true</attach>
+              <classifier>all</classifier>
               <release>${maven.build.timestamp}</release>
               <section>devel</section>
               <group>Development/Tools</group>
