@@ -200,7 +200,7 @@
                 <os>linux</os>
               </platform>
               <scripts>
-                <postInstall>${project.basedir}/src/main/nativepkg/create-user</postInstall>
+                <preInstall>${project.basedir}/src/main/nativepkg/create-user</preInstall>
               </scripts>
               <mappings>
                 <files>
