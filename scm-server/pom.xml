@@ -101,6 +101,10 @@
                           <name>darwin.arch.enable</name>
                           <value>false</value>
                         </property>
+                        <property>
+                          <name>windows.service.dependencies</name>
+                          <value>Tcpip</value>
+                        </property>
                       </configuration>
 
                     </generatorConfiguration>
