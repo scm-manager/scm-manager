@@ -86,15 +86,14 @@ public class IndentXMLStreamWriterTest
 
     String content = baos.toString();
 
-    //J-
-    Assert.assertEquals(
-      "<?xml version=\"1.0\" ?>\n" +
-      "<root>\n" +
-      "    <message>Hello</message>\n" +
-      "</root>\n", 
-      content
-    );
-    //J
+    StringBuilder buffer = new StringBuilder("<?xml version=\"1.0\" ?>");
+    buffer.append(IndentXMLStreamWriter.LINE_SEPARATOR);
+    buffer.append("<root>").append(IndentXMLStreamWriter.LINE_SEPARATOR);
+    buffer.append("    <message>Hello</message>");
+    buffer.append(IndentXMLStreamWriter.LINE_SEPARATOR);
+    buffer.append("</root>").append(IndentXMLStreamWriter.LINE_SEPARATOR);
+    
+    Assert.assertEquals(buffer.toString(), content);
   }
   
   

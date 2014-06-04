@@ -35,22 +35,27 @@ package sonia.scm.boot;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.util.ClassLoaders;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.Closeable;
 import java.io.File;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import java.util.LinkedList;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
@@ -89,7 +94,27 @@ public class BootstrapListener implements ServletContextListener
   {
     if (scmContextListener != null)
     {
+      logger.info("destroy scm context listener");
       scmContextListener.contextDestroyed(sce);
+    }
+
+    ServletContext servletContext = sce.getServletContext();
+    ClassLoader classLoader = BootstrapUtil.getClassLoader(servletContext);
+
+    if (classLoader != null)
+    {
+      if (classLoader instanceof Closeable)
+      {
+        logger.info("close plugin class loader");
+        IOUtil.close((Closeable) classLoader);
+      }
+
+      logger.debug("remove plugin class loader from servlet context");
+      BootstrapUtil.removeClassLoader(servletContext);
+    }
+    else
+    {
+      logger.debug("plugin class loader is not available");
     }
   }
 
@@ -110,6 +135,44 @@ public class BootstrapListener implements ServletContextListener
         context.getStage());
     }
 
+    ClassLoader classLoader = createClassLoader(context);
+
+    if (classLoader != null)
+    {
+      if (logger.isInfoEnabled())
+      {
+        logger.info("try to use ScmBootstrapClassLoader");
+      }
+
+      scmContextListener = BootstrapUtil.loadClass(classLoader,
+        ServletContextListener.class, LISTENER);
+      BootstrapUtil.setClassLoader(sce.getServletContext(), classLoader);
+    }
+
+    if (scmContextListener == null)
+    {
+      if (logger.isWarnEnabled())
+      {
+        logger.warn("fallback to default classloader");
+      }
+
+      scmContextListener =
+        BootstrapUtil.loadClass(ServletContextListener.class, LISTENER);
+    }
+
+    initializeContext(classLoader, scmContextListener, sce);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param context
+   *
+   * @return
+   */
+  private ClassLoader createClassLoader(SCMContextProvider context)
+  {
     ClassLoader classLoader = null;
     File pluginDirectory = new File(context.getBaseDirectory(),
                              PLUGIN_DIRECTORY);
@@ -144,31 +207,7 @@ public class BootstrapListener implements ServletContextListener
       logger.debug("no plugin directory found");
     }
 
-    if (classLoader != null)
-    {
-      if (logger.isInfoEnabled())
-      {
-        logger.info("try to use ScmBootstrapClassLoader");
-      }
-
-      scmContextListener = BootstrapUtil.loadClass(classLoader,
-        ServletContextListener.class, LISTENER);
-      Thread.currentThread().setContextClassLoader(classLoader);
-      BootstrapUtil.setClassLoader(sce.getServletContext(), classLoader);
-    }
-
-    if (scmContextListener == null)
-    {
-      if (logger.isWarnEnabled())
-      {
-        logger.warn("fallback to default classloader");
-      }
-
-      scmContextListener =
-        BootstrapUtil.loadClass(ServletContextListener.class, LISTENER);
-    }
-
-    scmContextListener.contextInitialized(sce);
+    return classLoader;
   }
 
   /**
@@ -188,7 +227,7 @@ public class BootstrapListener implements ServletContextListener
       logger.debug("create classloader from plugin classpath");
     }
 
-    List<URL> classpathURLs = new LinkedList<URL>();
+    List<URL> classpathURLs = Lists.newLinkedList();
 
     for (String path : classpath)
     {
@@ -224,32 +263,36 @@ public class BootstrapListener implements ServletContextListener
     }
 
     return BootstrapUtil.createClassLoader(classpathURLs,
-      getParentClassLoader());
+      ClassLoaders.getContextClassLoader(BootstrapListener.class));
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
    *
    *
-   * @return
+   * @param classLoader
+   * @param listener
+   * @param sce
    */
-  private ClassLoader getParentClassLoader()
+  private void initializeContext(ClassLoader classLoader,
+    ServletContextListener listener, ServletContextEvent sce)
   {
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
 
-    if (classLoader == null)
+    try
     {
-      if (logger.isWarnEnabled())
+      if (classLoader != null)
       {
-        logger.warn("could not use context classloader, try to use default");
+        Thread.currentThread().setContextClassLoader(classLoader);
       }
 
-      classLoader = BootstrapListener.class.getClassLoader();
+      logger.info("initialize scm context listener");
+      listener.contextInitialized(sce);
     }
-
-    return classLoader;
+    finally
+    {
+      Thread.currentThread().setContextClassLoader(oldClassLoader);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------

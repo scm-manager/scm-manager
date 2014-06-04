@@ -42,7 +42,6 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgContextProvider;
 import sonia.scm.repository.HgHookManager;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 /**
  *

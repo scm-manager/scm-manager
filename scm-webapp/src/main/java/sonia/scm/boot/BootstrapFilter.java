@@ -72,12 +72,23 @@ public class BootstrapFilter implements Filter
   @Override
   public void destroy()
   {
-    if (classLoader != null)
-    {
-      Thread.currentThread().setContextClassLoader(classLoader);
-    }
+    ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
 
-    guiceFilter.destroy();
+    try
+    {
+      if (classLoader != null)
+      {
+        Thread.currentThread().setContextClassLoader(classLoader);
+      }
+
+      logger.debug("destroy guice filter");
+
+      guiceFilter.destroy();
+    }
+    finally
+    {
+      Thread.currentThread().setContextClassLoader(oldClassLoader);
+    }
   }
 
   /**
@@ -93,15 +104,24 @@ public class BootstrapFilter implements Filter
    */
   @Override
   public void doFilter(ServletRequest request, ServletResponse response,
-                       FilterChain chain)
-          throws IOException, ServletException
+    FilterChain chain)
+    throws IOException, ServletException
   {
-    if (classLoader != null)
-    {
-      Thread.currentThread().setContextClassLoader(classLoader);
-    }
+    ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
 
-    guiceFilter.doFilter(request, response, chain);
+    try
+    {
+      if (classLoader != null)
+      {
+        Thread.currentThread().setContextClassLoader(classLoader);
+      }
+
+      guiceFilter.doFilter(request, response, chain);
+    }
+    finally
+    {
+      Thread.currentThread().setContextClassLoader(oldClassLoader);
+    }
   }
 
   /**

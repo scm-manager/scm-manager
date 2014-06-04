@@ -34,6 +34,7 @@ package sonia.scm.xml;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -48,7 +49,8 @@ public final class IndentXMLStreamWriter implements XMLStreamWriter
 {
 
   /** line separator */
-  private static final String LINE_SEPARATOR =
+  @VisibleForTesting
+  static final String LINE_SEPARATOR =
     System.getProperty("line.separator");
 
   //~--- constructors ---------------------------------------------------------

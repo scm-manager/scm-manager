@@ -35,6 +35,8 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -107,6 +109,21 @@ public class DefaultCipherHandler implements CipherHandler
   //~--- constructors ---------------------------------------------------------
 
   /**
+   * Constructs a new DefaultCipherHandler. Note this constructor is only for
+   * unit tests.
+   *
+   *
+   * @param key
+   *
+   * @since 1.38
+   */
+  @VisibleForTesting
+  protected DefaultCipherHandler(String key)
+  {
+    this.key = key.toCharArray();
+  }
+
+  /**
    * Constructs ...
    *
    *
@@ -116,7 +133,7 @@ public class DefaultCipherHandler implements CipherHandler
    *
    */
   public DefaultCipherHandler(SCMContextProvider context,
-                              KeyGenerator keyGenerator)
+    KeyGenerator keyGenerator)
   {
     File configDirectory = new File(context.getBaseDirectory(), "config");
 
@@ -178,7 +195,7 @@ public class DefaultCipherHandler implements CipherHandler
 
       System.arraycopy(encodedInput, 0, salt, 0, SALT_LENGTH);
       System.arraycopy(encodedInput, SALT_LENGTH, encoded, 0,
-                       encodedInput.length - SALT_LENGTH);
+        encodedInput.length - SALT_LENGTH);
 
       IvParameterSpec iv = new IvParameterSpec(salt);
       SecretKey secretKey = buildSecretKey(plainKey);
@@ -245,7 +262,7 @@ public class DefaultCipherHandler implements CipherHandler
 
       System.arraycopy(salt, 0, result, 0, SALT_LENGTH);
       System.arraycopy(encodedInput, 0, result, SALT_LENGTH,
-                       result.length - SALT_LENGTH);
+        result.length - SALT_LENGTH);
       res = new String(Base64.encode(result), ENCODING);
     }
     catch (Exception ex)
@@ -270,7 +287,7 @@ public class DefaultCipherHandler implements CipherHandler
    * @throws UnsupportedEncodingException
    */
   private SecretKey buildSecretKey(char[] plainKey)
-          throws UnsupportedEncodingException, NoSuchAlgorithmException
+    throws UnsupportedEncodingException, NoSuchAlgorithmException
   {
     byte[] raw = new String(plainKey).getBytes(ENCODING);
     MessageDigest digest = MessageDigest.getInstance(DIGEST_TYPE);

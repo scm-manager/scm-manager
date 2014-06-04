@@ -92,12 +92,23 @@ public class ScmServer extends Thread
   {
     try
     {
-      server.start();
+      if (!initialized)
+      {
+        init();
+      }
+
       server.join();
     }
     catch (Exception ex)
     {
-      throw new RuntimeException(ex);
+      if (ex instanceof ScmServerException)
+      {
+        throw(ScmServerException) ex;
+      }
+      else
+      {
+        throw new ScmServerException("could not start scm-server", ex);
+      }
     }
   }
 
@@ -110,6 +121,7 @@ public class ScmServer extends Thread
     try
     {
       server.setStopAtShutdown(true);
+      initialized = false;
     }
     catch (Exception ex)
     {
@@ -117,7 +129,27 @@ public class ScmServer extends Thread
     }
   }
 
+  /**
+   * Method description
+   *
+   */
+  void init()
+  {
+    try
+    {
+      server.start();
+      initialized = true;
+    }
+    catch (Exception ex)
+    {
+      throw new ScmServerException("could not initialize server", ex);
+    }
+  }
+
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private boolean initialized = false;
 
   /** Field description */
   private Server server = new Server();

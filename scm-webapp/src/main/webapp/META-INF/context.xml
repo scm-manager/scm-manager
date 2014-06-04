@@ -31,4 +31,4 @@
 
 
 -->
-<Context antiJARLocking="true" path="/scm"/>
+<Context path="/scm"/>

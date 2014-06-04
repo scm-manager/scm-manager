@@ -75,7 +75,7 @@ public class SvnServletModule extends ServletModule
     Map<String, String> parameters = new HashMap<String, String>();
 
     parameters.put(PARAMETER_SVN_PARENTPATH,
-                   System.getProperty("java.io.tmpdir"));
+      System.getProperty("java.io.tmpdir"));
     serve(PATTERN_SVN).with(SvnDAVServlet.class, parameters);
   }
 }
