@@ -59,6 +59,8 @@
   <logger name="sonia.scm.util.ServiceUtil" level="WARN" />
   <logger name="sonia.scm.plugin.ext.DefaultAnnotationScanner" level="INFO" />
   
+  <logger name="sonia.scm.web.cgi.DefaultCGIExecutor" level="DEBUG" />
+  
   <!-- aether -->
   <!--
   <logger name="org.sonatype.aether" level="TRACE" />
