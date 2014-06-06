@@ -101,7 +101,7 @@ import javax.xml.transform.stream.StreamResult;
  */
 @SuppressWarnings({ "Since16", "Since15" })
 @MetaInfServices(Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
 @SupportedAnnotationTypes("*")
 public final class ScmAnnotationProcessor extends AbstractProcessor
 {

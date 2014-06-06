@@ -33,33 +33,86 @@ package sonia.scm.plugin;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.util.Set;
+import java.nio.file.Path;
 
 /**
+ * Wrapper for a {@link Plugin}. The wrapper holds the directory and the 
+ * {@link ClassLoader}, which is able to load plugin classes.
  *
  * @author Sebastian Sdorra
+ * @since 2.0.0
  */
-public class CoreDependencyFilter extends AbstractDependencyFilter
+public final class PluginWrapper
 {
 
-  /** Field description */
-  private static final String CORE_DEPENDENCIES = "/config/dependencies.list";
+  /**
+   * Constructs a new plugin wrapper.
+   *
+   * @param plugin wrapped plugin
+   * @param classLoader plugin class loader
+   * @param directory plugin directory
+   */
+  public PluginWrapper(Plugin plugin, ClassLoader classLoader, Path directory)
+  {
+    this.plugin = plugin;
+    this.classLoader = classLoader;
+    this.directory = directory;
+  }
 
-  //~--- methods --------------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns plugin class loader.
    *
    *
-   * @return
-   *
-   * @throws IOException
+   * @return plugin class loader
    */
-  @Override
-  protected Set<String> loadExcludeSet() throws IOException
+  public ClassLoader getClassLoader()
   {
-    return DependencyFilters.loadDependencySet(CORE_DEPENDENCIES);
+    return classLoader;
   }
+
+  /**
+   * Returns plugin directory.
+   *
+   *
+   * @return plugin directory
+   */
+  public Path getDirectory()
+  {
+    return directory;
+  }
+
+  /**
+   * Returns the id of the plugin.
+   *
+   *
+   * @return id of plugin
+   */
+  public String getId()
+  {
+    return plugin.getInformation().getId();
+  }
+
+  /**
+   * Returns the plugin.
+   *
+   *
+   * @return plugin
+   */
+  public Plugin getPlugin()
+  {
+    return plugin;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** plugin class loader */
+  private final ClassLoader classLoader;
+
+  /** plugin directory */
+  private final Path directory;
+
+  /** plugin */
+  private final Plugin plugin;
 }

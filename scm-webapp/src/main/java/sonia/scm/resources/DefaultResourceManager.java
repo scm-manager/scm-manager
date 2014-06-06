@@ -30,10 +30,12 @@
  */
 
 
+
 package sonia.scm.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -46,7 +48,6 @@ import sonia.scm.plugin.PluginLoader;
 
 import java.io.IOException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,8 +80,7 @@ public class DefaultResourceManager extends AbstractResourceManager
    */
   @Inject
   public DefaultResourceManager(ServletContext servletContext,
-                                PluginLoader pluginLoader,
-                                Set<ResourceHandler> resourceHandlers)
+    PluginLoader pluginLoader, Set<ResourceHandler> resourceHandlers)
   {
     super(servletContext, pluginLoader, resourceHandlers);
   }
@@ -100,12 +100,12 @@ public class DefaultResourceManager extends AbstractResourceManager
 
     try
     {
-      Resource resource = new DefaultResource(servletContext, resources,
-                            new ArrayList<ResourceHandler>(resourceHandlers),
+      Resource resource = new DefaultResource(servletContext, pluginLoader,
+                            resources, Lists.newArrayList(resourceHandlers),
                             ResourceType.SCRIPT);
 
       resourceMap.put(new ResourceKey(resource.getName(), ResourceType.SCRIPT),
-                      resource);
+        resource);
     }
     catch (IOException ex)
     {

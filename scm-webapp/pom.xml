@@ -55,25 +55,7 @@
       <artifactId>scm-dao-xml</artifactId>
       <version>2.0.0-SNAPSHOT</version>
     </dependency>
-
-    <dependency>
-      <groupId>sonia.scm.plugins</groupId>
-      <artifactId>scm-hg-plugin</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>sonia.scm.plugins</groupId>
-      <artifactId>scm-svn-plugin</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-    </dependency>
-
-    <dependency>
-      <groupId>sonia.scm.plugins</groupId>
-      <artifactId>scm-git-plugin</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-    </dependency>
-    
+        
     <!-- security -->
 
     <dependency>
@@ -220,44 +202,6 @@
       <artifactId>compiler</artifactId>
       <version>${mustache.version}</version>
     </dependency>
-
-    <!-- aether -->
-
-    <dependency>
-      <groupId>org.sonatype.aether</groupId>
-      <artifactId>aether-api</artifactId>
-      <version>${aether.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.sonatype.aether</groupId>
-      <artifactId>aether-impl</artifactId>
-      <version>${aether.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-aether-provider</artifactId>
-      <version>${maven.version}</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>plexus-component-annotations</artifactId>
-          <groupId>org.codehaus.plexus</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.sonatype.aether</groupId>
-      <artifactId>aether-connector-asynchttpclient</artifactId>
-      <version>${aether.version}</version>
-    </dependency>
-    
-    <dependency>
-      <groupId>org.sonatype.aether</groupId>
-      <artifactId>aether-connector-file</artifactId>
-      <version>${aether.version}</version>
-    </dependency>
     
     <!-- rest documentation -->
     
@@ -364,7 +308,6 @@
   </dependencies>
 
   <build>
-
     <plugins>
     
       <plugin>
@@ -388,7 +331,6 @@
           <strictCheck>true</strictCheck>
         </configuration>
       </plugin>
-      
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -404,6 +346,42 @@
               <includeScope>runtime</includeScope>
               <outputFile>${project.build.directory}/classes/config/dependencies.list</outputFile>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>sonia.scm.maven</groupId>
+        <artifactId>smp-maven-plugin</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <configuration>
+          <artifactItems>
+            <artifactItem>
+              <groupId>sonia.scm.plugins</groupId>
+              <artifactId>scm-hg-plugin</artifactId>
+              <version>2.0.0-SNAPSHOT</version>
+              <type>smp</type>
+            </artifactItem>
+            <artifactItem>
+              <groupId>sonia.scm.plugins</groupId>
+              <artifactId>scm-svn-plugin</artifactId>
+              <version>2.0.0-SNAPSHOT</version>
+              <type>smp</type>
+            </artifactItem>
+            <artifactItem>
+              <groupId>sonia.scm.plugins</groupId>
+              <artifactId>scm-git-plugin</artifactId>
+              <version>2.0.0-SNAPSHOT</version>
+              <type>smp</type>
+            </artifactItem>
+          </artifactItems>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>copy-core-plugins</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>
@@ -452,7 +430,7 @@
           </webResources>
         </configuration>
       </plugin>
-
+      
       <plugin>
         <groupId>sonia.maven</groupId>
         <artifactId>change-env</artifactId>

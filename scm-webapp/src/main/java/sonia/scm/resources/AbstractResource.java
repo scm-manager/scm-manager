@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,7 +38,7 @@ package sonia.scm.resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.boot.BootstrapUtil;
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -72,14 +73,16 @@ public abstract class AbstractResource implements Resource
    *
    *
    * @param servletContext
+   * @param pluginLoader
    * @param resources
    * @param resourceHandlers
    */
   public AbstractResource(ServletContext servletContext,
-                          List<String> resources,
-                          List<ResourceHandler> resourceHandlers)
+    PluginLoader pluginLoader, List<String> resources,
+    List<ResourceHandler> resourceHandlers)
   {
     this.servletContext = servletContext;
+    this.pluginLoader = pluginLoader;
     this.resources = resources;
     this.resourceHandlers = resourceHandlers;
   }
@@ -128,7 +131,7 @@ public abstract class AbstractResource implements Resource
    * @throws IOException
    */
   private void appendResource(OutputStream stream, String resource)
-          throws IOException
+    throws IOException
   {
     InputStream input = getResourceAsStream(resource);
 
@@ -152,7 +155,7 @@ public abstract class AbstractResource implements Resource
    * @throws IOException
    */
   private void appendResource(InputStream input, OutputStream stream)
-          throws IOException
+    throws IOException
   {
     if (input != null)
     {
@@ -180,7 +183,7 @@ public abstract class AbstractResource implements Resource
   private InputStream getResourceAsStream(String resource)
   {
     InputStream input = null;
-    ClassLoader classLoader = BootstrapUtil.getClassLoader(servletContext);
+    ClassLoader classLoader = pluginLoader.getUberClassLoader();
 
     if (classLoader != null)
     {
@@ -203,6 +206,9 @@ public abstract class AbstractResource implements Resource
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final PluginLoader pluginLoader;
 
   /** Field description */
   protected List<ResourceHandler> resourceHandlers;

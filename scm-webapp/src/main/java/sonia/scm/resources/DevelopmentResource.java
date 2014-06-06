@@ -30,10 +30,12 @@
  */
 
 
+
 package sonia.scm.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -58,17 +60,17 @@ public class DevelopmentResource extends AbstractResource
    *
    *
    * @param servletContext
+   * @param pluginLoader
    * @param resources
    * @param resourceHandlers
    * @param name
    * @param type
    */
   public DevelopmentResource(ServletContext servletContext,
-                             List<String> resources,
-                             List<ResourceHandler> resourceHandlers,
-                             String name, ResourceType type)
+    PluginLoader pluginLoader, List<String> resources,
+    List<ResourceHandler> resourceHandlers, String name, ResourceType type)
   {
-    super(servletContext, resources, resourceHandlers);
+    super(servletContext, pluginLoader, resources, resourceHandlers);
     this.type = type;
 
     if (name.startsWith(HttpUtil.SEPARATOR_PATH))

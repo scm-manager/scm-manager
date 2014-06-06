@@ -46,6 +46,7 @@ import org.apache.shiro.guice.web.ShiroWebModule;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.DefaultPluginLoader;
+import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.repository.HealthCheckContextListener;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.StoreFactory;
@@ -57,6 +58,7 @@ import sonia.scm.web.security.AuthenticationManager;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -67,6 +69,21 @@ import javax.servlet.ServletContextEvent;
  */
 public class ScmContextListener extends GuiceServletContextListener
 {
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param parent
+   * @param plugins
+   */
+  public ScmContextListener(ClassLoader parent, Set<PluginWrapper> plugins)
+  {
+    this.parent = parent;
+    this.plugins = plugins;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -156,6 +173,17 @@ public class ScmContextListener extends GuiceServletContextListener
    *
    * @return
    */
+  public Set<PluginWrapper> getPlugins()
+  {
+    return plugins;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   @Override
   protected Injector getInjector()
   {
@@ -181,9 +209,10 @@ public class ScmContextListener extends GuiceServletContextListener
    */
   private Injector getDefaultInjector(ServletContext servletContext)
   {
-    DefaultPluginLoader pluginLoader = new DefaultPluginLoader();
+    DefaultPluginLoader pluginLoader = new DefaultPluginLoader(parent, plugins);
 
-    ClassOverrides overrides = ClassOverrides.findOverrides();
+    ClassOverrides overrides =
+      ClassOverrides.findOverrides(pluginLoader.getUberClassLoader());
     ScmServletModule main = new ScmServletModule(pluginLoader, overrides);
     List<Module> moduleList = Lists.newArrayList();
 
@@ -213,6 +242,12 @@ public class ScmContextListener extends GuiceServletContextListener
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final ClassLoader parent;
+
+  /** Field description */
+  private final Set<PluginWrapper> plugins;
 
   /** Field description */
   private Injector globalInjector;

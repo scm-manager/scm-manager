@@ -13,39 +13,16 @@
   <artifactId>scm-hg-plugin</artifactId>
   <version>2.0.0-SNAPSHOT</version>
   <name>scm-hg-plugin</name>
+  <packaging>smp</packaging>
   <url>https://bitbucket.org/sdorra/scm-manager</url>
   <description>Plugin for the version control system Mercurial</description>
 
   <dependencies>
-
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-      <version>${servlet.version}</version>
-      <scope>provided</scope>
-    </dependency>
     
     <dependency>
       <groupId>com.aragost.javahg</groupId>
       <artifactId>javahg</artifactId>
       <version>0.8-SNAPSHOT</version>
-    </dependency>
-    
-    <!-- fix conflict with javahg -->
-    
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>${guava.version}</version>
-    </dependency>
-
-    <!-- test scope -->
-
-    <dependency>
-      <groupId>sonia.scm</groupId>
-      <artifactId>scm-test</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
-      <scope>test</scope>
     </dependency>
     
   </dependencies>

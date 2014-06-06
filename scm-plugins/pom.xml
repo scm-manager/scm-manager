@@ -24,9 +24,17 @@
   <dependencies>
 
     <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+      <version>${servlet.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
       <version>2.0.0-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
     
     <!-- annotation processor -->
@@ -36,6 +44,15 @@
       <artifactId>scm-annotation-processor</artifactId>
       <version>2.0.0-SNAPSHOT</version>
       <scope>provided</scope>
+    </dependency>
+    
+    <!-- test scope -->
+
+    <dependency>
+      <groupId>sonia.scm</groupId>
+      <artifactId>scm-test</artifactId>
+      <version>2.0.0-SNAPSHOT</version>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
@@ -67,8 +84,12 @@
       
       <plugin>
         <groupId>sonia.scm.maven</groupId>
-        <artifactId>scm-maven-plugin</artifactId>
-        <version>2.0.0-SNAPSHOT</version>
+        <artifactId>smp-maven-plugin</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <extensions>true</extensions>
+        <configuration>
+          <disableCompression>true</disableCompression>
+        </configuration>
         <executions>
           <execution>
             <id>fix-descriptor</id>

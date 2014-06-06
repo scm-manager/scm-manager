@@ -189,7 +189,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
    *
    * @since 1.26
    */
-  boolean isDisableLastCommit()
+  public boolean isDisableLastCommit()
   {
     return disableLastCommit;
   }
@@ -202,7 +202,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
    *
    * @since 1.26
    */
-  boolean isDisableSubRepositoryDetection()
+  public boolean isDisableSubRepositoryDetection()
   {
     return disableSubRepositoryDetection;
   }
@@ -215,7 +215,7 @@ public final class BrowseCommandRequest extends FileBaseCommandRequest
    *
    * @since 1.26
    */
-  boolean isRecursive()
+  public boolean isRecursive()
   {
     return recursive;
   }

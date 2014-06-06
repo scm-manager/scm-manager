@@ -38,12 +38,12 @@
          metadata-complete="true">
 
     <listener>
-      <listener-class>sonia.scm.boot.BootstrapListener</listener-class>
+      <listener-class>sonia.scm.boot.BootstrapContextListener</listener-class>
     </listener>
 
     <filter>
         <filter-name>guiceFilter</filter-name>
-        <filter-class>sonia.scm.boot.BootstrapFilter</filter-class>
+        <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
     </filter>
 
     <filter-mapping>

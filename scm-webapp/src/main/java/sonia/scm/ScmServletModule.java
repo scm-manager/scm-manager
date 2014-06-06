@@ -35,6 +35,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Maps;
 import com.google.inject.Provider;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
@@ -71,7 +72,6 @@ import sonia.scm.plugin.PluginManager;
 import sonia.scm.repository.DefaultRepositoryManager;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.HealthCheckContextListener;
-import sonia.scm.repository.LastModifiedUpdateListener;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryManager;
@@ -140,9 +140,7 @@ import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.sun.jersey.spi.container.servlet.ServletContainer;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -360,10 +358,11 @@ public class ScmServletModule extends JerseyServletModule
     bind(TemplateEngineFactory.class);
 
     // bind events
-    bind(LastModifiedUpdateListener.class);
-    
+    // bind(LastModifiedUpdateListener.class);
+
     // jersey
-    Map<String, String> params = new HashMap<String, String>();
+    Map<String, String> params = Maps.newHashMap();
+
     /*
      * params.put("com.sun.jersey.spi.container.ContainerRequestFilters",
      *          "com.sun.jersey.api.container.filter.LoggingFilter");
@@ -375,13 +374,13 @@ public class ScmServletModule extends JerseyServletModule
     params.put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE.toString());
     params.put(ResourceConfig.FEATURE_REDIRECT, Boolean.TRUE.toString());
     params.put(ResourceConfig.FEATURE_DISABLE_WADL, Boolean.TRUE.toString());
-    
+
     /*
      * TODO remove UriExtensionsConfig and PackagesResourceConfig
      * to stop jersey classpath scanning
      */
     params.put(ServletContainer.RESOURCE_CONFIG_CLASS,
-      UriExtensionsConfig.class.getName());      
+      UriExtensionsConfig.class.getName());
     params.put(PackagesResourceConfig.PROPERTY_PACKAGES, "unbound");
     serve(PATTERN_RESTAPI).with(GuiceContainer.class, params);
   }

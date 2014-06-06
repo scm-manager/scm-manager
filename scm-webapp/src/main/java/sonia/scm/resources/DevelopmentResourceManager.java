@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -72,8 +73,7 @@ public class DevelopmentResourceManager extends AbstractResourceManager
    */
   @Inject
   public DevelopmentResourceManager(ServletContext servletContext,
-                                    PluginLoader pluginLoader,
-                                    Set<ResourceHandler> resourceHandlers)
+    PluginLoader pluginLoader, Set<ResourceHandler> resourceHandlers)
   {
     super(servletContext, pluginLoader, resourceHandlers);
   }
@@ -94,12 +94,12 @@ public class DevelopmentResourceManager extends AbstractResourceManager
 
     for (String script : scripts)
     {
-      Resource resource = new DevelopmentResource(servletContext,
+      Resource resource = new DevelopmentResource(servletContext, pluginLoader,
                             Arrays.asList(script), Collections.EMPTY_LIST,
                             script, ResourceType.SCRIPT);
 
       resourceMap.put(new ResourceKey(resource.getName(), ResourceType.SCRIPT),
-                      resource);
+        resource);
     }
 
     for (ResourceHandler handler : resourceHandlers)
@@ -113,9 +113,9 @@ public class DevelopmentResourceManager extends AbstractResourceManager
 
       name = PREFIX_HANDLER.concat(name);
       resourceMap.put(new ResourceKey(name, ResourceType.SCRIPT),
-                      new DevelopmentResource(servletContext,
-                        Collections.EMPTY_LIST, Arrays.asList(handler), name,
-                        ResourceType.SCRIPT));
+        new DevelopmentResource(servletContext, pluginLoader,
+          Collections.EMPTY_LIST, Arrays.asList(handler), name,
+            ResourceType.SCRIPT));
     }
   }
 }

@@ -46,6 +46,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import javax.servlet.ServletContext;
+import sonia.scm.plugin.PluginLoader;
 
 /**
  *
@@ -65,12 +66,12 @@ public class DefaultResource extends AbstractResource
    *
    * @throws IOException
    */
-  public DefaultResource(ServletContext servletContext, List<String> resources,
+  public DefaultResource(ServletContext servletContext, PluginLoader pluginLoader, List<String> resources,
                          List<ResourceHandler> resourceHandlers,
                          ResourceType type)
           throws IOException
   {
-    super(servletContext, resources, resourceHandlers);
+    super(servletContext, pluginLoader, resources, resourceHandlers);
     this.type = type;
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -31,6 +31,10 @@
 
 package sonia.scm.util;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Preconditions;
+
 /**
  * Util methods for {@link ClassLoader}s.
  *
@@ -45,6 +49,38 @@ public final class ClassLoaders
    *
    */
   private ClassLoaders() {}
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Executes a {@link Runnable} with the given {@link ClassLoader} as context 
+   * ClassLoader ({@link Thread#setContextClassLoader(ClassLoader)}).
+   *
+   *
+   * @param classLoader ClassLoader for context
+   * @param runnable runnable
+   * 
+   * @since 2.0.0
+   */
+  public static void executeInContext(ClassLoader classLoader,
+    Runnable runnable)
+  {
+    Preconditions.checkNotNull(classLoader, "ClassLoader is required");
+    Preconditions.checkNotNull(runnable, "runnable is required");
+
+    ClassLoader ctxCl = Thread.currentThread().getContextClassLoader();
+
+    Thread.currentThread().setContextClassLoader(ctxCl);
+
+    try
+    {
+      runnable.run();
+    }
+    finally
+    {
+      Thread.currentThread().setContextClassLoader(ctxCl);
+    }
+  }
 
   //~--- get methods ----------------------------------------------------------
 

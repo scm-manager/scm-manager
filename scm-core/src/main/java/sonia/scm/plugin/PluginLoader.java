@@ -82,4 +82,12 @@ public interface PluginLoader
    * @return
    */
   public Collection<Plugin> getInstalledPlugins();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public ClassLoader getUberClassLoader();
 }

@@ -119,7 +119,7 @@ public final class DiffCommandRequest extends FileBaseCommandRequest
    * 
    * @since 1.34
    */
-  DiffFormat getFormat()
+  public DiffFormat getFormat()
   {
     return format;
   }

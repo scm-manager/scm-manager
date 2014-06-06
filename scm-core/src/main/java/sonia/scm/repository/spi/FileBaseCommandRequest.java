@@ -154,7 +154,7 @@ public abstract class FileBaseCommandRequest
    *
    * @return
    */
-  String getPath()
+  public String getPath()
   {
     return path;
   }
@@ -165,7 +165,7 @@ public abstract class FileBaseCommandRequest
    *
    * @return
    */
-  String getRevision()
+  public String getRevision()
   {
     return revision;
   }

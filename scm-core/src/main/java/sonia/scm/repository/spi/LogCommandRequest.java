@@ -212,7 +212,7 @@ public final class LogCommandRequest implements Serializable, Resetable
    *
    * @return
    */
-  String getBranch()
+  public String getBranch()
   {
     return branch;
   }
@@ -223,7 +223,7 @@ public final class LogCommandRequest implements Serializable, Resetable
    *
    * @return
    */
-  String getEndChangeset()
+  public String getEndChangeset()
   {
     return endChangeset;
   }
@@ -234,7 +234,7 @@ public final class LogCommandRequest implements Serializable, Resetable
    *
    * @return
    */
-  int getPagingLimit()
+  public int getPagingLimit()
   {
     return pagingLimit;
   }
@@ -245,7 +245,7 @@ public final class LogCommandRequest implements Serializable, Resetable
    *
    * @return
    */
-  int getPagingStart()
+  public int getPagingStart()
   {
     return pagingStart;
   }
@@ -256,7 +256,7 @@ public final class LogCommandRequest implements Serializable, Resetable
    *
    * @return
    */
-  String getPath()
+  public String getPath()
   {
     return path;
   }
@@ -267,7 +267,7 @@ public final class LogCommandRequest implements Serializable, Resetable
    *
    * @return
    */
-  String getStartChangeset()
+  public String getStartChangeset()
   {
     return startChangeset;
   }
@@ -278,7 +278,7 @@ public final class LogCommandRequest implements Serializable, Resetable
    *
    * @return
    */
-  boolean isPagingUnlimited()
+  public boolean isPagingUnlimited()
   {
     return pagingLimit < 0;
   }

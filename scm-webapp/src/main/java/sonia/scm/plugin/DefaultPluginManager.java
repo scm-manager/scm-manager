@@ -86,6 +86,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 /**
+ * TODO replace aether stuff
  *
  * @author Sebastian Sdorra
  */
@@ -199,7 +200,7 @@ public class DefaultPluginManager implements PluginManager
 
     PluginCenter center = getPluginCenter();
 
-    pluginHandler.install(id);
+    // pluginHandler.install(id);
 
     for (PluginInformation plugin : center.getPlugins())
     {
@@ -248,7 +249,7 @@ public class DefaultPluginManager implements PluginManager
         throw new PluginConditionFailedException(condition);
       }
 
-      AetherPluginHandler aph = new AetherPluginHandler(this, context,
+      /*AetherPluginHandler aph = new AetherPluginHandler(this, context,
                                   configuration);
       Collection<PluginRepository> repositories =
         Sets.newHashSet(new PluginRepository("package-repository",
@@ -256,7 +257,7 @@ public class DefaultPluginManager implements PluginManager
 
       aph.setPluginRepositories(repositories);
 
-      aph.install(plugin.getInformation().getId());
+      aph.install(plugin.getInformation().getId());*/
       plugin.getInformation().setState(PluginState.INSTALLED);
       installedPlugins.put(plugin.getInformation().getId(), plugin);
 
@@ -301,12 +302,12 @@ public class DefaultPluginManager implements PluginManager
       throw new PluginNotInstalledException(id.concat(" is not install"));
     }
 
-    if (pluginHandler == null)
+    /*if (pluginHandler == null)
     {
       getPluginCenter();
     }
 
-    pluginHandler.uninstall(id);
+    pluginHandler.uninstall(id);*/
     installedPlugins.remove(id);
     preparePlugins(getPluginCenter());
   }
@@ -643,13 +644,13 @@ public class DefaultPluginManager implements PluginManager
             preparePlugins(center);
             cache.put(PluginCenter.class.getName(), center);
 
-            if (pluginHandler == null)
+            /*if (pluginHandler == null)
             {
               pluginHandler = new AetherPluginHandler(this,
                 SCMContext.getContext(), configuration);
             }
 
-            pluginHandler.setPluginRepositories(center.getRepositories());
+            pluginHandler.setPluginRepositories(center.getRepositories());*/
           }
           catch (Exception ex)
           {
@@ -766,9 +767,6 @@ public class DefaultPluginManager implements PluginManager
 
   /** Field description */
   private final Map<String, Plugin> installedPlugins;
-
-  /** Field description */
-  private AetherPluginHandler pluginHandler;
 
   /** Field description */
   private Unmarshaller unmarshaller;

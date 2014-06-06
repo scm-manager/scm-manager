@@ -46,8 +46,6 @@ import com.google.inject.Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.util.ClassLoaders;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
@@ -83,24 +81,33 @@ public class DefaultPluginLoader implements PluginLoader
   /**
    * Constructs ...
    *
+   * @param parent
+   * @param wrappedPlugins
    */
-  public DefaultPluginLoader()
+  public DefaultPluginLoader(ClassLoader parent,
+    Set<PluginWrapper> wrappedPlugins)
   {
-    ClassLoader classLoader =
-      ClassLoaders.getContextClassLoader(DefaultPluginLoader.class);
+    this.uberClassLoader = new UberClassLoader(parent, wrappedPlugins);
 
     try
     {
       JAXBContext context = JAXBContext.newInstance(ScmModule.class,
                               Plugin.class);
 
-      modules = getInstalled(classLoader, context, PATH_MODULECONFIG);
-      plugins = getInstalled(classLoader, context, PATH_PLUGINCONFIG);
+      modules = getInstalled(parent, context, PATH_MODULECONFIG);
+
+      // hidden plugins ???
+      Set<Plugin> ips = getInstalled(parent, context, PATH_PLUGINCONFIG);
+      Builder<Plugin> builder = ImmutableSet.builder();
+
+      builder.addAll(ips);
+      builder.addAll(Plugins.unwrap(wrappedPlugins));
+      plugins = builder.build();
 
       appendExtensions(multiple, single, extensions, modules);
       appendExtensions(multiple, single, extensions, plugins);
     }
-    catch (Exception ex)
+    catch (IOException | JAXBException ex)
     {
       throw Throwables.propagate(ex);
     }
@@ -169,6 +176,18 @@ public class DefaultPluginLoader implements PluginLoader
   public Collection<Plugin> getInstalledPlugins()
   {
     return plugins;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public ClassLoader getUberClassLoader()
+  {
+    return uberClassLoader;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -258,6 +277,9 @@ public class DefaultPluginLoader implements PluginLoader
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final ClassLoader uberClassLoader;
 
   /** Field description */
   private Set<ScmModule> modules;

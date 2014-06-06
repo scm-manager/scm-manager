@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -42,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -50,7 +52,6 @@ import java.io.IOException;
 
 import java.net.URL;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -87,42 +88,54 @@ public class ClassOverrides implements Iterable<ClassOverride>
    * Method description
    *
    *
+   *
+   * @param classLoader
    * @return
    *
    */
-  public static ClassOverrides findOverrides()
+  public static ClassOverrides findOverrides(ClassLoader classLoader)
   {
-    ClassOverrides overrides = new ClassOverrides();
+    final ClassOverrides overrides = new ClassOverrides();
 
     try
     {
-      Enumeration<URL> overridesEnm =
-        getClassLoader().getResources(OVERRIDE_PATH);
-      JAXBContext context = JAXBContext.newInstance(ClassOverrides.class);
+      final Enumeration<URL> overridesEnm =
+        classLoader.getResources(OVERRIDE_PATH);
+      final JAXBContext context = JAXBContext.newInstance(ClassOverrides.class);
 
-      while (overridesEnm.hasMoreElements())
+      ClassLoaders.executeInContext(classLoader, new Runnable()
       {
-        URL overrideUrl = overridesEnm.nextElement();
 
-        if (logger.isInfoEnabled())
+        @Override
+        public void run()
         {
-          logger.info("load override from {}", overrideUrl.toExternalForm());
-        }
+          while (overridesEnm.hasMoreElements())
+          {
+            URL overrideUrl = overridesEnm.nextElement();
 
-        try
-        {
-          ClassOverrides co =
-            (ClassOverrides) context.createUnmarshaller().unmarshal(
-                overrideUrl);
+            if (logger.isInfoEnabled())
+            {
+              logger.info("load override from {}",
+                overrideUrl.toExternalForm());
+            }
 
-          overrides.append(co);
+            try
+            {
+              ClassOverrides co =
+                (ClassOverrides) context.createUnmarshaller().unmarshal(
+                  overrideUrl);
+
+              overrides.append(co);
+            }
+            catch (JAXBException ex)
+            {
+              logger.error(
+                "could not load ".concat(overrideUrl.toExternalForm()), ex);
+            }
+          }
         }
-        catch (Exception ex)
-        {
-          logger.error("could not load ".concat(overrideUrl.toExternalForm()),
-                       ex);
-        }
-      }
+      });
+
     }
     catch (IOException ex)
     {
@@ -135,28 +148,6 @@ public class ClassOverrides implements Iterable<ClassOverride>
 
     return overrides;
   }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private static ClassLoader getClassLoader()
-  {
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-    if (classLoader == null)
-    {
-      classLoader = ClassOverrides.class.getClassLoader();
-    }
-
-    return classLoader;
-  }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -207,7 +198,7 @@ public class ClassOverrides implements Iterable<ClassOverride>
   {
     if (moduleClasses == null)
     {
-      moduleClasses = new ArrayList<Class<? extends Module>>();
+      moduleClasses = Lists.newArrayList();
     }
 
     return moduleClasses;
@@ -227,7 +218,7 @@ public class ClassOverrides implements Iterable<ClassOverride>
     if (Util.isNotEmpty(moduleClasses))
     {
       modules = Lists.transform(moduleClasses,
-                                new Function<Class<? extends Module>, Module>()
+        new Function<Class<? extends Module>, Module>()
       {
         @Override
         public Module apply(Class<? extends Module> moduleClass)
@@ -238,11 +229,11 @@ public class ClassOverrides implements Iterable<ClassOverride>
           {
             module = moduleClass.newInstance();
           }
-          catch (Exception ex)
+          catch (IllegalAccessException | InstantiationException ex)
           {
             logger.error(
-                "could not create module instance of ".concat(
-                  moduleClass.getName()), ex);
+              "could not create module instance of ".concat(
+                moduleClass.getName()), ex);
           }
 
           return module;
@@ -292,7 +283,7 @@ public class ClassOverrides implements Iterable<ClassOverride>
   {
     if (overrides == null)
     {
-      overrides = new ArrayList<ClassOverride>();
+      overrides = Lists.newArrayList();
     }
 
     return overrides;
