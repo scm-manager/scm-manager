@@ -194,7 +194,7 @@ Sonia.security.PermissionsPanel = Ext.extend(Ext.Panel, {
   
   modifyPermission: function(id, record){
     Ext.Ajax.request({
-      url: restUrl + this.baseUrl + '/' + id + '.json',
+      url: restUrl + this.baseUrl + '/' + encodeURIComponent(id) + '.json',
       method: 'PUT',
       jsonData: record.data,
       scope: this,
@@ -207,7 +207,7 @@ Sonia.security.PermissionsPanel = Ext.extend(Ext.Panel, {
 
   removePermission: function(store, record){
     Ext.Ajax.request({
-      url: restUrl + this.baseUrl + '/' + record.get('id')  + '.json',
+      url: restUrl + this.baseUrl + '/' + encodeURIComponent(record.get('id'))  + '.json',
       method: 'DELETE',
       scope: this,
       success: function(){
