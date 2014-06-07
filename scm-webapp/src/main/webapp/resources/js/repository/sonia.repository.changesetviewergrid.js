@@ -35,7 +35,7 @@ Sonia.repository.ChangesetViewerGrid = Ext.extend(Ext.grid.GridPanel, {
 
   repository: null,
   
-  mailTemplate: '&lt;<a href="mailto: {0}">{0}</a>&gt;',
+  mailTemplate: '&lt;<a href="mailto:{0}">{0}</a>&gt;',
   
   changesetMetadataTemplate: '<div class="cs-desc">{0}</div>\
                               <div class="cs-author">{1}</div>\
