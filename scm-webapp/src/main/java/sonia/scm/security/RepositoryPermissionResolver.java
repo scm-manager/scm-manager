@@ -36,6 +36,7 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 
 import org.apache.shiro.authz.permission.PermissionResolver;
 
@@ -76,23 +77,32 @@ public class RepositoryPermissionResolver implements PermissionResolver
   public RepositoryPermission resolvePermission(String permissionString)
   {
     RepositoryPermission permission = null;
-    Iterator<String> permissionIt =
-      Splitter.on(':').omitEmptyStrings().trimResults().split(
-        permissionString).iterator();
 
-    if (permissionIt.hasNext())
+    if (!Strings.isNullOrEmpty(permissionString))
     {
-      String type = permissionIt.next();
+      Iterator<String> permissionIt =
+        Splitter.on(':').omitEmptyStrings().trimResults().split(
+          permissionString).iterator();
 
-      if (type.equals(RepositoryPermission.TYPE))
+      if (permissionIt.hasNext())
       {
-        permission = createRepositoryPermission(permissionIt);
+        String type = permissionIt.next();
+
+        if (type.equals(RepositoryPermission.TYPE))
+        {
+          permission = createRepositoryPermission(permissionIt);
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("permission '{}' is not a repository permission",
+            permissionString);
+        }
       }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("permission '{}' is not a repository permission",
-          permissionString);
-      }
+    }
+    else
+    {
+      logger.warn(
+        "permision string is empty, could not resolve empty permission");
     }
 
     return permission;
