@@ -59,7 +59,7 @@ Sonia.group.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
     // this.updateMembers(group);
     this.fireEvent('preUpdate', group);
 
-    var url = restUrl + 'groups/' + group.name + '.json';
+    var url = restUrl + 'groups/' + encodeURIComponent(group.name) + '.json';
     var el = this.el;
     var tid = setTimeout( function(){el.mask('Loading ...');}, 100);
 

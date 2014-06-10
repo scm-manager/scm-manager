@@ -136,7 +136,7 @@ Sonia.user.Grid = Ext.extend(Sonia.rest.Grid, {
     }
     Sonia.user.setEditPanel([panel,{
       xtype: 'permissionsPanel',
-      baseUrl: 'security/permission/user/' + item.name
+      baseUrl: 'security/permission/user/' + encodeURIComponent(item.name)
     }]);
   }
 

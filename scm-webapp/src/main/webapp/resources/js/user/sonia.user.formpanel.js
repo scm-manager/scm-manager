@@ -129,7 +129,7 @@ Sonia.user.FormPanel = Ext.extend(Sonia.rest.FormPanel,{
       console.debug( 'update user: ' + item.name );
     }
     this.fixRequest(item);
-    var url = restUrl + 'users/' + item.name + '.json';
+    var url = restUrl + 'users/' + encodeURIComponent(item.name) + '.json';
     Ext.Ajax.request({
       url: url,
       jsonData: item,
