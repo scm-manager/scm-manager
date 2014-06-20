@@ -259,7 +259,7 @@
         <configuration>
           <pushChanges>false</pushChanges>
           <localCheckout>true</localCheckout>
-          <releaseProfiles>release,APIviz,doc</releaseProfiles>
+          <releaseProfiles>release,APIviz,doc,nativepkg</releaseProfiles>
           <tagNameFormat>@{project.version}</tagNameFormat>
           <autoVersionSubmodules>true</autoVersionSubmodules>
         </configuration>
