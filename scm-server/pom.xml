@@ -178,7 +178,7 @@
           <plugin>
             <groupId>com.github.sdorra</groupId>
             <artifactId>nativepkg-maven-plugin</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
             <executions>
               <execution>
                 <goals>
@@ -269,22 +269,32 @@
                     <source>${exploded.directory}/lib</source>
                   </directory>
                   <directory>
+                    <path>/var/cache/scm</path>
+                    <uname>scm</uname>
+                    <gname>scm</gname>
+                    <dirMode>0700</dirMode>
+                    <addParents>false</addParents>
+                  </directory>
+                  <directory>
                     <path>/var/cache/scm/work</path>
                     <uname>scm</uname>
                     <gname>scm</gname>
                     <dirMode>0700</dirMode>
+                    <addParents>false</addParents>
                   </directory>
                   <directory>
                     <path>/var/log/scm</path>
                     <uname>scm</uname>
                     <gname>scm</gname>
                     <dirMode>0770</dirMode>
+                    <addParents>false</addParents>
                   </directory>
                   <directory>
                     <path>/var/lib/scm</path>
                     <uname>scm</uname>
                     <gname>scm</gname>
                     <dirMode>0700</dirMode>
+                    <addParents>false</addParents>
                   </directory>
                 </directories>
               </mappings>
