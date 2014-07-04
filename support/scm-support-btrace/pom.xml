@@ -4,12 +4,12 @@
   <parent>
     <groupId>sonia.scm.support</groupId>
     <artifactId>scm-support</artifactId>
-    <version>1.40</version>
+    <version>1.41-SNAPSHOT</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-support-btrace</artifactId>
-  <version>1.40</version>
+  <version>1.41-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>scm-support-btrace</name>
   
@@ -18,7 +18,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-core</artifactId>
-      <version>1.40</version>
+      <version>1.41-SNAPSHOT</version>
     </dependency>
     
     <!-- servlet api -->
