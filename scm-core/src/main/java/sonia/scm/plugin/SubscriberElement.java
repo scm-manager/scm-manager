@@ -34,11 +34,11 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -64,11 +64,14 @@ public final class SubscriberElement
    *
    * @param subscriberClass
    * @param eventClass
+   * @param description
    */
-  public SubscriberElement(Class<?> subscriberClass, Class<?> eventClass)
+  public SubscriberElement(Class<?> subscriberClass, Class<?> eventClass,
+    String description)
   {
     this.subscriberClass = subscriberClass;
     this.eventClass = eventClass;
+    this.description = description;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -97,7 +100,8 @@ public final class SubscriberElement
     final SubscriberElement other = (SubscriberElement) obj;
 
     return Objects.equal(eventClass, other.eventClass)
-      && Objects.equal(subscriberClass, other.subscriberClass);
+      && Objects.equal(subscriberClass, other.subscriberClass)
+      && Objects.equal(description, other.description);
   }
 
   /**
@@ -109,7 +113,7 @@ public final class SubscriberElement
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(eventClass, subscriberClass);
+    return Objects.hashCode(eventClass, subscriberClass, description);
   }
 
   /**
@@ -125,11 +129,23 @@ public final class SubscriberElement
     return Objects.toStringHelper(this)
                   .add("eventClass", eventClass)
                   .add("subscriberClass", subscriberClass)
+                  .add("description", description)
                   .toString();
     //J+
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getDescription()
+  {
+    return description;
+  }
 
   /**
    * Method description
@@ -154,6 +170,9 @@ public final class SubscriberElement
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String description;
 
   /** Field description */
   @XmlElement(name = "event")

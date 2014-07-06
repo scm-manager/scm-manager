@@ -77,9 +77,9 @@ public class ScmModuleTest
     assertThat(
       module.getExtensionPoints(), 
       containsInAnyOrder(
-        new ExtensionPointElement(String.class, true), 
-        new ExtensionPointElement(Long.class, true), 
-        new ExtensionPointElement(Integer.class, false)
+        new ExtensionPointElement(String.class, "ext01", true), 
+        new ExtensionPointElement(Long.class, "ext02", true), 
+        new ExtensionPointElement(Integer.class, "ext03", false)
       )
     );
     assertThat(
@@ -92,8 +92,8 @@ public class ScmModuleTest
     assertThat(
       module.getSubscribers(), 
       containsInAnyOrder(
-        new SubscriberElement(Long.class, Integer.class), 
-        new SubscriberElement(Double.class, Float.class)
+        new SubscriberElement(Long.class, Integer.class, "sub01"), 
+        new SubscriberElement(Double.class, Float.class, "sub02")
       )
     );
     assertThat(

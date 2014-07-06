@@ -33,6 +33,8 @@ package sonia.scm.annotation;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -45,6 +47,9 @@ public class SubscriberElement implements DescriptorElement
 
   /** Field description */
   private static final String EL_CLASS = "class";
+
+  /** Field description */
+  private static final String EL_DESCRIPTION = "description";
 
   /** Field description */
   private static final String EL_EVENT = "event";
@@ -60,11 +65,14 @@ public class SubscriberElement implements DescriptorElement
    *
    * @param subscriberType
    * @param eventType
+   * @param description
    */
-  public SubscriberElement(String subscriberType, String eventType)
+  public SubscriberElement(String subscriberType, String eventType,
+    String description)
   {
     this.subscriberType = subscriberType;
     this.eventType = eventType;
+    this.description = description;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -89,10 +97,22 @@ public class SubscriberElement implements DescriptorElement
 
     eventEl.setTextContent(eventType);
     subscriberEl.appendChild(eventEl);
+
+    if (!Strings.isNullOrEmpty(description))
+    {
+      Element descriptionEl = doc.createElement(EL_DESCRIPTION);
+
+      descriptionEl.setTextContent(description);
+      subscriberEl.appendChild(descriptionEl);
+    }
+
     root.appendChild(subscriberEl);
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final String description;
 
   /** Field description */
   private final String eventType;

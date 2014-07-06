@@ -33,6 +33,8 @@ package sonia.scm.annotation;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -50,6 +52,9 @@ public class ClassSetElement implements DescriptorElement
 
   /** Field description */
   private static final String EL_CLASS = "class";
+
+  /** Field description */
+  private static final String EL_DESCRIPTION = "description";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -87,9 +92,18 @@ public class ClassSetElement implements DescriptorElement
 
       classEl.setTextContent(c.className);
 
+      if (!Strings.isNullOrEmpty(c.description))
+      {
+        Element descriptionEl = doc.createElement(EL_DESCRIPTION);
+
+        descriptionEl.setTextContent(c.description);
+        element.appendChild(descriptionEl);
+      }
+
       for (Entry<String, String> e : c.attributes.entrySet())
       {
         Element attr = doc.createElement(e.getKey());
+
         attr.setTextContent(e.getValue());
         element.appendChild(attr);
       }
@@ -98,7 +112,6 @@ public class ClassSetElement implements DescriptorElement
       root.appendChild(element);
     }
 
-    
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -118,11 +131,14 @@ public class ClassSetElement implements DescriptorElement
      *
      *
      * @param className
+     * @param description
      * @param attributes
      */
-    public ClassWithAttributes(String className, Map<String, String> attributes)
+    public ClassWithAttributes(String className, String description,
+      Map<String, String> attributes)
     {
       this.className = className;
+      this.description = description;
       this.attributes = attributes;
     }
 
@@ -133,6 +149,9 @@ public class ClassSetElement implements DescriptorElement
 
     /** Field description */
     private final String className;
+
+    /** Field description */
+    private final String description;
   }
 
 

@@ -5,11 +5,13 @@
   <subscriber>
     <class>java.lang.Long</class>
     <event>java.lang.Integer</event>
+    <description>sub01</description>
   </subscriber>
 
   <subscriber>
     <class>java.lang.Double</class>
     <event>java.lang.Float</event>
+    <description>sub02</description>
   </subscriber>
 
   <!-- events -->
@@ -26,15 +28,18 @@
 
   <extension-point>
     <class>java.lang.String</class>
+    <description>ext01</description>
   </extension-point>
 
   <extension-point>
     <class>java.lang.Integer</class>
+    <description>ext03</description>
     <multi>false</multi>
   </extension-point>
 
   <extension-point>
     <class>java.lang.Long</class>
+    <description>ext02</description>
     <multi>true</multi>
   </extension-point>
 

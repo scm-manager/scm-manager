@@ -118,7 +118,13 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
   private static final String DESCRIPTOR_PLUGIN = "META-INF/scm/plugin.xml";
 
   /** Field description */
+  private static final String EL_MODULE = "module";
+
+  /** Field description */
   private static final String EMPTY = "";
+
+  /** Field description */
+  private static final String PROPERTY_VALUE = "yes";
 
   /** Field description */
   private static final Set<String> SUBSCRIBE_ANNOTATIONS =
@@ -289,7 +295,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
       else
       {
         doc = builder.newDocument();
-        doc.appendChild(doc.createElement("module"));
+        doc.appendChild(doc.createElement(EL_MODULE));
       }
     }
     catch (ParserConfigurationException | SAXException | IOException
@@ -344,9 +350,22 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
       if (e.getKind().isClass() || e.getKind().isInterface())
       {
         TypeElement type = (TypeElement) e;
+        String desc = processingEnv.getElementUtils().getDocComment(type);
 
-        classes.add(new ClassWithAttributes(type.getQualifiedName().toString(),
-          getAttributesFromAnnotation(e, annotation)));
+        if (desc != null)
+        {
+          desc = desc.trim();
+        }
+
+        //J-
+        classes.add(
+          new ClassWithAttributes(
+            type.getQualifiedName().toString(),
+            desc,
+            getAttributesFromAnnotation(e, annotation)
+          )
+        );
+        //J+
       }
     }
 
@@ -376,9 +395,23 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
         {
           VariableElement param = params.get(0);
 
+          Element clazz = el.getEnclosingElement();
+          String desc = processingEnv.getElementUtils().getDocComment(clazz);
+
+          if (desc != null)
+          {
+            desc = desc.trim();
+          }
+
+          //J-
           descriptorElements.add(
             new SubscriberElement(
-              el.getEnclosingElement().toString(), param.asType().toString()));
+              clazz.toString(), 
+              param.asType().toString(),
+              desc
+            )
+          );
+          //J+
         }
       }
     }
@@ -438,7 +471,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
       Transformer transformer =
         TransformerFactory.newInstance().newTransformer();
 
-      transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+      transformer.setOutputProperty(OutputKeys.INDENT, PROPERTY_VALUE);
       transformer.transform(new DOMSource(doc), new StreamResult(writer));
     }
     catch (IOException | IllegalArgumentException | TransformerException ex)

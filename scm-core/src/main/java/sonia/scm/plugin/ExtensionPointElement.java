@@ -63,11 +63,14 @@ public final class ExtensionPointElement
    *
    *
    * @param clazz
+   * @param description
    * @param multiple
    */
-  public ExtensionPointElement(Class<?> clazz, boolean multiple)
+  public ExtensionPointElement(Class<?> clazz, String description,
+    boolean multiple)
   {
     this.clazz = clazz;
+    this.description = description;
     this.multiple = multiple;
   }
 
@@ -97,6 +100,7 @@ public final class ExtensionPointElement
     final ExtensionPointElement other = (ExtensionPointElement) obj;
 
     return Objects.equal(clazz, other.clazz)
+      && Objects.equal(description, other.description)
       && Objects.equal(multiple, other.multiple);
   }
 
@@ -109,7 +113,7 @@ public final class ExtensionPointElement
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(clazz, multiple);
+    return Objects.hashCode(clazz, description, multiple);
   }
 
   /**
@@ -124,6 +128,7 @@ public final class ExtensionPointElement
     //J-
     return Objects.toStringHelper(this)
                   .add("class", clazz)
+                  .add("description", description)
                   .add("multiple", multiple)
                   .toString();
     //J+
@@ -148,6 +153,17 @@ public final class ExtensionPointElement
    *
    * @return
    */
+  public String getDescription()
+  {
+    return description;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public boolean isMultiple()
   {
     return multiple;
@@ -158,6 +174,9 @@ public final class ExtensionPointElement
   /** Field description */
   @XmlElement(name = "class")
   private Class<?> clazz;
+
+  /** Field description */
+  private String description;
 
   /** Field description */
   @XmlElement(name = "multi")

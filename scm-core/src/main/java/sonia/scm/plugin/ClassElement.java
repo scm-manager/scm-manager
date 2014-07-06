@@ -58,10 +58,12 @@ public final class ClassElement
    *
    *
    * @param clazz
+   * @param description
    */
-  public ClassElement(Class<?> clazz)
+  public ClassElement(Class<?> clazz, String description)
   {
     this.clazz = clazz;
+    this.description = description;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -89,7 +91,8 @@ public final class ClassElement
 
     final ClassElement other = (ClassElement) obj;
 
-    return Objects.equal(clazz, other.clazz);
+    return Objects.equal(clazz, other.clazz)
+      && Objects.equal(description, other.description);
   }
 
   /**
@@ -101,7 +104,7 @@ public final class ClassElement
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(clazz);
+    return Objects.hashCode(clazz, description);
   }
 
   /**
@@ -116,6 +119,7 @@ public final class ClassElement
     //J-
     return Objects.toStringHelper(this)
                   .add("clazz", clazz)
+                  .add("description", description)
                   .toString();
     //J+
   }
@@ -133,9 +137,23 @@ public final class ClassElement
     return clazz;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getDescription()
+  {
+    return description;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   @XmlElement(name = "class")
   private Class<?> clazz;
+
+  /** Field description */
+  private String description;
 }
