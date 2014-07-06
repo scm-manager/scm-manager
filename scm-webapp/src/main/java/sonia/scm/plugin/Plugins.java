@@ -11,7 +11,6 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -22,19 +21,12 @@ import java.nio.file.Path;
 
 import java.util.Set;
 
-import javax.servlet.ServletContext;
-
 /**
  *
  * @author Sebastian Sdorra
  */
 public final class Plugins
 {
-
-  /** Field description */
-  private static final String CONTEXT_VAR = "sonia.scm.plugins";
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
