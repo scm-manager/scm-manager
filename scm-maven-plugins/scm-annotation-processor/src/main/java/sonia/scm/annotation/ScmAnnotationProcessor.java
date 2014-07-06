@@ -42,7 +42,10 @@ import com.google.common.collect.Sets;
 
 import org.kohsuke.MetaInfServices;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
+
+import org.xml.sax.SAXException;
 
 import sonia.scm.annotation.ClassSetElement.ClassWithAttributes;
 import sonia.scm.plugin.PluginAnnotation;
@@ -89,8 +92,10 @@ import javax.ws.rs.ext.Provider;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -99,10 +104,10 @@ import javax.xml.transform.stream.StreamResult;
  *
  * @author Sebastian Sdorra
  */
-@SuppressWarnings({ "Since16", "Since15" })
-@MetaInfServices(Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_7)
 @SupportedAnnotationTypes("*")
+@MetaInfServices(Processor.class)
+@SuppressWarnings({ "Since16", "Since15" })
+@SupportedSourceVersion(SourceVersion.RELEASE_7)
 public final class ScmAnnotationProcessor extends AbstractProcessor
 {
 
@@ -198,8 +203,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
       }
       catch (IOException ex)
       {
-        processingEnv.getMessager().printMessage(Kind.WARNING,
-          "could not close closeable");
+        printException("could not close closeable", ex);
       }
     }
   }
@@ -288,7 +292,8 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
         doc.appendChild(doc.createElement("module"));
       }
     }
-    catch (Exception ex)
+    catch (ParserConfigurationException | SAXException | IOException
+      | DOMException ex)
     {
       printException("could not parse document", ex);
     }
@@ -407,7 +412,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
         writeDocument(doc, file);
       }
     }
-    catch (Exception ex)
+    catch (IOException ex)
     {
       printException("could not open plugin descriptor", ex);
     }
@@ -436,7 +441,7 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
       transformer.setOutputProperty(OutputKeys.INDENT, "yes");
       transformer.transform(new DOMSource(doc), new StreamResult(writer));
     }
-    catch (Exception ex)
+    catch (IOException | IllegalArgumentException | TransformerException ex)
     {
       printException("could not write document", ex);
     }
