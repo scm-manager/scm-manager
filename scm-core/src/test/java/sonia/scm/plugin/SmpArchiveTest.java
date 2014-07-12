@@ -36,6 +36,7 @@ package sonia.scm.plugin;
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
+import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
 
 import org.junit.Rule;
@@ -202,6 +203,10 @@ public class SmpArchiveTest
       {
         zos.putNextEntry(new ZipEntry(SmpArchive.PATH_DESCRIPTOR));
         Files.copy(descriptor, zos);
+        zos.closeEntry();
+        zos.putNextEntry(new ZipEntry("/META-INF/"));
+        zos.putNextEntry(new ZipEntry("/META-INF/somefile.txt"));
+        zos.write("some text".getBytes(Charsets.UTF_8));
         zos.closeEntry();
       }
     }

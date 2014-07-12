@@ -56,6 +56,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import java.net.URL;
+
 import java.nio.charset.Charset;
 
 import java.util.Collection;
@@ -74,7 +75,8 @@ public final class SmpArchive
 {
 
   /** Field description */
-  public static final String PATH_DESCRIPTOR = "/WEB-INF/classes/META-INF/scm/plugin.xml";
+  public static final String PATH_DESCRIPTOR =
+    "/WEB-INF/classes/META-INF/scm/plugin.xml";
 
   /** Field description */
   private static final String EL_ARTIFACTID = "artifactId";
@@ -145,6 +147,26 @@ public final class SmpArchive
    * Method description
    *
    *
+   * @param entry
+   *
+   * @return
+   */
+  private static String getPath(ZipEntry entry)
+  {
+    String path = entry.getName().replace("\\", "/");
+
+    if (!path.startsWith("/"))
+    {
+      path = "/".concat(path);
+    }
+
+    return path;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param map
    * @param key
    * @param <K>
@@ -189,9 +211,16 @@ public final class SmpArchive
 
         IOUtil.mkdirs(file.getParentFile());
 
-        try (FileOutputStream fos = new FileOutputStream(file))
+        if (ze.isDirectory())
         {
-          ByteStreams.copy(zis, fos);
+          IOUtil.mkdirs(file);
+        }
+        else
+        {
+          try (FileOutputStream fos = new FileOutputStream(file))
+          {
+            ByteStreams.copy(zis, fos);
+          }
         }
 
         ze = zis.getNextEntry();
@@ -264,9 +293,11 @@ public final class SmpArchive
     Document doc = null;
 
     NonClosingZipInputStream zis = null;
+
     try
     {
       zis = openNonClosing();
+
       ZipEntry entry = zis.getNextEntry();
 
       while (entry != null)
@@ -280,10 +311,11 @@ public final class SmpArchive
       }
 
       zis.closeEntry();
-    } 
-    finally 
+    }
+    finally
     {
-      if (zis != null){
+      if (zis != null)
+      {
         zis.reallyClose();
       }
     }
@@ -294,34 +326,6 @@ public final class SmpArchive
     }
 
     return doc;
-  }
-  
-  private static String getPath(ZipEntry entry)
-  {
-    String path = entry.getName().replace("\\", "/");
-    if ( ! path.startsWith("/") ){
-      path = "/".concat(path);
-    }
-    return path;
-  }
-  
-  private static class NonClosingZipInputStream extends ZipInputStream {
-
-    public NonClosingZipInputStream(InputStream in, Charset charset)
-    {
-      super(in, charset);
-    }
-
-    @Override
-    public void close() throws IOException
-    {
-      // do nothing
-    }
-    
-    public void reallyClose() throws IOException{
-      super.close();
-    }
-    
   }
 
   /**
@@ -373,7 +377,7 @@ public final class SmpArchive
   {
     return new ZipInputStream(archive.openStream(), Charsets.UTF_8);
   }
-  
+
   /**
    * Method description
    *
@@ -386,6 +390,58 @@ public final class SmpArchive
   {
     return new NonClosingZipInputStream(archive.openStream(), Charsets.UTF_8);
   }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 14/07/12
+   * @author         Enter your name here...
+   */
+  private static class NonClosingZipInputStream extends ZipInputStream
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param in
+     * @param charset
+     */
+    public NonClosingZipInputStream(InputStream in, Charset charset)
+    {
+      super(in, charset);
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @throws IOException
+     */
+    @Override
+    public void close() throws IOException
+    {
+
+      // do nothing
+    }
+
+    /**
+     * Method description
+     *
+     *
+     * @throws IOException
+     */
+    public void reallyClose() throws IOException
+    {
+      super.close();
+    }
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
