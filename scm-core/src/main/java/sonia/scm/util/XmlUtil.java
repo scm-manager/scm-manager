@@ -52,6 +52,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
+ * Util methods to handle xml files.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
@@ -66,6 +67,26 @@ public final class XmlUtil
   private XmlUtil() {}
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Create {@link Document} from {@link InputStream}.
+   *
+   *
+   * @param stream input stream
+   *
+   * @return generated document
+   *
+   *
+   * @throws IOException
+   * @throws ParserConfigurationException
+   * @throws SAXException
+   */
+  public static Document createDocument(InputStream stream)
+    throws ParserConfigurationException, SAXException, IOException
+  {
+    return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
+      stream);
+  }
 
   /**
    * Method description
@@ -90,22 +111,7 @@ public final class XmlUtil
       {
         Document doc = createDocument(input);
 
-        for (String entry : entries)
-        {
-          NodeList list = doc.getElementsByTagName(entry);
-
-          for (int i = 0; i < list.getLength(); i++)
-          {
-            Node node = list.item(i);
-            String value = node.getTextContent();
-
-            if (value != null)
-            {
-              values.put(entry, value);
-            }
-          }
-        }
-
+        values(values, doc, entries);
       }
       catch (DOMException | ParserConfigurationException | SAXException ex)
       {
@@ -120,19 +126,54 @@ public final class XmlUtil
    * Method description
    *
    *
-   * @param stream
+   * @param doc
+   * @param entries
    *
    * @return
    *
+   * @throws IOException
+   */
+  public static Multimap<String, String> values(Document doc, String... entries)
+    throws IOException
+  {
+    Multimap<String, String> values = HashMultimap.create();
+
+    if ((entries != null) && (entries.length > 0))
+    {
+      values(values, doc, entries);
+    }
+
+    return values;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param values
+   * @param doc
+   * @param entries
    *
    * @throws IOException
-   * @throws ParserConfigurationException
-   * @throws SAXException
    */
-  private static Document createDocument(InputStream stream)
-    throws ParserConfigurationException, SAXException, IOException
+  private static void values(Multimap<String, String> values, Document doc,
+    String... entries)
+    throws IOException
   {
-    return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(
-      stream);
+    for (String entry : entries)
+    {
+      NodeList list = doc.getElementsByTagName(entry);
+
+      for (int i = 0; i < list.getLength(); i++)
+      {
+        Node node = list.item(i);
+        String value = node.getTextContent();
+
+        if (value != null)
+        {
+          values.put(entry, value);
+        }
+      }
+    }
   }
 }
