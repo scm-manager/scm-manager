@@ -86,9 +86,6 @@ public class BootstrapContextListener implements ServletContextListener
   private static final String DIRECTORY_PLUGINS = "plugins";
 
   /** Field description */
-  private static final String FILE_CHECKSUM = "checksum";
-
-  /** Field description */
   private static final String PLUGIN_DIRECTORY = "/WEB-INF/plugins/";
 
   /**
@@ -172,41 +169,6 @@ public class BootstrapContextListener implements ServletContextListener
    * Method description
    *
    *
-   * @param archive
-   * @param checksum
-   * @param directory
-   * @param checksumFile
-   *
-   * @throws IOException
-   */
-  private void extract(SmpArchive archive, String checksum, File directory,
-    File checksumFile)
-    throws IOException
-  {
-    if (directory.exists())
-    {
-      logger.debug("delete directory {} for plugin extraction",
-        archive.getPluginId());
-      IOUtil.delete(directory);
-    }
-
-    IOUtil.mkdirs(directory);
-
-    logger.debug("extract plugin {}", archive.getPluginId());
-    archive.extract(directory);
-    //J-
-    com.google.common.io.Files.write(
-      checksum, 
-      checksumFile,
-      Charsets.UTF_8
-    );
-    //J+
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param context
    * @param pluginDirectory
    * @param name
@@ -223,18 +185,20 @@ public class BootstrapContextListener implements ServletContextListener
     PluginId id = archive.getPluginId();
 
     File directory = Plugins.createPluginDirectory(pluginDirectory, id);
-    File checksumFile = new File(directory, FILE_CHECKSUM);
+    File checksumFile = Plugins.getChecksumFile(directory);
 
     if (!directory.exists())
     {
       logger.warn("install plugin {}", id);
-      extract(archive, entry.getChecksum(), directory, checksumFile);
+      Plugins.extract(archive, entry.getChecksum(), directory, checksumFile,
+        true);
     }
     else if (!checksumFile.exists())
     {
       logger.warn("plugin directory {} exists without checksum file.",
         directory);
-      extract(archive, entry.getChecksum(), directory, checksumFile);
+      Plugins.extract(archive, entry.getChecksum(), directory, checksumFile,
+        true);
     }
     else
     {
@@ -247,7 +211,8 @@ public class BootstrapContextListener implements ServletContextListener
       else
       {
         logger.warn("checksum mismatch of pluing {}, start update", id);
-        extract(archive, entry.getChecksum(), directory, checksumFile);
+        Plugins.extract(archive, entry.getChecksum(), directory, checksumFile,
+          true);
       }
     }
   }

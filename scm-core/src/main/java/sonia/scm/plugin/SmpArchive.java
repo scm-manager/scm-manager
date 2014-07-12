@@ -58,6 +58,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 
 import java.util.Collection;
 import java.util.zip.ZipEntry;
@@ -126,6 +127,19 @@ public final class SmpArchive
   public static SmpArchive create(URL archive)
   {
     return create(Resources.asByteSource(archive));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param archive
+   *
+   * @return
+   */
+  public static SmpArchive create(Path archive)
+  {
+    return create(archive.toFile());
   }
 
   /**

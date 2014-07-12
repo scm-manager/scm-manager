@@ -36,15 +36,14 @@ package sonia.scm.plugin;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Sets;
+import com.google.common.hash.Hashing;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.io.ZipUnArchiver;
-import sonia.scm.util.IOUtil;
-
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -55,7 +54,10 @@ import java.nio.file.DirectoryStream.Filter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -70,13 +72,13 @@ public final class PluginProcessor
 {
 
   /** Field description */
-  private static final String DESCRIPTOR = "META-INF/scm/plugin.xml";
-
-  /** Field description */
   private static final String DIRECTORY_CLASSES = "classes";
 
   /** Field description */
   private static final String DIRECTORY_DEPENDENCIES = "lib";
+
+  /** Field description */
+  private static final String DIRECTORY_INSTALLED = ".installed";
 
   /** Field description */
   private static final String DIRECTORY_LINK = ".link";
@@ -89,6 +91,10 @@ public final class PluginProcessor
 
   /** Field description */
   private static final String EXTENSION_PLUGIN = ".smp";
+
+  /** Field description */
+  private static final String FILE_DESCRIPTOR =
+    SmpArchive.PATH_DESCRIPTOR.substring(1);
 
   /** Field description */
   private static final String GLOB_JAR = "*.jar";
@@ -110,6 +116,7 @@ public final class PluginProcessor
   public PluginProcessor(Path pluginDirectory)
   {
     this.pluginDirectory = pluginDirectory;
+    this.installedDirectory = findInstalledDirectory();
 
     try
     {
@@ -185,8 +192,6 @@ public final class PluginProcessor
         }
       }
     }
-
-    System.out.println(urls);
 
     //J-
     return new DefaultPluginClassLoader(
@@ -313,6 +318,17 @@ public final class PluginProcessor
    * Method description
    *
    *
+   * @return
+   */
+  private String createDate()
+  {
+    return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+  }
+
+  /**
+   * Method description
+   *
+   *
    *
    * @param classLoader
    * @param descriptor
@@ -357,7 +373,7 @@ public final class PluginProcessor
     throws IOException
   {
     PluginWrapper wrapper = null;
-    Path descriptor = directory.resolve(DESCRIPTOR);
+    Path descriptor = directory.resolve(FILE_DESCRIPTOR);
 
     if (Files.exists(descriptor))
     {
@@ -366,6 +382,10 @@ public final class PluginProcessor
       Plugin plugin = createPlugin(cl, descriptor);
 
       wrapper = new PluginWrapper(plugin, cl, directory);
+    }
+    else
+    {
+      logger.warn("found plugin directory without plugin descriptor");
     }
 
     return wrapper;
@@ -412,22 +432,79 @@ public final class PluginProcessor
    */
   private void extract(Iterable<Path> archives) throws IOException
   {
-
-    // TODO use SmpArchive and new path
     logger.debug("extract archives");
 
     for (Path archive : archives)
     {
+      File archiveFile = archive.toFile();
+
       logger.trace("extract archive {}", archive);
 
-      String filename = archive.getFileName().toString();
-      Path directory = pluginDirectory.resolve(filename.substring(0,
-                         filename.lastIndexOf('.')));
+      SmpArchive smp = SmpArchive.create(archive);
 
-      IOUtil.extract(archive.toFile(), directory.toFile(),
-        ZipUnArchiver.EXTENSION);
-      Files.delete(archive);
+      logger.debug("extract plugin {}", smp.getPluginId());
+
+      File directory = Plugins.createPluginDirectory(archiveFile,
+                         smp.getPluginId());
+
+      String checksum = com.google.common.io.Files.hash(archiveFile,
+                          Hashing.sha256()).toString();
+      File checksumFile = Plugins.getChecksumFile(directory);
+
+      Plugins.extract(smp, checksum, directory, checksumFile, false);
+      moveArchive(archive);
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private Path findInstalledDirectory()
+  {
+    Path directory = null;
+    Path installed = pluginDirectory.resolve(DIRECTORY_INSTALLED);
+    Path date = installed.resolve(createDate());
+
+    for (int i = 0; i < 999; i++)
+    {
+      Path dir = date.resolve(String.format("%03d", i));
+
+      if (!Files.exists(dir))
+      {
+        directory = dir;
+
+        break;
+      }
+    }
+
+    if (directory == null)
+    {
+      throw new PluginException("could not find installed directory");
+    }
+
+    return directory;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param archive
+   *
+   * @throws IOException
+   */
+  private void moveArchive(Path archive) throws IOException
+  {
+    if (!Files.exists(installedDirectory))
+    {
+      logger.debug("create installed directory {}", installedDirectory);
+      Files.createDirectories(installedDirectory);
+    }
+
+    Files.move(archive, installedDirectory.resolve(archive.getFileName()));
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -455,7 +532,7 @@ public final class PluginProcessor
     @Override
     public boolean accept(Path entry) throws IOException
     {
-      return Files.isDirectory(entry);
+      return Files.isDirectory(entry) &&!entry.getFileName().startsWith(".");
     }
   }
 
@@ -494,6 +571,9 @@ public final class PluginProcessor
 
   /** Field description */
   private final JAXBContext context;
+
+  /** Field description */
+  private final Path installedDirectory;
 
   /** Field description */
   private final Path pluginDirectory;
