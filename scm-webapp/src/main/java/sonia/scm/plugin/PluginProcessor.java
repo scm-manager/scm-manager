@@ -34,6 +34,7 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Sets;
 
 import org.slf4j.Logger;
@@ -184,7 +185,7 @@ public final class PluginProcessor
         }
       }
     }
-    
+
     System.out.println(urls);
 
     //J-
@@ -236,7 +237,7 @@ public final class PluginProcessor
 
     extract(archives);
 
-    Set<Path> directories = collect(pluginDirectory, new DirectoryFilter());
+    Set<Path> directories = collectPluginDirectories(pluginDirectory);
 
     if (logger.isDebugEnabled())
     {
@@ -276,6 +277,36 @@ public final class PluginProcessor
     }
 
     return paths;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private Set<Path> collectPluginDirectories(Path directory) throws IOException
+  {
+    Builder<Path> paths = ImmutableSet.builder();
+
+    Filter<Path> filter = new DirectoryFilter();
+
+    try (DirectoryStream<Path> parentStream = stream(directory, filter))
+    {
+      for (Path parent : parentStream)
+      {
+        try (DirectoryStream<Path> direcotries = stream(parent, filter))
+        {
+          paths.addAll(direcotries);
+        }
+      }
+    }
+
+    return paths.build();
   }
 
   /**
@@ -381,6 +412,8 @@ public final class PluginProcessor
    */
   private void extract(Iterable<Path> archives) throws IOException
   {
+
+    // TODO use SmpArchive and new path
     logger.debug("extract archives");
 
     for (Path archive : archives)

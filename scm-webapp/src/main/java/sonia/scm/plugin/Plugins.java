@@ -12,6 +12,7 @@ package sonia.scm.plugin;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
+import java.io.File;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -54,6 +55,10 @@ public final class Plugins
     PluginProcessor processor = new PluginProcessor(directory);
 
     return processor.collectPlugins(classLoader);
+  }
+  
+  public static File createPluginDirectory(File parent, PluginId id){
+    return new File(new File(parent, id.getGroupId()), id.getArtifactId());
   }
 
   /**
