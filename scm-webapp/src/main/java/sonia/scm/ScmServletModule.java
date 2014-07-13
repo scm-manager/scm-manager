@@ -55,6 +55,7 @@ import sonia.scm.event.ScmEventBus;
 import sonia.scm.filter.AdminSecurityFilter;
 import sonia.scm.filter.BaseUrlFilter;
 import sonia.scm.filter.GZipFilter;
+import sonia.scm.filter.MDCFilter;
 import sonia.scm.filter.SecurityFilter;
 import sonia.scm.group.DefaultGroupManager;
 import sonia.scm.group.GroupDAO;
@@ -359,6 +360,9 @@ public class ScmServletModule extends ServletModule
       PATTERN_DEBUG).through(ApiBasicAuthenticationFilter.class);
     filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(SecurityFilter.class);
     filter(PATTERN_CONFIG, PATTERN_ADMIN).through(AdminSecurityFilter.class);
+
+    // added mdcs for logging
+    filter(PATTERN_ALL).through(MDCFilter.class);
 
     // debug servlet
     serve(PATTERN_DEBUG).with(DebugServlet.class);
