@@ -28,6 +28,7 @@
  */
 
 
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -107,11 +108,6 @@ public final class Plugins
     return new File(new File(parent, id.getGroupId()), id.getArtifactId());
   }
 
-    /** Field description */
-  private static final String FILE_CHECKSUM = "checksum";
-
-  
-  
   /**
    * Method description
    *
@@ -143,15 +139,11 @@ public final class Plugins
 
     if (core)
     {
-      if (!new File(directory, "core").createNewFile())
+      if (!new File(directory, PluginConstants.FILE_CORE).createNewFile())
       {
         throw new IOException("could not create core plugin marker");
       }
     }
-  }
-  
-  public static File getChecksumFile(File pluginDirectory){
-    return new File(pluginDirectory, FILE_CHECKSUM);
   }
 
   /**
@@ -165,6 +157,21 @@ public final class Plugins
   public static Iterable<Plugin> unwrap(Iterable<PluginWrapper> wrapped)
   {
     return Iterables.transform(wrapped, new Unwrap());
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param pluginDirectory
+   *
+   * @return
+   */
+  public static File getChecksumFile(File pluginDirectory)
+  {
+    return new File(pluginDirectory, PluginConstants.FILE_CHECKSUM);
   }
 
   //~--- inner classes --------------------------------------------------------

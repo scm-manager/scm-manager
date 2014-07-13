@@ -36,7 +36,6 @@ package sonia.scm.plugin;
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
-import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
 
 import org.junit.Rule;
@@ -92,7 +91,7 @@ public class SmpArchiveTest
     IOUtil.mkdirs(target);
     SmpArchive.create(archive).extract(target);
 
-    File descriptor = new File(target, SmpArchive.PATH_DESCRIPTOR.substring(1));
+    File descriptor = new File(target, PluginConstants.FILE_DESCRIPTOR);
 
     assertTrue(descriptor.exists());
 
@@ -201,7 +200,7 @@ public class SmpArchiveTest
       try (ZipOutputStream zos =
         new ZipOutputStream(new FileOutputStream(archiveFile), Charsets.UTF_8))
       {
-        zos.putNextEntry(new ZipEntry(SmpArchive.PATH_DESCRIPTOR));
+        zos.putNextEntry(new ZipEntry(PluginConstants.PATH_DESCRIPTOR));
         Files.copy(descriptor, zos);
         zos.closeEntry();
         zos.putNextEntry(new ZipEntry("/META-INF/"));

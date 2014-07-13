@@ -74,20 +74,6 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public final class SmpArchive
 {
-
-  /** Field description */
-  public static final String PATH_DESCRIPTOR =
-    "/WEB-INF/classes/META-INF/scm/plugin.xml";
-
-  /** Field description */
-  private static final String EL_ARTIFACTID = "artifactId";
-
-  /** Field description */
-  private static final String EL_GROUPID = "groupId";
-
-  /** Field description */
-  private static final String EL_VERSION = "version";
-
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -316,7 +302,7 @@ public final class SmpArchive
 
       while (entry != null)
       {
-        if (PATH_DESCRIPTOR.equals(getPath(entry)))
+        if (PluginConstants.PATH_DESCRIPTOR.equals(getPath(entry)))
         {
           doc = XmlUtil.createDocument(zis);
         }
@@ -352,16 +338,23 @@ public final class SmpArchive
    */
   private PluginId createPluginId() throws IOException
   {
-    Multimap<String, String> entries = XmlUtil.values(getDescriptorDocument(),
-                                         EL_GROUPID, EL_ARTIFACTID, EL_VERSION);
-    String groupId = getSingleValue(entries, EL_GROUPID);
+    //J-
+    Multimap<String, String> entries = XmlUtil.values(
+      getDescriptorDocument(),
+      PluginConstants.EL_GROUPID,
+      PluginConstants.EL_ARTIFACTID,
+      PluginConstants.EL_VERSION
+    );
+    //J+
+    
+    String groupId = getSingleValue(entries, PluginConstants.EL_GROUPID);
 
     if (Strings.isNullOrEmpty(groupId))
     {
       throw new PluginException("could not find groupId in plugin descriptor");
     }
 
-    String artifactId = getSingleValue(entries, EL_ARTIFACTID);
+    String artifactId = getSingleValue(entries, PluginConstants.EL_ARTIFACTID);
 
     if (Strings.isNullOrEmpty(artifactId))
     {
@@ -369,7 +362,7 @@ public final class SmpArchive
         "could not find artifactId in plugin descriptor ");
     }
 
-    String version = getSingleValue(entries, EL_VERSION);
+    String version = getSingleValue(entries, PluginConstants.EL_VERSION);
 
     if (Strings.isNullOrEmpty(version))
     {

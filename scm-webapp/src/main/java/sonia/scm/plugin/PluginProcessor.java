@@ -33,13 +33,18 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSet.Builder;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import sonia.scm.plugin.ExplodedSmp.PathTransformer;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -67,6 +72,8 @@ import javax.xml.bind.JAXBException;
 /**
  *
  * @author Sebastian Sdorra
+ *
+ * TODO don't mix nio and io
  */
 public final class PluginProcessor
 {
@@ -93,8 +100,7 @@ public final class PluginProcessor
   private static final String EXTENSION_PLUGIN = ".smp";
 
   /** Field description */
-  private static final String FILE_DESCRIPTOR =
-    SmpArchive.PATH_DESCRIPTOR.substring(1);
+  private static final String FORMAT_DATE = "yyyy-MM-dd";
 
   /** Field description */
   private static final String GLOB_JAR = "*.jar";
@@ -242,15 +248,18 @@ public final class PluginProcessor
 
     extract(archives);
 
-    Set<Path> directories = collectPluginDirectories(pluginDirectory);
+    List<Path> dirs = collectPluginDirectories(pluginDirectory);
 
     if (logger.isDebugEnabled())
     {
-      logger.debug("process {} directories", directories.size());
+      logger.debug("process {} directories", dirs.size());
     }
 
+    List<ExplodedSmp> smps = Lists.transform(dirs, new PathTransformer());
+    Iterable<ExplodedSmp> smpOrdered = Ordering.natural().sortedCopy(smps);
+
     Set<PluginWrapper> pluginWrappers = createPluginWrappers(classLoader,
-                                          directories);
+                                          smpOrdered);
 
     if (logger.isDebugEnabled())
     {
@@ -294,9 +303,9 @@ public final class PluginProcessor
    *
    * @throws IOException
    */
-  private Set<Path> collectPluginDirectories(Path directory) throws IOException
+  private List<Path> collectPluginDirectories(Path directory) throws IOException
   {
-    Builder<Path> paths = ImmutableSet.builder();
+    Builder<Path> paths = ImmutableList.builder();
 
     Filter<Path> filter = new DirectoryFilter();
 
@@ -322,7 +331,7 @@ public final class PluginProcessor
    */
   private String createDate()
   {
-    return new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+    return new SimpleDateFormat(FORMAT_DATE).format(new Date());
   }
 
   /**
@@ -373,7 +382,7 @@ public final class PluginProcessor
     throws IOException
   {
     PluginWrapper wrapper = null;
-    Path descriptor = directory.resolve(FILE_DESCRIPTOR);
+    Path descriptor = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
 
     if (Files.exists(descriptor))
     {
@@ -397,21 +406,21 @@ public final class PluginProcessor
    *
    *
    * @param classLoader
-   * @param directories
+   * @param smps
    *
    * @return
    *
    * @throws IOException
    */
   private Set<PluginWrapper> createPluginWrappers(ClassLoader classLoader,
-    Iterable<Path> directories)
+    Iterable<ExplodedSmp> smps)
     throws IOException
   {
     Set<PluginWrapper> plugins = Sets.newHashSet();
 
-    for (Path directory : directories)
+    for (ExplodedSmp smp : smps)
     {
-      PluginWrapper plugin = createPluginWrapper(classLoader, directory);
+      PluginWrapper plugin = createPluginWrapper(classLoader, smp.getPath());
 
       if (plugin != null)
       {
@@ -444,7 +453,7 @@ public final class PluginProcessor
 
       logger.debug("extract plugin {}", smp.getPluginId());
 
-      File directory = Plugins.createPluginDirectory(archiveFile,
+      File directory = Plugins.createPluginDirectory(pluginDirectory.toFile(),
                          smp.getPluginId());
 
       String checksum = com.google.common.io.Files.hash(archiveFile,
@@ -532,7 +541,8 @@ public final class PluginProcessor
     @Override
     public boolean accept(Path entry) throws IOException
     {
-      return Files.isDirectory(entry) &&!entry.getFileName().startsWith(".");
+      return Files.isDirectory(entry)
+        &&!entry.getFileName().toString().startsWith(".");
     }
   }
 

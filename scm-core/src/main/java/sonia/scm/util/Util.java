@@ -36,6 +36,7 @@ package sonia.scm.util;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Multimap;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -426,6 +427,24 @@ public final class Util
   public static Date parseDate(String dateString) throws ParseException
   {
     return parseDate(dateString, null);
+  }
+
+  /**
+   * Returns the first value of a {@link Multimap} or {@code null}.
+   *
+   *
+   * @param map multi map
+   * @param key key
+   * @param <K> type of key
+   * @param <V> type of
+   *
+   * @return first value of {@code null}
+   * 
+   * @since 2.0.0
+   */
+  public static <K, V> V getFirst(Multimap<K, V> map, K key)
+  {
+    return map.get(key).iterator().next();
   }
 
   /**
