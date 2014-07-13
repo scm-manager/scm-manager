@@ -38,18 +38,9 @@ package sonia.scm.plugin;
  */
 public interface PluginConstants
 {
-
-  /** descriptor xml element artifactId */
-  public static final String EL_ARTIFACTID = "artifactId";
-
-  /** descriptor xml element dependency */
-  public static final String EL_DEPENDENCY = "dependency";
-
-  /** descriptor xml element groupId */
-  public static final String EL_GROUPID = "groupId";
-
-  /** descriptor xml element version */
-  public static final String EL_VERSION = "version";
+  
+    /** Field description */
+  public static final String ID_DELIMITER = ":";
 
   /** checksum file */
   public static final String FILE_CHECKSUM = "checksum";

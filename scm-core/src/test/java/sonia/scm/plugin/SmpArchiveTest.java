@@ -110,31 +110,20 @@ public class SmpArchiveTest
    * @throws IOException
    */
   @Test
-  public void testGetDescriptorDocument() throws IOException
+  public void testGetPlugin() throws IOException
   {
     File archive = createArchive("sonia.sample", "sample", "1.0");
-    Document doc = SmpArchive.create(archive).getDescriptorDocument();
+    Plugin plugin = SmpArchive.create(archive).getPlugin();
 
-    assertNotNull(doc);
-    assertEquals("plugin", doc.getDocumentElement().getNodeName());
-  }
+    assertNotNull(plugin);
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Test
-  public void testGetPluginId() throws IOException
-  {
-    File archive = createArchive("sonia.sample", "sample", "1.0");
-    PluginId pluginId = SmpArchive.create(archive).getPluginId();
+    PluginInformation info = plugin.getInformation();
 
-    assertNotNull(pluginId);
-    assertEquals("sonia.sample", pluginId.getGroupId());
-    assertEquals("sample", pluginId.getArtifactId());
-    assertEquals("1.0", pluginId.getVersion());
+    assertNotNull(info);
+
+    assertEquals("sonia.sample", info.getGroupId());
+    assertEquals("sample", info.getArtifactId());
+    assertEquals("1.0", info.getVersion());
   }
 
   /**
@@ -147,7 +136,7 @@ public class SmpArchiveTest
   {
     File archive = createArchive("sonia.sample", null, "1.0");
 
-    SmpArchive.create(archive).getPluginId();
+    SmpArchive.create(archive).getPlugin();
   }
 
   /**
@@ -160,7 +149,7 @@ public class SmpArchiveTest
   {
     File archive = createArchive(null, "sample", "1.0");
 
-    SmpArchive.create(archive).getPluginId();
+    SmpArchive.create(archive).getPlugin();
   }
 
   /**
@@ -173,7 +162,7 @@ public class SmpArchiveTest
   {
     File archive = createArchive("sonia.sample", "sample", null);
 
-    SmpArchive.create(archive).getPluginId();
+    SmpArchive.create(archive).getPlugin();
   }
 
   /**

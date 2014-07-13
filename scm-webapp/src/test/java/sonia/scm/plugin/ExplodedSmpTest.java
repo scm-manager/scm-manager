@@ -37,6 +37,8 @@ import com.google.common.collect.Lists;
 
 import org.junit.Test;
 
+import org.mockito.internal.util.collections.Sets;
+
 import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -127,8 +129,15 @@ public class ExplodedSmpTest
   private ExplodedSmp create(String groupId, String artifactId, String version,
     String... dependencies)
   {
-    return new ExplodedSmp(null, new PluginId(groupId, artifactId, version),
-      Lists.newArrayList(dependencies));
+    PluginInformation info = new PluginInformation();
+
+    info.setGroupId(groupId);
+    info.setArtifactId(artifactId);
+    info.setVersion(version);
+
+    Plugin plugin = new Plugin(info, null, null, Sets.newSet(dependencies));
+
+    return new ExplodedSmp(null, plugin);
   }
 
   /**
@@ -160,6 +169,6 @@ public class ExplodedSmpTest
    */
   private void is(List<ExplodedSmp> es, int p, String a)
   {
-    assertEquals(a, es.get(p).getPluginId().getArtifactId());
+    assertEquals(a, es.get(p).getPlugin().getInformation().getArtifactId());
   }
 }

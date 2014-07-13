@@ -56,13 +56,14 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
-public final class Plugins
+public final class PluginsInternal
 {
 
   /**
-   * the logger for Plugins
+   * the logger for PluginsInternal
    */
-  private static final Logger logger = LoggerFactory.getLogger(Plugins.class);
+  private static final Logger logger =
+    LoggerFactory.getLogger(PluginsInternal.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -70,7 +71,7 @@ public final class Plugins
    * Constructs ...
    *
    */
-  private Plugins() {}
+  private PluginsInternal() {}
 
   //~--- methods --------------------------------------------------------------
 
@@ -99,13 +100,15 @@ public final class Plugins
    *
    *
    * @param parent
-   * @param id
+   * @param plugin
    *
    * @return
    */
-  public static File createPluginDirectory(File parent, PluginId id)
+  public static File createPluginDirectory(File parent, Plugin plugin)
   {
-    return new File(new File(parent, id.getGroupId()), id.getArtifactId());
+    PluginInformation info = plugin.getInformation();
+
+    return new File(new File(parent, info.getGroupId()), info.getArtifactId());
   }
 
   /**
@@ -127,13 +130,14 @@ public final class Plugins
     if (directory.exists())
     {
       logger.debug("delete directory {} for plugin extraction",
-        archive.getPluginId());
+        archive.getPlugin().getInformation().getId(false));
       IOUtil.delete(directory);
     }
 
     IOUtil.mkdirs(directory);
 
-    logger.debug("extract plugin {}", archive.getPluginId());
+    logger.debug("extract plugin {}",
+      archive.getPlugin().getInformation().getId(false));
     archive.extract(directory);
     Files.write(checksum, checksumFile, Charsets.UTF_8);
 

@@ -101,7 +101,7 @@ public class DefaultPluginLoader implements PluginLoader
       Builder<Plugin> builder = ImmutableSet.builder();
 
       builder.addAll(ips);
-      builder.addAll(Plugins.unwrap(wrappedPlugins));
+      builder.addAll(PluginsInternal.unwrap(wrappedPlugins));
       plugins = builder.build();
 
       appendExtensions(multiple, single, extensions, modules);

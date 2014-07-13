@@ -34,20 +34,14 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Function;
-import com.google.common.collect.Multimap;
-
-import sonia.scm.util.Util;
-import sonia.scm.util.XmlUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import java.io.InputStream;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
  *
@@ -56,8 +50,6 @@ import java.util.Collection;
 public final class ExplodedSmp implements Comparable<ExplodedSmp>
 {
 
-  //~--- constructors ---------------------------------------------------------
-
   /**
    * Constructs ...
    *
@@ -65,12 +57,12 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
    * @param path
    * @param pluginId
    * @param dependencies
+   * @param plugin
    */
-  ExplodedSmp(Path path, PluginId pluginId, Collection<String> dependencies)
+  ExplodedSmp(Path path, Plugin plugin)
   {
     this.path = path;
-    this.pluginId = pluginId;
-    this.dependencies = dependencies;
+    this.plugin = plugin;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -87,35 +79,9 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
    */
   public static ExplodedSmp create(Path directory) throws IOException
   {
-    ExplodedSmp smp;
+    Path desc = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
 
-    Path descriptor = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
-
-    try (InputStream in = Files.newInputStream(descriptor))
-    {
-      //J-
-      Multimap<String,String> values = XmlUtil.values(in,
-        PluginConstants.EL_GROUPID,
-        PluginConstants.EL_ARTIFACTID, 
-        PluginConstants.EL_VERSION, 
-        PluginConstants.EL_DEPENDENCY
-      );
-      
-      PluginId pluginId = new PluginId(
-        Util.getFirst(values, PluginConstants.EL_GROUPID),
-        Util.getFirst(values, PluginConstants.EL_ARTIFACTID),
-        Util.getFirst(values, PluginConstants.EL_VERSION)
-      );
-      
-      smp = new ExplodedSmp(
-        directory, 
-        pluginId, 
-        values.get(PluginConstants.EL_DEPENDENCY)
-      );
-      //J+
-    }
-
-    return smp;
+    return new ExplodedSmp(directory, Plugins.parsePluginDescriptor(desc));
   }
 
   /**
@@ -131,24 +97,27 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
   {
     int result;
 
-    if (dependencies.isEmpty() && o.dependencies.isEmpty())
+    Set<String> depends = plugin.getDependencies();
+    Set<String> odepends = o.plugin.getDependencies();
+
+    if (depends.isEmpty() && odepends.isEmpty())
     {
       result = 0;
     }
-    else if (dependencies.isEmpty() &&!o.dependencies.isEmpty())
+    else if (depends.isEmpty() &&!odepends.isEmpty())
     {
       result = -1;
     }
-    else if (!dependencies.isEmpty() && o.dependencies.isEmpty())
+    else if (!depends.isEmpty() && odepends.isEmpty())
     {
       result = 1;
     }
     else
     {
-      String id = pluginId.getIdWithoutVersion();
-      String oid = o.pluginId.getIdWithoutVersion();
+      String id = plugin.getInformation().getId(false);
+      String oid = o.plugin.getInformation().getId(false);
 
-      if (dependencies.contains(oid) && o.dependencies.contains(id))
+      if (depends.contains(oid) && odepends.contains(id))
       {
         StringBuilder b = new StringBuilder("circular dependency detected: ");
 
@@ -157,11 +126,11 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
 
         throw new PluginCircularDependencyException(b.toString());
       }
-      else if (dependencies.contains(oid))
+      else if (depends.contains(oid))
       {
         result = 999;
       }
-      else if (o.dependencies.contains(id))
+      else if (odepends.contains(id))
       {
         result = -999;
       }
@@ -182,17 +151,6 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
    *
    * @return
    */
-  public Collection<String> getDependencies()
-  {
-    return dependencies;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public Path getPath()
   {
     return path;
@@ -204,9 +162,9 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
    *
    * @return
    */
-  public PluginId getPluginId()
+  public Plugin getPlugin()
   {
-    return pluginId;
+    return plugin;
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -247,11 +205,8 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final Collection<String> dependencies;
-
-  /** Field description */
   private final Path path;
 
   /** Field description */
-  private final PluginId pluginId;
+  private final Plugin plugin;
 }

@@ -42,11 +42,11 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
 import sonia.scm.ScmContextListener;
+import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginException;
-import sonia.scm.plugin.PluginId;
 import sonia.scm.plugin.PluginLoadException;
 import sonia.scm.plugin.PluginWrapper;
-import sonia.scm.plugin.Plugins;
+import sonia.scm.plugin.PluginsInternal;
 import sonia.scm.plugin.SmpArchive;
 import sonia.scm.util.ClassLoaders;
 import sonia.scm.util.IOUtil;
@@ -152,7 +152,7 @@ public class BootstrapContextListener implements ServletContextListener
       ClassLoader cl =
         ClassLoaders.getContextClassLoader(BootstrapContextListener.class);
 
-      Set<PluginWrapper> plugins = Plugins.collectPlugins(cl,
+      Set<PluginWrapper> plugins = PluginsInternal.collectPlugins(cl,
                                      pluginDirectory.toPath());
 
       contextListener = new ScmContextListener(cl, plugins);
@@ -182,23 +182,24 @@ public class BootstrapContextListener implements ServletContextListener
   {
     URL url = context.getResource(PLUGIN_DIRECTORY.concat(entry.getName()));
     SmpArchive archive = SmpArchive.create(url);
-    PluginId id = archive.getPluginId();
+    Plugin plugin = archive.getPlugin();
 
-    File directory = Plugins.createPluginDirectory(pluginDirectory, id);
-    File checksumFile = Plugins.getChecksumFile(directory);
+    File directory = PluginsInternal.createPluginDirectory(pluginDirectory,
+                       plugin);
+    File checksumFile = PluginsInternal.getChecksumFile(directory);
 
     if (!directory.exists())
     {
-      logger.warn("install plugin {}", id);
-      Plugins.extract(archive, entry.getChecksum(), directory, checksumFile,
-        true);
+      logger.warn("install plugin {}", plugin.getInformation().getId());
+      PluginsInternal.extract(archive, entry.getChecksum(), directory,
+        checksumFile, true);
     }
     else if (!checksumFile.exists())
     {
       logger.warn("plugin directory {} exists without checksum file.",
         directory);
-      Plugins.extract(archive, entry.getChecksum(), directory, checksumFile,
-        true);
+      PluginsInternal.extract(archive, entry.getChecksum(), directory,
+        checksumFile, true);
     }
     else
     {
@@ -206,13 +207,15 @@ public class BootstrapContextListener implements ServletContextListener
 
       if (checksum.equals(entry.getChecksum()))
       {
-        logger.debug("plugin {} is up to date", id);
+        logger.debug("plugin {} is up to date",
+          plugin.getInformation().getId());
       }
       else
       {
-        logger.warn("checksum mismatch of pluing {}, start update", id);
-        Plugins.extract(archive, entry.getChecksum(), directory, checksumFile,
-          true);
+        logger.warn("checksum mismatch of pluing {}, start update",
+          plugin.getInformation().getId());
+        PluginsInternal.extract(archive, entry.getChecksum(), directory,
+          checksumFile, true);
       }
     }
   }

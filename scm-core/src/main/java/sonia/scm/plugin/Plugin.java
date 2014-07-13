@@ -36,6 +36,7 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableSet;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -160,11 +161,16 @@ public final class Plugin extends ScmModule
    *
    *
    * @return
-   * 
+   *
    * @since 2.0.0
    */
   public Set<String> getDependencies()
   {
+    if (dependencies == null)
+    {
+      dependencies = ImmutableSet.of();
+    }
+
     return dependencies;
   }
 

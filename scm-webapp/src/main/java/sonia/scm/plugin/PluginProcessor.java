@@ -451,16 +451,17 @@ public final class PluginProcessor
 
       SmpArchive smp = SmpArchive.create(archive);
 
-      logger.debug("extract plugin {}", smp.getPluginId());
+      logger.debug("extract plugin {}", smp.getPlugin());
 
-      File directory = Plugins.createPluginDirectory(pluginDirectory.toFile(),
-                         smp.getPluginId());
+      File directory =
+        PluginsInternal.createPluginDirectory(pluginDirectory.toFile(),
+          smp.getPlugin());
 
       String checksum = com.google.common.io.Files.hash(archiveFile,
                           Hashing.sha256()).toString();
-      File checksumFile = Plugins.getChecksumFile(directory);
+      File checksumFile = PluginsInternal.getChecksumFile(directory);
 
-      Plugins.extract(smp, checksum, directory, checksumFile, false);
+      PluginsInternal.extract(smp, checksum, directory, checksumFile, false);
       moveArchive(archive);
     }
   }

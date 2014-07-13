@@ -35,18 +35,12 @@ package sonia.scm.plugin;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
-import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 
-import org.w3c.dom.Document;
-
-import org.xml.sax.SAXException;
-
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.XmlUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -60,11 +54,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 
-import java.util.Collection;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * Smp plugin archive.
@@ -74,7 +65,6 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public final class SmpArchive
 {
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -163,30 +153,6 @@ public final class SmpArchive
     return path;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param map
-   * @param key
-   * @param <K>
-   * @param <V>
-   *
-   * @return
-   */
-  private static <K, V> V getSingleValue(Multimap<K, V> map, K key)
-  {
-    V value = null;
-    Collection<V> values = map.get(key);
-
-    if (!values.isEmpty())
-    {
-      value = values.iterator().next();
-    }
-
-    return value;
-  }
-
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -240,39 +206,39 @@ public final class SmpArchive
    *
    * @throws IOException
    */
-  public Document getDescriptorDocument() throws IOException
+  public Plugin getPlugin() throws IOException
   {
-    if (descriptorDocument == null)
+    if (plugin == null)
     {
-      try
+      plugin = createPlugin();
+
+      PluginInformation info = plugin.getInformation();
+
+      if (info == null)
       {
-        descriptorDocument = createDescriptorDocument();
+        throw new PluginException("could not find information section");
       }
-      catch (ParserConfigurationException | SAXException ex)
+
+      if (Strings.isNullOrEmpty(info.getGroupId()))
       {
-        throw new PluginException("could not parse descriptor", ex);
+        throw new PluginException(
+          "could not find groupId in plugin descriptor");
+      }
+
+      if (Strings.isNullOrEmpty(info.getArtifactId()))
+      {
+        throw new PluginException(
+          "could not find artifactId in plugin descriptor");
+      }
+
+      if (Strings.isNullOrEmpty(info.getVersion()))
+      {
+        throw new PluginException(
+          "could not find version in plugin descriptor");
       }
     }
 
-    return descriptorDocument;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  public PluginId getPluginId() throws IOException
-  {
-    if (pluginId == null)
-    {
-      pluginId = createPluginId();
-    }
-
-    return pluginId;
+    return plugin;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -281,17 +247,13 @@ public final class SmpArchive
    * Method description
    *
    *
-   *
    * @return
+   *
    * @throws IOException
-   * @throws ParserConfigurationException
-   * @throws SAXException
    */
-  private Document createDescriptorDocument()
-    throws IOException, ParserConfigurationException, SAXException
+  private Plugin createPlugin() throws IOException
   {
-    Document doc = null;
-
+    Plugin p = null;
     NonClosingZipInputStream zis = null;
 
     try
@@ -304,7 +266,7 @@ public final class SmpArchive
       {
         if (PluginConstants.PATH_DESCRIPTOR.equals(getPath(entry)))
         {
-          doc = XmlUtil.createDocument(zis);
+          p = Plugins.parsePluginDescriptor(new InputStreamByteSource(zis));
         }
 
         entry = zis.getNextEntry();
@@ -320,56 +282,12 @@ public final class SmpArchive
       }
     }
 
-    if (doc == null)
+    if (p == null)
     {
-      throw new PluginException("could not find descritor");
+      throw new PluginLoadException("could not find plugin descriptor");
     }
 
-    return doc;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private PluginId createPluginId() throws IOException
-  {
-    //J-
-    Multimap<String, String> entries = XmlUtil.values(
-      getDescriptorDocument(),
-      PluginConstants.EL_GROUPID,
-      PluginConstants.EL_ARTIFACTID,
-      PluginConstants.EL_VERSION
-    );
-    //J+
-    
-    String groupId = getSingleValue(entries, PluginConstants.EL_GROUPID);
-
-    if (Strings.isNullOrEmpty(groupId))
-    {
-      throw new PluginException("could not find groupId in plugin descriptor");
-    }
-
-    String artifactId = getSingleValue(entries, PluginConstants.EL_ARTIFACTID);
-
-    if (Strings.isNullOrEmpty(artifactId))
-    {
-      throw new PluginException(
-        "could not find artifactId in plugin descriptor ");
-    }
-
-    String version = getSingleValue(entries, PluginConstants.EL_VERSION);
-
-    if (Strings.isNullOrEmpty(version))
-    {
-      throw new PluginException("could not find version in plugin descriptor ");
-    }
-
-    return new PluginId(groupId, artifactId, version);
+    return p;
   }
 
   /**
@@ -399,6 +317,50 @@ public final class SmpArchive
   }
 
   //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 14/07/13
+   * @author         Enter your name here...
+   */
+  private static class InputStreamByteSource extends ByteSource
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param input
+     */
+    public InputStreamByteSource(InputStream input)
+    {
+      this.input = input;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @return
+     *
+     * @throws IOException
+     */
+    @Override
+    public InputStream openStream() throws IOException
+    {
+      return input;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private final InputStream input;
+  }
+
 
   /**
    * Class description
@@ -456,8 +418,5 @@ public final class SmpArchive
   private final ByteSource archive;
 
   /** Field description */
-  private Document descriptorDocument;
-
-  /** Field description */
-  private PluginId pluginId;
+  private Plugin plugin;
 }
