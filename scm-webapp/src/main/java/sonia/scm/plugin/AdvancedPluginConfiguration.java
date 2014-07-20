@@ -34,7 +34,8 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableSet;
-import com.sun.xml.txw2.annotation.XmlCDATA;
+
+import sonia.scm.xml.XmlCipherStringAdapter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -46,7 +47,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import sonia.scm.xml.XmlCipherStringAdapter;
 
 /**
  *
@@ -97,7 +97,7 @@ public class AdvancedPluginConfiguration
    *
    *
    * @version        Enter version here..., 14/07/20
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   @XmlAccessorType(XmlAccessType.FIELD)
   public static class Server
