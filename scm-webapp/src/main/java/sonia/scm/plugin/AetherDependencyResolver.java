@@ -77,15 +77,18 @@ public class AetherDependencyResolver
    *
    *
    * @param configuration
+   * @param advancedPluginConfiguration
    * @param system
    * @param localRepository
    * @param remoteRepositories
    */
   public AetherDependencyResolver(ScmConfiguration configuration,
+    AdvancedPluginConfiguration advancedPluginConfiguration,
     RepositorySystem system, LocalRepository localRepository,
     List<RemoteRepository> remoteRepositories)
   {
     this.configuration = configuration;
+    this.advancedPluginConfiguration = advancedPluginConfiguration;
     this.system = system;
     this.localRepository = localRepository;
     this.remoteRepositories = remoteRepositories;
@@ -169,13 +172,16 @@ public class AetherDependencyResolver
     if (session == null)
     {
       session = Aether.createRepositorySystemSession(system, localRepository,
-        configuration);
+        configuration, advancedPluginConfiguration);
     }
 
     return session;
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final AdvancedPluginConfiguration advancedPluginConfiguration;
 
   /** Field description */
   private ScmConfiguration configuration;

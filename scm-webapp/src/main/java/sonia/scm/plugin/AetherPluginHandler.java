@@ -82,8 +82,6 @@ public class AetherPluginHandler
 
   //~--- constructors ---------------------------------------------------------
 
-  private final AdvancedPluginConfiguration advancedPluginConfiguration;
-  
   /**
    * Constructs ...
    *
@@ -92,9 +90,11 @@ public class AetherPluginHandler
    * @param pluginManager
    * @param context
    * @param configuration
+   * @param advancedPluginConfiguration
    */
   public AetherPluginHandler(PluginManager pluginManager,
-    SCMContextProvider context, ScmConfiguration configuration, AdvancedPluginConfiguration advancedPluginConfiguration)
+    SCMContextProvider context, ScmConfiguration configuration,
+    AdvancedPluginConfiguration advancedPluginConfiguration)
   {
     this.pluginManager = pluginManager;
     this.configuration = configuration;
@@ -127,7 +127,7 @@ public class AetherPluginHandler
         logger.error("could not read classpath file", ex);
       }
     }
-   
+
     IOUtil.mkdirs(localRepositoryDirectory);
     repositorySystem = Aether.createRepositorySystem();
     localRepository = new LocalRepository(localRepositoryDirectory);
@@ -198,9 +198,12 @@ public class AetherPluginHandler
   {
     try
     {
-      AetherDependencyResolver resolver =
-        new AetherDependencyResolver(configuration, repositorySystem,
-          localRepository, remoteRepositories);
+      //J-
+      AetherDependencyResolver resolver = new AetherDependencyResolver(
+        configuration, advancedPluginConfiguration, repositorySystem, 
+        localRepository, remoteRepositories
+      );
+      //J+
 
       resolver.resolveDependencies(dependency, localDependencies);
 
@@ -339,6 +342,9 @@ public class AetherPluginHandler
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final AdvancedPluginConfiguration advancedPluginConfiguration;
 
   /** Field description */
   private Classpath classpath;

@@ -98,6 +98,10 @@ public class DefaultPluginManager
   /** Field description */
   public static final String ENCODING = "UTF-8";
 
+  /** Field description */
+  private static final String ADVANCED_CONFIGURATION =
+    "advanced-configuration.xml";
+
   /** the logger for DefaultPluginManager */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultPluginManager.class);
@@ -106,9 +110,6 @@ public class DefaultPluginManager
   public static final PluginFilter FILTER_UPDATES =
     new StatePluginFilter(PluginState.UPDATE_AVAILABLE);
 
-  
-  private static final String ADVANCED_CONFIGURATION = "advanced-configuration.xml";
-  
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -151,21 +152,23 @@ public class DefaultPluginManager
     {
       throw new ConfigurationException(ex);
     }
-    
+
     File file = new File(context.getBaseDirectory(), ADVANCED_CONFIGURATION);
+
     if (file.exists())
     {
-      advancedPluginConfiguration = JAXB.unmarshal(file, AdvancedPluginConfiguration.class);
-    } else {
+      logger.info("load advanced plugin configuration from {}", file);
+      advancedPluginConfiguration = JAXB.unmarshal(file,
+        AdvancedPluginConfiguration.class);
+    }
+    else
+    {
+      logger.debug("no advanced plugin configuration found");
       advancedPluginConfiguration = new AdvancedPluginConfiguration();
     }
 
     this.configuration.addListener(this);
   }
-  
-    
-  private final AdvancedPluginConfiguration advancedPluginConfiguration;
-  
 
   //~--- methods --------------------------------------------------------------
 
@@ -650,10 +653,12 @@ public class DefaultPluginManager
             if (pluginHandler == null)
             {
               pluginHandler = new AetherPluginHandler(this,
-                SCMContext.getContext(), configuration, advancedPluginConfiguration);
+                SCMContext.getContext(), configuration,
+                advancedPluginConfiguration);
             }
-            
+
             Builder<PluginRepository> builder = ImmutableSet.builder();
+
             builder.addAll(advancedPluginConfiguration.getRepositories());
             builder.addAll(center.getRepositories());
 
@@ -759,6 +764,9 @@ public class DefaultPluginManager
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final AdvancedPluginConfiguration advancedPluginConfiguration;
 
   /** Field description */
   private Cache<String, PluginCenter> cache;

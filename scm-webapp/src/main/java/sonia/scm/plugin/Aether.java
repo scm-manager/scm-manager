@@ -48,8 +48,6 @@ import org.sonatype.aether.collection.DependencyGraphTransformer;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.graph.DependencyNode;
-import org.sonatype.aether.repository.Authentication;
-import org.sonatype.aether.repository.AuthenticationSelector;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.LocalRepositoryManager;
 import org.sonatype.aether.repository.Proxy;
@@ -81,10 +79,8 @@ public final class Aether
 
   /** Field description */
   private static final DependencyFilter FILTER =
-    new AndDependencyFilter(
-      new CoreDependencyFilter(),
-      new BlacklistDependencyFilter()
-    );
+    new AndDependencyFilter(new CoreDependencyFilter(),
+      new BlacklistDependencyFilter());
 
   /**
    * the logger for Aether
@@ -176,12 +172,14 @@ public final class Aether
    * @param system
    * @param localRepository
    * @param configuration
+   * @param advancedPluginConfiguration
    *
    * @return
    */
   public static RepositorySystemSession createRepositorySystemSession(
     RepositorySystem system, LocalRepository localRepository,
-    ScmConfiguration configuration)
+    ScmConfiguration configuration,
+    AdvancedPluginConfiguration advancedPluginConfiguration)
   {
     MavenRepositorySystemSession session = new MavenRepositorySystemSession();
 
@@ -197,6 +195,9 @@ public final class Aether
       system.newLocalRepositoryManager(localRepository);
 
     session.setLocalRepositoryManager(localRepositoryManager);
+    session.setAuthenticationSelector(
+      new AetherAuthenticationSelector(advancedPluginConfiguration)
+    );
 
     // create graph transformer to resolve dependency conflicts
     //J-
