@@ -49,6 +49,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
+ * Rest resource to encrypt values.
  *
  * @author Sebastian Sdorra
  * @since 1.41
@@ -58,12 +59,17 @@ public class CipherResource
 {
 
   /**
-   * Method description
+   * Encrypts the request body and returns an encrypted string. This method can
+   * only executed with administration privileges.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
+   * @param value value to encrypt
    *
-   * @param value
-   *
-   * @return
+   * @return unique key
    */
   @POST
   @Path("encrypt")

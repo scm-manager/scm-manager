@@ -48,6 +48,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 /**
+ * Rest resource to generate unique keys.
  *
  * @author Sebastian Sdorra
  * @since 1.41
@@ -57,10 +58,10 @@ public class KeyResource
 {
 
   /**
-   * Constructs ...
+   * Constructs a new KeyResource.
    *
    *
-   * @param keyGenerator
+   * @param keyGenerator key generator
    */
   @Inject
   public KeyResource(KeyGenerator keyGenerator)
@@ -71,10 +72,15 @@ public class KeyResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Generates a unique key. This method can only executed with administration 
+   * privileges.<br />
+   * <br />
+   * <ul>
+   *   <li>200 success</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @return
+   * @return unique key
    */
   @GET
   @Produces(MediaType.TEXT_PLAIN)
