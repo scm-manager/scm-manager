@@ -45,5 +45,15 @@ public interface SecurityUrlProvider
    *
    * @return
    */
+  public String getGenerateKeyUrl();
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getEncryptUrl();
 }

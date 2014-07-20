@@ -68,6 +68,21 @@ public class JerseySecurityClientHandler implements SecurityClientHandler
     return session.getClient().resource(url).post(String.class, value);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String generateKey()
+  {
+    String url =
+      session.getUrlProvider().getSecurityUrlProvider().getGenerateKeyUrl();
+
+    return session.getClient().resource(url).get(String.class);
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */

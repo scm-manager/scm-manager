@@ -48,4 +48,12 @@ public interface SecurityClientHandler
    * @return
    */
   public String encrypt(String value);
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String generateKey();
 }

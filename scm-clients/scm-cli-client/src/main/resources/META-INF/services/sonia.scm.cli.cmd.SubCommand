@@ -62,6 +62,7 @@ sonia.scm.cli.cmd.DeleteMembersSubCommand
 
 # security
 sonia.scm.cli.cmd.EncryptSubCommand
+sonia.scm.cli.cmd.GenerateKeySubCommand
 
 # misc
 sonia.scm.cli.cmd.VersionSubCommand

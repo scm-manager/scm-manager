@@ -29,40 +29,46 @@
 
 
 
-package sonia.scm.url;
+package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.HttpUtil;
+import com.google.inject.Inject;
+
+import org.apache.shiro.SecurityUtils;
+
+import sonia.scm.security.KeyGenerator;
+import sonia.scm.security.Role;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.41
  */
-public class RestSecurityUrlProvider implements SecurityUrlProvider
+@Path("security/key")
+public class KeyResource
 {
-
-  /** Field description */
-  private static final String PATH_ENCRYPT = "security/cipher/encrypt";
-
-  /** Field description */
-  private static final String PATH_KEY = "security/key";
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param baseUrl
+   * @param keyGenerator
    */
-  public RestSecurityUrlProvider(String baseUrl)
+  @Inject
+  public KeyResource(KeyGenerator keyGenerator)
   {
-    this.baseUrl = baseUrl;
+    this.keyGenerator = keyGenerator;
   }
 
-  //~--- get methods ----------------------------------------------------------
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -70,26 +76,17 @@ public class RestSecurityUrlProvider implements SecurityUrlProvider
    *
    * @return
    */
-  @Override
-  public String getEncryptUrl()
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  public String generateKey()
   {
-    return HttpUtil.append(baseUrl, PATH_ENCRYPT);
-  }
+    SecurityUtils.getSubject().checkRole(Role.ADMIN);
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getGenerateKeyUrl()
-  {
-    return HttpUtil.append(baseUrl, PATH_KEY);
+    return keyGenerator.createKey();
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final String baseUrl;
+  private final KeyGenerator keyGenerator;
 }

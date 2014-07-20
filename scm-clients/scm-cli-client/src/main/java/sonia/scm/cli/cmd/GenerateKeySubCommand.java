@@ -29,67 +29,27 @@
 
 
 
-package sonia.scm.url;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.util.HttpUtil;
+package sonia.scm.cli.cmd;
 
 /**
  *
  * @author Sebastian Sdorra
- * @since 1.41
  */
-public class RestSecurityUrlProvider implements SecurityUrlProvider
+@Command(
+  name = "generate-key",
+  usage = "usageGenerateKey",
+  group = "security"
+)
+public class GenerateKeySubCommand extends SubCommand
 {
 
-  /** Field description */
-  private static final String PATH_ENCRYPT = "security/cipher/encrypt";
-
-  /** Field description */
-  private static final String PATH_KEY = "security/key";
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param baseUrl
-   */
-  public RestSecurityUrlProvider(String baseUrl)
-  {
-    this.baseUrl = baseUrl;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Method description
    *
-   *
-   * @return
    */
   @Override
-  public String getEncryptUrl()
+  protected void run()
   {
-    return HttpUtil.append(baseUrl, PATH_ENCRYPT);
+    output.println(createSession().getSecurityHandler().generateKey());
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getGenerateKeyUrl()
-  {
-    return HttpUtil.append(baseUrl, PATH_KEY);
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final String baseUrl;
 }
