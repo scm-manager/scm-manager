@@ -48,6 +48,8 @@ import org.sonatype.aether.collection.DependencyGraphTransformer;
 import org.sonatype.aether.graph.Dependency;
 import org.sonatype.aether.graph.DependencyFilter;
 import org.sonatype.aether.graph.DependencyNode;
+import org.sonatype.aether.repository.Authentication;
+import org.sonatype.aether.repository.AuthenticationSelector;
 import org.sonatype.aether.repository.LocalRepository;
 import org.sonatype.aether.repository.LocalRepositoryManager;
 import org.sonatype.aether.repository.Proxy;

@@ -35,6 +35,8 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
@@ -104,17 +106,15 @@ public class DefaultPluginManager
   public static final PluginFilter FILTER_UPDATES =
     new StatePluginFilter(PluginState.UPDATE_AVAILABLE);
 
+  
+  private static final String ADVANCED_CONFIGURATION = "advanced-configuration.xml";
+  
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
-   *
-   *
-   *
-   *
    * @param context
-   * @param securityContextProvicer
    * @param configuration
    * @param pluginLoader
    * @param cacheManager
@@ -151,9 +151,21 @@ public class DefaultPluginManager
     {
       throw new ConfigurationException(ex);
     }
+    
+    File file = new File(context.getBaseDirectory(), ADVANCED_CONFIGURATION);
+    if (file.exists())
+    {
+      advancedPluginConfiguration = JAXB.unmarshal(file, AdvancedPluginConfiguration.class);
+    } else {
+      advancedPluginConfiguration = new AdvancedPluginConfiguration();
+    }
 
     this.configuration.addListener(this);
   }
+  
+    
+  private final AdvancedPluginConfiguration advancedPluginConfiguration;
+  
 
   //~--- methods --------------------------------------------------------------
 
@@ -246,7 +258,7 @@ public class DefaultPluginManager
       }
 
       AetherPluginHandler aph = new AetherPluginHandler(this, context,
-                                  configuration);
+                                  configuration, advancedPluginConfiguration);
       Collection<PluginRepository> repositories =
         Sets.newHashSet(new PluginRepository("package-repository",
           "file://".concat(tempDirectory.getAbsolutePath())));
@@ -638,10 +650,14 @@ public class DefaultPluginManager
             if (pluginHandler == null)
             {
               pluginHandler = new AetherPluginHandler(this,
-                SCMContext.getContext(), configuration);
+                SCMContext.getContext(), configuration, advancedPluginConfiguration);
             }
+            
+            Builder<PluginRepository> builder = ImmutableSet.builder();
+            builder.addAll(advancedPluginConfiguration.getRepositories());
+            builder.addAll(center.getRepositories());
 
-            pluginHandler.setPluginRepositories(center.getRepositories());
+            pluginHandler.setPluginRepositories(builder.build());
           }
           catch (Exception ex)
           {
