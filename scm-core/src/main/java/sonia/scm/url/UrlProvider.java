@@ -77,6 +77,16 @@ public interface UrlProvider
    *
    *
    * @return
+   * 
+   * @since 1.41
+   */
+  public SecurityUrlProvider getSecurityUrlProvider();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
    */
   public String getStateUrl();
 

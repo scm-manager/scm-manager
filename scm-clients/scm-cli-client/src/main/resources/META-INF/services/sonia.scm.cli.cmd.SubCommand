@@ -60,6 +60,9 @@ sonia.scm.cli.cmd.ModifyGroupSubCommand
 sonia.scm.cli.cmd.AddMembersSubCommand
 sonia.scm.cli.cmd.DeleteMembersSubCommand
 
+# security
+sonia.scm.cli.cmd.EncryptSubCommand
+
 # misc
 sonia.scm.cli.cmd.VersionSubCommand
 sonia.scm.cli.cmd.ServerVersionSubCommand

@@ -67,7 +67,7 @@ public class JerseyClientSession implements ScmClientSession
    * @param state
    */
   public JerseyClientSession(Client client, UrlProvider urlProvider,
-                             ScmState state)
+    ScmState state)
   {
     this.client = client;
     this.urlProvider = urlProvider;
@@ -127,6 +127,18 @@ public class JerseyClientSession implements ScmClientSession
   public RepositoryClientHandler getRepositoryHandler()
   {
     return new JerseyRepositoryClientHandler(this);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public SecurityClientHandler getSecurityHandler()
+  {
+    return new JerseySecurityClientHandler(this);
   }
 
   /**

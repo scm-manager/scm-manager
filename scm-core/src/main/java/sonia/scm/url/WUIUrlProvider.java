@@ -125,6 +125,19 @@ public class WUIUrlProvider implements UrlProvider
   }
 
   /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public SecurityUrlProvider getSecurityUrlProvider()
+  {
+    throw new UnsupportedOperationException(
+      "this provider does not support security url provider.");
+  }
+
+  /**
    * Returns the baseUrl, because there is no state url.
    *
    *

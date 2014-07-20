@@ -137,6 +137,18 @@ public class RestUrlProvider implements UrlProvider
    * @return
    */
   @Override
+  public SecurityUrlProvider getSecurityUrlProvider()
+  {
+    return new RestSecurityUrlProvider(baseUrl);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public String getStateUrl()
   {
     return HttpUtil.append(baseUrl, PART_STATE).concat(extension);

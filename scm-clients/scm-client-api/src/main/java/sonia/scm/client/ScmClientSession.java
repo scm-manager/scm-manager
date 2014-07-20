@@ -79,6 +79,14 @@ public interface ScmClientSession extends Closeable
    *
    * @return
    */
+  public SecurityClientHandler getSecurityHandler();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public ScmState getState();
 
   /**
