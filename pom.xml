@@ -440,7 +440,7 @@
 
     <!-- repostitory libraries -->
     <jgit.version>3.4.0.201406110918-r</jgit.version>
-    <svnkit.version>1.8.5-scm2-SNAPSHOT</svnkit.version>
+    <svnkit.version>1.8.5-scm2</svnkit.version>
     
     <!-- util libraries -->
     <guava.version>15.0</guava.version>
