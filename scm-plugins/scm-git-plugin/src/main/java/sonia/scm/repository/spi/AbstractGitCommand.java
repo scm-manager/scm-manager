@@ -51,10 +51,8 @@ public class AbstractGitCommand
    * Constructs ...
    *
    *
-   *
    * @param context
    * @param repository
-   * @param repositoryDirectory
    */
   protected AbstractGitCommand(GitContext context,
                                sonia.scm.repository.Repository repository)

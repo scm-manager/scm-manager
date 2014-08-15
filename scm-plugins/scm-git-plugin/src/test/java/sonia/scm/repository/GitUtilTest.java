@@ -30,11 +30,21 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import static org.hamcrest.Matchers.*;
+
+import static org.junit.Assert.*;
 
 import static org.mockito.Mockito.*;
 
@@ -85,6 +95,25 @@ public class GitUtilTest
    * Method description
    *
    *
+   * @throws GitAPIException
+   * @throws IOException
+   */
+  @Test
+  public void testOpenJava7() throws GitAPIException, IOException
+  {
+    File dir = temp.newFolder();
+
+    Git.init().setDirectory(dir).setBare(true).call();
+
+    org.eclipse.jgit.lib.Repository repo = GitUtil.open(dir);
+
+    assertThat(repo.getFS().getClass().getName(), containsString("Java7"));
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param directory
    *
    * @return
@@ -98,4 +127,10 @@ public class GitUtilTest
 
     return repo;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @Rule
+  public TemporaryFolder temp = new TemporaryFolder();
 }

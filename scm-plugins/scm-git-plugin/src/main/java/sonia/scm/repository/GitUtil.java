@@ -198,8 +198,6 @@ public final class GitUtil
    *
    * @return
    *
-   * @throws GitAPIException
-   *
    * @throws RepositoryException
    */
   public static FetchResult fetch(Git git, File directory,
@@ -376,7 +374,7 @@ public final class GitUtil
       }
 
     }
-    catch (Exception ex)
+    catch (IOException ex)
     {
       logger.warn("error occured during resolve of branch id", ex);
     }
@@ -582,7 +580,7 @@ public final class GitUtil
     String revision)
     throws IOException
   {
-    ObjectId revId = null;
+    ObjectId revId;
 
     if (Util.isNotEmpty(revision))
     {

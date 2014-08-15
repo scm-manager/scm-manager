@@ -80,10 +80,7 @@ public class GitContext implements Closeable
   @Override
   public void close()
   {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("close git repository {}", directory);
-    }
+    logger.trace("close git repository {}", directory);
 
     GitUtil.close(repository);
     repository = null;
@@ -101,10 +98,7 @@ public class GitContext implements Closeable
   {
     if (repository == null)
     {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("open git repository {}", directory);
-      }
+      logger.trace("open git repository {}", directory);
 
       repository = GitUtil.open(directory);
     }
@@ -115,7 +109,7 @@ public class GitContext implements Closeable
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private File directory;
+  private final File directory;
 
   /** Field description */
   private org.eclipse.jgit.lib.Repository repository;
