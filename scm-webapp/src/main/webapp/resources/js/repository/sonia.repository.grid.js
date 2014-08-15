@@ -265,6 +265,7 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
   },
   
   getTypeIcon: function(type){
+    var result = '';
     var icon = Sonia.repository.getTypeIcon(type);
     if ( icon ){
       var displayName = type;

@@ -66,6 +66,11 @@ Sonia.util.getBaseUrl = function(){
     url = url.substring(0, i);
   }
   
+  i = url.indexOf('?');
+  if ( i > 0 ){
+    url = url.substring(0, i);
+  }
+  
   if ( url.endsWith('/index.html') ){
     url = url.substring(0, url.length - '/index.html'.length);
   } else if ( url.endsWith('/') ){

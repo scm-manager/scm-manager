@@ -8,7 +8,7 @@
                   <h3 class="widget-title">Links</h3>
                   <ul class="xoxo blogroll">
                     <li>
-                      <a href="http://www.scm-manager.org/download/">Download</a>
+                      <a href="//www.scm-manager.org/download/">Download</a>
                     </li>
                     <li>
                       <a href="https://bitbucket.org/sdorra/scm-manager/issues?status=new&amp;status=open" target="_blank">Issue Tracker</a>
@@ -37,22 +37,33 @@
                   <h3 class="widget-title">Social</h3>
                   <div style="position: relative; display: block;" id="social4i">
                     <div style="float:left;margin-right: 8px;" class="socialicons">
-                      <div id="fb-root" style="float: left;"></div><script src="https://connect.facebook.net/en_US/all.js#appId=221636557882194&xfbml=1"></script><fb:like href="http://www.scm-manager.org" send="false" layout="box_count" width="52" show_faces="true" font=""></fb:like>
+                      <div id="fb-root" style="float: left;"></div>
+                      <fb:like href="http://www.scm-manager.org" send="false" layout="box_count" width="52" show_faces="true" font=""></fb:like>
+                      <script type="text/javascript">// <![CDATA[
+                        (function(d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0];
+                        if (d.getElementById(id)) return;
+                        js = d.createElement(s); js.id = id;
+                        js.async=true; js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&#038;appId=221636557882194";
+                        fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));
+                      // ]]></script>
                     </div>
                     <div style="float:left;margin-right: 8px;" class="socialicons">
                       <g:plusone size="tall" href="http://www.scm-manager.org"></g:plusone>
                     </div>
                     <div style="float:left;margin-right: 8px;" class="socialicons">
-                      <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.scm-manager.org" data-count="vertical">Tweet</a><script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+                      <a href="https://twitter.com/share" class="twitter-share-button" data-url="http://www.scm-manager.org" data-count="vertical">Tweet</a>
+                      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
                     </div>
                     <div style="clear: both;"></div>
                   </div>
                   <script type="text/javascript">
-                    (function() {
-                      var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-                      po.src = 'https://apis.google.com/js/plusone.js';
-                      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-                    })();
+                  (function() {
+                    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                    po.src = 'https://apis.google.com/js/plusone.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+                  })();
                   </script>
                 </li>
                 <li class="widget-container widget_links">
@@ -67,7 +78,7 @@
                 <li class="widget-container widget_links">
                   <h3 class="widget-title">Build and test</h3>
                   <a href="https://scm-manager.ci.cloudbees.com/">
-                    <img alt="Cloudbees" src="http://static-www.cloudbees.com/images/badges/BuiltOnDEV.png">
+                    <img src="//web-static-cloudfront.s3.amazonaws.com/images/badges/BuiltOnDEV.png" alt="Cloudbees">
                   </a>
                 </li>
               </ul>
@@ -84,8 +95,8 @@
       </footer>
     </div>
     
-    <script type='text/javascript' src='http://www.scm-manager.org/wp-content/themes/portfolio-press/js/superfish.js?ver=3.5.1'></script>
-    <script type='text/javascript' src='http://www.scm-manager.org/wp-content/themes/portfolio-press/js/theme.js?ver=3.5.1'></script>
+    <script type='text/javascript' src='//www.scm-manager.org/wp-content/themes/portfolio-press/js/superfish.js?ver=3.9.1'></script>
+    <script type='text/javascript' src='//www.scm-manager.org/wp-content/themes/portfolio-press/js/theme.js?ver=3.9.1'></script>
     
   </body>
 </html>

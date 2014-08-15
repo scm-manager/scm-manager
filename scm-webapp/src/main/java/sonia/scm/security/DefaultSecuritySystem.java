@@ -36,8 +36,10 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
+import com.google.common.base.Preconditions;
 
 import com.google.common.base.Predicate;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.inject.Inject;
@@ -125,6 +127,7 @@ public class DefaultSecuritySystem implements SecuritySystem
   public StoredAssignedPermission addPermission(AssignedPermission permission)
   {
     assertIsAdmin();
+    validatePermission(permission);
 
     String id = store.put(permission);
 
@@ -234,6 +237,7 @@ public class DefaultSecuritySystem implements SecuritySystem
   public void modifyPermission(StoredAssignedPermission permission)
   {
     assertIsAdmin();
+    validatePermission(permission);
 
     synchronized (store)
     {
@@ -423,6 +427,20 @@ public class DefaultSecuritySystem implements SecuritySystem
     }
 
     availablePermissions = builder.build();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param perm
+   */
+  private void validatePermission(AssignedPermission perm)
+  {
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(perm.getName()),
+      "name is required");
+    Preconditions.checkArgument(!Strings.isNullOrEmpty(perm.getPermission()),
+      "permission is required");
   }
 
   //~--- get methods ----------------------------------------------------------

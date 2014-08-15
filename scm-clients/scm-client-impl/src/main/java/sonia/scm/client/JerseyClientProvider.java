@@ -38,9 +38,6 @@ package sonia.scm.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.sonatype.spice.jersey.client.ahc.AhcHttpClient;
-import org.sonatype.spice.jersey.client.ahc.config.DefaultAhcConfig;
-
 import sonia.scm.ScmState;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
@@ -49,11 +46,20 @@ import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientHandlerException;
+import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.filter.ClientFilter;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.NewCookie;
 
 /**
  *
@@ -100,7 +106,7 @@ public class JerseyClientProvider implements ScmClientProvider
    */
   @Override
   public JerseyClientSession createSession(String url, String username,
-          String password)
+    String password)
   {
     AssertUtil.assertIsNotEmpty(url);
 
@@ -111,59 +117,24 @@ public class JerseyClientProvider implements ScmClientProvider
       user = username;
     }
 
-    if (logger.isInfoEnabled())
-    {
-      logger.info("create new session for {} with username {}", url, user);
-    }
+    logger.info("create new session for {} with username {}", url, user);
 
     UrlProvider urlProvider = UrlProviderFactory.createUrlProvider(url,
                                 UrlProviderFactory.TYPE_RESTAPI_XML);
-    DefaultAhcConfig config = new DefaultAhcConfig();
-    AhcHttpClient client = AhcHttpClient.create(config);
-    ClientResponse response = null;
+
+    Client client = Client.create();
+
+    client.addFilter(new CookieClientFilter());
+
+    ClientResponse response;
 
     if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
     {
-      String authUrl = urlProvider.getAuthenticationUrl();
-
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("try login at {}", authUrl);
-      }
-
-      WebResource resource = ClientUtil.createResource(client, authUrl,
-                               enableLogging);
-
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("try login for {}", username);
-      }
-
-      MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
-
-      formData.add("username", username);
-      formData.add("password", password);
-      response = resource.type("application/x-www-form-urlencoded").post(
-        ClientResponse.class, formData);
+      response = login(urlProvider, client, username, password);
     }
     else
     {
-      String stateUrl = urlProvider.getStateUrl();
-
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("retrive state from {}", stateUrl);
-      }
-
-      WebResource resource = ClientUtil.createResource(client, stateUrl,
-                               enableLogging);
-
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("try anonymous login");
-      }
-
-      response = resource.get(ClientResponse.class);
+      response = state(urlProvider, client);
     }
 
     ClientUtil.checkResponse(response);
@@ -172,10 +143,7 @@ public class JerseyClientProvider implements ScmClientProvider
 
     if (!state.isSuccess())
     {
-      if (logger.isWarnEnabled())
-      {
-        logger.warn("server returned state failed");
-      }
+      logger.warn("server returned state failed");
 
       throw new ScmClientException("create ScmClientSession failed");
     }
@@ -186,6 +154,122 @@ public class JerseyClientProvider implements ScmClientProvider
 
     return new JerseyClientSession(client, urlProvider, state);
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param urlProvider
+   * @param client
+   * @param username
+   * @param password
+   *
+   * @return
+   */
+  private ClientResponse login(UrlProvider urlProvider, Client client,
+    String username, String password)
+  {
+    String authUrl = urlProvider.getAuthenticationUrl();
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("try login at {}", authUrl);
+    }
+
+    WebResource resource = ClientUtil.createResource(client, authUrl,
+                             enableLogging);
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("try login for {}", username);
+    }
+
+    MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
+
+    formData.add("username", username);
+    formData.add("password", password);
+
+    return resource.type("application/x-www-form-urlencoded").post(
+      ClientResponse.class, formData);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param urlProvider
+   * @param client
+   *
+   * @return
+   */
+  private ClientResponse state(UrlProvider urlProvider, Client client)
+  {
+    String stateUrl = urlProvider.getStateUrl();
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("retrive state from {}", stateUrl);
+    }
+
+    WebResource resource = ClientUtil.createResource(client, stateUrl,
+                             enableLogging);
+
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("try anonymous login");
+    }
+
+    return resource.get(ClientResponse.class);
+  }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Class description
+   *
+   *
+   * @version        Enter version here..., 14/07/05
+   * @author         Enter your name here...
+   */
+  private class CookieClientFilter extends ClientFilter
+  {
+
+    /**
+     * Method description
+     *
+     *
+     * @param request
+     *
+     * @return
+     *
+     * @throws ClientHandlerException
+     */
+    @Override
+    public ClientResponse handle(ClientRequest request)
+      throws ClientHandlerException
+    {
+      for (NewCookie c : cookies)
+      {
+        request.getHeaders().putSingle("Cookie", c);
+      }
+
+      ClientResponse response = getNext().handle(request);
+
+      if (response.getCookies() != null)
+      {
+        cookies.addAll(response.getCookies());
+      }
+
+      return response;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private final List<NewCookie> cookies =
+      Collections.synchronizedList(new ArrayList<NewCookie>());
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 

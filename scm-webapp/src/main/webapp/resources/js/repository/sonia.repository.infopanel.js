@@ -34,7 +34,7 @@
 Sonia.repository.InfoPanel = Ext.extend(Ext.Panel, {
 
   linkTemplate: '<a target="_blank" href="{0}">{0}</a>',
-  mailTemplate: '<a href="mailto: {0}">{0}</a>',
+  mailTemplate: '<a href="mailto:{0}">{0}</a>',
   actionLinkTemplate: '<a style="cursor: pointer;">{0}</a>',
   
   // text

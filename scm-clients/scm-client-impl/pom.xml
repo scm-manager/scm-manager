@@ -45,30 +45,6 @@
       <version>${jersey.version}</version>
     </dependency>
     
-    <dependency>
-      <groupId>sonia.net.ahc</groupId>
-      <artifactId>jersey-ahc-client</artifactId>
-      <version>1.0.2.1</version>
-      <exclusions>
-        <exclusion>
-          <artifactId>jaxb-api</artifactId>
-          <groupId>javax.xml.bind</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jaxb-impl</artifactId>
-          <groupId>com.sun.xml.bind</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>stax-api</artifactId>
-          <groupId>stax</groupId>
-        </exclusion>
-        <exclusion>
-          <artifactId>jersey-json</artifactId>
-          <groupId>com.sun.jersey</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    
     <!-- test scope -->
     
     <dependency>
@@ -101,7 +77,13 @@
     <repository>
       <id>Sonatype</id>
       <name>Sonatype Release</name>
-      <url>http://oss.sonatype.org/content/repositories/releases </url>
+      <url>http://oss.sonatype.org/content/repositories/releases</url>
+    </repository>
+    
+    <repository>
+      <id>maven.scm-manager.org</id>
+      <name>scm-manager release repository</name>
+      <url>http://maven.scm-manager.org/nexus/content/groups/public</url>
     </repository>
   
   </repositories>

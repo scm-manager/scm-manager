@@ -61,7 +61,9 @@
   
   <!-- event bus -->
   <logger name="sonia.scm.event.LegmanScmEventBus" level="INFO" />
-  
+
+  <!-- cgi -->
+  <logger name="sonia.scm.web.cgi.DefaultCGIExecutor" level="DEBUG" />
   <!-- aether -->
   <!--
   <logger name="org.sonatype.aether" level="TRACE" />

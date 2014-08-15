@@ -38,7 +38,6 @@ package sonia.scm.plugin;
 import com.github.legman.Subscribe;
 
 import com.google.common.base.Predicate;
-import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -48,7 +47,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigurationException;
-import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
@@ -100,6 +98,10 @@ public class DefaultPluginManager implements PluginManager
   /** Field description */
   public static final String ENCODING = "UTF-8";
 
+  /** Field description */
+  private static final String ADVANCED_CONFIGURATION =
+    "advanced-configuration.xml";
+
   /** the logger for DefaultPluginManager */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultPluginManager.class);
@@ -115,10 +117,6 @@ public class DefaultPluginManager implements PluginManager
 
   /**
    * Constructs ...
-   *
-   *
-   *
-   *
    *
    * @param context
    * @param configuration
@@ -647,7 +645,8 @@ public class DefaultPluginManager implements PluginManager
             /*if (pluginHandler == null)
             {
               pluginHandler = new AetherPluginHandler(this,
-                SCMContext.getContext(), configuration);
+                SCMContext.getContext(), configuration,
+                advancedPluginConfiguration);
             }
 
             pluginHandler.setPluginRepositories(center.getRepositories());*/

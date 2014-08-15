@@ -274,7 +274,7 @@
         <configuration>
           <pushChanges>false</pushChanges>
           <localCheckout>true</localCheckout>
-          <releaseProfiles>release,APIviz,doc</releaseProfiles>
+          <releaseProfiles>release,APIviz,doc,nativepkg</releaseProfiles>
           <tagNameFormat>@{project.version}</tagNameFormat>
           <autoVersionSubmodules>true</autoVersionSubmodules>
         </configuration>
@@ -459,8 +459,8 @@
     <shiro.version>1.2.3</shiro.version>
 
     <!-- repostitory libraries -->
-    <jgit.version>3.3.2.201404171909-r</jgit.version>
-    <svnkit.version>1.8.5-scm1</svnkit.version>
+    <jgit.version>3.4.1.201406201815-r</jgit.version>
+    <svnkit.version>1.8.5-scm2</svnkit.version>
     
     <!-- util libraries -->
     <guava.version>16.0.1</guava.version>

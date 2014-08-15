@@ -41,6 +41,7 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.tmatesoft.svn.core.ISVNLogEntryHandler;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNLogEntry;
 import org.tmatesoft.svn.core.io.SVNRepository;
@@ -115,20 +116,15 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
 
     try
     {
-      long revisioNumber = Long.parseLong(revision);
-      SVNRepository repository = open();
-      Collection<SVNLogEntry> entries = repository.log(null, null,
-                                          revisioNumber, revisioNumber, true,
-                                          true);
+      long revisioNumber = parseRevision(revision);
+      SVNRepository repo = open();
+      Collection<SVNLogEntry> entries = repo.log(null, null, revisioNumber,
+                                          revisioNumber, true, true);
 
       if (Util.isNotEmpty(entries))
       {
         changeset = SvnUtil.createChangeset(entries.iterator().next());
       }
-    }
-    catch (NumberFormatException ex)
-    {
-      throw new RepositoryException("could not convert revision", ex);
     }
     catch (SVNException ex)
     {
@@ -160,75 +156,30 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     }
 
     ChangesetPagingResult changesets = null;
-    String startRevision = request.getStartChangeset();
-    String endRevision = request.getEndChangeset();
+    int start = request.getPagingStart();
+    int limit = request.getPagingLimit();
+    long startRevision = parseRevision(request.getStartChangeset());
+    long endRevision = parseRevision(request.getEndChangeset());
+    String[] pathArray = null;
+
+    if (!Strings.isNullOrEmpty(request.getPath()))
+    {
+      pathArray = new String[] { request.getPath() };
+    }
 
     try
     {
-      SVNRepository repository = open();
-      long startRev = repository.getLatestRevision();
-      long endRev = 0;
-      long maxRev = startRev;
+      SVNRepository repo = open();
 
-      if (!Strings.isNullOrEmpty(startRevision))
+      if ((startRevision > 0) || (pathArray != null))
       {
-        startRev = Long.parseLong(startRevision);
+        changesets = getChangesets(repo, startRevision, endRevision, start,
+          limit, pathArray);
       }
-
-      if (!Strings.isNullOrEmpty(endRevision))
+      else
       {
-        endRev = Long.parseLong(endRevision);
+        changesets = getChangesets(repo, start, limit);
       }
-
-      String[] pathArray = null;
-
-      if (!Strings.isNullOrEmpty(request.getPath()))
-      {
-        pathArray = new String[] { request.getPath() };
-      }
-
-      List<SVNLogEntry> changesetList = Lists.newArrayList();
-      Collection<SVNLogEntry> entries = repository.log(pathArray, null,
-                                          startRev, endRev, true, true);
-
-      for (SVNLogEntry entry : entries)
-      {
-        if (entry.getRevision() <= maxRev)
-        {
-          changesetList.add(entry);
-        }
-      }
-
-      int total = changesetList.size();
-      int start = request.getPagingStart();
-      int max = request.getPagingLimit() + start;
-      int end = total;
-
-      if ((max > 0) && (end > max))
-      {
-        end = max;
-      }
-
-      if (start < 0)
-      {
-        start = 0;
-      }
-
-      if (logger.isTraceEnabled())
-      {
-        logger.trace(
-          "create sublist from {} to {} of total {} collected changesets",
-          start, end, total);
-      }
-
-      changesetList = changesetList.subList(start, end);
-      changesets = new ChangesetPagingResult(total,
-        SvnUtil.createChangesets(changesetList));
-    }
-    catch (NumberFormatException ex)
-    {
-      throw new RepositoryException(
-        "could not parse revision ".concat(startRevision), ex);
     }
     catch (SVNException ex)
     {
@@ -236,5 +187,185 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     }
 
     return changesets;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param v
+   *
+   * @return
+   *
+   * @throws RepositoryException
+   */
+  private long parseRevision(String v) throws RepositoryException
+  {
+    long result = -1l;
+
+    if (!Strings.isNullOrEmpty(v))
+    {
+      try
+      {
+        result = Long.parseLong(v);
+      }
+      catch (NumberFormatException ex)
+      {
+        throw new RepositoryException(
+          String.format("could not convert revision %s", v), ex);
+      }
+    }
+
+    return result;
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repo
+   * @param start
+   * @param limit
+   *
+   * @return
+   *
+   * @throws SVNException
+   */
+  private ChangesetPagingResult getChangesets(SVNRepository repo, int start,
+    int limit)
+    throws SVNException
+  {
+    long latest = repo.getLatestRevision();
+    long startRev = latest - start;
+    long endRev = Math.max(startRev - (limit - 1), 0);
+
+    final List<Changeset> changesets = Lists.newArrayList();
+
+    if (startRev > 0)
+    {
+      logger.debug("fetch changeset from {} to {}", startRev, endRev);
+      repo.log(null, startRev, endRev, true, true,
+        new ChangesetCollector(changesets));
+    }
+
+    return new ChangesetPagingResult((int) (latest + 1l), changesets);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repo
+   * @param startRevision
+   * @param endRevision
+   * @param start
+   * @param limit
+   * @param path
+   *
+   * @return
+   *
+   * @throws SVNException
+   */
+  private ChangesetPagingResult getChangesets(SVNRepository repo,
+    long startRevision, long endRevision, int start, int limit, String[] path)
+    throws SVNException
+  {
+    long startRev;
+    long endRev = Math.max(endRevision, 0);
+    long maxRev = repo.getLatestRevision();
+
+    if (startRevision >= 0l)
+    {
+      startRev = startRevision;
+    }
+    else
+    {
+      startRev = maxRev;
+    }
+
+    List<SVNLogEntry> changesetList = Lists.newArrayList();
+
+    logger.debug("fetch changeset from {} to {} for path {}", startRev, endRev,
+      path);
+
+    Collection<SVNLogEntry> entries = repo.log(path, null, startRev, endRev,
+                                        true, true);
+
+    for (SVNLogEntry entry : entries)
+    {
+      if (entry.getRevision() <= maxRev)
+      {
+        changesetList.add(entry);
+      }
+    }
+
+    int total = changesetList.size();
+    int max = limit + start;
+    int end = total;
+
+    if ((max > 0) && (end > max))
+    {
+      end = max;
+    }
+
+    if (start < 0)
+    {
+      start = 0;
+    }
+
+    logger.trace(
+      "create sublist from {} to {} of total {} collected changesets", start,
+      end, total);
+
+    changesetList = changesetList.subList(start, end);
+
+    return new ChangesetPagingResult(total,
+      SvnUtil.createChangesets(changesetList));
+  }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Collect and convert changesets.
+   *
+   */
+  private static class ChangesetCollector implements ISVNLogEntryHandler
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param changesets
+     */
+    public ChangesetCollector(Collection<Changeset> changesets)
+    {
+      this.changesets = changesets;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Method description
+     *
+     *
+     * @param logEntry
+     *
+     * @throws SVNException
+     */
+    @Override
+    public void handleLogEntry(SVNLogEntry logEntry) throws SVNException
+    {
+      changesets.add(SvnUtil.createChangeset(logEntry));
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private final Collection<Changeset> changesets;
   }
 }
