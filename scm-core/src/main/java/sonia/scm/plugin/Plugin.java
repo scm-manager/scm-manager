@@ -70,14 +70,17 @@ public final class Plugin extends ScmModule
    * @param information
    * @param resources
    * @param condition
+   * @param childFirstClassLoader
    * @param dependencies
    */
   public Plugin(PluginInformation information, PluginResources resources,
-    PluginCondition condition, Set<String> dependencies)
+    PluginCondition condition, boolean childFirstClassLoader,
+    Set<String> dependencies)
   {
     this.information = information;
     this.resources = resources;
     this.condition = condition;
+    this.childFirstClassLoader = childFirstClassLoader;
     this.dependencies = dependencies;
   }
 
@@ -109,6 +112,7 @@ public final class Plugin extends ScmModule
     return Objects.equal(condition, other.condition)
       && Objects.equal(information, other.information)
       && Objects.equal(resources, other.resources)
+      && Objects.equal(childFirstClassLoader, other.childFirstClassLoader)
       && Objects.equal(dependencies, other.dependencies);
   }
 
@@ -121,7 +125,8 @@ public final class Plugin extends ScmModule
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(condition, information, resources, dependencies);
+    return Objects.hashCode(condition, information, resources,
+      childFirstClassLoader, dependencies);
   }
 
   /**
@@ -138,6 +143,7 @@ public final class Plugin extends ScmModule
                   .add("condition", condition)
                   .add("information", information)
                   .add("resources", resources)
+                  .add("childFirstClassLoader", childFirstClassLoader)
                   .add("dependencies", dependencies)
                   .toString();
     //J+
@@ -196,7 +202,22 @@ public final class Plugin extends ScmModule
     return resources;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isChildFirstClassLoader()
+  {
+    return childFirstClassLoader;
+  }
+
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @XmlElement(name = "child-first-classloader")
+  private boolean childFirstClassLoader;
 
   /** Field description */
   @XmlElement(name = "conditions")

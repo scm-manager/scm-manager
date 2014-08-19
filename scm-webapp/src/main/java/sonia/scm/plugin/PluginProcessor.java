@@ -139,77 +139,6 @@ public final class PluginProcessor
    * Method description
    *
    *
-   * @param parentClassLoader
-   * @param directory
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private DefaultPluginClassLoader createClassLoader(
-    ClassLoader parentClassLoader, Path directory)
-    throws IOException
-  {
-    List<URL> urls = new ArrayList<>();
-
-    Path metaDir = directory.resolve(DIRECTORY_METAINF);
-
-    if (!Files.exists(metaDir))
-    {
-      throw new FileNotFoundException("could not find META-INF directory");
-    }
-
-    Path linkDir = directory.resolve(DIRECTORY_LINK);
-
-    if (!Files.exists(linkDir))
-    {
-      Files.createDirectory(linkDir);
-    }
-
-    Path linkMetaDir = linkDir.resolve(DIRECTORY_METAINF);
-
-    if (!Files.exists(linkMetaDir))
-    {
-      Files.deleteIfExists(linkMetaDir);
-      Files.createSymbolicLink(linkMetaDir, linkMetaDir.relativize(metaDir));
-    }
-
-    urls.add(linkDir.toUri().toURL());
-
-    Path webinfDir = directory.resolve(DIRECTORY_WEBINF);
-
-    if (Files.exists(webinfDir))
-    {
-      Path classesDir = webinfDir.resolve(DIRECTORY_CLASSES);
-
-      if (Files.exists(classesDir))
-      {
-        urls.add(classesDir.toUri().toURL());
-      }
-
-      Path libDir = webinfDir.resolve(DIRECTORY_DEPENDENCIES);
-
-      if (Files.exists(libDir))
-      {
-        for (Path f : Files.newDirectoryStream(libDir, GLOB_JAR))
-        {
-          urls.add(f.toUri().toURL());
-        }
-      }
-    }
-
-    //J-
-    return new DefaultPluginClassLoader(
-      urls.toArray(new URL[urls.size()]),
-      parentClassLoader
-    );
-    //J+
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param directory
    * @param filter
    *
@@ -313,7 +242,7 @@ public final class PluginProcessor
 
     PluginWrapper plugin =
       createPluginWrapper(createParentPluginClassLoader(classLoader, parents),
-        smp.getPath());
+        smp);
 
     if (plugin != null)
     {
@@ -335,7 +264,7 @@ public final class PluginProcessor
     ClassLoader classLoader, List<PluginNode> nodes)
     throws IOException
   {
-    
+
     // TODO fix plugin loading order
     for (PluginNode node : nodes)
     {
@@ -406,11 +335,127 @@ public final class PluginProcessor
    * Method description
    *
    *
+   * @param parentClassLoader
+   * @param directory
+   * @param smp
+   *
+   * @return
+   *
+   * @throws IOException
+   */
+  private ClassLoader createClassLoader(ClassLoader parentClassLoader,
+    ExplodedSmp smp)
+    throws IOException
+  {
+    List<URL> urls = new ArrayList<>();
+
+    Path metaDir = smp.getPath().resolve(DIRECTORY_METAINF);
+
+    if (!Files.exists(metaDir))
+    {
+      throw new FileNotFoundException("could not find META-INF directory");
+    }
+
+    Path linkDir = smp.getPath().resolve(DIRECTORY_LINK);
+
+    if (!Files.exists(linkDir))
+    {
+      Files.createDirectory(linkDir);
+    }
+
+    Path linkMetaDir = linkDir.resolve(DIRECTORY_METAINF);
+
+    if (!Files.exists(linkMetaDir))
+    {
+      Files.deleteIfExists(linkMetaDir);
+      Files.createSymbolicLink(linkMetaDir, linkMetaDir.relativize(metaDir));
+    }
+
+    urls.add(linkDir.toUri().toURL());
+
+    Path webinfDir = smp.getPath().resolve(DIRECTORY_WEBINF);
+
+    if (Files.exists(webinfDir))
+    {
+      Path classesDir = webinfDir.resolve(DIRECTORY_CLASSES);
+
+      if (Files.exists(classesDir))
+      {
+        urls.add(classesDir.toUri().toURL());
+      }
+
+      Path libDir = webinfDir.resolve(DIRECTORY_DEPENDENCIES);
+
+      if (Files.exists(libDir))
+      {
+        for (Path f : Files.newDirectoryStream(libDir, GLOB_JAR))
+        {
+          urls.add(f.toUri().toURL());
+        }
+      }
+    }
+
+    ClassLoader classLoader;
+    URL[] urlArray = urls.toArray(new URL[urls.size()]);
+    Plugin plugin = smp.getPlugin();
+
+    if (smp.getPlugin().isChildFirstClassLoader())
+    {
+      logger.debug("create child fist classloader for plugin {}",
+        plugin.getInformation().getId());
+      classLoader = new ChildFirstPluginClassLoader(urlArray,
+        parentClassLoader);
+    }
+    else
+    {
+      logger.debug("create parent fist classloader for plugin {}",
+        plugin.getInformation().getId());
+      classLoader = new DefaultPluginClassLoader(urlArray, parentClassLoader);
+    }
+
+    return classLoader;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @return
    */
   private String createDate()
   {
     return new SimpleDateFormat(FORMAT_DATE).format(new Date());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param root
+   * @param parents
+   *
+   * @return
+   */
+  private ClassLoader createParentPluginClassLoader(ClassLoader root,
+    List<ClassLoader> parents)
+  {
+    ClassLoader result;
+    int size = parents.size();
+
+    if (size == 0)
+    {
+      result = root;
+    }
+    else if (size == 1)
+    {
+      result = parents.get(0);
+    }
+    else
+    {
+      result = new MultiParentClassLoader(parents);
+    }
+
+    return result;
   }
 
   /**
@@ -449,58 +494,28 @@ public final class PluginProcessor
    * Method description
    *
    *
-   * @param root
-   * @param parents
-   *
-   * @return
-   */
-  private ClassLoader createParentPluginClassLoader(ClassLoader root,
-    List<ClassLoader> parents)
-  {
-    ClassLoader result;
-    int size = parents.size();
-
-    if (size == 0)
-    {
-      result = root;
-    }
-    else if (size == 1)
-    {
-      result = parents.get(0);
-    }
-    else
-    {
-      result = new MultiParentClassLoader(parents);
-    }
-
-    return result;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param classLoader
    * @param directory
+   * @param smp
    *
    * @return
    *
    * @throws IOException
    */
   private PluginWrapper createPluginWrapper(ClassLoader classLoader,
-    Path directory)
+    ExplodedSmp smp)
     throws IOException
   {
     PluginWrapper wrapper = null;
-    Path descriptor = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
+    Path descriptor = smp.getPath().resolve(PluginConstants.FILE_DESCRIPTOR);
 
     if (Files.exists(descriptor))
     {
-      ClassLoader cl = createClassLoader(classLoader, directory);
+      ClassLoader cl = createClassLoader(classLoader, smp);
 
       Plugin plugin = createPlugin(cl, descriptor);
 
-      wrapper = new PluginWrapper(plugin, cl, directory);
+      wrapper = new PluginWrapper(plugin, cl, smp.getPath());
     }
     else
     {

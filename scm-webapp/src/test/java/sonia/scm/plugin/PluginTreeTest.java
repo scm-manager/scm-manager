@@ -72,7 +72,7 @@ public class PluginTreeTest
     PluginCondition condition = new PluginCondition("999",
                                   new ArrayList<String>(), "hit");
     Plugin plugin = new Plugin(createInfo("a", "b", "1"), null, condition,
-                      null);
+                      false, null);
     ExplodedSmp smp = createSmp(plugin);
 
     new PluginTree(smp).getRootNodes();
@@ -186,7 +186,7 @@ public class PluginTreeTest
   private ExplodedSmp createSmp(String name) throws IOException
   {
     return createSmp(new Plugin(createInfo(name, name, "1.0.0"), null, null,
-      null));
+      false, null));
   }
 
   /**
@@ -212,7 +212,7 @@ public class PluginTreeTest
     }
 
     Plugin plugin = new Plugin(createInfo(name, name, "1"), null, null,
-                      dependencySet);
+                      false, dependencySet);
 
     return createSmp(plugin);
   }

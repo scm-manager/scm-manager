@@ -135,7 +135,7 @@ public class ExplodedSmpTest
     info.setArtifactId(artifactId);
     info.setVersion(version);
 
-    Plugin plugin = new Plugin(info, null, null, Sets.newSet(dependencies));
+    Plugin plugin = new Plugin(info, null, null, false, Sets.newSet(dependencies));
 
     return new ExplodedSmp(null, plugin);
   }
