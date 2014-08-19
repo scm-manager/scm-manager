@@ -226,7 +226,7 @@ public class DefaultPluginLoader implements PluginLoader
           {
             injectionModules.add((Module) extensionClass.newInstance());
           }
-          catch (Exception ex)
+          catch (IllegalAccessException | InstantiationException ex)
           {
             logger.error("could not create instance of module", ex);
           }

@@ -37,7 +37,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Ordering;
 import com.google.common.collect.Sets;
 import com.google.common.hash.Hashing;
 
@@ -147,7 +146,7 @@ public final class PluginProcessor
    *
    * @throws IOException
    */
-  private static DefaultPluginClassLoader createClassLoader(
+  private DefaultPluginClassLoader createClassLoader(
     ClassLoader parentClassLoader, Path directory)
     throws IOException
   {
@@ -256,17 +255,97 @@ public final class PluginProcessor
     }
 
     List<ExplodedSmp> smps = Lists.transform(dirs, new PathTransformer());
-    Iterable<ExplodedSmp> smpOrdered = Ordering.natural().sortedCopy(smps);
 
-    Set<PluginWrapper> pluginWrappers = createPluginWrappers(classLoader,
-                                          smpOrdered);
+    logger.trace("start building plugin tree");
+
+    List<PluginNode> rootNodes = new PluginTree(smps).getRootNodes();
+
+    logger.trace("create plugin wrappers and build classloaders");
+
+    Set<PluginWrapper> wrappers = createPluginWrappers(classLoader, rootNodes);
 
     if (logger.isDebugEnabled())
     {
-      logger.debug("collected {} plugins", pluginWrappers.size());
+      logger.debug("collected {} plugins", wrappers.size());
     }
 
-    return ImmutableSet.copyOf(pluginWrappers);
+    return ImmutableSet.copyOf(wrappers);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param plugins
+   * @param classLoader
+   * @param node
+   *
+   * @throws IOException
+   */
+  private void appendPluginWrapper(Set<PluginWrapper> plugins,
+    ClassLoader classLoader, PluginNode node)
+    throws IOException
+  {
+    ExplodedSmp smp = node.getPlugin();
+
+    List<ClassLoader> parents = Lists.newArrayList();
+
+    for (PluginNode parent : node.getParents())
+    {
+      PluginWrapper wrapper = parent.getWrapper();
+
+      if (wrapper != null)
+      {
+        parents.add(wrapper.getClassLoader());
+      }
+      else
+      {
+        //J-
+        throw new PluginLoadException(
+          String.format(
+            "parent %s of plugin %s is not ready", parent.getId(), node.getId()
+          )
+        );
+        //J+
+      }
+
+    }
+
+    PluginWrapper plugin =
+      createPluginWrapper(createParentPluginClassLoader(classLoader, parents),
+        smp.getPath());
+
+    if (plugin != null)
+    {
+      plugins.add(plugin);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param plugins
+   * @param classLoader
+   * @param nodes
+   *
+   * @throws IOException
+   */
+  private void appendPluginWrappers(Set<PluginWrapper> plugins,
+    ClassLoader classLoader, List<PluginNode> nodes)
+    throws IOException
+  {
+    
+    // TODO fix plugin loading order
+    for (PluginNode node : nodes)
+    {
+      appendPluginWrapper(plugins, classLoader, node);
+    }
+
+    for (PluginNode node : nodes)
+    {
+      appendPluginWrappers(plugins, classLoader, node.getChildren());
+    }
   }
 
   /**
@@ -370,6 +449,37 @@ public final class PluginProcessor
    * Method description
    *
    *
+   * @param root
+   * @param parents
+   *
+   * @return
+   */
+  private ClassLoader createParentPluginClassLoader(ClassLoader root,
+    List<ClassLoader> parents)
+  {
+    ClassLoader result;
+    int size = parents.size();
+
+    if (size == 0)
+    {
+      result = root;
+    }
+    else if (size == 1)
+    {
+      result = parents.get(0);
+    }
+    else
+    {
+      result = new MultiParentClassLoader(parents);
+    }
+
+    return result;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param classLoader
    * @param directory
    *
@@ -407,26 +517,19 @@ public final class PluginProcessor
    *
    * @param classLoader
    * @param smps
+   * @param rootNodes
    *
    * @return
    *
    * @throws IOException
    */
   private Set<PluginWrapper> createPluginWrappers(ClassLoader classLoader,
-    Iterable<ExplodedSmp> smps)
+    List<PluginNode> rootNodes)
     throws IOException
   {
     Set<PluginWrapper> plugins = Sets.newHashSet();
 
-    for (ExplodedSmp smp : smps)
-    {
-      PluginWrapper plugin = createPluginWrapper(classLoader, smp.getPath());
-
-      if (plugin != null)
-      {
-        plugins.add(plugin);
-      }
-    }
+    appendPluginWrappers(plugins, classLoader, rootNodes);
 
     return plugins;
   }
