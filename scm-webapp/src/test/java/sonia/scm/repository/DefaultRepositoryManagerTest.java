@@ -35,16 +35,16 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import com.google.common.collect.ImmutableSet;
 
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.Test;
 
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.HookFeature;
+import sonia.scm.repository.spi.HookContextProvider;
 import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.store.JAXBStoreFactory;
@@ -65,8 +65,6 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(HookContext.class)
 public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
 {
 
@@ -81,12 +79,13 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
   @Override
   public HookContext createHookContext(Repository repository)
   {
-    HookContext ctx = mock(HookContext.class);
+    PreProcessorUtil ppu = mock(PreProcessorUtil.class);
+    HookContextProvider provider = mock(HookContextProvider.class);
+    Set<HookFeature> features = ImmutableSet.of();
 
-    when(ctx.isFeatureSupported(any(HookFeature.class))).thenReturn(
-      Boolean.FALSE);
+    when(provider.getSupportedFeatures()).thenReturn(features);
 
-    return ctx;
+    return new HookContextFactory(ppu).createContext(provider, repository);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -145,7 +144,7 @@ public class DefaultRepositoryManagerTest extends RepositoryManagerTestBase
   protected DefaultRepositoryManager createRepositoryManager(
     boolean archiveEnabled)
   {
-    Set<RepositoryHandler> handlerSet = new HashSet<RepositoryHandler>();
+    Set<RepositoryHandler> handlerSet = new HashSet<>();
     StoreFactory factory = new JAXBStoreFactory();
 
     factory.init(contextProvider);
