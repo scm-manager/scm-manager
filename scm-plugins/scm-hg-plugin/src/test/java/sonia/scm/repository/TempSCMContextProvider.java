@@ -120,7 +120,7 @@ public class TempSCMContextProvider implements SCMContextProvider
   @Override
   public String getVersion()
   {
-    return "UNIT-Test";
+    return "900.0.1-SNAPSHOT";
   }
 
   //~--- set methods ----------------------------------------------------------
