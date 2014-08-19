@@ -72,6 +72,7 @@ public class MultiParentClassLoaderTest
      classLoader = new MultiParentClassLoader(parent1, parent2);
   }
   
+  @SuppressWarnings("unchecked")
   @Test(expected = ClassNotFoundException.class)
   public void testClassNotFoundException() throws ClassNotFoundException
   {

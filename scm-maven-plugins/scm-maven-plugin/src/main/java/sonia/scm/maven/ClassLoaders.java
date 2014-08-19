@@ -75,10 +75,11 @@ public final class ClassLoaders
    * @throws DependencyResolutionRequiredException
    * @throws MalformedURLException
    */
+  @SuppressWarnings("unchecked")
   public static ClassLoader createRuntimeClassLoader(MavenProject project)
     throws DependencyResolutionRequiredException, MalformedURLException
   {
-    Set<URL> urls = new HashSet<URL>();
+    Set<URL> urls = new HashSet<>();
 
     append(urls, project.getRuntimeClasspathElements());
     append(urls, project.getCompileClasspathElements());

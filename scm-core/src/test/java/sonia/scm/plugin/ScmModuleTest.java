@@ -59,6 +59,7 @@ public class ScmModuleTest
    *
    */
   @Test
+  @SuppressWarnings("unchecked")
   public void testUnmarshall()
   {
     URL resource = Resources.getResource("sonia/scm/plugin/module.xml");

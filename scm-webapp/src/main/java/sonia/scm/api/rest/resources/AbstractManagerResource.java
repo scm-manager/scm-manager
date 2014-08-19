@@ -660,6 +660,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
      * @return
      */
     @Override
+    @SuppressWarnings("unchecked")
     public int compare(Object o1, Object o2)
     {
       return super.compare(o1, o2) * -1;

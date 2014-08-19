@@ -35,11 +35,6 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Maps;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.util.AssertUtil;
@@ -53,12 +48,6 @@ import sonia.scm.util.AssertUtil;
  */
 public abstract class AbstractRepositoryManager implements RepositoryManager
 {
-
-  /** the logger for AbstractRepositoryManager */
-  private static final Logger logger =
-    LoggerFactory.getLogger(AbstractRepositoryManager.class);
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Sends a {@link RepositoryHookEvent} to each registered

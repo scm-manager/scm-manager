@@ -270,6 +270,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
    *
    * @throws SVNException
    */
+  @SuppressWarnings("unchecked")
   private ChangesetPagingResult getChangesets(SVNRepository repo,
     long startRevision, long endRevision, int start, int limit, String[] path)
     throws SVNException

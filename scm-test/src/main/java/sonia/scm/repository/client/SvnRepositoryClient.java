@@ -54,6 +54,7 @@ import java.io.File;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.tmatesoft.svn.core.internal.util.SVNURLUtil;
 
 /**
  *
@@ -93,7 +94,7 @@ public class SvnRepositoryClient extends AbstractRepositoryClient
       client = SVNClientManager.newInstance(options);
     }
 
-    remoteRepositoryURL = SVNURL.parseURIDecoded(remoteRepository);
+    remoteRepositoryURL = SVNURL.parseURIEncoded(remoteRepository);
     DAVRepositoryFactory.setup();
   }
 

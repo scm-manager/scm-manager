@@ -34,8 +34,11 @@ package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterators;
+import com.google.common.io.ByteSource;
+import com.google.common.io.CharSource;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
 
@@ -168,7 +171,8 @@ public class CacheConfigurationTestLoader implements CacheConfigurationLoader
 
         URL manual = getResource(manualConfiguration);
 
-        Files.copy(Resources.newInputStreamSupplier(manual), file);
+        ByteSource source = Resources.asByteSource(manual);
+        source.copyTo(Files.asByteSink(file));
       }
       catch (IOException ex)
       {

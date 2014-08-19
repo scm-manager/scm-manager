@@ -59,6 +59,7 @@ import javax.ws.rs.ext.Provider;
  *
  * @author Sebastian Sdorra
  */
+@SuppressWarnings("unchecked")
 public final class ExtensionBinder
 {
 

@@ -59,6 +59,7 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  */
+@SuppressWarnings("deprecation")
 public class SvnBlameHandler implements ISVNAnnotateHandler
 {
 
@@ -230,7 +231,7 @@ public class SvnBlameHandler implements ISVNAnnotateHandler
   private final List<BlameLine> blameLines;
 
   /** Field description */
-  private final Map<Long, String> descriptionCache = new HashMap<Long, String>();
+  private final Map<Long, String> descriptionCache = new HashMap<>();
 
   /** Field description */
   private final String path;

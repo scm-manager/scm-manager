@@ -116,6 +116,7 @@ public final class I18nMessages
    *
    * @return instance of message class
    */
+  @SuppressWarnings("unchecked")
   public synchronized static <T> T get(Class<T> msgClass, Locale locale)
   {
     CacheKey ck = new CacheKey(locale, msgClass);

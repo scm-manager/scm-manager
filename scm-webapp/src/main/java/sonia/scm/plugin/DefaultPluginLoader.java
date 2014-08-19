@@ -258,6 +258,7 @@ public class DefaultPluginLoader implements PluginLoader
    * @throws IOException
    * @throws JAXBException
    */
+  @SuppressWarnings("unchecked")
   private <T> Set<T> getInstalled(ClassLoader classLoader, JAXBContext context,
     String path)
     throws IOException, JAXBException

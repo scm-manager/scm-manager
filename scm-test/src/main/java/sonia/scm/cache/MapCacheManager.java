@@ -48,6 +48,7 @@ import java.util.Map;
  * @author Sebastian Sdorra
  * @since 1.17
  */
+@SuppressWarnings("unchecked")
 public class MapCacheManager
   implements CacheManager, org.apache.shiro.cache.CacheManager
 {
@@ -94,6 +95,5 @@ public class MapCacheManager
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  @SuppressWarnings("unchecked")
   private final Map<String, MapCache> cacheMap = Maps.newHashMap();
 }
