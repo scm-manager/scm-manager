@@ -46,6 +46,8 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.plugin.PluginLoader;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
@@ -84,11 +86,13 @@ public class MustacheTemplateEngine implements TemplateEngine
    *
    *
    * @param context
+   * @param pluginLoader
    */
   @Inject
-  public MustacheTemplateEngine(ServletContext context)
+  public MustacheTemplateEngine(ServletContext context,
+    PluginLoader pluginLoader)
   {
-    factory = new ServletMustacheFactory(context);
+    factory = new ServletMustacheFactory(context, pluginLoader);
 
     ThreadFactory threadFactory =
       new ThreadFactoryBuilder().setNameFormat(THREAD_NAME).build();
@@ -168,11 +172,7 @@ public class MustacheTemplateEngine implements TemplateEngine
     {
       logger.warn("could not find mustache template at {}", templatePath);
     }
-    catch (UncheckedExecutionException ex)
-    {
-      handleWrappedException(ex, templatePath);
-    }
-    catch (MustacheException ex)
+    catch (UncheckedExecutionException | MustacheException ex)
     {
       handleWrappedException(ex, templatePath);
     }
@@ -231,5 +231,5 @@ public class MustacheTemplateEngine implements TemplateEngine
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ServletMustacheFactory factory;
+  private final ServletMustacheFactory factory;
 }

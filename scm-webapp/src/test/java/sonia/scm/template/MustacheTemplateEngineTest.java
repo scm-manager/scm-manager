@@ -33,6 +33,12 @@
 
 package sonia.scm.template;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.plugin.PluginLoader;
+
+import static org.mockito.Mockito.*;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.InputStream;
@@ -57,7 +63,12 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
   @Override
   public TemplateEngine createEngine(ServletContext context)
   {
-    return new MustacheTemplateEngine(context);
+    PluginLoader loader = mock(PluginLoader.class);
+
+    when(loader.getUberClassLoader()).thenReturn(
+      Thread.currentThread().getContextClassLoader());
+
+    return new MustacheTemplateEngine(context, loader);
   }
 
   //~--- get methods ----------------------------------------------------------

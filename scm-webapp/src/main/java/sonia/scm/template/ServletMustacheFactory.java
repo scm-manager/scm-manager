@@ -42,6 +42,8 @@ import com.google.common.base.Charsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.plugin.PluginLoader;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.BufferedReader;
@@ -71,10 +73,13 @@ public class ServletMustacheFactory extends DefaultMustacheFactory
    *
    *
    * @param servletContext
+   * @param pluginLoader
    */
-  public ServletMustacheFactory(ServletContext servletContext)
+  public ServletMustacheFactory(ServletContext servletContext,
+    PluginLoader pluginLoader)
   {
     this.servletContext = servletContext;
+    this.pluginLoader = pluginLoader;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -111,14 +116,7 @@ public class ServletMustacheFactory extends DefaultMustacheFactory
         resourceName = resourceName.substring(1);
       }
 
-      ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-      if (classLoader == null)
-      {
-        classLoader = ServletMustacheFactory.class.getClassLoader();
-      }
-
-      is = classLoader.getResourceAsStream(resourceName);
+      is = pluginLoader.getUberClassLoader().getResourceAsStream(resourceName);
     }
 
     if (is != null)
@@ -145,6 +143,9 @@ public class ServletMustacheFactory extends DefaultMustacheFactory
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final PluginLoader pluginLoader;
 
   /** Field description */
   private ServletContext servletContext;
