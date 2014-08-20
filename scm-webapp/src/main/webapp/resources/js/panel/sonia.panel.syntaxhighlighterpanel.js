@@ -30,10 +30,10 @@
  */
 
 Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
-  
+
   syntaxes: [{
     name: 'ActionScript3',
-    aliases: ['as3', 'actionscript3'],
+    aliases: ['as', 'as3', 'actionscript3'],
     fileName: 'shBrushAS3.js'
   },{
     name: 'AppleScript',
@@ -41,7 +41,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
     fileName: 'shBrushAppleScript.js'
   },{
     name: 'Bash/shell',
-    aliases: ['bash', 'shell'],
+    aliases: ['sh', 'bash', 'shell'],
     fileName: 'shBrushBash.js'
   },{
     name: 'ColdFusion',
@@ -49,7 +49,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
     fileName: 'shBrushColdFusion.js'
   },{
     name: 'C#',
-    aliases: ['c-sharp', 'csharp'],
+    aliases: ['cs', 'c-sharp', 'csharp'],
     fileName: 'shBrushCSharp.js'
   },{
     name: 'C++',
@@ -97,7 +97,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
     fileName: 'shBrushPhp.js'
   },{
     name: 'Plain Text',
-    aliases: ['plain', 'text'],
+    aliases: ['plain', 'text', 'txt', 'log'],
     fileName: 'shBrushPlain.js'
   },{
     name: 'PowerShell',
@@ -132,26 +132,26 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
     aliases: ['xml', 'xhtml', 'xslt', 'html', 'xhtml'],
     fileName: 'shBrushXml.js'
   }],
-  
+
   syntax: 'plain',
   brush: 'plain',
   brushUrl: 'shBrushPlain.js',
   theme: 'Netbeans',
   shPath: 'resources/syntaxhighlighter',
   contentUrl: null,
-  
+
   loadErrorTitleText: 'Error',
   loadErrorMsgText: 'Could not load file',
-  
+
   contentLoaded: false,
   scriptsLoaded: false,
-  
+
   initComponent: function(){
-    
+
     if (debug){
       console.debug( 'try to find brush for ' + this.syntax );
     }
-    
+
     if ( this.syntax !== 'plain' ){
       var s = null;
       var found = false;
@@ -171,7 +171,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
           break;
         }
       }
-      
+
       if (! found){
         if ( debug ){
           console.debug( 'could not find syntax for ' + this.syntax );
@@ -179,9 +179,9 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
         this.syntax = 'plain';
       }
     }
-    
+
     this.brush = this.syntax;
-    
+
     // load core stylesheet
     main.loadStylesheet( this.shPath + '/styles/shCore.css');
     // load theme stylesheet
@@ -189,7 +189,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
       console.debug( 'load theme ' + this.theme );
     }
     main.loadStylesheet(this.shPath + '/styles/shCore' + this.theme + '.css');
-    
+
     var config = {
       autoScroll: true,
       listeners: {
@@ -199,11 +199,11 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
         }
       }
     };
-    
+
     Ext.apply(this, Ext.apply(this.initialConfig, config));
     Sonia.panel.SyntaxHighlighterPanel.superclass.initComponent.apply(this, arguments);
   },
-  
+
   loadBodyContent: function(){
     main.loadScript(this.shPath + '/scripts/shCore.js', this.loadBrush, this);
     Ext.Ajax.request({
@@ -219,21 +219,21 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
       },
       failure: function(result){
         main.handleRestFailure(
-          result, 
-          this.loadErrorTitleText, 
+          result,
+          this.loadErrorTitleText,
           this.loadErrorMsgText
         );
       }
     });
   },
-  
+
   loadBrush: function(){
     main.loadScript(this.shPath + '/scripts/' + this.brushUrl, function(){
       this.scriptsLoaded = true;
       this.highlight();
     }, this);
   },
-  
+
   highlight: function(){
     if (debug){
       console.debug('loaded, script: ' + this.scriptsLoaded + ", content: " + this.contentLoaded );
@@ -247,7 +247,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
       SyntaxHighlighter.vars.discoveredBrushes = null;
     }
   }
-  
+
 });
 
 Ext.reg('syntaxHighlighterPanel', Sonia.panel.SyntaxHighlighterPanel);
