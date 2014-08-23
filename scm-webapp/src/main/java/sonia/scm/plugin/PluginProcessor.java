@@ -246,6 +246,7 @@ public final class PluginProcessor
 
     if (plugin != null)
     {
+      node.setWrapper(plugin);
       plugins.add(plugin);
     }
   }
