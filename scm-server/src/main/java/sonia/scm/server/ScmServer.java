@@ -99,16 +99,9 @@ public class ScmServer extends Thread
 
       server.join();
     }
-    catch (Exception ex)
+    catch (InterruptedException ex)
     {
-      if (ex instanceof ScmServerException)
-      {
-        throw(ScmServerException) ex;
-      }
-      else
-      {
-        throw new ScmServerException("could not start scm-server", ex);
-      }
+      throw new ScmServerException("could not start scm-server", ex);
     }
   }
 

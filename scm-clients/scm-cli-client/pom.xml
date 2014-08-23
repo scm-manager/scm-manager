@@ -166,7 +166,7 @@
           </plugin>
 
           <plugin>
-            <groupId>org.mortbay.jetty</groupId>
+            <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>${jetty.version}</version>
             <configuration>
@@ -182,20 +182,13 @@
                   <value>UTF-8</value>
                 </systemProperty>
               </systemProperties>
-              <connectors>
-                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                  <port>8081</port>
-                  <maxIdleTime>60000</maxIdleTime>
-                  <requestHeaderSize>16384</requestHeaderSize>
-                </connector>
-              </connectors>
+              <httpConnector>
+                <port>8081</port>
+              </httpConnector>
               <webApp>
                 <contextPath>/scm</contextPath>
               </webApp>
               <war>${project.build.directory}/webapp/scm-webapp.war</war>
-              <source>${project.build.javaLevel}</source>
-              <target>${project.build.javaLevel}</target>
-              <encoding>${project.build.sourceEncoding}</encoding>
               <scanIntervalSeconds>0</scanIntervalSeconds>
               <daemon>true</daemon>
             </configuration>

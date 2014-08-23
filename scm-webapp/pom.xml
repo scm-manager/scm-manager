@@ -451,10 +451,13 @@
       </plugin>
 
       <plugin>
-        <groupId>org.mortbay.jetty</groupId>
+        <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
         <version>${jetty.version}</version>
         <configuration>
+          <httpConnector>
+            <port>8081</port>
+          </httpConnector>
           <stopPort>8005</stopPort>
           <stopKey>STOP</stopKey>
           <systemProperties>
@@ -471,19 +474,10 @@
               <value>true</value>
             </systemProperty>
           </systemProperties>
-          <connectors>
-            <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-              <port>8081</port>
-              <maxIdleTime>60000</maxIdleTime>
-              <requestHeaderSize>16384</requestHeaderSize>
-            </connector>
-          </connectors>
           <webApp>
             <contextPath>/scm</contextPath>
           </webApp>
-          <source>${project.build.javaLevel}</source>
-          <target>${project.build.javaLevel}</target>
-          <encoding>${project.build.sourceEncoding}</encoding>
+          <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
           <scanIntervalSeconds>0</scanIntervalSeconds>
         </configuration>
       </plugin>        
@@ -587,10 +581,13 @@
           </plugin>
 
           <plugin>
-            <groupId>org.mortbay.jetty</groupId>
+            <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>${jetty.version}</version>
             <configuration>
+              <httpConnector>
+                <port>8081</port>
+              </httpConnector>
               <stopPort>8085</stopPort>
               <stopKey>STOP</stopKey>
               <systemProperties>
@@ -599,16 +596,7 @@
                   <value>target/scm-it</value>
                 </systemProperty>
               </systemProperties>
-              <connectors>
-                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                  <port>8081</port>
-                  <maxIdleTime>60000</maxIdleTime>
-                  <requestHeaderSize>16384</requestHeaderSize>
-                </connector>
-              </connectors>
-              <source>${project.build.javaLevel}</source>
-              <target>${project.build.javaLevel}</target>
-              <encoding>${project.build.sourceEncoding}</encoding>
+              <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
               <scanIntervalSeconds>0</scanIntervalSeconds>
               <daemon>true</daemon>
             </configuration>
@@ -667,10 +655,13 @@
           </plugin>
           
           <plugin>
-            <groupId>org.mortbay.jetty</groupId>
+            <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-maven-plugin</artifactId>
             <version>${jetty.version}</version>
             <configuration>
+              <httpConnector>
+                <port>8082</port>
+              </httpConnector>
               <stopPort>8086</stopPort>
               <stopKey>STOP</stopKey>
               <systemProperties>
@@ -679,16 +670,7 @@
                   <value>target/scm-it</value>
                 </systemProperty>
               </systemProperties>
-              <connectors>
-                <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
-                  <port>8082</port>
-                  <maxIdleTime>60000</maxIdleTime>
-                  <requestHeaderSize>16384</requestHeaderSize>
-                </connector>
-              </connectors>
-              <source>${project.build.javaLevel}</source>
-              <target>${project.build.javaLevel}</target>
-              <encoding>${project.build.sourceEncoding}</encoding>
+              <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>
               <scanIntervalSeconds>0</scanIntervalSeconds>
               <daemon>true</daemon>
             </configuration>

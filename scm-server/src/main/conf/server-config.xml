@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
 <!--
 
     Copyright (c) 2010, Sebastian Sdorra
@@ -41,36 +41,58 @@
         Purpose of the document follows.
 -->
 
-<Configure class="org.eclipse.jetty.server.Server">
+<Configure id="ScmServer" class="org.eclipse.jetty.server.Server">
 
+  <New id="httpConfig" class="org.eclipse.jetty.server.HttpConfiguration">
+    <!-- increase header size for mercurial -->
+    <Set name="requestHeaderSize">16384</Set>
+    <Set name="responseHeaderSize">16384</Set>
+
+    <!-- forwarding
+    <Call name="addCustomizer">
+      <Arg><New class="org.eclipse.jetty.server.ForwardedRequestCustomizer"/></Arg>
+    </Call>
+    -->
+  </New>
+  
+  <!--
+  Connectors
+  -->
   <Call name="addConnector">
     <Arg>
-      <New class="org.eclipse.jetty.server.nio.SelectChannelConnector">
-        <Set name="host">
-          <SystemProperty name="jetty.host" />
-        </Set>
+      <New class="org.eclipse.jetty.server.ServerConnector">
+        <Arg name="server">
+          <Ref refid="ScmServer" />
+        </Arg>
+        <Arg name="factories">
+          <Array type="org.eclipse.jetty.server.ConnectionFactory">
+            <Item>
+              <New class="org.eclipse.jetty.server.HttpConnectionFactory">
+                <Arg name="config">
+                  <Ref refid="httpConfig" />
+                </Arg>
+              </New>
+            </Item>
+          </Array>
+        </Arg>
         <Set name="port">
           <SystemProperty name="jetty.port" default="8080" />
         </Set>
-        <Set name="requestHeaderSize">16384</Set>
-        <!-- for mod_proxy -->
-        <!--
-        <Set name="forwarded">true</Set>
-        -->
       </New>
     </Arg>
   </Call>
 
   <New id="scm-webapp" class="org.eclipse.jetty.webapp.WebAppContext">
     <Set name="contextPath">/scm</Set>
-    <Set name="war"><SystemProperty name="basedir" default="."/>/var/webapp/scm-webapp.war</Set>
+    <Set name="war">
+      <SystemProperty name="basedir" default="."/>/var/webapp/scm-webapp.war</Set>
     <!-- disable directory listings -->
     <Call name="setInitParameter">
       <Arg>org.eclipse.jetty.servlet.Default.dirAllowed</Arg>
       <Arg>false</Arg>
     </Call>
     <Set name="tempDirectory">
-      <SystemProperty name="basedir" default="."/>/work
+      <SystemProperty name="basedir" default="."/>/work/scm
     </Set>
   </New>
 
@@ -80,13 +102,14 @@
       <New class="org.eclipse.jetty.util.resource.ResourceCollection">
         <Arg>
           <Array type="java.lang.String">
-            <Item><SystemProperty name="basedir" default="."/>/var/webapp/docroot</Item>
+            <Item>
+              <SystemProperty name="basedir" default="."/>/var/webapp/docroot</Item>
           </Array>
         </Arg>
       </New>
     </Set>
     <Set name="tempDirectory">
-      <SystemProperty name="basedir" default="."/>/work
+      <SystemProperty name="basedir" default="."/>/work/docroot
     </Set>
   </New>
   
@@ -100,82 +123,9 @@
           <Item>
             <Ref id="docroot" />
           </Item>
-          <!--
-          <Item>
-            <New id="RequestLog" class="org.eclipse.jetty.server.handler.RequestLogHandler"/>
-          </Item>
-          -->
         </Array>
       </Set>
     </New>
   </Set>
-  
-  <!-- request logging -->
-  <!--
-  <Ref id="RequestLog">
-    <Set name="requestLog">
-      <New id="RequestLogImpl" class="org.eclipse.jetty.server.NCSARequestLog">
-        <Arg><SystemProperty name="basedir" default="."/>/var/log/yyyy_mm_dd.request.log</Arg>
-        <Set name="retainDays">90</Set>
-        <Set name="append">true</Set>
-        <Set name="extended">false</Set>
-        <Set name="LogTimeZone">GMT</Set>
-       </New>
-    </Set>
-  </Ref>
-  -->
-
-  <!-- mod_proxy_ajp or mod_jk -->
-  <!--
-  <Call name="addConnector">
-    <Arg>
-       <New class="org.eclipse.jetty.ajp.Ajp13SocketConnector">
-         <Set name="port">8009</Set>
-       </New>
-    </Arg>
-  </Call>
-  -->
-
-  <!-- SSL-Connector -->
-  <!--
-     Documentation for the SSL-Connector: 
-     http://wiki.eclipse.org/Jetty/Reference/SSL_Connectors
-  -->
-  <!--
-  <Call name="addConnector">
-    <Arg>
-      <New class="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
-        <Set name="Port">8181</Set>
-        <Set name="maxIdleTime">30000</Set>
-        <Set name="requestHeaderSize">16384</Set>
-        <Set name="keystore"><SystemProperty name="basedir" default="." />/conf/keystore.jks</Set>
-        <Set name="password">OBF:xxx</Set>
-        <Set name="keyPassword">OBF:xxx</Set>
-        <Set name="truststore"><SystemProperty name="basedir" default="." />/conf/keystore.jks</Set>
-        <Set name="trustPassword">OBF:xxx</Set>
-      </New>
-    </Arg>
-  </Call>
-  -->
-
-  <!-- JMX support -->
-  <!--
-  <Call id="MBeanServer" class="java.lang.management.ManagementFactory"
-    name="getPlatformMBeanServer" />
-
-  <New id="MBeanContainer" class="org.eclipse.jetty.jmx.MBeanContainer">
-    <Arg>
-      <Ref id="MBeanServer" />
-    </Arg>
-  </New>
-
-  <Get id="Container" name="container">
-    <Call name="addEventListener">
-      <Arg>
-        <Ref id="MBeanContainer" />
-      </Arg>
-    </Call>
-  </Get>
-  -->
 
 </Configure>

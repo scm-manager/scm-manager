@@ -438,7 +438,7 @@
     <legman.version>1.2.0</legman.version>
     
     <!-- webserver -->
-    <jetty.version>7.6.15.v20140411</jetty.version>
+    <jetty.version>9.2.2.v20140723</jetty.version>
 
     <!-- security libraries -->
     <shiro.version>1.2.3</shiro.version>
