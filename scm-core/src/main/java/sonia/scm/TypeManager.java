@@ -43,28 +43,26 @@ import java.util.Collection;
  * @author Sebastian Sdorra
  *
  * @param <T> type of the model object
+ * @param <H> type of the handler
  * @param <E> type of the exception
  */
-public interface TypeManager<T extends ModelObject, E extends Exception>
-        extends Manager<T, E>
+public interface TypeManager<T extends ModelObject, H extends Handler<T, E>,
+  E extends Exception> extends Manager<T, E>
 {
 
   /**
    * Returns the handler for given type or
    * null if no handler of that type is available.
    *
-   *
    * @param type name of the handler
-   * @param <H> type of the handler
    *
    * @return the handler for given type
    */
-  public <H extends Handler<T, E>> H getHandler(String type);
+  public H getHandler(String type);
 
   /**
    * Returns a {@link java.util.Collection} of all
    * available and configured types.
-   *
    *
    * @return all available types
    */

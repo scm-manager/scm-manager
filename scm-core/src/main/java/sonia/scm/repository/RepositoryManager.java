@@ -55,7 +55,7 @@ import javax.servlet.http.HttpServletRequest;
  * @apiviz.uses sonia.scm.repository.RepositoryHandler
  */
 public interface RepositoryManager
-  extends TypeManager<Repository, RepositoryException>
+  extends TypeManager<Repository, RepositoryHandler, RepositoryException>
 {
 
   /**
