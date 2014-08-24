@@ -38,7 +38,6 @@ package sonia.scm;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.servlet.ServletModule;
 
-import sonia.scm.template.DefaultEngine;
 import sonia.scm.template.ErrorServlet;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
@@ -66,7 +65,7 @@ public class ScmErrorModule extends ServletModule
       Multibinder.newSetBinder(binder(), TemplateEngine.class);
 
     engineBinder.addBinding().to(MustacheTemplateEngine.class);
-    bind(TemplateEngine.class).annotatedWith(DefaultEngine.class).to(
+    bind(TemplateEngine.class).annotatedWith(Default.class).to(
       MustacheTemplateEngine.class);
     bind(TemplateEngineFactory.class);
 

@@ -52,6 +52,6 @@ import java.lang.annotation.Target;
  */
 @Documented
 @BindingAnnotation
-@Target(ElementType.PARAMETER)
+@Target({ ElementType.TYPE, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Default {}

@@ -42,6 +42,8 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.Default;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
@@ -81,7 +83,7 @@ public final class TemplateEngineFactory
    */
   @Inject
   public TemplateEngineFactory(Set<TemplateEngine> engines,
-    @DefaultEngine TemplateEngine defaultEngine)
+    @Default TemplateEngine defaultEngine)
   {
     if (logger.isDebugEnabled())
     {
@@ -186,8 +188,8 @@ public final class TemplateEngineFactory
   //~--- fields ---------------------------------------------------------------
 
   /** default template engine */
-  private TemplateEngine defaultEngine;
+  private final TemplateEngine defaultEngine;
 
   /** map of registered template engines */
-  private Map<String, TemplateEngine> engineMap;
+  private final Map<String, TemplateEngine> engineMap;
 }

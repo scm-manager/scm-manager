@@ -105,7 +105,6 @@ import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.store.JAXBDataStoreFactory;
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
-import sonia.scm.template.DefaultEngine;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
@@ -242,7 +241,7 @@ public class ScmServletModule extends JerseyServletModule
 
     bind(SCMContextProvider.class).toInstance(context);
 
-    ScmConfiguration config = getScmConfiguration(context);
+    ScmConfiguration config = getScmConfiguration();
     CipherUtil cu = CipherUtil.getInstance();
 
     // bind repository provider
@@ -367,7 +366,7 @@ public class ScmServletModule extends JerseyServletModule
       Multibinder.newSetBinder(binder(), TemplateEngine.class);
 
     engineBinder.addBinding().to(MustacheTemplateEngine.class);
-    bind(TemplateEngine.class).annotatedWith(DefaultEngine.class).to(
+    bind(TemplateEngine.class).annotatedWith(Default.class).to(
       MustacheTemplateEngine.class);
     bind(TemplateEngineFactory.class);
 
@@ -494,7 +493,7 @@ public class ScmServletModule extends JerseyServletModule
    *
    * @return
    */
-  private ScmConfiguration getScmConfiguration(SCMContextProvider context)
+  private ScmConfiguration getScmConfiguration()
   {
     ScmConfiguration configuration = new ScmConfiguration();
 

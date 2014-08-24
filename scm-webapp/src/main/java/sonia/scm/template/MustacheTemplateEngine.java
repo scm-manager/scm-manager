@@ -63,7 +63,7 @@ import javax.servlet.ServletContext;
  *
  * @author Sebastian Sdorra
  */
-@DefaultEngine
+@Default
 public class MustacheTemplateEngine implements TemplateEngine
 {
 
