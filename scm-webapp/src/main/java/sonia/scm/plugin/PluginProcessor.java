@@ -357,23 +357,6 @@ public final class PluginProcessor
       throw new FileNotFoundException("could not find META-INF directory");
     }
 
-    Path linkDir = smp.getPath().resolve(DIRECTORY_LINK);
-
-    if (!Files.exists(linkDir))
-    {
-      Files.createDirectory(linkDir);
-    }
-
-    Path linkMetaDir = linkDir.resolve(DIRECTORY_METAINF);
-
-    if (!Files.exists(linkMetaDir))
-    {
-      Files.deleteIfExists(linkMetaDir);
-      Files.createSymbolicLink(linkMetaDir, linkMetaDir.relativize(metaDir));
-    }
-
-    urls.add(linkDir.toUri().toURL());
-
     Path webinfDir = smp.getPath().resolve(DIRECTORY_WEBINF);
 
     if (Files.exists(webinfDir))
