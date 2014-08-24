@@ -143,6 +143,8 @@ import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 /**
  *
  * @author Sebastian Sdorra
@@ -212,11 +214,15 @@ public class ScmServletModule extends JerseyServletModule
    * Constructs ...
    *
    *
+   *
+   * @param servletContext
    * @param pluginLoader
    * @param overrides
    */
-  ScmServletModule(DefaultPluginLoader pluginLoader, ClassOverrides overrides)
+  ScmServletModule(ServletContext servletContext,
+    DefaultPluginLoader pluginLoader, ClassOverrides overrides)
   {
+    this.servletContext = servletContext;
     this.pluginLoader = pluginLoader;
     this.overrides = overrides;
   }
@@ -243,6 +249,10 @@ public class ScmServletModule extends JerseyServletModule
     ThrowingProviderBinder.create(binder()).bind(
       RepositoryProvider.class, Repository.class).to(
       DefaultRepositoryProvider.class).in(RequestScoped.class);
+
+    // bind servlet context
+    bind(ServletContext.class).annotatedWith(Default.class).toInstance(
+      servletContext);
 
     // bind event api
     bind(ScmEventBus.class).toInstance(ScmEventBus.getInstance());
@@ -500,4 +510,7 @@ public class ScmServletModule extends JerseyServletModule
 
   /** Field description */
   private final DefaultPluginLoader pluginLoader;
+
+  /** Field description */
+  private final ServletContext servletContext;
 }

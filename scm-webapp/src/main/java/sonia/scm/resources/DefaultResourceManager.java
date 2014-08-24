@@ -53,6 +53,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
+import sonia.scm.Default;
 
 /**
  *
@@ -79,7 +80,7 @@ public class DefaultResourceManager extends AbstractResourceManager
    * @param resourceHandlers
    */
   @Inject
-  public DefaultResourceManager(ServletContext servletContext,
+  public DefaultResourceManager(@Default ServletContext servletContext,
     PluginLoader pluginLoader, Set<ResourceHandler> resourceHandlers)
   {
     super(servletContext, pluginLoader, resourceHandlers);

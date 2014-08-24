@@ -38,6 +38,7 @@ package sonia.scm.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import sonia.scm.Default;
 import sonia.scm.plugin.PluginLoader;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -72,7 +73,7 @@ public class DevelopmentResourceManager extends AbstractResourceManager
    * @param resourceHandlers
    */
   @Inject
-  public DevelopmentResourceManager(ServletContext servletContext,
+  public DevelopmentResourceManager(@Default ServletContext servletContext,
     PluginLoader pluginLoader, Set<ResourceHandler> resourceHandlers)
   {
     super(servletContext, pluginLoader, resourceHandlers);

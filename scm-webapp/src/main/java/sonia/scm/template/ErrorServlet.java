@@ -86,7 +86,6 @@ public class ErrorServlet extends HttpServlet
    *
    *
    * @param context
-   * @param handler
    * @param templateEngineFactory
    */
   @Inject

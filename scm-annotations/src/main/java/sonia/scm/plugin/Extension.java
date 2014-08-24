@@ -33,10 +33,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.plugin.PluginAnnotation;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.lang.annotation.Documented;

@@ -46,6 +46,7 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.Default;
 import sonia.scm.plugin.PluginLoader;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -89,7 +90,7 @@ public class MustacheTemplateEngine implements TemplateEngine
    * @param pluginLoader
    */
   @Inject
-  public MustacheTemplateEngine(ServletContext context,
+  public MustacheTemplateEngine(@Default ServletContext context,
     PluginLoader pluginLoader)
   {
     factory = new ServletMustacheFactory(context, pluginLoader);

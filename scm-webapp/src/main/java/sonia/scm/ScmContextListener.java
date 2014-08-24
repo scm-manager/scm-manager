@@ -204,24 +204,23 @@ public class ScmContextListener extends GuiceServletContextListener
    *
    *
    *
-   * @param servletContext
+   * @param servletCtx
    * @return
    */
-  private Injector getDefaultInjector(ServletContext servletContext)
+  private Injector getDefaultInjector(ServletContext servletCtx)
   {
     DefaultPluginLoader pluginLoader = new DefaultPluginLoader(parent, plugins);
 
     ClassOverrides overrides =
       ClassOverrides.findOverrides(pluginLoader.getUberClassLoader());
-    ScmServletModule main = new ScmServletModule(pluginLoader, overrides);
     List<Module> moduleList = Lists.newArrayList();
 
     moduleList.add(new ScmInitializerModule());
     moduleList.add(new ScmEventBusModule());
     moduleList.add(new EagerSingletonModule());
     moduleList.add(ShiroWebModule.guiceFilterModule());
-    moduleList.add(main);
-    moduleList.add(new ScmSecurityModule(servletContext));
+    moduleList.add(new ScmServletModule(servletCtx, pluginLoader, overrides));
+    moduleList.add(new ScmSecurityModule(servletCtx));
     moduleList.addAll(pluginLoader.getInjectionModules());
     moduleList.addAll(overrides.getModules());
 
