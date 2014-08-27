@@ -56,6 +56,8 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
@@ -81,13 +83,17 @@ public class DefaultPluginLoader implements PluginLoader
   /**
    * Constructs ...
    *
+   * @param servletContext
    * @param parent
-   * @param wrappedPlugins
+   * @param installedPlugins
    */
-  public DefaultPluginLoader(ClassLoader parent,
-    Set<PluginWrapper> wrappedPlugins)
+  public DefaultPluginLoader(ServletContext servletContext, ClassLoader parent,
+    Set<PluginWrapper> installedPlugins)
   {
-    this.uberClassLoader = new UberClassLoader(parent, wrappedPlugins);
+    this.installedPlugins = installedPlugins;
+    this.uberClassLoader = new UberClassLoader(parent, installedPlugins);
+    this.uberWebResourceLoader =
+      new DefaultUberWebResourceLoader(servletContext, installedPlugins);
 
     try
     {
@@ -96,16 +102,8 @@ public class DefaultPluginLoader implements PluginLoader
 
       modules = getInstalled(parent, context, PATH_MODULECONFIG);
 
-      // hidden plugins ???
-      Set<Plugin> ips = getInstalled(parent, context, PATH_PLUGINCONFIG);
-      Builder<Plugin> builder = ImmutableSet.builder();
-
-      builder.addAll(ips);
-      builder.addAll(PluginsInternal.unwrap(wrappedPlugins));
-      plugins = builder.build();
-
       appendExtensions(multiple, single, extensions, modules);
-      appendExtensions(multiple, single, extensions, plugins);
+      appendExtensions(multiple, single, extensions, unwrap());
     }
     catch (IOException | JAXBException ex)
     {
@@ -127,7 +125,7 @@ public class DefaultPluginLoader implements PluginLoader
     logger.info("start processing extensions");
 
     appendExtensions(multiple, single, extensions, modules);
-    appendExtensions(multiple, single, extensions, plugins);
+    appendExtensions(multiple, single, extensions, unwrap());
 
     if (logger.isInfoEnabled())
     {
@@ -173,9 +171,9 @@ public class DefaultPluginLoader implements PluginLoader
    * @return
    */
   @Override
-  public Collection<Plugin> getInstalledPlugins()
+  public Collection<PluginWrapper> getInstalledPlugins()
   {
-    return plugins;
+    return installedPlugins;
   }
 
   /**
@@ -188,6 +186,18 @@ public class DefaultPluginLoader implements PluginLoader
   public ClassLoader getUberClassLoader()
   {
     return uberClassLoader;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public UberWebResourceLoader getUberWebResourceLoader()
+  {
+    return uberWebResourceLoader;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -242,6 +252,17 @@ public class DefaultPluginLoader implements PluginLoader
     }
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private Iterable<Plugin> unwrap()
+  {
+    return PluginsInternal.unwrap(installedPlugins);
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -283,13 +304,16 @@ public class DefaultPluginLoader implements PluginLoader
   private final ClassLoader uberClassLoader;
 
   /** Field description */
+  private final UberWebResourceLoader uberWebResourceLoader;
+
+  /** Field description */
+  private Set<PluginWrapper> installedPlugins;
+
+  /** Field description */
   private Set<ScmModule> modules;
 
   /** Field description */
   private Set<Class> multiple = Sets.newHashSet();
-
-  /** Field description */
-  private Set<Plugin> plugins;
 
   /** Field description */
   private Set<Class> single = Sets.newHashSet();

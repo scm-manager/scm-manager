@@ -51,6 +51,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
+import sonia.scm.plugin.PluginWrapper;
 
 /**
  *
@@ -117,7 +118,7 @@ public abstract class AbstractResourceManager implements ResourceManager
   @Override
   public List<Resource> getResources(ResourceType type)
   {
-    List<Resource> resources = new ArrayList<Resource>();
+    List<Resource> resources = new ArrayList<>();
 
     for (Entry<ResourceKey, Resource> e : resourceMap.entrySet())
     {
@@ -140,14 +141,14 @@ public abstract class AbstractResourceManager implements ResourceManager
    */
   protected List<String> getScriptResources()
   {
-    List<String> resources = new ArrayList<String>();
-    Collection<Plugin> plugins = pluginLoader.getInstalledPlugins();
+    List<String> resources = new ArrayList<>();
+    Collection<PluginWrapper> wrappers = pluginLoader.getInstalledPlugins();
 
-    if (plugins != null)
+    if (wrappers != null)
     {
-      for (Plugin plugin : plugins)
+      for (PluginWrapper plugin : wrappers)
       {
-        processPlugin(resources, plugin);
+        processPlugin(resources, plugin.getPlugin());
       }
     }
 
@@ -235,12 +236,7 @@ public abstract class AbstractResourceManager implements ResourceManager
         return false;
       }
 
-      if (this.type != other.type)
-      {
-        return false;
-      }
-
-      return true;
+      return this.type == other.type;
     }
 
     /**
@@ -291,10 +287,10 @@ public abstract class AbstractResourceManager implements ResourceManager
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private String name;
+    private final String name;
 
     /** Field description */
-    private ResourceType type;
+    private final ResourceType type;
   }
 
 
@@ -307,8 +303,7 @@ public abstract class AbstractResourceManager implements ResourceManager
   protected Set<ResourceHandler> resourceHandlers;
 
   /** Field description */
-  protected Map<ResourceKey, Resource> resourceMap = new HashMap<ResourceKey,
-                                                       Resource>();
+  protected Map<ResourceKey, Resource> resourceMap = new HashMap<>();
 
   /** Field description */
   protected ServletContext servletContext;

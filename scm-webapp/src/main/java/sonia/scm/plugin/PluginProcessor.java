@@ -491,7 +491,8 @@ public final class PluginProcessor
     throws IOException
   {
     PluginWrapper wrapper = null;
-    Path descriptor = smp.getPath().resolve(PluginConstants.FILE_DESCRIPTOR);
+    Path directory = smp.getPath();
+    Path descriptor = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
 
     if (Files.exists(descriptor))
     {
@@ -499,7 +500,8 @@ public final class PluginProcessor
 
       Plugin plugin = createPlugin(cl, descriptor);
 
-      wrapper = new PluginWrapper(plugin, cl, smp.getPath());
+      wrapper = new PluginWrapper(plugin, cl,
+        new PathWebResourceLoader(directory), directory);
     }
     else
     {

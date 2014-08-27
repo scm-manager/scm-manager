@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,70 +35,46 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Binder;
-import com.google.inject.Module;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
+import java.io.File;
+import java.io.IOException;
+
+import java.net.URL;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface PluginLoader
+public class PathWebResourceLoaderTest extends WebResourceLoaderTestBase
 {
 
   /**
    * Method description
    *
    *
-   * @param binder
+   * @throws IOException
    */
-  public void processExtensions(Binder binder);
+  @Test
+  public void testGetResource() throws IOException
+  {
+    File directory = temp.newFolder();
+    URL url = file(directory, "myresource").toURI().toURL();
 
-  //~--- get methods ----------------------------------------------------------
+    WebResourceLoader resourceLoader =
+      new PathWebResourceLoader(directory.toPath());
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<Module> getInjectionModules();
+    assertEquals(url, resourceLoader.getResource("/myresource"));
+    assertEquals(url, resourceLoader.getResource("myresource"));
+    assertNull(resourceLoader.getResource("other"));
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<ScmModule> getInstalledModules();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Collection<PluginWrapper> getInstalledPlugins();
+  //~--- fields ---------------------------------------------------------------
 
-  /**
-   * Returns a {@link ClassLoader} which is able to load classes and resources
-   * from the webapp and all installed plugins.
-   *
-   *
-   * @return uber classloader
-   */
-  public ClassLoader getUberClassLoader();
-
-  /**
-   * Returns a {@link WebResourceLoader} which is able to load web resources
-   * from the webapp and all installed plugins.
-   *
-   *
-   * @return uber webresourceloader
-   */
-  public UberWebResourceLoader getUberWebResourceLoader();
 }

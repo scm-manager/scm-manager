@@ -98,10 +98,6 @@ public class DefaultPluginManager implements PluginManager
   /** Field description */
   public static final String ENCODING = "UTF-8";
 
-  /** Field description */
-  private static final String ADVANCED_CONFIGURATION =
-    "advanced-configuration.xml";
-
   /** the logger for DefaultPluginManager */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultPluginManager.class);
@@ -133,10 +129,11 @@ public class DefaultPluginManager implements PluginManager
     this.configuration = configuration;
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.clientProvider = clientProvider;
-    installedPlugins = new HashMap<String, Plugin>();
+    installedPlugins = new HashMap<>();
 
-    for (Plugin plugin : pluginLoader.getInstalledPlugins())
+    for (PluginWrapper wrapper : pluginLoader.getInstalledPlugins())
     {
+      Plugin plugin = wrapper.getPlugin();
       PluginInformation info = plugin.getInformation();
 
       if ((info != null) && info.isValid())
@@ -247,15 +244,17 @@ public class DefaultPluginManager implements PluginManager
         throw new PluginConditionFailedException(condition);
       }
 
-      /*AetherPluginHandler aph = new AetherPluginHandler(this, context,
-                                  configuration);
-      Collection<PluginRepository> repositories =
-        Sets.newHashSet(new PluginRepository("package-repository",
-          "file://".concat(tempDirectory.getAbsolutePath())));
-
-      aph.setPluginRepositories(repositories);
-
-      aph.install(plugin.getInformation().getId());*/
+      /*
+       * AetherPluginHandler aph = new AetherPluginHandler(this, context,
+       *                           configuration);
+       * Collection<PluginRepository> repositories =
+       * Sets.newHashSet(new PluginRepository("package-repository",
+       *   "file://".concat(tempDirectory.getAbsolutePath())));
+       *
+       * aph.setPluginRepositories(repositories);
+       *
+       * aph.install(plugin.getInformation().getId());
+       */
       plugin.getInformation().setState(PluginState.INSTALLED);
       installedPlugins.put(plugin.getInformation().getId(), plugin);
 
@@ -300,12 +299,14 @@ public class DefaultPluginManager implements PluginManager
       throw new PluginNotInstalledException(id.concat(" is not install"));
     }
 
-    /*if (pluginHandler == null)
-    {
-      getPluginCenter();
-    }
-
-    pluginHandler.uninstall(id);*/
+    /*
+     * if (pluginHandler == null)
+     * {
+     * getPluginCenter();
+     * }
+     *
+     * pluginHandler.uninstall(id);
+     */
     installedPlugins.remove(id);
     preparePlugins(getPluginCenter());
   }
@@ -394,7 +395,7 @@ public class DefaultPluginManager implements PluginManager
     AssertUtil.assertIsNotNull(predicate);
     SecurityUtil.assertIsAdmin();
 
-    Set<PluginInformation> infoSet = new HashSet<PluginInformation>();
+    Set<PluginInformation> infoSet = new HashSet<>();
 
     filter(infoSet, getInstalled(), predicate);
     filter(infoSet, getPluginCenter().getPlugins(), predicate);
@@ -431,7 +432,7 @@ public class DefaultPluginManager implements PluginManager
   {
     SecurityUtil.assertIsAdmin();
 
-    Set<PluginInformation> availablePlugins = new HashSet<PluginInformation>();
+    Set<PluginInformation> availablePlugins = new HashSet<>();
     Set<PluginInformation> centerPlugins = getPluginCenter().getPlugins();
 
     for (PluginInformation info : centerPlugins)
@@ -470,7 +471,7 @@ public class DefaultPluginManager implements PluginManager
   {
     SecurityUtil.assertIsAdmin();
 
-    Set<PluginInformation> infoSet = new LinkedHashSet<PluginInformation>();
+    Set<PluginInformation> infoSet = new LinkedHashSet<>();
 
     for (Plugin plugin : installedPlugins.values())
     {
@@ -642,16 +643,18 @@ public class DefaultPluginManager implements PluginManager
             preparePlugins(center);
             cache.put(PluginCenter.class.getName(), center);
 
-            /*if (pluginHandler == null)
-            {
-              pluginHandler = new AetherPluginHandler(this,
-                SCMContext.getContext(), configuration,
-                advancedPluginConfiguration);
-            }
-
-            pluginHandler.setPluginRepositories(center.getRepositories());*/
+            /*
+             * if (pluginHandler == null)
+             * {
+             * pluginHandler = new AetherPluginHandler(this,
+             *   SCMContext.getContext(), configuration,
+             *   advancedPluginConfiguration);
+             * }
+             *
+             * pluginHandler.setPluginRepositories(center.getRepositories());
+             */
           }
-          catch (Exception ex)
+          catch (IOException | JAXBException ex)
           {
             logger.error("could not load plugins from plugin center", ex);
           }

@@ -209,7 +209,8 @@ public class ScmContextListener extends GuiceServletContextListener
    */
   private Injector getDefaultInjector(ServletContext servletCtx)
   {
-    DefaultPluginLoader pluginLoader = new DefaultPluginLoader(parent, plugins);
+    DefaultPluginLoader pluginLoader = new DefaultPluginLoader(servletCtx,
+                                         parent, plugins);
 
     ClassOverrides overrides =
       ClassOverrides.findOverrides(pluginLoader.getUberClassLoader());

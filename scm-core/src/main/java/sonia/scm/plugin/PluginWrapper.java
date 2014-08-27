@@ -36,8 +36,8 @@ package sonia.scm.plugin;
 import java.nio.file.Path;
 
 /**
- * Wrapper for a {@link Plugin}. The wrapper holds the directory and the 
- * {@link ClassLoader}, which is able to load plugin classes.
+ * Wrapper for a {@link Plugin}. The wrapper holds the directory,
+ * {@link ClassLoader} and {@link WebResourceLoader} of a plugin.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
@@ -50,12 +50,15 @@ public final class PluginWrapper
    *
    * @param plugin wrapped plugin
    * @param classLoader plugin class loader
+   * @param webResourceLoader web resource loader
    * @param directory plugin directory
    */
-  public PluginWrapper(Plugin plugin, ClassLoader classLoader, Path directory)
+  public PluginWrapper(Plugin plugin, ClassLoader classLoader,
+    WebResourceLoader webResourceLoader, Path directory)
   {
     this.plugin = plugin;
     this.classLoader = classLoader;
+    this.webResourceLoader = webResourceLoader;
     this.directory = directory;
   }
 
@@ -105,6 +108,17 @@ public final class PluginWrapper
     return plugin;
   }
 
+  /**
+   * Returns the {@link WebResourceLoader} for this plugin.
+   *
+   *
+   * @return web resource loader
+   */
+  public WebResourceLoader getWebResourceLoader()
+  {
+    return webResourceLoader;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** plugin class loader */
@@ -115,4 +129,7 @@ public final class PluginWrapper
 
   /** plugin */
   private final Plugin plugin;
+
+  /** plugin web resource loader */
+  private final WebResourceLoader webResourceLoader;
 }

@@ -95,8 +95,8 @@ public enum ResourceType
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String contentType;
+  private final String contentType;
 
   /** Field description */
-  private String extension;
+  private final String extension;
 }
