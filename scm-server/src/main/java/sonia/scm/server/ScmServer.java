@@ -52,6 +52,9 @@ public class ScmServer extends Thread
   /** Field description */
   public static final String CONFIGURATION = "/server-config.xml";
 
+  /** Field description */
+  static final int GRACEFUL_TIMEOUT = 2000;
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -113,14 +116,17 @@ public class ScmServer extends Thread
   }
 
   /**
-   * Method description
+   * Stop embedded webserver. Use {@link Server#stop()} to fix windows service.
    *
+   * @see <a href="http://goo.gl/Zfy0Ev">http://goo.gl/Zfy0Ev</a>
    */
   public void stopServer()
   {
     try
     {
+      server.setGracefulShutdown(GRACEFUL_TIMEOUT);
       server.setStopAtShutdown(true);
+      server.stop();
       initialized = false;
     }
     catch (Exception ex)
