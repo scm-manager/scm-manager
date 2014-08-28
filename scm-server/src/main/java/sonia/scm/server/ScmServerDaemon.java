@@ -86,7 +86,7 @@ public class ScmServerDaemon implements Daemon
   public static void stop(String[] args) throws Exception
   {
     webserver.stopServer();
-    webserver.join(2000l);
+    webserver.join((long) ScmServer.GRACEFUL_TIMEOUT);
   }
 
   /**
@@ -113,7 +113,8 @@ public class ScmServerDaemon implements Daemon
   public void init(DaemonContext context) throws DaemonInitException, Exception
   {
     daemonArgs = context.getArguments();
-    // initialize web server and open port. We have to do this in the init 
+
+    // initialize web server and open port. We have to do this in the init
     // method, because this method is started by jsvc with super user privileges.
     webserver.init();
   }
