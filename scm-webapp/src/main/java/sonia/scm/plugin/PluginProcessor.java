@@ -87,13 +87,10 @@ public final class PluginProcessor
   private static final String DIRECTORY_INSTALLED = ".installed";
 
   /** Field description */
-  private static final String DIRECTORY_LINK = ".link";
-
-  /** Field description */
   private static final String DIRECTORY_METAINF = "META-INF";
 
   /** Field description */
-  private static final String DIRECTORY_WEBINF = "WEB-INF";
+  private static final String DIRECTORY_WEBAPP = "webapp";
 
   /** Field description */
   private static final String EXTENSION_PLUGIN = ".smp";
@@ -350,32 +347,29 @@ public final class PluginProcessor
   {
     List<URL> urls = new ArrayList<>();
 
-    Path metaDir = smp.getPath().resolve(DIRECTORY_METAINF);
+    Path directory = smp.getPath();
+
+    Path metaDir = directory.resolve(DIRECTORY_METAINF);
 
     if (!Files.exists(metaDir))
     {
       throw new FileNotFoundException("could not find META-INF directory");
     }
 
-    Path webinfDir = smp.getPath().resolve(DIRECTORY_WEBINF);
+    Path classesDir = directory.resolve(DIRECTORY_CLASSES);
 
-    if (Files.exists(webinfDir))
+    if (Files.exists(classesDir))
     {
-      Path classesDir = webinfDir.resolve(DIRECTORY_CLASSES);
+      urls.add(classesDir.toUri().toURL());
+    }
 
-      if (Files.exists(classesDir))
+    Path libDir = directory.resolve(DIRECTORY_DEPENDENCIES);
+
+    if (Files.exists(libDir))
+    {
+      for (Path f : Files.newDirectoryStream(libDir, GLOB_JAR))
       {
-        urls.add(classesDir.toUri().toURL());
-      }
-
-      Path libDir = webinfDir.resolve(DIRECTORY_DEPENDENCIES);
-
-      if (Files.exists(libDir))
-      {
-        for (Path f : Files.newDirectoryStream(libDir, GLOB_JAR))
-        {
-          urls.add(f.toUri().toURL());
-        }
+        urls.add(f.toUri().toURL());
       }
     }
 
@@ -500,8 +494,9 @@ public final class PluginProcessor
 
       Plugin plugin = createPlugin(cl, descriptor);
 
-      wrapper = new PluginWrapper(plugin, cl,
-        new PathWebResourceLoader(directory), directory);
+      WebResourceLoader resourceLoader = createWebResourceLoader(directory);
+
+      wrapper = new PluginWrapper(plugin, cl, resourceLoader, directory);
     }
     else
     {
@@ -533,6 +528,33 @@ public final class PluginProcessor
     appendPluginWrappers(plugins, classLoader, rootNodes);
 
     return plugins;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   *
+   * @return
+   */
+  private WebResourceLoader createWebResourceLoader(Path directory)
+  {
+    WebResourceLoader resourceLoader;
+    Path webapp = directory.resolve(DIRECTORY_WEBAPP);
+
+    if (Files.exists(webapp))
+    {
+      logger.debug("create WebResourceLoader for path {}", webapp);
+      resourceLoader = new PathWebResourceLoader(webapp);
+    }
+    else
+    {
+      logger.debug("create empty WebResourceLoader");
+      resourceLoader = new EmptyWebResourceLoader();
+    }
+
+    return resourceLoader;
   }
 
   /**

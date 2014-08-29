@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
+ * Copyright (c) 2014, Sebastian Sdorra All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,26 +31,31 @@
 
 package sonia.scm.plugin;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.net.URL;
+
 /**
+ * This {@link WebResourceLoader} is used, if the plugin does not contain a
+ * webapp directory.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public interface PluginConstants
+public class EmptyWebResourceLoader implements WebResourceLoader
 {
 
-  /** checksum file */
-  public static final String FILE_CHECKSUM = "checksum";
-
-  /** core file */
-  public static final String FILE_CORE = "core";
-
-  /** Field description */
-  public static final String ID_DELIMITER = ":";
-
-  /** Field description */
-  public static final String PATH_DESCRIPTOR = "/META-INF/scm/plugin.xml";
-
-  /** Field description */
-  public static final String FILE_DESCRIPTOR = PATH_DESCRIPTOR.substring(1);
+  /**
+   * Returns always {@code null}.
+   *
+   *
+   * @param path resource path
+   *
+   * @return {@code null}
+   */
+  @Override
+  public URL getResource(String path)
+  {
+    return null;
+  }
 }
