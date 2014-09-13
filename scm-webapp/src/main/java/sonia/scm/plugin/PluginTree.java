@@ -52,6 +52,9 @@ import java.util.Set;
 public final class PluginTree
 {
 
+  /** Field description */
+  private static final int SCM_VERSION = 2;
+
   /**
    * the logger for PluginTree
    */
@@ -84,6 +87,19 @@ public final class PluginTree
     for (ExplodedSmp smp : smpOrdered)
     {
       Plugin plugin = smp.getPlugin();
+
+      if (plugin.getScmVersion() != SCM_VERSION)
+      {
+        //J-
+        throw new PluginException(
+          String.format(
+            "scm version %s of plugin %s does not match, required is version %s",
+            plugin.getScmVersion(), plugin.getInformation().getId(), SCM_VERSION
+          )
+        );
+        //J+
+      }
+
       PluginCondition condition = plugin.getCondition();
 
       if ((condition == null) || condition.isSupported())
@@ -201,7 +217,6 @@ public final class PluginTree
 
     return found;
   }
-
 
   //~--- fields ---------------------------------------------------------------
 

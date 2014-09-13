@@ -71,7 +71,7 @@ public class PluginTreeTest
   {
     PluginCondition condition = new PluginCondition("999",
                                   new ArrayList<String>(), "hit");
-    Plugin plugin = new Plugin(createInfo("a", "b", "1"), null, condition,
+    Plugin plugin = new Plugin(2, createInfo("a", "b", "1"), null, condition,
                       false, null);
     ExplodedSmp smp = createSmp(plugin);
 
@@ -103,6 +103,22 @@ public class PluginTreeTest
     List<String> nodes = unwrapIds(new PluginTree(smps).getRootNodes());
 
     assertThat(nodes, containsInAnyOrder("a:a", "b:b", "c:c"));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Test(expected = PluginException.class)
+  public void testScmVersion() throws IOException
+  {
+    Plugin plugin = new Plugin(1, createInfo("a", "b", "1"), null, null, false,
+                      null);
+    ExplodedSmp smp = createSmp(plugin);
+
+    new PluginTree(smp).getRootNodes();
   }
 
   /**
@@ -185,7 +201,7 @@ public class PluginTreeTest
    */
   private ExplodedSmp createSmp(String name) throws IOException
   {
-    return createSmp(new Plugin(createInfo(name, name, "1.0.0"), null, null,
+    return createSmp(new Plugin(2, createInfo(name, name, "1.0.0"), null, null,
       false, null));
   }
 
@@ -211,7 +227,7 @@ public class PluginTreeTest
       dependencySet.add(d.concat(":").concat(d));
     }
 
-    Plugin plugin = new Plugin(createInfo(name, name, "1"), null, null,
+    Plugin plugin = new Plugin(2, createInfo(name, name, "1"), null, null,
                       false, dependencySet);
 
     return createSmp(plugin);

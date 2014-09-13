@@ -67,16 +67,18 @@ public final class Plugin extends ScmModule
    * Constructs ...
    *
    *
+   * @param scmVersion
    * @param information
    * @param resources
    * @param condition
    * @param childFirstClassLoader
    * @param dependencies
    */
-  public Plugin(PluginInformation information, PluginResources resources,
-    PluginCondition condition, boolean childFirstClassLoader,
-    Set<String> dependencies)
+  public Plugin(int scmVersion, PluginInformation information,
+    PluginResources resources, PluginCondition condition,
+    boolean childFirstClassLoader, Set<String> dependencies)
   {
+    this.scmVersion = scmVersion;
     this.information = information;
     this.resources = resources;
     this.condition = condition;
@@ -109,7 +111,8 @@ public final class Plugin extends ScmModule
 
     final Plugin other = (Plugin) obj;
 
-    return Objects.equal(condition, other.condition)
+    return Objects.equal(scmVersion, other.scmVersion)
+      && Objects.equal(condition, other.condition)
       && Objects.equal(information, other.information)
       && Objects.equal(resources, other.resources)
       && Objects.equal(childFirstClassLoader, other.childFirstClassLoader)
@@ -125,7 +128,7 @@ public final class Plugin extends ScmModule
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(condition, information, resources,
+    return Objects.hashCode(scmVersion, condition, information, resources,
       childFirstClassLoader, dependencies);
   }
 
@@ -140,6 +143,7 @@ public final class Plugin extends ScmModule
   {
     //J-
     return Objects.toStringHelper(this)
+                  .add("scmVersion", scmVersion)
                   .add("condition", condition)
                   .add("information", information)
                   .add("resources", resources)
@@ -208,6 +212,17 @@ public final class Plugin extends ScmModule
    *
    * @return
    */
+  public int getScmVersion()
+  {
+    return scmVersion;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public boolean isChildFirstClassLoader()
   {
     return childFirstClassLoader;
@@ -233,4 +248,8 @@ public final class Plugin extends ScmModule
 
   /** Field description */
   private PluginResources resources;
+
+  /** Field description */
+  @XmlElement(name = "scm-version")
+  private int scmVersion = 1;
 }

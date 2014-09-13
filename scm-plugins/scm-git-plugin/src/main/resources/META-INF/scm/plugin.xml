@@ -41,6 +41,8 @@
 -->
 
 <plugin>
+  
+  <scm-version>2</scm-version>
 
   <information>
     <author>Sebastian Sdorra</author>
