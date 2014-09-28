@@ -171,6 +171,7 @@ public class AetherDependencyResolver
   {
     if (session == null)
     {
+      logger.info("create repository system session");
       session = Aether.createRepositorySystemSession(system, localRepository,
         configuration, advancedPluginConfiguration);
     }

@@ -37,6 +37,9 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.sonatype.aether.repository.Authentication;
 import org.sonatype.aether.repository.AuthenticationSelector;
 import org.sonatype.aether.repository.RemoteRepository;
@@ -54,6 +57,14 @@ import java.util.Map;
  */
 public class AetherAuthenticationSelector implements AuthenticationSelector
 {
+
+  /**
+   * the logger for AetherAuthenticationSelector
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(AetherAuthenticationSelector.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -102,6 +113,8 @@ public class AetherAuthenticationSelector implements AuthenticationSelector
 
     if (server != null)
     {
+      logger.info("use user {} for repository wiht id {}",
+        server.getUsername(), repository.getId());
       authentication = new Authentication(server.getUsername(),
         server.getPassword());
     }
