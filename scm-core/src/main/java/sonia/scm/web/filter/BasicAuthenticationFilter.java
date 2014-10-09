@@ -139,60 +139,17 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
     throws IOException, ServletException
   {
     Subject subject = SecurityUtils.getSubject();
+    // get authenticated user or process AutoLoginModule's
     User user = getAuthenticatedUser(request, response);
 
-    // Fallback to basic authentication scheme
-    if (user == null)
+    if (AutoLoginModules.isComplete(request))
     {
-      String authentication = request.getHeader(HEADER_AUTHORIZATION);
-
-      if (Util.startWithIgnoreCase(authentication, AUTHORIZATION_BASIC_PREFIX))
-      {
-        if (logger.isTraceEnabled())
-        {
-          logger.trace(
-            "found basic authorization header, start authentication");
-        }
-
-        user = authenticate(request, response, subject, authentication);
-
-        if (logger.isTraceEnabled())
-        {
-          if (user != null)
-          {
-            logger.trace("user {} successfully authenticated", user.getName());
-          }
-          else
-          {
-            logger.trace("authentcation failed, user object is null");
-          }
-        }
-      }
-      else if ((configuration != null)
-        && configuration.isAnonymousAccessEnabled())
-      {
-        if (logger.isTraceEnabled())
-        {
-          logger.trace("anonymous access granted");
-        }
-
-        user = SCMContext.ANONYMOUS;
-      }
-    }
-
-    if (user == null)
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("could not find user send unauthorized");
-      }
-
-      handleUnauthorized(request, response, chain);
+      logger.debug("request marked as complete from an auto login module");
     }
     else
     {
-      chain.doFilter(new SecurityHttpServletRequestWrapper(request, user),
-        response);
+      // process with basic authentication
+      processRequest(request, response, chain, subject, user);
     }
   }
 
@@ -329,6 +286,79 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
     }
 
     return user;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param response
+   * @param chain
+   * @param subject
+   * @param user
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  private void processRequest(HttpServletRequest request,
+    HttpServletResponse response, FilterChain chain, Subject subject, User user)
+    throws IOException, ServletException
+  {
+
+    // Fallback to basic authentication scheme
+    if (user == null)
+    {
+      String authentication = request.getHeader(HEADER_AUTHORIZATION);
+
+      if (Util.startWithIgnoreCase(authentication, AUTHORIZATION_BASIC_PREFIX))
+      {
+        if (logger.isTraceEnabled())
+        {
+          logger.trace(
+            "found basic authorization header, start authentication");
+        }
+
+        user = authenticate(request, response, subject, authentication);
+
+        if (logger.isTraceEnabled())
+        {
+          if (user != null)
+          {
+            logger.trace("user {} successfully authenticated", user.getName());
+          }
+          else
+          {
+            logger.trace("authentcation failed, user object is null");
+          }
+        }
+      }
+      else if ((configuration != null)
+        && configuration.isAnonymousAccessEnabled())
+      {
+        if (logger.isTraceEnabled())
+        {
+          logger.trace("anonymous access granted");
+        }
+
+        user = SCMContext.ANONYMOUS;
+      }
+    }
+
+    if (user == null)
+    {
+      if (logger.isTraceEnabled())
+      {
+        logger.trace("could not find user send unauthorized");
+      }
+
+      handleUnauthorized(request, response, chain);
+    }
+    else
+    {
+      chain.doFilter(new SecurityHttpServletRequestWrapper(request, user),
+        response);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------

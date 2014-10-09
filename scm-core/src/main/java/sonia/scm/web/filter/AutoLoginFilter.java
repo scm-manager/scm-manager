@@ -100,33 +100,37 @@ public class AutoLoginFilter extends HttpFilter {
 	 * @return The user or null if no user was found.
 	 */
 	protected User getAuthenticatedUser(HttpServletRequest request,
-			HttpServletResponse response) {
-		Subject subject = SecurityUtils.getSubject();
-		User user = null;
+			HttpServletResponse response) 
+    {
+      Subject subject = SecurityUtils.getSubject();
+      User user = null;
 
-		if (subject.isAuthenticated() || subject.isRemembered()) {
-			if (logger.isTraceEnabled()) {
-				logger.trace("user is allready authenticated");
-			}
+      if (subject.isAuthenticated() || subject.isRemembered()) 
+      {
+        logger.trace("user is allready authenticated");
+        user = subject.getPrincipals().oneByType(User.class);
+      } 
+      else 
+      {
+        // Try the known filters first
+        for (AutoLoginModule filter : autoLoginModules) 
+        {
+          user = filter.authenticate(request, response, subject);
 
-			user = subject.getPrincipals().oneByType(User.class);
-		} else {
-			// Try the known filters first
-			for (AutoLoginModule filter : autoLoginModules) {
-				user = filter.authenticate(request, response, subject);
+          if (user != null)
+          {
+            logger.trace("user {} successfully authenticated by authentication filter", user.getName());
+            break;
+          } 
+          else if (AutoLoginModules.isComplete(request))
+          {
+            logger.debug("stop auto login chain, because the AutoLoginModule {} marked the request as complete", filter.getClass());
+            break;
+          }
+        }
+      }
 
-				if (user != null) {
-					if (logger.isTraceEnabled()) {
-						logger.trace(
-								"user {} successfully authenticated by authentication filter",
-								user.getName());
-					}
-					break;
-				}
-			}
-		}
-
-		return user;
+      return user;
 	}
 
 	/**
