@@ -77,6 +77,7 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextListener;
+import javax.servlet.http.HttpSessionListener;
 
 import javax.xml.bind.JAXB;
 
@@ -563,10 +564,18 @@ public class DefaultPluginLoader implements PluginLoader
 
     //J-
     extensionPoints = extensionPointCollector.getAnnotatedClasses();
+    // add ServletContextListener to list of extension points
     extensionPoints.add(
       new AnnotatedClass<ExtensionPoint>(
         Extensions.createExtensionPoint(true), 
         ServletContextListener.class
+      )
+    );
+    // add HttpSessionListener to list of extension points
+    extensionPoints.add(
+      new AnnotatedClass<ExtensionPoint>(
+        Extensions.createExtensionPoint(true), 
+        HttpSessionListener.class
       )
     );
 
