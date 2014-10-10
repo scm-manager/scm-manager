@@ -65,7 +65,7 @@
 
   <modules>
     <module>scm-annotations</module>
-    <module>scm-maven-plugins</module>
+    <module>scm-annotation-processor</module>
     <module>scm-core</module>
     <module>scm-test</module>
     <module>scm-plugins</module>
