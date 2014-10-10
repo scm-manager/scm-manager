@@ -41,7 +41,7 @@ import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.InputStream;
+import java.net.URL;
 
 import java.util.Arrays;
 
@@ -116,7 +116,7 @@ public class ResourceHandlerComparatorTest
      * @return
      */
     @Override
-    public InputStream getResource()
+    public URL getResource()
     {
       throw new UnsupportedOperationException("Not supported yet.");
     }

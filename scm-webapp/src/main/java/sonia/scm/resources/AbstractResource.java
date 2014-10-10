@@ -35,18 +35,20 @@ package sonia.scm.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.Resources;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
+
+import java.net.URL;
 
 import java.util.Collections;
 import java.util.List;
@@ -107,10 +109,7 @@ public abstract class AbstractResource implements Resource
 
       for (ResourceHandler resourceHandler : resourceHandlers)
       {
-        if (resourceHandler.getType() == ResourceType.SCRIPT)
-        {
-          appendResource(resourceHandler.getResource(), stream);
-        }
+        processResourceHandler(stream, resourceHandler);
       }
     }
   }
@@ -120,22 +119,22 @@ public abstract class AbstractResource implements Resource
    *
    *
    * @param stream
-   * @param resource
+   * @param path
    *
    * @throws IOException
    */
-  private void appendResource(OutputStream stream, String resource)
+  private void appendResource(OutputStream stream, String path)
     throws IOException
   {
-    InputStream input = getResourceAsStream(resource);
+    URL resource = getResourceAsURL(path);
 
-    if (input != null)
+    if (resource != null)
     {
-      appendResource(input, stream);
+      Resources.copy(resource, stream);
     }
     else if (logger.isWarnEnabled())
     {
-      logger.warn("could not find resource {}", resource);
+      logger.warn("could not find resource {}", path);
     }
   }
 
@@ -143,23 +142,32 @@ public abstract class AbstractResource implements Resource
    * Method description
    *
    *
-   * @param input
    * @param stream
+   * @param resourceHandler
    *
    * @throws IOException
    */
-  private void appendResource(InputStream input, OutputStream stream)
+  private void processResourceHandler(OutputStream stream,
+    ResourceHandler resourceHandler)
     throws IOException
   {
-    if (input != null)
+    if (resourceHandler.getType() == getType())
     {
-      try
+      if (logger.isTraceEnabled())
       {
-        IOUtil.copy(input, stream);
+        logger.trace("process resource handler {}", resourceHandler.getClass());
       }
-      finally
+
+      URL resource = resourceHandler.getResource();
+
+      if (resource != null)
       {
-        IOUtil.close(input);
+        Resources.copy(resource, stream);
+      }
+      else if (logger.isDebugEnabled())
+      {
+        logger.debug("resource handler {} does not return a resource",
+          resourceHandler.getClass());
       }
     }
   }
@@ -170,33 +178,28 @@ public abstract class AbstractResource implements Resource
    * Method description
    *
    *
-   * @param resource
+   * @param path
    *
    * @return
    */
-  private InputStream getResourceAsStream(String resource)
+  private URL getResourceAsURL(String path)
   {
-    InputStream input = null;
+    URL resource = null;
     ClassLoader classLoader = pluginLoader.getUberClassLoader();
 
     if (classLoader != null)
     {
-      String classLoaderResource = resource;
+      String classLoaderResource = path;
 
       if (classLoaderResource.startsWith("/"))
       {
         classLoaderResource = classLoaderResource.substring(1);
       }
 
-      input = classLoader.getResourceAsStream(classLoaderResource);
+      resource = classLoader.getResource(classLoaderResource);
     }
 
-    if (input == null)
-    {
-      input = ScriptResourceServlet.class.getResourceAsStream(resource);
-    }
-
-    return input;
+    return resource;
   }
 
   //~--- fields ---------------------------------------------------------------

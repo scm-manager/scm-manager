@@ -39,7 +39,7 @@ import sonia.scm.plugin.ExtensionPoint;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.InputStream;
+import java.net.URL;
 
 /**
  *
@@ -63,7 +63,7 @@ public interface ResourceHandler
    *
    * @return
    */
-  public InputStream getResource();
+  public URL getResource();
 
   /**
    * Method description
