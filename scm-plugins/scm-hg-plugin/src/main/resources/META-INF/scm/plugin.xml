@@ -47,6 +47,12 @@
   <information>
     <author>Sebastian Sdorra</author>
     <category>Mercurial</category>
+    <tags>
+      <tag>mercurial</tag>
+      <tag>hg</tag>
+      <tag>scm</tag>
+      <tag>dvcs</tag>
+    </tags>
   </information>
 
   <conditions>

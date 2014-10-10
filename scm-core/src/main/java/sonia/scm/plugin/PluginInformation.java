@@ -83,6 +83,7 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
     clone.setArtifactId(artifactId);
     clone.setAuthor(author);
     clone.setCategory(category);
+    clone.setTags(tags);
 
     if (condition != null)
     {
@@ -133,6 +134,7 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
     return Objects.equal(artifactId, other.artifactId)
       && Objects.equal(author, other.author)
       && Objects.equal(category, other.category)
+      && Objects.equal(tags, other.tags)
       && Objects.equal(condition, other.condition)
       && Objects.equal(description, other.description)
       && Objects.equal(groupId, other.groupId)
@@ -154,7 +156,7 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(artifactId, author, category, condition,
+    return Objects.hashCode(artifactId, author, category, tags, condition,
       description, groupId, name, screenshots, state, url, version, wiki);
   }
 
@@ -172,6 +174,7 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
                   .add("artifactId", artifactId)
                   .add("author", author)
                   .add("category", category)
+                  .add("tags", tags)
                   .add("condition", condition)
                   .add("description", description)
                   .add("groupId", groupId)
@@ -326,6 +329,17 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
    *
    * @return
    */
+  public List<String> getTags()
+  {
+    return tags;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getUrl()
   {
     return url;
@@ -471,6 +485,17 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
    * Method description
    *
    *
+   * @param tags
+   */
+  public void setTags(List<String> tags)
+  {
+    this.tags = tags;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param url
    */
   public void setUrl(String url)
@@ -530,6 +555,11 @@ public class PluginInformation implements Validateable, Cloneable, Serializable
 
   /** Field description */
   private PluginState state;
+
+  /** Field description */
+  @XmlElement(name = "tag")
+  @XmlElementWrapper(name = "tags")
+  private List<String> tags;
 
   /** Field description */
   private String url;

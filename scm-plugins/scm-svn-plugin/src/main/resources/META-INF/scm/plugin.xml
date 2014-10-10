@@ -47,6 +47,11 @@
   <information>
     <author>Sebastian Sdorra</author>
     <category>Subversion</category>
+    <tags>
+      <tag>subversion</tag>
+      <tag>scm</tag>
+      <tag>svn</tag>
+    </tags>
   </information>
 
   <conditions>
