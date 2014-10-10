@@ -37,13 +37,15 @@ import com.google.common.base.Function;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
 import java.nio.file.Path;
 
 import java.util.Set;
 
 /**
+ * The ExplodedSmp object represents an extracted SCM-Manager plugin. The object
+ * contains the path to the plugin directory and loads the plugin descriptor.
+ * The ExplodedSmp can be created with the {@link #create(java.nio.file.Path)}
+ * method.
  *
  * @author Sebastian Sdorra
  */
@@ -68,16 +70,17 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Creates a new ExplodedSmp object.
    *
    *
-   * @param directory
+   * @param directory directory containing an extracted SCM-Manager plugin.
    *
-   * @return
+   * @return ExplodedSmp object
    *
-   * @throws IOException
+   * @throws PluginException if the path does not contain an plugin descriptor
+   *  or the plugin descriptor could not be parsed
    */
-  public static ExplodedSmp create(Path directory) throws IOException
+  public static ExplodedSmp create(Path directory)
   {
     Path desc = directory.resolve(PluginConstants.FILE_DESCRIPTOR);
 
@@ -85,12 +88,7 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param o
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public int compareTo(ExplodedSmp o)
@@ -146,10 +144,10 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the path to the plugin directory.
    *
    *
-   * @return
+   * @return to plugin directory
    */
   public Path getPath()
   {
@@ -157,10 +155,10 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
   }
 
   /**
-   * Method description
+   * Returns parsed plugin descriptor.
    *
    *
-   * @return
+   * @return plugin descriptor
    */
   public Plugin getPlugin()
   {
@@ -170,43 +168,36 @@ public final class ExplodedSmp implements Comparable<ExplodedSmp>
   //~--- inner classes --------------------------------------------------------
 
   /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/07/12
-   * @author         Enter your name here...
+   * Transforms {@link Path} to {@link ExplodedSmp}.
    */
   public static class PathTransformer implements Function<Path, ExplodedSmp>
   {
 
     /**
-     * Method description
+     * Transforms {@link Path} to {@link ExplodedSmp}. The path must contain an
+     * extracted SCM-Manager plugin.
      *
      *
-     * @param directory
+     * @param directory directory containing exploded plugin
      *
-     * @return
+     * @return exploded smp object
+     *
+     * @throws PluginException if the path does not contain an extracted
+     *  SCM-Manager plugin.
      */
     @Override
     public ExplodedSmp apply(Path directory)
     {
-      try
-      {
-        return ExplodedSmp.create(directory);
-      }
-      catch (IOException ex)
-      {
-        throw new PluginException("could not create ExplodedSmp", ex);
-      }
+      return ExplodedSmp.create(directory);
     }
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** directory */
   private final Path path;
 
-  /** Field description */
+  /** plugin object */
   private final Plugin plugin;
 }
