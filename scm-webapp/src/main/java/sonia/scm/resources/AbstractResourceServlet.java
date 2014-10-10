@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -103,13 +104,13 @@ public abstract class AbstractResourceServlet extends HttpServlet
    */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
-          throws ServletException, IOException
+    throws ServletException, IOException
   {
     String uri = HttpUtil.getStrippedURI(request);
     ResourceType type = getType();
     String nameSeparator = HttpUtil.SEPARATOR_PATH.concat(
-                               type.getExtension()).concat(
-                               HttpUtil.SEPARATOR_PATH);
+                             type.getExtension()).concat(
+                             HttpUtil.SEPARATOR_PATH);
     int index = uri.indexOf(nameSeparator);
 
     if (index > 0)
@@ -147,25 +148,18 @@ public abstract class AbstractResourceServlet extends HttpServlet
    * @throws IOException
    */
   private void printResource(HttpServletResponse response, Resource resource)
-          throws IOException
+    throws IOException
   {
     response.setContentType(resource.getType().getContentType());
 
-    OutputStream output = null;
-
-    try
+    try (OutputStream output = response.getOutputStream())
     {
-      output = response.getOutputStream();
       resource.copyTo(output);
-    }
-    finally
-    {
-      IOUtil.close(output);
     }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ResourceManager resourceManager;
+  private final ResourceManager resourceManager;
 }

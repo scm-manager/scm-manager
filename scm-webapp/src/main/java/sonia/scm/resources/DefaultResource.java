@@ -37,7 +37,6 @@ package sonia.scm.resources;
 
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.util.ChecksumUtil;
-import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -72,18 +71,12 @@ public final class DefaultResource extends AbstractResource
     super(pluginLoader, resources, resourceHandlers);
     this.type = type;
 
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-    try
+    try (ByteArrayOutputStream baos = new ByteArrayOutputStream())
     {
       appendResources(baos);
       this.content = baos.toByteArray();
       this.name = ChecksumUtil.createChecksum(this.content).concat(".").concat(
         type.getExtension());
-    }
-    finally
-    {
-      IOUtil.close(baos);
     }
   }
 
