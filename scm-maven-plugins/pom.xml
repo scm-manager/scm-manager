@@ -16,7 +16,6 @@
   <name>scm-maven-plugins</name>
 
   <modules>
-    <module>scm-plugin-archetype</module>
     <module>scm-annotation-processor</module>
   </modules>
 
