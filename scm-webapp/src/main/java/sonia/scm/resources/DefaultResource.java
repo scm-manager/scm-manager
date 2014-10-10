@@ -30,10 +30,12 @@
  */
 
 
+
 package sonia.scm.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.plugin.PluginLoader;
 import sonia.scm.util.ChecksumUtil;
 import sonia.scm.util.IOUtil;
 
@@ -45,33 +47,29 @@ import java.io.OutputStream;
 
 import java.util.List;
 
-import javax.servlet.ServletContext;
-import sonia.scm.plugin.PluginLoader;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public class DefaultResource extends AbstractResource
+public final class DefaultResource extends AbstractResource
 {
 
   /**
    * Constructs ...
    *
    *
-   * @param servletContext
+   * @param pluginLoader
    * @param resources
    * @param resourceHandlers
    * @param type
    *
    * @throws IOException
    */
-  public DefaultResource(ServletContext servletContext, PluginLoader pluginLoader, List<String> resources,
-                         List<ResourceHandler> resourceHandlers,
-                         ResourceType type)
-          throws IOException
+  public DefaultResource(PluginLoader pluginLoader, List<String> resources,
+    List<ResourceHandler> resourceHandlers, ResourceType type)
+    throws IOException
   {
-    super(servletContext, pluginLoader, resources, resourceHandlers);
+    super(pluginLoader, resources, resourceHandlers);
     this.type = type;
 
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -134,11 +132,11 @@ public class DefaultResource extends AbstractResource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private byte[] content;
+  private final byte[] content;
 
   /** Field description */
-  private String name;
+  private final String name;
 
   /** Field description */
-  private ResourceType type;
+  private final ResourceType type;
 }

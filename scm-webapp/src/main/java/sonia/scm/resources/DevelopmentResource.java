@@ -45,32 +45,27 @@ import java.io.OutputStream;
 
 import java.util.List;
 
-import javax.servlet.ServletContext;
-
 /**
  *
  * @author Sebastian Sdorra
  */
-public class DevelopmentResource extends AbstractResource
+public final class DevelopmentResource extends AbstractResource
 {
 
   /**
    * Constructs ...
    *
    *
-   *
-   * @param servletContext
    * @param pluginLoader
    * @param resources
    * @param resourceHandlers
    * @param name
    * @param type
    */
-  public DevelopmentResource(ServletContext servletContext,
-    PluginLoader pluginLoader, List<String> resources,
+  public DevelopmentResource(PluginLoader pluginLoader, List<String> resources,
     List<ResourceHandler> resourceHandlers, String name, ResourceType type)
   {
-    super(servletContext, pluginLoader, resources, resourceHandlers);
+    super(pluginLoader, resources, resourceHandlers);
     this.type = type;
 
     if (name.startsWith(HttpUtil.SEPARATOR_PATH))
@@ -133,8 +128,8 @@ public class DevelopmentResource extends AbstractResource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String name;
+  private final String name;
 
   /** Field description */
-  private ResourceType type;
+  private final ResourceType type;
 }

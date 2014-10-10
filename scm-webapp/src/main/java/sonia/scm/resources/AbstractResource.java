@@ -51,8 +51,6 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 
-import javax.servlet.ServletContext;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -71,17 +69,13 @@ public abstract class AbstractResource implements Resource
   /**
    * Constructs ...
    *
-   *
-   * @param servletContext
    * @param pluginLoader
    * @param resources
    * @param resourceHandlers
    */
-  public AbstractResource(ServletContext servletContext,
-    PluginLoader pluginLoader, List<String> resources,
+  public AbstractResource(PluginLoader pluginLoader, List<String> resources,
     List<ResourceHandler> resourceHandlers)
   {
-    this.servletContext = servletContext;
     this.pluginLoader = pluginLoader;
     this.resources = resources;
     this.resourceHandlers = resourceHandlers;
@@ -208,14 +202,11 @@ public abstract class AbstractResource implements Resource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  protected final List<ResourceHandler> resourceHandlers;
+
+  /** Field description */
+  protected final List<String> resources;
+
+  /** Field description */
   private final PluginLoader pluginLoader;
-
-  /** Field description */
-  protected List<ResourceHandler> resourceHandlers;
-
-  /** Field description */
-  protected List<String> resources;
-
-  /** Field description */
-  private ServletContext servletContext;
 }

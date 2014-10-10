@@ -52,9 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
-import sonia.scm.Default;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -74,16 +71,14 @@ public class DefaultResourceManager extends AbstractResourceManager
   /**
    * Constructs ...
    *
-   *
-   * @param servletContext
    * @param pluginLoader
    * @param resourceHandlers
    */
   @Inject
-  public DefaultResourceManager(@Default ServletContext servletContext,
-    PluginLoader pluginLoader, Set<ResourceHandler> resourceHandlers)
+  public DefaultResourceManager(PluginLoader pluginLoader,
+    Set<ResourceHandler> resourceHandlers)
   {
-    super(servletContext, pluginLoader, resourceHandlers);
+    super(pluginLoader, resourceHandlers);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -101,8 +96,8 @@ public class DefaultResourceManager extends AbstractResourceManager
 
     try
     {
-      Resource resource = new DefaultResource(servletContext, pluginLoader,
-                            resources, Lists.newArrayList(resourceHandlers),
+      Resource resource = new DefaultResource(pluginLoader, resources,
+                            Lists.newArrayList(resourceHandlers),
                             ResourceType.SCRIPT);
 
       resourceMap.put(new ResourceKey(resource.getName(), ResourceType.SCRIPT),

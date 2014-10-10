@@ -38,7 +38,6 @@ package sonia.scm.resources;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import sonia.scm.Default;
 import sonia.scm.plugin.PluginLoader;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -48,8 +47,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.servlet.ServletContext;
 
 /**
  *
@@ -68,15 +65,14 @@ public class DevelopmentResourceManager extends AbstractResourceManager
    * Constructs ...
    *
    *
-   * @param servletContext
    * @param pluginLoader
    * @param resourceHandlers
    */
   @Inject
-  public DevelopmentResourceManager(@Default ServletContext servletContext,
-    PluginLoader pluginLoader, Set<ResourceHandler> resourceHandlers)
+  public DevelopmentResourceManager(PluginLoader pluginLoader,
+    Set<ResourceHandler> resourceHandlers)
   {
-    super(servletContext, pluginLoader, resourceHandlers);
+    super(pluginLoader, resourceHandlers);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -95,7 +91,7 @@ public class DevelopmentResourceManager extends AbstractResourceManager
 
     for (String script : scripts)
     {
-      Resource resource = new DevelopmentResource(servletContext, pluginLoader,
+      Resource resource = new DevelopmentResource(pluginLoader,
                             Arrays.asList(script), Collections.EMPTY_LIST,
                             script, ResourceType.SCRIPT);
 
@@ -114,9 +110,8 @@ public class DevelopmentResourceManager extends AbstractResourceManager
 
       name = PREFIX_HANDLER.concat(name);
       resourceMap.put(new ResourceKey(name, ResourceType.SCRIPT),
-        new DevelopmentResource(servletContext, pluginLoader,
-          Collections.EMPTY_LIST, Arrays.asList(handler), name,
-            ResourceType.SCRIPT));
+        new DevelopmentResource(pluginLoader, Collections.EMPTY_LIST,
+          Arrays.asList(handler), name, ResourceType.SCRIPT));
     }
   }
 }
