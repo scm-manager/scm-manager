@@ -35,7 +35,7 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Objects;
+import com.google.common.base.Charsets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -61,6 +61,8 @@ import com.sun.jersey.core.util.Base64;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+
+import java.nio.charset.Charset;
 
 import java.util.Set;
 
@@ -90,7 +92,7 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
   private static final String ATTRIBUTE_FAILED_AUTH = "sonia.scm.auth.failed";
 
   /** default encoding to decode basic authentication header */
-  private static final String DEFAULT_ENCODING = "ISO-8859-1";
+  private static final Charset DEFAULT_ENCODING = Charsets.ISO_8859_1;
 
   /** the logger for BasicAuthenticationFilter */
   private static final Logger logger =
@@ -126,6 +128,30 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Decode base64 of the basic authentication header. The method will use
+   * ISO-8859-1 to encode the base64 authentication header.
+   *
+   *
+   * @param request http request
+   * @param authentication base64 encoded basic authentication string
+   *
+   * @return decoded basic authentication header
+   *
+   * @see <a href="http://goo.gl/tZEBS3">issue 627</a>
+   * @see <a href="http://goo.gl/NhbZ2F">Stackoverflow Basic Authentication</a>
+   *
+   * @throws UnsupportedEncodingException
+   */
+  protected String decodeAuthenticationHeader(HttpServletRequest request,
+    String authentication)
+    throws UnsupportedEncodingException
+  {
+    String token = authentication.substring(6);
+
+    return new String(Base64.decode(token), DEFAULT_ENCODING);
+  }
 
   /**
    * Method description
@@ -335,47 +361,6 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
     }
 
     return user;
-  }
-
-  /**
-   * Decode base64 of the basic authentication header. The method tries to use
-   * the charset provided by the request, if the request does not send an
-   * contain an encoding the method will be fallback to ISO-8859-1.
-   *
-   *
-   * @param request http request
-   * @param authentication base64 encoded basic authentication string
-   *
-   * @return decoded basic authentication header
-   *
-   * @see <a href="http://goo.gl/tZEBS3">issue 627</a>
-   * @see <a href="http://goo.gl/NhbZ2F">Stackoverflow Basic Authentication</a>
-   *
-   * @throws UnsupportedEncodingException
-   */
-  private String decodeAuthenticationHeader(HttpServletRequest request,
-    String authentication)
-    throws UnsupportedEncodingException
-  {
-
-    String encoding = Objects.firstNonNull(request.getCharacterEncoding(),
-                        DEFAULT_ENCODING);
-
-    String token = authentication.substring(6);
-
-    try
-    {
-      token = new String(Base64.decode(token.getBytes(encoding)));
-    }
-    catch (UnsupportedEncodingException ex)
-    {
-      logger.warn(
-        "encoding {} is not supported, use {} for decoding basic auth",
-        encoding, DEFAULT_ENCODING);
-      token = new String(Base64.decode(token.getBytes(DEFAULT_ENCODING)));
-    }
-
-    return token;
   }
 
   //~--- fields ---------------------------------------------------------------
