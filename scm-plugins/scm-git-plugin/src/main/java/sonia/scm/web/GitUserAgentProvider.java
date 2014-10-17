@@ -33,71 +33,64 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Charsets;
 
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.SvnUtil;
-import sonia.scm.util.HttpUtil;
-import sonia.scm.web.filter.AutoLoginModule;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import sonia.scm.plugin.ext.Extension;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-@Singleton
-public class SvnBasicAuthenticationFilter extends BasicAuthenticationFilter
+@Extension
+public class GitUserAgentProvider implements UserAgentProvider
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   * @param autoLoginModules
-   * @param userAgentParser
-   */
-  @Inject
-  public SvnBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<AutoLoginModule> autoLoginModules, UserAgentParser userAgentParser)
-  {
-    super(configuration, autoLoginModules, userAgentParser);
-  }
+  /** Field description */
+  @VisibleForTesting
+  static final UserAgent GIT = UserAgent.builder("Git").browser(
+                                 false).basicAuthenticationCharset(
+                                 Charsets.UTF_8).build();
+
+  /** Field description */
+  @VisibleForTesting
+  static final UserAgent MSYSGIT = UserAgent.builder("msysGit").browser(
+                                     false).basicAuthenticationCharset(
+                                     Charsets.UTF_8).build();
+
+  /** Field description */
+  private static final String PREFIX = "git/";
+
+  /** Field description */
+  private static final String SUFFIX = "msysgit";
 
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Sends unauthorized instead of forbidden for svn clients, because the
-   * svn client prompts again for authentication.
+   * Method description
    *
    *
-   * @param request http request
-   * @param response http response
+   * @param userAgentString
    *
-   * @throws IOException
+   * @return
    */
   @Override
-  protected void sendFailedAuthenticationError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
+  public UserAgent parseUserAgent(String userAgentString)
   {
-    if (SvnUtil.isSvnClient(request))
+    UserAgent ua = null;
+
+    if (userAgentString.startsWith(PREFIX))
     {
-      HttpUtil.sendUnauthorized(response, configuration.getRealmDescription());
+      if (userAgentString.contains(SUFFIX))
+      {
+        ua = MSYSGIT;
+      }
+      else
+      {
+        ua = GIT;
+      }
     }
-    else
-    {
-      super.sendFailedAuthenticationError(request, response);
-    }
+
+    return ua;
   }
 }

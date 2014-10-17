@@ -156,6 +156,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import sonia.scm.web.UserAgentParser;
 
 /**
  *
@@ -341,6 +342,9 @@ public class ScmServletModule extends ServletModule
     // bind new hook api
     bind(HookContextFactory.class);
     bind(HookEventFacade.class);
+    
+    // bind user-agent parser
+    bind(UserAgentParser.class);
 
     // bind debug logging filter
     if ("true".equalsIgnoreCase(System.getProperty(SYSTEM_PROPERTY_DEBUG_HTTP)))

@@ -33,71 +33,51 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.google.common.annotations.VisibleForTesting;
 
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.SvnUtil;
-import sonia.scm.util.HttpUtil;
-import sonia.scm.web.filter.AutoLoginModule;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
+import sonia.scm.plugin.ext.Extension;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.Charset;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-@Singleton
-public class SvnBasicAuthenticationFilter extends BasicAuthenticationFilter
+@Extension
+public class HgUserAgentProvider implements UserAgentProvider
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   * @param autoLoginModules
-   * @param userAgentParser
-   */
-  @Inject
-  public SvnBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<AutoLoginModule> autoLoginModules, UserAgentParser userAgentParser)
-  {
-    super(configuration, autoLoginModules, userAgentParser);
-  }
+  /** mercurial seems to use system encoding */
+  @VisibleForTesting
+  static UserAgent HG = UserAgent.builder("Mercurial").browser(
+                          false).basicAuthenticationCharset(
+                          Charset.defaultCharset()).build();
+
+  /** Field description */
+  private static final String PREFIX = "mercurial";
 
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Sends unauthorized instead of forbidden for svn clients, because the
-   * svn client prompts again for authentication.
+   * Method description
    *
    *
-   * @param request http request
-   * @param response http response
+   * @param userAgentString
    *
-   * @throws IOException
+   * @return
    */
   @Override
-  protected void sendFailedAuthenticationError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
+  public UserAgent parseUserAgent(String userAgentString)
   {
-    if (SvnUtil.isSvnClient(request))
+    UserAgent ua = null;
+
+    if (userAgentString.startsWith(PREFIX))
     {
-      HttpUtil.sendUnauthorized(response, configuration.getRealmDescription());
+      ua = HG;
     }
-    else
-    {
-      super.sendFailedAuthenticationError(request, response);
-    }
+
+    return ua;
   }
 }

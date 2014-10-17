@@ -33,71 +33,51 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.google.common.base.Strings;
 
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.SvnUtil;
-import sonia.scm.util.HttpUtil;
-import sonia.scm.web.filter.AutoLoginModule;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-@Singleton
-public class SvnBasicAuthenticationFilter extends BasicAuthenticationFilter
+public class GitUserAgentProviderTest
 {
 
   /**
-   * Constructs ...
+   * Method description
    *
-   *
-   * @param configuration
-   * @param autoLoginModules
-   * @param userAgentParser
    */
-  @Inject
-  public SvnBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<AutoLoginModule> autoLoginModules, UserAgentParser userAgentParser)
+  @Test
+  public void testParseUserAgent()
   {
-    super(configuration, autoLoginModules, userAgentParser);
+    assertEquals(GitUserAgentProvider.GIT, parse("git/1.7.9.5"));
+    assertEquals(GitUserAgentProvider.MSYSGIT, parse("git/1.8.3.msysgit.0"));
+    assertNull(parse("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"));
   }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
-   * Sends unauthorized instead of forbidden for svn clients, because the
-   * svn client prompts again for authentication.
+   * Method description
    *
    *
-   * @param request http request
-   * @param response http response
+   * @param v
    *
-   * @throws IOException
+   * @return
    */
-  @Override
-  protected void sendFailedAuthenticationError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
+  private UserAgent parse(String v)
   {
-    if (SvnUtil.isSvnClient(request))
-    {
-      HttpUtil.sendUnauthorized(response, configuration.getRealmDescription());
-    }
-    else
-    {
-      super.sendFailedAuthenticationError(request, response);
-    }
+    return provider.parseUserAgent(
+      Strings.nullToEmpty(v).toLowerCase(Locale.ENGLISH));
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final GitUserAgentProvider provider = new GitUserAgentProvider();
 }
