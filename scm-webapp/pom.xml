@@ -582,9 +582,6 @@
             <artifactId>jetty-maven-plugin</artifactId>
             <version>${jetty.version}</version>
             <configuration>
-              <httpConnector>
-                <port>8081</port>
-              </httpConnector>
               <stopPort>8085</stopPort>
               <stopKey>STOP</stopKey>
               <systemProperties>
