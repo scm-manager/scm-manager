@@ -183,6 +183,7 @@
               </execution>
             </executions>
             <configuration>
+              <name>${project.name}-2</name>
               <attach>true</attach>
               <classifier>all</classifier>
               <release>${maven.build.timestamp}</release>
