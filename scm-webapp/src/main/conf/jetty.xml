@@ -31,12 +31,42 @@ http://bitbucket.org/sdorra/scm-manager
 
 -->
 
-<Configure id="ScmServer" class="org.eclipse.jetty.server.Server">
+<Configure id="Server" class="org.eclipse.jetty.server.Server">
 
   <New id="httpConfig" class="org.eclipse.jetty.server.HttpConfiguration">
     <!-- increase header size for mercurial -->
     <Set name="requestHeaderSize">16384</Set>
     <Set name="responseHeaderSize">16384</Set>
   </New>
+  
+  <Call id="httpConnector" name="addConnector">
+    <Arg>
+      <New class="org.eclipse.jetty.server.ServerConnector">
+        <Arg name="server">
+          <Ref refid="Server" />
+        </Arg>
+        <Arg name="factories">
+          <Array type="org.eclipse.jetty.server.ConnectionFactory">
+            <Item>
+              <New class="org.eclipse.jetty.server.HttpConnectionFactory">
+                <Arg name="config">
+                  <Ref refid="httpConfig" />
+                </Arg>
+              </New>
+            </Item>
+          </Array>
+        </Arg>
+        <Set name="host">
+          <Property name="jetty.host" />
+        </Set>
+        <Set name="port">
+          <Property name="jetty.port" default="8081" />
+        </Set>
+        <Set name="idleTimeout">
+          <Property name="http.timeout" default="30000"/>
+        </Set>
+      </New>
+    </Arg>
+  </Call>
   
 </Configure>
