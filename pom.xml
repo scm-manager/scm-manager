@@ -421,7 +421,7 @@
 
   <properties>
     <!-- test libraries -->
-    <mokito.version>1.9.5</mokito.version>
+    <mokito.version>1.10.8</mokito.version>
     <hamcrest.version>1.3</hamcrest.version>
     <junit.version>4.11</junit.version>
 
