@@ -142,9 +142,23 @@
      http://wiki.eclipse.org/Jetty/Reference/SSL_Connectors
   -->
   <!--
+  Besure SSLv3 protocol is excluded to avoid POODLE vulnerability.
+  See https://groups.google.com/d/msg/scmmanager/sX_Ydy-wAPA/-Dvs5i7RHtQJ
+  -->
+  <!--
   <Call name="addConnector">
     <Arg>
       <New class="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
+        <Arg>
+          <New class="org.eclipse.jetty.http.ssl.SslContextFactory">
+            <Set name="excludeProtocols">
+              <Array type="java.lang.String">
+                <Item>SSLv2Hello</Item>
+                <Item>SSLv3</Item>
+              </Array>
+            </Set>
+          </New>
+        </Arg>
         <Set name="Port">8181</Set>
         <Set name="maxIdleTime">30000</Set>
         <Set name="requestHeaderSize">16384</Set>
