@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -38,12 +39,16 @@ import com.google.common.base.Objects;
 
 import sonia.scm.repository.Repository;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.net.URL;
+
 /**
  *
  * @author Sebastian Sdorra
  * @since 1.31
  */
-public abstract class RemoteCommandRequest
+public abstract class RemoteCommandRequest implements Resetable
 {
 
   /**
@@ -64,7 +69,8 @@ public abstract class RemoteCommandRequest
 
     final RemoteCommandRequest other = (RemoteCommandRequest) obj;
 
-    return Objects.equal(remoteRepository, other.remoteRepository);
+    return Objects.equal(remoteRepository, other.remoteRepository)
+      && Objects.equal(remoteUrl, other.remoteUrl);
   }
 
   /**
@@ -73,7 +79,19 @@ public abstract class RemoteCommandRequest
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(remoteRepository);
+    return Objects.hashCode(remoteRepository, remoteUrl);
+  }
+
+  /**
+   * Resets the request object.
+   *
+   * @since 1.43
+   */
+  @Override
+  public void reset()
+  {
+    remoteRepository = null;
+    remoteUrl = null;
   }
 
   /**
@@ -82,10 +100,10 @@ public abstract class RemoteCommandRequest
   @Override
   public String toString()
   {
-
     //J-
     return Objects.toStringHelper(this)
                   .add("remoteRepository", remoteRepository)
+                  .add("remoteUrl", remoteUrl)
                   .toString();
     //J+
   }
@@ -102,6 +120,19 @@ public abstract class RemoteCommandRequest
     this.remoteRepository = remoteRepository;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param remoteUrl
+   *
+   * @since 1.43
+   */
+  public void setRemoteUrl(URL remoteUrl)
+  {
+    this.remoteUrl = remoteUrl;
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -115,8 +146,24 @@ public abstract class RemoteCommandRequest
     return remoteRepository;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   *
+   * @since 1.43
+   */
+  URL getRemoteUrl()
+  {
+    return remoteUrl;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   protected Repository remoteRepository;
+
+  /** remote url */
+  protected URL remoteUrl;
 }

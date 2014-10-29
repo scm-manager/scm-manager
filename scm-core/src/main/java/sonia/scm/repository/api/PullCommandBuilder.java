@@ -50,6 +50,7 @@ import sonia.scm.security.RepositoryPermission;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * The pull command pull changes from a other repository.
@@ -84,6 +85,38 @@ public final class PullCommandBuilder
   //~--- methods --------------------------------------------------------------
 
   /**
+   * Pull all changes from the given remote url.
+   *
+   *
+   * @param url remote url
+   *
+   * @return informations over the executed pull command
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   * 
+   * @since 1.43
+   */
+  public PullResponse pull(String url)
+    throws IOException, RepositoryException
+  {
+    Subject subject = SecurityUtils.getSubject();
+    //J-
+    subject.checkPermission(
+      new RepositoryPermission(localRepository, PermissionType.WRITE)
+    );
+    //J+
+    
+    URL remoteUrl = new URL(url);
+    request.reset();
+    request.setRemoteUrl(remoteUrl);
+    
+    logger.info("pull changes from url {}", url);
+    
+    return command.pull(request);
+  }
+  
+  /**
    * Pull all changes from the given remote repository.
    *
    *
@@ -108,6 +141,7 @@ public final class PullCommandBuilder
     );
     //J+
 
+    request.reset();
     request.setRemoteRepository(remoteRepository);
 
     logger.info("pull changes from {}", remoteRepository);
