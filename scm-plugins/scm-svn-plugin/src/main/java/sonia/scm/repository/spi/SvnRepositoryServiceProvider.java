@@ -56,9 +56,12 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
 {
 
   /** Field description */
-  public static final Set<Command> COMMANDS = ImmutableSet.of(Command.BLAME,
-                                                Command.BROWSE, Command.CAT,
-                                                Command.DIFF, Command.LOG);
+  //J-
+  public static final Set<Command> COMMANDS = ImmutableSet.of(
+    Command.BLAME, Command.BROWSE, Command.CAT, Command.DIFF, 
+    Command.LOG, Command.BUNDLE, Command.UNBUNDLE
+  );
+  //J+
 
   //~--- constructors ---------------------------------------------------------
 
@@ -123,6 +126,18 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
    * @return
    */
   @Override
+  public BundleCommand getBundleCommand()
+  {
+    return new SvnBundleCommand(context, repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public SvnCatCommand getCatCommand()
   {
     return new SvnCatCommand(context, repository);
@@ -162,6 +177,18 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   public Set<Command> getSupportedCommands()
   {
     return COMMANDS;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public UnbundleCommand getUnbundleCommand()
+  {
+    return new SvnUnbundleCommand(context, repository);
   }
 
   //~--- fields ---------------------------------------------------------------
