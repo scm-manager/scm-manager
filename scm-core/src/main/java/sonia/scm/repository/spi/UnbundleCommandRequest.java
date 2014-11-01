@@ -31,35 +31,11 @@
 
 
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
 /**
- * Enumeration of available commands.
  *
- * @author Sebastian Sdorra
- * @since 1.17
+ * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @since 1.43
  */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
-
-  /**
-   * @since 1.18
-   */
-  TAGS,
-
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
-
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-  
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE;
-}
+public class UnbundleCommandRequest extends ArchiveCommandRequest {}

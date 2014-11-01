@@ -83,6 +83,8 @@ import java.io.IOException;
  * @apiviz.uses sonia.scm.repository.api.OutgoingCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.PullCommandBuilder
  * @apiviz.uses sonia.scm.repository.api.PushCommandBuilder
+ * @apiviz.uses sonia.scm.repository.api.BundleCommandBuilder
+ * @apiviz.uses sonia.scm.repository.api.UnbundleCommandBuilder
  */
 public final class RepositoryService implements Closeable
 {
@@ -202,6 +204,25 @@ public final class RepositoryService implements Closeable
 
     return new BrowseCommandBuilder(cacheManager, provider.getBrowseCommand(),
       repository, preProcessorUtil);
+  }
+
+  /**
+   * The bundle command creates an archive from the repository.
+   *
+   * @return instance of {@link BundleCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *         by the implementation of the repository service provider.
+   * @since 1.43
+   */
+  public BundleCommandBuilder getBundleCommand()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create bundle command for repository {}",
+        repository.getName());
+    }
+
+    return new BundleCommandBuilder(provider.getBundleCommand(), repository);
   }
 
   /**
@@ -371,6 +392,26 @@ public final class RepositoryService implements Closeable
   }
 
   /**
+   * The unbundle command restores a repository from the given bundle.
+   *
+   * @return instance of {@link UnbundleCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *         by the implementation of the repository service provider.
+   * @since 1.43
+   */
+  public UnbundleCommandBuilder getUnbundleCommand()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create bundle command for repository {}",
+        repository.getName());
+    }
+
+    return new UnbundleCommandBuilder(provider.getUnbundleCommand(),
+      repository);
+  }
+
+  /**
    * Returns true if the command is supported by the repository service.
    *
    *
@@ -390,7 +431,7 @@ public final class RepositoryService implements Closeable
    * @param feature feature
    *
    * @return true if the feature is supported
-   * 
+   *
    * @since 1.25
    */
   public boolean isSupported(Feature feature)

@@ -31,35 +31,36 @@
 
 
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.repository.RepositoryException;
+import sonia.scm.repository.api.UnbundleResponse;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 /**
- * Enumeration of available commands.
  *
- * @author Sebastian Sdorra
- * @since 1.17
+ * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @since 1.43
  */
-public enum Command
+public interface UnbundleCommand
 {
-  LOG, BROWSE, CAT, DIFF, BLAME,
 
   /**
-   * @since 1.18
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
    */
-  TAGS,
-
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
-
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-  
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE;
+  public UnbundleResponse unbundle(UnbundleCommandRequest request)
+    throws IOException, RepositoryException;;
 }

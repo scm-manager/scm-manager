@@ -31,35 +31,106 @@
 
 
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.io.File;
 
 /**
- * Enumeration of available commands.
  *
- * @author Sebastian Sdorra
- * @since 1.17
+ * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @since 1.43
  */
-public enum Command
+public abstract class ArchiveCommandRequest
 {
-  LOG, BROWSE, CAT, DIFF, BLAME,
 
   /**
-   * @since 1.18
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
    */
-  TAGS,
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final ArchiveCommandRequest other = (ArchiveCommandRequest) obj;
+
+    return Objects.equal(archive, other.archive);
+  }
 
   /**
-   * @since 1.18
+   * Method description
+   *
+   *
+   * @return
    */
-  BRANCHES,
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(archive);
+  }
 
   /**
-   * @since 1.31
+   * Method description
+   *
+   *
+   * @return
    */
-  INCOMING, OUTGOING, PUSH, PULL,
-  
+  @Override
+  public String toString()
+  {
+    //J-
+    return Objects.toStringHelper(this)
+                  .add("archive", archive)
+                  .toString();
+    //J+
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
   /**
-   * @since 1.43
+   * Method description
+   *
+   *
+   * @return
    */
-  BUNDLE, UNBUNDLE;
+  public File getArchive()
+  {
+    return archive;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param archive
+   */
+  public void setArchive(File archive)
+  {
+    this.archive = archive;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private File archive;
 }
