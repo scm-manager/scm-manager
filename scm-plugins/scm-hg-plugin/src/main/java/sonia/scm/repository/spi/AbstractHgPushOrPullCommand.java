@@ -35,37 +35,15 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.aragost.javahg.Changeset;
-import com.aragost.javahg.commands.ExecutionException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryException;
-import sonia.scm.repository.api.PushResponse;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.IOException;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-public class HgPushCommand extends AbstractHgPushOrPullCommand
-  implements PushCommand
+public class AbstractHgPushOrPullCommand extends AbstractCommand
 {
-
-  /** Field description */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgPushCommand.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -75,13 +53,14 @@ public class HgPushCommand extends AbstractHgPushOrPullCommand
    * @param context
    * @param repository
    */
-  public HgPushCommand(HgRepositoryHandler handler, HgCommandContext context,
-    Repository repository)
+  protected AbstractHgPushOrPullCommand(HgRepositoryHandler handler,
+    HgCommandContext context, Repository repository)
   {
-    super(handler, context, repository);
+    super(context, repository);
+    this.handler = handler;
   }
 
-  //~--- methods --------------------------------------------------------------
+  //~--- get methods ----------------------------------------------------------
 
   /**
    * Method description
@@ -90,29 +69,31 @@ public class HgPushCommand extends AbstractHgPushOrPullCommand
    * @param request
    *
    * @return
-   *
-   * @throws IOException
-   * @throws RepositoryException
    */
-  @Override
-  public PushResponse push(PushCommandRequest request)
-    throws RepositoryException, IOException
+  protected String getRemoteUrl(RemoteCommandRequest request)
   {
-    String url = getRemoteUrl(request);
+    String url;
+    Repository repo = request.getRemoteRepository();
 
-    logger.debug("push changes from {} to {}", getRepository().getId(), url);
-
-    List<Changeset> result = Collections.EMPTY_LIST;
-
-    try
+    if (repo != null)
     {
-      result = com.aragost.javahg.commands.PushCommand.on(open()).execute(url);
+      url =
+        handler.getDirectory(request.getRemoteRepository()).getAbsolutePath();
     }
-    catch (ExecutionException ex)
+    else if (request.getRemoteUrl() != null)
     {
-      throw new RepositoryException("could not execute push command", ex);
+      url = request.getRemoteUrl().toExternalForm();
+    }
+    else
+    {
+      throw new IllegalArgumentException("url or repository is required");
     }
 
-    return new PushResponse(result.size());
+    return url;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected final HgRepositoryHandler handler;
 }

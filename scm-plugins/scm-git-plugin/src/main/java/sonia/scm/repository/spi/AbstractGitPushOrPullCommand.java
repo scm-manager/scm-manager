@@ -48,6 +48,7 @@ import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.RepositoryException;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -61,17 +62,17 @@ import java.util.Collection;
  *
  * @author Sebastian Sdorra
  */
-public abstract class AbstractPushOrPullCommand extends AbstractGitCommand
+public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand
 {
 
   /** Field description */
   private static final String SCHEME = "scm://";
 
   /**
-   * the logger for AbstractPushOrPullCommand
+   * the logger for AbstractGitPushOrPullCommand
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(AbstractPushOrPullCommand.class);
+    LoggerFactory.getLogger(AbstractGitPushOrPullCommand.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -79,36 +80,38 @@ public abstract class AbstractPushOrPullCommand extends AbstractGitCommand
    * Constructs ...
    *
    *
+   * @param handler
    * @param context
    * @param repository
    */
-  public AbstractPushOrPullCommand(GitContext context,
-    sonia.scm.repository.Repository repository)
+  protected AbstractGitPushOrPullCommand(GitRepositoryHandler handler,
+    GitContext context, sonia.scm.repository.Repository repository)
   {
     super(context, repository);
+    this.handler = handler;
   }
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
-   * 
+   *
    * @param source
-   * @param target
+   * @param remoteUrl
    *
    * @return
    *
    * @throws IOException
    * @throws RepositoryException
    */
-  protected long push(Repository source, File target)
+  protected long push(Repository source, String remoteUrl)
     throws IOException, RepositoryException
   {
     Git git = Git.wrap(source);
     org.eclipse.jgit.api.PushCommand push = git.push();
 
     push.setPushAll().setPushTags();
-    push.setRemote(SCHEME.concat(target.getAbsolutePath()));
+    push.setRemote(remoteUrl);
 
     long counter = -1;
 
@@ -156,6 +159,61 @@ public abstract class AbstractPushOrPullCommand extends AbstractGitCommand
       "remote repository is required");
 
     return remoteRepository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  protected String getRemoteUrl(RemoteCommandRequest request)
+  {
+    String url;
+    sonia.scm.repository.Repository remRepo = request.getRemoteRepository();
+
+    if (remRepo != null)
+    {
+      url = getRemoteUrl(remRepo);
+    }
+    else if (request.getRemoteUrl() != null)
+    {
+      url = request.getRemoteUrl().toExternalForm();
+    }
+    else
+    {
+      throw new IllegalArgumentException("repository or url is requiered");
+    }
+
+    return url;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param directory
+   *
+   * @return
+   */
+  protected String getRemoteUrl(File directory)
+  {
+    return SCHEME.concat(directory.getAbsolutePath());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   *
+   * @return
+   */
+  protected String getRemoteUrl(sonia.scm.repository.Repository repository)
+  {
+    return getRemoteUrl(handler.getDirectory(repository));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -231,4 +289,9 @@ public abstract class AbstractPushOrPullCommand extends AbstractGitCommand
 
     return counter;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  protected GitRepositoryHandler handler;
 }

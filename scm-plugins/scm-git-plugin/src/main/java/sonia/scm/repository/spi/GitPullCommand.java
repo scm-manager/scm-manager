@@ -36,8 +36,19 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.TagOpt;
+import org.eclipse.jgit.transport.TrackingRefUpdate;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
@@ -50,27 +61,37 @@ import sonia.scm.repository.api.PullResponse;
 import java.io.File;
 import java.io.IOException;
 
+import java.net.URL;
+
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GitPullCommand extends AbstractPushOrPullCommand
+public class GitPullCommand extends AbstractGitPushOrPullCommand
   implements PullCommand
 {
+
+  /** Field description */
+  private static final String REF_SPEC = "refs/heads/*:refs/heads/*";
+
+  /** Field description */
+  private static final Logger logger =
+    LoggerFactory.getLogger(GitPullCommand.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
    *
    *
-   * @param repositoryHandler
+   * @param handler
    * @param context
    * @param repository
    */
-  public GitPullCommand(GitRepositoryHandler repositoryHandler,
-    GitContext context, Repository repository)
+  public GitPullCommand(GitRepositoryHandler handler, GitContext context,
+    Repository repository)
   {
-    super(context, repository);
-    this.repositoryHandler = repositoryHandler;
+    super(handler, context, repository);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -90,17 +111,126 @@ public class GitPullCommand extends AbstractPushOrPullCommand
   public PullResponse pull(PullCommandRequest request)
     throws IOException, RepositoryException
   {
-    Repository sourceRepository = getRemoteRepository(request);
+    PullResponse response;
+    Repository sourceRepository = request.getRemoteRepository();
 
-    File sourceDirectory = repositoryHandler.getDirectory(sourceRepository);
+    if (sourceRepository != null)
+    {
+      response = pullFromScmRepository(sourceRepository);
+    }
+    else if (request.getRemoteUrl() != null)
+    {
+      response = pullFromUrl(request.getRemoteUrl());
+    }
+    else
+    {
+      throw new IllegalArgumentException("repository or url is required");
+    }
+
+    return response;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param git
+   * @param result
+   * @param fetch
+   *
+   * @return
+   *
+   * @throws RepositoryException
+   */
+  private PullResponse convert(Git git, FetchResult fetch)
+    throws RepositoryException
+  {
+    long counter = 0l;
+
+    for (TrackingRefUpdate tru : fetch.getTrackingRefUpdates())
+    {
+      counter += count(git, tru);
+    }
+
+    return new PullResponse(counter);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param git
+   * @param tru
+   *
+   * @return
+   */
+  private long count(Git git, TrackingRefUpdate tru)
+  {
+    long counter = 0;
+
+    try
+    {
+      org.eclipse.jgit.api.LogCommand log = git.log();
+      ObjectId oldId = tru.getOldObjectId();
+
+      if (oldId != null)
+      {
+        log.not(oldId);
+      }
+
+      ObjectId newId = tru.getNewObjectId();
+
+      if (newId != null)
+      {
+        log.add(newId);
+
+        Iterable<RevCommit> commits = log.call();
+
+        if (commits != null)
+        {
+          counter += Iterables.size(commits);
+        }
+      }
+      else
+      {
+        logger.warn("update without new object id");
+      }
+
+    }
+    catch (Exception ex)
+    {
+      logger.error("could not count pushed/pulled changesets", ex);
+    }
+
+    return counter;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param sourceRepository
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  private PullResponse pullFromScmRepository(Repository sourceRepository)
+    throws IOException, RepositoryException
+  {
+    File sourceDirectory = handler.getDirectory(sourceRepository);
 
     Preconditions.checkArgument(sourceDirectory.exists(),
       "source repository directory does not exists");
 
-    File targetDirectory = repositoryHandler.getDirectory(repository);
+    File targetDirectory = handler.getDirectory(repository);
 
     Preconditions.checkArgument(sourceDirectory.exists(),
       "target repository directory does not exists");
+
+    logger.debug("pull changes from {} to {}",
+      sourceDirectory.getAbsolutePath(), repository.getId());
 
     PullResponse response = null;
 
@@ -109,7 +239,7 @@ public class GitPullCommand extends AbstractPushOrPullCommand
     try
     {
       source = Git.open(sourceDirectory).getRepository();
-      response = new PullResponse(push(source, targetDirectory));
+      response = new PullResponse(push(source, getRemoteUrl(targetDirectory)));
     }
     finally
     {
@@ -119,8 +249,42 @@ public class GitPullCommand extends AbstractPushOrPullCommand
     return response;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  /**
+   * Method description
+   *
+   *
+   * @param url
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  private PullResponse pullFromUrl(URL url)
+    throws IOException, RepositoryException
+  {
+    logger.debug("pull changes from {} to {}", url, repository.getId());
 
-  /** Field description */
-  private GitRepositoryHandler repositoryHandler;
+    PullResponse response;
+    Git git = Git.wrap(open());
+
+    try
+    {
+      //J-
+      FetchResult result = git.fetch()
+        .setRefSpecs(new RefSpec(REF_SPEC))
+        .setRemote(url.toExternalForm())
+        .setTagOpt(TagOpt.FETCH_TAGS)
+        .call();
+      //J+
+
+      response = convert(git, result);
+    }
+    catch (GitAPIException ex)
+    {
+      throw new RepositoryException("error durring pull", ex);
+    }
+
+    return response;
+  }
 }

@@ -37,7 +37,6 @@ package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.transport.ScmTransportProtocol;
 
 import org.junit.Test;
 
@@ -106,9 +105,4 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
     return new GitPushCommand(handler, new GitContext(outgoingDirectory),
       outgoingRepository);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private ScmTransportProtocol proto;
 }
