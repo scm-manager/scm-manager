@@ -39,6 +39,7 @@ import com.google.common.base.Objects;
 import com.google.common.io.ByteSource;
 
 /**
+ * Request object for the unbundle command.
  *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
@@ -47,10 +48,10 @@ public final class UnbundleCommandRequest
 {
 
   /**
-   * Constructs ...
+   * Constructs a new unbundle command request.
    *
    *
-   * @param archive
+   * @param archive byte source archive
    */
   public UnbundleCommandRequest(ByteSource archive)
   {
@@ -60,12 +61,7 @@ public final class UnbundleCommandRequest
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public boolean equals(Object obj)
@@ -86,10 +82,7 @@ public final class UnbundleCommandRequest
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public int hashCode()
@@ -100,10 +93,10 @@ public final class UnbundleCommandRequest
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the archive as {@link ByteSource}.
    *
    *
-   * @return
+   * @return {@link ByteSource} archive
    */
   ByteSource getArchive()
   {
@@ -112,6 +105,6 @@ public final class UnbundleCommandRequest
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** byte source archive */
   private final ByteSource archive;
 }

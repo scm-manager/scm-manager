@@ -34,6 +34,7 @@
 package sonia.scm.repository.api;
 
 /**
+ * Response of {@link BundleCommandBuilder}.
  *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43

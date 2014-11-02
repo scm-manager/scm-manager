@@ -43,6 +43,7 @@ import sonia.scm.repository.api.BundleResponse;
 import java.io.IOException;
 
 /**
+ * Service provider implementation for the bundle command.
  *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
@@ -51,16 +52,16 @@ public interface BundleCommand
 {
 
   /**
-   * Method description
+   * The bundle command dumps a repository to a byte source such as a file.
    *
    *
-   * @param request
+   * @param request bundle command request
    *
-   * @return
+   * @return bundle response
    *
    * @throws IOException
    * @throws RepositoryException
    */
   public BundleResponse bundle(BundleCommandRequest request)
-    throws IOException, RepositoryException;;
+    throws IOException, RepositoryException;
 }

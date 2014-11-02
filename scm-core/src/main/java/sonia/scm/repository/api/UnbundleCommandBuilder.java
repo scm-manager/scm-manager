@@ -57,6 +57,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * The unbundle command can restore an empty repository from a bundle. The 
+ * bundle can be created with the {@link BundleCommandBuilder}.
  *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
@@ -64,18 +66,18 @@ import java.io.InputStream;
 public final class UnbundleCommandBuilder
 {
 
-  /** Field description */
+  /** logger for UnbundleCommandBuilder */
   private static final Logger logger =
     LoggerFactory.getLogger(UnbundleCommandBuilder.class);
 
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new UnbundleCommandBuilder.
    *
    *
-   * @param unbundleCommand
-   * @param repository
+   * @param unbundleCommand unbundle command implementation
+   * @param repository repository
    */
   public UnbundleCommandBuilder(UnbundleCommand unbundleCommand,
     Repository repository)
@@ -87,12 +89,12 @@ public final class UnbundleCommandBuilder
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Restores the repository from the given bundle.
    *
    *
-   * @param inputFile
+   * @param inputFile input file
    *
-   * @return
+   * @return unbundle response
    *
    * @throws IOException
    * @throws RepositoryException
@@ -112,12 +114,12 @@ public final class UnbundleCommandBuilder
   }
 
   /**
-   * Method description
+   * Restores the repository from the given bundle.
    *
    *
-   * @param inputStream
+   * @param inputStream input stream
    *
-   * @return
+   * @return unbundle response
    *
    * @throws IOException
    * @throws RepositoryException
@@ -133,12 +135,12 @@ public final class UnbundleCommandBuilder
   }
 
   /**
-   * Method description
+   * Restores the repository from the given bundle.
    *
    *
-   * @param byteSource
+   * @param byteSource byte source
    *
-   * @return
+   * @return unbundle response
    *
    * @throws IOException
    * @throws RepositoryException
@@ -153,12 +155,12 @@ public final class UnbundleCommandBuilder
   }
 
   /**
-   * Method description
+   * Converts an {@link InputStream} into a {@link ByteSource}.
    *
    *
-   * @param inputStream
+   * @param inputStream input stream
    *
-   * @return
+   * @return byte source
    */
   private ByteSource asByteSource(final InputStream inputStream)
   {
@@ -175,9 +177,9 @@ public final class UnbundleCommandBuilder
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** repository */
   private final Repository repository;
 
-  /** Field description */
+  /** unbundle command implementation */
   private final UnbundleCommand unbundleCommand;
 }

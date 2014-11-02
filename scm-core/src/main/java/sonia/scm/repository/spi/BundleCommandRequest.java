@@ -39,6 +39,7 @@ import com.google.common.base.Objects;
 import com.google.common.io.ByteSink;
 
 /**
+ * Request for the bundle command.
  *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
@@ -47,10 +48,10 @@ public final class BundleCommandRequest
 {
 
   /**
-   * Constructs ...
+   * Constructs a new bundle command request.
    *
    *
-   * @param archive
+   * @param archive byte sink archive
    */
   public BundleCommandRequest(ByteSink archive)
   {
@@ -60,12 +61,7 @@ public final class BundleCommandRequest
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public boolean equals(Object obj)
@@ -86,10 +82,7 @@ public final class BundleCommandRequest
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public int hashCode()
@@ -100,10 +93,10 @@ public final class BundleCommandRequest
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the archive as {@link ByteSink}.
    *
    *
-   * @return
+   * @return {@link ByteSink} archive.
    */
   ByteSink getArchive()
   {
@@ -112,6 +105,6 @@ public final class BundleCommandRequest
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** byte sink archive */
   private final ByteSink archive;
 }

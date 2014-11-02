@@ -57,6 +57,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * The bundle command dumps a repository to a byte source such as a file. The 
+ * created bundle can be restored to an empty repository with the 
+ * {@link UnbundleCommandBuilder}.
  *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
@@ -64,21 +67,20 @@ import java.io.OutputStream;
 public final class BundleCommandBuilder
 {
 
-  /** Field description */
+  /** logger for BundleCommandBuilder */
   private static final Logger logger =
     LoggerFactory.getLogger(BundleCommandBuilder.class);
 
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new {@link BundleCommandBuilder}.
    *
    *
-   * @param bundleCommand
-   * @param repository
+   * @param bundleCommand bundle command implementation
+   * @param repository repository
    */
-  public BundleCommandBuilder(BundleCommand bundleCommand,
-    Repository repository)
+  BundleCommandBuilder(BundleCommand bundleCommand, Repository repository)
   {
     this.bundleCommand = bundleCommand;
     this.repository = repository;
@@ -87,12 +89,11 @@ public final class BundleCommandBuilder
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Dumps the repository to the given {@link File}.
    *
+   * @param outputFile output file
    *
-   * @param outputFile
-   *
-   * @return
+   * @return bundle response
    *
    * @throws IOException
    * @throws RepositoryException
@@ -113,12 +114,12 @@ public final class BundleCommandBuilder
   }
 
   /**
-   * Method description
+   * Dumps the repository to the given {@link OutputStream}.
    *
    *
-   * @param outputStream
+   * @param outputStream output stream
    *
-   * @return
+   * @return bundle response
    *
    * @throws IOException
    * @throws RepositoryException
@@ -135,12 +136,11 @@ public final class BundleCommandBuilder
   }
 
   /**
-   * Method description
+   * Dumps the repository to the given {@link ByteSink}.
    *
+   * @param sink byte sink
    *
-   * @param sink
-   *
-   * @return
+   * @return bundle response
    *
    * @throws IOException
    * @throws RepositoryException
@@ -155,12 +155,12 @@ public final class BundleCommandBuilder
   }
 
   /**
-   * Method description
+   * Converts an {@link OutputStream} into a {@link ByteSink}.
    *
    *
-   * @param outputStream
+   * @param outputStream ouput stream to convert
    *
-   * @return
+   * @return converted byte sink
    */
   private ByteSink asByteSink(final OutputStream outputStream)
   {
@@ -177,9 +177,9 @@ public final class BundleCommandBuilder
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** bundle command implementation */
   private final BundleCommand bundleCommand;
 
-  /** Field description */
+  /** repository */
   private final Repository repository;
 }
