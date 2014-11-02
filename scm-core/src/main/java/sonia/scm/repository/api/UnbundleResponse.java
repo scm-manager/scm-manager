@@ -34,9 +34,22 @@
 package sonia.scm.repository.api;
 
 /**
- * Response of {@link UnbundleCommandBuilder}.
+ * Response of unbundle command.
  *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
  */
-public class UnbundleResponse {}
+public class UnbundleResponse extends AbstractBundleOrUnbundleCommandResponse
+{
+
+  /**
+   * Constructs a new unbundle response.
+   *
+   *
+   * @param changesetCount count of unbundled changesets
+   */
+  public UnbundleResponse(long changesetCount)
+  {
+    super(changesetCount);
+  }
+}

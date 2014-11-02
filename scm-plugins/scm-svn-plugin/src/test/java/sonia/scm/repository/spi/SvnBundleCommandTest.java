@@ -77,7 +77,8 @@ public class SvnBundleCommandTest extends AbstractSvnCommandTestBase
     BundleResponse res = new SvnBundleCommand(createContext(),
                            repository).bundle(req);
 
-    assertNotNull(res);
+    assertThat(res, notNullValue());
+    assertThat(res.getChangesetCount(), is(5l));
     assertTrue("file does not exists", file.exists());
     assertThat(file.length(), greaterThan(0l));
   }

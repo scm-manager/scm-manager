@@ -105,6 +105,8 @@ public class SvnUnbundleCommand extends AbstractSvnCommand
     logger.debug("archive repository {} to {}", context.getDirectory(),
       archive);
 
+    UnbundleResponse response;
+
     SVNClientManager clientManager = null;
 
     try
@@ -114,6 +116,8 @@ public class SvnUnbundleCommand extends AbstractSvnCommand
       SVNAdminClient adminClient = clientManager.getAdminClient();
 
       restore(adminClient, archive, context.getDirectory());
+
+      response = new UnbundleResponse(context.open().getLatestRevision());
     }
     catch (SVNException ex)
     {
@@ -124,7 +128,7 @@ public class SvnUnbundleCommand extends AbstractSvnCommand
       SvnUtil.dispose(clientManager);
     }
 
-    return new UnbundleResponse();
+    return response;
   }
 
   /**

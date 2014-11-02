@@ -86,7 +86,8 @@ public class SvnUnbundleCommandTest extends AbstractSvnCommandTestBase
     );
     //J+
 
-    assertNotNull(res);
+    assertThat(res, notNullValue());
+    assertThat(res.getChangesetCount(), is(5l));
 
     SVNRepository repo = ctx.open();
 

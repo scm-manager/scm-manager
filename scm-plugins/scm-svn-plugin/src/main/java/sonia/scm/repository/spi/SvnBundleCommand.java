@@ -125,6 +125,8 @@ public class SvnBundleCommand extends AbstractSvnCommand
     ByteSink archive = checkNotNull(request.getArchive(),
                          "archive is required");
 
+    BundleResponse response;
+
     SVNClientManager clientManager = null;
 
     try
@@ -134,6 +136,7 @@ public class SvnBundleCommand extends AbstractSvnCommand
       SVNAdminClient adminClient = clientManager.getAdminClient();
 
       dump(adminClient, context.getDirectory(), archive);
+      response = new BundleResponse(context.open().getLatestRevision());
     }
     catch (SVNException ex)
     {
@@ -144,6 +147,6 @@ public class SvnBundleCommand extends AbstractSvnCommand
       SvnUtil.dispose(clientManager);
     }
 
-    return new BundleResponse();
+    return response;
   }
 }
