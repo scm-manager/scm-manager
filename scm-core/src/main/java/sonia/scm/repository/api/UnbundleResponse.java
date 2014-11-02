@@ -35,7 +35,7 @@ package sonia.scm.repository.api;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
  */
 public class UnbundleResponse {}

@@ -35,6 +35,11 @@ package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.ByteSink;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
+import com.google.common.io.OutputSupplier;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,14 +48,17 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.BundleCommand;
 import sonia.scm.repository.spi.BundleCommandRequest;
 
+import static com.google.common.base.Preconditions.*;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
  */
 public final class BundleCommandBuilder
@@ -92,13 +100,79 @@ public final class BundleCommandBuilder
   public BundleResponse bundle(File outputFile)
     throws IOException, RepositoryException
   {
-    BundleCommandRequest request = new BundleCommandRequest();
+    checkArgument((outputFile != null) &&!outputFile.exists(),
+      "file is null or exists already");
 
-    request.setArchive(outputFile);
+    BundleCommandRequest request =
+      new BundleCommandRequest(Files.asByteSink(outputFile));
+
     logger.info("create bundle at {} for repository {}", outputFile,
       repository.getId());
 
     return bundleCommand.bundle(request);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param outputStream
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  public BundleResponse bundle(OutputStream outputStream)
+    throws IOException, RepositoryException
+  {
+    checkNotNull(outputStream, "output stream is required");
+
+    logger.info("bundle {} to output stream", repository.getId());
+
+    return bundleCommand.bundle(
+      new BundleCommandRequest(asByteSink(outputStream)));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param sink
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  public BundleResponse bundle(ByteSink sink)
+    throws IOException, RepositoryException
+  {
+    checkNotNull(sink, "byte sink is required");
+    logger.info("bundle {} to byte sink");
+
+    return bundleCommand.bundle(new BundleCommandRequest(sink));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param outputStream
+   *
+   * @return
+   */
+  private ByteSink asByteSink(final OutputStream outputStream)
+  {
+    return ByteStreams.asByteSink(new OutputSupplier<OutputStream>()
+    {
+
+      @Override
+      public OutputStream getOutput() throws IOException
+      {
+        return outputStream;
+      }
+    });
   }
 
   //~--- fields ---------------------------------------------------------------

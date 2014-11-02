@@ -35,6 +35,11 @@ package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.ByteSource;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.Files;
+import com.google.common.io.InputSupplier;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,14 +48,17 @@ import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.spi.UnbundleCommand;
 import sonia.scm.repository.spi.UnbundleCommandRequest;
 
+import static com.google.common.base.Preconditions.*;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
  */
 public final class UnbundleCommandBuilder
@@ -92,13 +100,77 @@ public final class UnbundleCommandBuilder
   public UnbundleResponse unbundle(File inputFile)
     throws IOException, RepositoryException
   {
-    UnbundleCommandRequest request = new UnbundleCommandRequest();
+    checkArgument((inputFile != null) && inputFile.exists(),
+      "existing file is required");
 
-    request.setArchive(inputFile);
+    UnbundleCommandRequest request =
+      new UnbundleCommandRequest(Files.asByteSource(inputFile));
 
     logger.info("unbundle archive {} at {}", inputFile, repository.getId());
 
     return unbundleCommand.unbundle(request);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param inputStream
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  public UnbundleResponse unbundle(InputStream inputStream)
+    throws IOException, RepositoryException
+  {
+    checkNotNull(inputStream, "input stream is required");
+    logger.info("unbundle archive from stream");
+
+    return unbundleCommand.unbundle(
+      new UnbundleCommandRequest(asByteSource(inputStream)));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param byteSource
+   *
+   * @return
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   */
+  public UnbundleResponse unbundle(ByteSource byteSource)
+    throws IOException, RepositoryException
+  {
+    checkNotNull(byteSource, "byte source is required");
+    logger.info("unbundle from byte source");
+
+    return unbundleCommand.unbundle(new UnbundleCommandRequest(byteSource));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param inputStream
+   *
+   * @return
+   */
+  private ByteSource asByteSource(final InputStream inputStream)
+  {
+    return ByteStreams.asByteSource(new InputSupplier<InputStream>()
+    {
+
+      @Override
+      public InputStream getInput() throws IOException
+      {
+        return inputStream;
+      }
+    });
   }
 
   //~--- fields ---------------------------------------------------------------

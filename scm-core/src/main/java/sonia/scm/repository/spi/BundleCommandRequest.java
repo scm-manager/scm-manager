@@ -33,9 +33,85 @@
 
 package sonia.scm.repository.spi;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+import com.google.common.io.ByteSink;
+
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
  */
-public class BundleCommandRequest extends ArchiveCommandRequest {}
+public final class BundleCommandRequest
+{
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param archive
+   */
+  public BundleCommandRequest(ByteSink archive)
+  {
+    this.archive = archive;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final BundleCommandRequest other = (BundleCommandRequest) obj;
+
+    return Objects.equal(archive, other.archive);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(archive);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  ByteSink getArchive()
+  {
+    return archive;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final ByteSink archive;
+}

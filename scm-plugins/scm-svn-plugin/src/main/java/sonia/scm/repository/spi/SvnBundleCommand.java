@@ -35,6 +35,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.ByteSink;
 import com.google.common.io.Closeables;
 
 import org.tmatesoft.svn.core.SVNException;
@@ -52,13 +53,12 @@ import static com.google.common.base.Preconditions.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author Sebastian Sdorra <s.sdorra@gmail.com>
  */
 public class SvnBundleCommand extends AbstractSvnCommand
   implements BundleCommand
@@ -90,14 +90,14 @@ public class SvnBundleCommand extends AbstractSvnCommand
    * @throws SVNException
    */
   private static void dump(SVNAdminClient adminClient, File repository,
-    File target)
+    ByteSink target)
     throws SVNException, IOException
   {
     OutputStream outputStream = null;
 
     try
     {
-      outputStream = new FileOutputStream(target);
+      outputStream = target.openBufferedStream();
       adminClient.doDump(repository, outputStream, SVNRevision.create(-1l),
         SVNRevision.HEAD, false, false);
     }
@@ -122,7 +122,8 @@ public class SvnBundleCommand extends AbstractSvnCommand
   public BundleResponse bundle(BundleCommandRequest request)
     throws IOException, RepositoryException
   {
-    File archive = checkNotNull(request.getArchive(), "archive is required");
+    ByteSink archive = checkNotNull(request.getArchive(),
+                         "archive is required");
 
     SVNClientManager clientManager = null;
 

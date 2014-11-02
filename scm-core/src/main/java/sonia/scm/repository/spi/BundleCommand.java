@@ -44,7 +44,7 @@ import java.io.IOException;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
  */
 public interface BundleCommand

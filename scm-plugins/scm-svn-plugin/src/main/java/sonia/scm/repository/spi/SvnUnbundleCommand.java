@@ -35,6 +35,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.io.ByteSource;
 import com.google.common.io.Closeables;
 
 import org.slf4j.Logger;
@@ -53,13 +54,12 @@ import static com.google.common.base.Preconditions.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author Sebastian Sdorra <s.sdorra@gmail.com>
  */
 public class SvnUnbundleCommand extends AbstractSvnCommand
   implements UnbundleCommand
@@ -99,7 +99,8 @@ public class SvnUnbundleCommand extends AbstractSvnCommand
   public UnbundleResponse unbundle(UnbundleCommandRequest request)
     throws IOException
   {
-    File archive = checkNotNull(request.getArchive(), "archive is required");
+    ByteSource archive = checkNotNull(request.getArchive(),
+                           "archive is required");
 
     logger.debug("archive repository {} to {}", context.getDirectory(),
       archive);
@@ -137,14 +138,15 @@ public class SvnUnbundleCommand extends AbstractSvnCommand
    * @throws IOException
    * @throws SVNException
    */
-  private void restore(SVNAdminClient adminClient, File dump, File repository)
+  private void restore(SVNAdminClient adminClient, ByteSource dump,
+    File repository)
     throws SVNException, IOException
   {
     InputStream inputStream = null;
 
     try
     {
-      inputStream = new FileInputStream(dump);
+      inputStream = dump.openBufferedStream();
       adminClient.doLoad(repository, inputStream);
     }
     finally

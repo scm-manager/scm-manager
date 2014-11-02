@@ -40,7 +40,7 @@ import sonia.scm.repository.Repository;
 
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author Sebastian Sdorra <s.sdorra@gmail.com>
  */
 public class AbstractHgPushOrPullCommand extends AbstractCommand
 {

@@ -33,9 +33,85 @@
 
 package sonia.scm.repository.spi;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import com.google.common.base.Objects;
+import com.google.common.io.ByteSource;
+
 /**
  *
- * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
+ * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
  */
-public class UnbundleCommandRequest extends ArchiveCommandRequest {}
+public final class UnbundleCommandRequest
+{
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param archive
+   */
+  public UnbundleCommandRequest(ByteSource archive)
+  {
+    this.archive = archive;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param obj
+   *
+   * @return
+   */
+  @Override
+  public boolean equals(Object obj)
+  {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final UnbundleCommandRequest other = (UnbundleCommandRequest) obj;
+
+    return Objects.equal(archive, other.archive);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public int hashCode()
+  {
+    return Objects.hashCode(archive);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  ByteSource getArchive()
+  {
+    return archive;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final ByteSource archive;
+}
