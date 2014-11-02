@@ -29,6 +29,12 @@
       <groupId>com.aragost.javahg</groupId>
       <artifactId>javahg</artifactId>
       <version>0.7</version>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- test scope -->
