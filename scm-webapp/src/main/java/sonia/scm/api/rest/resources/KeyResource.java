@@ -37,6 +37,8 @@ import com.google.inject.Inject;
 
 import org.apache.shiro.SecurityUtils;
 
+import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
+
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.Role;
 
@@ -54,6 +56,7 @@ import javax.ws.rs.core.MediaType;
  * @since 1.41
  */
 @Path("security/key")
+@ExternallyManagedLifecycle
 public class KeyResource
 {
 
@@ -72,7 +75,7 @@ public class KeyResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Generates a unique key. This method can only executed with administration 
+   * Generates a unique key. This method can only executed with administration
    * privileges.<br />
    * <br />
    * <ul>
@@ -93,6 +96,6 @@ public class KeyResource
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** key generator */
   private final KeyGenerator keyGenerator;
 }
