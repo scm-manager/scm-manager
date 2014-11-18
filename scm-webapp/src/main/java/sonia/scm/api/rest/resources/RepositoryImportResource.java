@@ -36,7 +36,6 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
@@ -47,11 +46,14 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.util.SecurityUtil;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,12 +67,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
+ * Rest resource for importing repositories.
  *
  * @author Sebastian Sdorra
  */
-@Singleton
 @Path("import/repositories")
 @ExternallyManagedLifecycle
 public class RepositoryImportResource
@@ -85,11 +88,9 @@ public class RepositoryImportResource
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new repository import resource.
    *
-   *
-   * @param manager
-   * @param securityContextProvider
+   * @param manager repository manager
    */
   @Inject
   public RepositoryImportResource(RepositoryManager manager)
@@ -100,19 +101,26 @@ public class RepositoryImportResource
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Imports repositories of the given type from the configured repository
+   * directory. This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 ok, successful</li>
+   *   <li>400 bad request, the import feature is not
+   *       supported by this type of repositories.</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
+   * @param type repository type
    *
-   * @param type
-   *
-   * @return
+   * @return imported repositories
    */
   @POST
   @Path("{type}")
   @TypeHint(Repository[].class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public GenericEntity<List<Repository>> importRepositories(
-    @PathParam("type") String type)
+  public Response importRepositories(@PathParam("type") String type)
   {
     SecurityUtil.assertIsAdmin();
 
@@ -144,7 +152,15 @@ public class RepositoryImportResource
           }
         }
       }
-      catch (Exception ex)
+      catch (NotSupportedFeatuerException ex)
+      {
+        throw new WebApplicationException(ex, Response.Status.BAD_REQUEST);
+      }
+      catch (IOException ex)
+      {
+        throw new WebApplicationException(ex);
+      }
+      catch (RepositoryException ex)
       {
         throw new WebApplicationException(ex);
       }
@@ -154,22 +170,33 @@ public class RepositoryImportResource
       logger.warn("could not find handler for type {}", type);
     }
 
-    return new GenericEntity<List<Repository>>(repositories) {}
-    ;
+    //J-
+    return Response.ok(
+      new GenericEntity<List<Repository>>(repositories) {}
+    ).build();
+    //J+
   }
 
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns a list of repository types, which support the import feature.
+   * This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 ok, successful</li>
+   *   <li>400 bad request, the import feature is not
+   *       supported by this type of repositories.</li>
+   *   <li>500 internal server error</li>
+   * </ul>
    *
-   *
-   * @return
+   * @return list of repository types
    */
   @GET
   @TypeHint(Type[].class)
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-  public GenericEntity<List<Type>> getImportableTypes()
+  public Response getImportableTypes()
   {
     SecurityUtil.assertIsAdmin();
 
@@ -208,12 +235,15 @@ public class RepositoryImportResource
       }
     }
 
-    return new GenericEntity<List<Type>>(types) {}
-    ;
+    //J-
+    return Response.ok(
+      new GenericEntity<List<Type>>(types) {}
+    ).build();
+    //J+
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private RepositoryManager manager;
+  /** repository manager */
+  private final RepositoryManager manager;
 }
