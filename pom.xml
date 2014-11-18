@@ -430,7 +430,7 @@
     <logback.version>1.1.2</logback.version>
     <servlet.version>2.5</servlet.version>
     <guice.version>3.0</guice.version>
-    <jersey.version>1.18.1</jersey.version>
+    <jersey.version>1.18.2</jersey.version>
     <ehcache.version>2.6.6</ehcache.version>
     <freemarker.version>2.3.20</freemarker.version>
     <jetty.version>7.6.16.v20140903</jetty.version>
@@ -441,7 +441,7 @@
     <!-- repostitory libraries -->
     <jgit.version>3.4.1.201406201815-r</jgit.version>
     <svnkit.version>1.8.5-scm2</svnkit.version>
-    
+
     <!-- util libraries -->
     <guava.version>15.0</guava.version>
 
