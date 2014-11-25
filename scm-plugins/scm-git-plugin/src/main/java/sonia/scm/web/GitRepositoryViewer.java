@@ -158,6 +158,7 @@ public class GitRepositoryViewer
 
     try
     {
+        response.setCharacterEncoding("UTF-8");
       writer = response.getWriter();
       template.execute(writer, env);
     }
