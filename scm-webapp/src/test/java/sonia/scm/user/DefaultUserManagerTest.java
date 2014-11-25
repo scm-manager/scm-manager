@@ -35,20 +35,27 @@ package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Lists;
 import com.google.inject.Provider;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import sonia.scm.store.JAXBStoreFactory;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.user.xml.XmlUserDAO;
 import sonia.scm.util.MockUtil;
 
+import static org.junit.Assert.*;
+
 import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import org.junit.Before;
 
 /**
  *
@@ -56,11 +63,6 @@ import org.junit.Before;
  */
 public class DefaultUserManagerTest extends UserManagerTestBase
 {
-  
-  @Before
-  public void setAdminSubject(){
-    setSubject(MockUtil.createAdminSubject());
-  }
 
   /**
    * Method description
@@ -71,16 +73,87 @@ public class DefaultUserManagerTest extends UserManagerTestBase
   @Override
   public UserManager createManager()
   {
-    StoreFactory factory = new JAXBStoreFactory();
+    return new DefaultUserManager(createXmlUserDAO(), createListenerProvider());
+  }
 
-    factory.init(contextProvider);
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testDefaultAccountAfterFristStart()
+  {
+    UserDAO userDAO = mock(UserDAO.class);
+    List<User> users = Lists.newArrayList(new User("tuser"));
 
+    when(userDAO.getAll()).thenReturn(users);
+
+    UserManager userManager = new DefaultUserManager(userDAO,
+                                createListenerProvider());
+
+    userManager.init(contextProvider);
+    verify(userDAO, never()).add(any(User.class));
+  }
+
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testDefaultAccountCreation()
+  {
+    UserDAO userDAO = mock(UserDAO.class);
+
+    when(userDAO.getAll()).thenReturn(Collections.EMPTY_LIST);
+
+    UserManager userManager = new DefaultUserManager(userDAO,
+                                createListenerProvider());
+
+    userManager.init(contextProvider);
+    verify(userDAO, times(2)).add(any(User.class));
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   */
+  @Before
+  public void setAdminSubject()
+  {
+    setSubject(MockUtil.createAdminSubject());
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private Provider<Set<UserListener>> createListenerProvider()
+  {
     Provider<Set<UserListener>> listenerProvider = mock(Provider.class);
 
     when(listenerProvider.get()).thenReturn(new HashSet<UserListener>());
 
-    XmlUserDAO userDAO = new XmlUserDAO(factory);
-    
-    return new DefaultUserManager(userDAO, listenerProvider);
+    return listenerProvider;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private XmlUserDAO createXmlUserDAO()
+  {
+    StoreFactory factory = new JAXBStoreFactory();
+
+    factory.init(contextProvider);
+
+    return new XmlUserDAO(factory);
   }
 }
