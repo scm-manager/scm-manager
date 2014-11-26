@@ -102,6 +102,9 @@ public class DefaultPluginManager
   private static final String ADVANCED_CONFIGURATION =
     "advanced-configuration.xml";
 
+  /** Field description */
+  private static final String DIRECTORY_PLUGINS = "plugins";
+
   /** the logger for DefaultPluginManager */
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultPluginManager.class);
@@ -153,7 +156,7 @@ public class DefaultPluginManager
       throw new ConfigurationException(ex);
     }
 
-    File file = new File(context.getBaseDirectory(), ADVANCED_CONFIGURATION);
+    File file = findAdvancedConfiguration();
 
     if (file.exists())
     {
@@ -539,6 +542,25 @@ public class DefaultPluginManager
         target.add(info);
       }
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private File findAdvancedConfiguration()
+  {
+    File directory = new File(context.getBaseDirectory(), DIRECTORY_PLUGINS);
+    File file = new File(directory, ADVANCED_CONFIGURATION);
+
+    if (!file.exists())
+    {
+      file = new File(context.getBaseDirectory(), ADVANCED_CONFIGURATION);
+    }
+
+    return file;
   }
 
   /**
