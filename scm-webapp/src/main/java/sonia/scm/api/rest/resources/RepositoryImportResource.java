@@ -37,6 +37,7 @@ package sonia.scm.api.rest.resources;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import com.google.common.io.Files;
 import com.google.inject.Inject;
 
 import org.apache.shiro.SecurityUtils;
@@ -65,7 +66,11 @@ import static com.google.common.base.Preconditions.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.multipart.FormDataParam;
+
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import java.net.URI;
 
@@ -90,6 +95,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import sonia.scm.repository.api.UnbundleCommandBuilder;
 
 /**
  * Rest resource for importing repositories.
@@ -126,6 +132,123 @@ public class RepositoryImportResource
   //~--- methods --------------------------------------------------------------
 
   /**
+   * Imports a repository type specific bundle. The bundle file is uploaded to
+   * the server which is running scm-manager. After the upload has finished, the
+   * bundle file is passed to the {@link UnbundleCommandBuilder}. This method 
+   * requires admin privileges.<br />
+   *
+   * Status codes:
+   * <ul>
+   *   <li>201 created</li>
+   *   <li>400 bad request, the import bundle feature is not supported by this
+   *       type of repositories or the parameters are not valid.</li>
+   *   <li>500 internal server error</li>
+   *   <li>409 conflict, a repository with the name already exists.</li>
+   * </ul>
+   * 
+   * @param uriInfo uri info
+   * @param type repository type
+   * @param name name of the repository
+   * @param inputStream input bundle
+   *
+   * @return empty response with location header which points to the imported
+   *  repository
+   */
+  @POST
+  @Path("{type}/bundle")
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  public Response importFromBundle(@Context UriInfo uriInfo,
+    @PathParam("type") String type, @FormDataParam("name") String name,
+    @FormDataParam("bundle") InputStream inputStream)
+  {
+    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+
+    checkArgument(!Strings.isNullOrEmpty(name),
+      "request does not contain name of the repository");
+    checkNotNull(inputStream, "bundle inputStream is required");
+
+    Repository repository;
+
+    try
+    {
+      File file = File.createTempFile("scm-import-", ".bundle");
+      long length = Files.asByteSink(file).writeFrom(inputStream);
+
+      logger.debug("copied {} bytes to temp", length);
+
+      Type t = type(type);
+
+      checkSupport(t, Command.UNBUNDLE, "bundle");
+
+      repository = create(type, name);
+
+      RepositoryService service = null;
+
+      try
+      {
+        service = serviceFactory.create(repository);
+        service.getUnbundleCommand().unbundle(file);
+      }
+      catch (RepositoryException ex)
+      {
+        handleImportFailure(ex, repository);
+      }
+      catch (IOException ex)
+      {
+        handleImportFailure(ex, repository);
+      }
+      finally
+      {
+        IOUtil.close(service);
+      }
+    }
+    catch (IOException ex)
+    {
+      logger.warn("could not create temporary file", ex);
+
+      throw new WebApplicationException(ex);
+    }
+
+    return buildResponse(uriInfo, repository);
+  }
+
+  /**
+   * This method works exactly like 
+   * {@link #importFromBundle(UriInfo, String, String, InputStream)}, but this
+   * method returns an html content-type. The method exists only for a 
+   * workaround of the javascript ui extjs. This method requires admin 
+   * privileges.<br />
+   *
+   * Status codes:
+   * <ul>
+   *   <li>201 created</li>
+   *   <li>400 bad request, the import bundle feature is not supported by this
+   *       type of repositories or the parameters are not valid.</li>
+   *   <li>500 internal server error</li>
+   *   <li>409 conflict, a repository with the name already exists.</li>
+   * </ul>
+   * 
+   *
+   * @param uriInfo uri info
+   * @param type repository type
+   * @param name name of the repository
+   * @param inputStream input bundle
+   *
+   * @return empty response with location header which points to the imported
+   *  repository
+   */
+  @POST
+  @Path("{type}/bundle.html")
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Produces(MediaType.TEXT_HTML)
+  public Response importFromBundleUI(@Context UriInfo uriInfo,
+    @PathParam("type") String type, @FormDataParam("name") String name,
+    @FormDataParam("bundle") InputStream inputStream)
+  {
+    return importFromBundle(uriInfo, type, name, inputStream);
+  }
+
+  /**
    * Imports a external repository which is accessible via url. The method can
    * only be used, if the repository type supports the {@link Command#PULL}. The
    * method will return a location header with the url to the imported
@@ -136,6 +259,7 @@ public class RepositoryImportResource
    *   <li>201 created</li>
    *   <li>400 bad request, the import by url feature is not supported by this
    *       type of repositories or the parameters are not valid.</li>
+   *   <li>409 conflict, a repository with the name already exists.</li>
    *   <li>500 internal server error</li>
    * </ul>
    *
@@ -148,7 +272,6 @@ public class RepositoryImportResource
    */
   @POST
   @Path("{type}/url")
-  @TypeHint(Repository.class)
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response importFromUrl(@Context UriInfo uriInfo,
     @PathParam("type") String type, UrlImportRequest request)
@@ -160,16 +283,7 @@ public class RepositoryImportResource
     checkArgument(!Strings.isNullOrEmpty(request.getUrl()),
       "request does not contain url of the remote repository");
 
-    RepositoryHandler handler = manager.getHandler(type);
-
-    if (handler == null)
-    {
-      logger.warn("no handler for type {} found", type);
-
-      throw new WebApplicationException(Response.Status.NOT_FOUND);
-    }
-
-    Type t = handler.getType();
+    Type t = type(type);
 
     checkSupport(t, Command.PULL, request);
 
@@ -284,7 +398,6 @@ public class RepositoryImportResource
    *   <li>200 ok, successful</li>
    *   <li>400 bad request, the import feature is not
    *       supported by this type of repositories.</li>
-   *   <li>409 conflict, a repository with the name already exists.</li>
    *   <li>500 internal server error</li>
    * </ul>
    *
@@ -535,6 +648,28 @@ public class RepositoryImportResource
     {
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   *
+   * @return
+   */
+  private Type type(String type)
+  {
+    RepositoryHandler handler = manager.getHandler(type);
+
+    if (handler == null)
+    {
+      logger.warn("no handler for type {} found", type);
+
+      throw new WebApplicationException(Response.Status.NOT_FOUND);
+    }
+
+    return handler.getType();
   }
 
   //~--- inner classes --------------------------------------------------------
