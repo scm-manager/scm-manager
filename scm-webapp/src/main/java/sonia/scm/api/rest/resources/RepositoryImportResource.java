@@ -59,6 +59,7 @@ import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.repository.api.UnbundleCommandBuilder;
 import sonia.scm.security.Role;
 import sonia.scm.util.IOUtil;
 
@@ -95,7 +96,6 @@ import javax.ws.rs.core.UriInfo;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import sonia.scm.repository.api.UnbundleCommandBuilder;
 
 /**
  * Rest resource for importing repositories.
@@ -134,7 +134,7 @@ public class RepositoryImportResource
   /**
    * Imports a repository type specific bundle. The bundle file is uploaded to
    * the server which is running scm-manager. After the upload has finished, the
-   * bundle file is passed to the {@link UnbundleCommandBuilder}. This method 
+   * bundle file is passed to the {@link UnbundleCommandBuilder}. This method
    * requires admin privileges.<br />
    *
    * Status codes:
@@ -145,7 +145,7 @@ public class RepositoryImportResource
    *   <li>500 internal server error</li>
    *   <li>409 conflict, a repository with the name already exists.</li>
    * </ul>
-   * 
+   *
    * @param uriInfo uri info
    * @param type repository type
    * @param name name of the repository
@@ -171,11 +171,6 @@ public class RepositoryImportResource
 
     try
     {
-      File file = File.createTempFile("scm-import-", ".bundle");
-      long length = Files.asByteSink(file).writeFrom(inputStream);
-
-      logger.debug("copied {} bytes to temp", length);
-
       Type t = type(type);
 
       checkSupport(t, Command.UNBUNDLE, "bundle");
@@ -184,8 +179,13 @@ public class RepositoryImportResource
 
       RepositoryService service = null;
 
+      File file = File.createTempFile("scm-import-", ".bundle");
+
       try
       {
+        long length = Files.asByteSink(file).writeFrom(inputStream);
+
+        logger.info("copied {} bytes to temp, start bundle import", length);
         service = serviceFactory.create(repository);
         service.getUnbundleCommand().unbundle(file);
       }
@@ -200,6 +200,7 @@ public class RepositoryImportResource
       finally
       {
         IOUtil.close(service);
+        IOUtil.delete(file);
       }
     }
     catch (IOException ex)
@@ -213,10 +214,10 @@ public class RepositoryImportResource
   }
 
   /**
-   * This method works exactly like 
+   * This method works exactly like
    * {@link #importFromBundle(UriInfo, String, String, InputStream)}, but this
-   * method returns an html content-type. The method exists only for a 
-   * workaround of the javascript ui extjs. This method requires admin 
+   * method returns an html content-type. The method exists only for a
+   * workaround of the javascript ui extjs. This method requires admin
    * privileges.<br />
    *
    * Status codes:
@@ -227,7 +228,7 @@ public class RepositoryImportResource
    *   <li>500 internal server error</li>
    *   <li>409 conflict, a repository with the name already exists.</li>
    * </ul>
-   * 
+   *
    *
    * @param uriInfo uri info
    * @param type repository type
