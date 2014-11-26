@@ -129,7 +129,7 @@ public class RepositoryImportResource
    * Imports a external repository which is accessible via url. The method can
    * only be used, if the repository type supports the {@link Command#PULL}. The
    * method will return a location header with the url to the imported
-   * repository.
+   * repository. This method requires admin privileges.<br />
    *
    * Status codes:
    * <ul>
@@ -172,6 +172,8 @@ public class RepositoryImportResource
     Type t = handler.getType();
 
     checkSupport(t, Command.PULL, request);
+
+    logger.info("start {} import for external url {}", type, request.getUrl());
 
     Repository repository = create(type, request.getName());
     RepositoryService service = null;
@@ -222,49 +224,44 @@ public class RepositoryImportResource
     SecurityUtils.getSubject().checkRole(Role.ADMIN);
 
     List<Repository> repositories = new ArrayList<Repository>();
-    RepositoryHandler handler = manager.getHandler(type);
 
-    if (handler != null)
+    importFromDirectory(repositories, type);
+
+    //J-
+    return Response.ok(
+      new GenericEntity<List<Repository>>(repositories) {}
+    ).build();
+    //J+
+  }
+
+  /**
+   * Imports repositories of all supported types from the configured repository
+   * directories. This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 ok, successful</li>
+   *   <li>400 bad request, the import feature is not
+   *       supported by this type of repositories.</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   *
+   * @return imported repositories
+   */
+  @POST
+  @TypeHint(Repository[].class)
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public Response importRepositories()
+  {
+    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+
+    logger.info("start directory import for all supported repository types");
+
+    List<Repository> repositories = new ArrayList<Repository>();
+
+    for (Type t : findImportableTypes())
     {
-      try
-      {
-        List<String> repositoryNames =
-          handler.getImportHandler().importRepositories(manager);
-
-        if (repositoryNames != null)
-        {
-          for (String repositoryName : repositoryNames)
-          {
-            Repository repository = manager.get(type, repositoryName);
-
-            if (repository != null)
-            {
-              repositories.add(repository);
-            }
-            else if (logger.isWarnEnabled())
-            {
-              logger.warn("could not find imported repository {}",
-                repositoryName);
-            }
-          }
-        }
-      }
-      catch (NotSupportedFeatuerException ex)
-      {
-        throw new WebApplicationException(ex, Response.Status.BAD_REQUEST);
-      }
-      catch (IOException ex)
-      {
-        throw new WebApplicationException(ex);
-      }
-      catch (RepositoryException ex)
-      {
-        throw new WebApplicationException(ex);
-      }
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn("could not find handler for type {}", type);
+      importFromDirectory(repositories, t.getName());
     }
 
     //J-
@@ -300,40 +297,7 @@ public class RepositoryImportResource
   {
     SecurityUtils.getSubject().checkRole(Role.ADMIN);
 
-    List<Type> types = new ArrayList<Type>();
-    Collection<Type> handlerTypes = manager.getTypes();
-
-    for (Type t : handlerTypes)
-    {
-      RepositoryHandler handler = manager.getHandler(t.getName());
-
-      if (handler != null)
-      {
-        try
-        {
-          if (handler.getImportHandler() != null)
-          {
-            types.add(t);
-          }
-        }
-        catch (NotSupportedFeatuerException ex)
-        {
-          if (logger.isTraceEnabled())
-          {
-            logger.trace("import handler is not supported", ex);
-          }
-          else if (logger.isInfoEnabled())
-          {
-            logger.info("{} handler does not support import of repositories",
-              t.getName());
-          }
-        }
-      }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("could not find handler for type {}", t.getName());
-      }
-    }
+    List<Type> types = findImportableTypes();
 
     //J-
     return Response.ok(
@@ -426,6 +390,52 @@ public class RepositoryImportResource
   }
 
   /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private List<Type> findImportableTypes()
+  {
+    List<Type> types = new ArrayList<Type>();
+    Collection<Type> handlerTypes = manager.getTypes();
+
+    for (Type t : handlerTypes)
+    {
+      RepositoryHandler handler = manager.getHandler(t.getName());
+
+      if (handler != null)
+      {
+        try
+        {
+          if (handler.getImportHandler() != null)
+          {
+            types.add(t);
+          }
+        }
+        catch (NotSupportedFeatuerException ex)
+        {
+          if (logger.isTraceEnabled())
+          {
+            logger.trace("import handler is not supported", ex);
+          }
+          else if (logger.isInfoEnabled())
+          {
+            logger.info("{} handler does not support import of repositories",
+              t.getName());
+          }
+        }
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("could not find handler for type {}", t.getName());
+      }
+    }
+
+    return types;
+  }
+
+  /**
    * Handle creation failures.
    *
    *
@@ -468,6 +478,63 @@ public class RepositoryImportResource
 
     throw new WebApplicationException(ex,
       Response.Status.INTERNAL_SERVER_ERROR);
+  }
+
+  /**
+   * Import repositories from a specific type.
+   *
+   *
+   * @param repositories repository list
+   * @param type type of repository
+   */
+  private void importFromDirectory(List<Repository> repositories, String type)
+  {
+    RepositoryHandler handler = manager.getHandler(type);
+
+    if (handler != null)
+    {
+      logger.info("start directory import for repository type {}", type);
+
+      try
+      {
+        List<String> repositoryNames =
+          handler.getImportHandler().importRepositories(manager);
+
+        if (repositoryNames != null)
+        {
+          for (String repositoryName : repositoryNames)
+          {
+            Repository repository = manager.get(type, repositoryName);
+
+            if (repository != null)
+            {
+              repositories.add(repository);
+            }
+            else if (logger.isWarnEnabled())
+            {
+              logger.warn("could not find imported repository {}",
+                repositoryName);
+            }
+          }
+        }
+      }
+      catch (NotSupportedFeatuerException ex)
+      {
+        throw new WebApplicationException(ex, Response.Status.BAD_REQUEST);
+      }
+      catch (IOException ex)
+      {
+        throw new WebApplicationException(ex);
+      }
+      catch (RepositoryException ex)
+      {
+        throw new WebApplicationException(ex);
+      }
+    }
+    else
+    {
+      throw new WebApplicationException(Response.Status.BAD_REQUEST);
+    }
   }
 
   //~--- inner classes --------------------------------------------------------
