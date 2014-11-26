@@ -35,7 +35,11 @@ package sonia.scm.api.rest.resources;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Objects;
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
+
+import org.apache.shiro.SecurityUtils;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
@@ -46,28 +50,46 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryAllreadyExistExeption;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.util.SecurityUtil;
+import sonia.scm.repository.RepositoryType;
+import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.security.Role;
+import sonia.scm.util.IOUtil;
+
+import static com.google.common.base.Preconditions.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
+import java.net.URI;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Rest resource for importing repositories.
@@ -91,14 +113,89 @@ public class RepositoryImportResource
    * Constructs a new repository import resource.
    *
    * @param manager repository manager
+   * @param serviceFactory
    */
   @Inject
-  public RepositoryImportResource(RepositoryManager manager)
+  public RepositoryImportResource(RepositoryManager manager,
+    RepositoryServiceFactory serviceFactory)
   {
     this.manager = manager;
+    this.serviceFactory = serviceFactory;
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Imports a external repository which is accessible via url. The method can
+   * only be used, if the repository type supports the {@link Command#PULL}. The
+   * method will return a location header with the url to the imported
+   * repository.
+   *
+   * Status codes:
+   * <ul>
+   *   <li>201 created</li>
+   *   <li>400 bad request, the import by url feature is not supported by this
+   *       type of repositories or the parameters are not valid.</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   *
+   * @param uriInfo uri info
+   * @param type repository type
+   * @param request request object
+   *
+   * @return empty response with location header which points to the imported
+   *  repository
+   */
+  @POST
+  @Path("{type}/url")
+  @TypeHint(Repository.class)
+  @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public Response importFromUrl(@Context UriInfo uriInfo,
+    @PathParam("type") String type, UrlImportRequest request)
+  {
+    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    checkNotNull(request, "request is required");
+    checkArgument(!Strings.isNullOrEmpty(request.getName()),
+      "request does not contain name of the repository");
+    checkArgument(!Strings.isNullOrEmpty(request.getUrl()),
+      "request does not contain url of the remote repository");
+
+    RepositoryHandler handler = manager.getHandler(type);
+
+    if (handler == null)
+    {
+      logger.warn("no handler for type {} found", type);
+
+      throw new WebApplicationException(Response.Status.NOT_FOUND);
+    }
+
+    Type t = handler.getType();
+
+    checkSupport(t, Command.PULL, request);
+
+    Repository repository = create(type, request.getName());
+    RepositoryService service = null;
+
+    try
+    {
+      service = serviceFactory.create(repository);
+      service.getPullCommand().pull(request.getUrl());
+    }
+    catch (RepositoryException ex)
+    {
+      handleImportFailure(ex, repository);
+    }
+    catch (IOException ex)
+    {
+      handleImportFailure(ex, repository);
+    }
+    finally
+    {
+      IOUtil.close(service);
+    }
+
+    return buildResponse(uriInfo, repository);
+  }
 
   /**
    * Imports repositories of the given type from the configured repository
@@ -122,7 +219,7 @@ public class RepositoryImportResource
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response importRepositories(@PathParam("type") String type)
   {
-    SecurityUtil.assertIsAdmin();
+    SecurityUtils.getSubject().checkRole(Role.ADMIN);
 
     List<Repository> repositories = new ArrayList<Repository>();
     RepositoryHandler handler = manager.getHandler(type);
@@ -180,7 +277,9 @@ public class RepositoryImportResource
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns a list of repository types, which support the import feature.
+   * Returns a list of repository types, which support the directory import
+   * feature.
+   *
    * This method requires admin privileges.<br />
    * <br />
    * Status codes:
@@ -188,6 +287,7 @@ public class RepositoryImportResource
    *   <li>200 ok, successful</li>
    *   <li>400 bad request, the import feature is not
    *       supported by this type of repositories.</li>
+   *   <li>409 conflict, a repository with the name already exists.</li>
    *   <li>500 internal server error</li>
    * </ul>
    *
@@ -198,7 +298,7 @@ public class RepositoryImportResource
   @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response getImportableTypes()
   {
-    SecurityUtil.assertIsAdmin();
+    SecurityUtils.getSubject().checkRole(Role.ADMIN);
 
     List<Type> types = new ArrayList<Type>();
     Collection<Type> handlerTypes = manager.getTypes();
@@ -242,8 +342,218 @@ public class RepositoryImportResource
     //J+
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Build rest response for repository.
+   *
+   *
+   * @param uriInfo uri info
+   * @param repository imported repository
+   *
+   * @return rest response
+   */
+  private Response buildResponse(UriInfo uriInfo, Repository repository)
+  {
+    URI location = uriInfo.getBaseUriBuilder().path(
+                     RepositoryResource.class).path(repository.getId()).build();
+
+    return Response.created(location).build();
+  }
+
+  /**
+   * Check repository type for support for the given command.
+   *
+   *
+   * @param type repository type
+   * @param cmd command
+   * @param request request object
+   */
+  private void checkSupport(Type type, Command cmd, Object request)
+  {
+    if (!(type instanceof RepositoryType))
+    {
+      logger.warn("type {} is not a repository type", type.getName());
+
+      throw new WebApplicationException(Response.Status.BAD_REQUEST);
+    }
+
+    Set<Command> cmds = ((RepositoryType) type).getSupportedCommands();
+
+    if (!cmds.contains(cmd))
+    {
+      logger.warn("type {} does not support this type of import: {}",
+        type.getName(), request);
+
+      throw new WebApplicationException(Response.Status.BAD_REQUEST);
+    }
+  }
+
+  /**
+   * Creates a new repository with the given name and type.
+   *
+   *
+   * @param type repository type
+   * @param name repository name
+   *
+   * @return newly created repository
+   */
+  private Repository create(String type, String name)
+  {
+    Repository repository = null;
+
+    try
+    {
+      repository = new Repository(null, type, name);
+      manager.create(repository);
+    }
+    catch (RepositoryAllreadyExistExeption ex)
+    {
+      logger.warn("a {} repository with the name {} already exists", ex);
+
+      throw new WebApplicationException(Response.Status.CONFLICT);
+    }
+    catch (RepositoryException ex)
+    {
+      handleGenericCreationFailure(ex, type, name);
+    }
+    catch (IOException ex)
+    {
+      handleGenericCreationFailure(ex, type, name);
+    }
+
+    return repository;
+  }
+
+  /**
+   * Handle creation failures.
+   *
+   *
+   * @param ex exception
+   * @param type repository type
+   * @param name name of the repository
+   */
+  private void handleGenericCreationFailure(Exception ex, String type,
+    String name)
+  {
+    logger.error(String.format("could not create repository {} with type {}",
+      type, name), ex);
+
+    throw new WebApplicationException(ex);
+  }
+
+  /**
+   * Handle import failures.
+   *
+   *
+   * @param ex exception
+   * @param repository repository
+   */
+  private void handleImportFailure(Exception ex, Repository repository)
+  {
+    logger.error("import for repository failed, delete repository", ex);
+
+    try
+    {
+      manager.delete(repository);
+    }
+    catch (IOException e)
+    {
+      logger.error("can not delete repository", e);
+    }
+    catch (RepositoryException e)
+    {
+      logger.error("can not delete repository", e);
+    }
+
+    throw new WebApplicationException(ex,
+      Response.Status.INTERNAL_SERVER_ERROR);
+  }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * Request for importing external repositories which are accessible via url.
+   */
+  @XmlRootElement(name = "import")
+  @XmlAccessorType(XmlAccessType.FIELD)
+  public static class UrlImportRequest
+  {
+
+    /**
+     * Constructs ...
+     *
+     */
+    public UrlImportRequest() {}
+
+    /**
+     * Constructs a new {@link UrlImportRequest}
+     *
+     *
+     * @param name name of the repository
+     * @param url external url of the repository
+     */
+    public UrlImportRequest(String name, String url)
+    {
+      this.name = name;
+      this.url = url;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+      //J-
+      return Objects.toStringHelper(this)
+                    .add("name", name)
+                    .add("url", url)
+                    .toString();
+      //J+
+    }
+
+    //~--- get methods --------------------------------------------------------
+
+    /**
+     * Returns name of the repository.
+     *
+     *
+     * @return name of the repository
+     */
+    public String getName()
+    {
+      return name;
+    }
+
+    /**
+     * Returns external url of the repository.
+     *
+     *
+     * @return external url of the repository
+     */
+    public String getUrl()
+    {
+      return url;
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** name of the repository */
+    private String name;
+
+    /** external url of the repository */
+    private String url;
+  }
+
+
   //~--- fields ---------------------------------------------------------------
 
   /** repository manager */
   private final RepositoryManager manager;
+
+  /** repository service factory */
+  private final RepositoryServiceFactory serviceFactory;
 }
