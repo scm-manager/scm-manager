@@ -31,9 +31,52 @@
 
 Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
   
-  titleText: 'Import Repositories',
-  okText: 'Ok',
-  closeText: 'Close',
+  title: 'Repository Import Wizard',
+  
+  initComponent: function(){
+    
+    this.addEvents('finish');
+    
+    var config = {
+      title: this.title,
+      layout: 'fit',
+      width: 420,
+      height: 140,
+      closable: true,
+      resizable: true,
+      plain: true,
+      border: false,
+      modal: true,
+      bodyCssClass: 'x-panel-mc',
+      items: [{
+        id: 'scmRepositoryImportWizard',
+        xtype: 'scmRepositoryImportWizard',
+        listeners: {
+          finish: {
+            fn: this.onFinish,
+            scope: this
+          }
+        }
+      }]
+    };
+    
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.repository.ImportWindow.superclass.initComponent.apply(this, arguments);
+  },
+  
+  onFinish: function(config){
+    this.fireEvent('finish', config);
+    this.close();
+  }
+  
+});
+
+Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
+  
+    // text
+  backText: 'Back',
+  nextText: 'Next',
+  finishText: 'Finish',
   
   // cache
   importForm: null,
@@ -42,114 +85,220 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
   importJobsFinished: 0,
   importJobs: 0,
   
+  // settings
+  repositoryType: null,
+  
   initComponent: function(){
-    this.imported = [];
-    this.importJobsFinished = 0;
-    this.importJobs = 0;
+    this.addEvents('finish');
+    
+    
+    var importedStore = new Ext.data.JsonStore({
+      fields: ['type', 'name']
+    });
+    // store.loadData(this.imported);
+    
+    var importedColModel = new Ext.grid.ColumnModel({
+      defaults: {
+        sortable: true,
+        scope: this
+      },
+      columns: [
+        {id: 'name', header: 'Name', dataIndex: 'name'},
+        {id: 'type', header: 'Type', dataIndex: 'type'}
+      ]
+    });
+    
+    var types = [];
+  
+    Ext.each(state.repositoryTypes, function(repositoryType){
+      console.log(repositoryType);
+      types.push({
+        boxLabel: repositoryType.displayName,
+        name: 'repositoryType', 
+        inputValue: repositoryType.name,
+        checked: false
+      });
+    });
     
     var config = {
-      layout:'fit',
-      width:300,
-      height:170,
-      closable: true,
-      resizable: false,
-      plain: true,
-      border: false,
-      modal: true,
-      title: this.titleText,
-      items: [{
-        id: 'importRepositoryForm',
-        frame: true,
-        xtype: 'form',
-        defaultType: 'checkbox'
-      }],
-      buttons: [{
-        id: 'startRepositoryImportButton',
-        text: this.okText,
-        formBind: true,
-        scope: this,
-        handler: this.importRepositories
+      layout: 'card',
+      activeItem: 0,
+      bodyStyle: 'padding: 5px',
+      defaults: {
+        bodyCssClass: 'x-panel-mc',
+        border: false,
+        labelWidth: 120,
+        width: 250
+      },
+      bbar: ['->',{
+        id: 'move-prev',
+        text: this.backText,
+        handler: this.navHandler.createDelegate(this, [-1]),
+        disabled: true,
+        scope: this
       },{
-        text: this.closeText,
-        scope: this,
-        handler: this.close
+        id: 'move-next',
+        text: this.nextText,
+        handler: this.navHandler.createDelegate(this, [1]),
+        disabled: true,
+        scope: this
+      },{
+        id: 'finish',
+        text: this.finishText,
+        handler: this.applyChanges,
+        disabled: true,
+        scope: this
       }],
-      listeners: {
-        afterrender: {
-          fn: this.readImportableTypes,
-          scope: this
+      items: [{
+        id: 'repositoryTypeLayout',
+        items: [{
+          id: 'chooseRepositoryType',
+          xtype: 'radiogroup',
+          name: 'chooseRepositoryType',
+          columns: 1,
+          items: [types],
+          listeners: {
+            change: function(){
+              Ext.getCmp('move-next').setDisabled(false);
+            }
+          }
+        }]
+      },{
+        id: 'importTypeLayout',
+        items: [{
+          id: 'chooseImportType',
+          xtype: 'radiogroup',
+          name: 'chooseImportType',
+          columns: 1,
+          items: [{
+            id: 'importTypeDirectory',
+            boxLabel: 'Import from directory',
+            name: 'importType', 
+            inputValue: 'directory',
+            disabled: false
+          },{
+            id: 'importTypeURL',
+            boxLabel: 'Import from URL',
+            name: 'importType', 
+            inputValue: 'url',
+            checked: false,
+            disabled: true
+          },{
+            id: 'importTypeFile',
+            boxLabel: 'Import from File',
+            name: 'importType', 
+            inputValue: 'file',
+            checked: false,
+            disabled: true
+          }],
+          listeners: {
+            change: function(){
+              Ext.getCmp('move-next').setDisabled(false);
+            }
+          }
+        }]
+      },{
+        id: 'importUrlLayout',
+        layout: 'form',
+        defaults: {
+          width: 250
+        },
+        items: [{
+          id: 'importUrlName',
+          xtype: 'textfield',
+          fieldLabel: 'Repository name',
+          name: 'importUrlName', 
+          type: 'textfield',
+          disabled: false
+        },{
+          id: 'importUrl',
+          xtype: 'textfield',
+          fieldLabel: 'Import URL',
+          name: 'importUrl', 
+          disabled: false
+        }]
+      },{
+        id: 'importFileLayout',
+        layout: 'form',
+        defaults: {
+          width: 250
+        },
+        items: [{
+          id: 'importFileName',
+          xtype: 'textfield',
+          fieldLabel: 'Repository name',
+          name: 'importFileName', 
+          type: 'textfield',
+          disabled: false
+        },{
+          id: 'importFile',
+          xtype: 'textfield',
+          fieldLabel: 'Import File',
+          name: 'importFile', 
+          disabled: false
+        }]
+      },{
+        id: 'importFinishedLayout',
+        layout: 'form',
+        defaults: {
+          width: 250
+        },
+        items: [{
+          id: 'importedGrid',
+          xtype: 'grid',
+          autoExpandColumn: 'name',
+          store: importedStore,
+          colModel: importedColModel,
+          height: 100
+        }]
+      }]
+    };
+    
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.repository.ImportPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  navHandler: function(direction){
+    var layout = this.getLayout();
+    var id = layout.activeItem.id;
+    
+    var next = -1;
+    
+    if ( id === 'repositoryTypeLayout' && direction === 1 ){
+      this.repositoryType = Ext.getCmp('chooseRepositoryType').getValue().getRawValue();
+      console.log('rt: ' + this.repositoryType);
+      this.enableAvailableImportTypes();
+      next = 1;
+    } 
+    else if ( id === 'importTypeLayout' && direction === -1 ){
+      next = 0;
+      Ext.getCmp('move-prev').setDisabled(true);
+      Ext.getCmp('move-next').setDisabled(false);
+    }
+    else if ( id === 'importTypeLayout' && direction === 1 ){
+      var v = Ext.getCmp('chooseImportType').getValue();
+      if ( v ){
+        switch (v.getRawValue()){
+          case 'directory':
+            this.importFromDirectory(layout);
+            break;
+          case 'url':
+            next = 2;
+            break;
+          case 'file':
+            next = 3;
+            break;
         }
       }
-    };
-    Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.repository.ImportWindow.superclass.initComponent.apply(this, arguments);
-  },
-  
-  readImportableTypes: function(){
-    if (debug){
-      console.debug('read importable types');
+    }
+    else if ( (id === 'importUrlLayout' || id === 'importFileLayout') && direction === -1 )
+    {
+      next = 1;
     }
     
-    Ext.Ajax.request({
-      url: restUrl + 'import/repositories.json',
-      method: 'GET',
-      scope: this,
-      success: function(response){
-        var obj = Ext.decode(response.responseText);
-        this.renderTypeCheckboxes(obj);
-        this.doLayout();
-      },
-      failure: function(result){
-        main.handleRestFailure(
-          result, 
-          this.errorTitleText, 
-          this.errorMsgText
-        );
-      }
-    });
-    
-  },
-  
-  renderTypeCheckboxes: function(types){
-    Ext.each(types, function(type){
-      this.renderCheckbox(type);
-    }, this);
-  },
-  
-  getImportForm: function(){
-    if (!this.importForm){
-      this.importForm = Ext.getCmp('importRepositoryForm');
+    if ( next >= 0 ){
+      layout.setActiveItem(next);
     }
-    return this.importForm;
-  },
-    
-  renderCheckbox: function(type){
-    this.getImportForm().add({
-      xtype: 'checkbox',
-      name: 'type',
-      fieldLabel: type.displayName,
-      inputValue: type.name
-    });
-  },
-  
-  importRepositories: function(){
-    if (debug){
-      console.debug('start import of repositories');
-    }
-    var form = this.getImportForm().getForm();
-    var values = form.getValues().type;
-    if ( values ){
-      if ( Ext.isArray(values) ){
-        this.importJobs = values.length;
-      } else {
-        this.importJobs = 1;
-      }
-    } else {
-      this.importJobs = 0;
-    }
-    Ext.each(values, function(value){
-      this.importRepositoriesOfType(value);
-    }, this);
   },
   
   appendImported: function(repositories){
@@ -161,60 +310,22 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
       if (debug){
         console.debug( 'import of ' + this.importJobsFinished + ' jobs finished'  );
       }
-      this.printImported();
+      Ext.getCmp('importedGrid').getStore().loadData(this.imported);
+      Ext.getCmp('move-next').setDisabled(true);
+      Ext.getCmp('move-prev').setDisabled(true);
+      Ext.getCmp('finish').setDisabled(false);
     }
   },
   
-  printImported: function(){
-    var store = new Ext.data.JsonStore({
-      fields: ['type', 'name']
-    });
-    store.loadData(this.imported);
-    
-    var colModel = new Ext.grid.ColumnModel({
-      defaults: {
-        sortable: true,
-        scope: this
-      },
-      columns: [
-        {id: 'name', header: 'Name', dataIndex: 'name'},
-        {id: 'type', header: 'Type', dataIndex: 'type'}
-      ]
-    });
-    
-    this.getImportForm().add({
-      xtype: 'grid',
-      autoExpandColumn: 'name',
-      store: store,
-      colModel: colModel,
-      height: 100
-    });
-    var h = this.getHeight();
-    this.setHeight( h + 100 );
-    this.doLayout();
-    
-    // reload repositories panel
-    var panel = Ext.getCmp('repositories');
-    if (panel){
-      panel.getGrid().reload();
-    }
-  },
-  
-  importRepositoriesOfType: function(type){
-    if (debug){
-      console.debug('start import of ' + type + ' repositories');
-    }
-    var b = Ext.getCmp('startRepositoryImportButton');
-    if ( b ){
-      b.setDisabled(true);
-    }
+  importFromDirectory: function(layout){
     Ext.Ajax.request({
-      url: restUrl + 'import/repositories/' + type + '.json',
+      url: restUrl + 'import/repositories/' + this.repositoryType + '.json',
       method: 'POST',
       scope: this,
       success: function(response){
         var obj = Ext.decode(response.responseText);
         this.appendImported(obj);
+        layout.setActiveItem(4);
       },
       failure: function(result){
         main.handleRestFailure(
@@ -224,6 +335,34 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
         );
       }
     });
+  },
+  
+  enableAvailableImportTypes: function(){
+    var type = null;
+    Ext.each(state.repositoryTypes, function(repositoryType){
+      if (repositoryType.name === this.repositoryType){
+        type = repositoryType;
+      }
+    }, this);
+    
+    if ( type !== null ){
+      Ext.getCmp('chooseImportType').setValue(null);
+      Ext.getCmp('move-next').setDisabled(true);
+      Ext.getCmp('move-prev').setDisabled(false);
+      Ext.getCmp('importTypeURL').setDisabled(type.supportedCommands.indexOf('PULL') < 0);
+      Ext.getCmp('importTypeFile').setDisabled(type.supportedCommands.indexOf('UNBUNDLE') < 0);
+    }
+  },
+  
+  applyChanges: function(){
+    var panel = Ext.getCmp('repositories');
+    if (panel){
+      panel.getGrid().reload();
+    }
+    this.fireEvent('finish');
   }
   
 });
+
+// register xtype
+Ext.reg('scmRepositoryImportWizard', Sonia.repository.ImportPanel);
