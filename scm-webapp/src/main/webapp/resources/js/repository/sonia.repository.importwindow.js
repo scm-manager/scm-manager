@@ -73,7 +73,7 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
 
 Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   
-    // text
+  // text
   backText: 'Back',
   nextText: 'Next',
   finishText: 'Finish',
@@ -97,8 +97,15 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   tipRepositoryType: 'Choose your repository type for the import.',
   tipImportType: 'Select the type of import. <b>Note:</b> Not all repository types support all options.',
   
+  // cache
+  nextButton: null,
+  prevButton: null,
+  
   // settings
   repositoryType: null,
+  
+  // active card
+  activeForm: null,
   
   initComponent: function(){
     this.addEvents('finish');
@@ -107,6 +114,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
     this.imported = [];
     this.importJobsFinished = 0;
     this.importJobs = 0;
+    this.activeForm = null;
     
     var importedStore = new Ext.data.JsonStore({
       fields: ['type', 'name']
@@ -232,23 +240,31 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
       },{
         id: 'importUrlLayout',
         xtype: 'form',
+        monitorValid: true,
         defaults: {
           width: 250
+        },
+        listeners: {
+          clientvalidation: {
+            fn: this.urlFormValidityMonitor,
+            scope: this
+          }
         },
         items: [{
           id: 'importUrlName',
           xtype: 'textfield',
           fieldLabel: 'Repository name',
-          name: 'name', 
-          type: 'textfield',
-          disabled: false,
+          name: 'name',
+          allowBlank: false,
+          vtype: 'repositoryName',
           helpText: this.importUrlNameHelpText
         },{
           id: 'importUrl',
           xtype: 'textfield',
           fieldLabel: 'Import URL',
           name: 'url', 
-          disabled: false,
+          allowBlank: false,
+          vtype: 'url',
           helpText: this.importUrlHelpText
         },{
           xtype: 'scmTip',
@@ -259,6 +275,13 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
         id: 'importFileLayout',
         xtype: 'form',
         fileUpload: true,
+        monitorValid: true,
+        listeners: {
+          clientvalidation: {
+            fn: this.urlFormValidityMonitor,
+            scope: this
+          }
+        },
         items: [{
           id: 'importFileName',
           xtype: 'textfield',
@@ -266,6 +289,8 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
           name: 'name', 
           type: 'textfield',
           width: 250,
+          allowBlank: false,
+          vtype: 'repositoryName',
           helpText: this.importFileNameHelpText
         },{
           id: 'importFile',
@@ -273,6 +298,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
           fieldLabel: 'Import File',
           ctCls: 'import-fu',
           name: 'bundle', 
+          allowBlank: false,
           helpText: this.importFileHelpText,
           cls: 'import-fu',
           buttonCfg: {
@@ -305,6 +331,8 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   },
   
   navHandler: function(direction){
+    this.activeForm = null;
+    
     var layout = this.getLayout();
     var id = layout.activeItem.id;
     
@@ -322,6 +350,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
       Ext.getCmp('move-next').setDisabled(false);
     }
     else if ( id === 'importTypeLayout' && direction === 1 ){
+      Ext.getCmp('move-next').setDisabled(false);
       var v = Ext.getCmp('chooseImportType').getValue();
       if ( v ){
         switch (v.getRawValue()){
@@ -330,9 +359,11 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
             break;
           case 'url':
             next = 2;
+            this.activeForm = 'url';
             break;
           case 'file':
             next = 3;
+            this.activeForm = 'file';
             break;
         }
       }
@@ -352,6 +383,31 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
     
     if ( next >= 0 ){
       layout.setActiveItem(next);
+    }
+  },
+  
+  getNextButton: function(){
+    if (!this.nextButton){
+      this.nextButton = Ext.getCmp('move-next');
+    }
+    return this.nextButton;
+  },
+  
+  getPrevButton: function(){
+    if (!this.prevButton){
+      this.prevButton = Ext.getCmp('move-prev');
+    }
+    return this.prevButton;
+  },
+  
+  urlFormValidityMonitor: function(form, valid){
+    if (this.activeForm === 'url' || this.activeForm === 'file'){
+      var nbt = this.getNextButton();
+      if (valid && nbt.disabled){
+        nbt.setDisabled(false);
+      } else if (!valid && !nbt.disabled){
+        nbt.setDisabled(true);
+      }
     }
   },
   
