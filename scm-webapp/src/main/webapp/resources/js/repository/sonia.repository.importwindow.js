@@ -41,7 +41,7 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
       title: this.title,
       layout: 'fit',
       width: 420,
-      height: 140,
+      height: 190,
       closable: true,
       resizable: true,
       plain: true,
@@ -85,6 +85,21 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   importJobsFinished: 0,
   importJobs: 0,
   
+  // help text
+  importTypeDirectoryHelpText: 'Imports all repositories that are located at the repository folder of SCM-Manager.',
+  importTypeURLHelpText: 'Imports a repository from a remote url.',
+  importTypeFileHelpText: 'Imports a repository from a file (e.g. SVN dump).',
+  
+  importUrlNameHelpText: 'The name of the repository in SCM-Manager.',
+  importUrlHelpText: 'The source url of the repository.',
+  
+  importFileNameHelpText: 'The name of the repository in SCM-Manager.',
+  importFileHelpText: 'Choose the dump file you want to import to SCM-Manager.',
+  
+  // tips
+  tipRepositoryType: 'Choose your repository type for the import.',
+  tipImportType: 'Select the type of import. <b>Note:</b> Not all repository types support all options.',
+  
   // settings
   repositoryType: null,
   
@@ -108,16 +123,25 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
       ]
     });
     
-    var types = [];
+    var typeItems = [];
   
     Ext.each(state.repositoryTypes, function(repositoryType){
-      console.log(repositoryType);
-      types.push({
+      typeItems.push({
         boxLabel: repositoryType.displayName,
         name: 'repositoryType', 
         inputValue: repositoryType.name,
         checked: false
       });
+    });
+    
+    typeItems = typeItems.sort(function(a, b){
+      return a.boxLabel > b.boxLabel;
+    });
+    
+    typeItems.push({
+      xtype: 'scmTip',
+      content: this.tipRepositoryType,
+      width: '100%'
     });
     
     var config = {
@@ -156,7 +180,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
           xtype: 'radiogroup',
           name: 'chooseRepositoryType',
           columns: 1,
-          items: [types],
+          items: [typeItems],
           listeners: {
             change: function(){
               Ext.getCmp('move-next').setDisabled(false);
@@ -175,21 +199,28 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
             boxLabel: 'Import from directory',
             name: 'importType', 
             inputValue: 'directory',
-            disabled: false
+            disabled: false,
+            helpText: this.importTypeDirectoryHelpText
           },{
             id: 'importTypeURL',
-            boxLabel: 'Import from URL',
+            boxLabel: 'Import from url',
             name: 'importType', 
             inputValue: 'url',
             checked: false,
-            disabled: true
+            disabled: true,
+            helpText: this.importTypeURLHelpText
           },{
             id: 'importTypeFile',
-            boxLabel: 'Import from File',
+            boxLabel: 'Import from file',
             name: 'importType', 
             inputValue: 'file',
             checked: false,
-            disabled: true
+            disabled: true,
+            helpText: this.importTypeFileHelpText
+          },{
+            xtype: 'scmTip',
+            content: this.tipImportType,
+            width: '100%'
           }],
           listeners: {
             change: function(){
@@ -209,33 +240,46 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
           fieldLabel: 'Repository name',
           name: 'importUrlName', 
           type: 'textfield',
-          disabled: false
+          disabled: false,
+          helpText: this.importUrlNameHelpText
         },{
           id: 'importUrl',
           xtype: 'textfield',
           fieldLabel: 'Import URL',
           name: 'importUrl', 
-          disabled: false
+          disabled: false,
+          helpText: this.importUrlHelpText
+        },{
+          xtype: 'scmTip',
+          content: 'Please insert name and remote url of the repository.',
+          width: '100%'
         }]
       },{
         id: 'importFileLayout',
         layout: 'form',
-        defaults: {
-          width: 250
-        },
         items: [{
           id: 'importFileName',
           xtype: 'textfield',
           fieldLabel: 'Repository name',
           name: 'importFileName', 
           type: 'textfield',
-          disabled: false
+          width: 250,
+          helpText: this.importFileNameHelpText
         },{
           id: 'importFile',
-          xtype: 'textfield',
+          xtype: 'fileuploadfield',
           fieldLabel: 'Import File',
+          ctCls: 'import-fu',
           name: 'importFile', 
-          disabled: false
+          helpText: this.importFileHelpText,
+          cls: 'import-fu',
+          buttonCfg: {
+            iconCls: 'upload-icon'
+          }
+        },{
+          xtype: 'scmTip',
+          content: 'Please insert name and upload the repository file.',
+          width: '100%'
         }]
       },{
         id: 'importFinishedLayout',

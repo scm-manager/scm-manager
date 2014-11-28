@@ -105,6 +105,11 @@ a.scm-link:hover {
   margin-left: 2px;
 }
 
+.scm-form-fileupload-help-button {
+  position: absolute;
+  right: -19px;
+}
+
 .scm-nav-item {
   cursor: pointer;
 }
@@ -237,4 +242,13 @@ div.noscript-container h1 {
 
 .unhealthy {
   color: red;
+}
+
+/** import **/
+.import-fu {
+  margin-right: 24px;
+}
+
+.import-fu input {
+  width: 215px;
 }
