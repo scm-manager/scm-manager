@@ -278,7 +278,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
         monitorValid: true,
         listeners: {
           clientvalidation: {
-            fn: this.urlFormValidityMonitor,
+            fn: this.fileFormValidityMonitor,
             scope: this
           }
         },
@@ -399,15 +399,37 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
     }
     return this.prevButton;
   },
+    
+  showLoadingBox: function(){
+    return Ext.MessageBox.show({
+      title: 'Loading',
+      msg: 'Import repository',
+      width: 300,
+      wait: true,
+      animate: true,
+      progress: true,
+      closable: false
+    });
+  },
   
   urlFormValidityMonitor: function(form, valid){
-    if (this.activeForm === 'url' || this.activeForm === 'file'){
-      var nbt = this.getNextButton();
-      if (valid && nbt.disabled){
-        nbt.setDisabled(false);
-      } else if (!valid && !nbt.disabled){
-        nbt.setDisabled(true);
-      }
+    if (this.activeForm === 'url'){
+      this.formValidityMonitor(form, valid);
+    }
+  },
+  
+  fileFormValidityMonitor: function(form, valid){
+    if (this.activeForm === 'file'){
+      this.formValidityMonitor(form, valid);
+    }
+  },
+  
+  formValidityMonitor: function(form, valid){
+    var nbt = this.getNextButton();
+    if (valid && nbt.disabled){
+      nbt.setDisabled(false);
+    } else if (!valid && !nbt.disabled){
+      nbt.setDisabled(true);
     }
   },
   
@@ -428,6 +450,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   },
   
   importFromFile: function(layout, form){
+    var lbox = this.showLoadingBox();
     form.submit({
       url: restUrl + 'import/repositories/' + this.repositoryType + '/bundle.html',
       scope: this,
@@ -436,9 +459,11 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
           name: form.getValues().name,
           type: this.repositoryType
         }]);
+        lbox.hide();
         layout.setActiveItem(4);
       },
       failure: function(form, action){
+        lbox.hide();
         main.handleRestFailure(
           action.response, 
           this.errorTitleText, 
@@ -449,6 +474,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   },
   
   importFromUrl: function(layout, repository){
+    var lbox = this.showLoadingBox();
     Ext.Ajax.request({
       url: restUrl + 'import/repositories/' + this.repositoryType + '/url.json',
       method: 'POST',
@@ -459,9 +485,11 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
           name: repository.name,
           type: this.repositoryType
         }]);
+        lbox.hide();
         layout.setActiveItem(4);
       },
       failure: function(result){
+        lbox.hide();
         main.handleRestFailure(
           result, 
           this.errorTitleText, 
@@ -472,6 +500,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   },
   
   importFromDirectory: function(layout){
+    var lbox = this.showLoadingBox();
     Ext.Ajax.request({
       url: restUrl + 'import/repositories/' + this.repositoryType + '.json',
       method: 'POST',
@@ -479,9 +508,11 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
       success: function(response){
         var obj = Ext.decode(response.responseText);
         this.appendImported(obj);
+        lbox.hide();
         layout.setActiveItem(4);
       },
       failure: function(result){
+        lbox.hide();
         main.handleRestFailure(
           result, 
           this.errorTitleText, 
