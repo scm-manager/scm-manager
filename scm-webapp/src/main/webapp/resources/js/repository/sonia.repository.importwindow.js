@@ -78,9 +78,6 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   nextText: 'Next',
   finishText: 'Finish',
   
-  // cache
-  importForm: null,
-  
   imported: [],
   importJobsFinished: 0,
   importJobs: 0,
@@ -105,7 +102,11 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   
   initComponent: function(){
     this.addEvents('finish');
-    
+
+    // fix initialization bug
+    this.imported = [];
+    this.importJobsFinished = 0;
+    this.importJobs = 0;
     
     var importedStore = new Ext.data.JsonStore({
       fields: ['type', 'name']
@@ -256,12 +257,13 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
         }]
       },{
         id: 'importFileLayout',
-        layout: 'form',
+        xtype: 'form',
+        fileUpload: true,
         items: [{
           id: 'importFileName',
           xtype: 'textfield',
           fieldLabel: 'Repository name',
-          name: 'importFileName', 
+          name: 'name', 
           type: 'textfield',
           width: 250,
           helpText: this.importFileNameHelpText
@@ -270,7 +272,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
           xtype: 'fileuploadfield',
           fieldLabel: 'Import File',
           ctCls: 'import-fu',
-          name: 'importFile', 
+          name: 'bundle', 
           helpText: this.importFileHelpText,
           cls: 'import-fu',
           buttonCfg: {
@@ -339,9 +341,13 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
     {
       next = 1;
     }
-    else if ( id === 'importUrlLayout' && direction === 1 ){
-      var panel = Ext.getCmp('importUrlLayout');
-      this.importFromUrl(layout, panel.getForm().getValues());
+    else if ( id === 'importUrlLayout' && direction === 1 )
+    {
+      this.importFromUrl(layout, Ext.getCmp('importUrlLayout').getForm().getValues());
+    }
+    else if ( id === 'importFileLayout' && direction === 1 )
+    {
+      this.importFromFile(layout, Ext.getCmp('importFileLayout').getForm());
     }
     
     if ( next >= 0 ){
@@ -363,6 +369,27 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
       Ext.getCmp('move-prev').setDisabled(true);
       Ext.getCmp('finish').setDisabled(false);
     }
+  },
+  
+  importFromFile: function(layout, form){
+    form.submit({
+      url: restUrl + 'import/repositories/' + this.repositoryType + '/bundle.html',
+      scope: this,
+      success: function(form, action){
+        this.appendImported([{
+          name: form.getValues().name,
+          type: this.repositoryType
+        }]);
+        layout.setActiveItem(4);
+      },
+      failure: function(form, action){
+        main.handleRestFailure(
+          action.response, 
+          this.errorTitleText, 
+          this.errorMsgText
+        );
+      }
+    });
   },
   
   importFromUrl: function(layout, repository){
