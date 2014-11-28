@@ -230,7 +230,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
         }]
       },{
         id: 'importUrlLayout',
-        layout: 'form',
+        xtype: 'form',
         defaults: {
           width: 250
         },
@@ -238,7 +238,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
           id: 'importUrlName',
           xtype: 'textfield',
           fieldLabel: 'Repository name',
-          name: 'importUrlName', 
+          name: 'name', 
           type: 'textfield',
           disabled: false,
           helpText: this.importUrlNameHelpText
@@ -246,7 +246,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
           id: 'importUrl',
           xtype: 'textfield',
           fieldLabel: 'Import URL',
-          name: 'importUrl', 
+          name: 'url', 
           disabled: false,
           helpText: this.importUrlHelpText
         },{
@@ -339,6 +339,10 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
     {
       next = 1;
     }
+    else if ( id === 'importUrlLayout' && direction === 1 ){
+      var panel = Ext.getCmp('importUrlLayout');
+      this.importFromUrl(layout, panel.getForm().getValues());
+    }
     
     if ( next >= 0 ){
       layout.setActiveItem(next);
@@ -359,6 +363,29 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
       Ext.getCmp('move-prev').setDisabled(true);
       Ext.getCmp('finish').setDisabled(false);
     }
+  },
+  
+  importFromUrl: function(layout, repository){
+    Ext.Ajax.request({
+      url: restUrl + 'import/repositories/' + this.repositoryType + '/url.json',
+      method: 'POST',
+      scope: this,
+      jsonData: repository,
+      success: function(){
+        this.appendImported([{
+          name: repository.name,
+          type: this.repositoryType
+        }]);
+        layout.setActiveItem(4);
+      },
+      failure: function(result){
+        main.handleRestFailure(
+          result, 
+          this.errorTitleText, 
+          this.errorMsgText
+        );
+      }
+    });    
   },
   
   importFromDirectory: function(layout){
