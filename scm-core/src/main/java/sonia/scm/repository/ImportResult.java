@@ -37,6 +37,8 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
+import static com.google.common.base.Preconditions.*;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
@@ -66,8 +68,10 @@ public final class ImportResult
   public ImportResult(List<String> importedDirectories,
     List<String> failedDirectories)
   {
-    this.importedDirectories = importedDirectories;
-    this.failedDirectories = failedDirectories;
+    this.importedDirectories = checkNotNull(importedDirectories,
+      "list of imported directories is required");
+    this.failedDirectories = checkNotNull(failedDirectories,
+      "list of failed directories is required");
   }
 
   //~--- methods --------------------------------------------------------------
