@@ -37,6 +37,7 @@ package sonia.scm.api.rest.resources;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
 
@@ -50,6 +51,9 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
+import sonia.scm.repository.AdvancedImportHandler;
+import sonia.scm.repository.ImportHandler;
+import sonia.scm.repository.ImportResult;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryAllreadyExistExeption;
 import sonia.scm.repository.RepositoryException;
@@ -67,6 +71,7 @@ import static com.google.common.base.Preconditions.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.sun.jersey.api.client.ClientResponse.Status;
 import com.sun.jersey.multipart.FormDataParam;
 
 import java.io.File;
@@ -153,6 +158,7 @@ public class RepositoryImportResource
    *
    * @return empty response with location header which points to the imported
    *  repository
+   * @since 1.43
    */
   @POST
   @Path("{type}/bundle")
@@ -237,6 +243,7 @@ public class RepositoryImportResource
    *
    * @return empty response with location header which points to the imported
    *  repository
+   * @since 1.43
    */
   @POST
   @Path("{type}/bundle.html")
@@ -270,6 +277,7 @@ public class RepositoryImportResource
    *
    * @return empty response with location header which points to the imported
    *  repository
+   * @since 1.43
    */
   @POST
   @Path("{type}/url")
@@ -384,6 +392,90 @@ public class RepositoryImportResource
       new GenericEntity<List<Repository>>(repositories) {}
     ).build();
     //J+
+  }
+
+  /**
+   * Imports repositories of the given type from the configured repository
+   * directory. Returns a list of successfully imported directories and a list
+   * of failed directories. This method requires admin privileges.<br />
+   * <br />
+   * Status codes:
+   * <ul>
+   *   <li>200 ok, successful</li>
+   *   <li>400 bad request, the import feature is not
+   *       supported by this type of repositories.</li>
+   *   <li>500 internal server error</li>
+   * </ul>
+   *
+   * @param type repository type
+   *
+   * @return imported repositories
+   * @since 1.43
+   */
+  @POST
+  @Path("{type}/directory")
+  @TypeHint(ImportResult.class)
+  @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+  public Response importRepositoriesFromDirectory(
+    @PathParam("type") String type)
+  {
+    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+
+    Response response;
+
+    RepositoryHandler handler = manager.getHandler(type);
+
+    if (handler != null)
+    {
+      logger.info("start directory import for repository type {}", type);
+
+      try
+      {
+        ImportResult result;
+        ImportHandler importHandler = handler.getImportHandler();
+
+        if (importHandler instanceof AdvancedImportHandler)
+        {
+          logger.debug("start directory import, using advanced import handler");
+          result =
+            ((AdvancedImportHandler) importHandler)
+              .importRepositoriesFromDirectory(manager);
+        }
+        else
+        {
+          logger.debug("start directory import, using normal import handler");
+          result = new ImportResult(importHandler.importRepositories(manager),
+            ImmutableList.<String>of());
+        }
+
+        response = Response.ok(result).build();
+      }
+      catch (NotSupportedFeatuerException ex)
+      {
+        logger
+          .warn(
+            "import feature is not supported by repository handler for type "
+              .concat(type), ex);
+        response = Response.status(Status.BAD_REQUEST).build();
+      }
+      catch (IOException ex)
+      {
+        logger.warn("exception occured durring directory import", ex);
+        response = Response.serverError().build();
+      }
+      catch (RepositoryException ex)
+      {
+        logger.warn("exception occured durring directory import", ex);
+        response = Response.serverError().build();
+      }
+    }
+    else
+    {
+      logger.warn("could not find reposiotry handler for type {}", type);
+      response = Response.status(Status.BAD_REQUEST).build();
+    }
+
+    return response;
   }
 
   //~--- get methods ----------------------------------------------------------
