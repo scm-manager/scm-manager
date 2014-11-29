@@ -239,6 +239,11 @@ public abstract class AbstactImportHandler implements AdvancedImportHandler
         builder.addFailedDirectory(repositoryName);
         handleException(ex, throwExceptions);
       }
+      catch (IllegalStateException ex)
+      {
+        builder.addFailedDirectory(repositoryName);
+        handleException(ex, throwExceptions);
+      }
       catch (RepositoryException ex)
       {
         builder.addFailedDirectory(repositoryName);
