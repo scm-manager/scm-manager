@@ -28,66 +28,50 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+   
+Sonia.util.Tip = Ext.extend(Ext.BoxComponent, {
 
-Ext.form.Field.prototype.afterRenderExt = Ext.form.Field.prototype.afterRender;
-
-Ext.override(Ext.form.Field, {
-
-  afterRender : function() {
-    if ( this.helpText ){
-      this.renderHelp( this.helpText );
+  tpl: new Ext.XTemplate('\
+    <div id="" class="x-tip" style="position: inherit; visibility: visible;">\
+      <div class="x-tip-tl">\
+        <div class="x-tip-tr">\
+          <div class="x-tip-tc">\
+            <div class="x-tip-header x-unselectable">\
+              <span class="x-tip-header-text"></span>\
+            </div>\
+          </div>\
+        </div>\
+      </div>\
+      <div class="x-tip-bwrap">\
+        <div class="x-tip-ml">\
+          <div class="x-tip-mr">\
+            <div class="x-tip-mc">\
+              <div class="x-tip-body" style="height: auto; width: auto;">\
+                {content}\
+              </div>\
+            </div>\
+          </div>\
+        </div>\
+        <div class="x-tip-bl x-panel-nofooter">\
+          <div class="x-tip-br">\
+            <div class="x-tip-bc"></div>\
+          </div>\
+        </div>\
+      </div>\
+    </div>'),
+  
+  constructor: function(config) {
+    config = config || {};
+    var cl = 'scm-tip';
+    if (config['class']){
+      cl += ' ' + config['class'];
     }
-    this.afterRenderExt.apply(this, arguments);
-  },
-
-  renderHelp : function(text){
-    var div = this.el.up('div');
-    var cls = this.getHelpButtonClass();
-
-    var helpButton = div.createChild({
-      tag: 'img',
-      width : 16,
-      height : 16,
-      src: 'resources/images/help.png',
-      cls: cls
-    });
-    
-    var quickTip = {
-      target : helpButton,
-      title : '',
-      text : text,
-      enabled : true
-    };
-    
-    if (this.helpDisableAutoHide){
-      quickTip.autoHide = !this.helpDisableAutoHide;
-    }
-
-    Ext.QuickTips.register(quickTip);
-  },
-
-  getHelpButtonClass: function(){
-    var cls = null;
-
-    switch ( this.getXType() ){
-      case 'combo':
-        if ( this.readOnly ){
-          cls = 'scm-form-help-button';
-        } else {
-          cls = 'scm-form-combo-help-button';
-        }
-        break;
-      case 'fileuploadfield':
-        cls = 'scm-form-fileupload-help-button';
-        break;
-      case 'textarea':
-        cls = 'scm-form-textarea-help-button';
-        break;
-      default:
-        cls = 'scm-form-help-button';
-    }
-
-    return cls;
+    config.xtype = 'box';
+    this.html = this.tpl.apply({content: config.content});
+    Sonia.util.Tip.superclass.constructor.apply(this, arguments);
   }
 
 });
+
+// register xtype
+Ext.reg('scmTip', Sonia.util.Tip);

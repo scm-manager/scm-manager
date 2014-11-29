@@ -51,6 +51,7 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
+import sonia.scm.api.rest.RestActionUploadResult;
 import sonia.scm.repository.AdvancedImportHandler;
 import sonia.scm.repository.ImportHandler;
 import sonia.scm.repository.ImportResult;
@@ -167,54 +168,7 @@ public class RepositoryImportResource
     @PathParam("type") String type, @FormDataParam("name") String name,
     @FormDataParam("bundle") InputStream inputStream)
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
-
-    checkArgument(!Strings.isNullOrEmpty(name),
-      "request does not contain name of the repository");
-    checkNotNull(inputStream, "bundle inputStream is required");
-
-    Repository repository;
-
-    try
-    {
-      Type t = type(type);
-
-      checkSupport(t, Command.UNBUNDLE, "bundle");
-
-      repository = create(type, name);
-
-      RepositoryService service = null;
-
-      File file = File.createTempFile("scm-import-", ".bundle");
-
-      try
-      {
-        long length = Files.asByteSink(file).writeFrom(inputStream);
-
-        logger.info("copied {} bytes to temp, start bundle import", length);
-        service = serviceFactory.create(repository);
-        service.getUnbundleCommand().unbundle(file);
-      }
-      catch (RepositoryException ex)
-      {
-        handleImportFailure(ex, repository);
-      }
-      catch (IOException ex)
-      {
-        handleImportFailure(ex, repository);
-      }
-      finally
-      {
-        IOUtil.close(service);
-        IOUtil.delete(file);
-      }
-    }
-    catch (IOException ex)
-    {
-      logger.warn("could not create temporary file", ex);
-
-      throw new WebApplicationException(ex);
-    }
+    Repository repository = doImportFromBundle(type, name, inputStream);
 
     return buildResponse(uriInfo, repository);
   }
@@ -236,7 +190,6 @@ public class RepositoryImportResource
    * </ul>
    *
    *
-   * @param uriInfo uri info
    * @param type repository type
    * @param name name of the repository
    * @param inputStream input bundle
@@ -249,11 +202,25 @@ public class RepositoryImportResource
   @Path("{type}/bundle.html")
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.TEXT_HTML)
-  public Response importFromBundleUI(@Context UriInfo uriInfo,
-    @PathParam("type") String type, @FormDataParam("name") String name,
+  public Response importFromBundleUI(@PathParam("type") String type,
+    @FormDataParam("name") String name,
     @FormDataParam("bundle") InputStream inputStream)
   {
-    return importFromBundle(uriInfo, type, name, inputStream);
+    Response response;
+
+    try
+    {
+      doImportFromBundle(type, name, inputStream);
+      response = Response.ok(new RestActionUploadResult(true)).build();
+    }
+    catch (WebApplicationException ex)
+    {
+      logger.warn("error durring bundle import", ex);
+      response = Response.fromResponse(ex.getResponse()).entity(
+        new RestActionUploadResult(false)).build();
+    }
+
+    return response;
   }
 
   /**
@@ -590,6 +557,71 @@ public class RepositoryImportResource
     catch (IOException ex)
     {
       handleGenericCreationFailure(ex, type, name);
+    }
+
+    return repository;
+  }
+
+  /**
+   * Start bundle import.
+   *
+   *
+   * @param type repository type
+   * @param name name of the repository
+   * @param inputStream bundle stream
+   *
+   * @return imported repository
+   */
+  private Repository doImportFromBundle(String type, String name,
+    InputStream inputStream)
+  {
+    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+
+    checkArgument(!Strings.isNullOrEmpty(name),
+      "request does not contain name of the repository");
+    checkNotNull(inputStream, "bundle inputStream is required");
+
+    Repository repository;
+
+    try
+    {
+      Type t = type(type);
+
+      checkSupport(t, Command.UNBUNDLE, "bundle");
+
+      repository = create(type, name);
+
+      RepositoryService service = null;
+
+      File file = File.createTempFile("scm-import-", ".bundle");
+
+      try
+      {
+        long length = Files.asByteSink(file).writeFrom(inputStream);
+
+        logger.info("copied {} bytes to temp, start bundle import", length);
+        service = serviceFactory.create(repository);
+        service.getUnbundleCommand().unbundle(file);
+      }
+      catch (RepositoryException ex)
+      {
+        handleImportFailure(ex, repository);
+      }
+      catch (IOException ex)
+      {
+        handleImportFailure(ex, repository);
+      }
+      finally
+      {
+        IOUtil.close(service);
+        IOUtil.delete(file);
+      }
+    }
+    catch (IOException ex)
+    {
+      logger.warn("could not create temporary file", ex);
+
+      throw new WebApplicationException(ex);
     }
 
     return repository;

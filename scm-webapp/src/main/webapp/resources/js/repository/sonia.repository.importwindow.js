@@ -31,125 +31,406 @@
 
 Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
   
-  titleText: 'Import Repositories',
-  okText: 'Ok',
-  closeText: 'Close',
+  title: 'Repository Import Wizard',
   
-  // cache
-  importForm: null,
+  initComponent: function(){
+    
+    this.addEvents('finish');
+    
+    var config = {
+      title: this.title,
+      layout: 'fit',
+      width: 420,
+      height: 190,
+      closable: true,
+      resizable: true,
+      plain: true,
+      border: false,
+      modal: true,
+      bodyCssClass: 'x-panel-mc',
+      items: [{
+        id: 'scmRepositoryImportWizard',
+        xtype: 'scmRepositoryImportWizard',
+        listeners: {
+          finish: {
+            fn: this.onFinish,
+            scope: this
+          }
+        }
+      }]
+    };
+    
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.repository.ImportWindow.superclass.initComponent.apply(this, arguments);
+  },
+  
+  onFinish: function(config){
+    this.fireEvent('finish', config);
+    this.close();
+  }
+  
+});
+
+Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
+  
+  // text
+  backText: 'Back',
+  nextText: 'Next',
+  finishText: 'Finish',
   
   imported: [],
   importJobsFinished: 0,
   importJobs: 0,
   
+  // help text
+  importTypeDirectoryHelpText: 'Imports all repositories that are located at the repository folder of SCM-Manager.',
+  importTypeURLHelpText: 'Imports a repository from a remote url.',
+  importTypeFileHelpText: 'Imports a repository from a file (e.g. SVN dump).',
+  
+  importUrlNameHelpText: 'The name of the repository in SCM-Manager.',
+  importUrlHelpText: 'The source url of the repository.',
+  
+  importFileNameHelpText: 'The name of the repository in SCM-Manager.',
+  importFileHelpText: 'Choose the dump file you want to import to SCM-Manager.',
+  
+  // tips
+  tipRepositoryType: 'Choose your repository type for the import.',
+  tipImportType: 'Select the type of import. <b>Note:</b> Not all repository types support all options.',
+  
+  // cache
+  nextButton: null,
+  prevButton: null,
+  
+  // settings
+  repositoryType: null,
+  
+  // active card
+  activeForm: null,
+  
   initComponent: function(){
+    this.addEvents('finish');
+
+    // fix initialization bug
     this.imported = [];
     this.importJobsFinished = 0;
     this.importJobs = 0;
+    this.activeForm = null;
+    
+    var importedStore = new Ext.data.JsonStore({
+      fields: ['type', 'name']
+    });
+    // store.loadData(this.imported);
+    
+    var importedColModel = new Ext.grid.ColumnModel({
+      defaults: {
+        sortable: true,
+        scope: this
+      },
+      columns: [
+        {id: 'name', header: 'Name', dataIndex: 'name'},
+        {id: 'type', header: 'Type', dataIndex: 'type'}
+      ]
+    });
+    
+    var typeItems = [];
+  
+    Ext.each(state.repositoryTypes, function(repositoryType){
+      typeItems.push({
+        boxLabel: repositoryType.displayName,
+        name: 'repositoryType', 
+        inputValue: repositoryType.name,
+        checked: false
+      });
+    });
+    
+    typeItems = typeItems.sort(function(a, b){
+      return a.boxLabel > b.boxLabel;
+    });
+    
+    typeItems.push({
+      xtype: 'scmTip',
+      content: this.tipRepositoryType,
+      width: '100%'
+    });
     
     var config = {
-      layout:'fit',
-      width:300,
-      height:170,
-      closable: true,
-      resizable: false,
-      plain: true,
-      border: false,
-      modal: true,
-      title: this.titleText,
-      items: [{
-        id: 'importRepositoryForm',
-        frame: true,
-        xtype: 'form',
-        defaultType: 'checkbox'
-      }],
-      buttons: [{
-        id: 'startRepositoryImportButton',
-        text: this.okText,
-        formBind: true,
-        scope: this,
-        handler: this.importRepositories
+      layout: 'card',
+      activeItem: 0,
+      bodyStyle: 'padding: 5px',
+      defaults: {
+        bodyCssClass: 'x-panel-mc',
+        border: false,
+        labelWidth: 120,
+        width: 250
+      },
+      bbar: ['->',{
+        id: 'move-prev',
+        text: this.backText,
+        handler: this.navHandler.createDelegate(this, [-1]),
+        disabled: true,
+        scope: this
       },{
-        text: this.closeText,
-        scope: this,
-        handler: this.close
+        id: 'move-next',
+        text: this.nextText,
+        handler: this.navHandler.createDelegate(this, [1]),
+        disabled: true,
+        scope: this
+      },{
+        id: 'finish',
+        text: this.finishText,
+        handler: this.applyChanges,
+        disabled: true,
+        scope: this
       }],
-      listeners: {
-        afterrender: {
-          fn: this.readImportableTypes,
-          scope: this
+      items: [{
+        id: 'repositoryTypeLayout',
+        items: [{
+          id: 'chooseRepositoryType',
+          xtype: 'radiogroup',
+          name: 'chooseRepositoryType',
+          columns: 1,
+          items: [typeItems],
+          listeners: {
+            change: function(){
+              Ext.getCmp('move-next').setDisabled(false);
+            }
+          }
+        }]
+      },{
+        id: 'importTypeLayout',
+        items: [{
+          id: 'chooseImportType',
+          xtype: 'radiogroup',
+          name: 'chooseImportType',
+          columns: 1,
+          items: [{
+            id: 'importTypeDirectory',
+            boxLabel: 'Import from directory',
+            name: 'importType', 
+            inputValue: 'directory',
+            disabled: false,
+            helpText: this.importTypeDirectoryHelpText
+          },{
+            id: 'importTypeURL',
+            boxLabel: 'Import from url',
+            name: 'importType', 
+            inputValue: 'url',
+            checked: false,
+            disabled: true,
+            helpText: this.importTypeURLHelpText
+          },{
+            id: 'importTypeFile',
+            boxLabel: 'Import from file',
+            name: 'importType', 
+            inputValue: 'file',
+            checked: false,
+            disabled: true,
+            helpText: this.importTypeFileHelpText
+          },{
+            xtype: 'scmTip',
+            content: this.tipImportType,
+            width: '100%'
+          }],
+          listeners: {
+            change: function(){
+              Ext.getCmp('move-next').setDisabled(false);
+            }
+          }
+        }]
+      },{
+        id: 'importUrlLayout',
+        xtype: 'form',
+        monitorValid: true,
+        defaults: {
+          width: 250
+        },
+        listeners: {
+          clientvalidation: {
+            fn: this.urlFormValidityMonitor,
+            scope: this
+          }
+        },
+        items: [{
+          id: 'importUrlName',
+          xtype: 'textfield',
+          fieldLabel: 'Repository name',
+          name: 'name',
+          allowBlank: false,
+          vtype: 'repositoryName',
+          helpText: this.importUrlNameHelpText
+        },{
+          id: 'importUrl',
+          xtype: 'textfield',
+          fieldLabel: 'Import URL',
+          name: 'url', 
+          allowBlank: false,
+          vtype: 'url',
+          helpText: this.importUrlHelpText
+        },{
+          xtype: 'scmTip',
+          content: 'Please insert name and remote url of the repository.',
+          width: '100%'
+        }]
+      },{
+        id: 'importFileLayout',
+        xtype: 'form',
+        fileUpload: true,
+        monitorValid: true,
+        listeners: {
+          clientvalidation: {
+            fn: this.fileFormValidityMonitor,
+            scope: this
+          }
+        },
+        items: [{
+          id: 'importFileName',
+          xtype: 'textfield',
+          fieldLabel: 'Repository name',
+          name: 'name', 
+          type: 'textfield',
+          width: 250,
+          allowBlank: false,
+          vtype: 'repositoryName',
+          helpText: this.importFileNameHelpText
+        },{
+          id: 'importFile',
+          xtype: 'fileuploadfield',
+          fieldLabel: 'Import File',
+          ctCls: 'import-fu',
+          name: 'bundle', 
+          allowBlank: false,
+          helpText: this.importFileHelpText,
+          cls: 'import-fu',
+          buttonCfg: {
+            iconCls: 'upload-icon'
+          }
+        },{
+          xtype: 'scmTip',
+          content: 'Please insert name and upload the repository file.',
+          width: '100%'
+        }]
+      },{
+        id: 'importFinishedLayout',
+        layout: 'form',
+        defaults: {
+          width: 250
+        },
+        items: [{
+          id: 'importedGrid',
+          xtype: 'grid',
+          autoExpandColumn: 'name',
+          store: importedStore,
+          colModel: importedColModel,
+          height: 100
+        }]
+      }]
+    };
+    
+    Ext.apply(this, Ext.apply(this.initialConfig, config));
+    Sonia.repository.ImportPanel.superclass.initComponent.apply(this, arguments);
+  },
+  
+  navHandler: function(direction){
+    this.activeForm = null;
+    
+    var layout = this.getLayout();
+    var id = layout.activeItem.id;
+    
+    var next = -1;
+    
+    if ( id === 'repositoryTypeLayout' && direction === 1 ){
+      this.repositoryType = Ext.getCmp('chooseRepositoryType').getValue().getRawValue();
+      console.log('rt: ' + this.repositoryType);
+      this.enableAvailableImportTypes();
+      next = 1;
+    } 
+    else if ( id === 'importTypeLayout' && direction === -1 ){
+      next = 0;
+      Ext.getCmp('move-prev').setDisabled(true);
+      Ext.getCmp('move-next').setDisabled(false);
+    }
+    else if ( id === 'importTypeLayout' && direction === 1 ){
+      Ext.getCmp('move-next').setDisabled(false);
+      var v = Ext.getCmp('chooseImportType').getValue();
+      if ( v ){
+        switch (v.getRawValue()){
+          case 'directory':
+            this.importFromDirectory(layout);
+            break;
+          case 'url':
+            next = 2;
+            this.activeForm = 'url';
+            break;
+          case 'file':
+            next = 3;
+            this.activeForm = 'file';
+            break;
         }
       }
-    };
-    Ext.apply(this, Ext.apply(this.initialConfig, config));
-    Sonia.repository.ImportWindow.superclass.initComponent.apply(this, arguments);
-  },
-  
-  readImportableTypes: function(){
-    if (debug){
-      console.debug('read importable types');
+    }
+    else if ( (id === 'importUrlLayout' || id === 'importFileLayout') && direction === -1 )
+    {
+      next = 1;
+    }
+    else if ( id === 'importUrlLayout' && direction === 1 )
+    {
+      this.importFromUrl(layout, Ext.getCmp('importUrlLayout').getForm().getValues());
+    }
+    else if ( id === 'importFileLayout' && direction === 1 )
+    {
+      this.importFromFile(layout, Ext.getCmp('importFileLayout').getForm());
     }
     
-    Ext.Ajax.request({
-      url: restUrl + 'import/repositories.json',
-      method: 'GET',
-      scope: this,
-      success: function(response){
-        var obj = Ext.decode(response.responseText);
-        this.renderTypeCheckboxes(obj);
-        this.doLayout();
-      },
-      failure: function(result){
-        main.handleRestFailure(
-          result, 
-          this.errorTitleText, 
-          this.errorMsgText
-        );
-      }
-    });
-    
-  },
-  
-  renderTypeCheckboxes: function(types){
-    Ext.each(types, function(type){
-      this.renderCheckbox(type);
-    }, this);
-  },
-  
-  getImportForm: function(){
-    if (!this.importForm){
-      this.importForm = Ext.getCmp('importRepositoryForm');
+    if ( next >= 0 ){
+      layout.setActiveItem(next);
     }
-    return this.importForm;
+  },
+  
+  getNextButton: function(){
+    if (!this.nextButton){
+      this.nextButton = Ext.getCmp('move-next');
+    }
+    return this.nextButton;
+  },
+  
+  getPrevButton: function(){
+    if (!this.prevButton){
+      this.prevButton = Ext.getCmp('move-prev');
+    }
+    return this.prevButton;
   },
     
-  renderCheckbox: function(type){
-    this.getImportForm().add({
-      xtype: 'checkbox',
-      name: 'type',
-      fieldLabel: type.displayName,
-      inputValue: type.name
+  showLoadingBox: function(){
+    return Ext.MessageBox.show({
+      title: 'Loading',
+      msg: 'Import repository',
+      width: 300,
+      wait: true,
+      animate: true,
+      progress: true,
+      closable: false
     });
   },
   
-  importRepositories: function(){
-    if (debug){
-      console.debug('start import of repositories');
+  urlFormValidityMonitor: function(form, valid){
+    if (this.activeForm === 'url'){
+      this.formValidityMonitor(form, valid);
     }
-    var form = this.getImportForm().getForm();
-    var values = form.getValues().type;
-    if ( values ){
-      if ( Ext.isArray(values) ){
-        this.importJobs = values.length;
-      } else {
-        this.importJobs = 1;
-      }
-    } else {
-      this.importJobs = 0;
+  },
+  
+  fileFormValidityMonitor: function(form, valid){
+    if (this.activeForm === 'file'){
+      this.formValidityMonitor(form, valid);
     }
-    Ext.each(values, function(value){
-      this.importRepositoriesOfType(value);
-    }, this);
+  },
+  
+  formValidityMonitor: function(form, valid){
+    var nbt = this.getNextButton();
+    if (valid && nbt.disabled){
+      nbt.setDisabled(false);
+    } else if (!valid && !nbt.disabled){
+      nbt.setDisabled(true);
+    }
   },
   
   appendImported: function(repositories){
@@ -161,62 +442,77 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
       if (debug){
         console.debug( 'import of ' + this.importJobsFinished + ' jobs finished'  );
       }
-      this.printImported();
+      Ext.getCmp('importedGrid').getStore().loadData(this.imported);
+      Ext.getCmp('move-next').setDisabled(true);
+      Ext.getCmp('move-prev').setDisabled(true);
+      Ext.getCmp('finish').setDisabled(false);
     }
   },
   
-  printImported: function(){
-    var store = new Ext.data.JsonStore({
-      fields: ['type', 'name']
-    });
-    store.loadData(this.imported);
-    
-    var colModel = new Ext.grid.ColumnModel({
-      defaults: {
-        sortable: true,
-        scope: this
+  importFromFile: function(layout, form){
+    var lbox = this.showLoadingBox();
+    form.submit({
+      url: restUrl + 'import/repositories/' + this.repositoryType + '/bundle.html',
+      scope: this,
+      success: function(form, action){
+        this.appendImported([{
+          name: form.getValues().name,
+          type: this.repositoryType
+        }]);
+        lbox.hide();
+        layout.setActiveItem(4);
       },
-      columns: [
-        {id: 'name', header: 'Name', dataIndex: 'name'},
-        {id: 'type', header: 'Type', dataIndex: 'type'}
-      ]
+      failure: function(form, action){
+        lbox.hide();
+        main.handleRestFailure(
+          action.response, 
+          this.errorTitleText, 
+          this.errorMsgText
+        );
+      }
     });
-    
-    this.getImportForm().add({
-      xtype: 'grid',
-      autoExpandColumn: 'name',
-      store: store,
-      colModel: colModel,
-      height: 100
-    });
-    var h = this.getHeight();
-    this.setHeight( h + 100 );
-    this.doLayout();
-    
-    // reload repositories panel
-    var panel = Ext.getCmp('repositories');
-    if (panel){
-      panel.getGrid().reload();
-    }
   },
   
-  importRepositoriesOfType: function(type){
-    if (debug){
-      console.debug('start import of ' + type + ' repositories');
-    }
-    var b = Ext.getCmp('startRepositoryImportButton');
-    if ( b ){
-      b.setDisabled(true);
-    }
+  importFromUrl: function(layout, repository){
+    var lbox = this.showLoadingBox();
     Ext.Ajax.request({
-      url: restUrl + 'import/repositories/' + type + '.json',
+      url: restUrl + 'import/repositories/' + this.repositoryType + '/url.json',
+      method: 'POST',
+      scope: this,
+      jsonData: repository,
+      success: function(){
+        this.appendImported([{
+          name: repository.name,
+          type: this.repositoryType
+        }]);
+        lbox.hide();
+        layout.setActiveItem(4);
+      },
+      failure: function(result){
+        lbox.hide();
+        main.handleRestFailure(
+          result, 
+          this.errorTitleText, 
+          this.errorMsgText
+        );
+      }
+    });    
+  },
+  
+  importFromDirectory: function(layout){
+    var lbox = this.showLoadingBox();
+    Ext.Ajax.request({
+      url: restUrl + 'import/repositories/' + this.repositoryType + '.json',
       method: 'POST',
       scope: this,
       success: function(response){
         var obj = Ext.decode(response.responseText);
         this.appendImported(obj);
+        lbox.hide();
+        layout.setActiveItem(4);
       },
       failure: function(result){
+        lbox.hide();
         main.handleRestFailure(
           result, 
           this.errorTitleText, 
@@ -224,6 +520,34 @@ Sonia.repository.ImportWindow =  Ext.extend(Ext.Window,{
         );
       }
     });
+  },
+  
+  enableAvailableImportTypes: function(){
+    var type = null;
+    Ext.each(state.repositoryTypes, function(repositoryType){
+      if (repositoryType.name === this.repositoryType){
+        type = repositoryType;
+      }
+    }, this);
+    
+    if ( type !== null ){
+      Ext.getCmp('chooseImportType').setValue(null);
+      Ext.getCmp('move-next').setDisabled(true);
+      Ext.getCmp('move-prev').setDisabled(false);
+      Ext.getCmp('importTypeURL').setDisabled(type.supportedCommands.indexOf('PULL') < 0);
+      Ext.getCmp('importTypeFile').setDisabled(type.supportedCommands.indexOf('UNBUNDLE') < 0);
+    }
+  },
+  
+  applyChanges: function(){
+    var panel = Ext.getCmp('repositories');
+    if (panel){
+      panel.getGrid().reload();
+    }
+    this.fireEvent('finish');
   }
   
 });
+
+// register xtype
+Ext.reg('scmRepositoryImportWizard', Sonia.repository.ImportPanel);
