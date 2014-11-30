@@ -56,6 +56,43 @@ public interface RepositoryClientHandler extends ClientHandler<Repository>
    *
    *
    * @param type
+   *
+   * @return
+   *
+   * @since 1.43
+   */
+  public ImportResultWrapper importFromDirectory(String type);
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   * 
+   * @since 1.43
+   */
+  public Repository importFromBundle(ImportBundleRequest request);
+
+  /**
+   * Method description
+   * 
+   *
+   * @param request
+   * @return
+   * 
+   * @since 1.43
+   */
+  public Repository importFromUrl(ImportUrlRequest request);
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
    * @param name
    *
    * @return

@@ -93,6 +93,20 @@ public class WUIUrlProvider implements UrlProvider
    *
    *
    * @return
+   * 
+   * @since 1.43
+   */
+  @Override
+  public String getBaseUrl()
+  {
+    return baseUrl;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
    */
   @Override
   public String getConfigUrl()
