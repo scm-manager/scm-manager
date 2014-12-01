@@ -310,6 +310,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
           fieldLabel: 'Import File',
           ctCls: 'import-fu',
           name: 'bundle', 
+          buttonText: '',
           allowBlank: false,
           helpText: this.importFileHelpText,
           cls: 'import-fu',
