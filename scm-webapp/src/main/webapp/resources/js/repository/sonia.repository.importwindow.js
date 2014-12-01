@@ -91,6 +91,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   
   importFileNameHelpText: 'The name of the repository in SCM-Manager.',
   importFileHelpText: 'Choose the dump file you want to import to SCM-Manager.',
+  importFileGZipCompressedHelpText: 'The file is gzip compressed.',
   
   // tips
   tipRepositoryType: 'Choose your repository type for the import.',
@@ -315,6 +316,11 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
             iconCls: 'upload-icon'
           }
         },{
+          id: 'importFileGZipCompressed',
+          xtype: 'checkbox',
+          fieldLabel: 'GZip compressed',
+          helpText: this.importFileGZipCompressedHelpText
+        },{
           xtype: 'scmTip',
           content: 'Please insert name and upload the repository file.',
           width: '100%'
@@ -479,9 +485,10 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
   },
   
   importFromFile: function(layout, form){
+    var compressed = Ext.getCmp('importFileGZipCompressed').getValue();
     var lbox = this.showLoadingBox();
     form.submit({
-      url: restUrl + 'import/repositories/' + this.repositoryType + '/bundle.html',
+      url: restUrl + 'import/repositories/' + this.repositoryType + '/bundle.html?compressed=' + compressed,
       scope: this,
       success: function(form){
         lbox.hide();

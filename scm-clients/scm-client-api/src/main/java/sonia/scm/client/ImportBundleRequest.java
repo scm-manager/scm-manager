@@ -26,7 +26,12 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+
+
+
 package sonia.scm.client;
+
+//~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteSource;
 
@@ -37,14 +42,21 @@ import com.google.common.io.ByteSource;
  */
 public class ImportBundleRequest
 {
-  private String type;
-  private String name;
-  private ByteSource bundle;
 
-  ImportBundleRequest()
-  {
-  }
+  /**
+   * Constructs ...
+   *
+   */
+  ImportBundleRequest() {}
 
+  /**
+   * Constructs ...
+   *
+   *
+   * @param type
+   * @param name
+   * @param bundle
+   */
   public ImportBundleRequest(String type, String name, ByteSource bundle)
   {
     this.type = type;
@@ -52,19 +64,76 @@ public class ImportBundleRequest
     this.bundle = bundle;
   }
 
-  public String getType()
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public ByteSource getBundle()
   {
-    return type;
+    return bundle;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public String getName()
   {
     return name;
   }
 
-  public ByteSource getBundle()
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getType()
   {
-    return bundle;
+    return type;
   }
-  
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isCompressed()
+  {
+    return compressed;
+  }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param compressed
+   */
+  public void setCompressed(boolean compressed)
+  {
+    this.compressed = compressed;
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private ByteSource bundle;
+
+  /** Field description */
+  private boolean compressed = false;
+
+  /** Field description */
+  private String name;
+
+  /** Field description */
+  private String type;
 }

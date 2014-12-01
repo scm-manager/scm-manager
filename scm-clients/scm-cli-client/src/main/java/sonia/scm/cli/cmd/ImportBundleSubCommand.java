@@ -81,6 +81,17 @@ public class ImportBundleSubCommand extends ImportSubCommand
     return name;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isCompressed()
+  {
+    return compressed;
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -92,6 +103,17 @@ public class ImportBundleSubCommand extends ImportSubCommand
   public void setBundle(File bundle)
   {
     this.bundle = bundle;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param compressed
+   */
+  public void setCompressed(boolean compressed)
+  {
+    this.compressed = compressed;
   }
 
   /**
@@ -122,9 +144,13 @@ public class ImportBundleSubCommand extends ImportSubCommand
     {
       ScmClientSession session = createSession();
 
-      Repository repository = session.getRepositoryHandler().importFromBundle(
-                                new ImportBundleRequest(
-                                  getType(), name, Files.asByteSource(bundle)));
+      ImportBundleRequest req = new ImportBundleRequest(getType(), name,
+                                  Files.asByteSource(bundle));
+
+      req.setCompressed(compressed);
+
+      Repository repository =
+        session.getRepositoryHandler().importFromBundle(req);
 
       printImportedRepository(repository);
     }
@@ -140,6 +166,14 @@ public class ImportBundleSubCommand extends ImportSubCommand
     aliases = { "-b" }
   )
   private File bundle;
+
+  /** Field description */
+  @Option(
+    name = "--compressed",
+    usage = "optionRepositoryBundleCompressed",
+    aliases = { "-c" }
+  )
+  private boolean compressed = false;
 
   /** Field description */
   @Option(

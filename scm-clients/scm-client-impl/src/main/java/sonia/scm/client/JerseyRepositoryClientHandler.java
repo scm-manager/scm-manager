@@ -58,6 +58,7 @@ import java.io.InputStream;
 
 import java.util.Collection;
 import java.util.List;
+
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -79,6 +80,9 @@ public class JerseyRepositoryClientHandler
 
   /** Field description */
   private static final String PARAM_BUNDLE = "bundle";
+
+  /** Field description */
+  private static final String PARAM_COMPRESSED = "compressed";
 
   /** Field description */
   private static final String PARAM_NAME = "name";
@@ -113,7 +117,8 @@ public class JerseyRepositoryClientHandler
   public Repository importFromBundle(ImportBundleRequest request)
   {
     WebResource r = client.resource(getImportUrl(request.getType(),
-                      IMPORT_TYPE_BUNDLE));
+                      IMPORT_TYPE_BUNDLE)).queryParam(PARAM_COMPRESSED,
+                        Boolean.toString(request.isCompressed()));
     Repository repository = null;
     InputStream stream = null;
 

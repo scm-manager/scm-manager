@@ -87,11 +87,13 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
@@ -156,6 +158,7 @@ public class RepositoryImportResource
    * @param type repository type
    * @param name name of the repository
    * @param inputStream input bundle
+   * @param compressed true if the bundle is gzip compressed
    *
    * @return empty response with location header which points to the imported
    *  repository
@@ -166,9 +169,11 @@ public class RepositoryImportResource
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   public Response importFromBundle(@Context UriInfo uriInfo,
     @PathParam("type") String type, @FormDataParam("name") String name,
-    @FormDataParam("bundle") InputStream inputStream)
+    @FormDataParam("bundle") InputStream inputStream, @QueryParam("compressed")
+  @DefaultValue("false") boolean compressed)
   {
-    Repository repository = doImportFromBundle(type, name, inputStream);
+    Repository repository = doImportFromBundle(type, name, inputStream,
+                              compressed);
 
     return buildResponse(uriInfo, repository);
   }
@@ -193,6 +198,7 @@ public class RepositoryImportResource
    * @param type repository type
    * @param name name of the repository
    * @param inputStream input bundle
+   * @param compressed true if the bundle is gzip compressed
    *
    * @return empty response with location header which points to the imported
    *  repository
@@ -204,13 +210,14 @@ public class RepositoryImportResource
   @Produces(MediaType.TEXT_HTML)
   public Response importFromBundleUI(@PathParam("type") String type,
     @FormDataParam("name") String name,
-    @FormDataParam("bundle") InputStream inputStream)
+    @FormDataParam("bundle") InputStream inputStream, @QueryParam("compressed")
+  @DefaultValue("false") boolean compressed)
   {
     Response response;
 
     try
     {
-      doImportFromBundle(type, name, inputStream);
+      doImportFromBundle(type, name, inputStream, compressed);
       response = Response.ok(new RestActionUploadResult(true)).build();
     }
     catch (WebApplicationException ex)
@@ -569,11 +576,12 @@ public class RepositoryImportResource
    * @param type repository type
    * @param name name of the repository
    * @param inputStream bundle stream
+   * @param compressed true if the bundle is gzip compressed
    *
    * @return imported repository
    */
   private Repository doImportFromBundle(String type, String name,
-    InputStream inputStream)
+    InputStream inputStream, boolean compressed)
   {
     SecurityUtils.getSubject().checkRole(Role.ADMIN);
 
@@ -601,7 +609,7 @@ public class RepositoryImportResource
 
         logger.info("copied {} bytes to temp, start bundle import", length);
         service = serviceFactory.create(repository);
-        service.getUnbundleCommand().unbundle(file);
+        service.getUnbundleCommand().setCompressed(compressed).unbundle(file);
       }
       catch (RepositoryException ex)
       {

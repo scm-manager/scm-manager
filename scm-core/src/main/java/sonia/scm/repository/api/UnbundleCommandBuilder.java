@@ -56,8 +56,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.util.zip.GZIPInputStream;
+
 /**
- * The unbundle command can restore an empty repository from a bundle. The 
+ * The unbundle command can restore an empty repository from a bundle. The
  * bundle can be created with the {@link BundleCommandBuilder}.
  *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
@@ -106,7 +108,7 @@ public final class UnbundleCommandBuilder
       "existing file is required");
 
     UnbundleCommandRequest request =
-      new UnbundleCommandRequest(Files.asByteSource(inputFile));
+      createRequest(Files.asByteSource(inputFile));
 
     logger.info("unbundle archive {} at {}", inputFile, repository.getId());
 
@@ -130,8 +132,7 @@ public final class UnbundleCommandBuilder
     checkNotNull(inputStream, "input stream is required");
     logger.info("unbundle archive from stream");
 
-    return unbundleCommand.unbundle(
-      new UnbundleCommandRequest(asByteSource(inputStream)));
+    return unbundleCommand.unbundle(createRequest(asByteSource(inputStream)));
   }
 
   /**
@@ -151,8 +152,27 @@ public final class UnbundleCommandBuilder
     checkNotNull(byteSource, "byte source is required");
     logger.info("unbundle from byte source");
 
-    return unbundleCommand.unbundle(new UnbundleCommandRequest(byteSource));
+    return unbundleCommand.unbundle(createRequest(byteSource));
   }
+
+  //~--- set methods ----------------------------------------------------------
+
+  /**
+   * Set to {@code true} if bundle is gzip compressed. Default is {@code false}.
+   *
+   *
+   * @param compressed {@code true} if bundle is gzip compressed
+   *
+   * @return {@code this}
+   */
+  public UnbundleCommandBuilder setCompressed(boolean compressed)
+  {
+    this.compressed = compressed;
+
+    return this;
+  }
+
+  //~--- methods --------------------------------------------------------------
 
   /**
    * Converts an {@link InputStream} into a {@link ByteSource}.
@@ -175,6 +195,73 @@ public final class UnbundleCommandBuilder
     });
   }
 
+  /**
+   * Creates the {@link UnbundleCommandRequest}.
+   *
+   *
+   * @param source byte source
+   *
+   * @return the create request
+   */
+  private UnbundleCommandRequest createRequest(ByteSource source)
+  {
+    ByteSource bs;
+
+    if (compressed)
+    {
+      logger.debug("decode gzip stream for unbundle command");
+      bs = new CompressedByteSource(source);
+    }
+    else
+    {
+      bs = source;
+    }
+
+    return new UnbundleCommandRequest(bs);
+  }
+
+  //~--- inner classes --------------------------------------------------------
+
+  /**
+   * ByteSource which is able to handle gzip compressed resources.
+   */
+  private static class CompressedByteSource extends ByteSource
+  {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param wrapped
+     */
+    public CompressedByteSource(ByteSource wrapped)
+    {
+      this.wrapped = wrapped;
+    }
+
+    //~--- methods ------------------------------------------------------------
+
+    /**
+     * Opens the stream for reading the compressed source.
+     *
+     *
+     * @return input stream
+     *
+     * @throws IOException
+     */
+    @Override
+    public InputStream openStream() throws IOException
+    {
+      return new GZIPInputStream(wrapped.openStream());
+    }
+
+    //~--- fields -------------------------------------------------------------
+
+    /** Field description */
+    private final ByteSource wrapped;
+  }
+
+
   //~--- fields ---------------------------------------------------------------
 
   /** repository */
@@ -182,4 +269,7 @@ public final class UnbundleCommandBuilder
 
   /** unbundle command implementation */
   private final UnbundleCommand unbundleCommand;
+
+  /** Field description */
+  private boolean compressed = false;
 }
