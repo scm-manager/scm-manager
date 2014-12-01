@@ -37,6 +37,7 @@ import com.google.common.collect.Maps;
 
 import org.kohsuke.args4j.Argument;
 
+import sonia.scm.cli.wrapper.RepositoryWrapper;
 import sonia.scm.repository.Repository;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -87,7 +88,7 @@ public abstract class ImportSubCommand extends TemplateSubCommand
   {
     Map<String, Object> env = Maps.newHashMap();
 
-    env.put("repository", repository);
+    env.put("repository", new RepositoryWrapper(config, repository));
     renderTemplate(env, GetRepositorySubCommand.TEMPLATE);
   }
 
