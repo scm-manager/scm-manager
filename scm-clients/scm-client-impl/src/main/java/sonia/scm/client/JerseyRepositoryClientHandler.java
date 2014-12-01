@@ -184,7 +184,7 @@ public class JerseyRepositoryClientHandler
   {
     WebResource r = client.resource(getImportUrl(request.getType(),
                       IMPORT_TYPE_URL));
-    ClientResponse response = r.post(ClientResponse.class);
+    ClientResponse response = r.post(ClientResponse.class, request);
 
     ClientUtil.checkResponse(response);
 
