@@ -58,6 +58,7 @@ import java.io.InputStream;
 
 import java.util.Collection;
 import java.util.List;
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -125,7 +126,8 @@ public class JerseyRepositoryClientHandler
       form.field(PARAM_NAME, request.getName());
       form.bodyPart(new StreamDataBodyPart(PARAM_BUNDLE, stream));
 
-      ClientResponse response = r.post(ClientResponse.class);
+      ClientResponse response =
+        r.type(MediaType.MULTIPART_FORM_DATA).post(ClientResponse.class, form);
 
       ClientUtil.checkResponse(response);
 
