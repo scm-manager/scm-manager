@@ -126,7 +126,8 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
     '  <tpl if="isEmpty(imported, failed)">',
     '    <b>No repositories to import</b>',
     '  </tpl>',
-    '</p>'
+    '</p>',
+    '<br />'
   ]),
   
   initComponent: function(){
@@ -336,6 +337,12 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
           xtype: 'panel',
           bodyCssClass: 'x-panel-mc',
           tpl: this.tpl
+        },{
+          id: 'finalTip',
+          xtype: 'scmTip',
+          content: 'Please see log for details.',
+          width: '100%',
+          hidden: true
         }]
       }]
     };
@@ -480,6 +487,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
       }
     };
     var resultPanel = Ext.getCmp('resultPanel');
+    Ext.getCmp('finalTip').setVisible(this.failed.length > 0);
     resultPanel.tpl.overwrite(resultPanel.body, model);
     layout.setActiveItem(4);
   },
