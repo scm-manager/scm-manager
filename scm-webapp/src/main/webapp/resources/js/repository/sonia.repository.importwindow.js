@@ -497,6 +497,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
     var lbox = this.showLoadingBox();
     form.submit({
       url: restUrl + 'import/repositories/' + this.repositoryType + '/bundle.html?compressed=' + compressed,
+      timeout: 300000, // 5min
       scope: this,
       success: function(form){
         lbox.hide();
@@ -515,6 +516,7 @@ Sonia.repository.ImportPanel = Ext.extend(Ext.Panel, {
       url: restUrl + 'import/repositories/' + this.repositoryType + '/url.json',
       method: 'POST',
       scope: this,
+      timeout: 300000, // 5min
       jsonData: repository,
       success: function(){
         lbox.hide();
