@@ -38,6 +38,7 @@ sonia.scm.cli.cmd.GetRepositorySubCommand
 sonia.scm.cli.cmd.ListRepositoriesSubCommand
 sonia.scm.cli.cmd.DeleteRepositorySubCommand
 sonia.scm.cli.cmd.ImportDirectorySubCommand
+sonia.scm.cli.cmd.ImportUrlSubCommand
 
 # permission
 sonia.scm.cli.cmd.AddPermissionSubCommand

@@ -56,38 +56,12 @@ import java.util.Map;
   usage = "usageImportDirectory",
   group = "repository"
 )
-public class ImportDirectorySubCommand extends TemplateSubCommand
+public class ImportDirectorySubCommand extends ImportSubCommand
 {
 
   /** Field description */
   public static final String TEMPLATE =
     "/sonia/resources/import-from-directory.ftl";
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getType()
-  {
-    return type;
-  }
-
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   */
-  public void setType(String type)
-  {
-    this.type = type;
-  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -100,21 +74,11 @@ public class ImportDirectorySubCommand extends TemplateSubCommand
   {
     ScmClientSession session = createSession();
     ImportResultWrapper wrapper =
-      session.getRepositoryHandler().importFromDirectory(type);
+      session.getRepositoryHandler().importFromDirectory(getType());
     Map<String, Object> env = Maps.newHashMap();
 
     env.put("importedDirectories", wrapper.getImportedDirectories());
     env.put("failedDirectories", wrapper.getFailedDirectories());
     renderTemplate(env, TEMPLATE);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @Argument(
-    usage = "optionRepositoryType",
-    metaVar = "repositorytype",
-    required = true
-  )
-  private String type;
 }
