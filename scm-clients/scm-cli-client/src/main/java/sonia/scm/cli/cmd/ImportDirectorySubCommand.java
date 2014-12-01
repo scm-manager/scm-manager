@@ -37,8 +37,6 @@ package sonia.scm.cli.cmd;
 
 import com.google.common.collect.Maps;
 
-import org.kohsuke.args4j.Argument;
-
 import sonia.scm.client.ImportResultWrapper;
 import sonia.scm.client.ScmClientSession;
 

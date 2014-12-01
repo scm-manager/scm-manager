@@ -120,10 +120,8 @@ public class ImportUrlSubCommand extends ImportSubCommand
                                  url.toExternalForm());
     Repository repository =
       session.getRepositoryHandler().importFromUrl(request);
-    Map<String, Object> env = Maps.newHashMap();
 
-    env.put("repository", repository);
-    renderTemplate(env, GetRepositorySubCommand.TEMPLATE);
+    printImportedRepository(repository);
   }
 
   //~--- fields ---------------------------------------------------------------

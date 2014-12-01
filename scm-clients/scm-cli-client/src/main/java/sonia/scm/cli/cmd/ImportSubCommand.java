@@ -33,7 +33,15 @@ package sonia.scm.cli.cmd;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.collect.Maps;
+
 import org.kohsuke.args4j.Argument;
+
+import sonia.scm.repository.Repository;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.Map;
 
 /**
  *
@@ -65,6 +73,22 @@ public abstract class ImportSubCommand extends TemplateSubCommand
   public void setType(String type)
   {
     this.type = type;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param repository
+   */
+  protected void printImportedRepository(Repository repository)
+  {
+    Map<String, Object> env = Maps.newHashMap();
+
+    env.put("repository", repository);
+    renderTemplate(env, GetRepositorySubCommand.TEMPLATE);
   }
 
   //~--- fields ---------------------------------------------------------------
