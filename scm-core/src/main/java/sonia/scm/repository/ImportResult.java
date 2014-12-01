@@ -42,6 +42,9 @@ import static com.google.common.base.Preconditions.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * Import result of the {@link AdvancedImportHandler}.
@@ -49,6 +52,8 @@ import java.util.List;
  * @author Sebastian Sdorra
  * @since 1.43
  */
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "import-result")
 public final class ImportResult
 {
 
