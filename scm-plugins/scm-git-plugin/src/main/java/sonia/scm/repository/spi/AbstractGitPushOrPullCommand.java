@@ -49,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.RepositoryException;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -253,21 +254,24 @@ public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand
   {
     long counter = 0;
 
-    try
+    if (GitUtil.isHead(update.getRemoteName()))
     {
-      org.eclipse.jgit.api.LogCommand log = git.log();
-      ObjectId oldId = update.getExpectedOldObjectId();
-
-      if (oldId != null)
+      try
       {
-        log.not(oldId);
-      }
+        org.eclipse.jgit.api.LogCommand log = git.log();
+        ObjectId oldId = update.getExpectedOldObjectId();
 
-      ObjectId newId = update.getNewObjectId();
+        if (GitUtil.isValidObjectId(oldId))
+        {
+          log.not(oldId);
+        }
 
-      if (newId != null)
-      {
-        log.add(newId);
+        ObjectId newId = update.getNewObjectId();
+
+        if (GitUtil.isValidObjectId(newId))
+        {
+          log.add(newId);
+        }
 
         Iterable<RevCommit> commits = log.call();
 
@@ -275,16 +279,17 @@ public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand
         {
           counter += Iterables.size(commits);
         }
-      }
-      else
-      {
-        logger.warn("update without new object id");
-      }
 
+        logger.trace("counting {} commits for ref update {}", counter, update);
+      }
+      catch (Exception ex)
+      {
+        logger.error("could not count pushed/pulled changesets", ex);
+      }
     }
-    catch (Exception ex)
+    else
     {
-      logger.error("could not count pushed/pulled changesets", ex);
+      logger.debug("do not count non branch ref update {}", update);
     }
 
     return counter;

@@ -152,6 +152,8 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       counter += count(git, tru);
     }
 
+    logger.debug("received {} changesets by pull", counter);
+
     return new PullResponse(counter);
   }
 
@@ -168,21 +170,25 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   {
     long counter = 0;
 
-    try
+    if (GitUtil.isHead(tru.getLocalName()))
     {
-      org.eclipse.jgit.api.LogCommand log = git.log();
-      ObjectId oldId = tru.getOldObjectId();
-
-      if (oldId != null)
+      try
       {
-        log.not(oldId);
-      }
+        org.eclipse.jgit.api.LogCommand log = git.log();
 
-      ObjectId newId = tru.getNewObjectId();
+        ObjectId oldId = tru.getOldObjectId();
 
-      if (newId != null)
-      {
-        log.add(newId);
+        if (GitUtil.isValidObjectId(oldId))
+        {
+          log.not(oldId);
+        }
+
+        ObjectId newId = tru.getNewObjectId();
+
+        if (GitUtil.isValidObjectId(newId))
+        {
+          log.add(newId);
+        }
 
         Iterable<RevCommit> commits = log.call();
 
@@ -190,16 +196,17 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
         {
           counter += Iterables.size(commits);
         }
-      }
-      else
-      {
-        logger.warn("update without new object id");
-      }
 
+        logger.trace("counting {} commits for ref update {}", counter, tru);
+      }
+      catch (Exception ex)
+      {
+        logger.error("could not count pushed/pulled changesets", ex);
+      }
     }
-    catch (Exception ex)
+    else
     {
-      logger.error("could not count pushed/pulled changesets", ex);
+      logger.debug("do not count non branch ref update {}", tru);
     }
 
     return counter;
