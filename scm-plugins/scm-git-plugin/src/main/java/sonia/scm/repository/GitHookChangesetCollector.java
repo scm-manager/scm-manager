@@ -37,8 +37,8 @@ package sonia.scm.repository;
 
 import com.google.common.collect.Lists;
 
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevSort;
 import org.eclipse.jgit.revwalk.RevWalk;
@@ -52,8 +52,9 @@ import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.IOException;
+
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -109,76 +110,27 @@ public class GitHookChangesetCollector
 
       for (ReceiveCommand rc : receiveCommands)
       {
-        //J-
-         logger.trace("handle receive command, type={}, ref={}, result={}",
-           new Object[] {
-             rc.getType(),
-             rc.getRefName(),
-             rc.getResult()
-           }
-         );
-         //J+
-
-        ObjectId newId = rc.getNewId();
-
-        String branch = GitUtil.getBranch(rc.getRefName());
-
-        walk.reset();
-        walk.sort(RevSort.TOPO);
-        walk.sort(RevSort.REVERSE, true);
-
-        if (logger.isTraceEnabled())
+        if (rc.getType() != ReceiveCommand.Type.DELETE)
         {
-          logger.trace("mark {} as start for rev walk", newId.getName());
-        }
-
-        walk.markStart(walk.parseCommit(newId));
-
-        ObjectId oldId = rc.getOldId();
-
-        if ((oldId != null) &&!oldId.equals(ObjectId.zeroId()))
-        {
-          if (logger.isTraceEnabled())
+          try
           {
-            logger.trace("mark {} as uninteresting for rev walk",
-              oldId.getName());
+            collectChangesets(changesets, converter, walk, rc);
           }
-
-          walk.markUninteresting(walk.parseCommit(oldId));
-        }
-
-        for (ObjectId id : getExistingObjects(rpack))
-        {
-          if (logger.isTraceEnabled())
+          catch (IOException ex)
           {
-            logger.trace("mark {} as uninteresting for rev walk", id.getName());
+            StringBuilder builder = new StringBuilder();
+
+            builder.append("could not handle receive command, type=");
+            builder.append(rc.getType()).append(", ref=");
+            builder.append(rc.getRefName()).append(", result=");
+            builder.append(rc.getResult());
+            logger.error(builder.toString(), ex);
           }
-
-          walk.markUninteresting(walk.parseCommit(id));
         }
-
-        RevCommit commit = walk.next();
-
-        List<String> branches = Lists.newArrayList(branch);
-
-        while (commit != null)
+        else
         {
-
-          // parse commit body to avoid npe
-          walk.parseBody(commit);
-
-          Changeset changeset = converter.createChangeset(commit, branches);
-
-          if (logger.isTraceEnabled())
-          {
-            logger.trace("retrive commit {} for hook", changeset.getId());
-          }
-
-          changesets.add(changeset);
-
-          commit = walk.next();
+          logger.debug("skip delete of branch {}", rc.getRefName());
         }
-
       }
 
     }
@@ -195,38 +147,78 @@ public class GitHookChangesetCollector
     return changesets;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Method description
    *
    *
-   * @param rpack
+   * @param changesets
+   * @param converter
+   * @param walk
+   * @param rc
    *
-   * @return
+   * @throws IOException
+   * @throws IncorrectObjectTypeException
    */
-  private List<ObjectId> getExistingObjects(ReceivePack rpack)
+  private void collectChangesets(List<Changeset> changesets,
+    GitChangesetConverter converter, RevWalk walk, ReceiveCommand rc)
+    throws IncorrectObjectTypeException, IOException
   {
-    List<ObjectId> existingObjects = Lists.newArrayList();
-
-    if (existingObjects == null)
-    {
-      Map<String, Ref> refs = rpack.getRepository().getAllRefs();
-
-      for (Ref r : refs.values())
-      {
-        existingObjects.add(r.getObjectId());
+    //J-
+    logger.trace("handle receive command, type={}, ref={}, result={}",
+      new Object[] {
+        rc.getType(),
+        rc.getRefName(),
+        rc.getResult()
       }
+    );
+    //J+
+
+    ObjectId newId = rc.getNewId();
+
+    String branch = GitUtil.getBranch(rc.getRefName());
+
+    walk.reset();
+    walk.sort(RevSort.TOPO);
+    walk.sort(RevSort.REVERSE, true);
+
+    logger.trace("mark {} as start for rev walk", newId.getName());
+
+    walk.markStart(walk.parseCommit(newId));
+
+    ObjectId oldId = rc.getOldId();
+
+    if ((oldId != null) &&!oldId.equals(ObjectId.zeroId()))
+    {
+      logger.trace("mark {} as uninteresting for rev walk", oldId.getName());
+
+      walk.markUninteresting(walk.parseCommit(oldId));
     }
 
-    return existingObjects;
+    RevCommit commit = walk.next();
+
+    List<String> branches = Lists.newArrayList(branch);
+
+    while (commit != null)
+    {
+
+      // parse commit body to avoid npe
+      walk.parseBody(commit);
+
+      Changeset changeset = converter.createChangeset(commit, branches);
+
+      logger.trace("retrive commit {} for hook", changeset.getId());
+
+      changesets.add(changeset);
+
+      commit = walk.next();
+    }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private List<ReceiveCommand> receiveCommands;
+  private final List<ReceiveCommand> receiveCommands;
 
   /** Field description */
-  private ReceivePack rpack;
+  private final ReceivePack rpack;
 }

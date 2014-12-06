@@ -30,12 +30,16 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.ExecutionException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -44,7 +48,6 @@ import sonia.scm.repository.api.PushResponse;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 import java.util.Collections;
@@ -54,8 +57,15 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class HgPushCommand extends AbstractCommand implements PushCommand
+public class HgPushCommand extends AbstractHgPushOrPullCommand
+  implements PushCommand
 {
+
+  /** Field description */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgPushCommand.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -68,8 +78,7 @@ public class HgPushCommand extends AbstractCommand implements PushCommand
   public HgPushCommand(HgRepositoryHandler handler, HgCommandContext context,
     Repository repository)
   {
-    super(context, repository);
-    this.handler = handler;
+    super(handler, context, repository);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -90,14 +99,15 @@ public class HgPushCommand extends AbstractCommand implements PushCommand
   public PushResponse push(PushCommandRequest request)
     throws RepositoryException, IOException
   {
-    File remoteRepository = handler.getDirectory(request.getRemoteRepository());
+    String url = getRemoteUrl(request);
+
+    logger.debug("push changes from {} to {}", getRepository().getId(), url);
 
     List<Changeset> result = Collections.EMPTY_LIST;
 
     try
     {
-      result = com.aragost.javahg.commands.PushCommand.on(open()).execute(
-        remoteRepository.getAbsolutePath());
+      result = com.aragost.javahg.commands.PushCommand.on(open()).execute(url);
     }
     catch (ExecutionException ex)
     {
@@ -106,9 +116,4 @@ public class HgPushCommand extends AbstractCommand implements PushCommand
 
     return new PushResponse(result.size());
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final HgRepositoryHandler handler;
 }

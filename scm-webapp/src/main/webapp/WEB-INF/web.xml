@@ -42,6 +42,10 @@
     <listener>
       <listener-class>sonia.scm.boot.BootstrapContextListener</listener-class>
     </listener>
+    
+    <listener>
+      <listener-class>sonia.scm.HttpSessionListenerHolder</listener-class>
+    </listener>
 
     <filter>
         <filter-name>guiceFilter</filter-name>

@@ -53,6 +53,16 @@ public interface UrlProvider
    *
    *
    * @return
+   * 
+   * @since 1.43
+   */
+  public String getBaseUrl();
+
+  /**
+   * Method description
+   *
+   *
+   * @return
    */
   public String getConfigUrl();
 
@@ -77,7 +87,7 @@ public interface UrlProvider
    *
    *
    * @return
-   * 
+   *
    * @since 1.41
    */
   public SecurityUrlProvider getSecurityUrlProvider();

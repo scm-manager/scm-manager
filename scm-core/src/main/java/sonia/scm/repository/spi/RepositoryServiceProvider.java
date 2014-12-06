@@ -116,6 +116,19 @@ public abstract class RepositoryServiceProvider implements Closeable
   }
 
   /**
+   * Method description
+   *
+   *
+   * @return
+   * 
+   * @since 1.43
+   */
+  public BundleCommand getBundleCommand()
+  {
+    throw new CommandNotSupportedException(Command.BUNDLE);
+  }
+
+  /**
    *  Method description
    *
    *
@@ -217,5 +230,18 @@ public abstract class RepositoryServiceProvider implements Closeable
   public TagsCommand getTagsCommand()
   {
     throw new CommandNotSupportedException(Command.TAGS);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   * 
+   * @since 1.43
+   */
+  public UnbundleCommand getUnbundleCommand()
+  {
+    throw new CommandNotSupportedException(Command.UNBUNDLE);
   }
 }

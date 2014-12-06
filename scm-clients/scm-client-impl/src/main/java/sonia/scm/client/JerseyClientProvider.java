@@ -51,8 +51,11 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
+import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
+import com.sun.jersey.multipart.impl.MultiPartWriter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -122,7 +125,8 @@ public class JerseyClientProvider implements ScmClientProvider
     UrlProvider urlProvider = UrlProviderFactory.createUrlProvider(url,
                                 UrlProviderFactory.TYPE_RESTAPI_XML);
 
-    Client client = Client.create();
+    Client client =
+      Client.create(new DefaultClientConfig(MultiPartWriter.class));
 
     client.addFilter(new CookieClientFilter());
 

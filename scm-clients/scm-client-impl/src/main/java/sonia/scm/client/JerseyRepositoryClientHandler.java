@@ -35,19 +35,31 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
+
 import sonia.scm.NotSupportedFeatuerException;
 import sonia.scm.Type;
+import sonia.scm.repository.ImportResult;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tags;
+import sonia.scm.util.HttpUtil;
+import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.multipart.FormDataMultiPart;
+import com.sun.jersey.multipart.file.StreamDataBodyPart;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 import java.util.Collection;
 import java.util.List;
+
+import javax.ws.rs.core.MediaType;
 
 /**
  *
@@ -56,6 +68,29 @@ import java.util.List;
 public class JerseyRepositoryClientHandler
   extends AbstractClientHandler<Repository> implements RepositoryClientHandler
 {
+
+  /** Field description */
+  private static final String IMPORT_TYPE_BUNDLE = "bundle";
+
+  /** Field description */
+  private static final String IMPORT_TYPE_DIRECTORY = "directory";
+
+  /** Field description */
+  private static final String IMPORT_TYPE_URL = "url";
+
+  /** Field description */
+  private static final String PARAM_BUNDLE = "bundle";
+
+  /** Field description */
+  private static final String PARAM_COMPRESSED = "compressed";
+
+  /** Field description */
+  private static final String PARAM_NAME = "name";
+
+  /** Field description */
+  private static final String URL_IMPORT = "import/repositories/";
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -66,6 +101,108 @@ public class JerseyRepositoryClientHandler
   public JerseyRepositoryClientHandler(JerseyClientSession session)
   {
     super(session, Repository.class);
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  @Override
+  public Repository importFromBundle(ImportBundleRequest request)
+  {
+    WebResource r = client.resource(getImportUrl(request.getType(),
+                      IMPORT_TYPE_BUNDLE)).queryParam(PARAM_COMPRESSED,
+                        Boolean.toString(request.isCompressed()));
+    Repository repository = null;
+    InputStream stream = null;
+
+    try
+    {
+      stream = request.getBundle().openStream();
+
+      FormDataMultiPart form = new FormDataMultiPart();
+
+      form.field(PARAM_NAME, request.getName());
+      form.bodyPart(new StreamDataBodyPart(PARAM_BUNDLE, stream));
+
+      ClientResponse response =
+        r.type(MediaType.MULTIPART_FORM_DATA).post(ClientResponse.class, form);
+
+      ClientUtil.checkResponse(response);
+
+      String location =
+        response.getHeaders().getFirst(HttpUtil.HEADER_LOCATION);
+
+      if (Strings.isNullOrEmpty(location))
+      {
+        throw new ScmClientException("no location header found after import");
+      }
+
+      repository = getItemByUrl(location);
+    }
+    catch (IOException ex)
+    {
+      throw new ScmClientException("could not import bundle", ex);
+    }
+    finally
+    {
+      IOUtil.close(stream);
+    }
+
+    return repository;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   *
+   * @return
+   */
+  @Override
+  public ImportResultWrapper importFromDirectory(String type)
+  {
+    WebResource r = client.resource(getImportUrl(type, IMPORT_TYPE_DIRECTORY));
+    ClientResponse response = r.post(ClientResponse.class);
+
+    ClientUtil.checkResponse(response);
+
+    return new ImportResultWrapper(this, type,
+      response.getEntity(ImportResult.class));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
+   */
+  @Override
+  public Repository importFromUrl(ImportUrlRequest request)
+  {
+    WebResource r = client.resource(getImportUrl(request.getType(),
+                      IMPORT_TYPE_URL));
+    ClientResponse response = r.post(ClientResponse.class, request);
+
+    ClientUtil.checkResponse(response);
+
+    String location = response.getHeaders().getFirst(HttpUtil.HEADER_LOCATION);
+
+    if (Strings.isNullOrEmpty(location))
+    {
+      throw new ScmClientException("no location header found after import");
+    }
+
+    return getItemByUrl(location);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -227,5 +364,23 @@ public class JerseyRepositoryClientHandler
   protected String getItemsUrl()
   {
     return urlProvider.getRepositoryUrlProvider().getAllUrl();
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   * @param importType
+   *
+   * @return
+   */
+  private String getImportUrl(String type, String importType)
+  {
+    StringBuilder buffer = new StringBuilder(URL_IMPORT);
+
+    buffer.append(type).append(HttpUtil.SEPARATOR_PATH).append(importType);
+
+    return HttpUtil.append(urlProvider.getBaseUrl(), buffer.toString());
   }
 }

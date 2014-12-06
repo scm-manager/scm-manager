@@ -74,6 +74,12 @@ public final class HttpUtil
   public static final String ENCODING = "UTF-8";
 
   /**
+   * location header
+   * @since 1.43
+   */
+  public static final String HEADER_LOCATION = "Location";
+
+  /**
    * header for identifying the scm-manager client
    * @since 1.19
    */

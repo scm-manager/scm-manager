@@ -44,7 +44,6 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.Changeset;
@@ -60,6 +59,7 @@ import sonia.scm.template.TemplateEngineFactory;
 import sonia.scm.url.RepositoryUrlProvider;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 
@@ -85,7 +85,8 @@ public class GitRepositoryViewer
   public static final String MIMETYPE_HTML = "text/html";
 
   /** Field description */
-  public static final String RESOURCE_GITINDEX = "/sonia/scm/git.index.mustache";
+  public static final String RESOURCE_GITINDEX =
+    "/sonia/scm/git.index.mustache";
 
   /** Field description */
   private static final int CHANGESET_PER_BRANCH = 10;
@@ -104,16 +105,13 @@ public class GitRepositoryViewer
    *
    * @param templateEngineFactory
    * @param repositoryServiceFactory
-   * @param configuration
    */
   @Inject
   public GitRepositoryViewer(TemplateEngineFactory templateEngineFactory,
-    RepositoryServiceFactory repositoryServiceFactory,
-    ScmConfiguration configuration)
+    RepositoryServiceFactory repositoryServiceFactory)
   {
     this.templateEngineFactory = templateEngineFactory;
     this.repositoryServiceFactory = repositoryServiceFactory;
-    this.configuration = configuration;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -135,7 +133,9 @@ public class GitRepositoryViewer
     throws RepositoryException, IOException
   {
 
-    String baseUrl = configuration.getBaseUrl();
+    String baseUrl = HttpUtil.getCompleteUrl(request);
+
+    logger.trace("render git repository quick view with base url {}", baseUrl);
 
     UrlProvider urlProvider = UrlProviderFactory.createUrlProvider(baseUrl,
                                 UrlProviderFactory.TYPE_WUI);
@@ -159,6 +159,7 @@ public class GitRepositoryViewer
 
     try
     {
+      response.setCharacterEncoding("UTF-8");
       writer = response.getWriter();
       template.execute(writer, env);
     }
@@ -452,9 +453,6 @@ public class GitRepositoryViewer
 
 
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final ScmConfiguration configuration;
 
   /** Field description */
   private final RepositoryServiceFactory repositoryServiceFactory;

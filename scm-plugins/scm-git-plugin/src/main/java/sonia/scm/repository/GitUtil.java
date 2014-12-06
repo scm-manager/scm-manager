@@ -695,6 +695,32 @@ public final class GitUtil
     //J+
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param ref
+   *
+   * @return
+   */
+  public static boolean isHead(String ref)
+  {
+    return ref.startsWith(REF_HEAD_PREFIX);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param id
+   *
+   * @return
+   */
+  public static boolean isValidObjectId(ObjectId id)
+  {
+    return (id != null) &&!id.equals(ObjectId.zeroId());
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**

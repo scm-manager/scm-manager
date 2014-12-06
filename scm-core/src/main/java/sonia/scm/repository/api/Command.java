@@ -56,5 +56,10 @@ public enum Command
   /**
    * @since 1.31
    */
-  INCOMING, OUTGOING, PUSH, PULL;
+  INCOMING, OUTGOING, PUSH, PULL,
+  
+  /**
+   * @since 1.43
+   */
+  BUNDLE, UNBUNDLE;
 }

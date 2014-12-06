@@ -127,5 +127,90 @@
       </Set>
     </New>
   </Set>
+<<<<<<< mine
+=======
+  
+  <!-- request logging -->
+  <!--
+  <Ref id="RequestLog">
+    <Set name="requestLog">
+      <New id="RequestLogImpl" class="org.eclipse.jetty.server.NCSARequestLog">
+        <Arg><SystemProperty name="basedir" default="."/>/var/log/yyyy_mm_dd.request.log</Arg>
+        <Set name="retainDays">90</Set>
+        <Set name="append">true</Set>
+        <Set name="extended">false</Set>
+        <Set name="LogTimeZone">GMT</Set>
+       </New>
+    </Set>
+  </Ref>
+  -->
+
+  <!-- mod_proxy_ajp or mod_jk -->
+  <!--
+  <Call name="addConnector">
+    <Arg>
+       <New class="org.eclipse.jetty.ajp.Ajp13SocketConnector">
+         <Set name="port">8009</Set>
+       </New>
+    </Arg>
+  </Call>
+  -->
+
+  <!-- SSL-Connector -->
+  <!--
+     Documentation for the SSL-Connector: 
+     http://wiki.eclipse.org/Jetty/Reference/SSL_Connectors
+  -->
+  <!--
+  Besure SSLv3 protocol is excluded to avoid POODLE vulnerability.
+  See https://groups.google.com/d/msg/scmmanager/sX_Ydy-wAPA/-Dvs5i7RHtQJ
+  -->
+  <!--
+  <Call name="addConnector">
+    <Arg>
+      <New class="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
+        <Arg>
+          <New class="org.eclipse.jetty.http.ssl.SslContextFactory">
+            <Set name="excludeProtocols">
+              <Array type="java.lang.String">
+                <Item>SSLv2Hello</Item>
+                <Item>SSLv3</Item>
+              </Array>
+            </Set>
+          </New>
+        </Arg>
+        <Set name="Port">8181</Set>
+        <Set name="maxIdleTime">30000</Set>
+        <Set name="requestHeaderSize">16384</Set>
+        <Set name="keystore"><SystemProperty name="basedir" default="." />/conf/keystore.jks</Set>
+        <Set name="password">OBF:xxx</Set>
+        <Set name="keyPassword">OBF:xxx</Set>
+        <Set name="truststore"><SystemProperty name="basedir" default="." />/conf/keystore.jks</Set>
+        <Set name="trustPassword">OBF:xxx</Set>
+      </New>
+    </Arg>
+  </Call>
+  -->
+
+  <!-- JMX support -->
+  <!--
+  <Call id="MBeanServer" class="java.lang.management.ManagementFactory"
+    name="getPlatformMBeanServer" />
+
+  <New id="MBeanContainer" class="org.eclipse.jetty.jmx.MBeanContainer">
+    <Arg>
+      <Ref id="MBeanServer" />
+    </Arg>
+  </New>
+
+  <Get id="Container" name="container">
+    <Call name="addEventListener">
+      <Arg>
+        <Ref id="MBeanContainer" />
+      </Arg>
+    </Call>
+  </Get>
+  -->
+>>>>>>> theirs
 
 </Configure>

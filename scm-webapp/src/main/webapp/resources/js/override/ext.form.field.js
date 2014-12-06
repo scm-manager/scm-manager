@@ -77,6 +77,9 @@ Ext.override(Ext.form.Field, {
           cls = 'scm-form-combo-help-button';
         }
         break;
+      case 'fileuploadfield':
+        cls = 'scm-form-fileupload-help-button';
+        break;
       case 'textarea':
         cls = 'scm-form-textarea-help-button';
         break;

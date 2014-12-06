@@ -33,4 +33,7 @@ http://bitbucket.org/sdorra/scm-manager
   <extension-point>
     <class>javax.servlet.ServletContextListener</class>
   </extension-point>
+  <extension-point>
+    <class>javax.servlet.http.HttpSessionListener</class>
+  </extension-point>
 </module>

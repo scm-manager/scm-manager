@@ -99,6 +99,10 @@ public class DefaultUserManager extends AbstractUserManager
   /**
    * Constructs ...
    *
+<<<<<<< mine
+=======
+   *
+>>>>>>> theirs
    * @param userDAO
    */
   @Inject
@@ -227,8 +231,8 @@ public class DefaultUserManager extends AbstractUserManager
   public void init(SCMContextProvider context)
   {
 
-    // TODO improve
-    if (!userDAO.contains("scmadmin") &&!userDAO.contains("anonymous"))
+    // create default account only, if no other account is available
+    if (userDAO.getAll().isEmpty())
     {
       createDefaultAccounts();
     }
@@ -519,6 +523,8 @@ public class DefaultUserManager extends AbstractUserManager
   {
     try
     {
+      logger.info("create default accounts");
+
       JAXBContext context = JAXBContext.newInstance(User.class);
       Unmarshaller unmarshaller = context.createUnmarshaller();
 

@@ -30,11 +30,13 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -43,16 +45,21 @@ import sonia.scm.repository.api.PushResponse;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class GitPushCommand extends AbstractPushOrPullCommand
+public class GitPushCommand extends AbstractGitPushOrPullCommand
   implements PushCommand
 {
+
+  /** Field description */
+  private static final Logger logger =
+    LoggerFactory.getLogger(GitPushCommand.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -65,7 +72,7 @@ public class GitPushCommand extends AbstractPushOrPullCommand
   public GitPushCommand(GitRepositoryHandler handler, GitContext context,
     Repository repository)
   {
-    super(context, repository);
+    super(handler, context, repository);
     this.handler = handler;
   }
 
@@ -86,17 +93,10 @@ public class GitPushCommand extends AbstractPushOrPullCommand
   public PushResponse push(PushCommandRequest request)
     throws IOException, RepositoryException
   {
-    Repository target = getRemoteRepository(request);
-    File targetDirectory = handler.getDirectory(target);
+    String remoteUrl = getRemoteUrl(request);
 
-    Preconditions.checkArgument(targetDirectory.exists(),
-      "target repository directory does not exists");
+    logger.debug("push changes from {} to {}", repository.getId(), remoteUrl);
 
-    return new PushResponse(push(open(), targetDirectory));
+    return new PushResponse(push(open(), remoteUrl));
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private GitRepositoryHandler handler;
 }

@@ -30,12 +30,16 @@
  */
 
 
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
@@ -48,14 +52,24 @@ import sonia.scm.security.RepositoryPermission;
 
 import java.io.IOException;
 
+import java.net.URL;
+
 /**
  * The push command push changes to a other repository.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 1.31
  */
 public final class PushCommandBuilder
 {
+
+  /**
+   * the logger for PushCommandBuilder
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(PushCommandBuilder.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new PushCommandBuilder.
@@ -90,7 +104,35 @@ public final class PushCommandBuilder
     );
     //J+
 
+    logger.info("push changes to repository {}", remoteRepository.getId());
+
+    request.reset();
     request.setRemoteRepository(remoteRepository);
+
+    return command.push(request);
+  }
+
+  /**
+   * Push all changes to the given remote url.
+   *
+   * @param url url of a remote repository
+   *
+   * @return informations of the executed push command
+   *
+   * @throws IOException
+   * @throws RepositoryException
+   *
+   * @since 1.43
+   */
+  public PushResponse push(String url) throws IOException, RepositoryException
+  {
+
+    URL remoteUrl = new URL(url);
+
+    logger.info("push changes to url {}", url);
+
+    request.reset();
+    request.setRemoteUrl(remoteUrl);
 
     return command.push(request);
   }

@@ -33,6 +33,7 @@
 package sonia.scm.repository.spi;
 
 /**
+ * Request object for {@link PushCommand}.
  *
  * @author Sebastian Sdorra
  * @since 1.31
