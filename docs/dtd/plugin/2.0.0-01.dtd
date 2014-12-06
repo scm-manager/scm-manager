@@ -1,0 +1,124 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!--
+    TODO define vocabulary identification
+    PUBLIC ID: -//scm-manager//plugin//EN
+    SYSTEM ID: https://download.scm-manager.org/dtd/plugin/2.0.0-01.dtd
+
+-->
+
+<!--
+    Plugin Descriptor
+    The plugin descriptor contains informations and instructions for the
+    scm-manager to integrate the plugin. The descriptor is located at
+    META-INF/scm/plugin.xml in the package of a plugin.
+
+    <?xml version="1.0"?>
+
+    <!DOCTYPE plugin SYSTEM "https://download.scm-manager.org/dtd/plugin/2.0.0-01.dtd">
+
+    <plugin>
+    ...
+    </plugin>
+-->
+
+<!--- root element of the plugin descriptor -->
+<!ELEMENT plugin (scm-version|information|child-first-classloader|conditions|resources|dependencies|extension|extension-point|rest-resource|subscriber)*>
+
+<!--- major scm-manager version -->
+<!ELEMENT scm-version (#PCDATA)>
+
+<!--- contains informations of the plugin for the plugin backend -->
+<!ELEMENT information (author|artifactId|category|tags|description|groupId|name|screenshots|url|version|wiki)*>
+
+<!--- plugin author -->
+<!ELEMENT author (#PCDATA)>
+
+<!--- maven artifact id -->
+<!ELEMENT artifactId (#PCDATA)>
+
+<!--- category of the plugin -->
+<!ELEMENT category (#PCDATA)>
+
+<!--- tags of the plugin -->
+<!ELEMENT tags (tag)*>
+
+<!--- single tag -->
+<!ELEMENT tag (#PCDATA)>
+
+<!--- description of the plugin -->
+<!ELEMENT description (#PCDATA)>
+
+<!--- maven groupId id -->
+<!ELEMENT groupId (#PCDATA)>
+
+<!--- name of the plugin or the name of the os condition -->
+<!ELEMENT name (#PCDATA)>
+
+<!--- contains screenshots of the plugin -->
+<!ELEMENT screenshots (screenshot)*>
+
+<!--- single screenshot of the plugin -->
+<!ELEMENT screenshot (#PCDATA)>
+
+<!--- the url of the plugin homepage -->
+<!ELEMENT url (#PCDATA)>
+
+<!--- the current version of the plugin -->
+<!ELEMENT version (#PCDATA)>
+
+<!--- the url of a wiki page -->
+<!ELEMENT wiki (#PCDATA)>
+
+<!--- true if the plugin should load child classes first, the default is false -->
+<!ELEMENT child-first-classloader (#PCDATA)>
+
+<!--- plugin conditions -->
+<!ELEMENT conditions (arch|min-version|os)*>
+
+<!--- Processor architecture (x86/amd64) -->
+<!ELEMENT arch (#PCDATA)>
+
+<!--- Minimum version of SCM-Manager -->
+<!ELEMENT min-version (#PCDATA)>
+
+<!--- Operation System -->
+<!ELEMENT os (name)*>
+
+<!--- contains resources for the web interface (stylesheets and JavaScript files) -->
+<!ELEMENT resources (script|stylesheet)*>
+
+<!--- JavaScript file for the web interface -->
+<!ELEMENT script (#PCDATA)>
+
+<!--- Stylesheet for the web interface -->
+<!ELEMENT stylesheet (#PCDATA)>
+
+<!--- contains plugin dependencies -->
+<!ELEMENT dependencies (dependency)*>
+
+<!--- sing plugin dependency -->
+<!ELEMENT dependency (#PCDATA)>
+
+<!-- generated entries -->
+
+<!--- extension -->
+<!ELEMENT extension (description|class)*>
+
+<!--- class value -->
+<!ELEMENT class (#PCDATA)>
+
+<!--- rest resource -->
+<!ELEMENT rest-resource (description|value|class)*>
+
+<!--- generic value -->
+<!ELEMENT value (#PCDATA)>
+
+<!--- subscriber -->
+<!ELEMENT subscriber (class|event|description)*>
+
+<!--- event value -->
+<!ELEMENT event (#PCDATA)>
+
+<!--- extension point -->
+<!ELEMENT extension-point (class|description)*>
