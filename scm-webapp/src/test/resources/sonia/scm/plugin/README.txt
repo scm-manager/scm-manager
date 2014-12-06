@@ -1,0 +1,1 @@
+The source of the test plugins can be found here: https://bitbucket.org/sdorra/scm-test-plugins
