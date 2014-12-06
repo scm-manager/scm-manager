@@ -120,7 +120,7 @@ public abstract class TemplateSubCommand extends SubCommand
    */
   protected void renderTemplate(Map<String, Object> env, String defaultTemplate)
   {
-    Configuration configuration = new Configuration();
+    Configuration configuration = new Configuration(Configuration.VERSION_2_3_20);
     Reader reader = null;
 
     try
@@ -143,11 +143,7 @@ public abstract class TemplateSubCommand extends SubCommand
 
       tpl.process(env, output);
     }
-    catch (TemplateException ex)
-    {
-      throw new ConfigurationException("could not render template", ex);
-    }
-    catch (IOException ex)
+    catch (TemplateException | IOException ex)
     {
       throw new ConfigurationException("could not render template", ex);
     }

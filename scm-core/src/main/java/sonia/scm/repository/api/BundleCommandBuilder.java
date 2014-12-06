@@ -36,9 +36,7 @@ package sonia.scm.repository.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteSink;
-import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
-import com.google.common.io.OutputSupplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,8 +55,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * The bundle command dumps a repository to a byte source such as a file. The 
- * created bundle can be restored to an empty repository with the 
+ * The bundle command dumps a repository to a byte source such as a file. The
+ * created bundle can be restored to an empty repository with the
  * {@link UnbundleCommandBuilder}.
  *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
@@ -164,15 +162,15 @@ public final class BundleCommandBuilder
    */
   private ByteSink asByteSink(final OutputStream outputStream)
   {
-    return ByteStreams.asByteSink(new OutputSupplier<OutputStream>()
+    return new ByteSink()
     {
 
       @Override
-      public OutputStream getOutput() throws IOException
+      public OutputStream openStream() throws IOException
       {
         return outputStream;
       }
-    });
+    };
   }
 
   //~--- fields ---------------------------------------------------------------

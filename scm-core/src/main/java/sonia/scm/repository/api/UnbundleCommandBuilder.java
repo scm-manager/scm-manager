@@ -36,9 +36,7 @@ package sonia.scm.repository.api;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.io.ByteSource;
-import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -184,15 +182,15 @@ public final class UnbundleCommandBuilder
    */
   private ByteSource asByteSource(final InputStream inputStream)
   {
-    return ByteStreams.asByteSource(new InputSupplier<InputStream>()
+    return new ByteSource()
     {
 
       @Override
-      public InputStream getInput() throws IOException
+      public InputStream openStream() throws IOException
       {
         return inputStream;
       }
-    });
+    };
   }
 
   /**

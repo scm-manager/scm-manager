@@ -37,10 +37,14 @@ package sonia.scm.cli.cmd;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Localizable;
 import org.kohsuke.args4j.OptionDef;
+import org.kohsuke.args4j.spi.Messages;
 import org.kohsuke.args4j.spi.OptionHandler;
 import org.kohsuke.args4j.spi.Parameters;
 import org.kohsuke.args4j.spi.Setter;
+
+import sonia.scm.cli.SimpleLocalizable;
 
 /**
  *
@@ -58,7 +62,7 @@ public class SubCommandOptionHandler extends OptionHandler<SubCommand>
    * @param setter
    */
   public SubCommandOptionHandler(CmdLineParser parser, OptionDef option,
-                                 Setter<? super SubCommand> setter)
+    Setter<? super SubCommand> setter)
   {
     super(parser, option, setter);
   }
@@ -90,8 +94,9 @@ public class SubCommandOptionHandler extends OptionHandler<SubCommand>
     }
     else
     {
-      throw new CmdLineException(owner,
-                                 "command ".concat(name).concat(" not found"));
+      String msg = "command ".concat(name).concat(" not found");
+
+      throw new CmdLineException(owner, new SimpleLocalizable(msg));
     }
 
     return 1;
