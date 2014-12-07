@@ -78,6 +78,9 @@ public final class PluginProcessor
 {
 
   /** Field description */
+  private static final String INSTALLEDNAME_FORMAT = "%s.%03d";
+
+  /** Field description */
   private static final String DIRECTORY_CLASSES = "classes";
 
   /** Field description */
@@ -640,7 +643,23 @@ public final class PluginProcessor
       Files.createDirectories(installedDirectory);
     }
 
-    Files.move(archive, installedDirectory.resolve(archive.getFileName()));
+    Path installed = null;
+
+    for (int i = 0; i < 1000; i++)
+    {
+      String name = String.format(INSTALLEDNAME_FORMAT, archive.getFileName(), i);
+
+      installed = installedDirectory.resolve(name);
+
+      if (!Files.exists(installed))
+      {
+        break;
+      }
+    }
+    
+    logger.debug("move installed archive to {}", installed);
+
+    Files.move(archive, installed);
   }
 
   //~--- inner classes --------------------------------------------------------

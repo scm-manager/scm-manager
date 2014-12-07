@@ -92,6 +92,16 @@ public class PluginProcessorTest
     new PluginResource("sonia/scm/plugin/scm-e-plugin.smp", "scm-e-plugin.smp",
       "sonia.scm.plugins:scm-e-plugin:1.0.0-SNAPSHOT");
 
+  /** Field description */
+  private static final PluginResource PLUGIN_F_1_0_0 =
+    new PluginResource("sonia/scm/plugin/scm-f-plugin-1.0.0.smp",
+      "scm-f-plugin.smp", "sonia.scm.plugins:scm-f-plugin:1.0.0");
+
+  /** Field description */
+  private static final PluginResource PLUGIN_F_1_0_1 =
+    new PluginResource("sonia/scm/plugin/scm-f-plugin-1.0.1.smp",
+      "scm-f-plugin.smp", "sonia.scm.plugins:scm-f-plugin:1.0.1");
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -245,6 +255,25 @@ public class PluginProcessorTest
 
     assertNotNull(url);
     assertThat(Resources.toString(url, Charsets.UTF_8), is("hello"));
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testUpdate() throws IOException
+  {
+    copySmp(PLUGIN_F_1_0_0);
+
+    PluginWrapper plugin = collectAndGetFirst();
+
+    assertThat(plugin.getId(), is(PLUGIN_F_1_0_0.id));
+    copySmp(PLUGIN_F_1_0_1);
+    plugin = collectAndGetFirst();
+    assertThat(plugin.getId(), is(PLUGIN_F_1_0_1.id));
   }
 
   //~--- set methods ----------------------------------------------------------
