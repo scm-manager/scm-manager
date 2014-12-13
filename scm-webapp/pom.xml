@@ -359,19 +359,19 @@
             <artifactItem>
               <groupId>sonia.scm.plugins</groupId>
               <artifactId>scm-hg-plugin</artifactId>
-              <version>2.0.0-SNAPSHOT</version>
+              <version>${project.version}</version>
               <type>smp</type>
             </artifactItem>
             <artifactItem>
               <groupId>sonia.scm.plugins</groupId>
               <artifactId>scm-svn-plugin</artifactId>
-              <version>2.0.0-SNAPSHOT</version>
+              <version>${project.version}</version>
               <type>smp</type>
             </artifactItem>
             <artifactItem>
               <groupId>sonia.scm.plugins</groupId>
               <artifactId>scm-git-plugin</artifactId>
-              <version>2.0.0-SNAPSHOT</version>
+              <version>${project.version}</version>
               <type>smp</type>
             </artifactItem>
           </artifactItems>
