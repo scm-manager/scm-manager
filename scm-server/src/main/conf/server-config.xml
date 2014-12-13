@@ -127,8 +127,8 @@
       </Set>
     </New>
   </Set>
-<<<<<<< mine
-=======
+  
+  <!-- TODO fix for jetty 9.2.x -->
   
   <!-- request logging -->
   <!--
@@ -211,6 +211,5 @@
     </Call>
   </Get>
   -->
->>>>>>> theirs
 
 </Configure>
