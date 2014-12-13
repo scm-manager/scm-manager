@@ -6,12 +6,12 @@
   <parent>
     <artifactId>scm</artifactId>
     <groupId>sonia.scm</groupId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.0.0-M1</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-core</artifactId>
-  <version>2.0.0-SNAPSHOT</version>
+  <version>2.0.0-M1</version>
   <name>scm-core</name>
 
   <dependencies>
@@ -30,7 +30,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-annotations</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
+      <version>2.0.0-M1</version>
     </dependency>
     
     <!-- logging -->
@@ -110,7 +110,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-annotation-processor</artifactId>
-      <version>2.0.0-SNAPSHOT</version>
+      <version>2.0.0-M1</version>
       <scope>provided</scope>
     </dependency>
 
