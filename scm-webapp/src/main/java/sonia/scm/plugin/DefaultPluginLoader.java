@@ -124,9 +124,6 @@ public class DefaultPluginLoader implements PluginLoader
   {
     logger.info("start processing extensions");
 
-    appendExtensions(multiple, single, extensions, modules);
-    appendExtensions(multiple, single, extensions, unwrap());
-
     if (logger.isInfoEnabled())
     {
       logger.info(
