@@ -131,7 +131,6 @@ public class DefaultPluginLoader implements PluginLoader
         extensions.size(), multiple.size(), single.size());
     }
 
-    // TODO bind jax-rs providers always as singleton
     new ExtensionBinder(binder).bind(multiple, single, extensions);
   }
 
