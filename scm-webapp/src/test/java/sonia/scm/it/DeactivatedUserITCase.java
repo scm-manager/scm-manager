@@ -50,6 +50,7 @@ import static sonia.scm.it.IntegrationTestUtil.*;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import javax.servlet.http.HttpServletResponse;
 
 import javax.ws.rs.core.MediaType;
 
@@ -126,9 +127,8 @@ public class DeactivatedUserITCase
     Client client = createClient();
     ClientResponse response = authenticate(client, slarti.getName(),
                                 "slart123");
-
     assertNotNull(response);
-    assertEquals(401, response.getStatus());
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   //~--- fields ---------------------------------------------------------------

@@ -53,7 +53,6 @@ import sonia.scm.store.StoreFactory;
 import sonia.scm.upgrade.UpgradeManager;
 import sonia.scm.user.UserManager;
 import sonia.scm.util.IOUtil;
-import sonia.scm.web.security.AuthenticationManager;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -99,9 +98,6 @@ public class ScmContextListener extends GuiceServletContextListener
 
       // close RepositoryManager
       IOUtil.close(globalInjector.getInstance(RepositoryManager.class));
-
-      // close Authenticator
-      IOUtil.close(globalInjector.getInstance(AuthenticationManager.class));
 
       // close GroupManager
       IOUtil.close(globalInjector.getInstance(GroupManager.class));

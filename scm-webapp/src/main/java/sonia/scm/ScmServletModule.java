@@ -88,13 +88,9 @@ import sonia.scm.resources.ResourceManager;
 import sonia.scm.resources.ScriptResourceServlet;
 import sonia.scm.security.CipherHandler;
 import sonia.scm.security.CipherUtil;
-import sonia.scm.security.ConfigurableLoginAttemptHandler;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.security.DefaultSecuritySystem;
-import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.KeyGenerator;
-import sonia.scm.security.LoginAttemptHandler;
-import sonia.scm.security.MessageDigestEncryptionHandler;
 import sonia.scm.security.RepositoryPermissionResolver;
 import sonia.scm.security.SecuritySystem;
 import sonia.scm.store.BlobStoreFactory;
@@ -127,8 +123,6 @@ import sonia.scm.web.filter.AutoLoginFilter;
 import sonia.scm.web.filter.LoggingFilter;
 import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.ApiBasicAuthenticationFilter;
-import sonia.scm.web.security.AuthenticationManager;
-import sonia.scm.web.security.ChainAuthenticatonManager;
 import sonia.scm.web.security.DefaultAdministrationContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -269,7 +263,6 @@ public class ScmServletModule extends JerseyServletModule
     // note CipherUtil uses an other generator
     bind(KeyGenerator.class).to(DefaultKeyGenerator.class);
     bind(CipherHandler.class).toInstance(cu.getCipherHandler());
-    bind(EncryptionHandler.class, MessageDigestEncryptionHandler.class);
     bind(FileSystem.class, DefaultFileSystem.class);
 
     // bind health check stuff
@@ -280,10 +273,8 @@ public class ScmServletModule extends JerseyServletModule
 
     // bind security stuff
     bind(PermissionResolver.class, RepositoryPermissionResolver.class);
-    bind(AuthenticationManager.class, ChainAuthenticatonManager.class);
     bind(SecuritySystem.class).to(DefaultSecuritySystem.class);
     bind(AdministrationContext.class, DefaultAdministrationContext.class);
-    bind(LoginAttemptHandler.class, ConfigurableLoginAttemptHandler.class);
 
     // bind cache
     bind(CacheManager.class, GuavaCacheManager.class);

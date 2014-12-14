@@ -39,11 +39,11 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.credential.PasswordService;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
 import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 
-import sonia.scm.security.EncryptionHandler;
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
@@ -95,15 +95,13 @@ public class UserResource extends AbstractManagerResource<User, UserException>
    *
    *
    * @param userManager
-   * @param encryptionHandler
-   * @param securityContextProvider
+   * @param passwordService
    */
   @Inject
-  public UserResource(UserManager userManager,
-    EncryptionHandler encryptionHandler)
+  public UserResource(UserManager userManager, PasswordService passwordService)
   {
     super(userManager);
-    this.encryptionHandler = encryptionHandler;
+    this.passwordService = passwordService;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -386,12 +384,12 @@ public class UserResource extends AbstractManagerResource<User, UserException>
 
     if (Util.isNotEmpty(password))
     {
-      user.setPassword(encryptionHandler.encrypt(password));
+      user.setPassword(passwordService.encryptPassword(password));
     }
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private EncryptionHandler encryptionHandler;
+  private PasswordService passwordService;
 }

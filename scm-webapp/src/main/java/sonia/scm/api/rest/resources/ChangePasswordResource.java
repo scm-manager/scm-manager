@@ -38,6 +38,7 @@ package sonia.scm.api.rest.resources;
 import com.google.inject.Inject;
 
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.Subject;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
@@ -47,7 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.api.rest.RestActionResult;
-import sonia.scm.security.EncryptionHandler;
+import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
@@ -65,7 +66,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import sonia.scm.security.Role;
 
 /**
  *
@@ -88,14 +88,13 @@ public class ChangePasswordResource
    *
    * @param userManager
    * @param encryptionHandler
-   * @param securityContextProvider
    */
   @Inject
   public ChangePasswordResource(UserManager userManager,
-    EncryptionHandler encryptionHandler)
+    PasswordService encryptionHandler)
   {
     this.userManager = userManager;
-    this.encryptionHandler = encryptionHandler;
+    this.passwordService = encryptionHandler;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -155,9 +154,9 @@ public class ChangePasswordResource
     {
       User dbUser = userManager.get(currentUser.getName());
 
-      if (encryptionHandler.encrypt(oldPassword).equals(dbUser.getPassword()))
+      if (passwordService.passwordsMatch(oldPassword, dbUser.getPassword()))
       {
-        dbUser.setPassword(encryptionHandler.encrypt(newPassword));
+        dbUser.setPassword(passwordService.encryptPassword(newPassword));
         userManager.modify(dbUser);
         response = Response.ok(new RestActionResult(true)).build();
       }
@@ -183,8 +182,8 @@ public class ChangePasswordResource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private EncryptionHandler encryptionHandler;
+  private final PasswordService passwordService;
 
   /** Field description */
-  private UserManager userManager;
+  private final UserManager userManager;
 }

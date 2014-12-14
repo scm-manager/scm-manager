@@ -74,6 +74,18 @@ public final class HttpUtil
   public static final String ENCODING = "UTF-8";
 
   /**
+   * authorization header
+   * @since 2.0.0
+   */
+  public static final String HEADER_AUTHORIZATION = "Authorization";
+
+  /**
+   * Basic authorization scheme
+   * @since 2.0.0
+   */
+  public static final String AUTHORIZATION_SCHEME_BASIC = "Basic";
+  
+  /**
    * location header
    * @since 1.43
    */

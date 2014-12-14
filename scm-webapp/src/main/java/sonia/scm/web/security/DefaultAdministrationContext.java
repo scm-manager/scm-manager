@@ -53,7 +53,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.group.GroupNames;
 import sonia.scm.security.Role;
-import sonia.scm.security.ScmRealm;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
 
@@ -74,6 +73,9 @@ public class DefaultAdministrationContext implements AdministrationContext
   /** Field description */
   public static final String SYSTEM_ACCOUNT =
     "/sonia/scm/web/security/system-account.xml";
+
+  /** Field description */
+  private static final String REALM = "AdminRealm";
 
   /** the logger for DefaultAdministrationContext */
   private static final Logger logger =
@@ -169,9 +171,9 @@ public class DefaultAdministrationContext implements AdministrationContext
   {
     SimplePrincipalCollection collection = new SimplePrincipalCollection();
 
-    collection.add(adminUser.getId(), ScmRealm.NAME);
-    collection.add(adminUser, ScmRealm.NAME);
-    collection.add(new GroupNames(), ScmRealm.NAME);
+    collection.add(adminUser.getId(), REALM);
+    collection.add(adminUser, REALM);
+    collection.add(new GroupNames(), REALM);
 
     return collection;
   }

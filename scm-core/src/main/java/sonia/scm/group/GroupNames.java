@@ -35,6 +35,7 @@ package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
 
@@ -156,6 +157,18 @@ public final class GroupNames implements Serializable, Iterable<String>
     return collection.iterator();
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public String toString()
+  {
+    return Joiner.on(", ").join(collection);
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -172,5 +185,5 @@ public final class GroupNames implements Serializable, Iterable<String>
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Collection<String> collection;
+  private final Collection<String> collection;
 }

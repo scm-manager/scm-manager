@@ -37,9 +37,12 @@ package sonia.scm;
 
 import com.google.inject.name.Names;
 
+import org.apache.shiro.authc.credential.DefaultPasswordService;
+import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.crypto.hash.DefaultHashService;
 import org.apache.shiro.guice.web.ShiroWebModule;
 
-import sonia.scm.security.ScmRealm;
+import sonia.scm.security.DefaultRealm;
 
 import static org.apache.shiro.guice.web.ShiroWebModule.ROLES;
 
@@ -53,6 +56,11 @@ import javax.servlet.ServletContext;
  */
 public class ScmSecurityModule extends ShiroWebModule
 {
+
+  /** Field description */
+  private static final int ITERATIONS = 8192;
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -75,9 +83,13 @@ public class ScmSecurityModule extends ShiroWebModule
   @SuppressWarnings("unchecked")
   protected void configureShiroWeb()
   {
+    bind(PasswordService.class).toInstance(createPasswordService());
+
+    // expose password service to global injector
+    expose(PasswordService.class);
 
     // bind realm
-    bindRealm().to(ScmRealm.class);
+    bindRealm().to(DefaultRealm.class);
 
     // bind constant
     bindConstant().annotatedWith(Names.named("shiro.loginUrl")).to(
@@ -85,5 +97,22 @@ public class ScmSecurityModule extends ShiroWebModule
 
     // disable access to mustache resources
     addFilterChain("/**.mustache", config(ROLES, "nobody"));
+  }
+
+  /**
+   * Creates a {@link PasswordService} with a smaller size of iteration, because
+   * large iterations will slow down subversion.
+   *
+   * @return instance of {@link PasswordService}
+   */
+  private PasswordService createPasswordService()
+  {
+    DefaultPasswordService passwordService = new DefaultPasswordService();
+    DefaultHashService hashService = new DefaultHashService();
+
+    hashService.setHashIterations(ITERATIONS);
+    passwordService.setHashService(hashService);
+
+    return passwordService;
   }
 }

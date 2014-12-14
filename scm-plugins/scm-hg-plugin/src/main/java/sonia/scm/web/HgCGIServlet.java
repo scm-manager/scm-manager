@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -51,12 +52,16 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
+import sonia.scm.security.CipherUtil;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.EnvList;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import com.sun.jersey.core.util.Base64;
 
 import java.io.File;
 import java.io.IOException;
@@ -85,6 +90,9 @@ public class HgCGIServlet extends HttpServlet
 
   /** Field description */
   public static final String ENV_SESSION_PREFIX = "SCM_";
+
+  /** Field description */
+  private static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
 
   /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
@@ -187,6 +195,39 @@ public class HgCGIServlet extends HttpServlet
    * Method description
    *
    *
+   * @param env
+   * @param request
+   */
+  private void addCredentials(EnvList env, HttpServletRequest request)
+  {
+    String authorization = request.getHeader(HttpUtil.HEADER_AUTHORIZATION);
+
+    if (!Strings.isNullOrEmpty(authorization))
+    {
+      if (authorization.startsWith(HttpUtil.AUTHORIZATION_SCHEME_BASIC))
+      {
+        String encodedUserInfo =
+          authorization.substring(
+            HttpUtil.AUTHORIZATION_SCHEME_BASIC.length()).trim();
+        String userInfo = Base64.base64Decode(encodedUserInfo);
+
+        env.set(SCM_CREDENTIALS, CipherUtil.getInstance().encode(userInfo));
+      }
+      else
+      {
+        logger.warn("unknow authentication scheme used");
+      }
+    }
+    else
+    {
+      logger.trace("no authorization header found");
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param request
    * @param response
    * @param repository
@@ -259,6 +300,7 @@ public class HgCGIServlet extends HttpServlet
     executor.getEnvironment().set(ENV_REPOSITORY_NAME, name);
     executor.getEnvironment().set(ENV_REPOSITORY_PATH,
       directory.getAbsolutePath());
+
     // add hook environment
     //J-
     HgEnvironment.prepareEnvironment(
@@ -269,6 +311,9 @@ public class HgCGIServlet extends HttpServlet
     );
     //J+
 
+    addCredentials(executor.getEnvironment(), request);
+
+    // unused ???
     HttpSession session = request.getSession();
 
     if (session != null)
