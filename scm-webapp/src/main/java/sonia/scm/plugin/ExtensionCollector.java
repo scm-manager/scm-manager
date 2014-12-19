@@ -39,10 +39,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-import com.google.inject.Module;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -59,14 +55,6 @@ import java.util.Set;
 @SuppressWarnings("unchecked")
 public final class ExtensionCollector
 {
-
-  /**
-   * the logger for ExtensionCollector
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(ExtensionCollector.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -100,9 +88,12 @@ public final class ExtensionCollector
   public Collection<Class> byExtensionPoint(ExtensionPointElement epe)
   {
     Collection<Class> collection = extensions.get(epe);
-    if ( collection == null ){
+
+    if (collection == null)
+    {
       collection = Collections.EMPTY_SET;
     }
+
     return collection;
   }
 
@@ -187,17 +178,6 @@ public final class ExtensionCollector
    *
    * @return
    */
-  public Set<Module> getInjectionModules()
-  {
-    return injectionModules;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public Set<Class> getLooseExtensions()
   {
     return looseExtensions;
@@ -258,38 +238,13 @@ public final class ExtensionCollector
    * Method description
    *
    *
-   * @param extension
-   */
-  private void appendModule(Class extension)
-  {
-    try
-    {
-      injectionModules.add((Module) extension.newInstance());
-    }
-    catch (IllegalAccessException | InstantiationException ex)
-    {
-      logger.error("could not create instance of module", ex);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param module
    */
   private void collectExtensions(ScmModule module)
   {
     for (Class extension : module.getExtensions())
     {
-      if (Module.class.isAssignableFrom(extension))
-      {
-        appendModule(extension);
-      }
-      else
-      {
-        appendExtension(extension);
-      }
+      appendExtension(extension);
     }
   }
 
@@ -305,6 +260,7 @@ public final class ExtensionCollector
     {
       extensionPointIndex.put(epe.getClazz(), epe);
     }
+
     restProviders.addAll(Lists.newArrayList(module.getRestProviders()));
     restResources.addAll(Lists.newArrayList(module.getRestResources()));
   }
@@ -313,9 +269,6 @@ public final class ExtensionCollector
 
   /** Field description */
   private final Set<Class> looseExtensions = Sets.newHashSet();
-
-  /** Field description */
-  private final Set<Module> injectionModules = Sets.newHashSet();
 
   /** Field description */
   private final Set<Class> restProviders = Sets.newHashSet();

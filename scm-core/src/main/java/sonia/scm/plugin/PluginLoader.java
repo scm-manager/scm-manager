@@ -62,14 +62,6 @@ public interface PluginLoader
    *
    * @return
    */
-  public Collection<Module> getInjectionModules();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public Collection<ScmModule> getInstalledModules();
 
   /**

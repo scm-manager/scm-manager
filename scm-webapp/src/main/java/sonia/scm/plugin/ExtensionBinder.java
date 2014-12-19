@@ -94,6 +94,29 @@ public final class ExtensionBinder
 
     for (ExtensionPointElement epe : collector.getExtensionPointElements())
     {
+      bindExtensionPoint(collector, epe);
+    }
+
+    logger.info("bind loose extensions");
+    bindLooseExtensions(collector.getLooseExtensions());
+    logger.info("bind rest providers");
+    bindRestProviders(collector.getRestProviders());
+    logger.info("bind rest resources");
+    bindRestResource(collector.getRestResources());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param collector
+   * @param epe
+   */
+  private void bindExtensionPoint(ExtensionCollector collector,
+    ExtensionPointElement epe)
+  {
+    if (epe.isAutoBind())
+    {
       if (epe.isMultiple())
       {
         bindMultiExtensionPoint(epe, collector.byExtensionPoint(epe));
@@ -113,13 +136,10 @@ public final class ExtensionBinder
         }
       }
     }
-
-    logger.info("bind loose extensions");
-    bindLooseExtensions(collector.getLooseExtensions());
-    logger.info("bind rest providers");
-    bindRestProviders(collector.getRestProviders());
-    logger.info("bind rest resources");
-    bindRestResource(collector.getRestResources());
+    else
+    {
+      logger.debug("bind type of {} is manual", epe.getClazz());
+    }
   }
 
   /**

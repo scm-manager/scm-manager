@@ -51,5 +51,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExtensionPoint
 {
-  boolean multi() default true;
+  boolean multi()    default true;
+  boolean autoBind() default true;
 }

@@ -130,18 +130,6 @@ public class DefaultPluginLoader implements PluginLoader
    * @return
    */
   @Override
-  public Set<Module> getInjectionModules()
-  {
-    return ImmutableSet.copyOf(collector.getInjectionModules());
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
   public Collection<ScmModule> getInstalledModules()
   {
     return modules;

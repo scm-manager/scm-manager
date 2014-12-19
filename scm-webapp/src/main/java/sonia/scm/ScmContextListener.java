@@ -36,6 +36,7 @@ package sonia.scm;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Stopwatch;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -50,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.DefaultPluginLoader;
+import sonia.scm.plugin.ExtensionProcessor;
 import sonia.scm.plugin.PluginWrapper;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.StoreFactory;
@@ -204,6 +206,33 @@ public class ScmContextListener extends GuiceServletContextListener
     return globalInjector;
   }
 
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @param ep
+   * @param moduleList
+   */
+  private void appendModules(ExtensionProcessor ep, List<Module> moduleList)
+  {
+    for (Class<Module> module : ep.byExtensionPoint(Module.class))
+    {
+      try
+      {
+        logger.info("add module {}", module);
+        moduleList.add(module.newInstance());
+      }
+      catch (IllegalAccessException | InstantiationException ex)
+      {
+        throw Throwables.propagate(ex);
+      }
+    }
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
   /**
    * Method description
    *
@@ -228,7 +257,7 @@ public class ScmContextListener extends GuiceServletContextListener
     moduleList.add(ShiroWebModule.guiceFilterModule());
     moduleList.add(new ScmServletModule(servletCtx, pluginLoader, overrides));
     moduleList.add(new ScmSecurityModule(servletCtx));
-    moduleList.addAll(pluginLoader.getInjectionModules());
+    appendModules(pluginLoader.getExtensionProcessor(), moduleList);
     moduleList.addAll(overrides.getModules());
 
     SCMContextProvider ctx = SCMContext.getContext();

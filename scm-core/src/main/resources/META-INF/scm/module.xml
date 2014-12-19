@@ -36,4 +36,8 @@ http://bitbucket.org/sdorra/scm-manager
   <extension-point>
     <class>javax.servlet.http.HttpSessionListener</class>
   </extension-point>
+  <extension-point>
+    <class>com.google.inject.Module</class>
+    <autoBind>false</autoBind>
+  </extension-point>
 </module>

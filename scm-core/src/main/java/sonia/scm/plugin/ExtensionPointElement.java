@@ -65,13 +65,15 @@ public final class ExtensionPointElement
    * @param clazz
    * @param description
    * @param multiple
+   * @param autoBind
    */
   public ExtensionPointElement(Class<?> clazz, String description,
-    boolean multiple)
+    boolean multiple, boolean autoBind)
   {
     this.clazz = clazz;
     this.description = description;
     this.multiple = multiple;
+    this.autoBind = autoBind;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -101,7 +103,8 @@ public final class ExtensionPointElement
 
     return Objects.equal(clazz, other.clazz)
       && Objects.equal(description, other.description)
-      && Objects.equal(multiple, other.multiple);
+      && Objects.equal(multiple, other.multiple)
+      && Objects.equal(autoBind, other.autoBind);
   }
 
   /**
@@ -113,7 +116,7 @@ public final class ExtensionPointElement
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(clazz, description, multiple);
+    return Objects.hashCode(clazz, description, multiple, autoBind);
   }
 
   /**
@@ -130,6 +133,7 @@ public final class ExtensionPointElement
                   .add("class", clazz)
                   .add("description", description)
                   .add("multiple", multiple)
+                  .add("autoBind", autoBind)
                   .toString();
     //J+
   }
@@ -164,6 +168,17 @@ public final class ExtensionPointElement
    *
    * @return
    */
+  public boolean isAutoBind()
+  {
+    return autoBind;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
   public boolean isMultiple()
   {
     return multiple;
@@ -181,4 +196,7 @@ public final class ExtensionPointElement
   /** Field description */
   @XmlElement(name = "multi")
   private boolean multiple = true;
+
+  /** Field description */
+  private boolean autoBind = true;
 }
