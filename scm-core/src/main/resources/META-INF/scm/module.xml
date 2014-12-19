@@ -40,4 +40,8 @@ http://bitbucket.org/sdorra/scm-manager
     <class>com.google.inject.Module</class>
     <autoBind>false</autoBind>
   </extension-point>
+  <extension-point>
+    <class>org.apache.shiro.realm.Realm</class>
+    <autoBind>false</autoBind>
+  </extension-point>
 </module>

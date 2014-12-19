@@ -41,8 +41,12 @@ import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.crypto.hash.DefaultHashService;
 import org.apache.shiro.guice.web.ShiroWebModule;
+import org.apache.shiro.realm.Realm;
 
-import sonia.scm.security.DefaultRealm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.plugin.ExtensionProcessor;
 
 import static org.apache.shiro.guice.web.ShiroWebModule.ROLES;
 
@@ -60,6 +64,12 @@ public class ScmSecurityModule extends ShiroWebModule
   /** Field description */
   private static final int ITERATIONS = 8192;
 
+  /**
+   *   the logger for ScmSecurityModule
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ScmSecurityModule.class);
+
   //~--- constructors ---------------------------------------------------------
 
   /**
@@ -67,10 +77,13 @@ public class ScmSecurityModule extends ShiroWebModule
    *
    *
    * @param servletContext
+   * @param extensionProcessor
    */
-  ScmSecurityModule(ServletContext servletContext)
+  ScmSecurityModule(ServletContext servletContext,
+    ExtensionProcessor extensionProcessor)
   {
     super(servletContext);
+    this.extensionProcessor = extensionProcessor;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -89,7 +102,11 @@ public class ScmSecurityModule extends ShiroWebModule
     expose(PasswordService.class);
 
     // bind realm
-    bindRealm().to(DefaultRealm.class);
+    for (Class<Realm> realm : extensionProcessor.byExtensionPoint(Realm.class))
+    {
+      logger.info("bind security realm {}", realm);
+      bindRealm().to(realm);
+    }
 
     // bind constant
     bindConstant().annotatedWith(Names.named("shiro.loginUrl")).to(
@@ -115,4 +132,9 @@ public class ScmSecurityModule extends ShiroWebModule
 
     return passwordService;
   }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final ExtensionProcessor extensionProcessor;
 }

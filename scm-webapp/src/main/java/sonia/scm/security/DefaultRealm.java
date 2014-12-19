@@ -58,6 +58,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.group.GroupNames;
+import sonia.scm.plugin.Extension;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 
@@ -74,6 +75,7 @@ import javax.inject.Singleton;
  *
  * @since 2.0.0
  */
+@Extension
 @Singleton
 public class DefaultRealm extends AuthorizingRealm
 {

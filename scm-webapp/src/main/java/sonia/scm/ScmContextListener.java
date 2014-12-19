@@ -256,7 +256,9 @@ public class ScmContextListener extends GuiceServletContextListener
     moduleList.add(new EagerSingletonModule());
     moduleList.add(ShiroWebModule.guiceFilterModule());
     moduleList.add(new ScmServletModule(servletCtx, pluginLoader, overrides));
-    moduleList.add(new ScmSecurityModule(servletCtx));
+    moduleList.add(
+      new ScmSecurityModule(servletCtx, pluginLoader.getExtensionProcessor())
+    );
     appendModules(pluginLoader.getExtensionProcessor(), moduleList);
     moduleList.addAll(overrides.getModules());
 
