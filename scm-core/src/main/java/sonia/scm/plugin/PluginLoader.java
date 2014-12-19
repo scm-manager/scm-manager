@@ -35,9 +35,7 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Binder;
 import com.google.inject.Module;
-
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -54,11 +52,9 @@ public interface PluginLoader
    * Method description
    *
    *
-   * @param binder
+   * @return
    */
-  public void processExtensions(Binder binder);
-
-  //~--- get methods ----------------------------------------------------------
+  public ExtensionProcessor getExtensionProcessor();
 
   /**
    * Method description
@@ -90,6 +86,8 @@ public interface PluginLoader
    *
    *
    * @return uber classloader
+   *
+   * @since 2.0.0
    */
   public ClassLoader getUberClassLoader();
 
@@ -99,6 +97,8 @@ public interface PluginLoader
    *
    *
    * @return uber webresourceloader
+   *
+   * @since 2.0.0
    */
   public UberWebResourceLoader getUberWebResourceLoader();
 }

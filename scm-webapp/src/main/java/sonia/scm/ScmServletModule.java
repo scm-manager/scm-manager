@@ -269,7 +269,7 @@ public class ScmServletModule extends JerseyServletModule
     bind(HealthCheckContextListener.class);
 
     // bind extensions
-    pluginLoader.processExtensions(binder());
+    pluginLoader.getExtensionProcessor().processAutoBindExtensions(binder());
 
     // bind security stuff
     bind(PermissionResolver.class, RepositoryPermissionResolver.class);

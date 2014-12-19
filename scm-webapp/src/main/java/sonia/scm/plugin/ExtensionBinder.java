@@ -35,10 +35,8 @@ package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import com.google.inject.Binder;
-import com.google.inject.Scopes;
+import com.google.inject.Singleton;
 import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.binder.ScopedBindingBuilder;
 import com.google.inject.multibindings.Multibinder;
@@ -49,12 +47,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.EagerSingleton;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
-
-import javax.ws.rs.ext.Provider;
-
 /**
  *
  * @author Sebastian Sdorra
@@ -62,6 +54,12 @@ import javax.ws.rs.ext.Provider;
 @SuppressWarnings("unchecked")
 public final class ExtensionBinder
 {
+
+  /** Field description */
+  private static final String TYPE_LOOSE_EXT = "loose extension";
+
+  /** Field description */
+  private static final String TYPE_REST_RESOURCE = "rest resource";
 
   /**
    * the logger for ExtensionBinder
@@ -88,92 +86,53 @@ public final class ExtensionBinder
    * Method description
    *
    *
-   * @param mutipleExtensionPoints
-   * @param singleExtensionPoints
-   * @param extensions
+   * @param collector
    */
-  public void bind(Set<Class> mutipleExtensionPoints,
-    Set<Class> singleExtensionPoints, Set<Class> extensions)
+  public void bind(ExtensionCollector collector)
   {
-    if (logger.isInfoEnabled())
+    logger.info("bind extensions to extension points");
+
+    for (ExtensionPointElement epe : collector.getExtensionPointElements())
     {
-      logger.info("bind {} extensions to {} extension points",
-        extensions.size(),
-        mutipleExtensionPoints.size() + singleExtensionPoints.size());
-    }
-
-    Set<Class> boundClasses = Sets.newHashSet();
-
-    for (Class extensionPointClass : mutipleExtensionPoints)
-    {
-      bindMultiExtensionPoint(boundClasses, extensionPointClass, extensions);
-    }
-
-    for (Class extensionPointClass : singleExtensionPoints)
-    {
-      bindExtensionPoint(boundClasses, extensionPointClass, extensions);
-    }
-
-    Set<Class> extensionsCopy = Sets.newHashSet(extensions);
-
-    Iterables.removeAll(extensionsCopy, boundClasses);
-
-    for (Class extension : extensionsCopy)
-    {
-      AnnotatedBindingBuilder abb = binder.bind(extension);
-
-      if (isProvider(extension))
+      if (epe.isMultiple())
       {
-        logger.info("bind provider {} as singleton", extension);
-        abb.in(Scopes.SINGLETON);
-      }
-      else if (isEagerSingleton(extension))
-      {
-
-        logger.info("bind {} as eager singleton, without extensionpoint",
-          extension);
-        abb.asEagerSingleton();
+        bindMultiExtensionPoint(epe, collector.byExtensionPoint(epe));
       }
       else
       {
-        logger.info("bind {}, without extensionpoint", extension);
-        binder.bind(extension);
-      }
-    }
-  }
+        Class extension = collector.oneByExtensionPoint(epe);
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param found
-   *
-   * @param boundClasses
-   * @param extensionPointClass
-   * @param extensions
-   */
-  @SuppressWarnings("unchecked")
-  private void bindExtensionPoint(Set<Class> boundClasses,
-    Class extensionPointClass, Set<Class> extensions)
-  {
-    boolean bound = false;
-
-    for (Class extensionClass : extensions)
-    {
-      if (extensionPointClass.isAssignableFrom(extensionClass))
-      {
-        if (bound)
+        if (extension != null)
         {
-          throw new IllegalStateException(
-            "extension point ".concat(extensionPointClass.getName()).concat(
-              " is not multiple and is already bound to another class"));
+          bindSingleInstance(epe, extension);
         }
-
-        bindSingleInstance(extensionPointClass, extensionClass);
-        boundClasses.add(extensionClass);
-        bound = true;
+        else
+        {
+          logger.warn("could not find extension for extension point {}",
+            epe.getClazz());
+        }
       }
+    }
+
+    logger.info("bind loose extensions");
+    bindLooseExtensions(collector.getLooseExtensions());
+    logger.info("bind rest providers");
+    bindRestProviders(collector.getRestProviders());
+    logger.info("bind rest resources");
+    bindRestResource(collector.getRestResources());
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param extensions
+   */
+  private void bindLooseExtensions(Iterable<Class> extensions)
+  {
+    for (Class extension : extensions)
+    {
+      singleBind(TYPE_LOOSE_EXT, extension);
     }
   }
 
@@ -184,14 +143,17 @@ public final class ExtensionBinder
    *
    * @param found
    *
+   * @param extensionPoint
+   *
    * @param boundClasses
    * @param extensionPointClass
    * @param extensions
    */
-  @SuppressWarnings("unchecked")
-  private void bindMultiExtensionPoint(Set<Class> boundClasses,
-    Class extensionPointClass, Iterable<Class> extensions)
+  private void bindMultiExtensionPoint(ExtensionPointElement extensionPoint,
+    Iterable<Class> extensions)
   {
+    Class extensionPointClass = extensionPoint.getClazz();
+
     if (logger.isInfoEnabled())
     {
       logger.info("create multibinder for {}", extensionPointClass.getName());
@@ -202,32 +164,26 @@ public final class ExtensionBinder
 
     for (Class extensionClass : extensions)
     {
-      if (extensionPointClass.isAssignableFrom(extensionClass))
+      boolean eagerSingleton = isEagerSingleton(extensionClass);
+
+      if (logger.isInfoEnabled())
       {
-        boolean eagerSingleton = isEagerSingleton(extensionClass);
-
-        if (logger.isInfoEnabled())
-        {
-          String as = Util.EMPTY_STRING;
-
-          if (eagerSingleton)
-          {
-            as = " as eager singleton";
-          }
-
-          logger.info("bind {} to multibinder of {}{}",
-            extensionClass.getName(), extensionPointClass.getName(), as);
-        }
-
-        ScopedBindingBuilder sbb = multibinder.addBinding().to(extensionClass);
+        String as = Util.EMPTY_STRING;
 
         if (eagerSingleton)
         {
-          sbb.asEagerSingleton();
-          logger.info("bind {} as eager singleton");
+          as = " as eager singleton";
         }
 
-        boundClasses.add(extensionClass);
+        logger.info("bind {} to multibinder of {}{}", extensionClass.getName(),
+          extensionPointClass.getName(), as);
+      }
+
+      ScopedBindingBuilder sbb = multibinder.addBinding().to(extensionClass);
+
+      if (eagerSingleton)
+      {
+        sbb.asEagerSingleton();
       }
     }
   }
@@ -236,13 +192,44 @@ public final class ExtensionBinder
    * Method description
    *
    *
+   * @param restProviders
+   */
+  private void bindRestProviders(Iterable<Class> restProviders)
+  {
+    for (Class restProvider : restProviders)
+    {
+      logger.info("bind rest provider {}", restProvider);
+      binder.bind(restProvider).in(Singleton.class);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param restResources
+   */
+  private void bindRestResource(Iterable<Class> restResources)
+  {
+    for (Class restResource : restResources)
+    {
+      singleBind(TYPE_REST_RESOURCE, restResource);
+    }
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param extensionPointClass
+   *
+   * @param extensionPoint
    * @param extensionClass
    */
-  @SuppressWarnings("unchecked")
-  private void bindSingleInstance(Class extensionPointClass,
+  private void bindSingleInstance(ExtensionPointElement extensionPoint,
     Class extensionClass)
   {
+    Class extensionPointClass = extensionPoint.getClazz();
     boolean eagerSingleton = isEagerSingleton(extensionClass);
 
     if (logger.isInfoEnabled())
@@ -267,6 +254,30 @@ public final class ExtensionBinder
     }
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @param type
+   * @param extension
+   */
+  private void singleBind(String type, Class extension)
+  {
+    StringBuilder log = new StringBuilder();
+
+    log.append("bind ").append(type).append(" ").append(extension);
+
+    AnnotatedBindingBuilder abb = binder.bind(extension);
+
+    if (isEagerSingleton(extension))
+    {
+      log.append(" as eager singleton");
+      abb.asEagerSingleton();
+    }
+
+    logger.info(log.toString());
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -280,19 +291,6 @@ public final class ExtensionBinder
   private boolean isEagerSingleton(Class extensionClass)
   {
     return extensionClass.isAnnotationPresent(EagerSingleton.class);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param extensionClass
-   *
-   * @return
-   */
-  private boolean isProvider(Class extensionClass)
-  {
-    return extensionClass.isAnnotationPresent(Provider.class);
   }
 
   //~--- fields ---------------------------------------------------------------

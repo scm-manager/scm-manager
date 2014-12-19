@@ -35,6 +35,7 @@ package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -43,11 +44,13 @@ import com.google.inject.servlet.GuiceServletContextListener;
 
 import org.apache.shiro.guice.web.ShiroWebModule;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.DefaultPluginLoader;
 import sonia.scm.plugin.PluginWrapper;
-import sonia.scm.repository.HealthCheckContextListener;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.StoreFactory;
 import sonia.scm.upgrade.UpgradeManager;
@@ -68,6 +71,14 @@ import javax.servlet.ServletContextEvent;
  */
 public class ScmContextListener extends GuiceServletContextListener
 {
+
+  /**
+   * the logger for ScmContextListener
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(ScmContextListener.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -155,8 +166,6 @@ public class ScmContextListener extends GuiceServletContextListener
       // init servlet context listeners
       globalInjector.getInstance(ServletContextListenerHolder.class)
                     .contextInitialized(servletContextEvent);
-      globalInjector.getInstance(HealthCheckContextListener.class)
-                    .contextInitialized(servletContextEvent);
       //J+
     }
   }
@@ -205,6 +214,7 @@ public class ScmContextListener extends GuiceServletContextListener
    */
   private Injector getDefaultInjector(ServletContext servletCtx)
   {
+    Stopwatch sw = Stopwatch.createStarted();
     DefaultPluginLoader pluginLoader = new DefaultPluginLoader(servletCtx,
                                          parent, plugins);
 
@@ -223,7 +233,12 @@ public class ScmContextListener extends GuiceServletContextListener
 
     SCMContextProvider ctx = SCMContext.getContext();
 
-    return Guice.createInjector(ctx.getStage().getInjectionStage(), moduleList);
+    Injector injector =
+      Guice.createInjector(ctx.getStage().getInjectionStage(), moduleList);
+
+    logger.info("created injector in {}", sw.stop());
+
+    return injector;
   }
 
   /**

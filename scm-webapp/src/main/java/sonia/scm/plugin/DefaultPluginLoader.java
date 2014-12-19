@@ -39,8 +39,6 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
-import com.google.inject.Binder;
 import com.google.inject.Module;
 
 import org.slf4j.Logger;
@@ -102,36 +100,13 @@ public class DefaultPluginLoader implements PluginLoader
 
       modules = getInstalled(parent, context, PATH_MODULECONFIG);
 
-      appendExtensions(multiple, single, extensions, modules);
-      appendExtensions(multiple, single, extensions, unwrap());
+      collector = new ExtensionCollector(Iterables.concat(modules, unwrap()));
+      extensionProcessor = new DefaultExtensionProcessor(collector);
     }
     catch (IOException | JAXBException ex)
     {
       throw Throwables.propagate(ex);
     }
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param binder
-   */
-  @Override
-  public void processExtensions(Binder binder)
-  {
-    logger.info("start processing extensions");
-
-    if (logger.isInfoEnabled())
-    {
-      logger.info(
-        "found {} extensions for {} multiple and {} single extension points",
-        extensions.size(), multiple.size(), single.size());
-    }
-
-    new ExtensionBinder(binder).bind(multiple, single, extensions);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -143,9 +118,21 @@ public class DefaultPluginLoader implements PluginLoader
    * @return
    */
   @Override
+  public ExtensionProcessor getExtensionProcessor()
+  {
+    return extensionProcessor;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
   public Set<Module> getInjectionModules()
   {
-    return ImmutableSet.copyOf(injectionModules);
+    return ImmutableSet.copyOf(collector.getInjectionModules());
   }
 
   /**
@@ -202,56 +189,6 @@ public class DefaultPluginLoader implements PluginLoader
    * Method description
    *
    *
-   * @param multiple
-   * @param single
-   * @param extensions
-   * @param mods
-   */
-  private void appendExtensions(Set<Class> multiple, Set<Class> single,
-    Set<Class> extensions, Iterable<? extends ScmModule> mods)
-  {
-    for (ScmModule mod : mods)
-    {
-      for (ExtensionPointElement epe : mod.getExtensionPoints())
-      {
-        if (epe.isMultiple())
-        {
-          multiple.add(epe.getClazz());
-        }
-        else
-        {
-          single.add(epe.getClazz());
-        }
-      }
-
-      for (Class extensionClass : mod.getExtensions())
-      {
-        if (Module.class.isAssignableFrom(extensionClass))
-        {
-          try
-          {
-            injectionModules.add((Module) extensionClass.newInstance());
-          }
-          catch (IllegalAccessException | InstantiationException ex)
-          {
-            logger.error("could not create instance of module", ex);
-          }
-        }
-        else
-        {
-          extensions.add(extensionClass);
-        }
-      }
-
-      Iterables.addAll(extensions, mod.getRestProviders());
-      Iterables.addAll(extensions, mod.getRestResources());
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @return
    */
   private Iterable<Plugin> unwrap()
@@ -297,26 +234,20 @@ public class DefaultPluginLoader implements PluginLoader
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private final ExtensionCollector collector;
+
+  /** Field description */
+  private final ExtensionProcessor extensionProcessor;
+
+  /** Field description */
+  private final Set<PluginWrapper> installedPlugins;
+
+  /** Field description */
+  private final Set<ScmModule> modules;
+
+  /** Field description */
   private final ClassLoader uberClassLoader;
 
   /** Field description */
   private final UberWebResourceLoader uberWebResourceLoader;
-
-  /** Field description */
-  private Set<PluginWrapper> installedPlugins;
-
-  /** Field description */
-  private Set<ScmModule> modules;
-
-  /** Field description */
-  private Set<Class> multiple = Sets.newHashSet();
-
-  /** Field description */
-  private Set<Class> single = Sets.newHashSet();
-
-  /** Field description */
-  private Set<Module> injectionModules = Sets.newHashSet();
-
-  /** Field description */
-  private Set<Class> extensions = Sets.newHashSet();
 }
