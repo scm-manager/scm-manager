@@ -41,7 +41,7 @@ import com.google.common.primitives.Ints;
 import java.util.List;
 
 /**
- * Priority constants and util methods to sort classes by {@link Priority} 
+ * Priority constants and util methods to sort classes by {@link Priority}
  * annotation.
  *
  * @author Sebastian Sdorra
@@ -53,6 +53,9 @@ public final class Priorities
   /** authentication priority */
   public static final int AUTHENTICATION = 5000;
 
+  /** authorization priority */
+  public static final int AUTHORIZATION = 6000;
+
   /** base url priority */
   public static final int BASEURL = 1000;
 
@@ -62,11 +65,17 @@ public final class Priorities
   /** post authentication priority */
   public static final int POST_AUTHENTICATION = 5500;
 
+  /** pre authorization priority */
+  public static final int POST_AUTHORIZATION = 6500;
+
   /** post base url priority */
   public static final int POST_BASEURL = 1500;
 
   /** pre authentication priority */
   public static final int PRE_AUTHENTICATION = 4500;
+
+  /** pre authorization priority */
+  public static final int PRE_AUTHORIZATION = 5500;
 
   /** pre base url priority */
   public static final int PRE_BASEURL = 500;
