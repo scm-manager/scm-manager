@@ -93,11 +93,12 @@ public final class Priorities
   /**
    * Returns a list sorted by priority.
    *
+   * @param <T> type of class
    * @param unordered unordered classes
    *
    * @return sorted class list
    */
-  public static List<Class<?>> sort(Iterable<Class<?>> unordered)
+  public static <T> List<Class<T>> sort(Iterable<Class<T>> unordered)
   {
     return new PriorityOrdering().sortedCopy(unordered);
   }
@@ -129,8 +130,10 @@ public final class Priorities
 
   /**
    * {@link Ordering} which orders classes by priority.
+   *
+   * @param <T> type of class
    */
-  public static class PriorityOrdering extends Ordering<Class<?>>
+  public static class PriorityOrdering<T> extends Ordering<Class<T>>
   {
 
     /**
@@ -143,7 +146,7 @@ public final class Priorities
      * @return compare value
      */
     @Override
-    public int compare(Class<?> left, Class<?> right)
+    public int compare(Class<T> left, Class<T> right)
     {
       return Ints.compare(getPriority(left), getPriority(right));
     }
