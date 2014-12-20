@@ -69,7 +69,8 @@ public class PrioritiesTest
   @Test
   public void testGetPriority()
   {
-    assertEquals(Priorities.POST_AUTHENTICATION, Priorities.getPriority(A.class));
+    assertEquals(Priorities.POST_AUTHENTICATION,
+      Priorities.getPriority(A.class));
     assertEquals(Priorities.DEFAULT, Priorities.getPriority(D.class));
   }
 
@@ -78,6 +79,7 @@ public class PrioritiesTest
    *
    */
   @Test
+  @SuppressWarnings("unchecked")
   public void testSort()
   {
     List<Class<?>> cls = ImmutableList.of(A.class, B.class, C.class, D.class);
@@ -93,7 +95,7 @@ public class PrioritiesTest
    *
    *
    * @version        Enter version here..., 14/12/20
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   @Priority(Priorities.POST_AUTHENTICATION)
   public static class A {}
@@ -104,7 +106,7 @@ public class PrioritiesTest
    *
    *
    * @version        Enter version here..., 14/12/20
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   @Priority(Priorities.PRE_AUTHENTICATION)
   public static class B {}
@@ -115,7 +117,7 @@ public class PrioritiesTest
    *
    *
    * @version        Enter version here..., 14/12/20
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   @Priority(Priorities.AUTHENTICATION)
   public static class C {}
@@ -126,7 +128,7 @@ public class PrioritiesTest
    *
    *
    * @version        Enter version here..., 14/12/20
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   public static class D {}
 }

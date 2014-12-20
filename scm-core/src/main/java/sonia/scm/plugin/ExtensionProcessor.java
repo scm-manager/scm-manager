@@ -45,28 +45,32 @@ public interface ExtensionProcessor
 {
 
   /**
-   * Return extensions
+   * Collect extension classes by extension point.
    *
    *
-   * @param extensionPoint
-   * @return
+   * @param <T> type of extension
+   * @param extensionPoint extension point
+   * 
+   * @return extensions
    */
-  public Iterable<Class> byExtensionPoint(Class extensionPoint);
+  public <T> Iterable<Class<T>> byExtensionPoint(Class<T> extensionPoint);
 
   /**
-   * Method description
+   * Returns single extension by its extension point.
    *
    *
-   * @param extensionPoint
-   * @return
+   * @param <T> type of extension
+   * @param extensionPoint extension point
+   * 
+   * @return extension
    */
-  public Class oneByExtensionPoint(Class extensionPoint);
+  public <T> Class<T> oneByExtensionPoint(Class<T> extensionPoint);
 
   /**
-   * Method description
+   * Process auto bind extensions.
    *
    *
-   * @param binder
+   * @param binder injection binder
    */
   public void processAutoBindExtensions(Binder binder);
 }

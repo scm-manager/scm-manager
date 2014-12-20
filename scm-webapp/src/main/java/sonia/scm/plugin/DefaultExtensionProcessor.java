@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Sebastian Sdorra
  */
+@SuppressWarnings("unchecked")
 public class DefaultExtensionProcessor implements ExtensionProcessor
 {
 
