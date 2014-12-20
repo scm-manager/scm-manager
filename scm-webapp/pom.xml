@@ -374,6 +374,12 @@
               <version>${project.version}</version>
               <type>smp</type>
             </artifactItem>
+            <artifactItem>
+              <groupId>sonia.scm.plugins</groupId>
+              <artifactId>scm-legacy-plugin</artifactId>
+              <version>${project.version}</version>
+              <type>smp</type>
+            </artifactItem>
           </artifactItems>
         </configuration>
         <executions>

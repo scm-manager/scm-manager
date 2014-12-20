@@ -128,7 +128,7 @@ public class DeactivatedUserITCase
     ClientResponse response = authenticate(client, slarti.getName(),
                                 "slart123");
     assertNotNull(response);
-    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
+    assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
   }
 
   //~--- fields ---------------------------------------------------------------

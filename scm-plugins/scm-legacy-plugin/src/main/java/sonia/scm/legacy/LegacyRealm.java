@@ -29,7 +29,7 @@
 
 
 
-package sonia.scm.security;
+package sonia.scm.legacy;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -39,14 +39,13 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authc.credential.PasswordMatcher;
-import org.apache.shiro.authc.credential.PasswordService;
-import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.realm.AuthorizingRealm;
-import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.crypto.hash.Sha1Hash;
+import org.apache.shiro.realm.AuthenticatingRealm;
 
 import sonia.scm.group.GroupDAO;
 import sonia.scm.plugin.Extension;
+import sonia.scm.security.DAORealmHelper;
 import sonia.scm.user.UserDAO;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -55,19 +54,19 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
+ * Support for SCM-Manager 1.x password hashes.
  *
  * @author Sebastian Sdorra
- *
  * @since 2.0.0
  */
 @Extension
 @Singleton
-public class DefaultRealm extends AuthorizingRealm
+public class LegacyRealm extends AuthenticatingRealm
 {
 
   /** Field description */
   @VisibleForTesting
-  static final String REALM = "DefaultRealm";
+  static final String REALM = "LegacyRealm";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -75,23 +74,21 @@ public class DefaultRealm extends AuthorizingRealm
    * Constructs ...
    *
    *
-   * @param service
-   * @param collector
    * @param userDAO
    * @param groupDAO
    */
   @Inject
-  public DefaultRealm(PasswordService service,
-    AuthorizationCollector collector, UserDAO userDAO, GroupDAO groupDAO)
+  public LegacyRealm(UserDAO userDAO, GroupDAO groupDAO)
   {
-    this.collector = collector;
     this.helper = new DAORealmHelper(REALM, userDAO, groupDAO);
-
-    PasswordMatcher matcher = new PasswordMatcher();
-
-    matcher.setPasswordService(service);
-    setCredentialsMatcher(matcher);
     setAuthenticationTokenClass(UsernamePasswordToken.class);
+
+    HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
+
+    matcher.setHashAlgorithmName(Sha1Hash.ALGORITHM_NAME);
+    matcher.setHashIterations(1);
+    matcher.setStoredCredentialsHexEncoded(true);
+    setCredentialsMatcher(matcher);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -114,25 +111,7 @@ public class DefaultRealm extends AuthorizingRealm
     return helper.getAuthenticationInfo(token);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param principals
-   *
-   * @return
-   */
-  @Override
-  protected AuthorizationInfo doGetAuthorizationInfo(
-    PrincipalCollection principals)
-  {
-    return collector.collect(principals);
-  }
-
   //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final AuthorizationCollector collector;
 
   /** Field description */
   private final DAORealmHelper helper;
