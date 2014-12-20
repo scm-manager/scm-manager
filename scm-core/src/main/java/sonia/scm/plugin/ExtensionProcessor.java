@@ -50,10 +50,11 @@ public interface ExtensionProcessor
    *
    * @param <T> type of extension
    * @param extensionPoint extension point
-   * 
+   *
    * @return extensions
    */
-  public <T> Iterable<Class<T>> byExtensionPoint(Class<T> extensionPoint);
+  public <T> Iterable<Class<? extends T>> byExtensionPoint(
+    Class<T> extensionPoint);
 
   /**
    * Returns single extension by its extension point.
@@ -61,10 +62,10 @@ public interface ExtensionProcessor
    *
    * @param <T> type of extension
    * @param extensionPoint extension point
-   * 
+   *
    * @return extension
    */
-  public <T> Class<T> oneByExtensionPoint(Class<T> extensionPoint);
+  public <T> Class<? extends T> oneByExtensionPoint(Class<T> extensionPoint);
 
   /**
    * Process auto bind extensions.

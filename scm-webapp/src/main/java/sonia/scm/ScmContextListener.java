@@ -217,7 +217,7 @@ public class ScmContextListener extends GuiceServletContextListener
    */
   private void appendModules(ExtensionProcessor ep, List<Module> moduleList)
   {
-    for (Class<Module> module : ep.byExtensionPoint(Module.class))
+    for (Class<? extends Module> module : ep.byExtensionPoint(Module.class))
     {
       try
       {

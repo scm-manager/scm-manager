@@ -98,9 +98,10 @@ public final class Priorities
    *
    * @return sorted class list
    */
-  public static <T> List<Class<T>> sort(Iterable<Class<T>> unordered)
+  public static <T> List<Class<? extends T>> sort(
+    Iterable<Class<? extends T>> unordered)
   {
-    return new PriorityOrdering().sortedCopy(unordered);
+    return new PriorityOrdering<T>().sortedCopy(unordered);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -133,7 +134,7 @@ public final class Priorities
    *
    * @param <T> type of class
    */
-  public static class PriorityOrdering<T> extends Ordering<Class<T>>
+  public static class PriorityOrdering<T> extends Ordering<Class<? extends T>>
   {
 
     /**
@@ -146,7 +147,7 @@ public final class Priorities
      * @return compare value
      */
     @Override
-    public int compare(Class<T> left, Class<T> right)
+    public int compare(Class<? extends T> left, Class<? extends T> right)
     {
       return Ints.compare(getPriority(left), getPriority(right));
     }

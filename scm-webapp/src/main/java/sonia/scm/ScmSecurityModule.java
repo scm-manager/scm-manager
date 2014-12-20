@@ -102,7 +102,7 @@ public class ScmSecurityModule extends ShiroWebModule
     expose(PasswordService.class);
 
     // bind realm
-    for (Class<Realm> realm : extensionProcessor.byExtensionPoint(Realm.class))
+    for (Class<? extends Realm> realm : extensionProcessor.byExtensionPoint(Realm.class))
     {
       logger.info("bind security realm {}", realm);
       bindRealm().to(realm);
