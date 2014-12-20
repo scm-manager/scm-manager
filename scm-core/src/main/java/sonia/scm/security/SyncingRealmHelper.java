@@ -45,6 +45,7 @@ import sonia.scm.group.Group;
 import sonia.scm.group.GroupException;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupNames;
+import sonia.scm.plugin.Extension;
 import sonia.scm.user.User;
 import sonia.scm.user.UserException;
 import sonia.scm.user.UserManager;
@@ -58,12 +59,13 @@ import java.io.IOException;
 import java.util.Collection;
 
 /**
- * Helper class for syncing realms. The class should simplify the creation of 
+ * Helper class for syncing realms. The class should simplify the creation of
  * realms, which are syncing authenticated users with the local database.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
+@Extension
 public final class SyncingRealmHelper
 {
 
