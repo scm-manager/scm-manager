@@ -36,8 +36,8 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
-import com.google.common.base.Preconditions;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -56,6 +56,7 @@ import sonia.scm.group.GroupEvent;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.user.UserEvent;
+import sonia.scm.util.ClassLoaders;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -405,7 +406,8 @@ public class DefaultSecuritySystem implements SecuritySystem
         JAXBContext.newInstance(PermissionDescriptors.class);
 
       Enumeration<URL> descirptorEnum =
-        getClassLoader().getResources(PERMISSION_DESCRIPTOR);
+        ClassLoaders.getContextClassLoader(
+          DefaultSecuritySystem.class).getResources(PERMISSION_DESCRIPTOR);
 
       while (descirptorEnum.hasMoreElements())
       {
@@ -443,36 +445,10 @@ public class DefaultSecuritySystem implements SecuritySystem
       "permission is required");
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private ClassLoader getClassLoader()
-  {
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
-    if (classLoader == null)
-    {
-      logger.warn("could not find context classloader, use default");
-
-      classLoader = DefaultSecuritySystem.class.getClassLoader();
-    }
-
-    return classLoader;
-  }
-
   //~--- inner classes --------------------------------------------------------
 
   /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/04/30
-   * @author         Enter your name here...
+   * Descriptor for permissions.
    */
   @XmlRootElement(name = "permissions")
   @XmlAccessorType(XmlAccessType.FIELD)
