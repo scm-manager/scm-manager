@@ -6,12 +6,12 @@
   <parent>
     <artifactId>scm-clients</artifactId>
     <groupId>sonia.scm.clients</groupId>
-    <version>1.44-SNAPSHOT</version>
+    <version>1.44</version>
   </parent>
 
   <groupId>sonia.scm.clients</groupId>
   <artifactId>scm-cli-client</artifactId>
-  <version>1.44-SNAPSHOT</version>
+  <version>1.44</version>
   <name>scm-cli-client</name>
 
   <dependencies>
@@ -34,7 +34,7 @@
     <dependency>
       <groupId>sonia.scm.clients</groupId>
       <artifactId>scm-client-impl</artifactId>
-      <version>1.44-SNAPSHOT</version>
+      <version>1.44</version>
     </dependency>
 
     <dependency>
