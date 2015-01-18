@@ -190,7 +190,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
       p = Runtime.getRuntime().exec(execCmd, env.getEnvArray(), workDirectory);
       execute(p);
     }
-    catch (Throwable ex)
+    catch (IOException ex)
     {
       getExceptionHandler().handleException(request, response, ex);
     }
