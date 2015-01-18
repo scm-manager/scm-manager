@@ -132,7 +132,9 @@ public class Changeset extends BasicPropertiesAware
 
     final Changeset other = (Changeset) obj;
 
-    return Objects.equal(id, other.id) && Objects.equal(date, other.date)
+    //J-
+    return Objects.equal(id, other.id) 
+           && Objects.equal(date, other.date)
            && Objects.equal(author, other.author)
            && Objects.equal(description, other.description)
            && Objects.equal(parents, other.parents)
@@ -140,6 +142,7 @@ public class Changeset extends BasicPropertiesAware
            && Objects.equal(branches, other.branches)
            && Objects.equal(modifications, other.modifications)
            && Objects.equal(properties, other.properties);
+    //J+
   }
 
   /**
@@ -206,7 +209,9 @@ public class Changeset extends BasicPropertiesAware
   }
 
   /**
-   * Returns the branches of the changeset.
+   * Returns the branches of the changeset. In the most cases a changeset is 
+   * only related to one branch, but in the case of receive hooks it is possible 
+   * that a changeset is related to more than a branch.
    *
    *
    * @return branches of the changeset

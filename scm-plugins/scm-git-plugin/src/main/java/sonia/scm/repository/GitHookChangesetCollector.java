@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -56,7 +57,7 @@ import sonia.scm.web.CollectingPackParserListener;
 import java.io.IOException;
 
 import java.util.List;
-
+import java.util.Map;
 
 /**
  *
@@ -98,7 +99,7 @@ public class GitHookChangesetCollector
    */
   public List<Changeset> collectChangesets()
   {
-    List<Changeset> changesets = Lists.newArrayList();
+    Map<String, Changeset> changesets = Maps.newLinkedHashMap();
 
     org.eclipse.jgit.lib.Repository repository = rpack.getRepository();
 
@@ -157,7 +158,7 @@ public class GitHookChangesetCollector
       GitUtil.release(walk);
     }
 
-    return changesets;
+    return Lists.newArrayList(changesets.values());
   }
 
   /**
@@ -172,7 +173,7 @@ public class GitHookChangesetCollector
    * @throws IOException
    * @throws IncorrectObjectTypeException
    */
-  private void collectChangesets(List<Changeset> changesets,
+  private void collectChangesets(Map<String, Changeset> changesets,
     GitChangesetConverter converter, RevWalk walk, ReceiveCommand rc)
     throws IncorrectObjectTypeException, IOException
   {
@@ -190,7 +191,7 @@ public class GitHookChangesetCollector
 
     ObjectId oldId = rc.getOldId();
 
-    if ((oldId != null) &&!oldId.equals(ObjectId.zeroId()))
+    if ((oldId != null) && !oldId.equals(ObjectId.zeroId()))
     {
       logger.trace("mark {} as uninteresting for rev walk", oldId.getName());
 
@@ -199,27 +200,38 @@ public class GitHookChangesetCollector
 
     RevCommit commit = walk.next();
 
-    List<String> branches = Lists.newArrayList(branch);
-
     while (commit != null)
     {
+      String id = commit.getId().name();
+      Changeset changeset = changesets.get(id);
 
-      // only append new commits
-      if (listener.isNew(commit))
+      if (changeset != null)
       {
-
-        // parse commit body to avoid npe
-        walk.parseBody(commit);
-
-        Changeset changeset = converter.createChangeset(commit, branches);
-
-        logger.trace("retrieve commit {} for hook", changeset.getId());
-
-        changesets.add(changeset);
+        logger.trace(
+          "commit {} already received durring this push, add branch {} to the commit",
+          commit, branch);
+        changeset.getBranches().add(branch);
       }
       else
       {
-        logger.trace("commit {} was already received", commit.getId());
+
+        // only append new commits
+        if (listener.isNew(commit))
+        {
+
+          // parse commit body to avoid npe
+          walk.parseBody(commit);
+
+          changeset = converter.createChangeset(commit, branch);
+
+          logger.trace("retrieve commit {} for hook", changeset.getId());
+
+          changesets.put(id, changeset);
+        }
+        else
+        {
+          logger.trace("commit {} was already received", commit.getId());
+        }
       }
 
       commit = walk.next();
