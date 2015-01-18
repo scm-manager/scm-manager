@@ -49,12 +49,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.util.IOUtil;
+import sonia.scm.web.CollectingPackParserListener;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
 import java.util.List;
+
 
 /**
  *
@@ -83,6 +85,7 @@ public class GitHookChangesetCollector
   {
     this.rpack = rpack;
     this.receiveCommands = receiveCommands;
+    this.listener = CollectingPackParserListener.get(rpack);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -110,6 +113,16 @@ public class GitHookChangesetCollector
 
       for (ReceiveCommand rc : receiveCommands)
       {
+        //J-
+        logger.trace("handle receive command, type={}, ref={}, result={}",
+          new Object[] {
+            rc.getType(),
+            rc.getRefName(),
+            rc.getResult()
+          }
+        );
+        //J+
+
         if (rc.getType() != ReceiveCommand.Type.DELETE)
         {
           try
@@ -163,16 +176,6 @@ public class GitHookChangesetCollector
     GitChangesetConverter converter, RevWalk walk, ReceiveCommand rc)
     throws IncorrectObjectTypeException, IOException
   {
-    //J-
-    logger.trace("handle receive command, type={}, ref={}, result={}",
-      new Object[] {
-        rc.getType(),
-        rc.getRefName(),
-        rc.getResult()
-      }
-    );
-    //J+
-
     ObjectId newId = rc.getNewId();
 
     String branch = GitUtil.getBranch(rc.getRefName());
@@ -201,20 +204,32 @@ public class GitHookChangesetCollector
     while (commit != null)
     {
 
-      // parse commit body to avoid npe
-      walk.parseBody(commit);
+      // only append new commits
+      if (listener.isNew(commit))
+      {
 
-      Changeset changeset = converter.createChangeset(commit, branches);
+        // parse commit body to avoid npe
+        walk.parseBody(commit);
 
-      logger.trace("retrive commit {} for hook", changeset.getId());
+        Changeset changeset = converter.createChangeset(commit, branches);
 
-      changesets.add(changeset);
+        logger.trace("retrieve commit {} for hook", changeset.getId());
+
+        changesets.add(changeset);
+      }
+      else
+      {
+        logger.trace("commit {} was already received", commit.getId());
+      }
 
       commit = walk.next();
     }
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** listener to track new objects */
+  private final CollectingPackParserListener listener;
 
   /** Field description */
   private final List<ReceiveCommand> receiveCommands;
