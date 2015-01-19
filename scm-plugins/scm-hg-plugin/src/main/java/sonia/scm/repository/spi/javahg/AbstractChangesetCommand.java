@@ -30,6 +30,7 @@
  */
 
 
+
 package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -87,6 +88,9 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
   private static final String NULL_ID =
     "0000000000000000000000000000000000000000";
 
+  /** changeset property for closed branch */
+  private static final String PROPERTY_CLOSE = "hg.close";
+
   /** changeset property for parent1 revision */
   private static final String PROPERTY_PARENT1_REVISION = "hg.p1.rev";
 
@@ -114,12 +118,80 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
 
   //~--- methods --------------------------------------------------------------
 
+  /**
+   * Method description
+   *
+   *
+   * @param stream
+   *
+   * @return
+   */
+  protected List<Integer> loadRevisionsFromStream(HgInputStream stream)
+  {
+    List<Integer> revisions = Lists.newArrayList();
 
-  //~--- get methods ----------------------------------------------------------
+    try
+    {
+      while (stream.peek() != -1)
+      {
+        int rev = stream.revisionUpTo(' ');
 
+        if (rev >= 0)
+        {
+          revisions.add(rev);
+        }
+      }
 
+    }
+    catch (IOException ex)
+    {
+      throw new RuntimeIOException(ex);
+    }
 
-  //~--- methods --------------------------------------------------------------
+    return revisions;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param in
+   *
+   * @return
+   */
+  protected List<Changeset> readListFromStream(HgInputStream in)
+  {
+    List<Changeset> changesets = Lists.newArrayList();
+
+    try
+    {
+      boolean found = in.find(CHANGESET_PATTERN);
+
+      if (found)
+      {
+        while (!in.match(CHANGESET_PATTERN))
+        {
+
+          Changeset cset = createFromInputStream(in);
+
+          if (cset != null)
+          {
+            changesets.add(cset);
+          }
+        }
+
+        Utils.consumeAll(in);
+      }
+
+      // If the pattern is not found there is no changsets
+    }
+    catch (IOException e)
+    {
+      throw new RuntimeIOException(e);
+    }
+
+    return changesets;
+  }
 
   /**
    * Method description
@@ -168,7 +240,16 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
       changeset.getParents().add(p2);
     }
 
-    in.mustMatch(' ');    // skip space part of {parents}
+    // skip space part of {parents}
+    in.mustMatch(' ');
+
+    // read extras
+    String extraLine = in.textUpTo('\n');
+
+    if (extraLine.contains("close=1"))
+    {
+      changeset.getProperties().put(PROPERTY_CLOSE, "true");
+    }
 
     Modifications modifications = changeset.getModifications();
 
@@ -208,39 +289,6 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
    * Method description
    *
    *
-   * @param stream
-   *
-   * @return
-   */
-  protected List<Integer> loadRevisionsFromStream(HgInputStream stream)
-  {
-    List<Integer> revisions = Lists.newArrayList();
-
-    try
-    {
-      while (stream.peek() != -1)
-      {
-        int rev = stream.revisionUpTo(' ');
-
-        if (rev >= 0)
-        {
-          revisions.add(rev);
-        }
-      }
-
-    }
-    catch (IOException ex)
-    {
-      throw new RuntimeIOException(ex);
-    }
-
-    return revisions;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param in
    * @param changeset
    * @param propertyKey
@@ -266,48 +314,6 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
     in.upTo(':');
 
     return in.nextAsText(40);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param in
-   *
-   * @return
-   */
-  protected List<Changeset> readListFromStream(HgInputStream in)
-  {
-    List<Changeset> changesets = Lists.newArrayList();
-
-    try
-    {
-      boolean found = in.find(CHANGESET_PATTERN);
-
-      if (found)
-      {
-        while (!in.match(CHANGESET_PATTERN))
-        {
-
-          Changeset cset = createFromInputStream(in);
-
-          if (cset != null)
-          {
-            changesets.add(cset);
-          }
-        }
-
-        Utils.consumeAll(in);
-      }
-
-      // If the pattern is not found there is no changsets
-    }
-    catch (IOException e)
-    {
-      throw new RuntimeIOException(e);
-    }
-
-    return changesets;
   }
 
   //~--- get methods ----------------------------------------------------------
