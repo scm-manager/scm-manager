@@ -553,7 +553,8 @@ public class RepositoryImportResource
     }
     catch (RepositoryAllreadyExistExeption ex)
     {
-      logger.warn("a {} repository with the name {} already exists", ex);
+      logger.warn("a {} repository with the name {} already exists", type,
+        name);
 
       throw new WebApplicationException(Response.Status.CONFLICT);
     }
