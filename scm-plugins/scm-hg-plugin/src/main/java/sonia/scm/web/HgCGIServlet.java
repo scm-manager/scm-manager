@@ -122,6 +122,7 @@ public class HgCGIServlet extends HttpServlet
     this.hookManager = hookManager;
     this.requestListenerUtil = requestListenerUtil;
     this.exceptionHandler = new HgCGIExceptionHandler();
+    this.command = HgPythonScript.HGWEB.getFile(SCMContext.getContext());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -135,7 +136,7 @@ public class HgCGIServlet extends HttpServlet
   @Override
   public void init() throws ServletException
   {
-    command = HgPythonScript.HGWEB.getFile(SCMContext.getContext());
+
     super.init();
   }
 
@@ -176,7 +177,11 @@ public class HgCGIServlet extends HttpServlet
       {
         handleRequest(request, response, repository);
       }
-      catch (Exception ex)
+      catch (ServletException ex)
+      {
+        exceptionHandler.handleException(request, response, ex);
+      }
+      catch (IOException ex)
       {
         exceptionHandler.handleException(request, response, ex);
       }
@@ -258,6 +263,7 @@ public class HgCGIServlet extends HttpServlet
     executor.getEnvironment().set(ENV_REPOSITORY_NAME, name);
     executor.getEnvironment().set(ENV_REPOSITORY_PATH,
       directory.getAbsolutePath());
+
     // add hook environment
     //J-
     HgEnvironment.prepareEnvironment(
@@ -312,26 +318,26 @@ public class HgCGIServlet extends HttpServlet
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private CGIExecutorFactory cgiExecutorFactory;
+  private final CGIExecutorFactory cgiExecutorFactory;
 
   /** Field description */
-  private File command;
+  private final File command;
 
   /** Field description */
-  private ScmConfiguration configuration;
+  private final ScmConfiguration configuration;
 
   /** Field description */
-  private HgCGIExceptionHandler exceptionHandler;
+  private final HgCGIExceptionHandler exceptionHandler;
 
   /** Field description */
-  private HgRepositoryHandler handler;
+  private final HgRepositoryHandler handler;
 
   /** Field description */
-  private HgHookManager hookManager;
+  private final HgHookManager hookManager;
 
   /** Field description */
-  private RepositoryProvider repositoryProvider;
+  private final RepositoryProvider repositoryProvider;
 
   /** Field description */
-  private RepositoryRequestListenerUtil requestListenerUtil;
+  private final RepositoryRequestListenerUtil requestListenerUtil;
 }

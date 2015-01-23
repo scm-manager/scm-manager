@@ -307,5 +307,5 @@ public class ProxyServlet extends HttpServlet
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ProxyConfigurationProvider configurationProvider;
+  private final ProxyConfigurationProvider configurationProvider;
 }

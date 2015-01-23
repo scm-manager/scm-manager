@@ -185,8 +185,8 @@ public class ErrorServlet extends HttpServlet
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private SCMContextProvider context;
+  private final SCMContextProvider context;
 
   /** Field description */
-  private TemplateEngineFactory templateEngineFactory;
+  private final TemplateEngineFactory templateEngineFactory;
 }

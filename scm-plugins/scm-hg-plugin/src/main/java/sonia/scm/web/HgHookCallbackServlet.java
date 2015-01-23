@@ -538,14 +538,14 @@ public class HgHookCallbackServlet extends HttpServlet
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Provider<HgContext> contextProvider;
+  private final Provider<HgContext> contextProvider;
 
   /** Field description */
-  private HgRepositoryHandler handler;
+  private final HgRepositoryHandler handler;
 
   /** Field description */
-  private HookEventFacade hookEventFacade;
+  private final HookEventFacade hookEventFacade;
 
   /** Field description */
-  private HgHookManager hookManager;
+  private final HgHookManager hookManager;
 }

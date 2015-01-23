@@ -167,5 +167,5 @@ public abstract class AbstractResourceServlet extends HttpServlet
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private ResourceManager resourceManager;
+  private final ResourceManager resourceManager;
 }
