@@ -693,7 +693,7 @@ public class RepositoryImportResource
   private void handleGenericCreationFailure(Exception ex, String type,
     String name)
   {
-    logger.error(String.format("could not create repository {} with type {}",
+    logger.error(String.format("could not create repository %s with type %s",
       type, name), ex);
 
     throw new WebApplicationException(ex);
