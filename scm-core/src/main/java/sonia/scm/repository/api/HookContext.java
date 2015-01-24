@@ -43,8 +43,9 @@ import sonia.scm.repository.spi.HookContextProvider;
 
 /**
  * The context for all repository hooks. With the {@link HookContext} class it
- * is able to send messages back to the client and retrieve {@link Changeset}s
- * which are added during this push/commit.
+ * is able to send messages back to the client, retrieve {@link Changeset}s
+ * which are added during this push/commit and gives informations about changed 
+ * branches.
  *
  * @author Sebastian Sdorra
  * @since 1.33
@@ -79,11 +80,36 @@ public final class HookContext
   //~--- get methods ----------------------------------------------------------
 
   /**
+   * Returns a {@link HookBranchProvider} which is able to return informations
+   * about changed branches during the current hook.
+   *
+   * @return {@link HookBranchProvider}
+   * 
+   * @throws HookFeatureIsNotSupportedException if the feature is not supported 
+   *  by the underlying provider
+   * 
+   * @since 1.45
+   */
+  public HookBranchProvider getBranchProvider()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create branch provider for repository {}",
+        repository.getName());
+    }
+
+    return provider.getBranchProvider();
+  }
+
+  /**
    * Returns a {@link HookChangesetBuilder} which is able to return all
    * {@link Changeset}'s during this push/commit.
    *
    *
    * @return {@link HookChangesetBuilder}
+   * 
+   * @throws HookFeatureIsNotSupportedException if the feature is not supported 
+   *  by the underlying provider
    */
   public HookChangesetBuilder getChangesetProvider()
   {
@@ -111,6 +137,9 @@ public final class HookContext
    *
    * @return {@link HookMessageProvider} which is able to send message back to
    * the scm client
+   * 
+   * @throws HookFeatureIsNotSupportedException if the feature is not supported 
+   *  by the underlying provider
    */
   public HookMessageProvider getMessageProvider()
   {
@@ -138,12 +167,12 @@ public final class HookContext
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private PreProcessorUtil preProcessorUtil;
+  /** pre processor util */
+  private final PreProcessorUtil preProcessorUtil;
 
-  /** Field description */
-  private HookContextProvider provider;
+  /** hook context provider */
+  private final HookContextProvider provider;
 
-  /** Field description */
-  private Repository repository;
+  /** repository */
+  private final Repository repository;
 }

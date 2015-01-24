@@ -64,7 +64,7 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
 {
 
   /** Field description */
-  private static final String BRANCH_DEFAULT = "default";
+  public static final String BRANCH_DEFAULT = "default";
 
   /**
    * Character sequence that indicate the begin and end of the
@@ -89,7 +89,7 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
     "0000000000000000000000000000000000000000";
 
   /** changeset property for closed branch */
-  private static final String PROPERTY_CLOSE = "hg.close";
+  public static final String PROPERTY_CLOSE = "hg.close";
 
   /** changeset property for parent1 revision */
   private static final String PROPERTY_PARENT1_REVISION = "hg.p1.rev";

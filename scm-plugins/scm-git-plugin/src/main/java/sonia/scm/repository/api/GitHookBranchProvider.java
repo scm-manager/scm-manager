@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
+ * Copyright (c) 2014, Sebastian Sdorra All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,54 +29,58 @@
 
 
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.api.HookBranchProvider;
-import sonia.scm.repository.api.HookException;
-import sonia.scm.repository.api.HookFeature;
-import sonia.scm.repository.api.HookFeatureIsNotSupportedException;
-import sonia.scm.repository.api.HookMessageProvider;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+
+import org.eclipse.jgit.transport.ReceiveCommand;
+import org.eclipse.jgit.transport.ReceiveCommand.Type;
+
+import sonia.scm.repository.GitUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Set;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
- * @since 1.33
  */
-public abstract class HookContextProvider
+public class GitHookBranchProvider implements HookBranchProvider
 {
 
   /**
-   * Method description
+   * Constructs ...
    *
    *
-   * @return
+   * @param commands
    */
-  public final HookMessageProvider getMessageProvider()
+  public GitHookBranchProvider(List<ReceiveCommand> commands)
   {
-    if (clientDisconnected)
+    Builder<String> createdOrModifiedBuilder = ImmutableList.builder();
+    Builder<String> deletedOrClosedBuilder = ImmutableList.builder();
+
+    for (ReceiveCommand command : commands)
     {
-      throw new HookException(
-        "message provider is only available in a synchronous hook execution.");
+      Type type = command.getType();
+      String branch = GitUtil.getBranch(command.getRefName());
+
+      if ((type == Type.CREATE) || (type == Type.UPDATE)
+        || (type == Type.UPDATE_NONFASTFORWARD))
+      {
+        createdOrModifiedBuilder.add(branch);
+      }
+      else if (command.getType() == Type.DELETE)
+      {
+        deletedOrClosedBuilder.add(branch);
+      }
     }
 
-    return createMessageProvider();
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
-  final void handleClientDisconnect()
-  {
-    clientDisconnected = true;
+    createdOrModified = createdOrModifiedBuilder.build();
+    deletedOrClosed = deletedOrClosedBuilder.build();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -87,17 +91,10 @@ public abstract class HookContextProvider
    *
    * @return
    */
-  public abstract Set<HookFeature> getSupportedFeatures();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public HookBranchProvider getBranchProvider()
+  @Override
+  public List<String> getCreatedOrModified()
   {
-    throw new HookFeatureIsNotSupportedException(HookFeature.BRANCH_PROVIDER);
+    return createdOrModified;
   }
 
   /**
@@ -106,27 +103,17 @@ public abstract class HookContextProvider
    *
    * @return
    */
-  public HookChangesetProvider getChangesetProvider()
+  @Override
+  public List<String> getDeletedOrClosed()
   {
-    throw new HookFeatureIsNotSupportedException(
-      HookFeature.CHANGESET_PROVIDER);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  protected HookMessageProvider createMessageProvider()
-  {
-    throw new HookFeatureIsNotSupportedException(HookFeature.MESSAGE_PROVIDER);
+    return deletedOrClosed;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private boolean clientDisconnected = false;
+  private final List<String> createdOrModified;
+
+  /** Field description */
+  private final List<String> deletedOrClosed;
 }

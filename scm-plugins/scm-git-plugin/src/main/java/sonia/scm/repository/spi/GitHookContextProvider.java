@@ -36,7 +36,9 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
 
+import sonia.scm.repository.api.GitHookBranchProvider;
 import sonia.scm.repository.api.GitHookMessageProvider;
+import sonia.scm.repository.api.HookBranchProvider;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookMessageProvider;
 
@@ -55,7 +57,8 @@ public class GitHookContextProvider extends HookContextProvider
 
   /** Field description */
   private static final Set<HookFeature> SUPPORTED_FEATURES =
-    EnumSet.of(HookFeature.MESSAGE_PROVIDER, HookFeature.CHANGESET_PROVIDER);
+    EnumSet.of(HookFeature.MESSAGE_PROVIDER, HookFeature.CHANGESET_PROVIDER,
+      HookFeature.BRANCH_PROVIDER);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -70,6 +73,7 @@ public class GitHookContextProvider extends HookContextProvider
     List<ReceiveCommand> receiveCommands)
   {
     this.receivePack = receivePack;
+    this.receiveCommands = receiveCommands;
     this.changesetProvider = new GitHookChangesetProvider(receivePack,
       receiveCommands);
   }
@@ -89,6 +93,18 @@ public class GitHookContextProvider extends HookContextProvider
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  @Override
+  public HookBranchProvider getBranchProvider()
+  {
+    return new GitHookBranchProvider(receiveCommands);
+  }
 
   /**
    * Method description
@@ -117,8 +133,11 @@ public class GitHookContextProvider extends HookContextProvider
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private GitHookChangesetProvider changesetProvider;
+  private final GitHookChangesetProvider changesetProvider;
 
   /** Field description */
-  private ReceivePack receivePack;
+  private final List<ReceiveCommand> receiveCommands;
+
+  /** Field description */
+  private final ReceivePack receivePack;
 }

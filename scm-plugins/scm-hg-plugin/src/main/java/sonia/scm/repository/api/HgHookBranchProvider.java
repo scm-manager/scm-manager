@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
+ * Copyright (c) 2014, Sebastian Sdorra All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,35 +29,33 @@
 
 
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.HgHookManager;
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.RepositoryHookType;
-import sonia.scm.repository.api.HgHookBranchProvider;
-import sonia.scm.repository.api.HgHookMessageProvider;
-import sonia.scm.repository.api.HookBranchProvider;
-import sonia.scm.repository.api.HookFeature;
-import sonia.scm.repository.api.HookMessageProvider;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.spi.HgHookChangesetProvider;
+import sonia.scm.repository.spi.HookChangesetRequest;
+import sonia.scm.repository.spi.javahg.AbstractChangesetCommand;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.EnumSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgHookContextProvider extends HookContextProvider
+public class HgHookBranchProvider implements HookBranchProvider
 {
 
   /** Field description */
-  private static final Set<HookFeature> SUPPORTED_FEATURES =
-    EnumSet.of(HookFeature.CHANGESET_PROVIDER, HookFeature.MESSAGE_PROVIDER,
-      HookFeature.BRANCH_PROVIDER);
+  private static final HookChangesetRequest REQUEST =
+    new HookChangesetRequest();
 
   //~--- constructors ---------------------------------------------------------
 
@@ -65,18 +63,11 @@ public class HgHookContextProvider extends HookContextProvider
    * Constructs ...
    *
    *
-   * @param handler
-   * @param repositoryName
-   * @param hookManager
-   * @param startRev
-   * @param type
+   * @param changesetProvider
    */
-  public HgHookContextProvider(HgRepositoryHandler handler,
-    String repositoryName, HgHookManager hookManager, String startRev,
-    RepositoryHookType type)
+  public HgHookBranchProvider(HgHookChangesetProvider changesetProvider)
   {
-    this.hookChangesetProvider = new HgHookChangesetProvider(handler,
-      repositoryName, hookManager, startRev, type);
+    this.changesetProvider = changesetProvider;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -88,14 +79,14 @@ public class HgHookContextProvider extends HookContextProvider
    * @return
    */
   @Override
-  public HookBranchProvider getBranchProvider()
+  public List<String> getCreatedOrModified()
   {
-    if (hookBranchProvider == null)
+    if (createdOrModified == null)
     {
-      hookBranchProvider = new HgHookBranchProvider(hookChangesetProvider);
+      collect();
     }
 
-    return hookBranchProvider;
+    return createdOrModified;
   }
 
   /**
@@ -105,37 +96,14 @@ public class HgHookContextProvider extends HookContextProvider
    * @return
    */
   @Override
-  public HookChangesetProvider getChangesetProvider()
+  public List<String> getDeletedOrClosed()
   {
-    return hookChangesetProvider;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public HgHookMessageProvider getHgMessageProvider()
-  {
-    if (hgMessageProvider == null)
+    if (deletedOrClosed == null)
     {
-      hgMessageProvider = new HgHookMessageProvider();
+      collect();
     }
 
-    return hgMessageProvider;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Set<HookFeature> getSupportedFeatures()
-  {
-    return SUPPORTED_FEATURES;
+    return deletedOrClosed;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -144,22 +112,71 @@ public class HgHookContextProvider extends HookContextProvider
    * Method description
    *
    *
+   * @param builder
+   * @param c
+   *
    * @return
    */
-  @Override
-  protected HookMessageProvider createMessageProvider()
+  private List<String> appendBranches(Builder<String> builder, Changeset c)
   {
-    return getHgMessageProvider();
+    List<String> branches = c.getBranches();
+
+    if (Util.isEmpty(branches))
+    {
+      builder.add(AbstractChangesetCommand.BRANCH_DEFAULT);
+    }
+    else
+    {
+      builder.addAll(branches);
+    }
+
+    return branches;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  private Iterable<Changeset> changesets()
+  {
+    return changesetProvider.handleRequest(REQUEST).getChangesets();
+  }
+
+  /**
+   * Method description
+   *
+   */
+  private void collect()
+  {
+    Builder<String> createdOrModifiedBuilder = ImmutableList.builder();
+    Builder<String> deletedOrClosedBuilder = ImmutableList.builder();
+
+    for (Changeset c : changesets())
+    {
+      if (c.getProperty(AbstractChangesetCommand.PROPERTY_CLOSE) != null)
+      {
+        appendBranches(deletedOrClosedBuilder, c);
+      }
+      else
+      {
+        appendBranches(createdOrModifiedBuilder, c);
+      }
+    }
+
+    createdOrModified = createdOrModifiedBuilder.build();
+    deletedOrClosed = deletedOrClosedBuilder.build();
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final HgHookChangesetProvider hookChangesetProvider;
+  private final HgHookChangesetProvider changesetProvider;
 
   /** Field description */
-  private HgHookMessageProvider hgMessageProvider;
+  private List<String> createdOrModified;
 
   /** Field description */
-  private HgHookBranchProvider hookBranchProvider;
+  private List<String> deletedOrClosed;
 }

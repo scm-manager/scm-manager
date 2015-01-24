@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
+ * Copyright (c) 2014, Sebastian Sdorra All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,29 +31,31 @@
 
 package sonia.scm.repository.api;
 
+//~--- JDK imports ------------------------------------------------------------
+
+import java.util.List;
+
 /**
- * Enumeration of available hook features.
+ * The HookBranchProvider returns informations about branch changes during the
+ * current hook.
  *
  * @author Sebastian Sdorra
- * @since 1.33
+ * @since 1.45
  */
-public enum HookFeature
+public interface HookBranchProvider
 {
 
   /**
-   * Hook message provider
-   */
-  MESSAGE_PROVIDER,
-
-  /**
-   * Hook changeset provider
-   */
-  CHANGESET_PROVIDER,
-
-  /**
-   * Hook branch provider
+   * Returns the list of created or modified branch names.
    *
-   * @since 1.45
+   * @return list of created or modified branches
    */
-  BRANCH_PROVIDER;
+  public List<String> getCreatedOrModified();
+
+  /**
+   * Returns the list deleted or closed branch names.
+   *
+   * @return list of deleted or closed branches
+   */
+  public List<String> getDeletedOrClosed();
 }
