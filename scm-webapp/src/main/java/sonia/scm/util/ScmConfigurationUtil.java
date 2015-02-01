@@ -152,7 +152,7 @@ public final class ScmConfigurationUtil
     }
     else if (logger.isDebugEnabled())
     {
-      logger.debug("could not find ScmConfiuration file at {}", file);
+      logger.debug("could not find ScmConfiguration file at {}", file);
     }
   }
 
