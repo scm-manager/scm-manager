@@ -26,62 +26,35 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+package sonia.scm.filter;
 
-
-
-package sonia.scm.plugin;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Binder;
+import sonia.scm.plugin.WebElementDescriptor;
 
 /**
- * Process and resolve extensions.
  *
  * @author Sebastian Sdorra
- * @since 2.0.0
+ * @param <T>
  */
-public interface ExtensionProcessor
+public final class TypedWebElementDescriptor<T> 
 {
+  private final Class<T> clazz;
+  private final WebElementDescriptor descriptor;
 
-  /**
-   * Collect extension classes by extension point.
-   *
-   *
-   * @param <T> type of extension
-   * @param extensionPoint extension point
-   *
-   * @return extensions
-   */
-  public <T> Iterable<Class<? extends T>> byExtensionPoint(
-    Class<T> extensionPoint);
+  public TypedWebElementDescriptor(Class<T> clazz,
+    WebElementDescriptor descriptor)
+  {
+    this.clazz = clazz;
+    this.descriptor = descriptor;
+  }
 
-  /**
-   * Returns single extension by its extension point.
-   *
-   *
-   * @param <T> type of extension
-   * @param extensionPoint extension point
-   *
-   * @return extension
-   */
-  public <T> Class<? extends T> oneByExtensionPoint(Class<T> extensionPoint);
+  public Class<T> getClazz()
+  {
+    return clazz;
+  }
 
-  /**
-   * Process auto bind extensions.
-   *
-   *
-   * @param binder injection binder
-   */
-  public void processAutoBindExtensions(Binder binder);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns all collected web elements (servlets and filters).
-   *
-   *
-   * @return collected web elements
-   */
-  public Iterable<WebElementDescriptor> getWebElements();
+  public WebElementDescriptor getDescriptor()
+  {
+    return descriptor;
+  }
+  
 }

@@ -205,6 +205,17 @@ public final class ExtensionCollector
     return restResources;
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Set<WebElementDescriptor> getWebElements()
+  {
+    return webElements;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -263,18 +274,22 @@ public final class ExtensionCollector
 
     restProviders.addAll(Lists.newArrayList(module.getRestProviders()));
     restResources.addAll(Lists.newArrayList(module.getRestResources()));
+    Iterables.addAll(webElements, module.getWebElements());
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final Set<Class> looseExtensions = Sets.newHashSet();
+  private final Set<WebElementDescriptor> webElements = Sets.newHashSet();
+
+  /** Field description */
+  private final Set<Class> restResources = Sets.newHashSet();
 
   /** Field description */
   private final Set<Class> restProviders = Sets.newHashSet();
 
   /** Field description */
-  private final Set<Class> restResources = Sets.newHashSet();
+  private final Set<Class> looseExtensions = Sets.newHashSet();
 
   /** Field description */
   private final Multimap<ExtensionPointElement, Class> extensions =

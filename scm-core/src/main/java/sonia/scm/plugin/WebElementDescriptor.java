@@ -31,86 +31,47 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
+//~--- JDK imports ------------------------------------------------------------
 
-import com.google.common.base.Stopwatch;
-import com.google.inject.Binder;
+import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 2.0.0
  */
-@SuppressWarnings("unchecked")
-public class DefaultExtensionProcessor implements ExtensionProcessor
+@XmlRootElement(name = "web-element")
+@XmlAccessorType(XmlAccessType.FIELD)
+public final class WebElementDescriptor
 {
 
   /**
-   * the logger for DefaultExtensionProcessor
+   * Constructs ...
+   *
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(DefaultExtensionProcessor.class);
-
-  //~--- constructors ---------------------------------------------------------
+  WebElementDescriptor() {}
 
   /**
    * Constructs ...
    *
    *
-   * @param collector
+   * @param clazz
+   * @param pattern
+   * @param morePatterns
+   * @param regex
    */
-  public DefaultExtensionProcessor(ExtensionCollector collector)
+  public WebElementDescriptor(Class<?> clazz, String pattern,
+    String[] morePatterns, boolean regex)
   {
-    this.collector = collector;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param extensionPoint
-   *
-   * @return
-   */
-  @Override
-  public Iterable<Class> byExtensionPoint(Class extensionPoint)
-  {
-    return collector.byExtensionPoint(extensionPoint);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param extensionPoint
-   *
-   * @return
-   */
-  @Override
-  public Class oneByExtensionPoint(Class extensionPoint)
-  {
-    return collector.oneByExtensionPoint(extensionPoint);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param binder
-   */
-  @Override
-  public void processAutoBindExtensions(Binder binder)
-  {
-    logger.info("start processing extensions");
-
-    Stopwatch sw = Stopwatch.createStarted();
-
-    new ExtensionBinder(binder).bind(collector);
-    logger.info("bound extensions in {}", sw.stop());
+    this.clazz = clazz;
+    this.pattern = pattern;
+    this.morePatterns = morePatterns;
+    this.regex = regex;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -121,14 +82,68 @@ public class DefaultExtensionProcessor implements ExtensionProcessor
    *
    * @return
    */
-  @Override
-  public Iterable<WebElementDescriptor> getWebElements()
+  public Class<?> getClazz()
   {
-    return collector.getWebElements();
+    return clazz;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String[] getMorePatterns()
+  {
+    String[] patterns;
+
+    if (morePatterns != null)
+    {
+      patterns = Arrays.copyOf(morePatterns, morePatterns.length);
+    }
+    else
+    {
+      patterns = new String[0];
+    }
+
+    return patterns;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getPattern()
+  {
+    return pattern;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isRegex()
+  {
+    return regex;
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final ExtensionCollector collector;
+  @XmlElement(name = "class")
+  private Class<?> clazz;
+
+  /** Field description */
+  private String[] morePatterns;
+
+  /** Field description */
+  @XmlElement(name = "value")
+  private String pattern;
+
+  /** Field description */
+  private boolean regex = false;
 }

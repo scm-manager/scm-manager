@@ -29,29 +29,36 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Stopwatch;
-import com.google.inject.Binder;
+import com.google.inject.Scopes;
+import com.google.inject.servlet.ServletModule;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import sonia.scm.plugin.PluginLoader;
+import sonia.scm.plugin.WebElementDescriptor;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import javax.servlet.Filter;
+import javax.servlet.http.HttpServlet;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@SuppressWarnings("unchecked")
-public class DefaultExtensionProcessor implements ExtensionProcessor
+public class WebElementModule extends ServletModule
 {
 
   /**
-   * the logger for DefaultExtensionProcessor
+   * the logger for WebElementModule
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(DefaultExtensionProcessor.class);
+    LoggerFactory.getLogger(WebElementModule.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -59,11 +66,11 @@ public class DefaultExtensionProcessor implements ExtensionProcessor
    * Constructs ...
    *
    *
-   * @param collector
+   * @param pluginLoader
    */
-  public DefaultExtensionProcessor(ExtensionCollector collector)
+  public WebElementModule(PluginLoader pluginLoader)
   {
-    this.collector = collector;
+    collector = WebElementCollector.collect(pluginLoader);
   }
 
   //~--- methods --------------------------------------------------------------
@@ -71,64 +78,87 @@ public class DefaultExtensionProcessor implements ExtensionProcessor
   /**
    * Method description
    *
-   *
-   * @param extensionPoint
-   *
-   * @return
    */
   @Override
-  public Iterable<Class> byExtensionPoint(Class extensionPoint)
+  protected void configureServlets()
   {
-    return collector.byExtensionPoint(extensionPoint);
+    for (TypedWebElementDescriptor<? extends Filter> f : collector.getFilters())
+    {
+      bindFilter(f);
+    }
+
+    for (TypedWebElementDescriptor<? extends HttpServlet> s :
+      collector.getServlets())
+    {
+      bindServlet(s);
+    }
   }
 
   /**
    * Method description
    *
    *
-   * @param extensionPoint
-   *
-   * @return
+   * @param filter
    */
-  @Override
-  public Class oneByExtensionPoint(Class extensionPoint)
+  private void bindFilter(TypedWebElementDescriptor<? extends Filter> filter)
   {
-    return collector.oneByExtensionPoint(extensionPoint);
+    Class<? extends Filter> clazz = filter.getClazz();
+
+    logger.info("bind filter {} to filter chain", clazz);
+
+    // filters must be in singleton scope
+    bind(clazz).in(Scopes.SINGLETON);
+
+    WebElementDescriptor opts = filter.getDescriptor();
+    FilterKeyBindingBuilder builder;
+
+    if (opts.isRegex())
+    {
+      builder = filterRegex(opts.getPattern(), opts.getMorePatterns());
+    }
+    else
+    {
+      builder = filter(opts.getPattern(), opts.getMorePatterns());
+    }
+
+    // TODO handle init parameters
+    builder.through(clazz);
   }
 
   /**
    * Method description
    *
    *
-   * @param binder
+   * @param servlet
    */
-  @Override
-  public void processAutoBindExtensions(Binder binder)
+  private void bindServlet(
+    TypedWebElementDescriptor<? extends HttpServlet> servlet)
   {
-    logger.info("start processing extensions");
+    Class<? extends HttpServlet> clazz = servlet.getClazz();
 
-    Stopwatch sw = Stopwatch.createStarted();
+    logger.info("bind servlet {} to servlet chain", clazz);
 
-    new ExtensionBinder(binder).bind(collector);
-    logger.info("bound extensions in {}", sw.stop());
-  }
+    // filters must be in singleton scope
+    bind(clazz).in(Scopes.SINGLETON);
 
-  //~--- get methods ----------------------------------------------------------
+    WebElementDescriptor opts = servlet.getDescriptor();
+    ServletKeyBindingBuilder builder;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Iterable<WebElementDescriptor> getWebElements()
-  {
-    return collector.getWebElements();
+    if (opts.isRegex())
+    {
+      builder = serveRegex(opts.getPattern(), opts.getMorePatterns());
+    }
+    else
+    {
+      builder = serve(opts.getPattern(), opts.getMorePatterns());
+    }
+
+    // TODO handle init parameters
+    builder.with(clazz);
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final ExtensionCollector collector;
+  private final WebElementCollector collector;
 }

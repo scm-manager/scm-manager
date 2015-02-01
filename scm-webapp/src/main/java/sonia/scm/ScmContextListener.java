@@ -66,6 +66,7 @@ import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import sonia.scm.filter.WebElementModule;
 
 /**
  *
@@ -255,6 +256,7 @@ public class ScmContextListener extends GuiceServletContextListener
     moduleList.add(new ScmEventBusModule());
     moduleList.add(new EagerSingletonModule());
     moduleList.add(ShiroWebModule.guiceFilterModule());
+    moduleList.add(new WebElementModule(pluginLoader));
     moduleList.add(new ScmServletModule(servletCtx, pluginLoader, overrides));
     moduleList.add(
       new ScmSecurityModule(servletCtx, pluginLoader.getExtensionProcessor())

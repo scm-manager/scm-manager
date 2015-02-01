@@ -127,6 +127,17 @@ public class ScmModule
     return nonNull(subscribers);
   }
 
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public Iterable<WebElementDescriptor> getWebElements()
+  {
+    return nonNull(webElements);
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -225,4 +236,8 @@ public class ScmModule
   /** Field description */
   @XmlElement(name = "subscriber")
   private Set<SubscriberElement> subscribers;
+
+  /** Field description */
+  @XmlElement(name = "web-element")
+  private Set<WebElementDescriptor> webElements;
 }

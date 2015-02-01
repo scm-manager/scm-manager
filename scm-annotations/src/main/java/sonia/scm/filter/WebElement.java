@@ -29,59 +29,61 @@
 
 
 
-package sonia.scm.plugin;
+package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Binder;
+import sonia.scm.plugin.PluginAnnotation;
+
+//~--- JDK imports ------------------------------------------------------------
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Process and resolve extensions.
+ * Annotation to register servlets and filters. The annotation is automatically 
+ * picked up by the plugin registration processor of SCM-Manager.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public interface ExtensionProcessor
+@Documented
+@Target(ElementType.TYPE)
+@PluginAnnotation("web-element")
+@Retention(RetentionPolicy.RUNTIME)
+public @interface WebElement
 {
+  /**
+   * Returns filter or servlet path pattern. The path can be specified as glob 
+   * or as regex.
+   * 
+   * @return mapping path
+   */
+  public String value();
 
   /**
-   * Collect extension classes by extension point.
-   *
-   *
-   * @param <T> type of extension
-   * @param extensionPoint extension point
-   *
-   * @return extensions
+   * Returns additional filter or servlet path patterns. The path can be 
+   * specified as glob or as regex.
+   * 
+   * @return mapping paths
    */
-  public <T> Iterable<Class<? extends T>> byExtensionPoint(
-    Class<T> extensionPoint);
+  public String[] morePatterns() default {};
 
   /**
-   * Returns single extension by its extension point.
-   *
-   *
-   * @param <T> type of extension
-   * @param extensionPoint extension point
-   *
-   * @return extension
+   * Returns {@code true} if the path patterns are specified as regex patterns.
+   * Default is {@code false}.
+   * 
+   * @return {@code true} if the path patterns are specified as regex patterns
    */
-  public <T> Class<? extends T> oneByExtensionPoint(Class<T> extensionPoint);
+  public boolean regex() default false;
 
   /**
-   * Process auto bind extensions.
-   *
-   *
-   * @param binder injection binder
+   * Returns an array of init params.
+   * 
+   * @return array of init params
    */
-  public void processAutoBindExtensions(Binder binder);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns all collected web elements (servlets and filters).
-   *
-   *
-   * @return collected web elements
-   */
-  public Iterable<WebElementDescriptor> getWebElements();
+  public WebInitParam[] initParams() default {};
 }

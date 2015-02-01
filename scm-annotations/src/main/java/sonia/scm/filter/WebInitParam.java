@@ -26,62 +26,36 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+package sonia.scm.filter;
 
-
-
-package sonia.scm.plugin;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Binder;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Process and resolve extensions.
+ * Init param for servlet of filter registration. This annotation can only be 
+ * used with {@link WebElement}.
  *
  * @author Sebastian Sdorra
- * @since 2.0.0
  */
-public interface ExtensionProcessor
+@Documented
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface WebInitParam
 {
-
   /**
-   * Collect extension classes by extension point.
-   *
-   *
-   * @param <T> type of extension
-   * @param extensionPoint extension point
-   *
-   * @return extensions
+   * Name of the init parameter.
+   * 
+   * @return name of init parameter
    */
-  public <T> Iterable<Class<? extends T>> byExtensionPoint(
-    Class<T> extensionPoint);
-
+  public String name();
+  
   /**
-   * Returns single extension by its extension point.
-   *
-   *
-   * @param <T> type of extension
-   * @param extensionPoint extension point
-   *
-   * @return extension
+   * Value of the init parameter.
+   * 
+   * @return value of init parameter
    */
-  public <T> Class<? extends T> oneByExtensionPoint(Class<T> extensionPoint);
-
-  /**
-   * Process auto bind extensions.
-   *
-   *
-   * @param binder injection binder
-   */
-  public void processAutoBindExtensions(Binder binder);
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Returns all collected web elements (servlets and filters).
-   *
-   *
-   * @return collected web elements
-   */
-  public Iterable<WebElementDescriptor> getWebElements();
+  public String value();
 }
