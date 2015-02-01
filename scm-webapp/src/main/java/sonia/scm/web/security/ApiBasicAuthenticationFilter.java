@@ -52,12 +52,16 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.Priority;
+import sonia.scm.filter.Filters;
+import sonia.scm.filter.WebElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
+@Priority(Filters.PRIORITY_AUTHENTICATION)
+@WebElement(value = Filters.PATTERN_RESTAPI, morePatterns = {Filters.PATTERN_DEBUG})
 public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
 {
 

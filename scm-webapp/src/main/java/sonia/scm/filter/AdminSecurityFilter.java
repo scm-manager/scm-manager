@@ -36,9 +36,9 @@ package sonia.scm.filter;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import org.apache.shiro.subject.Subject;
+import sonia.scm.Priority;
 
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.Role;
@@ -47,7 +47,8 @@ import sonia.scm.security.Role;
  *
  * @author Sebastian Sdorra
  */
-@Singleton
+@Priority(Filters.PRIORITY_AUTHORIZATION + 1)
+@WebElement(value = Filters.PATTERN_RESTAPI, morePatterns = {Filters.PATTERN_DEBUG})
 public class AdminSecurityFilter extends SecurityFilter
 {
 
@@ -68,8 +69,6 @@ public class AdminSecurityFilter extends SecurityFilter
   /**
    * Method description
    *
-   *
-   * @param securityContext
    *
    * @param subject
    *

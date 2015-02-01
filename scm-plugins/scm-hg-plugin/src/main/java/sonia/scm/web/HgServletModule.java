@@ -74,8 +74,6 @@ public class HgServletModule extends ServletModule
     serve(MAPPING_HOOK).with(HgHookCallbackServlet.class);
 
     // register hg cgi servlet
-    filter(MAPPING_HG).through(HgBasicAuthenticationFilter.class);
-    filter(MAPPING_HG).through(HgPermissionFilter.class);
     serve(MAPPING_HG).with(HgCGIServlet.class);
   }
 }

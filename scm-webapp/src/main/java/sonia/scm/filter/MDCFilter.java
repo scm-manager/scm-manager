@@ -51,12 +51,14 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.Priority;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
+@Priority(Filters.PRIORITY_POST_AUTHENTICATION)
+@WebElement(Filters.PATTERN_ALL)
 public class MDCFilter extends HttpFilter
 {
 

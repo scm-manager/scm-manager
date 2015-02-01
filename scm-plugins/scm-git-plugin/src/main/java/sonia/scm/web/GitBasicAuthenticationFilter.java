@@ -39,7 +39,10 @@ import com.google.inject.Singleton;
 import org.eclipse.jgit.http.server.GitSmartHttpTools;
 
 import sonia.scm.ClientMessages;
+import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.filter.Filters;
+import sonia.scm.filter.WebElement;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.web.filter.AutoLoginModule;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
@@ -57,7 +60,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-@Singleton
+@Priority(Filters.PRIORITY_AUTHENTICATION)
+@WebElement(value = GitServletModule.PATTERN_GIT)
 public class GitBasicAuthenticationFilter extends BasicAuthenticationFilter
 {
 

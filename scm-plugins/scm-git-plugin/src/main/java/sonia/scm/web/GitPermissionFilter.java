@@ -52,12 +52,16 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.Priority;
+import sonia.scm.filter.Filters;
+import sonia.scm.filter.WebElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
+@Priority(Filters.PRIORITY_AUTHORIZATION)
+@WebElement(value = GitServletModule.PATTERN_GIT)
 public class GitPermissionFilter extends ProviderPermissionFilter
 {
 

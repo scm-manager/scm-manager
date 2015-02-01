@@ -50,35 +50,8 @@ import java.util.List;
 public final class Priorities
 {
 
-  /** authentication priority */
-  public static final int AUTHENTICATION = 5000;
-
-  /** authorization priority */
-  public static final int AUTHORIZATION = 6000;
-
-  /** base url priority */
-  public static final int BASEURL = 1000;
-
   /** default priority */
   public static final int DEFAULT = 9999;
-
-  /** post authentication priority */
-  public static final int POST_AUTHENTICATION = 5500;
-
-  /** pre authorization priority */
-  public static final int POST_AUTHORIZATION = 6500;
-
-  /** post base url priority */
-  public static final int POST_BASEURL = 1500;
-
-  /** pre authentication priority */
-  public static final int PRE_AUTHENTICATION = 4500;
-
-  /** pre authorization priority */
-  public static final int PRE_AUTHORIZATION = 5500;
-
-  /** pre base url priority */
-  public static final int PRE_BASEURL = 500;
 
   //~--- constructors ---------------------------------------------------------
 

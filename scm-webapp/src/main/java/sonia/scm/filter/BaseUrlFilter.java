@@ -37,7 +37,6 @@ package sonia.scm.filter;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.HttpUtil;
@@ -52,12 +51,14 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.Priority;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
+@Priority(Filters.PRIORITY_BASEURL)
+@WebElement(Filters.PATTERN_ALL)
 public class BaseUrlFilter extends HttpFilter
 {
 
@@ -162,6 +163,6 @@ public class BaseUrlFilter extends HttpFilter
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private ScmConfiguration configuration;
+  /** scm configuration */
+  private final ScmConfiguration configuration;
 }

@@ -54,6 +54,16 @@ import java.util.List;
 public class PrioritiesTest
 {
 
+    /** authentication priority */
+  public static final int AUTHENTICATION = 5000;
+  
+    /** post authentication priority */
+  public static final int POST_AUTHENTICATION = 5500;
+  
+    /** pre authentication priority */
+  public static final int PRE_AUTHENTICATION = 4500;
+
+  
   /**
    * Constructs ...
    *
@@ -69,7 +79,7 @@ public class PrioritiesTest
   @Test
   public void testGetPriority()
   {
-    assertEquals(Priorities.POST_AUTHENTICATION,
+    assertEquals(POST_AUTHENTICATION,
       Priorities.getPriority(A.class));
     assertEquals(Priorities.DEFAULT, Priorities.getPriority(D.class));
   }
@@ -97,7 +107,7 @@ public class PrioritiesTest
    * @version        Enter version here..., 14/12/20
    * @author         Enter your name here...
    */
-  @Priority(Priorities.POST_AUTHENTICATION)
+  @Priority(POST_AUTHENTICATION)
   public static class A {}
 
 
@@ -108,7 +118,7 @@ public class PrioritiesTest
    * @version        Enter version here..., 14/12/20
    * @author         Enter your name here...
    */
-  @Priority(Priorities.PRE_AUTHENTICATION)
+  @Priority(PRE_AUTHENTICATION)
   public static class B {}
 
 
@@ -119,7 +129,7 @@ public class PrioritiesTest
    * @version        Enter version here..., 14/12/20
    * @author         Enter your name here...
    */
-  @Priority(Priorities.AUTHENTICATION)
+  @Priority(AUTHENTICATION)
   public static class C {}
 
 

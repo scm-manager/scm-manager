@@ -35,11 +35,10 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.Priority;
 import sonia.scm.util.WebUtil;
 import sonia.scm.web.filter.HttpFilter;
 
@@ -58,7 +57,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  * @since 1.15
  */
-@Singleton
+@Priority(Filters.PRIORITY_PRE_BASEURL)
+@WebElement(value = Filters.PATTERN_RESOURCE_REGEX, regex = true)
 public class GZipFilter extends HttpFilter
 {
 
@@ -96,8 +96,8 @@ public class GZipFilter extends HttpFilter
    */
   @Override
   protected void doFilter(HttpServletRequest request,
-                          HttpServletResponse response, FilterChain chain)
-          throws IOException, ServletException
+    HttpServletResponse response, FilterChain chain)
+    throws IOException, ServletException
   {
     if (WebUtil.isGzipSupported(request))
     {

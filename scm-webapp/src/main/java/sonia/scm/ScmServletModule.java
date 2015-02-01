@@ -52,11 +52,6 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.filter.AdminSecurityFilter;
-import sonia.scm.filter.BaseUrlFilter;
-import sonia.scm.filter.GZipFilter;
-import sonia.scm.filter.MDCFilter;
-import sonia.scm.filter.SecurityFilter;
 import sonia.scm.group.DefaultGroupManager;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.group.GroupManager;
@@ -119,10 +114,8 @@ import sonia.scm.util.DebugServlet;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.DefaultCGIExecutorFactory;
-import sonia.scm.web.filter.AutoLoginFilter;
 import sonia.scm.web.filter.LoggingFilter;
 import sonia.scm.web.security.AdministrationContext;
-import sonia.scm.web.security.ApiBasicAuthenticationFilter;
 import sonia.scm.web.security.DefaultAdministrationContext;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -328,21 +321,6 @@ public class ScmServletModule extends JerseyServletModule
     {
       filter(PATTERN_ALL).through(LoggingFilter.class);
     }
-
-    /*
-     * filter(PATTERN_PAGE,
-     *      PATTERN_STATIC_RESOURCES).through(StaticResourceFilter.class);
-     */
-    filter(PATTERN_ALL).through(BaseUrlFilter.class);
-    filter(PATTERN_ALL).through(AutoLoginFilter.class);
-    filterRegex(RESOURCE_REGEX).through(GZipFilter.class);
-    filter(PATTERN_RESTAPI,
-      PATTERN_DEBUG).through(ApiBasicAuthenticationFilter.class);
-    filter(PATTERN_RESTAPI, PATTERN_DEBUG).through(SecurityFilter.class);
-    filter(PATTERN_CONFIG, PATTERN_ADMIN).through(AdminSecurityFilter.class);
-
-    // added mdcs for logging
-    filter(PATTERN_ALL).through(MDCFilter.class);
 
     // debug servlet
     serve(PATTERN_DEBUG).with(DebugServlet.class);

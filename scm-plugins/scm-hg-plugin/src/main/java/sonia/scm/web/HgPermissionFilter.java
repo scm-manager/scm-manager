@@ -36,9 +36,11 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
+import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.filter.Filters;
+import sonia.scm.filter.WebElement;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.web.filter.ProviderPermissionFilter;
 
@@ -50,7 +52,8 @@ import javax.servlet.http.HttpServletRequest;
  *
  * @author Sebastian Sdorra
  */
-@Singleton
+@Priority(Filters.PRIORITY_AUTHORIZATION)
+@WebElement(value = HgServletModule.MAPPING_HG)
 public class HgPermissionFilter extends ProviderPermissionFilter
 {
 

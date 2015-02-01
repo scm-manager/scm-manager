@@ -55,12 +55,14 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.Priority;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@Singleton
+@Priority(Filters.PRIORITY_AUTHORIZATION)
+@WebElement(value = Filters.PATTERN_RESTAPI, morePatterns = {Filters.PATTERN_DEBUG})
 public class SecurityFilter extends HttpFilter
 {
 
@@ -171,6 +173,6 @@ public class SecurityFilter extends HttpFilter
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private ScmConfiguration configuration;
+  /** scm configuration */
+  private final ScmConfiguration configuration;
 }

@@ -349,6 +349,7 @@ public class BufferedHttpServletResponse extends HttpServletResponseWrapper
    * @param sm
    */
   @Override
+  @SuppressWarnings("deprecation")
   public void setStatus(int sc, String sm)
   {
     this.statusCode = sc;

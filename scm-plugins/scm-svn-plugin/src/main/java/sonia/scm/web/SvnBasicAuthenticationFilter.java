@@ -34,9 +34,11 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
+import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.filter.Filters;
+import sonia.scm.filter.WebElement;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.filter.AutoLoginModule;
@@ -55,7 +57,8 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Sebastian Sdorra
  */
-@Singleton
+@Priority(Filters.PRIORITY_AUTHENTICATION)
+@WebElement(value = SvnServletModule.PATTERN_SVN)
 public class SvnBasicAuthenticationFilter extends BasicAuthenticationFilter
 {
 
