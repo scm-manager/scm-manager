@@ -140,10 +140,7 @@ public final class ScmConfigurationUtil
           loadedConfig.setProxyPassword(password);
         }
 
-        if (loadedConfig != null)
-        {
-          configuration.load(loadedConfig);
-        }
+        configuration.load(loadedConfig);
       }
       catch (Exception ex)
       {
