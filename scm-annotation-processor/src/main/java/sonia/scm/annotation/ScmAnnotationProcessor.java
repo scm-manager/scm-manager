@@ -61,7 +61,9 @@ import java.io.InputStream;
 import java.io.Writer;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -315,6 +317,31 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
    * Method description
    *
    *
+   * @param obj
+   *
+   * @return
+   */
+  private String prepareArrayElement(Object obj)
+  {
+    String v = obj.toString();
+
+    if (v.startsWith("\""))
+    {
+      v = v.substring(1);
+
+      if (v.endsWith(""))
+      {
+        v = v.substring(0, v.length() - 1);
+      }
+    }
+
+    return v;
+  }
+
+  /**
+   * Method description
+   *
+   *
    * @param msg
    * @param throwable
    */
@@ -510,12 +537,51 @@ public final class ScmAnnotationProcessor extends AbstractProcessor
           ? extends AnnotationValue> entry : am.getElementValues().entrySet())
         {
           attributes.put(entry.getKey().getSimpleName().toString(),
-            entry.getValue().getValue().toString());
+            getValue(entry.getValue()));
         }
       }
     }
 
     return attributes;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param v
+   *
+   * @return
+   */
+  private String getValue(AnnotationValue v)
+  {
+    String value;
+    Object object = v.getValue();
+
+    if (object instanceof Iterable)
+    {
+      Iterator<?> it = ((Iterable<?>) object).iterator();
+      StringBuilder buffer = new StringBuilder();
+
+      while (it.hasNext())
+      {
+        buffer.append(prepareArrayElement(it.next()));
+
+        if (it.hasNext())
+        {
+          buffer.append(",");
+        }
+
+      }
+
+      value = buffer.toString();
+    }
+    else
+    {
+      value = object.toString();
+    }
+
+    return value;
   }
 
   //~--- inner classes --------------------------------------------------------

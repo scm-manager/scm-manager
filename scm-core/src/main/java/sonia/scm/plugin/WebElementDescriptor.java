@@ -31,6 +31,10 @@
 
 package sonia.scm.plugin;
 
+//~--- non-JDK imports --------------------------------------------------------
+
+import sonia.scm.xml.XmlArrayStringAdapter;
+
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.Arrays;
@@ -39,6 +43,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -138,6 +143,7 @@ public final class WebElementDescriptor
   private Class<?> clazz;
 
   /** Field description */
+  @XmlJavaTypeAdapter(XmlArrayStringAdapter.class)
   private String[] morePatterns;
 
   /** Field description */
