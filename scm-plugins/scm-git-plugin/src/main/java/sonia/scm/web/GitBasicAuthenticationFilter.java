@@ -34,7 +34,6 @@ package sonia.scm.web;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 import org.eclipse.jgit.http.server.GitSmartHttpTools;
 
@@ -44,14 +43,11 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.web.filter.AutoLoginModule;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,13 +66,11 @@ public class GitBasicAuthenticationFilter extends BasicAuthenticationFilter
    *
    *
    * @param configuration
-   * @param autoLoginModules
    */
   @Inject
-  public GitBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<AutoLoginModule> autoLoginModules)
+  public GitBasicAuthenticationFilter(ScmConfiguration configuration)
   {
-    super(configuration, autoLoginModules);
+    super(configuration);
   }
 
   //~--- methods --------------------------------------------------------------

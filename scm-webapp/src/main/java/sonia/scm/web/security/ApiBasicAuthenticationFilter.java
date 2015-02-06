@@ -36,32 +36,28 @@ package sonia.scm.web.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
+import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.web.filter.AutoLoginModule;
+import sonia.scm.filter.Filters;
+import sonia.scm.filter.WebElement;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
-
 import java.io.IOException;
-import java.util.Set;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.Priority;
-import sonia.scm.filter.Filters;
-import sonia.scm.filter.WebElement;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Priority(Filters.PRIORITY_AUTHENTICATION)
-@WebElement(value = Filters.PATTERN_RESTAPI, morePatterns = {Filters.PATTERN_DEBUG})
+@WebElement(value = Filters.PATTERN_RESTAPI, morePatterns = { Filters.PATTERN_DEBUG })
 public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
 {
 
@@ -83,10 +79,9 @@ public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
    * @param configuration
    */
   @Inject
-  public ApiBasicAuthenticationFilter(ScmConfiguration configuration,
-			Set<AutoLoginModule> autoLoginModules)
+  public ApiBasicAuthenticationFilter(ScmConfiguration configuration)
   {
-    super(configuration, autoLoginModules);
+    super(configuration);
   }
 
   //~--- methods --------------------------------------------------------------

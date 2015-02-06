@@ -44,7 +44,16 @@ public final class Filters
   public static final String PATTERN_ALL = "/*";
 
   /** Field description */
+  public static final String PATTERN_CONFIG = "/api/rest/config*";
+
+  /** Field description */
   public static final String PATTERN_DEBUG = "/debug.html";
+
+  /** Field description */
+  public static final String PATTERN_GROUPS = "/api/rest/groups*";
+
+  /** Field description */
+  public static final String PATTERN_PLUGINS = "/api/rest/plugins*";
 
   /** Field description */
   public static final String PATTERN_RESOURCE_REGEX =
@@ -52,6 +61,9 @@ public final class Filters
 
   /** Field description */
   public static final String PATTERN_RESTAPI = "/api/rest/*";
+
+  /** Field description */
+  public static final String PATTERN_USERS = "/api/rest/users*";
 
   /** authentication priority */
   public static final int PRIORITY_AUTHENTICATION = 5000;

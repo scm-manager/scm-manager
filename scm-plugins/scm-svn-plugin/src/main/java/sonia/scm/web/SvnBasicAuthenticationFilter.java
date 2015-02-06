@@ -41,14 +41,11 @@ import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.util.HttpUtil;
-import sonia.scm.web.filter.AutoLoginModule;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,13 +64,11 @@ public class SvnBasicAuthenticationFilter extends BasicAuthenticationFilter
    *
    *
    * @param configuration
-   * @param autoLoginModules
    */
   @Inject
-  public SvnBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<AutoLoginModule> autoLoginModules)
+  public SvnBasicAuthenticationFilter(ScmConfiguration configuration)
   {
-    super(configuration, autoLoginModules);
+    super(configuration);
   }
 
   //~--- methods --------------------------------------------------------------

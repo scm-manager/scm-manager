@@ -38,8 +38,8 @@ package sonia.scm.filter;
 import com.google.inject.Inject;
 
 import org.apache.shiro.subject.Subject;
-import sonia.scm.Priority;
 
+import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.Role;
 
@@ -47,8 +47,15 @@ import sonia.scm.security.Role;
  *
  * @author Sebastian Sdorra
  */
+@WebElement(
+  value = Filters.PATTERN_CONFIG,
+  morePatterns = { 
+    Filters.PATTERN_USERS, 
+    Filters.PATTERN_GROUPS,
+    Filters.PATTERN_PLUGINS 
+  }
+)
 @Priority(Filters.PRIORITY_AUTHORIZATION + 1)
-@WebElement(value = Filters.PATTERN_RESTAPI, morePatterns = {Filters.PATTERN_DEBUG})
 public class AdminSecurityFilter extends SecurityFilter
 {
 

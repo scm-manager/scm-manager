@@ -105,9 +105,9 @@ public class AdminPermissionITCase
   @Parameters
   public static Collection<Object[]> createParameters()
   {
-    Collection<Object[]> params = new ArrayList<Object[]>();
+    Collection<Object[]> params = new ArrayList<>();
 
-    params.add(new Object[] { new Credentials() });
+    // params.add(new Object[] { new Credentials() });
 
     User u = UserTestData.createMarvin();
 

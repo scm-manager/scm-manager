@@ -90,7 +90,7 @@ public abstract class AbstractPermissionITCaseBase<T>
   @Parameters
   public static Collection<Credentials[]> createParameters()
   {
-    Collection<Credentials[]> params = new ArrayList<Credentials[]>();
+    Collection<Credentials[]> params = new ArrayList<>();
 
     params.add(new Credentials[] { new Credentials() });
     params.add(new Credentials[] {

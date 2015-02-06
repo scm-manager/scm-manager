@@ -39,7 +39,6 @@ import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
-import sonia.scm.web.filter.AutoLoginModule;
 import sonia.scm.web.filter.BasicAuthenticationFilter;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -65,13 +64,11 @@ public class HgBasicAuthenticationFilter extends BasicAuthenticationFilter
    *
    *
    * @param configuration
-   * @param autoLoginModules
    */
   @Inject
-  public HgBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<AutoLoginModule> autoLoginModules)
+  public HgBasicAuthenticationFilter(ScmConfiguration configuration)
   {
-    super(configuration, autoLoginModules);
+    super(configuration);
   }
 
   //~--- methods --------------------------------------------------------------
