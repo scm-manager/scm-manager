@@ -45,6 +45,8 @@ import static com.google.common.base.Preconditions.*;
 import java.nio.charset.Charset;
 
 /**
+ * The software agent that is acting on behalf of a user. The user agent 
+ * represents a browser or one of the repository client (svn, git or hg).
  *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.45
@@ -53,7 +55,7 @@ public final class UserAgent
 {
 
   /**
-   * Constructs ...
+   * Constructs a new user agent
    *
    *
    * @param name
@@ -71,12 +73,12 @@ public final class UserAgent
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the {@link Builder} for the UserAgent.
    *
    *
-   * @param name
+   * @param name name of the UserAgent
    *
-   * @return
+   * @return builder for UserAgent
    */
   public static Builder builder(String name)
   {
@@ -84,12 +86,7 @@ public final class UserAgent
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param obj
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public boolean equals(Object obj)
@@ -112,10 +109,7 @@ public final class UserAgent
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public int hashCode()
@@ -124,10 +118,7 @@ public final class UserAgent
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public String toString()
@@ -144,10 +135,10 @@ public final class UserAgent
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
+   * Returns the {@link Charset}, which is used to decode the basic 
+   * authentication header.
    *
-   *
-   * @return
+   * @return {@link Charset} for basic authentication
    */
   public Charset getBasicAuthenticationCharset()
   {
@@ -155,10 +146,10 @@ public final class UserAgent
   }
 
   /**
-   * Method description
+   * Returns the name of UserAgent.
    *
    *
-   * @return
+   * @return name of UserAgent
    */
   public String getName()
   {
@@ -166,10 +157,10 @@ public final class UserAgent
   }
 
   /**
-   * Method description
+   * Returns {@code true} if UserAgent is a browser.
    *
    *
-   * @return
+   * @return {@code true} if UserAgent is a browser 
    */
   public boolean isBrowser()
   {
@@ -179,20 +170,16 @@ public final class UserAgent
   //~--- inner classes --------------------------------------------------------
 
   /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/10/15
-   * @author         Enter your name here...    
+   * Builder class for {@link UserAgent}.
    */
   public static class Builder
   {
 
     /**
-     * Constructs ...
+     * Constructs a new UserAgent builder.
      *
      *
-     * @param name
+     * @param name name of the UserAgent
      */
     public Builder(String name)
     {
@@ -202,12 +189,12 @@ public final class UserAgent
     //~--- methods ------------------------------------------------------------
 
     /**
-     * Method description
+     * Sets {@link Charset} which is used to decode the basic authentication.
      *
      *
-     * @param basicAuthenticationCharset
+     * @param basicAuthenticationCharset charset for basic authentication
      *
-     * @return
+     * @return {@code this}
      */
     public Builder basicAuthenticationCharset(
       Charset basicAuthenticationCharset)
@@ -219,12 +206,12 @@ public final class UserAgent
     }
 
     /**
-     * Method description
+     * Set to {@code true} if the {@link UserAgent} is a browser.
      *
      *
-     * @param browser
+     * @param browser {@code true} for a browser
      *
-     * @return
+     * @return {@code this}
      */
     public Builder browser(boolean browser)
     {
@@ -234,10 +221,10 @@ public final class UserAgent
     }
 
     /**
-     * Method description
+     * Builds the {@link UserAgent}.
      *
      *
-     * @return
+     * @return new {@link UserAgent}
      */
     public UserAgent build()
     {
@@ -246,25 +233,25 @@ public final class UserAgent
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
+    /** name of UserAgent */
     private final String name;
 
-    /** Field description */
+    /** indicator for browsers */
     private boolean browser = true;
 
-    /** Field description */
+    /** basic authentication charset */
     private Charset basicAuthenticationCharset = Charsets.ISO_8859_1;
   }
 
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** basic authentication charset */
   private final Charset basicAuthenticationCharset;
 
-  /** Field description */
+  /** indicator for browsers */
   private final boolean browser;
 
-  /** Field description */
+  /** name of UserAgent */
   private final String name;
 }

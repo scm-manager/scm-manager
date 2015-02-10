@@ -36,8 +36,10 @@ package sonia.scm.web;
 import sonia.scm.plugin.ExtensionPoint;
 
 /**
+ * Provider to parse User-Agent header and returns an {@link UserAgent} object.
+ * The {@link UserAgentProvider} is used by the {@link UserAgentParser}.
  *
- * @author Sebastian Sdorra <sebastian.sdorra@gmail.com>
+ * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.45
  */
 @ExtensionPoint(multi = true)
@@ -45,12 +47,12 @@ public interface UserAgentProvider
 {
 
   /**
-   * Method description
+   * Parses the User-Agent header and returns a {@link UserAgent} object.
    *
    *
-   * @param userAgentString
+   * @param userAgentString User-Agent header
    *
-   * @return
+   * @return {@link UserAgent} object
    */
   public UserAgent parseUserAgent(String userAgentString);
 }

@@ -55,6 +55,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Parser for User-Agent header. The UserAgentParser parses the User-Agent 
+ * header and returns a {@link UserAgent} object.
  *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.45
@@ -63,26 +65,26 @@ import javax.servlet.http.HttpServletRequest;
 public final class UserAgentParser
 {
 
-  /** Field description */
+  /** name of the cache */
   @VisibleForTesting
   static final String CACHE_NAME = "sonia.scm.user-agent";
 
-  /** Field description */
+  /** unknown UserAgent */
   @VisibleForTesting
   static final UserAgent UNKNOWN = UserAgent.builder("UNKNOWN").build();
 
-  /** Field description */
+  /** logger */
   private static final Logger logger =
     LoggerFactory.getLogger(UserAgentParser.class);
 
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new UserAgentParser.
    *
    *
-   * @param providers
-   * @param cacheManager
+   * @param providers set of providers
+   * @param cacheManager cache manager
    */
   @Inject
   public UserAgentParser(Set<UserAgentProvider> providers,
@@ -96,12 +98,12 @@ public final class UserAgentParser
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Extracts the User-Agent header and returns an {@link UserAgent} object.
    *
    *
-   * @param request
+   * @param request http request
    *
-   * @return
+   * @return {@link UserAgent} object
    */
   public UserAgent parse(HttpServletRequest request)
   {
@@ -109,12 +111,12 @@ public final class UserAgentParser
   }
 
   /**
-   * Method description
+   * Parses the User-Agent header and returns a {@link UserAgent} object.
    *
    *
-   * @param userAgent
+   * @param userAgent User-Agent header
    *
-   * @return
+   * @return {@link UserAgent} object
    */
   public UserAgent parse(String userAgent)
   {
@@ -138,7 +140,7 @@ public final class UserAgentParser
         ua = UNKNOWN;
       }
 
-      // cache.put(uas, ua);
+      cache.put(uas, ua);
     }
 
     logger.trace("return user-agent {} for {}", ua, userAgent);
@@ -148,9 +150,9 @@ public final class UserAgentParser
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** cache for parsed UserAgents */
   private final Cache<String, UserAgent> cache;
 
-  /** Field description */
+  /** set of providers */
   private final Set<UserAgentProvider> providers;
 }
