@@ -35,6 +35,7 @@ package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Charsets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -51,6 +52,7 @@ import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.user.User;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.web.UserAgentParser;
 import sonia.scm.util.Util;
 import sonia.scm.web.security.WebSecurityContext;
 
@@ -59,6 +61,9 @@ import sonia.scm.web.security.WebSecurityContext;
 import com.sun.jersey.core.util.Base64;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import java.nio.charset.Charset;
 
 import java.util.Set;
 
@@ -66,6 +71,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import sonia.scm.web.UserAgent;
 
 /**
  *
@@ -87,6 +93,9 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
   /** marker for failed authentication */
   private static final String ATTRIBUTE_FAILED_AUTH = "sonia.scm.auth.failed";
 
+  /** default encoding to decode basic authentication header */
+  public static final Charset DEFAULT_ENCODING = Charsets.ISO_8859_1;
+
   /** the logger for BasicAuthenticationFilter */
   private static final Logger logger =
     LoggerFactory.getLogger(BasicAuthenticationFilter.class);
@@ -94,11 +103,13 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new basic authenticaton filter
    *
    *
    * @param securityContextProvider
-   * @deprecated use the constructor with out arguments instead.
+   * @deprecated use
+   *  {@link #BasicAuthenticationFilter(ScmConfiguration, Set, UserAgentParser)
+   *  instead
    */
   @Deprecated
   public BasicAuthenticationFilter(
@@ -111,16 +122,67 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
    * @param autoLoginModules auto login modules
    *
    * @since 1.21
+   *
+   * @deprecated use
+   *  {@link #BasicAuthenticationFilter(ScmConfiguration, Set, UserAgentParser)
+   *  instead
    */
-  @Inject
+  @Deprecated
   public BasicAuthenticationFilter(ScmConfiguration configuration,
     Set<AutoLoginModule> autoLoginModules)
   {
+    this(configuration, autoLoginModules, null);
+  }
+
+  /**
+   * Constructs a new basic authentication filter
+   *
+   * @param configuration scm-manager global configuration
+   * @param autoLoginModules auto login modules
+   * @param userAgentParser parser for user-agent header
+   *
+   * @since 1.42
+   */
+  @Inject
+  public BasicAuthenticationFilter(ScmConfiguration configuration,
+    Set<AutoLoginModule> autoLoginModules, UserAgentParser userAgentParser)
+  {
     super(autoLoginModules);
     this.configuration = configuration;
+    this.userAgentParser = userAgentParser;
   }
 
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Decode base64 of the basic authentication header. The method will use
+   * the charset provided by the {@link UserAgent}, if the 
+   * {@link UserAgentParser} is not available the method will be fall back to 
+   * ISO-8859-1.
+   *
+   * @param request http request
+   * @param authentication base64 encoded basic authentication string
+   *
+   * @return decoded basic authentication header
+   *
+   * @see <a href="http://goo.gl/tZEBS3">issue 627</a>
+   * @see <a href="http://goo.gl/NhbZ2F">Stackoverflow Basic Authentication</a>
+   *
+   * @throws UnsupportedEncodingException
+   */
+  protected String decodeAuthenticationHeader(HttpServletRequest request,
+    String authentication)
+    throws UnsupportedEncodingException
+  {
+    Charset encoding = DEFAULT_ENCODING;
+
+    if (userAgentParser != null)
+    {
+      encoding = userAgentParser.parse(request).getBasicAuthenticationCharset();
+    }
+
+    return new String(Base64.decode(authentication), encoding);
+  }
 
   /**
    * Method description
@@ -228,13 +290,15 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
    * @param authentication
    *
    * @return
+   *
+   * @throws IOException
    */
   private User authenticate(HttpServletRequest request,
     HttpServletResponse response, Subject subject, String authentication)
+    throws IOException
   {
-    String token = authentication.substring(6);
-
-    token = new String(Base64.decode(token.getBytes()));
+    String token = decodeAuthenticationHeader(request,
+                     authentication.substring(6));
 
     int index = token.indexOf(CREDENTIAL_SEPARATOR);
     User user = null;
@@ -365,4 +429,7 @@ public class BasicAuthenticationFilter extends AutoLoginFilter
 
   /** scm main configuration */
   protected ScmConfiguration configuration;
+
+  /** Field description */
+  protected UserAgentParser userAgentParser;
 }

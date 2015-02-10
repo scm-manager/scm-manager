@@ -67,12 +67,13 @@ public class GitBasicAuthenticationFilter extends BasicAuthenticationFilter
    *
    * @param configuration
    * @param autoLoginModules
+   * @param userAgentParser
    */
   @Inject
   public GitBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<AutoLoginModule> autoLoginModules)
+    Set<AutoLoginModule> autoLoginModules, UserAgentParser userAgentParser)
   {
-    super(configuration, autoLoginModules);
+    super(configuration, autoLoginModules, userAgentParser);
   }
 
   //~--- methods --------------------------------------------------------------

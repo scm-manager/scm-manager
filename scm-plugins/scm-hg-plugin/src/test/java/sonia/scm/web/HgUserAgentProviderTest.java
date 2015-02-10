@@ -33,71 +33,59 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.google.common.base.Strings;
 
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.SvnUtil;
-import sonia.scm.util.HttpUtil;
-import sonia.scm.web.filter.AutoLoginModule;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-@Singleton
-public class SvnBasicAuthenticationFilter extends BasicAuthenticationFilter
+public class HgUserAgentProviderTest
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   * @param autoLoginModules
-   * @param userAgentParser
-   */
-  @Inject
-  public SvnBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<AutoLoginModule> autoLoginModules, UserAgentParser userAgentParser)
-  {
-    super(configuration, autoLoginModules, userAgentParser);
-  }
+  /** Field description */
+  private static final String UA_1 = "mercurial/proto-1.0";
+
+  /** Field description */
+  private static final String UA_2 =
+    "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.124 Safari/537.36";
 
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Sends unauthorized instead of forbidden for svn clients, because the
-   * svn client prompts again for authentication.
+   * Method description
    *
-   *
-   * @param request http request
-   * @param response http response
-   *
-   * @throws IOException
    */
-  @Override
-  protected void sendFailedAuthenticationError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
+  @Test
+  public void testParseUserAgent()
   {
-    if (SvnUtil.isSvnClient(request))
-    {
-      HttpUtil.sendUnauthorized(response, configuration.getRealmDescription());
-    }
-    else
-    {
-      super.sendFailedAuthenticationError(request, response);
-    }
+    assertEquals(HgUserAgentProvider.HG, parse(UA_1));
+    assertNull(parse(UA_2));
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param v
+   *
+   * @return
+   */
+  private UserAgent parse(String v)
+  {
+    return provider.parseUserAgent(
+      Strings.nullToEmpty(v).toLowerCase(Locale.ENGLISH));
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final HgUserAgentProvider provider = new HgUserAgentProvider();
 }

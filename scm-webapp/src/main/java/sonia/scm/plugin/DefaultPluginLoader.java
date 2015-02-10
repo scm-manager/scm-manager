@@ -80,6 +80,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSessionListener;
 
 import javax.xml.bind.JAXB;
+import sonia.scm.web.BrowserUserAgentProvider;
 
 /**
  *
@@ -584,7 +585,13 @@ public class DefaultPluginLoader implements PluginLoader
       new AnnotatedClass<Extension>(
         Extensions.createExtension(), 
         DefaultAuthenticationHandler.class
-      ) 
+      )
+    );
+    extensions.add( 
+      new AnnotatedClass<Extension>(
+        Extensions.createExtension(), 
+        BrowserUserAgentProvider.class
+      )
     );
     //J+
   }

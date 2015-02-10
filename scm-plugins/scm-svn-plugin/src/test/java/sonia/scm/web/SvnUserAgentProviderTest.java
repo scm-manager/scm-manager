@@ -33,71 +33,66 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import org.junit.Test;
 
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.SvnUtil;
-import sonia.scm.util.HttpUtil;
-import sonia.scm.web.filter.AutoLoginModule;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
+
+import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Locale;
 
 /**
  *
- * @author Sebastian Sdorra
+ * @author Sebastian Sdorra <sebastian.sdorra@triology.de>
  */
-@Singleton
-public class SvnBasicAuthenticationFilter extends BasicAuthenticationFilter
+public class SvnUserAgentProviderTest
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   * @param autoLoginModules
-   * @param userAgentParser
-   */
-  @Inject
-  public SvnBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<AutoLoginModule> autoLoginModules, UserAgentParser userAgentParser)
-  {
-    super(configuration, autoLoginModules, userAgentParser);
-  }
+  /** Field description */
+  private static final String UA_1 =
+    "SVN/1.8.8 (x64-microsoft-windows) serf/1.3.4 TortoiseSVN-1.8.6.25419";
+
+  /** Field description */
+  private static final String UA_2 = "SVN/1.5.4 (r33841) neon/0.28.3";
+
+  /** Field description */
+  private static final String UA_3 = "SVN/1.6.3 (r38063) neon/0.28.4";
+
+  /** Field description */
+  private static final String UA_4 =
+    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0;Google Wireless Transcoder;)";
 
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Sends unauthorized instead of forbidden for svn clients, because the
-   * svn client prompts again for authentication.
+   * Method description
    *
-   *
-   * @param request http request
-   * @param response http response
-   *
-   * @throws IOException
    */
-  @Override
-  protected void sendFailedAuthenticationError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
+  @Test
+  public void testParseUserAgent()
   {
-    if (SvnUtil.isSvnClient(request))
-    {
-      HttpUtil.sendUnauthorized(response, configuration.getRealmDescription());
-    }
-    else
-    {
-      super.sendFailedAuthenticationError(request, response);
-    }
+    assertEquals(SvnUserAgentProvider.TORTOISE_SVN, parse(UA_1));
+    assertEquals(SvnUserAgentProvider.SVN, parse(UA_2));
+    assertEquals(SvnUserAgentProvider.SVN, parse(UA_3));
+    assertNull(parse(UA_4));
   }
+
+  /**
+   * Method description
+   *
+   *
+   * @param ua
+   *
+   * @return
+   */
+  private UserAgent parse(String ua)
+  {
+    return suap.parseUserAgent(ua.toLowerCase(Locale.ENGLISH));
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final SvnUserAgentProvider suap = new SvnUserAgentProvider();
 }
