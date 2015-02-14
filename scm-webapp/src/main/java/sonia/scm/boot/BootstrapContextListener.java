@@ -33,15 +33,20 @@ package sonia.scm.boot;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.github.legman.Subscribe;
+
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
+import com.google.inject.servlet.GuiceFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
 import sonia.scm.ScmContextListener;
+import sonia.scm.Stage;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.plugin.Plugin;
 import sonia.scm.plugin.PluginException;
 import sonia.scm.plugin.PluginLoadException;
@@ -128,6 +133,7 @@ public class BootstrapContextListener implements ServletContextListener
       }
     }
 
+    context = null;
     contextListener = null;
   }
 
@@ -140,7 +146,8 @@ public class BootstrapContextListener implements ServletContextListener
   @Override
   public void contextInitialized(ServletContextEvent sce)
   {
-    ServletContext context = sce.getServletContext();
+    context = sce.getServletContext();
+
     PluginIndex index = readCorePluginIndex(context);
 
     File pluginDirectory = getPluginDirectory();
@@ -163,6 +170,42 @@ public class BootstrapContextListener implements ServletContextListener
     }
 
     contextListener.contextInitialized(sce);
+    
+        // register for restart events
+    if (!registered
+      && (SCMContext.getContext().getStage() == Stage.DEVELOPMENT))
+    {
+      logger.info("register for restart events");
+      ScmEventBus.getInstance().register(this);
+      registered = true;
+    }
+  }
+
+  /**
+   * Restart the whole webapp context.
+   *
+   *
+   * @param event restart event
+   */
+  @Subscribe
+  public void handleRestartEvent(RestartEvent event)
+  {
+    logger.warn("received restart event from {} with reason: {}",
+      event.getCause(), event.getReason());
+
+    if (context == null)
+    {
+      logger.error("context is null, scm-manager is not initialized");
+    }
+    else
+    {
+      ServletContextEvent sce = new ServletContextEvent(context);
+
+      logger.warn("destroy context, because of a received restart event");
+      contextDestroyed(sce);
+      logger.warn("reinitialize context, because of a received restart event");
+      contextInitialized(sce);
+    }
   }
 
   /**
@@ -392,5 +435,11 @@ public class BootstrapContextListener implements ServletContextListener
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
+  private ServletContext context;
+
+  /** Field description */
   private ScmContextListener contextListener;
+
+  /** Field description */
+  private boolean registered = false;
 }
