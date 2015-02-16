@@ -221,7 +221,8 @@ if (Sonia.repository.Panel){
     
     emptyText: 'Es wurde kein Repository selektiert',
     removeTitleText: 'Repository entfernen',
-    removeMsgText: 'Repository entfernen "{0}"?',
+    removeMsgText: 'Diese Aktion wird das Repository "{0}" permanent von der \n\
+        Festplatte löschen?<br />Repository entfernen?',
     errorTitleText: 'Fehler',
     errorMsgText: 'Repository entfernen fehlgeschlagen'
   });
