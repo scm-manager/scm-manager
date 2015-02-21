@@ -41,6 +41,7 @@ import com.google.inject.Singleton;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import sonia.scm.Priority;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.user.User;
@@ -55,14 +56,14 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import sonia.scm.Priority;
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Priority(Filters.PRIORITY_AUTHORIZATION)
-@WebElement(value = Filters.PATTERN_RESTAPI, morePatterns = {Filters.PATTERN_DEBUG})
+@WebElement(value = Filters.PATTERN_RESTAPI,
+  morePatterns = { Filters.PATTERN_DEBUG })
 public class SecurityFilter extends HttpFilter
 {
 
@@ -111,7 +112,7 @@ public class SecurityFilter extends HttpFilter
       if (hasPermission(subject))
       {
         chain.doFilter(new SecurityHttpServletRequestWrapper(request,
-          getUser(subject)), response);
+          getUsername(subject)), response);
       }
       else if (subject.isAuthenticated() || subject.isRemembered())
       {
@@ -144,7 +145,9 @@ public class SecurityFilter extends HttpFilter
    */
   protected boolean hasPermission(Subject subject)
   {
-    return ((configuration != null) && configuration.isAnonymousAccessEnabled()) || subject.isAuthenticated() || subject.isRemembered();
+    return ((configuration != null)
+      && configuration.isAnonymousAccessEnabled()) || subject.isAuthenticated()
+        || subject.isRemembered();
   }
 
   /**
@@ -155,20 +158,21 @@ public class SecurityFilter extends HttpFilter
    *
    * @return
    */
-  private User getUser(Subject subject)
+  private String getUsername(Subject subject)
   {
-    User user = null;
+    String username = SCMContext.USER_ANONYMOUS;
 
     if (subject.isAuthenticated() || subject.isRemembered())
     {
-      user = subject.getPrincipals().oneByType(User.class);
-    }
-    else
-    {
-      user = SCMContext.ANONYMOUS;
+      Object obj = subject.getPrincipal();
+
+      if (obj != null)
+      {
+        username = obj.toString();
+      }
     }
 
-    return user;
+    return username;
   }
 
   //~--- fields ---------------------------------------------------------------

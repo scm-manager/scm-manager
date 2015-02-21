@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
+ * Copyright (c) 2014, Sebastian Sdorra All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,49 +33,33 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
+import com.google.common.base.Strings;
 
-import org.eclipse.jgit.http.server.GitSmartHttpTools;
+import org.apache.shiro.authc.AuthenticationToken;
 
-import sonia.scm.ClientMessages;
-import sonia.scm.Priority;
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.filter.Filters;
-import sonia.scm.filter.WebElement;
-import sonia.scm.repository.GitUtil;
-import sonia.scm.web.filter.AuthenticationFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 2.0.0
  */
-@Priority(Filters.PRIORITY_AUTHENTICATION)
-@WebElement(value = GitServletModule.PATTERN_GIT)
-public class GitBasicAuthenticationFilter extends AuthenticationFilter
+public abstract class SchemeBasedWebTokenGenerator implements WebTokenGenerator
 {
 
+  /** authorization header */
+  private static final String HEADER_AUTHORIZATION = "Authorization";
+
   /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   * @param webTokenGenerators
+   * the logger for SchemeBasedWebTokenGenerator
    */
-  @Inject
-  public GitBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<WebTokenGenerator> webTokenGenerators)
-  {
-    super(configuration, webTokenGenerators);
-  }
+  private static final Logger logger =
+    LoggerFactory.getLogger(SchemeBasedWebTokenGenerator.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -84,24 +68,47 @@ public class GitBasicAuthenticationFilter extends AuthenticationFilter
    *
    *
    * @param request
-   * @param response
+   * @param scheme
+   * @param authorization
    *
-   * @throws IOException
+   * @return
+   */
+  protected abstract AuthenticationToken createToken(
+    HttpServletRequest request, String scheme, String authorization);
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   *
+   * @return
    */
   @Override
-  protected void sendFailedAuthenticationError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
+  public AuthenticationToken createToken(HttpServletRequest request)
   {
-    if (GitUtil.isGitClient(request))
+    AuthenticationToken token = null;
+    String authorization = request.getHeader(HEADER_AUTHORIZATION);
+
+    if (!Strings.isNullOrEmpty(authorization))
     {
-      GitSmartHttpTools.sendError(request, response,
-        HttpServletResponse.SC_FORBIDDEN,
-        ClientMessages.get(request).failedAuthentication());
+      String[] parts = authorization.split("\\s+");
+
+      if (parts.length > 0)
+      {
+        token = createToken(request, parts[0], parts[1]);
+
+        if (token == null)
+        {
+          logger.warn("could not create token from authentication header");
+        }
+      }
+      else
+      {
+        logger.warn("found malformed authentication header");
+      }
     }
-    else
-    {
-      super.sendFailedAuthenticationError(request, response);
-    }
+
+    return token;
   }
 }

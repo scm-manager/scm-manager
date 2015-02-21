@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
+ * Copyright (c) 2014, Sebastian Sdorra All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,49 +33,39 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.codec.Base64;
 
-import org.eclipse.jgit.http.server.GitSmartHttpTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import sonia.scm.ClientMessages;
-import sonia.scm.Priority;
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.filter.Filters;
-import sonia.scm.filter.WebElement;
-import sonia.scm.repository.GitUtil;
-import sonia.scm.web.filter.AuthenticationFilter;
+import sonia.scm.plugin.Extension;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 2.0.0
  */
-@Priority(Filters.PRIORITY_AUTHENTICATION)
-@WebElement(value = GitServletModule.PATTERN_GIT)
-public class GitBasicAuthenticationFilter extends AuthenticationFilter
+@Extension
+public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator
 {
 
+  /** Field description */
+  public static final String AUTHORIZATION_BASIC_PREFIX = "basic";
+
+  /** Field description */
+  public static final String CREDENTIAL_SEPARATOR = ":";
+
   /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   * @param webTokenGenerators
+   * the logger for BasicWebTokenGenerator
    */
-  @Inject
-  public GitBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<WebTokenGenerator> webTokenGenerators)
-  {
-    super(configuration, webTokenGenerators);
-  }
+  private static final Logger logger =
+    LoggerFactory.getLogger(BasicWebTokenGenerator.class);
 
   //~--- methods --------------------------------------------------------------
 
@@ -84,24 +74,44 @@ public class GitBasicAuthenticationFilter extends AuthenticationFilter
    *
    *
    * @param request
-   * @param response
+   * @param scheme
+   * @param authorization
    *
-   * @throws IOException
+   * @return
    */
   @Override
-  protected void sendFailedAuthenticationError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
+  protected UsernamePasswordToken createToken(HttpServletRequest request,
+    String scheme, String authorization)
   {
-    if (GitUtil.isGitClient(request))
+    UsernamePasswordToken authToken = null;
+
+    if (AUTHORIZATION_BASIC_PREFIX.equalsIgnoreCase(scheme))
     {
-      GitSmartHttpTools.sendError(request, response,
-        HttpServletResponse.SC_FORBIDDEN,
-        ClientMessages.get(request).failedAuthentication());
+      String token = new String(Base64.decode(authorization.getBytes()));
+
+      int index = token.indexOf(CREDENTIAL_SEPARATOR);
+
+      if ((index > 0) && (index < token.length()))
+      {
+        String username = token.substring(0, index);
+        String password = token.substring(index + 1);
+
+        if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
+        {
+          logger.trace("try to authenticate user {}", username);
+          authToken = new UsernamePasswordToken(username, password);
+        }
+        else if (logger.isWarnEnabled())
+        {
+          logger.warn("username or password is null/empty");
+        }
+      }
+      else if (logger.isWarnEnabled())
+      {
+        logger.warn("failed to read basic auth credentials");
+      }
     }
-    else
-    {
-      super.sendFailedAuthenticationError(request, response);
-    }
+
+    return authToken;
   }
 }

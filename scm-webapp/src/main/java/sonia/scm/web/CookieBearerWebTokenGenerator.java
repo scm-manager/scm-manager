@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
+ * Copyright (c) 2014, Sebastian Sdorra All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,49 +33,27 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
-
-import org.eclipse.jgit.http.server.GitSmartHttpTools;
-
-import sonia.scm.ClientMessages;
-import sonia.scm.Priority;
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.filter.Filters;
-import sonia.scm.filter.WebElement;
-import sonia.scm.repository.GitUtil;
-import sonia.scm.web.filter.AuthenticationFilter;
+import com.google.common.annotations.VisibleForTesting;
+import sonia.scm.plugin.Extension;
+import sonia.scm.security.BearerAuthenticationToken;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.util.Set;
-
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Sebastian Sdorra
+ * @since 2.0.0
  */
-@Priority(Filters.PRIORITY_AUTHENTICATION)
-@WebElement(value = GitServletModule.PATTERN_GIT)
-public class GitBasicAuthenticationFilter extends AuthenticationFilter
+@Extension
+public class CookieBearerWebTokenGenerator implements WebTokenGenerator
 {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   * @param webTokenGenerators
-   */
-  @Inject
-  public GitBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<WebTokenGenerator> webTokenGenerators)
-  {
-    super(configuration, webTokenGenerators);
-  }
+  /** Field description */
+  @VisibleForTesting
+  static final String COOKIE_NAME = "X-Bearer-Token";
 
   //~--- methods --------------------------------------------------------------
 
@@ -84,24 +62,28 @@ public class GitBasicAuthenticationFilter extends AuthenticationFilter
    *
    *
    * @param request
-   * @param response
    *
-   * @throws IOException
+   * @return
    */
   @Override
-  protected void sendFailedAuthenticationError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
+  public BearerAuthenticationToken createToken(HttpServletRequest request)
   {
-    if (GitUtil.isGitClient(request))
+    BearerAuthenticationToken token = null;
+    Cookie[] cookies = request.getCookies();
+
+    if (cookies != null)
     {
-      GitSmartHttpTools.sendError(request, response,
-        HttpServletResponse.SC_FORBIDDEN,
-        ClientMessages.get(request).failedAuthentication());
+      for (Cookie cookie : cookies)
+      {
+        if (COOKIE_NAME.equals(cookie.getName()))
+        {
+          token = new BearerAuthenticationToken(cookie.getValue());
+
+          break;
+        }
+      }
     }
-    else
-    {
-      super.sendFailedAuthenticationError(request, response);
-    }
+
+    return token;
   }
 }

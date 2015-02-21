@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,47 +31,85 @@
 
 
 
-package sonia.scm.web.filter;
+package sonia.scm.web;
+
+//~--- non-JDK imports --------------------------------------------------------
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import sonia.scm.security.BearerAuthenticationToken;
+
+import static org.junit.Assert.*;
+
+import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class SecurityHttpServletRequestWrapper extends HttpServletRequestWrapper
+@RunWith(MockitoJUnitRunner.class)
+public class CookieBearerWebTokenGeneratorTest
 {
 
   /**
-   * Constructs ...
+   * Method description
    *
-   *
-   * @param request
-   * @param principal
    */
-  public SecurityHttpServletRequestWrapper(HttpServletRequest request,
-    String principal)
+  @Test
+  public void testCreateToken()
   {
-    super(request);
-    this.principal = principal;
+    Cookie c = mock(Cookie.class);
+
+    when(c.getName()).thenReturn(CookieBearerWebTokenGenerator.COOKIE_NAME);
+    when(c.getValue()).thenReturn("value");
+    when(request.getCookies()).thenReturn(new Cookie[] { c });
+
+    BearerAuthenticationToken token = tokenGenerator.createToken(request);
+
+    assertNotNull(token);
+    assertEquals("value", token.getCredentials());
   }
 
-  //~--- get methods ----------------------------------------------------------
+  /**
+   * Method description
+   *
+   */
+  @Test
+  public void testCreateTokenWithWrongCookie()
+  {
+    Cookie c = mock(Cookie.class);
+
+    when(c.getName()).thenReturn("other-cookie");
+    when(request.getCookies()).thenReturn(new Cookie[] { c });
+    assertNull(tokenGenerator.createToken(request));
+  }
 
   /**
-   * {@inheritDoc}
+   * Method description
+   *
    */
-  @Override
-  public String getRemoteUser()
+  @Test
+  public void testCreateTokenWithoutCookies()
   {
-    return principal;
+    assertNull(tokenGenerator.createToken(request));
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final String principal;
+  private final CookieBearerWebTokenGenerator tokenGenerator =
+    new CookieBearerWebTokenGenerator();
+
+  /** Field description */
+  @Mock
+  private HttpServletRequest request;
 }

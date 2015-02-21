@@ -39,7 +39,7 @@ import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
+import sonia.scm.web.filter.AuthenticationFilter;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -56,7 +56,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Priority(Filters.PRIORITY_AUTHENTICATION)
 @WebElement(value = HgServletModule.MAPPING_HG)
-public class HgBasicAuthenticationFilter extends BasicAuthenticationFilter
+public class HgBasicAuthenticationFilter extends AuthenticationFilter
 {
 
   /**
@@ -64,11 +64,13 @@ public class HgBasicAuthenticationFilter extends BasicAuthenticationFilter
    *
    *
    * @param configuration
+   * @param webTokenGenerators
    */
   @Inject
-  public HgBasicAuthenticationFilter(ScmConfiguration configuration)
+  public HgBasicAuthenticationFilter(ScmConfiguration configuration,
+    Set<WebTokenGenerator> webTokenGenerators)
   {
-    super(configuration);
+    super(configuration, webTokenGenerators);
   }
 
   //~--- methods --------------------------------------------------------------

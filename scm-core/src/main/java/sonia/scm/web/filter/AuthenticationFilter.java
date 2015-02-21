@@ -40,7 +40,7 @@ import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
@@ -48,15 +48,15 @@ import org.slf4j.LoggerFactory;
 
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.user.User;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
+import sonia.scm.web.WebTokenGenerator;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.core.util.Base64;
-
 import java.io.IOException;
+
+import java.util.Set;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -64,28 +64,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Handles authentication, if a one of the {@link WebTokenGenerator} returns
+ * an {@link AuthenticationToken}.
  *
  * @author Sebastian Sdorra
+ * @since 2.0.0
  */
 @Singleton
-public class BasicAuthenticationFilter extends HttpFilter
+public class AuthenticationFilter extends HttpFilter
 {
-
-  /** Field description */
-  public static final String AUTHORIZATION_BASIC_PREFIX = "BASIC";
-
-  /** Field description */
-  public static final String CREDENTIAL_SEPARATOR = ":";
-
-  /** Field description */
-  public static final String HEADER_AUTHORIZATION = "Authorization";
 
   /** marker for failed authentication */
   private static final String ATTRIBUTE_FAILED_AUTH = "sonia.scm.auth.failed";
 
-  /** the logger for BasicAuthenticationFilter */
+  /** Field description */
+  private static final String HEADER_AUTHORIZATION = "Authorization";
+
+  /** the logger for AuthenticationFilter */
   private static final Logger logger =
-    LoggerFactory.getLogger(BasicAuthenticationFilter.class);
+    LoggerFactory.getLogger(AuthenticationFilter.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -93,24 +90,26 @@ public class BasicAuthenticationFilter extends HttpFilter
    * Constructs a new basic authenticaton filter.
    *
    * @param configuration scm-manager global configuration
-   *
-   * @since 1.21
+   * @param tokenGenerators web token generators
    */
   @Inject
-  public BasicAuthenticationFilter(ScmConfiguration configuration)
+  public AuthenticationFilter(ScmConfiguration configuration,
+    Set<WebTokenGenerator> tokenGenerators)
   {
     this.configuration = configuration;
+    this.tokenGenerators = tokenGenerators;
   }
 
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Handles authentication, if a one of the {@link WebTokenGenerator} returns
+   * an {@link AuthenticationToken}.
    *
    *
-   * @param request
-   * @param response
-   * @param chain
+   * @param request servlet request
+   * @param response servlet response
+   * @param chain filter chain
    *
    * @throws IOException
    * @throws ServletException
@@ -121,54 +120,29 @@ public class BasicAuthenticationFilter extends HttpFilter
     throws IOException, ServletException
   {
     Subject subject = SecurityUtils.getSubject();
-    User user = null;
 
-    String authentication = request.getHeader(HEADER_AUTHORIZATION);
+    AuthenticationToken token = createToken(request);
 
-    if (Util.startWithIgnoreCase(authentication, AUTHORIZATION_BASIC_PREFIX))
+    if (token != null)
     {
-      logger.trace("found basic authorization header, start authentication");
-
-      user = authenticate(request, response, subject, authentication);
-
-      if (logger.isTraceEnabled())
-      {
-        if (user != null)
-        {
-          logger.trace("user {} successfully authenticated", user.getName());
-        }
-        else
-        {
-          logger.trace("authentcation failed, user object is null");
-        }
-      }
+      logger.trace(
+        "found authentication token on request, start authentication");
+      handleAuthentication(request, response, chain, subject, token);
     }
     else if (subject.isAuthenticated())
     {
       logger.trace("user is allready authenticated");
-      user = subject.getPrincipals().oneByType(User.class);
+      processChain(request, response, chain, subject);
     }
-    else if ((configuration != null)
-      && configuration.isAnonymousAccessEnabled())
+    else if (isAnonymousAccessEnabled())
     {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("anonymous access granted");
-      }
-
-      user = SCMContext.ANONYMOUS;
-    }
-
-    if (user == null)
-    {
-      logger.trace("could not find user send unauthorized");
-
-      handleUnauthorized(request, response, chain);
+      logger.trace("anonymous access granted");
+      processChain(request, response, chain, subject);
     }
     else
     {
-      chain.doFilter(new SecurityHttpServletRequestWrapper(request, user),
-        response);
+      logger.trace("could not find user send unauthorized");
+      handleUnauthorized(request, response, chain);
     }
   }
 
@@ -237,74 +211,121 @@ public class BasicAuthenticationFilter extends HttpFilter
   }
 
   /**
-   * Method description
+   * Iterates all {@link WebTokenGenerator} and creates an
+   * {@link AuthenticationToken} from the given request.
    *
    *
-   * @param request
-   * @param response
-   * @param securityContext
-   * @param subject
-   * @param authentication
+   * @param request http servlet request
    *
-   * @return
+   * @return authentication token of {@code null}
    */
-  private User authenticate(HttpServletRequest request,
-    HttpServletResponse response, Subject subject, String authentication)
+  private AuthenticationToken createToken(HttpServletRequest request)
   {
-    String token = authentication.substring(6);
+    AuthenticationToken token = null;
 
-    token = new String(Base64.decode(token.getBytes()));
-
-    int index = token.indexOf(CREDENTIAL_SEPARATOR);
-    User user = null;
-
-    if ((index > 0) && (index < token.length()))
+    for (WebTokenGenerator generator : tokenGenerators)
     {
-      String username = token.substring(0, index);
-      String password = token.substring(index + 1);
+      token = generator.createToken(request);
 
-      if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
+      if (token != null)
       {
-        logger.trace("try to authenticate user {}", username);
+        logger.trace("generated web token {} from generator {}",
+          token.getClass(), generator.getClass());
 
-        try
-        {
-
-          subject.login(new UsernamePasswordToken(username, password,
-            request.getRemoteAddr()));
-          user = subject.getPrincipals().oneByType(User.class);
-        }
-        catch (AuthenticationException ex)
-        {
-
-          // add a marker to the request that the authentication has failed
-          request.setAttribute(ATTRIBUTE_FAILED_AUTH, Boolean.TRUE);
-
-          if (logger.isTraceEnabled())
-          {
-            logger.trace("authentication failed for user ".concat(username),
-              ex);
-          }
-          else if (logger.isWarnEnabled())
-          {
-            logger.warn("authentication failed for user {}", username);
-          }
-        }
-      }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("username or password is null/empty");
+        break;
       }
     }
-    else if (logger.isWarnEnabled())
+
+    return token;
+  }
+
+  /**
+   * Handle authentication with the given {@link AuthenticationToken}.
+   *
+   *
+   * @param request http servlet request
+   * @param response http servlet response
+   * @param chain filter chain
+   * @param subject subject
+   * @param token authentication token
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  private void handleAuthentication(HttpServletRequest request,
+    HttpServletResponse response, FilterChain chain, Subject subject,
+    AuthenticationToken token)
+    throws IOException, ServletException
+  {
+    logger.trace("found basic authorization header, start authentication");
+
+    try
     {
-      logger.warn("failed to read basic auth credentials");
+      subject.login(token);
+      processChain(request, response, chain, subject);
+    }
+    catch (AuthenticationException ex)
+    {
+      logger.warn("authentication failed", ex);
+      handleUnauthorized(request, response, chain);
+    }
+  }
+
+  /**
+   * Process the filter chain.
+   *
+   *
+   * @param request http servlet request
+   * @param response http servlet response
+   * @param chain filter chain
+   * @param subject subject
+   *
+   * @throws IOException
+   * @throws ServletException
+   */
+  private void processChain(HttpServletRequest request,
+    HttpServletResponse response, FilterChain chain, Subject subject)
+    throws IOException, ServletException
+  {
+    String username = Util.EMPTY_STRING;
+
+    if (!subject.isAuthenticated())
+    {
+
+      // anonymous access
+      username = SCMContext.USER_ANONYMOUS;
+    }
+    else
+    {
+      Object obj = subject.getPrincipal();
+
+      if (obj != null)
+      {
+        username = obj.toString();
+      }
     }
 
-    return user;
+    chain.doFilter(new SecurityHttpServletRequestWrapper(request, username),
+      response);
+  }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns {@code true} if anonymous access is enabled.
+   *
+   *
+   * @return {@code true} if anonymous access is enabled
+   */
+  private boolean isAnonymousAccessEnabled()
+  {
+    return (configuration != null) && configuration.isAnonymousAccessEnabled();
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** set of web token generators */
+  private final Set<WebTokenGenerator> tokenGenerators;
 
   /** scm main configuration */
   protected ScmConfiguration configuration;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra All rights reserved.
+ * Copyright (c) 2014, Sebastian Sdorra All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -33,75 +33,31 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.inject.Inject;
+import org.apache.shiro.authc.AuthenticationToken;
 
-import org.eclipse.jgit.http.server.GitSmartHttpTools;
-
-import sonia.scm.ClientMessages;
-import sonia.scm.Priority;
-import sonia.scm.config.ScmConfiguration;
-import sonia.scm.filter.Filters;
-import sonia.scm.filter.WebElement;
-import sonia.scm.repository.GitUtil;
-import sonia.scm.web.filter.AuthenticationFilter;
+import sonia.scm.plugin.ExtensionPoint;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.IOException;
-
-import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Creates an {@link AuthenticationToken} from a {@link HttpServletRequest}.
  *
  * @author Sebastian Sdorra
+ * @since 2.0.0
  */
-@Priority(Filters.PRIORITY_AUTHENTICATION)
-@WebElement(value = GitServletModule.PATTERN_GIT)
-public class GitBasicAuthenticationFilter extends AuthenticationFilter
+@ExtensionPoint
+public interface WebTokenGenerator
 {
 
   /**
-   * Constructs ...
+   * Returns an {@link AuthenticationToken} or {@code null}.
    *
    *
-   * @param configuration
-   * @param webTokenGenerators
+   * @param request http servlet request
+   *
+   * @return {@link AuthenticationToken} or {@code null}
    */
-  @Inject
-  public GitBasicAuthenticationFilter(ScmConfiguration configuration,
-    Set<WebTokenGenerator> webTokenGenerators)
-  {
-    super(configuration, webTokenGenerators);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   *
-   * @throws IOException
-   */
-  @Override
-  protected void sendFailedAuthenticationError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
-  {
-    if (GitUtil.isGitClient(request))
-    {
-      GitSmartHttpTools.sendError(request, response,
-        HttpServletResponse.SC_FORBIDDEN,
-        ClientMessages.get(request).failedAuthentication());
-    }
-    else
-    {
-      super.sendFailedAuthenticationError(request, response);
-    }
-  }
+  public AuthenticationToken createToken(HttpServletRequest request);
 }

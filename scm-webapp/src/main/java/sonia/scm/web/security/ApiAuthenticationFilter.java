@@ -41,11 +41,14 @@ import sonia.scm.Priority;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
-import sonia.scm.web.filter.BasicAuthenticationFilter;
+import sonia.scm.web.filter.AuthenticationFilter;
+import sonia.scm.web.WebTokenGenerator;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+
+import java.util.Set;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -57,8 +60,9 @@ import javax.servlet.http.HttpServletResponse;
  * @author Sebastian Sdorra
  */
 @Priority(Filters.PRIORITY_AUTHENTICATION)
-@WebElement(value = Filters.PATTERN_RESTAPI, morePatterns = { Filters.PATTERN_DEBUG })
-public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
+@WebElement(value = Filters.PATTERN_RESTAPI,
+  morePatterns = { Filters.PATTERN_DEBUG })
+public class ApiAuthenticationFilter extends AuthenticationFilter
 {
 
   /** Field description */
@@ -77,11 +81,13 @@ public class ApiBasicAuthenticationFilter extends BasicAuthenticationFilter
    *
    *
    * @param configuration
+   * @param tokenGenerators
    */
   @Inject
-  public ApiBasicAuthenticationFilter(ScmConfiguration configuration)
+  public ApiAuthenticationFilter(ScmConfiguration configuration,
+    Set<WebTokenGenerator> tokenGenerators)
   {
-    super(configuration);
+    super(configuration, tokenGenerators);
   }
 
   //~--- methods --------------------------------------------------------------
