@@ -111,6 +111,21 @@ public final class DAORealmHelper
     UsernamePasswordToken upt = (UsernamePasswordToken) token;
     String principal = upt.getUsername();
 
+    return getAuthenticationInfo(principal, null);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param principal
+   * @param credentials
+   *
+   * @return
+   */
+  public AuthenticationInfo getAuthenticationInfo(String principal,
+    String credentials)
+  {
     checkArgument(!Strings.isNullOrEmpty(principal), "username is required");
 
     logger.debug("try to authenticate {}", principal);
@@ -141,7 +156,14 @@ public final class DAORealmHelper
     collection.add(user, realm);
     collection.add(collectGroups(principal), realm);
 
-    return new SimpleAuthenticationInfo(collection, user.getPassword());
+    String creds = credentials;
+
+    if (credentials == null)
+    {
+      creds = user.getPassword();
+    }
+
+    return new SimpleAuthenticationInfo(collection, creds);
   }
 
   //~--- methods --------------------------------------------------------------
