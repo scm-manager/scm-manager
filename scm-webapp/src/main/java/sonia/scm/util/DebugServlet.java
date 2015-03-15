@@ -229,9 +229,13 @@ public class DebugServlet extends HttpServlet
       printHeader(writer);
       appendContextAttributes(writer);
 
-      HttpSession session = request.getSession();
+      HttpSession session = request.getSession(false);
 
-      appendSessionAttributes(writer, session);
+      if (session != null)
+      {
+        appendSessionAttributes(writer, session);
+      }
+
       printFooter(writer);
     }
     finally
