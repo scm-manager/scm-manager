@@ -114,6 +114,9 @@ public class ScmSecurityModule extends ShiroWebModule
 
     // disable access to mustache resources
     addFilterChain("/**.mustache", config(ROLES, "nobody"));
+    
+    // disable session
+    // addFilterChain("/**", NO_SESSION_CREATION);
   }
 
   /**

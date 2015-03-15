@@ -36,6 +36,7 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
+
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -59,6 +60,7 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.group.GroupNames;
+import sonia.scm.plugin.Extension;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
@@ -77,17 +79,18 @@ import java.util.Set;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class AuthorizationCollector
+@Extension
+public class DefaultAuthorizationCollector implements AuthorizationCollector
 {
 
   /** Field description */
   private static final String CACHE_NAME = "sonia.cache.authorizing";
 
   /**
-   * the logger for AuthorizationCollector
+   * the logger for DefaultAuthorizationCollector
    */
   private static final Logger logger =
-    LoggerFactory.getLogger(AuthorizationCollector.class);
+    LoggerFactory.getLogger(DefaultAuthorizationCollector.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -102,7 +105,7 @@ public class AuthorizationCollector
    * @param resolver
    */
   @Inject
-  public AuthorizationCollector(CacheManager cacheManager,
+  public DefaultAuthorizationCollector(CacheManager cacheManager,
     RepositoryDAO repositoryDAO, SecuritySystem securitySystem,
     PermissionResolver resolver)
   {
@@ -120,6 +123,7 @@ public class AuthorizationCollector
    *
    * @return
    */
+  @Override
   public AuthorizationInfo collect()
   {
     AuthorizationInfo authorizationInfo;
@@ -267,16 +271,6 @@ public class AuthorizationCollector
     return info;
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param builder
-   * @param user
-   * @param groups
-   *
-   */
   private void collectGlobalPermissions(Builder<Permission> builder,
     final User user, final GroupNames groups)
   {
@@ -313,16 +307,6 @@ public class AuthorizationCollector
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param builder
-   * @param user
-   * @param groups
-   *
-   */
   private void collectRepositoryPermissions(Builder<Permission> builder,
     User user, GroupNames groups)
   {
@@ -338,16 +322,6 @@ public class AuthorizationCollector
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param builder
-   * @param repository
-   * @param user
-   * @param groups
-   */
   private void collectRepositoryPermissions(Builder<Permission> builder,
     Repository repository, User user, GroupNames groups)
   {
@@ -381,15 +355,6 @@ public class AuthorizationCollector
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   * @param groups
-   *
-   * @return
-   */
   private AuthorizationInfo createAuthorizationInfo(User user,
     GroupNames groups)
   {
@@ -434,16 +399,6 @@ public class AuthorizationCollector
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   * @param groups
-   * @param perm
-   *
-   * @return
-   */
   private boolean isUserPermission(User user, GroupNames groups,
     PermissionObject perm)
   {
@@ -456,22 +411,10 @@ public class AuthorizationCollector
   //~--- inner classes --------------------------------------------------------
 
   /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/08/28
-   * @author         Enter your name here...
+   * Cache key.
    */
   private static class CacheKey
   {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param username
-     * @param groupnames
-     */
     private CacheKey(String username, GroupNames groupnames)
     {
       this.username = username;
@@ -513,10 +456,10 @@ public class AuthorizationCollector
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
+    /** group names */
     private final GroupNames groupnames;
 
-    /** Field description */
+    /** username */
     private final String username;
   }
 

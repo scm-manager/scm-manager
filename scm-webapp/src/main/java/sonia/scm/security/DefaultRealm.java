@@ -55,9 +55,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
+ * Default authorizing realm.
  *
  * @author Sebastian Sdorra
- *
  * @since 2.0.0
  */
 @Extension
@@ -82,7 +82,7 @@ public class DefaultRealm extends AuthorizingRealm
    */
   @Inject
   public DefaultRealm(PasswordService service,
-    AuthorizationCollector collector, UserDAO userDAO, GroupDAO groupDAO)
+    DefaultAuthorizationCollector collector, UserDAO userDAO, GroupDAO groupDAO)
   {
     this.collector = collector;
     this.helper = new DAORealmHelper(REALM, userDAO, groupDAO);
@@ -131,9 +131,9 @@ public class DefaultRealm extends AuthorizingRealm
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private final AuthorizationCollector collector;
+  /** default authorization collector */
+  private final DefaultAuthorizationCollector collector;
 
-  /** Field description */
+  /** realm helper */
   private final DAORealmHelper helper;
 }

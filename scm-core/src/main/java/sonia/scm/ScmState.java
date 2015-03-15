@@ -55,7 +55,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "state")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ScmState
+public final class ScmState
 {
 
   /**
@@ -63,53 +63,33 @@ public class ScmState
    * This constructor is required by JAXB.
    *
    */
-  public ScmState() {}
+  ScmState() {}
 
   /**
    * Constructs {@link ScmState} object.
    *
    *
-   * @param provider context provider
+   * @param version scm-manager version
    * @param user current user
    * @param groups groups of the current user
+   * @param token authentication token
    * @param repositoryTypes available repository types
    * @param defaultUserType default user type
    * @param clientConfig client configuration
-   *
-   * @since 1.21
-   */
-  public ScmState(SCMContextProvider provider, User user,
-    Collection<String> groups, Collection<Type> repositoryTypes,
-    String defaultUserType, ScmClientConfig clientConfig)
-  {
-    this(provider, user, groups, repositoryTypes, defaultUserType,
-      clientConfig, null, null);
-  }
-
-  /**
-   * Constructs {@link ScmState} object.
-   *
-   *
-   * @param provider context provider
-   * @param user current user
-   * @param groups groups of the current user
-   * @param repositoryTypes available repository types
-   * @param defaultUserType default user type
-   * @param clientConfig client configuration
-   * @param assignedPermission
+   * @param assignedPermission assigned permissions
    * @param availablePermissions list of available permissions
    *
-   * @since 1.31
+   * @since 2.0.0
    */
-  public ScmState(SCMContextProvider provider, User user,
-    Collection<String> groups, Collection<Type> repositoryTypes,
-    String defaultUserType, ScmClientConfig clientConfig,
-    List<String> assignedPermission,
+  public ScmState(String version, User user, Collection<String> groups,
+    String token, Collection<Type> repositoryTypes, String defaultUserType,
+    ScmClientConfig clientConfig, List<String> assignedPermission,
     List<PermissionDescriptor> availablePermissions)
   {
-    this.version = provider.getVersion();
+    this.version = version;
     this.user = user;
     this.groups = groups;
+    this.token = token;
     this.repositoryTypes = repositoryTypes;
     this.clientConfig = clientConfig;
     this.defaultUserType = defaultUserType;
@@ -191,6 +171,19 @@ public class ScmState
   }
 
   /**
+   * Returns authentication token or {@code null}.
+   *
+   *
+   * @return authentication token or {@code null}
+   * 
+   * @since 2.0.0
+   */
+  public String getToken()
+  {
+    return token;
+  }
+
+  /**
    * Returns the current logged in user.
    *
    *
@@ -223,115 +216,13 @@ public class ScmState
     return success;
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Sets a list of assigned permissions.
-   *
-   *
-   * @param assignedPermissions list of assigned permissions
-   * @since 1.31
-   */
-  public void setAssignedPermissions(List<String> assignedPermissions)
-  {
-    this.assignedPermissions = assignedPermissions;
-  }
-
-  /**
-   * Sets a list of available global permissions.
-   *
-   *
-   * @param permissions list of available global permisisons
-   * @since 1.31
-   */
-  public void setAvailablePermissions(List<PermissionDescriptor> permissions)
-  {
-    this.availablePermissions = permissions;
-  }
-
-  /**
-   * Setter for the client configuration
-   *
-   *
-   *
-   * @param clientConfig - client configuration
-   */
-  public void setClientConfig(ScmClientConfig clientConfig)
-  {
-    this.clientConfig = clientConfig;
-  }
-
-  /**
-   * Sets the default user type
-   *
-   *
-   * @param defaultUserType default user type
-   * @since 1.14
-   */
-  public void setDefaultUserType(String defaultUserType)
-  {
-    this.defaultUserType = defaultUserType;
-  }
-
-  /**
-   * Setter for the groups.
-   *
-   *
-   *
-   * @param groups - collection of group names
-   */
-  public void setGroups(Collection<String> groups)
-  {
-    this.groups = groups;
-  }
-
-  /**
-   * Setter for the available repository types.
-   *
-   *
-   *
-   * @param repositoryTypes - collection of available repository types
-   */
-  public void setRepositoryTypes(Collection<Type> repositoryTypes)
-  {
-    this.repositoryTypes = repositoryTypes;
-  }
-
-  /**
-   * Setter for the success switch.
-   *
-   *
-   * @param success switch
-   */
-  public void setSuccess(boolean success)
-  {
-    this.success = success;
-  }
-
-  /**
-   * Setter for the User
-   *
-   *
-   *
-   * @param user - the current user
-   */
-  public void setUser(User user)
-  {
-    this.user = user;
-  }
-
-  /**
-   * Setter for the SCM-Manager version.
-   *
-   *
-   * @param version - SCM-Manager version
-   */
-  public void setVersion(String version)
-  {
-    this.version = version;
-  }
-
   //~--- fields ---------------------------------------------------------------
+
+  /** marker for extjs */
+  private final boolean success = true;
+
+  /** authentication token */
+  private String token;
 
   /** Field description */
   private List<String> assignedPermissions;
@@ -354,9 +245,6 @@ public class ScmState
   /** Field description */
   @XmlElement(name = "repositoryTypes")
   private Collection<Type> repositoryTypes;
-
-  /** Field description */
-  private boolean success = true;
 
   /** Field description */
   private User user;

@@ -108,7 +108,7 @@ public final class IntegrationTestUtil
   public static ClientResponse authenticate(Client client, String username,
     String password)
   {
-    WebResource wr = createResource(client, "authentication/login");
+    WebResource wr =  client.resource(createResourceUrl("authentication/login").concat("?cookie=true"));
     MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
 
     formData.add("username", username);

@@ -37,8 +37,6 @@ package sonia.scm.api.rest.resources;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -46,8 +44,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
-import org.apache.shiro.authz.Permission;
-import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
 import org.codehaus.enunciate.jaxrs.TypeHint;
@@ -56,30 +52,18 @@ import org.codehaus.enunciate.modules.jersey.ExternallyManagedLifecycle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sonia.scm.SCMContext;
-import sonia.scm.SCMContextProvider;
-import sonia.scm.ScmClientConfig;
 import sonia.scm.ScmState;
+import sonia.scm.ScmStateFactory;
 import sonia.scm.api.rest.RestActionResult;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.group.GroupNames;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.security.AuthorizationCollector;
-import sonia.scm.security.PermissionDescriptor;
-import sonia.scm.security.Role;
-import sonia.scm.security.SecuritySystem;
-import sonia.scm.security.StringablePermission;
+import sonia.scm.security.BearerTokenGenerator;
 import sonia.scm.security.Tokens;
 import sonia.scm.user.User;
-import sonia.scm.user.UserManager;
 import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -89,6 +73,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -127,25 +112,17 @@ public class AuthenticationResource
    * Constructs ...
    *
    *
-   * @param contextProvider
    * @param configuration
-   * @param repositoryManger
-   * @param userManager
-   * @param securitySystem
-   * @param collector
+   * @param stateFactory
+   * @param tokenGenerator
    */
   @Inject
-  public AuthenticationResource(SCMContextProvider contextProvider,
-    ScmConfiguration configuration, RepositoryManager repositoryManger,
-    UserManager userManager, SecuritySystem securitySystem,
-    AuthorizationCollector collector)
+  public AuthenticationResource(ScmConfiguration configuration,
+    ScmStateFactory stateFactory, BearerTokenGenerator tokenGenerator)
   {
-    this.contextProvider = contextProvider;
     this.configuration = configuration;
-    this.repositoryManger = repositoryManger;
-    this.userManager = userManager;
-    this.securitySystem = securitySystem;
-    this.permissionCollector = collector;
+    this.stateFactory = stateFactory;
+    this.tokenGenerator = tokenGenerator;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -160,10 +137,12 @@ public class AuthenticationResource
    *   <li>500 internal server error</li>
    * </ul>
    *
-   * @param request the current http request
+   * @param request current http request
+   * @param response current http response
    * @param username the username for the authentication
    * @param password the password for the authentication
    * @param rememberMe true to remember the user across sessions
+   * @param cookie create authentication token
    *
    * @return
    */
@@ -171,23 +150,46 @@ public class AuthenticationResource
   @Path("login")
   @TypeHint(ScmState.class)
   public Response authenticate(@Context HttpServletRequest request,
+    @Context HttpServletResponse response,
     @FormParam("username") String username,
     @FormParam("password") String password, @FormParam("rememberMe")
-  @DefaultValue("false") boolean rememberMe)
+  @DefaultValue("false") boolean rememberMe, @QueryParam(
+    "cookie") boolean cookie)
   {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(username),
       "username parameter is required");
     Preconditions.checkArgument(!Strings.isNullOrEmpty(password),
       "password parameter is required");
 
-    Response response;
+    Response res;
     Subject subject = SecurityUtils.getSubject();
 
     try
     {
       subject.login(Tokens.createAuthenticationToken(request, username,
         password, rememberMe));
-      response = Response.ok(createState(subject)).build();
+
+      User user = subject.getPrincipals().oneByType(User.class);
+
+      String token = tokenGenerator.createBearerToken(user);
+
+      ScmState state;
+
+      if (cookie)
+      {
+        Cookie c = new Cookie("X-Bearer-Token", token);
+
+        c.setPath(request.getContextPath());
+        c.setHttpOnly(true);
+        response.addCookie(c);
+        state = stateFactory.createState(subject);
+      }
+      else
+      {
+        state = stateFactory.createState(subject, token);
+      }
+
+      res = Response.ok(state).build();
     }
     catch (DisabledAccountException ex)
     {
@@ -202,8 +204,8 @@ public class AuthenticationResource
         logger.warn("authentication failed, account {} is locked", username);
       }
 
-      response = handleFailedAuthentication(request, ex,
-        Response.Status.FORBIDDEN, WUIAuthenticationFailure.LOCKED);
+      res = handleFailedAuthentication(request, ex, Response.Status.FORBIDDEN,
+        WUIAuthenticationFailure.LOCKED);
     }
     catch (ExcessiveAttemptsException ex)
     {
@@ -219,8 +221,8 @@ public class AuthenticationResource
           username);
       }
 
-      response = handleFailedAuthentication(request, ex,
-        Response.Status.FORBIDDEN, WUIAuthenticationFailure.TEMPORARY_LOCKED);
+      res = handleFailedAuthentication(request, ex, Response.Status.FORBIDDEN,
+        WUIAuthenticationFailure.TEMPORARY_LOCKED);
     }
     catch (AuthenticationException ex)
     {
@@ -233,12 +235,12 @@ public class AuthenticationResource
         logger.warn("authentication failed for user {}", username);
       }
 
-      response = handleFailedAuthentication(request, ex,
+      res = handleFailedAuthentication(request, ex,
         Response.Status.UNAUTHORIZED,
         WUIAuthenticationFailure.WRONG_CREDENTIALS);
     }
 
-    return response;
+    return res;
   }
 
   /**
@@ -270,7 +272,7 @@ public class AuthenticationResource
     if (configuration.isAnonymousAccessEnabled())
     {
 
-      resp = Response.ok(createAnonymousState()).build();
+      resp = Response.ok(stateFactory.createAnonymousState()).build();
     }
     else
     {
@@ -338,14 +340,14 @@ public class AuthenticationResource
           subject.getPrincipal());
       }
 
-      ScmState state = createState(subject);
+      ScmState state = stateFactory.createState(subject);
 
       response = Response.ok(state).build();
     }
     else if (configuration.isAnonymousAccessEnabled())
     {
 
-      response = Response.ok(createAnonymousState()).build();
+      response = Response.ok(stateFactory.createAnonymousState()).build();
     }
     else
     {
@@ -356,78 +358,6 @@ public class AuthenticationResource
   }
 
   //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @SuppressWarnings("unchecked")
-  private ScmState createAnonymousState()
-  {
-    return createState(SCMContext.ANONYMOUS, Collections.EMPTY_LIST,
-      Collections.EMPTY_LIST, Collections.EMPTY_LIST);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param securityContext
-   *
-   * @param subject
-   *
-   * @return
-   */
-  @SuppressWarnings("unchecked")
-  private ScmState createState(Subject subject)
-  {
-    PrincipalCollection collection = subject.getPrincipals();
-    User user = collection.oneByType(User.class);
-    GroupNames groups = collection.oneByType(GroupNames.class);
-
-    List<PermissionDescriptor> ap = Collections.EMPTY_LIST;
-
-    if (subject.hasRole(Role.ADMIN))
-    {
-      ap = securitySystem.getAvailablePermissions();
-    }
-
-    Builder<String> builder = ImmutableList.builder();
-
-    for (Permission p : permissionCollector.collect().getObjectPermissions())
-    {
-      if (p instanceof StringablePermission)
-      {
-        builder.add(((StringablePermission) p).getAsString());
-      }
-
-    }
-
-    return createState(user, groups.getCollection(), builder.build(), ap);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   * @param groups
-   * @param assignedPermissions
-   * @param availablePermissions
-   *
-   * @return
-   */
-  private ScmState createState(User user, Collection<String> groups,
-    List<String> assignedPermissions,
-    List<PermissionDescriptor> availablePermissions)
-  {
-    return new ScmState(contextProvider, user, groups,
-      repositoryManger.getConfiguredTypes(), userManager.getDefaultType(),
-      new ScmClientConfig(configuration), assignedPermissions,
-      availablePermissions);
-  }
 
   /**
    * Method description
@@ -529,17 +459,8 @@ public class AuthenticationResource
   private final ScmConfiguration configuration;
 
   /** Field description */
-  private final SCMContextProvider contextProvider;
+  private final ScmStateFactory stateFactory;
 
   /** Field description */
-  private final AuthorizationCollector permissionCollector;
-
-  /** Field description */
-  private final RepositoryManager repositoryManger;
-
-  /** Field description */
-  private final SecuritySystem securitySystem;
-
-  /** Field description */
-  private final UserManager userManager;
+  private final BearerTokenGenerator tokenGenerator;
 }

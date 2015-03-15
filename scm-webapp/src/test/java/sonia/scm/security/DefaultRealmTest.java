@@ -290,7 +290,7 @@ public class DefaultRealmTest
 
   /** Field description */
   @Mock
-  private AuthorizationCollector collector;
+  private DefaultAuthorizationCollector collector;
 
   /** Field description */
   @Mock
