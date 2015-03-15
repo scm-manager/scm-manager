@@ -357,7 +357,7 @@ public class ServletContainerDetector
 
     // Request the default servlet (its pretty safe to say it will always be there)
     final RequestDispatcher dispatcher =
-      request.getSession().getServletContext().getNamedDispatcher("default");
+      request.getServletContext().getNamedDispatcher("default");
 
     if (dispatcher == null)
     {
