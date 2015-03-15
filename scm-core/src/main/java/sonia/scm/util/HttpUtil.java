@@ -181,7 +181,7 @@ public final class HttpUtil
   public static final String STATUS_UNAUTHORIZED_MESSAGE =
     "Authorization Required";
 
-  /** Field description */
+  /** skip size for drain body method */
   private static final int SKIP_SIZE = 4096;
 
   /** the logger for HttpUtil */
@@ -212,11 +212,11 @@ public final class HttpUtil
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Appends the suffix to given uri.
    *
    *
-   * @param uri
-   * @param suffix
+   * @param uri uri
+   * @param suffix suffix
    *
    * @return
    * @since 1.9
@@ -236,13 +236,13 @@ public final class HttpUtil
   }
 
   /**
-   * Method description
+   * Appends the hash to the given uri.
    *
    *
-   * @param uri
-   * @param hash
+   * @param uri uri
+   * @param hash hash
    *
-   * @return
+   * @return uri with hash
    * @since 1.9
    */
   public static String appendHash(String uri, String hash)
@@ -251,19 +251,19 @@ public final class HttpUtil
   }
 
   /**
-   * Method description
+   * Appends the parameter to the given uri.
    *
    *
-   * @param uri
-   * @param name
-   * @param value
+   * @param uri uri
+   * @param name parameter name
+   * @param value parameter value
    *
-   * @return
+   * @return uri with parameter
    * @since 1.9
    */
   public static String appendParameter(String uri, String name, String value)
   {
-    String s = null;
+    String s;
 
     if (uri.contains(SEPARATOR_PARAMETERS))
     {
@@ -281,7 +281,7 @@ public final class HttpUtil
   /**
    * Throws an {@link IllegalArgumentException} if the parameter contains
    * illegal characters which could imply a CRLF injection attack.
-   * <stronng>Note:</strong> the current implementation throws the
+   * <strong>Note:</strong> the current implementation throws the
    * {@link IllegalArgumentException} also if the parameter contains a "%". So
    * you have to decode your parameters before the check,
    *
@@ -303,12 +303,12 @@ public final class HttpUtil
   }
 
   /**
-   * Method description
+   * Url decode.
    *
    *
-   * @param value
+   * @param value value to decode
    *
-   * @return
+   * @return decoded value
    * @since 1.9
    */
   public static String decode(String value)
@@ -358,12 +358,12 @@ public final class HttpUtil
   }
 
   /**
-   * Method description
+   * Url encode.
    *
    *
-   * @param value
+   * @param value value to encode
    *
-   * @return
+   * @return encoded value
    * @since 1.9
    */
   public static String encode(String value)
@@ -427,7 +427,7 @@ public final class HttpUtil
 
   /**
    * Remove all chars from the given parameter, which could be used for
-   * CRLF injection attack. <stronng>Note:</strong> the current implementation
+   * CRLF injection attack. <strong>Note:</strong> the current implementation
    * the "%" char is also removed from the source parameter.
    *
    * @param parameter value
@@ -442,12 +442,12 @@ public final class HttpUtil
   }
 
   /**
-   * Method description
+   * Remove matrix parameters from the given uri.
    *
    *
-   * @param uri
+   * @param uri uri
    *
-   * @return
+   * @return uri without matrix parameter
    * @since 1.10
    */
   public static String removeMatrixParameter(String uri)
@@ -669,7 +669,7 @@ public final class HttpUtil
   public static int getServerPort(ScmConfiguration configuration,
     HttpServletRequest request)
   {
-    int port = PORT_HTTP;
+    int port;
     String baseUrl = configuration.getBaseUrl();
 
     if (Util.isNotEmpty(baseUrl))
