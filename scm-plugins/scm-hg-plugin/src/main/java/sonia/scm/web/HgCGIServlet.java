@@ -314,7 +314,7 @@ public class HgCGIServlet extends HttpServlet
     addCredentials(executor.getEnvironment(), request);
 
     // unused ???
-    HttpSession session = request.getSession();
+    HttpSession session = request.getSession(false);
 
     if (session != null)
     {
