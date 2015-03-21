@@ -30,16 +30,20 @@
  */
 
 
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Strings;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
+import org.apache.shiro.codec.Base64;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import sonia.scm.security.CipherUtil;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.web.HgUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -66,6 +70,12 @@ public final class HgEnvironment
 
   /** Field description */
   private static final String SCM_CREDENTIALS = "SCM_CREDENTIALS";
+
+  /**
+   *   the logger for HgEnvironment
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(HgEnvironment.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -95,6 +105,7 @@ public final class HgEnvironment
     if (request != null)
     {
       hookUrl = hookManager.createUrl(request);
+      environment.put(SCM_CREDENTIALS, getCredentials(request));
     }
     else
     {
@@ -104,7 +115,6 @@ public final class HgEnvironment
     environment.put(ENV_PYTHON_PATH, HgUtil.getPythonPath(handler.getConfig()));
     environment.put(ENV_URL, hookUrl);
     environment.put(ENV_CHALLENGE, hookManager.getChallenge());
-    environment.put(SCM_CREDENTIALS, getCredentials());
   }
 
   /**
@@ -129,16 +139,29 @@ public final class HgEnvironment
    *
    * @return
    */
-  private static String getCredentials()
+  private static String getCredentials(HttpServletRequest request)
   {
     String credentials = null;
+    String header = request.getHeader(HttpUtil.HEADER_AUTHORIZATION);
 
-    Subject subject = SecurityUtils.getSubject();
-    Session session = subject.getSession(false);
-
-    if (session != null)
+    if (!Strings.isNullOrEmpty(header))
     {
-      credentials = (String) session.getAttribute(SCM_CREDENTIALS);
+      String[] parts = header.split("\\s+");
+
+      if (parts.length > 0)
+      {
+        CipherUtil cu = CipherUtil.getInstance();
+
+        credentials = cu.encode(Base64.decodeToString(parts[1]));
+      }
+      else
+      {
+        logger.warn("invalid basic authentication header");
+      }
+    }
+    else
+    {
+      logger.warn("could not find authentication header on request");
     }
 
     return Strings.nullToEmpty(credentials);
