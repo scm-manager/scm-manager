@@ -90,7 +90,8 @@ public class DisabledRememberMeManager implements RememberMeManager
   @Override
   public void onLogout(Subject subject)
   {
-    throw new UnsupportedOperationException("Not supported yet.");    // To change body of generated methods, choose Tools | Templates.
+
+    // do nothing
   }
 
   /**
