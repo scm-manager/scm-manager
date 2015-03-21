@@ -63,6 +63,8 @@ import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.util.concurrent.TimeUnit;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -180,6 +182,9 @@ public class AuthenticationResource
         Cookie c = new Cookie("X-Bearer-Token", token);
 
         c.setPath(request.getContextPath());
+
+        // TODO: should be configureable
+        c.setMaxAge((int) TimeUnit.SECONDS.convert(10, TimeUnit.HOURS));
         c.setHttpOnly(true);
         response.addCookie(c);
         state = stateFactory.createState(subject);

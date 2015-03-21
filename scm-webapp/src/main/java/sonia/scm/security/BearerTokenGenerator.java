@@ -39,6 +39,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import sonia.scm.user.User;
 
 import static com.google.common.base.Preconditions.*;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -83,14 +85,18 @@ public final class BearerTokenGenerator
     checkNotNull(user, "user is required");
 
     SecureKey key = keyResolver.getSecureKey(user.getName());
-
-    // TODO add expiration date
+    
+    Date now = new Date();
+    // TODO: should be configurable
+    long expiration = TimeUnit.MILLISECONDS.convert(10, TimeUnit.HOURS);
     
     //J-
     return Jwts.builder()
       .setSubject(user.getName())
       .setId(keyGenerator.createKey())
       .signWith(SignatureAlgorithm.HS256, key.getBytes())
+      .setIssuedAt(now)
+      .setExpiration(new Date(now.getTime() + expiration))
       .compact();
     //J+
   }
