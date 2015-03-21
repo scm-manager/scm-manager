@@ -173,20 +173,23 @@ public class LoggingFilter extends HttpFilter
       }
     }
 
-    HttpSession session = request.getSession(true);
+    HttpSession session = request.getSession(false);
 
-    logger.debug("Session-New: {}", Boolean.toString(session.isNew()));
-
-    Enumeration sAttributes = session.getAttributeNames();
-
-    if (sAttributes != null)
+    if (session != null)
     {
-      while (sAttributes.hasMoreElements())
-      {
-        String sAttribute = (String) sAttributes.nextElement();
+      logger.debug("Session-New: {}", Boolean.toString(session.isNew()));
 
-        logger.debug("Session-Attribute: {} = {}", sAttribute,
-          request.getSession().getAttribute(sAttribute).toString());
+      Enumeration sAttributes = session.getAttributeNames();
+
+      if (sAttributes != null)
+      {
+        while (sAttributes.hasMoreElements())
+        {
+          String sAttribute = (String) sAttributes.nextElement();
+
+          logger.debug("Session-Attribute: {} = {}", sAttribute,
+            request.getSession().getAttribute(sAttribute).toString());
+        }
       }
     }
 
