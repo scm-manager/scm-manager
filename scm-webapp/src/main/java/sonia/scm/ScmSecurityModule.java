@@ -53,6 +53,8 @@ import static org.apache.shiro.guice.web.ShiroWebModule.ROLES;
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.servlet.ServletContext;
+import org.apache.shiro.mgt.RememberMeManager;
+import sonia.scm.security.DisabledRememberMeManager;
 
 /**
  *
@@ -100,6 +102,9 @@ public class ScmSecurityModule extends ShiroWebModule
 
     // expose password service to global injector
     expose(PasswordService.class);
+    
+    // disable remember me cookie generation
+    bind(RememberMeManager.class).to(DisabledRememberMeManager.class);
 
     // bind realm
     for (Class<? extends Realm> realm : extensionProcessor.byExtensionPoint(Realm.class))

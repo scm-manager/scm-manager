@@ -143,7 +143,6 @@ public class AuthenticationResource
    * @param response current http response
    * @param username the username for the authentication
    * @param password the password for the authentication
-   * @param rememberMe true to remember the user across sessions
    * @param cookie create authentication token
    *
    * @return
@@ -155,8 +154,7 @@ public class AuthenticationResource
     @Context HttpServletResponse response,
     @FormParam("username") String username,
     @FormParam("password") String password, @FormParam("rememberMe")
-  @DefaultValue("false") boolean rememberMe, @QueryParam(
-    "cookie") boolean cookie)
+    @QueryParam("cookie") boolean cookie)
   {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(username),
       "username parameter is required");
@@ -169,7 +167,7 @@ public class AuthenticationResource
     try
     {
       subject.login(Tokens.createAuthenticationToken(request, username,
-        password, rememberMe));
+        password));
 
       User user = subject.getPrincipals().oneByType(User.class);
 
