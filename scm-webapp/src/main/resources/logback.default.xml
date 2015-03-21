@@ -64,11 +64,9 @@
 
   <!-- cgi -->
   <logger name="sonia.scm.web.cgi.DefaultCGIExecutor" level="DEBUG" />
-  <!-- aether -->
-  <!--
-  <logger name="org.sonatype.aether" level="TRACE" />
-  <logger name="com.ning.http.client" level="DEBUG" />
-  -->
+  
+  <!-- shiro -->
+  <logger name="org.apache.shiro" level="TRACE" />
   
   <!-- svnkit -->
   <!--

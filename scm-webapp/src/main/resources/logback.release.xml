@@ -84,10 +84,9 @@
   <!-- event bus -->
   <logger name="sonia.scm.event.LegmanScmEventBus" level="INFO" />
   
-  <!-- aether -->
+  <!-- shiro -->
   <!--
-  <logger name="org.sonatype.aether" level="TRACE" />
-  <logger name="com.ning.http.client" level="DEBUG" />
+  <logger name="org.apache.shiro" level="TRACE" />
   -->
   
   <!-- svnkit -->
