@@ -84,6 +84,12 @@ public final class HttpUtil
    * @since 2.0.0
    */
   public static final String AUTHORIZATION_SCHEME_BASIC = "Basic";
+
+  /**
+   * Bearer authorization scheme
+   * @since 2.0.0
+   */
+  public static final String AUTHORIZATION_SCHEME_BEARER = "Bearer";
   
   /**
    * location header
