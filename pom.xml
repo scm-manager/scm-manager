@@ -443,7 +443,7 @@
 
     <!-- repostitory libraries -->
     <jgit.version>3.4.1.201406201815-r</jgit.version>
-    <svnkit.version>1.8.5-scm2</svnkit.version>
+    <svnkit.version>1.8.5-scm3</svnkit.version>
 
     <!-- util libraries -->
     <guava.version>16.0.1</guava.version>
