@@ -35,6 +35,8 @@ package sonia.scm.client;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Strings;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +44,7 @@ import sonia.scm.ScmState;
 import sonia.scm.url.UrlProvider;
 import sonia.scm.url.UrlProviderFactory;
 import sonia.scm.util.AssertUtil;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -51,18 +54,12 @@ import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientRequest;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.ClientFilter;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 import com.sun.jersey.multipart.impl.MultiPartWriter;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.NewCookie;
 
 /**
  *
@@ -128,11 +125,10 @@ public class JerseyClientProvider implements ScmClientProvider
     Client client =
       Client.create(new DefaultClientConfig(MultiPartWriter.class));
 
-    client.addFilter(new CookieClientFilter());
-
+    boolean loginAttempt = isLoginAttempt(username, password);
     ClientResponse response;
 
-    if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
+    if (loginAttempt)
     {
       response = login(urlProvider, client, username, password);
     }
@@ -151,25 +147,31 @@ public class JerseyClientProvider implements ScmClientProvider
 
       throw new ScmClientException("create ScmClientSession failed");
     }
-    else if (logger.isInfoEnabled())
+
+    logger.info("create session successfully for user {}", user);
+
+    if (loginAttempt)
     {
-      logger.info("create session successfully for user {}", user);
+      appendAuthenticationFilter(client, state);
     }
 
     return new JerseyClientSession(client, urlProvider, state);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param urlProvider
-   * @param client
-   * @param username
-   * @param password
-   *
-   * @return
-   */
+  private void appendAuthenticationFilter(Client client, ScmState state)
+  {
+    String token = state.getToken();
+
+    if (Strings.isNullOrEmpty(token))
+    {
+      throw new ScmClientException(
+        "scm-manager does not return a bearer token");
+    }
+
+    // authentication for further requests
+    client.addFilter(new AuthenticationFilter(token));
+  }
+
   private ClientResponse login(UrlProvider urlProvider, Client client,
     String username, String password)
   {
@@ -197,15 +199,6 @@ public class JerseyClientProvider implements ScmClientProvider
       ClientResponse.class, formData);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param urlProvider
-   * @param client
-   *
-   * @return
-   */
   private ClientResponse state(UrlProvider urlProvider, Client client)
   {
     String stateUrl = urlProvider.getStateUrl();
@@ -226,17 +219,33 @@ public class JerseyClientProvider implements ScmClientProvider
     return resource.get(ClientResponse.class);
   }
 
+  //~--- get methods ----------------------------------------------------------
+
+  private boolean isLoginAttempt(String username, String password)
+  {
+    return Util.isNotEmpty(username) && Util.isNotEmpty(password);
+  }
+
   //~--- inner classes --------------------------------------------------------
 
   /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/07/05
-   * @author         Enter your name here...
+   * Authentication filter
    */
-  private class CookieClientFilter extends ClientFilter
+  private class AuthenticationFilter extends ClientFilter
   {
+
+    /**
+     * Constructs ...
+     *
+     *
+     * @param bearerToken
+     */
+    public AuthenticationFilter(String bearerToken)
+    {
+      this.bearerToken = bearerToken;
+    }
+
+    //~--- methods ------------------------------------------------------------
 
     /**
      * Method description
@@ -252,26 +261,16 @@ public class JerseyClientProvider implements ScmClientProvider
     public ClientResponse handle(ClientRequest request)
       throws ClientHandlerException
     {
-      for (NewCookie c : cookies)
-      {
-        request.getHeaders().putSingle("Cookie", c);
-      }
+      request.getHeaders().putSingle(HttpUtil.HEADER_AUTHORIZATION,
+        HttpUtil.AUTHORIZATION_SCHEME_BEARER.concat(" ").concat(bearerToken));
 
-      ClientResponse response = getNext().handle(request);
-
-      if (response.getCookies() != null)
-      {
-        cookies.addAll(response.getCookies());
-      }
-
-      return response;
+      return getNext().handle(request);
     }
 
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private final List<NewCookie> cookies =
-      Collections.synchronizedList(new ArrayList<NewCookie>());
+    private final String bearerToken;
   }
 
 

@@ -179,11 +179,11 @@ public class JerseyClientSession implements ScmClientSession
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private Client client;
+  private final Client client;
 
   /** Field description */
-  private ScmState state;
+  private final ScmState state;
 
   /** Field description */
-  private UrlProvider urlProvider;
+  private final UrlProvider urlProvider;
 }
