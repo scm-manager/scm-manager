@@ -56,6 +56,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * Filter to handle authentication for the rest api of SCM-Manager.
  *
  * @author Sebastian Sdorra
  */
@@ -65,23 +66,16 @@ import javax.servlet.http.HttpServletResponse;
 public class ApiAuthenticationFilter extends AuthenticationFilter
 {
 
-  /** Field description */
+  /** login uri */
   public static final String URI_LOGIN = "/api/rest/authentication/login";
-
-  /** Field description */
-  public static final String URI_LOGOUT = "/api/rest/authentication/logout";
-
-  /** Field description */
-  public static final String URI_STATE = "/api/rest/authentication/state";
 
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new ApiAuthenticationFilter
    *
-   *
-   * @param configuration
-   * @param tokenGenerators
+   * @param configuration scm main configuration
+   * @param tokenGenerators web token generators
    */
   @Inject
   public ApiAuthenticationFilter(ScmConfiguration configuration,
@@ -93,12 +87,13 @@ public class ApiAuthenticationFilter extends AuthenticationFilter
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * The filter skips the authentication chain on the login resource, for all
+   * other resources the request is delegated to the 
+   * {@link AuthenticationFilter}.
    *
-   *
-   * @param request
-   * @param response
-   * @param chain
+   * @param request http servlet request
+   * @param response http servlet response
+   * @param chain filter chain
    *
    * @throws IOException
    * @throws ServletException
@@ -108,11 +103,8 @@ public class ApiAuthenticationFilter extends AuthenticationFilter
     HttpServletResponse response, FilterChain chain)
     throws IOException, ServletException
   {
-
-    // skip filter on authentication resource
-    if (request.getRequestURI().contains(URI_LOGIN)
-      || request.getRequestURI().contains(URI_STATE)
-      || request.getRequestURI().contains(URI_LOGOUT))
+    // skip filter on login resource
+    if (request.getRequestURI().contains(URI_LOGIN))
     {
       chain.doFilter(request, response);
     }
@@ -123,12 +115,12 @@ public class ApiAuthenticationFilter extends AuthenticationFilter
   }
 
   /**
-   * Method description
+   * The filter process the chain on unauthorized requests and does not prompt 
+   * for authentication.
    *
-   *
-   * @param request
-   * @param response
-   * @param chain
+   * @param request http servlet request
+   * @param response http servlet response
+   * @param chain filter chain
    *
    * @throws IOException
    * @throws ServletException

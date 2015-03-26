@@ -86,7 +86,8 @@
   
   <!-- shiro -->
   <!--
-  <logger name="org.apache.shiro" level="TRACE" />
+  <logger name="org.apache.shiro" level="INFO" />
+  <logger name="org.apache.shiro.authc.pam.ModularRealmAuthenticator" level="DEBUG" />
   -->
   
   <!-- svnkit -->

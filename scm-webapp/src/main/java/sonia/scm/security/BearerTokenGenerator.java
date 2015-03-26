@@ -36,13 +36,17 @@ package sonia.scm.security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sonia.scm.user.User;
 
 import static com.google.common.base.Preconditions.*;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -54,6 +58,14 @@ import javax.inject.Inject;
  */
 public final class BearerTokenGenerator
 {
+
+  /**
+   * the logger for BearerTokenGenerator
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(BearerTokenGenerator.class);
+
+  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new token generator.
@@ -84,16 +96,23 @@ public final class BearerTokenGenerator
   {
     checkNotNull(user, "user is required");
 
-    SecureKey key = keyResolver.getSecureKey(user.getName());
-    
+    String username = user.getName();
+
+    String id = keyGenerator.createKey();
+
+    logger.trace("create new token {} for user {}", id, username);
+
+    SecureKey key = keyResolver.getSecureKey(username);
+
     Date now = new Date();
+
     // TODO: should be configurable
     long expiration = TimeUnit.MILLISECONDS.convert(10, TimeUnit.HOURS);
-    
+
     //J-
     return Jwts.builder()
-      .setSubject(user.getName())
-      .setId(keyGenerator.createKey())
+      .setSubject(username)
+      .setId(id)
       .signWith(SignatureAlgorithm.HS256, key.getBytes())
       .setIssuedAt(now)
       .setExpiration(new Date(now.getTime() + expiration))
