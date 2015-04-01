@@ -43,6 +43,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Creates an {@link BearerAuthenticationToken} from the {@link #COOKIE_NAME} 
+ * cookie.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
@@ -51,19 +53,19 @@ import javax.servlet.http.HttpServletRequest;
 public class CookieBearerWebTokenGenerator implements WebTokenGenerator
 {
 
-  /** Field description */
+  /** cookie name */
   @VisibleForTesting
   static final String COOKIE_NAME = "X-Bearer-Token";
 
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Creates an {@link BearerAuthenticationToken} from the {@link #COOKIE_NAME} 
+   * cookie.
    *
+   * @param request http servlet request
    *
-   * @param request
-   *
-   * @return
+   * @return {@link BearerAuthenticationToken} or {@code null}
    */
   @Override
   public BearerAuthenticationToken createToken(HttpServletRequest request)

@@ -33,15 +33,18 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.plugin.Extension;
 import sonia.scm.security.BearerAuthenticationToken;
+import sonia.scm.util.HttpUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.servlet.http.HttpServletRequest;
-import sonia.scm.plugin.Extension;
 
 /**
- *
+ * Creates a {@link BearerAuthenticationToken} from an authorization header with
+ * bearer authorization.
+ * 
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
@@ -49,20 +52,15 @@ import sonia.scm.plugin.Extension;
 public class BearerWebTokenGenerator extends SchemeBasedWebTokenGenerator
 {
 
-  /** Field description */
-  public static final String AUTHORIZATION_BEARER_PREFIX = "BEARER";
-
-  //~--- methods --------------------------------------------------------------
-
   /**
-   * Method description
+   * Creates a {@link BearerAuthenticationToken} from an authorization header 
+   * with bearer authorization.
    *
+   * @param request http servlet request
+   * @param scheme authorization scheme
+   * @param authorization authorization payload
    *
-   * @param request
-   * @param scheme
-   * @param authorization
-   *
-   * @return
+   * @return {@link BearerAuthenticationToken} or {@code null}
    */
   @Override
   protected BearerAuthenticationToken createToken(HttpServletRequest request,
@@ -70,7 +68,7 @@ public class BearerWebTokenGenerator extends SchemeBasedWebTokenGenerator
   {
     BearerAuthenticationToken token = null;
 
-    if (AUTHORIZATION_BEARER_PREFIX.equalsIgnoreCase(scheme))
+    if (HttpUtil.AUTHORIZATION_SCHEME_BEARER.equalsIgnoreCase(scheme))
     {
       token = new BearerAuthenticationToken(authorization);
     }

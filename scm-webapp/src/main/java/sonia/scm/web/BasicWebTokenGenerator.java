@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.plugin.Extension;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -47,6 +48,8 @@ import sonia.scm.util.Util;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Creates a {@link UsernamePasswordToken} from an authorization header with
+ * basic authentication.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
@@ -55,10 +58,7 @@ import javax.servlet.http.HttpServletRequest;
 public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator
 {
 
-  /** Field description */
-  public static final String AUTHORIZATION_BASIC_PREFIX = "basic";
-
-  /** Field description */
+  /** credential separator for basic authentication */
   public static final String CREDENTIAL_SEPARATOR = ":";
 
   /**
@@ -70,14 +70,15 @@ public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Creates a {@link UsernamePasswordToken} from an authorization header with
+   * basic authentication scheme.
    *
    *
-   * @param request
-   * @param scheme
-   * @param authorization
+   * @param request http servlet request
+   * @param scheme authentication scheme
+   * @param authorization authorization payload
    *
-   * @return
+   * @return {@link UsernamePasswordToken} or {@code null}
    */
   @Override
   protected UsernamePasswordToken createToken(HttpServletRequest request,
@@ -85,7 +86,7 @@ public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator
   {
     UsernamePasswordToken authToken = null;
 
-    if (AUTHORIZATION_BASIC_PREFIX.equalsIgnoreCase(scheme))
+    if (HttpUtil.AUTHORIZATION_SCHEME_BASIC.equalsIgnoreCase(scheme))
     {
       String token = new String(Base64.decode(authorization.getBytes()));
 
