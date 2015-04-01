@@ -70,15 +70,6 @@ public final class HttpUtil
   /** authentication realm for basic authentication */
   public static final String AUTHENTICATION_REALM = "SONIA :: SCM Manager";
 
-  /** Field description */
-  public static final String ENCODING = "UTF-8";
-
-  /**
-   * authorization header
-   * @since 2.0.0
-   */
-  public static final String HEADER_AUTHORIZATION = "Authorization";
-
   /**
    * Basic authorization scheme
    * @since 2.0.0
@@ -90,7 +81,22 @@ public final class HttpUtil
    * @since 2.0.0
    */
   public static final String AUTHORIZATION_SCHEME_BEARER = "Bearer";
-  
+
+  /**
+   * Name of bearer authentication cookie.
+   * @since 2.0.0
+   */
+  public static final String COOKIE_BEARER_AUTHENTICATION = "X-Bearer-Token";
+
+  /** Field description */
+  public static final String ENCODING = "UTF-8";
+
+  /**
+   * authorization header
+   * @since 2.0.0
+   */
+  public static final String HEADER_AUTHORIZATION = "Authorization";
+
   /**
    * location header
    * @since 1.43

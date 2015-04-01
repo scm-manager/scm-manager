@@ -60,6 +60,7 @@ import sonia.scm.security.BearerTokenGenerator;
 import sonia.scm.security.Tokens;
 import sonia.scm.user.User;
 import sonia.scm.util.HttpUtil;
+import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -69,7 +70,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -154,7 +154,7 @@ public class AuthenticationResource
     @Context HttpServletResponse response,
     @FormParam("username") String username,
     @FormParam("password") String password, @FormParam("rememberMe")
-    @QueryParam("cookie") boolean cookie)
+  @QueryParam("cookie") boolean cookie)
   {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(username),
       "username parameter is required");
@@ -177,7 +177,7 @@ public class AuthenticationResource
 
       if (cookie)
       {
-        Cookie c = new Cookie("X-Bearer-Token", token);
+        Cookie c = new Cookie(HttpUtil.COOKIE_BEARER_AUTHENTICATION, token);
 
         c.setPath(request.getContextPath());
 
@@ -270,11 +270,21 @@ public class AuthenticationResource
 
     subject.logout();
 
+    // remove bearer authentication cookie
+    Cookie c = new Cookie(
+      HttpUtil.COOKIE_BEARER_AUTHENTICATION,
+      Util.EMPTY_STRING
+    );
+    c.setPath(request.getContextPath());
+    c.setMaxAge(0);
+    c.setHttpOnly(true);
+    
+    response.addCookie(c);
+
     Response resp;
 
     if (configuration.isAnonymousAccessEnabled())
     {
-
       resp = Response.ok(stateFactory.createAnonymousState()).build();
     }
     else
