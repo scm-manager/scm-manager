@@ -78,6 +78,12 @@ public final class HttpUtil
    * @since 1.43
    */
   public static final String HEADER_LOCATION = "Location";
+  
+  /**
+   * content-length header
+   * @since 1.46
+   */
+  public static final String HEADER_CONTENT_LENGTH = "Content-Length";
 
   /**
    * header for identifying the scm-manager client
