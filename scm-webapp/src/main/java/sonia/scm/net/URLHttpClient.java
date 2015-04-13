@@ -417,9 +417,15 @@ public class URLHttpClient implements HttpClient
       {
         String key = encode(p.getKey());
 
-        for (String value : values)
+        Iterator<String> valueIt = values.iterator();
+        
+        while(valueIt.hasNext())
         {
+          String value = valueIt.next();
           writer.append(key).append("=").append(encode(value));
+          if ( valueIt.hasNext() ){
+            writer.write("&");
+          }
         }
 
         if (it.hasNext())
