@@ -33,10 +33,12 @@ package sonia.scm.net.ahc;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -133,6 +135,14 @@ public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
   {
 
     /**
+     * the logger for URLConnectionByteSource
+     */
+    private static final Logger logger =
+      LoggerFactory.getLogger(URLConnectionByteSource.class);
+
+    //~--- constructors -------------------------------------------------------
+
+    /**
      * Constructs a new {@link URLConnectionByteSource}.
      *
      *
@@ -146,17 +156,35 @@ public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
     //~--- methods ------------------------------------------------------------
 
     /**
-     * Opens the http connection.
+     * Opens the input stream of http connection, if an error occurs during
+     * opening the method will return the error stream instead.
      *
      *
-     * @return http connection
+     * @return input or error stream of http connection
      *
      * @throws IOException
      */
     @Override
     public InputStream openStream() throws IOException
     {
-      return connection.getInputStream();
+      InputStream stream;
+
+      try
+      {
+        stream = connection.getInputStream();
+      }
+      catch (IOException ex)
+      {
+        if (logger.isDebugEnabled())
+        {
+          logger.debug(
+            "could not open input stream, open error stream instead", ex);
+        }
+
+        stream = connection.getErrorStream();
+      }
+
+      return stream;
     }
 
     //~--- fields -------------------------------------------------------------

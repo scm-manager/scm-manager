@@ -95,6 +95,28 @@ public class DefaultAdvancedHttpResponseTest
   /**
    * Method description
    *
+   *
+   * @throws IOException
+   */
+  @Test
+  public void testContentAsByteSourceWithFailedRequest() throws IOException
+  {
+    ByteArrayInputStream bais =
+      new ByteArrayInputStream("test".getBytes(Charsets.UTF_8));
+
+    when(connection.getInputStream()).thenThrow(IOException.class);
+    when(connection.getErrorStream()).thenReturn(bais);
+
+    AdvancedHttpResponse response = new DefaultAdvancedHttpResponse(connection,
+                                      404, "NOT FOUND");
+    ByteSource content = response.contentAsByteSource();
+
+    assertEquals("test", content.asCharSource(Charsets.UTF_8).read());
+  }
+
+  /**
+   * Method description
+   *
    */
   @Test
   public void testGetHeaders()
