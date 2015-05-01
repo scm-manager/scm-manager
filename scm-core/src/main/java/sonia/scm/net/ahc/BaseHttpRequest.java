@@ -36,6 +36,7 @@ package sonia.scm.net.ahc;
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
 import org.apache.shiro.codec.Base64;
@@ -386,7 +387,7 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
   protected final AdvancedHttpClient client;
 
   /** http header */
-  private final Multimap<String, String> headers = HashMultimap.create();
+  private final Multimap<String, String> headers = LinkedHashMultimap.create();
 
   /** http method */
   private final String method;

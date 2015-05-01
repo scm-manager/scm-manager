@@ -32,6 +32,8 @@
 package sonia.scm.net.ahc;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
@@ -86,6 +88,43 @@ public class AdvancedHttpResponseTest {
     when(response.contentAsByteSource()).thenReturn(bs);
     byte[] data = ByteStreams.toByteArray(response.contentAsStream());
     assertEquals("cde456", new String(data, Charsets.UTF_8));
+  }
+  
+  @Test
+  public void testGetFirstHeader() throws IOException
+  {
+    Multimap<String,String> mm = LinkedHashMultimap.create();
+    mm.put("Test", "One");
+    mm.put("Test-2", "One");
+    mm.put("Test-2", "Two");
+    when(response.getHeaders()).thenReturn(mm);
+    assertEquals("One", response.getFirstHeader("Test"));
+    assertEquals("One", response.getFirstHeader("Test-2"));
+    assertNull(response.getFirstHeader("Test-3"));
+  }
+  
+  @Test
+  public void testIsSuccessful() throws IOException
+  {
+    // successful
+    when(response.getStatus()).thenReturn(200);
+    assertTrue(response.isSuccessful());
+    when(response.getStatus()).thenReturn(201);
+    assertTrue(response.isSuccessful());
+    when(response.getStatus()).thenReturn(204);
+    assertTrue(response.isSuccessful());
+    when(response.getStatus()).thenReturn(301);
+    assertTrue(response.isSuccessful());
+    
+    // not successful
+    when(response.getStatus()).thenReturn(400);
+    assertFalse(response.isSuccessful());
+    when(response.getStatus()).thenReturn(404);
+    assertFalse(response.isSuccessful());
+    when(response.getStatus()).thenReturn(500);
+    assertFalse(response.isSuccessful());
+    when(response.getStatus()).thenReturn(199);
+    assertFalse(response.isSuccessful());
   }
 
 }

@@ -34,6 +34,7 @@ package sonia.scm.net.ahc;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
 
@@ -48,6 +49,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 /**
+ * Http server response object of {@link DefaultAdvancedHttpClient}.
  *
  * @author Sebastian Sdorra
  * @since 1.46
@@ -56,12 +58,12 @@ public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
 {
 
   /**
-   * Constructs ...
+   * Constructs a new {@link DefaultAdvancedHttpResponse}.
    *
    *
-   * @param connection
-   * @param status
-   * @param statusText
+   * @param connection http connection
+   * @param status response status code
+   * @param statusText response status text
    */
   DefaultAdvancedHttpResponse(HttpURLConnection connection, int status,
     String statusText)
@@ -74,12 +76,7 @@ public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
+   * {@inheritDoc}
    */
   @Override
   public ByteSource contentAsByteSource() throws IOException
@@ -90,17 +87,14 @@ public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public Multimap<String, String> getHeaders()
   {
     if (headers == null)
     {
-      headers = HashMultimap.create();
+      headers = LinkedHashMultimap.create();
 
       for (Entry<String, List<String>> e :
         connection.getHeaderFields().entrySet())
@@ -113,10 +107,7 @@ public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public int getStatus()
@@ -125,10 +116,7 @@ public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
   }
 
   /**
-   * Method description
-   *
-   *
-   * @return
+   * {@inheritDoc}
    */
   @Override
   public String getStatusText()
@@ -183,10 +171,10 @@ public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
   /** http connection */
   private final HttpURLConnection connection;
 
-  /** Field description */
+  /** server response status */
   private final int status;
 
-  /** Field description */
+  /** server response text */
   private final String statusText;
 
   /** http headers */

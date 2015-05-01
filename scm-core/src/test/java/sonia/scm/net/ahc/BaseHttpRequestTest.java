@@ -113,7 +113,7 @@ public class BaseHttpRequestTest {
   public void testHeaderMultiple(){
     request.header("a", "b", "c", "d");
     Collection<String> values = request.getHeaders().get("a");
-    assertThat(values, containsInAnyOrder("b", "c", "d"));
+    assertThat(values, contains("b", "c", "d"));
   }
   
   @Test

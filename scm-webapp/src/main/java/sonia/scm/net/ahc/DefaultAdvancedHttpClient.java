@@ -33,6 +33,7 @@ package sonia.scm.net.ahc;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Closeables;
@@ -69,6 +70,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
 /**
+ * Default implementation of the {@link AdvancedHttpClient}. The default 
+ * implementation uses {@link HttpURLConnection}.
  *
  * @author Sebastian Sdorra
  * @since 1.46
@@ -76,20 +79,23 @@ import javax.net.ssl.TrustManager;
 public class DefaultAdvancedHttpClient extends AdvancedHttpClient
 {
 
-  /** Field description */
-  public static final String CREDENTIAL_SEPARATOR = ":";
+  /** credential separator */
+  private static final String CREDENTIAL_SEPARATOR = ":";
 
-  /** Field description */
-  public static final String HEADER_PROXY_AUTHORIZATION = "Proxy-Authorization";
+  /** proxy authorization header */
+  @VisibleForTesting
+  static final String HEADER_PROXY_AUTHORIZATION = "Proxy-Authorization";
 
-  /** Field description */
-  public static final String PREFIX_BASIC_AUTHENTICATION = "Basic ";
+  /** basic authentication prefix */
+  private static final String PREFIX_BASIC_AUTHENTICATION = "Basic ";
 
-  /** Field description */
-  public static final int TIMEOUT_CONNECTION = 30000;
+  /** connection timeout */
+  @VisibleForTesting
+  static final int TIMEOUT_CONNECTION = 30000;
 
-  /** Field description */
-  public static final int TIMEOUT_RAED = 1200000;
+  /** read timeout */
+  @VisibleForTesting
+  static final int TIMEOUT_RAED = 1200000;
 
   /**
    * the logger for DefaultAdvancedHttpClient
@@ -100,10 +106,10 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new {@link DefaultAdvancedHttpClient}.
    *
    *
-   * @param configuration
+   * @param configuration scm-manager main configuration
    */
   @Inject
   public DefaultAdvancedHttpClient(ScmConfiguration configuration)
@@ -114,12 +120,50 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Creates a new {@link HttpURLConnection} from the given {@link URL}. The 
+   * method is visible for testing.
    *
    *
-   * @param request
+   * @param url url
    *
-   * @return
+   * @return new {@link HttpURLConnection}
+   *
+   * @throws IOException
+   */
+  @VisibleForTesting
+  protected HttpURLConnection createConnection(URL url) throws IOException
+  {
+    return (HttpURLConnection) url.openConnection();
+  }
+
+  /**
+   * Creates a new proxy {@link HttpURLConnection} from the given {@link URL}
+   * and {@link SocketAddress}. The method is visible for testing.
+   *
+   *
+   * @param url url
+   * @param address proxy socket address
+   *
+   * @return new proxy {@link HttpURLConnection}
+   *
+   * @throws IOException
+   */
+  @VisibleForTesting
+  protected HttpURLConnection createProxyConnecton(URL url,
+    SocketAddress address)
+    throws IOException
+  {
+    return (HttpURLConnection) url.openConnection(new Proxy(Proxy.Type.HTTP,
+      address));
+  }
+
+  /**
+   * Executes the given request and returns the server response.
+   *
+   *
+   * @param request http request
+   *
+   * @return server response
    *
    * @throws IOException
    */
@@ -223,7 +267,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
     {
       for (String value : headers.get(key))
       {
-        connection.setRequestProperty(key, value);
+        connection.addRequestProperty(key, value);
       }
     }
   }
@@ -280,7 +324,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
 
       logger.debug("fetch {}", url.toExternalForm());
 
-      connection = (HttpURLConnection) url.openConnection();
+      connection = createConnection(url);
     }
 
     return connection;
@@ -300,8 +344,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
       new InetSocketAddress(configuration.getProxyServer(),
         configuration.getProxyPort());
 
-    return (HttpURLConnection) url.openConnection(new Proxy(Proxy.Type.HTTP,
-      address));
+    return createProxyConnecton(url, address);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -314,6 +357,6 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /** scm-manager main configuration */
   private final ScmConfiguration configuration;
 }
