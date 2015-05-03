@@ -468,7 +468,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
       }
       else
       {
-        throw new ScmSecurityException("not enaugh permissions");
+        throw new ScmSecurityException("not enough permissions");
       }
     }
 
