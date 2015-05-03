@@ -51,7 +51,11 @@ import java.util.Map;
  *
  * @author Sebastian Sdorra
  * @since 1.9
+ * 
+ * @deprecated use {@link sonia.scm.net.ahc.AdvancedHttpRequest} or 
+ *   {@link sonia.scm.net.ahc.AdvancedHttpRequestWithBody} instead.
  */
+@Deprecated
 public class HttpRequest
 {
 

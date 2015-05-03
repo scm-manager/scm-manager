@@ -48,7 +48,10 @@ import java.util.Map;
  * @apiviz.landmark
  * @apiviz.uses sonia.scm.net.HttpRequest
  * @apiviz.uses sonia.scm.net.HttpResponse
+ * 
+ * @deprecated use {@link sonia.scm.net.ahc.AdvancedHttpClient} instead.
  */
+@Deprecated
 public interface HttpClient
 {
 

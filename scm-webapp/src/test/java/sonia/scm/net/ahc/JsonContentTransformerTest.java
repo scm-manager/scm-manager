@@ -38,7 +38,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
 /**
