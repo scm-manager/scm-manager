@@ -31,78 +31,63 @@
 
 package sonia.scm.net.ahc;
 
+import com.google.common.io.ByteSource;
+import java.io.IOException;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.runner.RunWith;
-import org.mockito.Answers;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
-public class AdvancedHttpClientTest {
+public class JsonContentTransformerTest {
 
-  @Mock(answer = Answers.CALLS_REAL_METHODS)
-  private AdvancedHttpClient client;
 
-  private static final String URL = "https://www.scm-manager.org";
-  
+  private final JsonContentTransformer transformer = new JsonContentTransformer();
+
   @Test
-  public void testGet()
+  public void testIsResponsible()
   {
-    AdvancedHttpRequest request = client.get(URL);
-    assertEquals(URL, request.getUrl());
-    assertEquals(HttpMethod.GET, request.getMethod());
+    assertTrue(transformer.isResponsible(String.class, "application/json"));
+    assertTrue(transformer.isResponsible(String.class, "application/json;charset=UTF-8"));
+    assertFalse(transformer.isResponsible(String.class, "text/plain"));
   }
   
   @Test
-  public void testDelete()
-  {
-    AdvancedHttpRequestWithBody request = client.delete(URL);
-    assertEquals(URL, request.getUrl());
-    assertEquals(HttpMethod.DELETE, request.getMethod());
+  public void testMarshallAndUnmarshall() throws IOException{
+    ByteSource bs = transformer.marshall(new TestObject("test"));
+    TestObject to = transformer.unmarshall(TestObject.class, bs);
+    assertEquals("test", to.value);
   }
   
-  @Test
-  public void testPut()
-  {
-    AdvancedHttpRequestWithBody request = client.put(URL);
-    assertEquals(URL, request.getUrl());
-    assertEquals(HttpMethod.PUT, request.getMethod());
+  @Test(expected = ContentTransformerException.class)
+  public void testUnmarshallIOException() throws IOException{
+    ByteSource bs = mock(ByteSource.class);
+    when(bs.openBufferedStream()).thenThrow(IOException.class);
+    transformer.unmarshall(String.class, bs);
   }
   
-  @Test
-  public void testPost()
-  {
-    AdvancedHttpRequestWithBody request = client.post(URL);
-    assertEquals(URL, request.getUrl());
-    assertEquals(HttpMethod.POST, request.getMethod());
-  }
+  private static class TestObject2 {}
   
-  @Test
-  public void testOptions()
-  {
-    AdvancedHttpRequestWithBody request = client.options(URL);
-    assertEquals(URL, request.getUrl());
-    assertEquals(HttpMethod.OPTIONS, request.getMethod());
-  }
+  @XmlRootElement(name = "test")
+  @XmlAccessorType(XmlAccessType.FIELD)
+  private static class TestObject {
   
-  @Test
-  public void testHead()
-  {
-    AdvancedHttpRequest request = client.head(URL);
-    assertEquals(URL, request.getUrl());
-    assertEquals(HttpMethod.HEAD, request.getMethod());
-  }
-  
-  @Test
-  public void testMethod()
-  {
-    AdvancedHttpRequestWithBody request = client.method("PROPFIND", URL);
-    assertEquals(URL, request.getUrl());
-    assertEquals("PROPFIND", request.getMethod());
+    private String value;
+
+    public TestObject()
+    {
+    }
+    
+    public TestObject(String value)
+    {
+      this.value = value;
+    }
+    
   }
 }

@@ -62,14 +62,15 @@ public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
   /**
    * Constructs a new {@link DefaultAdvancedHttpResponse}.
    *
-   *
+   * @param client ahc
    * @param connection http connection
    * @param status response status code
    * @param statusText response status text
    */
-  DefaultAdvancedHttpResponse(HttpURLConnection connection, int status,
-    String statusText)
+  DefaultAdvancedHttpResponse(DefaultAdvancedHttpClient client,
+    HttpURLConnection connection, int status, String statusText)
   {
+    this.client = client;
     this.connection = connection;
     this.status = status;
     this.statusText = statusText;
@@ -124,6 +125,18 @@ public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
   public String getStatusText()
   {
     return statusText;
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected ContentTransformer createTransformer(Class<?> type,
+    String contentType)
+  {
+    return client.createTransformer(type, contentType);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -195,6 +208,9 @@ public class DefaultAdvancedHttpResponse extends AdvancedHttpResponse
 
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final DefaultAdvancedHttpClient client;
 
   /** http connection */
   private final HttpURLConnection connection;

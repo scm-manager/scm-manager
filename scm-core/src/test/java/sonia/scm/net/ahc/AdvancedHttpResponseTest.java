@@ -55,6 +55,9 @@ public class AdvancedHttpResponseTest {
 
   @Mock(answer = Answers.CALLS_REAL_METHODS)
   private AdvancedHttpResponse response;
+  
+  @Mock
+  private ContentTransformer transformer;
 
   @Test
   public void testContent() throws IOException
@@ -66,11 +69,23 @@ public class AdvancedHttpResponseTest {
   }
   
   @Test
+  public void testContentWithoutByteSource() throws IOException
+  {
+    assertNull(response.content());
+  }
+  
+  @Test
   public void testContentAsString() throws IOException
   {
     ByteSource bs = ByteSource.wrap("123test".getBytes(Charsets.UTF_8));
     when(response.contentAsByteSource()).thenReturn(bs);
     assertEquals("123test", response.contentAsString());
+  }
+  
+  @Test
+  public void testContentAsStingWithoutByteSource() throws IOException 
+  {
+    assertNull(response.contentAsString());
   }
   
   @Test
@@ -82,12 +97,81 @@ public class AdvancedHttpResponseTest {
   }
   
   @Test
+  public void testContentAsReaderWithoutByteSource() throws IOException
+  {
+    assertNull(response.contentAsReader());
+  }
+  
+  @Test
   public void testContentAsStream() throws IOException
   {
     ByteSource bs = ByteSource.wrap("cde456".getBytes(Charsets.UTF_8));
     when(response.contentAsByteSource()).thenReturn(bs);
     byte[] data = ByteStreams.toByteArray(response.contentAsStream());
     assertEquals("cde456", new String(data, Charsets.UTF_8));
+  }
+  
+  @Test
+  public void testContentAsStreamWithoutByteSource() throws IOException
+  {
+    assertNull(response.contentAsStream());
+  }
+  
+  @Test
+  public void testContentFromJson() throws IOException{
+    ByteSource bs = ByteSource.wrap("{}".getBytes(Charsets.UTF_8));
+    when(response.contentAsByteSource()).thenReturn(bs);
+    when(response.createTransformer(String.class, ContentType.JSON)).thenReturn(transformer);
+    when(transformer.unmarshall(String.class, bs)).thenReturn("{root: null}");
+    String c = response.contentFromJson(String.class);
+    assertEquals("{root: null}", c);
+  }
+  
+  @Test
+  public void testContentFromXml() throws IOException{
+    ByteSource bs = ByteSource.wrap("<root />".getBytes(Charsets.UTF_8));
+    when(response.contentAsByteSource()).thenReturn(bs);
+    when(response.createTransformer(String.class, ContentType.XML)).thenReturn(transformer);
+    when(transformer.unmarshall(String.class, bs)).thenReturn("<root></root>");
+    String c = response.contentFromXml(String.class);
+    assertEquals("<root></root>", c);
+  }
+  
+  @Test(expected = ContentTransformerException.class)
+  public void testContentTransformedWithoutHeader() throws IOException{
+    Multimap<String,String> map = LinkedHashMultimap.create();
+    when(response.getHeaders()).thenReturn(map);
+    response.contentTransformed(String.class);
+  }
+  
+  @Test
+  public void testContentTransformedFromHeader() throws IOException{
+    Multimap<String,String> map = LinkedHashMultimap.create();
+    map.put("Content-Type", "text/plain");
+    when(response.getHeaders()).thenReturn(map);
+    when(response.createTransformer(String.class, "text/plain")).thenReturn(
+      transformer);
+    ByteSource bs = ByteSource.wrap("hello".getBytes(Charsets.UTF_8));
+    when(response.contentAsByteSource()).thenReturn(bs);
+    when(transformer.unmarshall(String.class, bs)).thenReturn("hello world");
+    String v = response.contentTransformed(String.class);
+    assertEquals("hello world", v);
+  }
+  
+  @Test
+  public void testContentTransformed() throws IOException{
+    when(response.createTransformer(String.class, "text/plain")).thenReturn(
+      transformer);
+    ByteSource bs = ByteSource.wrap("hello".getBytes(Charsets.UTF_8));
+    when(response.contentAsByteSource()).thenReturn(bs);
+    when(transformer.unmarshall(String.class, bs)).thenReturn("hello world");
+    String v = response.contentTransformed(String.class, "text/plain");
+    assertEquals("hello world", v);
+  }
+  
+  @Test
+  public void testContentTransformedWithoutByteSource() throws IOException{
+    assertNull(response.contentTransformed(String.class, "text/plain"));
   }
   
   @Test

@@ -47,6 +47,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import sonia.scm.config.ScmConfiguration;
+
 import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
@@ -60,6 +62,7 @@ import java.io.IOException;
 
 import java.net.HttpURLConnection;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -85,8 +88,8 @@ public class DefaultAdvancedHttpResponseTest
 
     when(connection.getInputStream()).thenReturn(bais);
 
-    AdvancedHttpResponse response = new DefaultAdvancedHttpResponse(connection,
-                                      200, "OK");
+    AdvancedHttpResponse response = new DefaultAdvancedHttpResponse(client,
+                                      connection, 200, "OK");
     ByteSource content = response.contentAsByteSource();
 
     assertEquals("test", content.asCharSource(Charsets.UTF_8).read());
@@ -107,8 +110,8 @@ public class DefaultAdvancedHttpResponseTest
     when(connection.getInputStream()).thenThrow(IOException.class);
     when(connection.getErrorStream()).thenReturn(bais);
 
-    AdvancedHttpResponse response = new DefaultAdvancedHttpResponse(connection,
-                                      404, "NOT FOUND");
+    AdvancedHttpResponse response = new DefaultAdvancedHttpResponse(client,
+                                      connection, 404, "NOT FOUND");
     ByteSource content = response.contentAsByteSource();
 
     assertEquals("test", content.asCharSource(Charsets.UTF_8).read());
@@ -127,8 +130,8 @@ public class DefaultAdvancedHttpResponseTest
     map.put("Test", test);
     when(connection.getHeaderFields()).thenReturn(map);
 
-    AdvancedHttpResponse response = new DefaultAdvancedHttpResponse(connection,
-                                      200, "OK");
+    AdvancedHttpResponse response = new DefaultAdvancedHttpResponse(client,
+                                      connection, 200, "OK");
     Multimap<String, String> headers = response.getHeaders();
 
     assertThat(headers.get("Test"), contains("One", "Two"));
@@ -136,6 +139,11 @@ public class DefaultAdvancedHttpResponseTest
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private final DefaultAdvancedHttpClient client =
+    new DefaultAdvancedHttpClient(new ScmConfiguration(),
+      new HashSet<ContentTransformer>());
 
   /** Field description */
   @Mock

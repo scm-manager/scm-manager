@@ -65,12 +65,14 @@ import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
+import java.util.Set;
+
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 
 /**
- * Default implementation of the {@link AdvancedHttpClient}. The default 
+ * Default implementation of the {@link AdvancedHttpClient}. The default
  * implementation uses {@link HttpURLConnection}.
  *
  * @author Sebastian Sdorra
@@ -79,15 +81,9 @@ import javax.net.ssl.TrustManager;
 public class DefaultAdvancedHttpClient extends AdvancedHttpClient
 {
 
-  /** credential separator */
-  private static final String CREDENTIAL_SEPARATOR = ":";
-
   /** proxy authorization header */
   @VisibleForTesting
   static final String HEADER_PROXY_AUTHORIZATION = "Proxy-Authorization";
-
-  /** basic authentication prefix */
-  private static final String PREFIX_BASIC_AUTHENTICATION = "Basic ";
 
   /** connection timeout */
   @VisibleForTesting
@@ -96,6 +92,12 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
   /** read timeout */
   @VisibleForTesting
   static final int TIMEOUT_RAED = 1200000;
+
+  /** credential separator */
+  private static final String CREDENTIAL_SEPARATOR = ":";
+
+  /** basic authentication prefix */
+  private static final String PREFIX_BASIC_AUTHENTICATION = "Basic ";
 
   /**
    * the logger for DefaultAdvancedHttpClient
@@ -110,17 +112,20 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
    *
    *
    * @param configuration scm-manager main configuration
+   * @param contentTransformers content transformer
    */
   @Inject
-  public DefaultAdvancedHttpClient(ScmConfiguration configuration)
+  public DefaultAdvancedHttpClient(ScmConfiguration configuration,
+    Set<ContentTransformer> contentTransformers)
   {
     this.configuration = configuration;
+    this.contentTransformers = contentTransformers;
   }
 
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Creates a new {@link HttpURLConnection} from the given {@link URL}. The 
+   * Creates a new {@link HttpURLConnection} from the given {@link URL}. The
    * method is visible for testing.
    *
    *
@@ -155,6 +160,34 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
   {
     return (HttpURLConnection) url.openConnection(new Proxy(Proxy.Type.HTTP,
       address));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected ContentTransformer createTransformer(Class<?> type, String contentType)
+  {
+    ContentTransformer responsible = null;
+
+    for (ContentTransformer transformer : contentTransformers)
+    {
+      if (transformer.isResponsible(type, contentType))
+      {
+        responsible = transformer;
+
+        break;
+      }
+    }
+
+    if (responsible == null)
+    {
+      throw new ContentTransformerNotFoundException(
+        "could not find content transformer for content type ".concat(
+          contentType));
+    }
+
+    return responsible;
   }
 
   /**
@@ -210,7 +243,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
       applyContent(connection, content);
     }
 
-    return new DefaultAdvancedHttpResponse(connection,
+    return new DefaultAdvancedHttpResponse(this, connection,
       connection.getResponseCode(), connection.getResponseMessage());
   }
 
@@ -359,4 +392,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
 
   /** scm-manager main configuration */
   private final ScmConfiguration configuration;
+
+  /** set of content transformers */
+  private final Set<ContentTransformer> contentTransformers;
 }

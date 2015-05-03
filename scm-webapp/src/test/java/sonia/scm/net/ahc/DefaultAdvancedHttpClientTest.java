@@ -59,6 +59,9 @@ import java.net.HttpURLConnection;
 import java.net.SocketAddress;
 import java.net.URL;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
 
@@ -86,6 +89,20 @@ public class DefaultAdvancedHttpClientTest
     verify(connection).setConnectTimeout(
       DefaultAdvancedHttpClient.TIMEOUT_CONNECTION);
     verify(connection).addRequestProperty(HttpUtil.HEADER_CONTENT_LENGTH, "0");
+  }
+  
+  @Test(expected = ContentTransformerNotFoundException.class)
+  public void testContentTransformerNotFound(){
+    client.createTransformer(String.class, "text/plain");
+  }
+  
+  @Test
+  public void testContentTransformer(){
+    ContentTransformer transformer = mock(ContentTransformer.class);
+    when(transformer.isResponsible(String.class, "text/plain")).thenReturn(Boolean.TRUE);
+    transformers.add(transformer);
+    ContentTransformer t = client.createTransformer(String.class, "text/plain");
+    assertSame(transformer, t);
   }
 
   /**
@@ -266,7 +283,8 @@ public class DefaultAdvancedHttpClientTest
   public void setUp()
   {
     configuration = new ScmConfiguration();
-    client = new TestingAdvacedHttpClient(configuration);
+    transformers = new HashSet<ContentTransformer>();
+    client = new TestingAdvacedHttpClient(configuration, transformers);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -276,7 +294,7 @@ public class DefaultAdvancedHttpClientTest
    *
    *
    * @version        Enter version here..., 15/05/01
-   * @author         Enter your name here...    
+   * @author         Enter your name here...
    */
   public class TestingAdvacedHttpClient extends DefaultAdvancedHttpClient
   {
@@ -286,10 +304,12 @@ public class DefaultAdvancedHttpClientTest
      *
      *
      * @param configuration
+     * @param transformers
      */
-    public TestingAdvacedHttpClient(ScmConfiguration configuration)
+    public TestingAdvacedHttpClient(ScmConfiguration configuration,
+      Set<ContentTransformer> transformers)
     {
-      super(configuration);
+      super(configuration, transformers);
     }
 
     //~--- methods ------------------------------------------------------------
@@ -349,4 +369,7 @@ public class DefaultAdvancedHttpClientTest
   /** Field description */
   @Mock
   private HttpsURLConnection connection;
+
+  /** Field description */
+  private Set<ContentTransformer> transformers;
 }

@@ -39,7 +39,7 @@ import java.io.IOException;
  * Advanced client for http operations. The {@link AdvancedHttpClient} replaces
  * the much more simpler implementation {@link sonia.scm.net.HttpClient}. The
  * {@link AdvancedHttpClient} offers a fluid interface for handling most common
- * http operations. The {@link AdvancedHttpClient} can be injected by the 
+ * http operations. The {@link AdvancedHttpClient} can be injected by the
  * default injection mechanism of SCM-Manager.
  * <p>&nbsp;</p>
  * <b>Http GET example:</b>
@@ -48,13 +48,13 @@ import java.io.IOException;
  * AdvancedHttpResponse response = client.get("https://www.scm-manager.org")
  *                                       .decodeGZip(true)
  *                                       .request();
- * 
+ *
  * System.out.println(response.contentAsString());
  * </code></pre>
- * 
+ *
  * <p>&nbsp;</p>
  * <b>Http POST example:</b>
- * 
+ *
  * <pre><code>
  * AdvancedHttpResponse response = client.post("https://www.scm-manager.org")
  *                                       .formContent()
@@ -62,7 +62,7 @@ import java.io.IOException;
  *                                       .field("lastname", "McMillan")
  *                                       .build()
  *                                       .request();
- * 
+ *
  * if (response.isSuccessful()){
  *   System.out.println("success");
  * }
@@ -70,15 +70,28 @@ import java.io.IOException;
  *
  * @author Sebastian Sdorra
  * @since 1.46
- * 
+ *
  * @apiviz.landmark
  */
 public abstract class AdvancedHttpClient
 {
 
   /**
+   * Creates a {@link ContentTransformer} for the given Content-Type.
+   *
+   * @param type object type
+   * @param contentType content-type
+   * @throws ContentTransformerNotFoundException if no
+   *   {@link ContentTransformer} could be found for the content-type
+   *
+   * @return {@link ContentTransformer}
+   */
+  protected abstract ContentTransformer createTransformer(Class<?> type,
+    String contentType);
+
+  /**
    * Executes the given request and returns the http response. Implementation
-   * have to check, if the instance if from type 
+   * have to check, if the instance if from type
    * {@link AdvancedHttpRequestWithBody} in order to handle request contents.
    *
    *
@@ -118,8 +131,8 @@ public abstract class AdvancedHttpClient
   }
 
   /**
-   * Returns a request builder with a custom method. <strong>Note:</strong> not 
-   * every method is supported by the underlying implementation of the http 
+   * Returns a request builder with a custom method. <strong>Note:</strong> not
+   * every method is supported by the underlying implementation of the http
    * client.
    *
    *

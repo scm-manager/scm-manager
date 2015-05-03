@@ -33,11 +33,14 @@ package sonia.scm.net.ahc;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
@@ -54,6 +57,9 @@ public class AdvancedHttpRequestWithBodyTest {
 
   @Mock
   private AdvancedHttpClient ahc;
+  
+  @Mock
+  private ContentTransformer transformer;
   
   private AdvancedHttpRequestWithBody request;
   
@@ -116,6 +122,42 @@ public class AdvancedHttpRequestWithBodyTest {
   public void testStringContentWithCharset(){
     request.stringContent("test", Charsets.UTF_8);
     assertThat(request.getContent(), instanceOf(StringContent.class));
+  }
+  
+  @Test
+  public void testXmlContent() throws IOException{
+    when(ahc.createTransformer(String.class, ContentType.XML)).thenReturn(transformer);
+    when(transformer.marshall("<root />")).thenReturn(ByteSource.wrap("<root></root>".getBytes(Charsets.UTF_8)));
+    Content content = request.xmlContent("<root />").getContent();
+    assertThat(content, instanceOf(ByteSourceContent.class));
+    ByteSourceContent bsc = (ByteSourceContent) content;
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    bsc.process(baos);
+    assertEquals("<root></root>", baos.toString("UTF-8"));
+  }
+  
+  @Test
+  public void testJsonContent() throws IOException{
+    when(ahc.createTransformer(String.class, ContentType.JSON)).thenReturn(transformer);
+    when(transformer.marshall("{}")).thenReturn(ByteSource.wrap("{'root': {}}".getBytes(Charsets.UTF_8)));
+    Content content = request.jsonContent("{}").getContent();
+    assertThat(content, instanceOf(ByteSourceContent.class));
+    ByteSourceContent bsc = (ByteSourceContent) content;
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    bsc.process(baos);
+    assertEquals("{'root': {}}", baos.toString("UTF-8"));
+  }
+  
+ @Test
+  public void testTransformedContent() throws IOException{
+    when(ahc.createTransformer(String.class, "text/plain")).thenReturn(transformer);
+    when(transformer.marshall("hello")).thenReturn(ByteSource.wrap("hello world".getBytes(Charsets.UTF_8)));
+    Content content = request.transformedContent("text/plain", "hello").getContent();
+    assertThat(content, instanceOf(ByteSourceContent.class));
+    ByteSourceContent bsc = (ByteSourceContent) content;
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    bsc.process(baos);
+    assertEquals("hello world", baos.toString("UTF-8"));
   }
   
   @Test

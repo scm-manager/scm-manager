@@ -123,6 +123,21 @@ public class AdvancedHttpRequestWithBody
   }
 
   /**
+   * Transforms the given object to a xml string and set this string as request
+   * content.
+   *
+   * @param object object to transform
+   * @throws ContentTransformerNotFoundException if no
+   *   {@link ContentTransformer} could be found for the json content-type
+   *
+   * @return {@code this}
+   */
+  public AdvancedHttpRequestWithBody jsonContent(Object object)
+  {
+    return transformedContent(ContentType.JSON, object);
+  }
+
+  /**
    * Sets the raw data as request content.
    *
    *
@@ -180,6 +195,46 @@ public class AdvancedHttpRequestWithBody
     this.content = new StringContent(content, charset);
 
     return this;
+  }
+
+  /**
+   * Transforms the given object to a string and set this string as request
+   * content. The content-type is used to pick the right
+   * {@link ContentTransformer}. The method will throw an exception if no
+   * {@link ContentTransformer} for the content-type could be found.
+   *
+   * @param contentType content-type
+   * @param object object to transform
+   * @throws ContentTransformerNotFoundException if no
+   *   {@link ContentTransformer} could be found for the given content-type
+   *
+   * @return {@code this}
+   */
+  public AdvancedHttpRequestWithBody transformedContent(String contentType,
+    Object object)
+  {
+    ContentTransformer transformer =
+      client.createTransformer(object.getClass(), contentType);
+    ByteSource value = transformer.marshall(object);
+
+    contentType(contentType);
+
+    return rawContent(value);
+  }
+
+  /**
+   * Transforms the given object to a xml string and set this string as request
+   * content.
+   *
+   * @param object object to transform
+   * @throws ContentTransformerNotFoundException if no
+   *   {@link ContentTransformer} could be found for the xml content-type
+   *
+   * @return {@code this}
+   */
+  public AdvancedHttpRequestWithBody xmlContent(Object object)
+  {
+    return transformedContent(ContentType.XML, object);
   }
 
   //~--- get methods ----------------------------------------------------------

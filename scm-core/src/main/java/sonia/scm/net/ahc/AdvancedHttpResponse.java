@@ -34,6 +34,7 @@ package sonia.scm.net.ahc;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
@@ -45,7 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Http response. The response of a {@link AdvancedHttpRequest} or 
+ * Http response. The response of a {@link AdvancedHttpRequest} or
  * {@link AdvancedHttpRequestWithBody}.
  *
  * @author Sebastian Sdorra
@@ -54,7 +55,55 @@ import java.io.InputStream;
 public abstract class AdvancedHttpResponse
 {
 
+  /**
+   * Returns the response content as byte source.
+   *
+   *
+   * @return response content as byte source
+   * @throws IOException
+   */
+  public abstract ByteSource contentAsByteSource() throws IOException;
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Returns the response headers.
+   *
+   *
+   * @return response headers
+   */
+  public abstract Multimap<String, String> getHeaders();
+
+  /**
+   * Returns the status code of the response.
+   *
+   *
+   * @return status code
+   */
+  public abstract int getStatus();
+
+  /**
+   * Returns the status text of the response.
+   *
+   *
+   * @return status text
+   */
+  public abstract String getStatusText();
+
   //~--- methods --------------------------------------------------------------
+
+  /**
+   * Creates a {@link ContentTransformer} for the given Content-Type.
+   *
+   * @param type object type
+   * @param contentType content-type
+   * @throws ContentTransformerNotFoundException if no
+   *   {@link ContentTransformer} could be found for the content-type
+   *
+   * @return {@link ContentTransformer}
+   */
+  protected abstract ContentTransformer createTransformer(Class<?> type,
+    String contentType);
 
   /**
    * Returns the content of the response as byte array.
@@ -89,6 +138,7 @@ public abstract class AdvancedHttpResponse
   {
     ByteSource content = contentAsByteSource();
     BufferedReader reader = null;
+
     if (content != null)
     {
       reader = content.asCharSource(Charsets.UTF_8).openBufferedStream();
@@ -109,6 +159,7 @@ public abstract class AdvancedHttpResponse
   {
     ByteSource content = contentAsByteSource();
     InputStream stream = null;
+
     if (content != null)
     {
       stream = content.openBufferedStream();
@@ -116,15 +167,6 @@ public abstract class AdvancedHttpResponse
 
     return stream;
   }
-  
-  /**
-   * Returns the response content as byte source.
-   * 
-   * 
-   * @return response content as byte source
-   * @throws IOException 
-   */
-  public abstract ByteSource contentAsByteSource() throws IOException;
 
   /**
    * Returns the response content as string.
@@ -138,12 +180,106 @@ public abstract class AdvancedHttpResponse
   {
     ByteSource content = contentAsByteSource();
     String value = null;
+
     if (content != null)
     {
       value = content.asCharSource(Charsets.UTF_8).read();
     }
 
     return value;
+  }
+
+  /**
+   * Transforms the response content from json to the given type.
+   *
+   * @param <T> object type
+   * @param type object type
+   *
+   * @throws ContentTransformerNotFoundException if no
+   *   {@link ContentTransformer} could be found for the json content-type
+   *
+   * @return transformed object
+   *
+   * @throws IOException
+   */
+  public <T> T contentFromJson(Class<T> type) throws IOException
+  {
+    return contentTransformed(type, ContentType.JSON);
+  }
+
+  /**
+   * Transforms the response content from xml to the given type.
+   *
+   * @param <T> object type
+   * @param type object type
+   *
+   * @throws ContentTransformerNotFoundException if no
+   *   {@link ContentTransformer} could be found for the xml content-type
+   *
+   * @return transformed object
+   *
+   * @throws IOException
+   */
+  public <T> T contentFromXml(Class<T> type) throws IOException
+  {
+    return contentTransformed(type, ContentType.XML);
+  }
+
+  /**
+   * Transforms the response content to the given type. The method uses the
+   * content-type header to pick the right {@link ContentTransformer}.
+   *
+   * @param <T> object type
+   * @param type object type
+   *
+   * @throws ContentTransformerNotFoundException if no
+   *   {@link ContentTransformer} could be found for the content-type
+   *
+   * @return transformed object
+   *
+   * @throws IOException
+   */
+  public <T> T contentTransformed(Class<T> type) throws IOException
+  {
+    String contentType = getFirstHeader("Content-Type");
+
+    if (Strings.isNullOrEmpty(contentType))
+    {
+      throw new ContentTransformerException(
+        "response does not return a Content-Type header");
+    }
+
+    return contentTransformed(type, contentType);
+  }
+
+  /**
+   * Transforms the response content from xml to the given type.
+   *
+   * @param <T> object type
+   * @param type object type
+   * @param contentType type to pick {@link ContentTransformer}
+   *
+   * @throws ContentTransformerNotFoundException if no
+   *   {@link ContentTransformer} could be found for the content-type
+   *
+   * @return transformed object
+   *
+   * @throws IOException
+   */
+  public <T> T contentTransformed(Class<T> type, String contentType)
+    throws IOException
+  {
+    T object = null;
+    ByteSource source = contentAsByteSource();
+
+    if (source != null)
+    {
+      ContentTransformer transformer = createTransformer(type, contentType);
+
+      object = transformer.unmarshall(type, contentAsByteSource());
+    }
+
+    return object;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -162,38 +298,15 @@ public abstract class AdvancedHttpResponse
   }
 
   /**
-   * Returns the response headers.
-   *
-   *
-   * @return response headers
-   */
-  public abstract Multimap<String, String> getHeaders();
-
-  /**
-   * Returns {@code true} if the response was successful. A response is 
+   * Returns {@code true} if the response was successful. A response is
    * successful, if the status code is greater than 199 and lower than 400.
-   * 
+   *
    * @return {@code true} if the response was successful
    */
   public boolean isSuccessful()
   {
     int status = getStatus();
-    return status > 199 && status < 400;
-  }
-  
-  /**
-   * Returns the status code of the response.
-   *
-   *
-   * @return status code
-   */
-  public abstract int getStatus();
 
-  /**
-   * Returns the status text of the response.
-   *
-   *
-   * @return status text
-   */
-  public abstract String getStatusText();
+    return (status > 199) && (status < 400);
+  }
 }
