@@ -43,7 +43,7 @@ import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.installer.HgPackage;
 import sonia.scm.installer.HgPackageReader;
 import sonia.scm.installer.HgPackages;
-import sonia.scm.net.HttpClient;
+import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 
@@ -89,8 +89,8 @@ public class HgConfigResource
    * @param pkgReader
    */
   @Inject
-  public HgConfigResource(HttpClient client, HgRepositoryHandler handler,
-                          HgPackageReader pkgReader)
+  public HgConfigResource(AdvancedHttpClient client,
+    HgRepositoryHandler handler, HgPackageReader pkgReader)
   {
     this.client = client;
     this.handler = handler;
@@ -158,7 +158,7 @@ public class HgConfigResource
     if (pkg != null)
     {
       if (HgInstallerFactory.createInstaller().installPackage(client, handler,
-              SCMContext.getContext().getBaseDirectory(), pkg))
+        SCMContext.getContext().getBaseDirectory(), pkg))
       {
         response = Response.noContent().build();
       }
@@ -262,7 +262,7 @@ public class HgConfigResource
   @POST
   @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
   public Response setConfig(@Context UriInfo uriInfo, HgConfig config)
-          throws IOException
+    throws IOException
   {
     handler.setConfig(config);
     handler.storeConfig();
@@ -338,7 +338,7 @@ public class HgConfigResource
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private HttpClient client;
+  private AdvancedHttpClient client;
 
   /** Field description */
   private HgRepositoryHandler handler;

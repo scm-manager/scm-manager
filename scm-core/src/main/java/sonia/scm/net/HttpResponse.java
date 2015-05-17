@@ -41,12 +41,16 @@ import java.io.InputStream;
 
 import java.util.List;
 import java.util.Map;
+import sonia.scm.net.ahc.AdvancedHttpResponse;
 
 /**
  * Response of a {@link HttpRequest} execute by the {@link HttpClient}.
  *
  * @author Sebastian Sdorra
+ * 
+ * @deprecated use {@link AdvancedHttpResponse} instead
  */
+@Deprecated
 public interface HttpResponse extends Closeable
 {
 

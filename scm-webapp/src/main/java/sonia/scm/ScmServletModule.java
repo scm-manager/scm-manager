@@ -157,6 +157,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.net.ahc.ContentTransformer;
+import sonia.scm.net.ahc.DefaultAdvancedHttpClient;
+import sonia.scm.net.ahc.JsonContentTransformer;
+import sonia.scm.net.ahc.XmlContentTransformer;
 import sonia.scm.web.UserAgentParser;
 
 /**
@@ -219,7 +224,7 @@ public class ScmServletModule extends ServletModule
     PATTERN_STYLESHEET, "*.json", "*.xml", "*.txt" };
 
   /** Field description */
-  private static Logger logger =
+  private static final Logger logger =
     LoggerFactory.getLogger(ScmServletModule.class);
 
   //~--- constructors ---------------------------------------------------------
@@ -315,6 +320,13 @@ public class ScmServletModule extends ServletModule
 
     // bind httpclient
     bind(HttpClient.class, URLHttpClient.class);
+    
+    // bind ahc
+    Multibinder<ContentTransformer> transformers =
+      Multibinder.newSetBinder(binder(), ContentTransformer.class);
+    transformers.addBinding().to(XmlContentTransformer.class);
+    transformers.addBinding().to(JsonContentTransformer.class);
+    bind(AdvancedHttpClient.class).to(DefaultAdvancedHttpClient.class);
 
     // bind resourcemanager
     if (context.getStage() == Stage.DEVELOPMENT)

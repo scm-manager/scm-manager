@@ -1,10 +1,10 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
@@ -13,7 +13,7 @@
  * 3. Neither the name of SCM-Manager; nor the names of its
  *    contributors may be used to endorse or promote products derived from this
  *    software without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -24,90 +24,49 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
+ * 
  * http://bitbucket.org/sdorra/scm-manager
- *
+ * 
  */
 
+package sonia.scm.net.ahc;
 
-
-package sonia.scm.installer;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.net.ahc.AdvancedHttpClient;
-import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.HgRepositoryHandler;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
+import com.google.common.base.Charsets;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import java.util.List;
+import org.junit.Test;
+import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import static org.mockito.Mockito.*;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface HgInstaller
-{
+@RunWith(MockitoJUnitRunner.class)
+public class RawContentTest {
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param baseDirectory
-   * @param config
-   *
-   * @throws IOException
-   */
-  public void install(File baseDirectory, HgConfig config) throws IOException;
 
-  /**
-   * Method description
-   *
-   *
-   *
-   *
-   * @param client
-   * @param handler
-   * @param baseDirectory
-   * @param pkg
-   *
-   * @return
-   */
-  public boolean installPackage(AdvancedHttpClient client,
-    HgRepositoryHandler handler, File baseDirectory, HgPackage pkg);
+  @Mock
+  private AdvancedHttpRequestWithBody request;
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param baseDirectory
-   * @param config
-   *
-   * @throws IOException
-   */
-  public void update(File baseDirectory, HgConfig config) throws IOException;
+  @Test
+  public void testPrepareRequest()
+  {
+    RawContent raw = new RawContent("abc".getBytes(Charsets.UTF_8));
+    raw.prepare(request);
+    verify(request).contentLength(3);
+  }
+  
+  @Test
+  public void testProcess() throws IOException
+  {
+    RawContent raw = new RawContent("abc".getBytes(Charsets.UTF_8));
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    raw.process(baos);
+    assertEquals("abc", baos.toString("UTF-8"));
+  }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<String> getHgInstallations();
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<String> getPythonInstallations();
 }

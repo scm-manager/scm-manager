@@ -36,7 +36,6 @@ package sonia.scm.installer;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,21 +43,16 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.PlatformType;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
-import sonia.scm.net.HttpClient;
-import sonia.scm.net.HttpResponse;
-import sonia.scm.util.IOUtil;
+import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.util.SystemUtil;
 import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.bind.JAXB;
 
 /**
  *
@@ -85,14 +79,14 @@ public class HgPackageReader
    *
    *
    * @param cacheManager
-   * @param httpClientProvider
+   * @param httpClient
    */
   @Inject
   public HgPackageReader(CacheManager cacheManager,
-                         Provider<HttpClient> httpClientProvider)
+    AdvancedHttpClient httpClient)
   {
     cache = cacheManager.getCache(String.class, HgPackages.class, CACHENAME);
-    this.httpClientProvider = httpClientProvider;
+    this.httpClient = httpClient;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -167,7 +161,7 @@ public class HgPackageReader
           if (logger.isDebugEnabled())
           {
             logger.debug("reject package {}, because of wrong platform {}",
-                         pkg.getId(), pkg.getPlatform());
+              pkg.getId(), pkg.getPlatform());
           }
 
           add = false;
@@ -181,7 +175,7 @@ public class HgPackageReader
           if (logger.isDebugEnabled())
           {
             logger.debug("reject package {}, because of wrong arch {}",
-                         pkg.getId(), pkg.getArch());
+              pkg.getId(), pkg.getArch());
           }
 
           add = false;
@@ -218,22 +212,18 @@ public class HgPackageReader
     }
 
     HgPackages packages = null;
-    InputStream input = null;
 
     try
     {
-      HttpResponse response = httpClientProvider.get().get(PACKAGEURL);
-
-      input = response.getContent();
-      packages = JAXB.unmarshal(input, HgPackages.class);
+      //J-
+      packages = httpClient.get(PACKAGEURL)
+                           .request()
+                           .contentFromXml(HgPackages.class);
+      //J+
     }
     catch (IOException ex)
     {
       logger.error("could not read HgPackages from ".concat(PACKAGEURL), ex);
-    }
-    finally
-    {
-      IOUtil.close(input);
     }
 
     if (packages == null)
@@ -251,5 +241,5 @@ public class HgPackageReader
   private Cache<String, HgPackages> cache;
 
   /** Field description */
-  private Provider<HttpClient> httpClientProvider;
+  private AdvancedHttpClient httpClient;
 }

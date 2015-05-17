@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,83 +31,86 @@
 
 
 
-package sonia.scm.installer;
+package sonia.scm.net.ahc;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.net.ahc.AdvancedHttpClient;
-import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.HgRepositoryHandler;
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import static org.junit.Assert.*;
+
+import static org.mockito.Mockito.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-
-import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface HgInstaller
+@RunWith(MockitoJUnitRunner.class)
+public class FileContentTest
 {
 
   /**
    * Method description
    *
    *
+   * @throws IOException
+   */
+  @Test
+  public void testPrepareRequest() throws IOException
+  {
+    FileContent content = create("abc");
+
+    content.prepare(request);
+    verify(request).contentLength(3l);
+  }
+
+  /**
+   * Method description
    *
-   * @param baseDirectory
-   * @param config
    *
    * @throws IOException
    */
-  public void install(File baseDirectory, HgConfig config) throws IOException;
+  @Test
+  public void testProcess() throws IOException
+  {
+    FileContent content = create("abc");
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-  /**
-   * Method description
-   *
-   *
-   *
-   *
-   * @param client
-   * @param handler
-   * @param baseDirectory
-   * @param pkg
-   *
-   * @return
-   */
-  public boolean installPackage(AdvancedHttpClient client,
-    HgRepositoryHandler handler, File baseDirectory, HgPackage pkg);
+    content.process(baos);
+    assertEquals("abc", baos.toString("UTF-8"));
+  }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param baseDirectory
-   * @param config
-   *
-   * @throws IOException
-   */
-  public void update(File baseDirectory, HgConfig config) throws IOException;
+  private FileContent create(String value) throws IOException
+  {
+    File file = temp.newFile();
 
-  //~--- get methods ----------------------------------------------------------
+    Files.write("abc", file, Charsets.UTF_8);
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<String> getHgInstallations();
+    return new FileContent(file);
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public List<String> getPythonInstallations();
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  @Rule
+  public TemporaryFolder temp = new TemporaryFolder();
+
+  /** Field description */
+  @Mock
+  private AdvancedHttpRequestWithBody request;
 }
