@@ -74,7 +74,9 @@ import sonia.scm.util.HttpUtil;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated use {@link sonia.scm.net.ahc.AdvancedHttpClient}
  */
+@Deprecated
 public class URLHttpClient implements HttpClient
 {
 

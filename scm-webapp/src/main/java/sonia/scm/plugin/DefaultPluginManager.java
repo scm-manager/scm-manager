@@ -40,21 +40,18 @@ import com.google.common.collect.ImmutableSet.Builder;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.ConfigChangedListener;
-import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.io.ZipUnArchiver;
-import sonia.scm.net.HttpClient;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SecurityUtil;
@@ -79,9 +76,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import sonia.scm.net.ahc.AdvancedHttpClient;
 
 /**
  *
@@ -122,18 +117,18 @@ public class DefaultPluginManager
    * @param configuration
    * @param pluginLoader
    * @param cacheManager
-   * @param clientProvider
+   * @param httpClient
    */
   @Inject
   public DefaultPluginManager(SCMContextProvider context,
     ScmConfiguration configuration, PluginLoader pluginLoader,
-    CacheManager cacheManager, Provider<HttpClient> clientProvider)
+    CacheManager cacheManager, AdvancedHttpClient httpClient)
   {
     this.context = context;
     this.configuration = configuration;
     this.cache = cacheManager.getCache(String.class, PluginCenter.class,
       CACHE_NAME);
-    this.clientProvider = clientProvider;
+    this.httpClient = httpClient;
     installedPlugins = new HashMap<String, Plugin>();
 
     for (Plugin plugin : pluginLoader.getInstalledPlugins())
@@ -144,16 +139,6 @@ public class DefaultPluginManager
       {
         installedPlugins.put(info.getId(), plugin);
       }
-    }
-
-    try
-    {
-      unmarshaller =
-        JAXBContext.newInstance(PluginCenter.class).createUnmarshaller();
-    }
-    catch (JAXBException ex)
-    {
-      throw new ConfigurationException(ex);
     }
 
     File file = findAdvancedConfiguration();
@@ -654,21 +639,9 @@ public class DefaultPluginManager
 
         if (Util.isNotEmpty(pluginUrl))
         {
-          InputStream input = null;
-
           try
           {
-            input = clientProvider.get().get(pluginUrl).getContent();
-
-            /*
-             *  TODO: add gzip support
-             *
-             * if (gzip)
-             * {
-             * input = new GZIPInputStream(input);
-             * }
-             */
-            center = (PluginCenter) unmarshaller.unmarshal(input);
+            center = httpClient.get(pluginUrl).request().contentFromXml(PluginCenter.class);
             preparePlugins(center);
             cache.put(PluginCenter.class.getName(), center);
 
@@ -689,10 +662,6 @@ public class DefaultPluginManager
           catch (Exception ex)
           {
             logger.error("could not load plugins from plugin center", ex);
-          }
-          finally
-          {
-            IOUtil.close(input);
           }
         }
 
@@ -794,7 +763,7 @@ public class DefaultPluginManager
   private Cache<String, PluginCenter> cache;
 
   /** Field description */
-  private Provider<HttpClient> clientProvider;
+  private AdvancedHttpClient httpClient;
 
   /** Field description */
   private ScmConfiguration configuration;
@@ -807,7 +776,4 @@ public class DefaultPluginManager
 
   /** Field description */
   private AetherPluginHandler pluginHandler;
-
-  /** Field description */
-  private Unmarshaller unmarshaller;
 }
