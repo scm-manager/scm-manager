@@ -74,16 +74,16 @@ public final class HttpUtil
   public static final String ENCODING = "UTF-8";
 
   /**
-   * location header
-   * @since 1.43
-   */
-  public static final String HEADER_LOCATION = "Location";
-  
-  /**
    * content-length header
    * @since 1.46
    */
   public static final String HEADER_CONTENT_LENGTH = "Content-Length";
+
+  /**
+   * location header
+   * @since 1.43
+   */
+  public static final String HEADER_LOCATION = "Location";
 
   /**
    * header for identifying the scm-manager client
@@ -294,6 +294,25 @@ public final class HttpUtil
       throw new IllegalArgumentException(
         "parameter contains an illegal character");
     }
+  }
+
+  /**
+   * Creates the value for the content-disposition attachment header. The method
+   * creates the filename as specified in rfc6266.
+   *
+   * @param name attachment name
+   * @see <a href="http://tools.ietf.org/html/rfc6266#section-5">rfc6266 section 5</a>
+   * @return value of content-disposition header
+   * @since 1.46
+   */
+  public static String createContentDispositionAttachmentHeader(String name)
+  {
+    StringBuilder buffer = new StringBuilder("attachment; ");
+
+    buffer.append("filename=\"").append(name).append("\"; ");
+    buffer.append("filename*=utf-8''").append(encode(name));
+
+    return buffer.toString();
   }
 
   /**
