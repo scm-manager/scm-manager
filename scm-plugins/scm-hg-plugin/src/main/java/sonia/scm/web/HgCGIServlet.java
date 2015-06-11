@@ -35,6 +35,7 @@ package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -205,7 +206,9 @@ public class HgCGIServlet extends HttpServlet
   {
     if (requestListenerUtil.callListeners(request, response, repository))
     {
+      Stopwatch sw = Stopwatch.createStarted();
       process(request, response, repository);
+      logger.debug("mercurial request finished in {}", sw.stop());
     }
     else if (logger.isDebugEnabled())
     {
