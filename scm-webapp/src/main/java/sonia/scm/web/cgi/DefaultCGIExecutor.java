@@ -58,6 +58,7 @@ import java.io.OutputStream;
 
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletInputStream;
@@ -94,15 +95,17 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    * Constructs ...
    *
    *
+   * @param executor to handle error stream processing
    * @param configuration
    * @param context
    * @param request
    * @param response
    */
-  public DefaultCGIExecutor(ScmConfiguration configuration,
-    ServletContext context, HttpServletRequest request,
-    HttpServletResponse response)
+  public DefaultCGIExecutor(ExecutorService executor,
+    ScmConfiguration configuration, ServletContext context,
+    HttpServletRequest request, HttpServletResponse response)
   {
+    this.executor = executor;
     this.configuration = configuration;
     this.context = context;
     this.request = request;
@@ -507,7 +510,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    */
   private void processErrorStreamAsync(final Process process)
   {
-    new Thread(new Runnable()
+    executor.execute(new Runnable()
     {
       @Override
       public void run()
@@ -528,7 +531,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
           IOUtil.close(errorStream);
         }
       }
-    }).start();
+    });
   }
 
   /**
@@ -539,6 +542,8 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    */
   private void processServletInput(Process process)
   {
+    logger.trace("process servlet input");
+
     OutputStream processOS = null;
     ServletInputStream servletIS = null;
 
@@ -636,6 +641,9 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
   }
 
   //~--- fields ---------------------------------------------------------------
+
+  /** executor to handle error stream processing */
+  private final ExecutorService executor;
 
   /** Field description */
   private ScmConfiguration configuration;
