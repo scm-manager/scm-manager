@@ -73,10 +73,26 @@ public final class Branch implements Serializable
    *
    *
    * @param name name of the branch
+   *
+   * @deprecated use {@link Branch#Branch(String, String)} instead
    */
+  @Deprecated
   public Branch(String name)
   {
     this.name = name;
+  }
+
+  /**
+   * Constructs a new branch.
+   *
+   *
+   * @param name name of the branch
+   * @param revision latest revision of the branch
+   */
+  public Branch(String name, String revision)
+  {
+    this.name = name;
+    this.revision = revision;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -104,7 +120,8 @@ public final class Branch implements Serializable
 
     final Branch other = (Branch) obj;
 
-    return Objects.equal(name, other.name);
+    return Objects.equal(name, other.name)
+      && Objects.equal(revision, other.revision);
   }
 
   /**
@@ -116,7 +133,7 @@ public final class Branch implements Serializable
   @Override
   public int hashCode()
   {
-    return Objects.hashCode(name);
+    return Objects.hashCode(name, revision);
   }
 
   /**
@@ -131,6 +148,7 @@ public final class Branch implements Serializable
     //J-
     return Objects.toStringHelper(this)
                   .add("name", name)
+                  .add("revision", revision)
                   .toString();
     //J+
   }
@@ -148,8 +166,21 @@ public final class Branch implements Serializable
     return name;
   }
 
+  /**
+   * Returns the latest revision of the branch.
+   *
+   * @return latest revision of branch
+   */
+  public String getRevision()
+  {
+    return revision;
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** name of the branch */
   private String name;
+
+  /** Field description */
+  private String revision;
 }

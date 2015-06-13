@@ -30,9 +30,12 @@
  */
 
 
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
+
+import com.aragost.javahg.Changeset;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Lists;
@@ -92,7 +95,15 @@ public class HgBranchesCommand extends AbstractCommand
       @Override
       public Branch apply(com.aragost.javahg.commands.Branch hgBranch)
       {
-        return new Branch(hgBranch.getName());
+        String node = null;
+        Changeset changeset = hgBranch.getBranchTip();
+
+        if (changeset != null)
+        {
+          node = changeset.getNode();
+        }
+
+        return new Branch(hgBranch.getName(), node);
       }
     });
 

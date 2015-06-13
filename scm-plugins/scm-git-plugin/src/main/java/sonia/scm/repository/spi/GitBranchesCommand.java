@@ -105,7 +105,7 @@ public class GitBranchesCommand extends AbstractGitCommand
 
           if (branchName != null)
           {
-            branch = new Branch(branchName);
+            branch = new Branch(branchName, GitUtil.getId(ref.getObjectId()));
           }
 
           return branch;
