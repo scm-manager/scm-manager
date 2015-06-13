@@ -73,10 +73,16 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
                    </div>',
   
   templateModifications: '<ul class="scm-modifications">\n\
-               <tpl if="modifications.added"><tpl for="modifications.added"><li class="scm-added">{.}</li></tpl></tpl>\n\
-               <tpl if="modifications.modified"><tpl for="modifications.modified"><li class="scm-modified">{.}</li></tpl></tpl>\n\
-               <tpl if="modifications.removed"><tpl for="modifications.removed"><li class="scm-removed">{.}</li></tpl></tpl>\n\
-             </ul>',
+                            <tpl if="modifications.added"><tpl for="modifications.added">\n\
+                              <li class="scm-added"><a rel="{.}" class="scm-link">{.}</a></li>\n\
+                            </tpl></tpl>\n\
+                            <tpl if="modifications.modified"><tpl for="modifications.modified">\n\
+                              <li class="scm-modified"><a rel="{.}" class="scm-link">{.}</a></li>\n\
+                            </tpl></tpl>\n\
+                            <tpl if="modifications.removed"><tpl for="modifications.removed">\n\
+                              <li class="scm-removed"><a rel="{.}" class="scm-link">{.}</a></li>\n\
+                            </tpl></tpl>\n\
+                          </ul>',
   
   // header panel
   commitPanel: null,
@@ -84,7 +90,15 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
   
   initComponent: function(){
     this.commitPanel = new Ext.Panel({
-      tpl: new Ext.XTemplate(this.templateCommit + this.templateModifications)
+      tpl: new Ext.XTemplate(this.templateCommit + this.templateModifications),
+      listeners: {
+        render: {
+          fn: function(panel){
+            panel.body.on('click', this.onClick, this);
+          },
+          scope: this
+        }
+      }
     });
     
     this.diffPanel = new Sonia.panel.SyntaxHighlighterPanel({
@@ -132,7 +146,39 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
         );
       }
     });
-  }
+  },
+  
+  onClick: function(e){
+    var el = e.getTarget('a.scm-link');
+    if (el){
+      var path = el.rel;
+      if (path){
+        this.openFile(path);
+      }
+    }
+  },
+  
+  openFile: function(path){
+    if ( debug ){
+      console.debug( 'open file: ' + path );
+    }
+    
+    var id = Sonia.repository.createContentId(
+      this.repository, 
+      path, 
+      this.revision
+    );
+    
+    main.addTab({
+      id: id,
+      path: path,
+      revision: this.revision,
+      repository: this.repository,
+      xtype: 'contentPanel',
+      closable: true,
+      autoScroll: true
+    });
+  },
   
 });
 
