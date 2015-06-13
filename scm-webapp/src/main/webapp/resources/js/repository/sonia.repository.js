@@ -190,3 +190,26 @@ Sonia.repository.get = function(id, callback){
     }); 
   }
 };
+
+/** open file */
+Sonia.repository.openFile = function(repository, path, revision){
+  if ( debug ){
+    console.debug( 'open file: ' + path );
+  }
+
+  var id = Sonia.repository.createContentId(
+    repository, 
+    path, 
+    revision
+  );
+
+  main.addTab({
+    id: id,
+    path: path,
+    revision: revision,
+    repository: repository,
+    xtype: 'contentPanel',
+    closable: true,
+    autoScroll: true
+  });
+};

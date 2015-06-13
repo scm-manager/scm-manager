@@ -339,25 +339,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
   },
   
   openFile: function(path){
-    if ( debug ){
-      console.debug( 'open file: ' + path );
-    }
-    
-    var id = Sonia.repository.createContentId(
-      this.repository, 
-      path, 
-      this.revision
-    );
-    
-    main.addTab({
-      id: id,
-      path: path,
-      revision: this.revision,
-      repository: this.repository,
-      xtype: 'contentPanel',
-      closable: true,
-      autoScroll: true
-    });
+    Sonia.repository.openFile(this.repository, path, this.revision);
   },
   
   changeDirectory: function(path){

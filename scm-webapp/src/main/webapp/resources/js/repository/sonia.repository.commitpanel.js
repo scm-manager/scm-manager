@@ -159,26 +159,8 @@ Sonia.repository.CommitPanel = Ext.extend(Ext.Panel, {
   },
   
   openFile: function(path){
-    if ( debug ){
-      console.debug( 'open file: ' + path );
-    }
-    
-    var id = Sonia.repository.createContentId(
-      this.repository, 
-      path, 
-      this.revision
-    );
-    
-    main.addTab({
-      id: id,
-      path: path,
-      revision: this.revision,
-      repository: this.repository,
-      xtype: 'contentPanel',
-      closable: true,
-      autoScroll: true
-    });
-  },
+    Sonia.repository.openFile(this.repository, path, this.revision);
+  }
   
 });
 
