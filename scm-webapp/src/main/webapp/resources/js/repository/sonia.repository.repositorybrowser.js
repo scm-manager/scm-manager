@@ -154,6 +154,40 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     var items = [this.repository.name];
     
     var type = Sonia.repository.getTypeByName( this.repository.type );
+    var branches = false;
+    if (type && type.supportedCommands && type.supportedCommands.indexOf('BRANCHES') >= 0){
+      
+      branches = true;
+      
+      var branchStore = new Sonia.rest.JsonStore({
+        proxy: new Ext.data.HttpProxy({
+          url: restUrl + 'repositories/' + this.repository.id + '/branches.json',
+          method: 'GET',
+          disableCaching: false
+        }),
+        root: 'branch',
+        idProperty: 'name',
+        fields: [ 'name', 'revision' ]
+      });
+
+      items.push('->','Branches:', ' ',{
+        xtype: 'combo',
+        valueField: 'revision',
+        displayField: 'name',
+        typeAhead: false,
+        editable: false,
+        triggerAction: 'all',
+        store: branchStore,
+        listeners: {
+          select: {
+            fn: this.selectRev,
+            scope: this
+          }
+        }
+      });
+      
+    }
+   
     if ( type && type.supportedCommands && type.supportedCommands.indexOf('TAGS') >= 0){
     
       var tagStore = new Sonia.rest.JsonStore({
@@ -167,7 +201,13 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         fields: [ 'name', 'revision' ]
       });
 
-      items.push('->','Tags:', ' ',{
+      if (branches){
+        items.push(' ');
+      } else {
+        items.push('->');
+      }
+
+      items.push('Tags:', ' ',{
         xtype: 'combo',
         valueField: 'revision',
         displayField: 'name',
@@ -177,7 +217,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         store: tagStore,
         listeners: {
           select: {
-            fn: this.selectTag,
+            fn: this.selectRev,
             scope: this
           }
         }
@@ -193,10 +233,10 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     return tbar;
   },
   
-  selectTag: function(combo, rec){
+  selectRev: function(combo, rec){
     var tag = rec.get('name');
     if (debug){
-      console.debug('select tag ' + tag);
+      console.debug('select rev ' + tag);
     }
     this.revision = rec.get('revision');
     this.getStore().load({
