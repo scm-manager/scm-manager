@@ -414,7 +414,12 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     var bbar = this.getBottomToolbar();
     bbar.removeAll();
     
-    var parts = path.split('/');
+    var parts;
+    if (path){
+      parts = path.split('/');
+    } else {
+      parts = [];
+    }
     var currentPath = '';
     var items = [this.createFolderButton(currentPath, '')];
           
