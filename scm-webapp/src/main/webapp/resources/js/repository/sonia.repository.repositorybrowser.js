@@ -171,6 +171,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       });
 
       items.push('->','Branches:', ' ',{
+        id: 'branchComboBox',
         xtype: 'combo',
         valueField: 'revision',
         displayField: 'name',
@@ -180,7 +181,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         store: branchStore,
         listeners: {
           select: {
-            fn: this.selectRev,
+            fn: this.selectBranch,
             scope: this
           }
         }
@@ -208,6 +209,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
       }
 
       items.push('Tags:', ' ',{
+        id: 'tagComboBox',
         xtype: 'combo',
         valueField: 'revision',
         displayField: 'name',
@@ -217,7 +219,7 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
         store: tagStore,
         listeners: {
           select: {
-            fn: this.selectRev,
+            fn: this.selectTag,
             scope: this
           }
         }
@@ -233,7 +235,15 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     return tbar;
   },
   
-  selectRev: function(combo, rec){
+  selectBranch: function(combo, rec){
+    this.selectRev(rec, Ext.getCmp('tagComboBox'));
+  },
+  
+  selectTag: function(combo, rec){
+    this.selectRev(rec, Ext.getCmp('branchComboBox'));
+  },
+  
+  selectRev: function(rec, comboToClear){
     var tag = rec.get('name');
     if (debug){
       console.debug('select rev ' + tag);
@@ -248,6 +258,11 @@ Sonia.repository.RepositoryBrowser = Ext.extend(Ext.grid.GridPanel, {
     
     this.reRenderBottomBar(this.path);
     this.updateHistory();
+    
+    // clear other combobox
+    if (comboToClear){
+      comboToClear.clearValue();
+    }
   },
   
   loadStore: function(store, records, extra){
