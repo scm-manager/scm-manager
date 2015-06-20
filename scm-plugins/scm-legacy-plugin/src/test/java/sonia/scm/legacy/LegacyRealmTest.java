@@ -37,7 +37,6 @@ package sonia.scm.legacy;
 
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.crypto.hash.Sha1Hash;
 
@@ -53,8 +52,6 @@ import sonia.scm.security.BearerAuthenticationToken;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserTestData;
-
-import static org.hamcrest.Matchers.*;
 
 import static org.junit.Assert.*;
 
@@ -101,23 +98,25 @@ public class LegacyRealmTest
   public void testDoGetAuthenticationInfoWithNewPasswords()
   {
     User user = UserTestData.createTrillian();
+
     user.setPassword(NEW_PASSWORD);
     when(userDAO.get("tricia")).thenReturn(user);
-    
+
     AuthenticationToken token = new UsernamePasswordToken("tricia",
                                   NEW_PASSWORD);
 
     assertNull(realm.doGetAuthenticationInfo(token));
   }
-  
-/**
-   * Method description
-   *
+
+  /**
+   *   Method description
+   *  
    */
   @Test
   public void testDoGetAuthenticationInfoWithNullPassword()
   {
     when(userDAO.get("tricia")).thenReturn(UserTestData.createTrillian());
+
     AuthenticationToken token = new UsernamePasswordToken("tricia", "secret");
 
     assertNull(realm.doGetAuthenticationInfo(token));
