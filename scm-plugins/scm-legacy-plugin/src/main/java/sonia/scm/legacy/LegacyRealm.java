@@ -34,6 +34,7 @@ package sonia.scm.legacy;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -108,7 +109,18 @@ public class LegacyRealm extends AuthenticatingRealm
     AuthenticationToken token)
     throws AuthenticationException
   {
-    return helper.getAuthenticationInfo(token);
+    Preconditions.checkArgument(token instanceof UsernamePasswordToken,
+      "unsupported token");
+
+    AuthenticationInfo info = null;
+    char[] password = ((UsernamePasswordToken) token).getPassword();
+
+    if ((password != null) && (password[0] != '$'))
+    {
+      info = helper.getAuthenticationInfo(token);
+    }
+
+    return info;
   }
 
   //~--- fields ---------------------------------------------------------------
