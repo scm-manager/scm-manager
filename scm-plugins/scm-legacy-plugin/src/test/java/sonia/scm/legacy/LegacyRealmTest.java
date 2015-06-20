@@ -100,8 +100,25 @@ public class LegacyRealmTest
   @Test
   public void testDoGetAuthenticationInfoWithNewPasswords()
   {
+    User user = UserTestData.createTrillian();
+    user.setPassword(NEW_PASSWORD);
+    when(userDAO.get("tricia")).thenReturn(user);
+    
     AuthenticationToken token = new UsernamePasswordToken("tricia",
                                   NEW_PASSWORD);
+
+    assertNull(realm.doGetAuthenticationInfo(token));
+  }
+  
+/**
+   * Method description
+   *
+   */
+  @Test
+  public void testDoGetAuthenticationInfoWithNullPassword()
+  {
+    when(userDAO.get("tricia")).thenReturn(UserTestData.createTrillian());
+    AuthenticationToken token = new UsernamePasswordToken("tricia", "secret");
 
     assertNull(realm.doGetAuthenticationInfo(token));
   }

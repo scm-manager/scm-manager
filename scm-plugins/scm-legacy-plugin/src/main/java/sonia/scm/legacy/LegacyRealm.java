@@ -34,6 +34,7 @@ package sonia.scm.legacy;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 
 import org.apache.shiro.authc.AuthenticationException;
@@ -43,6 +44,9 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.Sha1Hash;
 import org.apache.shiro.realm.AuthenticatingRealm;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import sonia.scm.group.GroupDAO;
 import sonia.scm.plugin.Extension;
@@ -68,6 +72,19 @@ public class LegacyRealm extends AuthenticatingRealm
   /** Field description */
   @VisibleForTesting
   static final String REALM = "LegacyRealm";
+
+  /** Field description */
+  //J-
+  private static final CharMatcher HEX_MATCHER = CharMatcher.inRange('0', '9')
+    .or(CharMatcher.inRange('a', 'f'))
+    .or(CharMatcher.inRange('A', 'F'));
+  //J+
+
+  /**
+   *   the logger for LegacyRealm
+   */
+  private static final Logger logger =
+    LoggerFactory.getLogger(LegacyRealm.class);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -112,15 +129,37 @@ public class LegacyRealm extends AuthenticatingRealm
     Preconditions.checkArgument(token instanceof UsernamePasswordToken,
       "unsupported token");
 
-    AuthenticationInfo info = null;
-    char[] password = ((UsernamePasswordToken) token).getPassword();
+    return returnOnHexCredentials(helper.getAuthenticationInfo(token));
+  }
 
-    if ((password != null) && (password[0] != '$'))
+  private AuthenticationInfo returnOnHexCredentials(AuthenticationInfo info)
+  {
+    AuthenticationInfo result = null;
+
+    if (info != null)
     {
-      info = helper.getAuthenticationInfo(token);
+      Object credentials = info.getCredentials();
+
+      if (credentials instanceof String)
+      {
+        String password = (String) credentials;
+
+        if (HEX_MATCHER.matchesAllOf(password))
+        {
+          result = info;
+        }
+        else
+        {
+          logger.debug("hash contains non hex chars");
+        }
+      }
+      else
+      {
+        logger.debug("non string crendentials found");
+      }
     }
 
-    return info;
+    return result;
   }
 
   //~--- fields ---------------------------------------------------------------
