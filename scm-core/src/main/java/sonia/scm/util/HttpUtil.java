@@ -35,7 +35,9 @@ package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
+import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 
 import org.slf4j.Logger;
@@ -96,6 +98,24 @@ public final class HttpUtil
 
   /** authentication header */
   public static final String HEADER_WWW_AUTHENTICATE = "WWW-Authenticate";
+
+  /**
+   * The original host requested by the client in the Host HTTP request header.
+   * @since 1.47
+   */
+  public static final String HEADER_X_FORWARDED_HOST = "X-Forwarded-Host";
+
+  /**
+   * The original port requested by the client.
+   * @since 1.47
+   */
+  public static final String HEADER_X_FORWARDED_PORT = "X-Forwarded-Port";
+
+  /**
+   * The original protocol (http or https) requested by the client.
+   * @since 1.47
+   */
+  public static final String HEADER_X_FORWARDED_PROTO = "X-Forwarded-Proto";
 
   /**
    * Default http port
@@ -579,21 +599,31 @@ public final class HttpUtil
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns an absolute url with context path.
+   * Returns an absolute url with context path. The method creates the url from
+   * forwarding request headers, if they are available.
    *
    *
    * @param request http client request
    * @param pathSegments
    *
    * @return absolute url with context path
+   *
+   * @see <a href="https://goo.gl/PvGQyH">Issue 748</a>
    * @since 1.16
    */
   public static String getCompleteUrl(HttpServletRequest request,
     String... pathSegments)
   {
-    String baseUrl =
-      request.getRequestURL().toString().replace(request.getRequestURI(),
-        Util.EMPTY_STRING).concat(request.getContextPath());
+    String baseUrl;
+
+    if (isForwarded(request))
+    {
+      baseUrl = createForwardedBaseUrl(request);
+    }
+    else
+    {
+      baseUrl = createBaseUrl(request);
+    }
 
     if (Util.isNotEmpty(pathSegments))
     {
@@ -621,6 +651,24 @@ public final class HttpUtil
     String path)
   {
     return append(configuration.getBaseUrl(), path);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @param request
+   * @param header
+   * @param defaultValue
+   *
+   * @return
+   */
+  public static String getHeader(HttpServletRequest request, String header,
+    String defaultValue)
+  {
+    String value = request.getHeader(header);
+
+    return Objects.firstNonNull(value, defaultValue);
   }
 
   /**
@@ -778,6 +826,21 @@ public final class HttpUtil
   }
 
   /**
+   * Returns {@code true} if the request is forwarded by a reverse proxy. The
+   * method uses the X-Forwarded-Host header to identify a forwarded request.
+   *
+   * @param request servlet request
+   *
+   * @return {@code true} if the request is forwarded
+   *
+   * @since 1.47
+   */
+  public static boolean isForwarded(HttpServletRequest request)
+  {
+    return !Strings.isNullOrEmpty(request.getHeader(HEADER_X_FORWARDED_HOST));
+  }
+
+  /**
    * Returns true if the http request is send by the scm-manager web interface.
    *
    *
@@ -790,5 +853,75 @@ public final class HttpUtil
   {
     return SCM_CLIENT_WUI.equalsIgnoreCase(
       request.getHeader(HEADER_SCM_CLIENT));
+  }
+
+  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Creates base url for request url.
+   *
+   * @param request http servlet request
+   *
+   * @return base url from request
+   *
+   * @since 1.47
+   */
+  @VisibleForTesting
+  static String createBaseUrl(HttpServletRequest request)
+  {
+    return request.getRequestURL().toString().replace(request.getRequestURI(),
+      Util.EMPTY_STRING).concat(request.getContextPath());
+  }
+
+  /**
+   * Creates base url from forwarding request headers.
+   *
+   * @param request http servlet request
+   *
+   * @return base url from forward headers
+   *
+   * @since 1.47
+   */
+  @VisibleForTesting
+  static String createForwardedBaseUrl(HttpServletRequest request)
+  {
+    String proto = getHeader(request, HEADER_X_FORWARDED_PROTO,
+                     request.getScheme());
+    String host;
+    String fhost = getHeader(request, HEADER_X_FORWARDED_HOST,
+                     request.getScheme());
+    String port = request.getHeader(HEADER_X_FORWARDED_PORT);
+    int s = fhost.indexOf(SEPARATOR_PORT);
+
+    if (s > 0)
+    {
+      host = fhost.substring(0, s);
+
+      if (Strings.isNullOrEmpty(port))
+      {
+        port = fhost.substring(s + 1);
+      }
+    }
+    else
+    {
+      host = fhost;
+    }
+
+    StringBuilder buffer = new StringBuilder(proto);
+
+    buffer.append(SEPARATOR_SCHEME).append(host).append(SEPARATOR_PORT);
+
+    if (Strings.isNullOrEmpty(port))
+    {
+      buffer.append(String.valueOf(request.getServerPort()));
+    }
+    else
+    {
+      buffer.append(port);
+    }
+
+    buffer.append(request.getContextPath());
+
+    return buffer.toString();
   }
 }
