@@ -55,8 +55,6 @@ import sonia.scm.repository.BlameResult;
 import sonia.scm.repository.Branches;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
@@ -64,6 +62,7 @@ import sonia.scm.repository.RepositoryCacheKeyPredicate;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryNotFoundException;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.Tags;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
@@ -251,11 +250,7 @@ public final class RepositoryServiceFactory
     Preconditions.checkNotNull(repository, "repository is required");
 
     // check for read permissions of current user
-    if (!PermissionUtil.hasPermission(configuration, repository,
-      PermissionType.READ))
-    {
-      throw new ScmSecurityException("read permission are required");
-    }
+    RepositoryPermissions.read(repository);
 
     RepositoryService service = null;
 
@@ -311,7 +306,8 @@ public final class RepositoryServiceFactory
       this.browseCache = cacheManager.getCache(BrowseCommandBuilder.CACHE_NAME);
       this.logCache = cacheManager.getCache(LogCommandBuilder.CACHE_NAME);
       this.tagsCache = cacheManager.getCache(TagsCommandBuilder.CACHE_NAME);
-      this.branchesCache =cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME);
+      this.branchesCache =
+        cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME);
     }
 
     //~--- methods ------------------------------------------------------------

@@ -55,7 +55,6 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.HealthChecker;
 import sonia.scm.repository.Permission;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryException;
 import sonia.scm.repository.RepositoryIsNotArchivedException;
@@ -71,8 +70,6 @@ import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.api.LogCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.security.RepositoryPermission;
-import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.IOUtil;
@@ -103,6 +100,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
+import org.apache.shiro.authz.AuthorizationException;
 
 /**
  *
@@ -196,7 +194,7 @@ public class RepositoryResource
   @Override
   public Response delete(@PathParam("id") String id)
   {
-    Response response = null;
+    Response response;
     Repository repository = manager.get(id);
 
     if (repository != null)
@@ -213,12 +211,12 @@ public class RepositoryResource
         logger.warn("non archived repository could not be deleted", ex);
         response = Response.status(Response.Status.PRECONDITION_FAILED).build();
       }
-      catch (ScmSecurityException ex)
+      catch (AuthorizationException ex)
       {
         logger.warn("delete not allowed", ex);
         response = Response.status(Response.Status.FORBIDDEN).build();
       }
-      catch (Exception ex)
+      catch (RepositoryException | IOException ex)
       {
         logger.error("error during create", ex);
         response = createErrorResonse(ex);
@@ -263,12 +261,7 @@ public class RepositoryResource
       logger.warn("could not find repository ".concat(id), ex);
       response = Response.status(Status.NOT_FOUND).build();
     }
-    catch (RepositoryException ex)
-    {
-      logger.error("error occured during health check", ex);
-      response = Response.serverError().build();
-    }
-    catch (IOException ex)
+    catch (RepositoryException | IOException ex)
     {
       logger.error("error occured during health check", ex);
       response = Response.serverError().build();
@@ -610,7 +603,7 @@ public class RepositoryResource
   public Response getByTypeAndName(@PathParam("type") String type,
     @PathParam("name") String name)
   {
-    Response response = null;
+    Response response;
     Repository repository = repositoryManager.get(type, name);
 
     if (repository != null)
@@ -690,11 +683,7 @@ public class RepositoryResource
     }
     else
     {
-      if (logger.isWarnEnabled())
-      {
-        logger.warn("id or revision is empty");
-      }
-
+      logger.warn("id or revision is empty");
       response = Response.status(Status.BAD_REQUEST).build();
     }
 
@@ -745,7 +734,7 @@ public class RepositoryResource
 
     try
     {
-      ChangesetPagingResult changesets = null;
+      ChangesetPagingResult changesets;
 
       service = servicefactory.create(id);
 
@@ -819,9 +808,9 @@ public class RepositoryResource
   public Response getContent(@PathParam("id") String id,
     @QueryParam("revision") String revision, @QueryParam("path") String path)
   {
-    Response response = null;
-    StreamingOutput output = null;
-    RepositoryService service = null;
+    Response response;
+    StreamingOutput output;
+    RepositoryService service;
 
     try
     {
@@ -905,8 +894,8 @@ public class RepositoryResource
      */
     HttpUtil.checkForCRLFInjection(revision);
 
-    RepositoryService service = null;
-    Response response = null;
+    RepositoryService service;
+    Response response;
 
     try
     {
@@ -1062,7 +1051,8 @@ public class RepositoryResource
   @Override
   protected Repository prepareForReturn(Repository repository)
   {
-    if (isOwner(repository))
+    if (SecurityUtils.getSubject().isPermitted(
+      "repository:modify:".concat(repository.getId())))
     {
       if (repository.getPermissions() == null)
       {
@@ -1071,11 +1061,8 @@ public class RepositoryResource
     }
     else
     {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("remove properties and permissions from repository, "
-          + "because the user is not privileged");
-      }
+      logger.trace("remove properties and permissions from repository, "
+        + "because the user is not privileged");
 
       repository.setProperties(null);
       repository.setPermissions(null);
@@ -1147,22 +1134,7 @@ public class RepositoryResource
 
     return getContentDispositionName(name);
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  private boolean isOwner(Repository repository)
-  {
-
-    return SecurityUtils.getSubject().isPermitted(
-      new RepositoryPermission(repository, PermissionType.OWNER));
-  }
-
+  
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */

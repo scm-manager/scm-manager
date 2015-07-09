@@ -36,18 +36,14 @@ package sonia.scm.repository;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 
-import org.apache.shiro.SecurityUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sonia.scm.security.Role;
-
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 
 import java.util.Set;
+import sonia.scm.security.PermissionActionCheck;
 
 /**
  *
@@ -95,7 +91,7 @@ public final class HealthChecker
   public void check(String id)
     throws RepositoryNotFoundException, RepositoryException, IOException
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
+    RepositoryPermissions.healthCheck(id);
 
     Repository repository = repositoryManager.get(id);
 
@@ -105,7 +101,7 @@ public final class HealthChecker
         "could not find repository with id ".concat(id));
     }
 
-    check(repository);
+    doCheck(repository);
   }
 
   /**
@@ -120,8 +116,48 @@ public final class HealthChecker
   public void check(Repository repository)
     throws RepositoryException, IOException
   {
+    RepositoryPermissions.healthCheck(repository);
+
+    doCheck(repository);
+  }
+
+  /**
+   * Method description
+   *
+   *
+   */
+  public void checkAll()
+  {
+    logger.debug("check health of all repositories");
+
+    PermissionActionCheck<Repository> check = RepositoryPermissions.healthCheck();
+
+    for (Repository repository : repositoryManager.getAll())
+    {
+      if (check.isPermitted(repository))
+      {
+        try
+        {
+          check(repository);
+        }
+        catch (RepositoryException | IOException ex)
+        {
+          logger.error("health check ends with exception", ex);
+        }
+      }
+      else
+      {
+        logger.debug(
+          "no permissions to execute health check for repository {}",
+          repository.getId());
+      }
+    }
+  }
+
+  private void doCheck(Repository repository)
+    throws RepositoryException, IOException
+  {
     logger.info("start health check for repository {}", repository.getName());
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
 
     HealthCheckResult result = HealthCheckResult.healthy();
 
@@ -149,29 +185,6 @@ public final class HealthChecker
       repository.setHealthCheckFailures(
         ImmutableList.copyOf(result.getFailures()));
       repositoryManager.modify(repository);
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   */
-  public void checkAll()
-  {
-    logger.debug("check health of all repositories");
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
-
-    for (Repository repository : repositoryManager.getAll())
-    {
-      try
-      {
-        check(repository);
-      }
-      catch (Exception ex)
-      {
-        logger.error("health check ends with exception", ex);
-      }
     }
   }
 

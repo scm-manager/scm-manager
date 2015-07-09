@@ -111,8 +111,8 @@ public class DefaultRepositoryProvider implements RepositoryProvider
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private RepositoryManager manager;
+  private final RepositoryManager manager;
 
   /** Field description */
-  private Provider<HttpServletRequest> requestProvider;
+  private final Provider<HttpServletRequest> requestProvider;
 }

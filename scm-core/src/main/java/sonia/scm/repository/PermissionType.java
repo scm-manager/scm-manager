@@ -34,7 +34,7 @@
 package sonia.scm.repository;
 
 /**
- * Type of permission for a {@link Repository}.
+ * Type of permissionPrefix for a {@link Repository}.
  *
  * @author Sebastian Sdorra
  */
@@ -42,29 +42,41 @@ public enum PermissionType
 {
 
   /** read permision */
-  READ(0),
+  READ(0, "repository:read:"),
 
-  /** read and write permission */
-  WRITE(10),
+  /** read and write permissionPrefix */
+  WRITE(10, "repository:read,write:"),
 
   /**
    * read, write and
    * also the ability to manage the properties and permissions
    */
-  OWNER(100);
+  OWNER(100, "repository:*:");
 
   /**
-   * Constructs a new permission type
+   * Constructs a new permissionPrefix type
    *
    *
    * @param value
    */
-  private PermissionType(int value)
+  private PermissionType(int value, String permissionPrefix)
   {
     this.value = value;
+    this.permissionPrefix = permissionPrefix;
   }
 
   //~--- get methods ----------------------------------------------------------
+
+  /**
+   *
+   * @return
+   *
+   * @since 2.0.0
+   */
+  public String getPermissionPrefix()
+  {
+    return permissionPrefix;
+  }
 
   /**
    * Returns the integer representation of the {@link PermissionType}
@@ -80,5 +92,8 @@ public enum PermissionType
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private int value;
+  private final String permissionPrefix;
+
+  /** Field description */
+  private final int value;
 }

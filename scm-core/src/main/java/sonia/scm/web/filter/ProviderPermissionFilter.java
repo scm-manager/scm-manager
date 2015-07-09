@@ -38,6 +38,8 @@ package sonia.scm.web.filter;
 import com.google.common.base.Throwables;
 import com.google.inject.ProvisionException;
 
+import org.apache.shiro.authz.AuthorizationException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,13 +103,9 @@ public abstract class ProviderPermissionFilter extends PermissionFilter
     }
     catch (ProvisionException ex)
     {
-      Throwables.propagateIfInstanceOf(ex.getCause(),
-        IllegalStateException.class);
-
-      if (logger.isErrorEnabled())
-      {
-        logger.error("could not get repository from request", ex);
-      }
+      Throwables.propagateIfPossible(ex.getCause(),
+        IllegalStateException.class, AuthorizationException.class);
+      logger.error("could not get repository from request", ex);
     }
 
     return repository;

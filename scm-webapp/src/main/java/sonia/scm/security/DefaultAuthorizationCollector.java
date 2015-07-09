@@ -47,9 +47,7 @@ import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.authz.permission.PermissionResolver;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
@@ -61,7 +59,6 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.group.GroupNames;
 import sonia.scm.plugin.Extension;
-import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryEvent;
@@ -84,6 +81,9 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 {
 
   /** Field description */
+  private static final String ADMIN_PERMISSION = "*";
+
+  /** Field description */
   private static final String CACHE_NAME = "sonia.cache.authorizing";
 
   /**
@@ -102,17 +102,14 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
    * @param cacheManager
    * @param repositoryDAO
    * @param securitySystem
-   * @param resolver
    */
   @Inject
   public DefaultAuthorizationCollector(CacheManager cacheManager,
-    RepositoryDAO repositoryDAO, SecuritySystem securitySystem,
-    PermissionResolver resolver)
+    RepositoryDAO repositoryDAO, SecuritySystem securitySystem)
   {
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.repositoryDAO = repositoryDAO;
     this.securitySystem = securitySystem;
-    this.resolver = resolver;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -271,7 +268,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     return info;
   }
 
-  private void collectGlobalPermissions(Builder<Permission> builder,
+  private void collectGlobalPermissions(Builder<String> builder,
     final User user, final GroupNames groups)
   {
     if (logger.isTraceEnabled())
@@ -292,23 +289,15 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
     for (StoredAssignedPermission gp : globalPermissions)
     {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("add permission {} for user {}", gp.getPermission(),
-          user.getName());
-      }
+      String permission = gp.getPermission();
 
-      Permission permission = resolver.resolvePermission(gp.getPermission());
-
-      if (permission != null)
-      {
-        builder.add(permission);
-      }
+      logger.trace("add permission {} for user {}", permission, user.getName());
+      builder.add(permission);
     }
   }
 
-  private void collectRepositoryPermissions(Builder<Permission> builder,
-    User user, GroupNames groups)
+  private void collectRepositoryPermissions(Builder<String> builder, User user,
+    GroupNames groups)
   {
     for (Repository repository : repositoryDAO.getAll())
     {
@@ -322,7 +311,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     }
   }
 
-  private void collectRepositoryPermissions(Builder<Permission> builder,
+  private void collectRepositoryPermissions(Builder<String> builder,
     Repository repository, User user, GroupNames groups)
   {
     List<sonia.scm.repository.Permission> repositoryPermissions =
@@ -335,16 +324,14 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       {
         if (isUserPermission(user, groups, permission))
         {
-          RepositoryPermission rp = new RepositoryPermission(repository,
-                                      permission.getType());
 
-          if (logger.isTraceEnabled())
-          {
-            logger.trace("add repository permission {} for user {}", rp,
-              user.getName());
-          }
+          String perm = permission.getType().getPermissionPrefix().concat(
+                          repository.getId());
 
-          builder.add(rp);
+          logger.trace("add repository permission {} for user {}", perm,
+            user.getName());
+
+          builder.add(perm);
         }
       }
     }
@@ -359,7 +346,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
     GroupNames groups)
   {
     Set<String> roles;
-    Set<Permission> permissions;
+    Set<String> permissions;
 
     if (user.isAdmin())
     {
@@ -370,20 +357,13 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
       roles = ImmutableSet.of(Role.USER, Role.ADMIN);
 
-      //J-
-      Permission adminPermission = new RepositoryPermission(
-        RepositoryPermission.WILDCARD,
-        PermissionType.OWNER
-      );
-      //J+
-
-      permissions = ImmutableSet.of(adminPermission);
+      permissions = ImmutableSet.of(ADMIN_PERMISSION);
     }
     else
     {
       roles = ImmutableSet.of(Role.USER);
 
-      Builder<Permission> builder = ImmutableSet.builder();
+      Builder<String> builder = ImmutableSet.builder();
 
       collectGlobalPermissions(builder, user, groups);
       collectRepositoryPermissions(builder, user, groups);
@@ -392,7 +372,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
 
-    info.addObjectPermissions(permissions);
+    info.addStringPermissions(permissions);
 
     return info;
   }
@@ -471,9 +451,6 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
   /** repository dao */
   private final RepositoryDAO repositoryDAO;
-
-  /** permission resolver */
-  private final PermissionResolver resolver;
 
   /** security system */
   private final SecuritySystem securitySystem;

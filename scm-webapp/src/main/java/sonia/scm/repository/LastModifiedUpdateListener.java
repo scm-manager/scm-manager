@@ -154,11 +154,7 @@ public final class LastModifiedUpdateListener
         {
           repositoryManager.modify(dbr);
         }
-        catch (RepositoryException ex)
-        {
-          logger.error("could not modify repository", ex);
-        }
-        catch (IOException ex)
+        catch (RepositoryException | IOException ex)
         {
           logger.error("could not modify repository", ex);
         }

@@ -46,9 +46,8 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ArgumentIsInvalidException;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.PermissionType;
-import sonia.scm.repository.PermissionUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.security.Role;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.HttpUtil;
@@ -64,6 +63,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.shiro.authz.AuthorizationException;
 
 /**
  * Abstract http filter to check repository permissions.
@@ -191,7 +191,7 @@ public abstract class PermissionFilter extends HttpFilter
 
       response.sendRedirect(getRepositoryRootHelpUrl(request));
     }
-    catch (ScmSecurityException ex)
+    catch (ScmSecurityException | AuthorizationException ex)
     {
       if (logger.isWarnEnabled())
       {
@@ -353,12 +353,11 @@ public abstract class PermissionFilter extends HttpFilter
 
     if (writeRequest)
     {
-      permitted = PermissionUtil.isWritable(configuration, repository);
+      permitted = RepositoryPermissions.write(repository).isPermitted();
     }
     else
     {
-      permitted = PermissionUtil.hasPermission(configuration, repository,
-        PermissionType.READ);
+      permitted = RepositoryPermissions.read(repository).isPermitted();
     }
 
     return permitted;

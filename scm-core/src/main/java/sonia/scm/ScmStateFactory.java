@@ -34,9 +34,7 @@ package sonia.scm;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 
-import org.apache.shiro.authz.Permission;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
@@ -47,7 +45,6 @@ import sonia.scm.security.AuthorizationCollector;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.security.Role;
 import sonia.scm.security.SecuritySystem;
-import sonia.scm.security.StringablePermission;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 
@@ -144,19 +141,11 @@ public final class ScmStateFactory
       ap = securitySystem.getAvailablePermissions();
     }
 
-    Builder<String> builder = ImmutableList.builder();
+    List<String> permissions =
+      ImmutableList.copyOf(
+        authorizationCollector.collect().getStringPermissions());
 
-    for (Permission p : authorizationCollector.collect().getObjectPermissions())
-    {
-      if (p instanceof StringablePermission)
-      {
-        builder.add(((StringablePermission) p).getAsString());
-      }
-
-    }
-
-    return createState(user, groups.getCollection(), token, builder.build(),
-      ap);
+    return createState(user, groups.getCollection(), token, permissions, ap);
   }
 
   private ScmState createState(User user, Collection<String> groups,
@@ -164,8 +153,10 @@ public final class ScmStateFactory
     List<PermissionDescriptor> availablePermissions)
   {
     User u = user.clone();
+
     // do not return password on authentication
     u.setPassword(null);
+
     return new ScmState(contextProvider.getVersion(), u, groups, token,
       repositoryManger.getConfiguredTypes(), userManager.getDefaultType(),
       new ScmClientConfig(configuration), assignedPermissions,

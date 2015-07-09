@@ -41,9 +41,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.concurrent.SubjectAwareExecutorService;
-import org.apache.shiro.subject.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +53,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.KeyGenerator;
-import sonia.scm.security.ScmSecurityException;
+import sonia.scm.security.PermissionActionCheck;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
 import sonia.scm.util.HttpUtil;
@@ -81,6 +79,7 @@ import java.util.concurrent.ThreadFactory;
 import javax.servlet.http.HttpServletRequest;
 
 /**
+ * Default implementation of {@link RepositoryManager}.
  *
  * @author Sebastian Sdorra
  */
@@ -123,8 +122,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     );
     //J+
 
-    handlerMap = new HashMap<String, RepositoryHandler>();
-    types = new HashSet<Type>();
+    handlerMap = new HashMap<>();
+    types = new HashSet<>();
 
     for (RepositoryHandler handler : handlerSet)
     {
@@ -156,21 +155,18 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
    *
    *
    * @param repository
-   * @param createRepository
+   * @param initRepository
    *
    * @throws IOException
    * @throws RepositoryException
    */
-  public void create(Repository repository, boolean createRepository)
+  public void create(Repository repository, boolean initRepository)
     throws RepositoryException, IOException
   {
-    if (logger.isInfoEnabled())
-    {
-      logger.info("create repository {} of type {}", repository.getName(),
-        repository.getType());
-    }
+    logger.info("create repository {} of type {}", repository.getName(),
+      repository.getType());
 
-    assertIsAdmin();
+    RepositoryPermissions.create().check();
     AssertUtil.assertIsValid(repository);
 
     if (repositoryDAO.contains(repository))
@@ -181,7 +177,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     repository.setId(keyGenerator.createKey());
     repository.setCreationDate(System.currentTimeMillis());
 
-    if (createRepository)
+    if (initRepository)
     {
       getHandler(repository).create(repository);
     }
@@ -226,7 +222,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
         repository.getType());
     }
 
-    assertIsOwner(repository);
+    RepositoryPermissions.delete(repository).check();
 
     if (configuration.isEnableRepositoryArchive() &&!repository.isArchived())
     {
@@ -299,7 +295,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
     if (oldRepository != null)
     {
-      assertIsOwner(oldRepository);
+      RepositoryPermissions.modify(oldRepository).check();
       fireEvent(HandlerEventType.BEFORE_MODIFY, repository, oldRepository);
       repository.setLastModified(System.currentTimeMillis());
       getHandler(repository).modify(repository);
@@ -327,7 +323,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     throws RepositoryException, IOException
   {
     AssertUtil.assertIsNotNull(repository);
-    assertIsReader(repository);
+    RepositoryPermissions.read(repository).check();
 
     Repository fresh = repositoryDAO.get(repository.getType(),
                          repository.getName());
@@ -358,11 +354,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   {
     AssertUtil.assertIsNotEmpty(id);
 
+    RepositoryPermissions.read(id).check();
+
     Repository repository = repositoryDAO.get(id);
 
     if (repository != null)
     {
-      assertIsReader(repository);
       repository = repository.clone();
     }
 
@@ -388,14 +385,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
 
     if (repository != null)
     {
-      if (isReader(repository))
-      {
-        repository = repository.clone();
-      }
-      else
-      {
-        throw new ScmSecurityException("not enaugh permissions");
-      }
+      RepositoryPermissions.read(repository).check();
+      repository = repository.clone();
     }
 
     return repository;
@@ -414,9 +405,12 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   {
     List<Repository> repositories = Lists.newArrayList();
 
+    PermissionActionCheck<Repository> check = RepositoryPermissions.read();
+
     for (Repository repository : repositoryDAO.getAll())
     {
-      if (handlerMap.containsKey(repository.getType()) && isReader(repository))
+      if (handlerMap.containsKey(repository.getType())
+        && check.isPermitted(repository))
       {
         Repository r = repository.clone();
 
@@ -459,13 +453,19 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
   public Collection<Repository> getAll(Comparator<Repository> comparator,
     int start, int limit)
   {
+    final PermissionActionCheck<Repository> check =
+      RepositoryPermissions.read();
+
     return Util.createSubCollection(repositoryDAO.getAll(), comparator,
       new CollectionAppender<Repository>()
     {
       @Override
       public void append(Collection<Repository> collection, Repository item)
       {
-        collection.add(item.clone());
+        if (check.isPermitted(item))
+        {
+          collection.add(item.clone());
+        }
       }
     }, start, limit);
   }
@@ -554,11 +554,13 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     {
       Collection<Repository> repositories = repositoryDAO.getAll();
 
+      PermissionActionCheck<Repository> check = RepositoryPermissions.read();
+
       for (Repository r : repositories)
       {
         if (type.equals(r.getType()) && isNameMatching(r, uri))
         {
-          assertIsReader(r);
+          check.check(r);
           repository = r.clone();
 
           break;
@@ -681,49 +683,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     types.add(type);
   }
 
-  /**
-   * Method description
-   *
-   */
-  private void assertIsAdmin()
-  {
-    if (!SecurityUtils.getSubject().hasRole("admin"))
-    {
-      throw new ScmSecurityException("admin role is required");
-    }
-  }
-
-  /**
-   * TODO use {@link Subject#checkPermission(org.apache.shiro.authz.Permission)}
-   * in version 2.x.
-   *
-   *
-   * @param repository
-   */
-  private void assertIsOwner(Repository repository)
-  {
-    if (!isPermitted(repository, PermissionType.OWNER))
-    {
-      throw new ScmSecurityException(
-        "owner permission is required, access denied");
-    }
-  }
-
-  /**
-   * TODO use {@link Subject#checkPermission(org.apache.shiro.authz.Permission)}
-   * in version 2.x.
-   *
-   * @param repository
-   */
-  private void assertIsReader(Repository repository)
-  {
-    if (!isReader(repository))
-    {
-      throw new ScmSecurityException(
-        "reader permission is required, access denied");
-    }
-  }
-
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -778,33 +737,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     }
 
     return result;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param type
-   *
-   * @return
-   */
-  private boolean isPermitted(Repository repository, PermissionType type)
-  {
-    return PermissionUtil.hasPermission(configuration, repository, type);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  private boolean isReader(Repository repository)
-  {
-    return isPermitted(repository, PermissionType.READ);
   }
 
   //~--- fields ---------------------------------------------------------------

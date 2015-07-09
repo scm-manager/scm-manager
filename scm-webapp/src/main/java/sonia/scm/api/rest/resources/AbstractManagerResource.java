@@ -36,6 +36,7 @@ package sonia.scm.api.rest.resources;
 //~--- non-JDK imports --------------------------------------------------------
 
 import org.apache.commons.beanutils.BeanComparator;
+import org.apache.shiro.authz.AuthorizationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,6 @@ import sonia.scm.LastModifiedAware;
 import sonia.scm.Manager;
 import sonia.scm.ModelObject;
 import sonia.scm.api.rest.RestExceptionResult;
-import sonia.scm.security.ScmSecurityException;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
@@ -71,7 +71,7 @@ import javax.ws.rs.core.UriInfo;
  * @param <E>
  */
 public abstract class AbstractManagerResource<T extends ModelObject,
-        E extends Exception>
+  E extends Exception>
 {
 
   /** the logger for AbstractManagerResource */
@@ -102,7 +102,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    * @return
    */
   protected abstract GenericEntity<Collection<T>> createGenericEntity(
-          Collection<T> items);
+    Collection<T> items);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -140,7 +140,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   {
     preCreate(item);
 
-    Response response = null;
+    Response response;
 
     try
     {
@@ -153,7 +153,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
         uriInfo.getAbsolutePath().resolve(
           getPathPart().concat("/").concat(id))).build();
     }
-    catch (ScmSecurityException ex)
+    catch (AuthorizationException ex)
     {
       logger.warn("create is not allowd", ex);
       response = Response.status(Status.FORBIDDEN).build();
@@ -189,7 +189,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
         manager.delete(item);
         response = Response.noContent().build();
       }
-      catch (ScmSecurityException ex)
+      catch (AuthorizationException ex)
       {
         logger.warn("delete not allowd", ex);
         response = Response.status(Response.Status.FORBIDDEN).build();
@@ -228,7 +228,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
       manager.modify(item);
       response = Response.noContent().build();
     }
-    catch (ScmSecurityException ex)
+    catch (AuthorizationException ex)
     {
       logger.warn("update not allowd", ex);
       response = Response.status(Response.Status.FORBIDDEN).build();
@@ -293,7 +293,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    * @return
    */
   public Response getAll(Request request, int start, int limit, String sortby,
-                         boolean desc)
+    boolean desc)
   {
     Collection<T> items = fetchItems(sortby, desc, start, limit);
 
@@ -376,7 +376,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
   protected Response createErrorResonse(Throwable throwable)
   {
     return createErrorResonse(Status.INTERNAL_SERVER_ERROR,
-                              throwable.getMessage(), throwable);
+      throwable.getMessage(), throwable);
   }
 
   /**
@@ -404,10 +404,10 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    * @return
    */
   protected Response createErrorResonse(Status status, String message,
-          Throwable throwable)
+    Throwable throwable)
   {
     return Response.status(status).entity(new RestExceptionResult(message,
-            throwable)).build();
+      throwable)).build();
   }
 
   /**
@@ -486,7 +486,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    * @return
    */
   private <I> Response createCacheResponse(Request request,
-          LastModifiedAware timeItem, I item)
+    LastModifiedAware timeItem, I item)
   {
     return createCacheResponse(request, timeItem, item, item);
   }
@@ -504,7 +504,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    * @return
    */
   private <I> Response createCacheResponse(Request request,
-          LastModifiedAware timeItem, Object entityItem, I item)
+    LastModifiedAware timeItem, Object entityItem, I item)
   {
     Response.ResponseBuilder builder = null;
     Date lastModified = getLastModified(timeItem);
@@ -568,7 +568,7 @@ public abstract class AbstractManagerResource<T extends ModelObject,
    * @return
    */
   private Collection<T> fetchItems(String sortby, boolean desc, int start,
-                                   int limit)
+    int limit)
   {
     AssertUtil.assertPositive(start);
 
