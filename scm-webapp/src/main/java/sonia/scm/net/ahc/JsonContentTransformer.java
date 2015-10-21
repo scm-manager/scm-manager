@@ -35,7 +35,11 @@ package sonia.scm.net.ahc;
 
 import com.google.common.io.ByteSource;
 
+import org.codehaus.jackson.map.AnnotationIntrospector;
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
+import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 
 import sonia.scm.plugin.ext.Extension;
 import sonia.scm.util.IOUtil;
@@ -47,9 +51,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import javax.ws.rs.core.MediaType;
-import org.codehaus.jackson.map.AnnotationIntrospector;
-import org.codehaus.jackson.map.introspect.JacksonAnnotationIntrospector;
-import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 
 /**
  * {@link ContentTransformer} for json. The {@link JsonContentTransformer} uses
@@ -62,18 +63,26 @@ import org.codehaus.jackson.xc.JaxbAnnotationIntrospector;
 public class JsonContentTransformer implements ContentTransformer
 {
 
+  /**
+   * Constructs a new {@link JsonContentTransformer}.
+   *
+   */
   public JsonContentTransformer()
   {
     this.mapper = new ObjectMapper();
+
+    // allow jackson and jaxb annotations
     AnnotationIntrospector jackson = new JacksonAnnotationIntrospector();
     AnnotationIntrospector jaxb = new JaxbAnnotationIntrospector();
-    AnnotationIntrospector pair = new AnnotationIntrospector.Pair(jackson, jaxb);
-    this.mapper.setAnnotationIntrospector(pair);
+
+    this.mapper.setAnnotationIntrospector(new AnnotationIntrospector.Pair(jackson, jaxb));
+
+    // do not fail on unknown json properties
+    this.mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
-  
-  
-  
+  //~--- methods --------------------------------------------------------------
+
   /**
    * {@inheritDoc}
    */
@@ -138,8 +147,7 @@ public class JsonContentTransformer implements ContentTransformer
   @Override
   public boolean isResponsible(Class<?> type, String contentType)
   {
-    return MediaType.valueOf(contentType).isCompatible(
-      MediaType.APPLICATION_JSON_TYPE);
+    return MediaType.valueOf(contentType).isCompatible(MediaType.APPLICATION_JSON_TYPE);
   }
 
   //~--- fields ---------------------------------------------------------------
