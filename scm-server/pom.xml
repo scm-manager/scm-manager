@@ -244,13 +244,13 @@
                   <file>
                     <path>/etc/default/scm-server</path>
                     <source>${project.basedir}/src/main/nativepkg/default</source>
-                    <mode>0744</mode>
+                    <mode>0644</mode>
                     <config>true</config>
                   </file>
                   <file>
                     <path>/etc/init.d/scm-server</path>
                     <source>${project.basedir}/src/main/nativepkg/init-script</source>
-                    <mode>0744</mode>
+                    <mode>0755</mode>
                   </file>
                 </files>
                 <links>
