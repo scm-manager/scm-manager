@@ -162,6 +162,7 @@ import sonia.scm.net.ahc.ContentTransformer;
 import sonia.scm.net.ahc.DefaultAdvancedHttpClient;
 import sonia.scm.net.ahc.JsonContentTransformer;
 import sonia.scm.net.ahc.XmlContentTransformer;
+import sonia.scm.security.XsrfProtectionFilter;
 import sonia.scm.web.UserAgentParser;
 
 /**
@@ -365,6 +366,9 @@ public class ScmServletModule extends ServletModule
       filter(PATTERN_ALL).through(LoggingFilter.class);
     }
 
+    // protect api agains xsrf attacks
+    filter(PATTERN_RESTAPI).through(XsrfProtectionFilter.class);
+    
     /*
      * filter(PATTERN_PAGE,
      *      PATTERN_STATIC_RESOURCES).through(StaticResourceFilter.class);
