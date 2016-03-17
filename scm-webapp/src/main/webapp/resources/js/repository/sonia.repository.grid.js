@@ -82,7 +82,8 @@ Sonia.repository.Grid = Ext.extend(Sonia.rest.Grid, {
           name: 'group',
           convert: this.convertToGroup
         },{
-          name: 'name'
+          name: 'name',
+          sortType:'asUCString'
         },{
           name: 'type'
         },{
