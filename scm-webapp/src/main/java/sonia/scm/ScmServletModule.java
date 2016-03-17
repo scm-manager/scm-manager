@@ -157,6 +157,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import javax.net.ssl.SSLContext;
+import sonia.scm.net.SSLContextProvider;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.ContentTransformer;
 import sonia.scm.net.ahc.DefaultAdvancedHttpClient;
@@ -318,6 +320,9 @@ public class ScmServletModule extends ServletModule
     bind(ChangesetViewerUtil.class);
     bind(RepositoryBrowserUtil.class);
 
+    // bind sslcontext provider
+    bind(SSLContext.class).toProvider(SSLContextProvider.class);
+    
     // bind httpclient
     bind(HttpClient.class, URLHttpClient.class);
     

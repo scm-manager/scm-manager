@@ -64,6 +64,7 @@ import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSocketFactory;
+import sonia.scm.net.SSLContextProvider;
 
 /**
  *
@@ -309,7 +310,7 @@ public class DefaultAdvancedHttpClientTest
     public TestingAdvacedHttpClient(ScmConfiguration configuration,
       Set<ContentTransformer> transformers)
     {
-      super(configuration, transformers);
+      super(configuration, transformers, new SSLContextProvider());
     }
 
     //~--- methods ------------------------------------------------------------

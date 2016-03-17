@@ -66,6 +66,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
 import java.util.Set;
+import javax.inject.Provider;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -113,13 +114,15 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
    *
    * @param configuration scm-manager main configuration
    * @param contentTransformers content transformer
+   * @param sslContextProvider ssl context provider
    */
   @Inject
   public DefaultAdvancedHttpClient(ScmConfiguration configuration,
-    Set<ContentTransformer> contentTransformers)
+    Set<ContentTransformer> contentTransformers, Provider<SSLContext> sslContextProvider)
   {
     this.configuration = configuration;
     this.contentTransformers = contentTransformers;
+    this.sslContextProvider = sslContextProvider;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -329,6 +332,11 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
       {
         logger.error("could not disable certificate validation", ex);
       }
+    } 
+    else 
+    {
+      logger.trace("set ssl socker factory from provider");
+      connection.setSSLSocketFactory(sslContextProvider.get().getSocketFactory());
     }
 
     if (request.isDisableHostnameValidation())
@@ -395,4 +403,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
 
   /** set of content transformers */
   private final Set<ContentTransformer> contentTransformers;
+  
+  /** ssl context provider */
+  private final Provider<SSLContext> sslContextProvider;
 }

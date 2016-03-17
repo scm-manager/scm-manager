@@ -37,7 +37,6 @@ package sonia.scm.net.ahc;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.ByteSource;
-import com.google.common.io.CharSource;
 
 import org.junit.Test;
 

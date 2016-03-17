@@ -65,6 +65,7 @@ import java.net.HttpURLConnection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import sonia.scm.net.SSLContextProvider;
 
 /**
  *
@@ -143,7 +144,7 @@ public class DefaultAdvancedHttpResponseTest
   /** Field description */
   private final DefaultAdvancedHttpClient client =
     new DefaultAdvancedHttpClient(new ScmConfiguration(),
-      new HashSet<ContentTransformer>());
+      new HashSet<ContentTransformer>(), new SSLContextProvider());
 
   /** Field description */
   @Mock
