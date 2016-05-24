@@ -177,6 +177,7 @@ public class ScmConfiguration
     this.skipFailedAuthenticators = other.skipFailedAuthenticators;
     this.loginAttemptLimit = other.loginAttemptLimit;
     this.loginAttemptLimitTimeout = other.loginAttemptLimitTimeout;
+    this.enabledXsrfProtection = other.enabledXsrfProtection;
 
     // deprecated fields
     this.servername = other.servername;
@@ -422,6 +423,19 @@ public class ScmConfiguration
   public boolean isDisableGroupingGrid()
   {
     return disableGroupingGrid;
+  }
+
+  /**
+   * Returns {@code true} if the cookie xsrf protection is enabled.
+   * 
+   * @see <a href="https://goo.gl/s67xO3">Issue 793</a>
+   * @return {@code true} if the cookie xsrf protection is enabled
+   * 
+   * @since 1.47
+   */
+  public boolean isEnabledXsrfProtection()
+  {
+    return enabledXsrfProtection;
   }
 
   /**
@@ -800,6 +814,21 @@ public class ScmConfiguration
     this.sslPort = sslPort;
   }
 
+  /**
+   * Set {@code true} to enable xsrf cookie protection.
+   * 
+   * @param enabledXsrfProtection {@code true} to enable xsrf protection
+   * @see <a href="https://goo.gl/s67xO3">Issue 793</a>
+   * 
+   * @since 1.47
+   */
+  public void setEnabledXsrfProtection(boolean enabledXsrfProtection)
+  {
+    this.enabledXsrfProtection = enabledXsrfProtection;
+  }
+  
+  
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -913,4 +942,12 @@ public class ScmConfiguration
 
   /** Field description */
   private boolean anonymousAccessEnabled = false;
+  
+  /** 
+   * Enables xsrf cookie protection.
+   * 
+   * @since 1.47
+   */
+  @XmlElement(name = "xsrf-protection")
+  private boolean enabledXsrfProtection = false;
 }

@@ -44,8 +44,10 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.HttpUtil;
 
 /**
@@ -68,7 +70,9 @@ public class XsrfProtectionFilterTest {
   @Mock
   private FilterChain chain;
   
-  private final XsrfProtectionFilter filter = new XsrfProtectionFilter();
+  private final ScmConfiguration configuration = new ScmConfiguration();
+  
+  private final XsrfProtectionFilter filter = new XsrfProtectionFilter(configuration);
   
   /**
    * Prepare mocks for testing.
@@ -77,6 +81,7 @@ public class XsrfProtectionFilterTest {
   public void setUp(){
     when(request.getSession(true)).thenReturn(session);
     when(request.getContextPath()).thenReturn("/scm");
+    configuration.setEnabledXsrfProtection(true);
   }
 
   /**
@@ -89,6 +94,31 @@ public class XsrfProtectionFilterTest {
   public void testDoFilterFromNonWuiClient() throws IOException, ServletException
   {
     filter.doFilter(request, response, chain);
+    verify(chain).doFilter(request, response);
+  }
+
+  /**
+   * Test filter method with disabled xsrf protection.
+   * 
+   * @throws IOException
+   * @throws ServletException 
+   */  
+  @Test
+  public void testDoFilterWithDisabledXsrfProtection() throws IOException, ServletException 
+  {
+    // disable xsrf protection
+    configuration.setEnabledXsrfProtection(false);
+    
+    // set webui user-agent
+    when(request.getHeader(HttpUtil.HEADER_SCM_CLIENT)).thenReturn(HttpUtil.SCM_CLIENT_WUI);
+    
+    // call the filter
+    filter.doFilter(request, response, chain);
+    
+    // verify that no xsrf other any other cookie was set
+    verify(response, never()).addCookie(Mockito.any(Cookie.class));
+    
+    // ensure filter chain is called
     verify(chain).doFilter(request, response);
   }
   

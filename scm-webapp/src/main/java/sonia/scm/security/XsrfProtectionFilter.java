@@ -32,6 +32,7 @@ package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import com.google.inject.Inject;
 import java.io.IOException;
 import java.util.UUID;
 import javax.inject.Singleton;
@@ -43,6 +44,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.filter.HttpFilter;
 
@@ -52,7 +54,8 @@ import sonia.scm.web.filter.HttpFilter;
  * session, the web interface has to send the token from the cookie as http header on every request. If the filter 
  * receives an request to a protected session, without proper xsrf header the filter will abort the request and send an
  * http error code back to the client. If the filter receives an request to a non protected session, from a non web 
- * interface client the filter will call the chain.
+ * interface client the filter will call the chain. The {@link XsrfProtectionFilter} is disabled by default and can be
+ * enabled with {@link ScmConfiguration#setEnabledXsrfProtection(boolean)}.
  * 
  * TODO for scm-manager 2 we have to store the csrf token as part of the jwt token instead of session.
  * 
@@ -73,10 +76,30 @@ public final class XsrfProtectionFilter extends HttpFilter
    * Key used for session, header and cookie.
    */
   static final String KEY = "X-XSRF-Token";
+
+  @Inject
+  public XsrfProtectionFilter(ScmConfiguration configuration)
+  {
+    this.configuration = configuration;
+  }
   
   @Override
   protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws
     IOException, ServletException
+  {
+    if (configuration.isEnabledXsrfProtection())
+    {
+      doXsrfProtection(request, response, chain);
+    } 
+    else 
+    {
+      logger.trace("xsrf protection is disabled, skipping check");
+      chain.doFilter(request, response);
+    }
+  }
+  
+  private void doXsrfProtection(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws
+    IOException, ServletException 
   {
     HttpSession session = request.getSession(true);
     String storedToken = (String) session.getAttribute(KEY);
@@ -109,4 +132,5 @@ public final class XsrfProtectionFilter extends HttpFilter
     return UUID.randomUUID().toString();
   }
   
+  private ScmConfiguration configuration;
 }
