@@ -102,6 +102,10 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
   forceBaseUrlHelpText: 'Redirects to the base url if the request comes from a other url',
   disableGroupingGridHelpText: 'Disable repository Groups. A complete page reload is required after a change of this value.',
   enableRepositoryArchiveHelpText: 'Enable repository archives. A complete page reload is required after a change of this value.',
+  
+  // TODO i18n
+  enableXsrfProtectionText: 'Enable Xsrf Protection',
+  enableXsrfProtectionHelpText: 'Enable Xsrf Cookie Protection. <b>Note:</b> This feature is still experimental.',
 
   initComponent: function(){
 
@@ -166,6 +170,12 @@ Sonia.config.ScmConfigPanel = Ext.extend(Sonia.config.ConfigPanel,{
           name: 'skip-failed-authenticators',
           inputValue: 'true',
           helpText: this.skipFailedAuthenticatorsHelpText
+        },{
+          xtype: 'checkbox',
+          fieldLabel: this.enableXsrfProtectionText,
+          name: 'xsrf-protection',
+          inputValue: 'true',
+          helpText: this.enableXsrfProtectionHelpText
         },{
           xtype: 'numberfield',
           fieldLabel: this.loginAttemptLimitText,
