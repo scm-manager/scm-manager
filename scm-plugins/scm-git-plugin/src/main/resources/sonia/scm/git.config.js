@@ -36,10 +36,12 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
   // labels
   titleText: 'Git Settings',
   repositoryDirectoryText: 'Repository directory',
+  gcExpressionText: 'Git GC Cron Expression',
   disabledText: 'Disabled',
 
   // helpTexts
   repositoryDirectoryHelpText: 'Location of the Git repositories.',
+  gcExpressionHelpText: 'Quartz Cron Expression to run git gc in intervals.',
   disabledHelpText: 'Enable or disable the Git plugin.\n\
                     Note you have to reload the page, after changing this value.',
 
@@ -54,6 +56,12 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
         fieldLabel: this.repositoryDirectoryText,
         helpText: this.repositoryDirectoryHelpText,
         allowBlank : false
+      },{
+        xtype: 'textfield',
+        name: 'gc-expression',
+        fieldLabel: this.gcExpressionText,
+        helpText: this.gcExpressionHelpText,
+        allowBlank : true        
       },{
         xtype: 'checkbox',
         name: 'disabled',

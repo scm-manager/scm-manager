@@ -35,6 +35,9 @@ package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -42,4 +45,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "config")
-public class GitConfig extends SimpleRepositoryConfig {}
+@XmlAccessorType(XmlAccessType.FIELD)
+public class GitConfig extends SimpleRepositoryConfig {
+  
+  @XmlElement(name = "gc-expression")
+  private String gcExpression;
+
+  public String getGcExpression()
+  {
+    return gcExpression;
+  }
+  
+}
