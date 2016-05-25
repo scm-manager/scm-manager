@@ -60,6 +60,7 @@ import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import sonia.scm.repository.HealthCheckContextListener;
+import sonia.scm.schedule.Scheduler;
 
 /**
  *
@@ -79,6 +80,8 @@ public class ScmContextListener extends GuiceServletContextListener
   {
     if ((globalInjector != null) &&!startupError)
     {
+      // close Scheduler
+      IOUtil.close(globalInjector.getInstance(Scheduler.class));
 
       // close RepositoryManager
       IOUtil.close(globalInjector.getInstance(RepositoryManager.class));

@@ -164,6 +164,8 @@ import sonia.scm.net.ahc.ContentTransformer;
 import sonia.scm.net.ahc.DefaultAdvancedHttpClient;
 import sonia.scm.net.ahc.JsonContentTransformer;
 import sonia.scm.net.ahc.XmlContentTransformer;
+import sonia.scm.schedule.QuartzScheduler;
+import sonia.scm.schedule.Scheduler;
 import sonia.scm.security.XsrfProtectionFilter;
 import sonia.scm.web.UserAgentParser;
 
@@ -282,6 +284,9 @@ public class ScmServletModule extends ServletModule
     bind(PluginLoader.class).toInstance(pluginLoader);
     bind(PluginManager.class, DefaultPluginManager.class);
 
+    // bind scheduler
+    bind(Scheduler.class).to(QuartzScheduler.class);
+    
     // note CipherUtil uses an other generator
     bind(KeyGenerator.class).to(DefaultKeyGenerator.class);
     bind(CipherHandler.class).toInstance(cu.getCipherHandler());

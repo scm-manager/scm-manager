@@ -435,6 +435,7 @@
 
     <!-- util libraries -->
     <guava.version>15.0</guava.version>
+    <quartz.version>2.2.3</quartz.version>
 
     <!-- build properties -->
     <project.build.javaLevel>1.6</project.build.javaLevel>
