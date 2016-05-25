@@ -74,13 +74,18 @@ Sonia.repository.isOwner = function(repository){
   return admin || repository.permissions;
 };
 
-Sonia.repository.setEditPanel = function(panels){
+Sonia.repository.setEditPanel = function(panels, activeTab){
   var editPanel = Ext.getCmp('repositoryEditPanel');
   editPanel.removeAll();
   Ext.each(panels, function(panel){
     editPanel.add(panel);
   });
-  editPanel.setActiveTab(0);
+  
+  if (!activeTab){
+    activeTab = 0;
+  }
+  
+  editPanel.setActiveTab(activeTab);
   editPanel.doLayout();
 };
 
