@@ -150,6 +150,9 @@ public abstract class AbstractResourceManager implements ResourceManager
         processPlugin(resources, plugin);
       }
     }
+    
+    // fix order of script resources, see https://goo.gl/ok03l4
+    Collections.sort(resources);
 
     return resources;
   }
@@ -291,10 +294,10 @@ public abstract class AbstractResourceManager implements ResourceManager
     //~--- fields -------------------------------------------------------------
 
     /** Field description */
-    private String name;
+    private final String name;
 
     /** Field description */
-    private ResourceType type;
+    private final ResourceType type;
   }
 
 
