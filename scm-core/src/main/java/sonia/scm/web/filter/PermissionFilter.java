@@ -161,33 +161,24 @@ public abstract class PermissionFilter extends HttpFilter
 
         if (hasPermission(repository, writeRequest))
         {
-          if (logger.isTraceEnabled())
-          {
-            logger.trace("{} access to repository {} for user {} granted",
-              getActionAsString(writeRequest), repository.getName(),
-              getUserName(subject));
-          }
+          logger.trace("{} access to repository {} for user {} granted",
+            getActionAsString(writeRequest), repository.getName(),
+            getUserName(subject));
 
           chain.doFilter(request, response);
         }
         else
         {
-          if (logger.isInfoEnabled())
-          {
-            logger.info("{} access to repository {} for user {} denied",
-              getActionAsString(writeRequest), repository.getName(),
-              getUserName(subject));
-          }
-
+          logger.info("{} access to repository {} for user {} denied",
+            getActionAsString(writeRequest), repository.getName(),
+            getUserName(subject));
+          
           sendAccessDenied(request, response, subject);
         }
       }
       else
       {
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("repository not found");
-        }
+        logger.debug("repository not found");
 
         response.sendError(HttpServletResponse.SC_NOT_FOUND);
       }
@@ -210,12 +201,7 @@ public abstract class PermissionFilter extends HttpFilter
     }
     catch (ScmSecurityException ex)
     {
-      if (logger.isWarnEnabled())
-      {
-        logger.warn("user {} has not enough permissions",
-          subject.getPrincipal());
-      }
-
+      logger.warn("user " + subject.getPrincipal() +  " has not enough permissions", ex);
       sendAccessDenied(request, response, subject);
     }
 
