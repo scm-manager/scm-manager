@@ -73,12 +73,6 @@
       <name>jgit release repository</name>
       <url>http://download.eclipse.org/jgit/maven</url>
     </repository>
-    
-    <repository>
-      <id>maven.tmatesoft.com</id>
-      <name>tmatesoft release repository</name>
-      <url>http://maven.tmatesoft.com/content/repositories/releases/</url>
-    </repository>
   
   </repositories>
   
