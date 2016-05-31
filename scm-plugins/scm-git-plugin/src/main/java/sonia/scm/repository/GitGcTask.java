@@ -31,6 +31,7 @@
 
 package sonia.scm.repository;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
 import com.google.inject.Inject;
 import java.io.File;
@@ -123,7 +124,7 @@ public class GitGcTask implements Runnable {
     File file = repositoryHandler.getDirectory(repository);
     Git git = null;
     try {
-      git = Git.open(file);
+      git = open(file);
       GarbageCollectCommand gcc = git.gc();
       // print statistics before execution, because it looks like
       // jgit returns the statistics after gc has finished
@@ -144,6 +145,20 @@ public class GitGcTask implements Runnable {
         git.close();
       }
     }
+  }
+  
+  /**
+   * Opens the git repository. This method is only visible for testing purposes.
+   * 
+   * @param file repository directory
+   * 
+   * @return git for repository
+   * 
+   * @throws IOException 
+   */
+  @VisibleForTesting
+  protected Git open(File file) throws IOException {
+    return Git.open(file);
   }
 
 }
