@@ -41,7 +41,18 @@ Sonia.git.ConfigPanel = Ext.extend(Sonia.config.SimpleConfigForm, {
 
   // helpTexts
   repositoryDirectoryHelpText: 'Location of the Git repositories.',
-  gcExpressionHelpText: 'Quartz Cron Expression to run git gc in intervals.',
+  // TODO i18n
+  gcExpressionHelpText: '<p>Use Quartz Cron Expressions (SECOND MINUTE HOUR DAYOFMONTH MONTH DAYOFWEEK) to run git gc in intervals.</p>\n\
+                         <table>\n\
+                         <tr><th><b>SECOND</b></th><td>Seconds within the minute (0–59)</td></tr>\n\
+                         <tr><th><b>MINUTE</b></th><td>Minutes within the hour (0–59)</td></tr>\n\
+                         <tr><th><b>HOUR</b></th><td>The hour of the day (0–23)</td></tr>\n\
+                         <tr><th><b>DAYOFMONTH</b></th><td>The day of the month (1–31)</td></tr>\n\
+                         <tr><th><b>MONTH</b></th><td>The month (1–12)</td></tr>\n\
+                         <tr><th><b>DAYOFWEEK</b></th><td>The day of the week (MON, TUE, WED, THU, FRI, SAT, SUN)</td></tr>\n\
+                         </table>\n\
+                         <p>E.g.: To run the task on every sunday at two o\'clock in the morning: 0 0 2 ? * SUN</p>\n\
+                         <p>For more informations please have a look at <a href="http://www.quartz-scheduler.org/documentation/quartz-2.2.x/tutorials/crontrigger.html">Quartz CronTrigger</a></p>',
   disabledHelpText: 'Enable or disable the Git plugin.\n\
                     Note you have to reload the page, after changing this value.',
 
