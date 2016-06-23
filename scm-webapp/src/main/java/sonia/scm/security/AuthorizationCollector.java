@@ -377,7 +377,7 @@ public class AuthorizationCollector
     }
     else if (logger.isTraceEnabled())
     {
-      logger.trace("repository {} has not permission entries",
+      logger.trace("repository {} has no permission entries",
         repository.getName());
     }
   }
