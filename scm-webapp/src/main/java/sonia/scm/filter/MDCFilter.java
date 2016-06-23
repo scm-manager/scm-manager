@@ -33,6 +33,7 @@ package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Singleton;
 
 import org.apache.shiro.SecurityUtils;
@@ -61,13 +62,20 @@ public class MDCFilter extends HttpFilter
 {
 
   /** Field description */
-  private static final String MDC_CLIEN_HOST = "client_host";
+  @VisibleForTesting
+  static final String MDC_CLIEN_HOST = "client_host";
 
   /** Field description */
-  private static final String MDC_CLIEN_IP = "client_ip";
+  @VisibleForTesting
+  static final String MDC_CLIEN_IP = "client_ip";
+  
+  /** url of the current request */
+  @VisibleForTesting
+  static final String MDC_REQUEST_URI = "request_uri";
 
   /** Field description */
-  private static final String MDC_USERNAME = "username";
+  @VisibleForTesting
+  static final String MDC_USERNAME = "username";
 
   //~--- methods --------------------------------------------------------------
 
@@ -90,6 +98,7 @@ public class MDCFilter extends HttpFilter
     MDC.put(MDC_USERNAME, getUsername());
     MDC.put(MDC_CLIEN_IP, request.getRemoteAddr());
     MDC.put(MDC_CLIEN_HOST, request.getRemoteHost());
+    MDC.put(MDC_REQUEST_URI, request.getRequestURI());
 
     try
     {
@@ -100,6 +109,7 @@ public class MDCFilter extends HttpFilter
       MDC.remove(MDC_USERNAME);
       MDC.remove(MDC_CLIEN_IP);
       MDC.remove(MDC_CLIEN_HOST);
+      MDC.remove(MDC_REQUEST_URI);
     }
   }
 
