@@ -281,11 +281,6 @@ public class AuthorizationCollector
   private void collectGlobalPermissions(Builder<Permission> builder,
     final User user, final GroupNames groups)
   {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("collect global permissions for user {}", user.getName());
-    }
-
     List<StoredAssignedPermission> globalPermissions =
       securitySystem.getPermissions(new Predicate<AssignedPermission>()
     {
@@ -293,7 +288,7 @@ public class AuthorizationCollector
       @Override
       public boolean apply(AssignedPermission input)
       {
-        return isUserPermission(user, groups, input);
+        return isUserPermitted(user, groups, input);
       }
     });
 
@@ -329,12 +324,6 @@ public class AuthorizationCollector
   {
     for (Repository repository : repositoryDAO.getAll())
     {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("collect permissions for repository {} and user {}",
-          repository.getName(), user.getName());
-      }
-
       collectRepositoryPermissions(builder, repository, user, groups);
     }
   }
@@ -357,22 +346,28 @@ public class AuthorizationCollector
 
     if (Util.isNotEmpty(repositoryPermissions))
     {
-
+      boolean hasPermission = false;
       for (sonia.scm.repository.Permission permission : repositoryPermissions)
       {
-        if (isUserPermission(user, groups, permission))
+        if (isUserPermitted(user, groups, permission))
         {
+          hasPermission = true;
           RepositoryPermission rp = new RepositoryPermission(repository,
                                       permission.getType());
 
           if (logger.isTraceEnabled())
           {
-            logger.trace("add repository permission {} for user {}", rp,
-              user.getName());
+            logger.trace("add repository permission {} for user {} at repository {}", rp,
+              user.getName(), repository.getName());
           }
 
           builder.add(rp);
         }
+      }
+      
+      if (!hasPermission && logger.isTraceEnabled())
+      {
+        logger.trace("no permission for user {} defined at repository {}", user.getName(), repository.getName());
       }
     }
     else if (logger.isTraceEnabled())
@@ -445,7 +440,7 @@ public class AuthorizationCollector
    *
    * @return
    */
-  private boolean isUserPermission(User user, GroupNames groups,
+  private boolean isUserPermitted(User user, GroupNames groups,
     PermissionObject perm)
   {
     //J-
