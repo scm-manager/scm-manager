@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,91 +28,24 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+package sonia.scm;
 
-
-package sonia.scm.repository;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.Objects;
-
-import sonia.scm.HandlerEvent;
-import sonia.scm.event.Event;
 import sonia.scm.event.HandlerEventBase;
 
 /**
- * The RepositoryEvent is fired if a {@link Repository} object changes.
+ * Extension to the {@link ModificationHandlerEvent}.
  *
+ * @param <T> type of changed item
+ * 
  * @author Sebastian Sdorra
- * @since 1.23
+ * @since 1.48
  */
-@Event
-public class RepositoryEvent implements HandlerEventBase<Repository>
+public interface ModificationHandlerEvent<T> extends HandlerEventBase<T>
 {
-
   /**
-   * Constructs new repository event
-   *
-   *
-   * @param repository changed repository
-   * @param eventType type of the event
+   * Returns item, before it was modified.
+   * 
+   * @return item before modification
    */
-  public RepositoryEvent(Repository repository, HandlerEvent eventType)
-  {
-    this.repository = repository;
-    this.eventType = eventType;
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public String toString()
-  {
-    //J-
-    return Objects.toStringHelper(this)
-                  .add("eventType", eventType)
-                  .add("repository", repository)
-                  .toString();
-    //J+
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public HandlerEvent getEventType()
-  {
-    return eventType;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public Repository getItem()
-  {
-    return repository;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** event type */
-  private HandlerEvent eventType;
-
-  /** changed repository */
-  private Repository repository;
+  public T getItemBeforeModification();
 }

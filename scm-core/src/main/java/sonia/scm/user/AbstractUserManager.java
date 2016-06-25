@@ -90,21 +90,32 @@ public abstract class AbstractUserManager implements UserManager
   }
 
   /**
-   * Calls the {@link UserListener#onEvent(User,sonia.scm.HandlerEvent)}
-   * method of all registered listeners and send a {@link UserEvent} to
-   * the {@link ScmEventBus}.
+   * Creates a new {@link UserEvent} and calls {@link #fireEvent(sonia.scm.user.UserEvent)}.
    *
    * @param user user that has changed
    * @param event type of change event
    */
   protected void fireEvent(User user, HandlerEvent event)
   {
+    fireEvent(new UserEvent(user, event));
+  }
+
+  /**
+   * Calls the {@link UserListener#onEvent(User,sonia.scm.HandlerEvent)}
+   * method of all registered listeners and send a {@link UserEvent} to
+   * the {@link ScmEventBus}.
+   *
+   * @param event user event
+   * @since 1.48
+   */  
+  protected void fireEvent(UserEvent event)
+  {
     for (UserListener listener : listenerSet)
     {
-      listener.onEvent(user, event);
+      listener.onEvent(event.getItem(), event.getEventType());
     }
 
-    ScmEventBus.getInstance().post(new UserEvent(user, event));
+    ScmEventBus.getInstance().post(event);
   }
 
   //~--- fields ---------------------------------------------------------------

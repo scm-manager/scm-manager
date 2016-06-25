@@ -280,14 +280,15 @@ public class DefaultUserManager extends AbstractUserManager
     }
 
     String name = user.getName();
-
-    if (userDAO.contains(name))
+    
+    User notModified = userDAO.get(name);
+    if (notModified != null)
     {
       AssertUtil.assertIsValid(user);
+      fireEvent(new UserModificationEvent(user, notModified, HandlerEvent.BEFORE_MODIFY));
       user.setLastModified(System.currentTimeMillis());
-      fireEvent(user, HandlerEvent.BEFORE_MODIFY);
       userDAO.modify(user);
-      fireEvent(user, HandlerEvent.MODIFY);
+      fireEvent(new UserModificationEvent(user, notModified, HandlerEvent.MODIFY));
     }
     else
     {

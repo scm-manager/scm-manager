@@ -48,7 +48,7 @@ import sonia.scm.event.HandlerEventBase;
  * @since 1.23
  */
 @Event
-public final class GroupEvent implements HandlerEventBase<Group>
+public class GroupEvent implements HandlerEventBase<Group>
 {
 
   /**

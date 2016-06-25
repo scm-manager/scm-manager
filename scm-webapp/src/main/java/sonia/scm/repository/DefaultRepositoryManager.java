@@ -373,7 +373,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     if (notModifiedRepository != null)
     {
       assertIsOwner(notModifiedRepository);
-      fireEvent(repository, HandlerEvent.BEFORE_MODIFY);
+      fireEvent(new RepositoryModificationEvent(repository, notModifiedRepository, HandlerEvent.BEFORE_MODIFY));
       repository.setLastModified(System.currentTimeMillis());
       getHandler(repository).modify(repository);
       repositoryDAO.modify(repository);
@@ -384,7 +384,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
         "repository ".concat(repository.getName()).concat(" not found"));
     }
 
-    fireEvent(repository, HandlerEvent.MODIFY);
+    fireEvent(new RepositoryModificationEvent(repository, notModifiedRepository, HandlerEvent.MODIFY));
   }
 
   /**

@@ -222,13 +222,14 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     String name = group.getName();
 
-    if (groupDAO.contains(name))
+    Group notModified = groupDAO.get(name);
+    if (notModified != null)
     {
       removeDuplicateMembers(group);
+      fireEvent(new GroupModificationEvent(group, notModified, HandlerEvent.BEFORE_MODIFY));
       group.setLastModified(System.currentTimeMillis());
-      fireEvent(group, HandlerEvent.BEFORE_MODIFY);
       groupDAO.modify(group);
-      fireEvent(group, HandlerEvent.MODIFY);
+      fireEvent(new GroupModificationEvent(group, notModified, HandlerEvent.MODIFY));
     }
     else
     {

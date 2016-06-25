@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,91 +28,39 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
-package sonia.scm.repository;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.Objects;
+package sonia.scm.group;
 
 import sonia.scm.HandlerEvent;
-import sonia.scm.event.Event;
-import sonia.scm.event.HandlerEventBase;
+import sonia.scm.ModificationHandlerEvent;
 
 /**
- * The RepositoryEvent is fired if a {@link Repository} object changes.
- *
+ * Event which is fired whenever a group is modified.
+ * 
  * @author Sebastian Sdorra
- * @since 1.23
+ * @since 1.48
  */
-@Event
-public class RepositoryEvent implements HandlerEventBase<Repository>
+public class GroupModificationEvent extends GroupEvent implements ModificationHandlerEvent<Group>
 {
+  
+  private final Group itemBeforeModification;
 
   /**
-   * Constructs new repository event
-   *
-   *
-   * @param repository changed repository
-   * @param eventType type of the event
+   * Constructs a new {@link GroupModificationEvent}.
+   * 
+   * @param item changed group
+   * @param itemBeforeModification changed group before it was modified
+   * @param eventType type of event
    */
-  public RepositoryEvent(Repository repository, HandlerEvent eventType)
+  public GroupModificationEvent(Group item, Group itemBeforeModification, HandlerEvent eventType)
   {
-    this.repository = repository;
-    this.eventType = eventType;
+    super(item, eventType);
+    this.itemBeforeModification = itemBeforeModification;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
   @Override
-  public String toString()
+  public Group getItemBeforeModification()
   {
-    //J-
-    return Objects.toStringHelper(this)
-                  .add("eventType", eventType)
-                  .add("repository", repository)
-                  .toString();
-    //J+
+    return itemBeforeModification;
   }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public HandlerEvent getEventType()
-  {
-    return eventType;
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
-  @Override
-  public Repository getItem()
-  {
-    return repository;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** event type */
-  private HandlerEvent eventType;
-
-  /** changed repository */
-  private Repository repository;
+  
 }

@@ -232,21 +232,33 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   }
 
   /**
+   * Creates an {@link RepositoryEvent} and calls {@link #fireEvent(sonia.scm.repository.RepositoryEvent)}.
+   * 
+   * @param repository changed repository
+   * @param event event type
+   */
+  protected void fireEvent(Repository repository, HandlerEvent event)
+  {
+    fireEvent(new RepositoryEvent(repository, event));
+  }
+  
+  /**
    * Calls the {@link RepositoryListener#onEvent(Repository,sonia.scm.HandlerEvent)}
    * method of all registered listeners and send a {@link RepositoryEvent} to
    * the {@link ScmEventBus}.
    *
-   * @param repository repository that has changed
-   * @param event type of change event
+   * @param event repository event
+   * 
+   * @since 1.48
    */
-  protected void fireEvent(Repository repository, HandlerEvent event)
+  protected void fireEvent(RepositoryEvent event)
   {
     for (RepositoryListener listener : listenerSet)
     {
-      listener.onEvent(repository, event);
+      listener.onEvent(event.getItem(), event.getEventType());
     }
 
-    ScmEventBus.getInstance().post(new RepositoryEvent(repository, event));
+    ScmEventBus.getInstance().post(event);
   }
 
   /**

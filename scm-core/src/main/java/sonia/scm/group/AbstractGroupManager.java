@@ -90,21 +90,32 @@ public abstract class AbstractGroupManager implements GroupManager
   }
 
   /**
-   * Calls the {@link GroupListener#onEvent(Group,sonia.scm.HandlerEvent)}
-   * method of all registered listeners and send a {@link GroupEvent} to
-   * the {@link ScmEventBus}.
-   *
+   * Creates a new {@link GroupEvent} and calls {@link #fireEvent(sonia.scm.group.GroupEvent)}.
+   * 
    * @param group group that has changed
    * @param event type of change event
    */
   protected void fireEvent(Group group, HandlerEvent event)
   {
+    fireEvent(new GroupEvent(group, event));
+  }
+
+  /**
+   * Calls the {@link GroupListener#onEvent(Group,sonia.scm.HandlerEvent)}
+   * method of all registered listeners and send a {@link GroupEvent} to
+   * the {@link ScmEventBus}.
+   *
+   * @param event type of change event
+   * @since 1.148
+   */  
+  protected void fireEvent(GroupEvent event)
+  {
     for (GroupListener listener : listenerSet)
     {
-      listener.onEvent(group, event);
+      listener.onEvent(event.getItem(), event.getEventType());
     }
 
-    ScmEventBus.getInstance().post(new GroupEvent(group, event));
+    ScmEventBus.getInstance().post(event);
   }
 
   //~--- fields ---------------------------------------------------------------
