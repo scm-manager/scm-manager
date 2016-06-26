@@ -71,6 +71,8 @@ import sonia.scm.util.Util;
 
 import java.util.List;
 import java.util.Set;
+import sonia.scm.Filter;
+import sonia.scm.user.UserModificationEvent;
 
 /**
  *
@@ -139,8 +141,13 @@ public class AuthorizationCollector
   }
 
   /**
-   * Method description
-   *
+   * Invalidates the cache of a user which was modified. The cache entries for the user will be invalidated for the
+   * following reasons:
+   * <ul>
+   * <li>Admin or Active flag was modified.</li>
+   * <li>New user created, for the case of old cache values</li>
+   * <li>User deleted</li>
+   * </ul>
    *
    * @param event
    */
@@ -150,17 +157,36 @@ public class AuthorizationCollector
     if (event.getEventType().isPost())
     {
       User user = event.getItem();
-
-      if (logger.isDebugEnabled())
+      String username = user.getId();
+      if (event instanceof UserModificationEvent)
       {
-        logger.debug(
-          "clear cache of user {}, because user properties have changed",
-          user.getName());
+        User beforeModification = ((UserModificationEvent) event).getItemBeforeModification();
+        if ( user.isAdmin() != beforeModification.isAdmin() || user.isActive() != beforeModification.isActive() )
+        {
+          invalidateUserCache(username);
+        } 
+        else 
+        {
+          logger.debug("cache of user {} is not invalidated, because admin and active flag has not changed", username);
+        }
+      } 
+      else 
+      {
+        invalidateUserCache(username);
       }
-
-      // check if this is neccessary
-      cache.clear();
     }
+  }
+  
+  private void invalidateUserCache(final String username){
+    logger.debug("invalidate cache of user {}, because user properties have changed", username);
+    cache.removeAll(new Filter<CacheKey>()
+    {
+      @Override
+      public boolean accept(CacheKey item)
+      {
+        return username.equalsIgnoreCase(item.username);
+      }
+    });
   }
 
   /**

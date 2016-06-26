@@ -53,6 +53,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import org.junit.Rule;
 import org.mockito.runners.MockitoJUnitRunner;
+import sonia.scm.Filter;
 import sonia.scm.HandlerEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
@@ -66,6 +67,7 @@ import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserEvent;
+import sonia.scm.user.UserModificationEvent;
 import sonia.scm.user.UserTestData;
 
 /**
@@ -118,7 +120,32 @@ public class AuthorizationCollectorTest {
     verify(cache, never()).clear();
     
     collector.onEvent(new UserEvent(user, HandlerEvent.CREATE));
-    verify(cache).clear();
+    verify(cache).removeAll(Mockito.any(Filter.class));
+  }
+  
+  /**
+   * Tests {@link AuthorizationCollector#onEvent(sonia.scm.user.UserEvent)} with modified user.
+   */
+  @Test  
+  public void testOnUserModificationEvent()
+  {
+    User user = UserTestData.createDent();
+    User userModified = UserTestData.createDent();
+    userModified.setDisplayName("Super Dent");
+    
+    collector.onEvent(new UserModificationEvent(userModified, user, HandlerEvent.BEFORE_CREATE));
+    verify(cache, never()).removeAll(Mockito.any(Filter.class));
+    
+    collector.onEvent(new UserModificationEvent(userModified, user, HandlerEvent.CREATE));
+    verify(cache, never()).removeAll(Mockito.any(Filter.class));
+    
+    userModified.setAdmin(true);
+    
+    collector.onEvent(new UserModificationEvent(userModified, user, HandlerEvent.BEFORE_CREATE));
+    verify(cache, never()).removeAll(Mockito.any(Filter.class));
+    
+    collector.onEvent(new UserModificationEvent(userModified, user, HandlerEvent.CREATE));
+    verify(cache).removeAll(Mockito.any(Filter.class));
   }
   
   /**
