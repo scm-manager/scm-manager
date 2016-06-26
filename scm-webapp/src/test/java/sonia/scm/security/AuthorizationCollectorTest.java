@@ -59,6 +59,7 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupEvent;
+import sonia.scm.group.GroupModificationEvent;
 import sonia.scm.group.GroupNames;
 import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
@@ -160,6 +161,25 @@ public class AuthorizationCollectorTest {
     verify(cache, never()).clear();
     
     collector.onEvent(new GroupEvent(group, HandlerEvent.CREATE));
+    verify(cache).clear();
+  }
+  
+  /**
+   * Tests {@link AuthorizationCollector#onEvent(sonia.scm.group.GroupEvent)} with modified groups.
+   */
+  @Test
+  public void testOnGroupModificationEvent()
+  {
+    Group group = new Group("xml", "base");
+    Group modifiedGroup = new Group("xml", "base");
+    collector.onEvent(new GroupModificationEvent(modifiedGroup, group, HandlerEvent.BEFORE_MODIFY));
+    verify(cache, never()).clear();
+    
+    collector.onEvent(new GroupModificationEvent(modifiedGroup, group, HandlerEvent.MODIFY));
+    verify(cache, never()).clear();
+    
+    modifiedGroup.add("test");
+    collector.onEvent(new GroupModificationEvent(modifiedGroup, group, HandlerEvent.MODIFY));
     verify(cache).clear();
   }
   

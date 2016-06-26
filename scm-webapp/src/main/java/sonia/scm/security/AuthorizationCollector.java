@@ -72,6 +72,8 @@ import sonia.scm.util.Util;
 import java.util.List;
 import java.util.Set;
 import sonia.scm.Filter;
+import sonia.scm.group.Group;
+import sonia.scm.group.GroupModificationEvent;
 import sonia.scm.repository.RepositoryModificationEvent;
 import sonia.scm.user.UserModificationEvent;
 
@@ -162,28 +164,29 @@ public class AuthorizationCollector
       if (event instanceof UserModificationEvent)
       {
         User beforeModification = ((UserModificationEvent) event).getItemBeforeModification();
-        if ( shouldCacheBeCleared(user, beforeModification) )
+        if (shouldCacheBeCleared(user, beforeModification))
         {
           invalidateUserCache(username);
-        } 
-        else 
+        }
+        else
         {
           logger.debug("cache of user {} is not invalidated, because admin and active flag has not changed", username);
         }
-      } 
-      else 
+      }
+      else
       {
         invalidateUserCache(username);
       }
     }
   }
-  
+
   private boolean shouldCacheBeCleared(User user, User beforeModification)
   {
     return user.isAdmin() != beforeModification.isAdmin() || user.isActive() != beforeModification.isActive();
   }
-  
-  private void invalidateUserCache(final String username){
+
+  private void invalidateUserCache(final String username)
+  {
     logger.debug("invalidate cache of user {}, because of a event which could change the permissions", username);
     cache.removeAll(new Filter<CacheKey>()
     {
@@ -223,26 +226,26 @@ public class AuthorizationCollector
         {
           logger.debug("clear cache, because a relevant field of repository {} has changed", repository.getName());
           cache.clear();
-        } 
-        else 
+        }
+        else
         {
           logger.debug(
-            "cache of repository {} is not invalidated, because non relevant fields have changed", 
+            "cache of repository {} is not invalidated, because non relevant fields have changed",
             repository.getName()
           );
         }
-      } 
-      else 
+      }
+      else
       {
         logger.debug("clear cache, because repository {} has changed", repository.getName());
         cache.clear();
       }
     }
   }
-  
+
   private boolean shouldCacheBeCleared(Repository repository, Repository beforeModification)
   {
-    return repository.isArchived() != beforeModification.isArchived() 
+    return repository.isArchived() != beforeModification.isArchived()
       || repository.isPublicReadable() != beforeModification.isPublicReadable()
       || ! repository.getPermissions().equals(beforeModification.getPermissions());
   }
@@ -271,7 +274,7 @@ public class AuthorizationCollector
         logger.debug("clears the whole cache, because global group permission {} has changed", permission.getId());
         cache.clear();
       }
-      else 
+      else
       {
         invalidateUserCache(permission.getName());
       }
@@ -279,24 +282,48 @@ public class AuthorizationCollector
   }
 
   /**
-   * Method description
+   * Invalidates the whole cache, if a group has changed. The cache get cleared for one of the following reasons:
+   * <ul>
+   * <li>New group created</li>
+   * <li>Group was removed</li>
+   * <li>Group members was modified</li>
+   * </ul>
    *
-   *
-   * @param event
+   * @param event group event
    */
   @Subscribe
   public void onEvent(GroupEvent event)
   {
     if (event.getEventType().isPost())
     {
-      if (logger.isDebugEnabled())
+      Group group = event.getItem();
+      if (event instanceof GroupModificationEvent)
       {
-        logger.debug("clear cache, because group {} has changed",
-          event.getItem().getId());
+        Group beforeModification = ((GroupModificationEvent) event).getItemBeforeModification();
+        if (shouldCacheBeCleared(group, beforeModification))
+        {
+          logger.debug("clear cache, because group {} has changed", group.getId());
+          cache.clear();
+        }
+        else
+        {
+          logger.debug(
+            "cache of group {} is not invalidated, because non relevant fields have changed",
+            group.getId()
+          );
+        }
       }
-
-      cache.clear();
+      else
+      {
+        logger.debug("clear cache, because group {} has changed", group.getId());
+        cache.clear();
+      }
     }
+  }
+
+  private boolean shouldCacheBeCleared(Group group, Group beforeModification)
+  {
+    return !group.getMembers().equals(beforeModification.getMembers());
   }
 
   /**
@@ -356,14 +383,14 @@ public class AuthorizationCollector
   {
     List<StoredAssignedPermission> globalPermissions =
       securitySystem.getPermissions(new Predicate<AssignedPermission>()
-    {
-
-      @Override
-      public boolean apply(AssignedPermission input)
       {
-        return isUserPermitted(user, groups, input);
-      }
-    });
+
+        @Override
+        public boolean apply(AssignedPermission input)
+        {
+          return isUserPermitted(user, groups, input);
+        }
+      });
 
     for (StoredAssignedPermission gp : globalPermissions)
     {
@@ -414,8 +441,8 @@ public class AuthorizationCollector
   private void collectRepositoryPermissions(Builder<Permission> builder,
     Repository repository, User user, GroupNames groups)
   {
-    List<sonia.scm.repository.Permission> repositoryPermissions =
-      repository.getPermissions();
+    List<sonia.scm.repository.Permission> repositoryPermissions
+      = repository.getPermissions();
 
     if (Util.isNotEmpty(repositoryPermissions))
     {
@@ -426,7 +453,7 @@ public class AuthorizationCollector
         {
           hasPermission = true;
           RepositoryPermission rp = new RepositoryPermission(repository,
-                                      permission.getType());
+            permission.getType());
 
           if (logger.isTraceEnabled())
           {
@@ -437,7 +464,7 @@ public class AuthorizationCollector
           builder.add(rp);
         }
       }
-      
+
       if (!hasPermission && logger.isTraceEnabled())
       {
         logger.trace("no permission for user {} defined at repository {}", user.getName(), repository.getName());
@@ -517,7 +544,7 @@ public class AuthorizationCollector
     PermissionObject perm)
   {
     //J-
-    return (perm.isGroupPermission() && groups.contains(perm.getName())) 
+    return (perm.isGroupPermission() && groups.contains(perm.getName()))
       || ((!perm.isGroupPermission()) && user.getName().equals(perm.getName()));
     //J+
   }
@@ -588,7 +615,6 @@ public class AuthorizationCollector
     /** Field description */
     private final String username;
   }
-
 
   //~--- fields ---------------------------------------------------------------
 
