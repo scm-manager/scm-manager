@@ -150,7 +150,7 @@ public class AuthorizationCollector
    * <li>User deleted</li>
    * </ul>
    *
-   * @param event
+   * @param event user event
    */
   @Subscribe
   public void onEvent(UserEvent event)
@@ -196,10 +196,14 @@ public class AuthorizationCollector
   }
 
   /**
-   * Method description
+   * Invalidates the whole cache, if a repository has changed. The cache get cleared for one of the following reasons:
+   * <ul>
+   * <li>New repository created</li>
+   * <li>Repository was removed</li>
+   * <li>Archived, Public readable or permission field of the repository was modified</li>
+   * </ul>
    *
-   *
-   * @param event
+   * @param event repository event
    */
   @Subscribe
   public void onEvent(RepositoryEvent event)
