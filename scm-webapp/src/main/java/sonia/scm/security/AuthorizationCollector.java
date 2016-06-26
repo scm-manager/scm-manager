@@ -184,7 +184,7 @@ public class AuthorizationCollector
   }
   
   private void invalidateUserCache(final String username){
-    logger.debug("invalidate cache of user {}, because user properties have changed", username);
+    logger.debug("invalidate cache of user {}, because of a event which could change the permissions", username);
     cache.removeAll(new Filter<CacheKey>()
     {
       @Override
@@ -248,10 +248,11 @@ public class AuthorizationCollector
   }
 
   /**
-   * Method description
+   * Invalidates the whole cache if a group permission has changed and invalidates the cached entries of a user, if a
+   * user permission has changed.
    *
    *
-   * @param event
+   * @param event permission event
    */
   @Subscribe
   public void onEvent(StoredAssignedPermissionEvent event)
@@ -264,7 +265,16 @@ public class AuthorizationCollector
           event.getPermission().getId());
       }
 
-      cache.clear();
+      StoredAssignedPermission permission = event.getPermission();
+      if (permission.isGroupPermission())
+      {
+        logger.debug("clears the whole cache, because global group permission {} has changed", permission.getId());
+        cache.clear();
+      }
+      else 
+      {
+        invalidateUserCache(permission.getName());
+      }
     }
   }
 

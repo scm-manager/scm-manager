@@ -211,11 +211,25 @@ public class AuthorizationCollectorTest {
   @Test
   public void testOnStoredAssignedPermissionEvent()
   {
-    StoredAssignedPermission permission = new StoredAssignedPermission();
-    collector.onEvent(new StoredAssignedPermissionEvent(HandlerEvent.BEFORE_CREATE, permission));
+    StoredAssignedPermission groupPermission = new StoredAssignedPermission(
+      "123", new AssignedPermission("_authenticated", true, "repository:read:*")
+    );
+    collector.onEvent(new StoredAssignedPermissionEvent(HandlerEvent.BEFORE_CREATE, groupPermission));
     verify(cache, never()).clear();
     
-    collector.onEvent(new StoredAssignedPermissionEvent(HandlerEvent.CREATE, permission));
+    collector.onEvent(new StoredAssignedPermissionEvent(HandlerEvent.CREATE, groupPermission));
+    verify(cache).clear();
+    
+    
+    StoredAssignedPermission userPermission = new StoredAssignedPermission(
+      "123", new AssignedPermission("trillian", false, "repository:read:*")
+    );
+    collector.onEvent(new StoredAssignedPermissionEvent(HandlerEvent.BEFORE_CREATE, userPermission));
+    verify(cache, never()).removeAll(Mockito.any(Filter.class));
+    verify(cache).clear();
+    
+    collector.onEvent(new StoredAssignedPermissionEvent(HandlerEvent.CREATE, userPermission));
+    verify(cache).removeAll(Mockito.any(Filter.class));
     verify(cache).clear();
   }
   
