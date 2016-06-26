@@ -64,6 +64,7 @@ import sonia.scm.repository.PermissionType;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryEvent;
+import sonia.scm.repository.RepositoryModificationEvent;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserEvent;
@@ -173,6 +174,34 @@ public class AuthorizationCollectorTest {
     verify(cache, never()).clear();
     
     collector.onEvent(new RepositoryEvent(repository, HandlerEvent.CREATE));
+    verify(cache).clear();
+  }
+  
+ /**
+   * Tests {@link AuthorizationCollector#onEvent(sonia.scm.repository.RepositoryEvent)} with modified repository.
+   */
+  @Test
+  public void testOnRepositoryModificationEvent()
+  {
+    Repository repositoryModified = RepositoryTestData.createHeartOfGold();
+    repositoryModified.setName("test123");
+    repositoryModified.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test")));
+    
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    repository.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test")));
+    
+    collector.onEvent(new RepositoryModificationEvent(repositoryModified, repository, HandlerEvent.BEFORE_CREATE));
+    verify(cache, never()).clear();
+    
+    collector.onEvent(new RepositoryModificationEvent(repositoryModified, repository, HandlerEvent.CREATE));
+    verify(cache, never()).clear();
+    
+    repositoryModified.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test")));
+    collector.onEvent(new RepositoryModificationEvent(repositoryModified, repository, HandlerEvent.CREATE));
+    verify(cache, never()).clear();
+    
+    repositoryModified.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test123")));
+    collector.onEvent(new RepositoryModificationEvent(repositoryModified, repository, HandlerEvent.CREATE));
     verify(cache).clear();
   }
   

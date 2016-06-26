@@ -72,6 +72,7 @@ import sonia.scm.util.Util;
 import java.util.List;
 import java.util.Set;
 import sonia.scm.Filter;
+import sonia.scm.repository.RepositoryModificationEvent;
 import sonia.scm.user.UserModificationEvent;
 
 /**
@@ -161,7 +162,7 @@ public class AuthorizationCollector
       if (event instanceof UserModificationEvent)
       {
         User beforeModification = ((UserModificationEvent) event).getItemBeforeModification();
-        if ( user.isAdmin() != beforeModification.isAdmin() || user.isActive() != beforeModification.isActive() )
+        if ( shouldCacheBeCleared(user, beforeModification) )
         {
           invalidateUserCache(username);
         } 
@@ -175,6 +176,11 @@ public class AuthorizationCollector
         invalidateUserCache(username);
       }
     }
+  }
+  
+  private boolean shouldCacheBeCleared(User user, User beforeModification)
+  {
+    return user.isAdmin() != beforeModification.isAdmin() || user.isActive() != beforeModification.isActive();
   }
   
   private void invalidateUserCache(final String username){
@@ -200,14 +206,41 @@ public class AuthorizationCollector
   {
     if (event.getEventType().isPost())
     {
+      Repository repository = event.getItem();
       if (logger.isDebugEnabled())
       {
-        logger.debug("clear cache, because repository {} has changed",
-          event.getItem().getName());
+        logger.debug("clear cache, because repository {} has changed", repository.getName());
       }
 
-      cache.clear();
+      if (event instanceof RepositoryModificationEvent)
+      {
+        Repository beforeModification = ((RepositoryModificationEvent) event).getItemBeforeModification();
+        if (shouldCacheBeCleared(repository, beforeModification))
+        {
+          logger.debug("clear cache, because a relevant field of repository {} has changed", repository.getName());
+          cache.clear();
+        } 
+        else 
+        {
+          logger.debug(
+            "cache of repository {} is not invalidated, because non relevant fields have changed", 
+            repository.getName()
+          );
+        }
+      } 
+      else 
+      {
+        logger.debug("clear cache, because repository {} has changed", repository.getName());
+        cache.clear();
+      }
     }
+  }
+  
+  private boolean shouldCacheBeCleared(Repository repository, Repository beforeModification)
+  {
+    return repository.isArchived() != beforeModification.isArchived() 
+      || repository.isPublicReadable() != beforeModification.isPublicReadable()
+      || ! repository.getPermissions().equals(beforeModification.getPermissions());
   }
 
   /**
