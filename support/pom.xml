@@ -6,13 +6,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>1.48-SNAPSHOT</version>
+    <version>1.48</version>
   </parent>
 
   <groupId>sonia.scm.support</groupId>
   <artifactId>scm-support</artifactId>
   <packaging>pom</packaging>
-  <version>1.48-SNAPSHOT</version>
+  <version>1.48</version>
   <name>scm-support</name>
 
   <modules>
