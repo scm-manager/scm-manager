@@ -35,6 +35,7 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -85,6 +86,9 @@ import sonia.scm.user.UserModificationEvent;
 public class AuthorizationCollector
 {
 
+  // TODO move to util class
+  private static final String SEPARATOR = System.getProperty("line.separator", "\n");
+  
   /** Field description */
   private static final String CACHE_NAME = "sonia.cache.authorizing";
 
@@ -359,8 +363,35 @@ public class AuthorizationCollector
     {
       logger.trace("retrieve AuthorizationInfo for user {} from cache", user.getName());
     }
+    
+    if (logger.isTraceEnabled()){
+      logger.trace(createAuthorizationSummary(user, groupNames, info));
+    }
 
     return info;
+  }
+  
+  private String createAuthorizationSummary(User user, GroupNames groups, AuthorizationInfo authzInfo)
+  {
+    StringBuilder buffer = new StringBuilder("authorization summary: ");
+    buffer.append(SEPARATOR).append("username   : ").append(user.getName());
+    buffer.append(SEPARATOR).append("groups     : ");
+    append(buffer, groups);
+    buffer.append(SEPARATOR).append("roles      : ");
+    append(buffer, authzInfo.getRoles());
+    buffer.append(SEPARATOR).append("permissions:");
+    append(buffer, authzInfo.getStringPermissions());
+    append(buffer, authzInfo.getObjectPermissions());
+    return buffer.toString();
+  }
+  
+  private void append(StringBuilder buffer, Iterable<?> iterable){
+    if (iterable != null){
+      for ( Object item : iterable )
+      {
+        buffer.append(SEPARATOR).append(" - ").append(item);
+      }      
+    }
   }
 
   /**

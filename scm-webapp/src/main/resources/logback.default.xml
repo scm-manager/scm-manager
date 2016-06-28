@@ -52,6 +52,9 @@
   
   <logger name="sonia.scm" level="TRACE" />
   
+  <logger name="sonia.scm.security.AuthorizationCollector" level="DEBUG" />
+  <logger name="sonia.scm.web.filter.AutoLoginFilter" level="DEBUG" />
+  
   <!-- suppress massive gzip logging -->
   <logger name="sonia.scm.filter.GZipFilter" level="WARN" />
   <logger name="sonia.scm.filter.GZipResponseStream" level="WARN" />
