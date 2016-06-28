@@ -918,7 +918,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     if (!isPermitted(repository, PermissionType.OWNER))
     {
       throw new ScmSecurityException(
-        "owner permission is required, access denied");
+        "owner permission is required, owner access to repository " + repository.getName() + " denied"
+      );
     }
   }
 
@@ -933,7 +934,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager
     if (!isReader(repository))
     {
       throw new ScmSecurityException(
-        "reader permission is required, access denied");
+        "reader permission is required, access to repository " + repository.getName() + " denied"
+      );
     }
   }
 
