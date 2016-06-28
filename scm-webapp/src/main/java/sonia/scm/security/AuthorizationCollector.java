@@ -166,15 +166,17 @@ public class AuthorizationCollector
         User beforeModification = ((UserModificationEvent) event).getItemBeforeModification();
         if (shouldCacheBeCleared(user, beforeModification))
         {
+          logger.debug("invalidate cache of user {}, because of a permission relevant field has changed", username);
           invalidateUserCache(username);
         }
         else
         {
-          logger.debug("cache of user {} is not invalidated, because admin and active flag has not changed", username);
+          logger.debug("cache of user {} is not invalidated, because no permission relevant field has changed", username);
         }
       }
       else
       {
+        logger.debug("invalidate cache of user {}, because of a user event", username);
         invalidateUserCache(username);
       }
     }
@@ -187,7 +189,6 @@ public class AuthorizationCollector
 
   private void invalidateUserCache(final String username)
   {
-    logger.debug("invalidate cache of user {}, because of a event which could change the permissions", username);
     cache.removeAll(new Filter<CacheKey>()
     {
       @Override
@@ -260,8 +261,7 @@ public class AuthorizationCollector
     {
       if (logger.isDebugEnabled())
       {
-        logger.debug("clear cache, because permission {} has changed",
-          event.getPermission().getId());
+
       }
 
       StoredAssignedPermission permission = event.getPermission();
@@ -272,6 +272,10 @@ public class AuthorizationCollector
       }
       else
       {
+        logger.debug(
+            "clear cache of user {}, because permission {} has changed", 
+            permission.getName(), event.getPermission().getId()
+        );
         invalidateUserCache(permission.getName());
       }
     }
@@ -347,18 +351,13 @@ public class AuthorizationCollector
 
     if (info == null)
     {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("collect AuthorizationInfo for user {}", user.getName());
-      }
-
+      logger.trace("collect AuthorizationInfo for user {}", user.getName());
       info = createAuthorizationInfo(user, groupNames);
       cache.put(cacheKey, info);
     }
     else if (logger.isTraceEnabled())
     {
-      logger.trace("retrieve AuthorizationInfo for user {} from cache",
-        user.getName());
+      logger.trace("retrieve AuthorizationInfo for user {} from cache", user.getName());
     }
 
     return info;
@@ -518,7 +517,6 @@ public class AuthorizationCollector
     }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
-
     info.addObjectPermissions(permissions);
 
     return info;
