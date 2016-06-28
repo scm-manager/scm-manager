@@ -41,6 +41,7 @@ Sonia.panel.SyntaxHighlighterPanel = Ext.extend(Ext.Panel, {
     fileName: 'shBrushAppleScript.js'
   },{
     name: 'Bash/shell',
+    brush: 'shell',
     aliases: ['sh', 'bash', 'shell'],
     fileName: 'shBrushBash.js'
   },{
