@@ -223,6 +223,18 @@ public class AuthorizationCollectorTest {
     repositoryModified.setPermissions(Lists.newArrayList(new sonia.scm.repository.Permission("test123")));
     collector.onEvent(new RepositoryModificationEvent(repositoryModified, repository, HandlerEvent.CREATE));
     verify(cache).clear();
+    
+    repositoryModified.setPermissions(
+      Lists.newArrayList(new sonia.scm.repository.Permission("test", PermissionType.READ, true))
+    );
+    collector.onEvent(new RepositoryModificationEvent(repositoryModified, repository, HandlerEvent.CREATE));
+    verify(cache, times(2)).clear();
+    
+    repositoryModified.setPermissions(
+      Lists.newArrayList(new sonia.scm.repository.Permission("test", PermissionType.WRITE))
+    );
+    collector.onEvent(new RepositoryModificationEvent(repositoryModified, repository, HandlerEvent.CREATE));
+    verify(cache, times(3)).clear();
   }
   
   /**

@@ -35,7 +35,6 @@ package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
@@ -180,7 +179,7 @@ public class AuthorizationCollector
       }
       else
       {
-        logger.debug("invalidate cache of user {}, because of a user event", username);
+        logger.debug("invalidate cache of user {}, because of user {} event", username, event.getEventType());
         invalidateUserCache(username);
       }
     }
@@ -231,14 +230,14 @@ public class AuthorizationCollector
         else
         {
           logger.debug(
-            "cache of repository {} is not invalidated, because non relevant fields have changed",
+            "cache is not invalidated, because non relevant field of repository {} has changed",
             repository.getName()
           );
         }
       }
       else
       {
-        logger.debug("clear cache, because repository {} has changed", repository.getName());
+        logger.debug("clear cache, received {} event of repository {}", event.getEventType(), repository.getName());
         cache.clear();
       }
     }
@@ -271,7 +270,7 @@ public class AuthorizationCollector
       StoredAssignedPermission permission = event.getPermission();
       if (permission.isGroupPermission())
       {
-        logger.debug("clears the whole cache, because global group permission {} has changed", permission.getId());
+        logger.debug("clear cache, because global group permission {} has changed", permission.getId());
         cache.clear();
       }
       else
@@ -312,14 +311,14 @@ public class AuthorizationCollector
         else
         {
           logger.debug(
-            "cache of group {} is not invalidated, because non relevant fields have changed",
+            "cache is not invalidated, because non relevant field of group {} has changed",
             group.getId()
           );
         }
       }
       else
       {
-        logger.debug("clear cache, because group {} has changed", group.getId());
+        logger.debug("clear cache, received group event {} for group {}", event.getEventType(), group.getId());
         cache.clear();
       }
     }
@@ -363,35 +362,8 @@ public class AuthorizationCollector
     {
       logger.trace("retrieve AuthorizationInfo for user {} from cache", user.getName());
     }
-    
-    if (logger.isTraceEnabled()){
-      logger.trace(createAuthorizationSummary(user, groupNames, info));
-    }
 
     return info;
-  }
-  
-  private String createAuthorizationSummary(User user, GroupNames groups, AuthorizationInfo authzInfo)
-  {
-    StringBuilder buffer = new StringBuilder("authorization summary: ");
-    buffer.append(SEPARATOR).append("username   : ").append(user.getName());
-    buffer.append(SEPARATOR).append("groups     : ");
-    append(buffer, groups);
-    buffer.append(SEPARATOR).append("roles      : ");
-    append(buffer, authzInfo.getRoles());
-    buffer.append(SEPARATOR).append("permissions:");
-    append(buffer, authzInfo.getStringPermissions());
-    append(buffer, authzInfo.getObjectPermissions());
-    return buffer.toString();
-  }
-  
-  private void append(StringBuilder buffer, Iterable<?> iterable){
-    if (iterable != null){
-      for ( Object item : iterable )
-      {
-        buffer.append(SEPARATOR).append(" - ").append(item);
-      }      
-    }
   }
 
   /**
@@ -549,8 +521,35 @@ public class AuthorizationCollector
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
     info.addObjectPermissions(permissions);
-
+    
+    if (logger.isTraceEnabled()){
+      logger.trace(createAuthorizationSummary(user, groups, info));
+    }
+    
     return info;
+  }
+  
+  private String createAuthorizationSummary(User user, GroupNames groups, AuthorizationInfo authzInfo)
+  {
+    StringBuilder buffer = new StringBuilder("authorization summary: ");
+    buffer.append(SEPARATOR).append("username   : ").append(user.getName());
+    buffer.append(SEPARATOR).append("groups     : ");
+    append(buffer, groups);
+    buffer.append(SEPARATOR).append("roles      : ");
+    append(buffer, authzInfo.getRoles());
+    buffer.append(SEPARATOR).append("permissions:");
+    append(buffer, authzInfo.getStringPermissions());
+    append(buffer, authzInfo.getObjectPermissions());
+    return buffer.toString();
+  }
+  
+  private void append(StringBuilder buffer, Iterable<?> iterable){
+    if (iterable != null){
+      for ( Object item : iterable )
+      {
+        buffer.append(SEPARATOR).append(" - ").append(item);
+      }      
+    }
   }
 
   //~--- get methods ----------------------------------------------------------
