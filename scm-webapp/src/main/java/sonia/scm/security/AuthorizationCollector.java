@@ -262,11 +262,6 @@ public class AuthorizationCollector
   {
     if (event.getEventType().isPost())
     {
-      if (logger.isDebugEnabled())
-      {
-
-      }
-
       StoredAssignedPermission permission = event.getPermission();
       if (permission.isGroupPermission())
       {
