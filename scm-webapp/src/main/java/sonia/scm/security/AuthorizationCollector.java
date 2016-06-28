@@ -214,11 +214,7 @@ public class AuthorizationCollector
     if (event.getEventType().isPost())
     {
       Repository repository = event.getItem();
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("clear cache, because repository {} has changed", repository.getName());
-      }
-
+      
       if (event instanceof RepositoryModificationEvent)
       {
         Repository beforeModification = ((RepositoryModificationEvent) event).getItemBeforeModification();
