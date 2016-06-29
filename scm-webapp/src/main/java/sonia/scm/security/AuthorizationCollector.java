@@ -85,6 +85,9 @@ import sonia.scm.user.UserModificationEvent;
 public class AuthorizationCollector
 {
 
+  // TODO move to util class
+  private static final String SEPARATOR = System.getProperty("line.separator", "\n");
+  
   /** Field description */
   private static final String CACHE_NAME = "sonia.cache.authorizing";
 
@@ -166,15 +169,17 @@ public class AuthorizationCollector
         User beforeModification = ((UserModificationEvent) event).getItemBeforeModification();
         if (shouldCacheBeCleared(user, beforeModification))
         {
+          logger.debug("invalidate cache of user {}, because of a permission relevant field has changed", username);
           invalidateUserCache(username);
         }
         else
         {
-          logger.debug("cache of user {} is not invalidated, because admin and active flag has not changed", username);
+          logger.debug("cache of user {} is not invalidated, because no permission relevant field has changed", username);
         }
       }
       else
       {
+        logger.debug("invalidate cache of user {}, because of user {} event", username, event.getEventType());
         invalidateUserCache(username);
       }
     }
@@ -187,7 +192,6 @@ public class AuthorizationCollector
 
   private void invalidateUserCache(final String username)
   {
-    logger.debug("invalidate cache of user {}, because of a event which could change the permissions", username);
     cache.removeAll(new Filter<CacheKey>()
     {
       @Override
@@ -214,11 +218,7 @@ public class AuthorizationCollector
     if (event.getEventType().isPost())
     {
       Repository repository = event.getItem();
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("clear cache, because repository {} has changed", repository.getName());
-      }
-
+      
       if (event instanceof RepositoryModificationEvent)
       {
         Repository beforeModification = ((RepositoryModificationEvent) event).getItemBeforeModification();
@@ -230,14 +230,14 @@ public class AuthorizationCollector
         else
         {
           logger.debug(
-            "cache of repository {} is not invalidated, because non relevant fields have changed",
+            "cache is not invalidated, because non relevant field of repository {} has changed",
             repository.getName()
           );
         }
       }
       else
       {
-        logger.debug("clear cache, because repository {} has changed", repository.getName());
+        logger.debug("clear cache, received {} event of repository {}", event.getEventType(), repository.getName());
         cache.clear();
       }
     }
@@ -262,20 +262,18 @@ public class AuthorizationCollector
   {
     if (event.getEventType().isPost())
     {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("clear cache, because permission {} has changed",
-          event.getPermission().getId());
-      }
-
       StoredAssignedPermission permission = event.getPermission();
       if (permission.isGroupPermission())
       {
-        logger.debug("clears the whole cache, because global group permission {} has changed", permission.getId());
+        logger.debug("clear cache, because global group permission {} has changed", permission.getId());
         cache.clear();
       }
       else
       {
+        logger.debug(
+            "clear cache of user {}, because permission {} has changed", 
+            permission.getName(), event.getPermission().getId()
+        );
         invalidateUserCache(permission.getName());
       }
     }
@@ -308,14 +306,14 @@ public class AuthorizationCollector
         else
         {
           logger.debug(
-            "cache of group {} is not invalidated, because non relevant fields have changed",
+            "cache is not invalidated, because non relevant field of group {} has changed",
             group.getId()
           );
         }
       }
       else
       {
-        logger.debug("clear cache, because group {} has changed", group.getId());
+        logger.debug("clear cache, received group event {} for group {}", event.getEventType(), group.getId());
         cache.clear();
       }
     }
@@ -351,18 +349,13 @@ public class AuthorizationCollector
 
     if (info == null)
     {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("collect AuthorizationInfo for user {}", user.getName());
-      }
-
+      logger.trace("collect AuthorizationInfo for user {}", user.getName());
       info = createAuthorizationInfo(user, groupNames);
       cache.put(cacheKey, info);
     }
     else if (logger.isTraceEnabled())
     {
-      logger.trace("retrieve AuthorizationInfo for user {} from cache",
-        user.getName());
+      logger.trace("retrieve AuthorizationInfo for user {} from cache", user.getName());
     }
 
     return info;
@@ -522,10 +515,36 @@ public class AuthorizationCollector
     }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(roles);
-
     info.addObjectPermissions(permissions);
-
+    
+    if (logger.isTraceEnabled()){
+      logger.trace(createAuthorizationSummary(user, groups, info));
+    }
+    
     return info;
+  }
+  
+  private String createAuthorizationSummary(User user, GroupNames groups, AuthorizationInfo authzInfo)
+  {
+    StringBuilder buffer = new StringBuilder("authorization summary: ");
+    buffer.append(SEPARATOR).append("username   : ").append(user.getName());
+    buffer.append(SEPARATOR).append("groups     : ");
+    append(buffer, groups);
+    buffer.append(SEPARATOR).append("roles      : ");
+    append(buffer, authzInfo.getRoles());
+    buffer.append(SEPARATOR).append("permissions:");
+    append(buffer, authzInfo.getStringPermissions());
+    append(buffer, authzInfo.getObjectPermissions());
+    return buffer.toString();
+  }
+  
+  private void append(StringBuilder buffer, Iterable<?> iterable){
+    if (iterable != null){
+      for ( Object item : iterable )
+      {
+        buffer.append(SEPARATOR).append(" - ").append(item);
+      }      
+    }
   }
 
   //~--- get methods ----------------------------------------------------------

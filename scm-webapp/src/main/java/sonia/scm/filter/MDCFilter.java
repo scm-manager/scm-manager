@@ -72,6 +72,10 @@ public class MDCFilter extends HttpFilter
   /** url of the current request */
   @VisibleForTesting
   static final String MDC_REQUEST_URI = "request_uri";
+  
+  /** request method */
+  @VisibleForTesting
+  static final String MDC_REQUEST_METHOD = "request_method";
 
   /** Field description */
   @VisibleForTesting
@@ -98,6 +102,7 @@ public class MDCFilter extends HttpFilter
     MDC.put(MDC_USERNAME, getUsername());
     MDC.put(MDC_CLIEN_IP, request.getRemoteAddr());
     MDC.put(MDC_CLIEN_HOST, request.getRemoteHost());
+    MDC.put(MDC_REQUEST_METHOD, request.getMethod());
     MDC.put(MDC_REQUEST_URI, request.getRequestURI());
 
     try
@@ -109,6 +114,7 @@ public class MDCFilter extends HttpFilter
       MDC.remove(MDC_USERNAME);
       MDC.remove(MDC_CLIEN_IP);
       MDC.remove(MDC_CLIEN_HOST);
+      MDC.remove(MDC_REQUEST_METHOD);
       MDC.remove(MDC_REQUEST_URI);
     }
   }

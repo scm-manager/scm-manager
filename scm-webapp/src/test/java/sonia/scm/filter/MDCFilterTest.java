@@ -87,6 +87,7 @@ public class MDCFilterTest extends AbstractTestBase {
     when(request.getRequestURI()).thenReturn("api/v1/repositories");
     when(request.getRemoteAddr()).thenReturn("127.0.0.1");
     when(request.getRemoteHost()).thenReturn("localhost");
+    when(request.getMethod()).thenReturn("GET");
     
     MDCCapturingFilterChain chain = new MDCCapturingFilterChain();
     filter.doFilter(request, response, chain);
@@ -96,6 +97,7 @@ public class MDCFilterTest extends AbstractTestBase {
     assertEquals("api/v1/repositories", chain.ctx.get(MDCFilter.MDC_REQUEST_URI));
     assertEquals("127.0.0.1", chain.ctx.get(MDCFilter.MDC_CLIEN_IP));
     assertEquals("localhost", chain.ctx.get(MDCFilter.MDC_CLIEN_HOST));
+    assertEquals("GET", chain.ctx.get(MDCFilter.MDC_REQUEST_METHOD));
   }
   
   /**
