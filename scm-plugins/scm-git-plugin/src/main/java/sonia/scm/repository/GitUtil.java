@@ -264,7 +264,7 @@ public final class GitUtil
   {
     if (formatter != null)
     {
-      formatter.release();
+      formatter.close();
     }
   }
 
@@ -278,7 +278,7 @@ public final class GitUtil
   {
     if (walk != null)
     {
-      walk.release();
+      walk.close();
     }
   }
 
@@ -292,7 +292,7 @@ public final class GitUtil
   {
     if (walk != null)
     {
-      walk.release();
+      walk.close();;
     }
   }
 
