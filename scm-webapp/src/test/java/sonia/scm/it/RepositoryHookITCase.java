@@ -57,6 +57,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.client.api.RepositoryClient;
 import sonia.scm.repository.client.api.RepositoryClientFactory;
+import sonia.scm.util.IOUtil;
 
 /**
  * Integration tests for repository hooks.
@@ -198,10 +199,10 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
     Collection<String[]> params = Lists.newArrayList();
     params.add(new String[] { "git" });
     // params.add(new String[] { "svn" });
-    // if (IOUtil.search("hg") != null)
-    // {
-    //   params.add(new String[] { "hg" });
-    // }
+     if (IOUtil.search("hg") != null)
+     {
+       params.add(new String[] { "hg" });
+     }
     return params;
   }
   
