@@ -61,7 +61,10 @@
   <logger name="sonia.scm.filter.GZipResponseStream" level="WARN" />
   
   <logger name="sonia.scm.util.ServiceUtil" level="WARN" />
+  <logger name="sonia.scm.ScmEventBusModule" level="DEBUG" />
+  <logger name="sonia.scm.event.GuavaScmEventBus" level="DEBUG" />
   <logger name="sonia.scm.plugin.ext.DefaultAnnotationScanner" level="INFO" />
+  <logger name="sonia.scm.security.ConfigurableLoginAttemptHandler" level="DEBUG" />
   
   <logger name="sonia.scm.web.cgi.DefaultCGIExecutor" level="DEBUG" />
   

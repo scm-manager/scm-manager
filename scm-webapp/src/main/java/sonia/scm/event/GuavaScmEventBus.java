@@ -123,7 +123,7 @@ public class GuavaScmEventBus extends ScmEventBus
   @Override
   public void register(Object object, boolean async)
   {
-    logger.debug("register {} to event bus, async = {}", object, async);
+    logger.trace("register {} to event bus, async = {}", object, async);
 
     if (async)
     {
@@ -144,7 +144,7 @@ public class GuavaScmEventBus extends ScmEventBus
   @Override
   public void unregister(Object object)
   {
-    logger.debug("unregister {} from event bus", object);
+    logger.trace("unregister {} from event bus", object);
     unregister(asyncEventBus, object);
     unregister(eventBus, object);
   }
