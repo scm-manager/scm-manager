@@ -59,6 +59,7 @@ import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import sonia.scm.debug.DebugModule;
 import sonia.scm.repository.HealthCheckContextListener;
 import sonia.scm.schedule.Scheduler;
 
@@ -198,6 +199,10 @@ public class ScmContextListener extends GuiceServletContextListener
     moduleList.add(new ScmSecurityModule(servletContext));
     moduleList.addAll(pluginLoader.getModuleSet());
     moduleList.addAll(overrides.getModules());
+    
+    if (SCMContext.getContext().getStage() == Stage.DEVELOPMENT){
+      moduleList.add(new DebugModule());
+    }
 
     return Guice.createInjector(moduleList);
   }

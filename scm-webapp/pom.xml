@@ -644,6 +644,10 @@
                   <name>scm.home</name>
                   <value>target/scm-it</value>
                 </systemProperty>
+                <systemProperty>
+                  <name>scm.stage</name>
+                  <value>${scm.stage}</value>
+                </systemProperty>
               </systemProperties>
               <connectors>
                 <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">

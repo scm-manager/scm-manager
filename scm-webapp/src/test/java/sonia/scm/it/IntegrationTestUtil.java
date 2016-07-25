@@ -76,9 +76,12 @@ public final class IntegrationTestUtil
 
   /** Field description */
   public static final String ADMIN_USERNAME = "scmadmin";
-
-  /** Field description */
-  public static final String BASE_URL = "http://localhost:8081/scm/api/rest/";
+  
+  /** scm-manager base url */
+  public static final String BASE_URL = "http://localhost:8081/scm/";
+  
+  /** scm-manager base url for the rest api */
+  public static final String REST_BASE_URL = BASE_URL.concat("api/rest/");
 
   /** Field description */
   public static final String EXTENSION = ".xml";
@@ -253,7 +256,7 @@ public final class IntegrationTestUtil
    */
   public static String createResourceUrl(String url)
   {
-    return BASE_URL.concat(url).concat(EXTENSION);
+    return REST_BASE_URL.concat(url).concat(EXTENSION);
   }
 
   /**
