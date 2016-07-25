@@ -146,7 +146,7 @@
         <configuration>
           <signature>
             <groupId>org.codehaus.mojo.signature</groupId>
-            <artifactId>java16</artifactId>
+            <artifactId>java17</artifactId>
             <version>1.0</version>
           </signature>
         </configuration>
@@ -424,7 +424,7 @@
     <shiro.version>1.2.5</shiro.version>
 
     <!-- repostitory libraries -->
-    <jgit.version>3.7.1.201504261725-r-scm1</jgit.version>
+    <jgit.version>4.4.0.201606070830-r-scm1</jgit.version>
     <svnkit.version>1.8.5-scm2</svnkit.version>
 
     <!-- util libraries -->
@@ -432,7 +432,7 @@
     <quartz.version>2.2.3</quartz.version>
 
     <!-- build properties -->
-    <project.build.javaLevel>1.6</project.build.javaLevel>
+    <project.build.javaLevel>1.7</project.build.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
     <jdk.classifier />

@@ -476,19 +476,10 @@ public class GitRepositoryClient extends AbstractRepositoryClient
   private RevCommit parseCommit(Ref branch)
     throws MissingObjectException, IncorrectObjectTypeException, IOException
   {
-    final RevWalk rw = new RevWalk(repository);
-    final RevCommit commit;
-
-    try
+    try (RevWalk rw = new RevWalk(repository))
     {
-      commit = rw.parseCommit(branch.getObjectId());
+      return rw.parseCommit(branch.getObjectId());
     }
-    finally
-    {
-      rw.release();
-    }
-
-    return commit;
   }
 
   /**
