@@ -50,13 +50,13 @@ public final class DebugService
   private final Multimap<String,DebugHookData> receivedHooks = LinkedListMultimap.create();
 
   /**
+   * Stores {@link DebugHookData} for the given repository.
    * 
    * @param repository repository id
    * @param hookData received hook data
    */
-  public void put(String repository, DebugHookData hookData)
+  void put(String repository, DebugHookData hookData)
   {
-    SecurityUtils.getSubject().checkRole(Role.ADMIN);
     receivedHooks.put(repository, hookData);
   }
   
