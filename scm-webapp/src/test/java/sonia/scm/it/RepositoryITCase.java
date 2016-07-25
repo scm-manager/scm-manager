@@ -35,8 +35,7 @@ package sonia.scm.it;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.AfterClass;
-import org.junit.Ignore;
+import com.google.common.collect.Lists;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -48,13 +47,13 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.*;
 
 import static sonia.scm.it.IntegrationTestUtil.*;
 import static sonia.scm.it.RepositoryITUtil.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
 import com.sun.jersey.api.client.WebResource;
@@ -62,6 +61,8 @@ import com.sun.jersey.api.client.WebResource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import org.junit.After;
+import sonia.scm.util.IOUtil;
 
 /**
  *
@@ -88,13 +89,9 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    * Method description
    *
    */
-  @AfterClass
-  public static void cleanup()
+  @After
+  public void cleanup()
   {
-    Client client = createClient();
-
-    authenticateAdmin(client);
-
     Collection<Repository> repositories =
       createResource(client,
         "repositories").get(new GenericType<Collection<Repository>>() {}
@@ -120,18 +117,15 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   @Parameters
   public static Collection<String[]> createParameters()
   {
-    Collection<String[]> params = new ArrayList<String[]>();
+    Collection<String[]> params = Lists.newArrayList();
 
     params.add(new String[] { "git" });
-
-    /*
-     * params.add(new String[] { "svn" });
-     *
-     * if (IOUtil.search("hg") != null)
-     * {
-     * params.add(new String[] { "hg" });
-     * }
-     */
+    params.add(new String[] { "svn" });
+    
+    if (IOUtil.search("hg") != null)
+    {
+      params.add(new String[] { "hg" });
+    }
 
     return params;
   }
@@ -141,7 +135,6 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    *
    */
   @Test
-  @Ignore
   public void create()
   {
     Repository repository =
@@ -155,7 +148,6 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    *
    */
   @Test
-  @Ignore
   public void delete()
   {
     Repository repository =
@@ -169,15 +161,18 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    * Method description
    *
    */
-
-  // @Test
+  @Test
   public void doubleCreate()
   {
     Repository repository = RepositoryTestData.create42Puzzle(repositoryType);
 
     repository = createRepository(client, repository);
-
-    // repository = createRepository(repository);
+    
+    WebResource wr = createResource(client, "repositories");
+    ClientResponse response = wr.post(ClientResponse.class, repository);
+    
+    assertNotNull(response);
+    assertThat(response.getStatus(), not(lessThanOrEqualTo(400)));
   }
 
   /**
@@ -185,7 +180,6 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
    *
    */
   @Test
-  @Ignore
   public void modify()
   {
     Repository repository =
@@ -259,5 +253,5 @@ public class RepositoryITCase extends AbstractAdminITCaseBase
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String repositoryType;
+  private final String repositoryType;
 }
