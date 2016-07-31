@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,33 +28,44 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
-
-
 package sonia.scm.selenium;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.selenium.page.Pages;
-import sonia.scm.selenium.page.MainPage;
-import sonia.scm.selenium.page.LoginPage;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 /**
- * Authentication related selenium integration tests.
- * 
+ * Base class for selenium integration tests.
+ *
  * @author Sebastian Sdorra
  */
-public class AuthenticationITCase extends SeleniumITCaseBase {
+public class SeleniumITCaseBase {
+  
+  /**
+   * Selenium test driver.
+   */
+  protected static WebDriver driver;
+  
+  /**
+   * Setup selenium test driver.
+   */
+  @BeforeClass
+  public static void setUpDriver() {
+    // DesiredCapabilities capa = DesiredCapabilities.chrome();
+    // capa.setBrowserName("firefox");
+    // capa.setPlatform(Platform.ANY);
+    // RemoteWebDriver driver = new RemoteWebDriver(new URL("http://localhost:4444/wd/hub"), capa);
+    
+    driver = new FirefoxDriver();
+    driver.get("http://localhost:8082/scm/index.html");
+  }
 
   /**
-   * Authenticates an user and call logout function.
-   */
-  @Test
-  public void testAuthentication() {
-    MainPage main = Pages.get(driver, LoginPage.class).login("scmadmin", "scmadmin");
-    assertEquals("scmadmin", main.getUserInfo());
-    main.logout();
+   * Closes the selenium test driver.
+   */  
+  @AfterClass
+  public static void tearDownDriver() {
+    driver.close();
   }
-  
 }

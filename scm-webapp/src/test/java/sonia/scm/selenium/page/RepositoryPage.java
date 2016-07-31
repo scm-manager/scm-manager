@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,33 +28,50 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+package sonia.scm.selenium.page;
 
-
-package sonia.scm.selenium;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.selenium.page.Pages;
-import sonia.scm.selenium.page.MainPage;
-import sonia.scm.selenium.page.LoginPage;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 /**
- * Authentication related selenium integration tests.
- * 
+ * Page object for scm-manager's repository detail page.
+ *
  * @author Sebastian Sdorra
  */
-public class AuthenticationITCase extends SeleniumITCaseBase {
-
+public class RepositoryPage extends BasePage<RepositoryPage> {
+  
+  @FindBy(css = "#repoRmButton button")
+  private WebElement removeButton;
+  
+  private final RepositoriesPage repositoriesPage;
+  
   /**
-   * Authenticates an user and call logout function.
+   * Constructs a new page. This constructor should only be called from {@link Pages}.
+   * 
+   * @param driver selenium test driver
+   * @param repositoriesPage repositories page object
    */
-  @Test
-  public void testAuthentication() {
-    MainPage main = Pages.get(driver, LoginPage.class).login("scmadmin", "scmadmin");
-    assertEquals("scmadmin", main.getUserInfo());
-    main.logout();
+  RepositoryPage(WebDriver driver, RepositoriesPage repositoriesPage) {
+    super(driver);
+    this.repositoriesPage = repositoriesPage;
+  }
+
+  @Override
+  protected RepositoryPage self() {
+    return this;
+  }
+  
+  /**
+   * Removes the selected repository.
+   * 
+   * @return repositories overview page object
+   */
+  public RepositoriesPage remove(){
+    removeButton.click();
+    waitToBeClickable(By.cssSelector("div.x-window button:nth-of-type(1)")).click();
+    return repositoriesPage;
   }
   
 }

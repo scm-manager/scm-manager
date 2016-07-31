@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,33 +28,62 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+package sonia.scm.selenium.page;
 
-
-package sonia.scm.selenium;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.selenium.page.Pages;
-import sonia.scm.selenium.page.MainPage;
-import sonia.scm.selenium.page.LoginPage;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 /**
- * Authentication related selenium integration tests.
- * 
+ * Page object for the scm-manager login page.
+ *
  * @author Sebastian Sdorra
  */
-public class AuthenticationITCase extends SeleniumITCaseBase {
+public class LoginPage extends BasePage<LoginPage> {
+  
+  @FindBy(css = "input[name=username]")
+  private WebElement usernameInput;
+  
+  @FindBy(css = "input[name=password]")
+  private WebElement passwordInput;
+  
+  @FindBy(css = "#loginButton button")
+  private WebElement loginButton;
 
   /**
-   * Authenticates an user and call logout function.
+   * Constructs a new page. This constructor should only be called from {@link Pages}.
+   * 
+   * @param driver selenium test driver
    */
-  @Test
-  public void testAuthentication() {
-    MainPage main = Pages.get(driver, LoginPage.class).login("scmadmin", "scmadmin");
-    assertEquals("scmadmin", main.getUserInfo());
-    main.logout();
+  LoginPage(WebDriver driver) {
+    super(driver);
+  }
+
+  @Override
+  protected LoginPage self() {
+    return this;
   }
   
+  /**
+   * Authenticates the user and returns the {@link MainPage}.
+   * 
+   * @param username username
+   * @param password password
+   * 
+   * @return {@link MainPage} after successful authentication
+   */
+  public MainPage login(String username, String password) {
+    usernameInput.clear();
+    usernameInput.sendKeys(username);
+    
+    passwordInput.clear();
+    passwordInput.sendKeys(password);
+    
+    sleep(250, TimeUnit.MILLISECONDS);
+    
+    waitToBeClickable(loginButton).click();
+    
+    return Pages.get(driver, MainPage.class);
+  }
 }

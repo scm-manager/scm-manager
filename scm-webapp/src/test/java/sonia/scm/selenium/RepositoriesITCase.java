@@ -34,61 +34,55 @@ package sonia.scm.selenium;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.selenium.page.Pages;
+import sonia.scm.selenium.page.MainPage;
+import sonia.scm.selenium.page.LoginPage;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import sonia.scm.repository.Repository;
 
 /**
- *
+ * Repository related selenium integration tests.
+ * 
  * @author Sebastian Sdorra
  */
-public class RepositoryCRUDITCase extends SeleniumTestBase
-{
+public class RepositoriesITCase extends SeleniumITCaseBase {
 
+  private MainPage main;
+  
   /**
-   * Method description
-   *
-   */
-  @After
-  public void after()
-  {
-    logout();
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void createRepository() throws InterruptedException
-  {
-    waitAndClick("#repositoryAddButton");
-    waitForPresence("input[name=name]").sendKeys("scm");
-    select("#x-form-el-repositoryType img").click();
-    waitAndClick("div.x-combo-list-item:nth-of-type(2)");
-    type("input[name=contact]", "scmadmin@scm-manager.org");
-    type("textarea[name=description]", "SCM-Manager");
-    waitAndClick("div.x-panel-btns button:nth-of-type(1)");
-
-    String name =
-      waitForPresence(
-          "div.x-grid3-row-selected div.x-grid3-col-name").getText();
-
-    assertEquals("scm", name);
-    
-    waitAndClick("#repoRmButton button");
-    waitAndClick("div.x-window button:nth-of-type(1)");
-  }
-
-  /**
-   * Method description
-   *
+   * Authenticates admin user, before each test.
    */
   @Before
-  public void login()
-  {
-    login("scmadmin", "scmadmin");
+  public void login() {
+    main = Pages.get(driver, LoginPage.class)
+                .login("scmadmin", "scmadmin");
+  }
+
+  /**
+   * Creates, select and removes a repository. 
+   */
+  @Test
+  public void createRepository() {
+    Repository repository = new Repository();
+    repository.setName("scm");
+    repository.setType("git");
+    repository.setContact("scmadmin@scm-manager.org");
+    repository.setDescription("SCM-Manager");
+    
+    main.repositories()
+        .add(repository)
+        .select(repository.getName())
+        .remove();
+  }
+  
+  /**
+   * Logs the user out, after each test.
+   */
+  @After
+  public void logout() {
+    main.logout();
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2010, Sebastian Sdorra
+ * Copyright (c) 2014, Sebastian Sdorra
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,33 +28,68 @@
  * http://bitbucket.org/sdorra/scm-manager
  *
  */
+package sonia.scm.selenium.page;
 
-
-package sonia.scm.selenium;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.selenium.page.Pages;
-import sonia.scm.selenium.page.MainPage;
-import sonia.scm.selenium.page.LoginPage;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 /**
- * Authentication related selenium integration tests.
+ * Page object for scm-manager's main page.
  * 
  * @author Sebastian Sdorra
  */
-public class AuthenticationITCase extends SeleniumITCaseBase {
+public class MainPage extends BasePage<MainPage> {
+  
+  @FindBy(css = "#navLogout a")
+  private WebElement logoutLink;
 
+  @FindBy(linkText = "Repositories")
+  private WebElement repositoriesLink;
+  
+  @FindBy(css = "#scm-userinfo-tip")
+  private WebElement userInfoTip;
+  
   /**
-   * Authenticates an user and call logout function.
+   * Constructs a new page. This constructor should only be called from {@link Pages}.
+   * 
+   * @param driver selenium test driver
    */
-  @Test
-  public void testAuthentication() {
-    MainPage main = Pages.get(driver, LoginPage.class).login("scmadmin", "scmadmin");
-    assertEquals("scmadmin", main.getUserInfo());
-    main.logout();
+  MainPage(WebDriver driver) {
+    super(driver);
   }
   
+  @Override
+  protected MainPage self() {
+    return this;
+  }
+  
+  /**
+   * Returns the name of the current authenticated user from the user info tip.
+   * 
+   * @return name of the current authenticated user
+   */
+  public String getUserInfo(){
+    return userInfoTip.getText();
+  }
+  
+  /**
+   * Navigates to the repositories page and returns the page object for this page.
+   * 
+   * @return page object for repositories page
+   */
+  public RepositoriesPage repositories(){
+    repositoriesLink.click();
+    return Pages.get(driver, RepositoriesPage.class);
+  }
+  
+  /**
+   * Logs the current user out.
+   * 
+   * @return page object for the login
+   */
+  public LoginPage logout(){
+    waitToBeClickable(logoutLink).click();
+    return Pages.get(driver, LoginPage.class);
+  }
 }
