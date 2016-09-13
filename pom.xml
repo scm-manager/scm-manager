@@ -192,14 +192,18 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.0</version>
+        <version>3.5.1</version>
         <configuration>
           <showWarnings>true</showWarnings>
           <showDeprecation>true</showDeprecation>
           <source>${project.build.javaLevel}</source>
           <target>${project.build.javaLevel}</target>
           <encoding>${project.build.sourceEncoding}</encoding>
-          <compilerArgument>-Xlint:unchecked</compilerArgument>
+          <!--
+          suppress compiler warning about bootclasspath with older source
+          see https://blogs.oracle.com/darcy/entry/bootclasspath_older_source
+          -->
+          <compilerArgument>-Xlint:unchecked,-options</compilerArgument>
         </configuration>
       </plugin>
 
