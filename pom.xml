@@ -141,6 +141,38 @@
 
   <build>
     <plugins>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.4.1</version>
+        <executions>
+          <execution>
+            <id>enforce-java</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <!--
+                enforce minimum 1.8.0-101 to accept Let’s Encrypt certificates
+                -->
+                <requireJavaVersion>
+                  <version>[1.8.0-101,)</version>
+                </requireJavaVersion>
+                <!--
+                enforce minimum maven 3.1 for the smp plugin
+                -->
+                <requireMavenVersion>
+                  <version>[3.1,)</version>
+                </requireMavenVersion>
+              </rules>
+              <fail>true</fail>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
@@ -173,7 +205,7 @@
           <source>${project.build.javaLevel}</source>
           <target>${project.build.javaLevel}</target>
           <encoding>${project.build.sourceEncoding}</encoding>
-           <compilerArgument>-Xlint:unchecked</compilerArgument>
+          <compilerArgument>-Xlint:unchecked</compilerArgument>
         </configuration>
       </plugin>
 
