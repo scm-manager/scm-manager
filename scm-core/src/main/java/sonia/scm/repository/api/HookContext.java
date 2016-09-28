@@ -45,7 +45,7 @@ import sonia.scm.repository.spi.HookContextProvider;
  * The context for all repository hooks. With the {@link HookContext} class it
  * is able to send messages back to the client, retrieve {@link Changeset}s
  * which are added during this push/commit and gives informations about changed 
- * branches.
+ * branches and tags.
  *
  * @author Sebastian Sdorra
  * @since 1.33
@@ -99,6 +99,28 @@ public final class HookContext
     }
 
     return provider.getBranchProvider();
+  }
+  
+ /**
+   * Returns a {@link HookTagProvider} which is able to return informations
+   * about changed tags during the current hook.
+   *
+   * @return {@link HookTagProvider}
+   * 
+   * @throws HookFeatureIsNotSupportedException if the feature is not supported 
+   *  by the underlying provider
+   * 
+   * @since 1.50
+   */
+  public HookTagProvider getTagProvider()
+  {
+    if (logger.isDebugEnabled())
+    {
+      logger.debug("create tag provider for repository {}",
+        repository.getName());
+    }
+
+    return provider.getTagProvider();
   }
 
   /**

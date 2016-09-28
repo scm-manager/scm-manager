@@ -55,5 +55,12 @@ public enum HookFeature
    *
    * @since 1.45
    */
-  BRANCH_PROVIDER;
+  BRANCH_PROVIDER,
+  
+  /**
+   * Hook tag provider
+   * 
+   * @since 1.50
+   */
+  TAG_PROVIDER;
 }
