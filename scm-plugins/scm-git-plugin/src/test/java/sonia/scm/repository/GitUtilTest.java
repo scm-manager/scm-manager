@@ -91,6 +91,19 @@ public class GitUtilTest
     assertEquals("1.0.0", GitUtil.getTagName("refs/tags/1.0.0"));
     assertEquals("super/1.0.0", GitUtil.getTagName("refs/tags/super/1.0.0"));
   }
+  
+  /**
+   * Tests {@link GitUtil#isBranch(java.lang.String)}.
+   */
+  @Test
+  public void testIsBranchName(){
+    assertTrue(GitUtil.isBranch("refs/heads/master"));
+    assertTrue(GitUtil.isBranch("refs/heads/feature/super"));
+    assertFalse(GitUtil.isBranch(""));
+    assertFalse(GitUtil.isBranch(null));
+    assertFalse(GitUtil.isBranch("refs/tags/1.0.0"));
+    assertFalse(GitUtil.isBranch("refs/heads"));
+  }
 
   private org.eclipse.jgit.lib.Repository mockRepo(File directory)
   {

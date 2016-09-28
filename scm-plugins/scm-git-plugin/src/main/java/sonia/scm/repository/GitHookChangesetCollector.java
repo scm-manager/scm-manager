@@ -75,7 +75,7 @@ public class GitHookChangesetCollector
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new instance
    *
    *
    * @param rpack
@@ -92,10 +92,9 @@ public class GitHookChangesetCollector
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Collect all new changesets from the received hook.
    *
-   *
-   * @return
+   * @return new changesets
    */
   public List<Changeset> collectChangesets()
   {
@@ -114,17 +113,19 @@ public class GitHookChangesetCollector
 
       for (ReceiveCommand rc : receiveCommands)
       {
-        //J-
-        logger.trace("handle receive command, type={}, ref={}, result={}",
-          new Object[] {
-            rc.getType(),
-            rc.getRefName(),
-            rc.getResult()
-          }
-        );
-        //J+
-
-        if (rc.getType() != ReceiveCommand.Type.DELETE)
+        String ref = rc.getRefName();
+        
+        logger.trace("handle receive command, type={}, ref={}, result={}", rc.getType(), ref, rc.getResult());
+        
+        if (rc.getType() == ReceiveCommand.Type.DELETE)
+        {
+          logger.debug("skip delete of ref {}", ref);
+        }
+        else if (! GitUtil.isBranch(ref))
+        {
+          logger.debug("skip ref {}, because it is not a branch", ref);
+        }
+        else
         {
           try
           {
@@ -138,12 +139,9 @@ public class GitHookChangesetCollector
             builder.append(rc.getType()).append(", ref=");
             builder.append(rc.getRefName()).append(", result=");
             builder.append(rc.getResult());
+            
             logger.error(builder.toString(), ex);
           }
-        }
-        else
-        {
-          logger.debug("skip delete of branch {}", rc.getRefName());
         }
       }
 
@@ -161,18 +159,6 @@ public class GitHookChangesetCollector
     return Lists.newArrayList(changesets.values());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param changesets
-   * @param converter
-   * @param walk
-   * @param rc
-   *
-   * @throws IOException
-   * @throws IncorrectObjectTypeException
-   */
   private void collectChangesets(Map<String, Changeset> changesets,
     GitChangesetConverter converter, RevWalk walk, ReceiveCommand rc)
     throws IncorrectObjectTypeException, IOException
@@ -243,9 +229,7 @@ public class GitHookChangesetCollector
   /** listener to track new objects */
   private final CollectingPackParserListener listener;
 
-  /** Field description */
   private final List<ReceiveCommand> receiveCommands;
 
-  /** Field description */
   private final ReceivePack rpack;
 }

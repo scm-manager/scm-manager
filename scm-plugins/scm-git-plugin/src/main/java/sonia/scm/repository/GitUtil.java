@@ -36,6 +36,7 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
@@ -336,6 +337,20 @@ public final class GitUtil
     }
 
     return branch;
+  }
+  
+  /**
+   * Returns {@code true} if the provided reference name is a branch name.
+   * 
+   * @param refName reference name
+   * 
+   * @return {@code true} if the name is a branch name
+   * 
+   * @since 1.50
+   */
+  public static boolean isBranch(String refName)
+  {
+    return Strings.nullToEmpty(refName).startsWith(PREFIX_HEADS);
   }
 
   /**
