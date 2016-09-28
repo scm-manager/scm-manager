@@ -43,16 +43,18 @@ import static org.mockito.Mockito.*;
 import java.io.File;
 import java.io.IOException;
 
+import static org.junit.Assert.*;
+
 /**
- *
+ * Unit tests for {@link GitUtil}.
+ * 
  * @author Sebastian Sdorra
  */
 public class GitUtilTest
 {
 
   /**
-   * Method description
-   *
+   * Tests {@link GitUtil#checkBranchName(org.eclipse.jgit.lib.Repository, java.lang.String)} with invalid name.
    *
    * @throws IOException
    */
@@ -66,8 +68,7 @@ public class GitUtilTest
   }
 
   /**
-   * Method description
-   *
+   * Tests {@link GitUtil#checkBranchName(org.eclipse.jgit.lib.Repository, java.lang.String)}.
    *
    * @throws IOException
    */
@@ -80,15 +81,17 @@ public class GitUtilTest
     GitUtil.checkBranchName(repo, GitUtil.REF_HEAD_PREFIX.concat("dev"));
     GitUtil.checkBranchName(repo, GitUtil.REF_HEAD_PREFIX.concat("develop"));
   }
-
+  
   /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
+   * Tests {@link GitUtil#getTagName(java.lang.String)}.
    */
+  @Test
+  public void testGetTagName(){
+    assertNull(GitUtil.getTagName("refs/head/master"));
+    assertEquals("1.0.0", GitUtil.getTagName("refs/tags/1.0.0"));
+    assertEquals("super/1.0.0", GitUtil.getTagName("refs/tags/super/1.0.0"));
+  }
+
   private org.eclipse.jgit.lib.Repository mockRepo(File directory)
   {
     org.eclipse.jgit.lib.Repository repo =

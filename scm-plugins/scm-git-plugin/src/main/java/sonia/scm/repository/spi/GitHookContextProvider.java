@@ -47,6 +47,8 @@ import sonia.scm.repository.api.HookMessageProvider;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
+import sonia.scm.repository.api.GitHookTagProvider;
+import sonia.scm.repository.api.HookTagProvider;
 
 /**
  *
@@ -58,16 +60,15 @@ public class GitHookContextProvider extends HookContextProvider
   /** Field description */
   private static final Set<HookFeature> SUPPORTED_FEATURES =
     EnumSet.of(HookFeature.MESSAGE_PROVIDER, HookFeature.CHANGESET_PROVIDER,
-      HookFeature.BRANCH_PROVIDER);
+      HookFeature.BRANCH_PROVIDER, HookFeature.TAG_PROVIDER);
 
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new instance
    *
-   *
-   * @param receivePack
-   * @param receiveCommands
+   * @param receivePack git receive pack
+   * @param receiveCommands received commands
    */
   public GitHookContextProvider(ReceivePack receivePack,
     List<ReceiveCommand> receiveCommands)
@@ -80,12 +81,6 @@ public class GitHookContextProvider extends HookContextProvider
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public HookMessageProvider createMessageProvider()
   {
@@ -94,36 +89,23 @@ public class GitHookContextProvider extends HookContextProvider
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public HookBranchProvider getBranchProvider()
   {
     return new GitHookBranchProvider(receiveCommands);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  @Override
+  public HookTagProvider getTagProvider() {
+    return new GitHookTagProvider(receiveCommands);
+  }
+
   @Override
   public HookChangesetProvider getChangesetProvider()
   {
     return changesetProvider;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public Set<HookFeature> getSupportedFeatures()
   {
