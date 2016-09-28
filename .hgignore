@@ -26,3 +26,5 @@ Desktop DF$
 # idea files
 \.iml
 \.idea$
+# jrebel
+rebel.xml
