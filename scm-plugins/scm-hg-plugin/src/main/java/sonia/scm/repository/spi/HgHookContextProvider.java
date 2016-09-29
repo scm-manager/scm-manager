@@ -46,30 +46,31 @@ import sonia.scm.repository.api.HookMessageProvider;
 
 import java.util.EnumSet;
 import java.util.Set;
+import sonia.scm.repository.api.HgHookTagProvider;
+import sonia.scm.repository.api.HookTagProvider;
 
 /**
- *
+ * Mercurial implementation of {@link HookContextProvider}.
+ * 
  * @author Sebastian Sdorra
  */
 public class HgHookContextProvider extends HookContextProvider
 {
 
-  /** Field description */
   private static final Set<HookFeature> SUPPORTED_FEATURES =
     EnumSet.of(HookFeature.CHANGESET_PROVIDER, HookFeature.MESSAGE_PROVIDER,
-      HookFeature.BRANCH_PROVIDER);
+      HookFeature.BRANCH_PROVIDER, HookFeature.TAG_PROVIDER);
 
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new instance.
    *
-   *
-   * @param handler
-   * @param repositoryName
-   * @param hookManager
-   * @param startRev
-   * @param type
+   * @param handler mercurial repository handler
+   * @param repositoryName name of changed repository
+   * @param hookManager mercurial hook manager
+   * @param startRev start revision
+   * @param type type of hook
    */
   public HgHookContextProvider(HgRepositoryHandler handler,
     String repositoryName, HgHookManager hookManager, String startRev,
@@ -81,12 +82,6 @@ public class HgHookContextProvider extends HookContextProvider
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public HookBranchProvider getBranchProvider()
   {
@@ -98,24 +93,23 @@ public class HgHookContextProvider extends HookContextProvider
     return hookBranchProvider;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  @Override
+  public HookTagProvider getTagProvider() 
+  {
+    if (hookTagProvider == null)
+    {
+      hookTagProvider = new HgHookTagProvider(hookChangesetProvider);
+    }
+    
+    return hookTagProvider;
+  }
+
   @Override
   public HookChangesetProvider getChangesetProvider()
   {
     return hookChangesetProvider;
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  
   public HgHookMessageProvider getHgMessageProvider()
   {
     if (hgMessageProvider == null)
@@ -126,12 +120,6 @@ public class HgHookContextProvider extends HookContextProvider
     return hgMessageProvider;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public Set<HookFeature> getSupportedFeatures()
   {
@@ -140,12 +128,6 @@ public class HgHookContextProvider extends HookContextProvider
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   protected HookMessageProvider createMessageProvider()
   {
@@ -154,12 +136,11 @@ public class HgHookContextProvider extends HookContextProvider
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private final HgHookChangesetProvider hookChangesetProvider;
 
-  /** Field description */
   private HgHookMessageProvider hgMessageProvider;
 
-  /** Field description */
   private HgHookBranchProvider hookBranchProvider;
+  
+  private HgHookTagProvider hookTagProvider;
 }

@@ -37,7 +37,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.spi.HgHookChangesetProvider;
+import sonia.scm.repository.spi.HookChangesetProvider;
 import sonia.scm.repository.spi.HookChangesetRequest;
 import sonia.scm.repository.spi.javahg.AbstractChangesetCommand;
 import sonia.scm.util.Util;
@@ -46,38 +46,37 @@ import sonia.scm.util.Util;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- *
+ * Mercurial hook branch provider implementation.
+ * 
  * @author Sebastian Sdorra
  */
 public class HgHookBranchProvider implements HookBranchProvider
 {
+  
+  private static final Logger logger = LoggerFactory.getLogger(HgHookBranchProvider.class);
 
-  /** Field description */
   private static final HookChangesetRequest REQUEST =
     new HookChangesetRequest();
 
   //~--- constructors ---------------------------------------------------------
 
   /**
-   * Constructs ...
+   * Constructs a new instance.
    *
    *
-   * @param changesetProvider
+   * @param changesetProvider changeset provider
    */
-  public HgHookBranchProvider(HgHookChangesetProvider changesetProvider)
+  public HgHookBranchProvider(HookChangesetProvider changesetProvider)
   {
     this.changesetProvider = changesetProvider;
   }
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public List<String> getCreatedOrModified()
   {
@@ -89,12 +88,6 @@ public class HgHookBranchProvider implements HookBranchProvider
     return createdOrModified;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
   public List<String> getDeletedOrClosed()
   {
@@ -108,15 +101,6 @@ public class HgHookBranchProvider implements HookBranchProvider
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param builder
-   * @param c
-   *
-   * @return
-   */
   private List<String> appendBranches(Builder<String> builder, Changeset c)
   {
     List<String> branches = c.getBranches();
@@ -133,26 +117,18 @@ public class HgHookBranchProvider implements HookBranchProvider
     return branches;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   private Iterable<Changeset> changesets()
   {
     return changesetProvider.handleRequest(REQUEST).getChangesets();
   }
 
-  /**
-   * Method description
-   *
-   */
   private void collect()
   {
     Builder<String> createdOrModifiedBuilder = ImmutableList.builder();
     Builder<String> deletedOrClosedBuilder = ImmutableList.builder();
 
+    logger.trace("collecting branches from hook changesets");
+    
     for (Changeset c : changesets())
     {
       if (c.getProperty(AbstractChangesetCommand.PROPERTY_CLOSE) != null)
@@ -171,12 +147,9 @@ public class HgHookBranchProvider implements HookBranchProvider
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private final HgHookChangesetProvider changesetProvider;
+  private final HookChangesetProvider changesetProvider;
 
-  /** Field description */
   private List<String> createdOrModified;
 
-  /** Field description */
   private List<String> deletedOrClosed;
 }
