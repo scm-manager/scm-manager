@@ -198,6 +198,8 @@
           <showDeprecation>true</showDeprecation>
           <source>${project.build.javaLevel}</source>
           <target>${project.build.javaLevel}</target>
+          <testSource>${project.test.javaLevel}</testSource>
+          <testTarget>${project.test.javaLevel}</testTarget>
           <encoding>${project.build.sourceEncoding}</encoding>
           <!--
           suppress compiler warning about bootclasspath with older source
@@ -502,6 +504,7 @@
 
     <!-- build properties -->
     <project.build.javaLevel>1.7</project.build.javaLevel>
+    <project.test.javaLevel>1.8</project.test.javaLevel>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-BSD</netbeans.hint.license>
     <jdk.classifier />

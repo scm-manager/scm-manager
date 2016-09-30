@@ -37,6 +37,7 @@ import sonia.scm.security.PermissionActionCheck;
 import sonia.scm.security.PermissionCheck;
 
 /**
+ * Permission checks for repository related permissions.
  *
  * @author Sebastian Sdorra
  * @since 2.0.0
@@ -44,30 +45,31 @@ import sonia.scm.security.PermissionCheck;
 public final class RepositoryPermissions
 {
 
-  /** Field description */
+  /** create permission */
   public static final String ACTION_CREATE = "create";
 
-  /** Field description */
+  /** delete permission */
   public static final String ACTION_DELETE = "delete";
 
-  /** Field description */
+  /** modify permission */
   public static final String ACTION_MODIFY = "modify";
 
-  /** Field description */
+  /** health check permission implies modify permission */
   public static final String ACTION_HC = "hc,".concat(ACTION_MODIFY);
 
-  /** Field description */
+  /** read permission */
   public static final String ACTION_READ = "read";
 
-  /** Field description */
+  /** write permission */
   public static final String ACTION_WRITE = "write";
 
-  /** Field description */
-  public static final String SEPERATOR = ":";
+  /** permission separator */
+  public static final String SEPARATOR = ":";
   
+  /** permission action separator */
   public static final String SEPERATOR_ACTION = ",";
 
-  /** Field description */
+  /** permission main type */
   public static final String TYPE = "repository";
 
   //~--- constructors ---------------------------------------------------------
@@ -77,10 +79,9 @@ public final class RepositoryPermissions
   //~--- methods --------------------------------------------------------------
 
   /**
-   * Method description
+   * Returns permission check for create action.
    *
-   *
-   * @return
+   * @return permission check for create action
    */
   public static PermissionCheck create()
   {
@@ -88,12 +89,11 @@ public final class RepositoryPermissions
   }
 
   /**
-   * Method description
+   * Returns permission check for delete action.
    *
+   * @param r repository for permission check
    *
-   * @param r
-   *
-   * @return
+   * @return permission check for delete action
    */
   public static PermissionCheck delete(Repository r)
   {
@@ -101,23 +101,21 @@ public final class RepositoryPermissions
   }
 
   /**
-   * Method description
+   * Returns permission check for delete action.
    *
+   * @param id id of repository for permission check
    *
-   * @param id
-   *
-   * @return
+   * @return permission check for delete action
    */
   public static PermissionCheck delete(String id)
   {
-    return check(ACTION_DELETE.concat(SEPERATOR).concat(id));
+    return check(ACTION_DELETE.concat(SEPARATOR).concat(id));
   }
 
   /**
-   * Method description
+   * Returns permission action check for delete action.
    *
-   *
-   * @return
+   * @return permission action check for delete action
    */
   public static PermissionActionCheck<Repository> delete()
   {
@@ -125,37 +123,34 @@ public final class RepositoryPermissions
   }
 
   /**
-   * Method description
+   * Returns permission check for health check action.
    *
+   * @param id id of repository for permission check
    *
-   * @param id
-   *
-   * @return
+   * @return permission check for health check action
    */
   public static PermissionCheck healthCheck(String id)
   {
-    return check(ACTION_HC.concat(SEPERATOR).concat(id));
+    return check(ACTION_HC.concat(SEPARATOR).concat(id));
   }
 
   /**
-   * Method description
+   * Returns permission action check for health check action.
    *
-   *
-   * @return
+   * @return permission action check for health check action.
    */
   public static PermissionActionCheck<Repository> healthCheck()
   {
     return new PermissionActionCheck<>(
-      TYPE.concat(SEPERATOR).concat(ACTION_HC));
+      TYPE.concat(SEPARATOR).concat(ACTION_HC));
   }
 
   /**
-   * Method description
+   * Returns permission check for health check action.
    *
+   * @param r repository for permission check
    *
-   * @param r
-   *
-   * @return
+   * @return permission check for health check action
    */
   public static PermissionCheck healthCheck(Repository r)
   {
@@ -163,12 +158,11 @@ public final class RepositoryPermissions
   }
 
   /**
-   * Method description
+   * Returns permission action check for modify action.
    *
+   * @param r repository for permission check
    *
-   * @param r
-   *
-   * @return
+   * @return permission action check for modify action
    */
   public static PermissionCheck modify(Repository r)
   {
@@ -176,23 +170,22 @@ public final class RepositoryPermissions
   }
 
   /**
-   * Method description
+   * Returns permission action check for modify action.
    *
    *
-   * @param id
+   * @param id id of repository for permission check
    *
-   * @return
+   * @return permission action check for modify action
    */
   public static PermissionCheck modify(String id)
   {
-    return check(ACTION_MODIFY.concat(SEPERATOR).concat(id));
+    return check(ACTION_MODIFY.concat(SEPARATOR).concat(id));
   }
 
   /**
-   * Method description
+   * Returns permission action check for modify action.
    *
-   *
-   * @return
+   * @return permission action check for modify action
    */
   public static PermissionActionCheck<Repository> modify()
   {
@@ -200,25 +193,23 @@ public final class RepositoryPermissions
   }
 
   /**
-   * Method description
+   * Returns permission check for read action.
    *
+   * @param id id of repository for permission check
    *
-   * @param id
-   *
-   * @return
+   * @return permission check for read action
    */
   public static PermissionCheck read(String id)
   {
-    return check(ACTION_READ.concat(SEPERATOR).concat(id));
+    return check(ACTION_READ.concat(SEPARATOR).concat(id));
   }
 
   /**
-   * Method description
+   * Returns permission check for read action.
    *
+   * @param r repository for permission check
    *
-   * @param r
-   *
-   * @return
+   * @return permission check for read action
    */
   public static PermissionCheck read(Repository r)
   {
@@ -226,10 +217,9 @@ public final class RepositoryPermissions
   }
 
   /**
-   * Method description
+   * Returns permission action check for read action.
    *
-   *
-   * @return
+   * @return permission action check for read action
    */
   public static PermissionActionCheck<Repository> read()
   {
@@ -237,25 +227,23 @@ public final class RepositoryPermissions
   }
 
   /**
-   * Method description
+   * Returns permission check for write action.
    *
+   * @param id id of repository for permission check
    *
-   * @param id
-   *
-   * @return
+   * @return permission check for write action
    */
   public static PermissionCheck write(String id)
   {
-    return check(ACTION_WRITE.concat(SEPERATOR).concat(id));
+    return check(ACTION_WRITE.concat(SEPARATOR).concat(id));
   }
 
   /**
-   * Method description
+   * Returns permission check for write action.
    *
+   * @param r repository for permission check
    *
-   * @param r
-   *
-   * @return
+   * @return permission check for write action
    */
   public static PermissionCheck write(Repository r)
   {
@@ -263,10 +251,9 @@ public final class RepositoryPermissions
   }
 
   /**
-   * Method description
+   * Return permission action check for write action.
    *
-   *
-   * @return
+   * @return permission action check for write action
    */
   public static PermissionActionCheck<Repository> write()
   {
@@ -275,11 +262,11 @@ public final class RepositoryPermissions
 
   private static PermissionActionCheck<Repository> actionCheck(String action)
   {
-    return new PermissionActionCheck<>(TYPE.concat(SEPERATOR).concat(action));
+    return new PermissionActionCheck<>(TYPE.concat(SEPARATOR).concat(action));
   }
 
   private static PermissionCheck check(String permission)
   {
-    return new PermissionCheck(TYPE.concat(SEPERATOR).concat(permission));
+    return new PermissionCheck(TYPE.concat(SEPARATOR).concat(permission));
   }
 }
